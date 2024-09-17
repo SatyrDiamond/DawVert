@@ -161,7 +161,7 @@ class flp_project:
 		elif event_id == 223:
 			event_bio = BytesIO(event_data)
 			while event_bio.tell() < len(event_data):
-				pos, autov, val = struct.unpack('III', event_bio.read(12))
+				pos, autov, val = struct.unpack('IIi', event_bio.read(12))
 				if autov not in self.current_pat_obj.automation: self.current_pat_obj.automation[autov] = []
 				self.current_pat_obj.automation[autov].append([pos, val])
 

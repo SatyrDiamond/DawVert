@@ -6,7 +6,7 @@ from functions import note_data
 from functions import xtramath
 from objects.convproj import project as convproj
 from objects import globalstore
-from objects.file_proj import proj_notessimo
+from objects.file_proj import proj_notessimo_v2
 import json
 import plugins
 import struct
@@ -36,7 +36,7 @@ class input_notessimo_v2(plugins.base):
 		globalstore.dataset.load('notessimo_v2', './data_main/dataset/notessimo_v2.dset')
 		
 		# ---------- File ----------
-		project_obj = proj_notessimo.notev2_song()
+		project_obj = proj_notessimo_v2.notev2_song()
 		if not project_obj.load_from_file(input_file): exit()
 
 		convproj_obj.metadata.name = project_obj.name

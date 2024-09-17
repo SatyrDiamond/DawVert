@@ -169,7 +169,7 @@ class cvpj_s_automation:
 	def convert____pl_points__nopl_points(self):
 		if self.u_pl_points:
 			for x in self.pl_points.iter():
-				x.data.edit_trimmove(0, x.time.duration)
+				x.remove_cut()
 				for c, p in enumerate(x.data.points):
 					self.add_autopoint(p.pos+x.time.position, p.value, p.type if c != 0 else 'instant')
 
@@ -282,6 +282,10 @@ class cvpj_automation:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.auto_num = counter.counter(200000, 'auto_')
+
+	def __setitem__(self, p, v):
+		autoloc = cvpj_autoloc(p)
+		self.autoloc[autoloc] = v
 
 	def list(self):
 		return list(self.data)

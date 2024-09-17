@@ -283,6 +283,9 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 		if slicer_filename != "": 
 			sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename, 'win')
+			if zipfile: sampleref_obj.find_relative('extracted')
+			sampleref_obj.find_relative('projectfile')
+			sampleref_obj.find_relative('factorysamples')
 			slicechannels = sampleref_obj.channels
 			sre_obj.from_sampleref(convproj_obj, slicer_filename)
 
@@ -294,7 +297,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		for _ in range(slicer_numslices):
 			slice_obj = sre_obj.add_slice()
 			slice_obj.name = fl_plugstr.c_string__int8(encoding='utf-8')
-			slice_obj.start = fl_plugstr.uint32()*(slicechannels/2)
+			slice_obj.start = fl_plugstr.uint32()
+			slice_obj.start *= (slicechannels/2)
 			custom_key = fl_plugstr.int32()
 			if custom_key != -1:
 				slice_obj.is_custom_key = True
@@ -533,6 +537,14 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 						simsynth_time(dfdict['svf_rel']), 0)
 			except:
 				pass
+
+		fldso = globalstore.dataset.get_obj('fl_studio', 'plugin', flplugin.name)
+		if fldso:
+			for param_id, dset_param in fldso.params.iter():
+				if dset_param.num != -1:
+					#print(dset_param.num, param_id, dset_param)
+					convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
+
 
 		#plugin_obj.params.debugtxt()
 		#exit()

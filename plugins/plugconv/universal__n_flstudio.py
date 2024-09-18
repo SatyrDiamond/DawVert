@@ -27,20 +27,25 @@ class plugconv(plugins.base):
 		if plugin_obj.type.subtype == 'fruity 7 band eq':
 			extpluglog.convinternal('FL Studio', 'Fruity 7 Band Equalizer', 'Universal', 'EQ Bands')
 
-			for bandnum, bandfreq in enumerate([63,250,500,1500,3000,5000,8000]):
-				bandstarttxt = str(bandnum+1)
-				gain_txt = 'band_'+bandstarttxt
+			bandsdata = max([plugin_obj.params.get('band_'+str(bandnum+1), 0).value for bandnum in range(7)])
 
-				filter_obj, filterid = plugin_obj.eq_add()
-				filter_obj.freq = bandfreq
-				filter_obj.gain = plugin_obj.params.get(gain_txt, 0).value/100
-				filter_obj.type.set('peak', None)
+			if bandsdata<=1800:
+				for bandnum, bandfreq in enumerate([63,250,500,1500,3000,5000,8000]):
+					bandstarttxt = str(bandnum+1)
+					gain_txt = 'band_'+bandstarttxt
 
-				convproj_obj.automation.calc(['plugin', pluginid, gain_txt], 'div', 100, 0, 0, 0)
-				convproj_obj.automation.move(['plugin', pluginid, gain_txt], ['n_filter', pluginid, filterid, 'gain'])
+					filter_obj, filterid = plugin_obj.eq_add()
+					filter_obj.freq = bandfreq
+					filter_obj.gain = plugin_obj.params.get(gain_txt, 0).value/100
+					filter_obj.type.set('peak', None)
 
-			plugin_obj.replace('universal', 'eq-bands')
-			return 1
+					convproj_obj.automation.calc(['plugin', pluginid, gain_txt], 'div', 100, 0, 0, 0)
+					convproj_obj.automation.move(['plugin', pluginid, gain_txt], ['n_filter', pluginid, filterid, 'gain'])
+
+				plugin_obj.replace('universal', 'eq-bands')
+				return 1
+			else:
+				return 2
 
 		if plugin_obj.type.subtype == 'fruity parametric eq':
 			extpluglog.convinternal('FL Studio', 'Fruity Parametric EQ', 'Universal', 'EQ Bands')

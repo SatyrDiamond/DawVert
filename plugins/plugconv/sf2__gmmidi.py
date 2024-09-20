@@ -25,8 +25,9 @@ class plugconv(plugins.base):
 		if sf2_loc == None: 
 			mididevice = plugin_obj.datavals.get('device', 'gm')
 			if mididevice in dv_config.paths_soundfonts:
-				logger_plugconv.info('Using '+mididevice.upper()+' SF2.')
-				sf2_loc = dv_config.paths_soundfonts[mididevice]
+				if dv_config.paths_soundfonts[mididevice]:
+					logger_plugconv.info('Using '+mididevice.upper()+' SF2.')
+					sf2_loc = dv_config.paths_soundfonts[mididevice]
 
 		if sf2_loc != None:
 			extpluglog.convinternal('MIDI', 'MIDI', 'SoundFont2', 'SoundFont2')

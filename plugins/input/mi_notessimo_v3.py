@@ -75,6 +75,7 @@ class sample_manager():
 
 	def add_sample(project_obj, convproj_obj, sample_id):
 		samplekey = 0
+		sampleref_obj = None
 		if sample_id in project_obj.samples:
 			notet_sample = project_obj.samples[sample_id]
 			#print(notet_sample.name)
@@ -87,10 +88,10 @@ class sample_manager():
 					realfilepath = os.path.join(samplefolder,zipfilepath)
 					sampleref_obj = convproj_obj.add_sampleref(sample_id, realfilepath, None)
 			samplekey = do_key(notet_sample.pitch, notet_sample.octave, notet_sample.accidental)
-			return sample_id, notet_sample, samplekey
+			return sample_id, notet_sample, samplekey, sampleref_obj
 		return None, None, 0
 
-DEBUGINSTNAMES = True
+DEBUGINSTNAMES = False
 
 from functions import note_data
 
@@ -104,7 +105,7 @@ class inst_manager():
 	fxnum = 2
 
 	def proc_inst(convproj_obj, plugin_obj, instid, inst_set, data_obj):
-		sampleid, notet_sample, samplekey = sample_manager.add_sample(data_obj, convproj_obj, inst_set.sample_1)
+		sampleid, notet_sample, samplekey, sampleref_obj = sample_manager.add_sample(data_obj, convproj_obj, inst_set.sample_1)
 
 		start_pitch = do_key(inst_set.pitch_start_1, inst_set.octave_start_1, inst_set.accidental_start_1)
 		end_pitch = do_key(inst_set.pitch_end_1, inst_set.octave_end_1, inst_set.accidental_end_1)
@@ -116,7 +117,8 @@ class inst_manager():
 			sp_obj.loop_active = notet_sample.loop_type == 'Loop'
 			sp_obj.loop_start = notet_sample.start
 			sp_obj.loop_end = notet_sample.end
-			#print(notet_sample.start, notet_sample.end)
+			sp_obj.start = notet_sample.sample_start
+			sp_obj.end = sampleref_obj.dur_samples
 
 	def add_inst(convproj_obj, instid, project_obj, maindata_obj):
 		inst_obj = convproj_obj.add_instrument(instid)
@@ -163,7 +165,7 @@ class inst_manager():
 				plugin_obj.role = 'synth'
 				inst_obj.pluginid = instid
 
-				sampleid, notet_sample, samplekey = sample_manager.add_sample(notet_data, convproj_obj, notet_inst.sample)
+				sampleid, notet_sample, samplekey, sampleref_obj = sample_manager.add_sample(notet_data, convproj_obj, notet_inst.sample)
 
 				sp_obj = plugin_obj.samplepart_add('sample')
 				sp_obj.sampleref = sampleid
@@ -172,10 +174,13 @@ class inst_manager():
 				sp_obj.loop_start = notet_sample.start
 				sp_obj.loop_end = notet_sample.end
 				sp_obj.start = notet_sample.sample_start
-				sp_obj.end = notet_sample.sample_end
+				sp_obj.end = sampleref_obj.dur_samples
 
 				inst_obj.datavals.add('middlenote', samplekey)
 				
+				outvol = xtramath.from_db(notet_sample.volume/3)
+				inst_obj.params.add('vol', outvol, 'float')
+
 				#print('S', dfrom, 0, notet_inst.sample)
 				#inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data)
 
@@ -245,6 +250,7 @@ class input_notessimo_v3(plugins.base):
 			for nnn in sheet_data.get_allnotes():
 				nle_obj.notelist.add_m(nnn.inst, nnn.pos*2, nnn.dur*4, nnn.get_note(), 1, None)
 				if nnn.inst not in used_insts: used_insts.append(nnn.inst)
+			nle_obj.notelist.sort()
 
 			sheetrealsize[sheet_id] = nle_obj.notelist.get_dur()
 

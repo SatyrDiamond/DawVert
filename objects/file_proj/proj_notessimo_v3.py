@@ -6,13 +6,16 @@ import zipfile
 from objects.data_bytes import bytereader
 import xml.etree.ElementTree as ET
 from functions import note_data
+import os
+
+import logging
+logger_projparse = logging.getLogger('projparse')
 
 class note_note:
 	__slots__ = ['pos','note','layer','inst','sharp','flat','vol','pan','dur','vars']
 	def __init__(self):
 		self.pos = 0
 		self.note = 0
-		self.layer = 0
 		self.inst = None
 		self.sharp = False
 		self.flat = False
@@ -22,10 +25,10 @@ class note_note:
 		self.vars = {}
 
 	def get_note(self):
-		n_key = (self.note-41)*-1
+		n_key = (self.note-42)*-1
 		out_oct = int(n_key/7)
 		out_key = n_key - out_oct*7
-		out_note = note_data.keynum_to_note(out_key, out_oct-3)
+		out_note = note_data.keynum_to_note(out_key, out_oct-5)
 		out_offset = 0
 		if self.sharp: out_offset = 1
 		if self.flat: out_offset = -1
@@ -65,24 +68,11 @@ def var_get(xml_data):
 			t = i.get('type')
 			pv = i.get('value')
 			if t == 'float': pv = float(pv)
-			if t == 'int': pv = int(pv)
+			if t == 'int': pv = int(float(pv))
 			vars_o.append([i.get('id'), t, pv])
 		for i in v.findall('set'): 
 			sets_o.append([i.get('id'), [x for x in var_in(i)]])
 	return vars_o, sets_o
-
-class notev3_instrument:
-	def __init__(self):
-		self.vars = {}
-		self.id = None
-		self.name = ''
-		self.date = ''
-		self.type = ''
-		self.data = ''
-		self.hash = ''
-
-	def load(self, input_file):
-		x_inst = ET.fromstring(zip_data.read('instruments.xml'))
 
 class notev3_entry:
 	def __init__(self, xml_data):
@@ -131,7 +121,9 @@ class notev3_sample:
 			self.date = x_samp.get('date')
 			self.type = x_samp.get('type')
 			self.hash = x_samp.get('hash')
+
 			vars_o, sets_o = var_get(x_samp)
+
 			for i, t, v in vars_o:
 				if i == 'frequency': self.frequency = v
 				elif i == 'pitch': self.pitch = v
@@ -156,7 +148,8 @@ class notev3_sample:
 				elif i == 'author': self.author = v
 				elif i == 'license': self.license = v
 			return True
-		except: return False
+		except:
+			return False
 
 class notev3_instrument_set:
 	def __init__(self):
@@ -339,7 +332,6 @@ class notev3_sheet:
 		self.author = ''
 		self.license = 'Undefined'
 		self.layers = {}
-		self.used_laynums = []
 
 	def load(self, zip_data, id):
 		filename = 'sheets/'+id+'.xml'
@@ -356,19 +348,19 @@ class notev3_sheet:
 				if x_items:
 					for x_item in x_items[0]:
 						if x_item.tag == 'item':
-							id = x_item.get('id')
+							idd = x_item.get('id')
 							layer_obj = notev3_sheet_layer()
 							layer_obj.name = x_item.get('name')
 							layer_obj.parent = x_item.get('parent')
 							layer_obj.noDelete = x_item.get('noDelete') == 'true'
-							self.layers[id] = layer_obj
+							self.layers[idd] = layer_obj
 
 				x_objects = x_layerdata.findall('objects')
 				if x_objects:
 					for x_object in x_objects[0]:
 						if x_object.tag == 'object':
-							id = x_item.get('id')
-							layer_obj = self.layers[id]
+							idd = x_item.get('id')
+							layer_obj = self.layers[idd]
 							layer_obj.date = x_object.get('date')
 							vars_o, sets_o = var_get(x_object)
 							for i, t, v in vars_o:
@@ -379,7 +371,6 @@ class notev3_sheet:
 								if i == 'comments': layer_obj.comments = v
 
 							notes = x_object.findall('obj')
-							if notes: self.used_laynums.append(id)
 							for note in notes:
 								note_obj = note_note()
 								note_obj.pos = float(note.get('x'))*2
@@ -412,9 +403,19 @@ class notev3_sheet:
 				elif i == 'vol_r': self.vol_r = v
 				elif i == 'vol_s': self.vol_s = v
 				elif i == 'volume': self.volume = v
+				elif i == 'width': self.width = v
+				elif i == 'tempo': self.tempo = v
+				elif i == 'color': self.color = v
 
 			return True
 		else: return False
+
+	def get_allnotes(self):
+		outnotes = []
+		for _, layer in self.layers.items(): 
+			for x in layer.notes: outnotes.append(x)
+		return outnotes
+
 
 class note_placement:
 	def __init__(self):
@@ -477,19 +478,19 @@ class notev3_song:
 				if x_items:
 					for x_item in x_items[0]:
 						if x_item.tag == 'item':
-							id = int(x_item.get('id'))-1
+							iid = int(x_item.get('id'))-1
 							layer_obj = notev3_song_layer()
 							layer_obj.name = x_item.get('name')
 							layer_obj.parent = x_item.get('parent')
 							layer_obj.noDelete = x_item.get('noDelete') == 'true'
-							self.layers[id] = layer_obj
+							self.layers[iid] = layer_obj
 
 				x_objects = x_layerdata.findall('objects')
 				if x_objects:
 					for x_object in x_objects[0]:
 						if x_object.tag == 'object':
-							id = int(x_object.get('id'))-1
-							layer_obj = self.layers[id]
+							iid = int(x_object.get('id'))-1
+							layer_obj = self.layers[iid]
 							layer_obj.date = x_object.get('date')
 							vars_o, sets_o = var_get(x_object)
 							for i, t, v in vars_o:
@@ -506,10 +507,11 @@ class notev3_song:
 								row = int(pl.get('y'))
 								pl_obj.len = float(pl.get('l2'))
 								pl_obj.id = pl.get('id')
-								pl_obj.z = float(pl.get('z'))
+								zval = pl.get('z')
+								if zval: pl_obj.z = float(zval)
 								pl_obj.uid = int(pl.get('uid'))
+								if row not in self.layers: self.layers[row] = notev3_song_layer()
 								self.layers[row].spots.append(pl_obj)
-
 
 			vars_o, sets_o = var_get(x_sheet)
 			for i, t, v in vars_o:
@@ -537,8 +539,6 @@ class notev3_song:
 			return True
 		else: return False
 
-
-
 class notev3_file:
 	def __init__(self):
 		self.instruments_def = {}
@@ -551,39 +551,43 @@ class notev3_file:
 		self.sheets = {}
 		self.songs = {}
 
+		self.zip_data = {}
+		
 	def load_from_file(self, input_file):
-		zip_data = zipfile.ZipFile(input_file, 'r')
+		self.zip_data = zipfile.ZipFile(input_file, 'r')
 
-		parse_xmlitems(zip_data, 'instruments.xml', self.instruments_def)
-		parse_xmlitems(zip_data, 'samples.xml', self.samples_def)
-		parse_xmlitems(zip_data, 'sheets.xml', self.sheets_def)
-		parse_xmlitems(zip_data, 'songs.xml', self.songs_def)
+		sngfile = os.path.basename(input_file)
 
-		print('[notessimo]', len(self.instruments_def), 'Instruments')
+		parse_xmlitems(self.zip_data, 'instruments.xml', self.instruments_def)
+		parse_xmlitems(self.zip_data, 'samples.xml', self.samples_def)
+		parse_xmlitems(self.zip_data, 'sheets.xml', self.sheets_def)
+		parse_xmlitems(self.zip_data, 'songs.xml', self.songs_def)
+
+		if self.instruments_def: logger_projparse.info('notessimo: '+sngfile+': '+str(len(self.instruments_def))+' Instruments')
 
 		for id, data in self.instruments_def.items():
 			inst_data = notev3_instrument()
-			ifvalid = inst_data.load(zip_data, id)
+			ifvalid = inst_data.load(self.zip_data, id)
 			self.instruments[id] = inst_data
 
-		print('[notessimo]', len(self.samples_def), 'Samples')
-		for filename in zip_data.namelist():
+		if self.samples_def: logger_projparse.info('notessimo: '+sngfile+': '+str(len(self.samples_def))+' Samples')
+		for filename in self.zip_data.namelist():
 			if filename.startswith('samples/'):
 				id = filename.split('/')[1].split('.')[0]
 				samp_data = notev3_sample()
-				ifvalid = samp_data.load(zip_data, filename)
+				ifvalid = samp_data.load(self.zip_data, filename)
 				self.samples[id] = samp_data
 
-		print('[notessimo]', len(self.sheets_def), 'Sheets')
+		if self.sheets_def: logger_projparse.info('notessimo: '+sngfile+': '+str(len(self.sheets_def))+' Sheets')
 		for id, data in self.sheets_def.items():
 			sheet_obj = notev3_sheet()
-			ifvalid = sheet_obj.load(zip_data, id)
+			ifvalid = sheet_obj.load(self.zip_data, id)
 			self.sheets[id] = sheet_obj
 
-		print('[notessimo]', len(self.songs_def), 'Songs')
+		if self.songs_def: logger_projparse.info('notessimo: '+sngfile+': '+str(len(self.songs_def))+' Songs')
 		for id, data in self.songs_def.items():
 			song_obj = notev3_song()
-			ifvalid = song_obj.load(zip_data, id)
+			ifvalid = song_obj.load(self.zip_data, id)
 			self.songs[id] = song_obj
 
 		return True

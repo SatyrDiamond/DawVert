@@ -285,18 +285,18 @@ def do_clips(convproj_obj, track_obj, clip, clips):
 class input_dawproject(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'dawproject'
-	def gettype(self): return 'r'
+	def get_shortname(self): return 'dawproject'
+	def get_name(self): return 'DawProject'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Dawproject'
-		dawinfo_obj.file_ext = 'dawproject'
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.audio_filetypes = ['wav', 'mp3', 'ogg', 'flac']
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.audio_stretch = ['warp']
-		dawinfo_obj.audio_nested = True
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'dawproject'
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
+		in_dict['placement_cut'] = True
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['audio_stretch'] = ['warp']
+		in_dict['audio_nested'] = True
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)

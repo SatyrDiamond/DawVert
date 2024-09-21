@@ -13,15 +13,15 @@ import plugins
 class input_gt_mnbs(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'mnbs'
-	def gettype(self): return 'rm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Minecraft Note Block Studio'
-		dawinfo_obj.file_ext = 'nbs'
-		dawinfo_obj.plugin_included = ['midi']
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['sampler:single']
+	def get_shortname(self): return 'mnbs'
+	def get_name(self): return 'Minecraft Note Block Studio'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'nbs'
+		in_dict['plugin_included'] = ['midi']
+		in_dict['track_nopl'] = True
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['sampler:single']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'rm'

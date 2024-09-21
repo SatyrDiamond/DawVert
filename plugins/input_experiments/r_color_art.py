@@ -8,7 +8,7 @@ import plugins
 class input_color_art(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'color_art'
+	def get_shortname(self): return 'color_art'
 	def gettype(self): return 'r'
 	def supported_autodetect(self): return False
 	def getdawinfo(self, dawinfo_obj): 

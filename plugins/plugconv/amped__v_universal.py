@@ -17,11 +17,11 @@ def eqpro_filterid(filter_type):
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
-	def getplugconvinfo(self, plugconv_obj): 
-		plugconv_obj.in_plugins = [['universal', None]]
-		plugconv_obj.in_daws = []
-		plugconv_obj.out_plugins = [['native-amped', None]]
-		plugconv_obj.out_daws = ['amped']
+	def get_prop(self, in_dict): 
+		in_dict['in_plugins'] = [['universal', None]]
+		in_dict['in_daws'] = []
+		in_dict['out_plugins'] = [['native-amped', None]]
+		in_dict['out_daws'] = ['amped']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
 		if plugin_obj.type.subtype == 'filter':

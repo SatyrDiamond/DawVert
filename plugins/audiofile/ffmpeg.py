@@ -11,9 +11,12 @@ class input_pyav(plugins.base):
 		usable = False
 
 	def is_dawvert_plugin(self): return 'audiofile'
-	def getshortname(self): return 'ffmpeg'
-	def getaudiofileinfo(self, audiofileinfo_obj):
-		audiofileinfo_obj.file_formats = ['wav', 'mp3', 'flac', 'ogg', 'wv']
+	def get_shortname(self): return 'ffmpeg'
+	def get_name(self): return 'FFmpeg'
+	def get_priority(self): return 0
+	def supported_autodetect(self): return False
+	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg', 'wv']
+
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		valid = False
 		if self.usable:

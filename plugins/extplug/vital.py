@@ -371,18 +371,19 @@ class extplugin(plugins.base):
 		self.plugin_type = None
 
 	def is_dawvert_plugin(self): return 'extplugin'
-	def getshortname(self): return 'vital'
-	def getextpluginfo(self, plugconv_obj): 
-		plugconv_obj.ext_formats = ['vst2']
-		plugconv_obj.type = 'matt_tytel'
-		plugconv_obj.subtype = 'vital'
+	def get_shortname(self): return 'vital'
+	def get_name(self): return 'Vital'
+	def get_prop(self, in_dict): 
+		in_dict['ext_formats'] = ['vst2']
+		in_dict['type'] = 'matt_tytel'
+		in_dict['subtype'] = 'vital'
 
-	def check_exists(inplugname):
+	def check_exists(self, inplugname):
 		outlist = []
 		if plugin_vst2.check_exists('id', 1449751649): outlist.append('vst2')
 		return outlist
 
-	def check_plug(plugin_obj): 
+	def check_plug(self, plugin_obj): 
 		if plugin_obj.check_wildmatch('vst2', None):
 			if plugin_obj.datavals.match('fourid', 1449751649): return 'vst2'
 		return None

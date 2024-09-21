@@ -105,20 +105,19 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 class output_amped(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'Amped Studio'
-	def getshortname(self): return 'amped'
+	def get_name(self): return 'Amped Studio'
+	def get_shortname(self): return 'amped'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Amped Studio'
-		dawinfo_obj.file_ext = 'amped'
-		dawinfo_obj.audio_filetypes = ['wav', 'mp3', 'ogg', 'flac']
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.track_hybrid = True
-		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.audio_nested = True
-		dawinfo_obj.plugin_included = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'amped'
+		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
+		in_dict['placement_cut'] = True
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['track_hybrid'] = True
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_nested'] = True
+		in_dict['plugin_included'] = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
 	def parse(self, convproj_obj, output_file):
 		global counter_id
 		global counter_devid

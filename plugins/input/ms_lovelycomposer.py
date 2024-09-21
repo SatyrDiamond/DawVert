@@ -127,13 +127,13 @@ def chord_parser(chordval):
 class input_lc(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'lovelycomposer'
-	def gettype(self): return 'rm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Lovely Composer'
-		dawinfo_obj.file_ext = 'jsonl'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.plugin_included = ['universal:synth-osc']
+	def get_shortname(self): return 'lovelycomposer'
+	def get_name(self): return 'Lovely Composer'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'jsonl'
+		in_dict['track_lanes'] = True
+		in_dict['plugin_included'] = ['universal:synth-osc']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'ms'

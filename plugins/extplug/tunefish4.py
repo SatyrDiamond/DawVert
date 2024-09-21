@@ -14,19 +14,20 @@ class extplugin(plugins.base):
 		self.plugin_type = None
 
 	def is_dawvert_plugin(self): return 'extplugin'
-	def getshortname(self): return 'tunefish4'
-	def getextpluginfo(self, plugconv_obj): 
-		plugconv_obj.ext_formats = ['vst2', 'vst3']
-		plugconv_obj.type = 'brain_control'
-		plugconv_obj.subtype = 'tunefish4'
+	def get_shortname(self): return 'tunefish4'
+	def get_name(self): return 'Tunefish4'
+	def get_prop(self, in_dict): 
+		in_dict['ext_formats'] = ['vst2', 'vst3']
+		in_dict['type'] = 'brain_control'
+		in_dict['subtype'] = 'tunefish4'
 
-	def check_exists(inplugname):
+	def check_exists(self, inplugname):
 		outlist = []
 		if plugin_vst2.check_exists('id', 1416000308): outlist.append('vst2')
 		if plugin_vst3.check_exists('id', '5653545466733474756E656669736834'): outlist.append('vst3')
 		return outlist
 
-	def check_plug(plugin_obj): 
+	def check_plug(self, plugin_obj): 
 		if plugin_obj.check_wildmatch('vst2', None):
 			if plugin_obj.datavals.match('fourid', 1416000308): return 'vst2'
 		if plugin_obj.check_wildmatch('vst3', None):

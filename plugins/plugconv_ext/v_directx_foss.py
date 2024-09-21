@@ -11,10 +11,10 @@ from functions import xtramath
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
-	def getplugconvinfo(self, plugconv_ext_obj): 
-		plugconv_ext_obj.in_plugin = ['directx', None]
-		plugconv_ext_obj.ext_formats = ['vst2']
-		plugconv_ext_obj.plugincat = ['foss']
+	def get_prop(self, in_dict): 
+		in_dict['in_plugin'] = ['directx', None]
+		in_dict['ext_formats'] = ['vst2']
+		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 

@@ -76,14 +76,14 @@ def add_single_sampler(convproj_obj, it_samp, sampleidnum):
 class input_it(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'it'
-	def gettype(self): return 'm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Impulse Tracker'
-		dawinfo_obj.file_ext = 'it'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['sampler:single', 'sampler:multi']
+	def get_shortname(self): return 'it'
+	def get_name(self): return 'Impulse Tracker'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict):
+		in_dict['file_ext'] = 'it'
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['sampler:single', 'sampler:multi']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

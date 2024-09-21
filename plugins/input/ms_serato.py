@@ -59,12 +59,12 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 class input_serato(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'serato'
-	def gettype(self): return 'rs'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.name = 'Serato Studio'
-		dawinfo_obj.file_ext = 'ssp'
+	def get_shortname(self): return 'serato'
+	def get_name(self): return 'Serato Studio'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['track_lanes'] = True
+		in_dict['file_ext'] = 'ssp'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'ms'

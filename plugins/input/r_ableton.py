@@ -347,18 +347,18 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 class input_ableton(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'ableton'
-	def gettype(self): return 'r'
+	def get_shortname(self): return 'ableton'
+	def get_name(self): return 'Ableton Live 11'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Ableton Live 11'
-		dawinfo_obj.file_ext = 'als'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.audio_stretch = ['warp']
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.plugin_included = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'als'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['audio_stretch'] = ['warp']
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['plugin_included'] = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		global autoid_assoc

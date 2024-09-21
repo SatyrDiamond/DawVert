@@ -46,14 +46,13 @@ class onebit_external:
 class input_1bitdragon(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return '1bitdragon'
-	def getname(self): return '1bitdragon'
-	def gettype(self): return 'rm'
+	def get_shortname(self): return '1bitdragon'
+	def get_name(self): return '1BITDRAGON'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = '1BITDRAGON'
-		dawinfo_obj.file_ext = '1bd'
-		dawinfo_obj.track_lanes = True
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = '1bd'
+		in_dict['track_lanes'] = True
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.set_timings(4, True)
 		convproj_obj.type = 'ms'

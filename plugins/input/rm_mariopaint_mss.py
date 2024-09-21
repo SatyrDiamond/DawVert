@@ -35,15 +35,15 @@ class mss_chord():
 class input_mariopaint_mss(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'mariopaint_mss'
-	def gettype(self): return 'm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.file_ext = 'mss'
-		dawinfo_obj.name = 'Advanced Mario Sequencer'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.plugin_included = ['midi']
+	def get_shortname(self): return 'mariopaint_mss'
+	def get_name(self): return 'Advanced Mario Sequencer'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'mss'
+		in_dict['track_lanes'] = True
+		in_dict['track_nopl'] = True
+		in_dict['fxtype'] = 'rack'
+		in_dict['plugin_included'] = ['midi']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		output = False

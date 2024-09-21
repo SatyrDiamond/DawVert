@@ -18,14 +18,14 @@ IGNORE_ERRORS = False
 class input_mod(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'mod'
-	def gettype(self): return 'm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Protracker Module'
-		dawinfo_obj.file_ext = 'mod'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['sampler:single']
+	def get_shortname(self): return 'mod'
+	def get_name(self): return 'Protracker Module'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'mod'
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['sampler:single']
 	def supported_autodetect(self): return False
 
 	def parse(self, convproj_obj, input_file, dv_config):

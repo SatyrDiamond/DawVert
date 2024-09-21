@@ -45,17 +45,17 @@ def autopoints_set(autoloc, points, add, mul):
 class input_soundation(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'soundation'
-	def gettype(self): return 'r'
+	def get_shortname(self): return 'soundation'
+	def get_name(self): return 'Soundation'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Soundation'
-		dawinfo_obj.file_ext = 'sng'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.plugin_included = ['sampler:single','synth-nonfree:europa','native-soundation']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'sng'
+		in_dict['placement_cut'] = True
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['plugin_included'] = ['sampler:single','synth-nonfree:europa','native-soundation']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 
 	def parse(self, i_convproj_obj, input_file, dv_config):
 		global dataset

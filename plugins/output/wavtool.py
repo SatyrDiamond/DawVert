@@ -106,19 +106,18 @@ def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoi
 class output_wavtool(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'Wavtool'
-	def getshortname(self): return 'wavtool'
+	def get_name(self): return 'Wavtool'
+	def get_shortname(self): return 'wavtool'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Wavtool'
-		dawinfo_obj.file_ext = 'zip'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.audio_stretch = ['warp', 'rate']
-		dawinfo_obj.plugin_included = ['sampler:single']
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.plugin_ext = ['vst2']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'zip'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['audio_stretch'] = ['warp', 'rate']
+		in_dict['plugin_included'] = ['sampler:single']
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
 		global audio_id
 		global wavtool_obj

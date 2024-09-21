@@ -46,16 +46,16 @@ class reader_midifile_class():
 class input_midi(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'midi'
-	def gettype(self): return 'rm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'MIDI'
-		dawinfo_obj.file_ext = 'mid'
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.fxrack_params = ['vol','pan','pitch']
-		dawinfo_obj.auto_types = ['nopl_ticks']
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.plugin_included = ['midi']
+	def get_shortname(self): return 'midi'
+	def get_name(self): return 'MIDI'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'mid'
+		in_dict['fxtype'] = 'rack'
+		in_dict['fxrack_params'] = ['vol','pan','pitch']
+		in_dict['auto_types'] = ['nopl_ticks']
+		in_dict['track_nopl'] = True
+		in_dict['plugin_included'] = ['midi']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

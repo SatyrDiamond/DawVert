@@ -176,7 +176,7 @@ class core:
 		global out_dawinfo
 		in_type = self.convproj_obj.type
 		out_type = self.currentplug_output.selected_plugin.plug_obj.gettype()
-		in_dawinfo = self.currentplug_output.selected_plugin.prop_obj
+		in_dawinfo = self.currentplug_input.selected_plugin.prop_obj
 		out_dawinfo = self.currentplug_output.selected_plugin.prop_obj
 
 		logger_core.info('' + convproj.typelist[in_type] + ' > ' + convproj.typelist[out_type])

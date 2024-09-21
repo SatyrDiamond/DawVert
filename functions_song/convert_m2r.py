@@ -53,6 +53,7 @@ def convert(convproj_obj):
 		for inst_id, placements in comb_split.items():
 			if inst_id in track_stor:
 				lane_obj = track_stor[inst_id].add_lane(str(pl_id))
+				lane_obj.visual.color.merge(playlist_obj.visual.color)
 				if placements[0]: lane_obj.placements.pl_notes.data = placements[0]
 				if placements[1]: lane_obj.placements.notelist = placements[1]
 

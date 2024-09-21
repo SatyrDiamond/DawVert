@@ -269,17 +269,24 @@ class cvpj_track:
 
 		lanefit_obj = lanefit()
 
+		colors = []
+
 		for l_name, l_data in old_lanes.items():
+			if l_data.visual.color: colors.append(l_data.visual.color)
 			for npl in l_data.placements.pl_notes: lanefit_obj.add_pl(npl, False)
 			for apl in l_data.placements.pl_audio: lanefit_obj.add_pl(apl, True)
+
+		allcolor = colors[0] if (all(x == colors[0] for x in colors) and colors) else None
 
 		if len(old_lanes) >= len(lanefit_obj.mergeddata_notes):
 			self.lanes = {}
 			for lanenum in range(len(lanefit_obj.mergeddata_notes)):
 				laneid = 'lanefit_'+str(lanenum)
-				self.lanes[laneid] = cvpj_lane(self.type, self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
-				self.lanes[laneid].placements.pl_notes = lanefit_obj.mergeddata_notes[lanenum]
-				self.lanes[laneid].placements.pl_audio = lanefit_obj.mergeddata_audio[lanenum]
+				lane_obj = cvpj_lane(self.type, self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
+				lane_obj.placements.pl_notes = lanefit_obj.mergeddata_notes[lanenum]
+				lane_obj.placements.pl_audio = lanefit_obj.mergeddata_audio[lanenum]
+				if allcolor: lane_obj.visual.color = copy.deepcopy(allcolor)
+				self.lanes[laneid] = lane_obj
 
 	def change_timings(self, time_ppq, time_float):
 		self.placements.change_timings(time_ppq, time_float)

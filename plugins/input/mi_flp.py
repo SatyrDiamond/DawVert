@@ -35,6 +35,8 @@ filtertype = [
 ['low_pass','sv'],
 ]
 
+commoncolors = [11117467,3162224,4171773,4478854,4734799,4934768,5270418,5331300,6114897,6972764,7168597,7232607,7301463,7565918,7689020,8026220,8152667,8743259,9996162]
+
 def calc_time(input_val):
 	return ((((input_val/65535)*3.66)**4.5)/8)**0.6
 
@@ -302,6 +304,8 @@ class input_flp(plugins.base):
 				inst_obj.visual.name = fl_channel_obj.name if fl_channel_obj.name else ''
 				inst_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
 
+				inst_obj.visual.color.priority = -1 if (fl_channel_obj.color in commoncolors) else 0
+
 				inst_obj.datavals.add('middlenote', fl_channel_obj.middlenote-60)
 				inst_obj.params.add('enabled', fl_channel_obj.enabled, 'bool')
 				inst_obj.params.add('pitch', fl_channel_obj.basicparams.pitch/100, 'float')
@@ -529,7 +533,10 @@ class input_flp(plugins.base):
 				if playlistline not in used_tracks: used_tracks.append(playlistline)
 
 				if playlistline not in temp_pl_track: 
-					temp_pl_track[playlistline] = convproj_obj.add_playlist(playlistline-1, 1, True)
+					playlist_obj = convproj_obj.add_playlist(playlistline-1, 1, True)
+					color = fl_arrangement.tracks[playlistline].color.to_bytes(4, "little")
+					if color != b'HQV\x00': playlist_obj.visual.color.set_int([color[0],color[1],color[2]])
+					temp_pl_track[playlistline] = playlist_obj
 
 				if item.itemindex > item.patternbase:
 					placement_obj = temp_pl_track[playlistline].placements.add_notes_indexed()
@@ -597,7 +604,11 @@ class input_flp(plugins.base):
 
 			fxchannel_obj = convproj_obj.add_fxchan(mixer_id)
 			if mixer_obj.name: fxchannel_obj.visual.name = mixer_obj.name
-			if mixer_obj.color: fxchannel_obj.visual.color.set_int(conv_color(mixer_obj.color))
+			if mixer_obj.color: 
+				if mixer_obj.color not in [9801863, 8814968]:
+					fxchannel_obj.visual.color.set_int(conv_color(mixer_obj.color))
+
+			#print(mixer_obj.color)
 
 			if mixer_obj.docked_center: dockedpos = 0
 			else: dockedpos = -1 if not mixer_obj.docked_pos else 1

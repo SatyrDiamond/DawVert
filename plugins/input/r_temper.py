@@ -11,13 +11,13 @@ import json
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'temper'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Temper'
-		dawinfo_obj.file_ext = ''
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.auto_types = ['pl_points']
+	def get_shortname(self): return 'temper'
+	def get_name(self): return 'Temper'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = ''
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['auto_types'] = ['pl_points']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		output = False

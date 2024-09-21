@@ -322,8 +322,9 @@ def ampedauto_to_cvpjauto(autopoints):
 class input_amped(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'amped'
-	def gettype(self): return 'r'
+	def get_shortname(self): return 'amped'
+	def get_name(self): return 'Amped Studio'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return True
 	def detect(self, input_file): 
 		try:
@@ -333,17 +334,16 @@ class input_amped(plugins.base):
 		except:
 			return False
 
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Amped Studio'
-		dawinfo_obj.file_ext = 'amped'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = ['wav', 'mp3', 'ogg', 'flac']
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.track_hybrid = True
-		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.audio_nested = True
-		dawinfo_obj.plugin_included = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'amped'
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
+		in_dict['placement_cut'] = True
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['track_hybrid'] = True
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_nested'] = True
+		in_dict['plugin_included'] = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		global samplefolder

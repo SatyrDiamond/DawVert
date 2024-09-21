@@ -30,14 +30,14 @@ def decode_tempopl(in_val, globaltempo): return ((((in_val-30)*-6)+60)/120)*glob
 class input_soundclub2(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'soundclub2'
-	def gettype(self): return 'rs'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Sound Club 2'
-		dawinfo_obj.file_ext = 'sn2'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['sampler:single']
+	def get_shortname(self): return 'soundclub2'
+	def get_name(self): return 'Sound Club 2'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'sn2'
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['sampler:single']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

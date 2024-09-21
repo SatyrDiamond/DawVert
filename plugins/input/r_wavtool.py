@@ -361,17 +361,17 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 class input_wavtool(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'wavtool'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Wavtool'
-		dawinfo_obj.file_ext = 'zip'
-		dawinfo_obj.fxtype = 'track'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.audio_stretch = ['warp']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
-		dawinfo_obj.plugin_included = ['native-wavtool','sampler:single','sampler:multi']
+	def get_shortname(self): return 'wavtool'
+	def get_name(self): return 'Wavtool'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'zip'
+		in_dict['fxtype'] = 'track'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['audio_stretch'] = ['warp']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['plugin_included'] = ['native-wavtool','sampler:single','sampler:multi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global zip_data

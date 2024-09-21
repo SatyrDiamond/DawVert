@@ -11,12 +11,12 @@ logger_plugconv = logging.getLogger('plugconv')
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
-	def getplugconvinfo(self, plugconv_obj): 
-		plugconv_obj.priority = 200
-		plugconv_obj.in_plugins = [['midi', None]]
-		plugconv_obj.in_daws = []
-		plugconv_obj.out_plugins = [['soundfont2', None]]
-		plugconv_obj.out_daws = []
+	def get_priority(self): return 100
+	def get_prop(self, in_dict): 
+		in_dict['in_plugins'] = [['midi', None]]
+		in_dict['in_daws'] = []
+		in_dict['out_plugins'] = [['soundfont2', None]]
+		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
 		sf2_loc = None
@@ -29,7 +29,7 @@ class plugconv(plugins.base):
 					logger_plugconv.info('Using '+mididevice.upper()+' SF2.')
 					sf2_loc = dv_config.paths_soundfonts[mididevice]
 
-		if sf2_loc != None:
+		if not sf2_loc:
 			extpluglog.convinternal('MIDI', 'MIDI', 'SoundFont2', 'SoundFont2')
 			plugin_obj.replace('soundfont2', None)
 			convproj_obj.add_fileref(sf2_loc, sf2_loc, None)

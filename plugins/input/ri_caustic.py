@@ -92,18 +92,18 @@ class mixertrack:
 class input_cvpj_r(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'caustic'
-	def gettype(self): return 'ri'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Caustic 3'
-		dawinfo_obj.file_ext = 'caustic'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = ['loop']
-		dawinfo_obj.audio_stretch = ['warp']
-		dawinfo_obj.auto_types = ['pl_points', 'nopl_points']
-		dawinfo_obj.plugin_included = ['native-caustic','sampler:single','sampler:multi']
-		dawinfo_obj.fxchain_mixer = True
-		dawinfo_obj.audio_filetypes = ['wav']
+	def get_shortname(self): return 'caustic'
+	def get_name(self): return 'Caustic 3'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'caustic'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop']
+		in_dict['audio_stretch'] = ['warp']
+		in_dict['auto_types'] = ['pl_points', 'nopl_points']
+		in_dict['plugin_included'] = ['native-caustic','sampler:single','sampler:multi']
+		in_dict['fxchain_mixer'] = True
+		in_dict['audio_filetypes'] = ['wav']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global dataset

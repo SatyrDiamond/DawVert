@@ -172,18 +172,17 @@ def add_timesig(x_siglist, pos, numerator, denominator):
 
 class output_cvpj(plugins.base):
 	def __init__(self): pass
-	def getname(self): return 'MusE'
+	def get_name(self): return 'MusE'
 	def is_dawvert_plugin(self): return 'output'
-	def getshortname(self): return 'muse'
+	def get_shortname(self): return 'muse'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return ['amd64', 'i386']
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'MusE Sequencer'
-		dawinfo_obj.file_ext = 'med'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.auto_types = ['nopl_points']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'med'
+		in_dict['track_lanes'] = True
+		in_dict['placement_cut'] = True
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['auto_types'] = ['nopl_points']
 	def getsupportedplugformats(self): return ['vst2']
 	def getsupportedplugins(self): return []
 	def getfileextension(self): return 'med'

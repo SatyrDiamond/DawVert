@@ -45,6 +45,9 @@ class cvpj_audioports:
 			self.ports.append([x])
 
 class cvpj_plugin:
+
+	extplug_selector = dv_plugins.create_selector('extplugin')
+
 	def __init__(self):
 		self.type = dualstr()
 		self.visual = visual.cvpj_visual()
@@ -375,19 +378,17 @@ class cvpj_plugin:
 		return plugdatamanu.plug_manu(self, convproj_obj, pluginid)
 
 	def from_ext_plugin(self, convproj_obj, pluginid, exttype):
-		for name, info_extplug in dv_plugins.iter_extplug():
-			if exttype in info_extplug.ext_formats:
-				exttsobj = info_extplug.classfunc()
-				if info_extplug.classfunc.check_plug(self):
-					exttsobj.decode_data(exttype, self)
-					exttsobj.params_from_plugin(convproj_obj, self, pluginid, exttype)
+		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
+			if exttype in prop_obj.ext_formats:
+				if dvplug_obj.check_plug(self):
+					dvplug_obj.decode_data(exttype, self)
+					dvplug_obj.params_from_plugin(convproj_obj, self, pluginid, exttype)
 
 	def to_ext_plugin(self, convproj_obj, pluginid, exttype, extplat):
-		for name, info_extplug in dv_plugins.iter_extplug():
-			if self.check_wildmatch(info_extplug.type, info_extplug.subtype):
-				exttsobj = info_extplug.classfunc()
-				exttsobj.params_to_plugin(convproj_obj, self, pluginid, exttype)
-				exttsobj.encode_data(exttype, convproj_obj, self, extplat)
+		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
+			if self.check_wildmatch(prop_obj.type, prop_obj.subtype):
+				dvplug_obj.params_to_plugin(convproj_obj, self, pluginid, exttype)
+				dvplug_obj.encode_data(exttype, convproj_obj, self, extplat)
 
 	def plugts_transform(self, plugts_path, plugts_tr, convproj_obj, pluginid):
 		globalstore.plugts.load(plugts_path, plugts_path)

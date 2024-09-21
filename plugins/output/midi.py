@@ -24,18 +24,17 @@ def add_cmd(i_list, i_pos, i_cmd):
 class output_cvpj_f(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'MIDI'
-	def getshortname(self): return 'midi'
+	def get_name(self): return 'MIDI'
+	def get_shortname(self): return 'midi'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'MIDI'
-		dawinfo_obj.file_ext = 'mid'
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.fxrack_params = ['vol','pan','pitch']
-		dawinfo_obj.auto_types = ['nopl_ticks']
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.plugin_included = ['midi']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'mid'
+		in_dict['fxtype'] = 'rack'
+		in_dict['fxrack_params'] = ['vol','pan','pitch']
+		in_dict['auto_types'] = ['nopl_ticks']
+		in_dict['track_nopl'] = True
+		in_dict['plugin_included'] = ['midi']
 	def parse(self, convproj_obj, output_file):
 		convproj_obj.change_timings(384, False)
 		

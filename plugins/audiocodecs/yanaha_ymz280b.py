@@ -5,11 +5,14 @@ import plugins
 
 class input_codec(plugins.base):
 	def is_dawvert_plugin(self): return 'audiocodec'
-	def getshortname(self): return 'yamaha_ymz280b'
-	def getaudiocodecinfo(self, audiocodecinfo_obj):
-		audiocodecinfo_obj.name = "Yamaha YMZ280B"
-		audiocodecinfo_obj.encode_supported = True
-		audiocodecinfo_obj.decode_supported = True
+	def get_shortname(self): return 'yamaha_ymz280b'
+
+	def get_name(self): return "Yamaha YMZ280B"
+	def get_priority(self): return 0
+	def supported_autodetect(self): return False
+	def get_prop(self, in_dict): 
+		in_dict['encode_supported'] = True
+		in_dict['decode_supported'] = True
 
 	def decode(self, in_bytes, audio_obj):
 		from objects.extlib import superctr_adpcm

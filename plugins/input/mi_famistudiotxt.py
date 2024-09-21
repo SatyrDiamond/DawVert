@@ -266,16 +266,16 @@ def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
 class input_famistudio(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'famistudio_txt'
-	def gettype(self): return 'mi'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'FamiStudio Text'
-		dawinfo_obj.file_ext = 'txt'
-		dawinfo_obj.auto_types = ['nopl_points', 'pl_points']
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['epsm_rhythm','fds','fm:epsm','fm:vrc7','namco163_famistudio','sampler:multi','universal:synth-osc']
+	def get_shortname(self): return 'famistudio_txt'
+	def get_name(self): return 'FamiStudio Text'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'txt'
+		in_dict['auto_types'] = ['nopl_points', 'pl_points']
+		in_dict['track_lanes'] = True
+		in_dict['fxtype'] = 'rack'
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['epsm_rhythm','fds','fm:epsm','fm:vrc7','namco163_famistudio','sampler:multi','universal:synth-osc']
 	def supported_autodetect(self): return False
 	def parse(self, i_convproj_obj, input_file, dv_config):
 		global samplefolder

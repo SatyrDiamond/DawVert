@@ -25,15 +25,15 @@ def create_auto(project_obj, convproj_obj, os_target, os_param, autoloc, mul):
 class output_onlineseq(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getshortname(self): return 'onlineseq'
+	def get_shortname(self): return 'onlineseq'
+	def get_name(self): return 'Online Sequencer'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Online Sequencer'
-		dawinfo_obj.file_ext = 'sequence'
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.plugin_included = ['midi','native-onlineseq','universal:synth-osc']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'sequence'
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['track_nopl'] = True
+		in_dict['plugin_included'] = ['midi','native-onlineseq','universal:synth-osc']
 	def parse(self, convproj_obj, output_file):
 
 		convproj_obj.change_timings(4, True)

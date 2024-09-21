@@ -13,15 +13,15 @@ import numpy as np
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'pixitracker'
-	def gettype(self): return 'rs'
+	def get_shortname(self): return 'pixitracker'
+	def get_name(self): return 'Pixitracker'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return True
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Pixitracker'
-		dawinfo_obj.file_ext = 'piximod'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['sampler:single']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'piximod'
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['sampler:single']
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
 		bytestream.seek(0)

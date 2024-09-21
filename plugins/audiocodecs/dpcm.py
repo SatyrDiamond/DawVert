@@ -7,10 +7,13 @@ from functions import xtramath
 
 class input_codec(plugins.base):
 	def is_dawvert_plugin(self): return 'audiocodec'
-	def getshortname(self): return 'dpcm'
-	def getaudiocodecinfo(self, audiocodecinfo_obj):
-		audiocodecinfo_obj.name = "DPCM"
-		audiocodecinfo_obj.decode_supported = True
+	def get_shortname(self): return 'dpcm'
+
+	def get_name(self): return 'DPCM'
+	def get_priority(self): return 0
+	def supported_autodetect(self): return False
+	def get_prop(self, in_dict): 
+		in_dict['decode_supported'] = True
 
 	def decode(self, in_bytes, audio_obj):
 		dpcm_samp = np.zeros(len(in_bytes)*8, dtype=np.float32)

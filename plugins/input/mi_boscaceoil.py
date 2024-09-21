@@ -65,14 +65,14 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 class input_ceol(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'ceol'
-	def gettype(self): return 'mi'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Bosca Ceoil'
-		dawinfo_obj.file_ext = 'ceol'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = []
-		dawinfo_obj.plugin_included = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','fm:opm','native-boscaceoil','universal:filter','midi']
+	def get_shortname(self): return 'ceol'
+	def get_name(self): return 'Bosca Ceoil'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'ceol'
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = []
+		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','fm:opm','native-boscaceoil','universal:filter','midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global ceol_data

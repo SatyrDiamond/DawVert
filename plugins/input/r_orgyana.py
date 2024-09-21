@@ -11,13 +11,13 @@ import os
 class input_orgyana(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'orgyana'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Orgyana'
-		dawinfo_obj.file_ext = 'org'
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.track_nopl = True
+	def get_shortname(self): return 'orgyana'
+	def get_name(self): return 'Orgyana'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'org'
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['track_nopl'] = True
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

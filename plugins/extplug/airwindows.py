@@ -48,12 +48,13 @@ class extplugin(plugins.base):
 		self.plugin_type = None
 
 	def is_dawvert_plugin(self): return 'extplugin'
-	def getshortname(self): return 'airwindows'
-	def getextpluginfo(self, plugconv_obj): 
-		plugconv_obj.ext_formats = ['vst2']
-		plugconv_obj.type = 'airwindows'
+	def get_shortname(self): return 'airwindows'
+	def get_name(self): return 'Airwindows'
+	def get_prop(self, in_dict): 
+		in_dict['ext_formats'] = ['vst2']
+		in_dict['type'] = 'airwindows'
 
-	def check_exists(inplugname):
+	def check_exists(self, inplugname):
 		arwindb.load_db()
 		outlist = []
 		namefound = np.where(inplugname==arwindb.dbdata['name'])
@@ -63,7 +64,7 @@ class extplugin(plugins.base):
 				outlist.append('vst2')
 		return outlist
 
-	def check_plug(plugin_obj): 
+	def check_plug(self, plugin_obj): 
 		arwindb.load_db()
 		checkvst = plugin_obj.datavals.get('fourid', 0)
 		if checkvst in arwindb.dbdata['vst2_id']: return 'vst2'

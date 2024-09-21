@@ -33,7 +33,7 @@ def datachunk_to_placements(poschunk):
 class input_color_art(experiments_plugin_input.base):
     def __init__(self): pass
     def is_dawvert_plugin(self): return 'input'
-    def getshortname(self): return 'beatmania'
+    def get_shortname(self): return 'beatmania'
     def getname(self): return 'Beatmania'
     def gettype(self): return 'r'
     def getdawcapabilities(self): 

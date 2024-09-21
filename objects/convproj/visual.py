@@ -32,6 +32,7 @@ class cvpj_color:
 	b_f: float = 0
 	used: bool = False
 	fx_allowed: bool = False
+	priority: int = 0
 
 	@classmethod
 	def from_float(self, indata):
@@ -262,6 +263,21 @@ class cvpj_color:
 				return index_of_smallest[0][0]
 		return fallbacknum
 
+	def copy_to_self(self, other_color):
+		self.r_i = other_color.r_i
+		self.g_i = other_color.g_i
+		self.b_i = other_color.b_i
+		self.r_f = other_color.r_f
+		self.g_f = other_color.g_f
+		self.b_f = other_color.b_f
+		self.used = other_color.used
+		self.fx_allowed = other_color.fx_allowed
+		self.priority = other_color.priority
+
+	def merge(self, other_color):
+		if other_color and not self: self.copy_to_self(other_color)
+		elif other_color.priority > self.priority and other_color: self.copy_to_self(other_color)
+
 class cvpj_visual_ui:
 	def __init__(self):
 		self.height = 1
@@ -288,7 +304,7 @@ class cvpj_visual:
 
 	def merge(self, other_visual_obj):
 		if other_visual_obj.name != None and self.name == None: self.name = other_visual_obj.name
-		if other_visual_obj.color != None and not self.color: self.color = other_visual_obj.color.copy()
+		self.merge_color(other_visual_obj)
 
 	def from_dset(self, d_id, d_cat, d_item, overwrite):
 		d = globalstore.dataset.get_obj(d_id, d_cat, d_item)

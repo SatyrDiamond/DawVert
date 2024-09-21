@@ -591,6 +591,7 @@ class input_ableton(plugins.base):
 			if tracktype == 'midi':
 
 				if not DEBUG_DISABLE_PLACEMENTS:
+					
 					for clipid, cliptype, clipobj in als_track.DeviceChain.MainSequencer.ClipTimeable.Events:
 						placement_obj = track_obj.placements.add_notes()
 						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)

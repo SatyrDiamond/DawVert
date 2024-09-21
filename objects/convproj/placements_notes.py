@@ -131,6 +131,7 @@ class cvpj_placements_notes:
 			return False
 
 	def add_loops(self, loopcompat):
+
 		old_data_notes = copy.deepcopy(self.data)
 		new_data_notes = []
 
@@ -150,6 +151,21 @@ class cvpj_placements_notes:
 						prevreal.time.cut_loopstart = pl.time.cut_start
 						prevreal.time.cut_loopend = pl.time.duration+pl.time.cut_start
 			prev = pl
+
+		self.data = new_data_notes
+
+	def remove_overlaps(self):
+		old_data_notes = copy.deepcopy(self.data)
+		new_data_notes = []
+
+		prev = None
+		for pl in old_data_notes:
+			endpos = pl.time.duration+pl.time.position
+			if prev:
+				poevendpos = prev.time.duration+prev.time.position
+				prev.time.duration = min(prev.time.duration, pl.time.position-prev.time.position)
+			prev = pl
+			new_data_notes.append(pl)
 
 		self.data = new_data_notes
 

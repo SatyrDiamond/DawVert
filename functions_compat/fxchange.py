@@ -166,6 +166,19 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				if fx_num in routedatas:
 					group_obj.group = 'fxrack_'+str(routedatas[fx_num])
 
+				cvpjtrackdata = convproj_obj.track_data
+				colors = []
+				for x in fx_trackids[fx_num]:
+					track_obj = cvpjtrackdata[x]
+					if track_obj.is_laned:
+						for _, x in track_obj.lanes.items():
+							if x.visual.color:
+								colors.append(x.visual.color)
+					if not colors:
+						if track_obj.visual.color: colors.append(track_obj.visual.color)
+
+				allcolor = colors[0] if (all(x == colors[0] for x in colors) and colors) else None
+
 				convproj_obj.automation.move(['fxmixer',str(fx_num),'pan'], ['group',groupid,'pan'])
 				convproj_obj.automation.move(['fxmixer',str(fx_num),'vol'], ['group',groupid,'vol'])
 				fxchannel_obj.params.move(group_obj.params, 'vol')
@@ -175,6 +188,9 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				fxchannel_obj.fxslots_audio = []
 				group_obj.visual.name = fxchannel_obj.visual.name if fxchannel_obj.visual.name else 'FX '+str(fx_num)
 				group_obj.visual.color = fxchannel_obj.visual.color
+				if allcolor: group_obj.visual.color.merge(allcolor)
+
+				track_obj.visual.color.merge(group_obj.visual.color)
 
 			logger_compat.info('fxchange: FX to Tracks '+ ', '.join(fx_trackids[fx_num]))
 		convproj_obj.fxrack = {}

@@ -460,6 +460,9 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			issampler = False
 
 		if not DEBUG_IGNORE_PLACEMENTS:
+
+			track_obj.placements.pl_notes.remove_overlaps()
+
 			for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
 				als_midiclip = als_track.add_midiclip(clipid)
 				als_midiclip.Color = notespl_obj.visual.color.closest_color_index(colordata, track_color)

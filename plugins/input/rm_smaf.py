@@ -22,17 +22,17 @@ def get_timebase(i_val):
 class input_mmf(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'mmf'
-	def gettype(self): return 'rm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Mobile Music File'
-		dawinfo_obj.file_ext = 'mmf'
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.fxrack_params = ['vol','pan','pitch']
-		dawinfo_obj.auto_types = ['nopl_ticks']
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.plugin_included = ['midi']
-		dawinfo_obj.audio_filetypes = ['wav']
+	def get_shortname(self): return 'mmf'
+	def get_name(self): return 'Mobile Music File'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'mmf'
+		in_dict['fxtype'] = 'rack'
+		in_dict['fxrack_params'] = ['vol','pan','pitch']
+		in_dict['auto_types'] = ['nopl_ticks']
+		in_dict['track_nopl'] = True
+		in_dict['plugin_included'] = ['midi']
+		in_dict['audio_filetypes'] = ['wav']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

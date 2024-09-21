@@ -22,13 +22,13 @@ scaletable = [[0,0,0,0,0,0,0], [0,0,-1,0,0,-1,-1], [0,1,1,1,0,1,0], [0,-1,-1,-1,
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'mekimekichip'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'メキメキチップ (MekiMeki Chip) (old)'
-		dawinfo_obj.file_ext = 'json'
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.track_nopl = True
+	def get_shortname(self): return 'mekimekichip'
+	def get_name(self): return 'メキメキチップ (MekiMeki Chip) (old)'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'json'
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['track_nopl'] = True
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		bytestream = open(input_file, 'r')

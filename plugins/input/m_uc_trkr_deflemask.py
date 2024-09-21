@@ -10,15 +10,15 @@ import plugins
 class input_deflemask(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'deflemask'
-	def gettype(self): return 'm'
+	def get_shortname(self): return 'deflemask'
+	def get_name(self): return 'Deflemask'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Deflemask'
-		dawinfo_obj.file_ext = 'dmf'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.fxtype = 'rack'
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'dmf'
+		in_dict['track_lanes'] = True
+		in_dict['track_nopl'] = True
+		in_dict['fxtype'] = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_deflemask.deflemask_project()
 		if not project_obj.load_from_file(input_file): exit()

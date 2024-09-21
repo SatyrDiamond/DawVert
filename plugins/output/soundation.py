@@ -73,19 +73,18 @@ def addsample(zip_sngz, filepath, alredyexists):
 class output_soundation(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'Soundation'
-	def getshortname(self): return 'soundation'
+	def get_name(self): return 'Soundation'
+	def get_shortname(self): return 'soundation'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Soundation'
-		dawinfo_obj.file_ext = 'sngz'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = []
-		dawinfo_obj.fxtype = 'track'
-		dawinfo_obj.plugin_included = ['sampler:single','synth-nonfree:europa','native-soundation','midi']
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.placement_loop = ['loop', 'loop_off']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'sngz'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = []
+		in_dict['fxtype'] = 'track'
+		in_dict['plugin_included'] = ['sampler:single','synth-nonfree:europa','native-soundation','midi']
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['placement_loop'] = ['loop', 'loop_off']
 
 	def parse(self, i_convproj_obj, output_file):
 		global convproj_obj

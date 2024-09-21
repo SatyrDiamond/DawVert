@@ -28,14 +28,14 @@ op_lfo_shapes = ['saw','square','triangle','random','sine']
 class input_audiosanua(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'audiosauna'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'AudioSauna'
-		dawinfo_obj.file_ext = 'song'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.audio_filetypes = ['wav', 'mp3']
-		dawinfo_obj.plugin_included = ['native-audiosauna', 'sampler:multi', 'universal:bitcrush']
+	def get_shortname(self): return 'audiosauna'
+	def get_name(self): return 'AudioSauna'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'song'
+		in_dict['placement_cut'] = True
+		in_dict['audio_filetypes'] = ['wav', 'mp3']
+		in_dict['plugin_included'] = ['native-audiosauna', 'sampler:multi', 'universal:bitcrush']
 	def supported_autodetect(self): return True
 	def detect(self, input_file): 
 		try:

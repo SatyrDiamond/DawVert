@@ -11,15 +11,15 @@ from objects.convproj import fileref
 class input_fruitytracks(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'fruitytracks'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'FruityTracks'
-		dawinfo_obj.file_ext = 'ftr'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.audio_filetypes = ['wav', 'mp3']
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.audio_stretch = ['rate']
+	def get_shortname(self): return 'fruitytracks'
+	def get_name(self): return 'FruityTracks'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'ftr'
+		in_dict['placement_cut'] = True
+		in_dict['audio_filetypes'] = ['wav', 'mp3']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['audio_stretch'] = ['rate']
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
 		bytestream.seek(0)

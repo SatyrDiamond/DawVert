@@ -43,12 +43,13 @@ class extplugin(plugins.base):
 		self.plugin_type = None
 
 	def is_dawvert_plugin(self): return 'extplugin'
-	def getshortname(self): return 'socalabs'
-	def getextpluginfo(self, plugconv_obj): 
-		plugconv_obj.ext_formats = ['vst2', 'vst3']
-		plugconv_obj.type = 'socalabs'
+	def get_shortname(self): return 'socalabs'
+	def get_name(self): return 'Socalabs'
+	def get_prop(self, in_dict): 
+		in_dict['ext_formats'] = ['vst2', 'vst3']
+		in_dict['type'] = 'socalabs'
 
-	def check_exists(inplugname):
+	def check_exists(self, inplugname):
 		socalabsdb.load_db()
 		outlist = []
 		namefound = np.where(inplugname==socalabsdb.dbdata['name'])
@@ -59,7 +60,7 @@ class extplugin(plugins.base):
 				outlist.append('vst3')
 		return outlist
 
-	def check_plug(plugin_obj):
+	def check_plug(self, plugin_obj):
 		socalabsdb.load_db()
 		if plugin_obj.check_wildmatch('vst2', None):
 			checkvst = plugin_obj.datavals.get('fourid', 0)

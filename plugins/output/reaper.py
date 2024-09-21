@@ -146,20 +146,19 @@ def file_source(rpp_source_obj, fileref_obj, filename):
 class output_reaper(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'reaper'
-	def getshortname(self): return 'reaper'
+	def get_name(self): return 'REAPER'
+	def get_shortname(self): return 'reaper'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'REAPER'
-		dawinfo_obj.file_ext = 'rpp'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = []
-		dawinfo_obj.fxtype = 'track'
-		dawinfo_obj.time_seconds = True
-		dawinfo_obj.track_hybrid = True
-		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.plugin_ext = ['vst2', 'vst3']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'rpp'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = []
+		in_dict['fxtype'] = 'track'
+		in_dict['time_seconds'] = True
+		in_dict['track_hybrid'] = True
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 	def parse(self, convproj_obj, output_file):
 		global reaper_tempo
 		global tempomul

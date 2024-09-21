@@ -8,13 +8,13 @@ import plugins
 class input_petaporon(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'flipper0'
-	def gettype(self): return 'r'
+	def get_shortname(self): return 'flipper0'
+	def get_name(self): return 'Flipper Zero'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Flipper Zero'
-		dawinfo_obj.file_ext = 'fmf'
-		dawinfo_obj.track_nopl = True
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'fmf'
+		in_dict['track_nopl'] = True
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)

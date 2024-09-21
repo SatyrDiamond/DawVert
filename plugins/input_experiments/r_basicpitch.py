@@ -11,7 +11,7 @@ import json
 class input_ex_basic_pitch(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'basic_pitch'
+	def get_shortname(self): return 'basic_pitch'
 	def gettype(self): return 'r'
 	def supported_autodetect(self): return False
 	def getdawinfo(self, dawinfo_obj): 

@@ -212,20 +212,20 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 class input_flp(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'flp'
-	def gettype(self): return 'mi'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'FL Studio'
-		dawinfo_obj.file_ext = 'flp'
-		dawinfo_obj.auto_types = ['pl_ticks']
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.fxrack_params = ['enabled','vol','pan']
-		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		dawinfo_obj.plugin_included = ['sampler:single','universal:arpeggiator','native-flstudio','soundfont2']
-		dawinfo_obj.fxchain_mixer = True
+	def get_shortname(self): return 'flp'
+	def get_name(self): return 'FL Studio'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'flp'
+		in_dict['auto_types'] = ['pl_ticks']
+		in_dict['track_lanes'] = True
+		in_dict['placement_cut'] = True
+		in_dict['fxtype'] = 'rack'
+		in_dict['fxrack_params'] = ['enabled','vol','pan']
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
+		in_dict['plugin_included'] = ['sampler:single','universal:arpeggiator','native-flstudio','soundfont2']
+		in_dict['fxchain_mixer'] = True
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

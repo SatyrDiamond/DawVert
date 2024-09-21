@@ -896,20 +896,19 @@ def do_tracks(convproj_obj, project_obj, current_grouptab, track_group, groups_u
 class output_ableton(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'Ableton Live'
-	def getshortname(self): return 'ableton'
+	def get_name(self): return 'Ableton Live'
+	def get_shortname(self): return 'ableton'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Ableton'
-		dawinfo_obj.file_ext = 'als'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.audio_stretch = ['warp', 'rate']
-		dawinfo_obj.plugin_included = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
-		dawinfo_obj.plugin_ext = ['vst2']
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'als'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['audio_stretch'] = ['warp', 'rate']
+		in_dict['plugin_included'] = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
+		in_dict['plugin_ext'] = ['vst2']
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		
 	def parse(self, convproj_obj, output_file):
 		global counter_track

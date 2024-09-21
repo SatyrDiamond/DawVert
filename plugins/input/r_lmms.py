@@ -654,19 +654,18 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 class input_lmms(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'lmms'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'LMMS'
-		dawinfo_obj.file_ext = 'mmp'
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.fxrack_params = ['enabled','vol']
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.auto_types = ['pl_points']
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.plugin_included = ['sampler:single','vst2','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay','ladspa']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
-
+	def get_shortname(self): return 'lmms'
+	def get_name(self): return 'LMMS'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'mmp'
+		in_dict['fxtype'] = 'rack'
+		in_dict['fxrack_params'] = ['enabled','vol']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['auto_types'] = ['pl_points']
+		in_dict['track_lanes'] = True
+		in_dict['plugin_included'] = ['sampler:single','vst2','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay','ladspa']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		try:

@@ -19,14 +19,14 @@ def parse_notes(convproj_obj, trackid, notes_data, track_obj, keyoffset):
 class input_piyopiyo(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'piyopiyo'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'PiyoPiyo'
-		dawinfo_obj.file_ext = 'pmd'
-		dawinfo_obj.plugin_included = ['universal:synth-osc','sampler:multi']
-		dawinfo_obj.auto_types = ['nopl_ticks']
-		dawinfo_obj.track_nopl = True
+	def get_shortname(self): return 'piyopiyo'
+	def get_name(self): return 'PiyoPiyo'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'pmd'
+		in_dict['plugin_included'] = ['universal:synth-osc','sampler:multi']
+		in_dict['auto_types'] = ['nopl_ticks']
+		in_dict['track_nopl'] = True
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

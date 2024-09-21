@@ -194,18 +194,18 @@ def do_track(convproj_obj, wf_track, track_obj):
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'waveform_edit'
-	def gettype(self): return 'r'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Waveform'
-		dawinfo_obj.file_ext = 'tracktionedit'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.time_seconds = True
-		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.auto_types = ['nopl_points']
-		dawinfo_obj.plugin_included = ['native-tracktion']
-		dawinfo_obj.plugin_ext = ['vst2']
+	def get_shortname(self): return 'waveform_edit'
+	def get_name(self): return 'Waveform'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'tracktionedit'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['time_seconds'] = True
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['auto_types'] = ['nopl_points']
+		in_dict['plugin_included'] = ['native-tracktion']
+		in_dict['plugin_ext'] = ['vst2']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global cvpj_l

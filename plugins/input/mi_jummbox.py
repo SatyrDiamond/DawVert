@@ -221,15 +221,15 @@ def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 class input_jummbox(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'jummbox'
-	def gettype(self): return 'mi'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Jummbox'
-		dawinfo_obj.file_ext = 'json'
-		dawinfo_obj.auto_types = ['pl_points']
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['native-jummbox','universal:eq-bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
+	def get_shortname(self): return 'jummbox'
+	def get_name(self): return 'Jummbox'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'json'
+		in_dict['auto_types'] = ['pl_points']
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['native-jummbox','universal:eq-bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
 
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):

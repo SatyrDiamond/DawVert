@@ -56,15 +56,15 @@ class pxtone_cmdstream():
 class input_pxtone(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'ptcop'
-	def gettype(self): return 'rm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'PxTone'
-		dawinfo_obj.file_ext = 'ptcop'
-		dawinfo_obj.auto_types = ['nopl_ticks']
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.plugin_included = ['sampler:single']
-		dawinfo_obj.audio_filetypes = ['wav','ogg']
+	def get_shortname(self): return 'ptcop'
+	def get_name(self): return 'PxTone'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'ptcop'
+		in_dict['auto_types'] = ['nopl_ticks']
+		in_dict['track_nopl'] = True
+		in_dict['plugin_included'] = ['sampler:single']
+		in_dict['audio_filetypes'] = ['wav','ogg']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

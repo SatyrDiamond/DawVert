@@ -13,7 +13,7 @@ class input_soundfile(plugins.base):
 	def is_dawvert_plugin(self): return 'audiofile'
 	def get_shortname(self): return 'vorbisacm'
 	def get_name(self): return 'VorbisACM'
-	def get_priority(self): return 0
+	def get_priority(self): return -100
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav']
 

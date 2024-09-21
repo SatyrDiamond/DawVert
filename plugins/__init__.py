@@ -273,37 +273,6 @@ class base:
 					if exttype in plugsup: return exttype
 		return None
 
-			
-
-
-	#def detect_plugin(plugin_obj, ext_formats):
-	#	for shortname, extplug_obj in base.plugins_extplug.items():
-	#		is_supported = True in [(x in extplug_obj.ext_formats) for x in ext_formats]
-	#		if is_supported:
-	#			extplug_obj = extplug_obj.classfunc()
-	#			is_match = extplug_obj.check(plugin_obj)
-	#			if is_match: return True, extplug_obj
-	#	return False, None
-
-#
-	#def print_pluginfo():
-	#	extended = False
-	#	if not extended:
-	#		logger_plugins.info('Inputs:',len(base.plugins_input))
-	#		logger_plugins.info('Outputs:',len(base.plugins_output))
-	#		logger_plugins.info('PlugConv (Internal):',len(base.plugins_plugconv))
-	#		logger_plugins.info('PlugConv (External):',len(base.plugins_plugconv_ext))
-	#	else:
-	#		outtxt = ''
-	#		for x, plug_obj in base.plugins_input.items():
-	#			outtxt += x+('[a] ' if plug_obj.supported_autodetect(plug_obj) else ' ')
-	#		logger_plugins.info('Input: '+outtxt)
-#
-	#		outtxt = ''
-	#		for x, plug_obj in base.plugins_input.items(): outtxt += x+' '
-	#		logger_plugins.info('Output: '+outtxt)
-
-
 def load_module(path):
 	name = os.path.split(path)[-1]
 	spec = util.spec_from_file_location(name, path)

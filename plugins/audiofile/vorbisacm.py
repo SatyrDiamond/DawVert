@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import io
-from objects.data_bytes import riff_chunks
 
 class input_soundfile(plugins.base):
 	try:
@@ -13,10 +11,16 @@ class input_soundfile(plugins.base):
 		usable = False
 
 	def is_dawvert_plugin(self): return 'audiofile'
-	def getshortname(self): return 'ogg_in_wav'
-	def getaudiofileinfo(self, audiofileinfo_obj):
-		audiofileinfo_obj.file_formats = ['wav']
+	def get_shortname(self): return 'vorbisacm'
+	def get_name(self): return 'VorbisACM'
+	def get_priority(self): return 0
+	def supported_autodetect(self): return False
+	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav']
+
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
+		import io
+		from objects.data_bytes import riff_chunks
+
 		if fileextlow == 'wav' and self.usable:
 			riff_data = riff_chunks.riff_chunk()
 			byr_stream = riff_data.load_from_file(input_file, False)

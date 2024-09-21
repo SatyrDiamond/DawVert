@@ -14,15 +14,14 @@ maincolor = [0.39, 0.16, 0.78]
 class input_sop(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'adlib_sop'
-	def getname(self): return 'Note Sequencer'
-	def gettype(self): return 'rm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Note Sequencer'
-		dawinfo_obj.file_ext = 'sop'
-		dawinfo_obj.auto_types = ['nopl_ticks']
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.plugin_included = ['fm:opl2','fm:opl3']
+	def get_shortname(self): return 'adlib_sop'
+	def get_name(self): return 'Note Sequencer'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'sop'
+		in_dict['auto_types'] = ['nopl_ticks']
+		in_dict['track_nopl'] = True
+		in_dict['plugin_included'] = ['fm:opl2','fm:opl3']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

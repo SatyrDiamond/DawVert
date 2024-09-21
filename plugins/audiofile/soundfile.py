@@ -11,9 +11,12 @@ class input_soundfile(plugins.base):
 		usable = False
 
 	def is_dawvert_plugin(self): return 'audiofile'
-	def getshortname(self): return 'soundfile'
-	def getaudiofileinfo(self, audiofileinfo_obj):
-		audiofileinfo_obj.file_formats = ['wav', 'mp3', 'flac', 'ogg']
+	def get_shortname(self): return 'soundfile'
+	def get_name(self): return 'SoundFile'
+	def get_priority(self): return 0
+	def supported_autodetect(self): return False
+	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg']
+
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		valid = False
 		if self.usable:

@@ -15,15 +15,15 @@ import zlib
 class input_notessimo_v2(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'notessimo_v2'
-	def gettype(self): return 'mi'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Notessimo V2'
-		dawinfo_obj.file_ext = 'note'
-		dawinfo_obj.auto_types = ['pl_points']
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.plugin_included = ['midi']
+	def get_shortname(self): return 'notessimo_v2'
+	def get_name(self): return 'Notessimo V2'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'note'
+		in_dict['auto_types'] = ['pl_points']
+		in_dict['fxtype'] = 'rack'
+		in_dict['track_lanes'] = True
+		in_dict['plugin_included'] = ['midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		global used_insts

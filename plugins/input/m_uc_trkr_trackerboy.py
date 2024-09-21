@@ -43,15 +43,15 @@ def parse_fx_event(r_row, pat_obj, fx_p, fx_v):
 class input_trackerboy(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'trackerboy'
-	def gettype(self): return 'm'
+	def get_shortname(self): return 'trackerboy'
+	def get_name(self): return 'Trackerboy'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Trackerboy'
-		dawinfo_obj.file_ext = 'tbm'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.fxtype = 'rack'
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'tbm'
+		in_dict['track_lanes'] = True
+		in_dict['track_nopl'] = True
+		in_dict['fxtype'] = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_trackerboy.trackerboy_project()
 		if not project_obj.load_from_file(input_file): exit()

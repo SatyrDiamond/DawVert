@@ -7,12 +7,12 @@ from functions import extpluglog
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
-	def getplugconvinfo(self, plugconv_obj): 
-		plugconv_obj.priority = 50
-		plugconv_obj.in_plugins = [['native-serato-fx', None]]
-		plugconv_obj.in_daws = ['serato']
-		plugconv_obj.out_plugins = [['universal', None]]
-		plugconv_obj.out_daws = []
+	def get_priority(self): return -50
+	def get_prop(self, in_dict): 
+		in_dict['in_plugins'] = [['native-serato-fx', None]]
+		in_dict['in_daws'] = ['serato']
+		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
 		print(plugin_obj.type.subtype)

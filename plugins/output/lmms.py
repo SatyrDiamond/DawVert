@@ -317,19 +317,18 @@ def asdrlfo_set(plugin_obj, eldata):
 class output_lmms(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'LMMS'
-	def getshortname(self): return 'lmms'
+	def get_name(self): return 'LMMS'
+	def get_shortname(self): return 'lmms'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return ['amd64', 'i386']
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'LMMS'
-		dawinfo_obj.file_ext = 'mmp'
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.fxrack_params = ['enabled','vol']
-		dawinfo_obj.auto_types = ['pl_points']
-		dawinfo_obj.plugin_included = ['sampler:single','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
-		dawinfo_obj.plugin_ext = ['vst2','ladspa']
-		dawinfo_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'mmp'
+		in_dict['fxtype'] = 'rack'
+		in_dict['fxrack_params'] = ['enabled','vol']
+		in_dict['auto_types'] = ['pl_points']
+		in_dict['plugin_included'] = ['sampler:single','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
+		in_dict['plugin_ext'] = ['vst2','ladspa']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		
 	def parse(self, i_cvpj_obj, output_file):
 		global lmms_bpm

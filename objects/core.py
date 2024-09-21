@@ -130,8 +130,8 @@ class core:
 
 		self.config = config_data()
 
-		self.currentplug_input = None
-		self.currentplug_output = None
+		self.currentplug_input = dv_plugins.create_selector('input')
+		self.currentplug_output = dv_plugins.create_selector('output')
 		dv_plugins.load_plugindir('audiofile')
 		dv_plugins.load_plugindir('audiocodecs')
 		dv_plugins.load_plugindir('audioconv')
@@ -142,74 +142,42 @@ class core:
 		else:
 			dv_plugins.load_plugindir('input')
 
-	def input_get_plugins(self): return dv_plugins.plugins_input
+	def input_get_plugins(self): return dv_plugins.get_list('input')
 
-	def input_get_plugins_auto(self): return dv_plugins.plugins_input_auto
+	def input_get_plugins_auto(self): return dv_plugins.get_list_detect('input')
 
-	def input_get_current(self): return self.currentplug_input[1]
+	def input_get_current(self): return self.currentplug_input.selected_shortname
 
-	def input_set(self, pluginname): 
-		if pluginname in dv_plugins.plugins_input:
-			inputdawobj = dv_plugins.plugins_input[pluginname]
-			self.currentplug_input = [
-				inputdawobj.object, 
-				pluginname, 
-				inputdawobj
-				]
-			logger_core.info('Set input format: '+self.currentplug_input[2].name+' ('+ self.currentplug_input[1]+')')
-			logger_core.info('Input Format: '+self.currentplug_input[1])
-			return pluginname
-		else: return None
+	def input_set(self, pluginname): return self.currentplug_input.set(pluginname)
 
-	def input_autoset(self, in_file):
-		outputname = None
-		for pluginname, inputclass in dv_plugins.plugins_input_auto.items():
-			detected_format = inputclass.object.detect(in_file)
-			if detected_format == True:
-				outputname = pluginname
-				self.input_set(outputname)
-				break
-		return outputname
+	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
 
 	def output_load_plugins(self):
 		dv_plugins.load_plugindir('output')
 
-	def output_get_plugins(self): return dv_plugins.plugins_output
+	def output_get_plugins(self): return dv_plugins.get_list('output')
 
-	def output_get_current(self): return self.currentplug_output[1]
+	def output_get_current(self): return self.currentplug_output.selected_shortname
 
-	def output_get_extension(self): return self.currentplug_output[2].file_ext
+	def output_get_extension(self): 
+		prop_obj = self.currentplug_output.get_prop_obj()
+		return prop_obj.file_ext if prop_obj else None
 
-	def output_set(self, pluginname): 
-		if pluginname in dv_plugins.plugins_output:
-			dawinfo_obj = dv_plugins.plugins_output[pluginname]
-			self.currentplug_output = [
-				dawinfo_obj.object, 
-				pluginname, 
-				dawinfo_obj,
-				dawinfo_obj.object.gettype()
-				]
-
-			logger_core.info('Output Format: '+self.currentplug_output[1])
-			logger_core.info('Output DataType: '+convproj.typelist[self.currentplug_output[3]])
-			return pluginname
-		else: return None
+	def output_set(self, pluginname): return self.currentplug_output.set(pluginname)
 
 	def parse_input(self, in_file, dv_config): 
 		self.convproj_obj = convproj.cvpj_project()
 		dv_config.searchpaths.append(os.path.dirname(in_file))
-		self.currentplug_input[0].parse(self.convproj_obj, in_file, dv_config)
-
-	def convert_plugins(self, dv_config): 
-		plug_conv.convproj(self.convproj_obj, in_dawinfo, out_dawinfo, dv_config)
+		plug_obj = self.currentplug_input.selected_plugin.plug_obj
+		plug_obj.parse(self.convproj_obj, in_file, dv_config)
 
 	def convert_type_output(self, dv_config): 
 		global in_dawinfo
 		global out_dawinfo
 		in_type = self.convproj_obj.type
-		out_type = self.currentplug_output[3]
-		in_dawinfo = self.currentplug_input[2]
-		out_dawinfo = self.currentplug_output[2]
+		out_type = self.currentplug_output.selected_plugin.plug_obj.gettype()
+		in_dawinfo = self.currentplug_output.selected_plugin.prop_obj
+		out_dawinfo = self.currentplug_output.selected_plugin.prop_obj
 
 		logger_core.info('' + convproj.typelist[in_type] + ' > ' + convproj.typelist[out_type])
 
@@ -222,5 +190,9 @@ class core:
 				if sampleref_obj.fileformat not in out_dawinfo.audio_filetypes:
 					isconverted = sampleref_obj.convert(out_dawinfo.audio_filetypes, dv_config.path_samples_converted)
 
+	def convert_plugins(self, dv_config): 
+		plug_conv.convproj(self.convproj_obj, in_dawinfo, out_dawinfo, self.currentplug_output.selected_shortname, dv_config)
+
 	def parse_output(self, out_file): 
-		self.currentplug_output[0].parse(self.convproj_obj, out_file)
+		plug_obj = self.currentplug_output.selected_plugin.plug_obj
+		plug_obj.parse(self.convproj_obj, out_file)

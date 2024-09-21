@@ -25,14 +25,14 @@ midi_inst = {
 class input_petaporon(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'petaporon'
-	def gettype(self): return 'r'
+	def get_shortname(self): return 'petaporon'
+	def get_name(self): return 'Petaporon'
+	def get_priority(self): return 0
 	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Petaporon'
-		dawinfo_obj.file_ext = 'json'
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.plugin_included = ['universal:synth-osc']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'json'
+		in_dict['track_nopl'] = True
+		in_dict['plugin_included'] = ['universal:synth-osc']
 	def parse(self, convproj_obj, input_file, dv_config):
 		bytestream = open(input_file, 'r')
 		

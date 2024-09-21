@@ -8,11 +8,11 @@ from objects import globalstore
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
-	def getplugconvinfo(self, plugconv_obj): 
-		plugconv_obj.in_plugins = [['native-flstudio', None]]
-		plugconv_obj.in_daws = ['flp']
-		plugconv_obj.out_plugins = [['native-tracktion', None]]
-		plugconv_obj.out_daws = ['waveform_edit']
+	def get_prop(self, in_dict): 
+		in_dict['in_plugins'] = [['native-flstudio', None]]
+		in_dict['in_daws'] = ['flp']
+		in_dict['out_plugins'] = [['native-tracktion', None]]
+		in_dict['out_daws'] = ['waveform_edit']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		if plugin_obj.type.subtype == None: plugin_obj.type.subtype = ''
 	

@@ -13,14 +13,14 @@ MAINCOLOR = [0.65, 0.57, 0.33]
 class input_s3m(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 's3m'
-	def gettype(self): return 'm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Scream Tracker 3 Module'
-		dawinfo_obj.file_ext = 's3m'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.audio_filetypes = ['wav']
-		dawinfo_obj.plugin_included = ['sampler:single']
+	def get_shortname(self): return 's3m'
+	def get_name(self): return 'Scream Tracker 3 Module'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 's3m'
+		in_dict['track_lanes'] = True
+		in_dict['audio_filetypes'] = ['wav']
+		in_dict['plugin_included'] = ['sampler:single']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

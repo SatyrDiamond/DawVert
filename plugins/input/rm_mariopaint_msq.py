@@ -41,15 +41,15 @@ def readpart(msq_score_str):
 class input_mariopaint_msq(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
-	def getshortname(self): return 'mariopaint_msq'
-	def gettype(self): return 'rm'
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.file_ext = 'msq'
-		dawinfo_obj.name = 'MarioSequencer'
-		dawinfo_obj.track_lanes = True
-		dawinfo_obj.track_nopl = True
-		dawinfo_obj.fxtype = 'rack'
-		dawinfo_obj.plugin_included = ['midi']
+	def get_shortname(self): return 'mariopaint_msq'
+	def get_name(self): return 'MarioSequencer'
+	def get_priority(self): return 0
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'msq'
+		in_dict['track_lanes'] = True
+		in_dict['track_nopl'] = True
+		in_dict['fxtype'] = 'rack'
+		in_dict['plugin_included'] = ['midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'rm'

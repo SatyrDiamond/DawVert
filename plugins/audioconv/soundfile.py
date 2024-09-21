@@ -13,10 +13,13 @@ class input_soundfile(plugins.base):
 		usable = False
 
 	def is_dawvert_plugin(self): return 'audioconv'
-	def getshortname(self): return 'soundfile'
-	def getaudioconvinfo(self, audioconvinfo_obj):
-		audioconvinfo_obj.in_file_formats = ['wav', 'mp3', 'flac', 'ogg', 'wav_codec']
-		audioconvinfo_obj.out_file_formats = ['wav', 'mp3', 'flac', 'ogg']
+	def get_shortname(self): return 'soundfile'
+	def get_name(self): return 'SoundFile'
+	def get_priority(self): return 0
+	def supported_autodetect(self): return False
+	def get_prop(self, in_dict): 
+		in_dict['in_file_formats'] = ['wav', 'mp3', 'flac', 'ogg', 'wav_codec']
+		in_dict['out_file_formats'] = ['wav', 'mp3', 'flac', 'ogg']
 	def convert_file(self, sampleref_obj, to_type, outpath):
 		if self.usable:
 			inpath = sampleref_obj.fileref.get_path(None, False)

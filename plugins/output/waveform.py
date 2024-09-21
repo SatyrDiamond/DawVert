@@ -56,19 +56,18 @@ def get_plugins(convproj_obj, wf_plugins, cvpj_fxids):
 class output_waveform_edit(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
-	def getname(self): return 'Waveform Edit'
-	def getshortname(self): return 'waveform_edit'
+	def get_name(self): return 'Waveform Edit'
+	def get_shortname(self): return 'waveform_edit'
 	def gettype(self): return 'r'
 	def plugin_archs(self): return None
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Waveform'
-		dawinfo_obj.file_ext = 'tracktionedit'
-		dawinfo_obj.placement_cut = True
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
-		dawinfo_obj.time_seconds = True
-		dawinfo_obj.audio_stretch = ['rate']
-		dawinfo_obj.plugin_included = ['native-tracktion']
-		dawinfo_obj.plugin_ext = ['vst2']
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = 'tracktionedit'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['time_seconds'] = True
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['plugin_included'] = ['native-tracktion']
+		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
 		global dataset
 

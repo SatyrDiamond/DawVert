@@ -367,6 +367,10 @@ VERBOSE = False
 class cvpj_sampleref:
 	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat','loop_found','loop_start','loop_end','slices']
 
+	audiofile_selector = dv_plugins.create_selector('audiofile')
+	audioconv_selector = dv_plugins.create_selector('audioconv')
+	audiocodec_selector = dv_plugins.create_selector('audiocodec')
+
 	def __init__(self):
 		self.fileref = cvpj_fileref()
 		self.found = False
@@ -428,12 +432,12 @@ class cvpj_sampleref:
 				except:
 					pass
 
-			for shortname, audiofileplug_obj in dv_plugins.plugins_audio_file.items():
+			for shortname, plug_obj, prop_obj in cvpj_sampleref.audiofile_selector.iter():
 				self.found = True
 				self.visual.name = self.fileref.file.filename
 				try:
-					if fileextlow in audiofileplug_obj.file_formats:
-						isvalid = audiofileplug_obj.object.getinfo(wav_realpath, self, fileextlow)
+					if fileextlow in prop_obj.file_formats:
+						isvalid = plug_obj.getinfo(wav_realpath, self, fileextlow)
 						if isvalid: break
 				except: 
 					if VERBOSE:
@@ -442,12 +446,12 @@ class cvpj_sampleref:
 					logger_project.warning('fileref: audioinfo: error using: '+shortname)
 
 	def convert(self, dawaudiofiles, outpath):
-		for shortname, audioconvplug_obj in dv_plugins.plugins_audio_convert.items():
-			if (self.fileformat in audioconvplug_obj.in_file_formats):
-				filesupported = data_values.list__in_both(dawaudiofiles, audioconvplug_obj.out_file_formats)
+		for shortname, plug_obj, prop_obj in cvpj_sampleref.audioconv_selector.iter():
+			if (self.fileformat in prop_obj.in_file_formats):
+				filesupported = data_values.list__in_both(dawaudiofiles, prop_obj.out_file_formats)
 				if filesupported:
 					isconverted = False
-					try: isconverted = audioconvplug_obj.object.convert_file(self, filesupported[0], outpath)
+					try: isconverted = plug_obj.convert_file(self, filesupported[0], outpath)
 					except PermissionError:
 						pass
 					except: 

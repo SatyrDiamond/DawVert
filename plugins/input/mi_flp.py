@@ -553,11 +553,12 @@ class input_flp(plugins.base):
 				playlistline = (item.trackindex*-1)+tr_n
 				if playlistline not in used_tracks: used_tracks.append(playlistline)
 
-				if playlistline not in temp_pl_track: 
-					playlist_obj = convproj_obj.add_playlist(playlistline-1, 1, True)
-					color = fl_arrangement.tracks[playlistline].color.to_bytes(4, "little")
-					if color != b'HQV\x00': playlist_obj.visual.color.set_int([color[0],color[1],color[2]])
-					temp_pl_track[playlistline] = playlist_obj
+				if playlistline not in temp_pl_track:
+					if playlistline in fl_arrangement.tracks: 
+						playlist_obj = convproj_obj.add_playlist(playlistline-1, 1, True)
+						color = fl_arrangement.tracks[playlistline].color.to_bytes(4, "little")
+						if color != b'HQV\x00': playlist_obj.visual.color.set_int([color[0],color[1],color[2]])
+						temp_pl_track[playlistline] = playlist_obj
 
 				if item.itemindex > item.patternbase:
 					placement_obj = temp_pl_track[playlistline].placements.add_notes_indexed()
@@ -584,20 +585,21 @@ class input_flp(plugins.base):
 								for pos, val in autodata: autopoint_obj = autopl_obj.data.add_point(pos, val/adiv)
 
 				else:
-					placement_obj = temp_pl_track[playlistline].placements.add_audio_indexed()
-					placement_obj.time.set_posdur(item.position, item.length)
-					placement_obj.fade_in['duration'] = (item.f_in_dur/flp_obj.ppq)*2
-					placement_obj.fade_out['duration'] = (item.f_out_dur/flp_obj.ppq)*2
-
-					placement_obj.muted = bool(item.flags & 0b0001000000000000)
-					placement_obj.fromindex = 'FLSample' + str(item.itemindex)
-					stretch_obj = samplestretch[item.itemindex] if item.itemindex in samplestretch else None
-
-					out_rate = stretch_obj.calc_tempo_speed if stretch_obj else 1
-
-					if item.startoffset not in [4294967295, 3212836864]:  
-						posdata = item.startoffset/4
-						placement_obj.time.set_offset((posdata/out_rate)*flp_obj.ppq)
+					if playlistline in temp_pl_track:
+						placement_obj = temp_pl_track[playlistline].placements.add_audio_indexed()
+						placement_obj.time.set_posdur(item.position, item.length)
+						placement_obj.fade_in['duration'] = (item.f_in_dur/flp_obj.ppq)*2
+						placement_obj.fade_out['duration'] = (item.f_out_dur/flp_obj.ppq)*2
+	
+						placement_obj.muted = bool(item.flags & 0b0001000000000000)
+						placement_obj.fromindex = 'FLSample' + str(item.itemindex)
+						stretch_obj = samplestretch[item.itemindex] if item.itemindex in samplestretch else None
+	
+						out_rate = stretch_obj.calc_tempo_speed if stretch_obj else 1
+	
+						if item.startoffset not in [4294967295, 3212836864]:  
+							posdata = item.startoffset/4
+							placement_obj.time.set_offset((posdata/out_rate)*flp_obj.ppq)
 
 			for fl_timemark in fl_arrangement.timemarkers:
 				if fl_timemark.type == 8:

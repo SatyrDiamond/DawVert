@@ -176,9 +176,9 @@ class output_cvpj(plugins.base):
 	def is_dawvert_plugin(self): return 'output'
 	def get_shortname(self): return 'muse'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return ['amd64', 'i386']
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'med'
+		in_dict['plugin_arch'] = [64]
 		in_dict['track_lanes'] = True
 		in_dict['placement_cut'] = True
 		in_dict['audio_stretch'] = ['rate']

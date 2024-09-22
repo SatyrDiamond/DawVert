@@ -440,7 +440,6 @@ class output_dawproject(plugins.base):
 	def get_shortname(self): return 'dawproject'
 	def get_name(self): return 'DawProject'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'dawproject'
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']

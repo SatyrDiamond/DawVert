@@ -28,7 +28,6 @@ class output_onlineseq(plugins.base):
 	def get_shortname(self): return 'onlineseq'
 	def get_name(self): return 'Online Sequencer'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'sequence'
 		in_dict['auto_types'] = ['nopl_points']

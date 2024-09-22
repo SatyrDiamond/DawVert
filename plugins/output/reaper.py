@@ -149,7 +149,6 @@ class output_reaper(plugins.base):
 	def get_name(self): return 'REAPER'
 	def get_shortname(self): return 'reaper'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'rpp'
 		in_dict['placement_cut'] = True

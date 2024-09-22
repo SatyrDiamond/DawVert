@@ -22,9 +22,9 @@ ______debugtxt______ = False
 plugtransform = plugts.storedtransform()
 
 def load_plugins():
-	dv_plugins.load_plugindir('plugconv')
-	dv_plugins.load_plugindir('plugconv_ext')
-	dv_plugins.load_plugindir('extplug')
+	dv_plugins.load_plugindir('plugconv', '')
+	dv_plugins.load_plugindir('plugconv_ext', '')
+	dv_plugins.load_plugindir('extplug', '')
 
 # -------------------- convproj --------------------
 

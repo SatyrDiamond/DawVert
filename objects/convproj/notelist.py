@@ -614,6 +614,7 @@ class cvpj_notelist:
 				previ, preve = endnotes[keynum]
 				subv = -min(n['pos']-preve, 0)
 				self.nld.nl[previ]['dur'] -= subv
+				if self.nld.nl[previ]['dur'] == 0: self.nld.nl[previ]['used'] = 0
 
 			endnotes[keynum]['pos'] = i
 			endnotes[keynum]['endpos'] = endpos

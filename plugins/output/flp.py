@@ -88,7 +88,6 @@ class output_cvpjs(plugins.base):
 	def get_shortname(self): return 'flp'
 	def get_name(self): return 'FL Studio'
 	def gettype(self): return 'mi'
-	def plugin_archs(self): return ['amd64', 'i386']
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'flp'
 		in_dict['auto_types'] = ['pl_ticks']

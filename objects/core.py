@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from plugins import base as dv_plugins
+from functions_plugin_ext import plugin_vst2
 
 #from experiments_plugin_input import base as experiments_plugin_input
 from functions import song_compat
@@ -178,6 +179,7 @@ class core:
 		out_type = self.currentplug_output.selected_plugin.plug_obj.gettype()
 		in_dawinfo = self.currentplug_input.selected_plugin.prop_obj
 		out_dawinfo = self.currentplug_output.selected_plugin.prop_obj
+		plugin_vst2.cpu_arch_list = out_dawinfo.plugin_arch
 
 		logger_core.info('' + convproj.typelist[in_type] + ' > ' + convproj.typelist[out_type])
 

@@ -599,6 +599,25 @@ class cvpj_notelist:
 			aid = self.nld.v_assoc_inst.index(instname)
 			self.nld.nl['used'][np.where(aid==self.nld.nl['assoc_inst'])] = 1
 
+	def remove_overlap(self):
+		if verbose: print('[notelist] remove_overlap')
+		self.sort()
+		self.clean()
+		endnotes = np.zeros(128, dtype=np.dtype([('pos', np.int32), ('endpos', np.float64)]))
+		endnotes[:] = -1
+
+		for i, n in enumerate(self.nld.nl):
+			keynum = n['key']+60
+
+			endpos = n['pos']+n['dur']
+			if endnotes[keynum][0] != -1:
+				previ, preve = endnotes[keynum]
+				subv = -min(n['pos']-preve, 0)
+				self.nld.nl[previ]['dur'] -= subv
+
+			endnotes[keynum]['pos'] = i
+			endnotes[keynum]['endpos'] = endpos
+
 	def clean(self):
 		if verbose: print('[notelist] clean')
 		self.nld.nl = self.nld.nl[np.nonzero(self.nld.nl['used'])]

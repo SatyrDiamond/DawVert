@@ -377,6 +377,27 @@ def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 	return als_device
 
 
+#def do_note_effects(convproj_obj, als_track, fxslots_notes):
+#	if not DEBUG_IGNORE_FX:
+#		for pluginid in fxslots_notes:
+#
+#			plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+#			if plugin_found:
+#
+#				#print(plugin_obj.type)
+#
+#				als_device = None
+#
+#				if plugin_obj.check_match('universal', 'arpeggiator'):
+#					fx_on, fx_wet = plugin_obj.fxdata_get()
+#					als_device = als_track.DeviceChain.add_device('MidiArpeggiator')
+#					#do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
+#					als_device.On.Manual = fx_on
+#					parampaths = {}
+#					timing_obj = plugin_obj.timing_get('main')
+#					#print(timing_obj.type)
+#					als_device.params.import_keys(parampaths)
+
 def do_effects(convproj_obj, als_track, fxslots_audio):
 	if not DEBUG_IGNORE_FX:
 		for plugid in fxslots_audio:
@@ -441,6 +462,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 	if track_obj.type == 'instrument':
 		tracknumid = counter_track.get()
 		als_track = project_obj.add_midi_track(tracknumid)
+		#do_note_effects(convproj_obj, als_track, track_obj.fxslots_notes)
 		als_track.Color = track_color
 		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)

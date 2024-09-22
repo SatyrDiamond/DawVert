@@ -290,6 +290,9 @@ class input_flp(plugins.base):
 
 		instdata_chans = []
 
+		layer_chans = {}
+		chan_range = {}
+
 		for instrument, channelnum in enumerate(flp_obj.channels):
 			fl_channel_obj = flp_obj.channels[channelnum]
 			instdata = {}
@@ -314,6 +317,8 @@ class input_flp(plugins.base):
 				inst_obj.params.add('vol', fl_channel_obj.basicparams.volume**1.5, 'float')
 				inst_obj.fxrack_channel = fl_channel_obj.fxchannel
 
+				chan_range[channelnum] = [fl_channel_obj.params.keyrange_min, fl_channel_obj.params.keyrange_max]
+
 				plugin_obj = None
 				if fl_channel_obj.type == 0:
 					inst_obj.pluginid = 'FLPlug_G_'+str(channelnum)
@@ -337,6 +342,9 @@ class input_flp(plugins.base):
 						if fl_channel_obj.samplefilename:
 							sp_obj = plugin_obj.samplepart_add('audiofile')
 							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
+
+				if fl_channel_obj.type == 3:
+					layer_chans[channelnum] = fl_channel_obj.layer_chans
 
 				if plugin_obj:
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
@@ -496,6 +504,19 @@ class input_flp(plugins.base):
 					nle_obj.notelist.auto_add_slide(sn[0], sn[1], sn[2], sn[3], sn[4], sn[5])
 				nle_obj.notelist.notemod_conv()
 				nle_obj.notelist.extra_to_noteenv()
+
+				for channum, lchans in layer_chans.items():
+					note_inst = id_inst[str(channum)] if str(channum) in id_inst else ''
+					if lchans and note_inst:
+						basenotes = nle_obj.notelist.__copy__()
+						basenotes.mod_filter_inst(note_inst)
+						for lchan in lchans:
+							channote = basenotes.__copy__()
+							lchani = id_inst[str(lchan)] if str(lchan) in id_inst else ''
+							channote.inst_all(lchani)
+							imin, imax = chan_range[lchan]
+							channote.mod_limit(imin-60, imax-60)
+							nle_obj.notelist.merge(channote, 0)
 
 				id_pat[str(pattern)] = 'FLPat' + str(pattern)
 

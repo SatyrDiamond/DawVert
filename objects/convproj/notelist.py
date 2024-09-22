@@ -583,6 +583,22 @@ class cvpj_notelist:
 		self.nld.nl['key'] *= i_key
 		self.nld.v_assoc_multikey = [[x*i_key for x in n] for n in self.nld.v_assoc_multikey]
 
+	def mod_limit(self, imin, imax):
+		if verbose: print('[notelist] mod_limit')
+		self.clean()
+		keyval = self.nld.nl['key']
+		findex = np.where(np.logical_and(imin<=keyval, keyval<=imax))
+		self.nld.nl['used'] = 0
+		self.nld.nl['used'][findex] = 1
+
+	def mod_filter_inst(self, instname):
+		if verbose: print('[notelist] mod_filter_inst')
+		self.clean()
+		self.nld.nl['used'] = 0
+		if instname in self.nld.v_assoc_inst:
+			aid = self.nld.v_assoc_inst.index(instname)
+			self.nld.nl['used'][np.where(aid==self.nld.nl['assoc_inst'])] = 1
+
 	def clean(self):
 		if verbose: print('[notelist] clean')
 		self.nld.nl = self.nld.nl[np.nonzero(self.nld.nl['used'])]

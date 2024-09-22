@@ -338,6 +338,8 @@ class flp_project:
 			elif event_id == 20:  self.current_ch_obj.looptype = event_data
 			elif event_id == 135: self.current_ch_obj.middlenote = event_data
 			elif event_id == 196: self.current_ch_obj.samplefilename = decodetext(self.version_split, event_data)
+
+
 		else:
 			if event_id == 149: self.fx_color = event_data
 			elif event_id == 95:  self.fx_icon = event_data
@@ -380,10 +382,6 @@ class flp_project:
 			elif event_id == 154: self.mixer[self.fx_num].inchannum = event_data
 			elif event_id == 147: self.mixer[self.fx_num].outchannum = event_data
 			elif event_id == 204: self.fx_name = decodetext(self.version_split, event_data)
-
-		#if event_id not in [228,44,30,23,67,9,0,10,11,128,131,132,135,138,139,143,144,145,147,148,149,150,154,155,156,17,18,193,194,195,196,197,199,20,201,202,203,204,205,206,207,209,21,212,213,215,218,219,22,221,223,224,225,229,231,233,235,236,237,238,239,241,33,34,38,64,65,69,70,71,74,75,76,80,83,85,86,89,95,98,99]:
-		#	print('unknown event: ',self.lines[event_id].strip())
-		#	print(event_data)
 
 	def read(self, inputfile):
 		song_data = bytereader.bytereader()

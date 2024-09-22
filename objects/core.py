@@ -133,15 +133,16 @@ class core:
 
 		self.currentplug_input = dv_plugins.create_selector('input')
 		self.currentplug_output = dv_plugins.create_selector('output')
-		dv_plugins.load_plugindir('audiofile')
-		dv_plugins.load_plugindir('audiocodecs')
-		dv_plugins.load_plugindir('audioconv')
+		dv_plugins.load_plugindir('audiofile', '')
+		dv_plugins.load_plugindir('audiocodecs', '')
+		dv_plugins.load_plugindir('audioconv', '')
 
 	def input_load_plugins(self, pluginset):
-		if pluginset == 'experiments': 
-			dv_plugins.load_plugindir('input_experiments')
-		else:
-			dv_plugins.load_plugindir('input')
+		if pluginset == 'exper': dv_plugins.load_plugindir('input', 'exper')
+		elif pluginset == 'vgm': dv_plugins.load_plugindir('input', 'vgm')
+		elif pluginset == 'gameres': dv_plugins.load_plugindir('input', 'gameres')
+		elif pluginset == 'ai': dv_plugins.load_plugindir('input', 'ai')
+		else: dv_plugins.load_plugindir('input', '')
 
 	def input_get_plugins(self): return dv_plugins.get_list('input')
 
@@ -154,7 +155,7 @@ class core:
 	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
 
 	def output_load_plugins(self):
-		dv_plugins.load_plugindir('output')
+		dv_plugins.load_plugindir('output', '')
 
 	def output_get_plugins(self): return dv_plugins.get_list('output')
 

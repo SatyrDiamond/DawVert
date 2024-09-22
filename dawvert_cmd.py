@@ -13,6 +13,8 @@ from functions import plug_conv
 from objects.convproj import fileref
 filesearcher = fileref.filesearcher
 
+logger_core = logging.getLogger('core')
+
 scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
 print('DawVert: Daw Conversion Tool')
@@ -25,7 +27,7 @@ parser.add_argument("-ot", default=None)
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
 parser.add_argument("--extrafile", default=None)
-parser.add_argument("--use-experiments-input", action='store_true')
+parser.add_argument("--plugset-input", default=None)
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 parser.add_argument("--nonfree-plugins", action='store_true')
 parser.add_argument("--shareware-plugins", action='store_true')
@@ -42,10 +44,10 @@ in_format = args.it
 out_format = args.ot
 
 if not in_file:
-	print('[error] Input File Not Specified.')
+	logger_core.error('Input File Not Specified.')
 	exit()
 elif not os.path.exists(in_file):
-	print('[error] Input File Not Found.')
+	logger_core.error('Input File Not Found.')
 	exit()
 
 if args.q == True: 
@@ -61,7 +63,7 @@ if args.soundfont != None: core.config_data.path_soundfont = args.soundfont
 if args.songnum != None: core.config_data.songnum = int(args.songnum)
 if args.extrafile != None: core.config_data.path_extrafile = args.extrafile
 if args.mi2m__output_unused_nle == True: core.config_data.flags_convproj.append('mi2m-output-unused-nle')
-if args.use_experiments_input == True: pluginset = 'experiments'
+if args.plugset_input: pluginset = args.plugset_input
 if args.nonfree_plugins == True: core.config_data.extplug_cat.append('nonfree')
 if args.shareware_plugins == True: core.config_data.extplug_cat.append('shareware')
 if args.old_plugins == True: core.config_data.extplug_cat.append('old')
@@ -81,13 +83,13 @@ dawvert_core.output_load_plugins()
 if in_format == None:
 	detect_plugin_found = dawvert_core.input_autoset(in_file)
 	if detect_plugin_found == None:
-		print('[error] could not identify the input format')
+		logger_core.error('Could not identify the input format')
 		exit()
 else:
 	if in_format in dawvert_core.input_get_plugins():
 		in_class = dawvert_core.input_set(in_format)
 	else:
-		print('[error] input format plugin not found')
+		logger_core.error('Input format plugin not found')
 		exit()
 
 # -------------------------------------------------------------- Output Format --------------------------------------------------------------
@@ -95,7 +97,7 @@ else:
 if out_format in dawvert_core.output_get_plugins():
 	out_class = dawvert_core.output_set(out_format)
 else:
-	print('[error] output format plugin not found')
+	logger_core.error('Output format plugin not found')
 	exit()
 
 out_file_nameext = os.path.splitext(os.path.basename(out_file))
@@ -136,7 +138,7 @@ if os.path.isfile(out_file) and 'overwrite' not in dawvert_core.config.flags_cor
 	if user_input.lower() == 'y': pass
 	elif user_input.lower() == 'n': exit()
 	else: 
-		print('Not overwriting - exiting')
+		logger_core.error('Not overwriting - exiting')
 		exit()
 
 dawvert_core.parse_input(in_file, dawvert_core.config)

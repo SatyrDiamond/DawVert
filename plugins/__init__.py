@@ -253,9 +253,10 @@ class base:
 	def get_list(plug_type):
 		return list(base.loaded_plugins['input']) if 'input' in base.loaded_plugins else []
 
-	def load_plugindir(plug_type):
+	def load_plugindir(plug_type, plugsetname):
+		plugfolder = plug_type + ('_'+plugsetname if plugsetname else '')
 		plugincount = 0
-		for filename in glob.iglob(dirpath + '**/'+plug_type+'/*.py', recursive=True):
+		for filename in glob.iglob(dirpath + '**/'+plugfolder+'/*.py', recursive=True):
 			if not filename.startswith('.') and \
 				not filename.endswith('__init__.py') and filename.endswith('.py'):
 				try: 
@@ -284,5 +285,3 @@ def load_module(path):
 # Get current path
 path = os.path.abspath(__file__)
 dirpath = os.path.dirname(path)
-
-base.load_plugindir('input')

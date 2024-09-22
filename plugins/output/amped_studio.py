@@ -108,7 +108,6 @@ class output_amped(plugins.base):
 	def get_name(self): return 'Amped Studio'
 	def get_shortname(self): return 'amped'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'amped'
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']

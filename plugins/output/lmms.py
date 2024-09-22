@@ -320,7 +320,6 @@ class output_lmms(plugins.base):
 	def get_name(self): return 'LMMS'
 	def get_shortname(self): return 'lmms'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return ['amd64', 'i386']
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'mmp'
 		in_dict['fxtype'] = 'rack'

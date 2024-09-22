@@ -27,7 +27,6 @@ class output_cvpj_f(plugins.base):
 	def get_name(self): return 'MIDI'
 	def get_shortname(self): return 'midi'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'mid'
 		in_dict['fxtype'] = 'rack'

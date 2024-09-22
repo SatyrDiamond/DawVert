@@ -59,7 +59,6 @@ class output_waveform_edit(plugins.base):
 	def get_name(self): return 'Waveform Edit'
 	def get_shortname(self): return 'waveform_edit'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'tracktionedit'
 		in_dict['placement_cut'] = True

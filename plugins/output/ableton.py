@@ -495,6 +495,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				als_midiclip.CurrentEnd = notespl_obj.time.position+notespl_obj.time.duration
 	
 				notespl_obj.notelist.notemod_conv()
+				notespl_obj.notelist.remove_overlap()
 	
 				if notespl_obj.time.cut_type == 'cut':
 					als_midiclip.Loop.LoopOn = False
@@ -924,7 +925,6 @@ class output_ableton(plugins.base):
 	def get_name(self): return 'Ableton Live'
 	def get_shortname(self): return 'ableton'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'als'
 		in_dict['placement_cut'] = True

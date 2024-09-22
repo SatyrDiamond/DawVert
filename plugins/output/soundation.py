@@ -76,7 +76,6 @@ class output_soundation(plugins.base):
 	def get_name(self): return 'Soundation'
 	def get_shortname(self): return 'soundation'
 	def gettype(self): return 'r'
-	def plugin_archs(self): return None
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'sngz'
 		in_dict['placement_cut'] = True

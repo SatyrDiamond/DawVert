@@ -1,22 +1,15 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
-from functions import note_data
-from functions import placement_data
-from functions_tracks import tracks_r
 import plugins
-import json
 
 class input_ex_basic_pitch(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
 	def get_shortname(self): return 'basic_pitch'
-	def gettype(self): return 'r'
-	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Basic Pitch'
-		dawinfo_obj.track_nopl = True
+	def get_name(self): return 'Basic Pitch'
+	def get_prop(self, in_dict): 
+		in_dict['track_nopl'] = True
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, False)

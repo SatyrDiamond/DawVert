@@ -589,7 +589,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 									pl_copy.muted = bbtco.muted
 									pl_copy.visual.name = bbtco.name
 									pl_copy.time.set_posdur(bbtco.pos, bbtco.len)
-									pl_copy.time.cut_loop_data(0, 0, steps*12)
+									pl_copy.time.set_loop_data(0, 0, steps*12)
 
 									if lmms_track.color: pl_copy.visual.color.set_hex(track_color)
 									lane_pl.placements.pl_notes.data.append(pl_copy)

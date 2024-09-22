@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions_tracks import tracks_r
 from PIL import Image
 import plugins
 
@@ -9,11 +8,9 @@ class input_color_art(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
 	def get_shortname(self): return 'color_art'
-	def gettype(self): return 'r'
-	def supported_autodetect(self): return False
-	def getdawinfo(self, dawinfo_obj): 
-		dawinfo_obj.name = 'Color Art'
-		dawinfo_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+	def get_name(self): return 'Color Art'
+	def get_prop(self, in_dict): 
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 	def parse(self, convproj_obj, input_file, dv_config):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, False)

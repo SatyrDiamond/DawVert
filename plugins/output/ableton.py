@@ -163,7 +163,9 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 		
 		if not warpprop and stretch_obj.calc_real_size != 1:
 			warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj.dur_sec, 0)
-	
+		else:
+			do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj.dur_sec, 0)
+
 		for sample_slice in cvpj_samplepart.slicer_slices:
 			als_slice = als_samplepart.add_slice()
 			als_slice.TimeInSeconds = sample_slice.start/sampleref_obj.hz

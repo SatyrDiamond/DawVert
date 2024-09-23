@@ -11,7 +11,7 @@ class input_soundfile(plugins.base):
 	def get_priority(self): return -100
 	def usable(self): 
 		usable = importlib.util.find_spec('soundfile')
-		usable_meg = 'SoundFile is not installed. do "pip install soundfile"' if not usable else ''
+		usable_meg = '"soundfile" package is not installed.' if not usable else ''
 		return usable, usable_meg
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav']

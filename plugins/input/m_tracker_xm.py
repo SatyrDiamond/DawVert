@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import io
 import plugins
 import os.path
 from functions import data_values
@@ -45,19 +46,33 @@ class input_xm(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['sampler:single', 'sampler:multi']
 	def supported_autodetect(self): return True
+
+	def detect_bytes(self, in_bytes):
+		bytestream = io.BytesIO(in_bytes)
+		return self.detect_internal(bytestream)
+
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
+		return self.detect_internal(bytestream)
+
+	def detect_internal(self, bytestream):
 		bytesdata = bytestream.read(17)
 		if bytesdata == b'Extended Module: ': return True
 		else: return False
 		bytestream.seek(0)
 
-	def parse(self, convproj_obj, input_file, dv_config):
-		global samplefolder
+	def parse_bytes(self, convproj_obj, input_bytes, dv_config):
+		project_obj = proj_xm.xm_song()
+		if not project_obj.load_from_raw(input_bytes): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
 
+	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_xm.xm_song()
 		if not project_obj.load_from_file(input_file): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
 
+	def parse_internal(self, convproj_obj, project_obj, dv_config):
+		global samplefolder
 		samplefolder = dv_config.path_samples_extracted
 		
 		patterndata_obj = pat_single.single_patsong(project_obj.num_channels, TEXTSTART, MAINCOLOR)

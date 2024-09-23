@@ -28,11 +28,17 @@ class input_mod(plugins.base):
 		in_dict['plugin_included'] = ['sampler:single']
 	def supported_autodetect(self): return False
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse_bytes(self, convproj_obj, input_file, dv_config):
+		project_obj = proj_mod.mod_song()
+		if not project_obj.load_from_raw(input_file, IGNORE_ERRORS): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
 
+	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_mod.mod_song()
 		if not project_obj.load_from_file(input_file, IGNORE_ERRORS): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
 
+	def parse_internal(self, convproj_obj, project_obj, dv_config):
 		samplefolder = dv_config.path_samples_extracted
 
 		cvpj_bpm = 125

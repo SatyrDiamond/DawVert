@@ -186,6 +186,17 @@ class it_song:
 		self.num_samples = 0
 		self.num_patterns = 0
 
+	def load_from_raw(self, raw_data):
+		song_file = bytereader.bytereader()
+		song_file.load_raw(raw_data)
+		
+		try: 
+			self.load(song_file)
+			return True
+		except ValueError as t:
+			logger_projparse.error('IT: '+str(t))
+			return False
+
 	def load_from_file(self, input_file):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)

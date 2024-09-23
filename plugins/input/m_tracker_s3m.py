@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+import io
 import plugins
 import os.path
 from functions import data_bytes
@@ -22,22 +23,35 @@ class input_s3m(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['sampler:single']
 	def supported_autodetect(self): return True
+
+	def detect_bytes(self, in_bytes):
+		bytestream = io.BytesIO(in_bytes)
+		return self.detect_internal(bytestream)
+
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
+		return self.detect_internal(bytestream)
+
+	def detect_internal(self, bytestream):
 		bytestream.seek(44)
 		bytesdata = bytestream.read(4)
 		if bytesdata == b'SCRM': return True
 		else: return False
 		bytestream.seek(0)
 
+	def parse_bytes(self, convproj_obj, input_file, dv_config):
+		project_obj = proj_s3m.s3m_song()
+		if not project_obj.load_from_raw(input_file): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
+
 	def parse(self, convproj_obj, input_file, dv_config):
-		fs = open(input_file, 'rb')
-		
-		samplefolder = dv_config.path_samples_extracted
-		
 		project_obj = proj_s3m.s3m_song()
 		if not project_obj.load_from_file(input_file): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
 
+	def parse_internal(self, convproj_obj, project_obj, dv_config):
+		samplefolder = dv_config.path_samples_extracted
+		
 		current_tempo = project_obj.tempo
 		current_speed = project_obj.speed
 
@@ -61,7 +75,7 @@ class input_s3m(plugins.base):
 			inst_obj.params.add('vol', 0.3, 'float')
 
 			if s3m_inst.type == 1:
-				s3m_inst.rip_sample(fs, samplefolder, project_obj.samptype, wave_path)
+				s3m_inst.rip_sample(samplefolder, project_obj.samptype, wave_path)
 				plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
 				sp_obj.point_value_type = "samples"
 

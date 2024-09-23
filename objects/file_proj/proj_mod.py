@@ -36,6 +36,11 @@ class mod_song:
 		self.title = ''
 		self.samples = []
 
+	def load_from_raw(self, input_file, IGNORE_ERRORS):
+		song_file = bytereader.bytereader()
+		song_file.load_raw(input_file)
+		return self.load(song_file, IGNORE_ERRORS)
+
 	def load_from_file(self, input_file, IGNORE_ERRORS):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)

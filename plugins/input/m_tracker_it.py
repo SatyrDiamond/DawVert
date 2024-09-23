@@ -5,6 +5,7 @@ from functions import data_bytes
 from functions import data_values
 from objects.file_proj import proj_it
 from objects.tracker import pat_single
+import io
 import os.path
 import plugins
 
@@ -86,22 +87,37 @@ class input_it(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['sampler:single', 'sampler:multi']
 	def supported_autodetect(self): return True
+
+	def detect_bytes(self, in_bytes):
+		bytestream = io.BytesIO(in_bytes)
+		return self.detect_internal(bytestream)
+
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
+		return self.detect_internal(bytestream)
+
+	def detect_internal(self, bytestream):
 		bytesdata = bytestream.read(4)
 		if bytesdata == b'IMPM': return True
 		else: return False
 		bytestream.seek(0)
 
+	def parse_bytes(self, convproj_obj, input_file, dv_config):
+		project_obj = proj_it.it_song()
+		if not project_obj.load_from_raw(input_file): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
+
 	def parse(self, convproj_obj, input_file, dv_config):
+		project_obj = proj_it.it_song()
+		if not project_obj.load_from_file(input_file): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config)
+
+	def parse_internal(self, convproj_obj, project_obj, dv_config):
 		global samplefolder
 
 		try: import xmodits
 		except: xmodits_exists = False
 		else: xmodits_exists = True
-
-		project_obj = proj_it.it_song()
-		if not project_obj.load_from_file(input_file): exit()
 
 		samplefolder = dv_config.path_samples_extracted
 		
@@ -266,6 +282,7 @@ class input_it(plugins.base):
 					autopoints_obj, maxvol = env_to_cvpj(it_inst.env_vol, plugin_obj, 'vol', 48)
 					if it_inst.fadeout != 0 and it_inst.new_note_action != 0: 
 						autopoints_obj.data['fadeout'] = (256/it_inst.fadeout)/8
+					autopoints_obj.data['use_fadeout'] = it_inst.new_note_action!=0
 					autopoints_obj, _ = env_to_cvpj(it_inst.env_pan, plugin_obj, 'pan', 48)
 					if 7 in it_inst.env_pitch.flags: 
 						it_inst.env_pitch.env_points = [[calc_filter_freq(pv), pp] for pv, pp in it_inst.env_pitch.env_points]

@@ -10,6 +10,7 @@ logger_projparse = logging.getLogger('projparse')
 
 class s3m_instrument:
 	def __init__(self, song_file, ptr):
+		self.song_file = song_file
 		song_file.seek(ptr)
 		self.type = song_file.uint8()
 		self.filename = song_file.string(12, encoding="windows-1252")
@@ -50,13 +51,13 @@ class s3m_instrument:
 		if self.type == 1: logger_projparse.info('s3m: PCM | "' + self.name + '", Filename:"' + self.filename+ '"')
 		if self.type == 2: logger_projparse.info('s3m: OPL | "' + self.name + '", Filename:"' + self.filename+ '"')
 
-	def rip_sample(self, song_file, samplefolder, s3m_samptype, wave_path):
+	def rip_sample(self, samplefolder, s3m_samptype, wave_path):
 		if self.type == 1:
 			if self.sampleloc != 0 and self.length != 0:
-				song_file.seek(self.sampleloc)
+				self.song_file.seek(self.sampleloc)
 				os.makedirs(samplefolder, exist_ok=True)
 				t_samplelen = self.length if not self.double else self.length*2
-				wave_sampledata = song_file.read(t_samplelen)
+				wave_sampledata = self.song_file.read(t_samplelen)
 				wave_bits = 8 if not self.double else 16
 				wave_channels = 1 if not self.stereo else 2
 				if self.double == 0 and self.stereo == 1: wave_sampledata = data_bytes.mono2stereo(wave_sampledata, fs.read(t_samplelen), 1)
@@ -111,10 +112,17 @@ class s3m_song:
 	def __init__(self):
 		pass
 
+	def load_from_raw(self, input_file):
+		song_file = bytereader.bytereader()
+		song_file.load_raw(input_file)
+		return self.load(song_file)
+
 	def load_from_file(self, input_file):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
+		return self.load(song_file)
 
+	def load(self, song_file):
 		self.name = song_file.string(28, encoding="windows-1252")
 		logger_projparse.info("s3m: Song Name: " + str(self.name))
 		self.sig1 = song_file.uint8()

@@ -19,6 +19,7 @@
 ```
 python3 dawvert_cmd.py -i <input> -ot <output type> -o <output>
 
+input pluginset: -ips
 input type: -it 
 input file: -i 
 output type: -ot 
@@ -36,11 +37,11 @@ e.g:
 GM Soundfont File Path (for GM MIDI instruments): 
 --soundfont <sf2 file>
 
-Sample Folder Path (path for sample extraction): 
---samplesfolder <sample folder>
-
 Song Number (used for Multi-Song inputs): 
 --songnum <number>
+
+Extra File (depends on plugin, .BNK for adlib_rol): 
+--extrafile <file>
 
 MultipleIndexed2Multiple:  
 --mi2m--output-unused-nle           (Output Unused Patterns)
@@ -64,7 +65,6 @@ av
 beautifulsoup4
 blackboxprotobuf
 git+https://github.com/Perlence/rpp
-tinydb
 ```
 
 ## Optional Libraries

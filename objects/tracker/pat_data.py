@@ -246,13 +246,13 @@ class tracker_column:
 		if fx_type == 4: self.cell_param(row_num, 'vol_slide', getfineval(fx_value))
 		if fx_type == 5: 
 			if 240 <= fx_value:		 self.cell_param(row_num, 'fine_slide_down', (fx_value-240)/8)
-			if 224 <= fx_value <= 239:  self.cell_param(row_num, 'fine_slide_down', (fx_value-224)/16)
-			else:					   self.cell_param(row_num, 'slide_down', fx_value)
+			elif 224 <= fx_value <= 239:  self.cell_param(row_num, 'fine_slide_down', (fx_value-224)/16)
+			else:					   self.cell_param(row_num, 'std_slide_down', fx_value)
 		if fx_type == 6: 
 			if 240 <= fx_value:		 self.cell_param(row_num, 'fine_slide_up', (fx_value-240)/8)
-			if 224 <= fx_value <= 239:  self.cell_param(row_num, 'fine_slide_up', (fx_value-224)/16)
-			else:					   self.cell_param(row_num, 'slide_up', fx_value)
-		if fx_type == 7: self.cell_param(row_num, 'slide_to_note', fx_value)
+			elif 224 <= fx_value <= 239:  self.cell_param(row_num, 'fine_slide_up', (fx_value-224)/16)
+			else:					   self.cell_param(row_num, 'std_slide_up', fx_value)
+		if fx_type == 7: self.cell_param(row_num, 'std_slide_to_note', fx_value)
 		if fx_type == 8: self.cell_param(row_num, 'vibrato', splitparams(fx_value, 'speed', 'depth'))
 		if fx_type == 9: self.cell_param(row_num, 'tremor', splitparams(fx_value, 'ontime', 'offtime'))
 		if fx_type == 11: self.cell_param(row_num, 'vol_slide', getfineval(fx_value))

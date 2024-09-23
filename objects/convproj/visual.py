@@ -275,8 +275,9 @@ class cvpj_color:
 		self.priority = other_color.priority
 
 	def merge(self, other_color):
-		if other_color and not self: self.copy_to_self(other_color)
-		elif other_color.priority > self.priority and other_color: self.copy_to_self(other_color)
+		if other_color: 
+			if not self: self.copy_to_self(other_color)
+			elif other_color.priority > self.priority and other_color: self.copy_to_self(other_color)
 
 class cvpj_visual_ui:
 	def __init__(self):

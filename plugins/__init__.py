@@ -125,6 +125,8 @@ class dv_plugin:
 		self.plug_obj = None
 		self.supported_autodetect = False
 		self.priority = 100
+		self.usable = True
+		self.usable_meg = ''
 
 	def propproc(self):
 		if self.type in ['input','output']:
@@ -228,10 +230,14 @@ class base:
 		try:
 			if plugintype not in base.loaded_plugins: base.loaded_plugins[plugintype] = {}
 			dvplug_obj = dv_plugin()
-			if 'get_shortname' in dir(in_object): dvplug_obj.shortname = in_object.get_shortname()
+			if 'get_shortname' in dir(in_object): 
+				dvplug_obj.shortname = in_object.get_shortname()
 			else: 
 				dvplug_obj.shortname = 'noname_'+str(base.noname_num)
 				base.noname_num += 1
+
+			if 'usable' in dir(in_object): 
+				dvplug_obj.usable, dvplug_obj.usable_meg = in_object.usable()
 
 			if dvplug_obj.shortname not in base.loaded_plugins:
 				dvplug_obj.type = plugintype
@@ -251,7 +257,7 @@ class base:
 		return selector_obj
 
 	def get_list(plug_type):
-		return list(base.loaded_plugins['input']) if 'input' in base.loaded_plugins else []
+		return list(base.loaded_plugins[plug_type]) if plug_type in base.loaded_plugins else []
 
 	def load_plugindir(plug_type, plugsetname):
 		plugfolder = plug_type + ('_'+plugsetname if plugsetname else '')

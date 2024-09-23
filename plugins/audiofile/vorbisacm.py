@@ -2,26 +2,25 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
+import importlib.util
 
 class input_soundfile(plugins.base):
-	try:
-		import soundfile
-		usable = True
-	except:
-		usable = False
-
 	def is_dawvert_plugin(self): return 'audiofile'
 	def get_shortname(self): return 'vorbisacm'
 	def get_name(self): return 'VorbisACM'
 	def get_priority(self): return -100
+	def usable(self): 
+		usable = importlib.util.find_spec('soundfile')
+		usable_meg = 'SoundFile is not installed. do "pip install soundfile"' if not usable else ''
+		return usable, usable_meg
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav']
-
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
+		from soundfile import SoundFile
 		import io
 		from objects.data_bytes import riff_chunks
 
-		if fileextlow == 'wav' and self.usable:
+		if fileextlow == 'wav':
 			riff_data = riff_chunks.riff_chunk()
 			byr_stream = riff_data.load_from_file(input_file, False)
 

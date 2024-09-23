@@ -113,7 +113,7 @@ class input_pxtone(plugins.base):
 				cvpj_instvol = 0.4
 				wave_path = samplefolder + 'ptcop_' + str(voicenum+1).zfill(2) + '.wav'
 				audio_obj = audio_data.audio_obj()
-				audio_obj.set_codec('int16' if voice_obj.bits == 16 else 'int8')
+				audio_obj.set_codec('int16' if voice_obj.bits == 16 else 'uint8')
 				audio_obj.rate = voice_obj.hz
 				audio_obj.channels = voice_obj.ch
 				audio_obj.pcm_from_bytes(voice_obj.data)
@@ -154,3 +154,4 @@ class input_pxtone(plugins.base):
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')
+		convproj_obj.params.add('bpm', project_obj.beattempo, 'float')

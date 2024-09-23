@@ -249,7 +249,7 @@ class base:
 				dvplug_obj.propproc()
 				base.loaded_plugins[plugintype][dvplug_obj.shortname] = dvplug_obj
 
-		except Exception:
+		except Exception: 
 			pass
 
 	def create_selector(plug_type):

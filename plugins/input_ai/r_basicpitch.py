@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
+import sys
+import importlib.util
 
 class input_ex_basic_pitch(plugins.base):
 	def __init__(self): pass
@@ -10,13 +12,17 @@ class input_ex_basic_pitch(plugins.base):
 	def get_name(self): return 'Basic Pitch'
 	def get_prop(self, in_dict): 
 		in_dict['track_nopl'] = True
+	def usable(self): 
+		usable = importlib.util.find_spec('basic_pitch')
+		usable_meg = 'Basic Pitch is not installed. do "pip install basic_pitch"' if not usable else ''
+		return usable, usable_meg
 	def parse(self, convproj_obj, input_file, dv_config):
+		from basic_pitch.inference import predict
+		from basic_pitch import ICASSP_2022_MODEL_PATH
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, False)
 		convproj_obj.params.add('bpm', 120, 'float')
-
-		from basic_pitch.inference import predict
-		from basic_pitch import ICASSP_2022_MODEL_PATH
 
 		model_output, midi_data, note_events = predict(input_file)
 

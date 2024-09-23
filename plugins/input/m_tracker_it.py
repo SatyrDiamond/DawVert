@@ -31,10 +31,11 @@ def env_to_cvpj(it_env, plugin_obj, t_type, i_div):
 def sample_vibrato(it_samp, plugin_obj): 
 	vibrato_on, vibrato_sweep, vibrato_wave, vibrato_speed, vibrato_depth = it_samp.vibrato_lfo()
 	if vibrato_on:
+		vibrato_speed = vibrato_speed
 		lfo_obj = plugin_obj.lfo_add('pitch')
 		lfo_obj.attack = vibrato_sweep
 		lfo_obj.prop.shape = vibrato_wave
-		lfo_obj.time.set_seconds(vibrato_speed)
+		lfo_obj.time.set_hz(vibrato_speed/2)
 		lfo_obj.amount = vibrato_depth
 
 def get_name(inst_name, dosfilename):

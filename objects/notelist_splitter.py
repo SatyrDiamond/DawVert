@@ -81,6 +81,7 @@ class timesigblocks:
 			for x in xtramath.gen_float_blocks(t[1]-t[0],t[2]):
 				curpos += x
 				p_splitts[curpos] = t[2]
+				if int(curpos) not in p_splitts: p_splitts[int(curpos)] = t[2]
 				if curpos not in self.splitpoints: self.splitpoints.append(curpos)
 
 		self.splitpoints = np.array(self.splitpoints, dtype=np.uint32) 

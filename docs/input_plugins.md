@@ -2,7 +2,7 @@
 # Supported Inputs
 ## DAWs
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info |
-| --- | --- | :--- | :--- | :--- | :--- |
+| --- | --- | --- | :--- | :--- | :--- | :--- |
 | M-I | ```main``` | ```flp``` | FL Studio | ```.flp``` | ✔️ | FL 20+ or higher |
 | M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
 | R | ```main``` | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
@@ -12,7 +12,7 @@
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
-| --- | --- | :--- | :--- | :--- | :--- |
+| --- | --- | --- | :--- | :--- | :--- | :--- |
 | M | ```main``` | ```mod``` | ProTracker | ```.mod``` | ❌ | |
 | M | ```main``` | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | |
 | M | ```main``` | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | |
@@ -21,7 +21,7 @@
 
 ## Chiptune/Retro
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
-| --- | --- | :--- | :--- | :--- | :--- |
+| --- | --- | --- | :--- | :--- | :--- | :--- |
 | M-I | ```main``` | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | |
 | M-I | ```main``` | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ | DMF Legacy only|
 | M-I | ```main``` | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | Some Arps is converted to Chords |
@@ -34,7 +34,7 @@
 
 ## Web
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
-| --- | --- | :--- | :--- | :--- | :--- |
+| --- | --- | --- | :--- | :--- | :--- | :--- |
 | M-I | ```main``` | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
 | R | ```main``` | ```amped``` | Amped Studio | ```.json``` | ✔️ | |
 | R | ```main``` | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
@@ -45,7 +45,7 @@
 
 ## Other
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
-| --- | --- | :--- | :--- | :--- | :--- |
+| --- | --- | --- | :--- | :--- | :--- | :--- |
 | R | ```main``` | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | 
 | R-I | ```main``` | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | R-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
@@ -54,7 +54,7 @@
 
 ## Mario Paint
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
-| --- | --- | :--- | :--- | :--- | :--- |
+| --- | --- | --- | :--- | :--- | :--- | :--- |
 | M-S | ```main``` | ```notessimo_v2``` | Notessimo V2 | ```.note``` | ❌ | |
 | M-S | ```main``` | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ❌ | |
 | R-M | ```main``` | ```mariopaint_msq``` | MarioSequencer | ```.msq``` | ❌ | |
@@ -63,7 +63,7 @@
 
 ## Old
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
-| --- | --- | :--- | :--- | :--- | :--- |
+| --- | --- | --- | :--- | :--- | :--- | :--- |
 | R | ```main``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R | ```main``` | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
 | R | ```main``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
@@ -75,10 +75,10 @@
 
 ## Experiments
 | DataType | PluginSet | Short Name | Name | Info |
-| --- | --- | :--- | :--- |
+| --- | --- | --- | :--- | :--- |
 | R | ```exper``` | ```color_art``` | Color Art | Image to Clip Colors
 
 ## AI
 | DataType | PluginSet | Short Name | Name | Info |
-| --- | --- | :--- | :--- |
+| --- | --- | --- | :--- | :--- |
 | R | ```ai``` | ```basic_pitch``` | [Basic Pitch](https://github.com/spotify/basic-pitch) | Audio File | audio-to-MIDI converter with pitch bend detection

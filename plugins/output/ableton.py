@@ -24,6 +24,14 @@ DEBUG_IGNORE_INST = False
 DEBUG_IGNORE_FX = False
 DEBUG_IGNORE_PLACEMENTS = False
 NOCOLORNUM = 13
+LFO_SHAPE = {
+	'sine': 0,
+	'square': 1,
+	'triangle': 2,
+	'saw': 3,
+	'saw_down': 4,
+	'random': 5,
+}
 
 def fixtxt(inp):
 	return inp.encode("ascii", "replace").decode(encoding="utf-8", errors="ignore")
@@ -390,15 +398,15 @@ def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 #
 #				als_device = None
 #
-#				if plugin_obj.check_match('universal', 'arpeggiator'):
-#					fx_on, fx_wet = plugin_obj.fxdata_get()
-#					als_device = als_track.DeviceChain.add_device('MidiArpeggiator')
-#					#do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
-#					als_device.On.Manual = fx_on
-#					parampaths = {}
-#					timing_obj = plugin_obj.timing_get('main')
-#					#print(timing_obj.type)
-#					als_device.params.import_keys(parampaths)
+#				#if plugin_obj.check_match('universal', 'arpeggiator'):
+#				#	fx_on, fx_wet = plugin_obj.fxdata_get()
+#				#	als_device = als_track.DeviceChain.add_device('MidiArpeggiator')
+#				#	#do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
+#				#	als_device.On.Manual = fx_on
+#				#	parampaths = {}
+#				#	timing_obj = plugin_obj.timing_get('main')
+#				#	#print(timing_obj.type)
+#				#	als_device.params.import_keys(parampaths)
 
 def do_effects(convproj_obj, als_track, fxslots_audio):
 	if not DEBUG_IGNORE_FX:
@@ -573,6 +581,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			#print(str(plugin_obj.type), plugin_obj.datavals_global.get('name', ''))
+			is_sampler = False
 
 			if plugin_obj.check_wildmatch('native-ableton', None):
 				if middlenote != 0:
@@ -593,6 +602,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
 
 			if plugin_obj.check_match('sampler', 'multi'):
+				is_sampler = True
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
 					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
@@ -628,9 +638,8 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			
 				paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
 
-				als_device.params.import_keys(paramkeys)
-
 			if plugin_obj.check_match('sampler', 'single'):
+				is_sampler = True
 
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
@@ -681,8 +690,6 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 					paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
 
-					als_device.params.import_keys(paramkeys)
-
 				else:
 					als_device = als_track.DeviceChain.add_device('OriginalSimpler')
 					spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
@@ -697,9 +704,8 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					paramkeys['Pitch/TransposeKey'] = ableton_parampart.as_param('TransposeKey', 'float', round(pitchin))
 					paramkeys['Pitch/TransposeFine'] = ableton_parampart.as_param('TransposeFine', 'float', (pitchin-round(pitchin))*100)
 
-					als_device.params.import_keys(paramkeys)
-
 			if plugin_obj.check_match('sampler', 'slicer'):
+				is_sampler = True
 				samplepart_obj = plugin_obj.samplepart_get('sample')
 
 				als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
@@ -715,6 +721,63 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				paramkeys['Globals/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 2)
 				paramkeys['SimplerSlicing/PlaybackMode'] = ableton_parampart.as_value('PlaybackMode', 1)
 				paramkeys['VolumeAndPan/OneShotEnvelope/SustainMode'] = ableton_parampart.as_param('SustainMode', 'int', int(samplepart_obj.trigger != 'oneshot'))
+
+			if is_sampler:
+				filter_obj = plugin_obj.filter
+
+				paramkeys['Filter/IsOn'] = ableton_parampart.as_param('IsOn', 'bool', filter_obj.on)
+				paramkeys['Filter/Slot/Value'] = ableton_parampart.as_numset('SimplerFilter')
+				alsfilter = paramkeys['Filter/Slot/Value']['0/SimplerFilter'] = {}
+				alsfilter['Freq'] = ableton_parampart.as_param('Freq', 'float', filter_obj.freq)
+				alsfilter['Res'] = ableton_parampart.as_param('Res', 'float', (filter_obj.q**0.7)/3.5)
+				alsfilter['Slope'] = ableton_parampart.as_param('Slope', 'bool', filter_obj.slope>18)
+				alsfilter['ModByPitch'] = ableton_parampart.as_param('ModByPitch', 'float', 0)
+
+				if filter_obj.type.type == 'low_pass': 
+					alsfilter['Type'] = ableton_parampart.as_param('Type', 'int', 0)
+
+				if filter_obj.type.type == 'high_pass': 
+					alsfilter['Type'] = ableton_parampart.as_param('Type', 'int', 1)
+
+				if filter_obj.type.type == 'band_pass': 
+					alsfilter['Type'] = ableton_parampart.as_param('Type', 'int', 2)
+
+				if filter_obj.type.type == 'notch': 
+					alsfilter['Type'] = ableton_parampart.as_param('Type', 'int', 3)
+
+				if als_device.name == 'MultiSampler':
+					lfo_pan_obj = plugin_obj.lfo_get('pan')
+					paramkeys['Lfo/IsOn'] = ableton_parampart.as_param('IsOn', 'bool', True)
+					paramkeys['VolumeAndPan/PanoramaLfoAmount'] = ableton_parampart.as_param('PanoramaLfoAmount', 'float', abs(lfo_pan_obj.amount))
+					paramkeys['Lfo/Slot/Value'] = ableton_parampart.as_numset('SimplerLfo')
+					alslfo = paramkeys['Lfo/Slot/Value']['0/SimplerLfo'] = {}
+					if lfo_pan_obj.prop.shape in LFO_SHAPE:
+						alslfo['Type'] = ableton_parampart.as_param('Type', 'int', LFO_SHAPE[lfo_pan_obj.prop.shape])
+					alslfo['Frequency'] = ableton_parampart.as_param('Frequency', 'float', 1/lfo_pan_obj.time.speed_seconds)
+					alslfo['Attack'] = ableton_parampart.as_param('Attack', 'float', lfo_pan_obj.attack*1000)
+
+					lfo_vol_obj = plugin_obj.lfo_get('vol')
+					paramkeys['AuxLfos.0/IsOn'] = ableton_parampart.as_param('IsOn', 'bool', True)
+					paramkeys['AuxLfos.0/Slot/Value'] = ableton_parampart.as_numset('SimplerAuxLfo')
+					alslfo = paramkeys['AuxLfos.0/Slot/Value']['0/SimplerAuxLfo'] = {}
+					if lfo_vol_obj.prop.shape in LFO_SHAPE:
+						alslfo['Type'] = ableton_parampart.as_param('Type', 'int', LFO_SHAPE[lfo_vol_obj.prop.shape])
+					alslfo['Frequency'] = ableton_parampart.as_param('Frequency', 'float', 1/lfo_vol_obj.time.speed_seconds)
+					alslfo['Attack'] = ableton_parampart.as_param('Attack', 'float', lfo_vol_obj.attack*1000)
+					alslfo['ModDst/ModConnections.0/Amount'] = ableton_parampart.as_value('Amount', lfo_vol_obj.amount*100)
+					alslfo['ModDst/ModConnections.0/Connection'] = ableton_parampart.as_value('Connection', 18)
+
+					lfo_pitch_obj = plugin_obj.lfo_get('pitch')
+					paramkeys['AuxLfos.1/IsOn'] = ableton_parampart.as_param('IsOn', 'bool', True)
+					paramkeys['AuxLfos.1/Slot/Value'] = ableton_parampart.as_numset('SimplerAuxLfo')
+					alslfo = paramkeys['AuxLfos.1/Slot/Value']['0/SimplerAuxLfo'] = {}
+					if lfo_pitch_obj.prop.shape in LFO_SHAPE:
+						alslfo['Type'] = ableton_parampart.as_param('Type', 'int', LFO_SHAPE[lfo_pitch_obj.prop.shape])
+					alslfo['Frequency'] = ableton_parampart.as_param('Frequency', 'float', 1/lfo_pitch_obj.time.speed_seconds)
+					alslfo['Attack'] = ableton_parampart.as_param('Attack', 'float', lfo_pitch_obj.attack*1000)
+					alslfo['ModDst/ModConnections.0/Amount'] = ableton_parampart.as_value('Amount', (lfo_pitch_obj.amount/24)*100)
+					alslfo['ModDst/ModConnections.0/Connection'] = ableton_parampart.as_value('Connection', 6)
+				
 				als_device.params.import_keys(paramkeys)
 
 		if als_device_pitch: als_device_pitch.params.import_keys(pitchparamkeys)

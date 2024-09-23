@@ -22,12 +22,12 @@ print('DawVert: Daw Conversion Tool')
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", default=None)
 parser.add_argument("-it", default=None)
+parser.add_argument("-ips", default=None)
 parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
 parser.add_argument("--extrafile", default=None)
-parser.add_argument("--plugset-input", default=None)
 parser.add_argument("--mi2m--output-unused-nle", action='store_true')
 parser.add_argument("--nonfree-plugins", action='store_true')
 parser.add_argument("--shareware-plugins", action='store_true')
@@ -63,7 +63,7 @@ if args.soundfont != None: core.config_data.path_soundfont = args.soundfont
 if args.songnum != None: core.config_data.songnum = int(args.songnum)
 if args.extrafile != None: core.config_data.path_extrafile = args.extrafile
 if args.mi2m__output_unused_nle == True: core.config_data.flags_convproj.append('mi2m-output-unused-nle')
-if args.plugset_input: pluginset = args.plugset_input
+if args.ips: pluginset = args.ips
 if args.nonfree_plugins == True: core.config_data.extplug_cat.append('nonfree')
 if args.shareware_plugins == True: core.config_data.extplug_cat.append('shareware')
 if args.old_plugins == True: core.config_data.extplug_cat.append('old')

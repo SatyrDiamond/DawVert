@@ -2,25 +2,24 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
+import importlib.util
 
 class input_pyav(plugins.base):
-	try:
-		import av
-		usable = True
-	except:
-		usable = False
-
 	def is_dawvert_plugin(self): return 'audiofile'
 	def get_shortname(self): return 'ffmpeg'
 	def get_name(self): return 'FFmpeg'
 	def get_priority(self): return 0
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg', 'wv']
-
+	def usable(self): 
+		usable = importlib.util.find_spec('av')
+		usable_meg = '"av" package is not installed.' if not usable else ''
+		return usable, usable_meg
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
+		import av
 		valid = False
 		if self.usable:
-			avdata = self.av.open(input_file)
+			avdata = av.open(input_file)
 			if len(avdata.streams.audio) != 0:
 				avaudio = avdata.streams.audio[0]
 				sampleref_obj.dur_samples = avaudio.duration

@@ -4,14 +4,9 @@
 import plugins
 import io
 from objects.data_bytes import riff_chunks
+import importlib.util
 
 class input_soundfile(plugins.base):
-	try:
-		import soundfile
-		usable = True
-	except:
-		usable = False
-
 	def is_dawvert_plugin(self): return 'audioconv'
 	def get_shortname(self): return 'vorbisacm'
 	def get_name(self): return 'VorbisACM'
@@ -20,8 +15,13 @@ class input_soundfile(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['in_file_formats'] = ['wav_ogg']
 		in_dict['out_file_formats'] = ['wav', 'mp3', 'flac', 'ogg']
+	def usable(self): 
+		usable = importlib.util.find_spec('soundfile')
+		usable_meg = '"soundfile" package is not installed.' if not usable else ''
+		return usable, usable_meg
 	def convert_file(self, sampleref_obj, to_type, outpath):
-		if sampleref_obj.fileref.file.extension == 'wav' and self.usable:
+		import soundfile
+		if sampleref_obj.fileref.file.extension == 'wav':
 			input_file = sampleref_obj.fileref.get_path(None, False)
 			riff_data = riff_chunks.riff_chunk()
 			byr_stream = riff_data.load_from_file(input_file, False)
@@ -39,13 +39,13 @@ class input_soundfile(plugins.base):
 
 			if fmt_format == 26447:
 				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream: audiodata = bye_stream.raw(data_end-data_pos)
-				samples, samplerate = self.soundfile.read(io.BytesIO(audiodata))
+				samples, samplerate = soundfile.read(io.BytesIO(audiodata))
 				sampleref_obj.fileref.set_folder(None, outpath, 0)
 				sampleref_obj.fileformat = to_type
 				sampleref_obj.fileref.file.extension = to_type
 				output_file = sampleref_obj.fileref.get_path(None, False)
 				f = open(output_file, 'wb')
-				self.soundfile.write(f, samples, samplerate)
+				soundfile.write(f, samples, samplerate)
 				return True
 			return False
 		return False

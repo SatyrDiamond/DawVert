@@ -33,7 +33,8 @@ class cvpj_envelope_adsr:
 		self.decay_tension = 0
 		self.release_tension = 0
 		
-		fadeout = env_pointsdata.data['fadeout'] if 'fadeout' in env_pointsdata.data else 0
+		use_fadeout = env_pointsdata.data['use_fadeout'] if 'use_fadeout' in env_pointsdata.data else 0
+		fadeout = env_pointsdata.data['fadeout'] if 'fadeout' in env_pointsdata.data else True
 		pointsdata = env_pointsdata.points
 		numpoints = len(pointsdata)
 
@@ -99,7 +100,7 @@ class cvpj_envelope_adsr:
 					self.decay = envp_end
 					self.decay_tension = (envv_middle-(envv_first/2))*2
 					self.sustain = 0
-					self.release = fadeout
+					if use_fadeout: self.release = fadeout
 					isenvconverted = 301
 
 				if sustainnum == 0: 

@@ -164,10 +164,17 @@ class xm_song:
 	def __init__(self):
 		pass
 
+	def load_from_raw(self, input_file):
+		song_file = bytereader.bytereader()
+		song_file.load_raw(input_file)
+		return self.load(song_file)
+
 	def load_from_file(self, input_file):
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
+		return self.load(song_file)
 
+	def load(self, song_file):
 		try: song_file.magic_check(b'Extended Module: ')
 		except ValueError as t:
 			logger_projparse.error('xm: '+str(t))

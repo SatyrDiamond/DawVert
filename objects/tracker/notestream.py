@@ -58,6 +58,13 @@ class notestream:
 		self.freeze_inst = -1
 		self.freeze_octave = 0
 		self.key_to_inst = 0
+		self.off_methods = {}
+		self.record_off_methods = False
+
+	def add_off_method(self, instnum, cuttype):
+		if instnum not in self.off_methods: self.off_methods[instnum] = {}
+		if cuttype not in self.off_methods[instnum]: self.off_methods[instnum][cuttype] = 0
+		self.off_methods[instnum][cuttype] += 1
 
 	def note_on(self, c_note, c_fx):
 		self.note_active = True
@@ -104,9 +111,15 @@ class notestream:
 					if self.freeze_octave: c_note = c_note%12
 					if self.key_to_inst: self.cur_inst += c_note
 					self.note_off()
+					#if self.cur_inst and self.record_off_methods: 
+					#	self.add_off_method(self.cur_inst, 'off')
 					self.note_on(c_note if not self.key_to_inst else 0, c_fx)
 				elif self.note_active: self.slide_pitch.slide_tracker_porta_targ(c_note)
-			else: self.note_off()
+			else:
+				if self.record_off_methods and self.cur_inst:
+					self.add_off_method(self.cur_inst, c_note)
+
+				self.note_off()
 
 		if c_inst != None: 
 			if self.cur_inst not in self.used_inst: self.used_inst.append(self.cur_inst)

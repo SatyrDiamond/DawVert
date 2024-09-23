@@ -4,7 +4,6 @@
 from plugins import base as dv_plugins
 from functions_plugin_ext import plugin_vst2
 
-#from experiments_plugin_input import base as experiments_plugin_input
 from functions import song_compat
 from functions import plug_conv
 
@@ -170,8 +169,13 @@ class core:
 	def parse_input(self, in_file, dv_config): 
 		self.convproj_obj = convproj.cvpj_project()
 		dv_config.searchpaths.append(os.path.dirname(in_file))
-		plug_obj = self.currentplug_input.selected_plugin.plug_obj
-		plug_obj.parse(self.convproj_obj, in_file, dv_config)
+		selected_plugin = self.currentplug_input.selected_plugin
+		plug_obj = selected_plugin.plug_obj
+		if selected_plugin.usable:
+			plug_obj.parse(self.convproj_obj, in_file, dv_config)
+		else:
+			logger_core.error(self.currentplug_input.selected_shortname+' is not usable: '+selected_plugin.usable_meg)
+			exit()
 
 	def convert_type_output(self, dv_config): 
 		global in_dawinfo

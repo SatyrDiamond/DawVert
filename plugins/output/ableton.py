@@ -505,6 +505,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				als_midiclip.CurrentEnd = notespl_obj.time.position+notespl_obj.time.duration
 	
 				notespl_obj.notelist.notemod_conv()
+				notespl_obj.notelist.mod_limit(-60, 67)
 				notespl_obj.notelist.remove_overlap()
 	
 				if notespl_obj.time.cut_type == 'cut':
@@ -991,6 +992,7 @@ class output_ableton(plugins.base):
 	def get_shortname(self): return 'ableton'
 	def gettype(self): return 'r'
 	def get_prop(self, in_dict): 
+		in_dict['plugin_arch'] = [64]
 		in_dict['file_ext'] = 'als'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']

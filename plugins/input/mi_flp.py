@@ -687,7 +687,11 @@ class input_flp(plugins.base):
 
 				mixer_eq.append([eq_freq, eq_level])
 
-			if mixer_eq != [[5777, 0], [33145, 0], [55825, 0]]:
+			eq_used = True
+			if mixer_eq != [[5777, 0], [33145, 0], [55825, 0]]: eq_used = False
+			if mixer_eq != [[0, 0], [0, 0], [0, 0]]: eq_used = False
+
+			if eq_used:
 				plugin_obj = convproj_obj.add_plugin(eq_fxid, 'universal', 'eq-bands')
 				for n, e in enumerate(mixer_eq):
 					eq_freq, eq_level = e

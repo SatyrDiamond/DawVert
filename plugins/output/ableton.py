@@ -346,6 +346,9 @@ def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 	do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
 	als_device.On.Manual = fx_on
 
+	if plugin_obj.type.subtype in ['Eq8']:
+		als_device.IsExpanded = False
+
 	parampaths = {}
 	fldso = globalstore.dataset.get_obj('ableton', 'plugin', plugin_obj.type.subtype)
 	if fldso:

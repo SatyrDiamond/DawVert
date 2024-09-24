@@ -94,6 +94,11 @@ lc_instlist[72] = ['FastArp Sine'    ,'FA-Sine'   ,0  ,0  ,0  ,False ,False]
 lc_instlist[73] =['FastArp TiltedSaw','FA-TiltSaw',0  ,0  ,0  ,False ,False]
 lc_instlist[74] = ['FastArp Noise'   ,'FA-Noise'  ,0  ,0  ,0  ,False ,False]
 
+lc_instlist[120] = ['Tone A'         ,'ToneA'     ,0  ,0  ,0  ,False ,False]
+lc_instlist[121] = ['Tone B'         ,'ToneB'     ,0  ,0  ,0  ,False ,False]
+lc_instlist[122] = ['Tone C'         ,'ToneC'     ,0  ,0  ,0  ,False ,False]
+lc_instlist[123] = ['Tone D'         ,'ToneD'     ,0  ,0  ,0  ,False ,False]
+
 lc_instlist[128]= ['_EXT'            ,'_EXT'      ,0  ,0  ,0  ,False ,False]
 lc_instlist[129]= ['_EXT_E'          ,'_EXT'      ,0  ,1  ,0  ,False ,False]
 
@@ -123,6 +128,19 @@ def chord_parser(chordval):
 		if chordbytes_nine == 1: output_val.append(14)
 		if chordbytes_nine == 2: output_val.append(13)
 	return output_val
+
+def customtone(project_obj, tonenum, osc_data, plugin_obj):
+	osc_data.prop.type = 'wave'
+	osc_data.prop.nameid = 'main'
+	wave_type = project_obj.wave_memory_type_list[tonenum]
+	wave_data = project_obj.wave_memory_table_list[tonenum]
+	if wave_type == 0:
+		wave_obj = plugin_obj.wave_add('main')
+		wave_obj.set_all_range(wave_data, -32, 32)
+	if wave_type == 1:
+		wave_data = [x for n, x in enumerate(wave_data) if n%2 == 0]
+		wave_obj = plugin_obj.wave_add('main')
+		wave_obj.set_all_range(wave_data, -32, 32)
 
 class input_lc(plugins.base):
 	def __init__(self): pass
@@ -286,6 +304,22 @@ class input_lc(plugins.base):
 					elif instdata[1] == 'Pulse125': 
 						osc_data.prop.shape = 'square'
 						osc_data.prop.noise_type = 1/8
+					elif instdata[1] == 'ToneA': 
+						osc_data.prop.type = 'wave'
+						osc_data.prop.nameid = 'main'
+						customtone(project_obj, 0, osc_data, plugin_obj)
+					elif instdata[1] == 'ToneB': 
+						osc_data.prop.type = 'wave'
+						osc_data.prop.nameid = 'main'
+						customtone(project_obj, 1, osc_data, plugin_obj)
+					elif instdata[1] == 'ToneC': 
+						osc_data.prop.type = 'wave'
+						osc_data.prop.nameid = 'main'
+						customtone(project_obj, 2, osc_data, plugin_obj)
+					elif instdata[1] == 'ToneD': 
+						osc_data.prop.type = 'wave'
+						osc_data.prop.nameid = 'main'
+						customtone(project_obj, 3, osc_data, plugin_obj)
 					#else: 
 					#	inst_plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', instdata[1])
 			else:

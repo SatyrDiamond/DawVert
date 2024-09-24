@@ -133,6 +133,7 @@ class LCMusic:
 		self.abrepeat_a = None
 		self.abrepeat_b = None
 		self.pianoroll_display_mode = 0
+		self.wave_memory_table_list = []
 
 	def get_channel(self, num):
 		voi_notes = self.channels.ch[num].sl
@@ -174,6 +175,8 @@ class LCMusic:
 			if 'abrepeat_a' in pd: self.abrepeat_a = pd['abrepeat_a']
 			if 'abrepeat_b' in pd: self.abrepeat_b = pd['abrepeat_b']
 			if 'pianoroll_display_mode' in pd: self.pianoroll_display_mode = pd['pianoroll_display_mode']
+			if 'wave_memory_table_list' in pd: self.wave_memory_table_list = pd['wave_memory_table_list']
+			if 'wave_memory_type_list' in pd: self.wave_memory_type_list = pd['wave_memory_type_list']
 
 	def load_from_file(self, input_file):
 		song_file = open(input_file, 'r')

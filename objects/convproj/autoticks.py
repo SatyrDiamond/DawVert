@@ -122,6 +122,31 @@ class cvpj_autoticks:
 			prev_val = p
 		return autotspl, self.time_ppq
 
+	def to_points_classic(self):
+		pp = 0
+		pv = 0
+
+		hp = self.time_ppq//4
+
+		tres = 0.02
+
+		points_out = []
+
+		for p, v in self.iter():
+			cp = p-pp
+			cv = abs(v-pv)
+
+			ip = hp>cp
+			iv = cv<tres
+
+			ia = ip and iv
+
+			points_out.append([p, v, ia])
+
+			pp, pv = p, v
+
+		return points_out
+
 	def to_points(self):
 		prev_pos = dif_val()
 		prev_val = dif_val()

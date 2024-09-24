@@ -194,13 +194,15 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 					else: group_obj.visual.name = 'FX '+str(fx_num)
 				else: 
 					allnames = [(convproj_obj.track_data[x].visual.name.split(' #')[0] if convproj_obj.track_data[x].visual.name else '') for x in fxtracks]
-					if all(x == allnames[0] for x in allnames): 
+					if all(x == allnames[0] for x in allnames) and allnames: 
 						group_obj.visual.name = allnames[0]+' [FX '+str(fx_num)+']' if allnames[0] else 'FX '+str(fx_num)
 					else: group_obj.visual.name = 'FX '+str(fx_num)
 				group_obj.visual.color = fxchannel_obj.visual.color
 				if allcolor: group_obj.visual.color.merge(allcolor)
 
-				track_obj.visual.color.merge(group_obj.visual.color)
+				for x in fxtracks:
+					track_obj = cvpjtrackdata[x]
+					track_obj.visual.color.merge(group_obj.visual.color)
 
 			logger_compat.info('fxchange: FX to Tracks '+ ', '.join(fx_trackids[fx_num]))
 		convproj_obj.fxrack = {}

@@ -76,5 +76,7 @@ class cvpj_placement_autopoints:
 
 	def remove_cut(self):
 		if self.time.cut_type == 'cut':
-			self.data.edit_trimmove(self.time.cut_start/4, self.time.duration)
+			self.data.edit_trimmove(self.time.cut_start, self.time.duration+self.time.cut_start)
+		if self.time.cut_type == 'none':
+			self.data.edit_trimmove(0, self.time.duration)
 

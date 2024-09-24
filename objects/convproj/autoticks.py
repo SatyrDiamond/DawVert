@@ -5,6 +5,15 @@ from functions import xtramath
 from objects.convproj import time
 import math
 
+class dif_val:
+	def __init__(self):
+		self.cur_val = 0
+
+	def do_value(self, inval):
+		out_val = inval-self.cur_val
+		self.cur_val = inval
+		return out_val
+
 class cvpj_autoticks:
 	__slots__ = ['val_type','time_ppq','time_float','points']
 
@@ -114,26 +123,44 @@ class cvpj_autoticks:
 		return autotspl, self.time_ppq
 
 	def to_points(self):
-		pp = 0
-		pv = 0
+		prev_pos = dif_val()
+		prev_val = dif_val()
+		prev_minus = False
 
-		hp = self.time_ppq//4
-
+		tres_pos = self.time_ppq//8
 		tres = 0.02
 
+		pointspl = []
+		first = True
+		for cur_pos, cur_val in self.iter():
+			pos_dif = prev_pos.do_value(cur_pos)
+			val_dif = prev_val.do_value(cur_val)
+			cur_minus = val_dif>=0
+
+			trigger_pos = tres_pos<pos_dif
+			trigger_minus = cur_minus!=prev_minus
+
+			if trigger_pos or trigger_minus or first:
+				pointspl.append([cur_pos, cur_val, []])
+				#print('NEW_!', cur_pos, cur_val)
+			else:
+				pointspl[-1][2].append([cur_pos, cur_val, pos_dif/tres_pos, val_dif])
+			prev_minus = cur_minus
+			first = False
+
 		points_out = []
+		for t_pos, t_val, t_points in pointspl:
+			points_out.append([t_pos, t_val, False])
 
-		for p, v in self.iter():
-			cp = p-pp
-			cv = abs(v-pv)
+			if t_points:
+				lastpoint = t_points[-1]
 
-			ip = hp>cp
-			iv = cv<tres
+				for cur_pos, cur_val, pos_dif, val_dif in t_points:
+					val_rdif = prev_val.do_value(val_dif/pos_dif)
+					val_rdif = max(abs(val_rdif)-0.003, 0)
+					if val_rdif:
+						points_out.append([cur_pos, cur_val, True])
 
-			ia = ip and iv
-
-			points_out.append([p, v, ia])
-
-			pp, pv = p, v
+				points_out.append([lastpoint[0], lastpoint[1], True])
 
 		return points_out

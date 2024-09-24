@@ -188,7 +188,7 @@ def decode(sysex_obj, bstream):
 				if mem_address[2] == 34: sysex_obj.param, sysex_obj.value = ['reverb_send', firstval]
 				if mem_address[2] == 35: sysex_obj.param, sysex_obj.value = ['rx_bank', firstval]
 				if mem_address[2] == 36: sysex_obj.param, sysex_obj.value = ['rx_bank_lsb', firstval]
-				if mem_address[2] == 42: sysex_obj.param, sysex_obj.value = ['pitch_fine_tune', int(mem_data[0:2])]
+				if mem_address[2] == 42: sysex_obj.param, sysex_obj.value = ['pitch_fine_tune', firstval]
 				if mem_address[2] == 44: sysex_obj.param, sysex_obj.value = ['delay_send_level', firstval]
 
 				if subnum[0] == 3: sysex_obj.param, sysex_obj.value = ['tone_modify_'+str(subnum[1]), firstval]

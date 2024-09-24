@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later 
 
 class counter:
 	def __init__(self, starting_num, start_txt):

@@ -226,4 +226,3 @@ class cvpj_autopoints:
 			apoint_obj = self.add_point()
 			apoint_obj.pos = numblock*blocks_obj.time
 			apoint_obj.value = xtramath.between_to_one(0, blocks_obj.max, blocks_obj.values[numblock])
-

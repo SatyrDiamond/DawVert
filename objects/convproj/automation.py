@@ -172,6 +172,7 @@ class cvpj_s_automation:
 				x.remove_cut()
 				for c, p in enumerate(x.data.points):
 					self.add_autopoint(p.pos+x.time.position, p.value, p.type if c != 0 else 'instant')
+				
 
 		self.pl_points = None
 		self.u_pl_points = False

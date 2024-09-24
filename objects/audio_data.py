@@ -41,6 +41,9 @@ class codec_obj:
 			elif self.pcm_bits == 32: return numpy.int32 if self.pcm_signed else numpy.uint32
 
 class audio_obj:
+
+	audiocodec_selector = dv_plugins.create_selector('audiocodec')
+
 	def __init__(self):
 		self.is_pcm = True
 		self.data = []
@@ -142,18 +145,19 @@ class audio_obj:
 				if not pcm_signed: self.pcm_to_unsigned()
 
 	def decode_from_codec(self, codecname, in_bytes):
-		codec_obj = self.codec
-		if codecname in dv_plugins.plugins_audio_codec:
-			extcodec_obj = dv_plugins.plugins_audio_codec[codecname]
-			if extcodec_obj.decode_supported: extcodec_obj.object.decode(in_bytes, self)
+		codecname = audio_obj.audiocodec_selector.set(codecname)
+		if codecname:
+			selected_plugin = audio_obj.audiocodec_selector.selected_plugin
+			if selected_plugin.prop_obj.decode_supported: selected_plugin.plug_obj.decode(in_bytes, self)
 			else: print('[plugins] codec: decoding unsupported:', codecname)
 		else: print('[plugins] codec: not found', codecname)
 
 	def encode_to_codec(self, codecname):
-		codec_obj = self.codec
-		if codecname in dv_plugins.plugins_audio_codec:
+		codecname = audio_obj.audiocodec_selector.set(codecname)
+		if codecname:
+			selected_plugin = audio_obj.audiocodec_selector.selected_plugin
 			extcodec_obj = dv_plugins.plugins_audio_codec[codecname]
-			if extcodec_obj.encode_supported: return extcodec_obj.object.encode(self)
+			if selected_plugin.prop_obj.encode_supported: return selected_plugin.plug_obj.encode(self)
 			else: print('[plugins] codec: encoding unsupported:', codecname)
 		else: print('[plugins] codec: not found', codecname)
 

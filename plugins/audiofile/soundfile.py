@@ -17,7 +17,7 @@ class input_soundfile(plugins.base):
 	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg']
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		from soundfile import SoundFile
-		sf_audio = self.SoundFile(input_file)
+		sf_audio = SoundFile(input_file)
 		sampleref_obj.hz = sf_audio.samplerate
 		sampleref_obj.timebase = sf_audio.samplerate
 		sampleref_obj.dur_samples = sf_audio.frames

@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond and B0ney
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins

@@ -173,7 +173,7 @@ class plugin_selector:
 		self.pluginlist = loaded_plugins
 
 	def set(self, dvplugsn):
-		if self.plugintype in self.pluginlist:
+		if self.plugintype in self.pluginlist and self.selected_shortname != dvplugsn:
 			if dvplugsn in self.pluginlist[self.plugintype]:
 				self.selected_shortname = dvplugsn
 				self.selected_plugin = self.pluginlist[self.plugintype][dvplugsn]
@@ -259,7 +259,11 @@ class base:
 	def get_list(plug_type):
 		return list(base.loaded_plugins[plug_type]) if plug_type in base.loaded_plugins else []
 
+	def get_list_names(plug_type):
+		return [n.name for _, n in base.loaded_plugins[plug_type].items()] if plug_type in base.loaded_plugins else []
+
 	def load_plugindir(plug_type, plugsetname):
+		if plug_type in base.loaded_plugins: del base.loaded_plugins[plug_type]
 		plugfolder = plug_type + ('_'+plugsetname if plugsetname else '')
 		plugincount = 0
 		for filename in glob.iglob(dirpath + '**/'+plugfolder+'/*.py', recursive=True):
@@ -269,6 +273,8 @@ class base:
 					load_module(os.path.join(dirpath, filename))
 					plugincount += 1
 				except Exception: traceback.print_exc()
+		if plug_type in base.loaded_plugins: 
+			base.loaded_plugins[plug_type] = dict(sorted(base.loaded_plugins[plug_type].items()))
 		logger_plugins.info('Loaded '+str(plugincount)+' '+plug_type+' Plugins.')
 
 	def extplug_exists(pluginname, exttypes, subname):

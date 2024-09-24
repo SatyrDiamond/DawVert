@@ -186,7 +186,17 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				group_obj.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
 				group_obj.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
 				fxchannel_obj.fxslots_audio = []
-				group_obj.visual.name = fxchannel_obj.visual.name if fxchannel_obj.visual.name else 'FX '+str(fx_num)
+				fxtracks = fx_trackids[fx_num]
+				if fxchannel_obj.visual.name: group_obj.visual.name = fxchannel_obj.visual.name
+				elif len(fxtracks) == 1: 
+					track_obj = convproj_obj.track_data[fxtracks[0]]
+					if track_obj.visual.name: group_obj.visual.name = track_obj.visual.name+' [FX '+str(fx_num)+']'
+					else: group_obj.visual.name = 'FX '+str(fx_num)
+				else: 
+					allnames = [(convproj_obj.track_data[x].visual.name.split(' #')[0] if convproj_obj.track_data[x].visual.name else '') for x in fxtracks]
+					if all(x == allnames[0] for x in allnames): 
+						group_obj.visual.name = allnames[0]+' [FX '+str(fx_num)+']' if allnames[0] else 'FX '+str(fx_num)
+					else: group_obj.visual.name = 'FX '+str(fx_num)
 				group_obj.visual.color = fxchannel_obj.visual.color
 				if allcolor: group_obj.visual.color.merge(allcolor)
 

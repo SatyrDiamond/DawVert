@@ -119,6 +119,9 @@ class filesearcher:
 		searchentry_obj.basepath = basepath
 		searchparts[searchseries].append(searchentry_obj)
 
+	def reset():
+		searchparts = {}
+
 class cvpj_filename:
 	def __init__(self):
 		self.used = False

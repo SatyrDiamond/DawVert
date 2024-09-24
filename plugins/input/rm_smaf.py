@@ -131,7 +131,7 @@ class input_mmf(plugins.base):
 					audiotracks[soundnum] = audtrack_obj
 					if soundnum>maxnum: maxnum = soundnum
 
-				filternstream = track_obj.notes.data['key']<16
+				filternstream = track_obj.notes.data.data['key']<16
 				findex = np.where(filternstream)
 
 				for audionote in track_obj.notes.data.data[findex]:

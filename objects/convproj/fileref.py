@@ -369,7 +369,6 @@ class cvpj_sampleref:
 
 	audiofile_selector = dv_plugins.create_selector('audiofile')
 	audioconv_selector = dv_plugins.create_selector('audioconv')
-	audiocodec_selector = dv_plugins.create_selector('audiocodec')
 
 	def __init__(self):
 		self.fileref = cvpj_fileref()

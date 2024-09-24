@@ -577,12 +577,12 @@ class input_flp(plugins.base):
 							autoloc, aadd, adiv = flpauto_to_cvpjauto(autoid.split('/'))
 
 							if autoloc == ['main','pitch']:
-								for x in autodata: x[1] = struct.unpack('i', struct.pack('I', x[1]))[0]
+								for x in autodata: x[1] = struct.unpack('I', struct.pack('i', x[1]))[0]
 
 							if autoloc: 
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
 								autopl_obj.time = placement_obj.time.copy()
-								for pos, val in autodata: autopoint_obj = autopl_obj.data.add_point(pos, val/adiv)
+								for pos, val in autodata: autopl_obj.data.add_point(pos, val/adiv)
 
 				else:
 					if playlistline in temp_pl_track:

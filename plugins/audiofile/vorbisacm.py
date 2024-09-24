@@ -16,7 +16,7 @@ class input_soundfile(plugins.base):
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav']
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
-		from soundfile import SoundFile
+		import soundfile
 		import io
 		from objects.data_bytes import riff_chunks
 
@@ -51,7 +51,7 @@ class input_soundfile(plugins.base):
 				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream:
 					audiodata = bye_stream.raw(data_end-data_pos)
 
-				samples, samplerate = self.soundfile.read(io.BytesIO(audiodata))
+				samples, samplerate = soundfile.read(io.BytesIO(audiodata))
 				frames = len(samples)
 				sampleref_obj.hz = samplerate
 				sampleref_obj.timebase = samplerate

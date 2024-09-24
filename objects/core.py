@@ -31,7 +31,7 @@ consoleHandler = logging.StreamHandler()
 consoleHandler.setLevel(logging.DEBUG)
 consoleHandler.setFormatter(logFormatter)
 
-logging.root.setLevel(logging.DEBUG)
+#logging.root.setLevel(logging.DEBUG)
 
 logger_core = logging.getLogger('core')
 logger_compat = logging.getLogger('compat')
@@ -55,15 +55,27 @@ logger_fxchange.addHandler(consoleHandler)
 logger_project.addHandler(consoleHandler)
 logger_automation.addHandler(consoleHandler)
 logger_globalstore.addHandler(consoleHandler)
-
 logger_input.addHandler(consoleHandler)
 logger_output.addHandler(consoleHandler)
 logger_plugconv.addHandler(consoleHandler)
 logger_plugconv_ext.addHandler(consoleHandler)
-
 logger_audiofile.addHandler(consoleHandler)
 logger_projparse.addHandler(consoleHandler)
 logger_plugins.addHandler(consoleHandler)
+
+logger_core.setLevel(logging.INFO)
+logger_compat.setLevel(logging.INFO)
+logger_fxchange.setLevel(logging.INFO)
+logger_project.setLevel(logging.INFO)
+logger_automation.setLevel(logging.INFO)
+logger_globalstore.setLevel(logging.INFO)
+logger_input.setLevel(logging.INFO)
+logger_output.setLevel(logging.INFO)
+logger_plugconv.setLevel(logging.INFO)
+logger_plugconv_ext.setLevel(logging.INFO)
+logger_audiofile.setLevel(logging.INFO)
+logger_projparse.setLevel(logging.INFO)
+logger_plugins.setLevel(logging.INFO)
 
 class config_data:
 	path_samples_extracted = os.getcwd() + '/__samples_extracted/'
@@ -122,6 +134,18 @@ class dawinfo:
 
 		self.time_seconds = False
 
+pluginsets_input = {
+'main': ['', 'Main'],
+'vgm': ['vgm', 'VGM'],
+'exper': ['exper', 'Experiments'],
+'gameres': ['gameres', 'Game Mod'],
+'ai': ['ai', 'AI']
+}
+
+pluginsets_output = {
+'main': ['', 'Main']
+}
+
 class core:
 	def __init__(self):
 		platform_architecture = platform.architecture()
@@ -137,28 +161,60 @@ class core:
 		dv_plugins.load_plugindir('audioconv', '')
 
 	def input_load_plugins(self, pluginset):
-		if pluginset == 'exper': dv_plugins.load_plugindir('input', 'exper')
-		elif pluginset == 'vgm': dv_plugins.load_plugindir('input', 'vgm')
-		elif pluginset == 'gameres': dv_plugins.load_plugindir('input', 'gameres')
-		elif pluginset == 'ai': dv_plugins.load_plugindir('input', 'ai')
+		if pluginset in pluginsets_input: 
+			plugsetfolder, fullname = pluginsets_input[pluginset]
+			dv_plugins.load_plugindir('input', plugsetfolder)
 		else: dv_plugins.load_plugindir('input', '')
 
+	def input_get_pluginsets(self): return list(pluginsets_input)
+
+	def input_get_pluginsets_names(self): return [n[1] for _, n in pluginsets_input.items()]
+
+	def input_get_pluginsets_index(self, num): return list(pluginsets_input)[num]
+
 	def input_get_plugins(self): return dv_plugins.get_list('input')
+
+	def input_get_plugins_names(self): return dv_plugins.get_list_names('input')
+
+	def input_get_plugins_index(self, num): 
+		pluglist = dv_plugins.get_list('input')
+		if (len(pluglist)-1)>num: return pluglist[num]
+		else: return None
 
 	def input_get_plugins_auto(self): return dv_plugins.get_list_detect('input')
 
 	def input_get_current(self): return self.currentplug_input.selected_shortname
 
+	def input_get_current_name(self): return self.currentplug_input.selected_plugin.name if self.currentplug_input.selected_plugin else 'None'
+
 	def input_set(self, pluginname): return self.currentplug_input.set(pluginname)
 
 	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
 
-	def output_load_plugins(self):
-		dv_plugins.load_plugindir('output', '')
+	def output_load_plugins(self, pluginset):
+		if pluginset in pluginsets_output: 
+			plugsetfolder, fullname = pluginsets_output[pluginset]
+			dv_plugins.load_plugindir('output', plugsetfolder)
+		else: dv_plugins.load_plugindir('output', '')
 
 	def output_get_plugins(self): return dv_plugins.get_list('output')
 
+	def output_get_plugins_names(self): return dv_plugins.get_list_names('output')
+
+	def output_get_plugins_index(self, num):
+		pluglist = dv_plugins.get_list('output')
+		if (len(pluglist)-1)>num: return pluglist[num]
+		else: return None
+
+	def output_get_pluginsets(self): return list(pluginsets_output)
+
+	def output_get_pluginsets_index(self, num): return list(pluginsets_output)[num]
+
+	def output_get_pluginsets_names(self): return [n[1] for _, n in pluginsets_output.items()]
+
 	def output_get_current(self): return self.currentplug_output.selected_shortname
+
+	def output_get_current_name(self): return self.currentplug_output.selected_plugin.name if self.currentplug_output.selected_plugin else 'None'
 
 	def output_get_extension(self): 
 		prop_obj = self.currentplug_output.get_prop_obj()
@@ -203,3 +259,4 @@ class core:
 	def parse_output(self, out_file): 
 		plug_obj = self.currentplug_output.selected_plugin.plug_obj
 		plug_obj.parse(self.convproj_obj, out_file)
+		logger_core.info('File outputted: '+out_file)

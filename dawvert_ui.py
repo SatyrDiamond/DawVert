@@ -5,7 +5,7 @@ import os
 import sys
 from PyQt6 import QtWidgets, uic, QtCore, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QFileDialog
-from objects_ui.ui_pyqt import Ui_MainWindow
+
 from objects import core as dv_core
 from pathlib import Path
 from functions import plug_conv
@@ -19,16 +19,24 @@ scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
 import logging
 
-class logtxt():
-	guiobject = None
-	def write(self, data):
-		if logtxt.guiobject: logtxt.guiobject.appendPlainText(data.strip())
-
-guitxt = logtxt()
-
-logging.basicConfig(stream=guitxt, level=logging.DEBUG)
-
 plug_conv.load_plugins()
+
+USE_LOG_WINDOW = False
+
+
+if USE_LOG_WINDOW: 
+	from objects_ui.ui_pyqt import Ui_MainWindow
+
+	class logtxt():
+		guiobject = None
+		def write(self, data):
+			if logtxt.guiobject: logtxt.guiobject.appendPlainText(data.strip())
+
+	guitxt = logtxt()
+
+	logging.basicConfig(stream=guitxt, level=logging.DEBUG)
+
+else: from objects_ui.ui_pyqt_console import Ui_MainWindow
 
 convprocess = {}
 def process_converter(qt_obj):
@@ -74,7 +82,7 @@ def process_converter(qt_obj):
 	except SystemExit:
 		pass
 	except:
-		logtxt.guiobject.append(traceback.format_exc())
+		if USE_LOG_WINDOW: logtxt.guiobject.append(traceback.format_exc())
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, *args, obj=None, **kwargs):
@@ -90,7 +98,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 		layout = QtWidgets.QVBoxLayout()
 
-		logtxt.guiobject = self.ui.LogText
+		if USE_LOG_WINDOW: logtxt.guiobject = self.ui.LogText
 
 		self.ui.InputFileButton.clicked.connect(self.__choose_input)
 		self.ui.OutputFileButton.clicked.connect(self.__choose_output)
@@ -199,12 +207,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		plugsetname = self.dawvert_core.output_get_pluginsets_index(num)
 		self.dawvert_core.output_load_plugins(plugsetname)
 		self.__update_output_plugins()
+		self.__change_output_path()
 
 	def __change_output_plugin(self, num):
 		pluginname = self.dawvert_core.output_get_plugins_index(num)
 		if pluginname: self.dawvert_core.output_set(pluginname)
 		self.__update_convst()
+		self.__change_output_path()
 
+	def __change_output_path(self):
 		outfound = self.dawvert_core.output_get_current()
 		filename = self.ui.OutputFilePath.text()
 		if outfound and filename:

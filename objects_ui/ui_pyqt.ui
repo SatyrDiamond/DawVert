@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1069</width>
-    <height>653</height>
+    <width>796</width>
+    <height>747</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -240,25 +240,6 @@
          </property>
         </widget>
        </item>
-       <item>
-        <widget class="QLabel" name="StatusText">
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">font: 14pt &quot;Arial&quot;;</string>
-         </property>
-         <property name="text">
-          <string>Info Here</string>
-         </property>
-         <property name="alignment">
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
       </layout>
      </item>
      <item>
@@ -267,18 +248,9 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QTextBrowser" name="LogText">
-         <property name="minimumSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
-         </property>
-         <property name="baseSize">
-          <size>
-           <width>0</width>
-           <height>0</height>
-          </size>
+        <widget class="QPlainTextEdit" name="LogText">
+         <property name="readOnly">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

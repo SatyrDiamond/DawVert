@@ -140,10 +140,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def __do_auto_detect(self, filename):
 		if os.path.exists(filename):
-			detect_plugin_found = self.dawvert_core.input_autoset(filename)
-			if detect_plugin_found:
+			try:
+				detect_plugin_found = self.dawvert_core.input_autoset(filename)
 				plugnames = self.dawvert_core.input_get_plugins()
-				self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(detect_plugin_found))
+				if detect_plugin_found:
+					self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(detect_plugin_found))
+					return True
+				else:
+					outshort = self.dawvert_core.input_autoset_fileext(filename)
+					if outshort:
+						self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(outshort))
+						return outshort != None
+			except:
+				pass
 
 	def __update_convst(self):
 		in_file = self.ui.InputFilePath.text().replace('/', '\\')

@@ -288,7 +288,14 @@ class input_dawproject(plugins.base):
 	def get_shortname(self): return 'dawproject'
 	def get_name(self): return 'DawProject'
 	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def supported_autodetect(self): return True
+	def detect(self, input_file): 
+		try:
+			zip_data = zipfile.ZipFile(input_file, 'r')
+			if 'project.xml' in zip_data.namelist(): return True
+			else: return False
+		except:
+			return False
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'dawproject'
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
+import zipfile
 import json
 import struct
 import os.path
@@ -230,11 +231,17 @@ class input_flp(plugins.base):
 		in_dict['fxchain_mixer'] = True
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'FLhd': return True
-		else: return False
+		try:
+			zip_data = zipfile.ZipFile(input_file, 'r')
+			for filename in zip_data.namelist():
+				if filename.endswith('.flp'): return True
+			return False
+		except:
+			bytestream = open(input_file, 'rb')
+			bytestream.seek(0)
+			bytesdata = bytestream.read(4)
+			if bytesdata == b'FLhd': return True
+			else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
 
 		convproj_obj.type = 'mi'

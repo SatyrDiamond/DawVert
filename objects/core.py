@@ -188,7 +188,8 @@ class core:
 
 	def input_get_current_name(self): return self.currentplug_input.selected_plugin.name if self.currentplug_input.selected_plugin else 'None'
 
-	def input_set(self, pluginname): return self.currentplug_input.set(pluginname)
+	def input_set(self, pluginname): 
+		return self.currentplug_input.set(pluginname)
 
 	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
 
@@ -197,7 +198,6 @@ class core:
 		for shortname, plug_obj, prop_obj in self.currentplug_input.iter():
 			if ('.'+prop_obj.file_ext.lower())==fileext.lower():
 				self.input_set(shortname)
-				print(shortname)
 				return shortname
 
 	def output_load_plugins(self, pluginset):

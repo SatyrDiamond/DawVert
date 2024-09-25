@@ -22,7 +22,7 @@ import logging
 class logtxt():
 	guiobject = None
 	def write(self, data):
-		if logtxt.guiobject: logtxt.guiobject.append(data.strip())
+		if logtxt.guiobject: logtxt.guiobject.appendPlainText(data.strip())
 
 guitxt = logtxt()
 
@@ -91,7 +91,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.ui.InputFileButton.clicked.connect(self.__choose_input)
 		self.ui.OutputFileButton.clicked.connect(self.__choose_output)
 		self.ui.ListWidget_InPlugSet.currentRowChanged.connect(self.__change_input_plugset)
-		self.ui.ListWidget_InPlugin.currentRowChanged.connect(self.__change_input_plugin)
+		self.ui.ListWidget_InPlugin.currentRowChanged.connect(self.__change_input_plugin_nofb)
 
 		self.ui.ListWidget_OutPlugSet.currentRowChanged.connect(self.__change_output_plugset)
 		self.ui.ListWidget_OutPlugin.currentRowChanged.connect(self.__change_output_plugin)
@@ -160,7 +160,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		infound = self.dawvert_core.input_get_current()
 		outfound = self.dawvert_core.output_get_current()
 		not_same = in_file!=out_file
-		outstate = bool(infound and outfound and not_same)
+		out_exists = not os.path.exists(out_file)
+		outstate = bool(infound and outfound and not_same and out_exists)
 		self.ui.ConvertButton.setEnabled(outstate)
 
 	def __change_input_plugset(self, num):
@@ -175,6 +176,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		else: 
 			plugnames = self.dawvert_core.input_get_plugins()
 			if plugnames: self.dawvert_core.input_set(plugnames[0])
+		self.__update_convst()
+
+	def __change_input_plugin_nofb(self, num):
+		pluginname = self.dawvert_core.input_get_plugins_index(num)
+		if pluginname: self.dawvert_core.input_set(pluginname)
 		self.__update_convst()
 
 	def __update_input_plugins(self):

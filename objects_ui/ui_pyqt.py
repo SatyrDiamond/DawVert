@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1069, 653)
+        MainWindow.resize(796, 747)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout(MainWindow)
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.horizontalLayout = QtWidgets.QHBoxLayout()
@@ -124,23 +124,12 @@ class Ui_MainWindow(object):
         self.ConvertButton.setStyleSheet("font: 20pt \"Source Sans Pro\";")
         self.ConvertButton.setObjectName("ConvertButton")
         self.verticalLayout_2.addWidget(self.ConvertButton)
-        self.StatusText = QtWidgets.QLabel(parent=MainWindow)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.StatusText.sizePolicy().hasHeightForWidth())
-        self.StatusText.setSizePolicy(sizePolicy)
-        self.StatusText.setStyleSheet("font: 14pt \"Arial\";")
-        self.StatusText.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.StatusText.setObjectName("StatusText")
-        self.verticalLayout_2.addWidget(self.StatusText)
         self.horizontalLayout.addLayout(self.verticalLayout_2)
         self.verticalLayout = QtWidgets.QVBoxLayout()
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.LogText = QtWidgets.QTextBrowser(parent=MainWindow)
-        self.LogText.setMinimumSize(QtCore.QSize(0, 0))
-        self.LogText.setBaseSize(QtCore.QSize(0, 0))
+        self.LogText = QtWidgets.QPlainTextEdit(parent=MainWindow)
+        self.LogText.setReadOnly(True)
         self.LogText.setObjectName("LogText")
         self.verticalLayout.addWidget(self.LogText)
         self.horizontalLayout.addLayout(self.verticalLayout)
@@ -164,7 +153,6 @@ class Ui_MainWindow(object):
         self.label_8.setText(_translate("MainWindow", "Plugin Set"))
         self.label_9.setText(_translate("MainWindow", "Output Plugin"))
         self.ConvertButton.setText(_translate("MainWindow", "Convert"))
-        self.StatusText.setText(_translate("MainWindow", "Info Here"))
 
 
 if __name__ == "__main__":

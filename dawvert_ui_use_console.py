@@ -5,7 +5,7 @@ import os
 import sys
 from PyQt6 import QtWidgets, uic, QtCore, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QFileDialog
-from objects_ui.ui_pyqt import Ui_MainWindow
+from objects_ui.ui_pyqt_console import Ui_MainWindow
 from objects import core as dv_core
 from pathlib import Path
 from functions import plug_conv
@@ -18,15 +18,6 @@ filesearcher = fileref.filesearcher
 scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
 import logging
-
-class logtxt():
-	guiobject = None
-	def write(self, data):
-		if logtxt.guiobject: logtxt.guiobject.appendPlainText(data.strip())
-
-guitxt = logtxt()
-
-logging.basicConfig(stream=guitxt, level=logging.DEBUG)
 
 plug_conv.load_plugins()
 
@@ -73,8 +64,6 @@ def process_converter(qt_obj):
 		dawvert_core.parse_output(out_file)
 	except SystemExit:
 		pass
-	except:
-		logtxt.guiobject.append(traceback.format_exc())
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, *args, obj=None, **kwargs):
@@ -89,8 +78,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.setAcceptDrops(True)
 
 		layout = QtWidgets.QVBoxLayout()
-
-		logtxt.guiobject = self.ui.LogText
 
 		self.ui.InputFileButton.clicked.connect(self.__choose_input)
 		self.ui.OutputFileButton.clicked.connect(self.__choose_output)

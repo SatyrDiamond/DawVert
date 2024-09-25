@@ -6,6 +6,7 @@ from functions_plugin_ext import plugin_vst2
 
 from functions import song_compat
 from functions import plug_conv
+import pathlib
 
 from functions_song import convert_r2m
 from functions_song import convert_ri2mi
@@ -190,6 +191,14 @@ class core:
 	def input_set(self, pluginname): return self.currentplug_input.set(pluginname)
 
 	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
+
+	def input_autoset_fileext(self, in_file):
+		fileext = pathlib.Path(in_file).suffix
+		for shortname, plug_obj, prop_obj in self.currentplug_input.iter():
+			if ('.'+prop_obj.file_ext.lower())==fileext.lower():
+				self.input_set(shortname)
+				print(shortname)
+				return shortname
 
 	def output_load_plugins(self, pluginset):
 		if pluginset in pluginsets_output: 

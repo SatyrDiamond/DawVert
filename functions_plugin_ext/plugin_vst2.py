@@ -57,6 +57,7 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, datatype, da
 		plugin_obj.datavals_global.add('basename', pluginfo_obj.basename)
 		plugin_obj.datavals_global.add('fourid', int(pluginfo_obj.id))
 		plugin_obj.datavals_global.add('creator', pluginfo_obj.creator)
+		if pluginfo_obj.num_params: plugin_obj.datavals_global.add('numparams', pluginfo_obj.num_params)
 		plugin_obj.role = pluginfo_obj.type
 		plugin_obj.audioports.setnums_auto(pluginfo_obj.audio_num_inputs, pluginfo_obj.audio_num_outputs)
 

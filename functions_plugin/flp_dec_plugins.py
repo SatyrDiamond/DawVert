@@ -140,6 +140,13 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'chunk', wrapper_vstdata, None)
 						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
 
+						numparams = plugin_obj.datavals_global.get('numparams', -1) 
+
+						if numparams != -1:
+							for x in range(numparams):
+								convproj_obj.automation.calc(['id_plug', pluginid, str(x)], 'floatbyteint2float', 0, 0, 0, 0)
+								convproj_obj.automation.move(['id_plug', pluginid, str(x)], ['plugin',pluginid,'ext_param_'+str(x)])
+
 					if wrapper_vststate[4] in [5, 4]:
 						stream_data = bytereader.bytereader()
 						stream_data.load_raw(wrapper_vstdata)
@@ -163,6 +170,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 								plugin_obj.params.add('ext_param_'+str(paramnum), bankparams[num][paramnum], 'float')
 
 						plugin_obj.set_program(wrapper_vstprogram)
+
+						for x in range(vst_total_params):
+							convproj_obj.automation.calc(['id_plug', pluginid, str(x)], 'floatbyteint2float', 0, 0, 0, 0)
+							convproj_obj.automation.move(['id_plug', pluginid, str(x)], ['plugin',pluginid,'ext_param_'+str(x)])
 
 			#elif '16id' in wrapperdata:
 			#	pluginstate = wrapperdata['state']

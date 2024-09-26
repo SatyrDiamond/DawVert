@@ -156,7 +156,6 @@ class audio_obj:
 		codecname = audio_obj.audiocodec_selector.set(codecname)
 		if codecname:
 			selected_plugin = audio_obj.audiocodec_selector.selected_plugin
-			extcodec_obj = dv_plugins.plugins_audio_codec[codecname]
 			if selected_plugin.prop_obj.encode_supported: return selected_plugin.plug_obj.encode(self)
 			else: print('[plugins] codec: encoding unsupported:', codecname)
 		else: print('[plugins] codec: not found', codecname)

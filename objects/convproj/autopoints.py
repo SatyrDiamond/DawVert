@@ -57,6 +57,18 @@ class cvpj_autopoints:
 		s_data = self.data == aps.data
 		return s_time_ppq and s_time_float and s_val_type and s_points and s_data
 
+	def __getitem__(self, num):
+		if num == 'pos': return [x.pos for x in self.points]
+		elif num == 'value': return [x.value for x in self.points]
+		else: return self.points[num]
+
+	def __len__(self):
+		return self.points.__len__()
+
+	def __iter__(self):
+		for x in self.points:
+			yield x
+
 	def clear(self):
 		self.data = {}
 		self.points = []

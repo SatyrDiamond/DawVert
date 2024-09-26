@@ -105,14 +105,14 @@ class input_it(plugins.base):
 	def parse_bytes(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_it.it_song()
 		if not project_obj.load_from_raw(input_file): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config)
+		self.parse_internal(convproj_obj, project_obj, dv_config, None)
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_it.it_song()
 		if not project_obj.load_from_file(input_file): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config)
+		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
 
-	def parse_internal(self, convproj_obj, project_obj, dv_config):
+	def parse_internal(self, convproj_obj, project_obj, dv_config, input_file):
 		global samplefolder
 
 		try: import xmodits
@@ -127,7 +127,7 @@ class input_it(plugins.base):
 		while -2 in table_orders: table_orders.remove(-2)
 		while -1 in table_orders: table_orders.remove(-1)
 		
-		if xmodits_exists == True:
+		if xmodits_exists == True and input_file:
 			if not os.path.exists(samplefolder): os.makedirs(samplefolder)
 			try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
 			except: pass

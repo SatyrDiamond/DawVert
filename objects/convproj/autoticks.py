@@ -2,17 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import xtramath
+from functions import data_values
 from objects.convproj import time
 import math
-
-class dif_val:
-	def __init__(self):
-		self.cur_val = 0
-
-	def do_value(self, inval):
-		out_val = inval-self.cur_val
-		self.cur_val = inval
-		return out_val
 
 class cvpj_autoticks:
 	__slots__ = ['val_type','time_ppq','time_float','points']
@@ -22,6 +14,18 @@ class cvpj_autoticks:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.points = {}
+
+	def __getitem__(self, num):
+		if num == 'pos': return list(self.points)
+		elif num == 'value': return [x for _, x in self.points.items()]
+		else: return self.points[list(self.points)[num]]
+
+	def __len__(self):
+		return self.points[num].__len__()
+
+	def __iter__(self):
+		for p, v in self.points.items(): 
+			yield p, v
 
 	def iter(self):
 		for p, v in self.points.items(): 
@@ -86,8 +90,6 @@ class cvpj_autoticks:
 					prev_data = None
 				self.points[mpos] = v
 
-
-
 	def optimize(self):
 		prevval = None
 		norepeats = {}
@@ -148,8 +150,8 @@ class cvpj_autoticks:
 		return points_out
 
 	def to_points(self):
-		prev_pos = dif_val()
-		prev_val = dif_val()
+		prev_pos = data_values.dif_val(0)
+		prev_val = data_values.dif_val(0)
 		prev_minus = False
 
 		tres_pos = self.time_ppq//8

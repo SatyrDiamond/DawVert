@@ -3,6 +3,7 @@
 
 import math
 from functions import note_data
+import struct
 
 # -------------------------------------------- values --------------------------------------------
 
@@ -65,6 +66,7 @@ def do_math(inputv, mathtype, val1, val2, val3, val4):
 	elif mathtype == 'freq2note': return note_data.freq_to_note(inputv)
 	elif mathtype == 'from_db': return note_data.from_db(inputv)
 	elif mathtype == 'to_db': return note_data.to_db(inputv)
+	elif mathtype == 'floatbyteint2float': return struct.unpack("<f", struct.pack("<I", int(inputv)))[0]
 	else: return inputv
 
 # -------------------------------------------- generators --------------------------------------------

@@ -7,7 +7,7 @@ import argparse
 from plugins import base as dv_plugins
 from objects import audio_data
 
-dv_plugins.load_plugindir('audiocodecs')
+dv_plugins.load_plugindir('audiocodecs', '')
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", default=None)

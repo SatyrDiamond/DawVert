@@ -3,6 +3,15 @@
 
 import re
 
+class dif_val:
+	def __init__(self, inval):
+		self.cur_val = inval
+
+	def do_value(self, inval):
+		out_val = inval-self.cur_val if self.cur_val != None else None
+		self.cur_val = inval
+		return out_val
+
 class counter:
 	def __init__(self, starting_num):
 		self.current = starting_num
@@ -168,6 +177,14 @@ def list__to_reigons_bool(i_list): # UNUSED
 		if found_reg[0]: output.append(found_reg[1:])
 
 	return output
+
+def list__dif_val(i_list, startnum):
+	outvals = []
+	prev = dif_val(startnum)
+	for x in i_list:
+		outv = prev.do_value(x)
+		if outv != None: outvals.append(outv)
+	return outvals
 
 def list__findrepeat(i_list): # UNUSED
 	outdata = []

@@ -173,11 +173,14 @@ class plugin_selector:
 		self.pluginlist = loaded_plugins
 
 	def set(self, dvplugsn):
-		if self.plugintype in self.pluginlist and self.selected_shortname != dvplugsn:
-			if dvplugsn in self.pluginlist[self.plugintype]:
-				self.selected_shortname = dvplugsn
-				self.selected_plugin = self.pluginlist[self.plugintype][dvplugsn]
-				logger_plugins.info('Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
+		if self.plugintype in self.pluginlist:
+			if self.selected_shortname != dvplugsn:
+				if dvplugsn in self.pluginlist[self.plugintype]:
+					self.selected_shortname = dvplugsn
+					self.selected_plugin = self.pluginlist[self.plugintype][dvplugsn]
+					logger_plugins.info('Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
+					return dvplugsn
+			else:
 				return dvplugsn
 
 	def set_auto(self, indata):

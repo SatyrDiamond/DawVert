@@ -3,6 +3,7 @@
 
 import plugins
 import os
+import re
 import numpy as np
 import math
 from objects.file_proj import proj_mod
@@ -52,7 +53,7 @@ class input_mod(plugins.base):
 			pluginid = 'sampler_'+strnum
 
 			inst_obj = convproj_obj.add_instrument(cvpj_instid)
-			inst_obj.visual.name = sample_obj.name
+			inst_obj.visual.name = sample_obj.name if not IGNORE_ERRORS else re.sub(r'[\x00-\x1f\x7f-\x9f]', '', sample_obj.name)
 			inst_obj.visual.color.set_float(MAINCOLOR)
 			inst_obj.params.add('vol', 0.3, 'float')
 			

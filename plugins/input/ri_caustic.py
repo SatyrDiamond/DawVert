@@ -203,6 +203,7 @@ class input_cvpj_r(plugins.base):
 						loopmode_cvpj(region_data, sp_obj)
 						sp_obj.length = sp_obj.end
 						sp_obj.sampleref = wave_path
+						sp_obj.point_value_type = 'samples'
 
 				if machine.samples:
 					pcms_c = machine.controls.data
@@ -241,6 +242,7 @@ class input_cvpj_r(plugins.base):
 					sp_obj.end = region_data['len']
 					sp_obj.trigger = 'oneshot'
 					sp_obj.sampleref = wave_path
+					sp_obj.point_value_type = "samples"
 
 			elif machine.mach_id == 'NULL':
 				pass

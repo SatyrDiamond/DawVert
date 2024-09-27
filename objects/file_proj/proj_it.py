@@ -101,7 +101,9 @@ class it_pattern:
 						pattern_done = 1
 					else:
 						if cell_previous_maskvariable == 1: t_previousmaskvariable[cell_channel] = maskvariable = song_file.flags8()
-						else: maskvariable = t_previousmaskvariable[cell_channel]
+						else: 
+							if cell_channel<len(t_previousmaskvariable):
+								maskvariable = t_previousmaskvariable[cell_channel]
 	
 						cell_note = None
 						cell_instrument = None
@@ -111,7 +113,8 @@ class it_pattern:
 	
 						if 0 in maskvariable:
 							cell_note = song_file.uint8()
-							t_lastnote[cell_channel] = cell_note
+							if cell_channel<len(t_lastnote):
+								t_lastnote[cell_channel] = cell_note
 						if 1 in maskvariable:
 							cell_instrument = song_file.uint8()
 							t_lastinstrument[cell_channel] = cell_instrument
@@ -121,11 +124,12 @@ class it_pattern:
 						if 3 in maskvariable:
 							cell_commandtype = song_file.uint8()
 							cell_commandval = song_file.uint8()
-							t_lastcommand[cell_channel] = [cell_commandtype, cell_commandval]
+							if cell_channel<len(t_lastcommand):
+								t_lastcommand[cell_channel] = [cell_commandtype, cell_commandval]
 	
-						if 4 in maskvariable: cell_note = t_lastnote[cell_channel]
-						if 5 in maskvariable: cell_instrument = t_lastinstrument[cell_channel]
-						if 6 in maskvariable: cell_volpan = t_lastvolpan[cell_channel]
+						if 4 in maskvariable and cell_channel<len(t_lastnote): cell_note = t_lastnote[cell_channel]
+						if 5 in maskvariable and cell_channel<len(t_lastinstrument): cell_instrument = t_lastinstrument[cell_channel]
+						if 6 in maskvariable and cell_channel<len(t_lastvolpan): cell_volpan = t_lastvolpan[cell_channel]
 						if 7 in maskvariable:
 							cell_commandtype = t_lastcommand[cell_channel][0]
 							cell_commandval = t_lastcommand[cell_channel][1]
@@ -263,18 +267,18 @@ class it_song:
 			for chunk_obj in main_iff_obj.iter(song_file.tell(), max(ptrall)):
 				if chunk_obj.id == b'CNAM': 
 					self.ompt_cnam = song_file.l_string(chunk_obj.size//20, 20)
-					print('[it] Channel Names:',self.ompt_cnam)
+					logger_projparse.info('IT: Channel Names:'+str(self.ompt_cnam))
 				elif chunk_obj.id == b'PNAM': 
 					self.ompt_pnam = song_file.l_string(chunk_obj.size//32, 32)
-					print('[it] Pattern Names:',self.ompt_pnam)
+					logger_projparse.info('IT: Pattern Names:'+str(self.ompt_pnam))
 				elif chunk_obj.id == b'CHFX': 
 					self.ompt_chfx = song_file.l_int32(chunk_obj.size//4)
-					print('[it] Channel FX:',self.ompt_chfx)
+					logger_projparse.info('IT: Channel FX:'+str(self.ompt_chfx))
 				elif chunk_obj.id[0:2] == b'FX':
 					plugnum = int(chunk_obj.id[2:4].decode())+1
 					plug_obj = openmpt_plugin.openmpt_plugin()
 					plug_obj.read(song_file)
-					print('[it] '+chunk_obj.id.decode()+':',plug_obj.type.decode())
+					logger_projparse.info('IT: '+chunk_obj.id.decode()+':',plug_obj.type.decode())
 					self.plugins[plugnum] = plug_obj
 				else: 
 					#print(chunk_obj.id)

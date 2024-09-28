@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.songinput import mariopaint
+from objects.exceptions import ProjectFileParserException
 from objects import globalstore
 import plugins
 import xml.etree.ElementTree as ET
@@ -60,8 +61,7 @@ class input_mariopaint_mss(plugins.base):
 		try: 
 			tree = ET.parse(input_file)
 		except ET.ParseError as t:
-			logger_input.error('mariopaint_mss: XML parsing error: '+str(t))
-			exit()
+			raise ProjectFileParserException('mariopaint_mss: XML parsing error: '+str(t))
 
 		root = tree.getroot()
 

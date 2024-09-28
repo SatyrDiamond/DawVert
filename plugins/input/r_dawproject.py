@@ -6,6 +6,7 @@ from functions_plugin_ext import plugin_vst2
 from functions_plugin_ext import plugin_vst3
 from functions import note_data
 from objects import auto_id
+from objects.exceptions import ProjectFileParserException
 import plugins
 import zipfile
 import os
@@ -322,15 +323,13 @@ class input_dawproject(plugins.base):
 		try:
 			zip_data = zipfile.ZipFile(input_file, 'r')
 		except zipfile.BadZipFile as t:
-			logger_input.error('dawproject: Bad ZIP File: '+str(t))
-			exit()
+			raise ProjectFileParserException('dawproject: Bad ZIP File: '+str(t))
 
 		project_obj = proj_dawproject.dawproject_song()
 		try:
 			xmldata = zip_data.read('project.xml')
 		except KeyError as t:
-			logger_input.error('dawproject: project.xml not found')
-			exit()
+			raise ProjectFileParserException('dawproject: project.xml not found')
 
 		project_obj.load_from_data(xmldata.decode())
 

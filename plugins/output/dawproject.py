@@ -539,7 +539,7 @@ class output_dawproject(plugins.base):
 				marker.time = timemarker_obj.position
 				markers.append(marker)
 
-		project_obj.save_to_file(output_file)
+		#project_obj.save_to_file(output_file)
 
 		x_metadata = ET.Element("MetaData")
 		x_metadata.set('version', '1.0')
@@ -549,6 +549,4 @@ class output_dawproject(plugins.base):
 		dawproject_zip.writestr('metadata.xml', xmlmetadata)
 		dawproject_zip.close()
 
-
-
-		open(output_file+'.dawproject', 'wb').write(zip_bio.getbuffer())
+		open(output_file, 'wb').write(zip_bio.getbuffer())

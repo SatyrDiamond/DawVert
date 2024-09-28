@@ -1,12 +1,10 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects.exceptions import ProjectFileParserException
 from objects.data_bytes import bytereader
 from objects.inst_params import fm_opl
 from io import BytesIO
-
-import logging
-logger_projparse = logging.getLogger('projparse')
 
 def decode_events(song_file):
 	sop_eventdata = []
@@ -58,8 +56,7 @@ class adlib_sop_project:
 		try: 
 			song_file.magic_check(b'sopepos')
 		except ValueError as t:
-			logger_projparse.error('adlib_sop: '+str(t))
-			return False
+			raise ProjectFileParserException('adlib_sop: '+str(t))
 
 		self.majorVersion = song_file.uint8()
 		self.minorVersion = song_file.uint8()

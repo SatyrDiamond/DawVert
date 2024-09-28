@@ -4,6 +4,7 @@
 import xml.etree.ElementTree as ET
 import zlib
 from functions import data_values
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -1104,8 +1105,7 @@ class lmms_project:
 		try:
 			xmldata = get_xml_tree(input_file)
 		except ET.ParseError as t:
-			logger_projparse.error('lmms: XML parsing error: '+str(t))
-			return False
+			raise ProjectFileParserException('lmms: XML parsing error: '+str(t))
 		self.type = xmldata.get('type')
 		self.version = xmldata.get('version')
 		self.creator = xmldata.get('creator')

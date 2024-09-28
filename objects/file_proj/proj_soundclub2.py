@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -92,9 +93,7 @@ class sn2_song:
 		song_file.load_file(input_file)
 
 		try: song_file.magic_check(b'SN2')
-		except ValueError as t:
-			logger_projparse.error('soundclub2: '+str(t))
-			return False
+		except ValueError as t: raise ProjectFileParserException('soundclub2: '+str(t))
 		
 		end_data = song_file.uint32()
 

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from lxml import etree as ET
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -207,9 +208,7 @@ class temper_song:
 		parser = ET.XMLParser(recover=True, encoding='utf-8')
 		xml_data = ET.parse(input_file, parser)
 		xml_musseq = xml_data.getroot()
-		if xml_musseq == None:
-			logger_projparse.error('temper: no XML root found')
-			return False
+		if xml_musseq == None: raise ProjectFileParserException('temper: no XML root found')
 
 		for xmlpart in xml_musseq:
 			#print(xmlpart)

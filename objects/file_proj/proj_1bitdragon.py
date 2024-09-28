@@ -7,9 +7,7 @@ import json
 import base64
 import zlib
 from functions import data_values
-
-import logging
-logger_projparse = logging.getLogger('projparse')
+from objects.exceptions import ProjectFileParserException
 
 class onebitd_instrument:
 	def __init__(self, i_dict):
@@ -83,16 +81,21 @@ class onebitd_song:
 		self.volume = 1
 
 	def load_from_file(self, input_file):
-		song_file = open(input_file, 'r')
-		basebase64stream = base64.b64decode(song_file.read())
+
+		try:
+			song_file = open(input_file, 'r')
+			filetxt = song_file.read()
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('1bitdragon: File is not text')
+
+		basebase64stream = base64.b64decode(filetxt)
 		bio_base64stream = BytesIO(basebase64stream)
 		bio_base64stream.seek(4)
 		
 		try: 
 			decompdata = json.loads(zlib.decompress(bio_base64stream.read(), 16+zlib.MAX_WBITS))
 		except zlib.error as t:
-			logger_projparse.error('1bitdragon: '+str(t))
-			return False
+			raise ProjectFileParserException('1bitdragon: '+str(t))
 
 		self.version = decompdata['version'] if 'version' in decompdata else None
 		self.reverb = decompdata['reverb']

@@ -14,6 +14,7 @@ from objects.file_proj._flp import fx
 from objects.file_proj._flp import channel
 from objects.file_proj._flp import auto
 from objects.file_proj._flp import arrangement
+from objects.exceptions import ProjectFileParserException
 
 logger_projparse = logging.getLogger('projparse')
 
@@ -127,8 +128,7 @@ class flp_project:
 			logger_projparse.info('FL: Version: ' + FLVersion)
 			self.version_split = [int(x) for x in FLVersion.split('.')]
 			if self.version_split[0] < 12 and self.version_split[0] != 24:
-				logger_projparse.error('FL: Version '+str(self.version_split[0])+' is not supported.') 
-				exit()
+				raise ProjectFileParserException('FL: Version '+str(self.version_split[0])+' is not supported.') 
 			self.version = FLVersion
 		elif event_id == 156: self.tempo = event_data/1000
 		elif event_id == 80:  self.mainpitch = struct.unpack('h', struct.pack('H', event_data))[0]
@@ -396,8 +396,7 @@ class flp_project:
 					song_data.load_raw(self.zipfile.read(filename))
 					flpfound = True
 			if not flpfound:
-				logger_projparse.error('FL: FLP file not found in zip')
-				exit()
+				raise ProjectFileParserException('FL: FLP file not found in zip')
 
 		main_iff_obj = song_data.chunk_objmake()
 		tlvfound = False
@@ -410,8 +409,7 @@ class flp_project:
 				tlvfound = True
 				for event_id, event_data in format_flp_tlv.decode(song_data, chunk_obj.end): self.do_event(event_id, event_data)
 		if not tlvfound:
-			logger_projparse.error('FL: TLV data not found')
-			exit()
+			raise ProjectFileParserException('FL: TLV data not found')
 
 	def make(self, outputfile):
 

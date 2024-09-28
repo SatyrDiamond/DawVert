@@ -4,6 +4,7 @@
 import struct
 from objects.data_bytes import bytereader
 from objects import openmpt_plugin
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -198,8 +199,7 @@ class it_song:
 			self.load(song_file)
 			return True
 		except ValueError as t:
-			logger_projparse.error('IT: '+str(t))
-			return False
+			raise ProjectFileParserException('IT: '+str(t))
 
 	def load_from_file(self, input_file):
 		song_file = bytereader.bytereader()
@@ -209,8 +209,7 @@ class it_song:
 			self.load(song_file)
 			return True
 		except ValueError as t:
-			logger_projparse.error('IT: '+str(t))
-			return False
+			raise ProjectFileParserException('IT: '+str(t))
 
 	def load(self, song_file):
 		song_file.magic_check(b'IMPM')

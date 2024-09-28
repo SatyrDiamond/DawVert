@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from PIL import Image
 import plugins
 
 class input_color_art(plugins.base):
@@ -11,7 +10,12 @@ class input_color_art(plugins.base):
 	def get_name(self): return 'Color Art'
 	def get_prop(self, in_dict): 
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+	def usable(self): 
+		usable = importlib.util.find_spec('PIL')
+		usable_meg = 'Pillow is not installed. do "pip install pillow"' if not usable else ''
+		return usable, usable_meg
 	def parse(self, convproj_obj, input_file, dv_config):
+		from PIL import Image
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, False)
 

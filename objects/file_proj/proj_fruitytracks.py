@@ -3,6 +3,7 @@
 
 from objects.data_bytes import bytereader
 from functions_plugin import format_flp_tlv
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -188,5 +189,5 @@ class ftr_song:
 
 					if verbose: verboseprint(event_id, event_data)
 
-		if not tlvdatafound: logger_projparse.error('fruitytracks: TLV data not found')
+		if not tlvdatafound: raise ProjectFileParserException('fruitytracks: TLV data not found')
 		return tlvdatafound

@@ -3,6 +3,7 @@
 
 from objects.data_bytes import bytereader
 import numpy as np
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -20,7 +21,7 @@ class caustic_controls:
 			pid = song_data.uint32()
 			self.data[pid] = song_data.float()
 		song_data.skip(CCOL_size)
-		logger_projparse.info('Caustic3: CCOL | '+str(len(self.data))+' Controls')
+		logger_projparse.info('caustic3: CCOL | '+str(len(self.data))+' Controls')
 
 class caustic_modularslot:
 	def __init__(self):
@@ -175,7 +176,7 @@ class caustic_machine:
 				sample_hz = song_data.uint32()
 				sample_chan = song_data.uint32()
 				sample_data = song_data.read((sample_len*2)*sample_chan)
-				logger_projparse.info('Caustic3: BBOX | len:'+str(sample_len)+', hz:'+str(sample_hz)+', ch:'+str(sample_chan))
+				logger_projparse.info('caustic3: BBOX | len:'+str(sample_len)+', hz:'+str(sample_hz)+', ch:'+str(sample_chan))
 				sampleinfo = {}
 				sampleinfo['name'] = sample_name
 				sampleinfo['hz'] = sample_hz
@@ -198,7 +199,7 @@ class caustic_machine:
 				sample_len = song_data.uint32()
 				sample_hz = song_data.uint32()
 				sample_data = song_data.read(sample_len*2)
-				logger_projparse.info('Caustic3: VCDR | len:'+str(sample_len)+', hz:'+str(sample_hz))
+				logger_projparse.info('caustic3: VCDR | len:'+str(sample_len)+', hz:'+str(sample_hz))
 				sampleinfo = {}
 				sampleinfo['name'] = sample_name
 				sampleinfo['len'] = sample_len
@@ -370,7 +371,7 @@ class caustic_patterns:
 		self.auto = [{} for x in range(16*4)]
 
 	def parse(self, song_data):
-		logger_projparse.info('Caustic3: SPAT')
+		logger_projparse.info('caustic3: SPAT')
 		song_data.magic_check(b'SPAT')
 
 		SPAT_size = song_data.uint32()
@@ -506,7 +507,7 @@ class caustic_project:
 				header = song_data.read(264)
 				while chunk_obj.end > song_data.tell():
 					chunk_datatype = song_data.read(4)
-					logger_projparse.info('Caustic3: main | chunk: '+str(chunk_datatype))
+					logger_projparse.info('caustic3: main | chunk: '+str(chunk_datatype))
 					if chunk_datatype == b'OUTP': self.read_OUTP(song_data)
 					elif chunk_datatype == b'EFFX': self.read_EFFX(song_data)
 					elif chunk_datatype == b'MIXR': self.read_MIXR(song_data)
@@ -514,8 +515,7 @@ class caustic_project:
 					elif chunk_datatype == b'SEQN': self.read_SEQN(song_data)
 					else: break
 		if not rackchunkfound:
-			logger_projparse.error('Caustic3: RACK chunk not found')
-			return False
+			raise ProjectFileParserException('Caustic3: RACK chunk not found')
 		else:
 			return True
 
@@ -532,7 +532,7 @@ class caustic_project:
 			song_data.skip(1)
 
 		for n, machdata in enumerate(self.machines):
-			logger_projparse.info('Caustic3: OUTP | '+machdata.mach_id)
+			logger_projparse.info('caustic3: OUTP | '+machdata.mach_id)
 			if machdata.mach_id != 'NULL':
 				machdata.name = song_data.string(10)
 				mach_head = song_data.raw(4)

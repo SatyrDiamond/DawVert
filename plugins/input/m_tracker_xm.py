@@ -61,10 +61,10 @@ class input_xm(plugins.base):
 		else: return False
 		bytestream.seek(0)
 
-	def parse_bytes(self, convproj_obj, input_bytes, dv_config):
+	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
 		project_obj = proj_xm.xm_song()
 		if not project_obj.load_from_raw(input_bytes): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config, None)
+		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_xm.xm_song()
@@ -87,6 +87,7 @@ class input_xm(plugins.base):
 						if cell_note != None: output_note = 'off' if cell_note == 97 else cell_note-49
 						pattern_obj.cell_note(channel, rownum, output_note, cell_inst)
 						if cell_vol: pattern_obj.cell_param(channel, rownum, 'vol', cell_vol/64)
+						if cell_effect == 13: pattern_obj.cell_g_param(channel, rownum, 'break_to_row', 0)
 						if cell_effect != None and cell_param != None:
 							pattern_obj.cell_fx_mod(channel, rownum, cell_effect, cell_param)
 							if cell_effect == 12: pattern_obj.cell_param(channel, rownum, 'vol', cell_param/64)
@@ -155,7 +156,7 @@ class input_xm(plugins.base):
 				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
 				for instnum, r_start, e_end in sampleregions:
 					filename = samplefolder + str(xm_cursamplenum+instnum) + '.wav'
-					sampleref_obj = convproj_obj.add_sampleref(filename, filename)
+					sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
 					sp_obj = plugin_obj.sampleregion_add(r_start, e_end, 0, None)
 					sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = xm_inst.samp_head[instnum].get_loop()
 					sp_obj.sampleref = filename
@@ -167,7 +168,7 @@ class input_xm(plugins.base):
 					lfo_obj = plugin_obj.lfo_add('pitch')
 					lfo_obj.attack = vibrato_sweep
 					lfo_obj.prop.shape = vibrato_type
-					lfo_obj.time.set_seconds(vibrato_rate)
+					lfo_obj.time.set_hz(vibrato_rate/5)
 					lfo_obj.amount = vibrato_depth
 
 				env_to_cvpj(xm_inst.env_vol, plugin_obj, False, xm_inst.fadeout)
@@ -177,10 +178,9 @@ class input_xm(plugins.base):
 
 			xm_cursamplenum += xm_inst.num_samples
 
-		patterndata_obj.to_cvpj(convproj_obj, TEXTSTART, project_obj.bpm, project_obj.speed, False, MAINCOLOR)
+		patterndata_obj.to_cvpj(convproj_obj, TEXTSTART, project_obj.bpm, project_obj.speed, True, MAINCOLOR)
 
 		convproj_obj.metadata.name = project_obj.title
 		convproj_obj.metadata.comment_text = '\r'.join([i.name for i in project_obj.instruments])
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_lanefit')
-		convproj_obj.params.add('bpm', project_obj.bpm, 'float')

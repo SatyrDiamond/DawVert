@@ -39,9 +39,9 @@ class input_s3m(plugins.base):
 		else: return False
 		bytestream.seek(0)
 
-	def parse_bytes(self, convproj_obj, input_file, dv_config):
+	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
 		project_obj = proj_s3m.s3m_song()
-		if not project_obj.load_from_raw(input_file): exit()
+		if not project_obj.load_from_raw(input_bytes): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config)
 
 	def parse(self, convproj_obj, input_file, dv_config):
@@ -103,9 +103,12 @@ class input_s3m(plugins.base):
 
 					if out_vol != None: pattern_obj.cell_param(c_channel, rownum, 'vol', out_vol)
 
-					if c_note != None or c_inst != None:
-						note_oct, note_tone = data_bytes.splitbyte(c_note)
-						out_note = (note_oct-4)*12 + note_tone if c_note != 254 else 'cut'
+					if c_note != None:
+						if c_inst != None:
+							note_oct, note_tone = data_bytes.splitbyte(c_note)
+							out_note = (note_oct-4)*12 + note_tone if c_note != 254 else 'cut'
+						else:
+							out_note = None
 						pattern_obj.cell_note(c_channel, rownum, out_note, None if c_inst == 0 else c_inst)
 
 					if c_command != None or c_info != None:

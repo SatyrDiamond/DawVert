@@ -95,14 +95,19 @@ class xm_sample_header:
 		if self.type&1: self.loop = 1
 		elif self.type&2: self.loop = 2
 		else: self.loop = 0
+		self.stereo = self.type&32
 		self.loop_on = bool(self.loop)
 		self.double = bool(self.type&16)
-		if self.double: self.loop_start /= 2
-		if self.double: self.loop_end /= 2
 
 	def get_loop(self): 
 		looptype = 'normal' if self.loop != 2 else 'pingpong'
-		return self.loop!=0, looptype, self.loop_start, self.loop_start+self.loop_end
+		loop_start = self.loop_start
+		loop_end = (self.loop_start+self.loop_end)
+		if self.double: loop_start /= 2
+		if self.double: loop_end /= 2
+		if self.stereo: loop_start /= 2
+		if self.stereo: loop_end /= 2
+		return self.loop!=0, looptype, loop_start, loop_end if self.loop_end else self.length
 
 class xm_instrument:
 	def __init__(self, song_file, num):

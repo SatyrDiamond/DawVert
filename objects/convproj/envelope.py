@@ -92,17 +92,22 @@ class cvpj_envelope_adsr:
 		maxval = max(point_start.value, point_end.value)
 		minval = min(point_start.value, point_end.value)
 		sustainp = sustainnum == 0
+		use_fadeout = env_pointsdata.data['use_fadeout'] if 'use_fadeout' in env_pointsdata.data else 0
+		fadeout = env_pointsdata.data['fadeout'] if 'fadeout' in env_pointsdata.data else True
 
 		debug_num = 0
 		if point_start.value != point_end.value:
 			if env_pointsdata.loop_on and env_pointsdata.loop_start < env_pointsdata.loop_end:
 				debug_num = 200
+				self.release = fadeout
+				self.amount = 1
 				if plugin_obj:
 					if VERBOSE: print("[env_asdr_from_points] 2 | LFO")
 					lfo_obj = plugin_obj.lfo_add(a_type)
 					lfo_obj.prop.shape = 'saw' if env_value>0 else 'saw_down'
 					lfo_obj.time.set_seconds(env_duration)
 					lfo_obj.amount = min(abs(env_value/1.3),1)
+					lfo_obj.retrigger = True
 
 			elif sustainp:
 				self.release = env_duration

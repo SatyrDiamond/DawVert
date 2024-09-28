@@ -42,7 +42,6 @@ class single_patsong:
 				singlepat_obj = self.patdata[n]
 				playstr.init_patinfo(singlepat_obj.num_rows, n)
 				playstr.columns = singlepat_obj.data
-
 				while playstr.next_row(): pass
 
 		if use_starttempo and playstr.first_speed: 

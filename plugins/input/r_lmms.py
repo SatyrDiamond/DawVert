@@ -34,7 +34,7 @@ def get_sample(i_value):
 	else:
 		return ''
 
-lfoshape = ['sine', 'tri', 'saw', 'square', 'custom', 'random']
+lfoshape = ['sine', 'tri', 'saw_down', 'square', 'custom', 'random']
 arpdirection = ['up', 'down', 'updown', 'downup', 'random']
 
 chordids = ["major","majb5","minor","minb5","sus2","sus4","aug","augsus4","tri","6","6sus4","6add9","m6","m6add9","7","7sus4","7#5","7b5","7#9","7b9","7#5#9","7#5b9","7b5b9","7add11","7add13","7#11","maj7","maj7b5","maj7#5","maj7#11","maj7add13","m7","m7b5","m7b9","m7add11","m7add13","m-maj7","m-maj7add11","m-maj7add13","9","9sus4","add9","9#5","9b5","9#11","9b13","maj9","maj9sus4","maj9#5","maj9#11","m9","madd9","m9b5","m9-maj7","11","11b9","maj11","m11","m-maj11","13","13#9","13b9","13b5b9","maj13","m13","m-maj13","full_major","harmonic_minor","melodic_minor","whole_tone","diminished","major_pentatonic","minor_pentatonic","jap_in_sen","major_bebop","dominant_bebop","blues","arabic","enigmatic","neopolitan","neopolitan_minor","hungarian_minor","dorian","phrygian","lydian","mixolydian","aeolian","locrian","full_minor","chromatic","half-whole_diminished","5","phrygian_dominant","persian"]
@@ -202,6 +202,7 @@ def asdflfo(plugin_obj, elenv, asdrtype):
 	lfo_obj.prop.shape = lfo_shape
 	lfo_obj.time.set_seconds(lfo_speed)
 	lfo_obj.amount = lfo_amount
+	lfo_obj.retrigger = False
 
 def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 	out_color = None

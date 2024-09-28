@@ -759,6 +759,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 						alslfo['Type'] = ableton_parampart.as_param('Type', 'int', LFO_SHAPE[lfo_pan_obj.prop.shape])
 					alslfo['Frequency'] = ableton_parampart.as_param('Frequency', 'float', 1/lfo_pan_obj.time.speed_seconds)
 					alslfo['Attack'] = ableton_parampart.as_param('Attack', 'float', lfo_pan_obj.attack*1000)
+					alslfo['Retrigger'] = ableton_parampart.as_param('Retrigger', 'bool', lfo_pan_obj.retrigger)
 
 					lfo_vol_obj = plugin_obj.lfo_get('vol')
 					paramkeys['AuxLfos.0/IsOn'] = ableton_parampart.as_param('IsOn', 'bool', True)
@@ -770,7 +771,8 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					alslfo['Attack'] = ableton_parampart.as_param('Attack', 'float', lfo_vol_obj.attack*1000)
 					alslfo['ModDst/ModConnections.0/Amount'] = ableton_parampart.as_value('Amount', lfo_vol_obj.amount*100)
 					alslfo['ModDst/ModConnections.0/Connection'] = ableton_parampart.as_value('Connection', 18)
-
+					alslfo['Retrigger'] = ableton_parampart.as_param('Retrigger', 'bool', lfo_vol_obj.retrigger)
+					
 					lfo_pitch_obj = plugin_obj.lfo_get('pitch')
 					paramkeys['AuxLfos.1/IsOn'] = ableton_parampart.as_param('IsOn', 'bool', True)
 					paramkeys['AuxLfos.1/Slot/Value'] = ableton_parampart.as_numset('SimplerAuxLfo')
@@ -781,6 +783,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					alslfo['Attack'] = ableton_parampart.as_param('Attack', 'float', lfo_pitch_obj.attack*1000)
 					alslfo['ModDst/ModConnections.0/Amount'] = ableton_parampart.as_value('Amount', (lfo_pitch_obj.amount/24)*100)
 					alslfo['ModDst/ModConnections.0/Connection'] = ableton_parampart.as_value('Connection', 6)
+					alslfo['Retrigger'] = ableton_parampart.as_param('Retrigger', 'bool', lfo_pitch_obj.retrigger)
 				
 				als_device.params.import_keys(paramkeys)
 

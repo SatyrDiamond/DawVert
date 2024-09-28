@@ -6,14 +6,12 @@ from functions import colors
 from functions import xtramath
 from objects import globalstore
 from objects.file_proj import proj_soundation
+from objects.exceptions import ProjectFileParserException
 import plugins
 import struct
 import json
 import math
 import zipfile
-
-import logging
-logger_input = logging.getLogger('input')
 
 def get_param(soundation_device, plugin_obj, i_name, cvpj_autoloc, add_to_param):
 	global convproj_obj
@@ -79,13 +77,12 @@ class input_soundation(plugins.base):
 
 		except:
 			zip_data = None
-			bytestream = open(input_file, 'r')
-			sndstat_data = json.load(bytestream)
-			soundation_obj = proj_soundation.soundation_project(sndstat_data)
-
-		if not soundation_obj:
-			logger_input.error('soundation: no .sng loaded')
-			exit()
+			try:
+				bytestream = open(input_file, 'r')
+				sndstat_data = json.load(bytestream)
+				soundation_obj = proj_soundation.soundation_project(sndstat_data)
+			except:
+				raise ProjectFileParserException('soundation: file is not Zipped or JSON')
 
 		convproj_obj.type = 'r'
 

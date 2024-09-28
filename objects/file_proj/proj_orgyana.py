@@ -3,6 +3,7 @@
 
 from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
+from objects.exceptions import ProjectFileParserException
 import struct
 
 import logging
@@ -86,8 +87,7 @@ class orgyana_project:
 		try: 
 			song_file.magic_check(b'Org-')
 		except ValueError as t:
-			logger_projparse.error('orgyana: '+str(t))
-			return False
+			raise ProjectFileParserException('orgyana: '+str(t))
 
 		self.oldperc = song_file.raw(2) == b'03'
 		self.wait = song_file.uint16()

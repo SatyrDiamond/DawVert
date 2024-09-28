@@ -4,6 +4,7 @@
 from objects.data_bytes import bytereader
 from objects.file_proj import proj_mod
 import numpy as np
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -15,8 +16,7 @@ class mod_sample:
 		self.length = song_file.uint16_b() if song_file else 0
 		self.finetune = song_file.uint8() if song_file else 0
 		if self.finetune > 15: 
-			logger_projparse.error('mod: sample finetune over 15')
-			self.errored = True
+			raise ProjectFileParserException('mod: sample finetune over 15')
 		self.default_vol = song_file.uint8() if song_file else 0
 		self.loop_start = song_file.uint16_b() if song_file else 0
 		self.loop_length = song_file.uint16_b() if song_file else 0
@@ -59,8 +59,7 @@ class mod_song:
 			if IGNORE_ERRORS:
 				self.l_order = song_file.l_int8(128)
 			else:
-				logger_projparse.error('mod: Pattern Order is 0')
-				exit()
+				raise ProjectFileParserException('mod: Pattern Order is 0')
 		else:
 			self.l_order = song_file.l_int8(128)[0:self.num_orders]
 		self.num_patterns = max(self.l_order)

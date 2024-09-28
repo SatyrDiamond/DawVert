@@ -3,6 +3,7 @@
 
 from objects.data_bytes import bytereader
 from dataclasses import dataclass
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -108,8 +109,7 @@ class smaf_track_ma3:
 						self.sequence.append([resttime, 16])
 			
 					else:
-						logger_projparse.error('mmf: Unknown Command', event_id, "0x%X" % event_id)
-						break
+						raise ProjectFileParserException('mmf: Unknown Command', event_id, "0x%X" % event_id)
 
 			if chunk_obj.id == b'Mtsu': self.setup = song_file.raw(chunk_obj.size)
 
@@ -290,9 +290,7 @@ class smaf_song:
 		song_file.load_file(input_file)
 
 		try: song_file.magic_check(b'MMMD')
-		except ValueError as t:
-			logger_projparse.error('mmf: '+str(t))
-			return False
+		except ValueError as t: raise ProjectFileParserException('mmf: '+str(t))
 		
 		end_file = song_file.uint32_b()
 

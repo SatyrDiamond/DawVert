@@ -8,13 +8,11 @@ from functions import colors
 from objects import globalstore
 from objects.file_proj import proj_jummbox
 from objects.inst_params import fx_delay
+from objects.exceptions import ProjectFileParserException
 import plugins
 import json
 import os
 import math
-
-import logging
-logger_input = logging.getLogger('input')
 
 FILTERFREQ = [2378.41, 3363.59, 4756.83, 5656.85, 8000, 9513.66, 11313.71, 13454.34, 16000, 19027.31, None]
 
@@ -249,11 +247,9 @@ class input_jummbox(plugins.base):
 		try:
 			jummbox_json = json.load(bytestream)
 		except UnicodeDecodeError as t:
-			logger_input.error('jummbox: Unicode Decode Error: '+str(t))
-			exit()
+			raise ProjectFileParserException('jummbox: File is not text')
 		except json.decoder.JSONDecodeError as t:
-			logger_input.error('jummbox: JSON parsing error: '+str(t))
-			exit()
+			raise ProjectFileParserException('jummbox: JSON parsing error: '+str(t))
 
 		jummbox_obj = proj_jummbox.jummbox_project(jummbox_json)
 		convproj_obj.params.add('bpm', jummbox_obj.beatsPerMinute, 'float')

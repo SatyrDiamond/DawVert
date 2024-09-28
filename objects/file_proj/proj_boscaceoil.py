@@ -1,11 +1,9 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects.exceptions import ProjectFileParserException
 import numpy as np
 from objects.data_bytes import bytereader
-
-import logging
-logger_projparse = logging.getLogger('projparse')
 
 class ceol_instrument:
 	def __init__(self, song_file):
@@ -64,11 +62,14 @@ class ceol_song:
 
 	def load_from_file(self, input_file):
 		ceol_file = open(input_file, 'r')
-		ceol_array = np.asarray([int(x) for x in ceol_file.readline().split(',')[:-1]], dtype=np.int16)
+
+		try: ceolnums = ceol_file.readline().split(',')[:-1]
+		except: raise ProjectFileParserException('boscaceoil: File is not text.')
+
+		ceol_array = np.asarray([int(x) for x in ceolnums], dtype=np.int16)
 
 		if not len(ceol_array):
-			logger_projparse.error('boscaceoil: array is empty')
-			return False
+			raise ProjectFileParserException('boscaceoil: array is empty')
 		
 		song_file = bytereader.bytereader()
 		song_file.load_raw(ceol_array.tobytes())

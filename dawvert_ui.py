@@ -13,34 +13,22 @@ from threading import Thread
 import traceback
 
 from objects.convproj import fileref
+from objects.exceptions import ProjectFileParserException
 filesearcher = fileref.filesearcher
 
 scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
-import logging
-
 plug_conv.load_plugins()
 
-USE_LOG_WINDOW = False
+from objects_ui.ui_pyqt import Ui_MainWindow
 
-
-if USE_LOG_WINDOW: 
-	from objects_ui.ui_pyqt import Ui_MainWindow
-
-	class logtxt():
-		guiobject = None
-		def write(self, data):
-			if logtxt.guiobject: logtxt.guiobject.appendPlainText(data.strip())
-
-	guitxt = logtxt()
-
-	logging.basicConfig(stream=guitxt, level=logging.DEBUG)
-
-else: from objects_ui.ui_pyqt_console import Ui_MainWindow
+class converterstate():
+	is_converting = False
 
 convprocess = {}
 def process_converter(qt_obj):
 	try:
+		converterstate.is_converting = True
 		dawvert_core = qt_obj.dawvert_core
 
 		dawvert_core.config.load('./__config/config.ini')
@@ -75,14 +63,38 @@ def process_converter(qt_obj):
 		filesearcher.add_searchpath_full_filereplace('converted', dawvert_core.config.path_samples_converted, None)
 		filesearcher.add_searchpath_full_filereplace('external_data', os.path.join(scriptfiledir, '__external_data'), None)
 
+		qt_obj.ui.SubStatusText.setText('Processing Input...')
 		dawvert_core.parse_input(in_file, dawvert_core.config)
+		qt_obj.ui.progressBar.setValue(25)
+		qt_obj.ui.SubStatusText.setText('Converting Project Type and Samples...')
 		dawvert_core.convert_type_output(dawvert_core.config)
+		qt_obj.ui.progressBar.setValue(50)
+		qt_obj.ui.SubStatusText.setText('Converting Plugins...')
 		dawvert_core.convert_plugins(dawvert_core.config)
+		qt_obj.ui.progressBar.setValue(75)
+		qt_obj.ui.SubStatusText.setText('Processing Output...')
 		dawvert_core.parse_output(out_file)
+		qt_obj.ui.progressBar.setValue(100)
+		qt_obj.ui.StatusText.setText('Status: OK')
+		qt_obj.ui.SubStatusText.setText('')
+	except ProjectFileParserException:
+		converterstate.is_converting = False
+		ex_type, ex_value, ex_traceback = sys.exc_info()
+		qt_obj.ui.StatusText.setText('Status: Project File Error')
+		qt_obj.ui.SubStatusText.setText(str(ex_value))
 	except SystemExit:
-		pass
+		converterstate.is_converting = False
+		ex_type, ex_value, ex_traceback = sys.exc_info()
+		qt_obj.ui.StatusText.setText('Status: Exited with no output')
+		qt_obj.ui.SubStatusText.setText('See Console.')
+		print(traceback.format_exc())
 	except:
-		if USE_LOG_WINDOW: logtxt.guiobject.append(traceback.format_exc())
+		converterstate.is_converting = False
+		ex_type, ex_value, ex_traceback = sys.exc_info()
+		qt_obj.ui.StatusText.setText('Status: Error. See Console.')
+		qt_obj.ui.SubStatusText.setText(ex_type.__name__+': '+str(ex_value))
+		print(traceback.format_exc())
+	converterstate.is_converting = False
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, *args, obj=None, **kwargs):
@@ -97,8 +109,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.setAcceptDrops(True)
 
 		layout = QtWidgets.QVBoxLayout()
-
-		if USE_LOG_WINDOW: logtxt.guiobject = self.ui.LogText
 
 		self.ui.InputFileButton.clicked.connect(self.__choose_input)
 		self.ui.OutputFileButton.clicked.connect(self.__choose_output)
@@ -120,6 +130,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 		for x in self.dawvert_core.output_get_pluginsets_names():
 			self.ui.ListWidget_OutPlugSet.addItem(x)
+
+		self.__update_convst()
 
 	def dragEnterEvent(self, event):
 		if event.mimeData().hasUrls():
@@ -172,12 +184,36 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __update_convst(self):
 		in_file = self.ui.InputFilePath.text().replace('/', '\\')
 		out_file = self.ui.OutputFilePath.text().replace('/', '\\')
-		infound = self.dawvert_core.input_get_current()
-		outfound = self.dawvert_core.output_get_current()
+		inplug = self.dawvert_core.input_get_current()
+		outplug = self.dawvert_core.output_get_current()
 		not_same = in_file!=out_file
 		out_exists = not os.path.exists(out_file)
-		outstate = bool(infound and outfound and not_same and out_exists)
-		self.ui.ConvertButton.setEnabled(outstate)
+		in_usable, in_usable_msg = self.dawvert_core.input_get_usable()
+		out_usable, out_usable_msg = self.dawvert_core.output_get_usable()
+		outstate = bool(inplug and outplug and not_same and out_exists and in_usable)
+
+		self.ui.ConvertButton.setEnabled(outstate and not converterstate.is_converting)
+		if converterstate.is_converting: 
+			self.ui.StatusText.setText('Status: Converting')
+			self.ui.SubStatusText.setText('')
+		elif not outstate:
+			self.ui.StatusText.setText('Status: Not Ready')
+			if not in_file: self.ui.SubStatusText.setText('No input file.')
+			elif not out_file: self.ui.SubStatusText.setText('No output file.')
+			elif not inplug: self.ui.SubStatusText.setText('Input plugin not selected.')
+			elif not outplug: self.ui.SubStatusText.setText('Output plugin not selected.')
+			elif not not_same: self.ui.SubStatusText.setText('Not overwriting input file.')
+			elif not out_exists: self.ui.SubStatusText.setText('Not overwriting output file.')
+			elif not in_usable: 
+				self.ui.StatusText.setText('Status: Input Plugin Unusable')
+				self.ui.SubStatusText.setText(in_usable_msg)
+			elif not out_usable: 
+				self.ui.StatusText.setText('Status: Output Plugin Unusable')
+				self.ui.SubStatusText.setText(out_usable_msg)
+		else:
+			self.ui.StatusText.setText('Status: Ready')
+			self.ui.SubStatusText.setText('')
+
 
 	def __change_input_plugset(self, num):
 		plugsetname = self.dawvert_core.input_get_pluginsets_index(num)
@@ -236,6 +272,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __do_convert(self):
 		thread1 = Thread(target = process_converter, args = (self,))
 		thread1.start()
+		self.__update_convst()
 
 app = QtWidgets.QApplication(sys.argv)
 

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>796</width>
-    <height>747</height>
+    <width>537</width>
+    <height>729</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -85,6 +85,9 @@
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
+             </property>
+             <property name="styleSheet">
+              <string notr="true">font: 15pt &quot;Ubuntu&quot;;</string>
              </property>
             </widget>
            </item>
@@ -202,7 +205,11 @@
             </widget>
            </item>
            <item row="1" column="1">
-            <widget class="QListWidget" name="ListWidget_OutPlugin"/>
+            <widget class="QListWidget" name="ListWidget_OutPlugin">
+             <property name="styleSheet">
+              <string notr="true">font: 15pt &quot;Ubuntu&quot;;</string>
+             </property>
+            </widget>
            </item>
            <item row="0" column="1">
             <widget class="QLabel" name="label_9">
@@ -217,6 +224,30 @@
           </layout>
          </item>
         </layout>
+       </item>
+       <item>
+        <widget class="QLabel" name="StatusText">
+         <property name="styleSheet">
+          <string notr="true">font: 18pt &quot;Ubuntu&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Status: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="SubStatusText">
+         <property name="text">
+          <string>Status Text</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="progressBar">
+         <property name="value">
+          <number>0</number>
+         </property>
+        </widget>
        </item>
        <item>
         <widget class="QPushButton" name="ConvertButton">
@@ -237,20 +268,6 @@
          </property>
          <property name="text">
           <string>Convert</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <property name="spacing">
-        <number>0</number>
-       </property>
-       <item>
-        <widget class="QPlainTextEdit" name="LogText">
-         <property name="readOnly">
-          <bool>true</bool>
          </property>
         </widget>
        </item>

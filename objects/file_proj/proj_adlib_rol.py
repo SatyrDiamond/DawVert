@@ -1,11 +1,9 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects.exceptions import ProjectFileParserException
 from objects.data_bytes import bytereader
 from functions import data_bytes
-
-import logging
-logger_projparse = logging.getLogger('projparse')
 
 class track_tempo:
 	def __init__(self): 
@@ -97,8 +95,7 @@ class adlib_rol_project:
 		try: 
 			song_file.magic_check(b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 		except ValueError as t:
-			logger_projparse.error('adlib_rol: '+str(t))
-			return False
+			raise ProjectFileParserException('adlib_rol: '+str(t))
 
 		self.tickBeat = song_file.uint16()
 		self.beatMeasure = song_file.uint16()

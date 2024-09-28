@@ -9,6 +9,7 @@ import os
 import logging
 from objects import core
 from functions import plug_conv
+from objects.exceptions import ProjectFileParserException
 
 from objects.convproj import fileref
 filesearcher = fileref.filesearcher
@@ -141,7 +142,11 @@ if os.path.isfile(out_file) and 'overwrite' not in dawvert_core.config.flags_cor
 		logger_core.error('Not overwriting - exiting')
 		exit()
 
-dawvert_core.parse_input(in_file, dawvert_core.config)
+try:
+	dawvert_core.parse_input(in_file, dawvert_core.config)
+except ProjectFileParserException:
+	pass
+
 dawvert_core.convert_type_output(dawvert_core.config)
 dawvert_core.convert_plugins(dawvert_core.config)
 dawvert_core.parse_output(out_file)

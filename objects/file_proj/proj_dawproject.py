@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from objects.file_proj._dawproject import clips

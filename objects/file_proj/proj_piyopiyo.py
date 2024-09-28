@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
+from objects.exceptions import ProjectFileParserException
 import logging
 
 logger_projparse = logging.getLogger('projparse')
@@ -27,11 +28,8 @@ class piyopiyo_song:
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
 
-		try: 
-			song_file.magic_check(b'PMD')
-		except ValueError as t:
-			logger_projparse.error('piyopiyo: '+str(t))
-			return False
+		try: song_file.magic_check(b'PMD')
+		except ValueError as t: raise ProjectFileParserException('piyopiyo: '+str(t))
 
 		song_file.skip(1)
 

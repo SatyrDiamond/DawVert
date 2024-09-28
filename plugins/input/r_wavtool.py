@@ -9,6 +9,7 @@ from functions_plugin_ext import data_vc2xml
 from functions_plugin import juce_memoryblock
 from objects.inst_params import fx_delay
 from objects.inst_params import juce_plugin
+from objects.exceptions import ProjectFileParserException
 from functions import data_xml
 import plugins
 import json
@@ -383,16 +384,14 @@ class input_wavtool(plugins.base):
 		try:
 			zip_data = zipfile.ZipFile(input_file, 'r')
 		except zipfile.BadZipFile as t:
-			logger_input.error('wavtool: Bad ZIP File: '+str(t))
-			exit()
+			raise ProjectFileParserException('wavtool: Bad ZIP File: '+str(t))
 
 		json_filename = None
 		samplefolder = dv_config.path_samples_extracted
 		for jsonname in zip_data.namelist():
 			if '.json' in jsonname: json_filename = jsonname
 		if not json_filename:
-			logger_input.error('wavtool: JSON file not found')
-			exit()
+			raise ProjectFileParserException('wavtool: JSON file not found')
 
 		t_wavtool_project = zip_data.read(json_filename)
 		wt_proj = json.loads(t_wavtool_project)

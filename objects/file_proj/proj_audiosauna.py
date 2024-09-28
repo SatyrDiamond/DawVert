@@ -1,12 +1,10 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects.exceptions import ProjectFileParserException
 from objects.data_bytes import bytereader
 import xml.etree.ElementTree as ET
 import zipfile
-
-import logging
-logger_projparse = logging.getLogger('projparse')
 
 def getvalue(xmltag, xmlname, fallbackval): 
 	if xmltag.findall(xmlname) != []: return xmltag.findall(xmlname)[0].text.strip()
@@ -112,8 +110,7 @@ class audiosauna_song:
 		try:
 			zip_data = zipfile.ZipFile(input_file, 'r')
 		except zipfile.BadZipFile as t:
-			logger_projparse.error('audiosauna: Bad ZIP File: '+str(t))
-			exit()
+			raise ProjectFileParserException('audiosauna: Bad ZIP File: '+str(t))
 		
 		as_songdata = zip_data.read('songdata.xml')
 

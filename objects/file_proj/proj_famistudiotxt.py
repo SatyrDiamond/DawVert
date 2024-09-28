@@ -7,6 +7,7 @@ from functions import xtramath
 
 from objects.inst_params import fm_vrc7
 from objects.inst_params import fm_epsm
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -232,6 +233,5 @@ class famistudiotxt_project:
 				cur_pat.Notes.append(fs_note(cmd_params))
 
 			else:
-				logger_projparse.error('famistudio: unexpected command and/or wrong tabs: '+cmd_name)
-				return False
+				raise ProjectFileParserException('famistudio: unexpected command and/or wrong tabs: '+cmd_name)
 		return True

@@ -7,9 +7,7 @@ from io import BytesIO
 import json
 import plugins
 import struct
-
-import logging
-logger_input = logging.getLogger('input')
+from objects.exceptions import ProjectFileParserException
 
 def getval(i_val):
 	if i_val == 91: i_val = 11
@@ -39,11 +37,9 @@ class input_petaporon(plugins.base):
 		try:
 			petapo_data = json.load(bytestream)
 		except UnicodeDecodeError as t:
-			logger_input.error('petaporon: Unicode Decode Error: '+str(t))
-			exit()
+			raise ProjectFileParserException('petaporon: Unicode Decode Error: '+str(t))
 		except json.decoder.JSONDecodeError as t:
-			logger_input.error('petaporon: JSON parsing error: '+str(t))
-			exit()
+			raise ProjectFileParserException('petaporon: JSON parsing error: '+str(t))
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)

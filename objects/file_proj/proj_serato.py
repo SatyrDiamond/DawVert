@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
+from objects.exceptions import ProjectFileParserException
 
 class serato_sample:
 	def __init__(self, json_data):
@@ -124,7 +125,8 @@ class serato_song:
 
 	def load_from_file(self, input_file):
 		f = open(input_file, 'r')
-		serato_json = json.load(f)
+		try: serato_json = json.load(f)
+		except: raise ProjectFileParserException('serato: JSON Decoding Error')
 
 		if 'version' in serato_json: self.version = serato_json['version']
 		if 'metadata' in serato_json: self.metadata = serato_json['metadata']

@@ -3,6 +3,7 @@
 
 from objects.data_bytes import bytereader
 from objects.data_bytes import structalloc
+from objects.exceptions import ProjectFileParserException
 import numpy as np
 import struct
 import logging
@@ -164,9 +165,7 @@ class ptcop_song:
 				self.title = song_file.string(chunk_size, encoding="shift-jis")
 			elif chunk_id == b'pxtoneND':
 				break
-			else:
-				logger_projparse.error('pxtone: unknown chunk: '+str(chunk_id))
-				exit()
+			else: raise ProjectFileParserException('pxtone: unknown chunk: '+str(chunk_id))
 
 		self.events.clean()
 

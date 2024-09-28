@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -54,8 +55,7 @@ class nbs_song:
 			self.newformat = 1
 			version = song_file.uint8()
 			if version != 5:
-				logger_projparse.error('mnbs: only version 5 new-NBS or old format is supported.')
-				return False
+				raise ProjectFileParserException('mnbs: only version 5 new-NBS or old format is supported.')
 			self.inst_count = song_file.uint8()
 			self.song_length = song_file.uint16()
 			self.layers_count = song_file.uint16()

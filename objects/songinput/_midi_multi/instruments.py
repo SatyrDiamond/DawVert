@@ -12,7 +12,7 @@ instrument_premake = structalloc.dynarray_premake([
 	('bank_hi', np.uint8),
 	('inst', np.uint8),
 	('is_custom', np.uint8),
-	('custom_name', np.unicode_, 128),
+	('custom_name', np.str_, 128),
 	('custom_color_used', np.uint8),
 	('custom_color', np.uint8, 3)])
 

@@ -143,12 +143,14 @@ class input_xm(plugins.base):
 			if xm_inst.num_samples == 0: pass
 			elif xm_inst.num_samples == 1:
 				inst_used = True
-				first_s_obj = xm_inst.samp_head[0]
-				inst_obj.params.add('vol', 0.3*(first_s_obj.vol), 'float')
+				trsamp = xm_inst.samp_head[0]
+				inst_obj.params.add('vol', 0.3*(trsamp.vol), 'float')
 				filename = samplefolder+str(xm_cursamplenum)+'.wav'
 
 				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filename, None)
-				sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = first_s_obj.get_loop()
+				sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = trsamp.get_loop()
+				if not sp_obj.loop_active: sp_obj.loop_end = trsamp.length
+				sp_obj.end = trsamp.length
 				sp_obj.point_value_type = "samples"
 			else:
 				inst_used = True
@@ -157,8 +159,11 @@ class input_xm(plugins.base):
 				for instnum, r_start, e_end in sampleregions:
 					filename = samplefolder + str(xm_cursamplenum+instnum) + '.wav'
 					sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
+					trsamp = xm_inst.samp_head[instnum]
 					sp_obj = plugin_obj.sampleregion_add(r_start, e_end, 0, None)
-					sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = xm_inst.samp_head[instnum].get_loop()
+					sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = trsamp.get_loop()
+					if not sp_obj.loop_active: sp_obj.loop_end = trsamp.length
+					sp_obj.end = trsamp.length
 					sp_obj.sampleref = filename
 					sp_obj.point_value_type = "samples"
 

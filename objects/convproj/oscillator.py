@@ -33,6 +33,7 @@ class cvpj_lfo:
 
 		self.loop_on = True
 		self.mode = 'normal'
+		self.retrigger = True
 
 		self.sustained = False
 

@@ -102,10 +102,10 @@ class input_it(plugins.base):
 		else: return False
 		bytestream.seek(0)
 
-	def parse_bytes(self, convproj_obj, input_file, dv_config):
+	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
 		project_obj = proj_it.it_song()
-		if not project_obj.load_from_raw(input_file): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config, None)
+		if not project_obj.load_from_raw(input_bytes): exit()
+		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		project_obj = proj_it.it_song()

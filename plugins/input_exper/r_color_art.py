@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
+import importlib.util
 
 class input_color_art(plugins.base):
 	def __init__(self): pass
@@ -17,7 +18,7 @@ class input_color_art(plugins.base):
 	def parse(self, convproj_obj, input_file, dv_config):
 		from PIL import Image
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(1, False)
+		convproj_obj.set_timings(4, False)
 
 		im = Image.open(input_file)
 

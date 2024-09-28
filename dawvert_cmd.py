@@ -23,7 +23,7 @@ print('DawVert: Daw Conversion Tool')
 parser = argparse.ArgumentParser()
 parser.add_argument("-i", default=None)
 parser.add_argument("-it", default=None)
-parser.add_argument("-ips", default=None)
+parser.add_argument("-ips", default='main')
 parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
 parser.add_argument("--soundfont", default=None)
@@ -145,7 +145,7 @@ if os.path.isfile(out_file) and 'overwrite' not in dawvert_core.config.flags_cor
 try:
 	dawvert_core.parse_input(in_file, dawvert_core.config)
 except ProjectFileParserException:
-	pass
+	exit()
 
 dawvert_core.convert_type_output(dawvert_core.config)
 dawvert_core.convert_plugins(dawvert_core.config)

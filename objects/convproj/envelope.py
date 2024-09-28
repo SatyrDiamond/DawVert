@@ -235,7 +235,7 @@ class cvpj_envelope_adsr:
 		pointsdata = env_pointsdata.points
 		numpoints = len(pointsdata)
 
-		sustainnum = -1 if (not env_pointsdata.sustain_on or env_pointsdata.sustain_point > numpoints) else env_pointsdata.sustain_point
+		sustainnum = -1 if (not env_pointsdata.sustain_on or env_pointsdata.sustain_point > numpoints-1) else env_pointsdata.sustain_point
 		debug_num = 0
 
 		if numpoints == 2:

@@ -15,8 +15,6 @@ class mod_sample:
 		self.name = song_file.string(22, encoding="ascii", errors="ignore") if song_file else ''
 		self.length = song_file.uint16_b() if song_file else 0
 		self.finetune = song_file.uint8() if song_file else 0
-		if self.finetune > 15: 
-			raise ProjectFileParserException('mod: sample finetune over 15')
 		self.default_vol = song_file.uint8() if song_file else 0
 		self.loop_start = song_file.uint16_b() if song_file else 0
 		self.loop_length = song_file.uint16_b() if song_file else 0
@@ -51,7 +49,12 @@ class mod_song:
 		logger_projparse.info('mod: Song Name: ' + str(self.title))
 		for _ in range(31):
 			sample_obj = mod_sample(song_file)
-			if sample_obj.errored and not IGNORE_ERRORS: return False
+			if sample_obj.finetune > 15: 
+				if not IGNORE_ERRORS:
+					raise ProjectFileParserException('mod: sample finetune over 15')
+				else:
+					logger_projparse.warning('mod: sample finetune over 15')
+
 			self.samples.append(sample_obj)
 		self.num_orders = song_file.uint8()
 		self.extravalue = song_file.uint8()

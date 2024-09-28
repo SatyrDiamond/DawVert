@@ -57,11 +57,11 @@ class input_mod(plugins.base):
 				if tracker.detect_bytes(project_obj.outdata):
 					isdetected = extension
 					logger_input.info(f"Detected inner UMX format: { tracker.get_name() }")
-					tracker.parse_bytes(convproj_obj, project_obj.outdata, dv_config)
+					tracker.parse_bytes(convproj_obj, project_obj.outdata, dv_config, input_file)
 			if not isdetected:
 				if firstname in FORMATS:
 					modo = mod()
-					modo.parse_bytes(convproj_obj, project_obj.outdata, dv_config)
+					modo.parse_bytes(convproj_obj, project_obj.outdata, dv_config, input_file)
 				else:
 					logger_input.error(firstname+" is not supported")
 					exit()

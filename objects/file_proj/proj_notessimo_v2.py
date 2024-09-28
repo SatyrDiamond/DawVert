@@ -6,6 +6,7 @@ import zipfile
 from objects.data_bytes import bytereader
 import xml.etree.ElementTree as ET
 from functions import note_data
+from objects.exceptions import ProjectFileParserException
 
 class note_note:
 	__slots__ = ['pos','note','layer','inst','sharp','flat','vol','pan','dur']
@@ -65,7 +66,13 @@ class notev2_song:
 		song_file.load_file(input_file)
 
 		song_data = bytereader.bytereader()
-		song_data.load_raw(zlib.decompress(song_file.rest(), zlib.MAX_WBITS|32))
+
+		try: 
+			decompdata = zlib.decompress(song_file.rest(), zlib.MAX_WBITS|32)
+		except zlib.error as t:
+			raise ProjectFileParserException('notessimo_v2: '+str(t))
+
+		song_data.load_raw(decompdata)
 		self.name = song_data.c_string__int16(True)
 		self.author = song_data.c_string__int16(True)
 		self.date1 = song_data.c_string__int16(True)

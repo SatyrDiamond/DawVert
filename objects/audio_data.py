@@ -1,3 +1,5 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 import numpy
 from objects.file import audio_wav

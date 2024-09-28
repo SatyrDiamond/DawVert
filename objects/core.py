@@ -179,14 +179,24 @@ class core:
 
 	def input_get_plugins_index(self, num): 
 		pluglist = dv_plugins.get_list('input')
-		if (len(pluglist)-1)>num: return pluglist[num]
-		else: return None
+		if num != -1:
+			if (len(pluglist)-1)>=num: return pluglist[min(num, len(pluglist)-1)]
+			else: return None
+		else:
+			return None
 
 	def input_get_plugins_auto(self): return dv_plugins.get_list_detect('input')
 
 	def input_get_current(self): return self.currentplug_input.selected_shortname
 
 	def input_get_current_name(self): return self.currentplug_input.selected_plugin.name if self.currentplug_input.selected_plugin else 'None'
+
+	def input_get_usable(self): 
+		selected_plugin = self.currentplug_input.selected_plugin
+		if selected_plugin:
+			return selected_plugin.usable, selected_plugin.usable_meg
+		else:
+			return False, ''
 
 	def input_set(self, pluginname): 
 		return self.currentplug_input.set(pluginname)
@@ -212,8 +222,11 @@ class core:
 
 	def output_get_plugins_index(self, num):
 		pluglist = dv_plugins.get_list('output')
-		if (len(pluglist)-1)>num: return pluglist[num]
-		else: return None
+		if num != -1:
+			if (len(pluglist)-1)>=num: return pluglist[min(num, len(pluglist)-1)]
+			else: return None
+		else:
+			return None
 
 	def output_get_pluginsets(self): return list(pluginsets_output)
 
@@ -224,6 +237,13 @@ class core:
 	def output_get_current(self): return self.currentplug_output.selected_shortname
 
 	def output_get_current_name(self): return self.currentplug_output.selected_plugin.name if self.currentplug_output.selected_plugin else 'None'
+
+	def output_get_usable(self): 
+		selected_plugin = self.currentplug_output.selected_plugin
+		if selected_plugin:
+			return selected_plugin.usable, selected_plugin.usable_meg
+		else:
+			return False, ''
 
 	def output_get_extension(self): 
 		prop_obj = self.currentplug_output.get_prop_obj()

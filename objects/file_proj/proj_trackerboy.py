@@ -3,6 +3,7 @@
 
 import numpy as np
 from objects.data_bytes import bytereader
+from objects.exceptions import ProjectFileParserException
 
 dtype_patdata = np.dtype([
 	('n_pos', np.int8), 
@@ -90,7 +91,10 @@ class trackerboy_project:
 		song_data = bytereader.bytereader()
 		song_data.load_file(input_file)
 
-		song_data.magic_check(b'\x00TRACKERBOY\x00')
+		try: 
+			song_data.magic_check(b'\x00TRACKERBOY\x00')
+		except ValueError as t:
+			raise ProjectFileParserException('trackerboy: '+str(t))
 
 		song_data.seek(24)
 		self.m_rev = song_data.uint8()

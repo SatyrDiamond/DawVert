@@ -3,6 +3,7 @@
 
 from objects.data_bytes import bytereader
 import logging
+from objects.exceptions import ProjectFileParserException
 logger_projparse = logging.getLogger('projparse')
 
 class piximod_pattern:
@@ -40,8 +41,7 @@ class piximod_song:
 		try: 
 			song_file.magic_check(b'PIXIMOD1')
 		except ValueError as t:
-			logger_projparse.error('piximod: '+str(t))
-			return False
+			raise ProjectFileParserException('piximod: '+str(t))
 
 		main_iff_obj = song_file.chunk_objmake()
 		cur_patnum = 0

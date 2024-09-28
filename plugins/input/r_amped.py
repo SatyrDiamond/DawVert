@@ -14,9 +14,7 @@ import os
 import struct
 import base64
 import zipfile
-
-import logging
-logger_input = logging.getLogger('input')
+from objects.exceptions import ProjectFileParserException
 
 AMPED_COLORS = {
 				'mint': [0.20, 0.80, 0.63],
@@ -351,8 +349,7 @@ class input_amped(plugins.base):
 		try:
 			zip_data = zipfile.ZipFile(input_file, 'r')
 		except zipfile.BadZipFile as t:
-			logger_input.error('amped: Bad ZIP File: '+str(t))
-			exit()
+			raise ProjectFileParserException('amped: Bad ZIP File: '+str(t))
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)
@@ -365,8 +362,7 @@ class input_amped(plugins.base):
 		try:
 			jsonfilenames = zip_data.read('filenames.json')
 		except KeyError as t:
-			logger_input.error('amped: filenames.json not found')
-			exit()
+			raise ProjectFileParserException('amped: filenames.json not found')
 
 		amped_filenames = json.loads(jsonfilenames)
 		for amped_filename, realfilename in amped_filenames.items():
@@ -380,8 +376,7 @@ class input_amped(plugins.base):
 		try:
 			jsonproject = zip_data.read('amped-studio-project.json')
 		except KeyError as t:
-			logger_input.error('amped: amped-studio-project.json not found')
-			exit()
+			raise ProjectFileParserException('amped: amped-studio-project.json not found')
 
 		amped_project = json.loads(jsonproject)
 		amped_obj = proj_amped.amped_project(amped_project)

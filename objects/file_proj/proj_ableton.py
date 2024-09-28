@@ -5,14 +5,12 @@ import xml.etree.ElementTree as ET
 from functions import data_values
 from xml.dom import minidom
 import gzip
+from objects.exceptions import ProjectFileParserException
 
 from objects.file_proj._ableton.func import *
 from objects.file_proj._ableton.param import *
 from objects.file_proj._ableton.automation import *
 from objects.file_proj._ableton.tracks import *
-
-import logging
-logger_projparse = logging.getLogger('projparse')
 
 mixerp_unused_id = data_values.counter(1000)
 counter_unused_id = data_values.counter(30000)
@@ -243,18 +241,19 @@ class ableton_liveset:
 				alsbytes.seek(0)
 				xmlstring = gzip.decompress(alsbytes.read())
 			else:
-				alsbytes.seek(0)
-				xmlstring = alsbytes.read().decode()
+				try:
+					alsbytes.seek(0)
+					xmlstring = alsbytes.read().decode()
+				except:
+					raise ProjectFileParserException('ableton: file is not GZIP or text')
 
 		try: root = ET.fromstring(xmlstring)
 		except ET.ParseError as t:
-			logger_projparse.error('ableton: XML parsing error: '+str(t))
-			return False
+			raise ProjectFileParserException('ableton: XML parsing error: '+str(t))
 
 		abletonversion = root.get('MinorVersion').split('.')[0]
 		if abletonversion != '11':
-			logger_projparse.error('ableton: Version '+abletonversion+' is not supported.')
-			return False
+			raise ProjectFileParserException('ableton: Version '+abletonversion+' is not supported.')
 
 		x_LiveSet = root.findall('LiveSet')[0]
 		self.NextPointeeId = int(get_value(x_LiveSet, 'NextPointeeId', 0))

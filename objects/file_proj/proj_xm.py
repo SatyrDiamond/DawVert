@@ -6,6 +6,7 @@ from objects import openmpt_plugin
 
 import logging
 logger_projparse = logging.getLogger('projparse')
+from objects.exceptions import ProjectFileParserException
 
 class xm_pattern:
 	def __init__(self, song_file, num, num_channels):
@@ -176,9 +177,7 @@ class xm_song:
 
 	def load(self, song_file):
 		try: song_file.magic_check(b'Extended Module: ')
-		except ValueError as t:
-			logger_projparse.error('xm: '+str(t))
-			return False
+		except ValueError as t: raise ProjectFileParserException('xm: '+str(t))
 
 		self.title = song_file.string(20, encoding="windows-1252")
 		logger_projparse.info("xm: Song Name: " + self.title)

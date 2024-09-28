@@ -3,8 +3,7 @@
 
 from objects.data_bytes import bytereader
 import logging
-
-logger_projparse = logging.getLogger('projparse')
+from objects.exceptions import ProjectFileParserException
 
 MINIMUM_VERSION = 61
 
@@ -40,17 +39,12 @@ class umx_file:
 		song_file = bytereader.bytereader()
 		song_file.load_file(input_file)
 
-		try: 
-			song_file.magic_check(b'\xc1\x83\x2a\x9e')
-		except ValueError as t:
-			logger_projparse.error('umx: '+str(t))
-			return False
+		try: song_file.magic_check(b'\xc1\x83\x2a\x9e')
+		except ValueError as t: raise ProjectFileParserException('umx: '+str(t))
 
 		self.version = song_file.uint32()
 
-		if self.version < MINIMUM_VERSION:
-			logger_projparse.error("umx: UMX versions below {MINIMUM_VERSION} are not supported")
-			return False
+		if self.version < MINIMUM_VERSION: raise ProjectFileParserException("umx: UMX versions below {MINIMUM_VERSION} are not supported")
 
 		song_file.skip(4)
 		name_count = song_file.uint32()
@@ -75,9 +69,7 @@ class umx_file:
 
 		serial_size = read_compact_index(song_file)
 
-		if serial_size == 0:
-			logger_projparse.error("umx: UMX doesn't contain anything")
-			return False
+		if serial_size == 0: raise ProjectFileParserException("umx: UMX doesn't contain anything")
 		
 		serial_offset = read_compact_index(song_file)
 		song_file.seek(serial_offset)  
@@ -90,6 +82,3 @@ class umx_file:
 		self.outdata = song_file.raw(inner_size)
 
 		return True
-
-test_obj = umx_file()
-test_obj.load_from_file("G:\\RandomMusicFiles\\umx\\jazz 3\\Jazz3Title.umx")

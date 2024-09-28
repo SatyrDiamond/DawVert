@@ -8,6 +8,7 @@ from io import BytesIO
 from objects.data_bytes import bytereader
 from objects.inst_params import fm_opn2
 from objects.inst_params import chip_sid
+from objects.exceptions import ProjectFileParserException
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -132,13 +133,16 @@ class deflemask_project:
 		bytestream = open(input_file, 'rb')
 
 		bio_dmf = bytereader.bytereader()
-		bio_dmf.load_raw(zlib.decompress(bytestream.read()))
+		try:
+			decompdata = zlib.decompress(bytestream.read())
+		except zlib.error as t:
+			raise ProjectFileParserException('1bitdragon: '+str(t))
+		bio_dmf.load_raw(decompdata)
 		bio_dmf.magic_check(b'.DelekDefleMask.')
 		self.version = bio_dmf.uint8()
 
 		if self.version != 24:
-			logger_projparse.error('deflemask: only version 24 is supported.')
-			return False
+			raise ProjectFileParserException('deflemask: only version 24 is supported.')
 
 		self.system = bio_dmf.uint8()
 

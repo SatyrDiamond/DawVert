@@ -8,9 +8,6 @@ from functions import data_values
 from functions import xtramath
 
 from objects import globalstore
-from objects import audio_data
-from objects.file_proj import proj_famistudiotxt
-from objects.inst_params import juce_plugin
 
 dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
 
@@ -139,6 +136,7 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 	if WaveType in ['VRC7FM']: inst_obj.datavals.add('middlenote', 12)
 
 def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
+	from objects import audio_data
 	global samplefolder
 	global dpcm_rate_arr
 
@@ -278,6 +276,8 @@ class input_famistudio(plugins.base):
 		in_dict['plugin_included'] = ['epsm_rhythm','fds','fm:epsm','fm:vrc7','namco163_famistudio','sampler:multi','universal:synth-osc']
 	def supported_autodetect(self): return False
 	def parse(self, i_convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_famistudiotxt
+		
 		global samplefolder
 		global convproj_obj
 		convproj_obj = i_convproj_obj

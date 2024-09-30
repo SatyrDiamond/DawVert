@@ -1,9 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.file_proj import proj_serato
-from functions import colors
-from objects.convproj import sample_entry
 import plugins
 import urllib.parse
 import os
@@ -67,6 +64,9 @@ class input_serato(plugins.base):
 		in_dict['file_ext'] = 'ssp'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_serato
+		from objects.convproj import sample_entry
+
 		convproj_obj.type = 'ms'
 		convproj_obj.set_timings(960, True)
 

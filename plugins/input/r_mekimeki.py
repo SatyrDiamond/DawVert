@@ -4,7 +4,6 @@
 import plugins
 import json
 from functions import xtramath
-from functions import note_data
 
 import logging
 logger_input = logging.getLogger('input')
@@ -31,6 +30,8 @@ class input_cvpj_f(plugins.base):
 		in_dict['track_nopl'] = True
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from functions import note_data
+
 		bytestream = open(input_file, 'r')
 		file_data = bytestream.read()
 		

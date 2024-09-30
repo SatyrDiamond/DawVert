@@ -1,15 +1,12 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects import audio_data
-from functions import colors
-from objects import globalstore
-from objects.file_proj import proj_pxtone
 import struct
 import math
 import os
 import numpy as np
 import plugins
+from objects import globalstore
 
 def get_float(in_int): return struct.unpack("<f", struct.pack("I", in_int))[0]
 
@@ -74,6 +71,10 @@ class input_pxtone(plugins.base):
 		elif bytesdata == b'PTTUNE--20071119': return True
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from functions import colors
+		from objects import audio_data
+		from objects.file_proj import proj_pxtone
+		
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_pxtone.ptcop_song()

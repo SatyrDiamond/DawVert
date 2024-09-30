@@ -4,12 +4,11 @@
 import plugins
 import json
 import struct
-import blackboxprotobuf
 from objects import globalstore
-from objects.file_proj import proj_onlineseq
 from functions import data_values
 
 def create_auto(project_obj, convproj_obj, os_target, os_param, autoloc, mul):
+	from objects.file_proj import proj_onlineseq
 	auto_found, auto_points = convproj_obj.automation.get_autopoints(autoloc)
 
 	if auto_found:
@@ -34,6 +33,7 @@ class output_onlineseq(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['midi','native-onlineseq','universal:synth-osc']
 	def parse(self, convproj_obj, output_file):
+		from objects.file_proj import proj_onlineseq
 
 		convproj_obj.change_timings(4, True)
 

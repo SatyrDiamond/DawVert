@@ -12,7 +12,6 @@ from functions import data_values
 from functions import xtramath
 from objects import counter
 from functions_plugin import synth_nonfree_values
-from objects.file_proj import proj_amped
 
 audioidnum = 0
 
@@ -35,7 +34,7 @@ def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, a
 		#if ap_f: print(ap_d)
 		if ap_f: 
 			if ap_d.u_nopl_points:
-				autospec = {"type": "numeric", "min": param_obj.min, "max": param_obj.max, "curve": 0, "step": 1 if paramtype == 'int' else 0}
+				autospec = {"type": "numeric", "min": param_obj.min, "max": param_obj.max, "curve": 0, "step": 0}
 				amped_auto = amped_track.add_auto(paramid, True, amped_device.id, convauto(cvpj_points, param_obj), autospec)
 
 				#print(autospec)
@@ -118,6 +117,8 @@ class output_amped(plugins.base):
 		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
 	def parse(self, convproj_obj, output_file):
+		from objects.file_proj import proj_amped
+
 		global counter_id
 		global counter_devid
 		global amped_obj

@@ -13,10 +13,6 @@ from functions import data_bytes
 from functions import data_values
 from functions import colors
 from functions import xtramath
-from objects.file_proj import proj_reaper
-from objects.file_proj._rpp import track as rpp_track
-from objects.file_proj._rpp import fxchain as rpp_fxchain
-from objects.file_proj._rpp import source as rpp_source
 
 def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
@@ -138,9 +134,9 @@ def convert_midi(rpp_source_obj,notelist, tempo, num, dem, notespl_obj):
 	
 def file_source(rpp_source_obj, fileref_obj, filename):
 	rpp_source_obj.file.set(filename)
-	if fileref_obj.extension == 'mp3': rpp_source_obj.type = 'MP3'
-	elif fileref_obj.extension == 'flac': rpp_source_obj.type = 'FLAC'
-	elif fileref_obj.extension == 'ogg': rpp_source_obj.type = 'VORBIS'
+	if fileref_obj.file.extension == 'mp3': rpp_source_obj.type = 'MP3'
+	elif fileref_obj.file.extension == 'flac': rpp_source_obj.type = 'FLAC'
+	elif fileref_obj.file.extension == 'ogg': rpp_source_obj.type = 'VORBIS'
 	else: rpp_source_obj.type = 'WAVE'
 
 class output_reaper(plugins.base):
@@ -159,6 +155,10 @@ class output_reaper(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 	def parse(self, convproj_obj, output_file):
+		from objects.file_proj import proj_reaper
+		from objects.file_proj._rpp import fxchain as rpp_fxchain
+		from objects.file_proj._rpp import source as rpp_source
+
 		global reaper_tempo
 		global tempomul
 
@@ -216,7 +216,7 @@ class output_reaper(plugins.base):
 				rpp_item_obj.position.set(notespl_obj.time.position_real)
 				rpp_item_obj.length.set(notespl_obj.time.duration_real)
 				rpp_item_obj.mute['mute'] = int(notespl_obj.muted)
-				if notespl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color_clip(notespl_obj.visual.color))
+				if notespl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(notespl_obj.visual.color))
 				if notespl_obj.visual.name: rpp_item_obj.name.set(notespl_obj.visual.name)
 				rpp_source_obj = rpp_item_obj.source = rpp_source.rpp_source()
 				rpp_source_obj.type = 'MIDI'
@@ -237,7 +237,7 @@ class output_reaper(plugins.base):
 				rpp_item_obj.position.set(audiopl_obj.time.position_real)
 				rpp_item_obj.length.set(audiopl_obj.time.duration_real)
 				rpp_item_obj.mute['mute'] = int(audiopl_obj.muted)
-				if audiopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color_clip(audiopl_obj.visual.color))
+				if audiopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(audiopl_obj.visual.color))
 				if audiopl_obj.visual.name: rpp_item_obj.name.set(audiopl_obj.visual.name)
 				rpp_item_obj.volpan['vol'] = audiopl_obj.sample.vol
 				rpp_item_obj.volpan['pan'] = audiopl_obj.sample.pan

@@ -308,7 +308,7 @@ class plugconv(plugins.base):
 				plugin_obj.replace('matt_tytel', 'vital')
 
 				osc_obj = plugin_obj.osc_add()
-				osc_obj.prop.type = 'custom_wave'
+				osc_obj.prop.type = 'wave'
 				osc_obj.prop.nameid = 'main'
 
 				wave_obj = plugin_obj.wave_add('main')
@@ -341,7 +341,7 @@ class plugconv(plugins.base):
 					vitalcutoff_minus = (lb_vcf_mod*20)
 					vcfamt = (lb_vcf_mod+0.2)*0.5
 
-				modulation_obj = plugin_obj.modulation_add_native('env_2', 'filter_fx_cutoff')
+				modulation_obj = plugin_obj.modulation_add_native('env_2', 'filter_2_cutoff')
 				modulation_obj.amount = vcfamt
 
 				plugin_obj.params.add('polyphony', 1, 'float')
@@ -349,9 +349,11 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('portamento_force', 1, 'float')
 					plugin_obj.params.add('portamento_slope', 5, 'float')
 					plugin_obj.params.add('portamento_time', (-5)+(pow(lb_slide_dec*2, 2.5)), 'float')
-				plugin_obj.params.add('filter_fx_on', 1, 'float')
-				plugin_obj.params.add('filter_fx_cutoff', vitalcutoff_first-vitalcutoff_minus, 'float')
-				plugin_obj.params.add('filter_fx_resonance', lb_vcf_res/1.7, 'float')
+
+				plugin_obj.params.add('osc_1_destination', 2, 'float')
+				plugin_obj.params.add('filter_2_on', 1, 'float')
+				plugin_obj.params.add('filter_2_cutoff', vitalcutoff_first-vitalcutoff_minus, 'float')
+				plugin_obj.params.add('filter_2_resonance', lb_vcf_res/1.7, 'float')
 				plugin_obj.env_asdr_add('vital_env_2', 0, 0, 0, 0.4+(lb_vcf_dec*3) if lb_dead == 0 else 0, 0, 0, 1)
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
 				return True

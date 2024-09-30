@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects import globalstore
-from functions import colors
 from io import BytesIO
 import json
 import plugins
@@ -32,6 +31,7 @@ class input_petaporon(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
 	def parse(self, convproj_obj, input_file, dv_config):
+		from functions import colors
 		bytestream = open(input_file, 'r')
 		
 		try:

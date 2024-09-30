@@ -1,11 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.file_proj import proj_dawproject
-from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext import plugin_vst3
-from functions import note_data
-from objects import auto_id
 from objects.exceptions import ProjectFileParserException
 import plugins
 import zipfile
@@ -67,6 +62,9 @@ def do_sends(convproj_obj, track_obj, dp_channel):
 		do_param(convproj_obj, send_obj.params, send.volume, 'amount', None, 'float', ['send', send.id, 'amount'])
 
 def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
+	from functions_plugin_ext import plugin_vst2
+	from functions_plugin_ext import plugin_vst3
+
 	for device in dp_devices:
 		plugin_obj = None
 
@@ -306,6 +304,9 @@ class input_dawproject(plugins.base):
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_nested'] = True
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_dawproject
+		from objects import auto_id
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)
 

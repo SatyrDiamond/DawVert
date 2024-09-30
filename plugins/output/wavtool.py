@@ -12,8 +12,6 @@ import math
 import base64
 from functions import colors
 from functions import xtramath
-from objects.file_proj import proj_wavtool
-from functions_plugin_ext import plugin_vst2
 
 def addsample(zip_wt, filepath, alredyexists): 
 	global audio_id
@@ -43,6 +41,7 @@ def addsample(zip_wt, filepath, alredyexists):
 		   
 
 def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoints, color, istrack):
+	from objects.file_proj import proj_wavtool
 	endtext = (autoid+'-'+trackid) if istrack == True else autoname
 	wt_autoid_AutoTrack = 'DawVert-AutoTrack-'+endtext
 	wt_autoid_AutoRec = 'DawVert-AutoRec-'+endtext
@@ -118,6 +117,9 @@ class output_wavtool(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
+		from functions_plugin_ext import plugin_vst2
+		from objects.file_proj import proj_wavtool
+
 		global audio_id
 		global wavtool_obj
 

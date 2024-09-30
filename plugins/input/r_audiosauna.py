@@ -3,7 +3,6 @@
 
 from functions import colors
 from objects import globalstore
-from objects.file_proj import proj_audiosauna
 import plugins
 import zipfile
 import os
@@ -45,6 +44,8 @@ class input_audiosanua(plugins.base):
 		except:
 			return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_audiosauna
+
 		global cvpj_l
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(128, False)

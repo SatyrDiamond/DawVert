@@ -10,12 +10,8 @@ from objects import core
 from pathlib import Path
 
 from functions import data_bytes
-from functions import data_values
 from functions import xtramath
-from functions_plugin import flp_dec_plugins
 from objects import globalstore
-from objects.file_proj import proj_flp
-from objects.inst_params import fx_delay
 
 from objects.convproj import fileref
 
@@ -216,7 +212,7 @@ class input_flp(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
 	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio'
+	def get_name(self): return 'FL Studio 12-21'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'flp'
@@ -243,6 +239,9 @@ class input_flp(plugins.base):
 			if bytesdata == b'FLhd': return True
 			else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from functions_plugin import flp_dec_plugins
+		from objects.file_proj import proj_flp
+		from objects.inst_params import fx_delay
 
 		convproj_obj.type = 'mi'
 

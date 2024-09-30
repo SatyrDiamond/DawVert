@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.songinput import mariopaint
 import io
 import plugins
 
@@ -26,6 +25,8 @@ class input_mariopaint_smp(plugins.base):
 		in_dict['plugin_included'] = ['midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.songinput import mariopaint
+
 		convproj_obj.type = 'rm'
 		mariopaint_obj = mariopaint.mariopaint_song()
 

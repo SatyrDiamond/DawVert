@@ -6,9 +6,6 @@ import os
 import re
 import numpy as np
 import math
-from objects.file_proj import proj_mod
-from objects import audio_data
-from objects.tracker import pat_single
 
 FINETUNE = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
 TEXTSTART = 'MOD_Inst_'
@@ -30,16 +27,20 @@ class input_mod(plugins.base):
 	def supported_autodetect(self): return False
 
 	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+		from objects.file_proj import proj_mod
 		project_obj = proj_mod.mod_song()
 		if not project_obj.load_from_raw(input_bytes, IGNORE_ERRORS): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config)
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_mod
 		project_obj = proj_mod.mod_song()
 		if not project_obj.load_from_file(input_file, IGNORE_ERRORS): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config)
 
 	def parse_internal(self, convproj_obj, project_obj, dv_config):
+		from objects.tracker import pat_single
+		from objects import audio_data
 		samplefolder = dv_config.path_samples_extracted
 
 		cvpj_bpm = 125

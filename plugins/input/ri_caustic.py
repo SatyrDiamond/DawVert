@@ -2,16 +2,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from dataclasses import dataclass
-from functions import data_bytes
-from functions import xtramath
-from objects import audio_data
+
 from objects import globalstore
-from objects.file_proj import proj_caustic
+from functions import xtramath
+
 import json
 import os.path
 import plugins
 import struct
-
 
 caustic_fxtype = {}
 caustic_fxtype[0] = 'delay'
@@ -106,6 +104,9 @@ class input_cvpj_r(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects import audio_data
+		from objects.file_proj import proj_caustic
+		
 		global dataset
 
 		convproj_obj.type = 'ri'

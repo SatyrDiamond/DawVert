@@ -6,8 +6,6 @@ from functions import data_values
 from functions import xtramath
 from functions import colors
 from objects import globalstore
-from objects.file_proj import proj_jummbox
-from objects.inst_params import fx_delay
 from objects.exceptions import ProjectFileParserException
 import plugins
 import json
@@ -183,6 +181,7 @@ def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
 
 def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 	if 'echo' in bb_fx.used:
+		from objects.inst_params import fx_delay
 		fx_pluginid = cvpj_instid+'_echo'
 		delay_obj = fx_delay.fx_delay()
 		delay_obj.feedback_first = True
@@ -220,7 +219,7 @@ class input_jummbox(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
 	def get_shortname(self): return 'jummbox'
-	def get_name(self): return 'Jummbox'
+	def get_name(self): return 'Beepbox/Jummbox'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'json'
@@ -231,6 +230,8 @@ class input_jummbox(plugins.base):
 
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_jummbox
+
 		convproj_obj.type = 'mi'
 		convproj_obj.set_timings(8, True)
 

@@ -1,14 +1,10 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
-from objects import audio_data
-from functions import colors
-from objects import globalstore
-from objects.file_proj import proj_piximod
 import plugins
 import os
 import numpy as np
+from objects import globalstore
 
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass
@@ -29,6 +25,10 @@ class input_cvpj_f(plugins.base):
 		if bytesdata == b'PIXIMOD1': return True
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects import audio_data
+		from functions import colors
+		from objects.file_proj import proj_piximod
+
 		convproj_obj.type = 'rs'
 		convproj_obj.set_timings(4, False)
 

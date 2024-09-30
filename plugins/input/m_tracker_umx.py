@@ -5,7 +5,6 @@ import plugins
 import os
 import numpy as np
 import math
-from objects.file_proj import proj_umx
 
 from plugins.input.m_tracker_s3m import input_s3m as s3m
 from plugins.input.m_tracker_mod import input_mod as mod
@@ -44,6 +43,7 @@ class input_mod(plugins.base):
 		else: return False
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_umx
 		project_obj = proj_umx.umx_file()
 		if not project_obj.load_from_file(input_file): exit()
 

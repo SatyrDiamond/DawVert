@@ -11,7 +11,6 @@ from pathlib import Path
 from objects import globalstore
 from functions import data_values
 from functions import colors
-from objects.file_proj import proj_lmms
 import xml.etree
 
 chordids = [None,"major","majb5","minor","minb5","sus2","sus4","aug","augsus4","tri","6","6sus4","6add9","m6","m6add9","7","7sus4","7#5","7b5","7#9","7b9","7#5#9","7#5b9","7b5b9","7add11","7add13","7#11","maj7","maj7b5","maj7#5","maj7#11","maj7add13","m7","m7b5","m7b9","m7add11","m7add13","m-maj7","m-maj7add11","m-maj7add13","9","9sus4","add9","9#5","9b5","9#11","9b13","maj9","maj9sus4","maj9#5","maj9#11","m9","madd9","m9b5","m9-maj7","11","11b9","maj11","m11","m-maj11","13","13#9","13b9","13b5b9","maj13","m13","m-maj13","full_major","harmonic_minor","melodic_minor","whole_tone","diminished","major_pentatonic","minor_pentatonic","jap_in_sen","major_bebop","dominant_bebop","blues","arabic","enigmatic","neopolitan","neopolitan_minor","hungarian_minor","dorian","phrygian","lydian","mixolydian","aeolian","locrian","full_minor","chromatic","half-whole_diminished","5","phrygian_dominant","persian"]
@@ -116,6 +115,8 @@ def parse_auto(lmms_points, autopoints_obj):
 		curpoint += 1
 
 def make_auto_track(autoidnum, autodata, visualname, automode):
+	from objects.file_proj import proj_lmms
+
 	global song_obj
 	lmms_track = proj_lmms.lmms_track()
 	lmms_track.type = 5
@@ -211,6 +212,8 @@ def setvstparams(lmms_plug_obj, plugin_obj, pluginid, keysdict):
 	return middlenotefix
 
 def encode_effectslot(effect_obj, plugin_obj, pluginid):
+	from objects.file_proj import proj_lmms
+
 	paramauto(effect_obj.on, plugin_obj.params_slot, 'enabled', True, None, ['slot', pluginid], 'Slot', 'On')
 	paramauto(effect_obj.wet, plugin_obj.params_slot, 'wet', 1, None, ['slot', pluginid], 'Slot', 'Wet')
 
@@ -263,6 +266,8 @@ def encode_effectslot(effect_obj, plugin_obj, pluginid):
 				lmms_plug_obj.ladspa_params[lmms_paramid] = ladspa_param_obj
 
 def encode_fxchain(lmms_fxchain, track_obj, trackname, autoloc):
+	from objects.file_proj import proj_lmms
+
 	#paramauto(lmms_fxchain.enabled, track_obj.params, 'fx_enabled', False, None, autoloc, trackname, 'FX Enabled')
 	for pluginid in track_obj.fxslots_audio:
 		plugin_found, plugin_obj = cvpj_obj.get_plugin(pluginid)
@@ -331,6 +336,8 @@ class output_lmms(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		
 	def parse(self, i_cvpj_obj, output_file):
+		from objects.file_proj import proj_lmms
+
 		global lmms_bpm
 		global cvpj_obj
 		global project_obj

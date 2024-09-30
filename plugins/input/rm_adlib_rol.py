@@ -1,14 +1,9 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions_plugin_cvpj import params_fm
-from functions import data_bytes
-from functions import data_values
-from objects import globalstore
-from objects.file_proj import proj_adlib_rol
-from objects.file import adlib_bnk
-
 import plugins
+
+from objects import globalstore
 
 class input_adlib_rol(plugins.base):
 	def __init__(self): pass
@@ -29,6 +24,9 @@ class input_adlib_rol(plugins.base):
 		if bytesdata == b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00': return True
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_adlib_rol
+		from objects.file import adlib_bnk
+
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_adlib_rol.adlib_rol_project()

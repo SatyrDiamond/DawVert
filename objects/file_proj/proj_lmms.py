@@ -799,7 +799,7 @@ class lmms_track:
 				self.bbtrack.read(xmlpart)
 			if xmlpart.tag == 'sampletrack':
 				self.sampletrack.read(xmlpart)
-			if xmlpart.tag == 'pattern':
+			if xmlpart.tag in ['pattern', 'midiclip']:
 				pattern_obj = lmms_pattern()
 				pattern_obj.read(xmlpart)
 				self.patterns.append(pattern_obj)
@@ -912,7 +912,7 @@ class lmms_fxmixer:
 	def read(self, xmldata):
 		self.window.read(xmldata)
 		for xmlpart in xmldata:
-			if xmlpart.tag == 'fxchannel':
+			if xmlpart.tag in ['fxchannel', 'mixerchannel']:
 				fxchannel_obj = lmms_fxchannel()
 				fxchannel_obj.read(xmlpart)
 				self.fxchannels[int(xmlpart.get('num'))] = fxchannel_obj

@@ -9,7 +9,6 @@ import zlib
 import base64
 import math
 from functions import colors
-from objects.file_proj import proj_muse
 
 import logging
 logger_output = logging.getLogger('output')
@@ -77,6 +76,7 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 	synthidnum += 1
 
 def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
+	from objects.file_proj import proj_muse
 	global tracknum
 	global synthidnum
 	logger_output.info('MusE:  Midi Track '+str(tracknum)+(': '+trackname if trackname else ''))
@@ -113,6 +113,7 @@ WAVE_FREQUENCY = 48000
 wavetime = WAVE_FREQUENCY/768
 
 def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bpm):
+	from objects.file_proj import proj_muse
 	global tracknum
 	global synthidnum
 	logger_output.info('MusE:  Wave Track '+str(tracknum)+(': '+track_obj.visual.name if track_obj.visual.name else ''))
@@ -187,6 +188,7 @@ class output_cvpj(plugins.base):
 	def getsupportedplugins(self): return []
 	def getfileextension(self): return 'med'
 	def parse(self, convproj_obj, output_file):
+		from objects.file_proj import proj_muse
 		global tracknum
 		global synthidnum
 		tracknum = 1

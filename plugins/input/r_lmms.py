@@ -15,7 +15,6 @@ from objects import auto_id
 from functions import colors
 from objects.convproj import placements_notes
 from objects.convproj import placements_audio
-from objects.file_proj import proj_lmms
 from objects.inst_params import fx_delay
 from objects.inst_params import fm_opl
 from objects.inst_params import chip_sid
@@ -289,15 +288,15 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 		plugin_obj = sid_obj.to_cvpj(convproj_obj, pluginid)
 
 	elif pluginname == "OPL2":
-		opn_obj = fm_opl.opl_inst()
-		opn_obj.set_opl2()
+		opl_obj = fm_opl.opl_inst()
+		opl_obj.set_opl2()
 
-		op_obj.feedback_1 = int(lmms_plugin.get_param('feedback', 0))
-		op_obj.fm_1 = bool(lmms_plugin.get_param('fm', 0))
-		op_obj.tremolo_depth = bool(lmms_plugin.get_param('trem_depth', 0))
-		op_obj.vibrato_depth = bool(lmms_plugin.get_param('vib_depth', 0))
+		opl_obj.feedback_1 = int(lmms_plugin.get_param('feedback', 0))
+		opl_obj.fm_1 = bool(lmms_plugin.get_param('fm', 0))
+		opl_obj.tremolo_depth = bool(lmms_plugin.get_param('trem_depth', 0))
+		opl_obj.vibrato_depth = bool(lmms_plugin.get_param('vib_depth', 0))
 		for opnum in range(2):
-			op_obj = opn_obj.ops[opnum]
+			op_obj = opl_obj.ops[opnum]
 			optxt = 'op'+str(opnum+1)+'_'
 
 			op_obj.env_attack = 15-int(lmms_plugin.get_param(optxt+'a', 0))
@@ -312,7 +311,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 			op_obj.vibrato = bool(lmms_plugin.get_param(optxt+'vib', 0))
 			op_obj.waveform = lmms_plugin.get_param(optxt+'waveform', 0)
 
-		plugin_obj = opn_obj.to_cvpj(convproj_obj, pluginid)
+		plugin_obj = opl_obj.to_cvpj(convproj_obj, pluginid)
 
 	else:
 		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', pluginname)
@@ -420,7 +419,7 @@ def lmms_decode_effectslot(convproj_obj, lmms_effect):
 		DelayTimeSamples = lmms_plugin.get_param('DelayTimeSamples', 1)
 		delay_obj = fx_delay.fx_delay()
 		delay_obj.feedback[0] = float(lmms_plugin.get_param('FeebackAmount', 0.5))
-		is_steps, timeval = get_timedata(float(DelayTimeSamples))
+		is_steps, timeval = get_timedata(DelayTimeSamples)
 		timing_obj = delay_obj.timing_add(0)
 		if is_steps: timing_obj.set_steps(timeval, convproj_obj)
 		else: timing_obj.set_seconds(float(DelayTimeSamples))
@@ -676,6 +675,8 @@ class input_lmms(plugins.base):
 		except ET.ParseError: output = False
 		return output
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_lmms
+
 		global dataset
 		global autoid_assoc
 		global bbpld

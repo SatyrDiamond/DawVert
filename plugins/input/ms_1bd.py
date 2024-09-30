@@ -3,11 +3,8 @@
 
 import plugins
 import os
-from functions import data_bytes
-from functions import data_values
 from functions import colors
 from objects import globalstore
-from objects.file_proj import proj_1bitdragon
 
 import logging
 logger_input = logging.getLogger('input')
@@ -54,6 +51,8 @@ class input_1bitdragon(plugins.base):
 		in_dict['file_ext'] = '1bd'
 		in_dict['track_lanes'] = True
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_1bitdragon
+
 		convproj_obj.set_timings(4, True)
 		convproj_obj.type = 'ms'
 

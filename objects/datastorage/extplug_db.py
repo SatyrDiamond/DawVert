@@ -260,6 +260,12 @@ class vst2:
 				o.append(pluginfo_obj)
 		return o
 
+	def count():
+		if extplug_db.db_plugins:
+			return extplug_db.db_plugins.execute("SELECT count(*) FROM vst2").fetchone()[0]
+		else:
+			return 0
+
 class vst3:
 	exe_txt_start = "SELECT name, id, type, creator, category, version, sdk_version, url, email, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, num_params, path_32bit_win, path_64bit_win, path_32bit_unix, path_64bit_unix FROM vst3"
 
@@ -331,6 +337,12 @@ class vst3:
 		if founddata: pluginfo_obj.from_sql_vst3(founddata, in_platformtxt)
 		return pluginfo_obj
 	
+	def count():
+		if extplug_db.db_plugins:
+			return extplug_db.db_plugins.execute("SELECT count(*) FROM vst3").fetchone()[0]
+		else:
+			return 0
+
 class clap:
 	def add(pluginfo_obj, platformtxt):
 		if pluginfo_obj.id and extplug_db.db_plugins:
@@ -348,6 +360,12 @@ class clap:
 					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE clap SET path_win = ? WHERE id = ?", (pluginfo_obj.path, pluginfo_obj.id,))
 					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE clap SET path_unix = ? WHERE id = ?", (pluginfo_obj.path, pluginfo_obj.id,))
 
+	def count():
+		if extplug_db.db_plugins:
+			return extplug_db.db_plugins.execute("SELECT count(*) FROM clap").fetchone()[0]
+		else:
+			return 0
+
 class ladspa:
 	def add(pluginfo_obj, platformtxt):
 		if pluginfo_obj.id and extplug_db.db_plugins:
@@ -362,3 +380,9 @@ class ladspa:
 			if pluginfo_obj.midi_num_outputs: extplug_db.db_plugins.execute("UPDATE ladspa SET midi_num_outputs = ? WHERE id = ?", (pluginfo_obj.midi_num_outputs, pluginfo_obj.id,))
 			if pluginfo_obj.num_params: extplug_db.db_plugins.execute("UPDATE ladspa SET num_params = ? WHERE id = ?", (pluginfo_obj.num_params, pluginfo_obj.id,))
 			if pluginfo_obj.num_params_out: extplug_db.db_plugins.execute("UPDATE ladspa SET num_params_out = ? WHERE id = ?", (pluginfo_obj.num_params_out, pluginfo_obj.id,))
+
+	def count():
+		if extplug_db.db_plugins:
+			return extplug_db.db_plugins.execute("SELECT count(*) FROM ladspa").fetchone()[0]
+		else:
+			return 0

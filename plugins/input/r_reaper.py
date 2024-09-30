@@ -2,17 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import colors
-from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext import plugin_vst3
 import plugins
 import json
 import os
 import struct
 import rpp
-import base64
-from io import BytesIO
-from objects.file_proj import proj_reaper
 
 def reaper_color_to_cvpj_color(i_color, isreversed): 
 	bytecolors = struct.pack('i', i_color)
@@ -71,6 +65,10 @@ class input_reaper(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_reaper
+		from functions_plugin_ext import plugin_vst2
+		from functions_plugin_ext import plugin_vst3
+
 		bytestream = open(input_file, 'r')
 		rpp_data = rpp.load(bytestream)
 

@@ -4,7 +4,6 @@
 import plugins
 #import difflib
 import json
-import mido
 from functions import xtramath
 from functions import colors
 
@@ -35,6 +34,8 @@ class output_cvpj_f(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['midi']
 	def parse(self, convproj_obj, output_file):
+		import mido
+
 		convproj_obj.change_timings(384, False)
 		
 		midiobj = mido.MidiFile()

@@ -1,14 +1,11 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
-from functions import colors
-from objects import globalstore
-from objects.file_proj import proj_nbs
-from objects.convproj import fileref
 import json
 import math
 import plugins
+
+from objects import globalstore
 
 class input_gt_mnbs(plugins.base):
 	def __init__(self): pass
@@ -24,6 +21,9 @@ class input_gt_mnbs(plugins.base):
 		in_dict['plugin_included'] = ['sampler:single']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_nbs
+		from objects.convproj import fileref
+
 		convproj_obj.type = 'rm'
 		convproj_obj.set_timings(4, True)
 		

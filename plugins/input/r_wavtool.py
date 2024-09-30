@@ -2,13 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import colors
-from objects.file_proj import proj_wavtool
-from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext import plugin_vst3
-from functions_plugin_ext import data_vc2xml
-from functions_plugin import juce_memoryblock
-from objects.inst_params import fx_delay
-from objects.inst_params import juce_plugin
 from objects.exceptions import ProjectFileParserException
 from functions import data_xml
 import plugins
@@ -33,6 +26,11 @@ def extract_audio(audioname):
 	return audio_filename
 
 def add_devices(convproj_obj, track_obj, trackid, devices_obj):
+	from functions_plugin_ext import plugin_vst2
+	from functions_plugin_ext import plugin_vst3
+	from objects.inst_params import fx_delay
+	from functions_plugin import juce_memoryblock
+	from functions_plugin_ext import data_vc2xml
 	if trackid in devices_obj.tracks:
 		device_track = devices_obj.tracks[trackid]
 
@@ -375,6 +373,8 @@ class input_wavtool(plugins.base):
 		in_dict['plugin_included'] = ['native-wavtool','sampler:single','sampler:multi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_wavtool
+
 		global zip_data
 		global samplefolder
 

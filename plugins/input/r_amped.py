@@ -1,18 +1,13 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import colors
-from functions import data_bytes
 from functions import data_values
 from functions import xtramath
 from objects import globalstore
-from objects.file_proj import proj_amped
 import xml.etree.ElementTree as ET
 import plugins
 import json
 import os
-import struct
-import base64
 import zipfile
 from objects.exceptions import ProjectFileParserException
 
@@ -344,6 +339,8 @@ class input_amped(plugins.base):
 		in_dict['plugin_included'] = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_amped
+
 		global samplefolder
 
 		try:

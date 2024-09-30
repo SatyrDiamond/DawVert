@@ -14,6 +14,13 @@ from objects.datastorage import plugts as pts_class
 
 logger_globalstore = logging.getLogger('globalstore')
 
+home_folder = os.path.expanduser("~")
+dawvert_script_path = os.getcwd()
+
+platform_architecture = platform.architecture()
+if platform_architecture[1] == 'WindowsPE': os_platform = 'win'
+else: os_platform = 'lin'
+
 class extplug:
 	def load():
 		try:
@@ -48,6 +55,12 @@ class extplug:
 			if plugtype == 'clap': ep_class.clap.add(pluginfo_obj, platformtxt)
 			if plugtype == 'ladspa': ep_class.ladspa.add(pluginfo_obj, platformtxt)
 
+	def count(plugtype):
+		if plugtype == 'vst2': return ep_class.vst2.count()
+		if plugtype == 'vst3': return ep_class.vst3.count()
+		if plugtype == 'clap': return ep_class.clap.count()
+		if plugtype == 'ladspa': return ep_class.ladspa.count()
+		if plugtype == 'all': return ep_class.vst2.count()+ep_class.vst3.count()+ep_class.clap.count()
 
 class extlib:
 	loaded_parts = {}

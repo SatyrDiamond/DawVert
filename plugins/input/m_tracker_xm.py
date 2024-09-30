@@ -5,8 +5,6 @@ import io
 import plugins
 import os.path
 from functions import data_values
-from objects.file_proj import proj_xm
-from objects.tracker import pat_single
 
 try: import xmodits
 except: xmodits_exists = False
@@ -62,16 +60,19 @@ class input_xm(plugins.base):
 		bytestream.seek(0)
 
 	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+		from objects.file_proj import proj_xm
 		project_obj = proj_xm.xm_song()
 		if not project_obj.load_from_raw(input_bytes): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_xm
 		project_obj = proj_xm.xm_song()
 		if not project_obj.load_from_file(input_file): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
 
 	def parse_internal(self, convproj_obj, project_obj, dv_config, input_file):
+		from objects.tracker import pat_single
 		global samplefolder
 		samplefolder = dv_config.path_samples_extracted
 		

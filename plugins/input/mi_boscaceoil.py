@@ -3,20 +3,15 @@
 
 from functions import data_values
 from functions import xtramath
-from functions_plugin_cvpj import params_fm
 from objects import globalstore
-from objects.convproj import project as convproj
-from objects.file_proj import proj_boscaceoil
-from objects.inst_params import fm_opm
-from objects.inst_params import fx_delay
 import plugins
-import json
 
 FX_NAMES = ['delay','chorus','reverb','distortion','low_boost','compressor','high_pass']
 CEOL_COLORS = [[0.23, 0.15, 0.93],[0.61, 0.04, 0.94],[0.82, 0.16, 0.23],[0.82, 0.60, 0.16],[0.21, 0.84, 0.14],[0.07, 0.56, 0.91]]
 
 def add_master_fx(convproj_obj, fx_type, fx_value):
 	if fx_type == 0: #delay
+		from objects.inst_params import fx_delay
 		delay_obj = fx_delay.fx_delay()
 		delay_obj.feedback_first = True
 		delay_obj.feedback[0] = 0.1
@@ -75,6 +70,8 @@ class input_ceol(plugins.base):
 		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','fm:opm','native-boscaceoil','universal:filter','midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_boscaceoil
+		from objects.inst_params import fm_opm
 		global ceol_data
 		
 		project_obj = proj_boscaceoil.ceol_song()

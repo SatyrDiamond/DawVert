@@ -1,11 +1,8 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.file_proj import proj_trackerboy
-from objects.tracker import pat_multi
 from functions import data_bytes
 from objects import globalstore
-from objects import audio_data
 import plugins
 
 def speed_to_tempo(framerate, speed):
@@ -53,6 +50,8 @@ class input_trackerboy(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['fxtype'] = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_trackerboy
+		from objects.tracker import pat_multi
 		project_obj = proj_trackerboy.trackerboy_project()
 		if not project_obj.load_from_file(input_file): exit()
 

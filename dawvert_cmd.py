@@ -65,9 +65,6 @@ if args.songnum != None: core.config_data.songnum = int(args.songnum)
 if args.extrafile != None: core.config_data.path_extrafile = args.extrafile
 if args.mi2m__output_unused_nle == True: core.config_data.flags_convproj.append('mi2m-output-unused-nle')
 if args.ips: pluginset = args.ips
-if args.nonfree_plugins == True: core.config_data.extplug_cat.append('nonfree')
-if args.shareware_plugins == True: core.config_data.extplug_cat.append('shareware')
-if args.old_plugins == True: core.config_data.extplug_cat.append('old')
 if args.splitter_mode != None: core.config_data.splitter_mode = int(args.splitter_mode)
 if args.splitter_detect_start != None: core.config_data.splitter_detect_start = bool(int(args.splitter_detect_start))
 
@@ -111,10 +108,7 @@ if out_file_nameext[1] == '': out_file = os.path.join(out_file_path, out_file_na
 
 file_name = os.path.splitext(os.path.basename(in_file))[0]
 
-dawvert_core.config.path_samples_extracted += file_name + '/'
-dawvert_core.config.path_samples_downloaded += file_name + '/'
-dawvert_core.config.path_samples_generated += file_name + '/'
-dawvert_core.config.path_samples_converted += file_name + '/'
+dawvert_core.config.set_projname_path(file_name)
 
 os.makedirs(dawvert_core.config.path_samples_extracted, exist_ok=True)
 os.makedirs(dawvert_core.config.path_samples_downloaded, exist_ok=True)

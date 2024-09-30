@@ -1,8 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.file_proj import proj_flipperzero
-from functions import note_data
 import plugins
 
 class input_petaporon(plugins.base):
@@ -16,6 +14,9 @@ class input_petaporon(plugins.base):
 		in_dict['file_ext'] = 'fmf'
 		in_dict['track_nopl'] = True
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_flipperzero
+		from functions import note_data
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)
 

@@ -1,10 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import colors
 from objects import globalstore
-from objects import audio_data
-from objects.file_proj import proj_orgyana
 import plugins
 import os
 
@@ -27,6 +24,10 @@ class input_orgyana(plugins.base):
 		else: return False
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_orgyana
+		from functions import colors
+		from objects import audio_data
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 

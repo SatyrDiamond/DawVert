@@ -1,10 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.file_proj import proj_famitracker
-from objects.tracker import pat_multi
 from objects import globalstore
-from objects import audio_data
 import plugins
 
 dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
@@ -22,6 +19,9 @@ class input_famitracker_txt(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['fxtype'] = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_famitracker
+		from objects.tracker import pat_multi
+		from objects import audio_data
 		project_obj = proj_famitracker.famitracker_project()
 		if not project_obj.load_from_file(input_file): exit()
 

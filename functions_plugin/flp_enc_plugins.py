@@ -226,7 +226,7 @@ def setparams(convproj_obj, plugin_obj):
 
 		if vst_datatype == 'param':
 			prognums = list(plugin_obj.programs)
-			prognum = prognums.index(plugin_obj.current_program)
+			prognum = prognums.index(plugin_obj.current_program) if plugin_obj.current_program in prognums else 0
 
 			wrapper_state.raw(b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff')
 			wrapper_state.raw(b'\x00\x00\x00\x00')

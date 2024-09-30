@@ -1,12 +1,8 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
-from functions import note_data
 from functions import xtramath
-from objects.convproj import project as convproj
 from objects import globalstore
-from objects.file_proj import proj_notessimo_v2
 import json
 import plugins
 import struct
@@ -26,6 +22,8 @@ class input_notessimo_v2(plugins.base):
 		in_dict['plugin_included'] = ['midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_notessimo_v2
+
 		global used_insts
 		used_insts = []
 

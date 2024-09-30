@@ -5,10 +5,6 @@ import plugins
 import math
 import os
 import numpy as np
-from objects import audio_data
-from functions import data_bytes
-from objects.songinput import midi_in
-from objects.file_proj import proj_mmf
 
 def get_timebase(i_val):
 	if i_val == 2: return 0.004
@@ -42,6 +38,10 @@ class input_mmf(plugins.base):
 		else: return False
 		bytestream.seek(0)
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects import audio_data
+		from objects.songinput import midi_in
+		from objects.file_proj import proj_mmf
+
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_mmf.smaf_song()

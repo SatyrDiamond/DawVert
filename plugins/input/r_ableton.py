@@ -2,13 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import colors
-from functions import data_values
 from objects import globalstore
-from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext import plugin_vst3
-from objects.file_proj import proj_ableton
-from objects import auto_id
 
 from io import BytesIO
 import numpy as np
@@ -101,6 +95,9 @@ def do_automation(convproj_obj, AutomationEnvelopes):
 						convproj_obj.timesig = [(alsevent.Value%99)+1, 2**(alsevent.Value//99)]
 
 def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
+	from functions_plugin_ext import plugin_vst2
+	from functions_plugin_ext import plugin_vst3
+
 	global vector_shapesdata
 
 	middlenote = 0
@@ -184,7 +181,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				windata_obj.pos_y = int(VstPluginInfo['WinPosY'])
 
 				vst_Path = str(VstPluginInfo['Path']).replace('/','\\')
-				convproj_obj.add_fileref(vst_Path, vst_Path)
+				convproj_obj.add_fileref(vst_Path, vst_Path, 'win')
 				plugin_obj.filerefs['plugin'] = vst_Path
 
 				plugin_obj.datavals_global.add('fourid', vst_UniqueId)
@@ -361,6 +358,10 @@ class input_ableton(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from functions import colors
+		from objects.file_proj import proj_ableton
+		from objects import auto_id
+
 		global autoid_assoc
 		global timesigid
 		global vector_shapesdata

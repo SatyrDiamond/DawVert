@@ -9,13 +9,11 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from objects import globalstore
 from functions import data_values
-from objects.file_proj import proj_dawproject
-from objects.file_proj._dawproject import track
+
 from objects.file_proj._dawproject import clips
 from objects.file_proj._dawproject import points
+from objects.file_proj._dawproject import track
 from objects.file_proj._dawproject import device
-from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext import plugin_vst3
 
 def do_visual(visual_obj, dp_track):
 	if visual_obj.name: dp_track.name = visual_obj.name
@@ -179,6 +177,7 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 	return dp_audio, dp_warps, zip_filepath, filepath, maxlen
 
 def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
+
 	dp_clip_obj = clips.dawproject_clip()
 	dp_clip_obj.contentTimeUnit = 'beats'
 	do_visual_clip(cvpj_audioclip.visual, dp_clip_obj)
@@ -300,6 +299,9 @@ def make_lane(starttxt):
 	return lane_obj
 
 def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
+	from functions_plugin_ext import plugin_vst2
+	from functions_plugin_ext import plugin_vst3
+
 	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
 	if plugin_found:
 		dp_device = None
@@ -450,6 +452,8 @@ class output_dawproject(plugins.base):
 		in_dict['audio_nested'] = True
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 	def parse(self, convproj_obj, output_file):
+		from objects.file_proj import proj_dawproject
+
 		global arrangement_obj
 		global dawproject_zip
 

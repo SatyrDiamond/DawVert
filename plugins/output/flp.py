@@ -7,17 +7,10 @@ import math
 import base64
 import struct
 import logging
-from bs4 import BeautifulSoup
-from functions_plugin import flp_enc_plugins
 from functions import data_values
 from functions import xtramath
 
 from objects import globalstore
-
-from objects.file_proj import proj_flp
-from objects.file_proj._flp import channel
-from objects.file_proj._flp import arrangement
-from objects.file_proj._flp import fx
 
 logger_output = logging.getLogger('output')
 
@@ -86,7 +79,7 @@ class output_cvpjs(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
 	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio'
+	def get_name(self): return 'FL Studio 20'
 	def gettype(self): return 'mi'
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'flp'
@@ -100,6 +93,12 @@ class output_cvpjs(plugins.base):
 		in_dict['plugin_included'] = ['sampler:single','universal:arpeggiator','native-flstudio','soundfont2']
 		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
+		from bs4 import BeautifulSoup
+		from functions_plugin import flp_enc_plugins
+		from objects.file_proj import proj_flp
+		from objects.file_proj._flp import channel
+		from objects.file_proj._flp import arrangement
+		from objects.file_proj._flp import fx
 
 		ppq = 96
 		convproj_obj.change_timings(ppq, False)

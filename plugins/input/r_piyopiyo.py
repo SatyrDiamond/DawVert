@@ -5,9 +5,7 @@ import plugins
 import json
 import struct
 import os.path
-from functions import colors
 from objects import globalstore
-from objects.file_proj import proj_piyopiyo
 
 def parse_notes(convproj_obj, trackid, notes_data, track_obj, keyoffset):
 	for pos, nd in enumerate(notes_data):
@@ -36,6 +34,9 @@ class input_piyopiyo(plugins.base):
 		else: return False
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from functions import colors
+		from objects.file_proj import proj_piyopiyo
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 

@@ -269,7 +269,11 @@ class wav_main:
 
 	def write(self, wavfile, normalized=False):
 		filepath = pathlib.Path(wavfile)
-		if not os.path.exists(filepath.parent): os.makedirs(filepath.parent)
+		if not os.path.exists(filepath.parent): 
+			try:
+				os.makedirs(filepath.parent, exist_ok=True)
+			except:
+				pass
 		logger_audiofile.info('WAV: Generating Sample: Channels: '+str(self.channels)+', Freq: '+str(self.rate)+', Bits: '+str(self.bits))
 		data = self.data
 

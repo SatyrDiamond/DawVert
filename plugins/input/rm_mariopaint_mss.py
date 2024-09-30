@@ -1,9 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.songinput import mariopaint
 from objects.exceptions import ProjectFileParserException
-from objects import globalstore
 import plugins
 import xml.etree.ElementTree as ET
 
@@ -55,6 +53,8 @@ class input_mariopaint_mss(plugins.base):
 		except ET.ParseError: output = False
 		return output
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.songinput import mariopaint
+
 		convproj_obj.type = 'rm'
 		mariopaint_obj = mariopaint.mariopaint_song()
 

@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.file_proj import proj_fruitytracks
 import plugins
 import json
 import os
@@ -29,6 +28,8 @@ class input_fruitytracks(plugins.base):
 	def supported_autodetect(self): return True
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_fruitytracks
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 

@@ -96,6 +96,19 @@ class config_data:
 	splitter_detect_start = False
 	searchpaths = []
 
+	def set_defualt_path(self):
+		config_data.path_samples_extracted = os.getcwd() + '/__samples_extracted/'
+		config_data.path_samples_downloaded = os.getcwd() + '/__samples_downloaded/'
+		config_data.path_samples_generated = os.getcwd() + '/__samples_generated/'
+		config_data.path_samples_converted = os.getcwd() + '/__samples_converted/'
+
+	def set_projname_path(self, file_name):
+		self.set_defualt_path()
+		config_data.path_samples_extracted += file_name + '/'
+		config_data.path_samples_downloaded += file_name + '/'
+		config_data.path_samples_generated += file_name + '/'
+		config_data.path_samples_converted += file_name + '/'
+
 	def load(self, filepath):
 		global paths_soundfonts
 		config = configparser.ConfigParser()

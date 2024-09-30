@@ -4,7 +4,6 @@
 from functions import note_data
 from functions import value_midi
 import xml.etree.ElementTree as ET
-from objects.file_proj import proj_temper
 import plugins
 import json
 
@@ -28,6 +27,8 @@ class input_cvpj_f(plugins.base):
 		except ET.ParseError: output = False
 		return output
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_temper
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(6716, False)
 

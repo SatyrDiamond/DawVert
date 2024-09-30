@@ -4,9 +4,6 @@
 import plugins
 import os.path
 
-from functions import data_bytes
-from objects.file_proj import proj_adlib_sop
-
 endtxt = ['', '4OP', '2OP']
 panvals = [1, 0, -1]
 maincolor = [0.39, 0.16, 0.78]
@@ -30,6 +27,8 @@ class input_sop(plugins.base):
 		if bytesdata == b'sopepos': return True
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_adlib_sop
+
 		song_file = open(input_file, 'rb')
 
 		convproj_obj.type = 'rm'

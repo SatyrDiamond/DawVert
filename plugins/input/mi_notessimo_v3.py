@@ -4,9 +4,7 @@
 from functions import data_bytes
 from functions import note_data
 from functions import xtramath
-from objects.convproj import project as convproj
 from objects import globalstore
-from objects.file_proj import proj_notessimo_v3
 import json
 import plugins
 import struct
@@ -209,6 +207,8 @@ class input_notessimo_v3(plugins.base):
 		in_dict['plugin_included'] = ['midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_notessimo_v3
+
 		global sheetrealsize
 		global samplefolder
 		samplefolder = dv_config.path_samples_extracted

@@ -2,13 +2,13 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-from objects.songinput import midi_in
 
 import logging
 logger_input = logging.getLogger('input')
 
 class reader_midifile_class():
 	def do_song(self, input_file):
+		from objects.songinput import midi_in
 		from objects_midi.parser import MidiFile
 		midifile = MidiFile.fromFile(input_file)
 		ppq = midifile.ppqn

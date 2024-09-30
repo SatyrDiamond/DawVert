@@ -110,7 +110,17 @@ class info_audiocodec:
 	def from_dict(self, indict):
 		if 'encode_supported' in indict: self.encode_supported = indict['encode_supported']
 		if 'decode_supported' in indict: self.decode_supported = indict['decode_supported']
+
+class info_externalsearch:
+	def __init__(self):
+		self.supported_os = False
+
+	def from_dict(self, indict):
+		if 'supported_os' in indict: self.supported_os = indict['supported_os']
 		
+
+
+
 
 
 
@@ -161,6 +171,11 @@ class dv_plugin:
 
 		if self.type == 'audioconv':
 			propobj = info_audioconvplug()
+			propobj.from_dict(self.prop)
+			self.prop_obj = propobj
+
+		if self.type == 'externalsearch':
+			propobj = info_externalsearch()
 			propobj.from_dict(self.prop)
 			self.prop_obj = propobj
 

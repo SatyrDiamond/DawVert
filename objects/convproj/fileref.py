@@ -467,5 +467,5 @@ class cvpj_sampleref:
 							output_file = self.fileref.get_path(None, False)
 							logger_project.info('fileref: converted "'+output_file+'" to '+filesupported[0])
 							break
-					else:
-						logger_project.error('fileref: audiofile plugin "'+shortname+'" is not usable: '+usable_meg)
+				else:
+					logger_project.error('fileref: audiofile plugin "'+shortname+'" is not usable: '+usable_meg)

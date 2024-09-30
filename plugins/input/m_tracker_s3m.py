@@ -5,8 +5,6 @@ import io
 import plugins
 import os.path
 from functions import data_bytes
-from objects.file_proj import proj_s3m
-from objects.tracker import pat_single
 
 TEXTSTART = 's3m_inst_'
 MAINCOLOR = [0.65, 0.57, 0.33]
@@ -40,16 +38,19 @@ class input_s3m(plugins.base):
 		bytestream.seek(0)
 
 	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+		from objects.file_proj import proj_s3m
 		project_obj = proj_s3m.s3m_song()
 		if not project_obj.load_from_raw(input_bytes): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config)
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_s3m
 		project_obj = proj_s3m.s3m_song()
 		if not project_obj.load_from_file(input_file): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config)
 
 	def parse_internal(self, convproj_obj, project_obj, dv_config):
+		from objects.tracker import pat_single
 		samplefolder = dv_config.path_samples_extracted
 		
 		current_tempo = project_obj.tempo

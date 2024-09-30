@@ -6,13 +6,13 @@ import json
 import lxml.etree as ET
 from functions import xtramath
 from functions import colors
-from objects.file_proj import proj_waveform
-from objects.inst_params import juce_plugin
 from objects import globalstore
 from objects import counter
 import math
 
 def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
+	from objects.file_proj import proj_waveform
+	from objects.inst_params import juce_plugin
 	plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
 	if plugin_found: 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
@@ -68,6 +68,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['plugin_included'] = ['native-tracktion']
 		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
+		from objects.file_proj import proj_waveform
 		global dataset
 
 		convproj_obj.change_timings(4, True)

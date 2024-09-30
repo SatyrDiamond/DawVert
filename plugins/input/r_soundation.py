@@ -2,10 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
-from functions import colors
 from functions import xtramath
 from objects import globalstore
-from objects.file_proj import proj_soundation
 from objects.exceptions import ProjectFileParserException
 import plugins
 import struct
@@ -56,6 +54,9 @@ class input_soundation(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 
 	def parse(self, i_convproj_obj, input_file, dv_config):
+		from functions import colors
+		from objects.file_proj import proj_soundation
+
 		global dataset
 		global convproj_obj
 

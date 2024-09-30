@@ -2,10 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import colors
-from objects.file_proj import proj_waveform
-from objects.inst_params import juce_plugin
-from functions_plugin import juce_memoryblock
-from objects.data_bytes import bytereader
 from objects import globalstore
 from lxml import etree
 import plugins
@@ -40,6 +36,7 @@ def sampler_decode_dict(sampler_data, indict):
 	return set_name, dictpart
 
 def sampler_parse(indata): 
+	from objects.data_bytes import bytereader
 	sampler_data = bytereader.bytereader()
 	sampler_data.load_raw(indata)
 	sampleheader = {}
@@ -67,6 +64,7 @@ def soundlayer_samplepart(sp_obj, soundlayer):
 	if 'looped' in soundlayer: sp_obj.loop_active = soundlayer['looped']
 
 def do_plugin(convproj_obj, wf_plugin, track_obj): 
+	from functions_plugin import juce_memoryblock
 
 	if wf_plugin.plugtype == 'vst':
 		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
@@ -97,6 +95,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				pass
 		else:
 			try:
+				from objects.inst_params import juce_plugin
 				juceobj = juce_plugin.juce_plugin()
 				juceobj.uniqueId = wf_plugin.params['uniqueId'] if "uniqueId" in wf_plugin.params else ''
 				juceobj.name = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
@@ -208,6 +207,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['plugin_ext'] = ['vst2']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_waveform
 		global cvpj_l
 
 		convproj_obj.type = 'r'

@@ -2,8 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from dataclasses import dataclass
-from objects import audio_data
-from objects.file_proj import proj_soundclub2
 import os
 import plugins
 
@@ -46,6 +44,9 @@ class input_soundclub2(plugins.base):
 		if bytesdata == b'SN2': return True
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects import audio_data
+		from objects.file_proj import proj_soundclub2
+		
 		convproj_obj.type = 'rs'
 		convproj_obj.set_timings(4, False)
 

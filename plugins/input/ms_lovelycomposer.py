@@ -9,7 +9,6 @@ import numpy as np
 from functions import colors
 from functions import xtramath
 from objects import globalstore
-from objects.file_proj import proj_lovelycomposer
 
 #                  Name,             Type,        FadeIn, FadeOut, PitchMod, Slide, Vib, Color
 
@@ -154,6 +153,8 @@ class input_lc(plugins.base):
 		in_dict['plugin_included'] = ['universal:synth-osc']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_lovelycomposer
+
 		convproj_obj.type = 'ms'
 		convproj_obj.set_timings(4, False)
 

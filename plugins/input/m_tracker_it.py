@@ -1,10 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 from functions import data_values
-from objects.file_proj import proj_it
-from objects.tracker import pat_single
 import io
 import os.path
 import plugins
@@ -103,16 +100,19 @@ class input_it(plugins.base):
 		bytestream.seek(0)
 
 	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+		from objects.file_proj import proj_it
 		project_obj = proj_it.it_song()
 		if not project_obj.load_from_raw(input_bytes): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
 
 	def parse(self, convproj_obj, input_file, dv_config):
+		from objects.file_proj import proj_it
 		project_obj = proj_it.it_song()
 		if not project_obj.load_from_file(input_file): exit()
 		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
 
 	def parse_internal(self, convproj_obj, project_obj, dv_config, input_file):
+		from objects.tracker import pat_single
 		global samplefolder
 
 		try: import xmodits

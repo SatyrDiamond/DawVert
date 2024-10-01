@@ -8,7 +8,7 @@ class input_soundfile(plugins.base):
 	def is_dawvert_plugin(self): return 'audiofile'
 	def get_shortname(self): return 'vorbisacm'
 	def get_name(self): return 'VorbisACM'
-	def get_priority(self): return -100
+	def get_priority(self): return 300
 	def usable(self): 
 		usable = importlib.util.find_spec('soundfile')
 		usable_meg = '"soundfile" package is not installed.' if not usable else ''

@@ -132,7 +132,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						if "sample"+endstr in constantsdata:
 							bufferid = constantsdata["sample"+endstr]
 							wave_path = extract_audio(bufferid)
-							convproj_obj.add_sampleref(bufferid, wave_path)
+							convproj_obj.add_sampleref(bufferid, wave_path, None)
 					
 							attack = inputdata["attack"+endstr]/48000 if "attack"+endstr in inputdata else 0.1
 							decay = inputdata["decay"+endstr]/48000 if "decay"+endstr in inputdata else 0.1
@@ -203,7 +203,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 									kr = range_notes[keynum]
 									vr = range_vel[velnum]
 									wave_path = extract_audio(bufferid)
-									sampleref_obj = convproj_obj.add_sampleref(bufferid, wave_path)
+									sampleref_obj = convproj_obj.add_sampleref(bufferid, wave_path, None)
 									sp_obj = plugin_obj.sampleregion_add(kr[0]-60, kr[1]-60, range_base[keynum]-60, None)
 									sp_obj.vel_min = vr[0]/127
 									sp_obj.vel_max = vr[1]/127
@@ -252,7 +252,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					bufferid = constantsdata['impulseResponse'] if 'impulseResponse' in constantsdata else None
 					if bufferid:
 						wave_path = extract_audio(bufferid)
-						convproj_obj.add_sampleref(bufferid, wave_path)
+						convproj_obj.add_sampleref(bufferid, wave_path, None)
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = wave_path
 					effects.append(deviceid)

@@ -100,7 +100,8 @@ class input_s3m(plugins.base):
 					if c_note == 255: c_note = None
 
 					if c_vol != None: out_vol = c_vol/64
-					elif c_inst != None: out_vol = project_obj.instruments[c_inst-1].volume/64
+					elif c_inst != None and c_inst-1 < len(project_obj.instruments): 
+						out_vol = project_obj.instruments[c_inst-1].volume/64
 
 					if out_vol != None: pattern_obj.cell_param(c_channel, rownum, 'vol', out_vol)
 

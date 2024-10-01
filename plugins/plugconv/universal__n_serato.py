@@ -15,8 +15,6 @@ class plugconv(plugins.base):
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
-		print(plugin_obj.type.subtype)
-
 		if plugin_obj.type.subtype == 'Limiter.serato-effect-definition':
 			extpluglog.convinternal('Serato Studio', 'Limiter', 'Universal', 'Limiter')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)

@@ -27,7 +27,8 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		fl_channel_obj.basicparams.volume = sre_obj.vol
 		fl_channel_obj.basicparams.pan = sre_obj.pan
 		fl_channel_obj.enabled = sre_obj.enabled
-		fl_channel_obj.fxchannel = max(sre_obj.fxrack_channel, 0)
+		if sre_obj.fxrack_channel in flp_obj.mixer:
+			fl_channel_obj.fxchannel = max(sre_obj.fxrack_channel, 0)
 
 	if sre_obj.visual.name: fl_channel_obj.name = sre_obj.visual.name
 	if sre_obj.visual.color: fl_channel_obj.color = decode_color(sre_obj.visual.color)
@@ -418,63 +419,66 @@ class output_cvpjs(plugins.base):
 			fl_fxchan.docked_center, fl_fxchan.docked_pos = False, False
 
 		for fx_num, fxchannel_obj in convproj_obj.fxrack.items():
-			fl_fxchan = flp_obj.mixer[fx_num]
-			if fxchannel_obj.visual.name: fl_fxchan.name = fxchannel_obj.visual.name
-			if fxchannel_obj.visual.color: fl_fxchan.color = decode_color(fxchannel_obj.visual.color)
- 
-			if 'docked' in fxchannel_obj.visual_ui.other:
-				dockedpos = fxchannel_obj.visual_ui.other['docked']
-				if dockedpos == 1: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, True
-				if dockedpos == 0: fl_fxchan.docked_center, fl_fxchan.docked_pos = True, False
-				if dockedpos == -1: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, False
-			else:
-				if fx_num == 0: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, False
+			if fx_num in flp_obj.mixer:
+				fl_fxchan = flp_obj.mixer[fx_num]
+				if fxchannel_obj.visual.name: fl_fxchan.name = fxchannel_obj.visual.name
+				if fxchannel_obj.visual.color: fl_fxchan.color = decode_color(fxchannel_obj.visual.color)
+ 	
+				if 'docked' in fxchannel_obj.visual_ui.other:
+					dockedpos = fxchannel_obj.visual_ui.other['docked']
+					if dockedpos == 1: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, True
+					if dockedpos == 0: fl_fxchan.docked_center, fl_fxchan.docked_pos = True, False
+					if dockedpos == -1: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, False
+				else:
+					if fx_num == 0: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, False
 
-			fxptxt = 'fx/'+str(fx_num)+'/param/'
-			vol = fxchannel_obj.params.get('vol', 1.0).value**0.5
-			if vol>1.25: vol = 1.25
-			flp_obj.initfxvals.initvals[fxptxt+'vol'] = int(12800*vol)
-			flp_obj.initfxvals.initvals[fxptxt+'pan'] = int(6400*fxchannel_obj.params.get('pan', 0).value)
-			fl_fxchan.enabled = int(fxchannel_obj.params.get('enabled', True).value)
+				fxptxt = 'fx/'+str(fx_num)+'/param/'
+				vol = fxchannel_obj.params.get('vol', 1.0).value**0.5
+				if vol>1.25: vol = 1.25
+				flp_obj.initfxvals.initvals[fxptxt+'vol'] = int(12800*vol)
+				flp_obj.initfxvals.initvals[fxptxt+'pan'] = int(6400*fxchannel_obj.params.get('pan', 0).value)
+				fl_fxchan.enabled = int(fxchannel_obj.params.get('enabled', True).value)
 
-			if fx_num != 0:
-				if fxchannel_obj.sends.to_master_active:
-					master_send_obj = fxchannel_obj.sends.to_master
+				if fx_num != 0:
+					if fxchannel_obj.sends.to_master_active:
+						master_send_obj = fxchannel_obj.sends.to_master
+						fl_fxchan.routing.append(0)
+						flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/0'] = int(master_send_obj.params.get('amount', 1).value*12800)
+
+				nocrashfx = []
+
+				if fxchannel_obj.sends.check():
+					for target, send_obj in fxchannel_obj.sends.iter():
+						if [fx_num, target] not in nocrashfx: 
+							fl_fxchan.routing.append(target)
+							flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/'+str(target)] = int(send_obj.params.get('amount', 1).value*12800)
+				elif 0 < fx_num < 100:
 					fl_fxchan.routing.append(0)
-					flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/0'] = int(master_send_obj.params.get('amount', 1).value*12800)
-
-			nocrashfx = []
-
-			if fxchannel_obj.sends.check():
-				for target, send_obj in fxchannel_obj.sends.iter():
-					if [fx_num, target] not in nocrashfx: 
-						fl_fxchan.routing.append(target)
-						flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/'+str(target)] = int(send_obj.params.get('amount', 1).value*12800)
-			elif 0 < fx_num < 100:
-				fl_fxchan.routing.append(0)
-				flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/0'] = 12800
+					flp_obj.initfxvals.initvals['fx/'+str(fx_num)+'/route/0'] = 12800
 
 
-			if fx_num == 0: fxchannel_obj.outchannum = 1
+				if fx_num == 0: fxchannel_obj.outchannum = 1
 
-			slotnum = 0
-			for pluginid in fxchannel_obj.fxslots_audio:
-				plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
-				if plugin_found: 
-					fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(convproj_obj, plugin_obj)
-					if fl_plugin != None:
-						slotdata = fx.flp_fxslot(fx_num)
-						slotdata.plugin.name = fl_plugin
-						slotdata.plugin.params = fl_pluginparams
-						slotdata.plugin.slotnum = slotnum
-						if plugin_obj.visual.name: slotdata.name = plugin_obj.visual.name
-						if plugin_obj.visual.color: slotdata.color = decode_color(plugin_obj.visual.color)
-						fl_fxchan.slots[slotnum] = slotdata
-						fxstxt = 'fx/'+str(fx_num)+'/slot/'+str(slotnum)+'/'
-						fx_on, fx_wet = plugin_obj.fxdata_get()
-						flp_obj.initfxvals.initvals[fxstxt+'on'] = int(fx_on)
-						flp_obj.initfxvals.initvals[fxstxt+'wet'] = int(fx_wet*12800)
-						slotnum += 1
-						if slotnum == 10: break
+				slotnum = 0
+				for pluginid in fxchannel_obj.fxslots_audio:
+					plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+					if plugin_found: 
+						fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(convproj_obj, plugin_obj)
+						if fl_plugin != None:
+							slotdata = fx.flp_fxslot(fx_num)
+							slotdata.plugin.name = fl_plugin
+							slotdata.plugin.params = fl_pluginparams
+							slotdata.plugin.slotnum = slotnum
+							if plugin_obj.visual.name: slotdata.name = plugin_obj.visual.name
+							if plugin_obj.visual.color: slotdata.color = decode_color(plugin_obj.visual.color)
+							fl_fxchan.slots[slotnum] = slotdata
+							fxstxt = 'fx/'+str(fx_num)+'/slot/'+str(slotnum)+'/'
+							fx_on, fx_wet = plugin_obj.fxdata_get()
+							flp_obj.initfxvals.initvals[fxstxt+'on'] = int(fx_on)
+							flp_obj.initfxvals.initvals[fxstxt+'wet'] = int(fx_wet*12800)
+							slotnum += 1
+							if slotnum == 10: break
+			else:
+				logger_output.warning('Mixer Channel "'+str(fx_num)+'" dosent exist.')
 
 		flp_obj.make(output_file)

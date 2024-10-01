@@ -14,8 +14,8 @@ class LCSound:
 			self.vl = None
 			if '__LCSound__' in pd:
 				self.vl = pd['vl']
-				self.play_notes = pd['play_notes']
-				self.play_speed = pd['play_speed']
+				if 'play_notes' in pd: self.play_notes = pd['play_notes']
+				if 'play_speed' in pd: self.play_speed = pd['play_speed']
 
 		self.voicelist = np.zeros(self.play_notes, dtype=vl_dtype)
 		self.voicelist.fill(-1)

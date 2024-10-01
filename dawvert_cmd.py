@@ -119,6 +119,7 @@ filesearcher.add_basepath('projectfile', os.path.dirname(in_file))
 filesearcher.add_basepath('dawvert', scriptfiledir)
 
 filesearcher.add_searchpath_partial('projectfile', '.', 'projectfile')
+filesearcher.add_searchpath_full_append('projectfile', os.path.dirname(in_file), None)
 
 filesearcher.add_searchpath_full_filereplace('extracted', dawvert_core.config.path_samples_extracted, None)
 filesearcher.add_searchpath_full_filereplace('downloaded', dawvert_core.config.path_samples_downloaded, None)

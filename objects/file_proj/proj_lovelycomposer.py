@@ -4,6 +4,8 @@
 import json
 import numpy as np
 
+from objects.exceptions import ProjectFileParserException
+
 vl_dtype = np.dtype([('n', np.int16),('t', np.int16),('v', np.int16),('f', np.int16),('id', np.int32),('x', np.int16),('p', np.int16),('e', np.int16)])
 
 class LCSound:
@@ -179,8 +181,12 @@ class LCMusic:
 			if 'wave_memory_type_list' in pd: self.wave_memory_type_list = pd['wave_memory_type_list']
 
 	def load_from_file(self, input_file):
-		song_file = open(input_file, 'r')
-		for num, lined in enumerate(song_file.readlines()):
-			if num == 1: self.load(json.loads(lined))
+		try:
+			song_file = open(input_file, 'r')
+			for num, lined in enumerate(song_file.readlines()):
+				if num == 1: self.load(json.loads(lined))
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('famistudio_txt: File is not text')
+
 		return True
 

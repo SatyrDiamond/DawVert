@@ -8,6 +8,8 @@ import xml.etree.ElementTree as ET
 from functions import note_data
 import os
 
+from objects.exceptions import ProjectFileParserException
+
 import logging
 logger_projparse = logging.getLogger('projparse')
 
@@ -554,7 +556,10 @@ class notev3_file:
 		self.zip_data = {}
 		
 	def load_from_file(self, input_file):
-		self.zip_data = zipfile.ZipFile(input_file, 'r')
+		try:
+			self.zip_data = zipfile.ZipFile(input_file, 'r')
+		except zipfile.BadZipFile as t:
+			raise ProjectFileParserException('notessimo: Bad ZIP File: '+str(t))
 
 		sngfile = os.path.basename(input_file)
 

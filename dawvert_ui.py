@@ -18,8 +18,6 @@ import os
 import sys
 import traceback
 
-logging.disable(logging.INFO)
-
 from objects.convproj import fileref
 filesearcher = fileref.filesearcher
 
@@ -31,6 +29,8 @@ class converterstate():
 	is_converting = False
 	is_plugscan = False
 
+dragdroploctexts = ['Beside Original', 'In "output" folder', 'Always "out.*"']
+
 globalstore.extplug.load()
 
 dawvert_core = dv_core.core()
@@ -39,7 +39,9 @@ dawvert_core.config.load('./__config/config.ini')
 dawvert_config__main = {}
 dawvert_config__main['songnum'] = dawvert_core.config.songnum
 dawvert_config__main['extrafile'] = dawvert_core.config.path_extrafile
-dawvert_config__main['drag_drop'] = 0
+dawvert_config__main['ui__drag_drop'] = 0
+dawvert_config__main['ui__overwrite_out'] = False
+dawvert_config__main['ui__auto_convert'] = False
 
 dawvert_config__nopl_splitter = {}
 dawvert_config__nopl_splitter['mode'] = dawvert_core.config.splitter_mode
@@ -101,6 +103,7 @@ class ConversionWorker(QtCore.QObject):
 			filesearcher.add_basepath('dawvert', scriptfiledir)
 
 			filesearcher.add_searchpath_partial('projectfile', '.', 'projectfile')
+			filesearcher.add_searchpath_full_append('projectfile', os.path.dirname(in_file), None)
 
 			filesearcher.add_searchpath_full_filereplace('extracted', dawvert_core.config.path_samples_extracted, None)
 			filesearcher.add_searchpath_full_filereplace('downloaded', dawvert_core.config.path_samples_downloaded, None)
@@ -255,7 +258,6 @@ class configdata():
 configparts_main = {
 	'songnum': ['int', 'Song Number'],
 	'extrafile': ['str', 'Extra File'],
-	'drag_drop': ['int', 'Drag and Drop Location']
 }
 
 configparts_soundfont = {
@@ -326,6 +328,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.ui.ConfigString.textChanged.connect(configinput.update_value)
 		self.ui.ConfigBool.stateChanged.connect(configinput.update_value)
 
+		for dragdroploctext in dragdroploctexts:
+			self.ui.DndOutPathSelection.addItem(dragdroploctext)
+		self.ui.DndOutPathSelection.currentIndexChanged.connect(self.__change_dd_setting)
+		self.ui.OverwriteOut.stateChanged.connect(self.__change_overwrite_setting)
+		self.ui.AutoConvert.stateChanged.connect(self.__change_auto_convert_setting)
+
 		configdata(self.ui, configparts_main, 'Main', dawvert_config__main)
 		configdata(self.ui, configparts_soundfont, 'Soundfonts', dawvert_core.config.paths_soundfonts)
 		configdata(self.ui, configparts_splitter, 'NoPl Splitter', dawvert_config__nopl_splitter)
@@ -377,19 +385,40 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		else:
 			event.ignore()
 
+	def set_dd_output(self, f):
+		self.ui.InputFilePath.setText(f)
+		if dawvert_config__main['ui__drag_drop'] == 0:
+			self.ui.OutputFilePath.setText(f.rsplit('.',1)[0])
+			self.ui.OutputSamplePath.setText(f.rsplit('.',1)[0]+'_samples')
+		if dawvert_config__main['ui__drag_drop'] == 1:
+			outfile = os.path.join(globalstore.dawvert_script_path, 'output', os.path.basename(f))
+			self.ui.OutputFilePath.setText(outfile.rsplit('.',1)[0])
+			self.ui.OutputSamplePath.setText(outfile.rsplit('.',1)[0]+'_samples')
+		if dawvert_config__main['ui__drag_drop'] == 2:
+			outfile = os.path.join(globalstore.dawvert_script_path, 'out')
+			self.ui.OutputFilePath.setText(outfile.rsplit('.',1)[0])
+			samplepath = os.path.join(globalstore.dawvert_script_path, '__samples', os.path.basename(f))
+			self.ui.OutputSamplePath.setText(samplepath)
+
 	def dropEvent(self, event):
 		files = [u.toLocalFile() for u in event.mimeData().urls()]
-		for f in files:
-			self.ui.InputFilePath.setText(f)
-			if dawvert_config__main['drag_drop'] == 0:
-				self.ui.OutputFilePath.setText(f.rsplit('.',1)[0])
-				self.ui.OutputSamplePath.setText(f.rsplit('.',1)[0]+'_samples')
-			if dawvert_config__main['drag_drop'] == 1:
-				outfile = os.path.join(globalstore.dawvert_script_path, 'output', os.path.basename(f))
-				self.ui.OutputFilePath.setText(outfile.rsplit('.',1)[0])
-				self.ui.OutputSamplePath.setText(outfile.rsplit('.',1)[0]+'_samples')
+		if files:
+			self.set_dd_output(files[0])
 			self.__do_auto_detect()
 			self.__change_output_path()
+			if dawvert_config__main['ui__auto_convert']:
+				if self.__can_convert():
+					self.__do_convert()
+
+	def __change_dd_setting(self, num):
+		dawvert_config__main['ui__drag_drop'] = num
+
+	def __change_overwrite_setting(self, val):
+		dawvert_config__main['ui__overwrite_out'] = val
+		self.__update_convst()
+
+	def __change_auto_convert_setting(self, val):
+		dawvert_config__main['ui__auto_convert'] = val
 
 	def __choose_input(self):
 		filename, _filter = QFileDialog.getOpenFileName(
@@ -435,21 +464,33 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			except:
 				pass
 
+	def __can_convert(self):
+		in_file = self.ui.InputFilePath.text().replace('/', '\\')
+		out_file = self.ui.OutputFilePath.text().replace('/', '\\')
+		inplug = dawvert_core.input_get_current()
+		outplug = dawvert_core.output_get_current()
+		not_same = in_file!=out_file
+		out_exists = (not os.path.exists(out_file)) or dawvert_config__main['ui__overwrite_out']
+		in_usable, in_usable_msg = dawvert_core.input_get_usable()
+		out_usable, out_usable_msg = dawvert_core.output_get_usable()
+		return bool(inplug and outplug and not_same and out_exists and in_usable and out_usable)
+
 	def __update_convst(self):
 		in_file = self.ui.InputFilePath.text().replace('/', '\\')
 		out_file = self.ui.OutputFilePath.text().replace('/', '\\')
 		inplug = dawvert_core.input_get_current()
 		outplug = dawvert_core.output_get_current()
 		not_same = in_file!=out_file
-		out_exists = not os.path.exists(out_file)
+		out_exists = (not os.path.exists(out_file)) or dawvert_config__main['ui__overwrite_out']
 		in_usable, in_usable_msg = dawvert_core.input_get_usable()
 		out_usable, out_usable_msg = dawvert_core.output_get_usable()
-		outstate = bool(inplug and outplug and not_same and out_exists and in_usable)
+		outstate = bool(inplug and outplug and not_same and out_exists and in_usable and out_usable)
 
 		self.ui.ConvertButton.setEnabled(outstate and not converterstate.is_converting)
 		if converterstate.is_converting: 
 			self.ui.StatusText.setText('Status: Converting')
 			self.ui.SubStatusText.setText('')
+			return False
 		elif not outstate:
 			self.ui.StatusText.setText('Status: Not Ready')
 			if not in_file: self.ui.SubStatusText.setText('No input file.')
@@ -464,9 +505,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			elif not out_usable: 
 				self.ui.StatusText.setText('Status: Output Plugin Unusable')
 				self.ui.SubStatusText.setText(out_usable_msg)
+			return False
 		else:
 			self.ui.StatusText.setText('Status: Ready')
 			self.ui.SubStatusText.setText('')
+			return True
 
 
 	def __change_input_plugset(self, num):

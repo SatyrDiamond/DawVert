@@ -36,8 +36,8 @@ class input_petaporon(plugins.base):
 		
 		try:
 			petapo_data = json.load(bytestream)
-		except UnicodeDecodeError as t:
-			raise ProjectFileParserException('petaporon: Unicode Decode Error: '+str(t))
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('petaporon: File is not text')
 		except json.decoder.JSONDecodeError as t:
 			raise ProjectFileParserException('petaporon: JSON parsing error: '+str(t))
 

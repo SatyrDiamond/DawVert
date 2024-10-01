@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later 
 
 import re
+from objects.exceptions import ProjectFileParserException
 
 class fmf_note:
 	def __init__(self):
@@ -20,8 +21,12 @@ class fmf_song:
 		self.notes = []
 
 	def load_from_file(self, input_file):
-		f_fmf = open(input_file, 'r')
-		lines_fmf = f_fmf.readlines()
+		try:
+			f_fmf = open(input_file, 'r')
+			lines_fmf = f_fmf.readlines()
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('flipperzero: File is not text')
+
 		for line in lines_fmf:
 			if line != "\n":
 				fmf_command, fmf_param = line.rstrip().split(': ')

@@ -3,6 +3,8 @@
 
 import shlex
 
+from objects.exceptions import ProjectFileParserException
+
 import logging
 logger_projparse = logging.getLogger('projparse')
 
@@ -197,121 +199,124 @@ class famitracker_project:
 
 	def load_from_file(self, input_file):
 		bytestream = open(input_file, 'r')
-		for line in bytestream.readlines():
-			linespl = line.strip().split(' ', 1)
+		try:
+			for line in bytestream.readlines():
+				linespl = line.strip().split(' ', 1)
 
-			if len(linespl) > 1:
-				if linespl[0:3] != 'ROW':
-					linedata = shlex.split(linespl[1])
-				linetype = linespl[0]
+				if len(linespl) > 1:
+					if linespl[0:3] != 'ROW':
+						linedata = shlex.split(linespl[1])
+					linetype = linespl[0]
 
-				if linetype == 'TITLE': self.title = linedata[0]
-				elif linetype == 'AUTHOR': self.author = linedata[0]
-				elif linetype == 'COPYRIGHT': self.copyright = linedata[0]
-				elif linetype == 'COMMENT': self.comment.append(linedata[0])
-				elif linetype == 'MACHINE': self.machine = int(linedata[0])
-				elif linetype == 'FRAMERATE': self.framerate = int(linedata[0])
-				elif linetype == 'EXPANSION': self.expansion = int(linedata[0])
-				elif linetype == 'VIBRATO': self.vibrato = int(linedata[0])
-				elif linetype == 'SPLIT': self.split = int(linedata[0])
-				elif linetype == 'N163CHANNELS': self.n163channels = int(linedata[0])
-
-
-				elif linetype == 'MACRO': 
-					ft_macro = famitracker_macro('2A03', linespl[1])
-					self.macros[ft_macro.id] = ft_macro
-				elif linetype == 'MACROVRC6': 
-					ft_macro = famitracker_macro('2A03', linespl[1])
-					self.macros_vrc6[ft_macro.id] = ft_macro
-				elif linetype == 'MACRON163': 
-					ft_macro = famitracker_macro('N163', linespl[1])
-					self.macros_n163[ft_macro.id] = ft_macro
-				elif linetype == 'MACROS5B': 
-					ft_macro = famitracker_macro('S5B', linespl[1])
-					self.macros_s5b[ft_macro.id] = ft_macro
+					if linetype == 'TITLE': self.title = linedata[0]
+					elif linetype == 'AUTHOR': self.author = linedata[0]
+					elif linetype == 'COPYRIGHT': self.copyright = linedata[0]
+					elif linetype == 'COMMENT': self.comment.append(linedata[0])
+					elif linetype == 'MACHINE': self.machine = int(linedata[0])
+					elif linetype == 'FRAMERATE': self.framerate = int(linedata[0])
+					elif linetype == 'EXPANSION': self.expansion = int(linedata[0])
+					elif linetype == 'VIBRATO': self.vibrato = int(linedata[0])
+					elif linetype == 'SPLIT': self.split = int(linedata[0])
+					elif linetype == 'N163CHANNELS': self.n163channels = int(linedata[0])
 
 
-				elif linetype == 'DPCMDEF':
-					dpcm_id = int(linedata[0])
-					self.current_dpcm = famitracker_dpcm()
-					self.current_dpcm.name = linedata[2]
-					self.dpcm[dpcm_id] = self.current_dpcm
-
-				elif linetype == 'DPCM':
-					self.current_dpcm.data += bytes.fromhex(linespl[1].split(':')[1])
-
-
-
-				elif linetype == 'KEYDPCM':
-					dpcmkey = famitracker_dpcmkey(linedata)
-					self.inst[dpcmkey.inst].dpcm_keys[dpcmkey.id] = dpcmkey
-				elif linetype == 'N163WAVE':
-					fds_idwav = linespl[1].split(': ')
-					n163_id, n163_wavnum = fds_idwav[0].split()
-					n163_id = int(n163_id)
-					n163_wavnum = int(n163_wavnum)
-					self.inst[n163_id].n163_waves[n163_wavnum] = [int(x) for x in fds_idwav[1].split()]
-				elif linetype == 'FDSWAVE':
-					fds_id, fds_wave = linespl[1].split(': ')
-					fds_id = int(fds_id)
-					self.inst[fds_id].fds_wave = [int(x) for x in fds_wave.split()]
-				elif linetype == 'FDSMOD':
-					fds_id, fds_wave = linespl[1].split(': ')
-					fds_id = int(fds_id)
-					self.inst[fds_id].fds_mod = [int(x) for x in fds_wave.split()]
-				elif linetype == 'FDSMACRO':
-					macro_data = famitracker_fds_macro(linespl[1])
-					self.inst[macro_data.inst].fds_macros.append(macro_data)
+					elif linetype == 'MACRO': 
+						ft_macro = famitracker_macro('2A03', linespl[1])
+						self.macros[ft_macro.id] = ft_macro
+					elif linetype == 'MACROVRC6': 
+						ft_macro = famitracker_macro('2A03', linespl[1])
+						self.macros_vrc6[ft_macro.id] = ft_macro
+					elif linetype == 'MACRON163': 
+						ft_macro = famitracker_macro('N163', linespl[1])
+						self.macros_n163[ft_macro.id] = ft_macro
+					elif linetype == 'MACROS5B': 
+						ft_macro = famitracker_macro('S5B', linespl[1])
+						self.macros_s5b[ft_macro.id] = ft_macro
 
 
-				elif linetype == 'INST2A03':
-					ft_inst = famitracker_inst('2A03', linedata)
-					self.inst[ft_inst.id] = ft_inst
-				elif linetype == 'INSTVRC6':
-					ft_inst = famitracker_inst('VRC6', linedata)
-					self.inst[ft_inst.id] = ft_inst
-				elif linetype == 'INSTS5B':
-					ft_inst = famitracker_inst('S5B', linedata)
-					self.inst[ft_inst.id] = ft_inst
-				elif linetype == 'INSTN163':
-					ft_inst = famitracker_inst('N163', linedata)
-					self.inst[ft_inst.id] = ft_inst
-				elif linetype == 'INSTFDS':
-					ft_inst = famitracker_inst('FDS', linedata)
-					self.inst[ft_inst.id] = ft_inst
-				elif linetype == 'INSTVRC7':
-					ft_inst = famitracker_inst('VRC7', linedata)
-					self.inst[ft_inst.id] = ft_inst
+					elif linetype == 'DPCMDEF':
+						dpcm_id = int(linedata[0])
+						self.current_dpcm = famitracker_dpcm()
+						self.current_dpcm.name = linedata[2]
+						self.dpcm[dpcm_id] = self.current_dpcm
+
+					elif linetype == 'DPCM':
+						self.current_dpcm.data += bytes.fromhex(linespl[1].split(':')[1])
 
 
-				elif linetype == 'TRACK':
-					self.current_song = famitracker_song()
-					self.current_song.patlen = int(linedata[0])
-					self.current_song.speed = int(linedata[1])
-					self.current_song.tempo = int(linedata[2])
-					self.current_song.name = linedata[3]
-					self.song.append(self.current_song)
-					logger_projparse.info('Famitracker: Song: '+self.current_song.name)
-				elif linetype == 'ORDER': 
-					sordernum, sorderdata = [shlex.split(s) for s in linespl[1].split(':')]
-					ordernum = int(sordernum[0], 16)
-					orderdata = [int(x, 16) for x in sorderdata]
-					for n, v in enumerate(orderdata):
-						if n not in self.current_song.orders: self.current_song.orders[n] = []
-						self.current_song.orders[n].append(v)
-				elif linetype == 'PATTERN': 
-					self.current_patnum = int(linedata[0], 16)
-					self.current_patdata = self.current_song.patterns[self.current_patnum] = famitracker_pattern()
-					logger_projparse.info('Famitracker: Pattern #'+str(self.current_patnum+1))
-				elif linetype == 'ROW': 
-					rowsplit = [shlex.split(s) for s in linespl[1].split(': ')]
-					rownum = int(rowsplit[0][0], 16)
-					for channum, rowdata in enumerate(rowsplit[1:]):
-						self.current_patdata.add_data(rownum, channum, rowdata)
 
-				elif linetype == 'COLUMNS': pass
-				elif linetype == '#': pass
-				else:
-					#print(linetype, linespl[1])
-					return False
+					elif linetype == 'KEYDPCM':
+						dpcmkey = famitracker_dpcmkey(linedata)
+						self.inst[dpcmkey.inst].dpcm_keys[dpcmkey.id] = dpcmkey
+					elif linetype == 'N163WAVE':
+						fds_idwav = linespl[1].split(': ')
+						n163_id, n163_wavnum = fds_idwav[0].split()
+						n163_id = int(n163_id)
+						n163_wavnum = int(n163_wavnum)
+						self.inst[n163_id].n163_waves[n163_wavnum] = [int(x) for x in fds_idwav[1].split()]
+					elif linetype == 'FDSWAVE':
+						fds_id, fds_wave = linespl[1].split(': ')
+						fds_id = int(fds_id)
+						self.inst[fds_id].fds_wave = [int(x) for x in fds_wave.split()]
+					elif linetype == 'FDSMOD':
+						fds_id, fds_wave = linespl[1].split(': ')
+						fds_id = int(fds_id)
+						self.inst[fds_id].fds_mod = [int(x) for x in fds_wave.split()]
+					elif linetype == 'FDSMACRO':
+						macro_data = famitracker_fds_macro(linespl[1])
+						self.inst[macro_data.inst].fds_macros.append(macro_data)
+
+
+					elif linetype == 'INST2A03':
+						ft_inst = famitracker_inst('2A03', linedata)
+						self.inst[ft_inst.id] = ft_inst
+					elif linetype == 'INSTVRC6':
+						ft_inst = famitracker_inst('VRC6', linedata)
+						self.inst[ft_inst.id] = ft_inst
+					elif linetype == 'INSTS5B':
+						ft_inst = famitracker_inst('S5B', linedata)
+						self.inst[ft_inst.id] = ft_inst
+					elif linetype == 'INSTN163':
+						ft_inst = famitracker_inst('N163', linedata)
+						self.inst[ft_inst.id] = ft_inst
+					elif linetype == 'INSTFDS':
+						ft_inst = famitracker_inst('FDS', linedata)
+						self.inst[ft_inst.id] = ft_inst
+					elif linetype == 'INSTVRC7':
+						ft_inst = famitracker_inst('VRC7', linedata)
+						self.inst[ft_inst.id] = ft_inst
+
+
+					elif linetype == 'TRACK':
+						self.current_song = famitracker_song()
+						self.current_song.patlen = int(linedata[0])
+						self.current_song.speed = int(linedata[1])
+						self.current_song.tempo = int(linedata[2])
+						self.current_song.name = linedata[3]
+						self.song.append(self.current_song)
+						logger_projparse.info('Famitracker: Song: '+self.current_song.name)
+					elif linetype == 'ORDER': 
+						sordernum, sorderdata = [shlex.split(s) for s in linespl[1].split(':')]
+						ordernum = int(sordernum[0], 16)
+						orderdata = [int(x, 16) for x in sorderdata]
+						for n, v in enumerate(orderdata):
+							if n not in self.current_song.orders: self.current_song.orders[n] = []
+							self.current_song.orders[n].append(v)
+					elif linetype == 'PATTERN': 
+						self.current_patnum = int(linedata[0], 16)
+						self.current_patdata = self.current_song.patterns[self.current_patnum] = famitracker_pattern()
+						logger_projparse.info('Famitracker: Pattern #'+str(self.current_patnum+1))
+					elif linetype == 'ROW': 
+						rowsplit = [shlex.split(s) for s in linespl[1].split(': ')]
+						rownum = int(rowsplit[0][0], 16)
+						for channum, rowdata in enumerate(rowsplit[1:]):
+							self.current_patdata.add_data(rownum, channum, rowdata)
+
+					elif linetype == 'COLUMNS': pass
+					elif linetype == '#': pass
+					else:
+						#print(linetype, linespl[1])
+						return False
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('famistudio_txt: File is not text')
 		return True

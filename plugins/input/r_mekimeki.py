@@ -4,9 +4,7 @@
 import plugins
 import json
 from functions import xtramath
-
-import logging
-logger_input = logging.getLogger('input')
+from objects.exceptions import ProjectFileParserException
 
 def getvalue(tag, name, fallbackval):
 	if name in tag: 
@@ -33,13 +31,16 @@ class input_cvpj_f(plugins.base):
 		from functions import note_data
 
 		bytestream = open(input_file, 'r')
-		file_data = bytestream.read()
 		
+		try: 
+			file_data = bytestream.read()
+		except UnicodeDecodeError: 
+			raise ProjectFileParserException('mekimekichip: File is not text')
+
 		try:
 			mmc_main = json.loads(file_data)
 		except json.decoder.JSONDecodeError as t:
-			logger_input.error('mekimekichip: JSON parsing error: '+str(t))
-			exit()
+			ProjectFileParserException('mekimekichip: JSON parsing error: '+str(t))
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)

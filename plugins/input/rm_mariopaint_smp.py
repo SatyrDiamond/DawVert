@@ -4,6 +4,8 @@
 import io
 import plugins
 
+from objects.exceptions import ProjectFileParserException
+
 smpnames = {'MARIO': "mario", 'MUSHROOM': "toad", 'YOSHI': "yoshi", 'STAR': "star", 'FLOWER': "flower", 'GAMEBOY': "gameboy", 'DOG': "dog", 'CAT': "cat", 'PIG': "pig", 'SWAN': "swan", 'FACE': "face", 'PLANE': "plane", 'BOAT': "boat", 'CAR': "car", 'HEART': "heart", 'PIRANHA': "plant", 'COIN': "coin", 'SHYGUY': "shyguy", 'BOO': "ghost", 'LUIGI': "luigi", 'PEACH': "peach", 'FEATHER': "feather", 'BULLETBILL': "bulletbill", 'GOOMBA': "goomba", 'BOBOMB': "bobomb", 'SPINY': "spiny", 'FRUIT': "fruit", 'ONEUP': "oneup", 'MOON': "moon", 'EGG': "egg", 'GNOME': "gnome"}
 keytable = ['C', 'D', 'E', 'F', 'G', 'A', 'B']
 
@@ -31,7 +33,11 @@ class input_mariopaint_smp(plugins.base):
 		mariopaint_obj = mariopaint.mariopaint_song()
 
 		f_smp = open(input_file, 'r')
-		lines_smp = f_smp.readlines()
+		try:
+			lines_smp = f_smp.readlines()
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('mariopaint_smp: File is not text')
+
 		for num, line in enumerate(lines_smp):
 			t_smp_values = line.rstrip().split(',')
 			if num == 0:

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>903</width>
-    <height>551</height>
+    <width>878</width>
+    <height>595</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -356,7 +356,7 @@
        <item>
         <layout class="QHBoxLayout" name="ExtPluginArea">
          <item>
-          <widget class="QGroupBox" name="ExtPlugScanner">
+          <widget class="QGroupBox" name="ExtPlugScannerGroup">
            <property name="title">
             <string>External Plugin Scanner</string>
            </property>
@@ -488,6 +488,63 @@
                 </property>
                 <property name="text">
                  <string>Non-Free</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="title">
+            <string>File Settings</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QCheckBox" name="OverwriteOut">
+                <property name="text">
+                 <string>Overwrite Output</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="AutoConvert">
+                <property name="text">
+                 <string>Auto-Convert</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>DragDrop Out Path</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="DndOutPathSelection">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
                 </property>
                </widget>
               </item>

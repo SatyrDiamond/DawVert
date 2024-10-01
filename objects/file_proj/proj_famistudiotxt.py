@@ -152,8 +152,11 @@ class famistudiotxt_project:
 		self.DPCMMappings = dpcm_mappings()
 
 	def load_from_file(self, input_file):
-		f_fst = open(input_file, 'r')
-		famistudiotxt_lines = f_fst.readlines()
+		try:
+			f_fst = open(input_file, 'r')
+			famistudiotxt_lines = f_fst.readlines()
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('famistudio_txt: File is not text')
 
 		for line in famistudiotxt_lines:
 			t_cmd = line.split(" ", 1)
@@ -233,5 +236,5 @@ class famistudiotxt_project:
 				cur_pat.Notes.append(fs_note(cmd_params))
 
 			else:
-				raise ProjectFileParserException('famistudio: unexpected command and/or wrong tabs: '+cmd_name)
+				raise ProjectFileParserException('famistudio_txt: unexpected command and/or wrong tabs: '+cmd_name)
 		return True

@@ -4,8 +4,7 @@
 import io
 import plugins
 
-import logging
-logger_input = logging.getLogger('input')
+from objects.exceptions import ProjectFileParserException
 
 instnames = ['mario','toad','yoshi','star','flower','gameboy','dog','cat','pig','swan','face','plane','boat','car','heart']
 
@@ -57,13 +56,16 @@ class input_mariopaint_msq(plugins.base):
 
 		msq_values = {}
 		f_msq = open(input_file, 'r')
-		lines_msq = f_msq.readlines()
-		for n, line in enumerate(lines_msq):
-			if '=' not in line:
-				logger_input.error('mariopaint_msq: Line '+str(n+1)+': "=" not found.')
-				exit()
-			msq_name, fmf_val = line.rstrip().split('=', 1)
-			msq_values[msq_name] = fmf_val
+
+		try:
+			lines_msq = f_msq.readlines()
+			for n, line in enumerate(lines_msq):
+				if '=' not in line:
+					ProjectFileParserException('mariopaint_msq: Line '+str(n+1)+': "=" not found.')
+				msq_name, fmf_val = line.rstrip().split('=', 1)
+				msq_values[msq_name] = fmf_val
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('mariopaint_msq: File is not text')
 
 		if 'TIME44' in msq_values: 
 			mariopaint_obj.measure = 4 if msq_values['TIME44'] == 'TRUE' else 2

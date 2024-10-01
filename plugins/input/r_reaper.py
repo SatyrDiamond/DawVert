@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects.exceptions import ProjectFileParserException
 from functions import data_bytes
 import plugins
 import json
@@ -70,7 +71,10 @@ class input_reaper(plugins.base):
 		from functions_plugin_ext import plugin_vst3
 
 		bytestream = open(input_file, 'r')
-		rpp_data = rpp.load(bytestream)
+		try:
+			rpp_data = rpp.load(bytestream)
+		except UnicodeDecodeError:
+			raise ProjectFileParserException('reaper: File is not text')
 
 		project_obj = proj_reaper.rpp_song()
 		if not project_obj.load_from_file(input_file): exit()

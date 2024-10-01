@@ -106,8 +106,12 @@ class input_serato(plugins.base):
 								inst_obj.visual.color.set_hex(drumsamp.color[3:])
 
 							samplepart_obj.point_value_type = 'percent'
-							samplepart_obj.start = drumsamp.start/sampleref_obj.dur_sec
-							samplepart_obj.end = drumsamp.end/sampleref_obj.dur_sec
+							if sampleref_obj.dur_sec:
+								samplepart_obj.start = drumsamp.start/sampleref_obj.dur_sec
+								samplepart_obj.end = drumsamp.end/sampleref_obj.dur_sec
+							else:
+								samplepart_obj.start = 0
+								samplepart_obj.end = 1
 							samplepart_obj.stretch.preserve_pitch = True
 							samplepart_obj.pitch = drumsamp.pitch_shift
 							samplepart_obj.stretch.set_rate_speed(project_obj.bpm, drumsamp.playback_speed, False)

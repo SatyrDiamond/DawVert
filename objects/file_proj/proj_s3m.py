@@ -4,6 +4,7 @@
 from objects.data_bytes import bytereader
 from objects import audio_data
 from objects.exceptions import ProjectFileParserException
+from functions import data_bytes
 import os
 
 import logging

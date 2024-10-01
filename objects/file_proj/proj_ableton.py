@@ -245,7 +245,7 @@ class ableton_liveset:
 					alsbytes.seek(0)
 					xmlstring = alsbytes.read().decode()
 				except:
-					raise ProjectFileParserException('ableton: file is not GZIP or text')
+					raise ProjectFileParserException('ableton: file is not GZIP or XML')
 
 		try: root = ET.fromstring(xmlstring)
 		except ET.ParseError as t:

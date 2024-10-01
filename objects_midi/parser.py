@@ -5,6 +5,8 @@ from typing import List
 from os import SEEK_CUR
 from dataclasses import dataclass
 
+from objects.exceptions import ProjectFileParserException
+
 # A brief description of the MIDI specification:
 # - http://www.somascape.org/midi/tech/spec.html
 # A brief description of the MIDI File specification:
@@ -120,6 +122,8 @@ class MidiTrack:
 
 def parseHeader(memoryMap):
 	identifier = memoryMap.read(4).decode('ascii')
+	if identifier != b'MThd':
+		raise ProjectFileParserException('midi: magic check failed.')
 	chunkLength = struct.unpack(">I", memoryMap.read(4))[0]
 	midiFormat = struct.unpack(">H", memoryMap.read(2))[0]
 	tracksCount = struct.unpack(">H", memoryMap.read(2))[0]

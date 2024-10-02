@@ -233,7 +233,7 @@ class input_jummbox(plugins.base):
 		from objects.file_proj import proj_jummbox
 
 		convproj_obj.type = 'mi'
-		convproj_obj.set_timings(8, True)
+		convproj_obj.set_timings(16, True)
 
 		globalstore.dataset.load('beepbox', './data_main/dataset/beepbox.dset')
 

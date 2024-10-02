@@ -14,8 +14,6 @@ from functions_plugin_ext import params_os_kickmess
 from functions_plugin_ext import plugin_vst2
 from objects.convproj import wave
 
-from objects.exceptions import ProjectFileParserException
-
 def sid_shape(lmms_sid_shape):
 	if lmms_sid_shape == 0: return 3 #squ
 	if lmms_sid_shape == 1: return 1 #tri

@@ -174,15 +174,19 @@ class cvpj_placements:
 
 	def add_inst_to_notes(self, inst):
 		for x in self.pl_notes:
-			x.notelist.used_inst = [inst]
 			x.notelist.inst_all(inst)
 
 	def used_insts(self):
 		used_insts = []
 		for notespl_obj in self.pl_notes: 
-			used_insts += notespl_obj.notelist.get_used_inst()
-		used_insts += self.notelist.get_used_inst()
-		return list(set(used_insts))
+
+			for instid in notespl_obj.notelist.get_used_inst():
+				if instid not in used_insts: used_insts.append(instid)
+
+		for instid in self.notelist.get_used_inst():
+			if instid not in used_insts: used_insts.append(instid)
+
+		return used_insts
 
 	def inst_split(self):
 		splitted_pl = {}

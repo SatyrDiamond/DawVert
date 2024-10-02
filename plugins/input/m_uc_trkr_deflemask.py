@@ -84,12 +84,15 @@ class input_deflemask(plugins.base):
 		for n, sample_obj in enumerate(project_obj.samples):
 			wave_path = samplefolder + str(n).zfill(2) + '.wav'
 			audio_obj = audio_data.audio_obj()
-			audio_obj.set_codec('int16' if sample_obj.bits==16 else 'int8')
-			audio_obj.pcm_from_list(sample_obj.data)
-			audio_obj.to_file_wav(wave_path)
-			sampleid = 'sample_'+str(n).zfill(2)
-			convproj_obj.add_sampleref(sampleid, wave_path, None)
-			sampleparts.append([sampleid, sample_obj.name])
+			if sample_obj.bits in [16, 8]:
+				audio_obj.set_codec('int16' if sample_obj.bits==16 else 'int8')
+				audio_obj.pcm_from_list(sample_obj.data)
+				audio_obj.to_file_wav(wave_path)
+				sampleid = 'sample_'+str(n).zfill(2)
+				convproj_obj.add_sampleref(sampleid, wave_path, None)
+				sampleparts.append([sampleid, sample_obj.name])
+			else:
+				sampleparts.append([None, ''])
 
 		for instname, instnums in used_insts.items():
 			for chinst in instnums:
@@ -132,10 +135,14 @@ class input_deflemask(plugins.base):
 
 					sampleid, sample_name = sampleparts[samplenum]
 
-					inst_obj.visual.name = sample_name
-					inst_obj.visual.color.set_float([.9,.9,.9])
+					if sampleid:
+						inst_obj.visual.name = sample_name
+						inst_obj.visual.color.set_float([.9,.9,.9])
 
-					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
-					samplepart_obj = plugin_obj.samplepart_add('sample')
-					samplepart_obj.sampleref = sampleid
-					plugin_obj.datavals.add('point_value_type', "samples")
+						plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
+						samplepart_obj = plugin_obj.samplepart_add('sample')
+						samplepart_obj.sampleref = sampleid
+						plugin_obj.datavals.add('point_value_type', "samples")
+					else:
+						inst_obj.visual.name = ''
+						inst_obj.visual.color.set_float([.9,.9,.9])

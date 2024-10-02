@@ -102,198 +102,173 @@ class pitchmod:
 			autopoints_obj.pos = spoint[0]
 			autopoints_obj.value = spoint[1]
 
-
-
-
-
-
-
-
-
-class notelist_data:
-	dt = np.dtype([
-		('used', np.int8), 
-		('pos', np.float64), 
-		('dur', np.float64), 
-		('vol', np.float16),
-		('key', np.int16),
-		('is_inst', np.int8), 
-		('is_extra', np.int8), 
-		('is_auto', np.int8), 
-		('is_slide', np.int8), 
-		('is_multikey', np.int8), 
-		('assoc_inst', np.uint16), 
-		('assoc_extra', np.int32), 
-		('assoc_auto', np.int32), 
-		('assoc_slide', np.int32), 
-		('assoc_multikey', np.int32), 
-		]) 
-
-	def __init__(self):
-		self.init_nl()
-		self.v_assoc_inst = []
-		self.v_assoc_extra = []
-		self.v_assoc_auto = []
-		self.v_assoc_slide = []
-		self.v_assoc_multikey = []
-		self.cursor = 0
-		self.num_notes = 0
-		self.alloc_size = 16
-		self.lastnote = 0
-
-	def __copy__(self):
-		new_obj = notelist_data()
-		new_obj.v_assoc_inst = copy.deepcopy(self.v_assoc_inst)
-		new_obj.v_assoc_extra = copy.deepcopy(self.v_assoc_extra)
-		new_obj.v_assoc_auto = copy.deepcopy(self.v_assoc_auto)
-		new_obj.v_assoc_slide = copy.deepcopy(self.v_assoc_slide)
-		new_obj.v_assoc_multikey = copy.deepcopy(self.v_assoc_multikey)
-		new_obj.cursor = self.cursor
-		new_obj.num_notes = self.num_notes
-		new_obj.alloc_size = self.alloc_size
-		new_obj.lastnote = self.lastnote
-		new_obj.nl = self.nl.copy()
-		return new_obj
-
-	def __eq__(self, nlo):
-		nl_same = np.all(self.nl == nlo.nl) if len(self.nl)==len(nlo.nl) else False
-		same_v_assoc_inst = self.v_assoc_inst == nlo.v_assoc_inst
-		same_v_assoc_extra = self.v_assoc_extra == nlo.v_assoc_extra
-		same_v_assoc_auto = self.v_assoc_auto == nlo.v_assoc_auto
-		same_v_assoc_slide = self.v_assoc_slide == nlo.v_assoc_slide
-		same_v_assoc_multikey = self.v_assoc_multikey == nlo.v_assoc_multikey
-
-		all_issame = nl_same and same_v_assoc_inst and same_v_assoc_extra and same_v_assoc_auto and same_v_assoc_slide and same_v_assoc_multikey
-		return all_issame
-
-	def init_nl(self):
-		self.nl = np.array([], dtype=notelist_data.dt)
+class notelist_cursor:
+	def __init__(self, base_nl):
+		self.base_nl = base_nl
+		self.pos = -1
+		self.enable_go_last = True
+		self.goto_last()
 
 	def __iter__(self):
-		prev_cur = self.cursor
-		for n, d in enumerate(self.nl):
-			self.cursor = n
-			yield d
-		self.cursor = prev_cur
+		oldpos = self.pos
+		self.enable_go_last = False
+		for pos, data in enumerate(self.base_nl):
+			self.pos = pos
+			yield data
+		self.pos = oldpos
+		self.enable_go_last = True
 
-	def alloc_auto(self, num):
-		newsize = self.num_notes+num
-		if len(self.nl) < newsize: self.extend(self.alloc_size)
-
-	def alloc(self, num):
-		self.nl = np.zeros(num, dtype=notelist_data.dt)
-
-	def extend(self, num):
-		zeros = np.zeros(num, dtype=notelist_data.dt)
-		self.nl = np.hstack((self.nl,zeros))
-
-	def add(self):
-		self.alloc_auto(1)
-		num = self.num_notes
-		note = self.nl[num]
-		note['used'] = 1
-		self.num_notes += 1
-		self.lastnote = self.num_notes-1
-		self.cursor = self.num_notes-1
-		return note
+	def goto_last(self):
+		ones = np.where(self.base_nl['used']==1)
+		self.pos = ones[0][-1] if len(ones[0]) else -1
 
 	def getcur(self):
-		return self.nl[self.cursor]
+		if self.base_nl.go_last and self.enable_go_last:
+			self.goto_last()
+			self.base_nl.go_last = False
+		return self.base_nl[self.pos]
+
+	def add(self):
+		if self.base_nl.go_last:
+			self.goto_last()
+			self.base_nl.go_last = False
+		self.pos += 1
+		self.base_nl.alloc_auto(self.pos+1)
+		cur_obj = self.getcur()
+		cur_obj['used'] = 1
+		return cur_obj
+
+	def add_r(self, t_pos, t_dur, t_key, t_vol, t_extra):
+		note = self.add()
+		note['pos'] = t_pos
+		note['dur'] = t_dur
+		note['vol'] = t_vol
+		note['key'] = t_key
+		self.assoc_extra_add(t_extra)
+
+	def add_r_multi(self, t_pos, t_dur, m_keys, t_vol, t_extra):
+		note = self.add()
+		note['pos'] = t_pos
+		note['dur'] = t_dur
+		note['vol'] = t_vol
+		self.assoc_extra_add(t_extra)
+		self.assoc_multikey_add(m_keys)
+
+	def add_m(self, t_inst, t_pos, t_dur, t_key, t_vol, t_extra):
+		note = self.add()
+		note['pos'] = t_pos
+		note['dur'] = t_dur
+		note['vol'] = t_vol
+		note['key'] = t_key
+		self.assoc_inst_add(t_inst)
+		self.assoc_extra_add(t_extra)
+
+	def add_m_multi(self, t_inst, t_pos, t_dur, m_keys, t_vol, t_extra):
+		note = self.add()
+		note['pos'] = t_pos
+		note['dur'] = t_dur
+		note['vol'] = t_vol
+		self.assoc_inst_add(t_inst)
+		self.assoc_extra_add(t_extra)
+		self.assoc_multikey_add(m_keys)
 
 	def assoc_multikey_add(self, m_keys):
 		if m_keys != None:
-			note = self.nl[self.cursor]
+			note = self.getcur()
 			if len(m_keys) != 1:
+				v_assoc_multikey = self.base_nl.v_assoc_multikey
 				note['is_multikey'] = 1
-				note['assoc_multikey'] = len(self.v_assoc_multikey)
-				self.v_assoc_multikey.append(m_keys)
+				note['assoc_multikey'] = len(v_assoc_multikey)
+				v_assoc_multikey.append(m_keys)
 			else: note['key'] = m_keys[0]
 
 	def assoc_multikey_get(self):
-		note = self.nl[self.cursor]
-		return self.v_assoc_multikey[note['assoc_multikey']] if note['is_multikey'] else [note['key']]
-
-	def assoc_extra_add(self, t_extra):
-		if t_extra:
-			note = self.nl[self.cursor]
-			note['is_extra'] = 1
-			note['assoc_extra'] = len(self.v_assoc_extra)
-			self.v_assoc_extra.append(t_extra)
-
-	def assoc_extra_set(self, name, val):
-		if not note['is_extra']: self.assoc_extra_add({name: val})
-		else: self.v_assoc_extra[note['assoc_extra']][name] = val
-
-	def assoc_extra_get(self):
-		note = self.nl[self.cursor]
-		return self.v_assoc_extra[note['assoc_extra']] if note['is_extra'] else None
-
-	def assoc_auto_set(self):
-		note = self.nl[self.cursor]
-		if not note['is_auto']:
-			note['is_auto'] = 1
-			note['assoc_auto'] = len(self.v_assoc_auto)
-			self.v_assoc_auto.append({})
-		return self.v_assoc_auto[note['assoc_auto']]
-
-	def assoc_auto_get(self):
-		note = self.nl[self.cursor]
-		return self.v_assoc_auto[note['assoc_auto']] if note['is_auto'] else None
-
-	def assoc_slide_append(self, slide):
-		note = self.nl[self.cursor]
-		if not note['is_slide']:
-			note['is_slide'] = 1
-			note['assoc_slide'] = len(self.v_assoc_slide)
-			self.v_assoc_slide.append([])
-		self.v_assoc_slide[note['assoc_slide']].append(slide)
-
-	def assoc_slide_get(self):
-		note = self.nl[self.cursor]
-		return self.v_assoc_slide[note['assoc_slide']] if note['is_slide'] else None
-
-	def add_inst(self, t_inst):
-		if t_inst not in self.v_assoc_inst: self.v_assoc_inst.append(t_inst)
-		return self.v_assoc_inst.index(t_inst)
-
-	def assoc_inst_add(self, t_inst):
-		if t_inst:
-			note = self.nl[self.cursor]
-			note['is_inst'] = 1
-			note['assoc_inst'] = self.add_inst(t_inst)
-
-	def assoc_inst_get(self):
-		note = self.nl[self.cursor]
-		return self.v_assoc_inst[note['assoc_inst']] if note['is_inst'] else None
+		v_assoc_multikey = self.base_nl.v_assoc_multikey
+		note = self.getcur()
+		return v_assoc_multikey[note['assoc_multikey']] if note['is_multikey'] else [note['key']]
 
 	def assoc_multikey_append(self, key):
-		note = self.nl[self.cursor]
+		v_assoc_multikey = self.base_nl.v_assoc_multikey
+		note = self.getcur()
 		if not note['is_multikey'] and key != note['key']: 
 			self.assoc_multikey_add([note['key'], key])
 		else: 
-			mkeys = self.v_assoc_multikey[note['assoc_multikey']]
+			mkeys = v_assoc_multikey[note['assoc_multikey']]
 			if key not in mkeys: mkeys.append(key)
 
-	def sort(self):
-		nums = self.nl.argsort(order=['used', 'pos'])
-		nonzero = np.count_nonzero(self.nl['used'])
-		self.nl = np.roll(self.nl[nums], nonzero)
-		self.num_notes = nonzero
-		self.cursor = nonzero-1
+	def assoc_extra_add(self, t_extra):
+		if t_extra:
+			v_assoc_extra = self.base_nl.v_assoc_extra
+			note = self.getcur()
+			note['is_extra'] = 1
+			note['assoc_extra'] = len(v_assoc_extra)
+			v_assoc_extra.append(t_extra)
 
-	def extra_to_noteenv(self, nl_obj):
+	def assoc_extra_set(self, name, val):
+		v_assoc_extra = self.base_nl.v_assoc_extra
+		note = self.getcur()
+		if not note['is_extra']: self.assoc_extra_add({name: val})
+		else: v_assoc_extra[note['assoc_extra']][name] = val
+
+	def assoc_extra_get(self):
+		v_assoc_extra = self.base_nl.v_assoc_extra
+		note = self.getcur()
+		return v_assoc_extra[note['assoc_extra']] if note['is_extra'] else None
+
+	def assoc_auto_set(self):
+		v_assoc_auto = self.base_nl.v_assoc_auto
+		note = self.getcur()
+		if not note['is_auto']:
+			note['is_auto'] = 1
+			note['assoc_auto'] = len(v_assoc_auto)
+			v_assoc_auto.append({})
+		return v_assoc_auto[note['assoc_auto']]
+
+	def assoc_auto_get(self):
+		v_assoc_auto = self.base_nl.v_assoc_auto
+		note = self.getcur()
+		return v_assoc_auto[note['assoc_auto']] if note['is_auto'] else None
+
+	def assoc_slide_append(self, slide):
+		v_assoc_slide = self.base_nl.v_assoc_slide
+		note = self.getcur()
+		if not note['is_slide']:
+			note['is_slide'] = 1
+			note['assoc_slide'] = len(v_assoc_slide)
+			v_assoc_slide.append([])
+		v_assoc_slide[note['assoc_slide']].append(slide)
+
+	def assoc_slide_get(self):
+		v_assoc_slide = self.base_nl.v_assoc_slide
+		note = self.getcur()
+		return v_assoc_slide[note['assoc_slide']] if note['is_slide'] else None
+
+	def assoc_inst_add(self, t_inst):
+		if t_inst:
+			note = self.getcur()
+			note['is_inst'] = 1
+			note['assoc_inst'] = self.base_nl.add_inst(t_inst)
+
+	def assoc_inst_get(self):
+		note = self.getcur()
+		return self.base_nl.v_assoc_inst[note['assoc_inst']] if note['is_inst'] else None
+
+	def extra_to_noteenv(self, time_ppq, time_float):
+		nl_obj = self.base_nl
 		extra_d = self.assoc_extra_get()
 		auto_d = self.assoc_auto_get()
 		if extra_d != None and auto_d == None:
 			auto_d = self.assoc_auto_set()
-			auto_d['pitch'] = autopoints.cvpj_autopoints(nl_obj.time_ppq, nl_obj.time_float, 'float')
-			if 'finepitch' in extra_d:
-				autopoint = auto_d['pitch'].add_point()
-				autopoint.pos = 0
-				autopoint.value = extra_d['finepitch']/100
+			if 'pitch' not in auto_d:
+				auto_d['pitch'] = autopoints.cvpj_autopoints(time_ppq, time_float, 'float')
+				if 'finepitch' in extra_d:
+					autopoint = auto_d['pitch'].add_point()
+					autopoint.pos = 0
+					autopoint.value = extra_d['finepitch']/100
 
-	def notemod_conv(self, nl_obj):
-		note = self.nl[self.cursor]
+	def notemod_conv(self):
+		nl_obj = self.base_nl
+		note = self.getcur()
 		if note['is_auto'] or note['is_slide']:
 			auto_d = self.assoc_auto_get()
 			slide_d = self.assoc_slide_get()
@@ -318,6 +293,121 @@ class notelist_data:
 					for pb in pitchblocks:
 						self.assoc_slide_append([pb[0], pb[1], pb[2]+maxnote, note[3], {}])
 
+verbose_copy = False
+
+class notelist_data:
+	dt = np.dtype([
+		('used', np.int8), 
+		('pos', np.float64), 
+		('dur', np.float64), 
+		('vol', np.float16),
+		('key', np.int16),
+		('is_inst', np.int8), 
+		('is_extra', np.int8), 
+		('is_auto', np.int8), 
+		('is_slide', np.int8), 
+		('is_multikey', np.int8), 
+		('assoc_inst', np.uint16), 
+		('assoc_extra', np.int32), 
+		('assoc_auto', np.int32), 
+		('assoc_slide', np.int32), 
+		('assoc_multikey', np.int32), 
+		]) 
+
+	__slots__ = [
+		'v_assoc_inst', 'v_assoc_extra', 'v_assoc_auto', 
+		'v_assoc_slide', 'v_assoc_multikey', 'alloc_size', 
+		'num_notes', 'nl', 'go_last'
+		]
+
+	def __init__(self):
+		self.init_nl()
+		self.v_assoc_inst = []
+		self.v_assoc_extra = []
+		self.v_assoc_auto = []
+		self.v_assoc_slide = []
+		self.v_assoc_multikey = []
+		self.alloc_size = 16
+		self.num_notes = 0
+
+	def init_nl(self):
+		self.nl = np.array([], dtype=notelist_data.dt)
+		self.go_last = True
+
+	def clean(self):
+		self.nl = self.nl[np.nonzero(self.nl['used'])]
+		self.go_last = True
+
+	def after_proc(self):
+		self.num_notes = self.count()
+		self.sort()
+		self.clean()
+
+	def __copy__(self):
+		if verbose_copy: print(len(self.data),'notelist_data, verbose_copy')
+		new_obj = notelist_data()
+		new_obj.v_assoc_inst = copy.deepcopy(self.v_assoc_inst)
+		new_obj.v_assoc_extra = copy.deepcopy(self.v_assoc_extra)
+		new_obj.v_assoc_auto = copy.deepcopy(self.v_assoc_auto)
+		new_obj.v_assoc_slide = copy.deepcopy(self.v_assoc_slide)
+		new_obj.v_assoc_multikey = copy.deepcopy(self.v_assoc_multikey)
+		new_obj.alloc_size = self.alloc_size
+		new_obj.nl = self.nl.copy()
+		return new_obj
+
+	def __eq__(self, nlo):
+		nl_same = np.all(self.nl == nlo.nl) if len(self.nl)==len(nlo.nl) else False
+		same_v_assoc_inst = self.v_assoc_inst == nlo.v_assoc_inst
+		same_v_assoc_extra = self.v_assoc_extra == nlo.v_assoc_extra
+		same_v_assoc_auto = self.v_assoc_auto == nlo.v_assoc_auto
+		same_v_assoc_slide = self.v_assoc_slide == nlo.v_assoc_slide
+		same_v_assoc_multikey = self.v_assoc_multikey == nlo.v_assoc_multikey
+
+		all_issame = nl_same and same_v_assoc_inst and same_v_assoc_extra and same_v_assoc_auto and same_v_assoc_slide and same_v_assoc_multikey
+		return all_issame
+
+	def __len__(self):
+		return self.nl.__len__()
+
+	def __iter__(self):
+		return self.nl.__iter__()
+
+	def __getitem__(self, a):
+		return self.nl.__getitem__(a)
+
+	def __setitem__(self, a, b):
+		return self.nl.__setitem__(a, b)
+
+	def count(self):
+		return np.count_nonzero(self.nl['used'])
+
+	def alloc_auto(self, pos):
+		newsize = self.num_notes+pos
+		if len(self.nl) < newsize: 
+			self.extend(self.alloc_size)
+
+	def alloc(self, num):
+		self.nl = np.zeros(num, dtype=notelist_data.dt)
+
+	def extend(self, num):
+		zeros = np.zeros(num, dtype=notelist_data.dt)
+		self.nl = np.hstack((self.nl,zeros))
+
+	def add_inst(self, t_inst):
+		if t_inst not in self.v_assoc_inst: self.v_assoc_inst.append(t_inst)
+		return self.v_assoc_inst.index(t_inst)
+
+	def inst_all(self, instid):
+		self.v_assoc_inst = [instid]
+		self.nl['is_inst'] = 1
+		self.nl['assoc_inst'] = 0
+
+	def sort(self):
+		nums = self.nl.argsort(order=['used', 'pos'])
+		nonzero = np.count_nonzero(self.nl['used'])
+		self.nl = np.roll(self.nl[nums], nonzero)
+		self.go_last = True
+
 	def merge(self, targ, offset):
 		copy_nl = targ.nl.copy()
 		copy_nl['pos'] += offset
@@ -336,277 +426,253 @@ class notelist_data:
 		self.v_assoc_auto += targ.v_assoc_auto
 		self.v_assoc_slide += targ.v_assoc_slide
 		self.v_assoc_multikey += targ.v_assoc_multikey
+		self.go_last = True
 		if remap_inst:
 			for n, x in enumerate(copy_nl['assoc_inst']):
 				copy_nl['assoc_inst'][n] = remap_inst[x]
 		self.nl = np.concatenate([self.nl, copy_nl])
-		
-		self.sort()
+		self.after_proc()
+
+	def appendtxt_inst(self, start, end):
+		self.v_assoc_inst = [start+x+end for x in self.v_assoc_inst]
 
 
 verbose = False
 
 class cvpj_notelist:
+
+	__slots__ = ['data', 'cursor', 'time_ppq', 'time_float']
+
 	def __init__(self, time_ppq, time_float):
-		self.nld = notelist_data()
+		self.data = notelist_data()
+		self.cursor = notelist_cursor(self.data)
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 
+	def create_cursor(self):
+		cursor_obj = notelist_cursor(self.data)
+		cursor_obj.go_last = True
+		return cursor_obj
+
 	def __copy__(self):
+		if verbose_copy: print(len(self.data),'cvpj_notelist, verbose_copy')
 		new_obj = cvpj_notelist(self.time_ppq, self.time_float)
-		new_obj.nld = self.nld.__copy__()
+		new_obj.data = self.data.__copy__()
+		new_obj.cursor = notelist_cursor(new_obj.data)
+		new_obj.cursor.goto_last()
 		return new_obj
 
 	def __eq__(self, nlo):
-		nl_same = self.nld == nlo.nld
+		nl_same = self.data == nlo.data
 		time_ppq_same = self.time_ppq == nlo.time_ppq
 		time_float_same = self.time_float == nlo.time_float
 		return nl_same and time_ppq_same and time_float_same
 
-	def __getitem__(self, name):
-		return self.nld[name]
+	def __len__(self):
+		return self.data.count()
 
 	def inst_split(self):
-		if verbose: print('[notelist] inst_split')
-		nldata = self.nld.nl
+		nldata = self.data.nl
 		out_nl = {}
 		w_used = np.where(nldata['used'] == 1)
-		for num, inst in enumerate(self.nld.v_assoc_inst):
+		for num, inst in enumerate(self.data.v_assoc_inst):
 			w_inst = np.where(nldata['assoc_inst'] == num)
 			splitnl = cvpj_notelist(self.time_ppq, self.time_float)
-			splitnld = splitnl.nld
+			splitnld = splitnl.data
 			splitnld.nl = nldata[np.intersect1d(w_used, w_inst)]
 			if len(splitnld.nl):
 				splitnld.nl['assoc_inst'] = 0
 				splitnld.v_assoc_inst = [inst]
-				splitnld.v_assoc_extra = self.nld.v_assoc_extra.copy()
-				splitnld.v_assoc_auto = self.nld.v_assoc_auto.copy()
-				splitnld.v_assoc_slide = copy.deepcopy(self.nld.v_assoc_slide)
-				splitnld.v_assoc_multikey = self.nld.v_assoc_multikey.copy()
+				splitnld.v_assoc_extra = self.data.v_assoc_extra.copy()
+				splitnld.v_assoc_auto = self.data.v_assoc_auto.copy()
+				splitnld.v_assoc_slide = copy.deepcopy(self.data.v_assoc_slide)
+				splitnld.v_assoc_multikey = self.data.v_assoc_multikey.copy()
 				splitnld.num_notes = len(splitnld.nl)
 				out_nl[inst] = splitnl
 		return out_nl
 
 	def inst_all(self, instid):
-		if verbose: print('[notelist] inst_all')
-		self.nld.v_assoc_inst = [instid]
-		self.nld.nl['is_inst'] = 1
-		self.nld.nl['assoc_inst'] = 0
+		self.data.inst_all(instid)
 
 	def stretch(self, time_ppq, time_float):
-		if verbose: print('[notelist] stretch |', len(self.nld.nl), end=' | ')
-		for note in self.nld:
+		for note in self.data:
 			note['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['pos'])
 			note['dur'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['dur'])
 
-		for slides in self.nld.v_assoc_slide:
+		for slides in self.data.v_assoc_slide:
 			for sn in slides:
 				sn[0] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, sn[0])
 				sn[1] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, sn[1])
 
-		for autos in self.nld.v_assoc_auto:
+		for autos in self.data.v_assoc_auto:
 			for t in autos: autos[t].change_timings(time_ppq, time_float)
 
-		if verbose: print(len(self.nld.nl))
-
 	def change_timings(self, time_ppq, time_float):
+		if verbose: print(len(self.data),'change_timings', time_ppq, time_float)
 		self.stretch(time_ppq, time_float)
 
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 
 	def add_r(self, t_pos, t_dur, t_key, t_vol, t_extra):
-		#if verbose: print('[notelist] add_r')
-		note = self.nld.add()
-		note['pos'] = t_pos
-		note['dur'] = t_dur
-		note['vol'] = t_vol
-		note['key'] = t_key
-		self.nld.assoc_extra_add(t_extra)
+		self.cursor.add_r(t_pos, t_dur, t_key, t_vol, t_extra)
 
 	def add_r_multi(self, t_pos, t_dur, m_keys, t_vol, t_extra):
-		#if verbose: print('[notelist] add_r_multi')
-		note = self.nld.add()
-		note['pos'] = t_pos
-		note['dur'] = t_dur
-		note['vol'] = t_vol
-		self.nld.assoc_extra_add(t_extra)
-		self.nld.assoc_multikey_add(m_keys)
+		self.cursor.add_r_multi(t_pos, t_dur, m_keys, t_vol, t_extra)
 
 	def add_m(self, t_inst, t_pos, t_dur, t_key, t_vol, t_extra):
-		#if verbose: print('[notelist] add_m')
-		note = self.nld.add()
-		note['pos'] = t_pos
-		note['dur'] = t_dur
-		note['vol'] = t_vol
-		note['key'] = t_key
-		self.nld.assoc_inst_add(t_inst)
-		self.nld.assoc_extra_add(t_extra)
+		self.cursor.add_m(t_inst, t_pos, t_dur, t_key, t_vol, t_extra)
 
 	def add_m_multi(self, t_inst, t_pos, t_dur, m_keys, t_vol, t_extra):
-		#if verbose: print('[notelist] add_m_multi')
-		note = self.nld.add()
-		note['pos'] = t_pos
-		note['dur'] = t_dur
-		note['vol'] = t_vol
-		self.nld.assoc_inst_add(t_inst)
-		self.nld.assoc_extra_add(t_extra)
-		self.nld.assoc_multikey_add(m_keys)
+		self.cursor.add_m_multi(t_inst, t_pos, t_dur, m_keys, t_vol, t_extra)
 
 	def last_add_auto(self, a_type):
-		if verbose: print('[notelist] last_add_auto')
-		autodata = self.nld.assoc_auto_set()
-		if a_type not in autodata: 
-			autodata[a_type] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
-		return autodata[a_type].add_point()
+		if self.__len__():
+			autodata = self.cursor.assoc_auto_set()
+			if a_type not in autodata: 
+				autodata[a_type] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+			return autodata[a_type].add_point()
+		else:
+			dummyp = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+			return dummyp.add_point()
 
 	def last_add_slide(self, t_pos, t_dur, t_key, t_vol, t_extra):
-		if verbose: print('[notelist] last_add_slide')
-		slidedata = self.nld.assoc_slide_append([t_pos, t_dur, t_key, t_vol, t_extra])
+		slidedata = self.cursor.assoc_slide_append([t_pos, t_dur, t_key, t_vol, t_extra])
 
 	def last_add_vol(self, i_val):
-		if verbose: print('[notelist] last_add_vol')
-		note = self.nld.getcur()
+		note = self.cursor.getcur()
 		note['vol'] = i_val
 
 	def last_add_extra(self, i_name, i_val):
-		if verbose: print('[notelist] last_add_extra')
-		note = self.nld.assoc_extra_set(i_name, i_val)
+		note = self.cursor.assoc_extra_set(i_name, i_val)
 
 	def last_extend_pos(self, endpos):
-		if verbose: print('[notelist] last_extend_pos')
-		if np.count_nonzero(self.nld.nl['used']):
-			note = self.nld.getcur()
+		if self.count():
+			note = self.cursor.getcur()
 			note['dur'] = endpos-note['pos']
 
 	def last_extend(self, dur):
-		if verbose: print('[notelist] last_extend')
-		if np.count_nonzero(self.nld.nl['used']):
-			note = self.nld.getcur()
+		if self.count():
+			note = self.cursor.getcur()
 			note['dur'] += dur
 
 	def auto_add_slide(self, t_inst, t_pos, t_dur, t_key, t_vol, t_extra):
-		if verbose: print('[notelist] auto_add_slide')
-		for note in self.nld:
+		for note in self.data:
 			n_inst = note['assoc_inst'] if note['is_inst'] else None
-			s_inst = self.nld.v_assoc_inst.index(t_inst) if t_inst in self.nld.v_assoc_inst else None
+			s_inst = self.data.v_assoc_inst.index(t_inst) if t_inst in self.data.v_assoc_inst else None
 
 			match_pos = (note['pos'] <= t_pos < note['pos']+note['dur'])
 			match_inst = n_inst == s_inst
 
 			if note['used'] and match_pos and match_inst:
-				sn_pos = t_pos - note['pos'] 
+				sn_pos = t_pos - note['pos']
 				sn_key = t_key
-				slidedata = self.nld.assoc_slide_append([sn_pos, t_dur, sn_key, t_vol, t_extra])
+				slidedata = self.cursor.assoc_slide_append([sn_pos, t_dur, sn_key, t_vol, t_extra])
 
 	def notesfound(self):
-		return self.nld.nl.size != 0
+		return self.count() != 0
 
 	def get_dur(self):
-		if verbose: print('[notelist] get_dur')
-		tab = self.nld.nl['pos']+self.nld.nl['dur']
-		#print(self.nld.nl)
+		tab = self.data.nl['pos']+self.data.nl['dur']
 		return max(tab) if tab.any() else 0
 
 	def get_start(self):
-		if verbose: print('[notelist] get_start')
-		tab = self.nld.nl['pos']
+		tab = self.data.nl['pos']
 		return min(tab) if tab.any() else 0
 
 	def get_start_end(self):
-		if verbose: print('[notelist] get_start_end')
-		ma = self.nld.nl['pos']+self.nld.nl['dur']
+		ma = self.data.nl['pos']+self.data.nl['dur']
 		return min(ma) if ma.any() else 0, max(ma) if ma.any() else 0
 
 	def edit_move(self, pos):
-		if verbose: print('[notelist] edit_move |', len(self.nld.nl), end=' | ')
-		self.nld.nl['pos'] += pos
-		used = [n for n, x in enumerate(self.nld.nl['pos']) if x>=0]
-		self.nld.nl = self.nld.nl[used]
-		if verbose: print(len(self.nld.nl))
+		if verbose: print(len(self.data),'edit_move', pos)
+		self.data.nl['pos'] += pos
+		used = [n for n, x in enumerate(self.data.nl['pos']) if x>=0]
+		self.data.nl = self.data.nl[used]
+		self.data.go_last = True
+		self.data.after_proc()
 
 	def edit_move_minus(self, pos):
-		if verbose: print('[notelist] edit_move_minus |', len(self.nld.nl), end=' | ')
-		self.nld.nl['pos'] += pos
-		if verbose: print(len(self.nld.nl))
+		if verbose: print(len(self.data),'edit_move_minus', pos)
+		self.data.nl['pos'] += pos
 
 	def edit_trim(self, pos):
-		if verbose: print('[notelist] edit_trim |', len(self.nld.nl), end=' | ')
-		self.nld.nl['pos'] += pos
-		used = [n for n, x in enumerate(self.nld.nl['pos']) if x>=pos]
-		self.nld.nl = self.nld.nl[used]
-		if verbose: print(len(self.nld.nl))
+		if verbose: print(len(self.data),'edit_trim', pos)
+		self.data.nl['pos'] += pos
+		used = [n for n, x in enumerate(self.data.nl['pos']) if x>=pos]
+		self.data.nl = self.data.nl[used]
+		self.data.after_proc()
 
 	def edit_trim_limit(self, pos):
-		if verbose: print('[notelist] edit_trim_limit |', len(self.nld.nl), end=' | ')
-		self.nld.nl['pos'] += pos
-		used = [n for n, x in enumerate(self.nld.nl['pos']) if x>=pos]
-		self.nld.nl = self.nld.nl[used]
-		if verbose: print(len(self.nld.nl))
-		self.clean()
+		if verbose: print(len(self.data),'edit_trim_limit', pos)
+		self.data.nl['pos'] += pos
+		used = [n for n, x in enumerate(self.data.nl['pos']) if x>=pos]
+		self.data.nl = self.data.nl[used]
+		self.data.after_proc()
 
 	def edit_trimmove(self, startat, endat):
-		if verbose: print('[notelist] edit_trimmove |', len(self.nld.nl), end=' | ')
-		used = [n for n, x in enumerate(self.nld.nl['pos']) if endat>x>=startat]
-		self.nld.nl['pos'] += -startat
-		self.nld.nl = self.nld.nl[used]
-		if verbose: print(len(self.nld.nl))
+		if verbose: print(len(self.data),'edit_trimmove', startat, endat)
+		used = [n for n, x in enumerate(self.data.nl['pos']) if endat>x>=startat]
+		self.data.nl['pos'] += -startat
+		self.data.nl = self.data.nl[used]
+		self.data.go_last = True
+		self.data.after_proc()
 
 	def new_nl_start_end(self, startat, endat):
-		if verbose: print('[notelist] new_nl_start_end |', startat, endat, end=' | ')
-		used = [n for n, x in enumerate(self.nld.nl['pos']) if endat>x>=startat]
+		if verbose_copy: print(len(self.data),'new_nl_start_end', startat, endat)
+		used = [n for n, x in enumerate(self.data.nl['pos']) if endat>x>=startat]
 
 		new_nl = cvpj_notelist(self.time_ppq, self.time_float)
-		new_nl.nld.nl = self.nld.nl[used].copy()
-		new_nl.nld.v_assoc_inst = copy.deepcopy(self.nld.v_assoc_inst)
-		new_nl.nld.v_assoc_extra = copy.deepcopy(self.nld.v_assoc_extra)
-		new_nl.nld.v_assoc_auto = copy.deepcopy(self.nld.v_assoc_auto)
-		new_nl.nld.v_assoc_slide = copy.deepcopy(self.nld.v_assoc_slide)
-		new_nl.nld.v_assoc_multikey = copy.deepcopy(self.nld.v_assoc_multikey)
-		new_nl.nld.nl['pos'] += -startat
-		new_nl.sort()
-		new_nl.clean()
+		new_data = new_nl.data
+		new_data.v_assoc_inst = copy.deepcopy(self.data.v_assoc_inst)
+		new_data.v_assoc_extra = copy.deepcopy(self.data.v_assoc_extra)
+		new_data.v_assoc_auto = copy.deepcopy(self.data.v_assoc_auto)
+		new_data.v_assoc_slide = copy.deepcopy(self.data.v_assoc_slide)
+		new_data.v_assoc_multikey = copy.deepcopy(self.data.v_assoc_multikey)
+		new_data.nl = self.data.nl[used].copy()
+		new_data.nl['pos'] += -startat
+		new_data.after_proc()
+
 		return new_nl
 
 	def mod_scale(self, i_size):
-		if verbose: print('[notelist] mod_scale')
-		self.nld.nl['pos'] *= i_size
-		self.nld.nl['dur'] *= i_size
+		self.data.nl['pos'] *= i_size
+		self.data.nl['dur'] *= i_size
 
 	def mod_transpose(self, i_key):
-		if verbose: print('[notelist] mod_transpose')
-		self.nld.nl['key'] += i_key
-		self.nld.v_assoc_multikey = [[x+i_key for x in n] for n in self.nld.v_assoc_multikey]
+		self.data.nl['key'] += i_key
+		self.data.v_assoc_multikey = [[x+i_key for x in n] for n in self.data.v_assoc_multikey]
 
 	def mod_weird(self, i_key):
-		if verbose: print('[notelist] mod_weird')
-		self.nld.nl['key'] *= i_key
-		self.nld.v_assoc_multikey = [[x*i_key for x in n] for n in self.nld.v_assoc_multikey]
+		self.data.nl['key'] *= i_key
+		self.data.v_assoc_multikey = [[x*i_key for x in n] for n in self.data.v_assoc_multikey]
 
 	def mod_limit(self, imin, imax):
-		if verbose: print('[notelist] mod_limit')
+		if verbose: print(len(self.data),'mod_limit', imin, imax)
 		self.clean()
-		keyval = self.nld.nl['key']
+		keyval = self.data.nl['key']
 		findex = np.where(np.logical_and(imin<=keyval, keyval<=imax))
-		self.nld.nl['used'] = 0
-		self.nld.nl['used'][findex] = 1
+		self.data.nl['used'] = 0
+		self.data.nl['used'][findex] = 1
+		self.data.after_proc()
 
 	def mod_filter_inst(self, instname):
-		if verbose: print('[notelist] mod_filter_inst')
+		if verbose: print(len(self.data),'mod_filter_inst', instname)
 		self.clean()
-		self.nld.nl['used'] = 0
-		if instname in self.nld.v_assoc_inst:
-			aid = self.nld.v_assoc_inst.index(instname)
-			self.nld.nl['used'][np.where(aid==self.nld.nl['assoc_inst'])] = 1
+		self.data.nl['used'] = 0
+		if instname in self.data.v_assoc_inst:
+			aid = self.data.v_assoc_inst.index(instname)
+			self.data.nl['used'][np.where(aid==self.data.nl['assoc_inst'])] = 1
+		self.data.after_proc()
 
 	def remove_overlap(self):
-		if verbose: print('[notelist] remove_overlap')
+		if verbose: print(len(self.data),'remove_overlap')
 		self.sort()
 		self.clean()
 		endnotes = np.zeros(129, dtype=np.dtype([('pos', np.int32), ('endpos', np.float64)]))
 		endnotes[:] = -1
 
-		for i, n in enumerate(self.nld.nl):
+		for i, n in enumerate(self.data):
 			keynum = n['key']+60
 
 			if n['dur']:
@@ -614,190 +680,177 @@ class cvpj_notelist:
 				if endnotes[keynum][0] != -1:
 					previ, preve = endnotes[keynum]
 					subv = -min(n['pos']-preve, 0)
-					self.nld.nl[previ]['dur'] -= subv
-					if self.nld.nl[previ]['dur'] == 0: self.nld.nl[previ]['used'] = 0
+					self.data.nl[previ]['dur'] -= subv
+					if self.data.nl[previ]['dur'] == 0: self.data.nl[previ]['used'] = 0
 
 				endnotes[keynum]['pos'] = i
 				endnotes[keynum]['endpos'] = endpos
-
-	def clean(self):
-		if verbose: print('[notelist] clean')
-		self.nld.nl = self.nld.nl[np.nonzero(self.nld.nl['used'])]
+		self.data.after_proc()
 
 	def sort(self):
-		if verbose: print('[notelist] sort |', len(self.nld.nl), end=' | ')
-		self.nld.sort()
-		if verbose: print(len(self.nld.nl))
+		self.data.sort()
 
 	def clear(self):
-		if verbose: print('[notelist] clear')
-		nld = self.nld
+		nld = self.data
 		nld.init_nl()
 		nld.v_assoc_inst = []
 		nld.v_assoc_extra = []
 		nld.v_assoc_auto = []
 		nld.v_assoc_slide = []
 		nld.v_assoc_multikey = []
-		nld.cursor = 0
-		nld.num_notes = 0
-		nld.lastnote = 0
 
 	def clear_size(self, i_size):
-		if verbose: print('[notelist] clear_size')
-		self.nld.alloc(i_size)
-		self.nld.v_assoc_inst = []
-		self.nld.v_assoc_extra = []
-		self.nld.v_assoc_auto = []
-		self.nld.v_assoc_slide = []
-		self.nld.v_assoc_multikey = []
-		self.nld.cursor = 0
-		self.nld.num_notes = 0
-		self.nld.lastnote = 0
+		nld = self.data
+		nld.init_nl()
+		nld.v_assoc_inst = []
+		nld.v_assoc_extra = []
+		nld.v_assoc_auto = []
+		nld.v_assoc_slide = []
+		nld.v_assoc_multikey = []
+		nld.alloc(i_size)
+
+	def clean(self):
+		return self.data.clean()
 
 	def last_arpeggio(self, notes):
-		if verbose: print('[notelist] last_arpeggio')
-		note = self.nld.getcur()
+		if verbose: print(len(self.data),'last_arpeggio')
+		note = self.cursor.getcur()
 		counts = np.unique(notes, return_counts=True)
 		isduped = True in (counts[1]>2)
 		if not isduped: 
-			self.nld.assoc_multikey_add([note['key']+x for x in notes])
+			self.cursor.assoc_multikey_add([note['key']+x for x in notes])
 
 	def add_instpos(self, instlocs):
-		if verbose: print('[notelist] add_instpos')
-		nld = self.nld
+		if verbose: print(len(self.data),'add_instpos')
 
-		if len(self.nld.nl):
+		if len(self.data):
+
 			if len(instlocs)==1:
 				self.inst_all(instlocs[0][1])
 	
 			if len(instlocs)>1:
 				inst_data = np.zeros(len(instlocs), dtype=np.dtype([('start', np.float64), ('end', np.float64), ('inst', np.int16), ('name', np.str_, 256)]))
 	
-				maxval = np.max(self.nld.nl['pos']+self.nld.nl['dur'])
+				maxval = np.max(self.data.nl['pos']+self.data.nl['dur'])
 	
 				inst_data['start'] = [x[0] for x in instlocs]
 				inst_data['end'] = [x[0] for x in instlocs[1:]]+[maxval]
-				inst_data['inst'] = [nld.add_inst(x[1]) for x in instlocs]
+				inst_data['inst'] = [self.data.add_inst(x[1]) for x in instlocs]
 				inst_data['name'] = [x[1] for x in instlocs]
 	
 				uniqueinsts = np.unique(inst_data)
 	
-				poses = self.nld.nl['pos']
-				usedd = self.nld.nl['used']
+				poses = self.data.nl['pos']
+				usedd = self.data.nl['used']
 				for n in inst_data:
 					findex = np.where(np.logical_and(n['start']<=poses, poses<n['end'], usedd==1))
-					self.nld.nl['is_inst'][findex] = 1
-					self.nld.nl['assoc_inst'][findex] = n['inst']
+					self.data.nl['is_inst'][findex] = 1
+					self.data.nl['assoc_inst'][findex] = n['inst']
 	
-				self.v_assoc_inst = uniqueinsts['name']
+				self.data.v_assoc_inst = uniqueinsts['name']
 
 	def get_used_inst(self):
-		return self.nld.v_assoc_inst
+		return self.data.v_assoc_inst
+
+	def count(self):
+		return self.data.count()
 
 	def iter(self):
-		for note in self.nld:
+		cursor_obj = self.create_cursor()
+
+		for note in cursor_obj:
 			if note['used']:
 				t_pos = note['pos']
 				t_dur = note['dur']
-				t_keys = self.nld.assoc_multikey_get()
+				t_keys = cursor_obj.assoc_multikey_get()
 				t_vol = note['vol']
-				t_inst = self.nld.assoc_inst_get()
-				t_extra = self.nld.assoc_extra_get()
-				t_auto = self.nld.assoc_auto_get()
-				t_slide = self.nld.assoc_slide_get()
+				t_inst = cursor_obj.assoc_inst_get()
+				t_extra = cursor_obj.assoc_extra_get()
+				t_auto = cursor_obj.assoc_auto_get()
+				t_slide = cursor_obj.assoc_slide_get()
 				yield t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide
 
-	def debugtxt(self):
-		print(len(self.nld.nl), 'notes')
-		for note in self.nld:
-			if note['used']:
-				t_pos = note['pos']
-				t_dur = note['dur']
-				t_keys = self.nld.assoc_multikey_get()
-				t_vol = note['vol']
-				t_inst = self.nld.assoc_inst_get()
-				t_extra = self.nld.assoc_extra_get()
-				t_auto = self.nld.assoc_auto_get()
-				t_slide = self.nld.assoc_slide_get()
-				print(t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto!=None, t_slide!=None)
-
 	def notemod_conv(self):
-		if verbose: print('[notelist] notemod_conv')
-		for note in self.nld: self.nld.notemod_conv(self)
+		cursor_obj = self.create_cursor()
+		for note in cursor_obj:
+			if note['used']:
+				cursor_obj.notemod_conv()
 
 	def extra_to_noteenv(self):
-		if verbose: print('[notelist] extra_to_noteenv')
-		for note in self.nld: self.nld.extra_to_noteenv(self)
+		cursor_obj = self.create_cursor()
+		for note in cursor_obj:
+			if note['used']:
+				cursor_obj.extra_to_noteenv(self.time_ppq, self.time_float)
 
 	def merge(self, i_nl, offset):
-		if verbose: print('[notelist] merge')
-		self.nld.merge(i_nl.nld, offset)
+		if verbose: print(len(self.data),'merge')
+		self.data.merge(i_nl.data, offset)
 
 	def usedrange(self, start, end):
-		if verbose: print('[notelist] usedrange')
-		poses = self.nld.nl['pos']
-		usedd = self.nld.nl['used']
-		return len(self.nld.nl[np.where(np.logical_and(start<=poses, poses<end, usedd==1))]) != 0
+		if verbose: print(len(self.data),'usedrange')
+		poses = self.data.nl['pos']
+		usedd = self.data.nl['used']
+		return len(self.data.nl[np.where(np.logical_and(start<=poses, poses<end, usedd==1))]) != 0
 
 	def usedoverflow(self, start, end):
-		if verbose: print('[notelist] usedoverflow')
-		poses = self.nld.nl['pos']
-		usedd = self.nld.nl['used']
+		if verbose: print(len(self.data),'usedoverflow')
+		poses = self.data.nl['pos']
+		usedd = self.data.nl['used']
 		usedposes = np.logical_and(start<=poses, poses<end)
 		usedvals = np.where(np.logical_and(usedposes, usedd==1))
-		filternl = self.nld.nl[usedvals]
+		filternl = self.data.nl[usedvals]
 		if len(filternl): return True, max(np.max(filternl['pos']+filternl['dur'])-end, 0) 
 		else: return False, 0
 
 	def appendtxt_inst(self, start, end):
-		self.nld.v_assoc_inst = [start+x+end for x in self.nld.v_assoc_inst]
+		self.data.appendtxt_inst(start, end)
 
-	def multikey_comb(self):
-		prev_note = None
-		for n, x in enumerate(self.nld.nl):
-			if x['used'] == 1 and x['is_extra'] == x['is_auto'] == x['is_slide'] == x['is_multikey'] == 0:
-				iffound_1 = np.logical_and(
-					self.nld.nl['vol']==x['vol'],
-					self.nld.nl['pos']==x['pos'],
-				)
-				iffound_2 = np.logical_and(
-					self.nld.nl['dur']==x['dur'],
-					self.nld.nl['is_inst']==x['is_inst'],
-				)
-				iffound_3 = np.logical_and(
-					self.nld.nl['assoc_inst']==x['assoc_inst'],
-					self.nld.nl['is_extra']==0,
-				)
-				iffound_4 = np.logical_and(
-					self.nld.nl['is_auto']==0,
-					self.nld.nl['is_slide']==0,
-					self.nld.nl['is_multikey']==0,
-				)
-				iffound_5 = np.logical_and(iffound_1,iffound_2)
-				iffound_6 = np.logical_and(iffound_3,iffound_4)
-
-				iffound = np.logical_and(iffound_5,iffound_6,self.nld.nl['used']==1)
-
-				foundvals = np.where(iffound)[0]
-				if len(foundvals) > 1:
-					multikeys = list(self.nld.nl['key'][foundvals])
-					self.nld.nl['is_multikey'][foundvals[0]] = 1
-					self.nld.nl['assoc_multikey'][foundvals[0]] = len(self.nld.v_assoc_multikey)
-					self.nld.v_assoc_multikey.append(multikeys)
-
-					for kn in foundvals[1:]: self.nld.nl['used'][kn] = 0
-
-		self.clean()
-
-	def get_hash(self):
-		m = hashlib.md5()
-		notebytes = self.nld.nl.tobytes()
-		m.update(notebytes)
-		return m.hexdigest() if len(notebytes) else None
-
-	def get_hash_range(self, startat, endat):
-		new_nl = self.new_nl_start_end(startat, endat)
-		return new_nl.get_hash()
-
-	def get_hash_split(self, splitdur, endat):
-		return [self.get_hash_range(x, x+splitdur) for x in range(0, endat, splitdur)]
+	#def multikey_comb(self):
+	#	prev_note = None
+	#	for n, x in enumerate(self.data):
+	#		if x['used'] == 1 and x['is_extra'] == x['is_auto'] == x['is_slide'] == x['is_multikey'] == 0:
+	#			iffound_1 = np.logical_and(
+	#				self.data.nl['vol']==x['vol'],
+	#				self.data.nl['pos']==x['pos'],
+	#			)
+	#			iffound_2 = np.logical_and(
+	#				self.data.nl['dur']==x['dur'],
+	#				self.data.nl['is_inst']==x['is_inst'],
+	#			)
+	#			iffound_3 = np.logical_and(
+	#				self.data.nl['assoc_inst']==x['assoc_inst'],
+	#				self.data.nl['is_extra']==0,
+	#			)
+	#			iffound_4 = np.logical_and(
+	#				self.data.nl['is_auto']==0,
+	#				self.data.nl['is_slide']==0,
+	#				self.data.nl['is_multikey']==0,
+	#			)
+	#			iffound_5 = np.logical_and(iffound_1,iffound_2)
+	#			iffound_6 = np.logical_and(iffound_3,iffound_4)
+#
+	#			iffound = np.logical_and(iffound_5,iffound_6,self.data.nl['used']==1)
+#
+	#			foundvals = np.where(iffound)[0]
+	#			if len(foundvals) > 1:
+	#				multikeys = list(self.data.nl['key'][foundvals])
+	#				self.data.nl['is_multikey'][foundvals[0]] = 1
+	#				self.data.nl['assoc_multikey'][foundvals[0]] = len(self.data.v_assoc_multikey)
+	#				self.data.v_assoc_multikey.append(multikeys)
+#
+	#				for kn in foundvals[1:]: self.data.nl['used'][kn] = 0
+#
+	#	self.clean()
+#
+	#def get_hash(self):
+	#	m = hashlib.md5()
+	#	notebytes = self.data.tobytes()
+	#	m.update(notebytes)
+	#	return m.hexdigest() if len(notebytes) else None
+#
+	#def get_hash_range(self, startat, endat):
+	#	new_nl = self.new_nl_start_end(startat, endat)
+	#	return new_nl.get_hash()
+#
+	#def get_hash_split(self, splitdur, endat):
+	#	return [self.get_hash_range(x, x+splitdur) for x in range(0, endat, splitdur)]

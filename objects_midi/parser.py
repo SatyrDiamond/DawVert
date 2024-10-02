@@ -122,7 +122,7 @@ class MidiTrack:
 
 def parseHeader(memoryMap):
 	identifier = memoryMap.read(4).decode('ascii')
-	if identifier != b'MThd':
+	if identifier != 'MThd':
 		raise ProjectFileParserException('midi: magic check failed.')
 	chunkLength = struct.unpack(">I", memoryMap.read(4))[0]
 	midiFormat = struct.unpack(">H", memoryMap.read(2))[0]

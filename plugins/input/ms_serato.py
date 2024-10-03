@@ -121,12 +121,18 @@ class input_serato(plugins.base):
 				inst_obj = convproj_obj.add_instrument(cvpj_instid)
 				inst_obj.visual.name = scene_deck.name
 				inst_obj.visual.color.set_float([0.48, 0.35, 0.84])
+				inst_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
+				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('native-serato-inst', 'instrument')
+				instrument_file = parse_filepath(scene_deck.instrument_file)
+				convproj_obj.add_fileref(scene_deck.instrument_file, instrument_file, 'win')
+				plugin_obj.filerefs['instrument'] = scene_deck.instrument_file
+				adsr_obj = plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, scene_deck.release, 1)
+				adsr_obj.release_tension = -1
 
 			if scene_deck.type == 'sample':
 				if useaudioclips == False:
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-serato-inst', 'sampler')
 					inst_obj = convproj_obj.add_instrument(cvpj_instid)
-					inst_obj.pluginid = pluginid
+					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('native-serato-inst', 'sampler')
 	
 					if scene_deck.sample_file:
 						inst_obj.visual.name = urllib.parse.unquote(scene_deck.sample_file).split('/')[-1]

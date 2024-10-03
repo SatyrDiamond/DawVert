@@ -364,7 +364,7 @@ class input_wavtool(plugins.base):
 	def get_name(self): return 'Wavtool'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'zip'
+		in_dict['file_ext'] = ['zip']
 		in_dict['fxtype'] = 'track'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']

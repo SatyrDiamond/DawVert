@@ -8,7 +8,8 @@ logger_plugins = logging.getLogger('plugins')
 
 class info_daw:
 	def __init__(self):
-		self.file_ext = ''
+		self.file_ext = []
+		self.file_ext_detect = True
 		self.plugin_arch = [32, 64]
 		self.plugin_ext = []
 		self.plugin_included = []
@@ -29,6 +30,7 @@ class info_daw:
 
 	def from_dict(self, indict):
 		if 'file_ext' in indict: self.file_ext = indict['file_ext']
+		if 'file_ext_detect' in indict: self.file_ext_detect = indict['file_ext_detect']
 		if 'plugin_arch' in indict: self.plugin_arch = indict['plugin_arch']
 		if 'plugin_ext' in indict: self.plugin_ext = indict['plugin_ext']
 		if 'plugin_included' in indict: self.plugin_included = indict['plugin_included']
@@ -187,6 +189,12 @@ class plugin_selector:
 		self.plugintype = plugintype
 		self.pluginlist = loaded_plugins
 
+	def unset(self):
+		if self.selected_plugin:
+			self.selected_shortname = None
+			self.selected_plugin = None
+			logger_plugins.info('Unset '+self.plugintype+' plugin')
+
 	def set(self, dvplugsn):
 		if self.plugintype in self.pluginlist:
 			if self.selected_shortname != dvplugsn:
@@ -208,6 +216,7 @@ class plugin_selector:
 						self.selected_plugin = self.pluginlist[self.plugintype][shortname]
 						logger_plugins.info('Auto-Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
 						return shortname
+		self.unset()
 
 	def get_prop_obj(self):
 		return self.selected_plugin.prop_obj if self.selected_plugin else None

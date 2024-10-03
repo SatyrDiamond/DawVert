@@ -14,7 +14,7 @@ class input_gt_mnbs(plugins.base):
 	def get_name(self): return 'Minecraft Note Block Studio'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'nbs'
+		in_dict['file_ext'] = ['nbs']
 		in_dict['plugin_included'] = ['midi']
 		in_dict['track_nopl'] = True
 		in_dict['audio_filetypes'] = ['wav']

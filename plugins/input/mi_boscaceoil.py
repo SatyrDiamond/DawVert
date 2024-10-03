@@ -64,7 +64,7 @@ class input_ceol(plugins.base):
 	def get_name(self): return 'Bosca Ceoil'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'ceol'
+		in_dict['file_ext'] = ['ceol']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = []
 		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','fm:opm','native-boscaceoil','universal:filter','midi']

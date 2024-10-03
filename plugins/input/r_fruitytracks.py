@@ -14,7 +14,7 @@ class input_fruitytracks(plugins.base):
 	def get_name(self): return 'FruityTracks'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'ftr'
+		in_dict['file_ext'] = ['ftr']
 		in_dict['placement_cut'] = True
 		in_dict['audio_filetypes'] = ['wav', 'mp3']
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']

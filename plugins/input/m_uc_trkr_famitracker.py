@@ -14,9 +14,9 @@ class input_famitracker_txt(plugins.base):
 	def get_priority(self): return 0
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'txt'
+		in_dict['file_ext'] = ['txt']
+		in_dict['file_ext_detect'] = False
 		in_dict['track_lanes'] = True
-		in_dict['track_nopl'] = True
 		in_dict['fxtype'] = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_famitracker

@@ -99,6 +99,13 @@ class cvpj_placements:
 
 		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio()
 
+	def sort(self):
+		self.pl_notes.sort()
+		self.pl_audio.sort()
+		self.pl_notes_indexed.sort()
+		self.pl_audio_indexed.sort()
+		self.pl_audio_nested.sort()
+
 	def autosplit(self):
 		self.pl_notes.autosplit(self.time_ppq)
 

@@ -14,7 +14,7 @@ class input_onlinesequencer(plugins.base):
 	def get_name(self): return 'Online Sequencer'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'sequence'
+		in_dict['file_ext'] = ['sequence']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['midi','native-onlineseq','universal:synth-osc']

@@ -22,7 +22,7 @@ class input_mmf(plugins.base):
 	def get_name(self): return 'Mobile Music File'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'mmf'
+		in_dict['file_ext'] = ['mmf']
 		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
 		in_dict['auto_types'] = ['nopl_ticks']

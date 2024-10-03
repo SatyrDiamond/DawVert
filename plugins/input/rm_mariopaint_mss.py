@@ -38,7 +38,7 @@ class input_mariopaint_mss(plugins.base):
 	def get_name(self): return 'Advanced Mario Sequencer'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'mss'
+		in_dict['file_ext'] = ['mss']
 		in_dict['track_lanes'] = True
 		in_dict['track_nopl'] = True
 		in_dict['fxtype'] = 'rack'

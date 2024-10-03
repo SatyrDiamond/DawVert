@@ -15,7 +15,7 @@ class input_sop(plugins.base):
 	def get_name(self): return 'Note Sequencer'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'sop'
+		in_dict['file_ext'] = ['sop']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['fm:opl2','fm:opl3']

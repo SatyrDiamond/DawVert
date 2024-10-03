@@ -20,7 +20,8 @@ class input_mariopaint_smp(plugins.base):
 	def get_name(self): return 'Super Mario Paint'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'txt'
+		in_dict['file_ext'] = ['txt']
+		in_dict['file_ext_detect'] = False
 		in_dict['track_lanes'] = True
 		in_dict['track_nopl'] = True
 		in_dict['fxtype'] = 'rack'

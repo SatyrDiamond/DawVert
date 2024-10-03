@@ -197,6 +197,9 @@ class cvpj_fileref:
 	def __repr__(self):
 		return ('FILE ' if self.is_file else 'FOLDER ')+self.get_path(None, False)
 
+	def copy(self):
+		return copy.deepcopy(self)
+
 	def search(self, searchseries):
 		iffound = False
 

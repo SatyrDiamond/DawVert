@@ -17,8 +17,8 @@ def process_r(convproj_obj):
 			track_obj = org_track_data[trackid]
 			trackroute_sendobj = org_trackroute[trackid] if trackid in org_trackroute else None
 
-			if_audio = (len(track_obj.placements.pl_audio.data) != 0) or (len(track_obj.placements.pl_audio_nested.data) != 0)
-			if_notes = (len(track_obj.placements.pl_notes.data) != 0) or (track_obj.placements.notelist.nld.num_notes != 0)
+			if_audio = track_obj.placements.pl_audio or track_obj.placements.pl_audio_nested
+			if_notes = track_obj.placements.pl_notes or track_obj.placements.notelist
 
 			if track_obj.type == 'hybrid':
 				a_track_obj = track_obj.make_base()

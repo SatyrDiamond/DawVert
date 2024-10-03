@@ -268,7 +268,8 @@ class input_famistudio(plugins.base):
 	def get_name(self): return 'FamiStudio Text'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'txt'
+		in_dict['file_ext'] = ['txt']
+		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['nopl_points', 'pl_points']
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'

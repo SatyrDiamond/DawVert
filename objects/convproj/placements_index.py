@@ -14,6 +14,12 @@ class cvpj_placements_index:
 	def __iter__(self):
 		for x in self.data: yield x
 
+	def __len__(self):
+		return self.data.__len__()
+
+	def __bool__(self):
+		return bool(self.data)
+
 	def add(self):
 		pl_obj = cvpj_placement_index()
 		self.data.append(pl_obj)

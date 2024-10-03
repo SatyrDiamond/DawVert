@@ -197,7 +197,7 @@ class input_cvpj_f(plugins.base):
 	def get_name(self): return 'Waveform'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'tracktionedit'
+		in_dict['file_ext'] = ['tracktionedit']
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['time_seconds'] = True

@@ -12,7 +12,7 @@ class input_orgyana(plugins.base):
 	def get_name(self): return 'Orgyana'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'org'
+		in_dict['file_ext'] = ['org']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 	def supported_autodetect(self): return True

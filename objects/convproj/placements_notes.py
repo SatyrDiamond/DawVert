@@ -21,6 +21,12 @@ class cvpj_placements_notes:
 	def __iter__(self):
 		for x in self.data: yield x
 
+	def __len__(self):
+		return self.data.__len__()
+
+	def __bool__(self):
+		return bool(self.data)
+
 	def merge_crop(self, npl_obj, pos, dur, visualfill):
 		for n in npl_obj.data:
 			if n.time.position < dur:

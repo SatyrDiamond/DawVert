@@ -14,6 +14,15 @@ class cvpj_placements_autopoints:
 		self.val_type = val_type
 		self.data = []
 
+	def __iter__(self):
+		for x in self.data: yield x
+
+	def __len__(self):
+		return self.data.__len__()
+
+	def __bool__(self):
+		return bool(self.data)
+
 	def sort(self):
 		ta_bsort = {}
 		ta_sorted = {}

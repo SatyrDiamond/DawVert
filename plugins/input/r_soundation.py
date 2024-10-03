@@ -46,7 +46,7 @@ class input_soundation(plugins.base):
 	def get_priority(self): return 0
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'sng'
+		in_dict['file_ext'] = ['sng']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
@@ -166,7 +166,7 @@ class input_soundation(plugins.base):
 									zip_data.extract(filename, path=samplefolder, pwd=None)
 									filename = samplefolder+filename
 
-							convproj_obj.add_sampleref(orgname, filename)
+							convproj_obj.add_sampleref(orgname, filename, 'None')
 
 							sp_obj.sampleref = orgname
 

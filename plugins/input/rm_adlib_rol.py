@@ -12,7 +12,7 @@ class input_adlib_rol(plugins.base):
 	def get_name(self): return 'AdLib Visual Composer'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'rol'
+		in_dict['file_ext'] = ['rol']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['fm:opl2']

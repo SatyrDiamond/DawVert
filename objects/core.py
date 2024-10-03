@@ -214,14 +214,19 @@ class core:
 	def input_set(self, pluginname): 
 		return self.currentplug_input.set(pluginname)
 
+	def input_unset(self, pluginname): 
+		return self.currentplug_input.unset()
+
 	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
 
 	def input_autoset_fileext(self, in_file):
 		fileext = pathlib.Path(in_file).suffix
 		for shortname, plug_obj, prop_obj in self.currentplug_input.iter():
-			if ('.'+prop_obj.file_ext.lower())==fileext.lower():
-				self.input_set(shortname)
-				return shortname
+			if prop_obj.file_ext_detect:
+				if fileext.lower() in ['.'+x.lower() for x in prop_obj.file_ext]:
+					self.input_set(shortname)
+					return shortname
+		self.input_unset(shortname)
 
 	def output_load_plugins(self, pluginset):
 		if pluginset in pluginsets_output: 

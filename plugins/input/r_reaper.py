@@ -46,6 +46,8 @@ class midi_notes():
 								)
 							cvpj_notelist.time_ppq = 1
 							cvpj_notelist.time_float = True
+		cvpj_notelist.sort()
+		#print(cvpj_notelist.data[:])
 
 class input_reaper(plugins.base):
 	def __init__(self): pass
@@ -55,7 +57,7 @@ class input_reaper(plugins.base):
 	def get_priority(self): return 0
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'rpp'
+		in_dict['file_ext'] = ['rpp']
 		in_dict['fxtype'] = 'track'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []
@@ -91,10 +93,13 @@ class input_reaper(plugins.base):
 
 		trackdata = []
 
+		used_trackids = []
+
 		for tracknum, rpp_track in enumerate(rpp_project.tracks):
 			cvpj_trackid = rpp_track.trackid.get()
+			used_trackids.append(cvpj_trackid)
 
-			if not cvpj_trackid: cvpj_trackid = 'track'+str(tracknum)
+			if not cvpj_trackid or cvpj_trackid in used_trackids: cvpj_trackid = 'track'+str(tracknum)
 
 			trackroute = [rpp_track.mainsend['tracknum'], rpp_track.auxrecv]
 
@@ -140,6 +145,7 @@ class input_reaper(plugins.base):
 				cvpj_position = rpp_trackitem.position.get()
 				cvpj_duration = rpp_trackitem.length.get()
 				cvpj_offset = rpp_trackitem.soffs.get()
+				cvpj_loop = rpp_trackitem.loop.get()
 				cvpj_vol = rpp_trackitem.volpan['vol']
 				cvpj_pan = rpp_trackitem.volpan['pan']
 				cvpj_muted = rpp_trackitem.mute['mute']
@@ -204,11 +210,17 @@ class input_reaper(plugins.base):
 					placement_obj.sample.sampleref = cvpj_audio_file
 					if samplemode == 3: placement_obj.sample.reverse = True
 
-					placement_obj.sample.stretch.set_rate_speed(bpm, cvpj_audio_rate, False)
-					placement_obj.sample.stretch.preserve_pitch = cvpj_audio_preserve_pitch
-					
-					placement_obj.time.set_offset((cvpj_offset_bpm/cvpj_audio_rate) + (startpos/cvpj_audio_rate)*8)
+					startoffset = (cvpj_offset_bpm/cvpj_audio_rate) + (startpos/cvpj_audio_rate)*8
 
+					placement_obj.sample.stretch.set_rate_tempo(bpm, (1/cvpj_audio_rate)*tempomul, True)
+					placement_obj.sample.stretch.preserve_pitch = cvpj_audio_preserve_pitch
+					if not cvpj_loop:
+						placement_obj.time.set_offset(startoffset)
+					else:
+						maxdur = ((sampleref_obj.dur_sec*8)/cvpj_audio_rate)*tempomul if sampleref_obj.dur_sec else cvpj_duration
+						placement_obj.time.set_loop_data(startoffset, 0, maxdur)
+
+			track_obj.placements.sort()
 			convproj_obj.add_trackroute(cvpj_trackid)
 			trackdata.append([cvpj_trackid, trackroute])
 

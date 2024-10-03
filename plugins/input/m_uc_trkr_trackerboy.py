@@ -45,9 +45,8 @@ class input_trackerboy(plugins.base):
 	def get_priority(self): return 0
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'tbm'
+		in_dict['file_ext'] = ['tbm']
 		in_dict['track_lanes'] = True
-		in_dict['track_nopl'] = True
 		in_dict['fxtype'] = 'rack'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_trackerboy
@@ -79,6 +78,7 @@ class input_trackerboy(plugins.base):
 
 		for channum, patm in tbm_cursong.patterns.items():
 			for patnum, patdata in patm.items():
+				#print(channum, patnum)
 				pat_obj = patterndata_obj.pattern_add(channum, patnum)
 
 				for d_pos, d_key, d_inst, d_fx in patdata:

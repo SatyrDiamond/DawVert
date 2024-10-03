@@ -10,7 +10,7 @@ from objects import globalstore
 def parse_notes(convproj_obj, trackid, notes_data, track_obj, keyoffset):
 	for pos, nd in enumerate(notes_data):
 		notes, pan = nd
-		track_obj.placements.notelist.add_r_multi(pos, 1, [(x+keyoffset)-20 for x in notes], 1, {})
+		track_obj.placements.notelist.add_r_multi(pos, 1, [(x+keyoffset)-12 for x in notes], 1, {})
 		if pan != 0:
 			convproj_obj.automation.add_autotick(['track', trackid, 'pan'], 'float', pos, (pan-4)/3)
 
@@ -21,7 +21,7 @@ class input_piyopiyo(plugins.base):
 	def get_name(self): return 'PiyoPiyo'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'pmd'
+		in_dict['file_ext'] = ['pmd']
 		in_dict['plugin_included'] = ['universal:synth-osc','sampler:multi']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True

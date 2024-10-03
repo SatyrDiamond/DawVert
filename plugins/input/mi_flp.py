@@ -215,7 +215,7 @@ class input_flp(plugins.base):
 	def get_name(self): return 'FL Studio 12-21'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'flp'
+		in_dict['file_ext'] = ['flp']
 		in_dict['auto_types'] = ['pl_ticks']
 		in_dict['track_lanes'] = True
 		in_dict['placement_cut'] = True

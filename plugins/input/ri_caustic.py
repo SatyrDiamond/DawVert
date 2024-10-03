@@ -94,7 +94,7 @@ class input_cvpj_r(plugins.base):
 	def get_name(self): return 'Caustic 3'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'caustic'
+		in_dict['file_ext'] = ['caustic']
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop']
 		in_dict['audio_stretch'] = ['warp']

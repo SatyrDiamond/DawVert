@@ -31,7 +31,7 @@ class input_audiosanua(plugins.base):
 	def get_name(self): return 'AudioSauna'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'song'
+		in_dict['file_ext'] = ['song']
 		in_dict['placement_cut'] = True
 		in_dict['audio_filetypes'] = ['wav', 'mp3']
 		in_dict['plugin_included'] = ['native-audiosauna', 'sampler:multi', 'universal:bitcrush']

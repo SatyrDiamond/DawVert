@@ -266,7 +266,7 @@ class notelist_cursor:
 					autopoint.pos = 0
 					autopoint.value = extra_d['finepitch']/100
 
-	def notemod_conv(self):
+	def notemod_conv(self, time_ppq, time_float):
 		nl_obj = self.base_nl
 		note = self.getcur()
 		if note['is_auto'] or note['is_slide']:
@@ -278,7 +278,7 @@ class notelist_cursor:
 				for slidenote in slide_d: pointsdata.slide_note(slidenote[0], slidenote[2], slidenote[1])
 				nmp = pointsdata.to_pointdata()
 				auto_d = self.assoc_auto_set()
-				auto_d['pitch'] = autopoints.cvpj_autopoints(nl_obj.time_ppq, nl_obj.time_float, 'float')
+				auto_d['pitch'] = autopoints.cvpj_autopoints(time_ppq, time_float, 'float')
 				for nmps in nmp:
 					autopoint = auto_d['pitch'].add_point()
 					autopoint.pos = nmps[0]
@@ -344,7 +344,7 @@ class notelist_data:
 		self.clean()
 
 	def __copy__(self):
-		if verbose_copy: print(len(self.data),'notelist_data, verbose_copy')
+		if verbose_copy: print(len(self.nl),'notelist_data, verbose_copy')
 		new_obj = notelist_data()
 		new_obj.v_assoc_inst = copy.deepcopy(self.v_assoc_inst)
 		new_obj.v_assoc_extra = copy.deepcopy(self.v_assoc_extra)
@@ -436,7 +436,6 @@ class notelist_data:
 	def appendtxt_inst(self, start, end):
 		self.v_assoc_inst = [start+x+end for x in self.v_assoc_inst]
 
-
 verbose = False
 
 class cvpj_notelist:
@@ -471,7 +470,11 @@ class cvpj_notelist:
 	def __len__(self):
 		return self.data.count()
 
+	def __bool__(self):
+		return bool(self.data.count())
+
 	def inst_split(self):
+		if verbose: print(len(self.data),'inst_split')
 		nldata = self.data.nl
 		out_nl = {}
 		w_used = np.where(nldata['used'] == 1)
@@ -492,9 +495,11 @@ class cvpj_notelist:
 		return out_nl
 
 	def inst_all(self, instid):
+		if verbose: print(len(self.data),'inst_all', instid)
 		self.data.inst_all(instid)
 
 	def stretch(self, time_ppq, time_float):
+		if verbose: print(len(self.data),'stretch', time_ppq, time_float)
 		for note in self.data:
 			note['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['pos'])
 			note['dur'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['dur'])
@@ -774,7 +779,7 @@ class cvpj_notelist:
 		cursor_obj = self.create_cursor()
 		for note in cursor_obj:
 			if note['used']:
-				cursor_obj.notemod_conv()
+				cursor_obj.notemod_conv(self.time_ppq, self.time_float)
 
 	def extra_to_noteenv(self):
 		cursor_obj = self.create_cursor()

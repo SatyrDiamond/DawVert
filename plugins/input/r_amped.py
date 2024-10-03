@@ -328,7 +328,7 @@ class input_amped(plugins.base):
 			return False
 
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'amped'
+		in_dict['file_ext'] = ['amped']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
 		in_dict['placement_cut'] = True

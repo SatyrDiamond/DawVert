@@ -23,7 +23,8 @@ class input_cvpj_f(plugins.base):
 	def get_name(self): return 'メキメキチップ (MekiMeki Chip) (old)'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'json'
+		in_dict['file_ext'] = ['json']
+		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 	def supported_autodetect(self): return False

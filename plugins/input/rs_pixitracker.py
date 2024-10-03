@@ -14,7 +14,7 @@ class input_cvpj_f(plugins.base):
 	def get_priority(self): return 0
 	def supported_autodetect(self): return True
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'piximod'
+		in_dict['file_ext'] = ['piximod']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['sampler:single']

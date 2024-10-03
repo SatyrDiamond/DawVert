@@ -19,6 +19,12 @@ class cvpj_placements_audio:
 	def __iter__(self):
 		for x in self.data: yield x
 
+	def __len__(self):
+		return self.data.__len__()
+
+	def __bool__(self):
+		return bool(self.data)
+
 	def merge_crop(self, apl_obj, pos, dur, visualfill):
 		for n in apl_obj.data:
 			if n.time.position < dur:
@@ -168,10 +174,25 @@ class cvpj_placements_nested_audio:
 	def __iter__(self):
 		for x in self.data: yield x
 
+	def __bool__(self):
+		return bool(self.data)
+
 	def add(self):
 		pl_obj = cvpj_placement_nested_audio()
 		self.data.append(pl_obj)
 		return pl_obj
+
+	def sort(self):
+		ta_bsort = {}
+		ta_sorted = {}
+		new_a = []
+		for n in self.data:
+			if n.time.position not in ta_bsort: ta_bsort[n.time.position] = []
+			ta_bsort[n.time.position].append(n)
+		ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))
+		for p in ta_sorted:
+			for note in ta_sorted[p]: new_a.append(note)
+		self.data = new_a
 
 	def remove_loops(self, out__placement_loop):
 		new_data = []

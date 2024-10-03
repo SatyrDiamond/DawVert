@@ -57,7 +57,7 @@ class input_pxtone(plugins.base):
 	def get_name(self): return 'PxTone'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'ptcop'
+		in_dict['file_ext'] = ['ptcop']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['sampler:single']
@@ -119,9 +119,14 @@ class input_pxtone(plugins.base):
 				audio_obj.channels = voice_obj.ch
 				audio_obj.pcm_from_bytes(voice_obj.data)
 				audio_obj.to_file_wav(wave_path)
+
 				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
+				if len(voice_obj.data) <= 256: 
+					samplepart_obj.loop_start = 0
+					samplepart_obj.loop_end = len(voice_obj.data)
+					samplepart_obj.loop_active = True
 				inst_obj.pluginid = pluginid
 
 			inst_obj.params.add('vol', cvpj_instvol, 'float')

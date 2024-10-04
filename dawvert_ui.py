@@ -25,6 +25,8 @@ scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
 from objects_ui.ui_pyqt import Ui_MainWindow
 
+logging.disable(logging.INFO)
+
 class converterstate():
 	is_converting = False
 	is_plugscan = False
@@ -37,15 +39,15 @@ dawvert_core = dv_core.core()
 dawvert_core.config.load('./__config/config.ini')
 
 dawvert_config__main = {}
-dawvert_config__main['songnum'] = dawvert_core.config.songnum
-dawvert_config__main['extrafile'] = dawvert_core.config.path_extrafile
+dawvert_config__main['songnum'] = dv_core.config_data.songnum
+dawvert_config__main['extrafile'] = dv_core.config_data.path_extrafile
 dawvert_config__main['ui__drag_drop'] = 0
 dawvert_config__main['ui__overwrite_out'] = False
 dawvert_config__main['ui__auto_convert'] = False
 
 dawvert_config__nopl_splitter = {}
-dawvert_config__nopl_splitter['mode'] = dawvert_core.config.splitter_mode
-dawvert_config__nopl_splitter['detect_start'] = dawvert_core.config.splitter_detect_start
+dawvert_config__nopl_splitter['mode'] = dv_core.config_data.splitter_mode
+dawvert_config__nopl_splitter['detect_start'] = dv_core.config_data.splitter_detect_start
 dawvert_config__mi2m = {}
 
 class ConversionWorker(QtCore.QObject):
@@ -74,29 +76,29 @@ class ConversionWorker(QtCore.QObject):
 
 			file_name = os.path.splitext(os.path.basename(in_file))[0]
 
-			dawvert_core.config.flags_convproj = []
-			if 'output_unused_nle' in dawvert_config__mi2m: dawvert_core.config.flags_convproj.append('mi2m-output-unused-nle')
-			dawvert_core.config.splitter_mode = dawvert_config__nopl_splitter['mode']
-			dawvert_core.config.splitter_detect_start = dawvert_config__nopl_splitter['detect_start']
+			dv_core.config_data.flags_convproj = []
+			if 'output_unused_nle' in dawvert_config__mi2m: dv_core.config_data.flags_convproj.append('mi2m-output-unused-nle')
+			dv_core.config_data.splitter_mode = dawvert_config__nopl_splitter['mode']
+			dv_core.config_data.splitter_detect_start = dawvert_config__nopl_splitter['detect_start']
 
-			if 'songnum' in dawvert_config__main: dawvert_core.config.songnum = dawvert_config__main['songnum']
-			if 'extrafile' in dawvert_config__main: dawvert_core.config.path_extrafile = dawvert_config__main['extrafile']
+			if 'songnum' in dawvert_config__main: dv_core.config_data.songnum = dawvert_config__main['songnum']
+			if 'extrafile' in dawvert_config__main: dv_core.config_data.path_extrafile = dawvert_config__main['extrafile']
 
 			if outsamples:
 				outsamples += '/'
 
-				dawvert_core.config.path_samples_extracted = outsamples+'extracted/'
-				dawvert_core.config.path_samples_downloaded = outsamples+'downloaded/'
-				dawvert_core.config.path_samples_generated = outsamples+'generated/'
-				dawvert_core.config.path_samples_converted = outsamples+'converted/'
+				dv_core.config_data.path_samples_extracted = outsamples+'extracted/'
+				dv_core.config_data.path_samples_downloaded = outsamples+'downloaded/'
+				dv_core.config_data.path_samples_generated = outsamples+'generated/'
+				dv_core.config_data.path_samples_converted = outsamples+'converted/'
 
 			else:
-				dawvert_core.config.set_projname_path(file_name)
+				dv_core.config_data.set_projname_path(file_name)
 
-			#os.makedirs(dawvert_core.config.path_samples_extracted, exist_ok=True)
-			#os.makedirs(dawvert_core.config.path_samples_downloaded, exist_ok=True)
-			#os.makedirs(dawvert_core.config.path_samples_generated, exist_ok=True)
-			#os.makedirs(dawvert_core.config.path_samples_converted, exist_ok=True)
+			#os.makedirs(dv_core.config_data.path_samples_extracted, exist_ok=True)
+			#os.makedirs(dv_core.config_data.path_samples_downloaded, exist_ok=True)
+			#os.makedirs(dv_core.config_data.path_samples_generated, exist_ok=True)
+			#os.makedirs(dv_core.config_data.path_samples_converted, exist_ok=True)
 
 			filesearcher.reset()
 			filesearcher.add_basepath('projectfile', os.path.dirname(in_file))
@@ -105,21 +107,21 @@ class ConversionWorker(QtCore.QObject):
 			filesearcher.add_searchpath_partial('projectfile', '.', 'projectfile')
 			filesearcher.add_searchpath_full_append('projectfile', os.path.dirname(in_file), None)
 
-			filesearcher.add_searchpath_full_filereplace('extracted', dawvert_core.config.path_samples_extracted, None)
-			filesearcher.add_searchpath_full_filereplace('downloaded', dawvert_core.config.path_samples_downloaded, None)
-			filesearcher.add_searchpath_full_filereplace('generated', dawvert_core.config.path_samples_generated, None)
-			filesearcher.add_searchpath_full_filereplace('converted', dawvert_core.config.path_samples_converted, None)
+			filesearcher.add_searchpath_full_filereplace('extracted', dv_core.config_data.path_samples_extracted, None)
+			filesearcher.add_searchpath_full_filereplace('downloaded', dv_core.config_data.path_samples_downloaded, None)
+			filesearcher.add_searchpath_full_filereplace('generated', dv_core.config_data.path_samples_generated, None)
+			filesearcher.add_searchpath_full_filereplace('converted', dv_core.config_data.path_samples_converted, None)
 			filesearcher.add_searchpath_full_filereplace('external_data', os.path.join(scriptfiledir, '__external_data'), None)
 
 			self.update_ui.emit([1, 0])
 			self.update_ui.emit([0, 'Processing Input...'])
-			dawvert_core.parse_input(in_file, dawvert_core.config)
+			dawvert_core.parse_input(in_file, dv_core.config_data)
 			self.update_ui.emit([1, 25])
 			self.update_ui.emit([0, 'Converting Project Type and Samples...'])
-			dawvert_core.convert_type_output(dawvert_core.config)
+			dawvert_core.convert_type_output(dv_core.config_data)
 			self.update_ui.emit([1, 50])
 			self.update_ui.emit([0, 'Converting Plugins...'])
-			dawvert_core.convert_plugins(dawvert_core.config)
+			dawvert_core.convert_plugins(dv_core.config_data)
 			self.update_ui.emit([1, 75])
 			self.update_ui.emit([0, 'Processing Output...'])
 			dawvert_core.parse_output(out_file)
@@ -335,7 +337,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.ui.AutoConvert.stateChanged.connect(self.__change_auto_convert_setting)
 
 		configdata(self.ui, configparts_main, 'Main', dawvert_config__main)
-		configdata(self.ui, configparts_soundfont, 'Soundfonts', dawvert_core.config.paths_soundfonts)
+		configdata(self.ui, configparts_soundfont, 'Soundfonts', dv_core.config_data.paths_soundfonts)
 		configdata(self.ui, configparts_splitter, 'NoPl Splitter', dawvert_config__nopl_splitter)
 		configdata(self.ui, configparts_mi2m, 'MI2M', dawvert_config__mi2m)
 
@@ -356,14 +358,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.ui.ExtCountCLAP.setText('CLAP: '+str(clap_count))
 
 	def __set_checks(self):
-		extplug_cat = dawvert_core.config.extplug_cat
+		extplug_cat = dv_core.config_data.extplug_cat
 		self.ui.ExtPlugG_Shareware.setChecked('shareware' in extplug_cat)
 		self.ui.ExtPlugG_FOSS.setChecked('foss' in extplug_cat)
 		self.ui.ExtPlugG_Old.setChecked('old' in extplug_cat)
 		self.ui.ExtPlugG_NonFree.setChecked('nonfree' in extplug_cat)
 
 	def __plugcatmod(self, name, isset):
-		extplug_cat = dawvert_core.config.extplug_cat
+		extplug_cat = dv_core.config_data.extplug_cat
 		if name not in extplug_cat and isset: extplug_cat.append(name)
 		if name in extplug_cat and not isset: extplug_cat.remove(name)
 

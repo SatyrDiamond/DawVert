@@ -380,6 +380,16 @@ class cvpj_automation:
 			autopath.change_start(len(locset_from), locset_to)
 			self.data[autopath] = autopart
 
+	def copy_everything(self, locset_from, locset_to):
+		logger_automation.info('Coping all from '+';'.join(locset_from)+' to '+';'.join(locset_to))
+		foundparts = [x for x in self.list() if x.startswith(locset_from)]
+		for autopath in foundparts:
+			if autopath in self.data:
+				autopoints = self.data[autopath]
+				newpath = copy.deepcopy(autopath)
+				newpath.change_start(len(locset_from), locset_to)
+				self.data[newpath] = autopoints
+
 	def calc(self, autopath, mathtype, val1, val2, val3, val4):
 		autopath = cvpj_autoloc(autopath)
 		logger_automation.info('Math '+str(autopath))

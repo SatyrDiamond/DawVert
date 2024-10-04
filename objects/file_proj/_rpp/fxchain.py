@@ -181,10 +181,6 @@ class rpp_fxchain:
 			if name == 'FLOATPOS': self.plugins[-1].floatpos.read(values)
 			if name == 'WAK': self.plugins[-1].wak.read(values)
 			if name == 'WET': self.plugins[-1].wet.read(values)
-			if name == 'PARMENV': 
-				parmenv_obj = rpp_env.rpp_env()
-				parmenv_obj.read(inside_dat, values)
-				self.plugins[-1].parmenv.append(parmenv_obj)
 
 			if is_dir:
 				if name in 'VST': 
@@ -219,10 +215,14 @@ class rpp_fxchain:
 					plug_obj.plugin = rewire_obj
 					plug_obj.bypass.read(bypassval)
 					self.plugins.append(plug_obj)
-				else:
-					plug_obj = rpp_plugin()
-					plug_obj.type = 'UNKNOWN'
-					self.plugins.append(plug_obj)
+				if name == 'PARMENV': 
+					parmenv_obj = rpp_env.rpp_env()
+					parmenv_obj.read(inside_dat, values)
+					self.plugins[-1].parmenv.append(parmenv_obj)
+				#else:
+				#	plug_obj = rpp_plugin()
+				#	plug_obj.type = 'UNKNOWN'
+				#	self.plugins.append(plug_obj)
 
 
 	def write(self, rpp_data):

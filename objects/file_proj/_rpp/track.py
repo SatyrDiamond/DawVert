@@ -39,6 +39,7 @@ class rpp_track:
 		self.auxrecv = []
 		self.panenv2 = rpp_env.rpp_env()
 		self.volenv2 = rpp_env.rpp_env()
+		self.muteenv = rpp_env.rpp_env()
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -68,6 +69,7 @@ class rpp_track:
 			if name == 'MAINSEND': self.mainsend.read(values)
 			if name == 'PANENV2': self.panenv2.read(inside_dat, values)
 			if name == 'VOLENV2': self.volenv2.read(inside_dat, values)
+			if name == 'MUTEENV': self.muteenv.read(inside_dat, values)
 			if name == 'AUXRECV': 
 				auxrecv_obj = self.add_auxrecv()
 				auxrecv_obj.read(values)
@@ -125,6 +127,9 @@ class rpp_track:
 		self.mainsend.write('MAINSEND', rpp_data)
 		self.panenv2.write('PANENV2', rpp_data)
 		self.volenv2.write('VOLENV2', rpp_data)
+		self.muteenv.write('MUTEENV', rpp_data)
+		for parmenv in self.parmenv:
+			parmenv.write('PARMENV', rpp_data)
 		if self.fxchain != None:
 			rpp_fxchaindata = robj('FXCHAIN',[])
 			self.fxchain.write(rpp_fxchaindata)

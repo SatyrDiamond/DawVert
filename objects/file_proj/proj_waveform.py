@@ -93,6 +93,27 @@ class waveform_seq_tempo:
 			pxml.set('denominator', str(denominator))
 			pxml.set('startBeat', str(pos))
 
+class waveform_automationcurve:
+	def __init__(self):
+		self.paramid = None
+		self.points = []
+
+	def load(self, xmldata):
+		self.paramid = xmldata.get('paramID')
+		for subxml in xmldata:
+			if subxml.tag == 'POINT': 
+				curve = float(subxml.get('c'))
+				self.points.append([float(subxml.get('t')), float(subxml.get('v')), curve if curve else None])
+
+	def write(self, xmldata):
+		tempxml = ET.SubElement(xmldata, "AUTOMATIONCURVE")
+		if self.paramid: tempxml.set('paramID', self.paramid)
+		for t,v,c in self.points:
+			pxml = ET.SubElement(tempxml, "POINT")
+			pxml.set('t', str(t))
+			pxml.set('v', str(v))
+			if c: pxml.set('c', str(c))
+
 class waveform_plugin:
 	def __init__(self):
 		self.plugtype = ''
@@ -107,6 +128,7 @@ class waveform_plugin:
 		self.quickParamName = ''
 		self.params = {}
 		self.macroparameters = waveform_macroparameters()
+		self.automationcurves = []
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
@@ -123,6 +145,10 @@ class waveform_plugin:
 			else: self.params[n] = v
 		for xmlpart in xmldata:
 			if xmlpart.tag == 'MACROPARAMETERS': self.macroparameters.load(xmlpart)
+			if xmlpart.tag == 'AUTOMATIONCURVE': 
+				autocurve_obj = waveform_automationcurve()
+				autocurve_obj.load(xmlpart)
+				self.automationcurves.append(autocurve_obj)
 
 	def write(self, xmldata):
 		tempxml = ET.SubElement(xmldata, "PLUGIN")
@@ -138,6 +164,8 @@ class waveform_plugin:
 		for n, v in self.params.items():
 			if ':' not in n:
 				tempxml.set(n, str(v))
+		for c in self.automationcurves:
+			c.write(tempxml)
 		self.macroparameters.write(tempxml)
 		ET.SubElement(tempxml, "MODIFIERASSIGNMENTS")
 

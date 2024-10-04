@@ -128,8 +128,13 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 			windata_obj.pos_y = wf_plugin.windowY
 
 		for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
-			paramval = wf_plugin.params[paramid] if paramid in wf_plugin.params else None
+			paramval = wf_plugin.params[param_id] if param_id in wf_plugin.params else None
 			plugin_obj.dset_param__add(param_id, paramval, dset_param)
+
+		for autocurves in wf_plugin.automationcurves:
+			if autocurves.paramid:
+				for time, val, curve in autocurves.points:
+					convproj_obj.automation.add_autopoint_real(['plugin',pluginid,autocurves.paramid], 'float', time, val, 'normal')
 
 		plugin_obj.fxdata_add(wf_plugin.enabled, 1)
 		if wf_plugin.plugtype not in ['4osc']: track_obj.fxslots_audio.append(pluginid)
@@ -143,7 +148,7 @@ autonames = {
 
 def do_track(convproj_obj, wf_track, track_obj): 
 	track_obj.visual.name = wf_track.name
-	track_obj.visual.color = colors.hex_to_rgb_float(wf_track.colour)
+	track_obj.visual.color.set_hex(wf_track.colour)
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
 	vol = 1
@@ -222,7 +227,7 @@ class input_cvpj_f(plugins.base):
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))
 			convproj_obj.params.add('bpm', tempo[0], 'float')
 			for pos, tempo in project_obj.temposequence.tempo.items():
-				convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', pos, tempo[0], 'normal')
+				convproj_obj.automation.add_autopoint_real(['main', 'bpm'], 'float', pos, tempo[0], 'normal')
 
 		if project_obj.temposequence.timesig:
 			pos, timesig = next(iter(project_obj.temposequence.timesig.items()))

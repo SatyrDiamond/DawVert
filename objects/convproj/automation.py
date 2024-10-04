@@ -106,6 +106,9 @@ class cvpj_s_automation:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if self.u_nopl_points: self.nopl_points.change_seconds(is_seconds, bpm, ppq)
+		
 	# | Ticks       | Points      |
 	# | NoPL | -PL- | NoPL | -PL- |
 	# +------+------+------+------+---+
@@ -319,6 +322,10 @@ class cvpj_automation:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 
+	def change_seconds(self, is_seconds, bpm, ppq):
+		for autopath, autodata in self.data.items():
+			autodata.change_seconds(is_seconds, bpm, ppq)
+
 	def convert(self, pl_points, nopl_points, pl_ticks, nopl_ticks):
 		for autopath, autodata in self.data.items(): 
 			autodata.convert(pl_points, nopl_points, pl_ticks, nopl_ticks)
@@ -389,6 +396,11 @@ class cvpj_automation:
 		self.create(autopath, valtype, False)
 		autopath = cvpj_autoloc(autopath)
 		self.data[autopath].add_autopoint(p_pos, p_val, p_type)
+
+	def add_autopoint_real(self, autopath, valtype, p_pos, p_val, p_type):
+		self.create(autopath, valtype, False)
+		autopath = cvpj_autoloc(autopath)
+		self.data[autopath].add_autopoint_real(p_pos, p_val, p_type)
 
 	def add_autopoints_twopoints(self, autopath, valtype, twopoints):
 		self.create(autopath, valtype, False)

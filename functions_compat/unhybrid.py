@@ -35,12 +35,15 @@ def process_r(convproj_obj):
 					convproj_obj.track_order.append(trackid_s)
 					convproj_obj.track_data[trackid_s] = n_track_obj
 					if trackroute_sendobj != None: convproj_obj.trackroute[trackid_s] = trackroute_sendobj
+					convproj_obj.automation.copy_everything(['track', trackid], ['track', trackid_s])
+
 				if if_audio:
 					trackid_s = trackid+'_unhybrid_audio'
 					a_track_obj.type = 'audio'
 					convproj_obj.track_order.append(trackid_s)
 					convproj_obj.track_data[trackid_s] = a_track_obj
 					if trackroute_sendobj != None: convproj_obj.trackroute[trackid_s] = trackroute_sendobj
+					convproj_obj.automation.copy_everything(['track', trackid], ['track', trackid_s])
 				#if not (if_audio and if_notes):
 				#	n_track_obj.type = 'instrument'
 				#	convproj_obj.track_order.append(trackid)

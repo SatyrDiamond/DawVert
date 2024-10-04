@@ -49,6 +49,14 @@ class midi_notes():
 		cvpj_notelist.sort()
 		#print(cvpj_notelist.data[:])
 
+def do_auto(convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert): 
+	isbool = paramtype=='bool'
+	if rpp_autodata.used:
+		for point in rpp_autodata.points:
+			val = point[1] if not invert else 1-point[1]
+			if isbool: val = bool(val)
+			convproj_obj.automation.add_autopoint_real(autoloc, paramtype, point[0], val, 'normal' if not instant else 'instant')
+
 class input_reaper(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -109,11 +117,16 @@ class input_reaper(plugins.base):
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
 
+			fxids = []
+
 			if rpp_track.fxchain != None:
 				rpp_plugins = rpp_track.fxchain.plugins
-				for rpp_plugin in rpp_plugins:
+				for n, rpp_plugin in enumerate(rpp_plugins):
 					rpp_extplug = rpp_plugin.plugin
 					fxid = rpp_plugin.fxid.get()
+					if not fxid: fxid = 'fx_'+str(n)
+					fxids.append(fxid)
+
 					if rpp_plugin.type == 'VST':
 						if rpp_extplug.vst3_uuid == None:
 							fourid = rpp_extplug.vst_fourid
@@ -123,6 +136,11 @@ class input_reaper(plugins.base):
 							if fourid == 1919118692: track_obj.fxslots_notes.append(fxid)
 							elif plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
 							elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+
+							for parmenv in rpp_plugin.parmenv:
+								if parmenv.is_param:
+									do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+
 						else:
 							plugin_obj = convproj_obj.add_plugin(fxid, 'vst3', None)
 							plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
@@ -137,7 +155,6 @@ class input_reaper(plugins.base):
 						for n, v in enumerate(rpp_extplug.data):
 							if v != '-': plugin_obj.datavals.add(str(n), v)
 						track_obj.fxslots_audio.append(fxid)
-
 
 			for rpp_trackitem in rpp_track.items:
 				cvpj_placement_type = 'notes'
@@ -219,6 +236,10 @@ class input_reaper(plugins.base):
 					else:
 						maxdur = ((sampleref_obj.dur_sec*8)/cvpj_audio_rate)*tempomul if sampleref_obj.dur_sec else cvpj_duration
 						placement_obj.time.set_loop_data(startoffset, 0, maxdur)
+
+			do_auto(convproj_obj, rpp_track.volenv2, ['track', cvpj_trackid, 'vol'], False, 'float', False)
+			do_auto(convproj_obj, rpp_track.panenv2, ['track', cvpj_trackid, 'pan'], False, 'float', False)
+			do_auto(convproj_obj, rpp_track.muteenv, ['track', cvpj_trackid, 'enabled'], True, 'bool', False)
 
 			track_obj.placements.sort()
 			convproj_obj.add_trackroute(cvpj_trackid)

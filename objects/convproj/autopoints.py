@@ -83,6 +83,12 @@ class cvpj_autopoints:
 		self.sustain_point = 0
 		self.sustain_end = 0
 
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if is_seconds:
+			for x in self.points: x.pos_real = xtramath.step2sec(x.pos, bpm)/(ppq/4)
+		else:
+			for x in self.points: x.pos = xtramath.sec2step(x.pos_real, bpm)
+		
 	def change_timings(self, time_ppq, time_float):
 		for ap in self.points:
 			ap.pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, ap.pos)

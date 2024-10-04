@@ -76,6 +76,8 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['plugin', pluginid, 'freq'], 'add', -72, 0, 0, 0)
 			convproj_obj.automation.calc(['plugin', pluginid, 'freq'], 'note2freq', 0, 0, 0, 0)
 			convproj_obj.automation.move(['plugin', pluginid, 'freq'], ['filter', pluginid, 'freq'])
+			convproj_obj.automation.move(['plugin', pluginid, "gain"], ['filter', pluginid, 'gain'])
+			convproj_obj.automation.move(['plugin', pluginid, "q"], ['filter', pluginid, 'q'])
 			return 1
 
 		if plugin_obj.type.subtype == '3bandEq':
@@ -88,19 +90,32 @@ class plugconv(plugins.base):
 			gain3 = plugin_obj.params.get('gain3', 0).value
 
 			filter_obj, filterid = plugin_obj.eq_add()
-			filter_obj.type = 'low_shelf'
+			filter_obj.type.set('low_shelf', None)
 			filter_obj.freq = note_data.note_to_freq(freq1-72)
 			filter_obj.gain = gain1
+			convproj_obj.automation.calc(['plugin', pluginid, 'freq1'], 'add', -72, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'freq1'], 'note2freq', 0, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'freq1'], ['n_filter', pluginid, filterid, 'freq'])
+			convproj_obj.automation.move(['plugin', pluginid, "gain1"], ['n_filter', pluginid, filterid, 'gain'])
 
 			filter_obj, filterid = plugin_obj.eq_add()
-			filter_obj.type = 'peak'
+			filter_obj.type.set('peak', None)
 			filter_obj.freq = note_data.note_to_freq(freq2-72)
 			filter_obj.gain = gain2
+			convproj_obj.automation.calc(['plugin', pluginid, 'freq2'], 'add', -72, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'freq2'], 'note2freq', 0, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'freq2'], ['n_filter', pluginid, filterid, 'freq'])
+			convproj_obj.automation.move(['plugin', pluginid, "gain2"], ['n_filter', pluginid, filterid, 'gain'])
 
 			filter_obj, filterid = plugin_obj.eq_add()
-			filter_obj.type = 'high_shelf'
+			filter_obj.type.set('high_shelf', None)
 			filter_obj.freq = note_data.note_to_freq(freq3-72)
 			filter_obj.gain = gain3
+			convproj_obj.automation.calc(['plugin', pluginid, 'freq3'], 'add', -72, 0, 0, 0)
+			convproj_obj.automation.calc(['plugin', pluginid, 'freq3'], 'note2freq', 0, 0, 0, 0)
+			convproj_obj.automation.move(['plugin', pluginid, 'freq3'], ['n_filter', pluginid, filterid, 'freq'])
+			convproj_obj.automation.move(['plugin', pluginid, "gain3"], ['n_filter', pluginid, filterid, 'gain'])
+
 			plugin_obj.replace('universal', 'eq-bands')
 			return 1
 
@@ -109,14 +124,16 @@ class plugconv(plugins.base):
 
 			for num in range(8):
 				eqnumtxt = str(num+1)
+
 				for typenum in range(2):
 					typename = ['lm', 'rs'][typenum]
-					band_enable = int(plugin_obj.params.get("enable"+eqnumtxt+typename, 0).value)
-					band_freq = plugin_obj.params.get("freq"+eqnumtxt+typename, 25).value
-					band_gain = plugin_obj.params.get("gain"+eqnumtxt+typename, 0).value
-					band_q = plugin_obj.params.get("q"+eqnumtxt+typename, 1).value
-					band_shape = plugin_obj.params.get("shape"+eqnumtxt+typename, 1).value
-					band_slope = plugin_obj.params.get("slope"+eqnumtxt+typename, 12).value
+					endtxt = eqnumtxt+typename
+					band_enable = int(plugin_obj.params.get("enable"+endtxt, 1).value)
+					band_freq = plugin_obj.params.get("freq"+endtxt, 25).value
+					band_gain = plugin_obj.params.get("gain"+endtxt, 0).value
+					band_q = plugin_obj.params.get("q"+endtxt, 1).value
+					band_shape = plugin_obj.params.get("shape"+endtxt, 1).value
+					band_slope = plugin_obj.params.get("slope"+endtxt, 12).value
 
 					if band_shape == 0: band_shape = 'low_pass'
 					if band_shape == 1: band_shape = 'low_shelf'
@@ -130,11 +147,17 @@ class plugconv(plugins.base):
 					else: filter_obj, filterid = plugin_obj.named_eq_add('alt')
 
 					filter_obj.on = bool(band_enable)
-					filter_obj.freq = band_freq
+					filter_obj.freq = note_data.note_to_freq(band_freq-72)
 					filter_obj.gain = band_gain
 					filter_obj.q = band_q
-					filter_obj.type = band_shape
+					filter_obj.type.set(band_shape, None)
 					filter_obj.slope = band_slope
+
+					convproj_obj.automation.calc(['plugin', pluginid, "freq"+endtxt], 'add', -72, 0, 0, 0)
+					convproj_obj.automation.calc(['plugin', pluginid, "freq"+endtxt], 'note2freq', 0, 0, 0, 0)
+					convproj_obj.automation.move(['plugin', pluginid, "freq"+endtxt], ['n_filter', pluginid, filterid, 'freq'])
+					convproj_obj.automation.move(['plugin', pluginid, "gain"+endtxt], ['n_filter', pluginid, filterid, 'gain'])
+					convproj_obj.automation.move(['plugin', pluginid, "q"+endtxt], ['n_filter', pluginid, filterid, 'q'])
 
 			eq_mode = plugin_obj.params.get("mode", 0).value
 			cvpj_eq_mode = ['normal', 'l_r', 'm_s'][eq_mode]

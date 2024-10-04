@@ -16,6 +16,7 @@ def process(convproj_obj, in_compat, out_compat, out_type):
 				track_obj.placements.change_seconds(is_seconds==1, tempo, ppq)
 				for laneid, lane_obj in track_obj.lanes.items(): 
 					lane_obj.placements.change_seconds(is_seconds==1, tempo, ppq)
+			convproj_obj.automation.change_seconds(is_seconds==1, tempo, ppq)
 			return True
 
 

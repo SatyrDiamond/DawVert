@@ -49,6 +49,7 @@ class input_orgyana(plugins.base):
 				track_obj = convproj_obj.add_track(idval, 'instrument', 0, False)
 				if tracknum > 7: 
 					track_obj.visual.from_dset('orgyana', 'drums', str(orgtrack_obj.instrument), False)
+					track_obj.is_drum = True
 					if orgsamp_obj.loaded:
 						drum_filename = os.path.join(dv_config.path_samples_extracted+'orgmaker_drum_'+str(orgtrack_obj.instrument)+'.wav')
 						if not os.path.exists(drum_filename):

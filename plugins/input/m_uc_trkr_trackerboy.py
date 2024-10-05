@@ -109,7 +109,9 @@ class input_trackerboy(plugins.base):
 				plugin_obj.role = 'synth'
 				osc_data = plugin_obj.osc_add()
 				if instname == 'pulse': osc_data.prop.shape = 'square'
-				if instname == 'noise': osc_data.prop.shape = 'random'
+				if instname == 'noise': 
+					osc_data.prop.shape = 'random'
+					inst_obj.is_drum = True
 				if instname == 'wavetable': 
 					osc_data.prop.type = 'wave'
 					osc_data.prop.nameid = 'main'

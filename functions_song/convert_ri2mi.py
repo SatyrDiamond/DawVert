@@ -28,6 +28,7 @@ def convert(convproj_obj):
 		inst_obj.midi = copy.deepcopy(track_obj.midi)
 		inst_obj.fxslots_notes = track_obj.fxslots_notes
 		inst_obj.fxslots_audio = track_obj.fxslots_audio
+		inst_obj.is_drum = track_obj.is_drum
 
 		starttxt = trackid+'_'
 

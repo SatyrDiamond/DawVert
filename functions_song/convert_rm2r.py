@@ -45,6 +45,7 @@ def convert(convproj_obj):
 					inst_obj = convproj_obj.instruments[i]
 	
 					new_track_obj = track_obj.make_base_inst(inst_obj)
+					new_track_obj.is_drum = inst_obj.is_drum
 					used_plugins.append(new_track_obj.inst_pluginid)
 	
 					if new_track_obj.fxrack_channel == -1: new_track_obj.fxrack_channel = track_obj.fxrack_channel

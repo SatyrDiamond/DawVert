@@ -233,6 +233,7 @@ class input_soundation(plugins.base):
 						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
+						track_obj.is_drum = True
 
 						kit_name = get_paramval(soundation_inst, 'kit_name')
 						for paramid in ["gain_2", "hold_1", "pitch_6", "gain_1", "decay_5", "gain_5", "hold_0", "hold_2", "pitch_7", "gain_0", "decay_6", "gain_3", "hold_5", "pitch_3", "decay_4", "pitch_4", "gain_6", "decay_7", "pitch_2", "hold_6", "decay_1", "decay_3", "decay_0", "decay_2", "gain_7", "pitch_0", "pitch_5", "hold_3", "pitch_1", "hold_4", "hold_7", "gain_4"]:
@@ -268,6 +269,7 @@ class input_soundation(plugins.base):
 						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
+						track_obj.is_drum = True
 						get_asdr(plugin_obj, soundation_inst)
 							
 					elif instpluginname == 'com.soundation.SAM-1':
@@ -293,6 +295,7 @@ class input_soundation(plugins.base):
 						if instpluginname == 'com.soundation.spc':
 							plugin_obj.datavals.add('cuts', soundation_inst.data['cuts'])
 							plugin_obj.datavals.add('envelopes', soundation_inst.data['envelopes'])
+							track_obj.is_drum = True
 
 						if instpluginname == 'com.soundation.supersaw':
 							get_asdr(plugin_obj, soundation_inst)

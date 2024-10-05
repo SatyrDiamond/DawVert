@@ -99,6 +99,7 @@ class input_serato(plugins.base):
 
 							plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler(cvpj_instid_p, samplepath, 'win')
 							inst_obj = convproj_obj.add_instrument(cvpj_instid_p)
+							inst_obj.is_drum = True
 							inst_obj.pluginid = cvpj_instid_p
 							inst_obj.visual.name = urllib.parse.unquote(samplefile).split('/')[-1]
 

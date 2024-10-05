@@ -161,6 +161,7 @@ class input_1bitdragon(plugins.base):
 			inst_obj.visual.name = instname
 			inst_obj.params.add('enabled', drumdata.on, 'int')
 			inst_obj.params.add('vol', drumdata.volume, 'float')
+			inst_obj.is_drum = True
 
 			audiofilepath = os.path.join(dv_config.path_samples_extracted, str(instname)+'.wav')
 			inst_obj.datavals.add('middlenote', -3)

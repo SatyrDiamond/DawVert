@@ -119,6 +119,7 @@ class input_famitracker_txt(plugins.base):
 					if ft_inst.chip == '2A03':
 
 						if insttype == 'dpcm':
+							inst_obj.is_drum = True
 							plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
 							plugin_obj.role = 'synth'
 							for _, dpcm_key in ft_inst.dpcm_keys.items():

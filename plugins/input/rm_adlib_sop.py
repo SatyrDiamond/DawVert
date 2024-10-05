@@ -49,6 +49,7 @@ class input_sop(plugins.base):
 			inst_obj.pluginid = cvpj_instname
 			inst_obj.visual.name = opli.name_long if not opli.name_long else opli.name
 			inst_obj.visual.color.set_float(maincolor)
+			inst_obj.is_drum = opli.perc_type!=0
 			opli.to_cvpj(convproj_obj, cvpj_instname)
 
 		for tracknum, soptrack in enumerate(project_obj.tracks):

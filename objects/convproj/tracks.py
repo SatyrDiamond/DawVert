@@ -68,12 +68,13 @@ class cvpj_midiport:
 		self.basevelocity = 63
 
 class cvpj_instrument:
-	__slots__ = ['visual','params','datavals','midi','fxrack_channel','fxslots_notes','fxslots_audio','pluginid']
+	__slots__ = ['visual','params','datavals','midi','fxrack_channel','fxslots_notes','fxslots_audio','pluginid','is_drum']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
 		self.datavals = params.cvpj_datavals()
 		self.midi = cvpj_midiport()
+		self.is_drum = False
 		self.fxrack_channel = -1
 		self.fxslots_notes = []
 		self.fxslots_audio = []
@@ -92,6 +93,7 @@ class cvpj_instrument:
 				midi_obj.bank = dso_midi.bank
 				midi_obj.patch = dso_midi.patch
 				midi_obj.drum = dso_midi.is_drum
+				self.is_drum = dso_midi.is_drum
 
 		return midifound
 
@@ -141,7 +143,7 @@ class cvpj_lane:
 		self.placements = placements.cvpj_placements(time_ppq, time_float, uses_placements, is_indexed)
 
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes','audio_channels']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -167,6 +169,7 @@ class cvpj_track:
 		self.notelist_index = {}
 		self.scenes = {}
 		self.audio_channels = 2
+		self.is_drum = False
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)

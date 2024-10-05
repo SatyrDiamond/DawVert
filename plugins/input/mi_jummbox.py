@@ -297,7 +297,9 @@ class input_jummbox(plugins.base):
 						if 'unison' in bb_inst.data: plugin_obj.datavals.add('unison', bb_inst.data['unison'])
 
 						if bb_chan.type == 'pitch': inst_obj.visual.from_dset('beepbox', 'inst', bb_inst.type, False)
-						if bb_chan.type == 'drum': inst_obj.visual.from_dset('beepbox', 'drums', bb_inst.type, False)
+						if bb_chan.type == 'drum': 
+							inst_obj.visual.from_dset('beepbox', 'drums', bb_inst.type, False)
+							inst_obj.is_drum = True
 
 						if bb_inst.type == 'chip':
 							bb_inst_wave = bb_inst.data['wave']

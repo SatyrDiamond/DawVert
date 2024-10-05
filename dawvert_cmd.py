@@ -81,8 +81,11 @@ dawvert_core.output_load_plugins('main')
 if in_format == None:
 	detect_plugin_found = dawvert_core.input_autoset(in_file)
 	if detect_plugin_found == None:
-		logger_core.error('Could not identify the input format')
-		exit()
+		detect_plugin_found = dawvert_core.input_autoset_fileext(in_file)
+		if detect_plugin_found == None:
+			logger_core.error('Could not identify the input format')
+			exit()
+
 else:
 	if in_format in dawvert_core.input_get_plugins():
 		in_class = dawvert_core.input_set(in_format)

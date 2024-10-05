@@ -390,7 +390,7 @@ class output_lmms(plugins.base):
 
 					paramauto(insttrack_obj.vol, track_obj.params, 'vol', 1, [0, 100], autoloc, trackname, 'Vol')
 					paramauto(insttrack_obj.pan, track_obj.params, 'pan', 0, [0, -100], autoloc, trackname, 'Pan')
-					paramauto(insttrack_obj.usemasterpitch, track_obj.params, 'usemasterpitch', True, None, autoloc, trackname, 'Use Master Pitch')
+					paramauto(insttrack_obj.usemasterpitch, track_obj.params, 'usemasterpitch', not track_obj.is_drum, None, autoloc, trackname, 'Use Master Pitch')
 					paramauto(insttrack_obj.pitch, track_obj.params, 'pitch', 0, [0, 100], autoloc, trackname, 'Pitch')
 
 					for pluginid in track_obj.fxslots_notes:

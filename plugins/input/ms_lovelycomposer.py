@@ -283,7 +283,8 @@ class input_lc(plugins.base):
 					inst_obj.pluginid = pluginid
 					inst_obj.visual.name = instdata[1]
 					inst_obj.visual.color.set_float(color)
-		
+					inst_obj.is_drum = instdata[1] in ['Noise', 'FreqNoise']
+
 					if instdata[1] == 'Sine': 
 						osc_data.prop.shape = 'sine'
 					elif instdata[1] == 'Square': 

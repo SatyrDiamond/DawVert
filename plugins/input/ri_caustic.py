@@ -221,6 +221,7 @@ class input_cvpj_r(plugins.base):
 				plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				track_obj.params.add('usemasterpitch', False, 'bool')
+				track_obj.is_drum = True
 				samplecount = 0
 				for samplecount, bbox_sample in enumerate(machine.samples):
 					region_data, wave_data = bbox_sample

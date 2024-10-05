@@ -149,6 +149,7 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 	inst_obj.visual.name = 'DPCM'
 	inst_obj.visual.from_dset('famistudio', 'chip', 'DPCM', False)
 	inst_obj.fxrack_channel = fx_num
+	inst_obj.is_drum = True
 	plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
 	plugin_obj.role = 'synth'
 

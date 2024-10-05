@@ -77,6 +77,7 @@ class input_piyopiyo(plugins.base):
 		plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
 		plugin_obj.role = 'synth'
 		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
+		track_obj.is_drum = True
 		track_obj.inst_pluginid = pluginid
 
 		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', os.path.join(extpath_path,'BASS1.wav'), None)

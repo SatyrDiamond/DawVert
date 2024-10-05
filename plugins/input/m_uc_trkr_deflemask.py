@@ -137,6 +137,7 @@ class input_deflemask(plugins.base):
 					if sampleid:
 						inst_obj.visual.name = sample_name
 						inst_obj.visual.color.set_float([.9,.9,.9])
+						inst_obj.is_drum = True
 
 						plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
 						samplepart_obj = plugin_obj.samplepart_add('sample')

@@ -67,7 +67,7 @@ class fm_data:
 		self.operator[opnum][name] = value
 
 	def to_cvpj(self, convproj_obj, pluginid):
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'fm', self.fmtype)
+		plugin_obj = convproj_obj.add_plugin(pluginid, 'chip', 'fm', self.fmtype)
 		for paramname in self.fm_paramnames[0]: 
 			param_obj = plugin_obj.params.add(paramname, self.params[paramname], 'int')
 			param_obj.visual.name = paramname

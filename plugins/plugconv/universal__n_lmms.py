@@ -14,13 +14,13 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-lmms', None]]
+		in_dict['in_plugins'] = [['native', 'lmms', None]]
 		in_dict['in_daws'] = ['lmms']
-		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'eq':
+		if plugin_obj.type.check_wildmatch('native', 'lmms', 'eq'):
 			extpluglog.convinternal('LMMS', 'EQ', 'Universal', 'EQ 8-Limited')
 			eq_Outputgain = plugin_obj.params.get('Outputgain', 0).value
 			eq_Inputgain = plugin_obj.params.get('Inputgain', 0).value
@@ -69,7 +69,7 @@ class plugconv(plugins.base):
 			filter_obj.q = plugin_obj.params.get('LPres', 0).value
 			filter_obj.slope = slope_vals[int(plugin_obj.params.get('LP', 0).value)]
 
-			plugin_obj.replace('universal', 'eq-8limited')
+			plugin_obj.replace('universal', 'eq', '8limited')
 			plugin_obj.params.add('gain_out', eq_Outputgain, 'float')
 			plugin_obj.params.add('gain_in', eq_Inputgain, 'float')
 			return 1

@@ -34,7 +34,7 @@ class input_mod(plugins.base):
 		in_dict['file_ext'] = ['umx']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['sampler:single', 'sampler:multi']
+		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

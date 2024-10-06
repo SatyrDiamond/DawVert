@@ -134,7 +134,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				sp_obj.reverse = int(parampaths['Player/Reverse'])
 
 			elif numzones>1:
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				for num, SamplePart in SampleParts.value.items():
 					key_r = [int(SamplePart.KeyRange.Min), int(SamplePart.KeyRange.Max)]
@@ -175,7 +175,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				vst_flags = int(VstPluginInfo['Flags'])
 				binflags = data_bytes.get_bitnums_int(vst_flags)
 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'vst2', 'win')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'external', 'vst2', 'win')
 				windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
 				windata_obj.pos_x = int(VstPluginInfo['WinPosX'])
 				windata_obj.pos_y = int(VstPluginInfo['WinPosY'])
@@ -247,7 +247,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				vst_WinPosX = int(VstPluginInfo['WinPosX'])
 				vst_WinPosY = int(VstPluginInfo['WinPosY'])
 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'vst3', 'win')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'external', 'vst3', 'win')
 				windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
 				windata_obj.pos_x = vst_WinPosX
 				windata_obj.pos_y = vst_WinPosY
@@ -291,7 +291,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 		else:
 			fldso = globalstore.dataset.get_obj('ableton', 'plugin', device.name)
 
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-ableton', device.name)
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'ableton', device.name)
 			plugin_obj.role = 'fx'
 
 			if fldso:
@@ -354,8 +354,9 @@ class input_ableton(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['plugin_included'] = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		from functions import colors

@@ -1,7 +1,7 @@
 
 [tremolo_airwindows]
 >input
-	type|native-soundation:com.soundation.tremolo
+	type|native:soundation:com.soundation.tremolo
 	param|depth
 	param|phase
 	param|speed
@@ -13,7 +13,7 @@
 <proc
 
 >output
-	type|airwindows:AutoPan
+	type|user:airwindows:AutoPan
 	param|rate<speed
 	param|phase<phase
 	param|wide%0

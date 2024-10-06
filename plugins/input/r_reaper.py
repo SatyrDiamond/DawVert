@@ -74,6 +74,7 @@ class input_reaper(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_reaper
@@ -130,7 +131,7 @@ class input_reaper(plugins.base):
 					if rpp_plugin.type == 'VST':
 						if rpp_extplug.vst3_uuid == None:
 							fourid = rpp_extplug.vst_fourid
-							plugin_obj = convproj_obj.add_plugin(fxid, 'vst2', None)
+							plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'vst2', None)
 							plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 							pluginfo_obj = plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', rpp_extplug.data_chunk, None)
 							if fourid == 1919118692: track_obj.fxslots_notes.append(fxid)
@@ -142,14 +143,14 @@ class input_reaper(plugins.base):
 									do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 						else:
-							plugin_obj = convproj_obj.add_plugin(fxid, 'vst3', None)
+							plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'vst3', None)
 							plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 							pluginfo_obj = plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.vst3_uuid, rpp_extplug.data_chunk[8:-8])
 							if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
 							elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
 
 					if rpp_plugin.type == 'JS':
-						plugin_obj = convproj_obj.add_plugin(fxid, 'jesusonic', rpp_extplug.js_id)
+						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'jesusonic', rpp_extplug.js_id)
 						plugin_obj.role = 'effect'
 						plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 						for n, v in enumerate(rpp_extplug.data):

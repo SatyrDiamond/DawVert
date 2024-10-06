@@ -1,7 +1,7 @@
 
 [nf_vst2_fruity_blood_overdrive]
 >input
-	type|native-flstudio:fruity blood overdrive
+	type|native:flstudio:fruity blood overdrive
 	param|preband
 	param|color
 	param|preamp
@@ -19,7 +19,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<preband
 	name| PreBand
 	param|ext_param_1<color
@@ -36,7 +36,7 @@
 
 [vst2_fruity_blood_overdrive]
 >input
-	type|native-flstudio:fruity blood overdrive
+	type|native:flstudio:fruity blood overdrive
 	param|preband
 	param|preamp
 	param|postfilter
@@ -54,7 +54,7 @@
 <proc
 
 >output
-	type|airwindows:Density
+	type|user:airwindows:Density
 	param|density<preamp
 	param|highpass<postfilter
 	param|output%1.0
@@ -63,7 +63,7 @@
 
 [vst2_fruity_dx10]
 >input
-	type|native-flstudio:fruity dx10
+	type|native:flstudio:fruity dx10
 	param|amp_att
 	param|amp_dec
 	param|amp_rel
@@ -100,7 +100,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<amp_att
 	param|ext_param_1<amp_dec
 	param|ext_param_2<amp_rel
@@ -122,7 +122,7 @@
 
 [vst2_fruity_phaser]
 >input
-	type|native-flstudio:fruity phaser
+	type|native:flstudio:fruity phaser
 	param|sweep_freq
 	param|depth_min
 	param|depth_max
@@ -147,7 +147,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0%0.0
 	name|attack
 	param|ext_param_1%0.0
@@ -184,7 +184,7 @@
 
 [vst2_fruit_kick]
 >input
-	type|native-flstudio:fruit kick
+	type|native:flstudio:fruit kick
 	param|max_freq
 	param|min_freq
 	param|decay_freq
@@ -208,7 +208,7 @@
 <proc
 
 >output
-	type|weirdconstructor:kickmess
+	type|user:weirdconstructor:kickmess
 	param|freq_start<max_freq
 	param|freq_end<min_freq
 	param|freq_slope<decay_freq
@@ -220,7 +220,7 @@
 
 [vst2_fruity_bass_boost]
 >input
-	type|native-flstudio:fruity bass boost
+	type|native:flstudio:fruity bass boost
 	param|freq
 	param|amount
 <input
@@ -231,25 +231,25 @@
 <proc
 
 >output
-	type|airwindows:Weight
+	type|user:airwindows:Weight
 	param|freq<freq
 	param|weight<amount
 <output
 
 [fruity_spectroman__socalabs]
 >input
-	type|native-flstudio:fruity spectroman
+	type|native:flstudio:fruity spectroman
 	param|outputmode
 <input
 
 >output
-	type|socalabs:spectrumanalyzer
+	type|user:socalabs:spectrumanalyzer
 	param|mode<outputmode
 <output
 
 [fruity_stereo_enhancer__socalabs]
 >input
-	type|native-flstudio:fruity waveshaper
+	type|native:flstudio:fruity waveshaper
 	param|preamp
 	param|wet
 	param|postgain
@@ -265,7 +265,7 @@
 <proc
 
 >output
-	type|wolf-plugins:wolfshaper
+	type|user:wolf-plugins:wolfshaper
 	param|pregain<preamp
 	param|wet<wet
 	param|postgain<postgain
@@ -274,7 +274,7 @@
 
 [vst2_fruity_stereo_enhancer]
 >input
-	type|native-flstudio:fruity stereo enhancer
+	type|native:flstudio:fruity stereo enhancer
 	param|stereo
 	param|pan
 	param|vol
@@ -289,7 +289,7 @@
 <proc
 
 >output
-	type|socalabs:stereoprocessor
+	type|user:socalabs:stereoprocessor
 	param|width1%0.5
 	param|center1<stereo
 	param|pan1%0.0
@@ -302,7 +302,7 @@
 
 [vst2_tuner]
 >input
-	type|native-flstudio:tuner
+	type|native:flstudio:tuner
 	param|refrence
 <input
 
@@ -313,14 +313,14 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<refrence
 	name|Tune
 <output
 
 [vst2_fruity_fast_dist_type2]
 >input
-	type|native-flstudio:fruity fast dist
+	type|native:flstudio:fruity fast dist
 	param|threshold
 	param|mix
 	param|post
@@ -335,7 +335,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<threshold
 	name|Drive
 	param|ext_param_1<mix
@@ -346,7 +346,7 @@
 
 [vst2_fruity_fast_dist_type1]
 >input
-	type|native-flstudio:fruity fast dist
+	type|native:flstudio:fruity fast dist
 	param|threshold
 	param|post
 <input
@@ -359,14 +359,14 @@
 <proc
 
 >output
-	type|airwindows:Mackity
+	type|user:airwindows:Mackity
 	param|in_trim<threshold
 	param|out_pad<post
 <output
 
 [vst2_fl_keys_piano]
 >input
-	type|native-flstudio:fl keys
+	type|native:flstudio:fl keys
 	param|decay
 	param|detune
 	param|fine
@@ -399,7 +399,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<decay
 	name|Envelope Decay
 	param|ext_param_1<release
@@ -428,7 +428,7 @@
 
 [vst2_fl_keys_epiano]
 >input
-	type|native-flstudio:fl keys
+	type|native:flstudio:fl keys
 	param|decay
 	param|detune
 	param|fine
@@ -465,7 +465,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<decay
 	name|Envelope Decay
 	param|ext_param_1<release

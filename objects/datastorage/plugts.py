@@ -3,7 +3,7 @@
 
 import os
 import chardet
-from objects.valobjs import dualstr
+from objects.valobjs import triplestr
 
 class pltr_pipe:
 	def __init__(self):
@@ -16,8 +16,8 @@ class pltr_pipe:
 
 class pltr_ts:
 	def __init__(self):
-		self.in_type = dualstr()
-		self.out_type = dualstr()
+		self.in_type = triplestr()
+		self.out_type = triplestr()
 		self.in_data = {}
 		self.out_data = {}
 		self.proc = []

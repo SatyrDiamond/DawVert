@@ -1,7 +1,7 @@
 
 [fruity_reeverb]
 >input
-	type|native-flstudio:fruity reeverb
+	type|native:flstudio:fruity reeverb
 	param|lowcut
 	param|highcut
 	param|room_size
@@ -39,7 +39,7 @@
 
 [fruity_reeverb_2]
 >input
-	type|native-flstudio:fruity reeverb 2
+	type|native:flstudio:fruity reeverb 2
 	param|lowcut
 	param|highcut
 	param|predelay
@@ -80,7 +80,7 @@
 
 [fruity_balance]
 >input
-	type|native-flstudio:fruity balance
+	type|native:flstudio:fruity balance
 	param|pan
 	param|vol
 <input

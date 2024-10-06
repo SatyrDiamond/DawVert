@@ -1,7 +1,7 @@
 
 [reverb]
 >input
-	type|native-amped:Reverb
+	type|native:amped:Reverb
 	param|fb
 	param|lpf
 	param|mix
@@ -12,7 +12,7 @@
 <proc
 
 >output
-	type|native-lmms:reverbsc
+	type|native:lmms:reverbsc
 	param|size<fb
 	param|color<lpf
 	wet|mix

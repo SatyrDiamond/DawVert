@@ -77,7 +77,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				for wf_smpl_part, wf_smpl_data in sampledata:
 					if wf_smpl_part == 'SOUNDLAYER': soundlayers.append(wf_smpl_data)
 				if len(soundlayers)>1:
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
 					track_obj.inst_pluginid = pluginid
 					for soundlayer in soundlayers:
 						sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
@@ -87,7 +87,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 						soundlayer_samplepart(sp_obj, soundlayer)
 				elif len(soundlayers)==1:
 					soundlayer = soundlayers[0]
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'single')
+					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'single')
 					track_obj.inst_pluginid = pluginid
 					sp_obj = plugin_obj.samplepart_add('sample')
 					soundlayer_samplepart(sp_obj, soundlayer)
@@ -118,7 +118,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				pass
 
 	elif wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-tracktion', wf_plugin.plugtype)
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'tracktion', wf_plugin.plugtype)
 		plugin_obj.role = 'effect'
 		plugin_obj.fxdata_add(wf_plugin.enabled, None)
 
@@ -208,8 +208,8 @@ class input_cvpj_f(plugins.base):
 		in_dict['time_seconds'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['plugin_included'] = ['native-tracktion']
-		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_included'] = ['native:tracktion']
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_waveform

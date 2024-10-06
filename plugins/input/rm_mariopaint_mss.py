@@ -42,7 +42,7 @@ class input_mariopaint_mss(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['track_nopl'] = True
 		in_dict['fxtype'] = 'rack'
-		in_dict['plugin_included'] = ['midi']
+		in_dict['plugin_included'] = ['universal:midi']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		output = False

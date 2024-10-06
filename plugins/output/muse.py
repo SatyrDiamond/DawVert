@@ -50,7 +50,7 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 
 	plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 	if plugin_found: 
-		if plugin_obj.check_match('vst2', 'win'):
+		if plugin_obj.check_match('external', 'vst2', 'win'):
 			pluginsupported = True
 			muse_track.synth_synthType = 'VST (synths)'
 

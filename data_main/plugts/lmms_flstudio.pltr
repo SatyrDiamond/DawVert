@@ -1,7 +1,7 @@
 
 [stereomatrix]
 >input
-	type|native-lmms:stereomatrix
+	type|native:lmms:stereomatrix
 	param|r-l
 	param|l-l
 	param|r-r
@@ -16,7 +16,7 @@
 <proc
 
 >output
-	type|native-flstudio:fruity stereo shaper
+	type|native:flstudio:fruity stereo shaper
 	param|r2l<r-l
 	param|l2l<l-l
 	param|r2r<r-r
@@ -29,22 +29,22 @@
 
 [spectrumanalyzer]
 >input
-	type|native-lmms:spectrumanalyzer
+	type|native:lmms:spectrumanalyzer
 <input
 
 >output
-	type|native-flstudio:fruity spectroman
+	type|native:flstudio:fruity spectroman
 	param|amp%128.0
 	param|scale%128.0
 <output
 
 [stereoenhancer]
 >input
-	type|native-lmms:stereoenhancer
+	type|native:lmms:stereoenhancer
 	param|width
 <input
 
 >output
-	type|native-flstudio:fruity stereo enhancer
+	type|native:flstudio:fruity stereo enhancer
 	param|phase_offs<width
 <output

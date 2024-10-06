@@ -54,7 +54,7 @@ class extplugin(plugins.base):
 		if not (self.plugin_data is None):
 			for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('tunefish4', plugintype):
 				if extparamid in self.plugin_data.attrib: valuepack.value = float(self.plugin_data.attrib[extparamid])
-			plugin_obj.replace('brain_control', 'tunefish4')
+			plugin_obj.replace('user', 'brain_control', 'tunefish4')
 			manu_obj.remap_ext_to_cvpj__post('tunefish4', plugintype)
 			return True
 		return False
@@ -65,7 +65,7 @@ class extplugin(plugins.base):
 		tf4_root = ET.Element("TF4SETTINGS")
 		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('tunefish4', plugintype):
 			tf4_root.set(extparamid, str(valuepack.value))
-		plugin_obj.replace('vst2', None)
+		plugin_obj.replace('external', 'vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('tunefish4', plugintype)
 		self.plugin_data = tf4_root
 		return True

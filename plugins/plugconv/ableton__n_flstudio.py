@@ -23,21 +23,21 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-flstudio', None]]
+		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flstudio']
-		in_dict['out_plugins'] = [['native-ableton', None]]
+		in_dict['out_plugins'] = [['native', 'ableton', None]]
 		in_dict['out_daws'] = ['ableton']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'fruity center':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity center'):
 			extpluglog.convinternal('FL Studio', 'Fruity Center', 'Ableton', 'StereoGain')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('on', 'on', 0)
-			plugin_obj.replace('native-ableton', 'StereoGain')
+			plugin_obj.replace('native', 'ableton', 'StereoGain')
 			manu_obj.to_param('on', 'DcFilter', None)
 			return 0
 
-		if plugin_obj.type.subtype == '3x osc':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', '3x osc'):
 			extpluglog.convinternal('FL Studio', '3xOsc', 'Ableton', 'Operator')
 			fl_osc1_coarse = plugin_obj.params.get('osc1_coarse', 0).value
 			fl_osc1_detune = plugin_obj.params.get('osc1_detune', 0).value
@@ -73,7 +73,7 @@ class plugconv(plugins.base):
 			osc2_freq = (fl_osc2_coarse)/12
 			osc3_freq = (fl_osc3_coarse)/12
 
-			plugin_obj.replace('native-ableton', 'Operator')
+			plugin_obj.replace('native', 'ableton', 'Operator')
 
 			plugin_obj.params.add('Operator.0/IsOn', True, 'bool')
 			plugin_obj.params.add('Operator.1/IsOn', True, 'bool')
@@ -122,7 +122,7 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('Globals/Algorithm', 10, 'int')
 			return 0
 			
-		if plugin_obj.type.subtype == 'fruity dx10':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity dx10'):
 			extpluglog.convinternal('FL Studio', 'Fruity DX10', 'Ableton', 'Operator')
 
 			amp_att = plugin_obj.params.get("amp_att", 0).value/65536
@@ -151,7 +151,7 @@ class plugconv(plugins.base):
 			mod_course = int((mod_course**2)*40)
 			mod2_course = int((mod2_course**2)*40)
 
-			plugin_obj.replace('native-ableton', 'Operator')
+			plugin_obj.replace('native', 'ableton', 'Operator')
 
 			plugin_obj.params.add('Lfo/LfoOn', True, 'float')
 			plugin_obj.params.add('Lfo/LfoAmount', vibrato/5.5, 'float')
@@ -199,7 +199,7 @@ class plugconv(plugins.base):
 			plugin_obj.datavals_global.add('middlenotefix', 24)
 			return 0
 
-		if plugin_obj.type.subtype == 'plucked!':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'plucked!'):
 			extpluglog.convinternal('FL Studio', 'Plucked!', 'Ableton', 'StringStudio')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('decay', 'decay', 256)
@@ -208,7 +208,7 @@ class plugconv(plugins.base):
 			manu_obj.calc('color', 'div', 128, 0, 0, 0)
 			manu_obj.calc('decay', 'sub_r', 1, 0, 0, 0)
 			manu_obj.calc('color', 'sub_r', 1, 0, 0, 0)
-			plugin_obj.replace('native-ableton', 'StringStudio')
+			plugin_obj.replace('native', 'ableton', 'StringStudio')
 			manu_obj.to_param('color', 'GeoExcitatorPosition', None)
 			manu_obj.to_param('decay', 'StringDecayRatio', None)
 			manu_obj.to_value(0.6, 'StringDamping', 'StringDamping', 'float')

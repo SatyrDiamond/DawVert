@@ -19,7 +19,7 @@ class input_s3m(plugins.base):
 		in_dict['file_ext'] = ['s3m']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['sampler:single']
+		in_dict['plugin_included'] = ['universal:sampler:single']
 	def supported_autodetect(self): return True
 
 	def detect_bytes(self, in_bytes):

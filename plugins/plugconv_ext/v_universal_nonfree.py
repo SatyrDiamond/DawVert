@@ -11,11 +11,11 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['universal', None]
+		in_dict['in_plugin'] = ['universal', None, None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['nonfree']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
-		if plugin_obj.type.subtype == 'autotune':
+		if plugin_obj.type.check_wildmatch('universal', 'autotune', None):
 			if 'vst2' in extplugtype:
 				extpluglog.extpluglist.add('Nonfree', 'VST2', 'GSnap', 'GVST')
 				if plugin_vst2.check_exists('id', 1735999862):
@@ -23,7 +23,7 @@ class plugconv(plugins.base):
 					keysdata = []
 					for x in range(12):
 						realkey = (x+9)%12
-						keysdata.append( int(plugin_obj.params.get('key_on_'+str(realkey), 0).value) )
+						keysdata.append( int(plugin_obj.params.get('key_on_'+str(realkey), 1).value) )
 					speed = plugin_obj.params.get('speed', 1).value
 					calibrate = plugin_obj.params.get('calibrate', 440).value
 					amount = plugin_obj.params.get('amount', 1).value

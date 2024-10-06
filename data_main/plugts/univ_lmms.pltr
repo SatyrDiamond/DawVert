@@ -7,7 +7,7 @@
 <input
 
 >output
-	type|native-lmms:bitcrush
+	type|native:lmms:bitcrush
 	param|rate<freq
 	param|levels<bits
 <output
@@ -25,7 +25,7 @@
 <proc
 
 >output
-	type|native-lmms:amplifier
+	type|native:lmms:amplifier
 	param|pan<pan
 	param|volume<vol
 	param|right%100

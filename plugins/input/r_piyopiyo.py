@@ -22,7 +22,7 @@ class input_piyopiyo(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['pmd']
-		in_dict['plugin_included'] = ['universal:synth-osc','sampler:multi']
+		in_dict['plugin_included'] = ['universal:synth-osc','universal:sampler:multi']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 	def supported_autodetect(self): return True
@@ -58,7 +58,7 @@ class input_piyopiyo(plugins.base):
 			track_obj.visual.color.set_float(colordata.getcolornum(tracknum))
 			track_obj.params.add('vol', pmdtrack_obj.volume/250, 'float')
 
-			plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+			plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
 			plugin_obj.role = 'synth'
 			osc_data = plugin_obj.osc_add()
 			osc_data.prop.type = 'wave'
@@ -74,7 +74,7 @@ class input_piyopiyo(plugins.base):
 		track_obj.visual.name = 'Drums'
 		track_obj.visual.color.set_float(colordata.getcolornum(3))
 		track_obj.params.add('vol', (project_obj.perc_volume/250)/3, 'float')
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
 		plugin_obj.role = 'synth'
 		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.is_drum = True

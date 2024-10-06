@@ -421,7 +421,7 @@ class extplugin(plugins.base):
 				if extparamid in v_settings: valuepack.value = v_settings[extparamid]
 				else: v_settings[extparamid] = valuepack.value
 
-			plugin_obj.replace('matt_tytel', 'vital')
+			plugin_obj.replace('user', 'matt_tytel', 'vital')
 
 			filter_objs = [plugin_obj.filter, plugin_obj.named_filter_add('filter_1'), plugin_obj.named_filter_add('filter_2')]
 

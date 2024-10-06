@@ -10,13 +10,13 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-digibooster', None]]
+		in_dict['in_plugins'] = [['native', 'digibooster', None]]
 		in_dict['in_daws'] = []
-		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'pro_echo':
+		if plugin_obj.type.check_wildmatch('native', 'digibooster', 'pro_echo'):
 			extpluglog.convinternal('DigiBooster', 'Pro Echo', 'Universal', 'Delay')
 			p_delay = plugin_obj.params.get("delay", 0).value*0.004
 			p_fb = plugin_obj.params.get("fb", 0).value/255

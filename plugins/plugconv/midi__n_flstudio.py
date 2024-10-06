@@ -11,16 +11,16 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-flstudio', None]]
+		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flp']
-		in_dict['out_plugins'] = [['midi', None]]
+		in_dict['out_plugins'] = [['universal', 'midi', None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		flpluginname = plugin_obj.type.subtype.lower()
 
-		if flpluginname == 'boobass':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'boobass'):
 			extpluglog.convinternal('FL Studio', 'BooBass', 'MIDI', 'Electric Bass (finger)')
-			plugin_obj.replace('midi', None)
+			plugin_obj.replace('universal', 'midi', None)
 			plugin_obj.midi.bank = 0
 			plugin_obj.midi.patch = 33
 			plugin_obj.midi.drum = False

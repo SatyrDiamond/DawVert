@@ -1,6 +1,6 @@
 [phaser]
 >input
-	type|native-amped:Phaser
+	type|native:amped:Phaser
 	param|stages
 	param|rate
 	param|feedback
@@ -24,7 +24,7 @@
 <proc
 
 >output
-	type|native-flstudio:fruity phaser
+	type|native:flstudio:fruity phaser
 	param|num_stages<stages
 	param|sweep_freq<rate
 	param|feedback<feedback
@@ -36,7 +36,7 @@
 
 [delay]
 >input
-	type|native-amped:Delay
+	type|native:amped:Delay
 	param|cross
 	param|damp
 	param|fb
@@ -56,7 +56,7 @@
 <proc
 
 >output
-	type|native-flstudio:fruity delay 3
+	type|native:flstudio:fruity delay 3
 	param|wet<mix
 	param|feedback_level<fb
 	param|feedback_cutoff<damp
@@ -69,7 +69,7 @@
 
 [flanger]
 >input
-	type|native-amped:Flanger
+	type|native:amped:Flanger
 	param|delayLfoDepth
 	param|delayLfoRateHz
 	param|delayTimeMS
@@ -90,7 +90,7 @@
 <proc
 
 >output
-	type|native-flstudio:fruity flanger
+	type|native:flstudio:fruity flanger
 	param|depth<delayLfoDepth
 	param|rate<delayLfoRateHz
 	param|delay<delayTimeMS

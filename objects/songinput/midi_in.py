@@ -185,7 +185,7 @@ class midi_song:
 			reverb_fxchannel_obj = convproj_obj.add_fxchan(self.song_channels+1+self.fx_offset)
 			reverb_fxchannel_obj.visual.name = 'Reverb'
 			reverb_fxchannel_obj.visual_ui.other['docked'] = 1
-			plugin_obj, reverb_pluginid = convproj_obj.add_plugin_genid('simple', 'reverb')
+			plugin_obj, reverb_pluginid = convproj_obj.add_plugin_genid('simple', 'reverb', None)
 			plugin_obj.visual.name = 'Reverb'
 			plugin_obj.fxdata_add(1, 0.5)
 			reverb_fxchannel_obj.fxslots_audio.append(reverb_pluginid)
@@ -213,7 +213,7 @@ class midi_song:
 			if used_fx['chorus']:
 				chorus_size = start_ctrls[93]/127 if 93 in start_ctrls else 0
 				chorus_pluginid = str(fx_num+1)+'_chorus'
-				chorus_plugin_obj = convproj_obj.add_plugin(chorus_pluginid, 'simple', 'chorus')
+				chorus_plugin_obj = convproj_obj.add_plugin(chorus_pluginid, 'simple', 'chorus', None)
 				chorus_plugin_obj.visual.name = 'Chorus'
 				chorus_plugin_obj.params.add('amount', chorus_size, 'float')
 				fxchannel_obj.fxslots_audio.append(chorus_pluginid)

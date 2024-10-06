@@ -33,7 +33,7 @@ def add_fx(convproj_obj, soundation_channel, fxchain_audio):
 	for pluginid in fxchain_audio:
 		plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
 		if plugin_found: 
-			if plugin_obj.check_wildmatch('native-soundation', None):
+			if plugin_obj.check_wildmatch('native', 'soundation', None):
 				fx_on, fx_wet = plugin_obj.fxdata_get()
 
 				soundation_effect = proj_soundation.soundation_device(None)
@@ -86,7 +86,7 @@ class output_soundation(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []
 		in_dict['fxtype'] = 'track'
-		in_dict['plugin_included'] = ['sampler:single','synth-nonfree:europa','native-soundation','midi']
+		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation','universal:midi']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['placement_loop'] = ['loop', 'loop_off']
 
@@ -172,7 +172,7 @@ class output_soundation(plugins.base):
 				inst_supported = False
 				plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
 				if plugin_found:
-					if plugin_obj.check_match('sampler', 'single'):
+					if plugin_obj.check_match('universal', 'sampler', 'single'):
 						inst_supported = True
 						soundation_instrument.identifier = 'com.soundation.simple-sampler'
 
@@ -220,7 +220,7 @@ class output_soundation(plugins.base):
 						else:
 							soundation_instrument.params.add('loop_mode', 0, [])
 
-					if plugin_obj.check_match('synth-nonfree', 'europa'):
+					if plugin_obj.check_match('user', 'reasonstudios', 'europa'):
 						inst_supported = True
 						soundation_instrument.identifier = 'com.soundation.europa'
 						europaparamlist = dataset_synth_nonfree.params_list('plugin', 'europa')
@@ -233,7 +233,7 @@ class output_soundation(plugins.base):
 							soundation_instrument.params.add("/custom_properties/"+dset_param.name, eur_value_value, [])
 						soundation_instrument.params.add("/soundation/sample/", None, [])
 
-					if plugin_obj.check_wildmatch('native-soundation', None):
+					if plugin_obj.check_wildmatch('native', 'soundation', None):
 						inst_supported = True
 						soundation_instrument.identifier = plugin_obj.type.subtype
 

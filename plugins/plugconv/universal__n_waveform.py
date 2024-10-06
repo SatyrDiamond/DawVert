@@ -22,13 +22,13 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-tracktion', None]]
+		in_dict['in_plugins'] = [['native', 'tracktion', None]]
 		in_dict['in_daws'] = ['waveform_edit']
-		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'chorusEffect':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'chorusEffect'):
 			extpluglog.convinternal('Waveform', 'chorusEffect', 'Universal', 'Chorus')
 			p_delay = plugin_obj.params.get('delay', 10).value/1000
 			p_depth = plugin_obj.params.get('depth', 20).value/1000
@@ -37,7 +37,7 @@ class plugconv(plugins.base):
 			p_rateSyncOn = int(plugin_obj.params.get('rateSyncOn', 1).value)
 			p_sync = plugin_obj.params.get('sync', True).value
 
-			plugin_obj.replace('universal', 'chorus')
+			plugin_obj.replace('universal', 'chorus', None)
 			plugin_obj.params.add('delay', p_delay, 'float')
 			plugin_obj.params.add('depth', p_depth, 'float')
 
@@ -51,7 +51,7 @@ class plugconv(plugins.base):
 
 			plugin_obj.fxdata_add(None, p_mix)
 
-		if plugin_obj.type.subtype == '1bandEq':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', '1bandEq'):
 			extpluglog.convinternal('Waveform', '1bandEq', 'Universal', 'Filter')
 			band_freq = plugin_obj.params.get('freq', 30).value
 			band_shape = plugin_obj.params.get('shape', 0).value
@@ -65,7 +65,7 @@ class plugconv(plugins.base):
 			if band_shape == 5: band_shape = 'high_shelf'
 			if band_shape == 6: band_shape = 'high_pass'
 
-			plugin_obj.replace('universal', 'filter')
+			plugin_obj.replace('universal', 'filter', None)
 			plugin_obj.filter.on = True
 			plugin_obj.filter.type.set(band_shape, None)
 			plugin_obj.filter.freq = note_data.note_to_freq(band_freq-72)
@@ -80,7 +80,7 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['plugin', pluginid, "q"], ['filter', pluginid, 'q'])
 			return 1
 
-		if plugin_obj.type.subtype == '3bandEq':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', '3bandEq'):
 			extpluglog.convinternal('Waveform', '3bandEq', 'Universal', 'EQ Bands')
 			freq1 = plugin_obj.params.get('freq1', 43.34996032714844).value
 			freq2 = plugin_obj.params.get('freq2', 90.23263549804688).value
@@ -116,10 +116,10 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['plugin', pluginid, 'freq3'], ['n_filter', pluginid, filterid, 'freq'])
 			convproj_obj.automation.move(['plugin', pluginid, "gain3"], ['n_filter', pluginid, filterid, 'gain'])
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 			return 1
 
-		if plugin_obj.type.subtype == '8bandEq':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', '8bandEq'):
 			extpluglog.convinternal('Waveform', '8bandEq', 'Universal', 'EQ Bands')
 
 			for num in range(8):
@@ -162,26 +162,26 @@ class plugconv(plugins.base):
 			eq_mode = plugin_obj.params.get("mode", 0).value
 			cvpj_eq_mode = ['normal', 'l_r', 'm_s'][eq_mode]
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 			plugin_obj.datavals.add('mode', cvpj_eq_mode)
 			return 1
 
-		if plugin_obj.type.subtype == 'comp':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'comp'):
 			extpluglog.convinternal('Waveform', 'Compressor', 'Universal', 'Compressor')
 			plugin_obj.plugts_transform('./data_main/plugts/waveform_univ.pltr', 'comp', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'gate':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'gate'):
 			extpluglog.convinternal('Waveform', 'Gate', 'Universal', 'Gate')
 			plugin_obj.plugts_transform('./data_main/plugts/waveform_univ.pltr', 'gate', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'limiter':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'limiter'):
 			extpluglog.convinternal('Waveform', 'Limiter', 'Universal', 'Limiter')
 			plugin_obj.plugts_transform('./data_main/plugts/waveform_univ.pltr', 'limiter', convproj_obj, pluginid)
 			return 1
 			
-		if plugin_obj.type.subtype == 'djeq':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'djeq'):
 			extpluglog.convinternal('Waveform', 'DJ EQ', 'Universal', '3-Band EQ')
 			freq1 = plugin_obj.params.get('freq1', 59.213096618652344).value
 			freq2 = plugin_obj.params.get('freq2', 99.07624816894531).value
@@ -189,7 +189,7 @@ class plugconv(plugins.base):
 			mid = plugin_obj.params.get('mid', 1).value/1.5
 			treble = plugin_obj.params.get('treble', 1).value/1.5
 
-			plugin_obj.replace('universal', 'eq-3band')
+			plugin_obj.replace('universal', 'eq', '3band')
 			plugin_obj.params.add('low_gain', djeq_calc_gain(bass), 'float')
 			plugin_obj.params.add('mid_gain', djeq_calc_gain(mid), 'float')
 			plugin_obj.params.add('high_gain', djeq_calc_gain(treble), 'float')
@@ -197,14 +197,14 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('midhigh_freq', note_data.note_to_freq(freq2-72), 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'pitchShifter':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'pitchShifter'):
 			extpluglog.convinternal('Waveform', 'Pitch Shifter', 'Universal', 'Pitch Shifter')
 			pitchmod = plugin_obj.params.get('semitonesUp', 0).value
-			plugin_obj.replace('universal', 'pitchshift')
+			plugin_obj.replace('universal', 'pitchshift', None)
 			plugin_obj.params.add('pitch', pitchmod, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'stereoDelay':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'stereoDelay'):
 			extpluglog.convinternal('Waveform', 'Stereo Delay', 'Universal', 'Delay')
 			crossL = plugin_obj.params.get('crossL', 0).value
 			crossR = plugin_obj.params.get('crossR', 0).value
@@ -250,7 +250,7 @@ class plugconv(plugins.base):
 			plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
 			plugin_obj.fxdata_add(None, mix)
 
-		if plugin_obj.type.subtype == 'naturalReverb':
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'naturalReverb'):
 			extpluglog.convinternal('Waveform', 'Natural Reverb', 'Universal', 'Reverb')
 			decay = plugin_obj.params.get('decay', 0).value
 			definition = plugin_obj.params.get('definition', 0).value
@@ -271,7 +271,7 @@ class plugconv(plugins.base):
 			size = (10+(size*50))/100
 			decay = ((decay*2)**3)*15
 
-			plugin_obj.replace('universal', 'reverb')
+			plugin_obj.replace('universal', 'reverb', None)
 			plugin_obj.params.add('low_cut', lowCut, 'float')
 			plugin_obj.params.add('high_cut', highCut, 'float')
 			plugin_obj.params.add('size', size, 'float')

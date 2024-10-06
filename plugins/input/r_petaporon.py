@@ -71,7 +71,7 @@ class input_petaporon(plugins.base):
 			track_obj = convproj_obj.add_track(instid, 'instrument', 0, False)
 			track_obj.visual.name = 'Inst #'+str(instnum+1)
 			track_obj.visual.color.set_float(colordata.getcolornum(instnum))
-			plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+			plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
 			plugin_obj.role = 'synth'
 			track_obj.inst_pluginid = pluginid
 

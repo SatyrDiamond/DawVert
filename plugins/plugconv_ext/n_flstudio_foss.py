@@ -26,7 +26,7 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-flstudio', None]
+		in_dict['in_plugin'] = ['native', 'flstudio', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
@@ -132,7 +132,7 @@ class plugconv(plugins.base):
 
 				chorus_on = plugin_obj.params.get('svf_on', 0).value
 
-				plugin_obj.replace('matt_tytel', 'vital')
+				plugin_obj.replace('external', 'matt_tytel', 'vital')
 
 				noisevol = 1
 
@@ -299,7 +299,7 @@ class plugconv(plugins.base):
 						modulation_obj.amount = v*(amt**1.2)
 						modulation_obj.bipolar = True
 
-				plugin_obj.replace('matt_tytel', 'vital')
+				plugin_obj.replace('external', 'matt_tytel', 'vital')
 
 				plugin_obj.params.add('osc_1_on', 1, 'float')
 				plugin_obj.params.add('osc_1_transpose', crs_1, 'float')
@@ -380,7 +380,7 @@ class plugconv(plugins.base):
 				if stateval == 1: flipstate = 1
 				if stateval == 2: flipstate = 2
 				outval = (flipstate/8)+0.01
-				plugin_obj.replace('airwindows', 'Flipity')
+				plugin_obj.replace('external', 'airwindows', 'Flipity')
 				plugin_obj.params.add('flipity', outval, 'float')
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
 				return True

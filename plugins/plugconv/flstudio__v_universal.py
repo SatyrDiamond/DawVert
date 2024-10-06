@@ -39,24 +39,24 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['universal', None]]
+		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
-		in_dict['out_plugins'] = [['native-flstudio', None]]
+		in_dict['out_plugins'] = [['native', 'flstudio', None]]
 		in_dict['out_daws'] = ['flp']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
-		if plugin_obj.type.subtype == 'filter':
+		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'FL Studio', 'Fruity Parametric EQ 2')
-			plugin_obj.replace('native-flstudio', 'fruity parametric eq 2')
+			plugin_obj.replace('native', 'flstudio', 'fruity parametric eq 2')
 			plugin_obj.params.add('4_type', eq2q_filtype(plugin_obj.filter), 'int')
 			plugin_obj.params.add('4_width', int(eq2q_calc(plugin_obj.filter)*65536), 'int')
 			plugin_obj.params.add('4_freq', int(eq2q_freq(plugin_obj.filter)*65536), 'int')
 			return 0
 
-		if plugin_obj.type.subtype == 'eq-bands':
+		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
 			extpluglog.convinternal('Universal', 'EQ Bands', 'FL Studio', 'Fruity Parametric EQ 2')
 			gain_out = plugin_obj.params.get("gain_out", 0).value
-			plugin_obj.replace('native-flstudio', 'fruity parametric eq 2')
+			plugin_obj.replace('native', 'flstudio', 'fruity parametric eq 2')
 			for n, f in enumerate(plugin_obj.eq):
 				filter_id, filter_obj = f
 
@@ -69,21 +69,21 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('main_lvl', gain_out*100, 'int')
 			return 0
 
-		if plugin_obj.type.subtype == 'tuner':
+		if plugin_obj.type.check_wildmatch('universal', 'tuner', None):
 			extpluglog.convinternal('Universal', 'Tuner', 'FL Studio', 'Tuner')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('refrence', 'refrence', 440)
 			manu_obj.calc('refrence', 'valrange', 400, 480, 0, 6000)
-			plugin_obj.replace('native-flstudio', 'tuner')
+			plugin_obj.replace('native', 'flstudio', 'tuner')
 			manu_obj.to_param('refrence', 'refrence', None)
 			return 0
 
-		if plugin_obj.type.subtype == 'frequency_shifter':
+		if plugin_obj.type.check_wildmatch('universal', 'frequency_shifter', None):
 			extpluglog.convinternal('Universal', 'Frequency Shifter', 'FL Studio', 'Frequency Shifter')
 			p_pitch = plugin_obj.params.get('pitch', 0).value
 			p_freqtype = p_pitch>200
 			p_frequency = (p_pitch/200)**(1/7.0707) if not p_freqtype else (p_pitch/20000)**(1/12)
-			plugin_obj.replace('native-flstudio', 'frequency shifter')
+			plugin_obj.replace('native', 'flstudio', 'frequency shifter')
 			plugin_obj.params.add('frequency', p_frequency*70000, 'int')
 			plugin_obj.params.add('freqtype', not p_freqtype, 'int')
 

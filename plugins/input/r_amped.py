@@ -201,7 +201,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				if param.name == 'bank': value_bank = param.value
 				if param.name == 'gain': value_gain = param.value
 
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'universal:midi', None)
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'midi', None)
 			plugin_obj.role = 'synth'
 			plugin_obj.midi.from_sf2(value_bank, value_patch)
 			param_obj = plugin_obj.params.add_named('gain', value_gain, 'float', 'Gain')

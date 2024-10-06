@@ -189,7 +189,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('sample_pan', (osc_pan-0.5)*2, 'float')
 					plugin_obj.datavals.add('sample_generate_noise', True)
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'Reverb':
@@ -198,7 +198,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Amped Studio', 'Reverb')
 				plugin_obj.plugts_transform('./data_ext/plugts/amped_vst2.pltr', 'vst2_reverb', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'Distortion':
@@ -220,7 +220,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('output', p_outlvl, 'float')
 					plugin_obj.params.add('dry_wet', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					return True
 
 			if distmode in [2,3]:
@@ -236,7 +236,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', 0.5, 'float')
 					plugin_obj.params.add('dry_wet', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					return True
 
 		if plugin_obj.type.subtype == 'CompressorMini':
@@ -245,7 +245,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Amped Studio', 'Compressor Mini')
 				plugin_obj.plugts_transform('./data_ext/plugts/amped_vst2.pltr', 'vst2_compressormini', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		else: return False

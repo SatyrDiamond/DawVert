@@ -62,7 +62,7 @@ class plugconv(plugins.base):
 				modulation_obj = plugin_obj.modulation_add_native('env_3', 'filter_fx_cutoff')
 				modulation_obj.amount = abs(filt_env_data.amount)/7000
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'tripleoscillator':
@@ -142,7 +142,7 @@ class plugconv(plugins.base):
 				modulation_obj = plugin_obj.modulation_add_native('env_3', 'filter_fx_cutoff')
 				modulation_obj.amount = abs(filt_env_data.amount)/7000
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'papu':
@@ -222,7 +222,7 @@ class plugconv(plugins.base):
 
 				plugin_obj.params.add("output", 7.0, 'float')
 				plugin_obj.params.add("param", 8.0, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 #
 		#if plugin_obj.type.subtype == 'sid':
@@ -286,7 +286,7 @@ class plugconv(plugins.base):
 				plugin_obj.plugts_transform('./data_ext/plugts/lmms_vst2.pltr', 'kickmess', convproj_obj, pluginid)
 				if startnote: plugin_obj.params.add('freq_note_start', 0.5, 'float')
 				if endnote: plugin_obj.params.add('freq_note_end', 0.5, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'lb302':
@@ -355,7 +355,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add('filter_2_cutoff', vitalcutoff_first-vitalcutoff_minus, 'float')
 				plugin_obj.params.add('filter_2_resonance', lb_vcf_res/1.7, 'float')
 				plugin_obj.env_asdr_add('vital_env_2', 0, 0, 0, 0.4+(lb_vcf_dec*3) if lb_dead == 0 else 0, 0, 0, 1)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'zynaddsubfx' and 'vst2' in extplugtype:
@@ -374,7 +374,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('LMMS', 'ReverbSC')
 				plugin_obj.plugts_transform('./data_ext/plugts/lmms_vst2.pltr', 'castello_reverbsc', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'spectrumanalyzer':
@@ -385,7 +385,7 @@ class plugconv(plugins.base):
 				plugin_obj.replace('external', 'socalabs', 'spectrumanalyzer')
 				plugin_obj.params.add('mode', 0.0, 'float')
 				plugin_obj.params.add('log', 1.0, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'stereoenhancer':
@@ -399,7 +399,7 @@ class plugconv(plugins.base):
 				manu_obj.calc('width', 'to_one', -1, 1, 0, 0)
 				plugin_obj.replace('external', 'airwindows', 'Wider')
 				manu_obj.to_param('width', 'width', None)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'waveshaper':
@@ -425,5 +425,5 @@ class plugconv(plugins.base):
 					autopoint_obj = autopoints_obj.add_point()
 					autopoint_obj.pos = pointnum/49
 					autopoint_obj.value = waveshapepoints[pointnum*4]
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True

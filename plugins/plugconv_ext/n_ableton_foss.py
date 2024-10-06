@@ -14,7 +14,7 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-ableton', None]
+		in_dict['in_plugin'] = ['native', 'ableton', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
@@ -50,7 +50,7 @@ class plugconv(plugins.base):
 				manu_obj.from_param('EarlyReflectModFreq', 'EarlyReflectModFreq', 0)
 				manu_obj.from_param('EarlyReflectModDepth', 'EarlyReflectModDepth', 0)
 
-				plugin_obj.replace('michaelwillis', 'dragonfly_hall')
+				plugin_obj.replace('external', 'michaelwillis', 'dragonfly_hall')
 
 				manu_obj.to_param('RoomSize', 'size', None)
 				manu_obj.to_param('PreDelay', 'delay', None)
@@ -81,7 +81,6 @@ class plugconv(plugins.base):
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
-
 		if plugin_obj.type.subtype == 'Amp':
 			p_AmpType = plugin_obj.params.get("AmpType", 0).value
 
@@ -92,7 +91,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'BassAmp')
 				if exttype:
 					extpluglog.extpluglist.success('Ableton', 'Amp')
-					plugin_obj.replace('airwindows', 'BassAmp')
+					plugin_obj.replace('external', 'airwindows', 'BassAmp')
 					plugin_obj.params.add('high', 0.7, 'float')
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 0, 'float')
@@ -106,7 +105,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'BassAmp')
 				if exttype:
 					extpluglog.extpluglist.success('Ableton', 'Amp')
-					plugin_obj.replace('airwindows', 'BassAmp')
+					plugin_obj.replace('external', 'airwindows', 'BassAmp')
 					plugin_obj.params.add('high', 0.7, 'float')
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 1, 'float')
@@ -120,7 +119,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'BassAmp')
 				if exttype:
 					extpluglog.extpluglist.success('Ableton', 'Amp')
-					plugin_obj.replace('airwindows', 'BassAmp')
+					plugin_obj.replace('external', 'airwindows', 'BassAmp')
 					plugin_obj.params.add('high', 0.7, 'float')
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 0.5, 'float')
@@ -134,7 +133,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'BassAmp')
 				if exttype:
 					extpluglog.extpluglist.success('Ableton', 'Amp')
-					plugin_obj.replace('airwindows', 'BassAmp')
+					plugin_obj.replace('external', 'airwindows', 'BassAmp')
 					plugin_obj.params.add('high', 0.7, 'float')
 					plugin_obj.params.add('dry', 1, 'float')
 					plugin_obj.params.add('dub', 0.5, 'float')
@@ -148,7 +147,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'MidAmp')
 				if exttype:
 					extpluglog.extpluglist.success('Ableton', 'Amp')
-					plugin_obj.replace('airwindows', 'MidAmp')
+					plugin_obj.replace('external', 'airwindows', 'MidAmp')
 					plugin_obj.params.add('gain', 0.8, 'float')
 					plugin_obj.params.add('tone', 1, 'float')
 					plugin_obj.params.add('output', 0.8, 'float')
@@ -162,7 +161,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'BassAmp')
 				if exttype:
 					extpluglog.extpluglist.success('Ableton', 'Amp')
-					plugin_obj.replace('airwindows', 'BassAmp')
+					plugin_obj.replace('external', 'airwindows', 'BassAmp')
 					plugin_obj.params.add('high', 0.5, 'float')
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 0.5, 'float')
@@ -178,7 +177,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('Ableton', 'Drum Buss')
 				p_DriveAmount = plugin_obj.params.get("DriveAmount", 0).value
 				p_DryWet = plugin_obj.params.get("DryWet", 1).value
-				plugin_obj.replace('airwindows', 'DrumSlam')
+				plugin_obj.replace('external', 'airwindows', 'DrumSlam')
 				plugin_obj.params.add('drive', p_DriveAmount/2, 'float')
 				plugin_obj.params.add('output', 1, 'float')
 				plugin_obj.params.add('dry_wet', 1, 'float')
@@ -195,7 +194,7 @@ class plugconv(plugins.base):
 				AutoBias = plugin_obj.params.get("AutoBias", 0).value
 				p_DryWet = plugin_obj.params.get("DryWet", 1).value
 
-				plugin_obj.replace('airwindows', 'Tube2')
+				plugin_obj.replace('external', 'airwindows', 'Tube2')
 				plugin_obj.params.add('input', xtramath.from_db(PreDrive)/2, 'float')
 				plugin_obj.params.add('tube', xtramath.between_to_one(-3, 3, AutoBias), 'float')
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
@@ -213,7 +212,7 @@ class plugconv(plugins.base):
 				p_DryWet = plugin_obj.params.get("DryWet", 1).value
 				plugin_obj.fxdata_add(None, p_DryWet)
 
-				plugin_obj.replace('airwindows', 'Drive')
+				plugin_obj.replace('external', 'airwindows', 'Drive')
 				plugin_obj.params.add('drive', p_Drive/200, 'float')
 				plugin_obj.params.add('highpass', 0.1+(p_Tone/300), 'float')
 				plugin_obj.params.add('out_level', 1, 'float')

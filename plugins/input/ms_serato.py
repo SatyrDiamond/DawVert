@@ -33,7 +33,7 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 
 	if not (channel_strip.low_eq == channel_strip.mid_eq == channel_strip.high_eq == 0):
 		fxplugid = trackid+'_fx_eq'
-		fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'universal', 'eq-3band')
+		fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'universal', 'eq', '3band')
 		fxplugin_obj.params.add('low_gain', channel_strip.low_eq, 'float')
 		fxplugin_obj.params.add('mid_gain', channel_strip.mid_eq, 'float')
 		fxplugin_obj.params.add('high_gain', channel_strip.high_eq, 'float')
@@ -47,7 +47,7 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 				fx_effect = pfe['effect']
 				fxplugid = trackid+'_fx_'+str(fxnum)
 				fxtype = fx_effect[10:] if fx_effect.startswith(':/effects/') else fx_effect
-				fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'native-serato-fx', fxtype)
+				fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'native', 'serato-fx', fxtype)
 				fxplugin_obj.role = 'effect'
 				if 'value' in pfe: fxplugin_obj.params.add('amount', pfe['value'], 'float')
 				fxslots_audio.append(fxplugid)
@@ -123,7 +123,7 @@ class input_serato(plugins.base):
 				inst_obj.visual.name = scene_deck.name
 				inst_obj.visual.color.set_float([0.48, 0.35, 0.84])
 				inst_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
-				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('native-serato-inst', 'instrument')
+				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('native', 'serato-inst', 'instrument')
 				instrument_file = parse_filepath(scene_deck.instrument_file)
 				convproj_obj.add_fileref(scene_deck.instrument_file, instrument_file, 'win')
 				plugin_obj.filerefs['instrument'] = scene_deck.instrument_file
@@ -133,7 +133,7 @@ class input_serato(plugins.base):
 			if scene_deck.type == 'sample':
 				if useaudioclips == False:
 					inst_obj = convproj_obj.add_instrument(cvpj_instid)
-					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('native-serato-inst', 'sampler')
+					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('native', 'serato-inst', 'sampler')
 	
 					if scene_deck.sample_file:
 						inst_obj.visual.name = urllib.parse.unquote(scene_deck.sample_file).split('/')[-1]

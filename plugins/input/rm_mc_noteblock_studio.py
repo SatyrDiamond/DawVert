@@ -15,10 +15,9 @@ class input_gt_mnbs(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['nbs']
-		in_dict['plugin_included'] = ['midi']
 		in_dict['track_nopl'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['sampler:single']
+		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_nbs

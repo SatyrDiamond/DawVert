@@ -1,7 +1,7 @@
 
 [glue]
 >input
-	type|native-ableton:GlueCompressor
+	type|native:ableton:GlueCompressor
 	param|Attack
 	param|DryWet
 	param|Makeup
@@ -23,7 +23,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0%1.0
 	name|Power
 	param|ext_param_1<Threshold

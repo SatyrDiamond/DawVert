@@ -69,7 +69,7 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 			#	amped_device['params'] = device_params
 			#	outdata.append(amped_device)
 
-			#if plugin_obj.check_matchmulti('native-amped', ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']):
+			#if plugin_obj.check_matchmulti('native', 'amped', ["Amp Sim Utility", 'Clean Machine', 'Distortion Machine', 'Metal Machine']):
 			#	amped_device = amped_track.add_device('WAM', 'Amp Sim Utility', counter_devid.get())
 			#	amped_device.bypass = fx_on
 			#	if plugin_obj.type.subtype == "Amp Sim Utility": wamClassName = "WASABI_SC.Utility"
@@ -80,7 +80,7 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 			#	amped_device.data['wamPreset'] = plugin_obj.datavals.get('data', '{}')
 			#	outdata.append(amped_device)
 
-			if plugin_obj.check_matchmulti('native-amped', ['BitCrusher', 'Chorus', 
+			if plugin_obj.check_matchmulti('native', 'amped', ['BitCrusher', 'Chorus', 
 		'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
 		'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
 		'Reverb', 'Tremolo', 'Vibrato', 'Compressor', 'Expander', 'EqualizerPro']):
@@ -115,7 +115,7 @@ class output_amped(plugins.base):
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_nested'] = True
-		in_dict['plugin_included'] = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
+		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_amped
 
@@ -170,7 +170,7 @@ class output_amped(plugins.base):
 			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 			if plugin_found:
 
-				if plugin_obj.check_match('discodsp', 'obxd'):
+				if plugin_obj.check_match('external', 'discodsp', 'obxd'):
 					inst_supported = True
 					amped_device = amped_track.add_device('WAM', 'OBXD', counter_devid.get())
 					wamPreset = {}
@@ -182,7 +182,7 @@ class output_amped(plugins.base):
 					amped_device.data['wamPreset'] = json.dumps(wamPreset)
 					amped_device.bypass = False
 
-				if plugin_obj.check_match('smartelectronix', 'augur'):
+				if plugin_obj.check_match('external', 'smartelectronix', 'augur'):
 					inst_supported = True
 					amped_device = amped_track.add_device('WAM', 'Augur', counter_devid.get())
 					wamPreset = {}
@@ -194,7 +194,7 @@ class output_amped(plugins.base):
 					amped_device.data['wamPreset'] = json.dumps(wamPreset)
 					amped_device.bypass = False
 
-				#if plugin_obj.check_matchmulti('native-amped', ['Augur', 'Dexed']):
+				#if plugin_obj.check_matchmulti('native', 'amped', ['Augur', 'Dexed']):
 				#	inst_supported = True
 				#	amped_device = amped_track.add_device('WAM', plugin_obj.type.subtype, counter_devid.get())
 #
@@ -204,7 +204,7 @@ class output_amped(plugins.base):
 				#	amped_track.devices.append(amped_device)
 				#	amped_device.bypass = False
 
-				if plugin_obj.check_matchmulti('native-amped', ['Volt', 'VoltMini', 'Granny']):
+				if plugin_obj.check_matchmulti('native', 'amped', ['Volt', 'VoltMini', 'Granny']):
 					inst_supported = True
 					if plugin_obj.type.subtype == "Volt": amped_device = amped_track.add_device('Volt', 'VOLT', counter_devid.get())
 					if plugin_obj.type.subtype == "VoltMini": amped_device = amped_track.add_device('VoltMini', 'VOLT Mini', counter_devid.get())
@@ -213,7 +213,7 @@ class output_amped(plugins.base):
 					amped_track.devices.append(amped_device)
 					amped_device.bypass = False
 
-				if plugin_obj.check_match('synth-nonfree', 'Europa'):
+				if plugin_obj.check_match('user', 'reasonstudios', 'europa'):
 					inst_supported = True
 					amped_device = amped_track.add_device('WAM','Europa',counter_devid.get())
 					amped_device.data['wamClassName'] = 'Europa'

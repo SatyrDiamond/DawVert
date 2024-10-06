@@ -223,8 +223,9 @@ class input_flp(plugins.base):
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		in_dict['plugin_included'] = ['sampler:single','universal:arpeggiator','native-flstudio','soundfont2']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','soundfont2']
 		in_dict['fxchain_mixer'] = True
+		in_dict['plugin_ext'] = ['vst2']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		try:
@@ -428,7 +429,7 @@ class input_flp(plugins.base):
 					plugin_obj.role = 'synth'
 
 				notefx_pluginid = 'FLPlug_GA_'+str(channelnum)
-				plugin_obj = convproj_obj.add_plugin(notefx_pluginid, 'universal', 'arpeggiator')
+				plugin_obj = convproj_obj.add_plugin(notefx_pluginid, 'universal', 'arpeggiator', None)
 				plugin_obj.fxdata_add(fl_channel_obj.params.arpdirection, None)
 				plugin_obj.role = 'notefx'
 				inst_obj.fxslots_notes.append(notefx_pluginid)
@@ -698,7 +699,7 @@ class input_flp(plugins.base):
 			if mixer_eq != [[0, 0], [0, 0], [0, 0]]: eq_used = False
 
 			if eq_used:
-				plugin_obj = convproj_obj.add_plugin(eq_fxid, 'universal', 'eq-bands')
+				plugin_obj = convproj_obj.add_plugin(eq_fxid, 'universal', 'eq', 'bands')
 				for n, e in enumerate(mixer_eq):
 					eq_freq, eq_level = e
 					eq_level /= 65536

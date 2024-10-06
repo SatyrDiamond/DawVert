@@ -18,13 +18,13 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-flstudio', None]]
+		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flp']
-		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'fruity 7 band eq':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity 7 band eq'):
 			extpluglog.convinternal('FL Studio', 'Fruity 7 Band Equalizer', 'Universal', 'EQ Bands')
 
 			bandsdata = max([plugin_obj.params.get('band_'+str(bandnum+1), 0).value for bandnum in range(7)])
@@ -42,12 +42,12 @@ class plugconv(plugins.base):
 					convproj_obj.automation.calc(['plugin', pluginid, gain_txt], 'div', 100, 0, 0, 0)
 					convproj_obj.automation.move(['plugin', pluginid, gain_txt], ['n_filter', pluginid, filterid, 'gain'])
 
-				plugin_obj.replace('universal', 'eq-bands')
+				plugin_obj.replace('universal', 'eq', 'bands')
 				return 1
 			else:
 				return 2
 
-		if plugin_obj.type.subtype == 'fruity parametric eq':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity parametric eq'):
 			extpluglog.convinternal('FL Studio', 'Fruity Parametric EQ', 'Universal', 'EQ Bands')
 
 			for bandnum in range(7):
@@ -84,10 +84,10 @@ class plugconv(plugins.base):
 				if fl_band_type == 6: filter_obj.type.set('peak', None)
 				if fl_band_type == 7: filter_obj.type.set('high_shelf', None)
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity parametric eq 2':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity parametric eq 2'):
 			extpluglog.convinternal('FL Studio', 'Fruity Parametric EQ 2', 'Universal', 'EQ Bands')
 			main_lvl = plugin_obj.params.get('main_lvl', 0).value/100
 
@@ -134,11 +134,11 @@ class plugconv(plugins.base):
 				convproj_obj.automation.calc(['plugin', pluginid, txt_gain], 'div', 100, 0, 0, 0)
 				convproj_obj.automation.move(['plugin', pluginid, txt_gain], ['n_filter', pluginid, filterid, 'gain'])
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 			param_obj = plugin_obj.params.add('gain_out', main_lvl, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity compressor':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity compressor'):
 			extpluglog.convinternal('FL Studio', 'Fruity Compressor', 'Universal', 'Compressor')
 			v_threshold = plugin_obj.params.get('threshold', 0).value/10
 			v_ratio = plugin_obj.params.get('ratio', 0).value/10
@@ -168,7 +168,7 @@ class plugconv(plugins.base):
 			if first_type == 0: v_tcr = 0
 			if first_type == 1: v_tcr = 1
 
-			plugin_obj.replace('universal', 'compressor')
+			plugin_obj.replace('universal', 'compressor', None)
 			plugin_obj.datavals.add('tcr', bool(v_tcr) )
 			manu_obj.to_param('gain', 'pregain', None)
 			manu_obj.to_param('ratio', 'ratio', None)
@@ -178,14 +178,14 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('knee', v_knee, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'pitcher':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'pitcher'):
 			extpluglog.convinternal('FL Studio', 'Pitcher', 'Universal', 'AutoTune')
 			p_hz = xtramath.between_from_one(415.3, 466.2, plugin_obj.datavals.get('hz', 0))
 			p_min_freq = [220,170,110,80,55,25][int(plugin_obj.datavals.get('min_freq', 0))]
 			p_speed = plugin_obj.params.get('correction_speed', 1).value
 			p_gender = plugin_obj.params.get('gender', 1).value
 			p_formant = bool(plugin_obj.datavals.get('formant', 0))
-			plugin_obj.replace('universal', 'autotune')
+			plugin_obj.replace('universal', 'autotune', None)
 			for keynum, p_key in enumerate(plugin_obj.array_get('key_on', 12)):
 				plugin_obj.params.add('key_on_'+str(keynum), p_key, 'bool')
 			for keynum, p_key in enumerate(plugin_obj.array_get('bypass', 12)):
@@ -197,7 +197,7 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('formant_on', p_formant, 'bool')
 			return 1
 		
-		if plugin_obj.type.subtype == 'fruity delay':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity delay'):
 			extpluglog.convinternal('FL Studio', 'Fruity Delay', 'Universal', 'Delay')
 			d_fb = plugin_obj.params.get('fb', 0).value/1024
 			d_input = plugin_obj.params.get('input', 0).value/1024
@@ -218,19 +218,19 @@ class plugconv(plugins.base):
 			delay_obj.to_cvpj(convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity fast lp':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity fast lp'):
 			extpluglog.convinternal('FL Studio', 'Fruity Fast LP', 'Universal', 'Filter')
 			filter_cutoff = plugin_obj.params.get('cutoff', 0).value/1024
 			filter_resonance = plugin_obj.params.get('reso', 0).value/1024
 			filter_cutoff = 0.2+(filter_cutoff*1.0)
-			plugin_obj.replace('universal', 'filter')
+			plugin_obj.replace('universal', 'filter', None)
 			plugin_obj.filter.on = True
 			plugin_obj.filter.type.set('low_pass', None)
 			plugin_obj.filter.freq = xtramath.midi_filter(filter_cutoff**1.5)
 			plugin_obj.filter.q = (filter_resonance*6)+1
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity filter':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity filter'):
 			extpluglog.convinternal('FL Studio', 'Fruity Filter', 'Universal', 'Filter')
 			filter_cutoff = plugin_obj.params.get('cutoff', 0).value/1024
 			filter_resonance = plugin_obj.params.get('reso', 0).value/1024
@@ -238,14 +238,14 @@ class plugconv(plugins.base):
 			filter_cutoff = (filter_cutoff*2)**0.95
 			filter_cutoff = filter_cutoff**3.325
 
-			plugin_obj.replace('universal', 'filter')
+			plugin_obj.replace('universal', 'filter', None)
 			plugin_obj.filter.on = True
 			plugin_obj.filter.type.set('low_pass', None)
 			plugin_obj.filter.freq = filter_cutoff*1000
 			plugin_obj.filter.q = (filter_resonance*6)+1
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity flanger':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity flanger'):
 			extpluglog.convinternal('FL Studio', 'Fruity Flanger', 'Universal', 'Flanger')
 
 			p_rate = plugin_obj.params.get('rate', 0).value/5000
@@ -257,7 +257,7 @@ class plugconv(plugins.base):
 			p_rate = (p_rate**7)*5
 			p_delay = p_delay**2.58495
 
-			plugin_obj.replace('universal', 'flanger')
+			plugin_obj.replace('universal', 'flanger', None)
 			plugin_obj.params.add('delay', p_delay*0.020, 'float')
 			plugin_obj.params.add('rate', p_rate, 'float')
 			plugin_obj.params.add('depth', p_depth, 'float')
@@ -269,7 +269,7 @@ class plugconv(plugins.base):
 			lfo_obj.amount = p_depth
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity free filter':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity free filter'):
 			extpluglog.convinternal('FL Studio', 'Fruity Free Filter', 'Universal', 'Filter')
 			filter_cutoff = plugin_obj.params.get('freq', 0).value/1024
 			filter_resonance = plugin_obj.params.get('q', 0).value/1024
@@ -279,7 +279,7 @@ class plugconv(plugins.base):
 			filter_resonance = 0.01+(filter_resonance*0.99)
 			filter_resonance = filter_resonance/0.1
 
-			plugin_obj.replace('universal', 'filter')
+			plugin_obj.replace('universal', 'filter', None)
 			plugin_obj.filter.on = True
 			plugin_obj.filter.type.set(['low_pass','band_pass','high_pass','notch','low_shelf','peak','high_shelf'][min(int(filter_type/0.125)-1, 6)], None)
 			plugin_obj.filter.gain = filter_gain*18
@@ -287,49 +287,49 @@ class plugconv(plugins.base):
 			plugin_obj.filter.q = filter_resonance**0.8
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity limiter':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity limiter'):
 			extpluglog.convinternal('FL Studio', 'Fruity Limiter', 'Universal', 'Limiter')
-			plugin_obj.replace('universal', 'limiter')
+			plugin_obj.replace('universal', 'limiter', None)
 			plugin_obj.params.add('attack', 0.002, 'float')
 			plugin_obj.params.add('release', 0.1, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity reeverb':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity reeverb'):
 			extpluglog.convinternal('FL Studio', 'Fruity Reeverb', 'Universal', 'Reverb')
 			plugin_obj.plugts_transform('./data_main/plugts/flstudio_univ.pltr', 'fruity_reeverb', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity reeverb 2':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity reeverb 2'):
 			extpluglog.convinternal('FL Studio', 'Fruity Reeverb 2', 'Universal', 'Reverb')
 			plugin_obj.plugts_transform('./data_main/plugts/flstudio_univ.pltr', 'fruity_reeverb_2', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'fruity balance':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity balance'):
 			extpluglog.convinternal('FL Studio', 'Fruity Balance', 'Universal', 'Vol/Pan')
 			plugin_obj.plugts_transform('./data_main/plugts/flstudio_univ.pltr', 'fruity_balance', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'frequency shifter':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'frequency shifter'):
 			extpluglog.convinternal('FL Studio', 'Frequency Shifter', 'Universal', 'Frequency Shifter')
 			p_frequency = plugin_obj.params.get('frequency', 0).value/70000
 			p_freqtype = plugin_obj.params.get('freqtype', 0).value
 			p_frequency = ((p_frequency**7)*(200 if p_freqtype else 20000))
 
-			plugin_obj.replace('universal', 'frequency_shifter')
+			plugin_obj.replace('universal', 'frequency_shifter', None)
 			plugin_obj.params.add('pitch', p_frequency, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'tuner':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'tuner'):
 			extpluglog.convinternal('FL Studio', 'Tuner', 'Universal', 'Tuner')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('refrence', 'refrence', 440)
 			manu_obj.calc('refrence', 'valrange', 0, 6000, 400, 480)
-			plugin_obj.replace('universal', 'tuner')
+			plugin_obj.replace('universal', 'tuner', None)
 			manu_obj.to_param('refrence', 'refrence', None)
 			return 1
 
 		if 'shareware' not in dv_config.extplug_cat:
-			if plugin_obj.type.subtype == 'fruity delay 2':
+			if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity delay 2'):
 				extpluglog.convinternal('FL Studio', 'Fruity Delay 2', 'Universal', 'Delay')
 				d_dry = plugin_obj.params.get('dry', 0).value/128
 				d_fb_cut = plugin_obj.params.get('fb_cut', 0).value/128

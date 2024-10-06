@@ -11,13 +11,13 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-serato-inst', 'instrument']]
+		in_dict['in_plugins'] = [['native', 'serato-inst', 'instrument']]
 		in_dict['in_daws'] = ['serato']
-		in_dict['out_plugins'] = [['sampler', None]]
+		in_dict['out_plugins'] = [['universal', 'sampler', None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
-		if plugin_obj.type.check_match('native-serato-inst', 'instrument'):
+		if plugin_obj.type.check_wildmatch('native', 'serato-inst', 'instrument'):
 			isfound, fileref = plugin_obj.get_fileref('instrument', convproj_obj)
 			if isfound:
 				filepath = fileref.get_path(None, False)
@@ -26,7 +26,7 @@ class plugconv(plugins.base):
 					try:
 						instdata = json.load(f)
 						extpluglog.convinternal('Serato Studio', 'Instrument', 'Sampler', 'MultiSampler')
-						plugin_obj.replace('sampler', 'multi')
+						plugin_obj.replace('universal', 'sampler', 'multi')
 						if 'samples' in instdata:
 							samples = instdata['samples']
 							for sample in samples:

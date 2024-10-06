@@ -1054,7 +1054,7 @@
             "pitcher": {
                 "group": "inst",
                 "params": {
-                    "bypass": {"max": 0,"noauto": true,"type": "list"},
+                    "bypass": {"noauto": true,"type": "list"},
                     "bypass_all": {"noauto": false,"type": "float"},
                     "correction_speed": {"noauto": false,"type": "float"},
                     "finetune": {"noauto": false,"type": "float"},

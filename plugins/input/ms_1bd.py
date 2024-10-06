@@ -177,7 +177,7 @@ class input_1bitdragon(plugins.base):
 		convproj_obj.track_master.params.add('vol', project_obj.volume, 'float')
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 
-		plugin_obj = convproj_obj.add_plugin('master-reverb', 'simple', 'reverb')
+		plugin_obj = convproj_obj.add_plugin('master-reverb', 'simple', 'reverb', None)
 		plugin_obj.role = 'effect'
 		plugin_obj.visual.name = 'Reverb'
 		plugin_obj.fxdata_add(project_obj.reverb, 0.5)

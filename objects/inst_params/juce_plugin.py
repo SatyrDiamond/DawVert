@@ -35,7 +35,7 @@ class juce_plugin:
 		chunkdata = juce_memoryblock.fromJuceBase64Encoding(self.memoryblock)
 
 		if not pluginid:
-			plugin_obj, pluginid = convproj_obj.add_plugin_genid(self.plugtype, None)
+			plugin_obj, pluginid = convproj_obj.add_plugin_genid('external', self.plugtype, None)
 			plugin_obj.role = 'effect'
 
 		if self.plugtype == 'vst2':

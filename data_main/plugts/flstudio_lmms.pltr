@@ -1,7 +1,7 @@
 
 [fruity_stereo_shaper]
 >input
-	type|native-flstudio:fruity stereo shaper
+	type|native:flstudio:fruity stereo shaper
 	param|r2l
 	param|l2l
 	param|r2r
@@ -16,7 +16,7 @@
 <proc
 
 >output
-	type|native-lmms:stereomatrix
+	type|native:lmms:stereomatrix
 	param|l-r<l2r
 	param|r-l<r2l
 	param|r-r<r2r

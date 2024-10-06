@@ -210,7 +210,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 	plugin_obj = None
 
 	if pluginname == "sf2player":
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('soundfont2', None)
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'soundfont2', None)
 		plugin_obj.role = 'synth'
 		bank = int(lmms_plugin.get_param('bank', 0))
 		patch = int(lmms_plugin.get_param('patch', 0))
@@ -252,12 +252,12 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 
 
 	elif pluginname == "vestige":
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('vst2', 'win')
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('external', 'vst2', 'win')
 		plugin_obj.role = 'synth'
 		getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin)
 
 	elif pluginname == "sid":
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid(None, None)
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid(None, None, None)
 		sid_obj = chip_sid.sid_inst()
 
 		sid_obj.filter_cutoff = int(lmms_plugin.get_param('filterFC', 0))
@@ -314,7 +314,9 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 		plugin_obj = opl_obj.to_cvpj(convproj_obj, pluginid)
 
 	else:
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', pluginname)
+		if pluginname == 'freeboy': pluginname = 'papu'
+
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'lmms', pluginname)
 		plugin_obj.role = 'synth'
 		dset_plugparams(pluginname, pluginid, lmms_plugin, plugin_obj)
 
@@ -383,12 +385,12 @@ def lmms_decode_effectslot(convproj_obj, lmms_effect):
 	lmms_plugin = lmms_effect.plugin
 
 	if lmms_effect.name == 'vsteffect':
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('vst2', 'win')
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('external', 'vst2', 'win')
 		plugin_obj.role = 'effect'
 		getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin)
 
 	elif lmms_effect.name == 'ladspaeffect':
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('ladspa', None)
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('external', 'ladspa', None)
 		plugin_obj.role = 'effect'
 
 		if 'file' in lmms_effect.keys:
@@ -425,7 +427,7 @@ def lmms_decode_effectslot(convproj_obj, lmms_effect):
 		else: timing_obj.set_seconds(float(DelayTimeSamples))
 		plugin_obj, pluginid = delay_obj.to_cvpj(convproj_obj, None)
 	else:
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native-lmms', lmms_effect.name)
+		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'lmms', lmms_effect.name)
 		plugin_obj.role = 'effect'
 		dset_plugparams(lmms_effect.name, pluginid, lmms_plugin, plugin_obj)
 
@@ -531,7 +533,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			# ------------------------------- arpeggiator -------------------------------
 			arpeggiator_obj = insttr_obj.arpeggiator
-			nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'arpeggiator')
+			nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'arpeggiator', None)
 			nfx_plugin_obj.role = 'notefx'
 			nfx_plugin_obj.fxdata_add(bool(arpeggiator_obj.arp_enabled), None)
 			doparam(arpeggiator_obj.arp_enabled, 'bool', None, ['slot', pluginid, 'enabled'])
@@ -559,7 +561,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			# ------------------------------- chordcreator -------------------------------
 			chordcreator_obj = insttr_obj.chordcreator
 	
-			nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'chord_creator')
+			nfx_plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'chord_creator', None)
 			nfx_plugin_obj.role = 'notefx'
 			nfx_plugin_obj.fxdata_add(bool(chordcreator_obj.chord_enabled), None)
 			doparam(chordcreator_obj.chord_enabled, 'bool', None, ['slot', pluginid, 'enabled'])
@@ -664,8 +666,9 @@ class input_lmms(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['track_lanes'] = True
-		in_dict['plugin_included'] = ['sampler:single','vst2','fm:opl2','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay','ladspa']
+		in_dict['plugin_included'] = ['universal:sampler:single','chip:fm:opl2','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['plugin_ext'] = ['vst2', 'ladspa']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		try:

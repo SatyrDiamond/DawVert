@@ -9,15 +9,15 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['universal', None]]
+		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
-		in_dict['out_plugins'] = [['native-tracktion', None]]
+		in_dict['out_plugins'] = [['native', 'tracktion', None]]
 		in_dict['out_daws'] = ['waveform_edit']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
-		if plugin_obj.type.subtype == 'filter':
+		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'Waveform', '1bandEq')
-			plugin_obj.replace('native-tracktion', '1bandEq')
+			plugin_obj.replace('native', 'tracktion', '1bandEq')
 
 			filter_obj = plugin_obj.filter
 
@@ -39,9 +39,9 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['plugin', pluginid, 'freq'], 'add', 72, 0, 0, 0)
 			return 0
 
-		if plugin_obj.type.subtype == 'eq-bands':
+		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
 			extpluglog.convinternal('Universal', 'EQ Bands', 'Waveform', '8bandEq')
-			plugin_obj.replace('native-tracktion', '8bandEq')
+			plugin_obj.replace('native', 'tracktion', '8bandEq')
 			for n, f in enumerate(plugin_obj.eq):
 				filter_id, filter_obj = f
 				eqnumtxt = str(n+1)+'lm'

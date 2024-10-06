@@ -98,13 +98,13 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 		if amped_tr_device.className == 'WAM':
 
 			if amped_tr_device.label == 'OBXD': 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'discodsp', 'obxd')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'synth', 'discodsp', 'obxd')
 				wampreset = get_wampreset(amped_tr_device)
 				if 'data' in wampreset:
 					for n, v in enumerate(wampreset['data']): plugin_obj.params.add('obxd_'+str(n), v, 'float')
 
 			elif amped_tr_device.label == 'Augur': 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'smartelectronix', 'augur')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'synth', 'smartelectronix', 'augur')
 				wampreset = get_wampreset(amped_tr_device)
 				if 'data' in wampreset:
 					for n, v in enumerate(wampreset['data']):
@@ -114,12 +114,12 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 						if isinstance(v, bool): plugin_obj.params.add(paramname, v, 'bool')
 
 			elif amped_tr_device.label == 'Dexed': 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', amped_tr_device.label)
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', amped_tr_device.label)
 				plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
 				wampreset = get_wampreset(amped_tr_device)
 
 			elif amped_tr_device.label == 'Europa': 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'synth-nonfree', 'Europa')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'user', 'reasonstudios', 'europa')
 
 				wampreset = get_wampreset(amped_tr_device)
 				europa_xml = ET.fromstring(wampreset['settings'])
@@ -150,7 +150,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				if 'encodedSampleData' in wampreset: plugin_obj.datavals.add('encodedSampleData', wampreset['encodedSampleData'])
 
 			elif amped_tr_device.label == 'Amp Sim Utility': 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', amped_tr_device.label)
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', amped_tr_device.label)
 				plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
 				plugin_obj.role = 'effect'
 				track_obj.fxslots_audio.append(pluginid)
@@ -160,7 +160,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				plugin_obj.role = 'synth'
 
 		elif devicetype == ['Drumpler', 'Drumpler']:
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'sampler', 'multi')
 			plugin_obj.role = 'synth'
 			track_obj.inst_pluginid = pluginid
 			track_obj.is_drum = True
@@ -201,14 +201,14 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				if param.name == 'bank': value_bank = param.value
 				if param.name == 'gain': value_gain = param.value
 
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'midi', None)
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'universal:midi', None)
 			plugin_obj.role = 'synth'
 			plugin_obj.midi.from_sf2(value_bank, value_patch)
 			param_obj = plugin_obj.params.add_named('gain', value_gain, 'float', 'Gain')
 
 		elif devicetype == ['Granny', 'Granny']:
 			track_obj.inst_pluginid = pluginid
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Granny')
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', 'Granny')
 			plugin_obj.role = 'synth'
 
 			#sampleuuid = amped_tr_device.grannySampleGuid
@@ -220,14 +220,14 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 
 		elif devicetype == ['Volt', 'VOLT']:
 			track_obj.inst_pluginid = pluginid
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'Volt')
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', 'Volt')
 			plugin_obj.role = 'synth'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
 		elif devicetype == ['VoltMini', 'VOLT Mini']:
 			track_obj.inst_pluginid = pluginid
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'VoltMini')
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', 'VoltMini')
 			plugin_obj.role = 'synth'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
@@ -257,7 +257,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			samplerdata = {}
 			for param in amped_tr_device.params: data_values.dict__nested_add_value(samplerdata, param.name.split('/'), param.value)
 
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'sampler', 'multi')
 			plugin_obj.role = 'synth'
 			plugin_obj.datavals.add('point_value_type', "percent")
 
@@ -277,7 +277,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 
 		elif devicetype == ['EqualizerPro', 'Equalizer']:
 			track_obj.fxslots_audio.append(pluginid)
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', 'EqualizerPro')
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', 'EqualizerPro')
 			plugin_obj.role = 'effect'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
@@ -287,7 +287,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 		'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
 		'Reverb', 'Tremolo', 'BitCrusher', 'Tremolo', 'Vibrato', 'Compressor', 'Expander']:
 			track_obj.fxslots_audio.append(pluginid)
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native-amped', amped_tr_device.className)
+			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', amped_tr_device.className)
 			plugin_obj.role = 'effect'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
@@ -336,7 +336,7 @@ class input_amped(plugins.base):
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_nested'] = True
-		in_dict['plugin_included'] = ['native-amped', 'midi', 'synth-nonfree:europa', 'sampler:multi']
+		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_amped

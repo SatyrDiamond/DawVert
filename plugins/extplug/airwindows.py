@@ -99,7 +99,7 @@ class extplugin(plugins.base):
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			for n in range(dbd['numparams']):
 				manu_obj.from_param(str(n), 'ext_param_'+str(n), float(paramdata[n]))
-			plugin_obj.replace('airwindows', dbd['name'])
+			plugin_obj.replace('user', 'airwindows', dbd['name'])
 			for n in range(dbd['numparams']):
 				manu_obj.to_param(str(n), dbd['params'][n][2], dbd['params'][n][1])
 			return True

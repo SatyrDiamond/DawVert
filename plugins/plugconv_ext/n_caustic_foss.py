@@ -11,7 +11,7 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-caustic', None]
+		in_dict['in_plugin'] = ['native', 'caustic', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
@@ -43,7 +43,7 @@ class plugconv(plugins.base):
 				manu_obj.calc('bar8', 'from_one', -8, 0, 0, 0)
 				manu_obj.calc('bar9', 'from_one', -8, 0, 0, 0)
 
-				plugin_obj.replace('socalabs', 'organ')
+				plugin_obj.replace('external', 'socalabs', 'organ')
 
 				manu_obj.to_param('bar1', 'upper1', 0)
 				manu_obj.to_param('bar2', 'upper2', 0)

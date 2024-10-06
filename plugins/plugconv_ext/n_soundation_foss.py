@@ -13,12 +13,12 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-soundation', None]
+		in_dict['in_plugin'] = ['native', 'soundation', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
 
-		if plugin_obj.type.subtype == 'com.soundation.distortion' and 'vst2' in extplugtype:
+		if plugin_obj.type.check_match('native', 'soundation', 'com.soundation.distortion'):
 			mode = int(plugin_obj.params.get('mode', 0).value)
 			gain = plugin_obj.params.get('gain', 0).value
 
@@ -31,7 +31,7 @@ class plugconv(plugins.base):
 					drive = max(driveval, 0)
 					vol = min(driveval, 0)+1
 
-					plugin_obj.replace('airwindows', 'Drive')
+					plugin_obj.replace('external', 'airwindows', 'Drive')
 					plugin_obj.params.add('drive', drive, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', vol, 'float')
@@ -44,7 +44,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Fracture2')
 				if exttype:
 					extpluglog.extpluglist.success('Soundation', 'Distortion')
-					plugin_obj.replace('airwindows', 'Fracture2')
+					plugin_obj.replace('external', 'airwindows', 'Fracture2')
 					plugin_obj.params.add('drive', gain, 'float')
 					plugin_obj.params.add('fractre', 0.2, 'float')
 					plugin_obj.params.add('thresh', 0.5, 'float')
@@ -58,7 +58,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Drive')
 				if exttype:
 					extpluglog.extpluglist.success('Soundation', 'Distortion')
-					plugin_obj.replace('airwindows', 'Drive')
+					plugin_obj.replace('external', 'airwindows', 'Drive')
 					plugin_obj.params.add('drive', gain, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', 1, 'float')
@@ -66,7 +66,7 @@ class plugconv(plugins.base):
 					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
 					return True
 
-		if plugin_obj.type.subtype == 'com.soundation.fakie' and 'vst2' in extplugtype:
+		if plugin_obj.type.check_match('native', 'soundation', 'com.soundation.fakie') and 'vst2' in extplugtype:
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'TAL-Filter-2', '')
 			if plugin_vst2.check_exists('id', 808596837):
 				extpluglog.extpluglist.success('Soundation', 'Fakie')
@@ -92,7 +92,7 @@ class plugconv(plugins.base):
 				tal_obj.to_cvpj_vst2(convproj_obj, plugin_obj)
 				return True
 
-		if plugin_obj.type.subtype == 'com.soundation.reverb' and 'vst2' in extplugtype:
+		if plugin_obj.type.check_match('native', 'soundation', 'com.soundation.reverb'):
 			extpluglog.extpluglist.add('FOSS', 'VST', 'MatrixVerb', 'Airwindows')
 			exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'MatrixVerb')
 			if exttype:
@@ -101,7 +101,7 @@ class plugconv(plugins.base):
 				dry = plugin_obj.params.get('dry', 0).value
 				size = plugin_obj.params.get('size', 0).value
 				wet = plugin_obj.params.get('wet', 0).value
-				plugin_obj.replace('airwindows', 'MatrixVerb')
+				plugin_obj.replace('external', 'airwindows', 'MatrixVerb')
 				plugin_obj.params.add('filter', 1, 'float')
 				plugin_obj.params.add('damping', damp, 'float')
 				plugin_obj.params.add('speed', 0, 'float')
@@ -112,7 +112,7 @@ class plugconv(plugins.base):
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
 				return True
 
-		if plugin_obj.type.subtype == 'com.soundation.tremolo' and 'vst2' in extplugtype:
+		if plugin_obj.type.check_match('native', 'soundation', 'com.soundation.tremolo'):
 			extpluglog.extpluglist.add('FOSS', 'VST', 'AutoPan', 'Airwindows')
 			exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'AutoPan')
 			if exttype:

@@ -8,13 +8,13 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-soundation', None]]
+		in_dict['in_plugins'] = [['native',' soundation', None]]
 		in_dict['in_daws'] = ['soundation']
-		in_dict['out_plugins'] = [['native-ableton', None]]
+		in_dict['out_plugins'] = [['native',' ableton', None]]
 		in_dict['out_daws'] = ['ableton']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'com.soundation.va_synth':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.va_synth'):
 			extpluglog.convinternal('Soundation', 'VA Synth', 'Ableton', 'UltraAnalog')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
@@ -46,7 +46,7 @@ class plugconv(plugins.base):
 			osc_2_octave = plugin_obj.params.get('osc_2_octave', 0).value
 			tune = plugin_obj.params.get('tune', 0).value
 
-			plugin_obj.replace('native-ableton', 'UltraAnalog')
+			plugin_obj.replace('native', 'ableton', 'UltraAnalog')
 
 			octave = (octave-0.5)*5
 
@@ -109,10 +109,10 @@ class plugconv(plugins.base):
 			
 			return 0
 
-		if plugin_obj.type.subtype == 'com.soundation.noiser':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.noiser'):
 			extpluglog.convinternal('Soundation', 'Noiser', 'Ableton', 'Operator')
 
-			plugin_obj.replace('native-ableton', 'Operator')
+			plugin_obj.replace('native', 'ableton', 'Operator')
 
 			adsr_obj = plugin_obj.env_asdr_get('vol')
 			plugin_obj.params.add('Operator.0/IsOn', True, 'bool')
@@ -127,7 +127,7 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('Operator.0/Envelope/ReleaseSlope', 0, 'float')
 			return 0
 
-		if plugin_obj.type.subtype == 'com.soundation.simple':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.simple'):
 			extpluglog.convinternal('Soundation', 'Simple Synth', 'Ableton', 'Operator')
 
 			opdata = []
@@ -140,7 +140,7 @@ class plugconv(plugins.base):
 				osc_vol = plugin_obj.params.get(starttxt+'vol', 0).value
 				opdata.append([osc_detune, (osc_pitch-0.5)*48, int(osc_type), osc_vol])
 
-			plugin_obj.replace('native-ableton', 'Operator')
+			plugin_obj.replace('native', 'ableton', 'Operator')
 
 			adsr_obj = plugin_obj.env_asdr_get('vol')
 

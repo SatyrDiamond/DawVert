@@ -13,13 +13,13 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-ableton', None]]
+		in_dict['in_plugins'] = [['native', 'ableton', None]]
 		in_dict['in_daws'] = ['ableton']
-		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'AutoFilter':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'AutoFilter'):
 			extpluglog.convinternal('Ableton', 'AutoFilter', 'Universal', 'Filter')
 			
 			p_Cutoff = plugin_obj.params.get('Cutoff', 60).value-72
@@ -27,7 +27,7 @@ class plugconv(plugins.base):
 			p_FilterType = plugin_obj.params.get('FilterType', 1).value
 			p_Slope = plugin_obj.params.get('Slope', 0).value
 
-			plugin_obj.replace('universal', 'filter')
+			plugin_obj.replace('universal', 'filter', None)
 			filter_obj = plugin_obj.filter
 			filter_obj.on = True
 			if p_FilterType == 0: filter_obj.type.set('low_pass', None)
@@ -47,7 +47,7 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['plugin', pluginid, 'Cutoff'], ['filter', pluginid, 'freq'])
 			return 1
 
-		if plugin_obj.type.subtype == 'ChannelEq':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'ChannelEq'):
 			extpluglog.convinternal('Ableton', 'Channel EQ', 'Universal', 'EQ Bands')
 			p_HighpassOn = plugin_obj.params.get("HighpassOn", 0).value
 			p_HighShelfGain = plugin_obj.params.get("HighShelfGain", 0).value
@@ -87,19 +87,19 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['plugin', pluginid, 'HighShelfGain'], 'to_db', 0, 0, 0, 0)
 			convproj_obj.automation.move(['plugin', pluginid, "HighShelfGain"], ['n_filter', pluginid, filter_id, 'gain'])
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 			plugin_obj.params.add('gain_out', xtramath.to_db(p_Gain), 'float')
 			convproj_obj.automation.calc(['plugin', pluginid, 'Gain'], 'to_db', 0, 0, 0, 0)
 			convproj_obj.automation.move_group(['plugin', pluginid], 'Gain', 'gain_out')
 			return 1
 
-		if plugin_obj.type.subtype == 'AutoPan':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'AutoPan'):
 			extpluglog.convinternal('Ableton', 'AutoPan', 'Universal', 'Auto Pan')
 			p_LfoAmount = plugin_obj.params.get('Lfo/LfoAmount', 1).value
 			p_Frequency = plugin_obj.params.get('Lfo/Frequency', 1).value
 			p_Type = plugin_obj.params.get('Lfo/Type', 0).value
 			p_Phase = plugin_obj.params.get('Lfo/Phase', 0).value
-			plugin_obj.replace('universal', 'autopan')
+			plugin_obj.replace('universal', 'autopan', None)
 			lfo_obj = plugin_obj.lfo_add('amount')
 			lfo_obj.time.set_hz(p_Frequency)
 			lfo_obj.amount = p_LfoAmount
@@ -107,35 +107,35 @@ class plugconv(plugins.base):
 			lfo_obj.phase = p_Phase
 			return 1
 
-		if plugin_obj.type.subtype == 'Tuner':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Tuner'):
 			extpluglog.convinternal('Ableton', 'Tuner', 'Universal', 'Tuner')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('TuningFreq', 'TuningFreq', 440)
-			plugin_obj.replace('universal', 'tuner')
+			plugin_obj.replace('universal', 'tuner', None)
 			manu_obj.to_param('TuningFreq', 'refrence', None)
 			return 1
 
-		if plugin_obj.type.subtype == 'Redux2':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Redux2'):
 			extpluglog.convinternal('Ableton', 'Redux2', 'Universal', 'Bitcrush')
 			plugin_obj.plugts_transform('./data_main/plugts/ableton_univ.pltr', 'redux2', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'Limiter':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Limiter'):
 			extpluglog.convinternal('Ableton', 'Limiter', 'Universal', 'Limiter')
 			plugin_obj.plugts_transform('./data_main/plugts/ableton_univ.pltr', 'limiter', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'Gate':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Gate'):
 			extpluglog.convinternal('Ableton', 'Gate', 'Universal', 'Gate')
 			plugin_obj.plugts_transform('./data_main/plugts/ableton_univ.pltr', 'gate', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'FilterEQ3':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'FilterEQ3'):
 			extpluglog.convinternal('Ableton', 'FilterEQ3', 'Universal', '3 Band EQ')
 			plugin_obj.plugts_transform('./data_main/plugts/ableton_univ.pltr', 'filtereq3', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'FrequencyShifter':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'FrequencyShifter'):
 			p_Coarse = plugin_obj.params.get("Coarse", 0).value
 			p_Fine = plugin_obj.params.get("Fine", 0).value
 			p_ModulationMode = plugin_obj.params.get("ModulationMode", 0).value
@@ -144,21 +144,21 @@ class plugconv(plugins.base):
 			if p_ModulationMode == 0:
 				extpluglog.convinternal('Ableton', 'Frequency Shifter', 'Universal', 'Frequency Shifter')
 				f = p_Coarse+p_Fine
-				plugin_obj.replace('universal', 'frequency_shifter')
+				plugin_obj.replace('universal', 'frequency_shifter', None)
 				plugin_obj.params.add('pitch', f, 'float')
 				return 1
 
 			if p_ModulationMode == 1:
 				extpluglog.convinternal('Ableton', 'Ringmod', 'Universal', 'Ringmod')
 				f = abs(p_RingModCoarse+p_Fine)
-				plugin_obj.replace('universal', 'ringmod')
+				plugin_obj.replace('universal', 'ringmod', None)
 				plugin_obj.params.add('rate', f, 'float')
 				lfo_obj = plugin_obj.lfo_add('amount')
 				lfo_obj.time.set_hz(f)
 				lfo_obj.amount = 1
 				return 1
 
-		if plugin_obj.type.subtype == 'Compressor2':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Compressor2'):
 			p_Model = plugin_obj.params.get('Model', 0).value
 			if p_Model != 2: 
 				extpluglog.convinternal('Ableton', 'Compressor2', 'Universal', 'Compressor')
@@ -169,7 +169,7 @@ class plugconv(plugins.base):
 			plugin_obj.datavals.add('mode', 'rms' if p_Model == 1 else 'peak')
 			return 1
 
-		if plugin_obj.type.subtype == 'Eq8':
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Eq8'):
 			extpluglog.convinternal('Ableton', 'EQ8', 'Universal', 'EQ Bands')
 			for band_num in range(8):
 				groupname = ['main', 'b']
@@ -211,7 +211,7 @@ class plugconv(plugins.base):
 				convproj_obj.automation.move(['plugin', pluginid, abe_starttxt_alt+"Gain"], ['n_filter', pluginid, filter_id, 'gain'])
 				convproj_obj.automation.move(['plugin', pluginid, abe_starttxt_alt+"Q"], ['n_filter', pluginid, filter_id, 'q'])
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 			return 1
 
 		return 2

@@ -64,7 +64,7 @@ class input_orgyana(plugins.base):
 				else: 
 					track_obj.visual.name = "Melody "+str(tracknum+1)
 					if orgsamp_obj.loaded:
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+						plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
 						track_obj.inst_pluginid = pluginid
 						osc_data = plugin_obj.osc_add()
 						osc_data.prop.type = 'wave'

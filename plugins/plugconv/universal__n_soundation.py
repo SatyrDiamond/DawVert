@@ -47,19 +47,19 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-soundation', None]]
+		in_dict['in_plugins'] = [['native', 'soundation', None]]
 		in_dict['in_daws'] = ['soundation']
-		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'com.soundation.filter':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.filter'):
 			extpluglog.convinternal('Soundation', 'Filter', 'Universal', 'Filter')
 			filter_cutoff = plugin_obj.params.get('cutoff', 0).value
 			filter_resonance = plugin_obj.params.get('resonance', 0).value+1
 			filter_mode = plugin_obj.params.get('mode', 0).value
 
-			plugin_obj.replace('universal', 'filter')
+			plugin_obj.replace('universal', 'filter', None)
 			plugin_obj.filter.on = True
 			plugin_obj.filter.type.set('low_pass' if filter_mode else 'high_pass', None)
 			plugin_obj.filter.freq = get_freq(filter_cutoff)
@@ -72,12 +72,12 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['filter', pluginid, 'q'], 'add', 1, 0, 0, 0)
 			return 1
 
-		if plugin_obj.type.subtype == 'com.soundation.butterworthfilter':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.butterworthfilter'):
 			extpluglog.convinternal('Soundation', 'Butterworth Filter', 'Universal', 'Filter')
 			filter_cutoff = plugin_obj.params.get('cutoff', 0).value
 			filter_resonance = plugin_obj.params.get('resonance', 0).value+15
 
-			plugin_obj.replace('universal', 'filter')
+			plugin_obj.replace('universal', 'filter', None)
 			plugin_obj.filter.on = True
 			plugin_obj.filter.type.set('low_pass', None)
 			plugin_obj.filter.freq = get_freq(filter_cutoff)
@@ -91,12 +91,12 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['filter', pluginid, 'q'], 'add', 1, 0, 0, 0)
 			return 1
 
-		if plugin_obj.type.subtype == 'com.soundation.equalizer':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.equalizer'):
 			extpluglog.convinternal('Soundation', 'Equalizer', 'Universal', '3-Band EQ')
 			plugin_obj.plugts_transform('./data_main/plugts/soundation_univ.pltr', 'equalizer', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'com.soundation.parametric-eq':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.parametric-eq'):
 			extpluglog.convinternal('Soundation', 'EQ', 'Universal', 'EQ 8-Limited')
 
 			#HP
@@ -189,12 +189,12 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['plugin', pluginid, 'master_gain'], 'mul', 40, 0, 0, 0)
 			convproj_obj.automation.move_group(['plugin', pluginid], 'master_gain', 'gain_out')
 			
-			plugin_obj.replace('universal', 'eq-8limited')
+			plugin_obj.replace('universal', 'eq', '8limited')
 
 			plugin_obj.params.add('gain_out', master_gain, 'float')
 			return 1
 			
-		if plugin_obj.type.subtype == 'com.soundation.compressor':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.compressor'):
 			extpluglog.convinternal('Soundation', 'Compressor', 'Universal', 'Compressor')
 
 			comp_attack = plugin_obj.params.get('attack', 0).value
@@ -210,7 +210,7 @@ class plugconv(plugins.base):
 			comp_gain = get_gain(comp_gain)
 			comp_ratio = 1/(max(1-(comp_ratio**0.25), 0.0001))
 
-			plugin_obj.replace('universal', 'compressor')
+			plugin_obj.replace('universal', 'compressor', None)
 			plugin_obj.params.add('ratio', comp_ratio, 'float')
 			plugin_obj.params.add('threshold', comp_threshold, 'float')
 			plugin_obj.params.add('attack', comp_attack, 'float')
@@ -218,7 +218,7 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('postgain', comp_gain, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'com.soundation.degrader':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.degrader'):
 			extpluglog.convinternal('Soundation', 'Degrader', 'Universal', 'Bitcrush')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('reduction', 'reduction', 0)
@@ -228,13 +228,13 @@ class plugconv(plugins.base):
 			manu_obj.calc('reduction', 'sub_r', 48, 0, 0, 0)
 			manu_obj.calc('rate', 'pow', 0.1, 0, 0, 0)
 			manu_obj.calc('rate', 'from_one', 44100, 1000, 0, 0)
-			plugin_obj.replace('universal', 'bitcrush')
+			plugin_obj.replace('universal', 'bitcrush', None)
 			manu_obj.to_param('reduction', 'bits', 0)
 			manu_obj.to_param('rate', 'freq', 0)
 			manu_obj.to_wet('mix')
 			return 1
 
-		if plugin_obj.type.subtype == 'com.soundation.delay':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.delay'):
 			extpluglog.convinternal('Soundation', 'Delay', 'Universal', 'Delay')
 			feedback = plugin_obj.params.get('feedback', 0).value
 			feedback_filter = plugin_obj.params.get('feedback_filter', 0).value
@@ -260,7 +260,7 @@ class plugconv(plugins.base):
 			plugin_obj.params_slot.add('wet', xtramath.wetdry(wet, dry), 'float')
 			return 1
 			
-		if plugin_obj.type.subtype == 'com.soundation.limiter':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.limiter'):
 			extpluglog.convinternal('Soundation', 'Limiter', 'Universal', 'Limiter')
 
 			comp_attack = plugin_obj.params.get('attack', 0).value
@@ -273,20 +273,20 @@ class plugconv(plugins.base):
 			comp_gain = get_gain(comp_gain)
 			comp_threshold = ((1-comp_threshold)**3)*50
 
-			plugin_obj.replace('universal', 'limiter')
+			plugin_obj.replace('universal', 'limiter', None)
 			plugin_obj.params.add('attack', comp_attack, 'float')
 			plugin_obj.params.add('release', comp_release, 'float')
 			plugin_obj.params.add('postgain', comp_gain, 'float')
 			plugin_obj.params.add('threshold', comp_threshold, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'com.soundation.pitch-correction':
+		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.pitch-correction'):
 			extpluglog.convinternal('Soundation', 'AutoTune', 'Universal', 'AutoTune')
 			tune_amount = plugin_obj.params.get('amount', 0).value
 			tune_glide = plugin_obj.params.get('glide', 0).value
 			tune_key = int(plugin_obj.params.get('key', 0).value)
 			tune_mode = int(plugin_obj.params.get('mode', 0).value)
-			plugin_obj.replace('universal', 'autotune')
+			plugin_obj.replace('universal', 'autotune', None)
 
 			if tune_mode in autotune_chords:
 				for p_key in autotune_chords[tune_mode]: 

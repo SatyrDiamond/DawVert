@@ -60,7 +60,7 @@ class input_pxtone(plugins.base):
 		in_dict['file_ext'] = ['ptcop']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
-		in_dict['plugin_included'] = ['sampler:single']
+		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['audio_filetypes'] = ['wav','ogg']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):

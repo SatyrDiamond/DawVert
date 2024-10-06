@@ -30,7 +30,7 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-lmms', None]
+		in_dict['in_plugin'] = ['native', 'lmms', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
@@ -42,7 +42,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('LMMS', 'BitInvader')
 				interpolation = bool(plugin_obj.params.get('interpolation', 0).value)
 
-				plugin_obj.replace('matt_tytel', 'vital')
+				plugin_obj.replace('external', 'matt_tytel', 'vital')
 				plugin_obj.env_asdr_copy('vol', 'vital_env_2')
 				plugin_obj.env_asdr_copy('cutoff', 'vital_env_3')
 				plugin_obj.env_asdr_copy('reso', 'vital_env_4')
@@ -83,7 +83,7 @@ class plugconv(plugins.base):
 					v_phoffset = plugin_obj.params.get('phoffset'+str_oscnum, 0).value
 					oscdata.append([v_vol,v_coarse,v_pan,v_finel,v_finer,v_wave,v_phoffset])
 
-				plugin_obj.replace('matt_tytel', 'vital')
+				plugin_obj.replace('external', 'matt_tytel', 'vital')
 
 				plugin_obj.env_asdr_copy('vol', 'vital_env_2')
 				plugin_obj.env_asdr_copy('cutoff', 'vital_env_3')
@@ -177,7 +177,7 @@ class plugconv(plugins.base):
 
 				papu_srw = plugin_obj.params.get('srw', 0).value
 
-				plugin_obj.replace('socalabs', 'papu')
+				plugin_obj.replace('external', 'socalabs', 'papu')
 
 				# Channel 1
 				plugin_obj.params.add("ol1", int(papu_ch1so1), 'float')
@@ -305,7 +305,7 @@ class plugconv(plugins.base):
 				lb_vcf_mod = plugin_obj.params.get('vcf_mod', 0).value
 				lb_vcf_res = plugin_obj.params.get('vcf_res', 0).value
 
-				plugin_obj.replace('matt_tytel', 'vital')
+				plugin_obj.replace('external', 'matt_tytel', 'vital')
 
 				osc_obj = plugin_obj.osc_add()
 				osc_obj.prop.type = 'wave'
@@ -382,7 +382,7 @@ class plugconv(plugins.base):
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'spectrumanalyzer')
 			if exttype:
 				extpluglog.extpluglist.success('LMMS', 'Spectrum Analyzer')
-				plugin_obj.replace('socalabs', 'spectrumanalyzer')
+				plugin_obj.replace('external', 'socalabs', 'spectrumanalyzer')
 				plugin_obj.params.add('mode', 0.0, 'float')
 				plugin_obj.params.add('log', 1.0, 'float')
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
@@ -397,7 +397,7 @@ class plugconv(plugins.base):
 				manu_obj.from_param('width', 'width', 1)
 				manu_obj.calc('width', 'div', 180, 0, 0, 0)
 				manu_obj.calc('width', 'to_one', -1, 1, 0, 0)
-				plugin_obj.replace('airwindows', 'Wider')
+				plugin_obj.replace('external', 'airwindows', 'Wider')
 				manu_obj.to_param('width', 'width', None)
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
 				return True
@@ -416,7 +416,7 @@ class plugconv(plugins.base):
 				manu_obj.from_param('outputGain', 'outputGain', 1)
 				manu_obj.calc_clamp('inputGain', 0, 2)
 				manu_obj.calc_clamp('outputGain', 0, 1)
-				plugin_obj.replace('wolf-plugins', 'wolfshaper')
+				plugin_obj.replace('external', 'wolf-plugins', 'wolfshaper')
 				manu_obj.to_param('inputGain', 'pregain', None)
 				manu_obj.to_param('outputGain', 'postgain', None)
 

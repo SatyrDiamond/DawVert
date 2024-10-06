@@ -174,6 +174,19 @@ class core:
 		dv_plugins.load_plugindir('audiocodecs', '')
 		dv_plugins.load_plugindir('audioconv', '')
 
+	def logger_only_plugconv(self):
+		logger_core.setLevel(logging.WARNING)
+		logger_compat.setLevel(logging.WARNING)
+		logger_fxchange.setLevel(logging.WARNING)
+		logger_project.setLevel(logging.WARNING)
+		logger_automation.setLevel(logging.WARNING)
+		logger_globalstore.setLevel(logging.WARNING)
+		logger_input.setLevel(logging.WARNING)
+		logger_output.setLevel(logging.WARNING)
+		logger_audiofile.setLevel(logging.WARNING)
+		logger_projparse.setLevel(logging.WARNING)
+		logger_plugins.setLevel(logging.WARNING)
+
 	def input_load_plugins(self, pluginset):
 		if pluginset in pluginsets_input: 
 			plugsetfolder, fullname = pluginsets_input[pluginset]

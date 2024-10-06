@@ -18,15 +18,15 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['universal', None]]
+		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
-		in_dict['out_plugins'] = [['native-amped', None]]
+		in_dict['out_plugins'] = [['native', 'amped', None]]
 		in_dict['out_daws'] = ['amped']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
-		if plugin_obj.type.subtype == 'filter':
+		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'Amped', 'EqualizerPro')
-			plugin_obj.replace('native-amped', 'EqualizerPro')
+			plugin_obj.replace('native', 'amped', 'EqualizerPro')
 
 			plugin_obj.params.add('filter/1/active', int(plugin_obj.filter.on), 'float')
 			plugin_obj.params.add('filter/1/freq', plugin_obj.filter.freq, 'float')
@@ -39,11 +39,11 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['filter', pluginid, 'q'], ['plugin', pluginid, "filter/1/q"])
 			return 0
 
-		if plugin_obj.type.subtype == 'eq-bands':
+		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
 			extpluglog.convinternal('Universal', 'EQ Bands', 'Amped', 'EqualizerPro')
 			gain_out = plugin_obj.params.get("gain_out", 0).value
 
-			plugin_obj.replace('native-amped', 'EqualizerPro')
+			plugin_obj.replace('native', 'amped', 'EqualizerPro')
 
 			for n, f in enumerate(plugin_obj.eq):
 				filter_id, filter_obj = f

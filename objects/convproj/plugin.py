@@ -4,7 +4,7 @@
 from functions import data_values
 from functions import xtramath
 from objects import globalstore
-from objects.valobjs import dualstr
+from objects.valobjs import triplestr
 from plugins import base as dv_plugins
 import wave as audio_wav
 import base64
@@ -49,7 +49,7 @@ class cvpj_plugin:
 	extplug_selector = dv_plugins.create_selector('extplugin')
 
 	def __init__(self):
-		self.type = dualstr()
+		self.type = triplestr()
 		self.visual = visual.cvpj_visual()
 		self.params_slot = params.cvpj_paramset()
 		self.filerefs_global = {}
@@ -165,8 +165,8 @@ class cvpj_plugin:
 		self.programs[prenum] = self.state = self.programs.pop(self.current_program)
 		self.current_program = prenum
 
-	def type_set(self, i_type, i_subtype):
-		self.type.set(i_type, i_subtype)
+	def type_set(self, i_category, i_type, i_subtype):
+		self.type.set(i_category, i_type, i_subtype)
 
 	def type_get(self):
 		return self.type.get_list()
@@ -174,28 +174,28 @@ class cvpj_plugin:
 	def get_type_visual(self):
 		return str(self.type)
 
-	def replace_hard(self, i_type, i_subtype):
-		self.type.set(i_type, i_subtype)
+	def replace_hard(self, i_category, i_type, i_subtype):
+		self.type.set(i_category, i_type, i_subtype)
 		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.set_program(0)
 		self.program_used = False
 		self.data = {}
 
-	def replace(self, i_type, i_subtype):
-		self.type.set(i_type, i_subtype)
+	def replace(self, i_category, i_type, i_subtype):
+		self.type.set(i_category, i_type, i_subtype)
 		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.clear_prog_keep(0)
 		self.program_used = False
 		self.data = {}
 
-	def check_match(self, i_type, i_subtype):
-		return self.type.check_match(i_type, i_subtype)
+	def check_match(self, i_category, i_type, i_subtype):
+		return self.type.check_match(i_category, i_type, i_subtype)
 
-	def check_matchmulti(self, i_type, i_subtypes):
-		return self.type.check_matchmulti(i_type, i_subtypes)
+	def check_matchmulti(self, i_category, i_type, i_subtypes):
+		return self.type.check_matchmulti(i_category, i_type, i_subtypes)
 
-	def check_wildmatch(self, i_type, i_subtype):
-		return self.type.check_wildmatch(i_type, i_subtype)
+	def check_wildmatch(self, i_category, i_type, i_subtype):
+		return self.type.check_wildmatch(i_category, i_type, i_subtype)
 
 	# -------------------------------------------------- fxdata
 	def fxdata_add(self, i_enabled, i_wet):
@@ -386,13 +386,14 @@ class cvpj_plugin:
 
 	def to_ext_plugin(self, convproj_obj, pluginid, exttype, extplat):
 		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
-			if self.check_wildmatch(prop_obj.type, prop_obj.subtype):
+			if self.check_wildmatch('external', prop_obj.type, prop_obj.subtype):
 				dvplug_obj.params_to_plugin(convproj_obj, self, pluginid, exttype)
 				dvplug_obj.encode_data(exttype, convproj_obj, self, extplat)
 
 	def plugts_transform(self, plugts_path, plugts_tr, convproj_obj, pluginid):
 		globalstore.plugts.load(plugts_path, plugts_path)
 		plugts_obj = globalstore.plugts.get(plugts_path)
+
 		if plugts_obj:
 			if plugts_tr in plugts_obj.transforms:
 				trobj = plugts_obj.transforms[plugts_tr]
@@ -411,7 +412,7 @@ class cvpj_plugin:
 							for n,x in enumerate(procdata[3:]): calcvals[n] = float(x)
 							manu_obj.calc(procdata[1], procdata[2], calcvals[0], calcvals[1], calcvals[2], calcvals[3])
 
-					self.replace(trobj.out_type.type, trobj.out_type.subtype)
+					self.replace(trobj.out_type.category, trobj.out_type.type, trobj.out_type.subtype)
 
 					for paramid, pltrpipe_obj in trobj.out_data.items():
 						if pltrpipe_obj.type == 'param':

@@ -50,7 +50,7 @@ class extplugin(plugins.base):
 				ws_params = self.plugin_data[1]
 				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('dragonfly_hall', plugintype):
 					if extparamid in ws_params: valuepack.value = float(ws_params[extparamid])
-				plugin_obj.replace('michaelwillis', 'dragonfly_hall')
+				plugin_obj.replace('user', 'michaelwillis', 'dragonfly_hall')
 				manu_obj.remap_ext_to_cvpj__post('dragonfly_hall', plugintype)
 				return True
 		return False
@@ -61,7 +61,7 @@ class extplugin(plugins.base):
 		params = {}
 		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('dragonfly_hall', plugintype):
 			params[extparamid] = float(valuepack)
-		plugin_obj.replace('vst2', None)
+		plugin_obj.replace('external', 'vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('dragonfly_hall', plugintype)
 		self.plugin_data = [{'preset': 'Small Clear Hall'}, params]
 		return True

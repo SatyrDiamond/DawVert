@@ -69,7 +69,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 		plugin_obj = None
 
 		if device.plugintype == 'Vst3Plugin':
-			plugin_obj = convproj_obj.add_plugin(device.id, 'vst3', None)
+			plugin_obj = convproj_obj.add_plugin(device.id, 'external', 'vst3', None)
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			vst3_state = zip_data.read(str(device.state))
 			plugin_vst3.import_presetdata_raw(convproj_obj, plugin_obj, vst3_state, None)
@@ -78,7 +78,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
 
 		if device.plugintype == 'Vst2Plugin':
-			plugin_obj = convproj_obj.add_plugin(device.id, 'vst2', None)
+			plugin_obj = convproj_obj.add_plugin(device.id, 'external', 'vst2', None)
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			vst2_state = zip_data.read(str(device.state))
 			plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, vst2_state, None)
@@ -303,6 +303,7 @@ class input_dawproject(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_nested'] = True
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_dawproject
 		from objects import auto_id

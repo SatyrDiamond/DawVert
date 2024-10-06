@@ -11,12 +11,12 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-tracktion', None]
+		in_dict['in_plugin'] = ['native', 'tracktion', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
 
-		if plugin_obj.type.subtype == 'distortion' and 'vst2' in extplugtype:
+		if plugin_obj.type.check_match('native', 'tracktion', 'distortion') and 'vst2' in extplugtype:
 			dtype = plugin_obj.params.get('dtype', 0).value
 			drive = plugin_obj.params.get('drive', 0).value
 			postGain = plugin_obj.params.get('postGain', 0).value
@@ -25,7 +25,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Mackity')
 				if exttype:
 					extpluglog.extpluglist.success('Waveform', 'Distortion')
-					plugin_obj.replace('airwindows', 'mackity')
+					plugin_obj.replace('external', 'airwindows', 'mackity')
 					plugin_obj.params.add('in_trim', drive, 'float')
 					plugin_obj.params.add('out_pad', postGain, 'float')
 					plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
@@ -35,7 +35,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Drive')
 				if exttype:
 					extpluglog.extpluglist.success('Waveform', 'Distortion')
-					plugin_obj.replace('airwindows', 'drive')
+					plugin_obj.replace('external', 'airwindows', 'drive')
 					plugin_obj.params.add('drive', drive, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', postGain, 'float')

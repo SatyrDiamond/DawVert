@@ -15,7 +15,7 @@ class input_adlib_rol(plugins.base):
 		in_dict['file_ext'] = ['rol']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
-		in_dict['plugin_included'] = ['fm:opl2']
+		in_dict['plugin_included'] = ['chip:fm:opl2']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

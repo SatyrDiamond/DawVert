@@ -420,13 +420,13 @@ def do_effects(convproj_obj, als_track, fxslots_audio):
 
 				als_device = None
 
-				if plugin_obj.check_wildmatch('native-ableton', None):
+				if plugin_obj.check_wildmatch('native', 'ableton', None):
 					als_device = add_plugindevice_native(als_track, convproj_obj, plugin_obj, plugid)
 
-				if plugin_obj.check_match('vst2', 'win'):
+				if plugin_obj.check_match('external', 'vst2', 'win'):
 					als_device = add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, plugid)
 	
-				if plugin_obj.check_match('vst3', 'win'):
+				if plugin_obj.check_match('external', 'vst3', 'win'):
 					als_device = add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, plugid)
 
 TIMESIGVALS = [1,2,4,8,16]
@@ -490,7 +490,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 		plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
 		if plugin_found:
-			issampler = plugin_obj.check_wildmatch('sampler', None)
+			issampler = plugin_obj.check_wildmatch('universal', 'sampler', None)
 		else:
 			issampler = False
 
@@ -587,25 +587,25 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			#print(str(plugin_obj.type), plugin_obj.datavals_global.get('name', ''))
 			is_sampler = False
 
-			if plugin_obj.check_wildmatch('native-ableton', None):
+			if plugin_obj.check_wildmatch('native', 'ableton', None):
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
 					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
 				add_plugindevice_native(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
 
-			if plugin_obj.check_match('vst2', 'win'):
+			if plugin_obj.check_match('external', 'vst2', 'win'):
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
 					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
 				add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
 
-			if plugin_obj.check_match('vst3', 'win'):
+			if plugin_obj.check_match('external', 'vst3', 'win'):
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
 					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
 				add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
 
-			if plugin_obj.check_match('sampler', 'multi'):
+			if plugin_obj.check_match('universal', 'sampler', 'multi'):
 				is_sampler = True
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
@@ -642,7 +642,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			
 				paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
 
-			if plugin_obj.check_match('sampler', 'single'):
+			if plugin_obj.check_match('universal', 'sampler', 'single'):
 				is_sampler = True
 
 				if middlenote != 0:
@@ -708,7 +708,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					paramkeys['Pitch/TransposeKey'] = ableton_parampart.as_param('TransposeKey', 'float', round(pitchin))
 					paramkeys['Pitch/TransposeFine'] = ableton_parampart.as_param('TransposeFine', 'float', (pitchin-round(pitchin))*100)
 
-			if plugin_obj.check_match('sampler', 'slicer'):
+			if plugin_obj.check_match('universal', 'sampler', 'slicer'):
 				is_sampler = True
 				samplepart_obj = plugin_obj.samplepart_get('sample')
 
@@ -1003,7 +1003,7 @@ class output_ableton(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp', 'rate']
-		in_dict['plugin_included'] = ['sampler:single','sampler:multi','sampler:slicer','native-ableton']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']

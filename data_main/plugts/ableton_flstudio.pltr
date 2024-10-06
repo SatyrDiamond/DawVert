@@ -1,7 +1,7 @@
 [fruity_balance]
 
 >input
-	type|native-flstudio:fruity balance
+	type|native:flstudio:fruity balance
 	param|pan
 	param|vol
 <input
@@ -13,7 +13,7 @@
 <proc
 
 >output
-	type|native-ableton:StereoGain
+	type|native:ableton:StereoGain
 	param|Balance<pan
 	param|LegacyGain<vol
 	param|BassMono&False

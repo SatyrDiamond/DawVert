@@ -12,22 +12,22 @@ STPM_valid = [b'...C',b'..MT',b'..PR',b'..TD',b'.APS',b'.BPR',b'.FSM',b'.MMP',b'
 def add_plugin(convproj_obj, omptp_num, omptp_type, omptp_id, omptp_name, omptp_libname, omptp_chunkdata, datadef, dataset):
 	pluginid = 'FX'+str(omptp_num)
 	if omptp_type == b'OMXD':
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'directx', omptp_libname)
+		plugin_obj = convproj_obj.add_plugin(pluginid, 'external', 'directx', omptp_libname)
 		jsondecoded = datadef.parse(omptp_libname.lower(), omptp_chunkdata)
 		plugin_obj.param_dict_dataset_get(jsondecoded, dataset, 'plugin', omptp_libname.lower())
 	elif omptp_type == b'PtsV':
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'vst2', None)
+		plugin_obj = convproj_obj.add_plugin(pluginid, 'external', 'vst2', None)
 		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', omptp_id, 'chunk', omptp_chunkdata, 0)
 	elif omptp_type == b'DBM0':
 		paramdata = omptp_chunkdata[4:]
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'native-digibooster', 'pro_echo')
+		plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'digibooster', 'pro_echo')
 		plugin_obj.params.add('delay', paramdata[0], 'int')
 		plugin_obj.params.add('fb', paramdata[1], 'int')
 		plugin_obj.params.add('wet', paramdata[2], 'int')
 		plugin_obj.params.add('cross_echo', paramdata[3], 'int')
 	elif omptp_type == b'SymM':
 		paramdata = omptp_chunkdata[4:]
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'native-symmod', 'echo')
+		plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'symmod', 'echo')
 		plugin_obj.params.add('type', paramdata[0], 'int')
 		plugin_obj.params.add('delay', paramdata[1], 'int')
 		plugin_obj.params.add('fb', paramdata[2], 'int')

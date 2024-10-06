@@ -1,7 +1,7 @@
 
 [eq_vst2]
 >input
-	type|native-onlineseq:eq
+	type|native:onlineseq:eq
 	param|eq_low
 	param|eq_mid
 	param|eq_high
@@ -17,7 +17,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<eq_low
 	name|Low
 	param|ext_param_1<eq_mid

@@ -17,7 +17,7 @@ class input_onlinesequencer(plugins.base):
 		in_dict['file_ext'] = ['sequence']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
-		in_dict['plugin_included'] = ['midi','native-onlineseq','universal:synth-osc']
+		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_onlineseq
@@ -85,7 +85,7 @@ class input_onlinesequencer(plugins.base):
 				track_obj.to_midi(convproj_obj, trackid, True)
 			else:
 				if instid in [13,14,15,16]: 
-					plugin_obj = convproj_obj.add_plugin(trackid, 'universal', 'synth-osc')
+					plugin_obj = convproj_obj.add_plugin(trackid, 'universal', 'synth-osc', None)
 					plugin_obj.role = 'synth'
 					track_obj.inst_pluginid = trackid
 					osc_data = plugin_obj.osc_add()
@@ -102,7 +102,7 @@ class input_onlinesequencer(plugins.base):
 	
 				if 'bitcrush' in s_used_fx:
 					pluginid = trackid+'_bitcrush'
-					plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'bitcrush')
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'bitcrush', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.params.add('bits', i_params.bitcrush_depth, 'float')
 					track_obj.fxslots_audio.append(pluginid)
@@ -119,7 +119,7 @@ class input_onlinesequencer(plugins.base):
 	
 				if 'distort' in s_used_fx:
 					pluginid = trackid+'_distort'
-					plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'distort')
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'onlineseq', 'distort')
 					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(True, i_params.distort_wet)
 					plugin_obj.params.add('distort_type', i_params.distort_type, 'int')
@@ -128,7 +128,7 @@ class input_onlinesequencer(plugins.base):
 	
 				if 'reverb' in s_used_fx:
 					pluginid = trackid+'_reverb'
-					plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'reverb')
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'onlineseq', 'reverb')
 					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(bool(i_params.reverb_on), i_params.reverb_wet)
 					plugin_obj.params.add('reverb_type', i_params.reverb_type, 'int')
@@ -137,7 +137,7 @@ class input_onlinesequencer(plugins.base):
 	
 				if 'eq' in s_used_fx:
 					pluginid = trackid+'_eq'
-					plugin_obj = convproj_obj.add_plugin(pluginid, 'native-onlineseq', 'eq')
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'onlineseq', 'eq')
 					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(bool(i_params.enable_eq), 1)
 					plugin_obj.params.add('eq_high', i_params.eq_high, 'float')

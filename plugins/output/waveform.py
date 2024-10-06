@@ -16,7 +16,7 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 	plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
 	if plugin_found: 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
-		if plugin_obj.check_wildmatch('vst2', None):
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			juceobj = juce_plugin.juce_plugin()
 			juceobj.from_cvpj(convproj_obj, plugin_obj)
 
@@ -33,7 +33,7 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 			wf_plugin.params['state'] = juceobj.memoryblock
 			return wf_plugin
 
-		if plugin_obj.check_wildmatch('native-tracktion', None):
+		if plugin_obj.check_wildmatch('native', 'tracktion', None):
 			wf_plugin = proj_waveform.waveform_plugin()
 			wf_plugin.plugtype = plugin_obj.type.subtype
 			wf_plugin.presetDirty = 1
@@ -65,7 +65,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['time_seconds'] = True
 		in_dict['audio_stretch'] = ['rate']
-		in_dict['plugin_included'] = ['native-tracktion']
+		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_waveform

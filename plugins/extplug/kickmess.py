@@ -68,7 +68,7 @@ class extplugin(plugins.base):
 			for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre__one('kickmess', plugintype):
 				outval = data_values.dict__nested_get_value(self.plugin_data, extparamid.split('/'))
 				if not (outval is None): valuepack.value = float(outval)
-			plugin_obj.replace('weirdconstructor', 'kickmess')
+			plugin_obj.replace('user', 'weirdconstructor', 'kickmess')
 			manu_obj.remap_ext_to_cvpj__post('kickmess', plugintype)
 			return True
 		return False
@@ -80,6 +80,6 @@ class extplugin(plugins.base):
 		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre__one('kickmess', plugintype):
 			data_values.dict__nested_add_value(self.plugin_data, extparamid.split('/'), valuepack.value)
 
-		plugin_obj.replace('vst2', None)
+		plugin_obj.replace('external', 'vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('kickmess', plugintype)
 		return True

@@ -117,21 +117,6 @@ class cvpj_plugin_state:
 	def get_type_visual(self):
 		return str(self.type)
 
-	def replace(self, i_type, i_subtype):
-		self.type.set(i_type, i_subtype)
-		self.params.clear()
-		self.datavals.clear()
-		self.data = {}
-
-	def check_match(self, i_type, i_subtype):
-		return self.type.check_match(i_type, i_subtype)
-
-	def check_matchmulti(self, i_type, i_subtypes):
-		return self.type.check_matchmulti(i_type, i_subtypes)
-
-	def check_wildmatch(self, i_type, i_subtype):
-		return self.type.check_wildmatch(i_type, i_subtype)
-
 	# -------------------------------------------------- dataset
 	def from_bytes(self, in_bytes, ds_name, df_name, cat_name, obj_name, structname): 
 		fldso = globalstore.dataset.get_obj(ds_name, 'plugin', obj_name)
@@ -159,7 +144,7 @@ class cvpj_plugin_state:
 			return b''
 			
 	def dset_param__add(self, p_id, p_value, dset_param):
-		if p_value == None: p_value = dset_param.defv
+		if p_value is None: p_value = dset_param.defv
 		if dset_param.type != 'list': 
 			if not dset_param.noauto:
 				param_obj = self.params.add(p_id, p_value, dset_param.type)
@@ -167,7 +152,8 @@ class cvpj_plugin_state:
 				param_obj.max = dset_param.max
 				param_obj.visual.name = dset_param.name
 			else: self.datavals.add(p_id, p_value)
-		else: self.array_add(p_id, p_value)
+		else: 
+			self.array_add(p_id, p_value)
 
 
 

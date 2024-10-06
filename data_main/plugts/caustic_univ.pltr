@@ -1,7 +1,7 @@
 
 [limiter]
 >input
-	type|native-caustic:master_limiter
+	type|native:caustic:master_limiter
 	param|35
 	param|36
 	param|37
@@ -18,7 +18,7 @@
 
 [master_reverb]
 >input
-	type|native-caustic:master_reverb
+	type|native:caustic:master_reverb
 	param|16
 	param|17
 	param|18

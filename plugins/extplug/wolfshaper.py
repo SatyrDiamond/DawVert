@@ -51,7 +51,7 @@ class extplugin(plugins.base):
 				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('wolfshaper', plugintype):
 					if extparamid in ws_params: valuepack.value = float(ws_params[extparamid])
 
-				plugin_obj.replace('wolf-plugins', 'wolfshaper')
+				plugin_obj.replace('user', 'wolf-plugins', 'wolfshaper')
 
 				manu_obj.remap_ext_to_cvpj__post('wolfshaper', plugintype)
 
@@ -81,7 +81,7 @@ class extplugin(plugins.base):
 		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('wolfshaper', plugintype):
 			params[extparamid] = float(valuepack)
 		
-		plugin_obj.replace('vst2', None)
+		plugin_obj.replace('external', 'vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('wolfshaper', plugintype)
 		for p in plugin_obj.env_points_get('shape').iter():
 			tension = p.tension

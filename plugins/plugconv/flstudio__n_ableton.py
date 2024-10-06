@@ -24,14 +24,14 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-ableton', None]]
+		in_dict['in_plugins'] = [['native', 'ableton', None]]
 		in_dict['in_daws'] = ['ableton']
-		in_dict['out_plugins'] = [['native-flstudio', None]]
+		in_dict['out_plugins'] = [['native', 'flstudio', None]]
 		in_dict['out_daws'] = ['flp']
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.subtype == 'Vocoder': 
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Vocoder'):
 			extpluglog.convinternal('Ableton', 'Vocoder', 'FL Studio', 'Fruity Vocoder')
 			als_BandCount = als_voc_bandnums[int(plugin_obj.datavals.get('FilterBank/BandCount', 4))]
 			band_lvls = [float(plugin_obj.datavals.get('FilterBank/BandLevel.'+str(n), 1)) for n in range(als_BandCount)]
@@ -43,14 +43,14 @@ class plugconv(plugins.base):
 			EnvelopeRelease = plugin_obj.params.get('EnvelopeRelease', 0).value
 			FormantShift = plugin_obj.params.get('FormantShift', 0).value
 			FilterBandWidth = plugin_obj.params.get('FilterBandWidth', 0).value
-			plugin_obj.replace('native-flstudio', 'fruity vocoder')
+			plugin_obj.replace('native', 'flstudio', 'fruity vocoder')
 			plugin_obj.params.add('env_att', int(EnvelopeRate), 'int')
 			plugin_obj.params.add('env_rel', int(EnvelopeRelease), 'int')
 			plugin_obj.params.add('freq_bandwidth', int(FilterBandWidth*200), 'int')
 			plugin_obj.params.add('freq_formant', int(FormantShift*100), 'int')
 			return 0
 
-		#if plugin_obj.type.subtype == 'FilterDelay': 
+		#if plugin_obj.type.check_wildmatch('native', 'ableton', 'FilterDelay'):
 		#	plugin_obj.params.debugtxt()
 		#	EnvelopeRate = plugin_obj.params.get('EnvelopeRate', 0).value
 #
@@ -70,7 +70,7 @@ class plugconv(plugins.base):
 		#		p_Volume = plugin_obj.params.get('Volume'+endnum, 0).value
 		#		filterparts.append([p_BandWidth,p_BeatDelayEnum,p_BeatDelayOffset,p_DelayTime,p_DelayTimeSwitch,p_Feedback,p_FilterOn,p_MidFreq,p_On,p_Pan,p_Volume])
 #
-		#	plugin_obj.replace('native-flstudio', 'fruity delay bank')
+		#	plugin_obj.replace('native', 'flstudio', 'fruity delay bank')
 #
 		#	plugin_obj.datavals.add('version', 16)
 		#	plugin_obj.params.add('dry', 128, 'int')
@@ -91,9 +91,9 @@ class plugconv(plugins.base):
 		#		plugin_obj.params.add(starttxtv+'/fbfilter_res', (p_BandWidth/9)*65536, 'int')
 		#		plugin_obj.params.add(starttxtv+'/feedback_vol', p_Feedback*128, 'int')
 
-		if plugin_obj.type.subtype == 'SpectrumAnalyzer': 
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'SpectrumAnalyzer'):
 			extpluglog.convinternal('Ableton', 'SpectrumAnalyzer', 'FL Studio', 'Fruity Spectroman')
-			plugin_obj.replace('native-flstudio', 'fruity spectroman')
+			plugin_obj.replace('native', 'flstudio', 'fruity spectroman')
 			plugin_obj.params.add('amp', 65, 'int')
 			plugin_obj.params.add('scale', 128, 'int')
 			plugin_obj.datavals.add('version', 100)

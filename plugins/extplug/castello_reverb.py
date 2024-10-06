@@ -52,7 +52,7 @@ class extplugin(plugins.base):
 				cr_params = self.plugin_data[1]
 				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('castello', plugintype):
 					if extparamid in cr_params: valuepack.value = float(cr_params[extparamid])
-			plugin_obj.replace('lucianoiam', 'castello')
+			plugin_obj.replace('user', 'lucianoiam', 'castello')
 			manu_obj.remap_ext_to_cvpj__post('castello', plugintype)
 			return True
 		return False
@@ -63,7 +63,7 @@ class extplugin(plugins.base):
 		params = {}
 		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('castello', plugintype):
 			params[extparamid] = float(valuepack)
-		plugin_obj.replace('vst2', None)
+		plugin_obj.replace('external', 'vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('castello', plugintype)
 		self.plugin_data = [{'ui_size': ''}, params]
 		return True

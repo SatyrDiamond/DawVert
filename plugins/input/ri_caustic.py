@@ -47,7 +47,7 @@ def add_caustic_fx(convproj_obj, track_obj, caustic_fx, start_plugid):
 
 		if caustic_fx_data.fx_type not in [4294967295, -1]:
 			fxtype = caustic_fxtype[caustic_fx_data.fx_type]
-			plugin_obj = convproj_obj.add_plugin(fx_pluginid, 'native-caustic', fxtype)
+			plugin_obj = convproj_obj.add_plugin(fx_pluginid, 'native', 'caustic', fxtype)
 			plugin_obj.role = 'effect'
 			plugin_obj.fxdata_add(bool(not int(controls_data[5])), 1)
 			plugin_obj.visual.from_dset('caustic', 'plugin_fx', fxtype, True)
@@ -99,7 +99,7 @@ class input_cvpj_r(plugins.base):
 		in_dict['placement_loop'] = ['loop']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['pl_points', 'nopl_points']
-		in_dict['plugin_included'] = ['native-caustic','sampler:single','sampler:multi']
+		in_dict['plugin_included'] = ['native:caustic','universal:sampler:single','universal:sampler:multi']
 		in_dict['fxchain_mixer'] = True
 		in_dict['audio_filetypes'] = ['wav']
 	def supported_autodetect(self): return False
@@ -181,7 +181,7 @@ class input_cvpj_r(plugins.base):
 
 					middlenote += region_data['key_root']-60
 				else:
-					plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+					plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
 					for samplecount, data in enumerate(machine.samples):
 						region_data, wave_data = data
@@ -218,7 +218,7 @@ class input_cvpj_r(plugins.base):
 
 			# -------------------------------- BeatBox --------------------------------
 			elif machine.mach_id == 'BBOX':
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'sampler', 'multi')
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				track_obj.params.add('usemasterpitch', False, 'bool')
 				track_obj.is_drum = True
@@ -249,7 +249,7 @@ class input_cvpj_r(plugins.base):
 			elif machine.mach_id == 'NULL':
 				pass
 			else:
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'native-caustic', machine.mach_id)
+				plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'caustic', machine.mach_id)
 				plugin_obj.role = 'synth'
 
 				fldso = globalstore.dataset.get_obj('caustic', 'plugin_inst', machine.mach_id)
@@ -303,7 +303,7 @@ class input_cvpj_r(plugins.base):
 			track_obj.sends.add('master_reverb', cvpj_trackid+'_send_reverb', mixer_tracks[machnum].send_reverb)
 
 			mixereq_plugid = 'machine'+str(machnum)+'_eq'
-			plugin_obj = convproj_obj.add_plugin(mixereq_plugid, 'native-caustic', 'mixer_eq')
+			plugin_obj = convproj_obj.add_plugin(mixereq_plugid, 'native', 'caustic', 'mixer_eq')
 			plugin_obj.visual.name = 'Mixer EQ'
 			plugin_obj.visual.color.set_float([0.67, 0.67, 0.67])
 			plugin_obj.params.add('bass', mixer_tracks[machnum].eq_low, 'float')
@@ -312,7 +312,7 @@ class input_cvpj_r(plugins.base):
 			track_obj.fxslots_mixer.append(mixereq_plugid)
 
 			width_plugid = 'machine'+str(machnum)+'_width'
-			plugin_obj = convproj_obj.add_plugin(width_plugid, 'universal', 'width')
+			plugin_obj = convproj_obj.add_plugin(width_plugid, 'universal', 'width', None)
 			plugin_obj.visual.name = 'Width'
 			plugin_obj.visual.color.set_float([0.66, 0.61, 0.76])
 			plugin_obj.params.add('width', mixer_tracks[machnum].width, 'float')
@@ -395,7 +395,7 @@ class input_cvpj_r(plugins.base):
 
 		for fxid in ['master_delay','master_reverb','master_eq','master_limiter']:
 
-			plugin_obj = convproj_obj.add_plugin(fxid, 'native-caustic', fxid)
+			plugin_obj = convproj_obj.add_plugin(fxid, 'native', 'caustic', fxid)
 			plugin_obj.visual.from_dset('caustic', 'plugin_master_fx', fxid, True)
 
 			if fxid in ['master_delay','master_reverb']:

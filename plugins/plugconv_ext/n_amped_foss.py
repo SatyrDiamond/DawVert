@@ -78,7 +78,7 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-amped', None]
+		in_dict['in_plugin'] = ['native', 'amped', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
@@ -114,7 +114,7 @@ class plugconv(plugins.base):
 
 				lfo_amp = plugin_obj.params.get("part/1/lfo/3/amp", 0).value
 
-				plugin_obj.replace('matt_tytel', 'vital')
+				plugin_obj.replace('external', 'matt_tytel', 'vital')
 
 				plugin_obj.env_asdr_copy('vol', 'vital_env_1')
 				plugin_obj.env_asdr_copy('cutoff', 'vital_env_2')
@@ -215,7 +215,7 @@ class plugconv(plugins.base):
 					p_density = 0.2+(boost*0.3)
 					p_outlvl = 1-(boost*(0.3 if distmode != 5 else 0.2))
 
-					plugin_obj.replace('airwindows', 'Density')
+					plugin_obj.replace('external', 'airwindows', 'Density')
 					plugin_obj.params.add('density', p_density, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('output', p_outlvl, 'float')
@@ -231,7 +231,7 @@ class plugconv(plugins.base):
 					extpluglog.extpluglist.success('Amped Studio', 'Distortion')
 					p_drive = [0.6,0.8,1][int(boost)]
 
-					plugin_obj.replace('airwindows', 'Drive')
+					plugin_obj.replace('external', 'airwindows', 'Drive')
 					plugin_obj.params.add('drive', p_drive, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', 0.5, 'float')

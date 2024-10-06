@@ -78,7 +78,7 @@ class plugconv(plugins.base):
 				manu_obj.to_value(0, 'early_send', None, 'float')
 				manu_obj.to_value(15, 'late_level', None, 'float')
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.subtype == 'Amp':
@@ -96,7 +96,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 0, 'float')
 					plugin_obj.params.add('sub', 0, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					plugin_obj.fxdata_add(None, p_DryWet)
 					return True
 
@@ -110,7 +110,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 1, 'float')
 					plugin_obj.params.add('sub', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					plugin_obj.fxdata_add(None, p_DryWet)
 					return True
 
@@ -124,7 +124,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 0.5, 'float')
 					plugin_obj.params.add('sub', 0.5, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					plugin_obj.fxdata_add(None, p_DryWet)
 					return True
 
@@ -138,7 +138,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('dry', 1, 'float')
 					plugin_obj.params.add('dub', 0.5, 'float')
 					plugin_obj.params.add('sub', 0.5, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					plugin_obj.fxdata_add(None, p_DryWet)
 					return True
 
@@ -152,7 +152,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('tone', 1, 'float')
 					plugin_obj.params.add('output', 0.8, 'float')
 					plugin_obj.params.add('dry_wet', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					plugin_obj.fxdata_add(None, p_DryWet)
 					return True
 
@@ -166,7 +166,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('dry', 0, 'float')
 					plugin_obj.params.add('dub', 0.5, 'float')
 					plugin_obj.params.add('sub', 0.5, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					plugin_obj.fxdata_add(None, p_DryWet)
 					return True
 
@@ -181,7 +181,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add('drive', p_DriveAmount/2, 'float')
 				plugin_obj.params.add('output', 1, 'float')
 				plugin_obj.params.add('dry_wet', 1, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				plugin_obj.fxdata_add(None, p_DryWet)
 				return True
 
@@ -197,7 +197,7 @@ class plugconv(plugins.base):
 				plugin_obj.replace('external', 'airwindows', 'Tube2')
 				plugin_obj.params.add('input', xtramath.from_db(PreDrive)/2, 'float')
 				plugin_obj.params.add('tube', xtramath.between_to_one(-3, 3, AutoBias), 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				plugin_obj.fxdata_add(None, p_DryWet)
 				return True
 
@@ -217,7 +217,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add('highpass', 0.1+(p_Tone/300), 'float')
 				plugin_obj.params.add('out_level', 1, 'float')
 				plugin_obj.params.add('dry_wet', 0.2, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				plugin_obj.fxdata_add(None, p_DryWet)
 				return True
 

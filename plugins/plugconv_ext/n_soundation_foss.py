@@ -36,7 +36,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', vol, 'float')
 					plugin_obj.params.add('dry_wet', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					return True
 
 			if mode in [1]:
@@ -50,7 +50,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('thresh', 0.5, 'float')
 					plugin_obj.params.add('output', 1, 'float')
 					plugin_obj.params.add('dry_wet', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					return True
 
 			if mode in [2,3]:
@@ -63,7 +63,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', 1, 'float')
 					plugin_obj.params.add('dry_wet', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					return True
 
 		if plugin_obj.type.check_match('native', 'soundation', 'com.soundation.fakie') and 'vst2' in extplugtype:
@@ -109,7 +109,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add('rmsize', 0.5, 'float')
 				plugin_obj.params.add('flavor', (size**2)/2, 'float')
 				plugin_obj.params.add('dry_wet', xtramath.wetdry(wet, dry), 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		if plugin_obj.type.check_match('native', 'soundation', 'com.soundation.tremolo'):
@@ -118,7 +118,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Soundation', 'Tremolo')
 				plugin_obj.plugts_transform('./data_ext/plugts/soundation_ext.pltr', 'tremolo_airwindows', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		return False

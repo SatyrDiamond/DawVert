@@ -358,16 +358,21 @@ class cvpj_automation:
 	def move(self, autopath, to_autopath):
 		autopath = cvpj_autoloc(autopath)
 		to_autopath = cvpj_autoloc(to_autopath)
-		logger_automation.info('Moving '+str(autopath)+' to '+str(to_autopath))
-		if autopath in self.data: self.data[to_autopath] = self.data.pop(autopath)
+		if autopath in self.data: 
+			logger_automation.info('Moving '+str(autopath)+' to '+str(to_autopath))
+			self.data[to_autopath] = self.data.pop(autopath)
+		else:
+			logger_automation.debug('Moving '+str(autopath)+' to '+str(to_autopath))
 
 	def copy(self, autopath, to_autopath):
 		autopath = cvpj_autoloc(autopath)
 		to_autopath = cvpj_autoloc(to_autopath)
-		logger_automation.info('Copying '+str(autopath)+' to '+str(to_autopath))
 		if autopath in self.data: 
+			logger_automation.info('Copying '+str(autopath)+' to '+str(to_autopath))
 			self.data[to_autopath] = copy.deepcopy(self.data[autopath])
 			self.data[to_autopath].id = self.auto_num.get()
+		else:
+			logger_automation.debug('Copying '+str(autopath)+' to '+str(to_autopath))
 
 	def move_group(self, autopath, fval, tval):
 		self.move(autopath+[fval], autopath+[tval])

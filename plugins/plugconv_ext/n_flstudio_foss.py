@@ -48,7 +48,7 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('dist_start', osc_dist, 'float')
 					plugin_obj.params.add('dist_end', osc_dist, 'float')
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		# ---------------------------------------- FL Keys ----------------------------------------
@@ -190,7 +190,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add('chorus_delay_1', -9.5, 'float')
 				plugin_obj.params.add('chorus_delay_2', -9.0, 'float')
 				if chorus_on != 0: plugin_obj.params.add('chorus_on', 1.0, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		# ---------------------------------------- Wasp ----------------------------------------
@@ -336,7 +336,7 @@ class plugconv(plugins.base):
 				modulation_obj.amount = fil_env/2
 				modulation_obj.bipolar = True
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 
@@ -347,7 +347,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('FL Studio', 'Fruity Bass Boost')
 				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'vst2_fruity_bass_boost', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		# ---------------------------------------- Fruity Fast Dist ----------------------------------------
@@ -359,7 +359,7 @@ class plugconv(plugins.base):
 				if exttype:
 					extpluglog.extpluglist.success('FL Studio', 'Fruity Fast Dist')
 					plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'vst2_fruity_fast_dist_type1', convproj_obj, pluginid)
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 					return True
 			if d_type == 1 and use_vst2:
 				extpluglog.extpluglist.add('FOSS', 'VST2', 'Overdrive', 'MDA')
@@ -382,7 +382,7 @@ class plugconv(plugins.base):
 				outval = (flipstate/8)+0.01
 				plugin_obj.replace('external', 'airwindows', 'Flipity')
 				plugin_obj.params.add('flipity', outval, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		# ---------------------------------------- fruity phaser ----------------------------------------
@@ -401,7 +401,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('FL Studio', 'Fruity Spectroman')
 				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'vst2_fruity_spectroman', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		# ---------------------------------------- fruity stereo enhancer ----------------------------------------
@@ -411,7 +411,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('FL Studio', 'Fruity Stereo Enhancer')
 				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'vst2_fruity_stereo_enhancer', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		# ---------------------------------------- fruity waveshaper ----------------------------------------
@@ -421,7 +421,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('FL Studio', 'Fruity Waveshaper')
 				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'fruity_waveshaper__wolfshaper', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		# ---------------------------------------- Vintage Chorus ----------------------------------------

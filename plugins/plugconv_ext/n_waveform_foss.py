@@ -28,7 +28,7 @@ class plugconv(plugins.base):
 					plugin_obj.replace('external', 'airwindows', 'mackity')
 					plugin_obj.params.add('in_trim', drive, 'float')
 					plugin_obj.params.add('out_pad', postGain, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 					return True
 			elif dtype == 0:
 				extpluglog.extpluglist.add('FOSS', 'VST', 'Drive', 'Airwindows')
@@ -40,5 +40,5 @@ class plugconv(plugins.base):
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', postGain, 'float')
 					plugin_obj.params.add('dry_wet', 1, 'float')
-					plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+					plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 					return True

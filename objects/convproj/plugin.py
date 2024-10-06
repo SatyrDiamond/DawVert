@@ -377,19 +377,6 @@ class cvpj_plugin:
 	def create_manu_obj(self, convproj_obj, pluginid):
 		return plugdatamanu.plug_manu(self, convproj_obj, pluginid)
 
-	def from_ext_plugin(self, convproj_obj, pluginid, exttype):
-		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
-			if exttype in prop_obj.ext_formats:
-				if dvplug_obj.check_plug(self):
-					dvplug_obj.decode_data(exttype, self)
-					dvplug_obj.params_from_plugin(convproj_obj, self, pluginid, exttype)
-
-	def to_ext_plugin(self, convproj_obj, pluginid, exttype, extplat):
-		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
-			if self.check_wildmatch('external', prop_obj.type, prop_obj.subtype):
-				dvplug_obj.params_to_plugin(convproj_obj, self, pluginid, exttype)
-				dvplug_obj.encode_data(exttype, convproj_obj, self, extplat)
-
 	def plugts_transform(self, plugts_path, plugts_tr, convproj_obj, pluginid):
 		globalstore.plugts.load(plugts_path, plugts_path)
 		plugts_obj = globalstore.plugts.get(plugts_path)
@@ -419,3 +406,18 @@ class cvpj_plugin:
 							iffound = manu_obj.to_param(pltrpipe_obj.v_from, pltrpipe_obj.v_to, pltrpipe_obj.name)
 							if not iffound: manu_obj.to_value(pltrpipe_obj.value, pltrpipe_obj.v_to, pltrpipe_obj.name, pltrpipe_obj.valuetype)
 					#print(trobj.proc)
+					
+	# -------------------------------------------------- ext
+
+	def external_to_user(self, convproj_obj, pluginid, exttype):
+		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
+			if exttype in prop_obj.ext_formats:
+				if dvplug_obj.check_plug(self):
+					dvplug_obj.decode_data(exttype, self)
+					dvplug_obj.params_from_plugin(convproj_obj, self, pluginid, exttype)
+
+	def user_to_external(self, convproj_obj, pluginid, exttype, extplat):
+		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
+			if self.check_wildmatch('user', prop_obj.type, prop_obj.subtype):
+				dvplug_obj.params_to_plugin(convproj_obj, self, pluginid, exttype)
+				dvplug_obj.encode_data(exttype, convproj_obj, self, extplat)

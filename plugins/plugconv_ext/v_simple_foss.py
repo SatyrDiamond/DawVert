@@ -27,7 +27,7 @@ class plugconv(plugins.base):
 				plugin_obj.replace('external', 'airwindows', 'reverb')
 				plugin_obj.params.add('big', 0.5, 'float')
 				plugin_obj.params.add('wet', fx_wet, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('simple', 'chorus', None):
@@ -41,7 +41,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add('speed', 0.5, 'float')
 				plugin_obj.params.add('range', amount/2.5, 'float')
 				plugin_obj.params.add('dry_wet', 1, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('simple', 'tremelo', None):
@@ -53,7 +53,7 @@ class plugconv(plugins.base):
 				plugin_obj.replace('external', 'airwindows', 'tremolo')
 				plugin_obj.params.add('speed', 0.5, 'float')
 				plugin_obj.params.add('depth', 0.5, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('simple', 'distortion', None):
@@ -69,7 +69,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add('highpass', 0, 'float')
 				plugin_obj.params.add('out_level', 1-(amount/2), 'float')
 				plugin_obj.params.add('dry_wet', fx_wet, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('simple', 'bassboost', None):
@@ -81,7 +81,7 @@ class plugconv(plugins.base):
 				plugin_obj.replace('external', 'airwindows', 'weight')
 				plugin_obj.params.add('freq', 1, 'float')
 				plugin_obj.params.add('weight', 1, 'float')
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		return False

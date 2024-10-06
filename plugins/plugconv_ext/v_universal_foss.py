@@ -37,7 +37,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'Compressor')
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'socalabs_compressor', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('universal', 'expander', None): 
@@ -46,7 +46,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'Expander')
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'socalabs_expander', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('universal', 'limiter', None):
@@ -55,7 +55,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'Limiter')
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'socalabs_limiter', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('universal', 'gate', None):
@@ -64,7 +64,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'Gate')
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'socalabs_gate', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('universal', 'flanger', None):
@@ -82,7 +82,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'Vibrato')
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'airwindows_vibrato', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 			if 'ladspa' in extplugtype:
 				extpluglog.extpluglist.add('FOSS', 'LADSPA', 'TAP Vibrato', 'TAP')
@@ -98,7 +98,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'AutoPan')
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'vst2_autopan', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 			if 'ladspa' in extplugtype:
 				extpluglog.extpluglist.add('FOSS', 'LADSPA', 'TAP AutoPanner', 'TAP')
@@ -114,7 +114,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'Reverb')
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'dragonfly_hall', convproj_obj, pluginid)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		if plugin_obj.type.check_wildmatch('universal', 'synth-osc', None):
@@ -174,7 +174,7 @@ class plugconv(plugins.base):
 							if s_osc.prop.shape == 'triangle': plugin_obj.params.add("osc", 1.0, 'float')
 							if s_osc.prop.shape == 'noise': plugin_obj.params.add("osc", 2.0, 'float')
 
-							plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+							plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 							return True
 					else:
 
@@ -201,5 +201,5 @@ class plugconv(plugins.base):
 							else:
 								plugin_obj.env_asdr_add('vital_env_1', 0, 0, 0, 0, 1, 0, 1)
 
-							plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+							plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 							return True

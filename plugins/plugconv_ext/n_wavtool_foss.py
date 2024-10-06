@@ -151,7 +151,7 @@ class plugconv(plugins.base):
 				#params_vital.importcvpj_lfo('custom2')
 				#params_vital.importcvpj_lfo('custom3')
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
 		else: return False

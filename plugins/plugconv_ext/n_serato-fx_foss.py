@@ -31,7 +31,7 @@ class plugconv(plugins.base):
 				manu_obj.to_value(0.8, 'detune', None, 'float')
 				manu_obj.to_value(0.5, 'bigness', None, 'float')
 				manu_obj.to_param('amount', 'dry_wet', None)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 
 		if plugin_obj.type.subtype == 'Light Tail Reverb.serato-effect-definition':
 			extpluglog.extpluglist.add('FOSS', 'VST', 'Galactic', 'Airwindows')
@@ -47,7 +47,7 @@ class plugconv(plugins.base):
 				manu_obj.to_value(0.5, 'detune', None, 'float')
 				manu_obj.to_value(0.7, 'bigness', None, 'float')
 				manu_obj.to_param('amount', 'dry_wet', None)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 
 		if plugin_obj.type.subtype == 'Dry Reverb.serato-effect-definition':
 			extpluglog.extpluglist.add('FOSS', 'VST', 'MatrixVerb', 'Airwindows')
@@ -65,7 +65,7 @@ class plugconv(plugins.base):
 				manu_obj.to_value(0.2, 'rmsize', None, 'float')
 				manu_obj.to_value(0, 'flavor', None, 'float')
 				manu_obj.to_param('amount', 'dry_wet', None)
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 
 
 		#else: return False

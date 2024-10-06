@@ -55,7 +55,7 @@ class plugconv(plugins.base):
 				manu_obj.to_param('bar8', 'upper8', 0)
 				manu_obj.to_param('bar9', 'upper9', 0)
 
-				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
+				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
 		return False

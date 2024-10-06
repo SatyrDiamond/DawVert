@@ -33,7 +33,7 @@ class plugconv(plugins.base):
 
 			plugin_obj.env_points_from_blocks('vol')
 			plugin_obj.env_points_copy('vol', 'vital_import_lfo_2')
-			plugin_obj.to_ext_plugin(convproj_obj, pluginid, exttype, 'any')
+			plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 
 			plugin_obj.datavals_global.add('middlenotefix', (-transpose)+12)
 			return True

@@ -241,7 +241,7 @@ class input_soundation(plugins.base):
 						plugin_obj.datavals.add('kit_name', kit_name)
 
 					elif instpluginname == 'com.soundation.europa':
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('external', 'reasonstudios', 'europa')
+						plugin_obj, pluginid = convproj_obj.add_plugin_genid('user', 'reasonstudios', 'europa')
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 

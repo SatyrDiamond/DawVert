@@ -479,7 +479,7 @@ class cvpj_plugin_state:
 
 	# -------------------------------------------------- ext
 
-	def from_ext_plugin(self, convproj_obj, pluginid, exttype):
+	def external_to_user(self, convproj_obj, pluginid, exttype):
 		for name, info_extplug in dv_plugins.iter_extplug():
 			if exttype in info_extplug.ext_formats:
 				exttsobj = info_extplug.classfunc()
@@ -487,7 +487,7 @@ class cvpj_plugin_state:
 					exttsobj.decode_data(exttype, self)
 					exttsobj.params_from_plugin(convproj_obj, self, pluginid, exttype)
 
-	def to_ext_plugin(self, convproj_obj, pluginid, exttype, extplat):
+	def user_to_external(self, convproj_obj, pluginid, exttype, extplat):
 		for name, info_extplug in dv_plugins.iter_extplug():
 			if self.check_wildmatch(info_extplug.type, info_extplug.subtype):
 				exttsobj = info_extplug.classfunc()

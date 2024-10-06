@@ -37,6 +37,7 @@ parser.add_argument("--splitter-mode")
 parser.add_argument("--splitter-detect-start")
 parser.add_argument("-y", action='store_true')
 parser.add_argument("-q", action='store_true')
+parser.add_argument("-pq", action='store_true')
 args = parser.parse_args()
 
 in_file = args.i
@@ -51,11 +52,14 @@ elif not os.path.exists(in_file):
 	logger_core.error('Input File Not Found.')
 	exit()
 
-if args.q == True: 
-	logging.disable(logging.INFO)
-
 pluginset = 'main'
 dawvert_core = core.core()
+
+if args.pq == True: 
+	dawvert_core.logger_only_plugconv()
+
+if args.q == True: 
+	logging.disable(logging.INFO)
 
 dawvert_core.config.load('./__config/config.ini')
 

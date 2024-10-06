@@ -21,23 +21,23 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 		plugin_obj.fxdata_add(1, 0.5)
 
 	elif fx_type == 1: #chorus
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'chorus')
+		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'chorus', None)
 		plugin_obj.params.add('amount', fx_value/100, 'float')
 
 	elif fx_type == 2: #reverb
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'reverb')
+		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'reverb', None)
 		plugin_obj.fxdata_add(1, (0.3)*(fx_value/100))
 
 	elif fx_type == 3: #distortion
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'distortion')
+		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'distortion', None)
 		plugin_obj.params.add('amount', fx_value/100, 'float')
 
 	elif fx_type == 4: #low_boost
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'bassboost')
+		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'bassboost', None)
 		plugin_obj.fxdata_add(1, fx_value/100)
 
 	elif fx_type == 5: #compressor
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'compressor')
+		plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'compressor', None)
 		plugin_obj.params.add('attack', 0.1, 'float')
 		plugin_obj.params.add('pregain', 0, 'float')
 		plugin_obj.params.add('knee', 6, 'float')
@@ -47,7 +47,7 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 		plugin_obj.params.add('threshold', -20, 'float')
 
 	elif fx_type == 6: #high_pass
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'filter')
+		plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'filter', None)
 		plugin_obj.filter.on = True
 		plugin_obj.filter.type.set('high_pass', None)
 		plugin_obj.filter.freq = xtramath.midi_filter(fx_value/100)
@@ -67,7 +67,7 @@ class input_ceol(plugins.base):
 		in_dict['file_ext'] = ['ceol']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = []
-		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','fm:opm','native-boscaceoil','universal:filter','midi']
+		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','chip:fm:opm','universal:filter','universal:midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_boscaceoil
@@ -133,7 +133,7 @@ class input_ceol(plugins.base):
 
 			if ceol_inst_obj.cutoff < 110:
 				fx_id = cvpj_instid+'_filter'
-				plugin_obj = convproj_obj.add_plugin(fx_id, 'universal', 'filter')
+				plugin_obj = convproj_obj.add_plugin(fx_id, 'universal', 'filter', None)
 				plugin_obj.filter.on = True
 				plugin_obj.filter.type.set('low_pass', None)
 				plugin_obj.filter.freq = xtramath.midi_filter(ceol_inst_obj.cutoff/100)

@@ -18,11 +18,11 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['universal', None]
+		in_dict['in_plugin'] = ['universal', None, None]
 		in_dict['ext_formats'] = ['vst2', 'ladspa']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
-		if plugin_obj.type.subtype == 'eq-3band':
+		if plugin_obj.type.check_wildmatch('universal', 'eq', '3band'):
 			if 'vst2' in extplugtype:
 				extpluglog.extpluglist.add('FOSS', 'VST2', '3 Band EQ', 'DISTRHO')
 				if plugin_vst2.check_exists('id', 1144210769):
@@ -31,7 +31,7 @@ class plugconv(plugins.base):
 					plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'any', 1144210769, 'param', None, 6)
 					return True
 
-		if plugin_obj.type.subtype == 'compressor':
+		if plugin_obj.type.check_wildmatch('universal', 'compressor', None):
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'Compressor', 'SocaLabs')
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'compressor')
 			if exttype:
@@ -40,7 +40,7 @@ class plugconv(plugins.base):
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
-		if plugin_obj.type.subtype == 'expander': 
+		if plugin_obj.type.check_wildmatch('universal', 'expander', None): 
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'Expander', 'SocaLabs')
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'expander')
 			if exttype:
@@ -49,7 +49,7 @@ class plugconv(plugins.base):
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
-		if plugin_obj.type.subtype == 'limiter':
+		if plugin_obj.type.check_wildmatch('universal', 'limiter', None):
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'Limiter', 'SocaLabs')
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'limiter')
 			if exttype:
@@ -58,7 +58,7 @@ class plugconv(plugins.base):
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
-		if plugin_obj.type.subtype == 'gate':
+		if plugin_obj.type.check_wildmatch('universal', 'gate', None):
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'Gate', 'SocaLabs')
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'gate')
 			if exttype:
@@ -67,7 +67,7 @@ class plugconv(plugins.base):
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
-		if plugin_obj.type.subtype == 'flanger':
+		if plugin_obj.type.check_wildmatch('universal', 'flanger', None):
 			if 'ladspa' in extplugtype:
 				extpluglog.extpluglist.add('FOSS', 'LADSPA', 'Calf Flanger', 'Calf')
 				extpluglog.extpluglist.success('Universal', 'Flanger')
@@ -76,7 +76,7 @@ class plugconv(plugins.base):
 				plugin_obj.datavals.add('plugin', 'Flanger')
 				return True
 
-		if plugin_obj.type.subtype == 'vibrato':
+		if plugin_obj.type.check_wildmatch('universal', 'vibrato', None):
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'Vibrato', 'Airwindows')
 			exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Vibrato')
 			if exttype:
@@ -92,7 +92,7 @@ class plugconv(plugins.base):
 				plugin_obj.datavals.add('plugin', 'tap_vibrato')
 				return True
 
-		if plugin_obj.type.subtype == 'autopan':
+		if plugin_obj.type.check_wildmatch('universal', 'autopan', None):
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'AutoPan', 'Airwindows')
 			exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'AutoPan')
 			if exttype:
@@ -108,7 +108,7 @@ class plugconv(plugins.base):
 				plugin_obj.datavals.add('plugin', 'tap_autopan')
 				return True
 
-		if plugin_obj.type.subtype == 'reverb':
+		if plugin_obj.type.check_wildmatch('universal', 'reverb', None):
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'Dragonfly Hall Reverb', '')
 			exttype = plugins.base.extplug_exists('dragonfly_hall', extplugtype, None)
 			if exttype:
@@ -117,7 +117,7 @@ class plugconv(plugins.base):
 				plugin_obj.to_ext_plugin(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
-		if plugin_obj.type.subtype == 'synth-osc':
+		if plugin_obj.type.check_wildmatch('universal', 'synth-osc', None):
 			if plugin_obj.oscs:
 				osc_obj = plugin_obj.oscs[0]
 
@@ -141,7 +141,7 @@ class plugconv(plugins.base):
 						if plugins.base.extplug_exists('magical8bitplug2', extplugtype, None):
 							extpluglog.extpluglist.success('Universal', 'Synth-OSC')
 
-							plugin_obj.replace('yokemura', 'magical8bitplug2')
+							plugin_obj.replace('external', 'yokemura', 'magical8bitplug2')
 
 							if env_a_vol[0]:
 								plugin_obj.params.add("attack", env_a_vol[1].attack, 'float')
@@ -184,7 +184,7 @@ class plugconv(plugins.base):
 						if exttype:
 							extpluglog.extpluglist.success('Universal', 'Synth-OSC')
 
-							plugin_obj.replace('matt_tytel', 'vital')
+							plugin_obj.replace('external', 'matt_tytel', 'vital')
 							plugin_obj.params.add('osc_1_on', 1, 'float')
 							plugin_obj.params.add('osc_1_level', 1, 'float')
 							plugin_obj.params.add('volume', 4000, 'float')

@@ -17,7 +17,7 @@
 <proc
 
 >output
-	type|socalabs:compressor
+	type|user:socalabs:compressor
 	param|attack
 	param|release
 	param|ratio
@@ -45,7 +45,7 @@
 <proc
 
 >output
-	type|socalabs:expander
+	type|user:socalabs:expander
 	param|attack
 	param|release
 	param|ratio
@@ -71,7 +71,7 @@
 <proc
 
 >output
-	type|socalabs:limiter
+	type|user:socalabs:limiter
 	param|attack
 	param|release
 	param|threshold
@@ -97,7 +97,7 @@
 <proc
 
 >output
-	type|socalabs:gate
+	type|user:socalabs:gate
 	param|attack
 	param|release
 	param|ratio
@@ -122,7 +122,7 @@
 <proc
 
 >output
-	type|airwindows:vibrato
+	type|user:airwindows:vibrato
 	param|speed<freq
 	param|depth<depth
 <output
@@ -139,7 +139,7 @@
 <proc
 
 >output
-	type|ladspa
+	type|external:ladspa
 	param|ext_param_0<freq
 	param|ext_param_1<depth
 	param|ext_param_0_1<freq
@@ -160,7 +160,7 @@
 <proc
 
 >output
-	type|airwindows:autopan
+	type|user:airwindows:autopan
 	param|rate<freq
 	param|phase%1.0
 	param|wide%0.0
@@ -179,7 +179,7 @@
 <proc
 
 >output
-	type|ladspa
+	type|external:ladspa
 	param|ext_param_0<freq
 	param|ext_param_1<depth
 	param|ext_param_0_1<freq
@@ -197,7 +197,7 @@
 <input
 
 >output
-	type|ladspa
+	type|external:ladspa
 	param|ext_param_4<delay
 	param|ext_param_5<depth
 	param|ext_param_6<rate
@@ -214,7 +214,7 @@
 
 [3band_vst2]
 >input
-	type|universal:eq-3band
+	type|universal:eq:3band
 	param|low_gain
 	param|mid_gain
 	param|high_gain
@@ -233,7 +233,7 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 	param|ext_param_0<low_gain
 	name|Low
 	param|ext_param_1<mid_gain
@@ -278,7 +278,7 @@
 <proc
 
 >output
-	type|michaelwillis:dragonfly_hall
+	type|user:michaelwillis:dragonfly_hall
 	param|low_cut
 	param|high_cut
 	param|size

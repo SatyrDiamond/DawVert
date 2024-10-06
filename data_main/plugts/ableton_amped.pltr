@@ -1,12 +1,12 @@
 [vibrato]
 >input
-	type|native-amped:Vibrato
+	type|native:amped:Vibrato
 	param|delayLfoDepth
 	param|delayLfoRateHz
 <input
 
 >output
-	type|native-ableton:Chorus2
+	type|native:ableton:Chorus2
 	param|Amount<delayLfoDepth
 	param|Rate<delayLfoRateHz
 	param|Mode%2
@@ -14,20 +14,20 @@
 
 [tremolo]
 >input
-	type|native-amped:Tremolo
+	type|native:amped:Tremolo
 	param|delayLfoDepth
 	param|delayLfoRateHz
 <input
 
 >output
-	type|native-ableton:AutoPan
+	type|native:ableton:AutoPan
 	param|Lfo/LfoAmount<delayLfoDepth
 	param|Lfo/Frequency<delayLfoRateHz
 <output
 
 [phaser]
 >input
-	type|native-amped:Phaser
+	type|native:amped:Phaser
 	param|feedback%0
 	param|hzmin%400
 	param|hzrange%4
@@ -43,7 +43,7 @@
 <proc
 
 >output
-	type|native-ableton:PhaserNew
+	type|native:ableton:PhaserNew
 	param|CenterFrequency<hzmin
 	param|Spread<hzrange
 	param|Feedback<feedback
@@ -57,7 +57,7 @@
 
 [flanger]
 >input
-	type|native-amped:Flanger
+	type|native:amped:Flanger
 	param|delayLfoDepth%0.75
 	param|delayLfoRateHz%1.0579
 	param|delayTimeMS%4
@@ -70,7 +70,7 @@
 <proc
 
 >output
-	type|native-ableton:PhaserNew
+	type|native:ableton:PhaserNew
 	param|DryWet<mix
 	param|FlangerDelayTime<delayTimeMS
 	param|Modulation_Amount<delayLfoDepth
@@ -81,7 +81,7 @@
 
 [chorus]
 >input
-	type|native-amped:Chorus
+	type|native:amped:Chorus
 	param|delayLfoDepth%1
 	param|delayLfoRateHz%1
 	param|mix%1
@@ -96,7 +96,7 @@
 <proc
 
 >output
-	type|native-ableton:Chorus2
+	type|native:ableton:Chorus2
 	param|Amount<delayLfoDepth
 	param|Rate<delayLfoRateHz
 	param|HighpassFrequency<tone
@@ -108,7 +108,7 @@
 
 [delay]
 >input
-	type|native-amped:Delay
+	type|native:amped:Delay
 	param|damp
 	param|fb
 	param|mix
@@ -121,7 +121,7 @@
 <proc
 
 >output
-	type|native-ableton:Delay
+	type|native:ableton:Delay
 	param|DelayLine_TimeL<time
 	param|DryWet<mix
 	param|Feedback<fb

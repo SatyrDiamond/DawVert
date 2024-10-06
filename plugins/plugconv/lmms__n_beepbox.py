@@ -9,12 +9,12 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-jummbox', None]]
+		in_dict['in_plugins'] = [['native', 'jummbox', None]]
 		in_dict['in_daws'] = ['jummbox']
-		in_dict['out_plugins'] = [['native-lmms', None]]
+		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
-		if plugin_obj.type.subtype in ['custom chip', 'chip', 'harmonics']:
+		if plugin_obj.type.check_matchmulti('native', 'jummbox', ['custom chip', 'chip', 'harmonics']):
 			extpluglog.convinternal('Beepbox', plugin_obj.type.subtype, 'LMMS', 'TripleOscillator')
 
 			samplefolder = dv_config.path_samples_generated
@@ -25,7 +25,7 @@ class plugconv(plugins.base):
 			if plugin_obj.type.subtype in ['custom chip', 'chip']: plugin_obj.wave_get('chipwave').to_audio(wave_path)
 			if plugin_obj.type.subtype in ['harmonics']: plugin_obj.harmonics_get('harmonics').to_audio(wave_path)
 
-			plugin_obj.replace('native-lmms', 'tripleoscillator')
+			plugin_obj.replace('native', 'lmms', 'tripleoscillator')
 			convproj_obj.add_sampleref(pluginid+'_wave', wave_path, None)
 
 			sampleid = pluginid+'_wave'

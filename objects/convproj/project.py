@@ -53,10 +53,11 @@ logger_project = logging.getLogger('project')
 def autopath_encode(autol):
 	return ';'.join(autol)
 
-def vis_plugin(p_type, p_subtype):
-	if p_type != None and p_subtype != None: return p_type+':'+p_subtype
-	elif p_type != None and p_subtype == None: return p_type
-	elif p_type == None and p_subtype == None: return 'None'
+def vis_plugin(p_category, p_type, p_subtype):
+	if p_category != None and p_type != None and p_subtype != None: return p_category+':'+p_type+':'+p_subtype
+	elif p_category != None and p_type != None and p_subtype == None: return p_category+':'+p_type
+	elif p_category != None and p_type == None and p_subtype == None: return p_category
+	elif p_category == None and p_type == None and p_subtype == None: return 'None'
 
 def autoloc_getname(autopath):
 	if autopath[0] == 'main': autoname = 'Main'
@@ -399,7 +400,7 @@ class cvpj_project:
 				track_obj.visual.from_dset_opt('midi', startcat, '0_0_'+str(m_inst) )
 
 		if not midifound:
-			plugin_obj = self.add_plugin(plug_id, None, None)
+			plugin_obj = self.add_plugin(plug_id, None, None, None)
 			plugin_obj.role = 'synth'
 			track_obj = self.add_track(track_id, 'instrument', uses_pl, indexed)
 			track_obj.inst_pluginid = plug_id
@@ -425,18 +426,18 @@ class cvpj_project:
 		if plug_id in self.plugins: return True, self.plugins[plug_id]
 		else: return False, None
 
-	def add_plugin(self, plug_id, i_type, i_subtype):
-		logger_project.info('Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype))
+	def add_plugin(self, plug_id, i_category, i_type, i_subtype):
+		logger_project.info('Plugin - '+str(plug_id)+' - '+vis_plugin(i_category, i_type, i_subtype))
 		plugin_obj = plugin.cvpj_plugin()
-		plugin_obj.replace(i_type, i_subtype)
+		plugin_obj.replace(i_category, i_type, i_subtype)
 		self.plugins[plug_id] = plugin_obj
 		return self.plugins[plug_id]
 
-	def add_plugin_genid(self, i_type, i_subtype):
+	def add_plugin_genid(self, i_category, i_type, i_subtype):
 		plug_id = plugin_id_counter.get_str_txt()
-		logger_project.info('Plugin - '+str(plug_id)+' - '+vis_plugin(i_type, i_subtype))
+		logger_project.info('Plugin - '+str(plug_id)+' - '+vis_plugin(i_category, i_type, i_subtype))
 		plugin_obj = plugin.cvpj_plugin()
-		plugin_obj.replace(i_type, i_subtype)
+		plugin_obj.replace(i_category, i_type, i_subtype)
 		self.plugins[plug_id] = plugin_obj
 		return self.plugins[plug_id], plug_id
 
@@ -456,12 +457,12 @@ class cvpj_project:
 			is_drumsynth = False
 
 		if not is_drumsynth:
-			plugin_obj = self.add_plugin(plug_id, 'sampler', 'single')
+			plugin_obj = self.add_plugin(plug_id, 'universal', 'sampler', 'single')
 			plugin_obj.role = 'synth'
 			samplepart_obj = plugin_obj.samplepart_add('sample')
 			if file_path: samplepart_obj.from_sampleref(self, sampleref)
 		else:
-			plugin_obj = self.add_plugin(plug_id, 'sampler', 'drumsynth')
+			plugin_obj = self.add_plugin(plug_id, 'universal', 'sampler', 'drumsynth')
 			plugin_obj.role = 'synth'
 			samplepart_obj = plugin_obj.samplepart_add('sample')
 			if file_path:
@@ -475,7 +476,7 @@ class cvpj_project:
 		return plugin_obj, sampleref_obj, samplepart_obj
 
 	def add_plugin_midi(self, plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev):
-		plugin_obj = self.add_plugin(plug_id, 'midi', None)
+		plugin_obj = self.add_plugin(plug_id, 'universal', 'midi', None)
 		plugin_obj.role = 'synth'
 		plugin_obj.midi.bank_hi = m_bank_hi
 		plugin_obj.midi.bank = m_bank

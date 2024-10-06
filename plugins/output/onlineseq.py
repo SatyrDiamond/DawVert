@@ -31,7 +31,7 @@ class output_onlineseq(plugins.base):
 		in_dict['file_ext'] = 'sequence'
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
-		in_dict['plugin_included'] = ['midi','native-onlineseq','universal:synth-osc']
+		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_onlineseq
 
@@ -58,7 +58,7 @@ class output_onlineseq(plugins.base):
 			if not midi_inst.drum: midiinst = midi_inst.patch
 
 			if plugin_found: 
-				if plugin_obj.check_wildmatch('synth-osc', None):
+				if plugin_obj.check_wildmatch('universal', 'synth-osc', None):
 					if len(plugin_obj.oscs) == 1:
 						s_osc = plugin_obj.oscs[0]
 						if s_osc.prop.shape == 'sine': onlineseqinst = 13

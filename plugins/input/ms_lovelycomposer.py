@@ -275,7 +275,7 @@ class input_lc(plugins.base):
 
 					cvpj_ninstid = '_'.join([str(tracknum),lc_instlist[used_instnum][1]])
 
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc')
+					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
 					plugin_obj.role = 'synth'
 					osc_data = plugin_obj.osc_add()
 		

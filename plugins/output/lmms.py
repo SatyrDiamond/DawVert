@@ -222,23 +222,23 @@ def encode_effectslot(effect_obj, plugin_obj, pluginid):
 	effect_obj.name = 'stereomatrix'
 	lmms_plug_obj.name = 'stereomatrixcontrols'
 
-	if plugin_obj.check_match('simple', 'reverb'):
+	if plugin_obj.check_match('simple', 'reverb', None):
 		effect_obj.name = 'reverbsc'
 		lmms_plug_obj.name = 'ReverbSCControls'
 		lmms_plug_obj.add_param('size', 0.2)
 		lmms_plug_obj.add_param('color', 15000)
 
-	elif plugin_obj.check_wildmatch('native-lmms', None):
+	elif plugin_obj.check_wildmatch('native', 'lmms', None):
 		effect_obj.name = plugin_obj.type.subtype
 		lmms_plug_obj.name = fxlist[plugin_obj.type.subtype]
 		dset_plugparams(plugin_obj.type.subtype, pluginid, lmms_plug_obj, plugin_obj)
 
-	elif plugin_obj.check_match('vst2', 'win'):
+	elif plugin_obj.check_match('external', 'vst2', 'win'):
 		effect_obj.name = 'vsteffect'
 		lmms_plug_obj.name = 'vsteffectcontrols'
 		setvstparams(lmms_plug_obj, plugin_obj, pluginid, effect_obj.keys)
 
-	elif plugin_obj.check_wildmatch('ladspa', None):
+	elif plugin_obj.check_wildmatch('external', 'ladspa', None):
 		effect_obj.name = 'ladspaeffect'
 		lmms_plug_obj.name = 'ladspacontrols'
 
@@ -331,7 +331,7 @@ class output_lmms(plugins.base):
 		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['enabled','vol']
 		in_dict['auto_types'] = ['pl_points']
-		in_dict['plugin_included'] = ['sampler:single','soundfont2','native-lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
+		in_dict['plugin_included'] = ['universal:sampler:single','soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['plugin_ext'] = ['vst2','ladspa']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		
@@ -396,7 +396,7 @@ class output_lmms(plugins.base):
 					for pluginid in track_obj.fxslots_notes:
 						plugin_found, plugin_obj = cvpj_obj.get_plugin(pluginid)
 						if plugin_found:
-							if plugin_obj.check_match('universal', 'arpeggiator'):
+							if plugin_obj.check_match('universal', 'arpeggiator', None):
 								arp_obj = insttrack_obj.arpeggiator
 								paramauto(arp_obj.arp_enabled, plugin_obj.params_slot, 'enabled', False, None, ['slot', pluginid], 'Arp', 'On')
 
@@ -414,7 +414,7 @@ class output_lmms(plugins.base):
 								chord_obj = plugin_obj.chord_get('main')
 								arp_obj.arp.value = chordids.index(chord_obj.chord_type) if chord_obj.chord_type in chordids else 0
 
-							if plugin_obj.check_match('universal', 'chord_creator'):
+							if plugin_obj.check_match('universal', 'chord_creator', None):
 								cc_obj = insttrack_obj.chordcreator
 								paramauto(cc_obj.chord_enabled, plugin_obj.params_slot, 'enabled', False, None, ['slot', pluginid], 'Chord', 'On')
 								chord_obj = plugin_obj.chord_get('main')
@@ -428,7 +428,7 @@ class output_lmms(plugins.base):
 
 					plugin_found, plugin_obj = cvpj_obj.get_plugin(track_obj.inst_pluginid)
 					if plugin_found:
-						if plugin_obj.check_match('sampler', 'single') or plugin_obj.check_match('sampler', 'drumsynth'):
+						if plugin_obj.check_match('universal', 'sampler', 'single') or plugin_obj.check_match('universal', 'sampler', 'drumsynth'):
 							lmms_inst_obj.name = 'audiofileprocessor'
 							lmms_plug_obj.name = 'audiofileprocessor'
 
@@ -456,7 +456,7 @@ class output_lmms(plugins.base):
 							else: lmms_plug_obj.add_param('interp', 2)
 							middlenotefix += 3
 
-						elif plugin_obj.check_wildmatch('soundfont2', None):
+						elif plugin_obj.check_wildmatch('universal', 'soundfont2', None):
 							lmms_inst_obj.name = 'sf2player'
 							lmms_plug_obj.name = 'sf2player'
 							bank, patch = plugin_obj.midi.to_sf2()
@@ -467,12 +467,12 @@ class output_lmms(plugins.base):
 							paramauto(lmms_plug_obj.add_param('gain', 1), plugin_obj.params, 'gain', 1, None, ['plugin', track_obj.inst_pluginid], 'Plugin', 'gain')
 							middlenotefix += 12
 
-						elif plugin_obj.check_match('vst2', 'win'):
+						elif plugin_obj.check_match('external', 'vst2', 'win'):
 							lmms_inst_obj.name = 'vestige'
 							lmms_plug_obj.name = 'vestige'
 							middlenotefix += setvstparams(lmms_plug_obj, plugin_obj, track_obj.inst_pluginid, None)
 
-						elif plugin_obj.check_wildmatch('native-lmms', None):
+						elif plugin_obj.check_wildmatch('native', 'lmms', None):
 							lmms_inst_obj.name = plugin_obj.type.subtype
 							lmms_plug_obj.name = plugin_obj.type.subtype
 							dset_plugparams(plugin_obj.type.subtype, track_obj.inst_pluginid, lmms_plug_obj, plugin_obj)

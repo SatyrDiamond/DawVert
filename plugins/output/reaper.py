@@ -19,7 +19,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 	if plugin_found:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 
-		if plugin_obj.check_wildmatch('vst2', None):
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
 			vst_fx_fourid = plugin_obj.datavals.get('fourid', 0)
 			vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
@@ -53,7 +53,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			rpp_plug_obj.wet['wet'] = fx_wet
 			if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-		if plugin_obj.check_wildmatch('vst3', None):
+		if plugin_obj.check_wildmatch('external', 'vst3', None):
 			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
 			vst_fx_name = plugin_obj.datavals.get('name', None)
 			vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
@@ -77,7 +77,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			rpp_plug_obj.wet['wet'] = fx_wet
 			if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-		if plugin_obj.check_wildmatch('jesusonic', None):
+		if plugin_obj.check_wildmatch('external', 'jesusonic', None):
 			rpp_plug_obj, rpp_js_obj, rpp_guid = rpp_fxchain.add_js()
 			rpp_js_obj.js_id = plugin_obj.type.subtype
 			rpp_js_obj.data = [plugin_obj.datavals.get(str(n), '-') for n in range(64)]

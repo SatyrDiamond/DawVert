@@ -20,7 +20,7 @@ class input_notessimo_v2(plugins.base):
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['fxtype'] = 'rack'
 		in_dict['track_lanes'] = True
-		in_dict['plugin_included'] = ['midi']
+		in_dict['plugin_included'] = ['universal:midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_notessimo_v2

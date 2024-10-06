@@ -1,7 +1,7 @@
 
 [comp]
 >input
-	type|native-tracktion:comp
+	type|native:tracktion:comp
 	param|attack
 	param|inputDb
 	param|knee
@@ -29,7 +29,7 @@
 
 [gate]
 >input
-	type|native-tracktion:gate
+	type|native:tracktion:gate
 	param|attack
 	param|hold
 	param|release
@@ -52,7 +52,7 @@
 
 [limiter]
 >input
-	type|native-tracktion:limiter
+	type|native:tracktion:limiter
 	param|ceiling
 	param|gain
 	param|release

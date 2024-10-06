@@ -1,7 +1,7 @@
 
 [compressor]
 >input
-	type|native-soundation:com.soundation.degrader
+	type|native:soundation:com.soundation.degrader
 	param|reduction
 	param|rate
 	param|mix
@@ -23,7 +23,7 @@
 
 [equalizer]
 >input
-	type|native-soundation:com.soundation.equalizer
+	type|native:soundation:com.soundation.equalizer
 	param|low
 	param|mid
 	param|high
@@ -39,7 +39,7 @@
 <proc
 
 >output
-	type|universal:eq-3band
+	type|universal:eq:3band
 	param|low_gain<low
 	param|mid_gain<mid
 	param|high_gain<high

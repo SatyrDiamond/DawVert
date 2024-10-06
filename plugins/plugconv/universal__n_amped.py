@@ -13,13 +13,13 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return -50
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native-amped', None]]
+		in_dict['in_plugins'] = [['native', 'amped', None]]
 		in_dict['in_daws'] = ['amped']
-		in_dict['out_plugins'] = [['universal', None]]
+		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
-		if plugin_obj.type.subtype == 'Delay':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Delay'):
 			extpluglog.convinternal('Amped', 'Delay', 'Universal', 'Delay')
 			p_time = plugin_obj.params.get('time', 0).value
 			p_fb = plugin_obj.params.get('fb', 0).value
@@ -36,7 +36,7 @@ class plugconv(plugins.base):
 			plugin_obj.params_slot.add('wet', p_mix, 'float')
 			return 1
 
-		if plugin_obj.type.subtype == 'Vibrato':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Vibrato'):
 			extpluglog.convinternal('Amped', 'Vibrato', 'Universal', 'Vibrato')
 			p_delayLfoRateHz = plugin_obj.params.get('delayLfoRateHz', 0).value
 			p_delayLfoDepth = plugin_obj.params.get('delayLfoDepth', 0).value
@@ -46,7 +46,7 @@ class plugconv(plugins.base):
 			lfo_obj.amount = p_delayLfoDepth
 			return 1
 
-		if plugin_obj.type.subtype == 'Tremolo':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Tremolo'):
 			extpluglog.convinternal('Amped', 'Tremolo', 'Universal', 'AutoPan')
 			p_lfoARateHz = plugin_obj.params.get('lfoARateHz', 0).value
 			p_lfoADepth = plugin_obj.params.get('lfoADepth', 0).value
@@ -56,12 +56,12 @@ class plugconv(plugins.base):
 			lfo_obj.amount = p_lfoADepth
 			return 1
 
-		if plugin_obj.type.subtype == 'BitCrusher':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'BitCrusher'):
 			extpluglog.convinternal('Amped', 'BitCrusher', 'Universal', 'BitCrusher')
 			plugin_obj.plugts_transform('./data_main/plugts/amped_univ.pltr', 'univ_bitcrush', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'Phaser':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Phaser'):
 			extpluglog.convinternal('Amped', 'Phaser', 'Universal', 'Phaser')
 			p_rate = plugin_obj.params.get('rate', 0).value
 			plugin_obj.plugts_transform('./data_main/plugts/amped_univ.pltr', 'univ_phaser', convproj_obj, pluginid)
@@ -69,12 +69,12 @@ class plugconv(plugins.base):
 			lfo_obj.time.set_hz(p_rate)
 			return 1
 
-		if plugin_obj.type.subtype == 'LimiterMini':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'LimiterMini'):
 			extpluglog.convinternal('Amped', 'Limiter Mini', 'Universal', 'Limiter')
 			plugin_obj.plugts_transform('./data_main/plugts/amped_univ.pltr', 'univ_limitermini', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'Limiter':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Limiter'):
 			extpluglog.convinternal('Amped', 'Limiter', 'Universal', 'Limiter')
 			filter_mode = plugin_obj.params.get('filterMode', 0).value
 			if filter_mode == 0: plugin_obj.filter.type.set('low_pass', None)
@@ -91,7 +91,7 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/amped_univ.pltr', 'univ_limiter', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype == 'Gate':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Gate'):
 			extpluglog.convinternal('Amped', 'Gate', 'Universal', 'Gate')
 			filter_mode = plugin_obj.params.get('filterMode', 0).value
 			if filter_mode == 0: plugin_obj.filter.type.set('low_pass', None)
@@ -108,7 +108,7 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/amped_univ.pltr', 'univ_gate', convproj_obj, pluginid)
 			return 1
 
-		if plugin_obj.type.subtype in ['Compressor', 'Expander']:
+		if plugin_obj.type.check_matchmulti('native', 'amped', ['Compressor', 'Expander']):
 			comp_detect_mode = plugin_obj.params.get('detectMode', 0).value
 			comp_circuit_mode = plugin_obj.params.get('circuitMode', 0).value
 
@@ -133,7 +133,7 @@ class plugconv(plugins.base):
 				extpluglog.convinternal('Amped', 'Expander', 'Universal', 'Expander')
 				plugin_obj.plugts_transform('./data_main/plugts/amped_univ.pltr', 'univ_expander', convproj_obj, pluginid)
 
-		if plugin_obj.type.subtype == 'Flanger':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Flanger'):
 			extpluglog.convinternal('Amped', 'Flanger', 'Universal', 'Flanger')
 			p_delayLfoRateHz = plugin_obj.params.get('delayLfoRateHz', 0).value
 			p_delayLfoDepth = plugin_obj.params.get('delayLfoDepth', 0).value
@@ -142,7 +142,7 @@ class plugconv(plugins.base):
 			lfo_obj.time.set_hz(p_delayLfoRateHz)
 			lfo_obj.amount = p_delayLfoDepth
 
-		if plugin_obj.type.subtype == 'Equalizer':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'Equalizer'):
 			extpluglog.convinternal('Amped', 'Equalizer', 'Universal', 'EQ Bands')
 			filter_obj, filter_id = plugin_obj.eq_add()
 			filter_obj.type.set('high_pass', None)
@@ -163,9 +163,9 @@ class plugconv(plugins.base):
 			filter_obj.freq = plugin_obj.params.get("lpfreq", 10000).value
 			convproj_obj.automation.move(['plugin', pluginid, "lpfreq"], ['n_filter', pluginid, filter_id, 'freq'])
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 
-		if plugin_obj.type.subtype == 'EqualizerPro':
+		if plugin_obj.type.check_wildmatch('native', 'amped', 'EqualizerPro'):
 			extpluglog.convinternal('Amped', 'Equalizer Pro', 'Universal', 'EQ Bands')
 			master_gain = plugin_obj.params.get("postGain", 0).value
 
@@ -192,7 +192,7 @@ class plugconv(plugins.base):
 				convproj_obj.automation.move(['plugin', pluginid, starttxt+"gain"], ['n_filter', pluginid, filter_id, 'gain'])
 				convproj_obj.automation.move(['plugin', pluginid, starttxt+"q"], ['n_filter', pluginid, filter_id, 'q'])
 
-			plugin_obj.replace('universal', 'eq-bands')
+			plugin_obj.replace('universal', 'eq', 'bands')
 
 			plugin_obj.params.add('gain_out', master_gain, 'float')
 			return 1

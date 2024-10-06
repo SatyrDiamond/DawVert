@@ -13,9 +13,9 @@ class plugconv(plugins.base):
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_priority(self): return 100
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['midi', None]]
+		in_dict['in_plugins'] = [['universal', 'midi', None]]
 		in_dict['in_daws'] = []
-		in_dict['out_plugins'] = [['soundfont2', None]]
+		in_dict['out_plugins'] = [['universal', 'soundfont2', None]]
 		in_dict['out_daws'] = []
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
@@ -31,7 +31,7 @@ class plugconv(plugins.base):
 
 		if sf2_loc:
 			extpluglog.convinternal('MIDI', 'MIDI', 'SoundFont2', 'SoundFont2')
-			plugin_obj.replace('soundfont2', None)
+			plugin_obj.replace('universal', 'soundfont2', None)
 			convproj_obj.add_fileref(sf2_loc, sf2_loc, None)
 			plugin_obj.filerefs['file'] = sf2_loc
 			return 1

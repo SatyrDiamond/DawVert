@@ -1,7 +1,7 @@
 
 [vst2_reverb]
 >input
-	type|native-amped:Reverb
+	type|native:amped:Reverb
 	param|fb
 	param|lpf
 	param|mix
@@ -13,7 +13,7 @@
 <proc
 
 >output
-	type|lucianoiam:castello
+	type|user:lucianoiam:castello
 	param|mix<mix
 	param|size<fb
 	param|brightness<lpf
@@ -21,7 +21,7 @@
 
 [vst2_compressormini]
 >input
-	type|native-amped:CompressorMini
+	type|native:amped:CompressorMini
 	param|squash
 <input
 
@@ -31,7 +31,7 @@
 <proc
 
 >output
-	type|airwindows:PurestSquish
+	type|user:airwindows:PurestSquish
 	param|squish<squash
 	param|bassblm%0.0
 	param|output%1.0

@@ -23,7 +23,7 @@ class input_mod(plugins.base):
 		in_dict['file_ext'] = ['mod']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['sampler:single']
+		in_dict['plugin_included'] = ['universal:sampler:single']
 	def supported_autodetect(self): return False
 
 	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):

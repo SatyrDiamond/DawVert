@@ -113,7 +113,7 @@ class output_wavtool(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp', 'rate']
-		in_dict['plugin_included'] = ['sampler:single']
+		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
@@ -267,7 +267,7 @@ class output_wavtool(plugins.base):
 						adsr_release = 0
 
 					if plugin_found:
-						if plugin_obj.check_match('sampler', 'single'):
+						if plugin_obj.check_match('universal', 'sampler', 'single'):
 							inst_supported = True
 							
 							sp_obj = plugin_obj.samplepart_get('sample')

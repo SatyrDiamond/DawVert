@@ -55,7 +55,7 @@ class input_midi(plugins.base):
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
-		in_dict['plugin_included'] = ['midi']
+		in_dict['plugin_included'] = ['universal:midi']
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

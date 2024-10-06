@@ -116,7 +116,7 @@ class extplugin(plugins.base):
 				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre(manuid, plugintype):
 					if extparamid in params: valuepack.value = params[extparamid]
 
-				plugin_obj.replace('socalabs', plugname)
+				plugin_obj.replace('user', 'socalabs', plugname)
 				manu_obj.remap_ext_to_cvpj__post(manuid, plugintype)
 				return True
 		return False
@@ -142,7 +142,7 @@ class extplugin(plugins.base):
 					temp_xml.set('uid', str(extparamid))
 					temp_xml.set('val', str(valuepack))
 	
-				plugin_obj.replace('vst2', None)
+				plugin_obj.replace('external', 'vst2', None)
 				manu_obj.remap_cvpj_to_ext__post(manuid, plugintype)
 			
 				self.plugin_data = [dbd, x_sl_data]

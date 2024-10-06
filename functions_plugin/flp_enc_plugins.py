@@ -25,7 +25,7 @@ def setparams(convproj_obj, plugin_obj):
 
 	bytesout = bytewriter.bytewriter()
 
-	if plugin_obj.check_wildmatch('sampler', 'slicer'):
+	if plugin_obj.check_wildmatch('universal', 'sampler', 'slicer'):
 		fl_plugin = 'fruity slicer'
 
 		sre_obj = plugin_obj.samplepart_get('sample')
@@ -89,13 +89,13 @@ def setparams(convproj_obj, plugin_obj):
 
 		fl_pluginparams = bytesout.getvalue()
 
-	if plugin_obj.check_wildmatch('native-flstudio', 'fruity html notebook'):
+	if plugin_obj.check_wildmatch('native', 'flstudio', 'fruity html notebook'):
 		fl_plugin = 'fruity html notebook'
 		bytesout.uint32(1)
 		bytesout.c_string__int8__nonull(plugin_obj.datavals.get('url', ''))
 		fl_pluginparams = bytesout.getvalue()
 
-	if plugin_obj.check_wildmatch('native-flstudio', 'fruity notebook'):
+	if plugin_obj.check_wildmatch('native', 'flstudio', 'fruity notebook'):
 		fl_plugin = 'fruity notebook'
 		bytesout.uint32(1000)
 		bytesout.uint32(plugin_obj.datavals.get('currentpage', 0))
@@ -107,7 +107,7 @@ def setparams(convproj_obj, plugin_obj):
 		bytesout.int8(plugin_obj.datavals.get('editing_enabled', 0))
 		fl_pluginparams = bytesout.getvalue()
 
-	if plugin_obj.check_wildmatch('native-flstudio', 'fruity notebook 2'):
+	if plugin_obj.check_wildmatch('native', 'flstudio', 'fruity notebook 2'):
 		fl_plugin = 'fruity notebook 2'
 		bytesout.uint32(0)
 		bytesout.uint32(plugin_obj.datavals.get('currentpage', 0))
@@ -120,7 +120,7 @@ def setparams(convproj_obj, plugin_obj):
 		bytesout.int8(plugin_obj.datavals.get('editing_enabled', 0))
 		fl_pluginparams = bytesout.getvalue()
 
-	if plugin_obj.check_wildmatch('native-flstudio', 'fruity vocoder'):
+	if plugin_obj.check_wildmatch('native', 'flstudio', 'fruity vocoder'):
 		fl_plugin = 'fruity vocoder'
 		p_bands = plugin_obj.array_get('bands', 4)
 		p_filter = plugin_obj.datavals.get('filter', 2)
@@ -162,7 +162,7 @@ def setparams(convproj_obj, plugin_obj):
 
 		fl_pluginparams = bytesout.getvalue()
 
-	if plugin_obj.check_wildmatch('native-flstudio', None):
+	if plugin_obj.check_wildmatch('native', 'flstudio', None):
 		outbytes = plugin_obj.to_bytes('fl_studio', 'fl_studio', 'plugin', plug_type[1], None)
 
 		if outbytes:
@@ -171,7 +171,7 @@ def setparams(convproj_obj, plugin_obj):
 		else:
 			fl_pluginparams = plugin_obj.rawdata_get('fl')
 
-	if plugin_obj.check_wildmatch('soundfont2', None):
+	if plugin_obj.check_wildmatch('universal', 'soundfont2', None):
 		fl_plugin = 'fruity soundfont player'
 
 		asdr_vol = plugin_obj.env_asdr_get('vol')
@@ -196,7 +196,7 @@ def setparams(convproj_obj, plugin_obj):
 		fl_pluginparams += sf2_file.encode('utf-8')
 		fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00'
 
-	if plugin_obj.check_wildmatch('vst2', None):
+	if plugin_obj.check_wildmatch('external', 'vst2', None):
 		vst_numparams = plugin_obj.datavals_global.get('numparams', 0)
 		vst_current_program = plugin_obj.current_program
 		vst_use_program = plugin_obj.program_used

@@ -13,12 +13,12 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugin'] = ['native-wavtool', None]
+		in_dict['in_plugin'] = ['native', 'wavtool', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
 
-		if plugin_obj.type.subtype == 'wavetable':
+		if plugin_obj.type.check_match('native', 'wavtool', 'wavetable'):
 			extpluglog.extpluglist.add('FOSS', 'VST', 'Vital', '')
 			exttype = plugins.base.extplug_exists('vital', extplugtype, None)
 			if exttype:
@@ -55,7 +55,7 @@ class plugconv(plugins.base):
 
 				matrix = plugin_obj.datavals.get('matrix', {})
 
-				plugin_obj.replace('matt_tytel', 'vital')
+				plugin_obj.replace('external', 'matt_tytel', 'vital')
 
 				plugin_obj.params.add('osc_1_destination', wt_filterA, 'float')
 				plugin_obj.params.add('osc_2_destination', wt_filterB, 'float')

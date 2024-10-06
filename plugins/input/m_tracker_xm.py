@@ -42,7 +42,7 @@ class input_xm(plugins.base):
 		in_dict['file_ext'] = ['xm']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['sampler:single', 'sampler:multi']
+		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 	def supported_autodetect(self): return True
 
 	def detect_bytes(self, in_bytes):
@@ -156,7 +156,7 @@ class input_xm(plugins.base):
 			else:
 				inst_used = True
 				inst_obj.params.add('vol', 0.3, 'float')
-				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('sampler', 'multi')
+				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
 				for instnum, r_start, e_end in sampleregions:
 					filename = samplefolder + str(xm_cursamplenum+instnum) + '.wav'
 					sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)

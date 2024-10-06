@@ -1,7 +1,7 @@
 
 [vst2_sid]
 >input
-	type|native-lmms:sid
+	type|native:lmms:sid
 	param|attack0
 	param|attack1
 	param|attack2
@@ -81,12 +81,12 @@
 <proc
 
 >output
-	type|vst2
+	type|external:vst2
 <output
 
 [kickmess]
 >input
-	type|native-lmms:kicker
+	type|native:lmms:kicker
 	param|startfreq
 	param|endfreq
 	param|decay
@@ -109,7 +109,7 @@
 <proc
 
 >output
-	type|weirdconstructor:kickmess
+	type|user:weirdconstructor:kickmess
 	param|freq_start<startfreq
 	param|freq_end<endfreq
 	param|f_env_release<decay
@@ -126,7 +126,7 @@
 
 [castello_reverbsc]
 >input
-	type|native-lmms:reverbsc
+	type|native:lmms:reverbsc
 	param|size
 	param|color
 <input
@@ -138,7 +138,7 @@
 <proc
 
 >output
-	type|lucianoiam:castello
+	type|user:lucianoiam:castello
 	param|mix%1
 	param|size<size
 	param|brightness<color

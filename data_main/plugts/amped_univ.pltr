@@ -1,7 +1,7 @@
 
 [univ_vibrato]
 >input
-	type|native-amped:Vibrato
+	type|native:amped:Vibrato
 	param|delayLfoRateHz
 	param|delayLfoDepth
 <input
@@ -14,7 +14,7 @@
 
 [univ_autopan]
 >input
-	type|native-amped:Tremolo
+	type|native:amped:Tremolo
 	param|lfoARateHz
 	param|lfoADepth
 <input
@@ -27,7 +27,7 @@
 
 [univ_bitcrush]
 >input
-	type|native-amped:BitCrusher
+	type|native:amped:BitCrusher
 	param|bits
 	param|down
 	param|mix
@@ -48,7 +48,7 @@
 
 [univ_compressor]
 >input
-	type|native-amped:Compressor
+	type|native:amped:Compressor
 	param|preGainDB
 	param|ratio
 	param|thresholdDB
@@ -80,7 +80,7 @@
 
 [univ_expander]
 >input
-	type|native-amped:Expander
+	type|native:amped:Expander
 	param|preGainDB
 	param|ratio
 	param|thresholdDB
@@ -112,7 +112,7 @@
 
 [univ_limitermini]
 >input
-	type|native-amped:LimiterMini
+	type|native:amped:LimiterMini
 	param|preGainDB
 	param|thresholdDB
 	param|releaseTimeMS
@@ -133,7 +133,7 @@
 
 [univ_limiter]
 >input
-	type|native-amped:LimiterMini
+	type|native:amped:LimiterMini
 	param|preGainDB
 	param|thresholdDB
 	param|attackTimeMS
@@ -160,7 +160,7 @@
 
 [univ_gate]
 >input
-	type|native-amped:Gate
+	type|native:amped:Gate
 	param|preGainDB
 	param|thresholdDB
 	param|attackTimeMS
@@ -193,7 +193,7 @@
 
 [univ_flanger]
 >input
-	type|native-amped:BitCrusher
+	type|native:amped:BitCrusher
 	param|voices
 	param|delayTimeMS
 	param|delayLfoRateHz
@@ -217,7 +217,7 @@
 
 [univ_phaser]
 >input
-	type|native-amped:Phaser
+	type|native:amped:Phaser
 	param|stages
 	param|rate
 	param|feedback

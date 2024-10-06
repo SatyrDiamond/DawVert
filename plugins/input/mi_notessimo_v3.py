@@ -148,7 +148,7 @@ class inst_manager():
 			sampleids = [d.sample_1 for _, d in notet_inst.sets.items() if d.sample_1]
 
 			if sampleids:
-				plugin_obj = convproj_obj.add_plugin(instid, 'sampler', 'multi')
+				plugin_obj = convproj_obj.add_plugin(instid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				inst_obj.pluginid = instid
 
@@ -156,7 +156,7 @@ class inst_manager():
 					inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data)
 
 			elif notet_inst.sample:
-				plugin_obj = convproj_obj.add_plugin(instid, 'sampler', 'single')
+				plugin_obj = convproj_obj.add_plugin(instid, 'universal', 'sampler', 'single')
 				plugin_obj.role = 'synth'
 				inst_obj.pluginid = instid
 
@@ -205,7 +205,7 @@ class input_notessimo_v3(plugins.base):
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['fxtype'] = 'rack'
 		in_dict['track_lanes'] = True
-		in_dict['plugin_included'] = ['midi']
+		in_dict['plugin_included'] = ['universal:midi']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_notessimo_v3

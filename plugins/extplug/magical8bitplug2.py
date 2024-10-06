@@ -58,7 +58,7 @@ class extplugin(plugins.base):
 
 				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('magical8bitplug2', plugintype):
 					if extparamid in params: valuepack.value = params[extparamid]
-				plugin_obj.replace('yokemura', 'magical8bitplug2')
+				plugin_obj.replace('user', 'yokemura', 'magical8bitplug2')
 				manu_obj.remap_ext_to_cvpj__post('magical8bitplug2', plugintype)
 			volumeEnv = data_xml.find_first(self.plugin_data, 'volumeEnv')
 			pitchEnv = data_xml.find_first(self.plugin_data, 'pitchEnv')
@@ -86,7 +86,7 @@ class extplugin(plugins.base):
 		xml_m8p_pitchEnv = ET.SubElement(xml_m8p_root, "pitchEnv")
 		xml_m8p_volumeEnv = ET.SubElement(xml_m8p_root, "volumeEnv")
 
-		plugin_obj.replace('vst2', None)
+		plugin_obj.replace('external', 'vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('magical8bitplug2', plugintype)
 		
 		for n, x in [["volumeEnv", xml_m8p_volumeEnv], ["pitchEnv", xml_m8p_pitchEnv], ["dutyEnv", xml_m8p_dutyEnv]]:

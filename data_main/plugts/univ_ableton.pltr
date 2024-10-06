@@ -13,7 +13,7 @@
 <proc
 
 >output
-	type|native-ableton:Limiter
+	type|native:ableton:Limiter
 	param|Ceiling<ceiling
 	param|Gain<gain
 	param|Release<release
@@ -29,7 +29,7 @@
 <input
 
 >output
-	type|native-ableton:Redux2
+	type|native:ableton:Redux2
 	param|BitDepth<bits
 	param|SampleRate<freq
 	param|DryWet<mix
@@ -56,7 +56,7 @@
 <proc
 
 >output
-	type|native-ableton:Compressor2
+	type|native:ableton:Compressor2
 	param|Threshold<threshold
 	param|Ratio<ratio
 	param|Attack<attack
@@ -87,7 +87,7 @@
 <proc
 
 >output
-	type|native-ableton:Compressor2
+	type|native:ableton:Compressor2
 	param|Threshold<threshold
 	param|ExpansionRatio<ratio
 	param|Attack<attack
@@ -119,7 +119,7 @@
 <proc
 
 >output
-	type|native-ableton:Gate
+	type|native:ableton:Gate
 	param|Attack<attack
 	param|Hold<hold
 	param|Release<release
@@ -149,7 +149,7 @@
 <proc
 
 >output
-	type|native-ableton:Gate
+	type|native:ableton:Gate
 	param|Attack<attack
 	param|Hold<hold
 	param|Release<release
@@ -170,7 +170,7 @@
 <proc
 
 >output
-	type|native-ableton:Chorus2
+	type|native:ableton:Chorus2
 	param|Mode%2
 	param|Width%1
 	param|OutputGain%1
@@ -187,7 +187,7 @@
 <input
 
 >output
-	type|native-ableton:AutoPan
+	type|native:ableton:AutoPan
 	param|Lfo/IsOn&1
 	param|Lfo/Frequency<freq
 	param|Lfo/LfoAmount<depth
@@ -201,7 +201,7 @@
 <input
 
 >output
-	type|native-ableton:StereoGain
+	type|native:ableton:StereoGain
 	param|Balance<pan
 	param|LegacyGain%0.0
 	param|BassMono&0

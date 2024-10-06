@@ -1,7 +1,7 @@
 
 [chorus_univ]
 >input
-	type|directx:Chorus
+	type|native:directx:Chorus
 	param|delay
 	param|depth
 	param|feedback
@@ -29,7 +29,7 @@
 
 [compressor_univ]
 >input
-	type|directx:Compressor
+	type|native:directx:Compressor
 	param|attack
 	param|gain
 	param|predelay
@@ -59,7 +59,7 @@
 
 [flanger_univ]
 >input
-	type|directx:Flanger
+	type|native:directx:Flanger
 	param|wetdrymix
 	param|delay
 	param|depth

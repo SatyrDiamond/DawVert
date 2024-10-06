@@ -98,15 +98,15 @@ def text_patternid(channum, patnum):
 def text_instid(channum, instnum):
 	return 'bb_ch'+str(channum)+'_inst'+str(instnum)
 
-def addfx(convproj_obj, inst_obj, fxgroupname, cvpj_instid, fxname):
+def addfx(convproj_obj, inst_obj, fxgroupname, cvpj_instid, fxname, fxsubname):
 	fx_pluginid = cvpj_instid+'_'+fxname
-	plugin_obj = convproj_obj.add_plugin(fx_pluginid, fxgroupname, fxname)
+	plugin_obj = convproj_obj.add_plugin(fx_pluginid, fxgroupname, fxname, fxsubname)
 	plugin_obj.role = 'effect'
 	inst_obj.fxslots_audio.append(fx_pluginid)
 	return plugin_obj
 
 def add_eq_data(inst_obj, cvpj_instid, eqfiltbands):
-	plugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'eq-bands')
+	plugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'eq', 'bands')
 	plugin_obj.role = 'effect'
 	plugin_obj.visual.name = 'EQ'
 	for eqfiltdata in eqfiltbands:
@@ -194,24 +194,24 @@ def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 		inst_obj.fxslots_audio.append(fx_pluginid)
 		
 	if 'distortion' in bb_fx.used:
-		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'distortion')
+		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'distortion', None)
 		fxplugin_obj.visual.name = 'Distortion'
 		param_obj = fxplugin_obj.params.add_named('amount', bb_fx.distortion/100, 'float', 'Amount')
 	
 	if 'bitcrusher' in bb_fx.used:
-		fxplugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'bitcrush')
+		fxplugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'bitcrush', None)
 		fxplugin_obj.visual.name = 'Bitcrusher'
 		t_bits_val = round(xtramath.between_from_one(7, 0, bb_fx.bitcrusherQuantization/100))
 		fxplugin_obj.params.add('bits', 2**t_bits_val, 'float')
 		fxplugin_obj.params.add('freq', (bb_fx.bitcrusherOctave+1)*523.25, 'float')
 		
 	if 'chorus' in bb_fx.used:
-		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'chorus')
+		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'chorus', None)
 		fxplugin_obj.visual.name = 'Chorus'
 		fxplugin_obj.params.add_named('amount', bb_fx.chorus/100, 'float', 'Amount')
 		
 	if 'reverb' in bb_fx.used:
-		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'reverb')
+		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'reverb', None)
 		fxplugin_obj.visual.name = 'Reverb'
 		fxplugin_obj.fxdata_add(1, bb_fx.reverb/100)
 						
@@ -227,7 +227,7 @@ class input_jummbox(plugins.base):
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['native-jummbox','universal:eq-bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
+		in_dict['plugin_included'] = ['native:jummbox','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
 
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
@@ -292,7 +292,7 @@ class input_jummbox(plugins.base):
 					if not midifound:
 						inst_obj = convproj_obj.add_instrument(cvpj_instid)
 						inst_obj.pluginid = cvpj_instid
-						plugin_obj = convproj_obj.add_plugin(cvpj_instid, 'native-jummbox', bb_inst.type)
+						plugin_obj = convproj_obj.add_plugin(cvpj_instid, 'native', 'jummbox', bb_inst.type)
 
 						if 'unison' in bb_inst.data: plugin_obj.datavals.add('unison', bb_inst.data['unison'])
 

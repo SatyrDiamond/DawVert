@@ -91,7 +91,7 @@ class output_cvpjs(plugins.base):
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		in_dict['plugin_included'] = ['sampler:single','universal:arpeggiator','native-flstudio','soundfont2']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','soundfont2']
 		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
 		from bs4 import BeautifulSoup
@@ -167,7 +167,7 @@ class output_cvpjs(plugins.base):
 
 			plugin_found, plugin_obj = convproj_obj.get_plugin(inst_obj.pluginid)
 			if plugin_found:
-				if plugin_obj.check_match('sampler', 'single'):
+				if plugin_obj.check_match('universal', 'sampler', 'single'):
 					fl_channel_obj.type = 0
 					fl_channel_obj.plugin.name = ''
 					fl_channel_obj.plugin.generator = True

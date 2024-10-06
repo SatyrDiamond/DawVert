@@ -80,7 +80,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 	fl_plugstr.load_raw(flplugin.params if flplugin.params else b'')
 	flplugin.name = flplugin.name.lower()
 
-	plugin_obj = convproj_obj.add_plugin(pluginid, 'native-flstudio', flplugin.name)
+	plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'flstudio', flplugin.name)
 
 	windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
 	windata_obj.pos_x = flplugin.window_p_x
@@ -121,7 +121,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
 			if 'fourid' in wrapperdata:
 
-				plugin_obj.type_set('vst2', 'win')
+				plugin_obj.type_set('external', 'vst2', 'win')
 				pluginstate = wrapperdata['state']
 				wrapper_vststate = pluginstate[0:9]
 				wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
@@ -236,7 +236,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 		flsf_hqrender = fl_plugstr.uint8()
 
-		plugin_obj.type_set('soundfont2', None)
+		plugin_obj.type_set('universal', 'soundfont2', None)
 
 		asdflfo_att = flsf_asdf_A/1024 if flsf_asdf_A != -1 else 0
 		asdflfo_dec = flsf_asdf_D/1024 if flsf_asdf_D != -1 else 0
@@ -273,7 +273,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		lfo_obj.amount = pitch_amount
 
 	elif flplugin.name == 'fruity slicer':
-		plugin_obj.type_set('sampler', 'slicer')
+		plugin_obj.type_set('universal', 'sampler', 'slicer')
 		slicer_version = fl_plugstr.int32()
 		slicer_beats = fl_plugstr.float()
 		slicer_bpm = fl_plugstr.float()
@@ -300,7 +300,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			slicechannels = sampleref_obj.channels
 			sre_obj.from_sampleref(convproj_obj, slicer_filename)
 
-		sre_obj.stretch.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
+		if slicer_bpm: sre_obj.stretch.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
 		sre_obj.pitch = slicer_pitch/100
 
 		slicer_numslices = fl_plugstr.uint32()
@@ -374,7 +374,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
 				with open(filename, "wb") as customconvolverfile:
 					customconvolverfile.write(fl_plugstr.read(audiosize))
-			plugin_obj.type_set( 'native-flstudio', flplugin.name)
+			plugin_obj.type_set('native', 'flstudio', flplugin.name)
 			plugin_obj.datavals.add('file', filename.decode())
 			fl_plugstr.read(36)
 			autodata = {}
@@ -394,13 +394,13 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 
 	elif flplugin.name == 'fruity html notebook':
-		plugin_obj.type_set( 'native-flstudio', flplugin.name)
+		plugin_obj.type_set('native', 'flstudio', flplugin.name)
 		version = fl_plugstr.uint32()
 		if version == 1: plugin_obj.datavals.add('url', fl_plugstr.c_string__int8(encoding='utf-8'))
 		
 
 	elif flplugin.name in ['fruity notebook 2', 'fruity notebook']:
-		plugin_obj.type_set( 'native-flstudio', flplugin.name)
+		plugin_obj.type_set('native', 'flstudio', flplugin.name)
 		version = fl_plugstr.uint32()
 		if (version == 0 and flplugin.name == 'fruity notebook 2') or (version == 1000 and flplugin.name == 'fruity notebook'): 
 			plugin_obj.datavals.add('currentpage', fl_plugstr.uint32())
@@ -420,7 +420,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		
 
 	elif flplugin.name == 'fruity vocoder':
-		plugin_obj.type_set( 'native-flstudio', flplugin.name)
+		plugin_obj.type_set('native', 'flstudio', flplugin.name)
 		voc_version = fl_plugstr.uint32()
 		voc_num_bands = fl_plugstr.uint32()
 		voc_filter = fl_plugstr.uint32()
@@ -446,7 +446,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		plugin_obj.params.add_named('mix_wet', fl_plugstr.uint32(), 'int', "Mix Wet")
 
 	elif flplugin.name == 'fruity waveshaper':
-		plugin_obj.type_set( 'native-flstudio', flplugin.name)
+		plugin_obj.type_set('native', 'flstudio', flplugin.name)
 		flplugvals = struct.unpack('bHHIIbbbbbb', fl_plugstr.read(22))
 		#print(flplugvals)
 		plugin_obj.params.add_named('preamp', flplugvals[2], 'int', "Pre Amp")
@@ -469,11 +469,11 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		sslfdata = decode_sslf(fl_plugstr)
 
 		if flplugin.name == 'bassdrum': 
-			plugin_obj.type_set('native-flstudio', flplugin.name)
+			plugin_obj.type_set('native', 'flstudio', flplugin.name)
 			plugin_obj.from_bytes(sslfdata, 'fl_studio', 'fl_studio', 'plugin', flplugin.name, 'sslf_bassdrum')
 
 		if flplugin.name == 'pitcher': 
-			plugin_obj.type_set('native-flstudio', flplugin.name)
+			plugin_obj.type_set('native', 'flstudio', flplugin.name)
 			plugin_obj.from_bytes(sslfdata, 'fl_studio', 'fl_studio', 'plugin', flplugin.name, 'sslf_pitcher')
 
 	elif flplugin.name == 'slicex':
@@ -498,7 +498,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		wavedata_size = fl_plugstr.int32()
 		wavedata = fl_plugstr.raw(wavedata_size)
 
-		plugin_obj.type_set('sampler', 'slicer')
+		plugin_obj.type_set('universal', 'sampler', 'slicer')
 
 		sre_obj = plugin_obj.samplepart_add('sample')
 
@@ -531,7 +531,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				slice_obj.start = marker_obj.sampleoffset
 
 	else:
-		plugin_obj.type_set('native-flstudio', flplugin.name)
+		plugin_obj.type_set('native', 'flstudio', flplugin.name)
 		dfdict = plugin_obj.from_bytes(flplugin.params, 'fl_studio', 'fl_studio', 'plugin', flplugin.name, None)
 		if dfdict and flplugin.name == 'simsynth':
 			try:

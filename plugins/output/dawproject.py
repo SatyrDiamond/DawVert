@@ -305,7 +305,7 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
 	if plugin_found:
 		dp_device = None
-		if plugin_obj.check_wildmatch('vst2', None):
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			dp_device = device.dawproject_device('Vst2Plugin')
 			dp_device.deviceID = plugin_obj.datavals_global.get('fourid', None)
 			dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
@@ -331,7 +331,7 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 					dp_device.realparameter.append(dp_realparam)
 					from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
 
-		if plugin_obj.check_wildmatch('vst3', None):
+		if plugin_obj.check_wildmatch('external', 'vst3', None):
 			dp_device = device.dawproject_device('Vst3Plugin')
 			dp_device.deviceID = plugin_obj.datavals_global.get('id', None)
 			dp_device.deviceName = plugin_obj.datavals_global.get('name', None)

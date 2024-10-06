@@ -19,33 +19,31 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict):
-		in_dict['in_plugins'] = [['native-flstudio', None]]
+		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flp']
-		in_dict['out_plugins'] = [['native-lmms', None]]
+		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		pluginname = plugin_obj.type.subtype.lower()
-
-		if pluginname == 'fruity stereo shaper':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity stereo shaper'):
 			extpluglog.convinternal('FL Studio', 'Stereo Shaper', 'LMMS', 'Stereo Matrix')
 			plugin_obj.plugts_transform('./data_main/plugts/flstudio_lmms.pltr', 'fruity_stereo_shaper', convproj_obj, pluginid)
 			return 0
 
-		if pluginname == 'fruity mute 2':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity mute 2'):
 			extpluglog.convinternal('FL Studio', 'Fruity Mute 2', 'LMMS', 'Amplifier')
 			channel = int(plugin_obj.params.get('channel', 1024).value/341)
 			mute = int(plugin_obj.params.get('mute', 0).value>512)
 			left = max(1-int(channel>=1), mute)
 			right = max(1-int(channel<=1), mute)
-			plugin_obj.replace('native-lmms', 'amplifier')
+			plugin_obj.replace('native', 'lmms', 'amplifier')
 			plugin_obj.params.add('pan', 0, 'int')
 			plugin_obj.params.add('volume', 100, 'int')
 			plugin_obj.params.add('right', 100*left, 'int')
 			plugin_obj.params.add('left', 100*right, 'int')
 			return 0
 
-		if pluginname == '3x osc':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', '3x osc'):
 			extpluglog.convinternal('FL Studio', '3xOsc', 'LMMS', 'TripleOscillator')
 			fl_osc1_coarse = plugin_obj.params.get('osc1_coarse', 0).value
 			fl_osc1_detune = plugin_obj.params.get('osc1_detune', 0).value
@@ -108,7 +106,7 @@ class plugconv(plugins.base):
 			plugin_obj.samplepart_copy('userwavefile2', 'sample')
 			plugin_obj.samplepart_copy('userwavefile3', 'sample')
 			
-			plugin_obj.replace('native-lmms', 'tripleoscillator')
+			plugin_obj.replace('native', 'lmms', 'tripleoscillator')
 
 			plugin_obj.params.add('coarse0', lmms_coarse0, 'int')
 			plugin_obj.params.add('coarse1', lmms_coarse1, 'int')
@@ -147,12 +145,12 @@ class plugconv(plugins.base):
 
 			return 0
 	   
-		if pluginname == 'plucked!':
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'plucked!'):
 			extpluglog.convinternal('FL Studio', 'Plucked!', 'LMMS', 'Vibed')
 			color = plugin_obj.params.get('color', 0).value/128
 			decay = plugin_obj.params.get('decay', 0).value/256
 
-			plugin_obj.replace('native-lmms', 'vibedstrings')
+			plugin_obj.replace('native', 'lmms', 'vibedstrings')
 
 			plugin_obj.params.add('active0', 1, 'int')
 			plugin_obj.params.add('slap0', 0.5, 'float')

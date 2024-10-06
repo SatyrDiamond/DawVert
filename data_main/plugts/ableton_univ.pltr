@@ -1,7 +1,7 @@
 
 [limiter]
 >input
-	type|native-ableton:Limiter
+	type|native:ableton:Limiter
 	param|Ceiling
 	param|Gain
 	param|Release
@@ -22,7 +22,7 @@
 
 [redux2]
 >input
-	type|native-ableton:Redux2
+	type|native:ableton:Redux2
 	param|BitDepth
 	param|SampleRate
 	param|DryWet
@@ -37,7 +37,7 @@
 
 [compressor2_comp]
 >input
-	type|native-ableton:Compressor2
+	type|native:ableton:Compressor2
 	param|Threshold
 	param|Ratio
 	param|Attack
@@ -69,7 +69,7 @@
 
 [compressor2_expand]
 >input
-	type|native-ableton:Compressor2
+	type|native:ableton:Compressor2
 	param|Threshold
 	param|ExpansionRatio
 	param|Attack
@@ -100,7 +100,7 @@
 
 [gate]
 >input
-	type|native-ableton:Gate
+	type|native:ableton:Gate
 	param|Attack
 	param|Hold
 	param|Release
@@ -130,7 +130,7 @@
 
 [filtereq3]
 >input
-	type|native-ableton:FilterEQ3
+	type|native:ableton:FilterEQ3
 	param|FreqHi
 	param|FreqLo
 	param|GainHi
@@ -148,7 +148,7 @@
 <proc
 
 >output
-	type|universal:eq-3band
+	type|universal:eq:3band
 	param|low_gain<GainLo
 	param|mid_gain<GainMid
 	param|high_gain<GainHi
@@ -159,7 +159,7 @@
 [volpan]
 
 >input
-	type|native-flstudio:fruity balance
+	type|native:flstudio:fruity balance
 	param|pan
 	param|vol
 <input
@@ -171,7 +171,7 @@
 <proc
 
 >output
-	type|native-ableton:StereoGain
+	type|native:ableton:StereoGain
 	param|Balance<pan
 	param|LegacyGain<vol
 	param|BassMono&0

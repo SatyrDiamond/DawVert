@@ -63,14 +63,14 @@ class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['universal', None]]
+		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
-		in_dict['out_plugins'] = [['native-lmms', None]]
+		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		#plugintype = cvpj_plugindata.type_get()
 
-		if plugin_obj.type.subtype == 'synth-osc':
+		if plugin_obj.type.check_wildmatch('universal', 'synth-osc', None):
 			samplefolder = dv_config.path_samples_generated
 
 			if len(plugin_obj.oscs) == 1 and not plugin_obj.env_blocks_get_exists('vol')[0] and not plugin_obj.env_points_get_exists('vol')[0]:
@@ -78,7 +78,7 @@ class plugconv(plugins.base):
 
 				if osc_obj.prop.shape == 'square':
 					extpluglog.convinternal('Universal', 'Synth-OSC', 'LMMS', 'Monstro')
-					plugin_obj.replace('native-lmms', 'monstro')
+					plugin_obj.replace('native', 'lmms', 'monstro')
 					plugin_obj.params.add('o1vol', 50, 'int')
 					plugin_obj.params.add('o2vol', 0, 'int')
 					plugin_obj.params.add('o3vol', 0, 'int')
@@ -87,7 +87,7 @@ class plugconv(plugins.base):
 
 				elif osc_obj.prop.shape in ['triangle', 'pulse', 'saw', 'sine'] or osc_obj.prop.type == 'wave':
 					extpluglog.convinternal('Universal', 'Synth-OSC', 'LMMS', 'Triple Oscillator')
-					plugin_obj.replace('native-lmms', 'tripleoscillator')
+					plugin_obj.replace('native', 'lmms', 'tripleoscillator')
 					plugin_obj.params.add('coarse0', -12, 'int')
 					plugin_obj.params.add('finel0', 0, 'int')
 					plugin_obj.params.add('finer0', 0, 'int')
@@ -113,20 +113,20 @@ class plugconv(plugins.base):
 						sp_obj.sampleref = pluginid+'_wave'
 					return 0
 
-		if plugin_obj.type.subtype == 'bitcrush':
+		if plugin_obj.type.check_wildmatch('universal', 'bitcrush', None):
 			extpluglog.convinternal('Universal', 'Bitcrush', 'LMMS', 'Bitcrush')
 			plugin_obj.plugts_transform('./data_main/plugts/univ_lmms.pltr', 'bitcrush', convproj_obj, pluginid)
 			return 0
 
-		if plugin_obj.type.subtype == 'volpan':
+		if plugin_obj.type.check_wildmatch('universal', 'volpan', None):
 			extpluglog.convinternal('Universal', 'Vol/Pan', 'LMMS', 'Amplifier')
 			plugin_obj.plugts_transform('./data_main/plugts/univ_lmms.pltr', 'volpan', convproj_obj, pluginid)
 			return 0
 
-		if plugin_obj.type.subtype == 'filter':
+		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'LMMS', 'Dual Filter')
 			filter_obj = plugin_obj.filter
-			plugin_obj.replace('native-lmms', 'dualfilter')
+			plugin_obj.replace('native', 'lmms', 'dualfilter')
 			convproj_obj.automation.move(['filter', pluginid, 'freq'], ['plugin', pluginid, 'cut1'])
 			convproj_obj.automation.move(['filter', pluginid, 'q'], ['plugin', pluginid, 'res1'])
 			plugin_obj.params.add('wet', 1, 'float')
@@ -143,10 +143,10 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('res2', 0.5, 'float')
 
 		iseqlimited = False
-		if plugin_obj.type.subtype == 'eq-bands':
+		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
 			iseqlimited = plugin_obj.eq_to_8limited(convproj_obj, pluginid)
 
-		if plugin_obj.type.subtype == 'eq-8limited' or iseqlimited:
+		if plugin_obj.type.check_wildmatch('universal', 'eq', '8limited') or iseqlimited:
 			extpluglog.convinternal('Universal', ('EQ 8-Limited' if iseqlimited else 'EQ Bands'), 'LMMS', 'EQ')
 			fil_hp = plugin_obj.named_filter_get('high_pass')
 			fil_ls = plugin_obj.named_filter_get('low_shelf')
@@ -154,7 +154,7 @@ class plugconv(plugins.base):
 			fil_hs = plugin_obj.named_filter_get('high_shelf')
 			fil_lp = plugin_obj.named_filter_get('low_pass')
 
-			plugin_obj.replace('native-lmms', 'eq')
+			plugin_obj.replace('native', 'lmms', 'eq')
 
 			plugin_obj.params.add('HPactive', int(fil_hp.on), 'float')
 			plugin_obj.params.add('HPfreq', fil_hp.freq, 'float')

@@ -10,7 +10,7 @@ import math
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -50
+	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'caustic', None]]
 		in_dict['in_daws'] = []

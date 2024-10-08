@@ -29,3 +29,9 @@ class input_codec(plugins.base):
 
 		audio_obj.set_codec('int16')
 		audio_obj.pcm_from_list(data)
+
+		#vag_flag = np.frombuffer(in_bytes, dtype=np.uint8)[1::16]%4
+		#print(vag_flag)
+		#loopflag = np.where(vag_flag==2)[0]
+		#if len(loopflag):
+		#	audio_obj.loop = [loopflag[0], len(data)]

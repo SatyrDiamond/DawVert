@@ -51,6 +51,8 @@ class midi_song:
 
 		self.instruments = instruments.midi_instruments()
 
+		self.nocolor = False
+
 	def add_port(self, numchannels):
 		self.song_channels += numchannels
 		self.start_pitch += [0 for _ in range(numchannels)]
@@ -113,6 +115,18 @@ class midi_song:
 				app = np.where(s_pitch['pos']<=self.startpos_chan[chan])
 				if len(app[0])!=0: self.start_pitch[chan] = s_pitch['value'][app][-1]
 
+	def get_insts_custom(self):
+		for inst in self.instruments.midi_instruments.data:
+			if inst['is_custom'] and inst['used']:
+				instid = '_'.join([
+					str(inst['track']), 
+					str(inst['chan']), 
+					str(inst['inst']), 
+					str(inst['bank']), 
+					str(inst['bank_hi']), 
+					str(inst['drum'])])
+				yield inst, instid
+
 	def to_cvpj(self, convproj_obj):
 		convproj_obj.set_timings(self.ppq, True)
 		self.auto_timesig.clean()
@@ -130,7 +144,7 @@ class midi_song:
 
 				track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
 				track_obj.visual.name = track.track_name
-				track_obj.visual.color.set_int(track.track_color)
+				if not self.nocolor: track_obj.visual.color.set_int(track.track_color)
 
 				s_tin = single_trackinst[tracknum]
 				if s_tin != None:
@@ -138,6 +152,8 @@ class midi_song:
 						track_obj.visual.from_dset('midi', self.device+'_inst', '_'.join([s_tin[0],s_tin[1],s_tin[2]]), False)
 
 				track.notes.to_cvpj(track_obj.placements.notelist, tracknum, -1)
+
+			if self.nocolor: track_obj.visual.color.remove()
 
 		if len(self.miditracks)==1:
 			track = self.miditracks[0]
@@ -163,10 +179,12 @@ class midi_song:
 						else: track_obj.visual.name = chantxt
 					else: 
 						track_obj.visual.name = 'Drums'
-						track_obj.visual.color.set_float([0.81, 0.80, 0.82])
+						if not self.nocolor: track_obj.visual.color.set_float([0.81, 0.80, 0.82])
 
 				else:
 					track_obj.visual.name = chantxt
+
+				if self.nocolor: track_obj.visual.color.remove()
 
 		for ts in self.auto_timesig:
 			convproj_obj.timesig_auto.add_point(ts['pos'], [ts['numerator'], ts['denominator']**2])
@@ -180,6 +198,8 @@ class midi_song:
 		fxchannel_obj = convproj_obj.add_fxchan(0)
 		fxchannel_obj.visual.name = "Master"
 		fxchannel_obj.visual.color.set_float([0.3, 0.3, 0.3])
+
+		if self.nocolor: fxchannel_obj.visual.color.remove()
 
 		if self.auto_chan.fx_used['reverb']:
 			reverb_fxchannel_obj = convproj_obj.add_fxchan(self.song_channels+1+self.fx_offset)

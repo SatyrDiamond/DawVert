@@ -177,6 +177,9 @@ class cvpj_color:
 	def __bool__(self):
 		return self.used
 
+	def remove(self):
+		self.used = False
+
 	def copy(self):
 		return copy.copy(self)
 

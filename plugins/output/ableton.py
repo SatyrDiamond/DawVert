@@ -628,6 +628,13 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					als_samplepart.KeyRange.CrossfadeMax = key_h+60
 					als_samplepart.RootKey = key_r+60
 
+					pitchd = samplepart_obj.pitch
+					TransposeKey = round(pitchd)
+					TransposeFine = (pitchd-round(pitchd))*100
+
+					als_samplepart.RootKey += TransposeKey
+					als_samplepart.Detune = TransposeFine
+
 				adsr_obj = plugin_obj.env_asdr_get('vol')
 				paramkeys['VolumeAndPan/Envelope/AttackTime'] = ableton_parampart.as_param('AttackTime', 'float', adsr_obj.attack*1000)
 				paramkeys['VolumeAndPan/Envelope/DecayTime'] = ableton_parampart.as_param('DecayTime', 'float', adsr_obj.decay*1000)

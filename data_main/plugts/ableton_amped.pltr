@@ -15,14 +15,14 @@
 [tremolo]
 >input
 	type|native:amped:Tremolo
-	param|delayLfoDepth
-	param|delayLfoRateHz
+	param|lfoARateHz
+	param|lfoADepth
 <input
 
 >output
 	type|native:ableton:AutoPan
-	param|Lfo/LfoAmount<delayLfoDepth
-	param|Lfo/Frequency<delayLfoRateHz
+	param|Lfo/LfoAmount<lfoADepth
+	param|Lfo/Frequency<lfoARateHz
 <output
 
 [phaser]

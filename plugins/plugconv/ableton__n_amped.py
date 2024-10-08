@@ -7,6 +7,7 @@ from functions import extpluglog
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
+	def get_priority(self): return -100
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'amped', None]]
 		in_dict['in_daws'] = ['amped']
@@ -31,7 +32,7 @@ class plugconv(plugins.base):
 
 		if plugin_obj.type.check_wildmatch('native', 'amped', 'Flanger'):
 			extpluglog.convinternal('Amped', 'Flanger', 'Ableton', 'PhaserNew')
-			plugin_obj.plugts_transform('./data_main/plugts/ableton_amped.pltr', 'phaser', convproj_obj, pluginid)
+			plugin_obj.plugts_transform('./data_main/plugts/ableton_amped.pltr', 'flanger', convproj_obj, pluginid)
 			return 0
 
 		if plugin_obj.type.check_wildmatch('native', 'amped', 'Chorus'):

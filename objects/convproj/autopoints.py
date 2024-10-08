@@ -177,6 +177,7 @@ class cvpj_autopoints:
 			if p.type == 'instant' and new_points:
 				autopoint_obj = cvpj_s_autopoint()
 				autopoint_obj.pos = p.pos-0.001
+				autopoint_obj.pos_real = p.pos_real-0.001
 				autopoint_obj.value = prev_val
 				autopoint_obj.type = 'normal'
 				autopoint_obj.tension = p.tension
@@ -184,6 +185,7 @@ class cvpj_autopoints:
 				
 			autopoint_obj = cvpj_s_autopoint()
 			autopoint_obj.pos = p.pos
+			autopoint_obj.pos_real = p.pos_real
 			autopoint_obj.value = p.value
 			autopoint_obj.type = 'normal'
 			autopoint_obj.tension = p.tension

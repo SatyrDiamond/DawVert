@@ -54,8 +54,16 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('4_freq', int(eq2q_freq(plugin_obj.filter)*65536), 'int')
 			return 0
 
-		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
-			extpluglog.convinternal('Universal', 'EQ Bands', 'FL Studio', 'Fruity Parametric EQ 2')
+		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
+		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
+
+		if is_eq_bands or is_eq_8limited:
+			if is_eq_bands:
+				extpluglog.convinternal('Universal', 'EQ Bands', 'FL Studio', 'Fruity Parametric EQ 2')
+			if is_eq_8limited:
+				extpluglog.convinternal('Universal', 'EQ 8-Limited', 'FL Studio', 'Fruity Parametric EQ 2')
+				plugin_obj.eq.from_8limited(pluginid)
+				
 			gain_out = plugin_obj.params.get("gain_out", 0).value
 			plugin_obj.replace('native', 'flstudio', 'fruity parametric eq 2')
 			for n, f in enumerate(plugin_obj.eq):

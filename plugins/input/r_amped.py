@@ -306,7 +306,7 @@ def ampedauto_to_cvpjauto_specs(autopoints, autospecs):
 		v_max = autospecs['max']
 
 	ampedauto = []
-	for autopoint in autopoints: ampedauto.append([autopoint['pos']/4, xtramath.between_from_one(v_min, v_max, autopoint['value'])])
+	for autopoint in autopoints: ampedauto.append([autopoint['pos'], xtramath.between_from_one(v_min, v_max, autopoint['value'])])
 	return ampedauto
 
 def ampedauto_to_cvpjauto(autopoints):

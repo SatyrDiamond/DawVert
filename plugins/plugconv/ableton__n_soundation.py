@@ -7,14 +7,15 @@ from functions import extpluglog
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
+	def get_priority(self): return -100
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = [['native',' soundation', None]]
+		in_dict['in_plugins'] = [['native','soundation', None]]
 		in_dict['in_daws'] = ['soundation']
 		in_dict['out_plugins'] = [['native',' ableton', None]]
 		in_dict['out_daws'] = ['ableton']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
-		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.va_synth'):
+		if plugin_obj.check_wildmatch('native', 'soundation', 'com.soundation.va_synth'):
 			extpluglog.convinternal('Soundation', 'VA Synth', 'Ableton', 'UltraAnalog')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
@@ -109,7 +110,7 @@ class plugconv(plugins.base):
 			
 			return 0
 
-		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.noiser'):
+		if plugin_obj.check_wildmatch('native', 'soundation', 'com.soundation.noiser'):
 			extpluglog.convinternal('Soundation', 'Noiser', 'Ableton', 'Operator')
 
 			plugin_obj.replace('native', 'ableton', 'Operator')
@@ -127,7 +128,7 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('Operator.0/Envelope/ReleaseSlope', 0, 'float')
 			return 0
 
-		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.simple'):
+		if plugin_obj.check_wildmatch('native', 'soundation', 'com.soundation.simple'):
 			extpluglog.convinternal('Soundation', 'Simple Synth', 'Ableton', 'Operator')
 
 			opdata = []

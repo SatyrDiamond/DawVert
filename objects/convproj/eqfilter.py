@@ -33,6 +33,9 @@ class cvpj_eq:
 
 		return self.plugin_obj.named_filter_add(filter_id), filter_id
 
+	def from_8limited(self, pluginid):
+		self.bands = ['high_pass', 'low_shelf', 'peak_1', 'peak_2', 'peak_3', 'peak_4', 'high_shelf', 'low_pass']
+
 	def to_8limited(self, convproj_obj, pluginid):
 		fnames = [f for f in self.plugin_obj.named_filter]
 		ftypes = [self.plugin_obj.named_filter[f].type.type for f in fnames]

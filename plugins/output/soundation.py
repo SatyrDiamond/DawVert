@@ -39,7 +39,7 @@ def add_fx(convproj_obj, soundation_channel, fxchain_audio):
 				soundation_effect = proj_soundation.soundation_device(None)
 				soundation_effect.identifier = plugin_obj.type.subtype
 				soundation_effect.bypass = not fx_on
-				for param_id, dset_param in globalstore.dataset.get_params('lmms', 'plugin', plugin_obj.type.subtype):
+				for param_id, dset_param in globalstore.dataset.get_params('soundation', 'plugin', plugin_obj.type.subtype):
 					param_cvpj2sng(param_id, soundation_effect, plugin_obj, pluginid)
 				soundation_channel.effects.append(soundation_effect)
 

@@ -124,8 +124,15 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['filter', pluginid, 'q'], ['plugin', pluginid, abe_starttxt+'Q'])
 			return 1
 
-		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
-			extpluglog.convinternal('Universal', 'EQ Bands', 'Ableton', 'Eq8')
+		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
+		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
+
+		if is_eq_bands or is_eq_8limited:
+			if is_eq_bands:
+				extpluglog.convinternal('Universal', 'EQ Bands', 'Ableton', 'Eq8')
+			if is_eq_8limited:
+				extpluglog.convinternal('Universal', 'EQ 8-Limited', 'Ableton', 'Eq8')
+				plugin_obj.eq.from_8limited(pluginid)
 
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 			manu_obj.from_param('gain_out', 'gain_out', 0)
@@ -140,33 +147,6 @@ class plugconv(plugins.base):
 
 				if als_shape == 1 and filter_obj.slope > 36: als_shape = 0
 				if als_shape == 6 and filter_obj.slope > 36: als_shape = 7
-
-				plugin_obj.params.add(abe_starttxt+'Freq', filter_obj.freq, 'float')
-				plugin_obj.params.add(abe_starttxt+'Gain', filter_obj.gain, 'float')
-				plugin_obj.params.add(abe_starttxt+'IsOn', bool(filter_obj.on), 'bool')
-				plugin_obj.params.add(abe_starttxt+'Mode', als_shape, 'float')
-				plugin_obj.params.add(abe_starttxt+'Q', filter_obj.q, 'float')
-
-				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'on'], ['plugin', pluginid, abe_starttxt+'IsOn'])
-				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'freq'], ['plugin', pluginid, abe_starttxt+'Freq'])
-				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'gain'], ['plugin', pluginid, abe_starttxt+'Gain'])
-
-			manu_obj.to_param('gain_out', 'GlobalGain', 0)
-			return 0
-
-		if plugin_obj.type.check_wildmatch('universal', 'eq', '8limited'):
-			extpluglog.convinternal('Universal', 'EQ 8-Limited', 'Ableton', 'Eq8')
-
-			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
-			manu_obj.from_param('gain_out', 'gain_out', 0)
-
-			plugin_obj.replace('native', 'ableton', 'Eq8')
-			for band_num, filter_id in enumerate(['high_pass','low_shelf','peak_1','peak_2','peak_3','peak_4','high_shelf','low_pass']):
-				abe_starttxt = "Bands."+str(band_num)+"/ParameterA/"
-
-				filter_obj = plugin_obj.named_filter_get(filter_id)
-
-				als_shape = eq_types.index(filter_obj.type.type)+1 if filter_obj.type.type in eq_types else 3
 
 				plugin_obj.params.add(abe_starttxt+'Freq', filter_obj.freq, 'float')
 				plugin_obj.params.add(abe_starttxt+'Gain', filter_obj.gain, 'float')

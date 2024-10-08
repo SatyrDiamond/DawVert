@@ -8,6 +8,7 @@ from functions import note_data
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv'
+	def get_priority(self): return 100
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
@@ -39,8 +40,16 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['plugin', pluginid, 'freq'], 'add', 72, 0, 0, 0)
 			return 0
 
-		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
-			extpluglog.convinternal('Universal', 'EQ Bands', 'Waveform', '8bandEq')
+		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
+		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
+
+		if is_eq_bands or is_eq_8limited:
+			if is_eq_bands:
+				extpluglog.convinternal('Universal', 'EQ Bands', 'Waveform', '8bandEq')
+			if is_eq_8limited:
+				extpluglog.convinternal('Universal', 'EQ 8-Limited', 'Waveform', '8bandEq')
+				plugin_obj.eq.from_8limited(pluginid)
+
 			plugin_obj.replace('native', 'tracktion', '8bandEq')
 			for n, f in enumerate(plugin_obj.eq):
 				filter_id, filter_obj = f
@@ -69,6 +78,7 @@ class plugconv(plugins.base):
 				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'gain'], ['plugin', pluginid, "gain"+eqnumtxt])
 				convproj_obj.automation.calc(['plugin', pluginid, "freq"+eqnumtxt], 'freq2note', 0, 0, 0, 0)
 				convproj_obj.automation.calc(['plugin', pluginid, "freq"+eqnumtxt], 'add', 72, 0, 0, 0)
+
 			return 0
 			
 		return 2

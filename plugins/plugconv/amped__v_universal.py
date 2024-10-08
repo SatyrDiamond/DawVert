@@ -40,8 +40,16 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['filter', pluginid, 'q'], ['plugin', pluginid, "filter/1/q"])
 			return 0
 
-		if plugin_obj.type.check_wildmatch('universal', 'eq', 'bands'):
-			extpluglog.convinternal('Universal', 'EQ Bands', 'Amped', 'EqualizerPro')
+		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
+		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
+
+		if is_eq_bands or is_eq_8limited:
+			if is_eq_bands:
+				extpluglog.convinternal('Universal', 'EQ Bands', 'Amped', 'EqualizerPro')
+			if is_eq_8limited:
+				extpluglog.convinternal('Universal', 'EQ 8-Limited', 'Amped', 'EqualizerPro')
+				plugin_obj.eq.from_8limited(pluginid)
+				
 			gain_out = plugin_obj.params.get("gain_out", 0).value
 
 			plugin_obj.replace('native', 'amped', 'EqualizerPro')

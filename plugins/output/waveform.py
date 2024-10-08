@@ -13,6 +13,7 @@ import math
 def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_waveform
 	from objects.inst_params import juce_plugin
+
 	plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
 	if plugin_found: 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
@@ -40,7 +41,16 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 			wf_plugin.enabled = fx_on
 			for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
 				wf_plugin.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value
+				if_found, autopoints = convproj_obj.automation.get_autopoints(['plugin', cvpj_fxid, param_id])
+				if if_found:
+					autopoints.remove_instant()
+					autocurve_obj = proj_waveform.waveform_automationcurve()
+					autocurve_obj.paramid = param_id
+					autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
+					wf_plugin.automationcurves.append(autocurve_obj)
+
 			return wf_plugin
+
 	elif isinstrument:
 		wf_plugin = proj_waveform.waveform_plugin()
 		wf_plugin.plugtype = '4osc'
@@ -65,6 +75,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['time_seconds'] = True
 		in_dict['audio_stretch'] = ['rate']
+		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):

@@ -188,18 +188,14 @@ class input_petaporon(plugins.base):
 		for i, instpart in enumerate(apeinst_obj.insts):
 			for s, inst in enumerate(instpart):
 				if inst['offset'] not in offset_points:
-					endtxt = '_'.join([str(i), str(s)])
-					wav_path = samplefolder + endtxt + '.wav'
-					sample_data = sample_obj.rip_sample((inst['offset']+2)*8)
+					sample_offset = (inst['offset']+2)*8
 					logger_input.info('Ripping Sample #'+str(s+1)+' from Instrument #'+str(i+1))
-					try:
-						audio_obj = audio_data.audio_obj()
-						audio_obj.decode_from_codec('sony_vag', sample_data)
-						audio_obj.to_file_wav(wav_path)
-					except:
-						pass
+					sample_data = sample_obj.rip_sample(sample_offset)
+					wav_path = samplefolder + str(inst['offset']) + '.wav'
+					audio_obj = audio_data.audio_obj()
+					audio_obj.decode_from_codec('sony_vag', sample_data)
+					audio_obj.to_file_wav(wav_path)
 					offset_points[inst['offset']] = wav_path
-					sampleref_obj = convproj_obj.add_sampleref(str(inst['offset']), wav_path, None)
 
 		for x in song_obj.instruments.midi_instruments.data:
 			if len(apeinst_obj.insts) >= x['inst']:
@@ -219,13 +215,19 @@ class input_petaporon(plugins.base):
 					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
 					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
-	
-					for v in vaginst:
-						sp_obj = plugin_obj.sampleregion_add(v['key_min']-60, v['key_max']-60, v['key_root']-60, None)
-						sp_obj.sampleref = str(v['offset'])
+
+					for n, v in enumerate(vaginst):
+						sample_offset = str(v['offset'])
+						sample_id = '_'.join([str(inst['inst']), str(n), sample_offset])
+						wav_path = samplefolder + str(v['offset']) + '.wav'
+						sampleref_obj = convproj_obj.add_sampleref(sample_id, wav_path, None)
+						sp_obj = plugin_obj.sampleregion_add(v['key_min']-60, v['key_max']-60, v['key_root']-60, None, samplepartid=sample_id)
+						sp_obj.sampleref = sample_id
 						sp_obj.from_sampleref(convproj_obj, sp_obj.sampleref)
-						#sp_obj.pitch = v['cents']/64
+
+						sp_obj.pitch = (v['cents']/100) - 0.4
 						sp_obj.vol = v['vol']/127
+						sp_obj.pan = (int(v['pan'])-64)/64
 
 			convproj_obj.do_actions.append('do_addloop')
 			convproj_obj.do_actions.append('do_singlenotelistcut')

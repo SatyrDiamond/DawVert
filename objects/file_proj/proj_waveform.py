@@ -191,6 +191,8 @@ class waveform_foldertrack:
 		self.tracks = []
 		self.plugins = []
 		self.macroparameters = waveform_macroparameters()
+		self.name = None
+		self.colour = None
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
@@ -219,6 +221,8 @@ class waveform_foldertrack:
 			track_obj.write(tempxml)
 		for plugin_obj in self.plugins:
 			plugin_obj.write(tempxml)
+		if self.name: tempxml.set('name', self.name)
+		if self.colour: tempxml.set('colour', self.colour)
 
 
 class waveform_control:

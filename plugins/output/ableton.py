@@ -1014,6 +1014,7 @@ class output_ableton(plugins.base):
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['fxtype'] = 'groupreturn'
 		
 	def parse(self, convproj_obj, output_file):
 		global counter_track

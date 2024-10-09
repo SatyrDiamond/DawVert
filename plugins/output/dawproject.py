@@ -451,6 +451,7 @@ class output_dawproject(plugins.base):
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_nested'] = True
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['fxtype'] = 'groupreturn'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_dawproject
 

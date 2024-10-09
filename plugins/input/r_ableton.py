@@ -125,13 +125,16 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 			plugin_obj = None
 			numzones = len(SampleParts.value)
+
 			if numzones == 1:
 				SamplePart = SampleParts.value[next(iter(SampleParts.value))]
 				middlenote = int(SamplePart.RootKey)-60
 				track_obj.datavals.add('middlenote', middlenote-60)
 				plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, None, None)
-				samplerefid = do_samplepart(convproj_obj, sp_obj, SamplePart)
+				do_samplepart(convproj_obj, sp_obj, SamplePart)
 				sp_obj.reverse = int(parampaths['Player/Reverse'])
+				sp_obj.vol = float(SamplePart.Volume)
+				sp_obj.pan = float(SamplePart.Panorama)
 
 			elif numzones>1:
 				plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'sampler', 'multi')
@@ -143,12 +146,14 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 					vel_cf = [int(SamplePart.VelocityRange.CrossfadeMin), SamplePart.VelocityRange.CrossfadeMax]
 					middlenote = int(SamplePart.RootKey)
 					sp_obj = plugin_obj.sampleregion_add(key_r[0]-60, key_r[1]-60, middlenote-60, None)
-					samplerefid = do_samplepart(convproj_obj, sp_obj, SamplePart)
+					do_samplepart(convproj_obj, sp_obj, SamplePart)
 					sp_obj.reverse = float(parampaths['Player/Reverse'])
 					sp_obj.data['key_fade'] = [key_cf[0]-key_r[0], key_r[1]-key_cf[1]]
 					sp_obj.data['r_vel_fade'] = [x/127 for x in vel_cf]
 					sp_obj.vel_min = vel_r[0]/127
 					sp_obj.vel_max = vel_r[1]/127
+					sp_obj.vol = float(SamplePart.Volume)
+					sp_obj.pan = float(SamplePart.Panorama)
 
 			if plugin_obj:
 				envstarttxt = 'VolumeAndPan/Envelope/'

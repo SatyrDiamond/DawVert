@@ -25,8 +25,7 @@ def convauto(autopoints, param_obj):
 def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, amped_auto):
 	paramout = []
 	paramlist = plugin_obj.params.list()
-	for paramnum in range(len(paramlist)):
-		paramid = paramlist[paramnum]
+	for paramnum, paramid in enumerate(paramlist):
 		ampedpid = paramid.replace('__', '/')
 		param_obj = plugin_obj.params.get(ampedpid, 0)
 
@@ -36,8 +35,6 @@ def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, a
 			if ap_d.u_nopl_points:
 				autospec = {"type": "numeric", "min": param_obj.min, "max": param_obj.max, "curve": 0, "step": 0}
 				amped_auto = amped_track.add_auto(paramid, True, amped_device.id, convauto(cvpj_points, param_obj), autospec)
-
-				#print(autospec)
 
 		amped_device.add_param(paramnum, ampedpid, param_obj.value)
 	return paramout

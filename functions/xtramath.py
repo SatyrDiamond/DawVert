@@ -67,6 +67,8 @@ def do_math(inputv, mathtype, val1, val2, val3, val4):
 	elif mathtype == 'from_db': return note_data.from_db(inputv)
 	elif mathtype == 'to_db': return note_data.to_db(inputv)
 	elif mathtype == 'floatbyteint2float': return struct.unpack("<f", struct.pack("<I", int(inputv)))[0]
+	elif mathtype == 'freq_20k_to_one': return (math.log(max(20, inputv)/20) / math.log(1000)) if inputv != 0 else 0
+	elif mathtype == 'freq_20k_from_one': return 20 * 1000**inputv
 	else: return inputv
 
 # -------------------------------------------- generators --------------------------------------------

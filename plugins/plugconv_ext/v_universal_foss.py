@@ -141,7 +141,7 @@ class plugconv(plugins.base):
 						if plugins.base.extplug_exists('magical8bitplug2', extplugtype, None):
 							extpluglog.extpluglist.success('Universal', 'Synth-OSC')
 
-							plugin_obj.replace('external', 'yokemura', 'magical8bitplug2')
+							plugin_obj.replace('user', 'yokemura', 'magical8bitplug2')
 
 							if env_a_vol[0]:
 								plugin_obj.params.add("attack", env_a_vol[1].attack, 'float')
@@ -184,7 +184,7 @@ class plugconv(plugins.base):
 						if exttype:
 							extpluglog.extpluglist.success('Universal', 'Synth-OSC')
 
-							plugin_obj.replace('external', 'matt_tytel', 'vital')
+							plugin_obj.replace('user', 'matt_tytel', 'vital')
 							plugin_obj.params.add('osc_1_on', 1, 'float')
 							plugin_obj.params.add('osc_1_level', 1, 'float')
 							plugin_obj.params.add('volume', 4000, 'float')

@@ -25,7 +25,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Mackity')
 				if exttype:
 					extpluglog.extpluglist.success('Waveform', 'Distortion')
-					plugin_obj.replace('external', 'airwindows', 'mackity')
+					plugin_obj.replace('user', 'airwindows', 'mackity')
 					plugin_obj.params.add('in_trim', drive, 'float')
 					plugin_obj.params.add('out_pad', postGain, 'float')
 					plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
@@ -35,7 +35,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Drive')
 				if exttype:
 					extpluglog.extpluglist.success('Waveform', 'Distortion')
-					plugin_obj.replace('external', 'airwindows', 'drive')
+					plugin_obj.replace('user', 'airwindows', 'drive')
 					plugin_obj.params.add('drive', drive, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', postGain, 'float')

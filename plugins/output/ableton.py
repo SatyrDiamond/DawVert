@@ -632,7 +632,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					TransposeKey = round(pitchd)
 					TransposeFine = (pitchd-round(pitchd))*100
 
-					als_samplepart.RootKey += TransposeKey
+					als_samplepart.RootKey -= TransposeKey
 					als_samplepart.Detune = TransposeFine
 
 				adsr_obj = plugin_obj.env_asdr_get('vol')

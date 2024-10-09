@@ -62,6 +62,9 @@ class cvpj_paramset:
 	def __init__(self):
 		self.paramset = {}
 
+	def __bool__(self):
+		return bool(self.paramset)
+
 	def move(self, other_paramset, p_id):
 		if p_id in self.paramset: 
 			other_paramset.paramset[p_id] = copy.deepcopy(self.paramset[p_id])

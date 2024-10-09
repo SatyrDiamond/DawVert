@@ -243,6 +243,22 @@ class cvpj_project:
 		for sampleref_id, sampleref_obj in self.samplerefs.items():
 			yield sampleref_id, sampleref_obj
 
+	def fxchan_remove_unused(self):
+		unused_fx = list(self.fxrack)
+		for trackid, track_obj in self.track_data.items():
+			if track_obj.fxrack_channel in unused_fx: unused_fx.remove(track_obj.fxrack_channel)
+
+		for n, d in self.fxrack.items():
+			if d.visual or d.visual_ui or d.fxslots_audio or d.fxslots_mixer:
+				if n in unused_fx: unused_fx.remove(n)
+			if d.sends.to_master_active:
+				if 0 in unused_fx: unused_fx.remove(0)
+			for i in list(d.sends.data):
+				if i in unused_fx: unused_fx.remove(i)
+
+		for x in unused_fx: del self.fxrack[x]
+		logger_project.info('Removed '+str(len(unused_fx))+' FX Channels')
+
 	def add_fxchan(self, fxnum):
 		logger_project.info('FX Channel - '+str(fxnum))
 		if fxnum not in self.fxrack: self.fxrack[fxnum] = cvpj_fxchannel()

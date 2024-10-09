@@ -24,7 +24,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('SimpleFX', 'Reverb')
 				plugin_obj.fxdata_add(fx_on, 1)
 				
-				plugin_obj.replace('external', 'airwindows', 'reverb')
+				plugin_obj.replace('user', 'airwindows', 'reverb')
 				plugin_obj.params.add('big', 0.5, 'float')
 				plugin_obj.params.add('wet', fx_wet, 'float')
 				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
@@ -37,7 +37,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('SimpleFX', 'Chorus')
 				amount = plugin_obj.params.get('amount', 0).value/2.5
 
-				plugin_obj.replace('external', 'airwindows', 'chorus')
+				plugin_obj.replace('user', 'airwindows', 'chorus')
 				plugin_obj.params.add('speed', 0.5, 'float')
 				plugin_obj.params.add('range', amount/2.5, 'float')
 				plugin_obj.params.add('dry_wet', 1, 'float')
@@ -50,7 +50,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('SimpleFX', 'Tremolo')
 
-				plugin_obj.replace('external', 'airwindows', 'tremolo')
+				plugin_obj.replace('user', 'airwindows', 'tremolo')
 				plugin_obj.params.add('speed', 0.5, 'float')
 				plugin_obj.params.add('depth', 0.5, 'float')
 				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
@@ -64,7 +64,7 @@ class plugconv(plugins.base):
 				plugin_obj.fxdata_add(fx_on, 1)
 				amount = plugin_obj.params.get('amount', 0).value
 
-				plugin_obj.replace('external', 'airwindows', 'drive')
+				plugin_obj.replace('user', 'airwindows', 'drive')
 				plugin_obj.params.add('drive', amount, 'float')
 				plugin_obj.params.add('highpass', 0, 'float')
 				plugin_obj.params.add('out_level', 1-(amount/2), 'float')
@@ -78,7 +78,7 @@ class plugconv(plugins.base):
 			if exttype:
 				extpluglog.extpluglist.success('SimpleFX', 'BassBoost')
 
-				plugin_obj.replace('external', 'airwindows', 'weight')
+				plugin_obj.replace('user', 'airwindows', 'weight')
 				plugin_obj.params.add('freq', 1, 'float')
 				plugin_obj.params.add('weight', 1, 'float')
 				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')

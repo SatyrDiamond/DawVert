@@ -55,7 +55,7 @@ class plugconv(plugins.base):
 
 				matrix = plugin_obj.datavals.get('matrix', {})
 
-				plugin_obj.replace('external', 'matt_tytel', 'vital')
+				plugin_obj.replace('user', 'matt_tytel', 'vital')
 
 				plugin_obj.params.add('osc_1_destination', wt_filterA, 'float')
 				plugin_obj.params.add('osc_2_destination', wt_filterB, 'float')

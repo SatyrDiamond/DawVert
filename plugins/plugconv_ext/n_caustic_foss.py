@@ -43,7 +43,7 @@ class plugconv(plugins.base):
 				manu_obj.calc('bar8', 'from_one', -8, 0, 0, 0)
 				manu_obj.calc('bar9', 'from_one', -8, 0, 0, 0)
 
-				plugin_obj.replace('external', 'socalabs', 'organ')
+				plugin_obj.replace('user', 'socalabs', 'organ')
 
 				manu_obj.to_param('bar1', 'upper1', 0)
 				manu_obj.to_param('bar2', 'upper2', 0)

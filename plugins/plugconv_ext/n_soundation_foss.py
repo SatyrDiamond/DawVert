@@ -31,7 +31,7 @@ class plugconv(plugins.base):
 					drive = max(driveval, 0)
 					vol = min(driveval, 0)+1
 
-					plugin_obj.replace('external', 'airwindows', 'Drive')
+					plugin_obj.replace('user', 'airwindows', 'Drive')
 					plugin_obj.params.add('drive', drive, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', vol, 'float')
@@ -44,7 +44,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Fracture2')
 				if exttype:
 					extpluglog.extpluglist.success('Soundation', 'Distortion')
-					plugin_obj.replace('external', 'airwindows', 'Fracture2')
+					plugin_obj.replace('user', 'airwindows', 'Fracture2')
 					plugin_obj.params.add('drive', gain, 'float')
 					plugin_obj.params.add('fractre', 0.2, 'float')
 					plugin_obj.params.add('thresh', 0.5, 'float')
@@ -58,7 +58,7 @@ class plugconv(plugins.base):
 				exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Drive')
 				if exttype:
 					extpluglog.extpluglist.success('Soundation', 'Distortion')
-					plugin_obj.replace('external', 'airwindows', 'Drive')
+					plugin_obj.replace('user', 'airwindows', 'Drive')
 					plugin_obj.params.add('drive', gain, 'float')
 					plugin_obj.params.add('highpass', 0, 'float')
 					plugin_obj.params.add('out_level', 1, 'float')
@@ -101,7 +101,7 @@ class plugconv(plugins.base):
 				dry = plugin_obj.params.get('dry', 0).value
 				size = plugin_obj.params.get('size', 0).value
 				wet = plugin_obj.params.get('wet', 0).value
-				plugin_obj.replace('external', 'airwindows', 'MatrixVerb')
+				plugin_obj.replace('user', 'airwindows', 'MatrixVerb')
 				plugin_obj.params.add('filter', 1, 'float')
 				plugin_obj.params.add('damping', damp, 'float')
 				plugin_obj.params.add('speed', 0, 'float')

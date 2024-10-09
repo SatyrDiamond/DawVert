@@ -54,9 +54,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 					convproj_obj.automation.copy(['fxmixer',str(track_obj.fxrack_channel),paramid], ['track',trackid,paramid])
 					fxrack_obj.params.copy(track_obj.params, paramid)
 
-		return True
-
-	elif in_fxtype == 'groupreturn' and out_fxtype == 'rack' and convproj_obj.type in ['m', 'mi']:
+	if in_fxtype == 'groupreturn' and out_fxtype == 'rack' and convproj_obj.type in ['m', 'mi']:
 		logger_compat.info('fxchange: Master to FX 0')
 		fxchannel_obj = convproj_obj.add_fxchan(0)
 		fxchannel_obj.visual = copy.deepcopy(convproj_obj.track_master.visual)
@@ -209,6 +207,8 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 		return True
 
 	elif in_fxtype == 'rack' and out_fxtype == 'track' and convproj_obj.type in ['r', 'ri']:
+		convproj_obj.fxchan_remove_unused()
+
 		for trackid in convproj_obj.track_order: convproj_obj.add_trackroute(trackid)
 
 		if 0 in convproj_obj.fxrack:

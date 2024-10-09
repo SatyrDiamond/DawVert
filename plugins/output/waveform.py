@@ -10,6 +10,29 @@ from objects import globalstore
 from objects import counter
 import math
 
+def make_volpan_plugin(convproj_obj, track_obj, iddat, wf_track, startn):
+	from objects.file_proj import proj_waveform
+	wf_plugin = proj_waveform.waveform_plugin()
+	wf_plugin.plugtype = 'volume'
+	wf_plugin.enabled = 1
+	wf_plugin.presetDirty = 1
+	wf_plugin.params['volume'] = track_obj.params.get('vol', 1.0).value
+	wf_plugin.params['pan'] = track_obj.params.get('pan', 0).value
+	add_auto_curves(convproj_obj, [startn, iddat, 'vol'], wf_plugin, 'volume')
+	add_auto_curves(convproj_obj, [startn, iddat, 'pan'], wf_plugin, 'pan')
+	wf_track.plugins.append(wf_plugin)
+	return wf_plugin
+
+def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
+	from objects.file_proj import proj_waveform
+	if_found, autopoints = convproj_obj.automation.get_autopoints(autoloc)
+	if if_found:
+		autopoints.remove_instant()
+		autocurve_obj = proj_waveform.waveform_automationcurve()
+		autocurve_obj.paramid = param_id
+		autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
+		wf_plugin.automationcurves.append(autocurve_obj)
+
 def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_waveform
 	from objects.inst_params import juce_plugin
@@ -41,13 +64,7 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 			wf_plugin.enabled = fx_on
 			for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
 				wf_plugin.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value
-				if_found, autopoints = convproj_obj.automation.get_autopoints(['plugin', cvpj_fxid, param_id])
-				if if_found:
-					autopoints.remove_instant()
-					autocurve_obj = proj_waveform.waveform_automationcurve()
-					autocurve_obj.paramid = param_id
-					autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
-					wf_plugin.automationcurves.append(autocurve_obj)
+				add_auto_curves(convproj_obj, ['plugin', cvpj_fxid, param_id], wf_plugin, param_id)
 
 			return wf_plugin
 
@@ -78,6 +95,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['fxtype'] = 'groupreturn'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_waveform
 		global dataset
@@ -100,8 +118,36 @@ class output_waveform_edit(plugins.base):
 
 		get_plugins(convproj_obj, project_obj.masterplugins, convproj_obj.track_master.fxslots_audio)
 
+		groups_data = {}
+
 		for trackid, track_obj in convproj_obj.iter_track():
+			wf_tracks = project_obj.tracks
+
+			if track_obj.group:
+				if track_obj.group not in groups_data and track_obj.group in convproj_obj.groups:
+					cvpj_group = convproj_obj.groups[track_obj.group]
+					wf_foldertrack = proj_waveform.waveform_foldertrack()
+					wf_foldertrack.id_num = counter_id.get()
+					wf_tracks.append(wf_foldertrack)
+					if cvpj_group.visual.name: wf_foldertrack.name = track_obj.visual.name
+					if cvpj_group.visual.color: wf_foldertrack.colour ='ff'+track_obj.visual.color.get_hex()
+
+					cvpj_group_vol = track_obj.params.get('vol', 1.0).value
+					cvpj_group_pan = track_obj.params.get('pan', 0).value
+
+					get_plugins(convproj_obj, wf_foldertrack.plugins, cvpj_group.fxslots_audio)
+
+					make_volpan_plugin(convproj_obj, cvpj_group, track_obj.group, wf_foldertrack, 'group')
+
+					wf_plugin = proj_waveform.waveform_plugin()
+					wf_plugin.plugtype = 'level'
+					wf_plugin.enabled = 1
+					wf_foldertrack.plugins.append(wf_plugin)
+					groups_data[track_obj.group] = wf_foldertrack
+				wf_tracks = groups_data[track_obj.group].tracks
+
 			wf_track = proj_waveform.waveform_track()
+			wf_track.id_num = counter_id.get()
 			if track_obj.visual.name: wf_track.name = track_obj.visual.name
 			if track_obj.visual.color: wf_track.colour ='ff'+track_obj.visual.color.get_hex()
 			
@@ -150,22 +196,13 @@ class output_waveform_edit(plugins.base):
 
 				wf_track.midiclips.append(wf_midiclip)
 
-
-			cvpj_track_vol = track_obj.params.get('vol', 1.0).value
-			cvpj_track_pan = track_obj.params.get('pan', 0).value
-
-			wf_plugin = proj_waveform.waveform_plugin()
-			wf_plugin.plugtype = 'volume'
-			wf_plugin.enabled = 1
-			wf_plugin.params['volume'] = cvpj_track_vol
-			wf_plugin.params['pan'] = cvpj_track_pan
-			wf_track.plugins.append(wf_plugin)
+			make_volpan_plugin(convproj_obj, track_obj, trackid, wf_track, 'track')
 
 			wf_plugin = proj_waveform.waveform_plugin()
 			wf_plugin.plugtype = 'level'
 			wf_plugin.enabled = 1
 			wf_track.plugins.append(wf_plugin)
 
-			project_obj.tracks.append(wf_track)
+			wf_tracks.append(wf_track)
 
 		project_obj.save_to_file(output_file)

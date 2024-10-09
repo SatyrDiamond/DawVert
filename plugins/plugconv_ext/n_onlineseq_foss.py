@@ -24,7 +24,7 @@ class plugconv(plugins.base):
 				if distort_type == [10, 6]: distlevel = 0.3
 				else: distlevel = 0.5
 
-				plugin_obj.replace('external', 'airwindows', 'density2')
+				plugin_obj.replace('user', 'airwindows', 'density2')
 				plugin_obj.params.add('density', distlevel, 'float')
 				plugin_obj.params.add('highpass', 0, 'float')
 				plugin_obj.params.add('output', 1, 'float')

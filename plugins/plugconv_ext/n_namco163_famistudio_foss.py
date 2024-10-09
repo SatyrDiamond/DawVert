@@ -19,7 +19,7 @@ class plugconv(plugins.base):
 		if exttype:
 			extpluglog.extpluglist.success('Famistudio', 'N163')
 			wavedata = plugin_obj.datavals.get('wave', {})
-			plugin_obj.replace('external', 'matt_tytel', 'vital')
+			plugin_obj.replace('user', 'matt_tytel', 'vital')
 			plugin_obj.params.add('volume', 6000, 'float')
 			plugin_obj.params.add('osc_1_level', 0.8, 'float')
 			plugin_obj.params.add('osc_1_on', 1, 'float')

@@ -132,7 +132,7 @@ class plugconv(plugins.base):
 
 				chorus_on = plugin_obj.params.get('svf_on', 0).value
 
-				plugin_obj.replace('external', 'matt_tytel', 'vital')
+				plugin_obj.replace('user', 'matt_tytel', 'vital')
 
 				noisevol = 1
 
@@ -299,7 +299,7 @@ class plugconv(plugins.base):
 						modulation_obj.amount = v*(amt**1.2)
 						modulation_obj.bipolar = True
 
-				plugin_obj.replace('external', 'matt_tytel', 'vital')
+				plugin_obj.replace('user', 'matt_tytel', 'vital')
 
 				plugin_obj.params.add('osc_1_on', 1, 'float')
 				plugin_obj.params.add('osc_1_transpose', crs_1, 'float')
@@ -380,7 +380,7 @@ class plugconv(plugins.base):
 				if stateval == 1: flipstate = 1
 				if stateval == 2: flipstate = 2
 				outval = (flipstate/8)+0.01
-				plugin_obj.replace('external', 'airwindows', 'Flipity')
+				plugin_obj.replace('user', 'airwindows', 'Flipity')
 				plugin_obj.params.add('flipity', outval, 'float')
 				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True

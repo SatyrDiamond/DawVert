@@ -26,7 +26,7 @@ class plugconv(plugins.base):
 				p_gain = plugin_obj.params.get('gain', 0).value
 				p_edge = plugin_obj.params.get('edge', 0).value
 				p_prelowpasscutoff = plugin_obj.params.get('prelowpasscutoff', 0).value
-				plugin_obj.replace('external', 'airwindows', 'edge')
+				plugin_obj.replace('user', 'airwindows', 'edge')
 				plugin_obj.params.add('gain', (p_gain*0.1)+0.1, 'float')
 				plugin_obj.params.add('lowpass', p_prelowpasscutoff, 'float')
 				plugin_obj.params.add('highpass', 0, 'float')

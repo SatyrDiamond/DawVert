@@ -23,6 +23,13 @@ def make_volpan_plugin(convproj_obj, track_obj, iddat, wf_track, startn):
 	wf_track.plugins.append(wf_plugin)
 	return wf_plugin
 
+def make_level_plugin(wf_track):
+	from objects.file_proj import proj_waveform
+	wf_plugin = proj_waveform.waveform_plugin()
+	wf_plugin.plugtype = 'level'
+	wf_plugin.enabled = 1
+	wf_track.plugins.append(wf_plugin)
+
 def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
 	from objects.file_proj import proj_waveform
 	if_found, autopoints = convproj_obj.automation.get_autopoints(autoloc)
@@ -80,6 +87,22 @@ def get_plugins(convproj_obj, wf_plugins, cvpj_fxids):
 		if wf_plugin:
 			wf_plugins.append(wf_plugin)
 
+def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
+	from objects.file_proj import proj_waveform
+	if groupid not in groups_data and groupid in convproj_obj.groups:
+		group_obj = convproj_obj.groups[groupid]
+		wf_foldertrack = proj_waveform.waveform_foldertrack()
+		wf_foldertrack.id_num = counter_id.get()
+		wf_maintrack.append(wf_foldertrack)
+		if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
+		if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
+		get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.fxslots_audio)
+
+		make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
+		make_level_plugin(wf_foldertrack)
+
+		groups_data[groupid] = wf_foldertrack
+
 class output_waveform_edit(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -124,26 +147,8 @@ class output_waveform_edit(plugins.base):
 			wf_tracks = project_obj.tracks
 
 			if track_obj.group:
-				if track_obj.group not in groups_data and track_obj.group in convproj_obj.groups:
-					cvpj_group = convproj_obj.groups[track_obj.group]
-					wf_foldertrack = proj_waveform.waveform_foldertrack()
-					wf_foldertrack.id_num = counter_id.get()
-					wf_tracks.append(wf_foldertrack)
-					if cvpj_group.visual.name: wf_foldertrack.name = track_obj.visual.name
-					if cvpj_group.visual.color: wf_foldertrack.colour ='ff'+track_obj.visual.color.get_hex()
+				make_group(convproj_obj, track_obj.group, groups_data, counter_id, wf_tracks)
 
-					cvpj_group_vol = track_obj.params.get('vol', 1.0).value
-					cvpj_group_pan = track_obj.params.get('pan', 0).value
-
-					get_plugins(convproj_obj, wf_foldertrack.plugins, cvpj_group.fxslots_audio)
-
-					make_volpan_plugin(convproj_obj, cvpj_group, track_obj.group, wf_foldertrack, 'group')
-
-					wf_plugin = proj_waveform.waveform_plugin()
-					wf_plugin.plugtype = 'level'
-					wf_plugin.enabled = 1
-					wf_foldertrack.plugins.append(wf_plugin)
-					groups_data[track_obj.group] = wf_foldertrack
 				wf_tracks = groups_data[track_obj.group].tracks
 
 			wf_track = proj_waveform.waveform_track()
@@ -197,11 +202,7 @@ class output_waveform_edit(plugins.base):
 				wf_track.midiclips.append(wf_midiclip)
 
 			make_volpan_plugin(convproj_obj, track_obj, trackid, wf_track, 'track')
-
-			wf_plugin = proj_waveform.waveform_plugin()
-			wf_plugin.plugtype = 'level'
-			wf_plugin.enabled = 1
-			wf_track.plugins.append(wf_plugin)
+			make_level_plugin(wf_track)
 
 			wf_tracks.append(wf_track)
 

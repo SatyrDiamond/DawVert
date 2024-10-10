@@ -116,6 +116,7 @@ class output_wavtool(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['fxtype'] = 'groupreturn'
 	def parse(self, convproj_obj, output_file):
 		from functions_plugin_ext import plugin_vst2
 		from objects.file_proj import proj_wavtool
@@ -194,6 +195,39 @@ class output_wavtool(plugins.base):
 		if if_found:
 			wt_trackauto = make_automation('vol', 'master', 'gain', 'masterFader', 'master', mas_cvpjauto_vol, 'AAAAAA', False)
 			wavtool_obj.tracks[wt_trackauto.id] = wt_trackauto
+
+		for groupid, group_obj in convproj_obj.groups.items():
+
+			if True:
+				wt_trackid = 'DawVert-Group-'+groupid
+				wt_trackid_MIDIRec = 'DawVert-Group-MIDIRec-'+groupid
+				wt_trackid_AudioRec = 'DawVert-Group-AudioRec-'+groupid
+				wt_trackid_ChanStrip = 'DawVert-Group-ChanStrip-'+groupid
+				wt_trackid_Instrument = 'DawVert-Group-Instrument-'+groupid
+				wt_trackid_BusSend = 'DawVert-Group-BusSend-'+groupid
+			else:
+				wt_trackid = ("MIDITrack-" if group_obj.type == 'instrument' else "AudioTrack-")+str(uuid.uuid4())
+				wt_trackid_MIDIRec = 'TrackMIDIReceiver-'+str(uuid.uuid4())
+				wt_trackid_AudioRec = 'TrackAudioReceiver-'+str(uuid.uuid4())
+				wt_trackid_ChanStrip = 'ChannelStrip-'+str(uuid.uuid4())
+				wt_trackid_Instrument = 'MIDIInstrument-'+str(uuid.uuid4())
+				wt_trackid_BusSend = 'MasterBusSend-'+str(uuid.uuid4())
+
+			wavtool_track = proj_wavtool.wavtool_track(None)
+			wavtool_track.name = group_obj.visual.name if group_obj.visual.name else ''
+			wavtool_track.color = '#'+group_obj.visual.color.get_hex_fb(70,70,70)
+			wavtool_track.gain = group_obj.params.get('vol', 1.0).value
+			wavtool_track.balance = group_obj.params.get('pan', 0).value
+
+			wavtool_track.type = "Audio"
+
+			wavtool_obj.devices.add_track(wt_trackid)
+			wavtool_obj.tracks[wt_trackid] = wavtool_track
+
+			wavtool_obj.devices.add_cable(wt_trackid, 'output', wt_trackid_AudioRec, 'input')
+			wavtool_obj.devices.add_cable(wt_trackid_AudioRec, 'output', wt_trackid_ChanStrip, 'input')
+			wavtool_obj.devices.add_cable(wt_trackid_ChanStrip, 'output', wt_trackid_BusSend, 'input')
+			wavtool_obj.devices.add_cable(wt_trackid_BusSend, 'output', 'masterBus', 'inputs['+wt_trackid+']')
 
 		for cvpj_trackid, track_obj in convproj_obj.iter_track():
 

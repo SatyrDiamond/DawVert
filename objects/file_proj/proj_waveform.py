@@ -102,7 +102,7 @@ class waveform_automationcurve:
 		self.paramid = xmldata.get('paramID')
 		for subxml in xmldata:
 			if subxml.tag == 'POINT': 
-				curve = float(subxml.get('c'))
+				curve = float(subxml.get('c')) if 'c' in subxml.attrib else 0
 				self.points.append([float(subxml.get('t')), float(subxml.get('v')), curve if curve else None])
 
 	def write(self, xmldata):
@@ -199,6 +199,8 @@ class waveform_foldertrack:
 			if n == 'id': self.id_num = int(v)
 			elif n == 'height': self.height = float(v)
 			elif n == 'expanded': self.expanded = int(v)
+			elif n == 'name': self.name = v
+			elif n == 'colour': self.colour = v
 
 		for subxml in xmldata:
 			if subxml.tag == 'MACROPARAMETERS': self.macroparameters.load(subxml)

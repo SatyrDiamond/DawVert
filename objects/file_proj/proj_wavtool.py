@@ -135,6 +135,7 @@ class wavtool_track:
 		self.color = '#333333'
 		self.points = []
 		self.clips = []
+		self.role = ''
 		self.mute = False
 		self.solo = False
 		self.channelStripId = ''
@@ -174,6 +175,7 @@ class wavtool_track:
 		wt_track['hasHeaderSelection'] = False
 		wt_track['gain'] = self.gain
 		wt_track['balance'] = self.balance
+		if self.role: wt_track['role'] = self.role
 		wt_track['color'] = self.color
 		if self.type == 'Automation':
 			wt_track['points'] = self.points

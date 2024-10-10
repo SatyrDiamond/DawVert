@@ -40,7 +40,7 @@ def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removebo
 def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 	in_fxtype = in_dawinfo.fxtype
 	out_fxtype = out_dawinfo.fxtype
-	logger_compat.info('fxchange: '+in_fxtype+' > '+out_fxtype)
+	logger_compat.info('fxchange: '+in_fxtype+' > '+out_fxtype+' - Proj Type: '+convproj_obj.type)
 
 	paramchange = in_dawinfo.fxrack_params.copy()
 	for x in out_dawinfo.fxrack_params:

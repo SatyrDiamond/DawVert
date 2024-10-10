@@ -4,6 +4,7 @@
 from functions import colors
 from objects import globalstore
 from lxml import etree
+from objects import counter
 import plugins
 import json
 import math
@@ -146,6 +147,37 @@ autonames = {
 	'PRESSURE': 'pressure',
 }
 
+def do_foldertrack(convproj_obj, wf_track, counter_track): 
+	groupid = str(wf_track.id_num)
+	track_obj = convproj_obj.add_group(groupid)
+	track_obj.visual.name = wf_track.name
+	track_obj.visual.color.set_hex(wf_track.colour)
+	track_obj.visual_ui.height = wf_track.height/35.41053828354546
+
+	vol = 1
+	pan = 0
+
+	for wf_plugin in wf_track.plugins:
+		if wf_plugin.plugtype == 'volume':
+			if 'volume' in wf_plugin.params: vol *= wf_plugin.params['volume']
+			if 'pan' in wf_plugin.params: pan = wf_plugin.params['pan']
+
+			for autocurves in wf_plugin.automationcurves:
+				if autocurves.paramid == 'volume':
+					for time, val, curve in autocurves.points:
+						convproj_obj.automation.add_autopoint_real(['group',groupid,'vol'], 'float', time, val, 'normal')
+
+				if autocurves.paramid == 'pan':
+					for time, val, curve in autocurves.points:
+						convproj_obj.automation.add_autopoint_real(['group',groupid,'pan'], 'float', time, val, 'normal')
+
+		else:
+			do_plugin(convproj_obj, wf_plugin, track_obj)
+
+	track_obj.params.add('vol', vol, 'float')
+	track_obj.params.add('pan', pan, 'float')
+	do_tracks(convproj_obj, wf_track.tracks, counter_track, groupid)
+
 def do_track(convproj_obj, wf_track, track_obj): 
 	track_obj.visual.name = wf_track.name
 	track_obj.visual.color.set_hex(wf_track.colour)
@@ -195,6 +227,18 @@ def do_track(convproj_obj, wf_track, track_obj):
 
 	track_obj.datavals.add('middlenote', middlenote)
 
+def do_tracks(convproj_obj, in_tracks, counter_track, groupid):
+	from objects.file_proj import proj_waveform
+	for wf_track in in_tracks:
+		tracknum = counter_track.get()
+		if isinstance(wf_track, proj_waveform.waveform_track):
+			track_obj = convproj_obj.add_track(str(tracknum), 'instrument', 1, False)
+			if groupid: track_obj.group = groupid
+			do_track(convproj_obj, wf_track, track_obj)
+		if isinstance(wf_track, proj_waveform.waveform_foldertrack):
+			do_foldertrack(convproj_obj, wf_track, counter_track)
+
+
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -239,8 +283,6 @@ class input_cvpj_f(plugins.base):
 			do_plugin(convproj_obj, wf_plugin, convproj_obj.track_master)
 
 		tracknum = 0
-		for wf_track in project_obj.tracks:
-			if isinstance(wf_track, proj_waveform.waveform_track):
-				track_obj = convproj_obj.add_track(str(tracknum), 'instrument', 1, False)
-				do_track(convproj_obj, wf_track, track_obj)
-				tracknum += 1
+		counter_track = counter.counter(1000, '')
+
+		do_tracks(convproj_obj, project_obj.tracks, counter_track, None)

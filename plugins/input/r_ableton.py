@@ -597,6 +597,11 @@ class input_ableton(plugins.base):
 
 			if tracktype == 'midi':
 
+				midictrls = {}
+				mainseq = als_track.DeviceChain.MainSequencer
+				for n, x in mainseq.MidiControllers.items():
+					midictrls[int(x.id)] = int(n)-2
+
 				if not DEBUG_DISABLE_PLACEMENTS:
 					
 					for clipid, cliptype, clipobj in als_track.DeviceChain.MainSequencer.ClipTimeable.Events:
@@ -605,6 +610,22 @@ class input_ableton(plugins.base):
 						placement_obj.visual.name = clipobj.Name
 						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
 						placement_obj.muted = clipobj.Disabled
+
+						for _, t in clipobj.TimeSignatures.items():
+							placement_obj.timesig_auto.add_point(t.Time, [t.Numerator, t.Denominator])
+
+						for _, e in clipobj.Envelopes.items():
+							if int(e.PointeeId) in midictrls: 
+								ccnum = midictrls[int(e.PointeeId)]
+								mpetype = 'midi_cc_'+str(ccnum)
+
+							if mpetype:
+								autopoints_obj = placement_obj.add_autopoints(mpetype)
+								for mid, mtype, mobj in e.Automation.Events:
+									if mtype == 'FloatEvent':
+										autopoint_obj = autopoints_obj.add_point()
+										autopoint_obj.pos = mobj.Time
+										autopoint_obj.value = mobj.Value
 
 						if clipobj.Loop.LoopOn == 1:
 							placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)

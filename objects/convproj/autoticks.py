@@ -27,6 +27,9 @@ class cvpj_autoticks:
 		for p, v in self.points.items(): 
 			yield p, v
 
+	def copy(self):
+		return copy.deepcopy(self)
+
 	def iter(self):
 		for p, v in self.points.items(): 
 			yield p, v

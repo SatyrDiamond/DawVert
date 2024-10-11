@@ -11,6 +11,7 @@ from objects.convproj import autopoints
 from objects.convproj import visual
 from objects.convproj import notelist
 from objects.convproj import time
+from objects.convproj import autoticks
 from objects import notelist_splitter
 
 class cvpj_placements_notes:
@@ -176,7 +177,7 @@ class cvpj_placements_notes:
 		self.data = new_data_notes
 
 class cvpj_placement_notes:
-	__slots__ = ['time','muted','visual','notelist','time_ppq','time_float','auto']
+	__slots__ = ['time','muted','visual','notelist','time_ppq','time_float','auto','timesig_auto']
 	def __init__(self, time_ppq, time_float):
 		self.time = placements.cvpj_placement_timing()
 		self.time_ppq = time_ppq
@@ -185,17 +186,23 @@ class cvpj_placement_notes:
 		self.muted = False
 		self.visual = visual.cvpj_visual()
 		self.auto = {}
+		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
+
+	def make_base(self):
+		plb_obj = cvpj_placement_notes(self.time_ppq, self.time_float)
+		plb_obj.time = self.time.copy()
+		plb_obj.time_ppq = self.time_ppq
+		plb_obj.time_float = self.time_float
+		plb_obj.muted = self.muted
+		plb_obj.visual = self.visual
+		plb_obj.timesig_auto = self.timesig_auto.copy()
+		return plb_obj
 
 	def inst_split(self, splitted_pl):
 		nl_splitted = self.notelist.inst_split()
 		for inst_id, notelist_obj in nl_splitted.items():
-			plb_obj = cvpj_placement_notes(self.time_ppq, self.time_float)
-			plb_obj.time = self.time.copy()
-			plb_obj.time_ppq = self.time_ppq
-			plb_obj.time_float = self.time_float
+			plb_obj = self.make_base()
 			plb_obj.notelist = notelist_obj
-			plb_obj.muted = self.muted
-			plb_obj.visual = self.visual
 			if inst_id not in splitted_pl: splitted_pl[inst_id] = []
 			splitted_pl[inst_id].append(plb_obj)
 

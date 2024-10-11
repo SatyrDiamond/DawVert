@@ -17,11 +17,16 @@ class ableton_MidiClip:
 
 		self.LaunchMode = int(get_value(xmltag, 'LaunchMode', 0))
 		self.LaunchQuantisation = int(get_value(xmltag, 'LaunchQuantisation', 0))
+		from objects.file_proj._ableton.automation import ableton_RemoteableTimeSignature
 		if xmltag:
 			x_TimeSignature = xmltag.findall('TimeSignature')[0]
 			self.TimeSignatures = get_list(x_TimeSignature, 'TimeSignatures', 'RemoteableTimeSignature', ableton_RemoteableTimeSignature)
+			x_Envelopes = xmltag.findall('Envelopes')[0]
+			from objects.file_proj._ableton.automation import ableton_AutomationEnvelope
+			self.Envelopes = get_list(x_Envelopes, 'Envelopes', 'ClipEnvelope', ableton_AutomationEnvelope)
 		else:
 			self.TimeSignatures = {0: ableton_RemoteableTimeSignature(None)}
+			self.Envelopes = {}
 
 		self.ScrollerTimePreserver = ableton_ScrollerTimePreserver(xmltag)
 		self.TimeSelection = ableton_TimeSelection(xmltag)

@@ -15,6 +15,7 @@ from objects.convproj import placements_notes
 from objects.convproj import placements_audio
 from objects.convproj import placements_index
 from objects.convproj import midi_inst
+from objects.convproj import autoticks
 
 import copy
 
@@ -46,11 +47,11 @@ class lanefit:
 
 
 class cvpj_nle:
-	__slots__ = ['visual','notelist']
+	__slots__ = ['visual','notelist','timesig_auto']
 	def __init__(self, time_ppq, time_float):
 		self.visual = visual.cvpj_visual()
 		self.notelist = notelist.cvpj_notelist(time_ppq, time_float)
-		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
+		self.timesig_auto = autoticks.cvpj_autoticks(time_ppq, time_float, 'timesig')
 
 cvpj_visual = visual.cvpj_visual
 cvpj_stretch = stretch.cvpj_stretch

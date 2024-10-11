@@ -495,9 +495,9 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			issampler = False
 
 		if not DEBUG_IGNORE_PLACEMENTS:
-
 			track_obj.placements.pl_notes.remove_overlaps()
-
+			#mainseq = als_track.DeviceChain.MainSequencer
+			#mainseq.MidiControllers
 			for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
 				als_midiclip = als_track.add_midiclip(clipid)
 				als_midiclip.Color = notespl_obj.visual.color.closest_color_index(colordata, track_color)
@@ -506,6 +506,10 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				als_midiclip.Disabled = notespl_obj.muted
 				als_midiclip.CurrentStart = notespl_obj.time.position
 				als_midiclip.CurrentEnd = notespl_obj.time.position+notespl_obj.time.duration
+
+				if 0 in notespl_obj.timesig_auto.points:
+					timesigc = als_midiclip.TimeSignatures[0]
+					timesigc.Numerator, timesigc.Denominator = notespl_obj.timesig_auto.points[0]
 	
 				notespl_obj.notelist.notemod_conv()
 				notespl_obj.notelist.mod_limit(-60, 67)

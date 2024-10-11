@@ -50,6 +50,7 @@ class cvpj_nle:
 	def __init__(self, time_ppq, time_float):
 		self.visual = visual.cvpj_visual()
 		self.notelist = notelist.cvpj_notelist(time_ppq, time_float)
+		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
 
 cvpj_visual = visual.cvpj_visual
 cvpj_stretch = stretch.cvpj_stretch

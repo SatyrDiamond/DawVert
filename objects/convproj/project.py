@@ -174,7 +174,9 @@ class cvpj_project:
 			for e in track_data.notelist_index: 
 				track_data.notelist_index[e].notelist.change_timings(time_ppq, time_float)
 		for p in self.playlist: self.playlist[p].change_timings(time_ppq, time_float)
-		for p in self.notelist_index: self.notelist_index[p].notelist.change_timings(time_ppq, time_float)
+		for _, n in self.notelist_index.items(): 
+			n.notelist.change_timings(time_ppq, time_float)
+			n.timesig_auto.change_timings(time_ppq, time_float)
 		for m in self.timemarkers: m.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.position)
 		self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
 		self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)

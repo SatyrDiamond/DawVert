@@ -26,6 +26,7 @@ from objects.convproj import autoticks
 from objects.convproj import autopoints
 from objects.convproj import notelist
 from objects.convproj import stretch
+from objects.convproj import timemarker
 
 from functions_song import convert_r2m
 from functions_song import convert_ri2mi
@@ -68,14 +69,6 @@ def autoloc_getname(autopath):
 
 plugin_id_counter = idcounter.counter(1000, 'plugin_')
 
-class cvpj_timemarker:
-	__slots__ = ['type','visual','position','duration']
-	def __init__(self):
-		self.visual = visual.cvpj_visual()
-		self.type = ''
-		self.position = 0
-		self.duration = 0
-
 class cvpj_fxchannel:
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
@@ -115,7 +108,7 @@ class cvpj_project:
 		self.playlist = {}
 		self.timesig = [4,4]
 		self.do_actions = []
-		self.timemarkers = []
+		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
 		self.metadata = visual.cvpj_metadata()
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
 		self.loop_active = False
@@ -165,6 +158,7 @@ class cvpj_project:
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
 		self.automation.time_ppq = self.time_ppq
 		self.automation.time_float = self.time_float
+		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
 
 	def change_timings(self, time_ppq, time_float):
 		logger_project.info('Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
@@ -177,7 +171,7 @@ class cvpj_project:
 		for _, n in self.notelist_index.items(): 
 			n.notelist.change_timings(time_ppq, time_float)
 			n.timesig_auto.change_timings(time_ppq, time_float)
-		for m in self.timemarkers: m.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.position)
+		self.timemarkers.change_timings(time_ppq, time_float)
 		self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
 		self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
 		self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
@@ -199,13 +193,10 @@ class cvpj_project:
 		return duration_final
 
 	def add_timemarker(self):
-		timemarker_obj = cvpj_timemarker()
-		self.timemarkers.append(timemarker_obj)
-		return timemarker_obj
+		return self.timemarkers.add()
 
 	def patlenlist_to_timemarker(self, PatternLengthList, pos_loop):
 		prevtimesig = self.timesig
-		timemarkers = []
 		currentpos = 0
 		blockcount = 0
 

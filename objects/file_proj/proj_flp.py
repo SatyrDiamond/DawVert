@@ -56,6 +56,7 @@ class flp_pattern:
 		self.automation = {}
 		self.notes = []
 		self.name = None
+		self.timemarkers = []
 
 class flp_project:
 	def __init__(self):
@@ -157,6 +158,7 @@ class flp_project:
 			self.current_pat = event_data
 			if self.current_pat not in self.patterns: self.patterns[self.current_pat] = flp_pattern()
 			self.current_pat_obj = self.patterns[self.current_pat] 
+			self.internal_cur_timemarkers = self.current_pat_obj.timemarkers
 
 		elif event_id == 223:
 			event_bio = BytesIO(event_data)
@@ -217,6 +219,7 @@ class flp_project:
 				fla = arrangement.flp_arrangement_clip()
 				fla.read(event_bio, self.version_split)
 				self.current_arr_obj.items.append(fla)
+			self.internal_cur_timemarkers = self.current_arr_obj.timemarkers
 
 		#Tracks
 		elif event_id == 238:
@@ -235,11 +238,11 @@ class flp_project:
 			timemarker_obj = arrangement.flp_timemarker()
 			timemarker_obj.type = event_data >> 24
 			timemarker_obj.pos = event_data & 0x00ffffff
-			self.current_arr_obj.timemarkers.append(timemarker_obj)
+			self.internal_cur_timemarkers.append(timemarker_obj)
 
-		elif event_id == 205: self.current_arr_obj.timemarkers[-1].name = decodetext(self.version_split, event_data)
-		elif event_id == 33: self.current_arr_obj.timemarkers[-1].numerator = event_data
-		elif event_id == 34: self.current_arr_obj.timemarkers[-1].denominator = event_data
+		elif event_id == 205: self.internal_cur_timemarkers[-1].name = decodetext(self.version_split, event_data)
+		elif event_id == 33: self.internal_cur_timemarkers[-1].numerator = event_data
+		elif event_id == 34: self.internal_cur_timemarkers[-1].denominator = event_data
 	
 
 
@@ -461,6 +464,13 @@ class flp_project:
 						format_flp_tlv.write_tlv(chunkdata, 224, flnotes)
 					if patdat.color != None: format_flp_tlv.write_tlv(chunkdata, 150, patdat.color)
 					if patdat.name != None: format_flp_tlv.write_tlv(chunkdata, 193, utf16encode(patdat.name))
+
+					for timem_obj in patdat.timemarkers:
+						format_flp_tlv.write_tlv(chunkdata, 148, (timem_obj.type << 24)+timem_obj.pos)
+						format_flp_tlv.write_tlv(chunkdata, 33, timem_obj.numerator)
+						format_flp_tlv.write_tlv(chunkdata, 34, timem_obj.denominator)
+						if timem_obj.name != None: format_flp_tlv.write_tlv(chunkdata, 205, utf16encode(timem_obj.name))
+						else: format_flp_tlv.write_tlv(chunkdata, 205, b'\x20\x00\x00\x00')
 
 			format_flp_tlv.write_tlv(chunkdata, 226, b'\x01\x00\x00\x00\x00\x00\x00\x00\x01\x90\xff\x0f\x04\x00\x00\x00\xd5\x01\x00\x00')
 			format_flp_tlv.write_tlv(chunkdata, 226, b'\xfd\x00\x00\x00\x00\x00\x00\x00\x80\x90\xff\x0f\x04\x00\x00\x00\xd5\x01\x00\x00')

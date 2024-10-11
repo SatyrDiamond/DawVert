@@ -40,6 +40,16 @@ class plugconv(plugins.base):
 			convproj_obj.automation.calc(['plugin', pluginid, 'freq'], 'add', 72, 0, 0, 0)
 			return 0
 
+		if plugin_obj.type.check_wildmatch('universal', 'compressor', None):
+			extpluglog.convinternal('Universal', 'Compressor', 'Waveform', 'Compressor')
+			plugin_obj.plugts_transform('./data_main/plugts/univ_waveform.pltr', 'comp', convproj_obj, pluginid)
+			return 0
+
+		if plugin_obj.type.check_wildmatch('universal', 'limiter', None):
+			extpluglog.convinternal('Universal', 'Limiter', 'Waveform', 'Limiter')
+			plugin_obj.plugts_transform('./data_main/plugts/univ_waveform.pltr', 'limiter', convproj_obj, pluginid)
+			return 0
+
 		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
 		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
 

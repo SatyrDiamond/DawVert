@@ -162,7 +162,10 @@ class cvpj_placements:
 
 		for pl in self.pl_notes:
 			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-			if not self.is_indexed: pl.notelist.change_timings(time_ppq, time_float)
+			if not self.is_indexed: 
+				pl.notelist.change_timings(time_ppq, time_float)
+				pl.timesig_auto.change_timings(time_ppq, time_float)
+				pl.timemarkers.change_timings(time_ppq, time_float)
 
 		for pl in self.pl_audio:
 			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
@@ -210,6 +213,8 @@ class cvpj_placements:
 				nle_obj = notelist_index[indexpl_obj.fromindex]
 				new_notespl_obj.notelist = copy.deepcopy(nle_obj.notelist)
 				new_notespl_obj.visual = nle_obj.visual
+				new_notespl_obj.timesig_auto = nle_obj.timesig_auto.copy()
+				new_notespl_obj.timemarkers = nle_obj.timemarkers.copy()
 
 			self.pl_notes.data.append(new_notespl_obj)
 		self.pl_notes_indexed = placements_index.cvpj_placements_index()

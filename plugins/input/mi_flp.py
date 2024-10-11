@@ -422,8 +422,10 @@ class input_flp(plugins.base):
 					poly_obj = plugin_obj.poly
 					poly_obj.max = polynum
 					poly_obj.limited = polynum != 0
-					poly_obj.porta_time.porta = bool(fl_channel_obj.poly.flags&2)
-					if poly_obj.porta_time.porta: 
+					poly_obj.mono = bool(fl_channel_obj.poly.flags&1)
+					poly_obj.slide_always = bool(fl_channel_obj.poly.flags&2)
+
+					if poly_obj.slide_always: 
 						poly_obj.porta_time.set_steps_nonsync((fl_channel_obj.poly.slide/1024)**(16/4), flp_obj.tempo)
 						poly_obj.porta_time.type = 'steps'
 					plugin_obj.role = 'synth'
@@ -531,6 +533,15 @@ class input_flp(plugins.base):
 				color = fl_pattern.color.to_bytes(4, "little")
 				if color != b'HQV\x00': nle_obj.visual.color.set_int([color[0],color[1],color[2]])
 			if fl_pattern.name: nle_obj.visual.name = fl_pattern.name
+
+			for fl_timemark in fl_pattern.timemarkers:
+				if fl_timemark.type == 8:
+					nle_obj.timesig_auto.add_point(fl_timemark.pos, [fl_timemark.numerator, fl_timemark.denominator])
+				#else:
+				#	timemarker_obj = convproj_obj.add_timemarker()
+				#	timemarker_obj.visual.name = fl_timemark.name
+				#	timemarker_obj.position = fl_timemark.pos
+				#	if fl_timemark.type == 5: timemarker_obj.type = 'start'
 
 		for num, sp_obj in enumerate(instdata_chans):
 			if numnotenum_chans[num] and sp_obj:

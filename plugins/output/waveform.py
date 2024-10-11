@@ -69,11 +69,21 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 			wf_plugin.plugtype = plugin_obj.type.subtype
 			wf_plugin.presetDirty = 1
 			wf_plugin.enabled = fx_on
+			dsetfound = False
 			for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
 				wf_plugin.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value
 				add_auto_curves(convproj_obj, ['plugin', cvpj_fxid, param_id], wf_plugin, param_id)
+				dsetfound = True
 
-			return wf_plugin
+			if dsetfound == False:
+				paramlist = plugin_obj.params.list()
+				if paramlist:
+					for param_id in paramlist:
+						wf_plugin.params[param_id] = plugin_obj.params.get(param_id, 0).value
+						add_auto_curves(convproj_obj, ['plugin', cvpj_fxid, param_id], wf_plugin, param_id)
+					return wf_plugin
+
+			
 
 	elif isinstrument:
 		wf_plugin = proj_waveform.waveform_plugin()
@@ -156,7 +166,12 @@ class output_waveform_edit(plugins.base):
 			if track_obj.visual.name: wf_track.name = track_obj.visual.name
 			if track_obj.visual.color: wf_track.colour ='ff'+track_obj.visual.color.get_hex()
 			
+			wf_inst_plugin = get_plugin(convproj_obj, track_obj.inst_pluginid, True)
 			middlenote = track_obj.datavals.get('middlenote', 0)
+
+			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
+
 			if middlenote != 0:
 				wf_plugin = proj_waveform.waveform_plugin()
 				wf_plugin.plugtype = 'midiModifier'
@@ -164,8 +179,7 @@ class output_waveform_edit(plugins.base):
 				wf_plugin.params['semitonesUp'] = -middlenote
 				wf_track.plugins.append(wf_plugin)
 
-			wf_plugin = get_plugin(convproj_obj, track_obj.inst_pluginid, True)
-			if wf_plugin: wf_track.plugins.append(wf_plugin)
+			if wf_inst_plugin: wf_track.plugins.append(wf_inst_plugin)
 
 			get_plugins(convproj_obj, wf_track.plugins, track_obj.fxslots_audio)
 

@@ -67,6 +67,7 @@ class cvpj_preset:
 class cvpj_poly:
 	def __init__(self):
 		self.limited = False
+		self.mono = False
 		self.max = 32
 		self.porta = False
 		self.porta_time = time.cvpj_time()

@@ -12,8 +12,8 @@
 <input
 
 >proc
-	calc|attack|div|1000
-	calc|release|div|1000
+	calc|attack|div|100
+	calc|release|div|100
 <proc
 
 >output

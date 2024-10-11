@@ -195,7 +195,7 @@ class output_cvpjs(plugins.base):
 
 					fl_channel_obj.poly.max = poly_obj.max if poly_obj.limited else 0
 					if fl_channel_obj.poly.max==1: fl_channel_obj.poly.flags += 1
-					if poly_obj.porta: fl_channel_obj.poly.flags += 2
+					if poly_obj.slide_always: fl_channel_obj.poly.flags += 2
 
 			for n in [100, 60]:
 				t = channel.flp_channel_tracking()
@@ -286,6 +286,15 @@ class output_cvpjs(plugins.base):
 			for poslist in sorted(fl_notes):
 				for fl_note in fl_notes[poslist]:
 					fl_pattern_obj.notes.append(fl_note)
+
+			for pos, value in nle_obj.timesig_auto.iter():
+				flp_timemarker_obj = arrangement.flp_timemarker()
+				flp_timemarker_obj.pos = pos
+				flp_timemarker_obj.type = 8
+				flp_timemarker_obj.name = str(value[0])+'/'+str(value[1])
+				flp_timemarker_obj.numerator = value[0]
+				flp_timemarker_obj.denominator = value[1]
+				fl_pattern_obj.timemarkers.append(flp_timemarker_obj)
 
 			flp_obj.patterns[pat_num] = fl_pattern_obj
 

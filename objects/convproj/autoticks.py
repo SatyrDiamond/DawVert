@@ -5,6 +5,7 @@ from functions import xtramath
 from functions import data_values
 from objects.convproj import time
 import math
+import copy
 
 class cvpj_autoticks:
 	__slots__ = ['val_type','time_ppq','time_float','points']

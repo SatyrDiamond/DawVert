@@ -140,6 +140,7 @@ class dawproject_song:
 		self.application = dawproject_application()
 		self.transport = dawproject_transport()
 		self.arrangement = dawproject_arrangement()
+		self.metadata = {}
 
 	def load_from_data(self, input_data):
 		x_root = ET.fromstring(input_data)
@@ -153,6 +154,22 @@ class dawproject_song:
 						track_obj = track.dawproject_track()
 						track_obj.read(x_trackpart)
 						self.tracks.append(track_obj)
+
+	def load_metadata(self, input_data):
+		x_root = ET.fromstring(input_data)
+		for x_part in x_root:
+			if x_part.text:
+				self.metadata[x_part.tag] = x_part.text
+
+	def save_metadata(self):
+		x_metadata = ET.Element("MetaData")
+		x_metadata.set('version', '1.0')
+		for x, v in self.metadata.items():
+			vp = ET.SubElement(x_root, x)
+			vp.text(v)
+
+		xmlstr = minidom.parseString(ET.tostring(x_metadata)).toprettyxml(indent="\t")
+		return xmlstr.encode("UTF-8")
 
 	def save_to_file(self, output_file):
 		with open(output_file, "wb") as f: 

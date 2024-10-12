@@ -53,32 +53,7 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dv_config):
 		is_external = plugin_obj.check_wildmatch('external', None, None)
 
 		if is_external:
-			if_ext_compat = plugin_obj.type.type in out_dawinfo.plugin_ext
-			if not if_ext_compat:
-				for shortname, dvplug_obj, prop_obj in extplug_selector.iter():
-					plugcheck = dvplug_obj.check_plug(plugin_obj)
-					if plugcheck:
-						funclist = dir(dvplug_obj)
-						if 'decode_data' in funclist and 'encode_data' in funclist:
-							try:
-								of_ext_compat = None
-								for x in prop_obj.ext_formats:
-									if x in out_dawinfo.plugin_ext: 
-										of_ext_compat = x
-										break
-
-								if of_ext_compat:
-									instr = plugin_obj.type.type
-									chunkdata = plugin_obj.rawdata_get('chunk')
-									success = dvplug_obj.decode_data(plugcheck, plugin_obj)
-									if success:
-										dvplug_obj.encode_data(of_ext_compat, convproj_obj, plugin_obj, None)
-										logger_plugconv.info(shortname+': Converted from '+instr+' to '+of_ext_compat)
-							except:
-								pass
-
-						#dvplug_obj.params_from_plugin(convproj_obj, plugin_obj, pluginid, plugin_obj.type.type)
-						#print(plugin_obj.type.type, if_ext_compat, shortname, plugcheck)
+			plugin_obj.external_make_compat(convproj_obj, out_dawinfo.plugin_ext)
 
 		if not is_external:
 			converted_val = 2

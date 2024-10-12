@@ -10,6 +10,7 @@ import wave as audio_wav
 import base64
 import struct
 import copy
+import logging
 
 from objects.convproj import sample_entry
 from objects.convproj import params
@@ -24,6 +25,8 @@ from objects.convproj import chord
 from objects.convproj import plugstate
 from objects.convproj import midi_inst
 from objects import plugdatamanu
+
+logger_plugins = logging.getLogger('plugins')
 
 class cvpj_audioports:
 	def __init__(self):
@@ -408,6 +411,33 @@ class cvpj_plugin:
 					#print(trobj.proc)
 					
 	# -------------------------------------------------- ext
+
+	def external_make_compat(self, convproj_obj, ext_daw_out):
+		if self.check_wildmatch('external', None, None):
+			in_exttype = self.type.type
+			if not in_exttype in ext_daw_out:
+				for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
+					plugcheck = dvplug_obj.check_plug(self)
+					if plugcheck:
+						funclist = dir(dvplug_obj)
+						if 'decode_data' in funclist and 'encode_data' in funclist:
+							try:
+								of_ext_compat = None
+								for x in prop_obj.ext_formats:
+									if x in ext_daw_out: 
+										of_ext_compat = x
+										break
+
+								if of_ext_compat:
+									chunkdata = self.rawdata_get('chunk')
+									success = dvplug_obj.decode_data(plugcheck, self)
+									if success:
+										dvplug_obj.encode_data(of_ext_compat, convproj_obj, self, None)
+										logger_plugins.info(shortname+': Converted from '+in_exttype+' to '+of_ext_compat)
+										return True
+							except:
+								return False
+		return False
 
 	def external_to_user(self, convproj_obj, pluginid, exttype):
 		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():

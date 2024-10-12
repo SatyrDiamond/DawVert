@@ -5,6 +5,7 @@ import plugins
 import zipfile
 import io
 import os
+import uuid
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from objects import globalstore
@@ -301,6 +302,7 @@ def make_lane(starttxt):
 def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	from functions_plugin_ext import plugin_vst2
 	from functions_plugin_ext import plugin_vst3
+	from functions_plugin_ext import plugin_clap
 
 	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
 	if plugin_found:
@@ -312,7 +314,7 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 			dp_device.name = plugin_obj.datavals_global.get('name', None)
 
 			fxpdata = plugin_vst2.export_presetdata(plugin_obj)
-			statepath = 'plugins/'+pluginid+'.fxp'
+			statepath = 'plugins/'+str(uuid.uuid4())+'.fxp'
 			dawproject_zip.writestr(statepath, fxpdata)
 			dp_device.state.set(statepath)
 
@@ -338,9 +340,36 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 			dp_device.name = plugin_obj.datavals_global.get('name', None)
 
 			fxpdata = plugin_vst3.export_presetdata(plugin_obj)
-			statepath = 'plugins/'+pluginid+'.vstpreset'
+			statepath = 'plugins/'+str(uuid.uuid4())+'.vstpreset'
 			dawproject_zip.writestr(statepath, fxpdata)
 			dp_device.state.set(statepath)
+
+			for cvpj_paramid in plugin_obj.params.list():
+				if cvpj_paramid.startswith('ext_param_'):
+					cvpj_paramdata = plugin_obj.params.get(cvpj_paramid, 1)
+					paramnum = int(cvpj_paramid[10:])
+					dp_realparam = device.dawproject_realparameter()
+					dp_realparam.max = 1
+					dp_realparam.min = 0
+					dp_realparam.unit = "normalized" 
+					dp_realparam.value = cvpj_paramdata.value
+					dp_realparam.parameterID = paramnum
+					dp_realparam.id = 'plugin__'+pluginid+'__param__'+cvpj_paramid
+					if cvpj_paramdata.visual.name: dp_realparam.name = cvpj_paramdata.visual.name
+					dp_device.realparameter.append(dp_realparam)
+					from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
+
+		if plugin_obj.check_wildmatch('external', 'clap', None):
+			dp_device = device.dawproject_device('ClapPlugin')
+			dp_device.deviceID = plugin_obj.datavals_global.get('id', None)
+			dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
+			dp_device.name = plugin_obj.datavals_global.get('name', None)
+
+			fxpdata = plugin_clap.export_presetdata(plugin_obj)
+			if fxpdata:
+				statepath = 'plugins/'+str(uuid.uuid4())+'.clap-preset'
+				dawproject_zip.writestr(statepath, fxpdata)
+				dp_device.state.set(statepath)
 
 			for cvpj_paramid in plugin_obj.params.list():
 				if cvpj_paramid.startswith('ext_param_'):
@@ -368,9 +397,6 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 			dp_device.enabled.name = 'On/Off'
 
 			dp_channel.devices.append(dp_device)
-
-
-
 
 def do_devices(convproj_obj, dp_channel, lane_obj, inst_pluginid, fxslots_audio):
 	if inst_pluginid: 
@@ -450,7 +476,7 @@ class output_dawproject(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_nested'] = True
-		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['fxtype'] = 'groupreturn'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_dawproject

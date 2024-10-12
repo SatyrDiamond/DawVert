@@ -83,6 +83,27 @@ class pluginfo:
 			self.path_32bit = p_path_32bit_unix
 			self.path_64bit = p_path_64bit_unix
 
+	def from_sql_clap(self, indata, platformtxt):
+		p_name, p_id, p_creator, p_category, p_version, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_path_win, p_path_unix = indata
+		self.out_exists = True
+		self.name = p_name
+		self.id = p_id
+		self.creator = p_creator
+		self.category = p_category
+		self.version = p_version
+		self.audio_num_inputs = p_audio_num_inputs
+		self.audio_num_outputs = p_audio_num_outputs
+		self.midi_num_inputs = p_midi_num_inputs
+		self.midi_num_outputs = p_midi_num_outputs
+		self.num_params = p_num_params
+		if platformtxt == 'win': 
+			self.path_32bit = p_path_win
+			self.path_64bit = p_path_win
+		if platformtxt == 'lin': 
+			self.path_32bit = p_path_unix
+			self.path_64bit = p_path_unix
+
+
 
 class extplug_db:
 	os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
@@ -360,6 +381,27 @@ class clap:
 					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE clap SET path_win = ? WHERE id = ?", (pluginfo_obj.path, pluginfo_obj.id,))
 					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE clap SET path_unix = ? WHERE id = ?", (pluginfo_obj.path, pluginfo_obj.id,))
 
+	def get(bycat, in_val, in_platformtxt, cpu_arch_list):
+		founddata = None
+	
+		if in_platformtxt == None: in_platformtxt = platformtxt
+	
+		if extplug_db.db_plugins:
+			if bycat == 'id':
+				founddata = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE id = ?", (in_val,)).fetchone()
+	
+			if bycat == 'name':
+				founddata = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE name = ?", (in_val,)).fetchone()
+	
+			if bycat == 'path':
+				patharch = 'win' if in_platformtxt == 'win' else 'unix'
+				in_val = in_val.replace('/', '\\')
+				founddata = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE path_"+patharch+" = ?", (in_val,)).fetchone()
+
+		pluginfo_obj = pluginfo()
+		if founddata: pluginfo_obj.from_sql_clap(founddata, in_platformtxt)
+		return pluginfo_obj
+	
 	def count():
 		if extplug_db.db_plugins:
 			return extplug_db.db_plugins.execute("SELECT count(*) FROM clap").fetchone()[0]

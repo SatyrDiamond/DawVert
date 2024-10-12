@@ -60,19 +60,22 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dv_config):
 					if plugcheck:
 						funclist = dir(dvplug_obj)
 						if 'decode_data' in funclist and 'encode_data' in funclist:
-							of_ext_compat = None
-							for x in prop_obj.ext_formats:
-								if x in out_dawinfo.plugin_ext: 
-									of_ext_compat = x
-									break
-	
-							if of_ext_compat:
-								instr = plugin_obj.type.type
-								chunkdata = plugin_obj.rawdata_get('chunk')
-								success = dvplug_obj.decode_data(plugcheck, plugin_obj)
-								if success:
-									dvplug_obj.encode_data(of_ext_compat, convproj_obj, plugin_obj, None)
-									logger_plugconv.warning(shortname+': Converted from '+instr+' to '+of_ext_compat)
+							try:
+								of_ext_compat = None
+								for x in prop_obj.ext_formats:
+									if x in out_dawinfo.plugin_ext: 
+										of_ext_compat = x
+										break
+
+								if of_ext_compat:
+									instr = plugin_obj.type.type
+									chunkdata = plugin_obj.rawdata_get('chunk')
+									success = dvplug_obj.decode_data(plugcheck, plugin_obj)
+									if success:
+										dvplug_obj.encode_data(of_ext_compat, convproj_obj, plugin_obj, None)
+										logger_plugconv.info(shortname+': Converted from '+instr+' to '+of_ext_compat)
+							except:
+								pass
 
 						#dvplug_obj.params_from_plugin(convproj_obj, plugin_obj, pluginid, plugin_obj.type.type)
 						#print(plugin_obj.type.type, if_ext_compat, shortname, plugcheck)

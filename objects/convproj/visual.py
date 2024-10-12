@@ -347,6 +347,10 @@ class cvpj_metadata:
 		self.t_month = -1
 		self.t_year = -1
 		self.email = ''
+		self.album = ''
+		self.songwriter = ''
+		self.producer = ''
+		self.copyright = ''
 
 class cvpj_window_data:
 	__slots__ = ['pos_x','pos_y','size_x','size_y','open','detatched','maximized','minimized']

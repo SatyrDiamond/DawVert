@@ -5,7 +5,6 @@ from objects.exceptions import ProjectFileParserException
 import plugins
 import zipfile
 import os
-
 import logging
 logger_input = logging.getLogger('input')
 
@@ -64,6 +63,7 @@ def do_sends(convproj_obj, track_obj, dp_channel):
 def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 	from functions_plugin_ext import plugin_vst2
 	from functions_plugin_ext import plugin_vst3
+	from functions_plugin_ext import plugin_clap
 
 	for device in dp_devices:
 		plugin_obj = None
@@ -82,6 +82,16 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			vst2_state = zip_data.read(str(device.state))
 			plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, vst2_state, None)
+			for realparam in device.realparameter:
+				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
+
+		if device.plugintype == 'ClapPlugin':
+			plugin_obj = convproj_obj.add_plugin(device.id, 'external', 'clap', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
+			clap_state = zip_data.read(str(device.state))
+			plugin_clap.import_presetdata_raw(convproj_obj, plugin_obj, clap_state, None)
+			if device.deviceName: plugin_obj.datavals_global.add('name', device.deviceName)
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
 				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
@@ -303,7 +313,7 @@ class input_dawproject(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_nested'] = True
-		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_dawproject
 		from objects import auto_id

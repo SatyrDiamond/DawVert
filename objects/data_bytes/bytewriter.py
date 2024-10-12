@@ -221,6 +221,11 @@ class bytewriter:
 		self.int32(len(outs))
 		self.raw(outs)
 
+	def c_string__int32_b(self, value, **kwargs): 
+		outs = value.encode(**kwargs)+b"\0"
+		self.int32_b(len(outs))
+		self.raw(outs)
+
 	def c_string__varint(self, value, **kwargs): 
 		outs = value.encode(**kwargs)+b"\0"
 		self.varint(len(outs))

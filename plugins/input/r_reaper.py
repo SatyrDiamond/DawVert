@@ -74,12 +74,13 @@ class input_reaper(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
-		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_reaper
 		from functions_plugin_ext import plugin_vst2
 		from functions_plugin_ext import plugin_vst3
+		from functions_plugin_ext import plugin_clap
 
 		bytestream = open(input_file, 'r')
 		try:
@@ -148,6 +149,13 @@ class input_reaper(plugins.base):
 							pluginfo_obj = plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.vst3_uuid, rpp_extplug.data_chunk[8:-8])
 							if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
 							elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+
+					if rpp_plugin.type == 'CLAP':
+						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'clap', None)
+						plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.clap_id, rpp_extplug.data_chunk)
+						plugin_obj.visual.name = rpp_extplug.clap_name
+						if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
+						elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
 
 					if rpp_plugin.type == 'JS':
 						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'jesusonic', rpp_extplug.js_id)

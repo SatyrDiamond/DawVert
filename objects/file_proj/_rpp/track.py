@@ -128,8 +128,6 @@ class rpp_track:
 		self.panenv2.write('PANENV2', rpp_data)
 		self.volenv2.write('VOLENV2', rpp_data)
 		self.muteenv.write('MUTEENV', rpp_data)
-		for parmenv in self.parmenv:
-			parmenv.write('PARMENV', rpp_data)
 		if self.fxchain != None:
 			rpp_fxchaindata = robj('FXCHAIN',[])
 			self.fxchain.write(rpp_fxchaindata)

@@ -537,11 +537,6 @@ class input_flp(plugins.base):
 			for fl_timemark in fl_pattern.timemarkers:
 				if fl_timemark.type == 8:
 					nle_obj.timesig_auto.add_point(fl_timemark.pos, [fl_timemark.numerator, fl_timemark.denominator])
-				#else:
-				#	timemarker_obj = convproj_obj.add_timemarker()
-				#	timemarker_obj.visual.name = fl_timemark.name
-				#	timemarker_obj.position = fl_timemark.pos
-				#	if fl_timemark.type == 5: timemarker_obj.type = 'start'
 
 		for num, sp_obj in enumerate(instdata_chans):
 			if numnotenum_chans[num] and sp_obj:

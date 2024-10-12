@@ -18,8 +18,9 @@ class to_numdata:
 		track_obj = convproj_obj.track_data[trackid]
 		self.tracknum = self.idnum_tracks[trackid]
 		for target, send_obj in track_obj.sends.iter():
-			send_amt = send_obj.params.get('amount',1).value
-			self.output_ids[self.tracknum][4].append([self.idnum_return[target], send_amt, send_obj.sendautoid])
+			if target in self.idnum_return:
+				send_amt = send_obj.params.get('amount',1).value
+				self.output_ids[self.tracknum][4].append([self.idnum_return[target], send_amt, send_obj.sendautoid])
 		self.tracknum += 1
 
 

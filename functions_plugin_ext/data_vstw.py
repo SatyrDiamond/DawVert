@@ -7,4 +7,4 @@ def get(chunkdata):
 		chunkdata = chunkdata[4:int.from_bytes(chunkdata[0:4])+8]
 		return chunkdata
 	else:
-		return None
+		return chunkdata

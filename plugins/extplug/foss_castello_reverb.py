@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import lxml.etree as ET
 from objects import globalstore
 from functions import data_xml
 from functions_plugin_ext import data_nullbytegroup

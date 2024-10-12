@@ -17,31 +17,39 @@ class extplugin(plugins.base):
 	def get_shortname(self): return 'magical8bitplug2'
 	def get_name(self): return 'Magical8bitplug2'
 	def get_prop(self, in_dict): 
-		in_dict['ext_formats'] = ['vst2']
+		in_dict['ext_formats'] = ['vst2', 'vst3']
 		in_dict['type'] = 'yokemura'
 		in_dict['subtype'] = 'magical8bitplug2'
 
 	def check_exists(self, inplugname):
 		outlist = []
 		if plugin_vst2.check_exists('id', 1937337962): outlist.append('vst2')
+		if plugin_vst3.check_exists('id', 'ABCDEF019182FAEB596D636B73796E6A'): outlist.append('vst3')
 		return outlist
 
 	def check_plug(self, plugin_obj): 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			if plugin_obj.datavals_global.match('fourid', 1937337962): return 'vst2'
+		if plugin_obj.check_wildmatch('external', 'vst3', None):
+			if plugin_obj.datavals_global.match('id', 'ABCDEF019182FAEB596D636B73796E6A'): return 'vst3'
 		return None
 
 	def decode_data(self, plugintype, plugin_obj):
-		if plugintype == 'vst2':
+		if plugintype in ['vst2', 'vst3']:
 			chunkdata = plugin_obj.rawdata_get('chunk')
 			self.plugin_data = data_vc2xml.get(chunkdata)
-			self.plugin_type = 'vst2'
+			self.plugin_type = plugintype
+			return True
 
 	def encode_data(self, plugintype, convproj_obj, plugin_obj, extplat):
 		if not (self.plugin_data is None):
+			chunkdata = data_vc2xml.make(self.plugin_data)
 			if plugintype == 'vst2':
-				chunkdata = data_vc2xml.make(self.plugin_data)
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', extplat, 1937337962, 'chunk', chunkdata, None)
+				return True
+			if plugintype == 'vst3':
+				plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, 'ABCDEF019182FAEB596D636B73796E6A', chunkdata)
+				return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
 		globalstore.paramremap.load('magical8bitplug2', '.\\data_ext\\remap\\magical8bitplug2.csv')

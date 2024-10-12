@@ -6,6 +6,7 @@ import lxml.etree as ET
 from objects import globalstore
 from functions import data_xml
 from functions_plugin_ext import data_vc2xml
+from functions_plugin_ext import data_vstw
 from functions_plugin_ext import plugin_vst2
 
 class extplugin(plugins.base):
@@ -28,17 +29,25 @@ class extplugin(plugins.base):
 		return outlist
 
 	def check_plug(self, plugin_obj): 
-		if plugin_obj.check_wildmatch('vst2', None):
-			if plugin_obj.datavals.match('fourid', 1416000308): return 'vst2'
-		if plugin_obj.check_wildmatch('vst3', None):
-			if plugin_obj.datavals.match('id', '5653545466733474756E656669736834'): return 'vst3'
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
+			if plugin_obj.datavals_global.match('fourid', 1416000308): return 'vst2'
+		if plugin_obj.check_wildmatch('external', 'vst3', None):
+			if plugin_obj.datavals_global.match('id', '5653545466733474756E656669736834'): return 'vst3'
 		return None
 
 	def decode_data(self, plugintype, plugin_obj):
-		if plugintype in ['vst2', 'vst3']:
+		if plugintype == 'vst2':
 			chunkdata = plugin_obj.rawdata_get('chunk')
 			self.plugin_data = data_vc2xml.get(chunkdata)
-			self.plugin_type = chunkdata
+			self.plugin_type = plugintype
+			return True
+		if plugintype == 'vst3':
+			chunkdata = plugin_obj.rawdata_get('chunk')
+			vstw_d = data_vstw.get(chunkdata)
+			if vstw_d: 
+				self.plugin_data = data_vc2xml.get(vstw_d)
+				self.plugin_type = plugintype
+				return True
 
 	def encode_data(self, plugintype, convproj_obj, plugin_obj, extplat):
 		if not (self.plugin_data is None):

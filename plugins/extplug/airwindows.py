@@ -65,9 +65,10 @@ class extplugin(plugins.base):
 		return outlist
 
 	def check_plug(self, plugin_obj): 
-		arwindb.load_db()
-		checkvst = plugin_obj.datavals.get('fourid', 0)
-		if checkvst in arwindb.dbdata['vst2_id']: return 'vst2'
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
+			arwindb.load_db()
+			checkvst = plugin_obj.datavals_global.get('fourid', 0)
+			if checkvst in arwindb.dbdata['vst2_id']: return 'vst2'
 		return None
 
 	# ----------------------------------------- PARAMS DATA -----------------------------------------
@@ -75,7 +76,7 @@ class extplugin(plugins.base):
 	def decode_data(self, plugintype, plugin_obj):
 		arwindb.load_db()
 		if plugintype == 'vst2':
-			checkvst = plugin_obj.datavals.get('fourid', 0)
+			checkvst = plugin_obj.datavals_global.get('fourid', 0)
 			namefound = np.where(checkvst==arwindb.dbdata['vst2_id'])[0]
 			if len(namefound):
 				chunkdata = plugin_obj.rawdata_get('chunk')

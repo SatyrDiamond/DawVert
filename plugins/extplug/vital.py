@@ -6,8 +6,12 @@ from functions import data_xml
 from functions import note_data
 from functions import xtramath
 from functions_plugin_ext import plugin_vst2
+from functions_plugin_ext import plugin_vst3
+from functions_plugin_ext import plugin_clap
+from functions_plugin_ext import data_vstw
 from objects import globalstore
 from objects.convproj import wave
+from objects.file import preset_vst2
 import json
 import math
 import numpy as np
@@ -374,31 +378,61 @@ class extplugin(plugins.base):
 	def get_shortname(self): return 'vital'
 	def get_name(self): return 'Vital'
 	def get_prop(self, in_dict): 
-		in_dict['ext_formats'] = ['vst2']
+		in_dict['ext_formats'] = ['vst2', 'vst3', 'clap']
 		in_dict['type'] = 'matt_tytel'
 		in_dict['subtype'] = 'vital'
 
 	def check_exists(self, inplugname):
 		outlist = []
 		if plugin_vst2.check_exists('id', 1449751649): outlist.append('vst2')
+		if plugin_vst3.check_exists('id', '56535456697461766974616C00000000'): outlist.append('vst3')
 		return outlist
 
 	def check_plug(self, plugin_obj): 
-		if plugin_obj.check_wildmatch('vst2', None):
-			if plugin_obj.datavals.match('fourid', 1449751649): return 'vst2'
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
+			if plugin_obj.datavals_global.match('fourid', 1449751649): return 'vst2'
+		if plugin_obj.check_wildmatch('external', 'vst3', None):
+			if plugin_obj.datavals_global.match('id', '56535456697461766974616C00000000'): return 'vst3'
+		if plugin_obj.check_wildmatch('external', 'clap', None):
+			if plugin_obj.datavals_global.match('id', 'audio.vital.synth'): return 'clap'
 		return None
 
 	def decode_data(self, plugintype, plugin_obj):
-		if plugintype in ['vst2']:
+		chunkdata = None
+		if plugintype in ['vst2', 'clap']:
+			chunkdata = plugin_obj.rawdata_get('chunk').decode().strip()
+		if plugintype in ['vst3']:
 			chunkdata = plugin_obj.rawdata_get('chunk')
-			self.plugin_data = chunkdata.decode().strip()
-			self.plugin_data = json.loads(self.plugin_data[0:-1])
-			self.plugin_type = 'vst2'
+			vstw_d = data_vstw.get(chunkdata)
+			if vstw_d: 
+				chunkdata = data_vc2xml.get(vstw_d)
+				chunkdata = chunkdata[4:int.from_bytes(chunkdata[0:4])+8]
+				chunkdata = chunkdata.split(b'\x00')[0].decode().strip()+'\x00'
+				self.plugin_type = plugintype
+				return True
+
+		if chunkdata:
+			try:
+				self.plugin_type = plugintype
+				self.plugin_data = chunkdata
+				self.plugin_data = json.loads(self.plugin_data[0:-1])
+				return True
+			except:
+				pass
+
+	#def extract_params(self):
+	#	if not (self.plugin_data is None):
+	#		for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('vital', plugintype):
 
 	def encode_data(self, plugintype, convproj_obj, plugin_obj, extplat):
 		if not (self.plugin_data is None):
+			jsonout = json.dumps(self.plugin_data).encode()
 			if plugintype == 'vst2':
-				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', extplat, 1449751649, 'chunk', json.dumps(self.plugin_data).encode(), None)
+				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', extplat, 1449751649, 'chunk', jsonout, None)
+			if plugintype == 'vst3':
+				plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, '56535456697461766974616C00000000', jsonout)
+			if plugintype == 'clap':
+				plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, 'audio.vital.synth', jsonout)
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
 		globalstore.paramremap.load('vital', './data_ext/remap/vital.csv')

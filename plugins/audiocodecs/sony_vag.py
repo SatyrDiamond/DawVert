@@ -18,9 +18,8 @@ class input_codec(plugins.base):
 		import av
 		vag_audio = io.BytesIO(in_bytes)
 
-		container = av.open(vag_audio, format='vag')
-
 		try:
+			container = av.open(vag_audio, format='vag')
 			data = np.empty(shape=0)
 			for packet in container.demux():
 				for frame in packet.decode():

@@ -617,7 +617,10 @@ class input_ableton(plugins.base):
 						for _, e in clipobj.Envelopes.items():
 							if int(e.PointeeId) in midictrls: 
 								ccnum = midictrls[int(e.PointeeId)]
-								mpetype = 'midi_cc_'+str(ccnum)
+
+								if ccnum == -2: mpetype = 'midi_pitch'
+								elif ccnum == -1: mpetype = 'midi_pressure'
+								else: mpetype = 'midi_cc_'+str(ccnum)
 
 							if mpetype:
 								autopoints_obj = placement_obj.add_autopoints(mpetype)

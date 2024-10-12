@@ -73,7 +73,7 @@ class ableton_MidiClip:
 		x_TimeSignature = ET.SubElement(xmltag, "TimeSignature")
 		set_list(x_TimeSignature, self.TimeSignatures, "TimeSignatures", "RemoteableTimeSignature")
 		x_Envelopes = ET.SubElement(xmltag, "Envelopes")
-		ET.SubElement(x_Envelopes, "Envelopes")
+		set_list(x_Envelopes, self.Envelopes, "Envelopes", "ClipEnvelope")
 		self.ScrollerTimePreserver.write(xmltag)
 		self.TimeSelection.write(xmltag)
 		add_bool(xmltag, 'Legato', self.Legato)

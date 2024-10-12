@@ -12,6 +12,7 @@ from objects.file_proj import proj_ableton
 from objects.file_proj._ableton.param import ableton_parampart
 from objects.file_proj._ableton.samplepart import ableton_MultiSamplePart
 from objects.file_proj._ableton.automation import ableton_AutomationEnvelope
+from objects.file_proj._ableton.automation import ableton_ReceiveTarget
 from objects import counter
 from objects import globalstore
 import numpy as np
@@ -494,10 +495,20 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		else:
 			issampler = False
 
+		mainseq = als_track.DeviceChain.MainSequencer
+
+		midicc = {}
+
+		for n in range(130):
+			d = mainseq.MidiControllers[n] = ableton_ReceiveTarget(None, 'ControllerTargets.'+str(n))
+			d.set_unused()
+			if n == 0: mpetype = 'midi_pitch'
+			elif n == 1: mpetype = 'midi_pressure'
+			else: mpetype = 'midi_cc_'+str(n-2)
+			midicc[mpetype] = d.id
+
 		if not DEBUG_IGNORE_PLACEMENTS:
 			track_obj.placements.pl_notes.remove_overlaps()
-			#mainseq = als_track.DeviceChain.MainSequencer
-			#mainseq.MidiControllers
 			for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
 				als_midiclip = als_track.add_midiclip(clipid)
 				als_midiclip.Color = notespl_obj.visual.color.closest_color_index(colordata, track_color)
@@ -579,6 +590,24 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 	
 					KeyTrack_obj.MidiKey = key+60
 					als_midiclip.Notes.KeyTrack[counter_keytrack.get()] = KeyTrack_obj
+
+				for i, d in enumerate(notespl_obj.auto.items()):
+					n, x = d
+					clipenv = ableton_AutomationEnvelope(None)
+
+					mpeid = None
+
+					if n in midicc: mpeid = midicc[n]
+
+					if mpeid:
+						clipenv.PointeeId = mpeid
+						for num, autopoint in enumerate(x.iter()):
+							alsevent = proj_ableton.ableton_FloatEvent(None)
+							alsevent.Time = autopoint.pos
+							alsevent.Value = autopoint.value
+							clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
+
+						als_midiclip.Envelopes[i] = clipenv
 
 		middlenote = track_obj.datavals.get('middlenote', 0)
 
@@ -884,7 +913,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 							alsevent.Value = autopoint.value
 							clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
 
-					als_audioclip.Envelopes[i] = clipenv
+						als_audioclip.Envelopes[i] = clipenv
 
 
 

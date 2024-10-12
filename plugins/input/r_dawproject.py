@@ -332,16 +332,20 @@ class input_dawproject(plugins.base):
 
 		samplefolder = dv_config.path_samples_extracted
 
+		project_obj = proj_dawproject.dawproject_song()
 		try:
 			zip_data = zipfile.ZipFile(input_file, 'r')
 		except zipfile.BadZipFile as t:
 			raise ProjectFileParserException('dawproject: Bad ZIP File: '+str(t))
 
-		project_obj = proj_dawproject.dawproject_song()
-		try:
-			xmldata = zip_data.read('project.xml')
-		except KeyError as t:
-			raise ProjectFileParserException('dawproject: project.xml not found')
+		try: 
+			meta_xmldata = zip_data.read('metadata.xml')
+			project_obj.load_metadata(meta_xmldata)
+		except: 
+			pass
+
+		try: xmldata = zip_data.read('project.xml')
+		except KeyError as t: raise ProjectFileParserException('dawproject: project.xml not found')
 
 		project_obj.load_from_data(xmldata.decode())
 
@@ -390,3 +394,17 @@ class input_dawproject(plugins.base):
 				timemarker_obj.position = marker.time
 
 		autoid_assoc.output(convproj_obj)
+
+		dp_obj = project_obj.metadata
+		meta_obj = convproj_obj.metadata
+
+		if 'Title' in dp_obj: meta_obj.name = dp_obj['Title']
+		if 'Artist' in dp_obj: meta_obj.author = dp_obj['Artist']
+		if 'Album' in dp_obj: meta_obj.album = dp_obj['Album']
+		if 'OriginalArtist' in dp_obj: meta_obj.original_author = dp_obj['OriginalArtist']
+		if 'Songwriter' in dp_obj: meta_obj.songwriter = dp_obj['Songwriter']
+		if 'Producer' in dp_obj: meta_obj.producer = dp_obj['Producer']
+		if 'Year' in dp_obj: meta_obj.t_year = int(dp_obj['Year'])
+		if 'Genre' in dp_obj: meta_obj.genre = dp_obj['Genre']
+		if 'Copyright' in dp_obj: meta_obj.copyright = dp_obj['Copyright']
+		if 'Comment' in dp_obj: meta_obj.comment_text = dp_obj['Comment']

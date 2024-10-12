@@ -572,12 +572,22 @@ class output_dawproject(plugins.base):
 
 		#project_obj.save_to_file(output_file)
 
-		x_metadata = ET.Element("MetaData")
-		x_metadata.set('version', '1.0')
-		xmlmetadata = minidom.parseString(ET.tostring(x_metadata)).toprettyxml(indent="\t")
+		dp_obj = project_obj.metadata
+		meta_obj = convproj_obj.metadata
+
+		if meta_obj.name: dp_obj['Title'] = meta_obj.name
+		if meta_obj.author: dp_obj['Artist'] = meta_obj.author
+		if meta_obj.album: dp_obj['Album'] = meta_obj.album
+		if meta_obj.original_author: dp_obj['OriginalArtist'] = meta_obj.original_author
+		if meta_obj.songwriter: dp_obj['Songwriter'] = meta_obj.songwriter
+		if meta_obj.producer: dp_obj['Producer'] = meta_obj.producer
+		if meta_obj.t_year != -1: dp_obj['Year'] = str(meta_obj.t_year)
+		if meta_obj.genre: dp_obj['Genre'] = meta_obj.genre
+		if meta_obj.copyright: dp_obj['Copyright'] = meta_obj.copyright
+		if meta_obj.comment_text: dp_obj['Comment'] = meta_obj.comment_text
 
 		dawproject_zip.writestr('project.xml', project_obj.save_to_text())
-		dawproject_zip.writestr('metadata.xml', xmlmetadata)
+		dawproject_zip.writestr('metadata.xml', project_obj.save_metadata())
 		dawproject_zip.close()
 
 		open(output_file, 'wb').write(zip_bio.getbuffer())

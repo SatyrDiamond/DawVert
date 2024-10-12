@@ -54,25 +54,13 @@ class rpp_vst:
 
 		rpp_data.children.append(rpp_vstdata)
 
-@dataclass
-class clap_conf:
-	unk1: float = 0.0
-	unk2: float = 420.0
-	unk3: float = 160.0
-	unk4: str = ''
-	@classmethod
-	def from_data(cls, rppvals):
-		return cls(*fdf(rppvals,[cls.unk1,cls.unk2,cls.unk3,cls.unk4]))
-	def write(cls, rppdata):
-		rppdata.children.append(['CFG',wsf(cls.unk1),wsf(cls.unk2),wsf(cls.unk3),wsf(cls.unk4)])
-
 class rpp_clap:
 	def __init__(self):
 		self.data_chunk = b''
 		self.clap_name = ''
 		self.clap_id = ''
 		self.clap_unk = ''
-		self.config = clap_conf()
+		self.config = rvd([0,0,0,''], ['unk1','unk2','unk3','unk4'], [int, int, int, str], True)
 
 	def load(self, values, rpp_data):
 		for n, v in enumerate(values):
@@ -85,7 +73,7 @@ class rpp_clap:
 
 	def write(self, rpp_data):
 		rpp_clapdata = robj('CLAP',[self.clap_name, self.clap_id, self.clap_unk])
-		self.config.write(rpp_clapdata)
+		self.config.write('CFG', rpp_clapdata)
 		rpp_clapstate = robj('STATE',[])
 		reaper_func.writebin(rpp_clapstate, self.data_chunk)
 		rpp_clapdata.children.append(rpp_clapstate)
@@ -157,6 +145,16 @@ class rpp_fxchain:
 		plug_obj.fxid.set(guid)
 		self.plugins.append(plug_obj)
 		return plug_obj, vst_obj, guid
+
+	def add_clap(self):
+		guid = '{'+str(uuid.uuid4())+'}'
+		clap_obj = rpp_clap()
+		plug_obj = rpp_plugin()
+		plug_obj.type = 'CLAP'
+		plug_obj.plugin = clap_obj
+		plug_obj.fxid.set(guid)
+		self.plugins.append(plug_obj)
+		return plug_obj, clap_obj, guid
 
 	def add_js(self):
 		guid = '{'+str(uuid.uuid4())+'}'

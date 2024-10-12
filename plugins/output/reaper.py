@@ -21,10 +21,10 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
-			vst_fx_fourid = plugin_obj.datavals.get('fourid', 0)
+			vst_fx_fourid = plugin_obj.datavals_global.get('fourid', 0)
 			vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-			vst_fx_datatype = plugin_obj.datavals.get('datatype', None)
-			vst_fx_numparams = plugin_obj.datavals.get('numparams', 0)
+			vst_fx_datatype = plugin_obj.datavals_global.get('datatype', None)
+			vst_fx_numparams = plugin_obj.datavals_global.get('numparams', 0)
 
 			rpp_vst_obj.vst_name = plugin_obj.datavals_global.get('basename', '')
 			if not rpp_vst_obj.vst_name: plugin_obj.datavals_global.get('name', '')
@@ -55,10 +55,10 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
 			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
-			vst_fx_name = plugin_obj.datavals.get('name', None)
+			vst_fx_name = plugin_obj.datavals_global.get('name', None)
 			vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-			vst_fx_version = plugin_obj.datavals.get('version', None)
-			vst_fx_id = plugin_obj.datavals.get('id', 0)
+			vst_fx_version = plugin_obj.datavals_global.get('version', None)
+			vst_fx_id = plugin_obj.datavals_global.get('id', 0)
 
 			chunkdata = plugin_obj.rawdata_get('chunk')
 			vstparams = struct.pack('II', len(chunkdata), 1)+chunkdata+b'\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -77,10 +77,24 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			rpp_plug_obj.wet['wet'] = fx_wet
 			if fx_wet != 1: rpp_plug_obj.wet.used = True
 
+		if plugin_obj.check_wildmatch('external', 'clap', None):
+			rpp_plug_obj, rpp_clap_obj, rpp_guid = rpp_fxchain.add_clap()
+			clap_fx_name = plugin_obj.visual.name
+			clap_fx_id = plugin_obj.datavals_global.get('id', '')
+
+			chunkdata = plugin_obj.rawdata_get('chunk')
+			rpp_clap_obj.data_chunk = chunkdata
+			rpp_clap_obj.clap_name = clap_fx_name
+			rpp_clap_obj.clap_id = clap_fx_id
+
+			rpp_plug_obj.bypass['bypass'] = not fx_on
+			rpp_plug_obj.wet['wet'] = fx_wet
+			if fx_wet != 1: rpp_plug_obj.wet.used = True
+
 		if plugin_obj.check_wildmatch('external', 'jesusonic', None):
 			rpp_plug_obj, rpp_js_obj, rpp_guid = rpp_fxchain.add_js()
 			rpp_js_obj.js_id = plugin_obj.type.subtype
-			rpp_js_obj.data = [plugin_obj.datavals.get(str(n), '-') for n in range(64)]
+			rpp_js_obj.data = [plugin_obj.datavals_global.get(str(n), '-') for n in range(64)]
 			rpp_plug_obj.bypass['bypass'] = not fx_on
 			rpp_plug_obj.wet['wet'] = fx_wet
 			if fx_wet != 1: rpp_plug_obj.wet.used = True
@@ -153,7 +167,7 @@ class output_reaper(plugins.base):
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
-		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain

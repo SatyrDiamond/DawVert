@@ -37,11 +37,13 @@ class extplug:
 		extplug.load()
 		if plugtype == 'vst2': return ep_class.vst2.get(bycat, in_val, in_platformtxt, cpu_arch_list)
 		if plugtype == 'vst3': return ep_class.vst3.get(bycat, in_val, in_platformtxt, cpu_arch_list)
+		if plugtype == 'clap': return ep_class.clap.get(bycat, in_val, in_platformtxt, cpu_arch_list)
 
 	def check(plugtype, bycat, in_val):
 		extplug.load()
 		if plugtype == 'vst2': return ep_class.vst2.check(bycat, in_val)
 		if plugtype == 'vst3': return ep_class.vst3.check(bycat, in_val)
+		if plugtype == 'clap': return ep_class.clap.check(bycat, in_val)
 
 	@contextmanager
 	def add(plugtype, platformtxt):

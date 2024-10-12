@@ -111,9 +111,14 @@ class vst2_main:
 		self.program = vst2_program()
 
 	def load_from_file(self, fxfile):
-		byr_stream = self.byr_stream = bytereader.bytereader()
-		byr_stream.load_file(fxfile)
+		self.byr_stream = bytereader.bytereader()
+		self.byr_stream.load_file(fxfile)
 		self.parse(byr_stream)
+
+	def load_raw(self, in_bytes):
+		self.byr_stream = bytereader.bytereader()
+		self.byr_stream.load_raw(in_bytes)
+		self.parse(self.byr_stream)
 
 	def parse(self, byr_stream):
 		if byr_stream.read(4) == b'CcnK':

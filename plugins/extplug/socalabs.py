@@ -11,6 +11,7 @@ from objects import globalstore
 from functions_plugin_ext import data_vc2xml
 from functions_plugin_ext import plugin_vst2
 from functions_plugin_ext import plugin_vst3
+from functions_plugin_ext import data_vstw
 
 logger_plugins = logging.getLogger('plugins')
 
@@ -62,40 +63,46 @@ class extplugin(plugins.base):
 
 	def check_plug(self, plugin_obj):
 		socalabsdb.load_db()
-		if plugin_obj.check_wildmatch('vst2', None):
-			checkvst = plugin_obj.datavals.get('fourid', 0)
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
+			checkvst = plugin_obj.datavals_global.get('fourid', 0)
 			if checkvst in socalabsdb.dbdata['vst2_id']: return 'vst2'
-		if plugin_obj.check_wildmatch('vst3', None):
-			checkvst = plugin_obj.datavals.get('id', '')
+		if plugin_obj.check_wildmatch('external', 'vst3', None):
+			checkvst = plugin_obj.datavals_global.get('id', '')
 			if checkvst in socalabsdb.dbdata['vst3_id']: return 'vst3'
 		return None
 
 	def decode_data(self, plugintype, plugin_obj):
 		socalabsdb.load_db()
 		if plugintype == 'vst2':
-			checkvst = plugin_obj.datavals.get('fourid', 0)
+			checkvst = plugin_obj.datavals_global.get('fourid', 0)
 			namefound = np.where(checkvst==socalabsdb.dbdata['vst2_id'])[0]
 			if len(namefound):
 				chunkdata = plugin_obj.rawdata_get('chunk')
 				dbd = socalabsdb.dbdata[namefound[0]]
 				self.plugin_data = [dbd, ET.fromstring(chunkdata)]
 				self.plugin_type = 'vst2'
+				return True
 		if plugintype == 'vst3':
-			checkvst = plugin_obj.datavals.get('id', '')
+			checkvst = plugin_obj.datavals_global.get('id', '')
 			namefound = np.where(checkvst==socalabsdb.dbdata['vst3_id'])[0]
 			if len(namefound):
 				chunkdata = plugin_obj.rawdata_get('chunk')
-				dbd = socalabsdb.dbdata[namefound[0]]
-				self.plugin_data = [dbd, ET.fromstring(chunkdata)]
-				self.plugin_type = 'vst2'
+				vstw_d = data_vstw.get(chunkdata)
+				if vstw_d: 
+					dbd = socalabsdb.dbdata[namefound[0]]
+					self.plugin_data = [dbd, ET.fromstring(vstw_d)]
+					self.plugin_type = 'vst3'
+					return True
 
 	def encode_data(self, plugintype, convproj_obj, plugin_obj, extplat):
 		if plugintype == 'vst2' and self.plugin_data:
 			dbd, paramdata = self.plugin_data
 			plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', extplat, int(dbd['vst2_id']), 'chunk', ET.tostring(paramdata, encoding='utf-8'), None)
+			return True
 		if plugintype == 'vst3' and self.plugin_data:
 			dbd, paramdata = self.plugin_data
 			plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', extplat, str(dbd['vst3_id']), ET.tostring(paramdata, encoding='utf-8'))
+			return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
 		if self.plugin_data:

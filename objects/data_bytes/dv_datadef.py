@@ -42,10 +42,11 @@ class datadef_part:
 
 			if len(textin)>1: self.inpart = datadef_part(textin[1:])
 
-	def decode(self, byr_stream, d_structs, d_vars):
+	def decode(self, byr_stream, d_structs, d_vars, inlength):
+		p_num = self.p_num
 
 		if self.vartype == 'skip': byr_stream.skip(1)
-		elif self.vartype == 'skip_n': byr_stream.skip(self.p_num)
+		elif self.vartype == 'skip_n': byr_stream.skip(p_num)
 
 		elif self.vartype == 'struct': 
 			if self.p_txt in d_structs: 
@@ -77,34 +78,36 @@ class datadef_part:
 
 		elif self.vartype == 'varint': return byr_stream.varint()
 
-		elif self.vartype == 'raw': return byr_stream.raw(self.p_num)
-		elif self.vartype == 'string': return byr_stream.string(self.p_num)
-		elif self.vartype == 'dstring': return byr_stream.string16(self.p_num)
+		elif self.vartype == 'rest': return byr_stream.rest()
+		elif self.vartype == 'raw': return byr_stream.raw(p_num)
+		elif self.vartype == 'string': return byr_stream.string(p_num)
+		elif self.vartype == 'dstring': return byr_stream.string16(p_num)
 
-		elif self.vartype == 'raw_part': return byr_stream.raw(self.inpart.decode(byr_stream, d_structs, d_vars))
-		elif self.vartype == 'string_part': return byr_stream.string(self.inpart.decode(byr_stream, d_structs, d_vars))
-		elif self.vartype == 'dstring_part': return byr_stream.string16(self.inpart.decode(byr_stream, d_structs, d_vars))
+		elif self.vartype == 'raw_part': return byr_stream.raw(self.inpart.decode(byr_stream, d_structs, d_vars, None))
+		elif self.vartype == 'string_part': return byr_stream.string(self.inpart.decode(byr_stream, d_structs, d_vars, None))
+		elif self.vartype == 'dstring_part': return byr_stream.string16(self.inpart.decode(byr_stream, d_structs, d_vars, None))
 
 		elif self.vartype == 'string_t': return byr_stream.string_t()
 
 		elif self.vartype == 'list':
+			if inlength: p_num = inlength
 			if not self.inpart: DataDefException('list requires a part')
 			elif not self.inpart.vartype: DataDefException('list requires a part')
-			elif self.inpart.vartype == 'byte': return byr_stream.l_uint8(self.p_num)
-			elif self.inpart.vartype == 's_byte': return byr_stream.l_int8(self.p_num)
-			elif self.inpart.vartype == 'short': return byr_stream.l_uint16(self.p_num)
-			elif self.inpart.vartype == 'short_b': return byr_stream.l_uint16_b(self.p_num)
-			elif self.inpart.vartype == 's_short': return byr_stream.l_int16(self.p_num)
-			elif self.inpart.vartype == 's_short_b': return byr_stream.l_int16_b(self.p_num)
-			elif self.inpart.vartype == 'int': return byr_stream.l_uint32(self.p_num)
-			elif self.inpart.vartype == 'int_b': return byr_stream.l_uint32_b(self.p_num)
-			elif self.inpart.vartype == 's_int': return byr_stream.l_int32(self.p_num)
-			elif self.inpart.vartype == 's_int_b': return byr_stream.l_int32_b(self.p_num)
-			elif self.inpart.vartype == 'float': return byr_stream.l_float(self.p_num)
-			elif self.inpart.vartype == 'float_b': return byr_stream.l_float_b(self.p_num)
-			elif self.inpart.vartype == 'double': return byr_stream.l_double(self.p_num)
-			elif self.inpart.vartype == 'double_b': return byr_stream.l_double_b(self.p_num)
-			else: return [self.inpart.decode(byr_stream, d_structs, d_vars) for _ in range(self.p_num)]
+			elif self.inpart.vartype == 'byte': return byr_stream.l_uint8(p_num)
+			elif self.inpart.vartype == 's_byte': return byr_stream.l_int8(p_num)
+			elif self.inpart.vartype == 'short': return byr_stream.l_uint16(p_num)
+			elif self.inpart.vartype == 'short_b': return byr_stream.l_uint16_b(p_num)
+			elif self.inpart.vartype == 's_short': return byr_stream.l_int16(p_num)
+			elif self.inpart.vartype == 's_short_b': return byr_stream.l_int16_b(p_num)
+			elif self.inpart.vartype == 'int': return byr_stream.l_uint32(p_num)
+			elif self.inpart.vartype == 'int_b': return byr_stream.l_uint32_b(p_num)
+			elif self.inpart.vartype == 's_int': return byr_stream.l_int32(p_num)
+			elif self.inpart.vartype == 's_int_b': return byr_stream.l_int32_b(p_num)
+			elif self.inpart.vartype == 'float': return byr_stream.l_float(p_num)
+			elif self.inpart.vartype == 'float_b': return byr_stream.l_float_b(p_num)
+			elif self.inpart.vartype == 'double': return byr_stream.l_double(p_num)
+			elif self.inpart.vartype == 'double_b': return byr_stream.l_double_b(p_num)
+			else: return [self.inpart.decode(byr_stream, d_structs, d_vars, None) for _ in range(p_num)]
 
 
 
@@ -142,6 +145,10 @@ class datadef_part:
 		elif self.vartype == 'raw': byw_stream.raw_l(value, self.p_num)
 		elif self.vartype == 'string': byw_stream.string(value, self.p_num)
 		elif self.vartype == 'dstring': byw_stream.string16(value, self.p_num)
+
+		elif self.vartype == 'string_t': 
+			outstr = value+'\x00'
+			return byw_stream.string(outstr, len(outstr))
 
 		elif self.vartype == 'raw_part':
 			self.inpart.encode(len(value), byw_stream, d_structs, p_name)
@@ -187,13 +194,15 @@ class datadef_struct:
 	def decode(self, byr_stream, d_structs, d_vars, **kwargs):
 		if d_vars == None: d_vars = {}
 		output = {}
+		lengths = {}
 
 		datadef_global.structnames.append(self.name)
 		for p_type, p_obj, p_name in self.parts:
 			try:
 				filepos = byr_stream.tell()
-				value = p_obj.decode(byr_stream, d_structs, d_vars)
-				if p_name: output[p_name] = value
+				value = p_obj.decode(byr_stream, d_structs, d_vars, lengths[p_name] if p_name in lengths else None)
+				if p_name and p_type == 'part': output[p_name] = value
+				if p_name and p_type == 'length': lengths[p_name] = value
 				datadef_global.output.append([str(filepos), datadef_global.structnames[-1], p_name, p_obj.vartype, str(value)])
 			except:
  				pass
@@ -204,9 +213,15 @@ class datadef_struct:
 
 	def encode(self, in_data, byw_stream, d_structs):
 
+		lengths = {}
+
 		for p_type, p_obj, p_name in self.parts:
-			value = in_data[p_name] if p_name in in_data else None
-			p_obj.encode(value, byw_stream, d_structs, p_name)
+			if p_type == 'part': 
+				value = in_data[p_name] if p_name in in_data else None
+				p_obj.encode(value, byw_stream, d_structs, p_name)
+			if p_type == 'length': 
+				value = len(in_data[p_name]) if p_name in in_data else 0
+				p_obj.encode(value, byw_stream, d_structs, p_name)
 
 
 class datadef:
@@ -282,7 +297,7 @@ class datadef:
 					if ddline[0] == 'area_struct':
 						current_struct = ddline[1]
 						self.structs[ddline[1]] = datadef_struct(ddline[1])
-					if ddline[0] == 'part':
+					if ddline[0] in ['part', 'length']:
 						self.structs[current_struct].parts.append([ddline[0], datadef_part(ddline[1].split('/')), ddline[2]])
 			#print('[datadef] Loaded '+in_datadef)
 

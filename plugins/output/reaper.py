@@ -9,15 +9,68 @@ import struct
 import base64
 import os.path
 from rpp import Element
+from objects import globalstore
 from functions import data_bytes
 from functions import data_values
 from functions import colors
 from functions import xtramath
 
+base_sampler = {'filename': '', 'volume': 1.0, 'pan': 0.5, 'min_vol_gain': 0.0, 'key_start': 0.0, 'key_end': 1.0, 'pitch_start': 0.06875, 'pitch_end': 0.86875, 'midi_chan': 0.0, 'voices': 4.0, 'env_attack': 0.0005, 'env_release': 0.0005, 'obey_note_offs': 0.0, 'loop_on': 0.0, 'start': 0.0, 'end': 1.0, 'pitch_offset': 0.5, 'mode': 2, '__unk17': 0.0, '__unk18': 1.0, 'cache_sample_size': 64, 'pitch_bend': 0.16666666666666666, 'resample_mode': -1, 'vel_max': 0.007874015748031496, 'vel_min': 1.0, 'prob_hitting': 1.0, 'round_robin': 0.0, 'filter_played': 0.0, 'xfade': 0.0, 'loop_start': 0.0, 'env_decay': 0.016010673782521682, 'env_sustain': 1.0, 'note_off_release_override': 0.00025, 'note_off_release_override__enabled': 0.0, 'legacy_voice_reuse': 0.0, 'porta': 0.0}
+
+def make_sampler(rpp_fxchain, sampler_params):
+	rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
+	rpp_vst_obj.vst_lib = 'reasamplomatic.dll'
+	rpp_vst_obj.vst_fourid = 1920167789
+	rpp_vst_obj.vst_name = 'VSTi: ReaSamplOmatic5000 (Cockos)'
+
+	rpp_vst_obj.data_chunk = datadef_obj.create('reasamplomatic', sampler_params)
+	vstheader_ints = (1920167789, 4276969198, 0, 2, 1, 0, 2, 0, len(rpp_vst_obj.data_chunk), 1, 1048576)
+	rpp_vst_obj.data_con = struct.pack('IIIIIIIIIII', *vstheader_ints)
+
 def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
 	if plugin_found:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
+
+		if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
+			sp_obj = plugin_obj.samplepart_get('sample')
+			_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+			sp_obj.convpoints_samples(sampleref_obj)
+
+			dur = sampleref_obj.dur_samples
+			dur_sec = sampleref_obj.dur_sec
+			hz = sampleref_obj.hz
+
+			sampler_params = base_sampler.copy()
+			sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
+			sampler_params['pitch_start'] = (-60/80)/2 + 0.5
+			sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
+			sampler_params['loop_on'] = int(sp_obj.loop_active)
+
+			adsr_obj = plugin_obj.env_asdr_get('vol')
+
+			if hz:
+				sampler_params['loop_start'] = sp_obj.loop_start/30/hz
+			if dur:
+				sampler_params['start'] = sp_obj.start/dur
+				sampler_params['end'] = sp_obj.end/dur
+				if sp_obj.loop_active:
+					sampler_params['end'] = max(sampler_params['end'], sp_obj.loop_end/dur)
+
+			if adsr_obj.amount:
+				if not sp_obj.loop_active: 
+					if dur:
+						sampler_params['env_attack'] = adsr_obj.attack/dur_sec
+						sampler_params['env_decay'] = adsr_obj.decay/15
+						sampler_params['env_sustain'] = adsr_obj.sustain
+						sampler_params['env_release'] = adsr_obj.release/dur_sec
+				else: 
+					sampler_params['env_attack'] = adsr_obj.attack/2
+					sampler_params['env_decay'] = adsr_obj.decay/15
+					sampler_params['env_sustain'] = adsr_obj.sustain
+					sampler_params['env_release'] = adsr_obj.release/2
+
+			make_sampler(rpp_fxchain, sampler_params)
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
@@ -168,6 +221,7 @@ class output_reaper(plugins.base):
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain
@@ -175,6 +229,10 @@ class output_reaper(plugins.base):
 
 		global reaper_tempo
 		global tempomul
+		global datadef_obj
+
+		globalstore.datadef.load('reaper', './data_main/datadef/reaper.ddef')
+		datadef_obj = globalstore.datadef.get('reaper')
 
 		convproj_obj.change_timings(4, True)
 

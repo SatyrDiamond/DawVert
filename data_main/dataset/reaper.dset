@@ -1,0 +1,59 @@
+{
+    "plugin": {
+        "objects": {
+            "reacomp": {
+                "params": {
+                    "thresh": {"name": "Thresh","type": "float", "num": 0},
+                    "ratio": {"name": "Ratio","type": "float", "num": 1},
+                    "attack": {"name": "Attack","type": "float", "num": 2},
+                    "release": {"name": "Release","type": "float", "num": 3},
+                    "pre_comp": {"name": "Pre-comp","type": "float", "num": 4},
+                    "resvd": {"name": "resvd","type": "float", "num": 5},
+                    "lowpass": {"name": "Lowpass","type": "float", "num": 6},
+                    "hipass": {"name": "Hipass","type": "float", "num": 7},
+                    "signin": {"name": "SignIn","type": "float", "num": 8},
+                    "audin": {"name": "AudIn","type": "float", "num": 9},
+                    "dry": {"name": "Dry","type": "float", "num": 10},
+                    "wet": {"name": "Wet","type": "float", "num": 11},
+                    "previewf": {"name": "PreviewF","type": "float", "num": 12},
+                    "rms_size": {"name": "RMS size","type": "float", "num": 13},
+                    "knee": {"name": "Knee","type": "float", "num": 14},
+                    "automkup": {"name": "AutoMkUp","type": "float", "num": 15},
+                    "autorel": {"name": "AutoRel","type": "float", "num": 16},
+                    "clsattk": {"name": "ClsAttk","type": "float", "num": 17},
+                    "antials": {"name": "AntiAls","type": "float", "num": 18}
+                },
+                "visual": {
+                    "name": "ReaComp"
+                }
+            },
+
+            "reagate": {
+                "params": {
+                    "thresh": {"name": "Thresh","type": "float", "num": 0},
+                    "attack": {"name": "Attack","type": "float", "num": 1},
+                    "release": {"name": "Release","type": "float", "num": 2},
+                    "pre_open": {"name": "Pre-open","type": "float", "num": 3},
+                    "hold": {"name": "Hold","type": "float", "num": 4},
+                    "lowpass": {"name": "Lowpass","type": "float", "num": 5},
+                    "hipass": {"name": "Hipass","type": "float", "num": 6},
+                    "signin": {"name": "SignIn","type": "float", "num": 7},
+                    "audin": {"name": "AudIn","type": "float", "num": 8},
+                    "dry": {"name": "Dry","type": "float", "num": 9},
+                    "wet": {"name": "Wet","type": "float", "num": 10},
+                    "noise": {"name": "Noise","type": "float", "num": 11},
+                    "hystrsis": {"name": "Hystrsis","type": "float", "num": 12},
+                    "previewf": {"name": "PreviewF","type": "float", "num": 13},
+                    "rms_size": {"name": "RMS size","type": "float", "num": 14},
+                    "usemidi": {"name": "Usemidi","type": "float", "num": 15},
+                    "midinote": {"name": "MidiNote","type": "float", "num": 16},
+                    "midichan": {"name": "MidiChan","type": "float", "num": 17},
+                    "invrtwet": {"name": "InvrtWet","type": "float", "num": 18}
+                },
+                "visual": {
+                    "name": "ReaComp"
+                }
+            }
+        }
+    }
+}

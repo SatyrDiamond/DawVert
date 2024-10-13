@@ -35,19 +35,20 @@ class extplugin(plugins.base):
 			chunkdata = plugin_obj.rawdata_get('chunk')
 			self.plugin_data = data_nullbytegroup.get(chunkdata)
 			self.plugin_type = chunkdata
+			return True
 
 	def encode_data(self, plugintype, convproj_obj, plugin_obj, extplat):
 		if not (self.plugin_data is None):
 			if plugintype == 'vst2':
 				chunkdata = data_nullbytegroup.make(self.plugin_data)
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', extplat, 1279878002, 'chunk', chunkdata, None)
+				return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
 		globalstore.paramremap.load('castello', '.\\data_ext\\remap\\castello_reverb.csv')
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		if not (self.plugin_data is None):
 			if len(self.plugin_data)>1:
-				cr_vis = self.plugin_data[0]
 				cr_params = self.plugin_data[1]
 				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('castello', plugintype):
 					if extparamid in cr_params: valuepack.value = float(cr_params[extparamid])

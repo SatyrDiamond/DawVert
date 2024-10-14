@@ -72,6 +72,31 @@ def do_auto(convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert):
 			if isbool: val = bool(val)
 			convproj_obj.automation.add_autopoint_real(autoloc, paramtype, point[0], val, 'normal' if not instant else 'instant')
 
+def do_samplepart_loop(samplerj, sp_obj, sampleref_obj):
+	dur = sampleref_obj.dur_samples
+	dur_sec = sampleref_obj.dur_sec
+	hz = sampleref_obj.hz
+
+	loop_on = samplerj['loop_on'] if 'loop_on' in samplerj else 0
+	start = samplerj['start'] if 'start' in samplerj else 0
+	end = samplerj['end'] if 'end' in samplerj else 1
+	loop_start = samplerj['loop_start'] if 'loop_start' in samplerj else 0
+	sp_obj.start = start*dur
+	sp_obj.end = end*dur
+	sp_obj.loop_active = bool(loop_on)
+	sp_obj.loop_start = loop_start*30*hz
+	sp_obj.loop_end = sp_obj.end
+
+def do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, asdrname):
+	dur_sec = sampleref_obj.dur_sec
+	loop_on = samplerj['loop_on'] if 'loop_on' in samplerj else 0
+	env_attack = samplerj['env_attack'] if 'env_attack' in samplerj else 0
+	env_decay = samplerj['env_decay'] if 'env_decay' in samplerj else 0
+	env_sustain = samplerj['env_sustain'] if 'env_sustain' in samplerj else 1
+	env_release = samplerj['env_release'] if 'env_release' in samplerj else 0
+	if not loop_on: plugin_obj.env_asdr_add(asdrname, 0, env_attack*dur_sec, 0, env_decay*15, env_sustain, env_release*dur_sec, 1)
+	else: plugin_obj.env_asdr_add(asdrname, 0, env_attack*2, 0, env_decay*15, env_sustain, env_release*2, 1)
+
 class input_reaper(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -209,29 +234,32 @@ class input_reaper(plugins.base):
 					filename, samplerj = outsamplers[0]
 					track_obj.inst_pluginid = sampler_id
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(sampler_id, filename, 'win')
+					do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
+					do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')
 
-					dur = sampleref_obj.dur_samples
-					dur_sec = sampleref_obj.dur_sec
-					hz = sampleref_obj.hz
+				if len(outsamplers) > 1:
+					plugin_obj, track_obj.inst_pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+					plugin_obj.role = 'synth'
 
-					loop_on = samplerj['loop_on'] if 'loop_on' in samplerj else 0
-					env_attack = samplerj['env_attack'] if 'env_attack' in samplerj else 0
-					env_decay = samplerj['env_decay'] if 'env_decay' in samplerj else 0
-					env_sustain = samplerj['env_sustain'] if 'env_sustain' in samplerj else 1
-					env_release = samplerj['env_release'] if 'env_release' in samplerj else 0
-					start = samplerj['start'] if 'start' in samplerj else 0
-					end = samplerj['end'] if 'end' in samplerj else 1
-					loop_start = samplerj['loop_start'] if 'loop_start' in samplerj else 0
+					key_start = 0
+					key_end = 127
+					key_middle = 60
 
-					sp_obj.start = start*dur
-					sp_obj.end = end*dur
+					for n, d in enumerate(outsamplers):
+						filename, samplerj = d
+						sampmode = samplerj['mode'] if 'mode' in samplerj else 0
 
-					sp_obj.loop_active = bool(loop_on)
-					sp_obj.loop_start = loop_start*30*hz
-					sp_obj.loop_end = sp_obj.end
+						sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
 
-					if not loop_on: plugin_obj.env_asdr_add('vol', 0, env_attack*dur_sec, 0, env_decay*15, env_sustain, env_release*dur_sec, 1)
-					else: plugin_obj.env_asdr_add('vol', 0, env_attack*2, 0, env_decay*15, env_sustain, env_release*2, 1)
+						if sampmode == 2:
+							key_start = int((samplerj['key_start'] if 'key_start' in samplerj else 0)*127)
+							key_end = int((samplerj['key_end'] if 'key_end' in samplerj else 1)*127)
+							pitch_start = int((samplerj['pitch_start'] if 'pitch_start' in samplerj else 0)*160)-80
+							pitch_start = -(60+(pitch_start-key_start))
+							sp_obj = plugin_obj.sampleregion_add(key_start-60, key_end-60, pitch_start, None, samplepartid=cvpj_trackid+'_'+str(n))
+							sp_obj.sampleref = filename
+							do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
+							do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')
 
 			for rpp_trackitem in rpp_track.items:
 				cvpj_placement_type = 'notes'

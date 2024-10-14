@@ -223,7 +223,7 @@ class input_flp(plugins.base):
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','soundfont2']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
 		in_dict['fxchain_mixer'] = True
 		in_dict['plugin_ext'] = ['vst2']
 	def supported_autodetect(self): return True

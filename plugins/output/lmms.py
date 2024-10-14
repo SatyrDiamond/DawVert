@@ -331,7 +331,7 @@ class output_lmms(plugins.base):
 		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['enabled','vol']
 		in_dict['auto_types'] = ['pl_points']
-		in_dict['plugin_included'] = ['universal:sampler:single','soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['plugin_ext'] = ['vst2','ladspa']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		

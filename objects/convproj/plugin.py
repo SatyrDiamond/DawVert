@@ -27,6 +27,7 @@ from objects.convproj import midi_inst
 from objects import plugdatamanu
 
 logger_plugins = logging.getLogger('plugins')
+logger_plugconv = logging.getLogger('plugconv')
 
 class cvpj_audioports:
 	def __init__(self):
@@ -199,6 +200,9 @@ class cvpj_plugin:
 
 	def check_wildmatch(self, i_category, i_type, i_subtype):
 		return self.type.check_wildmatch(i_category, i_type, i_subtype)
+
+	def check_str_multi(self, strlist):
+		return True in [self.check_wildmatch(x[0], x[1], x[2]) for x in strlist]
 
 	# -------------------------------------------------- fxdata
 	def fxdata_add(self, i_enabled, i_wet):
@@ -410,6 +414,34 @@ class cvpj_plugin:
 							if not iffound: manu_obj.to_value(pltrpipe_obj.value, pltrpipe_obj.v_to, pltrpipe_obj.name, pltrpipe_obj.valuetype)
 					#print(trobj.proc)
 					
+	# -------------------------------------------------- convert
+
+	def convert_internal(self, convproj_obj, pluginid, target_daw, dv_config):
+		plugconv_int_selector = dv_plugins.create_selector('plugconv')
+		converted_val = 2
+		for shortname, dvplug_obj, prop_obj in plugconv_int_selector.iter():
+			ismatch = self.check_str_multi(prop_obj.in_plugins)
+			correctdaw = (target_daw in prop_obj.out_daws) if prop_obj.out_daws else True
+			if ismatch and correctdaw:
+				converted_val_p = dvplug_obj.convert(convproj_obj, self, pluginid, dv_config)
+				if converted_val_p < converted_val: converted_val = converted_val_p
+				if converted_val == 0: break
+		return converted_val
+
+	def convert_external(self, convproj_obj, pluginid, target_extplugs, dv_config):
+		from functions import extpluglog
+		plugconv_ext_selector = dv_plugins.create_selector('plugconv_ext')
+		extpluglog.extpluglist.clear()
+		for shortname, dvplug_obj, prop_obj in plugconv_ext_selector.iter():
+			ismatch = self.check_wildmatch(prop_obj.in_plugin[0], prop_obj.in_plugin[1], prop_obj.in_plugin[2])
+			extmatch = True in [(x in target_extplugs) for x in prop_obj.ext_formats]
+			catmatch = data_values.list__only_values(prop_obj.plugincat, dv_config.extplug_cat)
+	
+			if ismatch and extmatch and catmatch:
+				ext_conv_val = dvplug_obj.convert(convproj_obj, self, pluginid, dv_config, target_extplugs)
+				if ext_conv_val: break
+		return ext_conv_val
+
 	# -------------------------------------------------- ext
 
 	def external_make_compat(self, convproj_obj, ext_daw_out):

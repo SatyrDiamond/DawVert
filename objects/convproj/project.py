@@ -91,6 +91,8 @@ class cvpj_scenepl:
 class cvpj_project:
 	def __init__(self):
 		self.type = None
+		self.fxtype = None
+
 		self.time_ppq = 96
 		self.time_float = False
 		self.track_data = {}

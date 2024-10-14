@@ -27,6 +27,37 @@ def make_sampler(rpp_fxchain, sampler_params):
 	vstheader_ints = (1920167789, 4276969198, 0, 2, 1, 0, 2, 0, len(rpp_vst_obj.data_chunk), 1, 1048576)
 	rpp_vst_obj.data_con = struct.pack('IIIIIIIIIII', *vstheader_ints)
 
+def do_sample_part(sampler_params, sampleref_obj, sp_obj):
+	if sampleref_obj:
+		dur = sampleref_obj.dur_samples
+		hz = sampleref_obj.hz
+
+		sampler_params['loop_on'] = int(sp_obj.loop_active)
+
+		if hz:
+			sampler_params['loop_start'] = sp_obj.loop_start/30/hz
+		if dur:
+			sampler_params['start'] = sp_obj.start/dur
+			sampler_params['end'] = sp_obj.end/dur
+			if sp_obj.loop_active:
+				sampler_params['end'] = max(sampler_params['end'], sp_obj.loop_end/dur)
+
+def do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj):
+	dur_sec = sampleref_obj.dur_sec
+
+	if adsr_obj.amount:
+		if not sp_obj.loop_active: 
+			if dur:
+				sampler_params['env_attack'] = adsr_obj.attack/dur_sec
+				sampler_params['env_decay'] = adsr_obj.decay/15
+				sampler_params['env_sustain'] = adsr_obj.sustain
+				sampler_params['env_release'] = adsr_obj.release/dur_sec
+		else: 
+			sampler_params['env_attack'] = adsr_obj.attack/2
+			sampler_params['env_decay'] = adsr_obj.decay/15
+			sampler_params['env_sustain'] = adsr_obj.sustain
+			sampler_params['env_release'] = adsr_obj.release/2
+
 def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
 	if plugin_found:
@@ -37,40 +68,37 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
 			sp_obj.convpoints_samples(sampleref_obj)
 
-			dur = sampleref_obj.dur_samples
-			dur_sec = sampleref_obj.dur_sec
-			hz = sampleref_obj.hz
-
 			sampler_params = base_sampler.copy()
 			sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
 			sampler_params['pitch_start'] = (-60/80)/2 + 0.5
 			sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
-			sampler_params['loop_on'] = int(sp_obj.loop_active)
 
 			adsr_obj = plugin_obj.env_asdr_get('vol')
-
-			if hz:
-				sampler_params['loop_start'] = sp_obj.loop_start/30/hz
-			if dur:
-				sampler_params['start'] = sp_obj.start/dur
-				sampler_params['end'] = sp_obj.end/dur
-				if sp_obj.loop_active:
-					sampler_params['end'] = max(sampler_params['end'], sp_obj.loop_end/dur)
-
-			if adsr_obj.amount:
-				if not sp_obj.loop_active: 
-					if dur:
-						sampler_params['env_attack'] = adsr_obj.attack/dur_sec
-						sampler_params['env_decay'] = adsr_obj.decay/15
-						sampler_params['env_sustain'] = adsr_obj.sustain
-						sampler_params['env_release'] = adsr_obj.release/dur_sec
-				else: 
-					sampler_params['env_attack'] = adsr_obj.attack/2
-					sampler_params['env_decay'] = adsr_obj.decay/15
-					sampler_params['env_sustain'] = adsr_obj.sustain
-					sampler_params['env_release'] = adsr_obj.release/2
+			do_sample_part(sampler_params, sampleref_obj, sp_obj)
+			do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
 
 			make_sampler(rpp_fxchain, sampler_params)
+
+		if plugin_obj.check_wildmatch('universal', 'sampler', 'multi'):
+			for sampleregion in plugin_obj.sampleregions:
+				key_l, key_h, key_r, samplerefid, extradata = sampleregion
+
+				sp_obj = plugin_obj.samplepart_get(samplerefid)
+
+				sampler_params = base_sampler.copy()
+				sampler_params['mode'] = 2
+				sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
+				sampler_params['key_start'] = (key_l+60)/127
+				sampler_params['key_end'] = (key_h+60)/127
+
+				pitch = -60 + key_l+60 - key_r
+
+				sampler_params['pitch_start'] = (pitch/80)/2 + 0.5
+				sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
+				_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+				do_sample_part(sampler_params, sampleref_obj, sp_obj)
+				make_sampler(rpp_fxchain, sampler_params)
+
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()

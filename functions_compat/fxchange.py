@@ -8,6 +8,19 @@ import copy
 import logging
 logger_compat = logging.getLogger('compat')
 
+def move_fx0_mastertrack(convproj_obj):
+	if 0 in convproj_obj.fxrack:
+		fxchannel_obj = convproj_obj.fxrack[0]
+		convproj_obj.automation.move(['fxmixer','0','vol'], ['master', 'vol'])
+		convproj_obj.automation.move(['fxmixer','0','pan'], ['master', 'pan'])
+		fxchannel_obj.params.move(convproj_obj.track_master.params, 'vol')
+		fxchannel_obj.params.move(convproj_obj.track_master.params, 'pan')
+		convproj_obj.track_master.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
+		convproj_obj.track_master.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
+		fxchannel_obj.fxslots_audio = []
+		fxchannel_obj.fxslots_mixer = []
+		del convproj_obj.fxrack[0]
+
 def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removeboth, autoloc):
 	fx_name = starttext+data_obj.visual.name if data_obj.visual.name else starttext+defualtname
 
@@ -118,17 +131,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 		return True
 
 	elif in_fxtype == 'rack' and out_fxtype == 'groupreturn' and convproj_obj.type in ['r', 'ri']:
-		if 0 in convproj_obj.fxrack:
-			fxchannel_obj = convproj_obj.fxrack[0]
-			convproj_obj.automation.move(['fxmixer','0','vol'], ['master', 'vol'])
-			convproj_obj.automation.move(['fxmixer','0','pan'], ['master', 'pan'])
-			fxchannel_obj.params.move(convproj_obj.track_master.params, 'vol')
-			fxchannel_obj.params.move(convproj_obj.track_master.params, 'pan')
-			convproj_obj.track_master.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
-			convproj_obj.track_master.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
-			fxchannel_obj.fxslots_audio = []
-			fxchannel_obj.fxslots_mixer = []
-			del convproj_obj.fxrack[0]
+		move_fx0_mastertrack(convproj_obj)
 
 		fx_trackids = {}
 		for trackid, track_obj in convproj_obj.iter_track():
@@ -211,17 +214,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 
 		for trackid in convproj_obj.track_order: convproj_obj.add_trackroute(trackid)
 
-		if 0 in convproj_obj.fxrack:
-			fxchannel_obj = convproj_obj.fxrack[0]
-			convproj_obj.automation.move(['fxmixer','0','vol'], ['master', 'vol'])
-			convproj_obj.automation.move(['fxmixer','0','pan'], ['master', 'pan'])
-			fxchannel_obj.params.move(convproj_obj.track_master.params, 'vol')
-			fxchannel_obj.params.move(convproj_obj.track_master.params, 'pan')
-			convproj_obj.track_master.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
-			convproj_obj.track_master.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
-			fxchannel_obj.fxslots_audio = []
-			fxchannel_obj.fxslots_mixer = []
-			del convproj_obj.fxrack[0]
+		move_fx0_mastertrack(convproj_obj)
 
 		used_fxchans = []
 

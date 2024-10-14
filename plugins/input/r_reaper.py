@@ -115,6 +115,7 @@ class input_reaper(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
 		
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_reaper

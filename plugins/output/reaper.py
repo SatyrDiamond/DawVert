@@ -47,7 +47,7 @@ def do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj):
 
 	if adsr_obj.amount:
 		if not sp_obj.loop_active: 
-			if dur:
+			if dur_sec:
 				sampler_params['env_attack'] = adsr_obj.attack/dur_sec
 				sampler_params['env_decay'] = adsr_obj.decay/15
 				sampler_params['env_sustain'] = adsr_obj.sustain
@@ -248,6 +248,7 @@ class output_reaper(plugins.base):
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
 	def parse(self, convproj_obj, output_file):

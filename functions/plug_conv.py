@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_values
-from functions import extpluglog
 from plugins import base as dv_plugins
 import base64
 import json
@@ -22,7 +21,6 @@ def load_plugins():
 
 # -------------------- convproj --------------------
 
-
 def commalist2plugtypes(inputdata):
 	sep_supp_plugs = []
 	for inputpart in inputdata:
@@ -33,9 +31,7 @@ def commalist2plugtypes(inputdata):
 		sep_supp_plugs.append(outputpart)
 	return sep_supp_plugs
 
-extplug_selector = dv_plugins.create_selector('extplugin')
 plugconv_int_selector = dv_plugins.create_selector('plugconv')
-plugconv_ext_selector = dv_plugins.create_selector('plugconv_ext')
 
 def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dv_config):
 	plugqueue = []
@@ -43,7 +39,6 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dv_config):
 	for shortname, dvplugin in plugconv_int_selector.iter_dvp():
 		if shortname in dvplugin.prop_obj.in_daws: dvplugin.priority = -1000
 
-	#indaw_plugs = commalist2plugtypes(in_dawinfo.plugin_included)
 	outdaw_plugs = commalist2plugtypes(out_dawinfo.plugin_included)
 
 	norepeat = []
@@ -56,29 +51,13 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dv_config):
 			plugin_obj.external_make_compat(convproj_obj, out_dawinfo.plugin_ext)
 
 		if not is_external:
-			converted_val = 2
-			for shortname, dvplug_obj, prop_obj in plugconv_int_selector.iter():
-				ismatch = True in [plugin_obj.check_wildmatch(x[0], x[1], x[2]) for x in prop_obj.in_plugins]
-				correctdaw = (out_dawname in prop_obj.out_daws) if prop_obj.out_daws else True
-				if ismatch and correctdaw:
-					converted_val_p = dvplug_obj.convert(convproj_obj, plugin_obj, pluginid, dv_config)
-					if converted_val_p < converted_val: converted_val = converted_val_p
-					if converted_val == 0: break
+			converted_val = plugin_obj.convert_internal(convproj_obj, pluginid, out_dawname, dv_config)
 
 			ext_conv_val = False
-			notsupported = not (True in [plugin_obj.check_wildmatch(x[0], x[1], x[2]) for x in outdaw_plugs])
+			notsupported = not plugin_obj.check_str_multi(outdaw_plugs)
 
-			if converted_val:
-				if notsupported:
-					extpluglog.extpluglist.clear()
-					for shortname, dvplug_obj, prop_obj in plugconv_ext_selector.iter():
-						ismatch = plugin_obj.check_wildmatch(prop_obj.in_plugin[0], prop_obj.in_plugin[1], prop_obj.in_plugin[2])
-						extmatch = True in [(x in out_dawinfo.plugin_ext) for x in prop_obj.ext_formats]
-						catmatch = data_values.list__only_values(prop_obj.plugincat, dv_config.extplug_cat)
-	
-						if ismatch and extmatch and catmatch:
-							ext_conv_val = dvplug_obj.convert(convproj_obj, plugin_obj, pluginid, dv_config, out_dawinfo.plugin_ext)
-							if ext_conv_val: break
+			if converted_val and notsupported:
+				ext_conv_val = plugin_obj.convert_external(convproj_obj, pluginid, out_dawinfo.plugin_ext, dv_config)
 
 			if converted_val==2 and not ext_conv_val and notsupported and str(plugin_obj.type) not in norepeat:
 				logger_plugconv.warning('       | No equivalent to "'+str(plugin_obj.type)+'" found or not supported')

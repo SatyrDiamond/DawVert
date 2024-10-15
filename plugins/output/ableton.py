@@ -35,7 +35,9 @@ LFO_SHAPE = {
 }
 
 def fixtxt(inp):
-	return inp.encode("ascii", "replace").decode(encoding="utf-8", errors="ignore")
+	inp = inp.encode("ascii", "replace").decode(encoding="utf-8", errors="ignore")
+	inp = "".join(t for t in inp if t.isprintable())
+	return inp
 
 def do_sampleref(convproj_obj, als_sampleref, cvpj_sampleref):
 	als_fileref = als_sampleref.FileRef

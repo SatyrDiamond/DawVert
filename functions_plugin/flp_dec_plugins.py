@@ -142,6 +142,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 						numparams = plugin_obj.datavals_global.get('numparams', -1) 
 
+						plugin_obj.datavals_global.add('all_params_used', False)
+
 						if numparams != -1:
 							for x in range(numparams):
 								convproj_obj.automation.calc(['id_plug', pluginid, str(x)], 'floatbyteint2float', 0, 0, 0, 0)
@@ -169,6 +171,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 							for paramnum in range(numparamseach): 
 								plugin_obj.params.add('ext_param_'+str(paramnum), bankparams[num][paramnum], 'float')
 
+						plugin_obj.datavals_global.add('all_params_used', True)
 						plugin_obj.set_program(wrapper_vstprogram)
 
 						for x in range(vst_total_params):

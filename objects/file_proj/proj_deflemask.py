@@ -136,7 +136,7 @@ class deflemask_project:
 		try:
 			decompdata = zlib.decompress(bytestream.read())
 		except zlib.error as t:
-			raise ProjectFileParserException('1bitdragon: '+str(t))
+			raise ProjectFileParserException('deflemask: '+str(t))
 		bio_dmf.load_raw(decompdata)
 		bio_dmf.magic_check(b'.DelekDefleMask.')
 		self.version = bio_dmf.uint8()

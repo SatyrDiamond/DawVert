@@ -22,6 +22,9 @@ from functions_plugin_ext import params_os_tal_chorus
 simsynth_shapes = {0.4: 'random', 0.3: 'sine', 0.2: 'square', 0.1: 'saw', 0.0: 'triangle'}
 wasp_shapes = {3: 'random', 2: 'sine', 1: 'square', 0: 'saw'}
 
+def sinesq(x, i_var):
+	return (((max(x-0.25, 0)*(5/4))**0.1)-0.5)*2
+
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
@@ -33,6 +36,87 @@ class plugconv(plugins.base):
 		flpluginname = plugin_obj.type.subtype.lower()
 
 		use_vst2 = 'vst2' in extplugtype
+
+		#---------------------------------------- Fruit Kick ----------------------------------------
+		if flpluginname == '3x osc':
+			extpluglog.extpluglist.add('FOSS', 'VST', 'Vital', '')
+			exttype = plugins.base.extplug_exists('vital', extplugtype, None)
+			if exttype:
+				extpluglog.extpluglist.success('FL Studio', '3x osc')
+				plugin_obj.params.debugtxt()
+
+				fl_osc1_mixlevel = plugin_obj.params.get('osc1_mixlevel', 0).value/128
+				fl_osc2_mixlevel = plugin_obj.params.get('osc2_mixlevel', 0).value/128
+
+				fl_vol0 = 1.0*(-fl_osc1_mixlevel+1)*(-fl_osc2_mixlevel+1)
+				fl_vol1 = fl_osc1_mixlevel*(-fl_osc2_mixlevel+1)
+				fl_vol2 = fl_osc2_mixlevel
+
+				oscdata = []
+				for oscnum in range(3):
+					starttxt = 'osc'+str(oscnum+1)+'_'
+					fl_coarse = plugin_obj.params.get(starttxt+'coarse', 0).value
+					fl_detune = plugin_obj.params.get(starttxt+'detune', 0).value
+					fl_fine = plugin_obj.params.get(starttxt+'fine', 0).value
+					fl_invert = plugin_obj.params.get(starttxt+'invert', 0).value
+					fl_ofs = plugin_obj.params.get(starttxt+'ofs', 0).value/64
+					fl_pan = plugin_obj.params.get(starttxt+'pan', 0).value/64
+					fl_shape = plugin_obj.params.get(starttxt+'shape', 0).value
+					oscdata.append([fl_coarse,fl_detune,fl_fine,fl_invert,fl_ofs,fl_pan,fl_shape,[fl_vol0,fl_vol1,fl_vol2][oscnum]])
+	
+				plugin_obj.replace('user', 'matt_tytel', 'vital')
+
+				fl_osc3_am = plugin_obj.params.get('osc3_am', 0).value
+				fl_phase_rand = plugin_obj.params.get('phase_rand', 0).value
+	
+				fl_vol0 = 1.0*(-fl_osc1_mixlevel+1)*(-fl_osc2_mixlevel+1)
+				fl_vol1 = fl_osc1_mixlevel*(-fl_osc2_mixlevel+1)
+				fl_vol2 = fl_osc2_mixlevel
+
+				env_data = plugin_obj.env_asdr_get('vital_env_2')
+
+				vollvl = abs(env_data.amount)
+				osclvl = 1-vollvl
+				noiselvl = 0
+
+				plugin_obj.env_asdr_copy('vol', 'vital_env_2')
+
+				plugin_obj.params.add('volume', 6000, 'float')
+
+				plugin_obj.datavals_global.add('middlenotefix', -12)
+
+				for oscnum, oscdata in enumerate(oscdata):
+					fl_coarse,fl_detune,fl_fine,fl_invert,fl_ofs,fl_pan,fl_shape,fl_vol = oscdata
+					#print(fl_coarse,fl_detune,fl_fine,fl_invert,fl_ofs,fl_pan,fl_shape,fl_vol)
+					vital_oscnum = 'osc_'+str(oscnum+1)
+
+					plugin_obj.params.add(vital_oscnum+'_on', 1, 'float')
+					plugin_obj.params.add(vital_oscnum+'_level', (fl_vol)*2, 'float')
+					plugin_obj.params.add(vital_oscnum+'_transpose', fl_coarse, 'float')
+					plugin_obj.params.add(vital_oscnum+'_pan', fl_pan/100, 'float')
+					plugin_obj.params.add(vital_oscnum+'_tune', fl_fine/100 , 'float')
+					plugin_obj.params.add(vital_oscnum+'_unison_detune', (fl_detune*3.5)/50, 'float')
+					plugin_obj.params.add(vital_oscnum+'_unison_voices', 2, 'float')
+
+					osc_obj = plugin_obj.osc_add()
+					osc_obj.prop.type = 'wave'
+					osc_obj.prop.nameid = vital_oscnum
+
+					wave_obj = plugin_obj.wave_add(vital_oscnum)
+					wave_obj.set_numpoints(2048)
+					if fl_shape == 0: wave_obj.add_wave('sine', 0, 1, 1)
+					if fl_shape == 1: wave_obj.add_wave('triangle', 0, 1, 1)
+					if fl_shape == 2: wave_obj.add_wave('square', 0, 1, 1)
+					if fl_shape == 3: wave_obj.add_wave('saw', 0, 1, 1)
+					if fl_shape == 4: wave_obj.add_wave_func(sinesq, 0, 1, 1)
+					if fl_shape == 5: 
+						noiselvl += (fl_vol/100)
+						plugin_obj.datavals.add('sample_generate_noise', True)
+						plugin_obj.params.add('sample_on', 1, 'float')
+
+				plugin_obj.params.add('sample_level', min(noiselvl, 1), 'float')
+				
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 
 		#---------------------------------------- Fruit Kick ----------------------------------------
 		if flpluginname == 'fruit kick':

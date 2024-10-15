@@ -249,11 +249,16 @@ class wavtool_project:
 						elif n == 'sourceId': device_obj.sourceId = d
 						else: device_obj.data[n] = d
 
+					#print('DEVICE', dev_trackId, dev_id, device_obj.name)
+
+
 			if 'deviceRouting' in pd: 
 				for dev_to, dev_from in pd['deviceRouting'].items():
 					from_t, from_i = dev_from.split('.')
 					to_t, to_i = dev_to.split('.')
 					self.devices.add_cable(from_t, from_i, to_t, to_i)
+
+					#print('CON', from_t, from_i, to_t, to_i)
 
 			if 'timelineSelectionStart' in pd: self.timelineSelectionStart = pd['timelineSelectionStart'] 
 			if 'timelineSelectionEnd' in pd: self.timelineSelectionEnd = pd['timelineSelectionEnd'] 

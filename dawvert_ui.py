@@ -31,7 +31,7 @@ class converterstate():
 	is_converting = False
 	is_plugscan = False
 
-dragdroploctexts = ['Beside Original', 'In "output" folder', 'Always "out.*"']
+dragdroploctexts = ['Beside Original', 'In "output" folder', 'Always out.*']
 
 globalstore.extplug.load()
 

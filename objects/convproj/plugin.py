@@ -432,6 +432,7 @@ class cvpj_plugin:
 		from functions import extpluglog
 		plugconv_ext_selector = dv_plugins.create_selector('plugconv_ext')
 		extpluglog.extpluglist.clear()
+		ext_conv_val = False
 		for shortname, dvplug_obj, prop_obj in plugconv_ext_selector.iter():
 			ismatch = self.check_wildmatch(prop_obj.in_plugin[0], prop_obj.in_plugin[1], prop_obj.in_plugin[2])
 			extmatch = True in [(x in target_extplugs) for x in prop_obj.ext_formats]

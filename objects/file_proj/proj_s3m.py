@@ -69,7 +69,8 @@ class s3m_instrument:
 				audio_obj = audio_data.audio_obj()
 				audio_obj.rate = self.c2spd
 				audio_obj.channels = wave_channels
-				audio_obj.set_codec('uint'+str(wave_bits))
+				if wave_bits == 8: audio_obj.set_codec('uint8')
+				if wave_bits == 16: audio_obj.set_codec('int16')
 				audio_obj.pcm_from_bytes(wave_sampledata)
 				if self.loopon: audio_obj.loop = [self.loopStart, self.loopEnd-1]
 				audio_obj.to_file_wav(wave_path)

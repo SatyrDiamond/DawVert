@@ -49,7 +49,7 @@ class plugconv(plugins.base):
 					num, denum, stxt = delaytab[p_rateSyncOn]
 					timing_obj.set_frac(num, denum, stxt, convproj_obj)
 
-			plugin_obj.fxdata_add(None, p_mix)
+			plugin_obj.fxdata_add(None, p_mix/2)
 
 		if plugin_obj.type.check_wildmatch('native', 'tracktion', '1bandEq'):
 			extpluglog.convinternal('Waveform', '1bandEq', 'Universal', 'Filter')

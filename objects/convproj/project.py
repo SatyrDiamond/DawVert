@@ -69,6 +69,40 @@ def autoloc_getname(autopath):
 
 plugin_id_counter = idcounter.counter(1000, 'plugin_')
 
+
+
+
+
+
+class groupassoc():
+	def __init__(self):
+		self.groupdata = []
+		self.inside_found = []
+
+	def add_part(self, groupname, insidegroup):
+		for x in self.groupdata:
+			if x[0] == groupname: 
+				if insidegroup: 
+					x[1] = insidegroup
+					self.inside_found.append(x[1])
+				return True
+		self.groupdata.append([groupname, insidegroup])
+		if insidegroup: 
+			self.inside_found.append(insidegroup)
+		return True
+
+	def filter(self, insidegroup):
+		for x in self.groupdata:
+			if insidegroup == x[1]:
+				yield x
+
+	def iter(self, i):
+		if i in self.inside_found or not i:
+			for x in self.filter(i):
+				yield x
+				for d in self.iter(x[0]):
+					yield d
+
 class cvpj_fxchannel:
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
@@ -127,6 +161,15 @@ class cvpj_project:
 		self.scene_placements = []
 
 		self._m2r_visual_playlist_first = False
+
+	def iter_group_inside(self):
+		groups_assoc = groupassoc()
+
+		for groupid, track_obj in self.groups.items():
+			groups_assoc.add_part(groupid, track_obj.group)
+
+		for groupid, insidegroup in groups_assoc.iter(None):
+			yield groupid, insidegroup
 
 	def add_scene(self, i_sceneid):
 		scene_obj = cvpj_scene()

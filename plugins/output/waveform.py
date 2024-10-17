@@ -9,6 +9,8 @@ from functions import colors
 from objects import globalstore
 from objects import counter
 import math
+import logging
+logger_output = logging.getLogger('output')
 
 def make_volpan_plugin(convproj_obj, track_obj, iddat, wf_track, startn):
 	from objects.file_proj import proj_waveform
@@ -65,6 +67,8 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 					wf_plugin.params['uid'] = f'{juceobj.fourid:x}'
 				wf_plugin.params['state'] = juceobj.memoryblock
 				return wf_plugin
+			else:
+				logger_output.warning('VST2 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('native', 'tracktion', None):
 			wf_plugin = proj_waveform.waveform_plugin()

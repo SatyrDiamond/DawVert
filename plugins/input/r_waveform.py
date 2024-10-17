@@ -115,6 +115,12 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 						windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
 						windata_obj.pos_x = wf_plugin.windowX
 						windata_obj.pos_y = wf_plugin.windowY
+
+					for autocurves in wf_plugin.automationcurves:
+						if autocurves.paramid:
+							for time, val, curve in autocurves.points:
+								convproj_obj.automation.add_autopoint_real(['plugin',pluginid,'ext_param_'+autocurves.paramid], 'float', time, val, 'normal')
+
 			except:
 				pass
 

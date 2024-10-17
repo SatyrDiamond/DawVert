@@ -66,7 +66,12 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 					wf_plugin.params['uniqueId'] = f'{juceobj.fourid:x}'
 					wf_plugin.params['uid'] = f'{juceobj.fourid:x}'
 				wf_plugin.params['state'] = juceobj.memoryblock
+
+				for _, _, paramnum in convproj_obj.automation.iter_nopl_points_external(cvpj_fxid):
+					add_auto_curves(convproj_obj, ['plugin', cvpj_fxid, 'ext_param_'+str(paramnum)], wf_plugin, str(paramnum))
+					
 				return wf_plugin
+
 			else:
 				logger_output.warning('VST2 plugin not placed: no ID found.')
 

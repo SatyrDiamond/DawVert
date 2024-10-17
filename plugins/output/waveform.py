@@ -155,13 +155,18 @@ class output_waveform_edit(plugins.base):
 
 		groups_data = {}
 
+		for groupid, insidegroup in convproj_obj.iter_group_inside():
+			wf_tracks = project_obj.tracks
+
+			if insidegroup: 
+				make_group(convproj_obj, groupid, groups_data, counter_id, groups_data[insidegroup].tracks)
+			else:
+				make_group(convproj_obj, groupid, groups_data, counter_id, wf_tracks)
+
 		for trackid, track_obj in convproj_obj.iter_track():
 			wf_tracks = project_obj.tracks
 
-			if track_obj.group:
-				make_group(convproj_obj, track_obj.group, groups_data, counter_id, wf_tracks)
-
-				wf_tracks = groups_data[track_obj.group].tracks
+			if track_obj.group: wf_tracks = groups_data[track_obj.group].tracks
 
 			wf_track = proj_waveform.waveform_track()
 			wf_track.id_num = counter_id.get()

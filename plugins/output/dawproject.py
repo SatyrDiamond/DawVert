@@ -11,6 +11,9 @@ from xml.dom import minidom
 from objects import globalstore
 from functions import data_values
 
+import logging
+logger_output = logging.getLogger('output')
+
 from objects.file_proj._dawproject import clips
 from objects.file_proj._dawproject import points
 from objects.file_proj._dawproject import track
@@ -299,6 +302,37 @@ def make_lane(starttxt):
 	arrangement_obj.lanes.lanes.append(lane_obj)
 	return lane_obj
 
+def do_extparams(param_obj, pluginid, convproj_obj, lane_obj, dp_device):
+	extparams = {}
+
+	for cvpj_paramid in param_obj.list():
+		if cvpj_paramid.startswith('ext_param_'):
+			cvpj_paramdata = param_obj.get(cvpj_paramid, 1)
+			paramnum = int(cvpj_paramid[10:])
+			dp_realparam = device.dawproject_realparameter()
+			dp_realparam.value = cvpj_paramdata.value
+			dp_realparam.parameterID = paramnum
+			dp_realparam.id = 'plugin__'+pluginid+'__param__'+cvpj_paramid
+			if cvpj_paramdata.visual.name: dp_realparam.name = cvpj_paramdata.visual.name
+			dp_device.realparameter.append(dp_realparam)
+			#from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
+			extparams[paramnum] = dp_realparam
+
+	for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+		if paramnum not in extparams:
+			dp_realparam = device.dawproject_realparameter()
+			dp_realparam.parameterID = paramnum
+			dp_realparam.id = 'plugin__'+pluginid+'__param__'+str(paramnum)
+			dp_device.realparameter.append(dp_realparam)
+		else:
+			dp_realparam = extparams[paramnum]
+
+		dppoints_obj = points.dawproject_points()
+		dppoints_obj.target = points.dawproject_pointtarget()
+		dppoints_obj.target.parameter = 'plugin__'+pluginid+'__param__'+str(paramnum)
+		do_autopoints(autodata, dppoints_obj)
+		lane_obj.points.append(dppoints_obj)
+
 def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	from functions_plugin_ext import plugin_vst2
 	from functions_plugin_ext import plugin_vst3
@@ -320,73 +354,46 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				dawproject_zip.writestr(statepath, fxpdata)
 				dp_device.state.set(statepath)
 
-				for cvpj_paramid in plugin_obj.params.list():
-					if cvpj_paramid.startswith('ext_param_'):
-						cvpj_paramdata = plugin_obj.params.get(cvpj_paramid, 1)
-						paramnum = int(cvpj_paramid[10:])
-						dp_realparam = device.dawproject_realparameter()
-						dp_realparam.max = 1
-						dp_realparam.min = 0
-						dp_realparam.unit = "normalized" 
-						dp_realparam.value = cvpj_paramdata.value
-						dp_realparam.parameterID = paramnum
-						dp_realparam.id = 'plugin__'+pluginid+'__param__'+cvpj_paramid
-						if cvpj_paramdata.visual.name: dp_realparam.name = cvpj_paramdata.visual.name
-						dp_device.realparameter.append(dp_realparam)
-						from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
+				extparams = {}
+
+				do_extparams(plugin_obj.params, pluginid, convproj_obj, lane_obj, dp_device)
+			else:
+				logger_output.warning('VST2 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			dp_device = device.dawproject_device('Vst3Plugin')
-			dp_device.deviceID = plugin_obj.datavals_global.get('id', None)
-			dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-			dp_device.name = plugin_obj.datavals_global.get('name', None)
+			vstid = plugin_obj.datavals_global.get('id', None)
+			if vstid:
+				dp_device = device.dawproject_device('Vst3Plugin')
+				dp_device.deviceID = vstid
+				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
+				dp_device.name = plugin_obj.datavals_global.get('name', None)
 
-			fxpdata = plugin_vst3.export_presetdata(plugin_obj)
-			statepath = 'plugins/'+str(uuid.uuid4())+'.vstpreset'
-			dawproject_zip.writestr(statepath, fxpdata)
-			dp_device.state.set(statepath)
-
-			for cvpj_paramid in plugin_obj.params.list():
-				if cvpj_paramid.startswith('ext_param_'):
-					cvpj_paramdata = plugin_obj.params.get(cvpj_paramid, 1)
-					paramnum = int(cvpj_paramid[10:])
-					dp_realparam = device.dawproject_realparameter()
-					dp_realparam.max = 1
-					dp_realparam.min = 0
-					dp_realparam.unit = "normalized" 
-					dp_realparam.value = cvpj_paramdata.value
-					dp_realparam.parameterID = paramnum
-					dp_realparam.id = 'plugin__'+pluginid+'__param__'+cvpj_paramid
-					if cvpj_paramdata.visual.name: dp_realparam.name = cvpj_paramdata.visual.name
-					dp_device.realparameter.append(dp_realparam)
-					from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
-
-		if plugin_obj.check_wildmatch('external', 'clap', None):
-			dp_device = device.dawproject_device('ClapPlugin')
-			dp_device.deviceID = plugin_obj.datavals_global.get('id', None)
-			dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-			dp_device.name = plugin_obj.datavals_global.get('name', None)
-
-			fxpdata = plugin_clap.export_presetdata(plugin_obj)
-			if fxpdata:
-				statepath = 'plugins/'+str(uuid.uuid4())+'.clap-preset'
+				fxpdata = plugin_vst3.export_presetdata(plugin_obj)
+				statepath = 'plugins/'+str(uuid.uuid4())+'.vstpreset'
 				dawproject_zip.writestr(statepath, fxpdata)
 				dp_device.state.set(statepath)
 
-			for cvpj_paramid in plugin_obj.params.list():
-				if cvpj_paramid.startswith('ext_param_'):
-					cvpj_paramdata = plugin_obj.params.get(cvpj_paramid, 1)
-					paramnum = int(cvpj_paramid[10:])
-					dp_realparam = device.dawproject_realparameter()
-					dp_realparam.max = 1
-					dp_realparam.min = 0
-					dp_realparam.unit = "normalized" 
-					dp_realparam.value = cvpj_paramdata.value
-					dp_realparam.parameterID = paramnum
-					dp_realparam.id = 'plugin__'+pluginid+'__param__'+cvpj_paramid
-					if cvpj_paramdata.visual.name: dp_realparam.name = cvpj_paramdata.visual.name
-					dp_device.realparameter.append(dp_realparam)
-					from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
+				do_extparams(plugin_obj.params, pluginid, convproj_obj, lane_obj, dp_device)
+			else:
+				logger_output.warning('VST3 plugin not placed: no ID found.')
+
+		if plugin_obj.check_wildmatch('external', 'clap', None):
+			clapid = plugin_obj.datavals_global.get('id', None)
+			if clapid:
+				dp_device = device.dawproject_device('ClapPlugin')
+				dp_device.deviceID = plugin_obj.datavals_global.get('id', None)
+				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
+				dp_device.name = plugin_obj.datavals_global.get('name', None)
+
+				fxpdata = plugin_clap.export_presetdata(plugin_obj)
+				if fxpdata:
+					statepath = 'plugins/'+str(uuid.uuid4())+'.clap-preset'
+					dawproject_zip.writestr(statepath, fxpdata)
+					dp_device.state.set(statepath)
+
+				do_extparams(plugin_obj.params, pluginid, convproj_obj, lane_obj, dp_device)
+			else:
+				logger_output.warning('CLAP plugin not placed: no ID found.')
 
 		if dp_device:
 			dp_device.deviceRole = role

@@ -127,6 +127,14 @@ class rpp_plugin:
 		self.wet = rvd([1,0], ['wet','delta_solo'], None, False)
 		self.parmenv = []
 
+	def add_env(self):
+		parmenv_obj = rpp_env.rpp_env()
+		parmenv_obj.is_param = True
+		parmenv_obj.used = True
+		parmenv_obj.act['bypass'] = 1
+		self.parmenv.append(parmenv_obj)
+		return parmenv_obj
+	
 class rpp_fxchain:
 	def __init__(self):
 		self.wndrect = rvd([0,0,0,0], ['pos_x','pos_y','size_x','size_y'], None, True)

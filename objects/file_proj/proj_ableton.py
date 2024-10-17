@@ -254,6 +254,8 @@ class ableton_liveset:
 		abletonversion = root.get('MinorVersion').split('.')[0]
 		if abletonversion != '11':
 			raise ProjectFileParserException('ableton: Version '+abletonversion+' is not supported.')
+		#if abletonversion not in ['10', '11']:
+		#	raise ProjectFileParserException('ableton: Version '+abletonversion+' is not supported.')
 
 		x_LiveSet = root.findall('LiveSet')[0]
 		self.NextPointeeId = int(get_value(x_LiveSet, 'NextPointeeId', 0))

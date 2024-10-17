@@ -3,6 +3,13 @@
 
 import xml.etree.ElementTree as ET
 
+def get_pointee(xmltag, counter_obj):
+	if xmltag:
+		Pointee = xmltag.findall('Pointee')
+		if Pointee:
+			return int(Pointee[0].get('Id'))
+	return int(counter_obj.get() if counter_obj else 0)
+
 def add_value(xmltag, name, value):
 	if isinstance(value, float): value = "%g"%value
 	x_temp = ET.SubElement(xmltag, name)
@@ -18,6 +25,15 @@ def add_value_opt(xmltag, name, value):
 
 def get_value(xmldata, varname, fallback): 
 	return (xmldata.findall(varname)[0].get('Value') if len(xmldata.findall(varname)) != 0 else fallback) if xmldata else fallback
+
+def get_value_multi(xmldata, varnames, fallback): 
+	if xmldata:
+		for varname in varnames:
+			valuevar = xmldata.findall(varname)
+			if len(valuevar) != 0: return valuevar[0].get('Value')
+		return fallback
+	else: 
+		return fallback
 
 def get_value_opt(xmldata, varname, fallback): 
 	if xmldata:
@@ -43,6 +59,15 @@ def get_bool(xmldata, varname, fallback):
 		if len(boolvar) != 0: return ['false','true'].index(boolvar[0].get('Value'))
 		else: return fallback
 	else: return fallback
+
+def get_bool_multi(xmldata, varnames, fallback): 
+	if xmldata:
+		for varname in varnames:
+			boolvar = xmldata.findall(varname)
+			if len(boolvar) != 0: return ['false','true'].index(boolvar[0].get('Value'))
+		return fallback
+	else: 
+		return fallback
 
 def get_bool_opt(xmldata, varname, fallback): 
 	if xmldata:

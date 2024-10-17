@@ -46,8 +46,10 @@ class ableton_AutomationLane:
 	def __init__(self, xmltag):
 		self.SelectedDevice = int(get_value(xmltag, 'SelectedDevice', 0))
 		self.SelectedEnvelope = int(get_value(xmltag, 'SelectedEnvelope', 0))
-		self.IsContentSelectedInDocument = get_bool(xmltag, 'IsContentSelectedInDocument', False)
+		self.IsContentSelectedInDocument = get_bool_multi(xmltag, ['IsContentSelectedInDocument', 'IsContentSelected'], False)
 		self.LaneHeight = int(get_value(xmltag, 'LaneHeight', 68))
+		# 11: IsContentSelectedInDocument
+		# 10: IsContentSelected
 
 	def write(self, xmltag):
 		add_value(xmltag, 'SelectedDevice', self.SelectedDevice)

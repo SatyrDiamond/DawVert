@@ -50,19 +50,21 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			juceobj = juce_plugin.juce_plugin()
 			juceobj.from_cvpj(convproj_obj, plugin_obj)
+			fourid = plugin_obj.datavals_global.get('fourid', None)
 
-			fx_on, fx_wet = plugin_obj.fxdata_get()
-			wf_plugin = proj_waveform.waveform_plugin()
-			wf_plugin.enabled = int(fx_on)
-			wf_plugin.params['type'] = 'vst'
-			if juceobj.name: wf_plugin.params['name'] = juceobj.name
-			if juceobj.filename: wf_plugin.params['filename'] = juceobj.filename
-			if juceobj.manufacturer: wf_plugin.params['manufacturer'] = juceobj.manufacturer
-			if juceobj.fourid: 
-				wf_plugin.params['uniqueId'] = f'{juceobj.fourid:x}'
-				wf_plugin.params['uid'] = f'{juceobj.fourid:x}'
-			wf_plugin.params['state'] = juceobj.memoryblock
-			return wf_plugin
+			if fourid: 
+				fx_on, fx_wet = plugin_obj.fxdata_get()
+				wf_plugin = proj_waveform.waveform_plugin()
+				wf_plugin.enabled = int(fx_on)
+				wf_plugin.params['type'] = 'vst'
+				if juceobj.name: wf_plugin.params['name'] = juceobj.name
+				if juceobj.filename: wf_plugin.params['filename'] = juceobj.filename
+				if juceobj.manufacturer: wf_plugin.params['manufacturer'] = juceobj.manufacturer
+				if juceobj.fourid: 
+					wf_plugin.params['uniqueId'] = f'{juceobj.fourid:x}'
+					wf_plugin.params['uid'] = f'{juceobj.fourid:x}'
+				wf_plugin.params['state'] = juceobj.memoryblock
+				return wf_plugin
 
 		if plugin_obj.check_wildmatch('native', 'tracktion', None):
 			wf_plugin = proj_waveform.waveform_plugin()

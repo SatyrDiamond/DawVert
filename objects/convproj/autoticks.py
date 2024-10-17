@@ -22,7 +22,7 @@ class cvpj_autoticks:
 		else: return self.points[list(self.points)[num]]
 
 	def __len__(self):
-		return self.points[num].__len__()
+		return self.points.__len__()
 
 	def __iter__(self):
 		for p, v in self.points.items(): 

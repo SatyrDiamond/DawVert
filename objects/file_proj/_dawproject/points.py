@@ -89,8 +89,8 @@ class dawproject_timesigpoint:
 
 	def write(self, xmltag):
 		tempxml = ET.SubElement(xmltag, 'TimeSignaturePoint')
-		if self.value != None: tempxml.set('numerator',  str(self.numerator))
-		if self.value != None: tempxml.set('denominator',  str(self.denominator))
+		if self.numerator != None: tempxml.set('numerator',  str(self.numerator))
+		if self.denominator != None: tempxml.set('denominator',  str(self.denominator))
 		if self.time != None: tempxml.set('time',  '%.6f' % self.time)
 
 class dawproject_points_timesig:

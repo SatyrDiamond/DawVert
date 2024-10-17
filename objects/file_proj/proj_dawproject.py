@@ -165,8 +165,8 @@ class dawproject_song:
 		x_metadata = ET.Element("MetaData")
 		x_metadata.set('version', '1.0')
 		for x, v in self.metadata.items():
-			vp = ET.SubElement(x_root, x)
-			vp.text(v)
+			vp = ET.SubElement(x_metadata, x)
+			vp.text = v
 
 		xmlstr = minidom.parseString(ET.tostring(x_metadata)).toprettyxml(indent="\t")
 		return xmlstr.encode("UTF-8")

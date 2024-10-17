@@ -43,7 +43,6 @@ class plugconv(plugins.base):
 			exttype = plugins.base.extplug_exists('vital', extplugtype, None)
 			if exttype:
 				extpluglog.extpluglist.success('FL Studio', '3x osc')
-				plugin_obj.params.debugtxt()
 
 				fl_osc1_mixlevel = plugin_obj.params.get('osc1_mixlevel', 0).value/128
 				fl_osc2_mixlevel = plugin_obj.params.get('osc2_mixlevel', 0).value/128

@@ -308,30 +308,32 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	if plugin_found:
 		dp_device = None
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			dp_device = device.dawproject_device('Vst2Plugin')
-			dp_device.deviceID = plugin_obj.datavals_global.get('fourid', None)
-			dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-			dp_device.name = plugin_obj.datavals_global.get('name', None)
+			fourid = plugin_obj.datavals_global.get('fourid', None)
+			if fourid:
+				dp_device = device.dawproject_device('Vst2Plugin')
+				dp_device.deviceID = fourid
+				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
+				dp_device.name = plugin_obj.datavals_global.get('name', None)
 
-			fxpdata = plugin_vst2.export_presetdata(plugin_obj)
-			statepath = 'plugins/'+str(uuid.uuid4())+'.fxp'
-			dawproject_zip.writestr(statepath, fxpdata)
-			dp_device.state.set(statepath)
+				fxpdata = plugin_vst2.export_presetdata(plugin_obj)
+				statepath = 'plugins/'+str(uuid.uuid4())+'.fxp'
+				dawproject_zip.writestr(statepath, fxpdata)
+				dp_device.state.set(statepath)
 
-			for cvpj_paramid in plugin_obj.params.list():
-				if cvpj_paramid.startswith('ext_param_'):
-					cvpj_paramdata = plugin_obj.params.get(cvpj_paramid, 1)
-					paramnum = int(cvpj_paramid[10:])
-					dp_realparam = device.dawproject_realparameter()
-					dp_realparam.max = 1
-					dp_realparam.min = 0
-					dp_realparam.unit = "normalized" 
-					dp_realparam.value = cvpj_paramdata.value
-					dp_realparam.parameterID = paramnum
-					dp_realparam.id = 'plugin__'+pluginid+'__param__'+cvpj_paramid
-					if cvpj_paramdata.visual.name: dp_realparam.name = cvpj_paramdata.visual.name
-					dp_device.realparameter.append(dp_realparam)
-					from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
+				for cvpj_paramid in plugin_obj.params.list():
+					if cvpj_paramid.startswith('ext_param_'):
+						cvpj_paramdata = plugin_obj.params.get(cvpj_paramid, 1)
+						paramnum = int(cvpj_paramid[10:])
+						dp_realparam = device.dawproject_realparameter()
+						dp_realparam.max = 1
+						dp_realparam.min = 0
+						dp_realparam.unit = "normalized" 
+						dp_realparam.value = cvpj_paramdata.value
+						dp_realparam.parameterID = paramnum
+						dp_realparam.id = 'plugin__'+pluginid+'__param__'+cvpj_paramid
+						if cvpj_paramdata.visual.name: dp_realparam.name = cvpj_paramdata.visual.name
+						dp_device.realparameter.append(dp_realparam)
+						from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, cvpj_paramid], 'float', dp_realparam.id, 0)
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
 			dp_device = device.dawproject_device('Vst3Plugin')
@@ -462,6 +464,7 @@ def maketrack_master(convproj_obj, track_obj, arrangement):
 		from_cvpj_auto_dppoints_obj(convproj_obj, tempoauto, ['main', 'bpm'], 'float', 'main__bpm', None)
 	return dp_track
 
+
 class output_dawproject(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -508,6 +511,16 @@ class output_dawproject(plugins.base):
 
 		groups_data = {}
 
+		for groupid, insidegroup in convproj_obj.iter_group_inside():
+			grp_lane_obj = make_lane('group__'+groupid)
+			cvpj_group = convproj_obj.groups[groupid]
+			dp_group = maketrack_group(convproj_obj, cvpj_group, groupid, grp_lane_obj)
+			groups_data[groupid] = dp_group
+			if insidegroup: 
+				groups_data[insidegroup].tracks.append(dp_group)
+			else:
+				project_obj.tracks.append(dp_group)
+
 		for trackid, track_obj in convproj_obj.iter_track():
 
 			if track_obj.type in ['instrument', 'audio', 'hybrid']:
@@ -516,13 +529,6 @@ class output_dawproject(plugins.base):
 				dp_track = None
 
 				if track_obj.group:
-					if track_obj.group not in groups_data and track_obj.group in convproj_obj.groups:
-						grp_lane_obj = make_lane('group__'+track_obj.group)
-						cvpj_group = convproj_obj.groups[track_obj.group]
-						dp_group = maketrack_group(convproj_obj, cvpj_group, track_obj.group, grp_lane_obj)
-						if not cvpj_group.group: project_obj.tracks.append(dp_group)
-						else: groups_data[cvpj_group.group].tracks.append(dp_group)
-						groups_data[track_obj.group] = dp_group
 					dp_tracks = groups_data[track_obj.group].tracks
 
 				if track_obj.type == 'instrument':

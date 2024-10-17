@@ -14,7 +14,7 @@ class ableton_Device:
 		self.IsExpanded = get_bool(xmltag, 'IsExpanded', True)
 		self.On = ableton_Param(xmltag, 'On', 'bool')
 		self.ModulationSourceCount = int(get_value(xmltag, 'ModulationSourceCount', 0))
-		self.Pointee = int(xmltag.findall('Pointee')[0].get('Id') if xmltag else proj_ableton.counter_unused_id.get())
+		self.Pointee = get_pointee(xmltag, proj_ableton.counter_unused_id)
 		self.LastSelectedTimeableIndex = int(get_value(xmltag, 'LastSelectedTimeableIndex', 0))
 		self.LastSelectedClipEnvelopeIndex = int(get_value(xmltag, 'LastSelectedClipEnvelopeIndex', 0))
 		self.IsFolded = get_bool(xmltag, 'IsFolded', False)

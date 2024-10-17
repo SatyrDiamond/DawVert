@@ -185,9 +185,10 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				windata_obj.pos_x = int(VstPluginInfo['WinPosX'])
 				windata_obj.pos_y = int(VstPluginInfo['WinPosY'])
 
-				vst_Path = str(VstPluginInfo['Path']).replace('/','\\')
-				convproj_obj.add_fileref(vst_Path, vst_Path, 'win')
-				plugin_obj.filerefs['plugin'] = vst_Path
+				if 'Path' in VstPluginInfo:
+					vst_Path = str(VstPluginInfo['Path']).replace('/','\\')
+					convproj_obj.add_fileref(vst_Path, vst_Path, 'win')
+					plugin_obj.filerefs['plugin'] = vst_Path
 
 				plugin_obj.datavals_global.add('fourid', vst_UniqueId)
 				plugin_obj.datavals_global.add('numparams', vst_NumberOfParameters)

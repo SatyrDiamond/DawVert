@@ -508,6 +508,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			elif pluginname == 'sf2player': noteoffset = 12
 			elif pluginname == 'OPL2': noteoffset = 24
 			elif pluginname == 'zynaddsubfx': noteoffset = 0
+			elif pluginname == 'vestige': noteoffset = 0
 			else: noteoffset = 12
 
 			middlenote = basenote - noteoffset

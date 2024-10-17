@@ -4,6 +4,7 @@
 from objects.exceptions import ProjectFileParserException
 from objects import globalstore
 from functions import data_bytes
+from objects.data_bytes import bytereader
 import plugins
 import json
 import os
@@ -172,8 +173,7 @@ class input_reaper(plugins.base):
 				rpp_plugins = rpp_track.fxchain.plugins
 				for n, rpp_plugin in enumerate(rpp_plugins):
 					rpp_extplug = rpp_plugin.plugin
-					fxid = rpp_plugin.fxid.get()
-					if not fxid: fxid = 'fx_'+str(n)
+					fxid = os.urandom(15).hex()
 					fxids.append(fxid)
 
 					if rpp_plugin.type == 'VST':
@@ -204,9 +204,23 @@ class input_reaper(plugins.base):
 						else:
 							plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'vst3', None)
 							plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
-							pluginfo_obj = plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.vst3_uuid, rpp_extplug.data_chunk[8:-8])
-							if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
-							elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+							if len(rpp_extplug.data_chunk)>8:
+								try:
+									preset_data = bytereader.bytereader()
+									preset_data.load_raw(rpp_extplug.data_chunk)
+									chunk_size = preset_data.int32()
+									unk = preset_data.int32()
+									chunk = preset_data.raw(chunk_size)
+
+									pluginfo_obj = plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.vst3_uuid, chunk)
+									if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
+									elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+								except:
+									pass
+
+							for parmenv in rpp_plugin.parmenv:
+								if parmenv.is_param:
+									do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'CLAP':
 						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'clap', None)
@@ -214,6 +228,10 @@ class input_reaper(plugins.base):
 						plugin_obj.visual.name = rpp_extplug.clap_name
 						if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
 						elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+
+						for parmenv in rpp_plugin.parmenv:
+							if parmenv.is_param:
+								do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'JS':
 						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'jesusonic', rpp_extplug.js_id)

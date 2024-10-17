@@ -10,6 +10,9 @@ from functions import data_bytes
 from functions import data_values
 from objects.data_bytes import bytewriter
 
+import logging
+logger_output = logging.getLogger('output')
+
 def wrapper_addchunk(wrapper_data, chunkid, chunkdata):
 	wrapper_data.uint32(chunkid)
 	wrapper_data.uint32(len(chunkdata))
@@ -201,63 +204,75 @@ def setparams(convproj_obj, plugin_obj):
 		vst_current_program = plugin_obj.current_program
 		vst_use_program = plugin_obj.program_used
 		vst_datatype = plugin_obj.datavals_global.get('datatype', 'chunk')
-		vst_fourid = plugin_obj.datavals_global.get('fourid', None)
+		vst_fourid = plugin_obj.datavals_global.get('fourid', 0)
 		vst_name = plugin_obj.datavals_global.get('name', None)
 
 		ref_found, fileref_obj = plugin_obj.get_fileref_global('plugin', convproj_obj)
 		vst_path = fileref_obj.get_path('win', False) if ref_found else None
 
-		vstdata_bytes = plugin_obj.rawdata_get('chunk')
-
-		wrapper_state = bytewriter.bytewriter()
-
-		if vst_datatype == 'chunk':
-			if vst_use_program:
-				wrapper_state.raw(b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff')
-				wrapper_state.uint32(len(vstdata_bytes))
-				wrapper_state.raw(b'\x00\x00\x00\x00')
-				wrapper_state.uint32(vst_current_program)
-				wrapper_state.raw(vstdata_bytes)
+		isvalid = True
+		if vst_fourid:
+			if vst_name or vst_path:
+				if vst_datatype in ['chunk', 'params']:
+					isvalid = True
+				else:
+					logger_output.warning('VST2 plugin not placed: unknown datatype:', vst_datatype)
 			else:
-				wrapper_state.raw(b'\xf7\xff\xff\xff\x0c\xfe\xff\xff\xff')
-				wrapper_state.uint32(len(vstdata_bytes))
-				wrapper_state.raw(b'\x00\x00\x00\x00\x00\x00\x00\x00')
-				wrapper_state.raw(vstdata_bytes)
+				logger_output.warning('VST2 plugin not placed: name or file path not found.')
+		else:
+			logger_output.warning('VST2 plugin not placed: no ID found.')
 
-		if vst_datatype == 'param':
-			prognums = list(plugin_obj.programs)
-			prognum = prognums.index(plugin_obj.current_program) if plugin_obj.current_program in prognums else 0
+		if isvalid:
+			vstdata_bytes = plugin_obj.rawdata_get('chunk')
 
-			wrapper_state.raw(b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff')
-			wrapper_state.raw(b'\x00\x00\x00\x00')
-			wrapper_state.raw(b'\x00\x00\x00\x00')
-			wrapper_state.uint32(prognum)
+			wrapper_state = bytewriter.bytewriter()
 
-			vst_total_params = 0
-			vst_num_names = len(plugin_obj.programs)
-			vst_params_data = bytewriter.bytewriter()
-			vst_names = bytewriter.bytewriter()
+			if vst_datatype == 'chunk':
+				if vst_use_program:
+					wrapper_state.raw(b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff')
+					wrapper_state.uint32(len(vstdata_bytes))
+					wrapper_state.raw(b'\x00\x00\x00\x00')
+					wrapper_state.uint32(vst_current_program)
+					wrapper_state.raw(vstdata_bytes)
+				else:
+					wrapper_state.raw(b'\xf7\xff\xff\xff\x0c\xfe\xff\xff\xff')
+					wrapper_state.uint32(len(vstdata_bytes))
+					wrapper_state.raw(b'\x00\x00\x00\x00\x00\x00\x00\x00')
+					wrapper_state.raw(vstdata_bytes)
 
-			for _, progstate in plugin_obj.programs.items():
-				vst_total_params += vst_numparams
-				for num in range(vst_numparams):
-					paramval = progstate.params.get('ext_param_'+str(num), 0).value
-					vst_params_data.float(paramval)
-				vst_names.string(progstate.preset.name, 25)
+			if vst_datatype == 'param':
+				prognums = list(plugin_obj.programs)
+				prognum = prognums.index(plugin_obj.current_program) if plugin_obj.current_program in prognums else 0
+	
+				wrapper_state.raw(b'\xf7\xff\xff\xff\x05\xfe\xff\xff\xff')
+				wrapper_state.raw(b'\x00\x00\x00\x00')
+				wrapper_state.raw(b'\x00\x00\x00\x00')
+				wrapper_state.uint32(prognum)
+	
+				vst_total_params = 0
+				vst_num_names = len(plugin_obj.programs)
+				vst_params_data = bytewriter.bytewriter()
+				vst_names = bytewriter.bytewriter()
+	
+				for _, progstate in plugin_obj.programs.items():
+					vst_total_params += vst_numparams
+					for num in range(vst_numparams):
+						paramval = progstate.params.get('ext_param_'+str(num), 0).value
+						vst_params_data.float(paramval)
+					vst_names.string(progstate.preset.name, 25)
+	
+				wrapper_state.uint32(vst_total_params)
+				wrapper_state.raw(vst_params_data.getvalue())
+				wrapper_state.uint32(vst_num_names)
+				wrapper_state.raw(vst_names.getvalue())
+	
+			wrapper_data = bytewriter.bytewriter()
+			wrapper_data.raw(b'\n\x00\x00\x00')
+			if vst_fourid != None: wrapper_addchunk(wrapper_data, 51, vst_fourid.to_bytes(4, "little") )
+			wrapper_addchunk(wrapper_data, 57, b'`\t\x00\x00' )
+			if vst_name != None: wrapper_addchunk(wrapper_data, 54, vst_name.encode() )
+			if vst_path != None: wrapper_addchunk(wrapper_data, 55, vst_path.encode() )
 
-			wrapper_state.uint32(vst_total_params)
-			wrapper_state.raw(vst_params_data.getvalue())
-			wrapper_state.uint32(vst_num_names)
-			wrapper_state.raw(vst_names.getvalue())
-
-		wrapper_data = bytewriter.bytewriter()
-		wrapper_data.raw(b'\n\x00\x00\x00')
-		if vst_fourid != None: wrapper_addchunk(wrapper_data, 51, vst_fourid.to_bytes(4, "little") )
-		wrapper_addchunk(wrapper_data, 57, b'`\t\x00\x00' )
-		if vst_name != None: wrapper_addchunk(wrapper_data, 54, vst_name.encode() )
-		if vst_path != None: wrapper_addchunk(wrapper_data, 55, vst_path.encode() )
-
-		if wrapper_state.getvalue():
 			wrapper_addchunk(wrapper_data, 53, wrapper_state.getvalue())
 			fl_plugin = 'fruity wrapper'
 			fl_pluginparams = wrapper_data.getvalue()

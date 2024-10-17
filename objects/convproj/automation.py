@@ -439,27 +439,23 @@ class cvpj_automation:
 			out_val = self.data[autopath].get_paramval_tick(firstnote, fallback)
 		return out_val
 
-	def iter_nopl_points(self):
-		autopath = cvpj_autoloc(autopath)
-		for autopath in self.data:
-			if self.u_data[autopath].nopl_points != None: 
-				yield autopath.split(';'), self.data[autopath].nopl_points
+	def iter_nopl_points(self, **kwargs):
+		locfilter = kwargs['filter'] if 'filter' in kwargs else []
+		for autopath, autodata in self.data.items():
+			if autodata.u_nopl_points != None and (autopath.startswith(locfilter) if locfilter else True): 
+				yield autopath, autodata.nopl_points
 
-	def iter_nopl_ticks(self):
-		autopath = cvpj_autoloc(autopath)
-		for autopath in self.data:
-			if self.u_data[autopath].nopl_ticks != None: 
-				yield autopath.split(';'), self.data[autopath].nopl_ticks
+	def iter_nopl_ticks(self, **kwargs):
+		locfilter = kwargs['filter'] if 'filter' in kwargs else []
+		for autopath, autodata in self.data.items():
+			if autodata.u_nopl_ticks != None and (autopath.startswith(locfilter) if locfilter else True): 
+				yield autopath, autodata.nopl_ticks
 
-	def iter_pl_points(self):
-		autopath = cvpj_autoloc(autopath)
-		for autopath in self.data:
-			if self.u_data[autopath].pl_points != None: 
-				yield autopath.split(';'), self.data[autopath].pl_points
-
-
-
-
+	def iter_pl_points(self, **kwargs):
+		locfilter = kwargs['filter'] if 'filter' in kwargs else []
+		for autopath, autodata in self.data.items():
+			if autodata.u_pl_points != None and (autopath.startswith(locfilter) if locfilter else True): 
+				yield autopath, autodata.pl_points
 
 	def get_autopoints(self, autopath):
 		autopath = cvpj_autoloc(autopath)
@@ -470,7 +466,12 @@ class cvpj_automation:
 		else: return False, None
 
 
-
+	def iter_nopl_points_external(self, pluginid):
+		for autoloc, autodata in self.iter_nopl_points(filter=['plugin', pluginid]):
+			paramname = autoloc[-1]
+			if paramname.startswith('ext_param_'):
+				paramnum = int(paramname[10:])
+				yield autoloc, autodata, paramnum
 
 
 

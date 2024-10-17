@@ -21,6 +21,9 @@ import os
 import copy
 import struct
 
+import logging
+logger_output = logging.getLogger('output')
+
 DEBUG_IGNORE_INST = False
 DEBUG_IGNORE_FX = False
 DEBUG_IGNORE_PLACEMENTS = False
@@ -186,16 +189,17 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 	return sampleref_obj
 
 def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
-	wobj = convproj_obj.window_data_get(['plugin', pluginid])
-	vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
-	vstname = os.path.basename(vstpath).split('.')[0]
 	vstid = plugin_obj.datavals_global.get('fourid', 0)
-	vstversion = plugin_obj.datavals_global.get('version_bytes', 0)
 	vstnumparams = plugin_obj.datavals_global.get('numparams', None)
 	vstdatatype = plugin_obj.datavals_global.get('datatype', 'chunk')
-	is_instrument = plugin_obj.role == 'inst'
 
-	if (vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk':
+	if ((vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk') and vstid:
+		wobj = convproj_obj.window_data_get(['plugin', pluginid])
+		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
+		vstname = os.path.basename(vstpath).split('.')[0]
+		vstversion = plugin_obj.datavals_global.get('version_bytes', 0)
+		is_instrument = plugin_obj.role == 'inst'
+
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 		als_device = als_track.DeviceChain.add_device('PluginDevice')
 		do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
@@ -275,73 +279,81 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 				do_param(convproj_obj, plugin_obj.params, cvpj_paramid, param_obj.value, 'float', ['plugin', pluginid, cvpj_paramid], plugparam['ParameterValue'].value, als_track.AutomationEnvelopes)
 				visualnum += 1
 		als_device.params.import_keys(paramkeys)
-	return als_device
+		return als_device
+	else:
+		if not vstid: errmsg = 'no ID found.'
+		elif vstdatatype=='param' and not vstnumparams: errmsg = 'num_params not found'
+		logger_output.warning('VST2 plugin not placed: '+errmsg)
+
 
 def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
-	fx_on, fx_wet = plugin_obj.fxdata_get()
-	als_device = als_track.DeviceChain.add_device('PluginDevice')
-	do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
-	als_device.On.Manual = fx_on
 
-	paramkeys = {}
+	vstid = plugin_obj.datavals_global.get('id', 0)
 
-	paramkeys['PluginDesc'] = ableton_parampart.as_numset('Vst3PluginInfo')
-	pluginfo = paramkeys['PluginDesc']['0/Vst3PluginInfo'] = {}
+	if vstid:
+		fx_on, fx_wet = plugin_obj.fxdata_get()
+		als_device = als_track.DeviceChain.add_device('PluginDevice')
+		do_param(convproj_obj, plugin_obj.params, 'enabled', 1, 'bool', ['slot', pluginid, 'enabled'], als_device.On, als_track.AutomationEnvelopes)
+		als_device.On.Manual = fx_on
 
-	wobj = convproj_obj.window_data_get(['plugin', pluginid])
-	vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
-	vstname = plugin_obj.datavals.get('name', 0)
-	vstid = plugin_obj.datavals.get('id', 0)
-	is_instrument = plugin_obj.role == 'inst'
+		paramkeys = {}
+		paramkeys['PluginDesc'] = ableton_parampart.as_numset('Vst3PluginInfo')
+		pluginfo = paramkeys['PluginDesc']['0/Vst3PluginInfo'] = {}
+		wobj = convproj_obj.window_data_get(['plugin', pluginid])
+		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
+		vstname = plugin_obj.datavals_global.get('name', 0)
+		is_instrument = plugin_obj.role == 'inst'
 
-	Fields = [int(vstid[0:8], 16), int(vstid[8:16], 16), int(vstid[16:24], 16), int(vstid[24:32], 16)]
-	devicetype = 1 if is_instrument else 2
+		Fields = [int(vstid[0:8], 16), int(vstid[8:16], 16), int(vstid[16:24], 16), int(vstid[24:32], 16)]
+		devicetype = 1 if is_instrument else 2
 
-	pluginfo['Preset'] = ableton_parampart.as_numset('VstPreset')
-	pluginfo['WinPosX'] = ableton_parampart.as_value('WinPosX', wobj.pos_x)
-	pluginfo['WinPosY'] = ableton_parampart.as_value('WinPosY', wobj.pos_y)
+		pluginfo['Preset'] = ableton_parampart.as_numset('VstPreset')
+		pluginfo['WinPosX'] = ableton_parampart.as_value('WinPosX', wobj.pos_x)
+		pluginfo['WinPosY'] = ableton_parampart.as_value('WinPosY', wobj.pos_y)
 
-	vstpreset = pluginfo['Preset']['0/Vst3Preset'] = {}
-	vstpreset['IsOn'] = ableton_parampart.as_bool('IsOn', True)
-	vstpreset['ParameterSettings'] = ableton_parampart.as_numset('ParameterSettings')
-	vstpreset['PowerMacroControlIndex'] = ableton_parampart.as_value('PowerMacroControlIndex', -1)
-	vstpreset['PowerMacroMappingRange/Min'] = ableton_parampart.as_value('Min', 64)
-	vstpreset['PowerMacroMappingRange/Max'] = ableton_parampart.as_value('Max', 127)
-	vstpreset['IsFolded'] = ableton_parampart.as_bool('IsFolded', True)
-	vstpreset['StoredAllParameters'] = ableton_parampart.as_bool('StoredAllParameters', False)
-	vstpreset['DeviceLomId'] = ableton_parampart.as_value('DeviceLomId', 0)
-	vstpreset['DeviceViewLomId'] = ableton_parampart.as_value('DeviceViewLomId', 0)
-	vstpreset['IsOnLomId'] = ableton_parampart.as_value('IsOnLomId', 0)
-	vstpreset['ParametersListWrapperLomId'] = ableton_parampart.as_value('ParametersListWrapperLomId', 0)
-	vstpreset['Uid/Fields.0'] = ableton_parampart.as_value('Fields.0', Fields[0])
-	vstpreset['Uid/Fields.1'] = ableton_parampart.as_value('Fields.1', Fields[1])
-	vstpreset['Uid/Fields.2'] = ableton_parampart.as_value('Fields.2', Fields[2])
-	vstpreset['Uid/Fields.3'] = ableton_parampart.as_value('Fields.3', Fields[3])
-	vstpreset['DeviceType'] = ableton_parampart.as_value('DeviceType', devicetype)
+		vstpreset = pluginfo['Preset']['0/Vst3Preset'] = {}
+		vstpreset['IsOn'] = ableton_parampart.as_bool('IsOn', True)
+		vstpreset['ParameterSettings'] = ableton_parampart.as_numset('ParameterSettings')
+		vstpreset['PowerMacroControlIndex'] = ableton_parampart.as_value('PowerMacroControlIndex', -1)
+		vstpreset['PowerMacroMappingRange/Min'] = ableton_parampart.as_value('Min', 64)
+		vstpreset['PowerMacroMappingRange/Max'] = ableton_parampart.as_value('Max', 127)
+		vstpreset['IsFolded'] = ableton_parampart.as_bool('IsFolded', True)
+		vstpreset['StoredAllParameters'] = ableton_parampart.as_bool('StoredAllParameters', False)
+		vstpreset['DeviceLomId'] = ableton_parampart.as_value('DeviceLomId', 0)
+		vstpreset['DeviceViewLomId'] = ableton_parampart.as_value('DeviceViewLomId', 0)
+		vstpreset['IsOnLomId'] = ableton_parampart.as_value('IsOnLomId', 0)
+		vstpreset['ParametersListWrapperLomId'] = ableton_parampart.as_value('ParametersListWrapperLomId', 0)
+		vstpreset['Uid/Fields.0'] = ableton_parampart.as_value('Fields.0', Fields[0])
+		vstpreset['Uid/Fields.1'] = ableton_parampart.as_value('Fields.1', Fields[1])
+		vstpreset['Uid/Fields.2'] = ableton_parampart.as_value('Fields.2', Fields[2])
+		vstpreset['Uid/Fields.3'] = ableton_parampart.as_value('Fields.3', Fields[3])
+		vstpreset['DeviceType'] = ableton_parampart.as_value('DeviceType', devicetype)
 
-	vstpreset['ProcessorState'] = ableton_parampart.as_buffer('ProcessorState', plugin_obj.rawdata_get('chunk'))
-	pluginfo['Name'] = ableton_parampart.as_value('Name', vstname)
-	pluginfo['Uid/Fields.0'] = ableton_parampart.as_value('Fields.0', Fields[0])
-	pluginfo['Uid/Fields.1'] = ableton_parampart.as_value('Fields.1', Fields[1])
-	pluginfo['Uid/Fields.2'] = ableton_parampart.as_value('Fields.2', Fields[2])
-	pluginfo['Uid/Fields.3'] = ableton_parampart.as_value('Fields.3', Fields[3])
-	pluginfo['DeviceType'] = ableton_parampart.as_value('DeviceType', devicetype)
+		vstpreset['ProcessorState'] = ableton_parampart.as_buffer('ProcessorState', plugin_obj.rawdata_get('chunk'))
+		pluginfo['Name'] = ableton_parampart.as_value('Name', vstname)
+		pluginfo['Uid/Fields.0'] = ableton_parampart.as_value('Fields.0', Fields[0])
+		pluginfo['Uid/Fields.1'] = ableton_parampart.as_value('Fields.1', Fields[1])
+		pluginfo['Uid/Fields.2'] = ableton_parampart.as_value('Fields.2', Fields[2])
+		pluginfo['Uid/Fields.3'] = ableton_parampart.as_value('Fields.3', Fields[3])
+		pluginfo['DeviceType'] = ableton_parampart.as_value('DeviceType', devicetype)
 	
-	paramkeys['ParameterList'] = ableton_parampart.as_numset('PluginFloatParameter')
-	visualnum = 0
-	for cvpj_paramid in plugin_obj.params.list():
-		if cvpj_paramid.startswith('ext_param_'):
-			plugparam = paramkeys['ParameterList'][str(visualnum)+'/PluginFloatParameter'] = {}
-			paramnum = int(cvpj_paramid[10:])
-			param_obj = plugin_obj.params.get(cvpj_paramid, 0)
-			plugparam['ParameterName'] = ableton_parampart.as_value('ParameterName', param_obj.visual.name)
-			plugparam['ParameterId'] = ableton_parampart.as_value('ParameterId', paramnum)
-			plugparam['VisualIndex'] = ableton_parampart.as_value('VisualIndex', visualnum)
-			plugparam['ParameterValue'] = ableton_parampart.as_param('ParameterValue', 'float', int(param_obj.value))
-			do_param(convproj_obj, plugin_obj.params, cvpj_paramid, param_obj.value, 'float', ['plugin', pluginid, cvpj_paramid], plugparam['ParameterValue'].value, als_track.AutomationEnvelopes)
-			visualnum += 1
-	als_device.params.import_keys(paramkeys)
-	return als_device
+		paramkeys['ParameterList'] = ableton_parampart.as_numset('PluginFloatParameter')
+		visualnum = 0
+		for cvpj_paramid in plugin_obj.params.list():
+			if cvpj_paramid.startswith('ext_param_'):
+				plugparam = paramkeys['ParameterList'][str(visualnum)+'/PluginFloatParameter'] = {}
+				paramnum = int(cvpj_paramid[10:])
+				param_obj = plugin_obj.params.get(cvpj_paramid, 0)
+				plugparam['ParameterName'] = ableton_parampart.as_value('ParameterName', param_obj.visual.name)
+				plugparam['ParameterId'] = ableton_parampart.as_value('ParameterId', paramnum)
+				plugparam['VisualIndex'] = ableton_parampart.as_value('VisualIndex', visualnum)
+				plugparam['ParameterValue'] = ableton_parampart.as_param('ParameterValue', 'float', int(param_obj.value))
+				do_param(convproj_obj, plugin_obj.params, cvpj_paramid, param_obj.value, 'float', ['plugin', pluginid, cvpj_paramid], plugparam['ParameterValue'].value, als_track.AutomationEnvelopes)
+				visualnum += 1
+		als_device.params.import_keys(paramkeys)
+		return als_device
+	else:
+		logger_output.warning('VST3 plugin not placed: no ID found.')
 
 def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 	fx_on, fx_wet = plugin_obj.fxdata_get()
@@ -1046,7 +1058,7 @@ class output_ableton(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp', 'rate']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
-		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['fxtype'] = 'groupreturn'

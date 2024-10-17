@@ -15,6 +15,9 @@ from functions import data_values
 from functions import colors
 from functions import xtramath
 
+import logging
+logger_output = logging.getLogger('output')
+
 base_sampler = {'filename': '', 'volume': 1.0, 'pan': 0.5, 'min_vol_gain': 0.0, 'key_start': 0.0, 'key_end': 1.0, 'pitch_start': 0.06875, 'pitch_end': 0.86875, 'midi_chan': 0.0, 'voices': 4.0, 'env_attack': 0.0005, 'env_release': 0.0005, 'obey_note_offs': 0.0, 'loop_on': 0.0, 'start': 0.0, 'end': 1.0, 'pitch_offset': 0.5, 'mode': 2, '__unk17': 0.0, '__unk18': 1.0, 'cache_sample_size': 64, 'pitch_bend': 0.16666666666666666, 'resample_mode': -1, 'vel_max': 0.007874015748031496, 'vel_min': 1.0, 'prob_hitting': 1.0, 'round_robin': 0.0, 'filter_played': 0.0, 'xfade': 0.0, 'loop_start': 0.0, 'env_decay': 0.016010673782521682, 'env_sustain': 1.0, 'note_off_release_override': 0.00025, 'note_off_release_override__enabled': 0.0, 'legacy_voice_reuse': 0.0, 'porta': 0.0}
 
 def make_sampler(rpp_fxchain, sampler_params):
@@ -57,6 +60,10 @@ def do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj):
 			sampler_params['env_decay'] = adsr_obj.decay/15
 			sampler_params['env_sustain'] = adsr_obj.sustain
 			sampler_params['env_release'] = adsr_obj.release/2
+
+def add_auto(rpp_env, autopoints_obj):
+	for x in autopoints_obj:
+		rpp_env.points.append([x.pos_real, x.value])
 
 def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
@@ -101,76 +108,100 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
 			vst_fx_fourid = plugin_obj.datavals_global.get('fourid', 0)
-			vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-			vst_fx_datatype = plugin_obj.datavals_global.get('datatype', None)
-			vst_fx_numparams = plugin_obj.datavals_global.get('numparams', 0)
+			if vst_fx_fourid:
+				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
+				vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
+				vst_fx_datatype = plugin_obj.datavals_global.get('datatype', None)
+				vst_fx_numparams = plugin_obj.datavals_global.get('numparams', 0)
 
-			rpp_vst_obj.vst_name = plugin_obj.datavals_global.get('basename', '')
-			if not rpp_vst_obj.vst_name: plugin_obj.datavals_global.get('name', '')
+				rpp_vst_obj.vst_name = plugin_obj.datavals_global.get('basename', '')
+				if not rpp_vst_obj.vst_name: plugin_obj.datavals_global.get('name', '')
 
-			rpp_vst_obj.vst_lib = os.path.basename(vst_fx_path)
-			rpp_vst_obj.vst_fourid = vst_fx_fourid
+				rpp_vst_obj.vst_lib = os.path.basename(vst_fx_path)
+				rpp_vst_obj.vst_fourid = vst_fx_fourid
 
-			vstparamsnum = 0
-			vstparams = None
+				vstparamsnum = 0
+				vstparams = None
 		
-			if vst_fx_datatype == 'chunk': 
-				vstparams = plugin_obj.rawdata_get('chunk')
-				vstparamsnum = len(vstparams)
-			if vst_fx_datatype == 'param': 
-				floatdata = []
-				for num in range(vst_fx_numparams):
-					floatdata.append(float(plugin_obj.params.get('vst_param_'+str(num), 0).value))
-				vstparams = struct.pack('f'*vst_fx_numparams, *floatdata)
-				vstparamsnum = len(vstparams)
+				if vst_fx_datatype == 'chunk': 
+					vstparams = plugin_obj.rawdata_get('chunk')
+					vstparamsnum = len(vstparams)
+				if vst_fx_datatype == 'param': 
+					floatdata = []
+					for num in range(vst_fx_numparams):
+						floatdata.append(float(plugin_obj.params.get('vst_param_'+str(num), 0).value))
+					vstparams = struct.pack('f'*vst_fx_numparams, *floatdata)
+					vstparamsnum = len(vstparams)
 
-			vstheader_ints = (vst_fx_fourid, 4276969198,0,2,1,0,2,0,vstparamsnum,1,1048576)
+				vstheader_ints = (vst_fx_fourid, 4276969198,0,2,1,0,2,0,vstparamsnum,1,1048576)
 
-			rpp_vst_obj.data_con = struct.pack('IIIIIIIIIII', *vstheader_ints)
-			if vstparams: rpp_vst_obj.data_chunk = vstparams
-			rpp_plug_obj.bypass['bypass'] = not fx_on
-			rpp_plug_obj.wet['wet'] = fx_wet
-			if fx_wet != 1: rpp_plug_obj.wet.used = True
+				rpp_vst_obj.data_con = struct.pack('IIIIIIIIIII', *vstheader_ints)
+				if vstparams: rpp_vst_obj.data_chunk = vstparams
+				rpp_plug_obj.bypass['bypass'] = not fx_on
+				rpp_plug_obj.wet['wet'] = fx_wet
+				if fx_wet != 1: rpp_plug_obj.wet.used = True
+
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+					parmenv_obj = rpp_plug_obj.add_env()
+					parmenv_obj.param_id = paramnum
+					add_auto(parmenv_obj, autodata)
+			else:
+				logger_output.warning('VST2 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
-			vst_fx_name = plugin_obj.datavals_global.get('name', None)
-			vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-			vst_fx_version = plugin_obj.datavals_global.get('version', None)
 			vst_fx_id = plugin_obj.datavals_global.get('id', 0)
+			if vst_fx_id:
+				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
+				vst_fx_name = plugin_obj.datavals_global.get('name', None)
+				vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
+				vst_fx_version = plugin_obj.datavals_global.get('version', None)
 
-			chunkdata = plugin_obj.rawdata_get('chunk')
-			vstparams = struct.pack('II', len(chunkdata), 1)+chunkdata+b'\x00\x00\x00\x00\x00\x00\x00\x00'
-			vstheader = b':\xfbA+\xee^\xed\xfe'
-			vstheader += struct.pack('II', 0, plugin_obj.audioports.num_outputs)
-			for n in range(plugin_obj.audioports.num_outputs): 
-				if n < len(plugin_obj.audioports.ports): vstheader += data_bytes.set_bitnums(plugin_obj.audioports.ports[n], 8)
-				else: vstheader += b'\x00\x00\x00\x00\x00\x00\x00\x00'
-			vstheader_end = (len(chunkdata)+16).to_bytes(4, 'little')+b'\x01\x00\x00\x00\xff\xff\x10\x00'
+				chunkdata = plugin_obj.rawdata_get('chunk')
+				vstparams = struct.pack('II', len(chunkdata), 1)+chunkdata+b'\x00\x00\x00\x00\x00\x00\x00\x00'
+				vstheader = b':\xfbA+\xee^\xed\xfe'
+				vstheader += struct.pack('II', 0, plugin_obj.audioports.num_outputs)
+				for n in range(plugin_obj.audioports.num_outputs): 
+					if n < len(plugin_obj.audioports.ports): vstheader += data_bytes.set_bitnums(plugin_obj.audioports.ports[n], 8)
+					else: vstheader += b'\x00\x00\x00\x00\x00\x00\x00\x00'
+				vstheader_end = (len(chunkdata)+16).to_bytes(4, 'little')+b'\x01\x00\x00\x00\xff\xff\x10\x00'
 
-			rpp_vst_obj.vst_fourid = 0
-			rpp_vst_obj.vst3_uuid = vst_fx_id
-			rpp_vst_obj.data_con = vstheader+vstheader_end
-			rpp_vst_obj.data_chunk = vstparams
-			rpp_plug_obj.bypass['bypass'] = not fx_on
-			rpp_plug_obj.wet['wet'] = fx_wet
-			if fx_wet != 1: rpp_plug_obj.wet.used = True
+				rpp_vst_obj.vst_fourid = 0
+				rpp_vst_obj.vst3_uuid = vst_fx_id
+				rpp_vst_obj.data_con = vstheader+vstheader_end
+				rpp_vst_obj.data_chunk = vstparams
+				rpp_plug_obj.bypass['bypass'] = not fx_on
+				rpp_plug_obj.wet['wet'] = fx_wet
+				if fx_wet != 1: rpp_plug_obj.wet.used = True
+
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+					parmenv_obj = rpp_plug_obj.add_env()
+					parmenv_obj.param_id = paramnum
+					add_auto(parmenv_obj, autodata)
+			else:
+				logger_output.warning('VST3 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'clap', None):
-			rpp_plug_obj, rpp_clap_obj, rpp_guid = rpp_fxchain.add_clap()
-			clap_fx_name = plugin_obj.visual.name
 			clap_fx_id = plugin_obj.datavals_global.get('id', '')
+			if clap_fx_id:
+				rpp_plug_obj, rpp_clap_obj, rpp_guid = rpp_fxchain.add_clap()
+				clap_fx_name = plugin_obj.visual.name
+	
+				chunkdata = plugin_obj.rawdata_get('chunk')
+				rpp_clap_obj.data_chunk = chunkdata
+				rpp_clap_obj.clap_name = clap_fx_name
+				rpp_clap_obj.clap_id = clap_fx_id
+	
+				rpp_plug_obj.bypass['bypass'] = not fx_on
+				rpp_plug_obj.wet['wet'] = fx_wet
+				if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-			chunkdata = plugin_obj.rawdata_get('chunk')
-			rpp_clap_obj.data_chunk = chunkdata
-			rpp_clap_obj.clap_name = clap_fx_name
-			rpp_clap_obj.clap_id = clap_fx_id
-
-			rpp_plug_obj.bypass['bypass'] = not fx_on
-			rpp_plug_obj.wet['wet'] = fx_wet
-			if fx_wet != 1: rpp_plug_obj.wet.used = True
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+					parmenv_obj = rpp_plug_obj.add_env()
+					parmenv_obj.param_id = paramnum
+					add_auto(parmenv_obj, autodata)
+			else:
+				logger_output.warning('CLAP plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'jesusonic', None):
 			rpp_plug_obj, rpp_js_obj, rpp_guid = rpp_fxchain.add_js()

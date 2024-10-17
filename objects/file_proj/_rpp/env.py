@@ -12,7 +12,7 @@ class rpp_env:
 		self.used = False
 		self.points = []
 		self.eguid = rvs(0, str, False)
-		self.act = rvd([0,-1], None, None, True)
+		self.act = rvd([0,-1], ['bypass', 'unknown'], None, True)
 		self.vis = rvd([1,1,1], None, None, True)
 		self.laneheight = rvd([0,0], None, None, True)
 		self.arm = rvs(0, float, False)

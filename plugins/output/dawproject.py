@@ -570,7 +570,17 @@ class output_dawproject(plugins.base):
 				marker.time = timemarker_obj.position
 				markers.append(marker)
 
-		#project_obj.save_to_file(output_file)
+		if bool(convproj_obj.timesig_auto):
+
+			dp_timesig = project_obj.arrangement.timesignatureautomation = points.dawproject_points_timesig()
+			dp_timesig.id = 'main__timesig'
+
+			for pos, value in convproj_obj.timesig_auto.iter():
+				point_obj = points.dawproject_timesigpoint()
+				point_obj.time = pos
+				point_obj.numerator = value[0]
+				point_obj.denominator = value[1]
+				dp_timesig.points.append(point_obj)
 
 		dp_obj = project_obj.metadata
 		meta_obj = convproj_obj.metadata

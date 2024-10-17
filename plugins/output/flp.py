@@ -70,6 +70,7 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
 	else:
 		fl_channel_obj.params.stretchingtime = int((sampleref_obj.dur_sec*384)/sre_obj.stretch.calc_tempo_speed) if sampleref_obj else 1
+		if fl_channel_obj.params.stretchingtime < 0: fl_channel_obj.params.stretchingtime = 384
 
 	return sre_obj.stretch.calc_tempo_speed
 
@@ -333,6 +334,7 @@ class output_cvpjs(plugins.base):
 	
 						if pl_obj.time.cut_type == 'cut':
 							fl_clip_obj.startoffset = int(pl_obj.time.cut_start)
+							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0
 							fl_clip_obj.endoffset += int(pl_obj.time.cut_start)
 						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
 						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
@@ -358,6 +360,7 @@ class output_cvpjs(plugins.base):
 							stretchrate = samplestretch[pl_obj.fromindex]
 							fl_clip_obj.startoffset = (startat*stretchrate)*4
 							fl_clip_obj.endoffset = (endat*stretchrate)*4
+							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0
 	
 						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
 						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)

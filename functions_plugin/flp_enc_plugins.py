@@ -213,7 +213,7 @@ def setparams(convproj_obj, plugin_obj):
 		isvalid = True
 		if vst_fourid:
 			if vst_name or vst_path:
-				if vst_datatype in ['chunk', 'params']:
+				if vst_datatype in ['chunk', 'param']:
 					isvalid = True
 				else:
 					logger_output.warning('VST2 plugin not placed: unknown datatype:', vst_datatype)

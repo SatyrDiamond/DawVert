@@ -30,9 +30,9 @@ class dawproject_realparameter:
 		self.parameterID = None
 		self.id = None
 		self.name = None
-		self.max = None
-		self.min = None
-		self.unit = None
+		self.max = 1
+		self.min = 0
+		self.unit = "normalized" 
 		self.value = None
 
 	def read(self, xml_data):

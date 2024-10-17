@@ -67,21 +67,22 @@ class ableton_Grid:
 	__slots__ = ['name','FixedNumerator','FixedDenominator','GridIntervalPixel','Ntoles','SnapToGrid','Fixed']
 	def __init__(self, xmltag, name):
 		self.name = name
+		self.FixedNumerator = 1
+		self.FixedDenominator = 16
+		self.GridIntervalPixel = 20
+		self.Ntoles = 2
+		self.SnapToGrid = True
+		self.Fixed = False
 		if xmltag:
-			x_Grid = xmltag.findall(name)[0]
-			self.FixedNumerator = int(get_value(x_Grid, 'FixedNumerator', 1))
-			self.FixedDenominator = int(get_value(x_Grid, 'FixedDenominator', 16))
-			self.GridIntervalPixel = int(get_value(x_Grid, 'GridIntervalPixel', 20))
-			self.Ntoles = int(get_value(x_Grid, 'Ntoles', 2))
-			self.SnapToGrid = get_bool(x_Grid, 'SnapToGrid', True)
-			self.Fixed = get_bool(x_Grid, 'Fixed', True)
-		else:
-			self.FixedNumerator = 1
-			self.FixedDenominator = 16
-			self.GridIntervalPixel = 20
-			self.Ntoles = 2
-			self.SnapToGrid = True
-			self.Fixed = False
+			x_Grid = xmltag.findall(name)
+			if x_Grid:
+				x_Grid = x_Grid[0]
+				self.FixedNumerator = int(get_value(x_Grid, 'FixedNumerator', 1))
+				self.FixedDenominator = int(get_value(x_Grid, 'FixedDenominator', 16))
+				self.GridIntervalPixel = int(get_value(x_Grid, 'GridIntervalPixel', 20))
+				self.Ntoles = int(get_value(x_Grid, 'Ntoles', 2))
+				self.SnapToGrid = get_bool(x_Grid, 'SnapToGrid', True)
+				self.Fixed = get_bool(x_Grid, 'Fixed', True)
 
 	def write(self, xmltag):
 		x_Grid = ET.SubElement(xmltag, self.name)
@@ -95,29 +96,31 @@ class ableton_Grid:
 class ableton_FollowAction:
 	__slots__ = ['FollowTime','IsLinked','LoopIterations','FollowActionA','FollowActionB','FollowChanceA','FollowChanceB','JumpIndexA','JumpIndexB','FollowActionEnabled']
 	def __init__(self, xmltag):
+		self.FollowTime = 4
+		self.IsLinked = True
+		self.LoopIterations = 1
+		self.FollowActionA = 4
+		self.FollowActionB = 0
+		self.FollowChanceA = 100
+		self.FollowChanceB = 0
+		self.JumpIndexA = 0
+		self.JumpIndexB = 0
+		self.FollowActionEnabled = False
+
 		if xmltag:
-			x_FollowAction = xmltag.findall('FollowAction')[0]
-			self.FollowTime = int(get_value(x_FollowAction, 'FollowTime', 4))
-			self.IsLinked = get_bool(x_FollowAction, 'IsLinked', True)
-			self.LoopIterations = int(get_value(x_FollowAction, 'LoopIterations', 1))
-			self.FollowActionA = int(get_value(x_FollowAction, 'FollowActionA', 4))
-			self.FollowActionB = int(get_value(x_FollowAction, 'FollowActionB', 0))
-			self.FollowChanceA = int(get_value(x_FollowAction, 'FollowChanceA', 100))
-			self.FollowChanceB = int(get_value(x_FollowAction, 'FollowChanceB', 0))
-			self.JumpIndexA = int(get_value(x_FollowAction, 'JumpIndexA', 1))
-			self.JumpIndexB = int(get_value(x_FollowAction, 'JumpIndexB', 1))
-			self.FollowActionEnabled = get_bool(x_FollowAction, 'FollowActionEnabled', False)
-		else:
-			self.FollowTime = 4
-			self.IsLinked = True
-			self.LoopIterations = 1
-			self.FollowActionA = 4
-			self.FollowActionB = 0
-			self.FollowChanceA = 100
-			self.FollowChanceB = 0
-			self.JumpIndexA = 0
-			self.JumpIndexB = 0
-			self.FollowActionEnabled = False
+			x_FollowAction = xmltag.findall('FollowAction')
+			if x_FollowAction:
+				x_FollowAction = x_FollowAction[0]
+				self.FollowTime = int(get_value(x_FollowAction, 'FollowTime', 4))
+				self.IsLinked = get_bool(x_FollowAction, 'IsLinked', True)
+				self.LoopIterations = int(get_value(x_FollowAction, 'LoopIterations', 1))
+				self.FollowActionA = int(get_value(x_FollowAction, 'FollowActionA', 4))
+				self.FollowActionB = int(get_value(x_FollowAction, 'FollowActionB', 0))
+				self.FollowChanceA = int(get_value(x_FollowAction, 'FollowChanceA', 100))
+				self.FollowChanceB = int(get_value(x_FollowAction, 'FollowChanceB', 0))
+				self.JumpIndexA = int(get_value(x_FollowAction, 'JumpIndexA', 1))
+				self.JumpIndexB = int(get_value(x_FollowAction, 'JumpIndexB', 1))
+				self.FollowActionEnabled = get_bool(x_FollowAction, 'FollowActionEnabled', False)
 
 	def write(self, xmltag):
 		x_FollowAction = ET.SubElement(xmltag, "FollowAction")
@@ -151,13 +154,14 @@ class ableton_TimeSelection:
 class ableton_ScaleInformation:
 	__slots__ = ['RootNote','Name']
 	def __init__(self, xmltag):
+		self.RootNote = 0
+		self.Name = 'Major'
 		if xmltag:
-			x_ScaleInformation = xmltag.findall('ScaleInformation')[0]
-			self.RootNote = float(get_value(x_ScaleInformation, 'RootNote', 0))
-			self.Name = get_value(x_ScaleInformation, 'Name', '')
-		else:
-			self.RootNote = 0
-			self.Name = 'Major'
+			x_ScaleInformation = xmltag.findall('ScaleInformation')
+			if x_ScaleInformation:
+				x_ScaleInformation = x_ScaleInformation[0]
+				self.RootNote = float(get_value(x_ScaleInformation, 'RootNote', 0))
+				self.Name = get_value(x_ScaleInformation, 'Name', '')
 
 	def write(self, xmltag):
 		x_ScaleInformation = ET.SubElement(xmltag, "ScaleInformation")

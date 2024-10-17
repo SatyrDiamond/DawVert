@@ -20,7 +20,8 @@ class ableton_MainSequencer:
 		self.IsExpanded = get_bool(xmltag, 'IsExpanded', True)
 		self.On = ableton_Param(xmltag, 'On', 'bool')
 		self.ModulationSourceCount = int(get_value(xmltag, 'ModulationSourceCount', 0))
-		self.Pointee = int(xmltag.findall('Pointee')[0].get('Id') if xmltag else proj_ableton.counter_unused_id.get())
+		self.Pointee = get_pointee(xmltag, proj_ableton.counter_unused_id)
+
 		self.LastSelectedTimeableIndex = int(get_value(xmltag, 'LastSelectedTimeableIndex', 0))
 		self.LastSelectedClipEnvelopeIndex = int(get_value(xmltag, 'LastSelectedClipEnvelopeIndex', 0))
 		self.IsFolded = get_bool(xmltag, 'IsFolded', False)
@@ -216,7 +217,7 @@ class ableton_Mixer:
 		self.IsExpanded = get_bool(xmltag, 'IsExpanded', True)
 		self.On = ableton_Param(xmltag, 'On', 'bool')
 		self.ModulationSourceCount = int(get_value(xmltag, 'ModulationSourceCount', 0))
-		self.Pointee = int(xmltag.findall('Pointee')[0].get('Id') if xmltag else 0)
+		self.Pointee = get_pointee(xmltag, None)
 		self.LastSelectedTimeableIndex = int(get_value(xmltag, 'LastSelectedTimeableIndex', 0))
 		self.LastSelectedClipEnvelopeIndex = int(get_value(xmltag, 'LastSelectedClipEnvelopeIndex', 0))
 		self.IsFolded = get_bool(xmltag, 'IsFolded', False)
@@ -422,13 +423,14 @@ class ableton_Name:
 
 class ableton_TakeLanes:
 	def __init__(self, xmltag):
+		self.AreTakeLanesFolded = True
+		self.TakeLanes = {}
 		if xmltag:
-			x_TakeLanes = xmltag.findall('TakeLanes')[0]
-			self.AreTakeLanesFolded = get_bool(x_TakeLanes, 'AreTakeLanesFolded', False)
-			self.TakeLanes = get_list(x_TakeLanes, 'TakeLanes', 'TakeLane', ableton_TakeLane)
-		else:
-			self.AreTakeLanesFolded = True
-			self.TakeLanes = {}
+			takelanes = xmltag.findall('TakeLanes')
+			if takelanes:
+				x_TakeLanes = takelanes[0]
+				self.AreTakeLanesFolded = get_bool(x_TakeLanes, 'AreTakeLanesFolded', False)
+				self.TakeLanes = get_list(x_TakeLanes, 'TakeLanes', 'TakeLane', ableton_TakeLane)
 
 	def write(self, xmltag):
 		x_TakeLanes = ET.SubElement(xmltag, "TakeLanes")
@@ -460,7 +462,7 @@ class ableton_MidiTrack:
 		self.PreferredContentViewMode = int(get_value(xmltag, 'PreferredContentViewMode', 0))
 		self.TrackDelay = ableton_TrackDelay(xmltag)
 		self.Name = ableton_Name(xmltag)
-		self.Color = int(get_value(xmltag, 'Color', 0))
+		self.Color = int(get_value_multi(xmltag, ['Color', 'ColorIndex'], 0))
 		self.AutomationEnvelopes = ableton_AutomationEnvelopes(xmltag)
 
 		self.TrackGroupId = int(get_value(xmltag, 'TrackGroupId', -1))
@@ -521,7 +523,7 @@ class ableton_AudioTrack:
 		self.PreferredContentViewMode = int(get_value(xmltag, 'PreferredContentViewMode', 0))
 		self.TrackDelay = ableton_TrackDelay(xmltag)
 		self.Name = ableton_Name(xmltag)
-		self.Color = int(get_value(xmltag, 'Color', 0))
+		self.Color = int(get_value_multi(xmltag, ['Color', 'ColorIndex'], 0))
 		self.AutomationEnvelopes = ableton_AutomationEnvelopes(xmltag)
 
 		self.TrackGroupId = int(get_value(xmltag, 'TrackGroupId', -1))
@@ -579,7 +581,7 @@ class ableton_GroupTrack:
 		self.PreferredContentViewMode = int(get_value(xmltag, 'PreferredContentViewMode', 0))
 		self.TrackDelay = ableton_TrackDelay(xmltag)
 		self.Name = ableton_Name(xmltag)
-		self.Color = int(get_value(xmltag, 'Color', 0))
+		self.Color = int(get_value_multi(xmltag, ['Color', 'ColorIndex'], 0))
 		self.AutomationEnvelopes = ableton_AutomationEnvelopes(xmltag)
 
 		self.TrackGroupId = int(get_value(xmltag, 'TrackGroupId', -1))
@@ -627,7 +629,7 @@ class ableton_ReturnTrack:
 		self.PreferredContentViewMode = int(get_value(xmltag, 'PreferredContentViewMode', 0))
 		self.TrackDelay = ableton_TrackDelay(xmltag)
 		self.Name = ableton_Name(xmltag)
-		self.Color = int(get_value(xmltag, 'Color', 0))
+		self.Color = int(get_value_multi(xmltag, ['Color', 'ColorIndex'], 0))
 		self.AutomationEnvelopes = ableton_AutomationEnvelopes(xmltag)
 
 		self.TrackGroupId = int(get_value(xmltag, 'TrackGroupId', -1))
@@ -666,7 +668,7 @@ class ableton_MasterTrack:
 		self.PreferredContentViewMode = int(get_value(xmltag, 'PreferredContentViewMode', 0))
 		self.TrackDelay = ableton_TrackDelay(xmltag)
 		self.Name = ableton_Name(xmltag)
-		self.Color = int(get_value(xmltag, 'Color', 13))
+		self.Color = int(get_value_multi(xmltag, ['Color', 'ColorIndex'], 13))
 		self.AutomationEnvelopes = ableton_AutomationEnvelopes(xmltag)
 		self.TrackGroupId = int(get_value(xmltag, 'TrackGroupId', -1))
 		self.TrackUnfolded = get_bool(xmltag, 'TrackUnfolded', False)
@@ -706,7 +708,7 @@ class ableton_PreHearTrack:
 		self.PreferredContentViewMode = int(get_value(xmltag, 'PreferredContentViewMode', 0))
 		self.TrackDelay = ableton_TrackDelay(xmltag)
 		self.Name = ableton_Name(xmltag)
-		self.Color = int(get_value(xmltag, 'Color', -1))
+		self.Color = int(get_value_multi(xmltag, ['Color', 'ColorIndex'], -1))
 		self.TrackGroupId = int(get_value(xmltag, 'TrackGroupId', -1))
 		self.TrackUnfolded = get_bool(xmltag, 'TrackUnfolded', False)
 

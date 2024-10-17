@@ -129,24 +129,25 @@ class ableton_Notes:
 class ableton_x_MidiNoteEvent:
 	__slots__ = ['Time','Duration','Velocity','VelocityDeviation','OffVelocity','Probability','IsEnabled','NoteId']
 	def __init__(self, xmltag):
+		self.VelocityDeviation = 0
+		self.Time = 1.25
+		self.Duration = 0.75
+		self.Velocity = 100
+		self.OffVelocity = 64
+		self.Probability = 1
+		self.IsEnabled = True
+		self.NoteId = 0
 		if xmltag != None:
+			VelocityDeviation = xmltag.get('VelocityDeviation')
+			Probability = xmltag.get('Probability')
 			self.Time = float(xmltag.get('Time'))
 			self.Duration = float(xmltag.get('Duration'))
 			self.Velocity = float(xmltag.get('Velocity'))
-			self.VelocityDeviation = float(xmltag.get('VelocityDeviation'))
+			if VelocityDeviation != None: self.VelocityDeviation = float(VelocityDeviation)
+			if Probability != None: self.Probability = float(Probability)
 			self.OffVelocity = int(xmltag.get('OffVelocity'))
-			self.Probability = int(xmltag.get('Probability'))
 			self.IsEnabled = bool(['false','true'].index(xmltag.get('IsEnabled')))
 			self.NoteId = int(xmltag.get('NoteId'))
-		else:
-			self.Time = 1.25
-			self.Duration = 0.75
-			self.Velocity = 100
-			self.VelocityDeviation = 0
-			self.OffVelocity = 64
-			self.Probability = 1
-			self.IsEnabled = True
-			self.NoteId = 0
 
 	def write(self, xmltag):
 		x_MidiNoteEvent = ET.SubElement(xmltag, "MidiNoteEvent")

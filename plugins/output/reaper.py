@@ -278,6 +278,7 @@ class output_reaper(plugins.base):
 		in_dict['fxtype'] = 'track'
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
+		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
@@ -324,6 +325,9 @@ class output_reaper(plugins.base):
 			rpp_track_obj.volpan['pan'] = track_obj.params.get('pan', 0).value
 
 			middlenote = track_obj.datavals.get('middlenote', 0)
+
+			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			rpp_track_obj.fxchain = rpp_fxchain.rpp_fxchain()
 

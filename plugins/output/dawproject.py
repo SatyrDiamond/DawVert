@@ -322,14 +322,14 @@ def do_extparams(param_obj, pluginid, convproj_obj, lane_obj, dp_device):
 		if paramnum not in extparams:
 			dp_realparam = device.dawproject_realparameter()
 			dp_realparam.parameterID = paramnum
-			dp_realparam.id = 'plugin__'+pluginid+'__param__'+str(paramnum)
+			dp_realparam.id = 'plugin__'+pluginid+'__param__ext_param_'+str(paramnum)
 			dp_device.realparameter.append(dp_realparam)
 		else:
 			dp_realparam = extparams[paramnum]
 
 		dppoints_obj = points.dawproject_points()
 		dppoints_obj.target = points.dawproject_pointtarget()
-		dppoints_obj.target.parameter = 'plugin__'+pluginid+'__param__'+str(paramnum)
+		dppoints_obj.target.parameter = 'plugin__'+pluginid+'__param__ext_param_'+str(paramnum)
 		do_autopoints(autodata, dppoints_obj)
 		lane_obj.points.append(dppoints_obj)
 

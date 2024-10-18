@@ -434,18 +434,18 @@ class output_wavtool(plugins.base):
 								wavtool_clip.warp = warpdata
 								wavtool_clip.transpose = audiopl_obj.sample.pitch
 
-						#else:
-						#	warpdata = {}
-						#	warpdata['sourceBPM'] = 120
-						#	warpdata['anchors'] = {}
-						#	warpdata['enabled'] = True
-#
-						#	for warppoint in audiopl_obj.sample.stretch.warp:
-						#		wt_warp_pos = (warppoint[0]/4)
-						#		wt_warp_pos_real = (warppoint[1])*2
-						#		warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}
-#
-						#	wavtool_clip.warp = warpdata
+						else:
+							warpdata = {}
+							warpdata['sourceBPM'] = 120
+							warpdata['anchors'] = {}
+							warpdata['enabled'] = True
+
+							for warp_point_obj in audiopl_obj.sample.stretch.iter_warp_points():
+								wt_warp_pos = (warp_point_obj.beat)
+								wt_warp_pos_real = (warp_point_obj.second)*2
+								warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}
+
+							wavtool_clip.warp = warpdata
 
 						wavtool_track.clips.append(wavtool_clip)
 

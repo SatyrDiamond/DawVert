@@ -193,6 +193,8 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 	vstnumparams = plugin_obj.datavals_global.get('numparams', None)
 	vstdatatype = plugin_obj.datavals_global.get('datatype', 'chunk')
 
+	visname = plugin_obj.datavals_global.get('name', '')
+
 	if ((vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk') and vstid:
 		wobj = convproj_obj.window_data_get(['plugin', pluginid])
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
@@ -281,7 +283,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 		als_device.params.import_keys(paramkeys)
 		return als_device
 	else:
-		if not vstid: errmsg = 'no ID found.'
+		if not vstid: errmsg = 'no ID '+('for "'+visname+'" found.' if visname else "found.")
 		elif vstdatatype=='param' and not vstnumparams: errmsg = 'num_params not found'
 		logger_output.warning('VST2 plugin not placed: '+errmsg)
 

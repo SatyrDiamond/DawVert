@@ -676,6 +676,10 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					als_samplepart.KeyRange.CrossfadeMin = key_l+60
 					als_samplepart.KeyRange.CrossfadeMax = key_h+60
 					als_samplepart.RootKey = key_r+60
+					als_samplepart.VelocityRange.Min = int(samplepart_obj.vel_min*127)
+					als_samplepart.VelocityRange.Max = int(samplepart_obj.vel_max*127)
+					als_samplepart.VelocityRange.CrossfadeMin = als_samplepart.VelocityRange.Min
+					als_samplepart.VelocityRange.CrossfadeMax = als_samplepart.VelocityRange.Max
 
 					pitchd = samplepart_obj.pitch
 					TransposeKey = round(pitchd)

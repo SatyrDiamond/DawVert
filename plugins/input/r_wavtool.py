@@ -40,6 +40,8 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 		trackdevices = []
 		TrackMIDIReceiver = None
 
+		inst_fallback = None
+
 		for deviceid, devicedata in device_track.items():
 			if devicedata.type == 'PortalOut':
 				if 'portalType' in devicedata.data:
@@ -105,9 +107,11 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					if filtertype == 'Notch': plugin_obj.filter.type.set('notch', None)
 
 					plugin_obj.datavals.add('matrix', matrix)
+					inst_fallback = deviceid
 
 				elif devicedata.sourceId == 'd694ef91-e624-404d-8e34-829d9c1c04b3':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'synth-osc', None)
+					inst_fallback = deviceid
 					instrument_dev = deviceid
 					osc_data = plugin_obj.osc_add()
 					osc_data.prop.shape = 'saw'
@@ -122,6 +126,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 				elif devicedata.sourceId == 'c2fc1730-9cc9-4643-bb54-9435a920c927':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'sampler', 'multi')
+					inst_fallback = deviceid
 					plugin_obj.role = 'synth'
 					instrument_dev = deviceid
 
@@ -158,6 +163,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 							sp_obj.pitch = inputdata["pitch"+endstr] if "pitch"+endstr in inputdata else 0
 
 				elif devicedata.sourceId == 'c4888b49-3a72-4b0a-bd4a-a06e9937000a':
+					inst_fallback = deviceid
 					if 'sample1All' in constantsdata:
 						bufferid = constantsdata['sample1All']
 						wave_path = extract_audio(bufferid)
@@ -175,6 +181,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						
 				elif devicedata.sourceId == '84345e98-f3a7-43b2-b2f2-61bf7c475248':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'sampler', 'multi')
+					inst_fallback = deviceid
 
 					LoudVel = constantsdata["LoudVelocity"] if "LoudVelocity" in constantsdata else 127
 					MedLoudVel = constantsdata["MedLoudVelocity"] if "MedLoudVelocity" in constantsdata else 85
@@ -204,10 +211,12 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 									vr = range_vel[velnum]
 									wave_path = extract_audio(bufferid)
 									sampleref_obj = convproj_obj.add_sampleref(bufferid, wave_path, None)
-									sp_obj = plugin_obj.sampleregion_add(kr[0]-60, kr[1]-60, range_base[keynum]-60, None)
+									sp_obj = plugin_obj.sampleregion_add(kr[0]-60, kr[1]-60, range_base[keynum]-60, None, samplepartid=deviceid+'_'+samplel)
 									sp_obj.vel_min = vr[0]/127
 									sp_obj.vel_max = vr[1]/127
-									sp_obj.sampleref = wave_path
+									sp_obj.sampleref = bufferid
+
+
 
 				elif devicedata.sourceId == 'bc24f717-88d0-4a99-b0ac-b61d4281c7c3':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'limiter', None)
@@ -356,6 +365,9 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						logger_input.info('FX Device: '+d_in)
 				else:
 					break
+
+		if not track_obj.inst_pluginid: 
+			track_obj.inst_pluginid = inst_fallback
 
 class input_wavtool(plugins.base):
 	def __init__(self): pass

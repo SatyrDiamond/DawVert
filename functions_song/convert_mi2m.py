@@ -1,86 +1,67 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
+import logging
 
-def convert(song, extra_json):
-    print('[song-convert] Converting from MultipleIndexed > Multiple')
-    cvpj_proj = json.loads(song)
-    t_s_playlist = cvpj_proj['playlist']
+logger_project = logging.getLogger('project')
 
-    if 'notelistindex' in cvpj_proj:
-        t_s_notelistindex = cvpj_proj['notelistindex']
-        unused_notelistindex = list(t_s_notelistindex)
-        for pl_row in t_s_playlist:
-            pl_row_data = t_s_playlist[pl_row]
-            if 'placements_notes' in pl_row_data:
-                pl_row_placements = pl_row_data['placements_notes']
-                for pldata in pl_row_placements:
-                    if 'fromindex' in pldata:
-                        fromindex = pldata['fromindex']
-                        if fromindex in t_s_notelistindex:
-                            index_pl_data = t_s_notelistindex[fromindex]
-                            if fromindex in unused_notelistindex:
-                                unused_notelistindex.remove(fromindex)
-                            del pldata['fromindex']
-                            if 'notelist' in index_pl_data:
-                                pldata['notelist'] = index_pl_data['notelist']
-                                if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
-                                if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
+def convert(convproj_obj, dv_config):
+	logger_project.info('ProjType Convert: MultipleIndexed > Multiple')
 
-        del cvpj_proj['notelistindex']
-        print('[song-convert] Unused NotelistIndexes:', ', '.join(unused_notelistindex))
+	do_unused = 'mi2m-output-unused-nle' in dv_config.flags_convproj
 
-        output_unused_patterns = False
-        if 'mi2m-output-unused-nle' in extra_json:
-            output_unused_patterns = extra_json['mi2m-output-unused-nle']
+	nle_list = [x for x in convproj_obj.notelist_index]
+	used_nle = []
 
-        if output_unused_patterns == True:
-            unusedplrowfound = None
-            plrow = 300
-            while unusedplrowfound == None:
-                if str(plrow) not in t_s_playlist: unusedplrowfound = True
-                else: unusedplrowfound = str(plrow)
-                plrow += 1
-                if plrow == 2000: break
-            if unusedplrowfound != None:
-                tracks.m_playlist_pl(cvpj_proj, unusedplrowfound, '__UNUSED__', None, None)
+	for pl_id, playlist_obj in convproj_obj.iter_playlist():
+		used_nle += [x.fromindex for x in playlist_obj.placements.pl_notes_indexed.data]
 
-                unused_placement_data_pos = 0
-                for unused_notelistindex_e in unused_notelistindex:
-                    unused_placement_data = {}
-                    unused_placement_data = unused_placement_data | t_s_notelistindex[unused_notelistindex_e]
-                    unused_placement_data['position'] = unused_placement_data_pos
-                    unused_placement_data_dur = notelist_data.getduration(unused_placement_data['notelist'])
-                    unused_placement_data['duration'] = unused_placement_data_dur
-                    unused_placement_data['muted'] = True
-                    unused_placement_data_pos += unused_placement_data_dur
-                    tracks.m_playlist_pl_add(cvpj_proj, unusedplrowfound, unused_placement_data)
+	unused_nle = list(set(nle_list))
 
-    else:
-        print('[song-convert] notelistindex not found.')
+	for x in used_nle:
+		if x in unused_nle: unused_nle.remove(x)
 
+	if do_unused:
+		pl_obj_found = None
+		maxdur = convproj_obj.get_dur()
 
-    if 'sampleindex' in cvpj_proj:
-        t_s_samplesindex = cvpj_proj['sampleindex']
-        for pl_row in t_s_playlist:
-            pl_row_data = t_s_playlist[pl_row]
-            if 'placements_audio' in pl_row_data:
-                pl_row_placements = pl_row_data['placements_audio']
-                for pldata in pl_row_placements:
-                    if 'fromindex' in pldata:
-                        fromindex = pldata['fromindex']
-                        if fromindex in t_s_samplesindex:
-                            index_pl_data = t_s_samplesindex[fromindex]
-                            del pldata['fromindex']
-                            if 'name' in index_pl_data: pldata['name'] = index_pl_data['name']
-                            if 'color' in index_pl_data: pldata['color'] = index_pl_data['color']
-                            if 'pan' in index_pl_data: pldata['pan'] = index_pl_data['pan']
-                            if 'vol' in index_pl_data: pldata['vol'] = index_pl_data['vol']
-                            if 'file' in index_pl_data: pldata['file'] = index_pl_data['file']
-                            if 'audiomod' in index_pl_data: pldata['audiomod'] = index_pl_data['audiomod']
-                            if 'fxrack_channel' in index_pl_data: pldata['fxrack_channel'] = index_pl_data['fxrack_channel']
-        del cvpj_proj['sampleindex']
+		for pl_id, playlist_obj in convproj_obj.iter_playlist():
+			if not playlist_obj.placements.get_dur():
+				pl_obj_found = playlist_obj
+				break
 
+		usednums = list(convproj_obj.playlist) 
 
-    return json.dumps(cvpj_proj)
+		num = 0
+		while True:
+			if num not in usednums:
+				pl_obj_found = convproj_obj.add_playlist(num, 1, True)
+				pl_obj_found.visual.name = '>>> UNUSED'
+				break
+			num += 1
+
+		startpos = maxdur
+		for x in unused_nle:
+			nle_obj = convproj_obj.notelist_index[x]
+			nledur = nle_obj.notelist.get_dur()
+			if nle_obj.visual.name: nle_obj.visual.name = '[UNUSED] '+nle_obj.visual.name
+			else: nle_obj.visual.name = '[UNUSED]'
+
+			if nledur:
+				startpos += convproj_obj.time_ppq*4
+
+				i_pl = pl_obj_found.placements.add_notes_indexed()
+				i_pl.fromindex = x
+				i_pl.time.set_posdur(startpos, nledur)
+
+				startpos += nledur
+
+	for pl_id, playlist_obj in convproj_obj.iter_playlist():
+		playlist_obj.placements.unindex_notes(convproj_obj.notelist_index)
+		playlist_obj.placements.unindex_audio(convproj_obj.sample_index)
+
+	convproj_obj.notelist_index = {}
+	convproj_obj.sample_index = {}
+
+	convproj_obj.type = 'm'

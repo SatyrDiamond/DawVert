@@ -1,0 +1,218 @@
+
+[limiter]
+>input
+	type|universal:limiter
+	param|ceiling
+	param|gain
+	param|release
+	param|release_auto
+<input
+
+>proc
+	calc|Release|mul|1000
+<proc
+
+>output
+	type|native:ableton:Limiter
+	param|Ceiling<ceiling
+	param|Gain<gain
+	param|Release<release
+	param|AutoRelease<release_auto
+<output
+
+[bitcrush]
+>input
+	type|universal:bitcrush
+	param|bits
+	param|freq
+	wet|mix
+<input
+
+>output
+	type|native:ableton:Redux2
+	param|BitDepth<bits
+	param|SampleRate<freq
+	param|DryWet<mix
+<output
+
+[compressor]
+>input
+	type|universal:compressor
+	param|threshold
+	param|ratio
+	param|attack
+	param|release
+	param|postgain
+	param|knee
+	wet|DryWet
+<input
+
+>proc
+	calc|threshold|mul|-1
+	calc|threshold|pow_r|0.8913
+	calc|attack|mul|1000
+	calc|release|mul|1000
+	calc|knee|div|6
+<proc
+
+>output
+	type|native:ableton:Compressor2
+	param|Threshold<threshold
+	param|Ratio<ratio
+	param|Attack<attack
+	param|Release<release
+	param|Gain<postgain
+	param|Knee<knee
+	param|DryWet
+<output
+
+[expander]
+>input
+	type|universal:expander
+	param|threshold
+	param|ratio
+	param|attack
+	param|release
+	param|postgain
+	param|knee
+	wet|DryWet
+<input
+
+>proc
+	calc|threshold|mul|-1
+	calc|threshold|pow_r|0.8913
+	calc|attack|mul|1000
+	calc|release|mul|1000
+	calc|knee|div|6
+<proc
+
+>output
+	type|native:ableton:Compressor2
+	param|Threshold<threshold
+	param|ExpansionRatio<ratio
+	param|Attack<attack
+	param|Release<release
+	param|Gain<postgain
+	param|Knee<knee
+	param|DryWet
+	param|Model%2
+<output
+
+[gate]
+>input
+	type|universal:gate
+	param|attack
+	param|hold
+	param|release
+	param|threshold
+	param|flip
+	param|return
+<input
+
+>proc
+	calc|threshold|mul|-1
+	calc|threshold|pow_r|0.8913
+	calc|attack|mul|1000
+	calc|release|mul|1000
+	calc|hold|mul|1000
+	calc|return|mul|1000
+<proc
+
+>output
+	type|native:ableton:Gate
+	param|Attack<attack
+	param|Hold<hold
+	param|Release<release
+	param|Threshold<threshold
+	param|FlipMode<flip
+	param|Return<return
+<output
+
+[gate]
+>input
+	type|universal:gate
+	param|attack
+	param|hold
+	param|release
+	param|threshold
+	param|flip
+	param|return
+<input
+
+>proc
+	calc|threshold|mul|-1
+	calc|threshold|pow_r|0.8913
+	calc|attack|mul|1000
+	calc|release|mul|1000
+	calc|hold|mul|1000
+	calc|return|mul|1000
+<proc
+
+>output
+	type|native:ableton:Gate
+	param|Attack<attack
+	param|Hold<hold
+	param|Release<release
+	param|Threshold<threshold
+	param|FlipMode<flip
+	param|Return<return
+<output
+
+[vibrato]
+>input
+	type|universal:vibrato
+	param|freq
+	param|depth
+<input
+
+>proc
+	calc|depth|div|2
+<proc
+
+>output
+	type|native:ableton:Chorus2
+	param|Mode%2
+	param|Width%1
+	param|OutputGain%1
+	param|DryWet%1
+	param|Rate<freq
+	param|Amount<depth
+<output
+
+[tremolo]
+>input
+	type|universal:tremolo
+	param|freq
+	param|depth
+<input
+
+>output
+	type|native:ableton:AutoPan
+	param|Lfo/IsOn&1
+	param|Lfo/Frequency<freq
+	param|Lfo/LfoAmount<depth
+<output
+
+[volpan]
+>input
+	type|universal:volpan
+	param|pan
+	param|vol
+<input
+
+>output
+	type|native:ableton:StereoGain
+	param|Balance<pan
+	param|LegacyGain%0.0
+	param|BassMono&0
+	param|BassMonoFrequency%120.0
+	param|ChannelMode%1.0
+	param|DcFilter&0
+	param|Gain<vol
+	param|MidSideBalance%1.0
+	param|Mono&0
+	param|Mute&0
+	param|PhaseInvertL&0
+	param|PhaseInvertR&0
+	param|StereoWidth%1.0
+<output

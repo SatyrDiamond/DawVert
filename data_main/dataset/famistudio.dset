@@ -1,0 +1,206 @@
+{
+    "chip": {
+        "objects": {
+            "DPCM": {
+                "visual": {
+                    "color": [
+                        0.48,
+                        0.83,
+                        0.49
+                    ],
+                    "name": "DPCM"
+                }
+            },
+            "EPSMFM": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM FM"
+                }
+            },
+            "EPSMSquare": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM Square"
+                }
+            },
+            "EPSM_Cymbal": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM Cymbal"
+                }
+            },
+            "EPSM_HiHat": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM HiHat"
+                }
+            },
+            "EPSM_Kick": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM Kick"
+                }
+            },
+            "EPSM_Rimshot": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM Rimshot"
+                }
+            },
+            "EPSM_Snare": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM Snare"
+                }
+            },
+            "EPSM_Tom": {
+                "visual": {
+                    "color": [
+                        0.84,
+                        0.84,
+                        0.84
+                    ],
+                    "name": "EPSM Tom"
+                }
+            },
+            "FDS": {
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.94,
+                        0.65
+                    ],
+                    "name": "FDS"
+                }
+            },
+            "MMC5": {
+                "visual": {
+                    "color": [
+                        0.65,
+                        0.34,
+                        0.84
+                    ],
+                    "name": "MMC5"
+                }
+            },
+            "N163": {
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.97,
+                        0.36
+                    ],
+                    "name": "Namco 163"
+                }
+            },
+            "Noise": {
+                "visual": {
+                    "color": [
+                        0.33,
+                        0.74,
+                        0.9
+                    ],
+                    "name": "Noise"
+                }
+            },
+            "S5B": {
+                "visual": {
+                    "color": [
+                        0.58,
+                        0.94,
+                        0.33
+                    ],
+                    "name": "Sunsoft 5B"
+                }
+            },
+            "Square1": {
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.56,
+                        0.36
+                    ],
+                    "name": "Square"
+                }
+            },
+            "Square2": {
+                "visual": {
+                    "color": [
+                        0.97,
+                        0.56,
+                        0.36
+                    ],
+                    "name": "Square"
+                }
+            },
+            "Triangle": {
+                "visual": {
+                    "color": [
+                        0.94,
+                        0.33,
+                        0.58
+                    ],
+                    "name": "Triangle"
+                }
+            },
+            "VRC6Saw": {
+                "visual": {
+                    "color": [
+                        0.46,
+                        0.52,
+                        0.91
+                    ],
+                    "name": "VRC6 Saw"
+                }
+            },
+            "VRC6Square": {
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.44,
+                        0.93
+                    ],
+                    "name": "VRC6 Square"
+                }
+            },
+            "VRC7FM": {
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.46,
+                        0.44
+                    ],
+                    "name": "VRC7 FM"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,145 @@
+
+[vst2_sid]
+>input
+	type|native:lmms:sid
+	param|attack0
+	param|attack1
+	param|attack2
+	param|filterFC
+	param|decay0
+	param|decay1
+	param|decay2
+	param|filtered0
+	param|filtered1
+	param|filtered2
+	param|filterMode
+	param|voice3Off
+	param|pulsewidth0
+	param|pulsewidth1
+	param|pulsewidth2
+	param|release0
+	param|release1
+	param|release2
+	param|filterResonance
+	param|ringmod0
+	param|ringmod1
+	param|ringmod2
+	param|sustain0
+	param|sustain1
+	param|sustain2
+	param|sync0
+	param|sync1
+	param|sync2
+	param|coarse0
+	param|coarse1
+	param|coarse2
+	param|volume
+	param|waveform0
+	param|waveform1
+	param|waveform2
+<input
+
+>proc
+	calc|coarse0|add|12
+	calc|coarse1|add|12
+	calc|coarse2|add|12
+	out_store|a1|attack0
+	out_store|a2|attack1
+	out_store|a3|attack2
+	out_store|cutoff|filterFC
+	out_store|d1|decay0
+	out_store|d2|decay1
+	out_store|d3|decay2
+	out_store|f1|filtered0
+	out_store|f2|filtered1
+	out_store|f3|filtered2
+	out_store|filterMode|filterMode
+	out_store|output3|voice3Off
+	out_store|pw1|pulsewidth0
+	out_store|pw2|pulsewidth1
+	out_store|pw3|pulsewidth2
+	out_store|r1|release0
+	out_store|r2|release1
+	out_store|r3|release2
+	out_store|reso|filterResonance
+	out_store|ring1|ringmod0
+	out_store|ring2|ringmod1
+	out_store|ring3|ringmod2
+	out_store|s1|sustain0
+	out_store|s2|sustain1
+	out_store|s3|sustain2
+	out_store|sync1|sync0
+	out_store|sync2|sync1
+	out_store|sync3|sync2
+	out_store|tune1|coarse0
+	out_store|tune2|coarse1
+	out_store|tune3|coarse2
+	out_store|vol|volume
+	out_store|w1|waveform0
+	out_store|w2|waveform1
+	out_store|w3|waveform2
+<proc
+
+>output
+	type|external:vst2
+<output
+
+[kickmess]
+>input
+	type|native:lmms:kicker
+	param|startfreq
+	param|endfreq
+	param|decay
+	param|dist
+	param|distend
+	param|gain
+	param|env
+	param|slope
+	param|noise
+	param|click
+	param|startnote
+	param|endnote
+<input
+
+>proc
+	calc|dist|div|100
+	calc|distend|div|100
+	calc|gain|div|2
+	calc|gain|clamp|0|1
+<proc
+
+>output
+	type|user:weirdconstructor:kickmess
+	param|freq_start<startfreq
+	param|freq_end<endfreq
+	param|f_env_release<decay
+	param|dist_start<dist
+	param|dist_end<distend
+	param|gain<gain
+	param|env_slope<env
+	param|freq_slope<slope
+	param|noise<noise
+	param|phase_offs<click
+	param|startnote<startnote
+	param|endnote<endnote
+<output
+
+[castello_reverbsc]
+>input
+	type|native:lmms:reverbsc
+	param|size
+	param|color
+<input
+
+>proc
+	calc|color|div|15000
+	out_store|size|size
+	out_store|color|color
+<proc
+
+>output
+	type|user:lucianoiam:castello
+	param|mix%1
+	param|size<size
+	param|brightness<color
+<output

@@ -1,0 +1,493 @@
+
+[nf_vst2_fruity_blood_overdrive]
+>input
+	type|native:flstudio:fruity blood overdrive
+	param|preband
+	param|color
+	param|preamp
+	param|x100
+	param|postfilter
+	param|postgain
+<input
+
+>proc
+	calc|preband|div|10000
+	calc|color|div|10000
+	calc|preamp|div|10000
+	calc|postfilter|div|10000
+	calc|postgain|div|10000
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<preband
+	name| PreBand
+	param|ext_param_1<color
+	name|  Color
+	param|ext_param_2<preamp
+	name|  PreAmp
+	param|ext_param_3<x100
+	name|  x 100
+	param|ext_param_4<postfilter
+	name|PostFilter
+	param|ext_param_5<postgain
+	name| PostGain
+<output
+
+[vst2_fruity_blood_overdrive]
+>input
+	type|native:flstudio:fruity blood overdrive
+	param|preband
+	param|preamp
+	param|postfilter
+	param|postgain
+<input
+
+>proc
+	calc|preband|div|10000
+	calc|preamp|div|10000
+	calc|postfilter|div|10000
+	calc|postgain|div|10000
+	calc|preamp|pow|0.5
+	calc|preamp|from_one|0.2|0.8
+	calc|postfilter|div|4
+<proc
+
+>output
+	type|user:airwindows:Density
+	param|density<preamp
+	param|highpass<postfilter
+	param|output%1.0
+	param|dry_wet%1.0
+<output
+
+[vst2_fruity_dx10]
+>input
+	type|native:flstudio:fruity dx10
+	param|amp_att
+	param|amp_dec
+	param|amp_rel
+	param|mod_course
+	param|mod_fine
+	param|mod_init
+	param|mod_time
+	param|mod_sus
+	param|mod_rel
+	param|velsen
+	param|vibrato
+	param|octave
+	param|waveform
+	param|mod_thru
+	param|lforate
+<input
+
+>proc
+	calc|amp_att|div|65536
+	calc|amp_dec|div|65536
+	calc|amp_rel|div|65536
+	calc|mod_course|div|65536
+	calc|mod_fine|div|65536
+	calc|mod_init|div|65536
+	calc|mod_time|div|65536
+	calc|mod_sus|div|65536
+	calc|mod_rel|div|65536
+	calc|velsen|div|65536
+	calc|vibrato|div|65536
+	calc|waveform|div|65536
+	calc|mod_thru|div|65536
+	calc|lforate|div|65536
+	calc|octave|addmul|2|0.2
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<amp_att
+	param|ext_param_1<amp_dec
+	param|ext_param_2<amp_rel
+	param|ext_param_3<mod_course
+	param|ext_param_4<mod_fine
+	param|ext_param_5<mod_init
+	param|ext_param_6<mod_time
+	param|ext_param_7<mod_sus
+	param|ext_param_8<mod_rel
+	param|ext_param_9<velsen
+	param|ext_param_10<vibrato
+	param|ext_param_11<octave
+	param|ext_param_12%0.5
+	name|FineTune
+	param|ext_param_13<waveform
+	param|ext_param_14<mod_thru
+	param|ext_param_15<lforate
+<output
+
+[vst2_fruity_phaser]
+>input
+	type|native:flstudio:fruity phaser
+	param|sweep_freq
+	param|depth_min
+	param|depth_max
+	param|freq_range
+	param|stereo
+	param|num_stages
+	param|feedback
+	param|drywet
+	param|gain
+<input
+
+>proc
+	calc|sweep_freq|div|5000
+	calc|depth_min|div|1000
+	calc|depth_max|div|1000
+	calc|freq_range|div|1024
+	calc|stereo|div|1024
+	calc|num_stages|div|22
+	calc|feedback|div|1000
+	calc|drywet|div|1024
+	calc|gain|div|5000
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0%0.0
+	name|attack
+	param|ext_param_1%0.0
+	name|release
+	param|ext_param_2%0.0
+	name|min env
+	param|ext_param_3%0.0
+	name|max env
+	param|ext_param_4%0.0
+	name|env-lfo mixture
+	param|ext_param_5<sweep_freq
+	name|sweep freq.
+	param|ext_param_6<depth_min
+	name|min. depth
+	param|ext_param_7<depth_max
+	name|max. depth
+	param|ext_param_8<freq_range
+	name|freq. range
+	param|ext_param_9<stereo
+	name|stereo
+	param|ext_param_10<num_stages
+	name|nr. stages
+	param|ext_param_11%0.0
+	name|distortion
+	param|ext_param_12<feedback
+	name|feedback
+	param|ext_param_13<drywet
+	name|dry-wet
+	param|ext_param_14<gain
+	name|out gain
+	param|ext_param_15%0.0
+	name|invert
+<output
+
+[vst2_fruit_kick]
+>input
+	type|native:flstudio:fruit kick
+	param|max_freq
+	param|min_freq
+	param|decay_freq
+	param|decay_vol
+	param|osc_click
+	param|osc_dist
+<input
+
+>proc
+	calc|max_freq|div|100
+	calc|max_freq|add|12
+	calc|max_freq|note2freq
+	calc|min_freq|div|100
+	calc|min_freq|add|-36
+	calc|min_freq|note2freq
+	calc|decay_freq|div|256
+	calc|decay_freq|pow|2
+	calc|decay_vol|div|256
+	calc|osc_click|div|64
+	calc|osc_dist|div|1280
+<proc
+
+>output
+	type|user:weirdconstructor:kickmess
+	param|freq_start<max_freq
+	param|freq_end<min_freq
+	param|freq_slope<decay_freq
+	param|env_slope<decay_vol
+	param|phase_offs<osc_click
+	param|dist_start<osc_dist
+	param|dist_end<osc_dist
+<output
+
+[vst2_fruity_bass_boost]
+>input
+	type|native:flstudio:fruity bass boost
+	param|freq
+	param|amount
+<input
+
+>proc
+	calc|freq|div|1280
+	calc|amount|div|1280
+<proc
+
+>output
+	type|user:airwindows:Weight
+	param|freq<freq
+	param|weight<amount
+<output
+
+[fruity_spectroman__socalabs]
+>input
+	type|native:flstudio:fruity spectroman
+	param|outputmode
+<input
+
+>output
+	type|user:socalabs:spectrumanalyzer
+	param|mode<outputmode
+<output
+
+[fruity_stereo_enhancer__socalabs]
+>input
+	type|native:flstudio:fruity waveshaper
+	param|preamp
+	param|wet
+	param|postgain
+	param|bipolarmode
+	param|removedc
+<input
+
+>proc
+	calc|preamp|div|128
+	calc|preamp|addmul|-0.5|2
+	calc|wet|div|128
+	calc|postgain|div|128
+<proc
+
+>output
+	type|user:wolf-plugins:wolfshaper
+	param|pregain<preamp
+	param|wet<wet
+	param|postgain<postgain
+	param|removedc<removedc
+<output
+
+[vst2_fruity_stereo_enhancer]
+>input
+	type|native:flstudio:fruity stereo enhancer
+	param|stereo
+	param|pan
+	param|vol
+<input
+
+>proc
+	calc|stereo|div|256
+	calc|stereo|add|0.5
+	calc|pan|div|128
+	calc|vol|div|640
+	calc|pan|to_one|-1|1
+<proc
+
+>output
+	type|user:socalabs:stereoprocessor
+	param|width1%0.5
+	param|center1<stereo
+	param|pan1%0.0
+	param|rotation%0.5
+	param|pan2<pan
+	param|center2%0.5
+	param|width2%0.5
+	param|output<vol
+<output
+
+[vst2_tuner]
+>input
+	type|native:flstudio:tuner
+	param|refrence
+<input
+
+>proc
+	calc|refrence|div|6000
+	calc|refrence|from_one|400|480
+	calc|refrence|to_one|420|460
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<refrence
+	name|Tune
+<output
+
+[vst2_fruity_fast_dist_type2]
+>input
+	type|native:flstudio:fruity fast dist
+	param|threshold
+	param|mix
+	param|post
+<input
+
+>proc
+	calc|threshold|div|10
+	calc|mix|div|128
+	calc|post|div|128
+	calc|mix|from_one|1|0
+	calc|post|div|2
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<threshold
+	name|Drive
+	param|ext_param_1<mix
+	name|Muffle
+	param|ext_param_2<post
+	name|Output
+<output
+
+[vst2_fruity_fast_dist_type1]
+>input
+	type|native:flstudio:fruity fast dist
+	param|threshold
+	param|post
+<input
+
+>proc
+	calc|threshold|div|10
+	calc|post|div|128
+	calc|threshold|mul|0.44
+	calc|post|mul|0.4
+<proc
+
+>output
+	type|user:airwindows:Mackity
+	param|in_trim<threshold
+	param|out_pad<post
+<output
+
+[vst2_fl_keys_piano]
+>input
+	type|native:flstudio:fl keys
+	param|decay
+	param|detune
+	param|fine
+	param|hardness
+	param|hardness_from_vel
+	param|lfo
+	param|muffle
+	param|muffle_from_vel
+	param|overdrive
+	param|pan
+	param|release
+	param|stereo
+	param|stretch
+	param|treble
+	param|vel_sens
+<input
+
+>proc
+	calc|decay|to_one|-1000|1000
+	calc|release|to_one|-1000|1000
+	calc|hardness|to_one|-1000|1000
+	calc|hardness_from_vel|to_one|-1000|1000
+	calc|muffle|to_one|-1000|1000
+	calc|muffle_from_vel|to_one|0|2000
+	calc|vel_sens|to_one|-1000|1000
+	calc|stereo|to_one|0|2000
+	calc|fine|to_one|-500|500
+	calc|detune|to_one|0|500
+	calc|stretch|to_one|-500|500
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<decay
+	name|Envelope Decay
+	param|ext_param_1<release
+	name|Envelope Release
+	param|ext_param_2<hardness
+	name|Hardness Offset
+	param|ext_param_3<hardness_from_vel
+	name|Velocity to Hardness
+	param|ext_param_4<muffle
+	name|Muffling Filter
+	param|ext_param_5<muffle_from_vel
+	name|Velocity to Muffling
+	param|ext_param_6<vel_sens
+	name|Velocity Sensitivity
+	param|ext_param_7<stereo
+	name|Stereo Width
+	param|ext_param_8%1.0
+	name|Polyphony
+	param|ext_param_9<fine
+	name|Fine Tuning
+	param|ext_param_10<detune
+	name|Random Detuning
+	param|ext_param_11<stretch
+	name|Stretch Tuning
+<output
+
+[vst2_fl_keys_epiano]
+>input
+	type|native:flstudio:fl keys
+	param|decay
+	param|detune
+	param|fine
+	param|hardness
+	param|hardness_from_vel
+	param|lfo
+	param|muffle
+	param|muffle_from_vel
+	param|overdrive
+	param|pan
+	param|release
+	param|stereo
+	param|stretch
+	param|treble
+	param|vel_sens
+<input
+
+>proc
+	calc|decay|to_one|-1000|1000
+	calc|release|to_one|-1000|1000
+	calc|hardness|to_one|-1000|1000
+	calc|hardness_from_vel|to_one|-1000|1000
+	calc|muffle|to_one|-1000|1000
+	calc|muffle_from_vel|to_one|0|2000
+	calc|vel_sens|to_one|-1000|1000
+	calc|stereo|to_one|0|2000
+	calc|fine|to_one|-500|500
+	calc|detune|to_one|0|500
+	calc|stretch|to_one|-500|500
+	calc|treble|to_one|-1000|1000
+	calc|pan|to_one|-1000|1000
+	calc|overdrive|to_one|-1000|1000
+	calc|lfo|to_one|0|70000
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<decay
+	name|Envelope Decay
+	param|ext_param_1<release
+	name|Envelope Release
+	param|ext_param_2<hardness
+	name|Hardness Offset
+	param|ext_param_3<treble
+	name|Treble Boost
+	param|ext_param_4<pan
+	name|Modulation
+	param|ext_param_5<lfo
+	name|LFO Rate
+	param|ext_param_6<vel_sens
+	name|Velocity Sensitivity
+	param|ext_param_7<stereo
+	name|Stereo Width
+	param|ext_param_8%1.0
+	name|Polyphony
+	param|ext_param_9<fine
+	name|Fine Tuning
+	param|ext_param_10<detune
+	name|Random Detuning
+	param|ext_param_11<overdrive
+	name|Overdrive
+<output

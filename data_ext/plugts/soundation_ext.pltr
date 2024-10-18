@@ -1,0 +1,21 @@
+
+[tremolo_airwindows]
+>input
+	type|native:soundation:com.soundation.tremolo
+	param|depth
+	param|phase
+	param|speed
+<input
+
+>proc
+	calc|speed|pow|0.8
+	calc|phase|div|2
+<proc
+
+>output
+	type|user:airwindows:AutoPan
+	param|rate<speed
+	param|phase<phase
+	param|wide%0
+	param|dry_wet<depth
+<output

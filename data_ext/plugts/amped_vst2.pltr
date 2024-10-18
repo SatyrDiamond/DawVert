@@ -1,0 +1,39 @@
+
+[vst2_reverb]
+>input
+	type|native:amped:Reverb
+	param|fb
+	param|lpf
+	param|mix
+<input
+
+>proc
+	calc|lpf|div|20000
+	calc|fb|pow|2
+<proc
+
+>output
+	type|user:lucianoiam:castello
+	param|mix<mix
+	param|size<fb
+	param|brightness<lpf
+<output
+
+[vst2_compressormini]
+>input
+	type|native:amped:CompressorMini
+	param|squash
+<input
+
+>proc
+	calc|squash|div|2
+	out_store|squash|squash
+<proc
+
+>output
+	type|user:airwindows:PurestSquish
+	param|squish<squash
+	param|bassblm%0.0
+	param|output%1.0
+	param|dry_wet%1.0
+<output

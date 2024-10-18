@@ -1,0 +1,24 @@
+
+[fruity_stereo_shaper]
+>input
+	type|native:flstudio:fruity stereo shaper
+	param|r2l
+	param|l2l
+	param|r2r
+	param|l2r
+<input
+
+>proc
+	calc|r2l|div|12800
+	calc|l2l|div|12800
+	calc|r2r|div|12800
+	calc|l2r|div|12800
+<proc
+
+>output
+	type|native:lmms:stereomatrix
+	param|l-r<l2r
+	param|r-l<r2l
+	param|r-r<r2r
+	param|l-l<l2l
+<output

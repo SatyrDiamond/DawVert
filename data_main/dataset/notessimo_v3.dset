@@ -1,0 +1,5481 @@
+{
+    "inst": {
+        "groups": {
+            "13fa5152eed0672": {
+                "visual": {
+                    "name": "Miscellaneous"
+                }
+            },
+            "13fefadfeada756": {
+                "visual": {
+                    "name": "Piano"
+                }
+            },
+            "13fefae17715623": {
+                "visual": {
+                    "name": "Chromatic Percussion"
+                }
+            },
+            "13fefae8e3bf2c5": {
+                "visual": {
+                    "name": "Organ"
+                }
+            },
+            "13fefae9c8106d7": {
+                "visual": {
+                    "name": "Guitar"
+                }
+            },
+            "13fefaead755592": {
+                "visual": {
+                    "name": "Bass"
+                }
+            },
+            "13fefaebab36b90": {
+                "visual": {
+                    "name": "Strings"
+                }
+            },
+            "13fefaed4414987": {
+                "visual": {
+                    "name": "Ensemble"
+                }
+            },
+            "13fefaee40bacaf": {
+                "visual": {
+                    "name": "Brass"
+                }
+            },
+            "13fefaef0ef730a": {
+                "visual": {
+                    "name": "Reed"
+                }
+            },
+            "13fefaf08896f96": {
+                "visual": {
+                    "name": "Pipe"
+                }
+            },
+            "13fefaf15baf963": {
+                "visual": {
+                    "name": "Synth Lead"
+                }
+            },
+            "13fefaf2d917d71": {
+                "visual": {
+                    "name": "Synth Pad"
+                }
+            },
+            "13fefaf4541a20a": {
+                "visual": {
+                    "name": "Synth Effects"
+                }
+            },
+            "13fefaf5f19a562": {
+                "visual": {
+                    "name": "Ethnic"
+                }
+            },
+            "13fefaf81a1a3cf": {
+                "visual": {
+                    "name": "Percussive"
+                }
+            },
+            "13fefaf92a6b73f": {
+                "visual": {
+                    "name": "Sound Effects"
+                }
+            },
+            "13fefb03f42cb8f": {
+                "visual": {
+                    "name": "Percussion"
+                }
+            },
+            "1406de351b982bc": {
+                "visual": {
+                    "name": "Video Games"
+                }
+            }
+        },
+        "objects": {
+            "13ea64d959b7961": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.9803921569,
+                        0.8470588235,
+                        0.368627451
+                    ],
+                    "name": "Mushroom"
+                }
+            },
+            "13ea650023451cd": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.6117647059,
+                        0.6392156863,
+                        0.4862745098
+                    ],
+                    "name": "Boat"
+                }
+            },
+            "13ea650ef8016c4": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.5333333333,
+                        0.0823529412,
+                        0.0352941176
+                    ],
+                    "name": "Star"
+                }
+            },
+            "13ea651e6a184c1": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.6392156863,
+                        0.2274509804,
+                        0.4078431373
+                    ],
+                    "name": "Mario"
+                }
+            },
+            "13ea6523abf98ba": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.6235294118,
+                        0.2549019608,
+                        0.8392156863
+                    ],
+                    "name": "Gameboy"
+                }
+            },
+            "13ea65307b87498": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.0039215686,
+                        0.2823529412,
+                        0.9215686275
+                    ],
+                    "name": "Flower"
+                }
+            },
+            "13ea653c50f32ba": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.431372549,
+                        0.9058823529,
+                        0.1921568627
+                    ],
+                    "name": "Bird"
+                }
+            },
+            "13ea65473be42c2": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.4666666667,
+                        0.7058823529,
+                        0.3490196078
+                    ],
+                    "name": "Plane"
+                }
+            },
+            "13ea65508d02e61": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.7607843137,
+                        0.1568627451,
+                        0.3333333333
+                    ],
+                    "name": "Heart"
+                }
+            },
+            "13ea655d3c565ca": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.0196078431,
+                        0.0,
+                        0.5529411765
+                    ],
+                    "name": "Car"
+                }
+            },
+            "13ea656c21c51ff": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.4392156863,
+                        0.568627451,
+                        0.3137254902
+                    ],
+                    "name": "Cat"
+                }
+            },
+            "13ea65735f4e536": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.6666666667,
+                        0.9960784314,
+                        0.0470588235
+                    ],
+                    "name": "Dog"
+                }
+            },
+            "13ea657d6f33b00": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.2980392157,
+                        0.937254902,
+                        0.7019607843
+                    ],
+                    "name": "Human"
+                }
+            },
+            "13ea65897ae708e": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.2039215686,
+                        0.0823529412,
+                        0.4
+                    ],
+                    "name": "Pig"
+                }
+            },
+            "13ea65944fccc3b": {
+                "data": {
+                    "group": "13ea64d7cc9f13e"
+                },
+                "visual": {
+                    "color": [
+                        0.8588235294,
+                        0.0274509804,
+                        0.7019607843
+                    ],
+                    "name": "Yoshi"
+                }
+            },
+            "13fe58b5620ff50": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.7960784314,
+                        0.7137254902,
+                        0.6196078431
+                    ],
+                    "name": "Test"
+                }
+            },
+            "13ffdf25b5b5fac": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 69
+                },
+                "visual": {
+                    "color": [
+                        0.1215686275,
+                        0.4862745098,
+                        0.9882352941
+                    ],
+                    "name": "English Horn"
+                }
+            },
+            "140036d2f84ca37": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true
+                },
+                "visual": {
+                    "color": [
+                        0.4588235294,
+                        0.2196078431,
+                        0.3333333333
+                    ],
+                    "name": "Stereo Grand Mellow"
+                }
+            },
+            "1400beb4ebdff0d": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "+1 Saw Decline"
+                }
+            },
+            "1400bf3a537253f": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true
+                },
+                "visual": {
+                    "color": [
+                        0.4588235294,
+                        0.2196078431,
+                        0.3333333333
+                    ],
+                    "name": "Stereo Grand Bright"
+                }
+            },
+            "1400c30196b3a17": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 4
+                },
+                "visual": {
+                    "color": [
+                        0.7411764706,
+                        0.4823529412,
+                        0.7882352941
+                    ],
+                    "name": "CP-80 EP"
+                }
+            },
+            "1404497beed1043": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.6274509804,
+                        0.7647058824,
+                        0.337254902
+                    ],
+                    "name": "5th Saw Wave"
+                }
+            },
+            "140449e30f9a5fc": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.2470588235,
+                        0.7450980392,
+                        0.6666666667
+                    ],
+                    "name": "+2 Triangle"
+                }
+            },
+            "14044b8f1bd29e5": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.462745098,
+                        0.7607843137,
+                        0.6823529412
+                    ],
+                    "name": "+5 Sine"
+                }
+            },
+            "14044bfc5544e9a": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.8862745098,
+                        0.9607843137,
+                        0.4117647059
+                    ],
+                    "name": "Pulse Width 75%"
+                }
+            },
+            "14044c30070941d": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.8862745098,
+                        0.9607843137,
+                        0.4117647059
+                    ],
+                    "name": "Pulse Width 88%"
+                }
+            },
+            "14044ca3104a352": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Saw Decline"
+                }
+            },
+            "14044cfa4fa3c0f": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Saw Incline"
+                }
+            },
+            "14044d4755823ae": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Sine"
+                }
+            },
+            "14044d9be420281": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Square"
+                }
+            },
+            "140452c1623e517": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true
+                },
+                "visual": {
+                    "color": [
+                        0.4588235294,
+                        0.2196078431,
+                        0.3333333333
+                    ],
+                    "name": "Stereo Grand Mellow (Filtered)"
+                }
+            },
+            "14045897efd790a": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.0274509804,
+                        0.0980392157,
+                        0.8078431373
+                    ],
+                    "name": "12-String Guitar #1"
+                }
+            },
+            "140458e6577689d": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.0274509804,
+                        0.0980392157,
+                        0.8078431373
+                    ],
+                    "name": "12-String Guitar #2"
+                }
+            },
+            "1404592f2cad77e": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 25
+                },
+                "visual": {
+                    "color": [
+                        0.1647058824,
+                        0.3450980392,
+                        0.9490196078
+                    ],
+                    "name": "Steel Guitar"
+                }
+            },
+            "14045afb227c5f8": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 21
+                },
+                "visual": {
+                    "color": [
+                        0.0235294118,
+                        0.4862745098,
+                        0.3411764706
+                    ],
+                    "name": "Accordian #1"
+                }
+            },
+            "14045ca94365e6a": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 21
+                },
+                "visual": {
+                    "color": [
+                        0.0784313725,
+                        0.937254902,
+                        0.2392156863
+                    ],
+                    "name": "Accordian #2"
+                }
+            },
+            "14045d927104a8b": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 21
+                },
+                "visual": {
+                    "color": [
+                        0.0784313725,
+                        0.937254902,
+                        0.2392156863
+                    ],
+                    "name": "Accordian #2 (delay #1)"
+                }
+            },
+            "14045d941c0d36e": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 21
+                },
+                "visual": {
+                    "color": [
+                        0.0784313725,
+                        0.937254902,
+                        0.2392156863
+                    ],
+                    "name": "Accordian #2 (delay #2)"
+                }
+            },
+            "14045f14af02ebc": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 32
+                },
+                "visual": {
+                    "color": [
+                        0.6784313725,
+                        0.2588235294,
+                        0.7843137255
+                    ],
+                    "name": "Acoustic Bass"
+                }
+            },
+            "14045f96db0ca05": {
+                "data": {
+                    "group": "13fefaf81a1a3cf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 113
+                },
+                "visual": {
+                    "color": [
+                        0.1764705882,
+                        0.6117647059,
+                        0.6901960784
+                    ],
+                    "name": "Agogo"
+                }
+            },
+            "1404653b696a0f8": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 65
+                },
+                "visual": {
+                    "color": [
+                        0.4745098039,
+                        0.6862745098,
+                        0.5490196078
+                    ],
+                    "name": "Alto Saxophone"
+                }
+            },
+            "14046670b26482a": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 126
+                },
+                "visual": {
+                    "color": [
+                        0.6431372549,
+                        0.4431372549,
+                        0.2862745098
+                    ],
+                    "name": "Applause"
+                }
+            },
+            "140466b1f4b501b": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 24
+                },
+                "visual": {
+                    "color": [
+                        0.0509803922,
+                        0.5607843137,
+                        0.8117647059
+                    ],
+                    "name": "Nylon Guitar"
+                }
+            },
+            "140467b9b21cf20": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 99
+                },
+                "visual": {
+                    "color": [
+                        0.0509803922,
+                        0.5607843137,
+                        0.8117647059
+                    ],
+                    "name": "Atmosphere"
+                }
+            },
+            "14046cb2d4937a7": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 109
+                },
+                "visual": {
+                    "color": [
+                        0.4705882353,
+                        0.6117647059,
+                        0.2745098039
+                    ],
+                    "name": "Bagpipe"
+                }
+            },
+            "14046d14a14b212": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "visual": {
+                    "color": [
+                        0.4705882353,
+                        0.6117647059,
+                        0.2745098039
+                    ],
+                    "name": "Chanter Ax1"
+                }
+            },
+            "14046dbc2c825bb": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "visual": {
+                    "color": [
+                        0.0235294118,
+                        0.4862745098,
+                        0.3411764706
+                    ],
+                    "name": "Bandoneon #1"
+                }
+            },
+            "14046e2768d3c30": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "visual": {
+                    "color": [
+                        0.0235294118,
+                        0.4862745098,
+                        0.3411764706
+                    ],
+                    "name": "Bandoneon #2"
+                }
+            },
+            "14046ebd96aa50c": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 105
+                },
+                "visual": {
+                    "color": [
+                        0.0745098039,
+                        0.7607843137,
+                        0.0745098039
+                    ],
+                    "name": "Banjo"
+                }
+            },
+            "14046f1c0077548": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 67
+                },
+                "visual": {
+                    "color": [
+                        0.168627451,
+                        0.8392156863,
+                        0.2980392157
+                    ],
+                    "name": "Baritone Saxophone"
+                }
+            },
+            "1404701eedadf1f": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.8862745098,
+                        0.9607843137,
+                        0.4117647059
+                    ],
+                    "name": "Bass & Lead"
+                }
+            },
+            "140470f6fd0cf37": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 70
+                },
+                "visual": {
+                    "color": [
+                        0.8509803922,
+                        0.6,
+                        0.5647058824
+                    ],
+                    "name": "Bassoon"
+                }
+            },
+            "1404725ed4d3a14": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9843137255,
+                        0.7882352941,
+                        0.3803921569
+                    ],
+                    "name": "Filter Snap"
+                }
+            },
+            "1404729d952ecef": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9529411765,
+                        0.0823529412,
+                        0.8235294118
+                    ],
+                    "name": "Slap"
+                }
+            },
+            "140472afe708028": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4901960784,
+                        0.1568627451,
+                        0.8156862745
+                    ],
+                    "name": "Stick"
+                }
+            },
+            "140472c2ce418a9": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3137254902,
+                        0.5254901961,
+                        0.1490196078
+                    ],
+                    "name": "Square Click"
+                }
+            },
+            "140472f8ed97181": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6705882353,
+                        0.7843137255,
+                        0.0117647059
+                    ],
+                    "name": "TR-808 Click"
+                }
+            },
+            "14047321e887774": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3333333333,
+                        0.0509803922,
+                        0.5215686275
+                    ],
+                    "name": "Carillon"
+                }
+            },
+            "14047366756fbf7": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4196078431,
+                        0.1450980392,
+                        0.6352941176
+                    ],
+                    "name": "Tambourine"
+                }
+            },
+            "140473ebda03301": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.862745098,
+                        0.1803921569,
+                        0.1764705882
+                    ],
+                    "name": "Vibra Slap"
+                }
+            },
+            "14047408b4ecdd0": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6,
+                        0.4156862745,
+                        0.6705882353
+                    ],
+                    "name": "Bongo Rim"
+                }
+            },
+            "14047430fb92650": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7137254902,
+                        0.1215686275,
+                        0.6980392157
+                    ],
+                    "name": "Bongo Tone"
+                }
+            },
+            "14047451667bfed": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5725490196,
+                        0.2980392157,
+                        0.7725490196
+                    ],
+                    "name": "Conga High Muted"
+                }
+            },
+            "14047477ab7c283": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5725490196,
+                        0.2980392157,
+                        0.7725490196
+                    ],
+                    "name": "Conga High Open"
+                }
+            },
+            "140474882f57a57": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9254901961,
+                        0.1725490196,
+                        0.9294117647
+                    ],
+                    "name": "Tumba Low"
+                }
+            },
+            "140474abaa4e90d": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7176470588,
+                        0.862745098,
+                        0.7921568627
+                    ],
+                    "name": "Timbale Rim"
+                }
+            },
+            "140474c2f8c9a98": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2509803922,
+                        0.8156862745,
+                        0.9333333333
+                    ],
+                    "name": "Timbale Low"
+                }
+            },
+            "140474d6b6b3717": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9294117647,
+                        0.9098039216,
+                        0.3607843137
+                    ],
+                    "name": "Cabasa"
+                }
+            },
+            "140474f20c5165b": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2745098039,
+                        0.6980392157,
+                        0.6823529412
+                    ],
+                    "name": "Maracas"
+                }
+            },
+            "1404752648580a1": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2745098039,
+                        0.6980392157,
+                        0.6823529412
+                    ],
+                    "name": "Whistle Short"
+                }
+            },
+            "1404754ec788e6b": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2745098039,
+                        0.6980392157,
+                        0.6823529412
+                    ],
+                    "name": "Whistle Long"
+                }
+            },
+            "1404755b7f39ab5": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2392156863,
+                        0.9882352941,
+                        0.4862745098
+                    ],
+                    "name": "Guiro Short"
+                }
+            },
+            "140475716ef6d9b": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2392156863,
+                        0.9882352941,
+                        0.4862745098
+                    ],
+                    "name": "Guiro Long"
+                }
+            },
+            "1404757b17e25b7": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6117647059,
+                        0.3803921569,
+                        0.1058823529
+                    ],
+                    "name": "Claves"
+                }
+            },
+            "140475936a51de8": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6117647059,
+                        0.3803921569,
+                        0.1058823529
+                    ],
+                    "name": "Cuita mute"
+                }
+            },
+            "140475a3d2eb58f": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6117647059,
+                        0.3803921569,
+                        0.1058823529
+                    ],
+                    "name": "Cuita open"
+                }
+            },
+            "140475c3f1aaf47": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.1803921569,
+                        0.7607843137,
+                        0.9647058824
+                    ],
+                    "name": "Triangle (Perc) #1"
+                }
+            },
+            "1404766dd880958": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.1803921569,
+                        0.7607843137,
+                        0.9647058824
+                    ],
+                    "name": "Triangle (Perc) #2"
+                }
+            },
+            "1404768ca2f0a44": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9294117647,
+                        0.9098039216,
+                        0.3607843137
+                    ],
+                    "name": "Shaker"
+                }
+            },
+            "140476976de45b9": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9294117647,
+                        0.9098039216,
+                        0.3607843137
+                    ],
+                    "name": "Jingle Bell"
+                }
+            },
+            "140476b48edd5a3": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6156862745,
+                        0.6980392157,
+                        0.4117647059
+                    ],
+                    "name": "Castanets"
+                }
+            },
+            "140476cb6c09dce": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4078431373,
+                        0.937254902,
+                        0.5176470588
+                    ],
+                    "name": "Surdo Mute"
+                }
+            },
+            "140476db2330170": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4078431373,
+                        0.937254902,
+                        0.5176470588
+                    ],
+                    "name": "Surdo Open"
+                }
+            },
+            "1404771f900474a": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6509803922,
+                        0.2392156863,
+                        0.0588235294
+                    ],
+                    "name": "Chinese Cymbal"
+                }
+            },
+            "140477b90aeb438": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2823529412,
+                        0.1764705882,
+                        0.5960784314
+                    ],
+                    "name": "Cowbell"
+                }
+            },
+            "1404781b662de9b": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 14
+                },
+                "visual": {
+                    "color": [
+                        0.6431372549,
+                        0.3647058824,
+                        0.6156862745
+                    ],
+                    "name": "Tubular Bells"
+                }
+            },
+            "1404787fe10f490": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "visual": {
+                    "color": [
+                        0.3882352941,
+                        0.3137254902,
+                        0.2745098039
+                    ],
+                    "name": "Bell Tower"
+                }
+            },
+            "14047952e9e339f": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 123
+                },
+                "visual": {
+                    "color": [
+                        0.9607843137,
+                        0.4941176471,
+                        0.6745098039
+                    ],
+                    "name": "Bird 2"
+                }
+            },
+            "140479c871557df": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 123
+                },
+                "visual": {
+                    "color": [
+                        0.7647058824,
+                        0.7568627451,
+                        0.662745098
+                    ],
+                    "name": "Bird"
+                }
+            },
+            "14047a1889f68e0": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 76
+                },
+                "visual": {
+                    "color": [
+                        0.5725490196,
+                        0.3725490196,
+                        0.7450980392
+                    ],
+                    "name": "Bottle Blow #1"
+                }
+            },
+            "14047a2af882b75": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 76
+                },
+                "visual": {
+                    "color": [
+                        0.5725490196,
+                        0.3725490196,
+                        0.7450980392
+                    ],
+                    "name": "Bottle Blow #2"
+                }
+            },
+            "14047b2caff04c2": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 76
+                },
+                "visual": {
+                    "color": [
+                        0.5725490196,
+                        0.3725490196,
+                        0.7450980392
+                    ],
+                    "name": "Bottle Blow #3"
+                }
+            },
+            "14047b61d1c03a6": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "visual": {
+                    "color": [
+                        0.1921568627,
+                        0.8235294118,
+                        0.8431372549
+                    ],
+                    "name": "Bowed Glass"
+                }
+            },
+            "14047bc60977b8a": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 61
+                },
+                "visual": {
+                    "color": [
+                        0.0705882353,
+                        0.0549019608,
+                        0.0549019608
+                    ],
+                    "name": "Brass Section"
+                }
+            },
+            "1404bb3687c8d65": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 121
+                },
+                "visual": {
+                    "color": [
+                        0.5568627451,
+                        0.831372549,
+                        0.5803921569
+                    ],
+                    "name": "Breath Noise"
+                }
+            },
+            "1404bb6bd60a6f9": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "visual": {
+                    "color": [
+                        0.9058823529,
+                        0.1568627451,
+                        0.031372549
+                    ],
+                    "name": "Bright Saw Stack"
+                }
+            },
+            "14064c5dcabe37f": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.0901960784,
+                        0.9882352941,
+                        0.5058823529
+                    ],
+                    "name": "Brush Snare"
+                }
+            },
+            "14064c770578b20": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6235294118,
+                        0.4470588235,
+                        0.2784313725
+                    ],
+                    "name": "Brush Swirl"
+                }
+            },
+            "14064c833ff073f": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9215686275,
+                        0.0235294118,
+                        0.3921568627
+                    ],
+                    "name": "Jazz Snare Soft #1"
+                }
+            },
+            "14064ca40214935": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2392156863,
+                        0.9137254902,
+                        0.5607843137
+                    ],
+                    "name": "Standard Snare #2"
+                }
+            },
+            "14064d2136bcca4": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2509803922,
+                        0.5215686275,
+                        0.4549019608
+                    ],
+                    "name": "Standard Tom #1"
+                }
+            },
+            "14064d4b3f0e8bb": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2549019608,
+                        0.2549019608,
+                        0.5294117647
+                    ],
+                    "name": "Standard Tom #2"
+                }
+            },
+            "14064d5cb18ca42": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2784313725,
+                        0.9058823529,
+                        0.0235294118
+                    ],
+                    "name": "Standard Tom #3"
+                }
+            },
+            "14064d6446224de": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3176470588,
+                        0.462745098,
+                        0.5058823529
+                    ],
+                    "name": "Standard Tom #4"
+                }
+            },
+            "14064d6bb59017e": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7019607843,
+                        0.862745098,
+                        0.5215686275
+                    ],
+                    "name": "Standard Tom #5"
+                }
+            },
+            "14064d7a437d494": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5843137255,
+                        0.9921568627,
+                        0.0901960784
+                    ],
+                    "name": "Brushed Tom"
+                }
+            },
+            "14064da19e0df22": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.2431372549,
+                        0.3764705882,
+                        0.0745098039
+                    ],
+                    "name": "Bubbles"
+                }
+            },
+            "14064dc46d67591": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.8117647059,
+                        0.3176470588,
+                        0.9764705882
+                    ],
+                    "name": "Siren"
+                }
+            },
+            "14064dcfedd285f": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.8117647059,
+                        0.3176470588,
+                        0.9764705882
+                    ],
+                    "name": "Siren (filtered)"
+                }
+            },
+            "14064dde6d57eae": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.8666666667,
+                        0.2392156863,
+                        0.5529411765
+                    ],
+                    "name": "White Noise"
+                }
+            },
+            "14064e4020b2612": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.4156862745,
+                        0.1921568627,
+                        0.8705882353
+                    ],
+                    "name": "Car Crash"
+                }
+            },
+            "14064e41c83a913": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.9294117647,
+                        0.5058823529,
+                        0.3411764706
+                    ],
+                    "name": "Car Engine"
+                }
+            },
+            "14064e42ee92ed5": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.3921568627,
+                        0.3098039216,
+                        0.7294117647
+                    ],
+                    "name": "Car Pass (Right)"
+                }
+            },
+            "14064e43a8209b7": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.2039215686,
+                        0.0784313725,
+                        0.7058823529
+                    ],
+                    "name": "Car Stop"
+                }
+            },
+            "14064e91ce91884": {
+                "data": {
+                    "group": "13fefaf81a1a3cf"
+                },
+                "visual": {
+                    "color": [
+                        0.3882352941,
+                        0.5647058824,
+                        0.1843137255
+                    ],
+                    "name": "Carillon"
+                }
+            },
+            "14064ec1aaa1160": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.3921568627,
+                        0.3098039216,
+                        0.7294117647
+                    ],
+                    "name": "Car Pass (Left)"
+                }
+            },
+            "14064f4e8251dd4": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "visual": {
+                    "color": [
+                        0.168627451,
+                        0.7254901961,
+                        0.7019607843
+                    ],
+                    "name": "Celeste"
+                }
+            },
+            "140650acdd139a6": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 42
+                },
+                "visual": {
+                    "color": [
+                        0.8588235294,
+                        0.6980392157,
+                        0.5058823529
+                    ],
+                    "name": "Cello"
+                }
+            },
+            "14065177d26e844": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 84
+                },
+                "visual": {
+                    "color": [
+                        0.2352941176,
+                        0.0274509804,
+                        0.1137254902
+                    ],
+                    "name": "Chiffer Lead"
+                }
+            },
+            "14065194f5994b1": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.5254901961,
+                        0.1843137255,
+                        0.2352941176
+                    ],
+                    "name": "Chimes"
+                }
+            },
+            "140651e2461f340": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3843137255,
+                        0.631372549,
+                        0.9098039216
+                    ],
+                    "name": "Triangle"
+                }
+            },
+            "140652018132e71": {
+                "data": {
+                    "group": "13fefaf81a1a3cf"
+                },
+                "visual": {
+                    "color": [
+                        0.2784313725,
+                        0.2901960784,
+                        0.9294117647
+                    ],
+                    "name": "Cold Glass Wave"
+                }
+            },
+            "1406528e3112e8f": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "visual": {
+                    "color": [
+                        0.6431372549,
+                        0.3647058824,
+                        0.6156862745
+                    ],
+                    "name": "Church Bells"
+                }
+            },
+            "140652c17f86011": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 71
+                },
+                "visual": {
+                    "color": [
+                        0.3725490196,
+                        0.2,
+                        0.4392156863
+                    ],
+                    "name": "Clarinet"
+                }
+            },
+            "140653382cf3774": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 7
+                },
+                "visual": {
+                    "color": [
+                        0.7333333333,
+                        0.7490196078,
+                        0.3137254902
+                    ],
+                    "name": "Clavinet"
+                }
+            },
+            "140653bf1f90cb3": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 27
+                },
+                "visual": {
+                    "color": [
+                        0.7764705882,
+                        0.1843137255,
+                        0.7450980392
+                    ],
+                    "name": "Clean Guitar"
+                }
+            },
+            "140654735d4e2cf": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "visual": {
+                    "color": [
+                        0.3607843137,
+                        0.8941176471,
+                        0.9137254902
+                    ],
+                    "name": "Cello Attack"
+                }
+            },
+            "1406551fed4af57": {
+                "data": {
+                    "group": "13fefaf81a1a3cf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 116
+                },
+                "visual": {
+                    "color": [
+                        0.8117647059,
+                        0.4509803922,
+                        0.231372549
+                    ],
+                    "name": "Taiko Drum"
+                }
+            },
+            "1406553ae78ef8b": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 47
+                },
+                "visual": {
+                    "color": [
+                        0.9137254902,
+                        0.3725490196,
+                        0.5921568627
+                    ],
+                    "name": "Timpani Hard"
+                }
+            },
+            "140655463b030c1": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 47
+                },
+                "visual": {
+                    "color": [
+                        0.5764705882,
+                        0.5764705882,
+                        0.7529411765
+                    ],
+                    "name": "Timpani Soft"
+                }
+            },
+            "1406556c68407a8": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "visual": {
+                    "color": [
+                        0.6196078431,
+                        0.6666666667,
+                        0.0588235294
+                    ],
+                    "name": "Concert Choir"
+                }
+            },
+            "1406575784e2958": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2901960784,
+                        0.9490196078,
+                        0.2078431373
+                    ],
+                    "name": "Crash Cymbal"
+                }
+            },
+            "1406575fd0e7e97": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.8117647059,
+                        0.5647058824,
+                        0.4431372549
+                    ],
+                    "name": "Ride Cymbal"
+                }
+            },
+            "140657cc86bf0d5": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 98
+                },
+                "visual": {
+                    "color": [
+                        0.7411764706,
+                        0.0156862745,
+                        0.6745098039
+                    ],
+                    "name": "Crystal #1"
+                }
+            },
+            "140657ef4225cc5": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 98
+                },
+                "visual": {
+                    "color": [
+                        0.5647058824,
+                        0.8392156863,
+                        0.9058823529
+                    ],
+                    "name": "Crystal #2"
+                }
+            },
+            "1406581ca2d28bd": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.0901960784,
+                        0.1843137255,
+                        0.0
+                    ],
+                    "name": "Cut Noise"
+                }
+            },
+            "1406586a04a54e4": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7215686275,
+                        0.1098039216,
+                        0.8745098039
+                    ],
+                    "name": "TR-909 Kick"
+                }
+            },
+            "1406589f8958551": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.3019607843,
+                        0.768627451
+                    ],
+                    "name": "Dance Snare"
+                }
+            },
+            "140658b42091c7e": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 30
+                },
+                "visual": {
+                    "color": [
+                        0.0078431373,
+                        0.0784313725,
+                        0.1098039216
+                    ],
+                    "name": "Distortion Guitar #1"
+                }
+            },
+            "140659995a5f681": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 30
+                },
+                "visual": {
+                    "color": [
+                        0.1882352941,
+                        0.5254901961,
+                        0.7254901961
+                    ],
+                    "name": "Distortion Guitar #2"
+                }
+            },
+            "140659eb4543138": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Doctor Solo #1"
+                }
+            },
+            "14065a1268be387": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "visual": {
+                    "color": [
+                        0.8862745098,
+                        0.9568627451,
+                        0.9921568627
+                    ],
+                    "name": "Doctor Solo #2"
+                }
+            },
+            "14065a3cb524d93": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.3411764706,
+                        0.3725490196,
+                        0.9137254902
+                    ],
+                    "name": "Dog"
+                }
+            },
+            "14065a4cc385b0b": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.6941176471,
+                        0.7333333333,
+                        0.2039215686
+                    ],
+                    "name": "Door"
+                }
+            },
+            "14065a5cca83eec": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.3294117647,
+                        0.1607843137,
+                        0.6117647059
+                    ],
+                    "name": "Door Creaking"
+                }
+            },
+            "14065a70c3807c1": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "visual": {
+                    "color": [
+                        0.2,
+                        0.568627451,
+                        0.4078431373
+                    ],
+                    "name": "Double Bass"
+                }
+            },
+            "140687de4239fe8": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 15
+                },
+                "visual": {
+                    "color": [
+                        0.8745098039,
+                        0.9960784314,
+                        0.831372549
+                    ],
+                    "name": "Dulcimer"
+                }
+            },
+            "14068820564f03d": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.9647058824,
+                        0.6784313725
+                    ],
+                    "name": "DX7 Wave"
+                }
+            },
+            "14068834e8ee73d": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "visual": {
+                    "color": [
+                        0.1803921569,
+                        0.0509803922,
+                        0.8901960784
+                    ],
+                    "name": "DX7 Strike"
+                }
+            },
+            "14068893c9e9424": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 102
+                },
+                "visual": {
+                    "color": [
+                        0.0666666667,
+                        0.5137254902,
+                        0.1137254902
+                    ],
+                    "name": "Echo Drop"
+                }
+            },
+            "140688be1490100": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 102
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Echo Pan"
+                }
+            },
+            "140688d1474a381": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6274509804,
+                        0.6470588235,
+                        0.6941176471
+                    ],
+                    "name": "Electronic Kick"
+                }
+            },
+            "140688d71d8bf27": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.1725490196,
+                        0.5019607843,
+                        0.8901960784
+                    ],
+                    "name": "Electric Snare"
+                }
+            },
+            "140688f774474f7": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.1058823529,
+                        0.4588235294,
+                        0.8666666667
+                    ],
+                    "name": "Explosion"
+                }
+            },
+            "1406895142928a8": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 51
+                },
+                "visual": {
+                    "color": [
+                        0.6941176471,
+                        0.9529411765,
+                        0.3058823529
+                    ],
+                    "name": "Synth Strings #5"
+                }
+            },
+            "14068979d59afc8": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 51
+                },
+                "visual": {
+                    "color": [
+                        0.6941176471,
+                        0.9529411765,
+                        0.3058823529
+                    ],
+                    "name": "Synth Strings #6"
+                }
+            },
+            "1406899a022d3ca": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 5
+                },
+                "visual": {
+                    "color": [
+                        0.4823529412,
+                        0.5647058824,
+                        0.6784313725
+                    ],
+                    "name": "Electric Piano 2MS"
+                }
+            },
+            "140689e298522bd": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.1921568627,
+                        0.8235294118,
+                        0.8431372549
+                    ],
+                    "name": "Fantasia #1"
+                }
+            },
+            "14068a3f13b2bef": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 33
+                },
+                "visual": {
+                    "color": [
+                        0.9921568627,
+                        0.6509803922,
+                        0.9333333333
+                    ],
+                    "name": "Finger Bass"
+                }
+            },
+            "14068a8f3640d27": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.368627451,
+                        0.0078431373,
+                        0.3176470588
+                    ],
+                    "name": "Guitar Click"
+                }
+            },
+            "14068a9bbc0b4f2": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 73
+                },
+                "visual": {
+                    "color": [
+                        0.8470588235,
+                        0.2470588235,
+                        0.9215686275
+                    ],
+                    "name": "Flute"
+                }
+            },
+            "14068b065cdd7a9": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.831372549,
+                        0.1137254902,
+                        0.5647058824
+                    ],
+                    "name": "Foot Step"
+                }
+            },
+            "14068b65a1bae9d": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 60
+                },
+                "visual": {
+                    "color": [
+                        0.5137254902,
+                        0.1411764706,
+                        0.2117647059
+                    ],
+                    "name": "French Horn"
+                }
+            },
+            "14068b9cb2b533b": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 120
+                },
+                "visual": {
+                    "color": [
+                        0.9960784314,
+                        0.9921568627,
+                        0.6705882353
+                    ],
+                    "name": "Fret Noise"
+                }
+            },
+            "14068bb0a098e8b": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 35
+                },
+                "visual": {
+                    "color": [
+                        0.7764705882,
+                        0.6039215686,
+                        0.7019607843
+                    ],
+                    "name": "Fretless Bass"
+                }
+            },
+            "14068c28f4c513c": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 9
+                },
+                "visual": {
+                    "color": [
+                        0.6235294118,
+                        0.8823529412,
+                        0.7058823529
+                    ],
+                    "name": "Glockenspiel"
+                }
+            },
+            "14068c619e89c66": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 53
+                },
+                "visual": {
+                    "color": [
+                        0.831372549,
+                        0.4901960784,
+                        0.8
+                    ],
+                    "name": "Synth Voice Oohs"
+                }
+            },
+            "14068cffd17c670": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 101
+                },
+                "visual": {
+                    "color": [
+                        0.8509803922,
+                        0.7921568627,
+                        0.8039215686
+                    ],
+                    "name": "Goblin"
+                }
+            },
+            "14068d7d6ab68e4": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.5450980392,
+                        0.0078431373,
+                        0.2117647059
+                    ],
+                    "name": "Guitar Cut Up"
+                }
+            },
+            "14068d7fecaf4bc": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.0431372549,
+                        0.9529411765,
+                        0.3019607843
+                    ],
+                    "name": "Guitar Cut Down"
+                }
+            },
+            "14068d81555d464": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.0588235294,
+                        0.8352941176,
+                        0.2588235294
+                    ],
+                    "name": "Guitar Slap"
+                }
+            },
+            "14068dd9b1753a2": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.0078431373,
+                        0.3490196078,
+                        0.5254901961
+                    ],
+                    "name": "Guitar Feedback"
+                }
+            },
+            "14068e36a4d449a": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 31
+                },
+                "visual": {
+                    "color": [
+                        0.5019607843,
+                        0.8274509804,
+                        0.3764705882
+                    ],
+                    "name": "Guitar Harmonics"
+                }
+            },
+            "14068e6d8a6b702": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 127
+                },
+                "visual": {
+                    "color": [
+                        0.6549019608,
+                        0.1254901961,
+                        0.8862745098
+                    ],
+                    "name": "Gun Shot"
+                }
+            },
+            "14069976f0e6273": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 52
+                },
+                "visual": {
+                    "color": [
+                        0.5333333333,
+                        0.0196078431,
+                        0.7921568627
+                    ],
+                    "name": "Synth Voice Aahs"
+                }
+            },
+            "140699cf00fe380": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 17
+                },
+                "visual": {
+                    "color": [
+                        0.8862745098,
+                        0.937254902,
+                        0.6705882353
+                    ],
+                    "name": "Hammond Organ"
+                }
+            },
+            "14069a447ec841f": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.768627451,
+                        0.6470588235,
+                        0.3607843137
+                    ],
+                    "name": "Hand Clap"
+                }
+            },
+            "14069a735526821": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 22
+                },
+                "visual": {
+                    "color": [
+                        0.3019607843,
+                        0.631372549,
+                        0.0078431373
+                    ],
+                    "name": "Harmonica"
+                }
+            },
+            "1406a75cd901b2e": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 6
+                },
+                "visual": {
+                    "color": [
+                        0.768627451,
+                        0.1921568627,
+                        0.1019607843
+                    ],
+                    "name": "Harpsichord #1"
+                }
+            },
+            "1406a77fd62ecba": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 6
+                },
+                "visual": {
+                    "color": [
+                        0.5843137255,
+                        0.6862745098,
+                        0.4039215686
+                    ],
+                    "name": "Harpsichord #2"
+                }
+            },
+            "1406a8163b331d8": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "visual": {
+                    "color": [
+                        0.9411764706,
+                        0.1411764706,
+                        0.2352941176
+                    ],
+                    "name": "Hawaiian Guitar"
+                }
+            },
+            "1406a82908f9d75": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.1843137255,
+                        0.1764705882,
+                        0.0156862745
+                    ],
+                    "name": "Heart Beat"
+                }
+            },
+            "1406a831e2707b6": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 125
+                },
+                "visual": {
+                    "color": [
+                        0.8392156863,
+                        0.1764705882,
+                        0.7568627451
+                    ],
+                    "name": "Helicopter"
+                }
+            },
+            "1406a85b703925c": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3254901961,
+                        0.4549019608,
+                        0.5921568627
+                    ],
+                    "name": "Hi-Hat Closed Hard"
+                }
+            },
+            "1406a864d73a6d8": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2431372549,
+                        0.0156862745,
+                        0.6470588235
+                    ],
+                    "name": "Hi-Hat Closed Soft"
+                }
+            },
+            "1406a879e6a595f": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.1607843137,
+                        0.9843137255,
+                        0.9764705882
+                    ],
+                    "name": "Hi-Hat Pedal"
+                }
+            },
+            "1406a87fb4578e0": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3960784314,
+                        0.8274509804,
+                        0.768627451
+                    ],
+                    "name": "Hi-Hat Open"
+                }
+            },
+            "1406a8837023d81": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4745098039,
+                        0.0941176471,
+                        0.768627451
+                    ],
+                    "name": "Hi-Hat Open Attack"
+                }
+            },
+            "1406a901e6f59e4": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 3
+                },
+                "visual": {
+                    "color": [
+                        0.031372549,
+                        0.3137254902,
+                        0.5176470588
+                    ],
+                    "name": "Honky-Tonk"
+                }
+            },
+            "1406a9658143245": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 69
+                },
+                "visual": {
+                    "color": [
+                        0.6470588235,
+                        0.368627451,
+                        0.2235294118
+                    ],
+                    "name": "Horns Thin #1"
+                }
+            },
+            "1406d9f04b29a5c": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 69
+                },
+                "visual": {
+                    "color": [
+                        0.5568627451,
+                        0.8901960784,
+                        0.5137254902
+                    ],
+                    "name": "Horns Thin #2"
+                }
+            },
+            "1406da5149c40bd": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.5921568627,
+                        0.8549019608,
+                        0.431372549
+                    ],
+                    "name": "Horse Gallop"
+                }
+            },
+            "1406da6549467c5": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.1411764706,
+                        0.9490196078,
+                        0.3529411765
+                    ],
+                    "name": "Howling Wind"
+                }
+            },
+            "1406daada091dc6": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 96
+                },
+                "visual": {
+                    "color": [
+                        0.9843137255,
+                        0.3490196078,
+                        0.8588235294
+                    ],
+                    "name": "Ice Rain #1"
+                }
+            },
+            "1406dada76bd505": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 96
+                },
+                "visual": {
+                    "color": [
+                        0.862745098,
+                        0.5803921569,
+                        0.5333333333
+                    ],
+                    "name": "Ice Rain #2"
+                }
+            },
+            "1406db8da1f0948": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 21
+                },
+                "visual": {
+                    "color": [
+                        0.0784313725,
+                        0.937254902,
+                        0.2392156863
+                    ],
+                    "name": "Italian Accordian"
+                }
+            },
+            "1406dc51010cf0a": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5764705882,
+                        0.6352941176,
+                        0.7098039216
+                    ],
+                    "name": "Jazz Bass Drum"
+                }
+            },
+            "1406dc5f5ac3477": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.137254902,
+                        0.8549019608,
+                        0.6039215686
+                    ],
+                    "name": "Standard Kick #1"
+                }
+            },
+            "1406dc6754caf80": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.0470588235,
+                        0.4352941176,
+                        0.1607843137
+                    ],
+                    "name": "Standard Kick #2"
+                }
+            },
+            "1406dc6a80e41d6": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7215686275,
+                        0.537254902,
+                        0.6039215686
+                    ],
+                    "name": "Standard Kick #3"
+                }
+            },
+            "1406dc86ece6682": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2666666667,
+                        1.0,
+                        0.9294117647
+                    ],
+                    "name": "Standard Snare #1"
+                }
+            },
+            "1406dc95dfb8068": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3254901961,
+                        0.2431372549,
+                        0.4666666667
+                    ],
+                    "name": "Standard Snare #3"
+                }
+            },
+            "1406dc991b30322": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5058823529,
+                        0.4196078431,
+                        0.8352941176
+                    ],
+                    "name": "Standard Snare #4"
+                }
+            },
+            "1406dce02e99049": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 26
+                },
+                "visual": {
+                    "color": [
+                        0.631372549,
+                        0.7647058824,
+                        0.5019607843
+                    ],
+                    "name": "Jazz Guitar"
+                }
+            },
+            "1406dd7f61e4601": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4509803922,
+                        0.3882352941,
+                        0.1137254902
+                    ],
+                    "name": "Jazz Rim Shot"
+                }
+            },
+            "1406dd8738bc052": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4980392157,
+                        0.7019607843,
+                        0.062745098
+                    ],
+                    "name": "Rim Shot"
+                }
+            },
+            "1406dd8e27d0165": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5568627451,
+                        0.9843137255,
+                        0.3333333333
+                    ],
+                    "name": "Jazz Snare Soft #2"
+                }
+            },
+            "1406dd9089c3235": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.368627451,
+                        0.1882352941,
+                        0.9294117647
+                    ],
+                    "name": "Jazz Snare Hard"
+                }
+            },
+            "1406ddb720369bb": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.8352941176,
+                        0.168627451,
+                        0.0117647059
+                    ],
+                    "name": "Jet"
+                }
+            },
+            "1406ddeda32b3ef": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 108
+                },
+                "visual": {
+                    "color": [
+                        0.8039215686,
+                        0.4941176471,
+                        0.1215686275
+                    ],
+                    "name": "Kalimba"
+                }
+            },
+            "1406de1fe608880": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 107
+                },
+                "visual": {
+                    "color": [
+                        0.3529411765,
+                        0.8156862745,
+                        0.1450980392
+                    ],
+                    "name": "Koto"
+                }
+            },
+            "1406de371a08b5c": {
+                "data": {
+                    "group": "1406de351b982bc"
+                },
+                "visual": {
+                    "color": [
+                        0.3333333333,
+                        0.0352941176,
+                        0.7843137255
+                    ],
+                    "name": "Kefka's Laugh"
+                }
+            },
+            "1406de5a966105b": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.2352941176,
+                        0.9843137255,
+                        0.6431372549
+                    ],
+                    "name": "Machine Gun"
+                }
+            },
+            "1406de96624694c": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "visual": {
+                    "color": [
+                        0.5098039216,
+                        0.2901960784,
+                        0.568627451
+                    ],
+                    "name": "Mandolin #1"
+                }
+            },
+            "1406deb48cbbfc0": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "visual": {
+                    "color": [
+                        0.5647058824,
+                        0.3411764706,
+                        0.2784313725
+                    ],
+                    "name": "Mandolin #2"
+                }
+            },
+            "1406df04571a36f": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "visual": {
+                    "color": [
+                        0.7058823529,
+                        0.1882352941,
+                        0.8039215686
+                    ],
+                    "name": "Ukulele"
+                }
+            },
+            "1406df406bf8fb6": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 12
+                },
+                "visual": {
+                    "color": [
+                        0.4784313725,
+                        0.6705882353,
+                        0.1098039216
+                    ],
+                    "name": "Marimba"
+                }
+            },
+            "1406df560738e90": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 117
+                },
+                "visual": {
+                    "color": [
+                        0.537254902,
+                        0.2666666667,
+                        0.8549019608
+                    ],
+                    "name": "Melodic Tom #1"
+                }
+            },
+            "1406e0bc5bf4c37": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 117
+                },
+                "visual": {
+                    "color": [
+                        0.9843137255,
+                        0.0039215686,
+                        0.4156862745
+                    ],
+                    "name": "Melodic Tom #2"
+                }
+            },
+            "1407008866fc39b": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 93
+                },
+                "visual": {
+                    "color": [
+                        0.1647058824,
+                        0.3450980392,
+                        0.9490196078
+                    ],
+                    "name": "Metal Pad"
+                }
+            },
+            "1407009e987ee50": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 10
+                },
+                "visual": {
+                    "color": [
+                        0.3137254902,
+                        0.3568627451,
+                        0.7137254902
+                    ],
+                    "name": "Music Box"
+                }
+            },
+            "140700a37abe00b": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 10
+                },
+                "visual": {
+                    "color": [
+                        0.3333333333,
+                        0.4352941176,
+                        0.5529411765
+                    ],
+                    "name": "Music Box Delay"
+                }
+            },
+            "140701c32ea2030": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 28
+                },
+                "visual": {
+                    "color": [
+                        0.5803921569,
+                        0.462745098,
+                        0.9921568627
+                    ],
+                    "name": "Muted Guitar"
+                }
+            },
+            "1407022182d90fc": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 59
+                },
+                "visual": {
+                    "color": [
+                        0.937254902,
+                        0.8235294118,
+                        0.8196078431
+                    ],
+                    "name": "Muted Trumpet #1"
+                }
+            },
+            "1407024da20a3e6": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 59
+                },
+                "visual": {
+                    "color": [
+                        0.937254902,
+                        0.8235294118,
+                        0.8196078431
+                    ],
+                    "name": "Muted Trumpet #2"
+                }
+            },
+            "140702630f4e7c9": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "visual": {
+                    "color": [
+                        0.2470588235,
+                        0.8509803922,
+                        0.8156862745
+                    ],
+                    "name": "Mystery Pad"
+                }
+            },
+            "14070b40f506414": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 68
+                },
+                "visual": {
+                    "color": [
+                        0.5647058824,
+                        0.0941176471,
+                        0.7019607843
+                    ],
+                    "name": "Oboe"
+                }
+            },
+            "14070cb6099c31f": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 79
+                },
+                "visual": {
+                    "color": [
+                        0.5450980392,
+                        0.8588235294,
+                        0.4745098039
+                    ],
+                    "name": "Ocarina"
+                }
+            },
+            "14073b1eb2d4ea0": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 55
+                },
+                "visual": {
+                    "color": [
+                        0.8470588235,
+                        0.1411764706,
+                        0.768627451
+                    ],
+                    "name": "Orchestra Hit #1"
+                }
+            },
+            "140748a778cc42b": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 55
+                },
+                "visual": {
+                    "color": [
+                        0.8588235294,
+                        0.4039215686,
+                        0.4156862745
+                    ],
+                    "name": "Orchestra Hit #2"
+                }
+            },
+            "1407493fd38d5fa": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.168627451,
+                        0.3098039216,
+                        0.5019607843
+                    ],
+                    "name": "Orchestral Cymbal"
+                }
+            },
+            "1407494e878b137": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 46
+                },
+                "visual": {
+                    "color": [
+                        0.9490196078,
+                        0.662745098,
+                        0.1607843137
+                    ],
+                    "name": "Orchestral Harp"
+                }
+            },
+            "14074a14498a6c7": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 16
+                },
+                "visual": {
+                    "color": [
+                        0.6235294118,
+                        0.5450980392,
+                        0.7058823529
+                    ],
+                    "name": "Organ Fast Cycle"
+                }
+            },
+            "14074b1ce673c93": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 16
+                },
+                "visual": {
+                    "color": [
+                        0.3137254902,
+                        0.6470588235,
+                        0.3176470588
+                    ],
+                    "name": "Organ Percussion"
+                }
+            },
+            "14074b6717b79fa": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 16
+                },
+                "visual": {
+                    "color": [
+                        0.0431372549,
+                        0.4666666667,
+                        0.368627451
+                    ],
+                    "name": "Organ Slow Cycle"
+                }
+            },
+            "14074bd04756eef": {
+                "data": {
+                    "group": "13fefae9c8106d7"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 29
+                },
+                "visual": {
+                    "color": [
+                        0.7607843137,
+                        0.7411764706,
+                        0.3803921569
+                    ],
+                    "name": "Overdrive Guitar"
+                }
+            },
+            "14074c81588f82b": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 75
+                },
+                "visual": {
+                    "color": [
+                        0.7607843137,
+                        0.0078431373,
+                        0.1294117647
+                    ],
+                    "name": "Pan Flute #1"
+                }
+            },
+            "14074c98a7a8ed2": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 75
+                },
+                "visual": {
+                    "color": [
+                        0.2980392157,
+                        0.1882352941,
+                        0.5803921569
+                    ],
+                    "name": "Pan Flute #2"
+                }
+            },
+            "14074cba5e7baa1": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "visual": {
+                    "color": [
+                        0.0274509804,
+                        0.4470588235,
+                        0.0392156863
+                    ],
+                    "name": "Percussive Saw Wave"
+                }
+            },
+            "14074ccf1ade98c": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 72
+                },
+                "visual": {
+                    "color": [
+                        0.5098039216,
+                        0.4588235294,
+                        0.3529411765
+                    ],
+                    "name": "Piccolo"
+                }
+            },
+            "14074d0cee06bab": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "visual": {
+                    "color": [
+                        0.1098039216,
+                        0.7294117647,
+                        0.1490196078
+                    ],
+                    "name": "Pick Bass"
+                }
+            },
+            "14074d99f037452": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 16
+                },
+                "visual": {
+                    "color": [
+                        0.7960784314,
+                        0.5411764706,
+                        0.9803921569
+                    ],
+                    "name": "Pipe Organ"
+                }
+            },
+            "1407502013a21e8": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 45
+                },
+                "visual": {
+                    "color": [
+                        0.5215686275,
+                        0.2392156863,
+                        0.3764705882
+                    ],
+                    "name": "Pizzicato Strings"
+                }
+            },
+            "140750c8bfcc0d9": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 90
+                },
+                "visual": {
+                    "color": [
+                        0.7921568627,
+                        0.6823529412,
+                        0.8509803922
+                    ],
+                    "name": "Polysynth #1"
+                }
+            },
+            "140750ea2512cb8": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 90
+                },
+                "visual": {
+                    "color": [
+                        0.1254901961,
+                        0.1058823529,
+                        0.3921568627
+                    ],
+                    "name": "Polysynth #2"
+                }
+            },
+            "140751063e57e84": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.9921568627,
+                        0.831372549,
+                        0.4235294118
+                    ],
+                    "name": "Power Kick #1"
+                }
+            },
+            "14075111fe6daf6": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6784313725,
+                        0.5882352941,
+                        0.1333333333
+                    ],
+                    "name": "Power Kick #2"
+                }
+            },
+            "1407511bfc77568": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.3019607843,
+                        0.537254902,
+                        0.2862745098
+                    ],
+                    "name": "Power Snare #1"
+                }
+            },
+            "1407511f75c6477": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.8078431373,
+                        0.062745098,
+                        0.6392156863
+                    ],
+                    "name": "Power Snare #2"
+                }
+            },
+            "140751278c29dfe": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7254901961,
+                        0.8156862745,
+                        0.0941176471
+                    ],
+                    "name": "Room Snare"
+                }
+            },
+            "140751590accf3d": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.8705882353,
+                        0.2470588235,
+                        0.0156862745
+                    ],
+                    "name": "Bone Crunch"
+                }
+            },
+            "140751625b83156": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.7450980392,
+                        0.7254901961,
+                        0.5921568627
+                    ],
+                    "name": "Punch"
+                }
+            },
+            "14075184c7cf367": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.431372549,
+                        0.3176470588,
+                        0.9411764706
+                    ],
+                    "name": "Rain"
+                }
+            },
+            "140751aca875aa1": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.768627451,
+                        0.7960784314,
+                        0.9960784314
+                    ],
+                    "name": "Scratch Push"
+                }
+            },
+            "140751b8be034e4": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.7568627451,
+                        0.7098039216,
+                        0.6078431373
+                    ],
+                    "name": "Scratch Pull"
+                }
+            },
+            "140751c14932c25": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 74
+                },
+                "visual": {
+                    "color": [
+                        0.2274509804,
+                        0.6745098039,
+                        0.8549019608
+                    ],
+                    "name": "Recorder"
+                }
+            },
+            "1407522d19b4f4c": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 20
+                },
+                "visual": {
+                    "color": [
+                        0.0235294118,
+                        0.4862745098,
+                        0.3411764706
+                    ],
+                    "name": "Reed Organ #1"
+                }
+            },
+            "1407528a0b13b9c": {
+                "data": {
+                    "group": "13fefae8e3bf2c5"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 20
+                },
+                "visual": {
+                    "color": [
+                        0.0235294118,
+                        0.4862745098,
+                        0.3411764706
+                    ],
+                    "name": "Reed Organ #2"
+                }
+            },
+            "140752ac3e7d872": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 119
+                },
+                "visual": {
+                    "color": [
+                        0.0901960784,
+                        0.9764705882,
+                        0.5176470588
+                    ],
+                    "name": "Reverse Cymbal"
+                }
+            },
+            "140752cbdc3f98b": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 2
+                },
+                "visual": {
+                    "color": [
+                        0.6784313725,
+                        0.631372549,
+                        0.7607843137
+                    ],
+                    "name": "Rhodes F"
+                }
+            },
+            "14075990202330a": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 2
+                },
+                "visual": {
+                    "color": [
+                        0.1568627451,
+                        0.6666666667,
+                        0.6352941176
+                    ],
+                    "name": "Rhodes M"
+                }
+            },
+            "140759c82cbc4ff": {
+                "data": {
+                    "group": "13fefadfeada756"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 2
+                },
+                "visual": {
+                    "color": [
+                        0.1215686275,
+                        0.5803921569,
+                        0.4980392157
+                    ],
+                    "name": "Rhodes P"
+                }
+            },
+            "14075a5f5670bc3": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7607843137,
+                        0.7450980392,
+                        0.5882352941
+                    ],
+                    "name": "Ride Bell"
+                }
+            },
+            "14075a9eeb029ae": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.0588235294,
+                        0.3411764706,
+                        0.9607843137
+                    ],
+                    "name": "Room Kick"
+                }
+            },
+            "14075add9c19160": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4901960784,
+                        0.3960784314,
+                        0.6117647059
+                    ],
+                    "name": "Room Tom #1"
+                }
+            },
+            "14075aebc2fbda4": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.8588235294,
+                        0.0588235294,
+                        0.462745098
+                    ],
+                    "name": "Room Tom #2"
+                }
+            },
+            "14075afa8e9c398": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 81
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Saw Lead #2"
+                }
+            },
+            "14075afa906817d": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 81
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Saw Lead #1"
+                }
+            },
+            "14075b173cb84ef": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.0431372549,
+                        0.1215686275,
+                        0.2901960784
+                    ],
+                    "name": "Scream"
+                }
+            },
+            "14075b28246e69c": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 122
+                },
+                "visual": {
+                    "color": [
+                        0.6509803922,
+                        0.1450980392,
+                        0.8274509804
+                    ],
+                    "name": "Seashore"
+                }
+            },
+            "14075dfc835feff": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 77
+                },
+                "visual": {
+                    "color": [
+                        0.0901960784,
+                        0.2196078431,
+                        0.9333333333
+                    ],
+                    "name": "Shakuhachi"
+                }
+            },
+            "14075e09d71d75e": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 106
+                },
+                "visual": {
+                    "color": [
+                        0.6784313725,
+                        0.2549019608,
+                        0.3294117647
+                    ],
+                    "name": "Shamisen"
+                }
+            },
+            "14075e9d260300d": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "visual": {
+                    "color": [
+                        0.6745098039,
+                        0.9529411765,
+                        0.5333333333
+                    ],
+                    "name": "Shenai"
+                }
+            },
+            "14075ee5871cb87": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Sine Wave"
+                }
+            },
+            "14075f37aabbbc4": {
+                "data": {
+                    "group": "13fefaf5f19a562"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 104
+                },
+                "visual": {
+                    "color": [
+                        0.4274509804,
+                        0.1803921569,
+                        0.8705882353
+                    ],
+                    "name": "Sitar"
+                }
+            },
+            "14075f77fafc211": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 36
+                },
+                "visual": {
+                    "color": [
+                        0.0156862745,
+                        0.0156862745,
+                        0.8392156863
+                    ],
+                    "name": "Slap Bass #1"
+                }
+            },
+            "14076010968126b": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 37
+                },
+                "visual": {
+                    "color": [
+                        0.3529411765,
+                        0.6862745098,
+                        0.0980392157
+                    ],
+                    "name": "Slap Bass #2 F"
+                }
+            },
+            "1407601f18ed68d": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 37
+                },
+                "visual": {
+                    "color": [
+                        0.9176470588,
+                        0.968627451,
+                        0.2352941176
+                    ],
+                    "name": "Slap Bass #2 P"
+                }
+            },
+            "14076083f53a42d": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 51
+                },
+                "visual": {
+                    "color": [
+                        0.6941176471,
+                        0.9529411765,
+                        0.3058823529
+                    ],
+                    "name": "Synth Strings #5 (Solar Wind)"
+                }
+            },
+            "1407608f6b8105d": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 53
+                },
+                "visual": {
+                    "color": [
+                        0.5450980392,
+                        0.6156862745,
+                        0.1921568627
+                    ],
+                    "name": "Ohh Voice"
+                }
+            },
+            "1407614e764112a": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "visual": {
+                    "color": [
+                        0.0941176471,
+                        0.3647058824,
+                        0.5137254902
+                    ],
+                    "name": "Solo Vox #1"
+                }
+            },
+            "1407619a40b5b1a": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "visual": {
+                    "color": [
+                        0.4156862745,
+                        0.3568627451,
+                        0.9529411765
+                    ],
+                    "name": "Solo Vox #2"
+                }
+            },
+            "140761ce3995ec8": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 64
+                },
+                "visual": {
+                    "color": [
+                        0.2666666667,
+                        0.3098039216,
+                        0.9607843137
+                    ],
+                    "name": "Soprano Saxophone"
+                }
+            },
+            "1407622335a5a4d": {
+                "data": {
+                    "group": "13fefaf4541a20a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 97
+                },
+                "visual": {
+                    "color": [
+                        0.1607843137,
+                        0.168627451,
+                        0.0784313725
+                    ],
+                    "name": "Soundtrack"
+                }
+            },
+            "140762430bc146b": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.6117647059,
+                        0.7294117647,
+                        0.6823529412
+                    ],
+                    "name": "Space Voice"
+                }
+            },
+            "1407624d5082fc9": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.8235294118,
+                        0.2235294118,
+                        0.1215686275
+                    ],
+                    "name": "Splash Cymbal"
+                }
+            },
+            "140762652d55f0d": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 80
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Square Lead"
+                }
+            },
+            "140762dfead2575": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.8862745098,
+                        0.8352941176,
+                        0.3098039216
+                    ],
+                    "name": "Starship"
+                }
+            },
+            "1407630b3b4a21c": {
+                "data": {
+                    "group": "13fefaf81a1a3cf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 114
+                },
+                "visual": {
+                    "color": [
+                        0.1843137255,
+                        0.6039215686,
+                        0.2117647059
+                    ],
+                    "name": "Steel Drums"
+                }
+            },
+            "1407635e2a68293": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.0235294118,
+                        0.337254902,
+                        0.6470588235
+                    ],
+                    "name": "Stream"
+                }
+            },
+            "1407826a9c2b495": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 48
+                },
+                "visual": {
+                    "color": [
+                        0.4823529412,
+                        0.9019607843,
+                        0.7333333333
+                    ],
+                    "name": "Strings"
+                }
+            },
+            "14078380ce719a3": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 38
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Synth Bass #1"
+                }
+            },
+            "140783b37a7f438": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 39
+                },
+                "visual": {
+                    "color": [
+                        0.1294117647,
+                        0.7647058824,
+                        0.3450980392
+                    ],
+                    "name": "Synth Bass #2"
+                }
+            },
+            "140783e6bc1d5eb": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 39
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Synth Bass #3"
+                }
+            },
+            "140783f9cf92a47": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 62
+                },
+                "visual": {
+                    "color": [
+                        0.9647058824,
+                        0.8509803922,
+                        0.6549019608
+                    ],
+                    "name": "Synth Brass #1"
+                }
+            },
+            "140784198da95f4": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 63
+                },
+                "visual": {
+                    "color": [
+                        0.9294117647,
+                        0.9215686275,
+                        0.1333333333
+                    ],
+                    "name": "Synth Brass #2"
+                }
+            },
+            "14078428aa74288": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 63
+                },
+                "visual": {
+                    "color": [
+                        0.6039215686,
+                        0.1098039216,
+                        0.7058823529
+                    ],
+                    "name": "Synth Brass #3"
+                }
+            },
+            "140784392560143": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "visual": {
+                    "color": [
+                        0.8078431373,
+                        0.8588235294,
+                        0.7568627451
+                    ],
+                    "name": "Synth Bass Loop"
+                }
+            },
+            "14078483342c5e3": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 63
+                },
+                "visual": {
+                    "color": [
+                        0.6039215686,
+                        0.1098039216,
+                        0.7058823529
+                    ],
+                    "name": "Synth Brass #3 (2)"
+                }
+            },
+            "140784ad3c8c492": {
+                "data": {
+                    "group": "13fefaf15baf963"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 82
+                },
+                "visual": {
+                    "color": [
+                        0.2470588235,
+                        0.7450980392,
+                        0.6666666667
+                    ],
+                    "name": "Synth Calliope"
+                }
+            },
+            "140784f19689d8c": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.4156862745,
+                        0.6549019608,
+                        0.1137254902
+                    ],
+                    "name": "Electric Tom"
+                }
+            },
+            "140785099afedb9": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 9
+                },
+                "visual": {
+                    "color": [
+                        0.3490196078,
+                        0.1843137255,
+                        0.5725490196
+                    ],
+                    "name": "Glockenspiel Loop"
+                }
+            },
+            "1407851abd2169c": {
+                "data": {
+                    "group": "13fa5152eed0672"
+                },
+                "visual": {
+                    "color": [
+                        0.4392156863,
+                        0.0196078431,
+                        0.168627451
+                    ],
+                    "name": "Vibes"
+                }
+            },
+            "1407853876ec2eb": {
+                "data": {
+                    "group": "13fefaf81a1a3cf"
+                },
+                "visual": {
+                    "color": [
+                        0.2784313725,
+                        0.2901960784,
+                        0.9294117647
+                    ],
+                    "name": "Cold Glass Wave (2)"
+                }
+            },
+            "140785631c506cd": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2117647059,
+                        0.5529411765,
+                        0.5647058824
+                    ],
+                    "name": "Synth Hand Clap"
+                }
+            },
+            "1407858066da0df": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "visual": {
+                    "color": [
+                        0.6274509804,
+                        0.7294117647,
+                        0.8784313725
+                    ],
+                    "name": "Synth Mallet"
+                }
+            },
+            "14078596b663e49": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 50
+                },
+                "visual": {
+                    "color": [
+                        0.8196078431,
+                        0.9411764706,
+                        0.2941176471
+                    ],
+                    "name": "Synth Strings #1"
+                }
+            },
+            "140785c6fcd59a7": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 50
+                },
+                "visual": {
+                    "color": [
+                        0.8784313725,
+                        0.4745098039,
+                        0.2784313725
+                    ],
+                    "name": "Synth Strings #2"
+                }
+            },
+            "1407a7ed6247291": {
+                "data": {
+                    "group": "13fefaead755592"
+                },
+                "visual": {
+                    "color": [
+                        0.5921568627,
+                        0.6235294118,
+                        0.4117647059
+                    ],
+                    "name": "Techno Bass"
+                }
+            },
+            "1407a8666632637": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 124
+                },
+                "visual": {
+                    "color": [
+                        0.9019607843,
+                        0.2392156863,
+                        0.5607843137
+                    ],
+                    "name": "Telephone #1"
+                }
+            },
+            "1407a8877a22a6d": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 124
+                },
+                "visual": {
+                    "color": [
+                        0.1333333333,
+                        0.8784313725,
+                        0.4980392157
+                    ],
+                    "name": "Telephone #2"
+                }
+            },
+            "1407a8f82255862": {
+                "data": {
+                    "group": "13fefaef0ef730a"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 66
+                },
+                "visual": {
+                    "color": [
+                        0.7803921569,
+                        0.8,
+                        0.8392156863
+                    ],
+                    "name": "Tenor Saxophone"
+                }
+            },
+            "1407a94e80515f5": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.5137254902,
+                        0.2117647059,
+                        0.5647058824
+                    ],
+                    "name": "Thunder"
+                }
+            },
+            "1407aa34a62d1ab": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 112
+                },
+                "visual": {
+                    "color": [
+                        0.431372549,
+                        0.6156862745,
+                        0.5215686275
+                    ],
+                    "name": "Tinker Bell"
+                }
+            },
+            "1407aa502fd64f5": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.0862745098,
+                        0.3058823529,
+                        0.1098039216
+                    ],
+                    "name": "TR-909 Scratch Pull"
+                }
+            },
+            "1407aa5289e6302": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.5098039216,
+                        0.831372549,
+                        0.7137254902
+                    ],
+                    "name": "TR-909 Scratch Push"
+                }
+            },
+            "1407aa83afb9d1b": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5254901961,
+                        0.1254901961,
+                        0.1843137255
+                    ],
+                    "name": "TR-808 Cowbell"
+                }
+            },
+            "1407aa8d98ce40a": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2431372549,
+                        0.6784313725,
+                        0.3098039216
+                    ],
+                    "name": "TR-808 Kick"
+                }
+            },
+            "1407aac89bd12fe": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6274509804,
+                        0.1764705882,
+                        0.537254902
+                    ],
+                    "name": "TR-808 Snare"
+                }
+            },
+            "1407aad65c4e875": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.6941176471,
+                        0.2745098039,
+                        0.3882352941
+                    ],
+                    "name": "TR-808 Clap"
+                }
+            },
+            "1407aadc14cd8f1": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7647058824,
+                        0.631372549,
+                        0.3647058824
+                    ],
+                    "name": "TR-808 Hat #1"
+                }
+            },
+            "1407aae08211017": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.5647058824,
+                        0.0196078431,
+                        0.968627451
+                    ],
+                    "name": "TR-808 Hat #2"
+                }
+            },
+            "1407aae4752a4c0": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.8156862745,
+                        0.5764705882,
+                        0.8470588235
+                    ],
+                    "name": "TR-808 Hat #3"
+                }
+            },
+            "1407aaeeec3bb1c": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.2117647059,
+                        0.2941176471,
+                        0.7333333333
+                    ],
+                    "name": "TR-808 Cymbal"
+                }
+            },
+            "1407aaffc688035": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.7176470588,
+                        0.5490196078,
+                        0.5803921569
+                    ],
+                    "name": "TR-909 Snare #1"
+                }
+            },
+            "1407ab06cf82339": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "is_drum": true
+                },
+                "visual": {
+                    "color": [
+                        0.8745098039,
+                        0.6509803922,
+                        0.2
+                    ],
+                    "name": "TR-909 Snare #2"
+                }
+            },
+            "1407ab1e0273a79": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.8980392157,
+                        0.1490196078
+                    ],
+                    "name": "Train"
+                }
+            },
+            "1407ab972aee98a": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 57
+                },
+                "visual": {
+                    "color": [
+                        0.8509803922,
+                        0.0078431373,
+                        0.1098039216
+                    ],
+                    "name": "Trombone #1"
+                }
+            },
+            "1407abcb92403c2": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 57
+                },
+                "visual": {
+                    "color": [
+                        0.8509803922,
+                        0.0078431373,
+                        0.1098039216
+                    ],
+                    "name": "Trombone #2"
+                }
+            },
+            "1407abd91520a50": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 56
+                },
+                "visual": {
+                    "color": [
+                        0.0,
+                        0.6431372549,
+                        0.9098039216
+                    ],
+                    "name": "Trumpet #1"
+                }
+            },
+            "1407ac32e77184c": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 56
+                },
+                "visual": {
+                    "color": [
+                        0.9176470588,
+                        0.5137254902,
+                        0.631372549
+                    ],
+                    "name": "Trumpet #2"
+                }
+            },
+            "1407ac53a5675ee": {
+                "data": {
+                    "group": "13fefaee40bacaf"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 58
+                },
+                "visual": {
+                    "color": [
+                        0.8666666667,
+                        0.3843137255,
+                        0.6941176471
+                    ],
+                    "name": "Tuba"
+                }
+            },
+            "1407aca1ef444f6": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 11
+                },
+                "visual": {
+                    "color": [
+                        0.2549019608,
+                        0.537254902,
+                        0.3725490196
+                    ],
+                    "name": "Vibraphone"
+                }
+            },
+            "1407acda32ff82b": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 41
+                },
+                "visual": {
+                    "color": [
+                        0.4156862745,
+                        0.4117647059,
+                        0.1058823529
+                    ],
+                    "name": "Viola"
+                }
+            },
+            "1407ae2b127d4bc": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 40
+                },
+                "visual": {
+                    "color": [
+                        0.3411764706,
+                        0.9921568627,
+                        0.0117647059
+                    ],
+                    "name": "Violin"
+                }
+            },
+            "1407aec1587079b": {
+                "data": {
+                    "group": "13fefaebab36b90"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 40
+                },
+                "visual": {
+                    "color": [
+                        0.6784313725,
+                        0.9529411765,
+                        0.6901960784
+                    ],
+                    "name": "Violin Strike"
+                }
+            },
+            "1407af17cd2a41b": {
+                "data": {
+                    "group": "13fefaed4414987"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 53
+                },
+                "visual": {
+                    "color": [
+                        0.0549019608,
+                        0.2901960784,
+                        0.4235294118
+                    ],
+                    "name": "Voice Oohs"
+                }
+            },
+            "1407af695b01c0b": {
+                "data": {
+                    "group": "13fefaf2d917d71"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 89
+                },
+                "visual": {
+                    "color": [
+                        0.4823529412,
+                        0.9019607843,
+                        0.7333333333
+                    ],
+                    "name": "Warm Pad"
+                }
+            },
+            "1407af99f9fddba": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 79
+                },
+                "visual": {
+                    "color": [
+                        0.7294117647,
+                        0.2235294118,
+                        0.6078431373
+                    ],
+                    "name": "Ocarina Fx"
+                }
+            },
+            "1407afbafc59c9d": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.8666666667,
+                        0.2392156863,
+                        0.5529411765
+                    ],
+                    "name": "Whistlin'"
+                }
+            },
+            "1407aff0440b7f2": {
+                "data": {
+                    "group": "13fefaf08896f96"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 78
+                },
+                "visual": {
+                    "color": [
+                        0.8509803922,
+                        0.0431372549,
+                        0.5137254902
+                    ],
+                    "name": "Whistle"
+                }
+            },
+            "1407b03423faa7c": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.7803921569,
+                        0.7254901961,
+                        0.3215686275
+                    ],
+                    "name": "Windchimes"
+                }
+            },
+            "1407b042f041a44": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 115
+                },
+                "visual": {
+                    "color": [
+                        0.2196078431,
+                        0.5098039216,
+                        0.3725490196
+                    ],
+                    "name": "Wood Block #1"
+                }
+            },
+            "1407b04fe8ae01e": {
+                "data": {
+                    "group": "13fefb03f42cb8f"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 115
+                },
+                "visual": {
+                    "color": [
+                        0.7137254902,
+                        0.7411764706,
+                        0.3607843137
+                    ],
+                    "name": "Wood Block #2"
+                }
+            },
+            "1407b0ce297c005": {
+                "data": {
+                    "group": "13fefae17715623"
+                },
+                "midi": {
+                    "active": true,
+                    "patch": 13
+                },
+                "visual": {
+                    "color": [
+                        0.7803921569,
+                        0.2980392157,
+                        0.7843137255
+                    ],
+                    "name": "Xylophone"
+                }
+            },
+            "1425966ba957afa": {
+                "data": {
+                    "group": "1406de351b982bc"
+                },
+                "visual": {
+                    "color": [
+                        0.7215686275,
+                        0.1960784314,
+                        0.2156862745
+                    ],
+                    "name": "Zigzagoon"
+                }
+            },
+            "1425975a3268daa": {
+                "data": {
+                    "group": "13fefaf92a6b73f"
+                },
+                "visual": {
+                    "color": [
+                        0.3803921569,
+                        0.6588235294,
+                        0.462745098
+                    ],
+                    "name": "Squidward"
+                }
+            }
+        }
+    }
+}

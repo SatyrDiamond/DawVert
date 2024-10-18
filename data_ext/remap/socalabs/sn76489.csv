@@ -1,0 +1,8 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+pulse1level,pulse1Level,1.0,0.0,1.0,Pulse 1 Level,0,Pulse 1 Level,0,Pulse 1 Level
+pulse2level,pulse2Level,0.0,0.0,1.0,Pulse 2 Level,1,Pulse 2 Level,1,Pulse 2 Level
+pulse3level,pulse3Level,0.0,0.0,1.0,Pulse 3 Level,2,Pulse 3 Level,2,Pulse 3 Level
+noiselevel,noiseLevel,0.0,0.0,1.0,Noise Level,3,Noise Level,3,Noise Level
+noisewhite,noiseWhite,0.0,0.0,1.0,Noise Type,4,Noise Type,4,Noise Type
+noiseshift,noiseShift,0.0,0.0,3.0,Noise Speed,5,Noise Speed,5,Noise Speed

@@ -1,0 +1,86 @@
+
+[chorus_univ]
+>input
+	type|native:directx:Chorus
+	param|delay
+	param|depth
+	param|feedback
+	param|frequency
+	param|phase
+	param|wetdrymix
+<input
+
+>proc
+	calc|frequency|from_one|0|10
+	calc|phase|from_one|-0.5|0.5
+	calc|feedback|from_one|-0.99|0.99
+	calc|delay|from_one|0|0.02
+<proc
+
+>output
+	type|universal:chorus
+	param|delay<delay
+	param|depth<depth
+	param|feedback<feedback
+	param|frequency<frequency
+	param|phase<phase
+	param|wetdrymix<wetdrymix
+<output
+
+[compressor_univ]
+>input
+	type|native:directx:Compressor
+	param|attack
+	param|gain
+	param|predelay
+	param|ratio
+	param|release
+	param|threshold
+<input
+
+>proc
+	calc|gain|from_one|-60|60
+	calc|attack|from_one|0.0001|0.5
+	calc|release|from_one|0.05|3
+	calc|threshold|from_one|-60|0
+	calc|ratio|from_one|1|100
+	calc|predelay|mul|1|0.004
+<proc
+
+>output
+	type|universal:compressor
+	param|attack<attack
+	param|postgain<gain
+	param|predelay<predelay
+	param|ratio<ratio
+	param|release<release
+	param|threshold<threshold
+<output
+
+[flanger_univ]
+>input
+	type|native:directx:Flanger
+	param|wetdrymix
+	param|delay
+	param|depth
+	param|feedback
+	param|frequency
+	param|phase
+<input
+
+>proc
+	calc|frequency|from_one|0|10
+	calc|phase|from_one|-0.5|0.5
+	calc|feedback|from_one|-0.99|0.99
+	calc|delay|from_one|0|0.004
+<proc
+
+>output
+	type|universal:flanger
+	param|wet<wetdrymix
+	param|frequency<frequency
+	param|depth<depth
+	param|phase<phase
+	param|feedback<feedback
+	param|delay<delay
+<output

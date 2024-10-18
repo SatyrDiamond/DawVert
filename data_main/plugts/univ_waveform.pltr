@@ -1,0 +1,68 @@
+
+[comp]
+>input
+	type|universal:compressor
+	param|attack
+	param|knee
+	param|postgain
+	param|ratio
+	param|release
+	param|threshold
+<input
+
+>proc
+	calc|attack|mul|100
+	calc|release|mul|100
+<proc
+
+>output
+	type|native:tracktion:comp
+	param|attack<attack
+	param|knee<knee
+	param|outputDb<postgain
+	param|ratio<ratio
+	param|release<release
+	param|threshold<threshold
+<output
+
+[limiter]
+>input
+	type|universal:limiter
+	param|ceiling
+	param|gain
+	param|release
+<input
+
+>proc
+	calc|release|mul|1000
+<proc
+
+>output
+	type|native:tracktion:limiter
+	param|ceiling<ceiling
+	param|gain<gain
+	param|release<release
+<output
+
+[gate]
+>input
+	type|universal:gate
+	param|attack
+	param|hold
+	param|release
+	param|threshold
+<input
+
+>proc
+	calc|attack|mul|1000
+	calc|hold|mul|1000
+	calc|release|mul|1000
+<proc
+
+>output
+	type|native:tracktion:gate
+	param|attack<attack
+	param|hold<hold
+	param|release<release
+	param|threshold<threshold
+<output

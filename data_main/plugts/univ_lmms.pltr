@@ -1,0 +1,33 @@
+
+[bitcrush]
+>input
+	type|universal:bitcrush
+	param|bits
+	param|freq
+<input
+
+>output
+	type|native:lmms:bitcrush
+	param|rate<freq
+	param|levels<bits
+<output
+
+[volpan]
+>input
+	type|universal:volpan
+	param|pan
+	param|vol
+<input
+
+>proc
+	calc|pan|mul|100
+	calc|vol|mul|100
+<proc
+
+>output
+	type|native:lmms:amplifier
+	param|pan<pan
+	param|volume<vol
+	param|right%100
+	param|left%100
+<output

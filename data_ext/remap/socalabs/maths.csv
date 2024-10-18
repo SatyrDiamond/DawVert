@@ -1,0 +1,7 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+p1,p1,1.0,0.0,1.0,p1 (0..1),0,p1 (0..1),0,p1 (0..1)
+p2,p2,1.0,0.0,1.0,p2 (0..1),1,p2 (0..1),1,p2 (0..1)
+p3,p3,1.0,-1.0,1.0,p3 (-1..1),2,p3 (-1..1),2,p3 (-1..1)
+p4,p4,1.0,-1.0,1.0,p4 (-1..1),3,p4 (-1..1),3,p4 (-1..1)
+limiter,limiter,1.0,0.0,1.0,Limiter,4,Limiter,4,Limiter

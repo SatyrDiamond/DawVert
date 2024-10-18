@@ -1,0 +1,131 @@
+[vibrato]
+>input
+	type|native:amped:Vibrato
+	param|delayLfoDepth
+	param|delayLfoRateHz
+<input
+
+>output
+	type|native:ableton:Chorus2
+	param|Amount<delayLfoDepth
+	param|Rate<delayLfoRateHz
+	param|Mode%2
+<output
+
+[tremolo]
+>input
+	type|native:amped:Tremolo
+	param|lfoARateHz
+	param|lfoADepth
+<input
+
+>output
+	type|native:ableton:AutoPan
+	param|Lfo/LfoAmount<lfoADepth
+	param|Lfo/Frequency<lfoARateHz
+<output
+
+[phaser]
+>input
+	type|native:amped:Phaser
+	param|feedback%0
+	param|hzmin%400
+	param|hzrange%4
+	param|mix%1
+	param|rate%1.5
+	param|stages%8
+<input
+
+>proc
+	calc|hzrange|div|10
+	calc|feedback|div|2
+	calc|rate|div|4
+<proc
+
+>output
+	type|native:ableton:PhaserNew
+	param|CenterFrequency<hzmin
+	param|Spread<hzrange
+	param|Feedback<feedback
+	param|Modulation_Frequency<rate
+	param|Notches<stages
+	param|DryWet<mix
+	param|Modulation_Amount%0.4
+	param|Modulation_Sync&0
+	param|Modulation_Waveform#0
+<output
+
+[flanger]
+>input
+	type|native:amped:Flanger
+	param|delayLfoDepth%0.75
+	param|delayLfoRateHz%1.0579
+	param|delayTimeMS%4
+	param|mix%1
+<input
+
+>proc
+	calc|rate|div|4
+	calc|delayTimeMS|div|1000
+<proc
+
+>output
+	type|native:ableton:PhaserNew
+	param|DryWet<mix
+	param|FlangerDelayTime<delayTimeMS
+	param|Modulation_Amount<delayLfoDepth
+	param|Modulation_Frequency<delayLfoRateHz
+	param|Modulation_Sync&0
+	param|Mode#1
+<output
+
+[chorus]
+>input
+	type|native:amped:Chorus
+	param|delayLfoDepth%1
+	param|delayLfoRateHz%1
+	param|mix%1
+	param|tone%0
+<input
+
+>proc
+	calc|delayLfoDepth|mul|0.9
+	calc|delayLfoDepth|add|0.1
+	calc|tone|pow|2
+	calc|tone|mul|2000
+<proc
+
+>output
+	type|native:ableton:Chorus2
+	param|Amount<delayLfoDepth
+	param|Rate<delayLfoRateHz
+	param|HighpassFrequency<tone
+	param|DryWet<mix
+	param|HighpassEnabled&1
+	param|Mode#1
+	param|Warmth%1
+<output
+
+[delay]
+>input
+	type|native:amped:Delay
+	param|damp
+	param|fb
+	param|mix
+	param|time
+<input
+
+>proc
+	calc|damp|mul|-6
+	calc|damp|add|9
+<proc
+
+>output
+	type|native:ableton:Delay
+	param|DelayLine_TimeL<time
+	param|DryWet<mix
+	param|Feedback<fb
+	param|Filter_Bandwidth<damp
+	param|DelayLine_SyncL&0
+	param|DelayLine_SmoothingMode#1
+<output

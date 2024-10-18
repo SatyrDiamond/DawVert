@@ -1,0 +1,19 @@
+
+[reverb]
+>input
+	type|native:amped:Reverb
+	param|fb
+	param|lpf
+	param|mix
+<input
+
+>proc
+	calc|fb|pow|2
+<proc
+
+>output
+	type|native:lmms:reverbsc
+	param|size<fb
+	param|color<lpf
+	wet|mix
+<output

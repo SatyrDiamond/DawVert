@@ -1,0 +1,8 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+sync,sync,0.0,0.0,1.0,Sync,0,Sync,0,Sync
+time,time,1.0,0.0,120.0,Delay,1,Delay,1,Delay
+beat,beat,13.0,0.0,32.0,Delay,2,Delay,2,Delay
+fb,fb,-10.0,-100.0,0.0,Feedback,3,Feedback,3,Feedback
+cf,cf,-100.0,-100.0,0.0,Crossfeed,4,Crossfeed,4,Crossfeed
+mix,mix,0.0,0.0,100.0,Mix,5,Mix,5,Mix

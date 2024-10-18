@@ -1,38 +1,11 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from io import BytesIO
 import numpy as np
+import struct
 
 # ----- Bytes -----
-
-def to_bytesio(input):
-	data = BytesIO()
-	data.write(input)
-	data.seek(0)
-	return data
-
-def readstring(data):
-	output = b''
-	terminated = 0
-	while terminated == 0:
-		char = data.read(1)
-		if char != b'\x00' and char != b'': output += char
-		else: terminated = 1
-	return output.decode('ascii')
-
-def readstring_lenbyte(file_stream, length_size, length_endian, codec):
-	stringlen = int.from_bytes(file_stream.read(length_size), length_endian)
-	if stringlen != 0: return readstring_fixedlen(file_stream, stringlen, codec)
-	else: return ''
-
-def readstring_fixedlen(file_stream, length, codec):
-	if codec != None: return file_stream.read(length).split(b'\x00')[0].decode(codec).translate(dict.fromkeys(range(32)))
-	else: return file_stream.read(length).split(b'\x00')[0].decode().translate(dict.fromkeys(range(32)))
-
-def makestring_fixedlen(textin, length):
-	textbytes = textin.encode()
-	return textbytes[:length] + b'\x00'*(length-len(textbytes))
 
 def splitbyte(value):
     first = value >> 4
@@ -78,6 +51,27 @@ def swap16(x):
     return (((x << 8) & 0xFF00) |
             ((x >> 8) & 0x00FF))
 
+def reverse_mask(x):
+    x = ((x & 0x55555555) << 1) | ((x & 0xAAAAAAAA) >> 1)
+    x = ((x & 0x33333333) << 2) | ((x & 0xCCCCCCCC) >> 2)
+    x = ((x & 0x0F0F0F0F) << 4) | ((x & 0xF0F0F0F0) >> 4)
+    x = ((x & 0x00FF00FF) << 8) | ((x & 0xFF00FF00) >> 8)
+    x = ((x & 0x0000FFFF) << 16) | ((x & 0xFFFF0000) >> 16)
+    return x
+    
+def get_bitnums_int(x):
+    return [i for i in range(x.bit_length()) if ((1 << i) & x)]
+
+def get_bitnums(x):
+    x = int.from_bytes(x, 'little')
+    return [i for i in range(x.bit_length()) if ((1 << i) & x)]
+
+def set_bitnums(x, n):
+	outvals = 0
+	for v in x: outvals += (1 << v)
+	return outvals.to_bytes(n, 'little') 
+
+
 # ----- audio -----
 
 def unsign_8(sampledata):
@@ -91,8 +85,8 @@ def unsign_16(sampledata):
     return sampledatabytes.tobytes('C')
 
 def mono2stereo(leftdata, rightdata, samplebytes):
-	leftdata_stream = to_bytesio(leftdata)
-	rightdata_stream = to_bytesio(rightdata)
+	leftdata_stream = BytesIO(leftdata)
+	rightdata_stream = BytesIO(rightdata)
 	output_stream = BytesIO()
 	for _ in range(int(len(leftdata)/samplebytes)):
 		output_stream.write(leftdata_stream.read(samplebytes))
@@ -103,28 +97,28 @@ def mono2stereo(leftdata, rightdata, samplebytes):
 # ----- RIFF -----
 
 
-def riff_read_debug_big(riffbytebuffer, offset):
-	return customchunk_read(riffbytebuffer, offset, 4, 4, "big", True)
+def iff_read_debug_big(iffbytebuffer, offset):
+	return customchunk_read(iffbytebuffer, offset, 4, 4, "big", True)
 
-def riff_read_big(riffbytebuffer, offset):
-	return customchunk_read(riffbytebuffer, offset, 4, 4, "big", False)
+def iff_read_big(iffbytebuffer, offset):
+	return customchunk_read(iffbytebuffer, offset, 4, 4, "big", False)
 
-def riff_read_debug(riffbytebuffer, offset):
-	return customchunk_read(riffbytebuffer, offset, 4, 4, "little", True)
+def iff_read_debug(iffbytebuffer, offset):
+	return customchunk_read(iffbytebuffer, offset, 4, 4, "little", True)
 
-def riff_read(riffbytebuffer, offset):
-	return customchunk_read(riffbytebuffer, offset, 4, 4, "little", False)
+def iff_read(iffbytebuffer, offset):
+	return customchunk_read(iffbytebuffer, offset, 4, 4, "little", False)
 
-def customchunk_read(riffbytebuffer, offset, in_namesize, in_chunksize, endian, debugtxt):
-	if isinstance(riffbytebuffer, (bytes, bytearray)) == True: riffbytebuffer = to_bytesio(riffbytebuffer)
+def customchunk_read(iffbytebuffer, offset, in_namesize, in_chunksize, endian, debugtxt):
+	if isinstance(iffbytebuffer, (bytes, bytearray)) == True: iffbytebuffer = BytesIO(iffbytebuffer)
 	riffobjects = []
-	riffbytebuffer.seek(0,2)
-	filesize = riffbytebuffer.tell()
-	riffbytebuffer.seek(offset)
-	while filesize > riffbytebuffer.tell():
-		chunkname = riffbytebuffer.read(in_namesize)
-		chunksize = int.from_bytes(riffbytebuffer.read(in_chunksize), endian)
-		chunkdata = riffbytebuffer.read(chunksize)
+	iffbytebuffer.seek(0,2)
+	filesize = iffbytebuffer.tell()
+	iffbytebuffer.seek(offset)
+	while filesize > iffbytebuffer.tell():
+		chunkname = iffbytebuffer.read(in_namesize)
+		chunksize = int.from_bytes(iffbytebuffer.read(in_chunksize), endian)
+		chunkdata = iffbytebuffer.read(chunksize)
 		riffobjects.append([chunkname, chunkdata])
 	if debugtxt == True:
 		print('--------')
@@ -135,7 +129,7 @@ def customchunk_read(riffbytebuffer, offset, in_namesize, in_chunksize, endian, 
 		print('--------')
 	return riffobjects
 
-def riff_make(riffobjects):
+def iff_make(riffobjects):
 	riffobjectsbytes = BytesIO()
 	for riffobject in riffobjects:
 		riffobjectsbytes.write(riffobject[0])

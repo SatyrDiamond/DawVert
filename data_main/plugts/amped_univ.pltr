@@ -1,0 +1,237 @@
+
+[univ_vibrato]
+>input
+	type|native:amped:Vibrato
+	param|delayLfoRateHz
+	param|delayLfoDepth
+<input
+
+>output
+	type|universal:vibrato
+	param|freq<delayLfoRateHz
+	param|depth<delayLfoDepth
+<output
+
+[univ_autopan]
+>input
+	type|native:amped:Tremolo
+	param|lfoARateHz
+	param|lfoADepth
+<input
+
+>output
+	type|universal:autopan
+	param|freq<lfoARateHz
+	param|depth<lfoADepth
+<output
+
+[univ_bitcrush]
+>input
+	type|native:amped:BitCrusher
+	param|bits
+	param|down
+	param|mix
+<input
+
+>proc
+	calc|down|mul|10
+	calc|down|pow_r|2
+	calc|down|mul|100
+<proc
+
+>output
+	type|universal:bitcrush
+	param|bits<bits
+	param|freq<down
+	wet|mix|
+<output
+
+[univ_compressor]
+>input
+	type|native:amped:Compressor
+	param|preGainDB
+	param|ratio
+	param|thresholdDB
+	param|attackTimeMS
+	param|releaseTimeMS
+	param|postGainDB
+	param|lookaheadTimeMS
+	param|softKneeWidth
+<input
+
+>proc
+	calc|attackTimeMS|div|1000
+	calc|releaseTimeMS|div|1000
+	calc|lookaheadTimeMS|div|1000
+	calc|softKneeWidth|mul|6
+<proc
+
+>output
+	type|universal:compressor
+	param|pregain<preGainDB
+	param|ratio<ratio
+	param|threshold<thresholdDB
+	param|attack<attackTimeMS
+	param|release<releaseTimeMS
+	param|postgain<postGainDB
+	param|lookahead<lookaheadTimeMS
+	param|knee<softKneeWidth
+<output
+
+[univ_expander]
+>input
+	type|native:amped:Expander
+	param|preGainDB
+	param|ratio
+	param|thresholdDB
+	param|attackTimeMS
+	param|releaseTimeMS
+	param|postGainDB
+	param|lookaheadTimeMS
+	param|softKneeWidth
+<input
+
+>proc
+	calc|attackTimeMS|div|1000
+	calc|releaseTimeMS|div|1000
+	calc|lookaheadTimeMS|div|1000
+	calc|softKneeWidth|mul|6
+<proc
+
+>output
+	type|universal:expander
+	param|pregain<preGainDB
+	param|ratio<ratio
+	param|threshold<thresholdDB
+	param|attack<attackTimeMS
+	param|release<releaseTimeMS
+	param|postgain<postGainDB
+	param|lookahead<lookaheadTimeMS
+	param|knee<softKneeWidth
+<output
+
+[univ_limitermini]
+>input
+	type|native:amped:LimiterMini
+	param|preGainDB
+	param|thresholdDB
+	param|releaseTimeMS
+	param|postGainDB
+<input
+
+>proc
+	calc|releaseTimeMS|div|1000
+<proc
+
+>output
+	type|universal:limiter
+	param|pregain<preGainDB
+	param|threshold<thresholdDB
+	param|release<releaseTimeMS
+	param|postgain<postGainDB
+<output
+
+[univ_limiter]
+>input
+	type|native:amped:LimiterMini
+	param|preGainDB
+	param|thresholdDB
+	param|attackTimeMS
+	param|releaseTimeMS
+	param|postGainDB
+	param|lookaheadTimeMS
+<input
+
+>proc
+	calc|attackTimeMS|div|1000
+	calc|releaseTimeMS|div|1000
+	calc|lookaheadTimeMS|div|1000
+<proc
+
+>output
+	type|universal:limiter
+	param|pregain<preGainDB
+	param|threshold<thresholdDB
+	param|attack<attackTimeMS
+	param|release<releaseTimeMS
+	param|postgain<postGainDB
+	param|lookahead<lookaheadTimeMS
+<output
+
+[univ_gate]
+>input
+	type|native:amped:Gate
+	param|preGainDB
+	param|thresholdDB
+	param|attackTimeMS
+	param|releaseTimeMS
+	param|postGainDB
+	param|lookaheadTimeMS
+	param|attackCurve
+	param|releaseCurve
+	param|hysteresisDB
+<input
+
+>proc
+	calc|attackTimeMS|div|1000
+	calc|releaseTimeMS|div|1000
+	calc|lookaheadTimeMS|div|1000
+<proc
+
+>output
+	type|universal:gate
+	param|pregain<preGainDB
+	param|threshold<thresholdDB
+	param|attack<attackTimeMS
+	param|release<releaseTimeMS
+	param|postgain<postGainDB
+	param|lookahead<lookaheadTimeMS
+	param|attack_tension<attackCurve
+	param|release_tension<releaseCurve
+	param|hysteresis<hysteresisDB
+<output
+
+[univ_flanger]
+>input
+	type|native:amped:BitCrusher
+	param|voices
+	param|delayTimeMS
+	param|delayLfoRateHz
+	param|delayLfoDepth
+	param|mix
+<input
+
+>proc
+	calc|delayTimeMS|div|1000
+	calc|delayLfoDepth|mul|20
+<proc
+
+>output
+	type|universal:flanger
+	param|voices<voices
+	param|delay<delayTimeMS
+	param|rate<delayLfoRateHz
+	param|depth<delayLfoDepth
+	wet|mix|
+<output
+
+[univ_phaser]
+>input
+	type|native:amped:Phaser
+	param|stages
+	param|rate
+	param|feedback
+	param|hzmin
+	param|hzrange
+	param|mix
+<input
+
+>output
+	type|universal:phaser
+	param|stages<stages
+	param|rate<rate
+	param|fb<feedback
+	param|hz_min<hzmin
+	param|hz_range<hzrange
+	wet|mix|
+<output

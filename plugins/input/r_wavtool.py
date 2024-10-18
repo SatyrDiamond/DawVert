@@ -95,7 +95,6 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						if waveform == 'Sine': lfo_obj.prop.shape = 'sine'
 						if waveform == 'Square': lfo_obj.prop.shape = 'square'
 
-
 					plugin_obj.filter.on = True
 					plugin_obj.filter.freq = plugin_obj.params.get('filterCutoff', 20000).value
 					plugin_obj.filter.q = plugin_obj.params.get('filterResonance', 0.71).value
@@ -222,10 +221,9 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 									sp_obj.vel_max = vr[1]/127
 									sp_obj.sampleref = bufferid
 
-
-
 				elif devicedata.sourceId == 'bc24f717-88d0-4a99-b0ac-b61d4281c7c3':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'limiter', None)
+					plugin_obj.role = 'effect'
 					plugin_obj.params.add('attack', 0.05, 'float')
 					plugin_obj.params.add('release', inputdata['release']/48000 if 'release' in inputdata else 0.3, 'float')
 					plugin_obj.params.add('pregain', inputdata['gain'] if 'gain' in inputdata else 0, 'float')
@@ -233,11 +231,13 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 				elif devicedata.sourceId == '50413fcd-de89-4db3-a308-095102c24f81':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'clipper', None)
+					plugin_obj.role = 'effect'
 					plugin_obj.params.add('pregain', inputdata['gain'] if 'gain' in inputdata else 0, 'float')
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == 'ad949dc9-c921-429d-b08e-c62eaae5e382':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'compressor', None)
+					plugin_obj.role = 'effect'
 					plugin_obj.params.add('attack', inputdata['attack']/48000 if 'attack' in inputdata else 0.001, 'float')
 					plugin_obj.params.add('release', inputdata['release']/48000 if 'release' in inputdata else 0.03, 'float')
 					plugin_obj.params.add('gain', inputdata['gain'] if 'gain' in inputdata else 0, 'float')
@@ -247,6 +247,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 				elif devicedata.sourceId == 'e0665a05-221d-42c6-9ff6-2ece5c20f80c':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'gate', None)
+					plugin_obj.role = 'effect'
 					plugin_obj.params.add('attack', inputdata['attack']/48000 if 'attack' in inputdata else 0.0001, 'float')
 					plugin_obj.params.add('release', inputdata['release']/48000 if 'release' in inputdata else 0.015, 'float')
 					plugin_obj.params.add('hold', inputdata['hold']/48000 if 'hold' in inputdata else 0.01, 'float')
@@ -256,6 +257,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 				elif devicedata.sourceId == 'c70556bf-0ba7-4283-a3cc-f2722ee390ec':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'reverb', None)
+					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(1, inputdata['mix'] if 'mix' in inputdata else 1)
 					plugin_obj.params.add('wet', 1, 'float')
 					plugin_obj.params.add('decay', inputdata['time'] if 'time' in inputdata else 5, 'float')
@@ -263,6 +265,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 				elif devicedata.sourceId == '3e2e3ece-476a-42f9-b740-7da8f5e37cc8':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'convolver', None)
+					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(1, inputdata['mix'] if 'mix' in inputdata else 1)
 					bufferid = constantsdata['impulseResponse'] if 'impulseResponse' in constantsdata else None
 					if bufferid:
@@ -294,18 +297,21 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 				elif devicedata.sourceId == '833b0ed8-575a-4dec-baa0-8d8ef7910aca':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'native', 'wavtool', 'Overdrive125')
+					plugin_obj.role = 'effect'
 					plugin_obj.params.add('pre', inputdata['pre'] if 'pre' in inputdata else 0, 'float')
 					plugin_obj.params.add('post', inputdata['post'] if 'post' in inputdata else 0, 'float')
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == 'b64cf1c9-db3b-4031-9325-2a933f9893c2':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'bitcrush', None)
+					plugin_obj.role = 'effect'
 					plugin_obj.params.add('bits', inputdata['bitDepth'] if 'bitDepth' in inputdata else 6, 'float')
 					plugin_obj.params.add('freq', inputdata['targetSampleRate'] if 'targetSampleRate' in inputdata else 8000, 'float')
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == '95c16c68-cd38-4459-8616-d0c1364650ac':
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'flanger', None)
+					plugin_obj.role = 'effect'
 
 					lfoAmount = inputdata['lfoAmount'] if 'lfoAmount' in inputdata else 7.5
 					lfoFreq = inputdata['lfoFreq'] if 'lfoFreq' in inputdata else 1
@@ -321,7 +327,6 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 			if devicedata.type == 'Bridge':
-
 				encodedState = base64.b64decode(devicedata.data['encodedState']) if 'encodedState' in devicedata.data else ''
 				sourceId = devicedata.data['sourceId'] if 'sourceId' in devicedata.data else ''
 				sourceName = devicedata.data['sourceName'] if 'sourceName' in devicedata.data else ''
@@ -344,8 +349,12 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 							chunkdata = juce_memoryblock.fromJuceBase64Encoding(IComponent.text)
 							plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', None, sourceName, chunkdata)
 
-				if isinst: instrument_dev = deviceid
-				else: effects.append(deviceid)
+				if isinst: 
+					instrument_dev = deviceid
+					if plugin_obj: plugin_obj.role = 'synth'
+				else:
+					effects.append(deviceid)
+					if plugin_obj: plugin_obj.role = 'effect'
 
 			trackdevices.append(deviceid)
 

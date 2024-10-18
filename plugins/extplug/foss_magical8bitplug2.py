@@ -7,6 +7,7 @@ from objects import globalstore
 from functions import data_xml
 from functions_plugin_ext import data_vc2xml
 from functions_plugin_ext import plugin_vst2
+from functions_plugin_ext import plugin_vst3
 
 class extplugin(plugins.base):
 	def __init__(self): 

@@ -475,12 +475,16 @@ class cvpj_plugin:
 	def external_to_user(self, convproj_obj, pluginid, exttype):
 		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
 			if exttype in prop_obj.ext_formats:
-				if dvplug_obj.check_plug(self):
-					dvplug_obj.decode_data(exttype, self)
-					dvplug_obj.params_from_plugin(convproj_obj, self, pluginid, exttype)
+				funclist = dir(dvplug_obj)
+				if 'check_plug' in funclist and 'decode_data' in funclist and 'params_from_plugin' in funclist:
+					if dvplug_obj.check_plug(self):
+						dvplug_obj.decode_data(exttype, self)
+						dvplug_obj.params_from_plugin(convproj_obj, self, pluginid, exttype)
 
 	def user_to_external(self, convproj_obj, pluginid, exttype, extplat):
 		for shortname, dvplug_obj, prop_obj in cvpj_plugin.extplug_selector.iter():
 			if self.check_wildmatch('user', prop_obj.type, prop_obj.subtype):
-				dvplug_obj.params_to_plugin(convproj_obj, self, pluginid, exttype)
-				dvplug_obj.encode_data(exttype, convproj_obj, self, extplat)
+				funclist = dir(dvplug_obj)
+				if 'params_to_plugin' in funclist and 'encode_data' in funclist:
+					dvplug_obj.params_to_plugin(convproj_obj, self, pluginid, exttype)
+					dvplug_obj.encode_data(exttype, convproj_obj, self, extplat)

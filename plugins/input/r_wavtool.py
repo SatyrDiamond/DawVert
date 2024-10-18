@@ -183,6 +183,12 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'sampler', 'multi')
 					inst_fallback = deviceid
 
+					attack = inputdata["attack"]/48000 if "attack" in inputdata else 0.001
+					decay = inputdata["decay"]/48000 if "decay" in inputdata else 0.1
+					sustain = inputdata["sustain"] if "sustain" in inputdata else 1
+					release = inputdata["release"]/48000 if "release" in inputdata else 0.05
+					plugin_obj.env_asdr_add('vol', 0, attack, 0, decay, sustain, release, 1)
+
 					LoudVel = constantsdata["LoudVelocity"] if "LoudVelocity" in constantsdata else 127
 					MedLoudVel = constantsdata["MedLoudVelocity"] if "MedLoudVelocity" in constantsdata else 85
 					MedSoftVel = constantsdata["MedSoftVelocity"] if "MedSoftVelocity" in constantsdata else 42

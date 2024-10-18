@@ -220,7 +220,7 @@ def setparams(convproj_obj, plugin_obj):
 			else:
 				logger_output.warning('VST2 plugin not placed: name or file path not found.')
 		else:
-			logger_output.warning('VST2 plugin not placed: no ID found.')
+			logger_output.warning('VST2 plugin not placed: no ID '+('for "'+vst_name+'" found.' if vst_name else "found."))
 
 		if isvalid:
 			vstdata_bytes = plugin_obj.rawdata_get('chunk')

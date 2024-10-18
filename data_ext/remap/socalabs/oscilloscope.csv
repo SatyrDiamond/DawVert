@@ -1,0 +1,12 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+samplesperpixel,samplesPerPixel,1.0,1.0,48.0,Samp/px,0,Samp/px,0,Samp/px
+zoom,zoom,1.0,0.1000000014901161,100.0,Zoom,1,Zoom,1,Zoom
+offset_l,offset_l,0.0,-2.0,2.0,Offset L,2,Offset L,2,Offset L
+offset_r,offset_r,0.0,-2.0,2.0,Offset R,3,Offset R,3,Offset R
+trigger_chan,trigger_chan,0.0,-1.0,1.0,Trigger Chan,4,Trigger Chan,4,Trigger Chan
+trigger_mode,trigger_mode,1.0,0.0,2.0,Trigger Mode,5,Trigger Mode,5,Trigger Mode
+trigger_level,trigger_level,0.0,-1.0,1.0,Trigger Level,6,Trigger Level,6,Trigger Level
+trigger_pos,trigger_pos,0.0,0.0,1.0,Trigger Pos,7,Trigger Pos,7,Trigger Pos
+trigger_run,trigger_run,0.0,0.0,1.0,Trigger Run,8,Trigger Run,8,Trigger Run
+trigger_reset,trigger_reset,0.0,0.0,1.0,Trigger Reset,9,Trigger Reset,9,Trigger Reset

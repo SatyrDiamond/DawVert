@@ -1,0 +1,30 @@
+[fruity_balance]
+
+>input
+	type|native:flstudio:fruity balance
+	param|pan
+	param|vol
+<input
+
+>proc
+	calc|pan|div|128
+	calc|vol|div|256
+	calc|vol|addmul|-1|35
+<proc
+
+>output
+	type|native:ableton:StereoGain
+	param|Balance<pan
+	param|LegacyGain<vol
+	param|BassMono&False
+	param|BassMonoFrequency%120.0
+	param|ChannelMode%1.0
+	param|DcFilter&False
+	param|Gain%0.0
+	param|MidSideBalance%1.0
+	param|Mono&False
+	param|Mute&False
+	param|PhaseInvertL&False
+	param|PhaseInvertR&False
+	param|StereoWidth%1.0
+<output

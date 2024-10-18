@@ -1,0 +1,36 @@
+{
+    "chip": {
+        "objects": {
+            "noise": {
+                "visual": {
+                    "color": [
+                        0.8,
+                        0.8,
+                        0.8
+                    ],
+                    "name": "Noise"
+                }
+            },
+            "pulse": {
+                "visual": {
+                    "color": [
+                        0.4,
+                        1.0,
+                        0.2
+                    ],
+                    "name": "Pulse"
+                }
+            },
+            "wavetable": {
+                "visual": {
+                    "color": [
+                        1.0,
+                        0.5,
+                        0.2
+                    ],
+                    "name": "Wavetable"
+                }
+            }
+        }
+    }
+}

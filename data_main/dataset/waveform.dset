@@ -1,0 +1,481 @@
+{
+    "plugin": {
+        "groups": {},
+        "objects": {
+            "1bandEq": {
+                "params": {
+                    "freq": {"def": 83.21308898925781,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq","type": "float"},
+                    "gain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain","type": "float"},
+                    "q": {"def": 0.5,"max": 4.0,"min": 0.10000000149011612,"name": "Q","type": "float"},
+                    "shape": {"def": 2,"max": 5,"name": "Shape","type": "int"},
+                    "slope": {"def": 12,"max": 48,"min": 12,"name": "Slope","type": "int"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "1-Band Equalizer"
+                }
+            },
+            "3bandEq": {
+                "params": {
+                    "freq1": {"def": 43.34996032714844,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq 1","type": "float"},
+                    "freq2": {"def": 90.23263549804688,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq 2","type": "float"},
+                    "freq3": {"def": 119.21308898925781,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq 3","type": "float"},
+                    "gain1": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain 1","type": "float"},
+                    "gain2": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain 2","type": "float"},
+                    "gain3": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain 3","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "3-Band Equalizer"
+                }
+            },
+            "4bandEq": {
+                "params": {
+                    "hiFreq": {"def": 17000.0,"max": 20000.0,"min": 20.0,"name": "hiFreq","type": "float"},
+                    "hiGain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "hiGain","type": "float"},
+                    "hiQ": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "hiQ","type": "float"},
+                    "loFreq": {"def": 79.99998474121094,"max": 20000.0,"min": 20.0,"name": "loFreq","type": "float"},
+                    "loGain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "loGain","type": "float"},
+                    "loQ": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "loQ","type": "float"},
+                    "midFreq1": {"def": 3000.0,"max": 20000.0,"min": 20.0,"name": "midFreq1","type": "float"},
+                    "midFreq2": {"def": 5000.0,"max": 20000.0,"min": 20.0,"name": "midFreq2","type": "float"},
+                    "midGain1": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "midGain1","type": "float"},
+                    "midGain2": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "midGain2","type": "float"},
+                    "midQ1": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "midQ1","type": "float"},
+                    "midQ2": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "midQ2","type": "float"},
+                    "phaseInvert": {"def": 0,"max": null,"min": null,"name": "phaseInvert","type": "bool"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "4-Band Equalizer"
+                }
+            },
+            "8bandEq": {
+                "params": {
+                    "analyzer": {"def": "0","name": "analyzer","type": "int"},
+                    "enable1lm": {"def": 1.0,"name": "enable1lm","type": "float"},
+                    "enable1rs": {"def": 1.0,"name": "enable1rs","type": "float"},
+                    "enable2lm": {"def": 1.0,"name": "enable2lm","type": "float"},
+                    "enable2rs": {"def": 1.0,"name": "enable2rs","type": "float"},
+                    "enable3lm": {"def": 1.0,"name": "enable3lm","type": "float"},
+                    "enable3rs": {"def": 1.0,"name": "enable3rs","type": "float"},
+                    "enable4lm": {"def": 1.0,"name": "enable4lm","type": "float"},
+                    "enable4rs": {"def": 1.0,"name": "enable4rs","type": "float"},
+                    "enable5lm": {"def": 1.0,"name": "enable5lm","type": "float"},
+                    "enable5rs": {"def": 1.0,"name": "enable5rs","type": "float"},
+                    "enable6lm": {"def": 1.0,"name": "enable6lm","type": "float"},
+                    "enable6rs": {"def": 1.0,"name": "enable6rs","type": "float"},
+                    "enable7lm": {"def": 1.0,"name": "enable7lm","type": "float"},
+                    "enable7rs": {"def": 1.0,"name": "enable7rs","type": "float"},
+                    "enable8lm": {"def": 1.0,"name": "enable8lm","type": "float"},
+                    "enable8rs": {"def": 1.0,"name": "enable8rs","type": "float"},
+                    "freq1lm": {"def": 22.5063,"name": "freq1lm","type": "float"},
+                    "freq1rs": {"def": 22.5063,"name": "freq1rs","type": "float"},
+                    "freq2lm": {"def": 22.5063,"name": "freq2lm","type": "float"},
+                    "freq2rs": {"def": 22.5063,"name": "freq2rs","type": "float"},
+                    "freq3lm": {"def": 22.5063,"name": "freq3lm","type": "float"},
+                    "freq3rs": {"def": 22.5063,"name": "freq3rs","type": "float"},
+                    "freq4lm": {"def": 22.5063,"name": "freq4lm","type": "float"},
+                    "freq4rs": {"def": 22.5063,"name": "freq4rs","type": "float"},
+                    "freq5lm": {"def": 22.5063,"name": "freq5lm","type": "float"},
+                    "freq5rs": {"def": 22.5063,"name": "freq5rs","type": "float"},
+                    "freq6lm": {"def": 22.5063,"name": "freq6lm","type": "float"},
+                    "freq6rs": {"def": 22.5063,"name": "freq6rs","type": "float"},
+                    "freq7lm": {"def": 22.5063,"name": "freq7lm","type": "float"},
+                    "freq7rs": {"def": 22.5063,"name": "freq7rs","type": "float"},
+                    "freq8lm": {"def": 22.5063,"name": "freq8lm","type": "float"},
+                    "freq8rs": {"def": 22.5063,"name": "freq8rs","type": "float"},
+                    "gain1lm": {"def": 0.0,"name": "gain1lm","type": "float"},
+                    "gain1rs": {"def": 0.0,"name": "gain1rs","type": "float"},
+                    "gain2lm": {"def": 0.0,"name": "gain2lm","type": "float"},
+                    "gain2rs": {"def": 0.0,"name": "gain2rs","type": "float"},
+                    "gain3lm": {"def": 0.0,"name": "gain3lm","type": "float"},
+                    "gain3rs": {"def": 0.0,"name": "gain3rs","type": "float"},
+                    "gain4lm": {"def": 0.0,"name": "gain4lm","type": "float"},
+                    "gain4rs": {"def": 0.0,"name": "gain4rs","type": "float"},
+                    "gain5lm": {"def": 0.0,"name": "gain5lm","type": "float"},
+                    "gain5rs": {"def": 0.0,"name": "gain5rs","type": "float"},
+                    "gain6lm": {"def": 0.0,"name": "gain6lm","type": "float"},
+                    "gain6rs": {"def": 0.0,"name": "gain6rs","type": "float"},
+                    "gain7lm": {"def": 0.0,"name": "gain7lm","type": "float"},
+                    "gain7rs": {"def": 0.0,"name": "gain7rs","type": "float"},
+                    "gain8lm": {"def": 0.0,"name": "gain8lm","type": "float"},
+                    "gain8rs": {"def": 0.0,"name": "gain8rs","type": "float"},
+                    "mode": {"def": 0,"max": 2,"name": "mode","type": "int"},
+                    "q1lm": {"def": 0.5,"name": "q1lm","type": "float"},
+                    "q1rs": {"def": 0.5,"name": "q1rs","type": "float"},
+                    "q2lm": {"def": 0.5,"name": "q2lm","type": "float"},
+                    "q2rs": {"def": 0.5,"name": "q2rs","type": "float"},
+                    "q3lm": {"def": 0.5,"name": "q3lm","type": "float"},
+                    "q3rs": {"def": 0.5,"name": "q3rs","type": "float"},
+                    "q4lm": {"def": 0.5,"name": "q4lm","type": "float"},
+                    "q4rs": {"def": 0.5,"name": "q4rs","type": "float"},
+                    "q5lm": {"def": 0.5,"name": "q5lm","type": "float"},
+                    "q5rs": {"def": 0.5,"name": "q5rs","type": "float"},
+                    "q6lm": {"def": 0.5,"name": "q6lm","type": "float"},
+                    "q6rs": {"def": 0.5,"name": "q6rs","type": "float"},
+                    "q7lm": {"def": 0.5,"name": "q7lm","type": "float"},
+                    "q7rs": {"def": 0.5,"name": "q7rs","type": "float"},
+                    "q8lm": {"def": 0.5,"name": "q8lm","type": "float"},
+                    "q8rs": {"def": 0.5,"name": "q8rs","type": "float"},
+                    "shape1lm": {"def": 1.0,"name": "shape1lm","type": "float"},
+                    "shape1rs": {"def": 1.0,"name": "shape1rs","type": "float"},
+                    "shape2lm": {"def": 1.0,"name": "shape2lm","type": "float"},
+                    "shape2rs": {"def": 1.0,"name": "shape2rs","type": "float"},
+                    "shape3lm": {"def": 1.0,"name": "shape3lm","type": "float"},
+                    "shape3rs": {"def": 1.0,"name": "shape3rs","type": "float"},
+                    "shape4lm": {"def": 1.0,"name": "shape4lm","type": "float"},
+                    "shape4rs": {"def": 1.0,"name": "shape4rs","type": "float"},
+                    "shape5lm": {"def": 1.0,"name": "shape5lm","type": "float"},
+                    "shape5rs": {"def": 1.0,"name": "shape5rs","type": "float"},
+                    "shape6lm": {"def": 1.0,"name": "shape6lm","type": "float"},
+                    "shape6rs": {"def": 1.0,"name": "shape6rs","type": "float"},
+                    "shape7lm": {"def": 1.0,"name": "shape7lm","type": "float"},
+                    "shape7rs": {"def": 1.0,"name": "shape7rs","type": "float"},
+                    "shape8lm": {"def": 1.0,"name": "shape8lm","type": "float"},
+                    "shape8rs": {"def": 1.0,"name": "shape8rs","type": "float"},
+                    "slope1lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope1rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope2lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope2rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope3lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope3rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope4lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope4rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope5lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope5rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope6lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope6rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope7lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope7rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope8lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
+                    "slope8rs": {"def": 12,"max": 48,"min": 12,"type": "int"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "8-Band Equalizer"
+                }
+            },
+            "chorus": {
+                "params": {
+                    "depthMs": {"def": 3.0,"max": 20.0,"min": 0.10000000149011612,"name": "depthMs","type": "float"},
+                    "mixProportion": {"def": 0.5,"name": "mixProportion","type": "float"},
+                    "speedHz": {"def": 1.0,"max": 10.0,"min": 0.10000000149011612,"name": "speedHz","type": "float"},
+                    "width": {"def": 0.5,"name": "width","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Chorus (Old)"
+                }
+            },
+            "chorusEffect": {
+                "params": {
+                    "delay": {"def": 10.0,"max": 30.0,"name": "Delay","type": "float"},
+                    "depth": {"def": 20.0,"max": 20.0,"name": "Depth","type": "float"},
+                    "mix": {"def": 1.0,"name": "Mix","type": "float"},
+                    "mixLock": {"def": 0,"max": null,"min": null,"name": "Mix Lock","type": "bool"},
+                    "mode": {"def": 1,"max": 2,"name": "Mode","type": "int"},
+                    "rateSyncOff": {"def": 0.4000000059604645,"max": 5.0,"min": 0.019999999552965164,"name": "Rate Sec","type": "float"},
+                    "rateSyncOn": {"def": 15,"max": 35,"name": "Rate Beat","type": "int"},
+                    "sync": {"def": false,"max": null,"min": null,"name": "Sync","type": "bool"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Chorus"
+                }
+            },
+            "comp": {
+                "params": {
+                    "attack": {"def": 50.0,"max": 100.0,"min": 1.0,"name": "attack","type": "float"},
+                    "inputDb": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "inputDb","type": "float"},
+                    "knee": {"def": 0.0,"max": 18.0,"name": "knee","type": "float"},
+                    "outputDb": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "outputDb","type": "float"},
+                    "ratio": {"def": 2.0,"max": 100.0,"min": 1.0,"name": "ratio","type": "float"},
+                    "release": {"def": 500.0,"max": 1000.0,"min": 1.0,"name": "release","type": "float"},
+                    "rms": {"def": 0.0,"name": "rms","type": "float"},
+                    "sidechainTrigger": {"def": 0,"max": null,"min": null,"name": "sidechainTrigger","type": "bool"},
+                    "threshold": {"def": -30.0,"max": 0.0,"min": -60.0,"name": "threshold","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Compressor"
+                }
+            },
+            "compressor": {
+                "params": {
+                    "attack": {"def": 100.0,"max": 200.0,"min": 0.30000001192092896,"name": "attack","type": "float"},
+                    "inputDb": {"def": 0.0,"max": 24.0,"min": -24.0,"name": "inputDb","type": "float"},
+                    "outputDb": {"def": 0.0,"max": 24.0,"min": -10.0,"name": "outputDb","type": "float"},
+                    "ratio": {"def": 0.5,"max": 0.9499989748001099,"name": "ratio","type": "float"},
+                    "release": {"def": 100.0,"max": 300.0,"min": 10.0,"name": "release","type": "float"},
+                    "sidechainTrigger": {"def": 0,"max": null,"min": null,"name": "sidechainTrigger","type": "bool"},
+                    "threshold": {"def": 0.5011872053146362,"min": 0.009999999776482582,"name": "threshold","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Compressor (Old)"
+                }
+            },
+            "delay": {
+                "params": {
+                    "feedback": {"def": -6.0,"max": 0.0,"min": -30.0,"name": "feedback","type": "float"},
+                    "length": {"def": 149.0,"max": 1000.0,"name": "length","type": "float"},
+                    "mix": {"def": 0.3,"name": "mix","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Delay (Old)"
+                }
+            },
+            "distortion": {
+                "params": {
+                    "drive": {"def": 0.0,"name": "drive","type": "float"},
+                    "dtype": {"def": 0,"max": 5,"name": "dtype","type": "int"},
+                    "emphasis": {"def": 0.25,"name": "emphasis","type": "float"},
+                    "mix": {"def": 1.0,"name": "mix","type": "float"},
+                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
+                    "postGain": {"def": 1.0,"name": "postGain","type": "float"},
+                    "tone": {"def": 1.0,"name": "tone","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Distortion"
+                }
+            },
+            "djeq": {
+                "params": {
+                    "bass": {"def": 1.0,"name": "bass","type": "float"},
+                    "freq1": {"def": 59.213096618652344,"max": 135.07623291015625,"min": 15.487000465393066,"name": "freq1","type": "float"},
+                    "freq2": {"def": 99.07624816894531,"max": 135.07623291015625,"min": 15.487000465393066,"name": "freq2","type": "float"},
+                    "mid": {"def": 1.0,"name": "mid","type": "float"},
+                    "treble": {"def": 1.0,"name": "treble","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "DJ EQ"
+                }
+            },
+            "djfilter": {
+                "params": {
+                    "freq": {"def": 0.0,"name": "freq","type": "float"},
+                    "mix": {"def": 1.0,"name": "mix","type": "float"},
+                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
+                    "q": {"def": 0.7070000171661377,"max": 4.0,"min": 0.10000000149011612,"name": "q","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "DJ Filter"
+                }
+            },
+            "gate": {
+                "params": {
+                    "attack": {"def": 3.0267577171325684,"max": 100.0,"min": 0.10000000149011612,"name": "attack","type": "float"},
+                    "hold": {"def": 29.296875,"max": 1000.0,"name": "hold","type": "float"},
+                    "release": {"def": 100.0,"max": 1000.0,"min": 1.0,"name": "release","type": "float"},
+                    "threshold": {"def": -40.0,"max": 0.0,"min": -60.0,"name": "threshold","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Gate"
+                }
+            },
+            "limiter": {
+                "params": {
+                    "ceiling": {"def": -0.2999992370605469,"max": 0.0,"min": -60.0,"name": "ceiling","type": "float"},
+                    "gain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "gain","type": "float"},
+                    "release": {"def": 300.0,"max": 300.0,"min": 1.0,"name": "release","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Limiter"
+                }
+            },
+            "lowpass": {
+                "params": {
+                    "frequency": {"def": 4000.0,"max": 22000.0,"min": 10.0,"name": "Frequency","type": "float"},
+                    "mode": {"def": "lowpass","max": null,"min": null,"name": "Mode","noauto": true,"type": "string"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Low Pass (Old)"
+                }
+            },
+            "naturalReverb": {
+                "params": {
+                    "decay": {"def": 0.2,"name": "decay","type": "float"},
+                    "definition": {"def": 0.8,"name": "definition","type": "float"},
+                    "diffusion": {"def": 0.829296886920929,"name": "diffusion","type": "float"},
+                    "highCut": {"def": 1.0,"name": "highCut","type": "float"},
+                    "highDamp": {"def": 1.0,"name": "highDamp","type": "float"},
+                    "lowCut": {"def": 0.0,"name": "lowCut","type": "float"},
+                    "lowDamp": {"def": 0.0,"name": "lowDamp","type": "float"},
+                    "mix": {"def": 0.5,"name": "mix","type": "float"},
+                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
+                    "pan": {"def": 0.5,"name": "pan","type": "float"},
+                    "preDelay": {"def": 0.0,"name": "preDelay","type": "float"},
+                    "size": {"def": 0.5,"name": "size","type": "float"},
+                    "slope": {"def": 0.25,"name": "slope","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Natural Reverb"
+                }
+            },
+            "nonLinearReverb": {
+                "params": {
+                    "decay": {"def": 0.2,"name": "decay","type": "float"},
+                    "definition": {"def": 0.25,"name": "definition","type": "float"},
+                    "diffusion": {"def": 0.8,"name": "diffusion","type": "float"},
+                    "highCut": {"def": 1.0,"name": "highCut","type": "float"},
+                    "highDamp": {"def": 1.0,"name": "highDamp","type": "float"},
+                    "lowCut": {"def": 0.0,"name": "lowCut","type": "float"},
+                    "lowDamp": {"def": 0.0,"name": "lowDamp","type": "float"},
+                    "mix": {"def": 0.5,"name": "mix","type": "float"},
+                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
+                    "pan": {"def": 0.5,"name": "pan","type": "float"},
+                    "preDelay": {"def": 0.0,"name": "preDelay","type": "float"},
+                    "size": {"def": 0.5,"name": "size","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Non-linear Reverb"
+                }
+            },
+            "phaser": {
+                "params": {
+                    "depth": {"def": 5.0,"max": 7.0,"min": 0.10000000149011612,"name": "depth","type": "float"},
+                    "feedback": {"def": 0.699999988079071,"max": 0.9900000095367432,"name": "feedback","type": "float"},
+                    "rate": {"def": 0.4000000059604645,"max": 16.0,"min": 0.009999999776482582,"name": "rate","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Phaser (Old)"
+                }
+            },
+            "phaser2": {
+                "params": {
+                    "ceiling": {"def": 20000.0,"max": 20000.0,"name": "ceiling","type": "float"},
+                    "feedback": {"def": 50.0,"max": 100.0,"name": "feedback","type": "float"},
+                    "floor": {"def": 20.0,"max": 20000.0,"name": "floor","type": "float"},
+                    "mix": {"def": 1.0,"name": "mix","type": "float"},
+                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
+                    "rateSyncOn": {"def": 8,"max": 35,"name": "rateSyncOn","type": "int"},
+                    "stages": {"def": 6,"max": 12,"name": "stages","type": "int"},
+                    "sync": {"def": 0,"max": null,"min": null,"name": "sync","type": "bool"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Phaser"
+                }
+            },
+            "pitchShifter": {
+                "data": {
+                    "group": ""
+                },
+                "params": {
+                    "elastiqueOptions": {"def": "1/0/0/0/64","max": null,"min": null,"name": "Elastique Options","noauto": true,"type": "string"},
+                    "semitonesUp": {"def": 0.0,"max": 24.0,"min": -24.0,"name": "Pitch","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Pitch Shifter"
+                }
+            },
+            "plateReverb": {
+                "params": {
+                    "decay": {"def": 0.2,"name": "decay","type": "float"},
+                    "definition": {"def": 0.8,"name": "definition","type": "float"},
+                    "diffusion": {"def": 0.8,"name": "diffusion","type": "float"},
+                    "highCut": {"def": 1.0,"name": "highCut","type": "float"},
+                    "highDamp": {"def": 1.0,"name": "highDamp","type": "float"},
+                    "lowCut": {"def": 0.0,"name": "lowCut","type": "float"},
+                    "lowDamp": {"def": 0.0,"name": "lowDamp","type": "float"},
+                    "mix": {"def": 0.5,"name": "mix","type": "float"},
+                    "mixLock": {"def": 1.0,"name": "mixLock","type": "float"},
+                    "pan": {"def": 0.5,"name": "pan","type": "float"},
+                    "preDelay": {"def": 0.0,"name": "preDelay","type": "float"},
+                    "size": {"def": 0.5,"name": "size","type": "float"},
+                    "slope": {"def": 0.25,"name": "slope","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Plate Reverb"
+                }
+            },
+            "reverb": {
+                "params": {
+                    "damp": {"def": 0.5,"name": "damp","type": "float"},
+                    "dry": {"def": 0.5,"name": "dry","type": "float"},
+                    "mode": {"def": 0.0,"name": "mode","type": "float"},
+                    "roomSize": {"def": 0.300000011920929,"name": "roomSize","type": "float"},
+                    "wet": {"def": 0.3333333432674408,"name": "wet","type": "float"},
+                    "width": {"def": 0.970703125,"name": "width","type": "float"}
+                },
+                "visual": {
+                    "name": "Reverb (Old)"
+                }
+            },
+            "stereoDelay": {
+                "data": {
+                    "group": ""
+                },
+                "params": {
+                    "crossL": {"def": 8.0,"max": 99.0,"name": "crossL","type": "float"},
+                    "crossR": {"def": 8.0,"max": 99.0,"name": "crossR","type": "float"},
+                    "delaySyncOffL": {"def": 0.0,"max": 5000.0,"name": "delaySyncOffL","type": "float"},
+                    "delaySyncOffR": {"def": 0.0,"max": 5000.0,"name": "delaySyncOffR","type": "float"},
+                    "delaySyncOnL": {"def": 1,"max": 35,"name": "delaySyncOnL","type": "int"},
+                    "delaySyncOnR": {"def": 1,"max": 35,"name": "delaySyncOnR","type": "int"},
+                    "feedbackL": {"def": 8.0,"max": 99.0,"name": "feedbackL","type": "float"},
+                    "feedbackR": {"def": 8.0,"max": 99.0,"name": "feedbackR","type": "float"},
+                    "highcut": {"def": 5000.0,"max": 20000.0,"min": 20.0,"name": "highcut","type": "float"},
+                    "lowcut": {"def": 300.0,"max": 20000.0,"min": 20.0,"name": "lowcut","type": "float"},
+                    "mix": {"def": 1.0,"name": "mix","type": "float"},
+                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
+                    "panL": {"def": -1.0,"min": -1.0,"name": "panL","type": "float"},
+                    "panR": {"def": 1.0,"min": -1.0,"name": "panR","type": "float"},
+                    "sync": {"def": 0,"name": "sync","type": "int"},
+                    "volL": {"def": 0.0,"max": 6.0,"min": -12.0,"name": "volL","type": "float"},
+                    "volR": {"def": 0.0,"max": 6.0,"min": -12.0,"name": "volR","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Delay"
+                }
+            },
+            "volume": {
+                "params": {
+                    "pan": {"def": 0.0,"min": -1.0,"name": "Pan","type": "float"},
+                    "volume": {"def": 1.0,"name": "Volume","type": "float"}
+                },
+                "visual": {
+                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
+                    ],
+                    "name": "Volume"
+                }
+            }
+        }
+    }
+}

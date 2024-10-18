@@ -1,0 +1,97 @@
+
+[fruity_reeverb]
+>input
+	type|native:flstudio:fruity reeverb
+	param|lowcut
+	param|highcut
+	param|room_size
+	param|predelay
+	param|diffusion
+	param|decay
+	param|hidamping
+	param|dry
+	param|reverb
+<input
+
+>proc
+	calc|lowcut|valrange|0|65536|20|3000
+	calc|highcut|valrange|0|65536|500|22050
+	calc|room_size|div|65536
+	calc|diffusion|div|65536
+	calc|decay|valrange|0|65536|0.1|20
+	calc|hidamping|valrange|0|65536|500|22050
+	calc|dry|div|65536
+	calc|reverb|div|65536
+<proc
+
+>output
+	type|universal:reverb
+	param|low_cut<lowcut
+	param|high_cut<highcut
+	param|size<room_size
+	param|predelay<predelay
+	param|diffusion<diffusion
+	param|decay<decay
+	param|high_xo<hidamping
+	param|dry<dry
+	param|wet<reverb
+<output
+
+[fruity_reeverb_2]
+>input
+	type|native:flstudio:fruity reeverb 2
+	param|lowcut
+	param|highcut
+	param|predelay
+	param|room_size
+	param|diffusion
+	param|decay
+	param|hidamping
+	param|bass
+	param|dry
+	param|wet
+<input
+
+>proc
+	calc|highcut|mul|100
+	calc|predelay|div|38.4
+	calc|decay|div|10
+	calc|hidamping|mul|100
+	calc|bass|div|100
+	calc|dry|div|128
+	calc|wet|div|128
+	calc|diffusion|div|100
+	calc|room_size|div|100
+<proc
+
+>output
+	type|universal:reverb
+	param|low_cut<lowcut
+	param|high_cut<highcut
+	param|size<room_size
+	param|predelay<predelay
+	param|diffusion<diffusion
+	param|decay<decay
+	param|high_xo<hidamping
+	param|low_mult<bass
+	param|dry<dry
+	param|wet<wet
+<output
+
+[fruity_balance]
+>input
+	type|native:flstudio:fruity balance
+	param|pan
+	param|vol
+<input
+
+>proc
+	calc|pan|div|128
+	calc|vol|div|256
+<proc
+
+>output
+	type|universal:volpan
+	param|pan<pan
+	param|vol<vol
+<output

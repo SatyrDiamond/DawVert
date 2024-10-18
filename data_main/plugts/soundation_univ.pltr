@@ -1,0 +1,48 @@
+
+[compressor]
+>input
+	type|native:soundation:com.soundation.degrader
+	param|reduction
+	param|rate
+	param|mix
+<input
+
+>proc
+	calc|rate|from_one|44100|1000
+	calc|reduction|mul|50
+	calc|attack|mul|200
+	calc|attack|div|1000
+<proc
+
+>output
+	type|universal:bitcrush
+	param|bits<reduction
+	param|freq<rate
+	wet|mix
+<output
+
+[equalizer]
+>input
+	type|native:soundation:com.soundation.equalizer
+	param|low
+	param|mid
+	param|high
+<input
+
+>proc
+	calc|low|sub|0.5
+	calc|mid|sub|0.5
+	calc|high|sub|0.5
+	calc|low|mul|24
+	calc|mid|mul|24
+	calc|high|mul|24
+<proc
+
+>output
+	type|universal:eq:3band
+	param|low_gain<low
+	param|mid_gain<mid
+	param|high_gain<high
+	param|lowmid_freq%250.0
+	param|midhigh_freq%2500.0
+<output

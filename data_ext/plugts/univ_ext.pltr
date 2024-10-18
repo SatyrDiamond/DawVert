@@ -1,0 +1,296 @@
+
+[socalabs_compressor]
+>input
+	type|universal:compressor
+	param|attack
+	param|release
+	param|ratio
+	param|threshold
+	param|knee
+	param|pregain
+	param|postgain
+<input
+
+>proc
+	calc|attack|mul|1000
+	calc|release|mul|1000
+<proc
+
+>output
+	type|user:socalabs:compressor
+	param|attack
+	param|release
+	param|ratio
+	param|threshold
+	param|knee
+	param|input<pregain
+	param|output<postgain
+<output
+
+[socalabs_expander]
+>input
+	type|universal:expander
+	param|attack
+	param|release
+	param|ratio
+	param|threshold
+	param|knee
+	param|pregain
+	param|postgain
+<input
+
+>proc
+	calc|attack|mul|2000
+	calc|release|mul|2000
+<proc
+
+>output
+	type|user:socalabs:expander
+	param|attack
+	param|release
+	param|ratio
+	param|threshold
+	param|knee
+	param|input<pregain
+	param|output<postgain
+<output
+
+[socalabs_limiter]
+>input
+	type|universal:limiter
+	param|attack
+	param|release
+	param|threshold
+	param|pregain
+	param|postgain
+<input
+
+>proc
+	calc|attack|mul|1000
+	calc|release|mul|1000
+<proc
+
+>output
+	type|user:socalabs:limiter
+	param|attack
+	param|release
+	param|threshold
+	param|input<pregain
+	param|output<postgain
+<output
+
+[socalabs_gate]
+>input
+	type|universal:gate
+	param|attack
+	param|release
+	param|ratio
+	param|threshold
+	param|knee
+	param|pregain
+	param|postgain
+<input
+
+>proc
+	calc|attack|mul|1000
+	calc|release|mul|1000
+<proc
+
+>output
+	type|user:socalabs:gate
+	param|attack
+	param|release
+	param|ratio
+	param|threshold
+	param|knee
+	param|input<pregain
+	param|output<postgain
+<output
+
+[airwindows_vibrato]
+>input
+	type|universal:vibrato
+	param|freq
+	param|depth
+<input
+
+>proc
+	calc|freq|add|-0.1
+	calc|freq|pow_r|0.72
+	out_store|freq|freq
+	out_store|depth|depth
+<proc
+
+>output
+	type|user:airwindows:vibrato
+	param|speed<freq
+	param|depth<depth
+<output
+
+[ladspa_vibrato]
+>input
+	type|universal:vibrato
+	param|freq
+	param|depth
+<input
+
+>proc
+	calc|depth|mul|20
+<proc
+
+>output
+	type|external:ladspa
+	param|ext_param_0<freq
+	param|ext_param_1<depth
+	param|ext_param_0_1<freq
+	param|ext_param_1_1<depth
+<output
+
+[vst2_autopan]
+>input
+	type|universal:autopan
+	param|freq
+	param|depth
+<input
+
+>proc
+	calc|freq|div|8
+	out_store|freq|freq
+	out_store|depth|depth
+<proc
+
+>output
+	type|user:airwindows:autopan
+	param|rate<freq
+	param|phase%1.0
+	param|wide%0.0
+	param|dry_wet<depth
+<output
+
+[ladspa_autopan]
+>input
+	type|universal:tremolo
+	param|freq
+	param|depth
+<input
+
+>proc
+	calc|depth|mul|100
+<proc
+
+>output
+	type|external:ladspa
+	param|ext_param_0<freq
+	param|ext_param_1<depth
+	param|ext_param_0_1<freq
+	param|ext_param_1_1<depth
+	param|ext_param_2%0.0
+	param|ext_param_2_1%0.0
+<output
+
+[ladspa_flanger]
+>input
+	type|universal:flanger
+	param|delay
+	param|rate
+	param|depth
+<input
+
+>output
+	type|external:ladspa
+	param|ext_param_4<delay
+	param|ext_param_5<depth
+	param|ext_param_6<rate
+	param|ext_param_7%0.01
+	param|ext_param_8%0.0
+	param|ext_param_9%0.0
+	param|ext_param_10%1.0
+	param|ext_param_11%1.0
+	param|ext_param_12%1.0
+	param|ext_param_13%1.0
+	param|ext_param_14%1.0
+	param|ext_param_23%1.0
+<output
+
+[3band_vst2]
+>input
+	type|universal:eq:3band
+	param|low_gain
+	param|mid_gain
+	param|high_gain
+	param|lowmid_freq
+	param|midhigh_freq
+	param|postgain
+<input
+
+>proc
+	calc|low_gain|to_one|-24|24
+	calc|mid_gain|to_one|-24|24
+	calc|high_gain|to_one|-24|24
+	calc|postgain|to_one|-24|24
+	calc|lowmid_freq|to_one|0|1000
+	calc|midhigh_freq|to_one|1000|20000
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<low_gain
+	name|Low
+	param|ext_param_1<mid_gain
+	name|Mid
+	param|ext_param_2<high_gain
+	name|High
+	param|ext_param_3<postgain
+	name|Master
+	param|ext_param_4<lowmid_freq
+	name|Low-Mid Freq
+	param|ext_param_5<midhigh_freq
+	name|Mid-High Freq
+<output
+
+[dragonfly_hall]
+>input
+	type|universal:reverb
+	param|low_cut
+	param|high_cut
+	param|size
+	param|predelay
+	param|diffusion
+	param|decay
+	param|low_xo
+	param|high_xo
+	param|low_mult%1.0
+	param|high_mult%1.0
+	param|early_level
+	param|early_send
+	param|dry
+	param|wet
+<input
+
+>proc
+	calc|size|mul|100
+	calc|delay|mul|100
+	calc|diffuse|mul|100
+	calc|early_level|mul|100
+	calc|early_send|mul|100
+	calc|dry|mul|100
+	calc|wet|mul|100
+<proc
+
+>output
+	type|user:michaelwillis:dragonfly_hall
+	param|low_cut
+	param|high_cut
+	param|size
+	param|delay
+	param|diffuse
+	param|decay
+	param|low_xo
+	param|high_xo
+	param|low_mult%1.0
+	param|high_mult%1.0
+	param|early_level
+	param|early_send
+	param|dry_level<dry
+	param|late_level<wet
+<output

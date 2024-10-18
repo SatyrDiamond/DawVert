@@ -1,0 +1,102 @@
+[phaser]
+>input
+	type|native:amped:Phaser
+	param|stages
+	param|rate
+	param|feedback
+	param|hzmin
+	param|hzrange
+	param|mix
+<input
+
+>proc
+	calc|pan|div|128
+	calc|hzmin|div|2000
+	calc|hzrange|div|10
+	calc|mix|div|2
+
+	calc|rate|mul|5000
+	calc|feedback|mul|1000
+	calc|hzmin|mul|1000
+	calc|hzrange|mul|1000
+	calc|stages|sub|1
+	calc|mix|mul|1024
+<proc
+
+>output
+	type|native:flstudio:fruity phaser
+	param|num_stages<stages
+	param|sweep_freq<rate
+	param|feedback<feedback
+	param|depth_min<hzmin
+	param|depth_max<hzrange
+	param|drywet<mix
+	param|gain%4000
+<output
+
+[delay]
+>input
+	type|native:amped:Delay
+	param|cross
+	param|damp
+	param|fb
+	param|mix
+	param|offset
+	param|time
+<input
+
+>proc
+	calc|damp|mul|-1
+	calc|damp|add|1
+	calc|time|pow|0.3333
+	calc|mix|mul|6000
+	calc|fb|mul|4800
+	calc|damp|mul|6000
+	calc|time|mul|768
+<proc
+
+>output
+	type|native:flstudio:fruity delay 3
+	param|wet<mix
+	param|feedback_level<fb
+	param|feedback_cutoff<damp
+	param|delay_time<time
+	param|dry%6000
+	param|feedback_bits%6000
+	param|feedback_sample_rate%60000
+	param|offset%3000
+<output
+
+[flanger]
+>input
+	type|native:amped:Flanger
+	param|delayLfoDepth
+	param|delayLfoRateHz
+	param|delayTimeMS
+	param|mix
+	param|tone
+	param|voices
+<input
+
+>proc
+	calc|delayLfoRateHz|div|5
+	calc|delayLfoRateHz|pow|0.168
+	calc|delayTimeMS|div|20
+	calc|delayTimeMS|pow|0.38
+	calc|delayLfoDepth|div|2
+	calc|delayLfoDepth|mul|5000
+	calc|delayLfoRateHz|mul|5000
+	calc|delayTimeMS|mul|1024
+<proc
+
+>output
+	type|native:flstudio:fruity flanger
+	param|depth<delayLfoDepth
+	param|rate<delayLfoRateHz
+	param|delay<delayTimeMS
+	param|phase%180
+	param|cross%4000
+	param|dry%4000
+	param|wet%4000
+	wet|mix
+<output

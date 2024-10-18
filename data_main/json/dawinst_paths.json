@@ -1,0 +1,55 @@
+{
+	"win": {
+		"lmms": [
+			"C:\\Program Files\\LMMS\\data\\samples\\"
+		],
+		"flp": [
+			"C:\\Program Files\\Image-Line\\FL Studio 2024\\", 
+			"C:\\Program Files\\Image-Line\\FL Studio 21\\", 
+			"C:\\Program Files\\Image-Line\\FL Studio 20\\",
+			"C:\\Program Files\\Image-Line\\FL Studio 8\\",
+			"C:\\Program Files\\Image-Line\\FL Studio 7\\",
+			"C:\\Program Files\\Image-Line\\FLStudio5\\",
+			"C:\\Program Files\\FLStudio4\\",
+			"C:\\Program Files\\FruityLoops3.5\\",
+			"C:\\Program Files\\FruityLoops3\\",
+			"C:\\Program Files (x86)\\Image-Line\\FL Studio 2024\\",
+			"C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\", 
+			"C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\",
+			"C:\\Program Files (x86)\\Image-Line\\FL Studio 8\\",
+			"C:\\Program Files (x86)\\Image-Line\\FL Studio 7\\",
+			"C:\\Program Files (x86)\\Image-Line\\FLStudio5\\",
+			"C:\\Program Files (x86)\\FLStudio4\\",
+			"C:\\Program Files (x86)\\FruityLoops3.5\\",
+			"C:\\Program Files (x86)\\FruityLoops3\\",
+			],
+		"serato": [
+			"%%user_win%%\\Music\\Serato Studio\\Content\\"
+		],
+	},
+	"unix": {
+		"lmms": [
+			"/usr/share/lmms/samples/"
+		],
+		"flp": [
+			"%%wine_c%%\\Program Files\\Image-Line\\FL Studio 2024\\", 
+			"%%wine_c%%\\Program Files\\Image-Line\\FL Studio 21\\", 
+			"%%wine_c%%\\Program Files\\Image-Line\\FL Studio 20\\",
+			"%%wine_c%%\\Program Files\\Image-Line\\FL Studio 8\\",
+			"%%wine_c%%\\Program Files\\Image-Line\\FL Studio 7\\",
+			"%%wine_c%%\\Program Files\\Image-Line\\FLStudio5\\",
+			"%%wine_c%%\\Program Files\\FLStudio4\\",
+			"%%wine_c%%\\Program Files\\FruityLoops3.5\\",
+			"%%wine_c%%\\Program Files\\FruityLoops3\\",
+			"%%wine_c%%\\Program Files (x86)\\Image-Line\\FL Studio 2024\\",
+			"%%wine_c%%\\Program Files (x86)\\Image-Line\\FL Studio 21\\", 
+			"%%wine_c%%\\Program Files (x86)\\Image-Line\\FL Studio 20\\",
+			"%%wine_c%%\\Program Files (x86)\\Image-Line\\FL Studio 8\\",
+			"%%wine_c%%\\Program Files (x86)\\Image-Line\\FL Studio 7\\",
+			"%%wine_c%%\\Program Files (x86)\\Image-Line\\FLStudio5\\",
+			"%%wine_c%%\\Program Files (x86)\\FLStudio4\\",
+			"%%wine_c%%\\Program Files (x86)\\FruityLoops3.5\\",
+			"%%wine_c%%\\Program Files (x86)\\FruityLoops3\\",
+			],
+	}
+}

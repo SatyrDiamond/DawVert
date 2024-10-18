@@ -1,0 +1,188 @@
+
+[limiter]
+>input
+	type|native:ableton:Limiter
+	param|Ceiling
+	param|Gain
+	param|Release
+	param|AutoRelease
+<input
+
+>proc
+	calc|Release|div|1000
+<proc
+
+>output
+	type|universal:limiter
+	param|ceiling<Ceiling
+	param|gain<Gain
+	param|release<Release
+	param|release_auto<AutoRelease
+<output
+
+[redux2]
+>input
+	type|native:ableton:Redux2
+	param|BitDepth
+	param|SampleRate
+	param|DryWet
+<input
+
+>output
+	type|universal:bitcrush
+	param|bits<BitDepth
+	param|freq<SampleRate
+	wet|mix
+<output
+
+[compressor2_comp]
+>input
+	type|native:ableton:Compressor2
+	param|Threshold
+	param|Ratio
+	param|Attack
+	param|Release
+	param|Gain
+	param|DryWet
+	param|Model
+	param|Knee
+<input
+
+>proc
+	calc|Threshold|log|0.8913
+	calc|Threshold|mul|-1
+	calc|Attack|div|1000
+	calc|Release|div|1000
+	calc|Knee|mul|6
+<proc
+
+>output
+	type|universal:compressor
+	param|threshold<Threshold
+	param|ratio<Ratio
+	param|attack<Attack
+	param|release<Release
+	param|postgain<Gain
+	param|knee<Knee
+	wet|DryWet
+<output
+
+[compressor2_expand]
+>input
+	type|native:ableton:Compressor2
+	param|Threshold
+	param|ExpansionRatio
+	param|Attack
+	param|Release
+	param|Gain
+	param|DryWet
+	param|Knee
+<input
+
+>proc
+	calc|Threshold|log|0.8913
+	calc|Threshold|mul|-1
+	calc|Attack|div|1000
+	calc|Release|div|1000
+	calc|Knee|mul|6
+<proc
+
+>output
+	type|universal:expander
+	param|threshold<Threshold
+	param|ratio<ExpansionRatio
+	param|attack<Attack
+	param|release<Release
+	param|postgain<Gain
+	param|knee<Knee
+	wet|DryWet
+<output
+
+[gate]
+>input
+	type|native:ableton:Gate
+	param|Attack
+	param|Hold
+	param|Release
+	param|Threshold
+	param|FlipMode
+	param|Return
+<input
+
+>proc
+	calc|Threshold|log|0.8913
+	calc|Threshold|mul|-1
+	calc|Attack|div|1000
+	calc|Hold|div|1000
+	calc|Release|div|1000
+	calc|Return|div|1000
+<proc
+
+>output
+	type|universal:gate
+	param|attack<Attack
+	param|hold<Hold
+	param|release<Release
+	param|threshold<Threshold
+	param|flip<FlipMode
+	param|return<Return
+<output
+
+[filtereq3]
+>input
+	type|native:ableton:FilterEQ3
+	param|FreqHi
+	param|FreqLo
+	param|GainHi
+	param|GainLo
+	param|GainMid
+<input
+
+>proc
+	calc|GainHi|log|2
+	calc|GainLo|log|2
+	calc|GainMid|log|2
+	calc|GainHi|mul|6
+	calc|GainLo|mul|6
+	calc|GainMid|mul|6
+<proc
+
+>output
+	type|universal:eq:3band
+	param|low_gain<GainLo
+	param|mid_gain<GainMid
+	param|high_gain<GainHi
+	param|lowmid_freq<FreqLo
+	param|midhigh_freq<FreqHi
+<output
+
+[volpan]
+
+>input
+	type|native:flstudio:fruity balance
+	param|pan
+	param|vol
+<input
+
+>proc
+	calc|pan|div|128
+	calc|vol|div|256
+	calc|vol|addmul|-1|35
+<proc
+
+>output
+	type|native:ableton:StereoGain
+	param|Balance<pan
+	param|LegacyGain<vol
+	param|BassMono&0
+	param|BassMonoFrequency%120.0
+	param|ChannelMode%1.0
+	param|DcFilter&0
+	param|Gain%0.0
+	param|MidSideBalance%1.0
+	param|Mono&0
+	param|Mute&0
+	param|PhaseInvertL&0
+	param|PhaseInvertR&0
+	param|StereoWidth%1.0
+<output

@@ -1,0 +1,20 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+pulse1level,pulse1Level,1.0,0.0,1.0,Pulse 1 Level,0,Pulse 1 Level,0,Pulse 1 Level
+pulse1duty,pulse1Duty,0.0,0.0,3.0,Pulse 1 Duty Cycle,1,Pulse 1 Duty Cycle,1,Pulse 1 Duty Cycle
+pulse2level,pulse2Level,0.0,0.0,1.0,Pulse 2 Level,2,Pulse 2 Level,2,Pulse 2 Level
+pulse2duty,pulse2Duty,0.0,0.0,3.0,Pulse 2 Duty Cycle,3,Pulse 2 Duty Cycle,3,Pulse 2 Duty Cycle
+noiselevel,noiseLevel,0.0,0.0,1.0,Noise Level,4,Noise Level,4,Noise Level
+noiseperiod,noisePeriod,0.0,0.0,1.0,Noise Short,5,Noise Short,5,Noise Short
+trianglelevel,triangleLevel,0.0,0.0,1.0,Triangle Level,6,Triangle Level,6,Triangle Level
+output,output,1.0,0.0,1.0,Output,7,Output,7,Output
+pulse1tune,pulse1Tune,0.0,-48.0,48.0,Pulse 1 Tune,8,Pulse 1 Tune,8,Pulse 1 Tune
+pulse1tunefine,pulse1TuneFine,0.0,-100.0,100.0,Pulse 1 Tune Fine,9,Pulse 1 Tune Fine,9,Pulse 1 Tune Fine
+pulse2tune,pulse2Tune,0.0,-48.0,48.0,Pulse 2 Tune,10,Pulse 2 Tune,10,Pulse 2 Tune
+pulse2tunefine,pulse2TuneFine,0.0,-100.0,100.0,Pulse 2 Tune Fine,11,Pulse 2 Tune Fine,11,Pulse 2 Tune Fine
+triangletune,triangleTune,0.0,-48.0,48.0,Triangle Tune,12,Triangle Tune,12,Triangle Tune
+triangletunefine,triangleTuneFine,0.0,-100.0,100.0,Triangle Tune Fine,13,Triangle Tune Fine,13,Triangle Tune Fine
+pulse1sweep,pulse1Sweep,0.0,-8.0,8.0,Pulse 1 Sweep,14,Pulse 1 Sweep,14,Pulse 1 Sweep
+pulse1shift,pulse1Shift,0.0,0.0,7.0,Pulse 1 Shift,15,Pulse 1 Shift,15,Pulse 1 Shift
+pulse2sweep,pulse2Sweep,0.0,-8.0,8.0,Pulse 2 Sweep,16,Pulse 2 Sweep,16,Pulse 2 Sweep
+pulse2shift,pulse2Shift,0.0,0.0,7.0,Pulse 2 Shift,17,Pulse 2 Shift,17,Pulse 2 Shift

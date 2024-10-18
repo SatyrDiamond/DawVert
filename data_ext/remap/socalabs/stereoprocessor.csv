@@ -1,0 +1,10 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+width1,width1,0.5,0.0,1.0,Width,0,Width,0,Width
+center1,center1,0.5,0.0,1.0,Center,1,Center,1,Center
+pan1,pan1,0.0,-1.0,1.0,Pan,2,Pan,2,Pan
+rotation,rotation,0.5,0.0,1.0,Rotation,3,Rotation,3,Rotation
+pan2,pan2,0.0,-1.0,1.0,Pan,4,Pan,4,Pan
+center2,center2,0.5,0.0,1.0,Center,5,Center,5,Center
+width2,width2,0.5,0.0,1.0,Width,6,Width,6,Width
+output,output,0.5,0.0,1.0,Output,7,Output,7,Output

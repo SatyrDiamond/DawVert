@@ -1,0 +1,33 @@
+
+[eq_vst2]
+>input
+	type|native:onlineseq:eq
+	param|eq_low
+	param|eq_mid
+	param|eq_high
+<input
+
+>proc
+	calc|eq_low|div|96
+	calc|eq_mid|div|96
+	calc|eq_high|div|96
+	calc|eq_low|add|0.5
+	calc|eq_mid|add|0.5
+	calc|eq_high|add|0.5
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0<eq_low
+	name|Low
+	param|ext_param_1<eq_mid
+	name|Mid
+	param|ext_param_2<eq_high
+	name|High
+	param|ext_param_3%0.5
+	name|Master
+	param|ext_param_4%0.22
+	name|Low-Mid Freq
+	param|ext_param_5%0.3
+	name|Mid-High Freq
+<output

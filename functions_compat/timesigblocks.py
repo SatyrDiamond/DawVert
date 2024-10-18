@@ -1,33 +1,60 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import song
+from functions import xtramath
 
-def create_points_cut(projJ, cvpj_type):
-    if cvpj_type == 'r': songduration = song.r_getduration(projJ)
-    if cvpj_type == 'm': songduration = song.m_getduration(projJ)
+def create_points_cut(convproj_obj, mode):
+	songduration = convproj_obj.get_dur()
+	ppq = convproj_obj.time_ppq
 
-    if 'timesig' in projJ: timesig_numerator = projJ['timesig'][0]
-    else: timesig_numerator = 4
+	timesig_num, timesig_dem = convproj_obj.timesig
+	if mode == 1:
+		timesig_num *= timesig_dem
 
-    timesigposs = []
-    timesigblocks = []
-    if 'timemarkers' in projJ:
-        for timemarker in projJ['timemarkers']:
-            if 'type' in timemarker:
-                if timemarker['type'] == 'timesig':
-                    numerator = timemarker['numerator']
-                    denominator = timemarker['denominator']
-                    outval = (numerator/denominator)*4
-                    timesigposs.append([timemarker['position'], outval])
+	timesigposs = []
 
-    if timesigposs == []: timesigposs.append([0, 4])
+	if mode == 0:
+		for p, v in convproj_obj.timesig_auto.iter(): timesigposs.append([p, v[0]*ppq])
+	if mode == 1:
+		for p, v in convproj_obj.timesig_auto.iter(): timesigposs.append([p, v[0]*v[1]*ppq])
 
-    timesigposs.append([songduration, None])
-    if timesigposs == []: timesigposs = [[0, timesig_numerator],[songduration, timesig_numerator]] 
+	if timesigposs == []: timesigposs.append([0, int(4*ppq)])
+	timesigposs.append([songduration, None])
+	if timesigposs == []: timesigposs = [[0, timesig_num*ppq],[songduration, timesig_num*ppq]] 
 
-    for timesigposnum in range(len(timesigposs)-1):
-        timesigpos = timesigposs[timesigposnum]
-        timesigblocks.append([timesigpos[0], timesigposs[timesigposnum+1][0], float(timesigpos[1])*4])
+	timesigblocks = []
+	for timesigposnum in range(len(timesigposs)-1):
+		timesigpos = timesigposs[timesigposnum]
+		timesigblocks.append([timesigpos[0], timesigposs[timesigposnum+1][0], timesigpos[1]])
 
-    return timesigposs, timesigblocks
+	splitpoints = []
+	p_splitts = {}
+	for t in timesigblocks:
+		if t[0] not in splitpoints: splitpoints.append(t[0])
+		p_splitts[t[0]] = t[2]
+		curpos = t[0]
+		for x in xtramath.gen_float_blocks(t[1]-t[0],t[2]):
+			curpos += x
+			p_splitts[curpos] = t[2]
+			if curpos not in splitpoints: splitpoints.append(curpos)
+
+	splitts = [p_splitts[x] for x in splitpoints]
+
+
+	#print(splitpoints, timesigposs, songduration)
+
+	if False:
+		import matplotlib.pyplot as plt
+		import matplotlib
+		matplotlib.interactive(True)
+		plt.scatter(splitpoints, [0 for x in splitpoints])
+		plt.scatter([0,songduration], [0.3,0.3])
+		plt.scatter([x[0] for x in timesigposs], [0.1 for x in timesigposs])
+		plt.scatter([1,1], [-1,1])
+		plt.show(block=True)
+
+	print(splitpoints)
+	print(splitts)
+	print(timesigposs)
+
+	return splitpoints, splitts, timesigposs

@@ -1,0 +1,53 @@
+
+[glue]
+>input
+	type|native:ableton:GlueCompressor
+	param|Attack
+	param|DryWet
+	param|Makeup
+	param|PeakClipIn
+	param|Range
+	param|Ratio
+	param|Release
+	param|Threshold
+<input
+
+>proc
+	calc|Threshold|to_one|-40.0|0
+	calc|Makeup|to_one|0|20.0
+	calc|Range|to_one|0|70.0
+	calc|Attack|to_one|0|6
+	calc|Release|to_one|0|6
+	calc|Ratio|to_one|0|2
+	calc|Ratio|to_one|0|2
+<proc
+
+>output
+	type|external:vst2
+	param|ext_param_0%1.0
+	name|Power
+	param|ext_param_1<Threshold
+	name|Threshold
+	param|ext_param_2<Makeup
+	name|Makeup
+	param|ext_param_3<Range
+	name|Range
+	param|ext_param_4<Attack
+	name|Attack
+	param|ext_param_5<Release
+	name|Release
+	param|ext_param_6<Ratio
+	name|Ratio
+	param|ext_param_7%0.0
+	name|CompIn
+	param|ext_param_8<DryWet
+	name|WetMix
+	param|ext_param_9%0.25
+	name|PeakClipIn
+	param|ext_param_10%0.0
+	name|SidechainHp
+	param|ext_param_11%0.25
+	name|ExtSidechainIn
+	param|ext_param_12%0.25
+	name|DcBlockIo
+<output

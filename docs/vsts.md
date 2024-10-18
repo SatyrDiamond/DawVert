@@ -1,5 +1,5 @@
  
-## VST Plugins 
+## VST Plugins (FOSS)
 
 
 
@@ -63,10 +63,16 @@
 
 [SupaPhaser](https://github.com/bdejong/smartelectronix) - Fruity Phaser
 
-# Proprietary
+## VST Plugins (Proprietary/Nonfree)
 
 Spaceship Delay
 
+# Synths
+
 Europa
 
+# from FL Studio
+
 Image-Line VST
+
+[GVST](https://www.gvst.co.uk/downloads.htm) - Tuner

@@ -1,0 +1,49 @@
+
+[limiter]
+>input
+	type|native:caustic:master_limiter
+	param|35
+	param|36
+	param|37
+	param|38
+<input
+
+>output
+	type|universal:limiter
+	param|gain<35
+	param|attack<36
+	param|release<37
+	param|postgain<38
+<output
+
+[master_reverb]
+>input
+	type|native:caustic:master_reverb
+	param|16
+	param|17
+	param|18
+	param|19
+	param|20
+	param|21
+	param|22
+	param|23
+	param|24
+	param|25
+<input
+
+>proc
+	calc|18|mul|1200
+	calc|18|add|200
+	calc|22|add|1
+<proc
+
+>output
+	type|universal:reverb
+	param|predelay<16
+	param|size<17
+	param|low_xo<18
+	param|diffusion<19
+	param|low_mult%0.5
+	param|decay<22
+	param|wet<25
+<output

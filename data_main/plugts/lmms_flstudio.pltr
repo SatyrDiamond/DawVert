@@ -1,0 +1,50 @@
+
+[stereomatrix]
+>input
+	type|native:lmms:stereomatrix
+	param|r-l
+	param|l-l
+	param|r-r
+	param|l-r
+<input
+
+>proc
+	calc|r-l|mul|12800
+	calc|l-l|mul|12800
+	calc|r-r|mul|12800
+	calc|l-r|mul|12800
+<proc
+
+>output
+	type|native:flstudio:fruity stereo shaper
+	param|r2l<r-l
+	param|l2l<l-l
+	param|r2r<r-r
+	param|l2r<l-r
+	param|delay%0.0
+	param|dephase%0.0
+	param|iodiff%0.0
+	param|prepost%0.0
+<output
+
+[spectrumanalyzer]
+>input
+	type|native:lmms:spectrumanalyzer
+<input
+
+>output
+	type|native:flstudio:fruity spectroman
+	param|amp%128.0
+	param|scale%128.0
+<output
+
+[stereoenhancer]
+>input
+	type|native:lmms:stereoenhancer
+	param|width
+<input
+
+>output
+	type|native:flstudio:fruity stereo enhancer
+	param|phase_offs<width
+<output

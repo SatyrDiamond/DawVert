@@ -1,62 +1,57 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later 
 
 import varint
-from io import BytesIO
+from objects.data_bytes import bytereader
+from objects.data_bytes import bytewriter
+
+VERBOSE = False
 
 # ---------------------- decode
 
-def parse_flevent(datastream):
-    event_id = int.from_bytes(datastream.read(1), "little")
-    if event_id <= 63 and event_id >= 0: # int8
-        event_data = int.from_bytes(datastream.read(1), "little")
-    if event_id <= 127 and event_id >= 64 : # int16
-        event_data = int.from_bytes(datastream.read(2), "little")
-    if event_id <= 191 and event_id >= 128 : # int32
-        event_data = int.from_bytes(datastream.read(4), "little")
-    if event_id <= 224 and event_id >= 192 : # text
-        eventpartdatasize = varint.decode_stream(datastream)
-        event_data = datastream.read(eventpartdatasize)
-    if event_id <= 255 and event_id >= 225 : # data
-        eventpartdatasize = varint.decode_stream(datastream)
-        event_data = datastream.read(eventpartdatasize)
-    return [event_id, event_data]
+def read_tlv(tlv_data):
+	event_id = tlv_data.uint8()
+	if event_id <= 63 and event_id >= 0: 
+		outval = tlv_data.uint8()
+		if VERBOSE: print('INT8, ', f"{event_id:#010b}"[2:],'|',str(event_id).ljust(3), f"{outval:#010b}"[2:], outval)
+		return event_id, outval
+	if event_id <= 127 and event_id >= 64: 
+		outval = tlv_data.uint16()
+		if VERBOSE: print('INT16,', f"{event_id:#010b}"[2:],'|',str(event_id).ljust(3), f"{outval:#028b}"[2:], outval)
+		return event_id, outval
+	if event_id <= 191 and event_id >= 128: 
+		outval = tlv_data.uint32()
+		if VERBOSE: print('INT32,', f"{event_id:#010b}"[2:],'|',str(event_id).ljust(3), f"{outval:#034b}"[2:], outval)
+		return event_id, outval
+	if event_id <= 224 and event_id >= 192: 
+		if VERBOSE: print('TEXT, ', f"{event_id:#010b}"[2:],'|',event_id)
+		return event_id, tlv_data.raw(tlv_data.varint())
+	if event_id <= 255 and event_id >= 225: 
+		if VERBOSE: print('RAW,  ', f"{event_id:#010b}"[2:],'|',event_id)
+		return event_id, tlv_data.raw(tlv_data.varint())
 
-def decode(mainevents):
-    eventdatasize = len(mainevents)
-    eventdatastream = BytesIO()
-    eventdatastream.write(mainevents)
-    eventdatastream.seek(0)
-    eventtable = []
-    while eventdatastream.tell() < int(eventdatasize):
-        event_data = parse_flevent(eventdatastream)
-        eventtable.append(event_data)
-    return eventtable
+def decode(song_data, endpos):
+	eventtable = []
+	while song_data.tell() < endpos:
+		event_id, event_data = read_tlv(song_data)
+		eventtable.append([event_id, event_data])
+	return eventtable
 
 # ---------------------- encode
 
-def make_flevent(FLdt_bytes, value, data):
-    if value <= 63 and value >= 0: # int8
-        FLdt_bytes.write(value.to_bytes(1, "little"))
-        FLdt_bytes.write(data.to_bytes(1, "little"))
-    if value <= 127 and value >= 64 : # int16
-        FLdt_bytes.write(value.to_bytes(1, "little"))
-        FLdt_bytes.write(data.to_bytes(2, "little"))
-    if value <= 191 and value >= 128 : # int32
-        FLdt_bytes.write(value.to_bytes(1, "little"))
-        FLdt_bytes.write(data.to_bytes(4, "little"))
-    if value <= 224 and value >= 192 : # text
-        FLdt_bytes.write(value.to_bytes(1, "little"))
-        FLdt_bytes.write(varint.encode(len(data)))
-        FLdt_bytes.write(data)
-    if value <= 255 and value >= 225 : # data
-        FLdt_bytes.write(value.to_bytes(1, "little"))
-        FLdt_bytes.write(varint.encode(len(data)))
-        FLdt_bytes.write(data)
+def write_tlv(tlv_data, value, data):
+	tlv_data.uint8(value)
+	if value <= 63 and value >= 0: tlv_data.uint8(data)
+	if value <= 127 and value >= 64: tlv_data.uint16(data)
+	if value <= 191 and value >= 128: tlv_data.uint32(data)
+	if value <= 224 and value >= 192:
+		tlv_data.varint(len(data))
+		tlv_data.raw(data)
+	if value <= 255 and value >= 225:
+		tlv_data.varint(len(data))
+		tlv_data.raw(data)
 
 def encode(eventtable):
-    eventdatastream = BytesIO()
-    for event_data in eventtable:
-        make_flevent(eventdatastream, event_data[0], event_data[1])
-    eventdatastream.seek(0)
-    return eventdatastream.read()
+	tlv_data = bytewriter.bytewriter()
+	for event_data in eventtable: write_tlv(tlv_data, event_data[0], event_data[1])
+	return tlv_data.getvalue()

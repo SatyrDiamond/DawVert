@@ -1,0 +1,43 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+w1,w1,1.0,0.0,4.0,Pulse 1 Wave,0,Pulse 1 Wave,0,Pulse 1 Wave
+pw1,pw1,2048.0,0.0,4095.0,Pulse 1 Pulse Width,1,Pulse 1 Pulse Width,1,Pulse 1 Pulse Width
+a1,a1,4.0,0.0,15.0,Pulse 1 A,2,Pulse 1 A,2,Pulse 1 A
+d1,d1,4.0,0.0,15.0,Pulse 1 D,3,Pulse 1 D,3,Pulse 1 D
+s1,s1,8.0,0.0,15.0,Pulse 1 S,4,Pulse 1 S,4,Pulse 1 S
+r1,r1,4.0,0.0,15.0,Pulse 1 R,5,Pulse 1 R,5,Pulse 1 R
+tune1,tune1,0.0,-48.0,48.0,Pulse 1 Tune,6,Pulse 1 Tune,6,Pulse 1 Tune
+fine1,fine1,0.0,-100.0,100.0,Pulse 1 Fine,7,Pulse 1 Fine,7,Pulse 1 Fine
+sync1,sync1,0.0,0.0,1.0,Pulse 1 Sync,8,Pulse 1 Sync,8,Pulse 1 Sync
+ring1,ring1,0.0,0.0,1.0,Pulse 1 Ring,9,Pulse 1 Ring,9,Pulse 1 Ring
+w2,w2,0.0,0.0,4.0,Pulse 2 Wave,10,Pulse 2 Wave,10,Pulse 2 Wave
+pw2,pw2,2048.0,0.0,4095.0,Pulse 2 Pulse Width,11,Pulse 2 Pulse Width,11,Pulse 2 Pulse Width
+a2,a2,4.0,0.0,15.0,Pulse 2 A,12,Pulse 2 A,12,Pulse 2 A
+d2,d2,4.0,0.0,15.0,Pulse 2 D,13,Pulse 2 D,13,Pulse 2 D
+s2,s2,8.0,0.0,15.0,Pulse 2 S,14,Pulse 2 S,14,Pulse 2 S
+r2,r2,4.0,0.0,15.0,Pulse 2 R,15,Pulse 2 R,15,Pulse 2 R
+tune2,tune2,0.0,-48.0,48.0,Pulse 2 Tune,16,Pulse 2 Tune,16,Pulse 2 Tune
+fine2,fine2,0.0,-100.0,100.0,Pulse 2 Fine,17,Pulse 2 Fine,17,Pulse 2 Fine
+sync2,sync2,0.0,0.0,1.0,Pulse 2 Sync,18,Pulse 2 Sync,18,Pulse 2 Sync
+ring2,ring2,0.0,0.0,1.0,Pulse 2 Ring,19,Pulse 2 Ring,19,Pulse 2 Ring
+w3,w3,0.0,0.0,4.0,Pulse 3 Wave,20,Pulse 3 Wave,20,Pulse 3 Wave
+pw3,pw3,2048.0,0.0,4095.0,Pulse 3 Pulse Width,21,Pulse 3 Pulse Width,21,Pulse 3 Pulse Width
+a3,a3,4.0,0.0,15.0,Pulse 3 A,22,Pulse 3 A,22,Pulse 3 A
+d3,d3,4.0,0.0,15.0,Pulse 3 D,23,Pulse 3 D,23,Pulse 3 D
+s3,s3,8.0,0.0,15.0,Pulse 3 S,24,Pulse 3 S,24,Pulse 3 S
+r3,r3,4.0,0.0,15.0,Pulse 3 R,25,Pulse 3 R,25,Pulse 3 R
+tune3,tune3,0.0,-48.0,48.0,Pulse 3 Tune,26,Pulse 3 Tune,26,Pulse 3 Tune
+fine3,fine3,0.0,-100.0,100.0,Pulse 3 Fine,27,Pulse 3 Fine,27,Pulse 3 Fine
+sync3,sync3,0.0,0.0,1.0,Pulse 3 Sync,28,Pulse 3 Sync,28,Pulse 3 Sync
+ring3,ring3,0.0,0.0,1.0,Pulse 3 Ring,29,Pulse 3 Ring,29,Pulse 3 Ring
+f1,f1,0.0,0.0,1.0,Filter Ch 1,30,Filter Ch 1,30,Filter Ch 1
+f2,f2,0.0,0.0,1.0,Filter Ch 2,31,Filter Ch 2,31,Filter Ch 2
+f3,f3,0.0,0.0,1.0,Filter Ch 3,32,Filter Ch 3,32,Filter Ch 3
+lowpass,lowpass,0.0,0.0,1.0,Low Pass,33,Low Pass,33,Low Pass
+bandpass,bandpass,0.0,0.0,1.0,Band Pass,34,Band Pass,34,Band Pass
+highpass,highpass,0.0,0.0,1.0,High Pass,35,High Pass,35,High Pass
+cutoff,cutoff,1024.0,0.0,2047.0,Cutoff,36,Cutoff,36,Cutoff
+reso,reso,8.0,0.0,15.0,Resonance,37,Resonance,37,Resonance
+vol,vol,10.0,0.0,15.0,Volume,38,Volume,38,Volume
+output3,output3,1.0,0.0,1.0,Output 3,39,Output 3,39,Output 3
+voices,voices,1.0,1.0,8.0,Voices,40,Voices,40,Voices

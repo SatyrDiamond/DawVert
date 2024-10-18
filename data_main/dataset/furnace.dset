@@ -1,0 +1,19 @@
+{
+    "chip": {
+        "objects": {
+            "opn2": {"visual": {"color": [0.2,0.8,1.0],"name": "FM"}},
+            "square": {"visual": {"color": [0.4,1.0,0.2],"name": "Square"}},
+            "psg": {"visual": {"color": [0.4,1.0,0.2],"name": "PSG"}},
+            "noise": {"visual": {"color": [0.8,0.8,0.8],"name": "Noise"}},
+            "opn2-op": {"visual": {"color": [0.2,0.4,1.0],"name": "FM OP"}},
+            "gameboy_pulse": {"visual": {"color": [0.4,1.0,0.2],"name": "Square"}},
+            "gameboy_wavetable": {"visual": {"color": [1.0,0.5,0.2],"name": "Wavetable"}},
+            "gameboy_noise": {"visual": {"color": [0.8,0.8,0.8],"name": "Noise"}},
+            "pce": {"visual": {"color": [1.0,0.5,0.2],"name": "Wavetable"}},
+            "pcm": {"visual": {"color": [1.0,0.9,0.2],"name": "PCM"}},
+            "sample": {"visual": {"color": [1.0,0.9,0.2],"name": "sample"}},
+            "adpcma": {"visual": {"color": [1.0,0.9,0.2],"name": "ADPCM-A"}},
+            "c64": {"visual": {"color": [0.8,0.8,0.8],"name": "C64"}}
+        }
+    }
+}

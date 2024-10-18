@@ -1,0 +1,121 @@
+{
+    "plugin": {
+        "objects": {
+            "chorus": {
+                "params": {
+                    "delay": {"def": 0.0,"name": "Delay","type": "float"},
+                    "depth": {"def": 0.0,"name": "Depth","type": "float"},
+                    "feedback": {"def": 0.0,"name": "Feedback","type": "float"},
+                    "frequency": {"def": 0.0,"name": "Frequency","type": "float"},
+                    "phase": {"def": 0.0,"name": "Phase","type": "float"},
+                    "waveshape": {"def": 0.0,"name": "WaveShape","type": "float"},
+                    "wetdrymix": {"def": 0.0,"name": "WetDryMix","type": "float"}
+                },
+                "visual": {
+                    "name": "Chorus"
+                }
+            },
+            "compressor": {
+                "params": {
+                    "attack": {"def": 0.0,"name": "Attack","type": "float"},
+                    "gain": {"def": 0.0,"name": "Gain","type": "float"},
+                    "predelay": {"def": 0.0,"name": "Predelay","type": "float"},
+                    "ratio": {"def": 0.0,"name": "Ratio","type": "float"},
+                    "release": {"def": 0.0,"name": "Release","type": "float"},
+                    "threshold": {"def": 0.0,"name": "Threshold","type": "float"}
+                },
+                "visual": {
+                    "name": "Compressor"
+                }
+            },
+            "distortion": {
+                "params": {
+                    "edge": {"def": 0.0,"name": "Edge","type": "float"},
+                    "gain": {"def": 0.0,"name": "Gain","type": "float"},
+                    "posteqbandwidth": {"def": 0.0,"name": "Post-EQ Bandwidth","type": "float"},
+                    "posteqcenterfrequency": {"def": 0.0,"name": "Post-EQ Center Frequency","type": "float"},
+                    "prelowpasscutoff": {"def": 0.0,"name": "Pre-Lowpass Cutoff","type": "float"}
+                },
+                "visual": {
+                    "name": "Distortion"
+                }
+            },
+            "echo": {
+                "params": {
+                    "feedback": {"def": 0.0,"name": "Feedback","type": "float"},
+                    "leftdelay": {"def": 0.0,"name": "Left Delay","type": "float"},
+                    "pandelay": {"def": 0.0,"name": "Pan Delay","type": "float"},
+                    "rightdelay": {"def": 0.0,"name": "Right Delay","type": "float"},
+                    "wetdry": {"def": 0.0,"name": "WetDryMix","type": "float"}
+                },
+                "visual": {
+                    "name": "Echo"
+                }
+            },
+            "flanger": {
+                "params": {
+                    "delay": {"def": 0.0,"name": "Delay","type": "float"},
+                    "depth": {"def": 0.0,"name": "Depth","type": "float"},
+                    "feedback": {"def": 0.0,"name": "Feedback","type": "float"},
+                    "frequency": {"def": 0.0,"name": "Frequency","type": "float"},
+                    "phase": {"def": 0.0,"name": "Phase","type": "float"},
+                    "waveshape": {"def": 0.0,"name": "WaveShape","type": "float"},
+                    "wetdrymix": {"def": 0.0,"name": "WetDryMix","type": "float"}
+                },
+                "visual": {
+                    "name": "Flanger"
+                }
+            },
+            "gargle": {
+                "params": {
+                    "rate": {"def": 0.0,"name": "Rate","type": "float"},
+                    "waveshape": {"def": 0.0,"name": "WaveShape","type": "float"}
+                },
+                "visual": {
+                    "name": "Gargle"
+                }
+            },
+            "i3dl2reverb": {
+                "params": {
+                    "decayhfratio": {"def": 0.0,"name": "DecayHFRatio","type": "float"},
+                    "decaytime": {"def": 0.0,"name": "DecayTime","type": "float"},
+                    "density": {"def": 0.0,"name": "Density","type": "float"},
+                    "diffusion": {"def": 0.0,"name": "Diffusion","type": "float"},
+                    "hfreference": {"def": 0.0,"name": "HFReference","type": "float"},
+                    "quality": {"def": 0.0,"name": "Quality","type": "float"},
+                    "reflections": {"def": 0.0,"name": "Reflections","type": "float"},
+                    "reflectionsdelay": {"def": 0.0,"name": "ReflectionsDelay","type": "float"},
+                    "reverb": {"def": 0.0,"name": "Reverb","type": "float"},
+                    "reverbdelay": {"def": 0.0,"name": "ReverbDelay","type": "float"},
+                    "room": {"def": 0.0,"name": "Room","type": "float"},
+                    "roomhf": {"def": 0.0,"name": "RoomHF","type": "float"},
+                    "roomrollofffactor": {"def": 0.0,"name": "RoomRolloffFactor","type": "float"}
+                },
+                "visual": {
+                    "name": "I3DL2Reverb"
+                }
+            },
+            "parameq": {
+                "params": {
+                    "bandwidth": {"def": 0.0,"name": "Bandwidth","type": "float"},
+                    "center": {"def": 0.0,"name": "Center","type": "float"},
+                    "eqgain": {"def": 0.0,"name": "Gain","type": "float"}
+                },
+                "visual": {
+                    "name": "ParamEq"
+                }
+            },
+            "wavesreverb": {
+                "params": {
+                    "highfreqrtratio": {"def": 0.0,"name": "HighFreqRTRatio","type": "float"},
+                    "ingain": {"def": 0.0,"name": "InGain","type": "float"},
+                    "reverbmix": {"def": 0.0,"name": "ReverbMix","type": "float"},
+                    "reverbtime": {"def": 0.0,"name": "ReverbTime","type": "float"}
+                },
+                "visual": {
+                    "name": "WavesReverb"
+                }
+            }
+        }
+    }
+}

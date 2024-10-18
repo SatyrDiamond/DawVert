@@ -1,0 +1,53 @@
+
+[chorus]
+>input
+	type|native:amped:Chorus
+	param|delayLfoDepth%0.15
+	param|delayLfoRateHz%0.7585
+	param|mix%0.85
+	param|tone%0.2
+<input
+
+>proc
+	calc|delayLfoDepth|mul|2
+	calc|delayLfoDepth|clamp|0|1
+<proc
+
+>output
+	type|native:ableton:Chorus2
+	param|Rate<delayLfoRateHz
+	param|DryWet<mix
+	param|Amount<delayLfoDepth
+	param|Mode%0
+	param|Width%1
+	param|OutputGain%1
+<output
+
+[phaser]
+>input
+	type|native:amped:Phaser
+	param|feedback%0
+	param|hzmin%400
+	param|hzrange%4
+	param|mix%1
+	param|rate%1.5
+	param|stages%8
+<input
+
+>proc
+	calc|feedback|div|4
+	calc|hzrange|div|20
+	calc|rate|div|2
+<proc
+
+>output
+	type|native:ableton:PhaserNew
+	param|Feedback<feedback
+	param|CenterFrequency<hzmin
+	param|Spread<hzrange
+	param|DryWet<mix
+	param|Modulation_Frequency<rate
+	param|Notches<stages
+	param|Modulation_Amount%0.2
+	param|OutputGain%1
+<output

@@ -1,104 +1,59 @@
-# SPDX-FileCopyrightText: 2023 SatyrDiamond
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import json
+import copy
+import logging
 
-def pl_addinst(placements, trackid):
-    t_placements = placements.copy()
-    for placement in placements:
-        if 'notelist' in placement:
-            for t_note in placement['notelist']:
-                t_note['instrument'] = trackid
-    return placements
+logger_project = logging.getLogger('project')
 
-def makeplaylistrow(cvpjJ, plnum, trackid, placements_notes, m_name, m_color, l_name, l_color):
-    cvpjJ['playlist'][str(plnum)] = {}
-    playlistrow = cvpjJ['playlist'][str(plnum)]
-    playlistrow['placements_notes'] = pl_addinst(placements_notes, trackid)
-    if m_name != None and l_name == None: playlistrow['name'] = m_name
-    elif m_name != None and l_name != None: playlistrow['name'] = m_name+' ['+l_name+']'
-    if m_color != None: playlistrow['color'] = m_color
-    elif l_color != None: playlistrow['color'] = l_color
+def convert(convproj_obj):
+	logger_project.info('ProjType Convert: Regular > Multiple')
 
-def makeplaylistrow_audio(cvpjJ, plnum, trackid, placements_audio, t_name, t_color):
-    cvpjJ['playlist'][str(plnum)] = {}
-    playlistrow = cvpjJ['playlist'][str(plnum)]
-    playlistrow['placements_audio'] = placements_audio
-    if t_name != None: playlistrow['name'] = t_name
-    if t_color != None: playlistrow['color'] = t_color
+	plnum = -1
+	for trackid, track_obj in convproj_obj.iter_track():
 
-def convert(song):
-    print('[song-convert] Converting from Regular > Multiple')
-    cvpj_proj = json.loads(song)
-    if 'track_order' not in cvpj_proj:
-        print('[error] track_order not found')
+		used_inst = False
+		if track_obj.type == 'instruments': used_inst = True
+		if track_obj.type == 'instrument': used_inst = True
+		if track_obj.placements.pl_notes.data: used_inst = True
+		if track_obj.placements.notelist.notesfound(): used_inst = True
 
-    if 'track_order' in cvpj_proj:
-        t_s_track_order = cvpj_proj['track_order']
-        del cvpj_proj['track_order']
-    else:
-        t_s_track_order = []
+		if not track_obj.is_laned:
+			plnum += 1
+			logger_project.info('r2m: non-laned: '+trackid)
+			playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
+			playlist_obj.visual = copy.deepcopy(track_obj.visual)
+			playlist_obj.visual_ui = copy.deepcopy(track_obj.visual_ui)
+			playlist_obj.placements = copy.deepcopy(track_obj.placements)
+			playlist_obj.placements.add_inst_to_notes(trackid)
+		else:
+			logger_project.info('r2m: laned: '+trackid)
+			for lane_id, lane_obj in track_obj.lanes.items():
+				plnum += 1
+				playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
+				playlist_obj.visual = copy.deepcopy(track_obj.visual)
+				if lane_obj.visual.name: playlist_obj.visual.name += ' ('+lane_obj.visual.name+')'
+				playlist_obj.visual_ui = copy.deepcopy(lane_obj.visual_ui)
+				playlist_obj.params = copy.deepcopy(lane_obj.params)
+				playlist_obj.datavals = copy.deepcopy(lane_obj.datavals)
+				playlist_obj.placements = copy.deepcopy(lane_obj.placements)
+				playlist_obj.placements.add_inst_to_notes(trackid)
 
-    if 'track_data' in cvpj_proj:
-        t_s_trackdata = cvpj_proj['track_data']
-        del cvpj_proj['track_data']
-    else:
-        t_s_trackdata = {}
+		if used_inst:
+			inst_obj = convproj_obj.add_instrument(trackid)
+			inst_obj.visual = copy.deepcopy(track_obj.visual)
+			inst_obj.params = copy.deepcopy(track_obj.params)
+			inst_obj.datavals = copy.deepcopy(track_obj.datavals)
+			inst_obj.pluginid = track_obj.inst_pluginid
+			inst_obj.fxrack_channel = track_obj.fxrack_channel
+			inst_obj.midi = copy.deepcopy(track_obj.midi)
+			inst_obj.fxslots_notes = track_obj.fxslots_notes
+			inst_obj.fxslots_audio = track_obj.fxslots_audio
+			inst_obj.is_drum = track_obj.is_drum
 
-    if 'track_placements' in cvpj_proj:
-        t_s_trackplacements = cvpj_proj['track_placements']
-        del cvpj_proj['track_placements']
-    else:
-        t_s_trackplacements = {}
+	convproj_obj.automation.move_everything(['track'], ['inst'])
 
-    cvpj_proj['instruments_data'] = {}
-    cvpj_proj['instruments_order'] = []
-    cvpj_proj['playlist'] = {}
-
-    plnum = 1
-    for trackid in t_s_track_order:
-        if trackid in t_s_trackdata:
-            singletrack_data = t_s_trackdata[trackid]
-
-            m_name = singletrack_data['name'] if 'name' in singletrack_data else None
-            m_color = singletrack_data['color'] if 'color' in singletrack_data else None
-  
-            ishybrid = True if singletrack_data['type'] == 'hybrid' else False
-            singletrack_laned = 0
-
-            if singletrack_data['type'] == 'instrument':
-                cvpj_proj['instruments_order'].append(trackid)
-                cvpj_proj['instruments_data'][trackid] = singletrack_data
-
-            if singletrack_data['type'] == 'instrument':
-                if trackid in t_s_trackplacements:
-                    pltrack = t_s_trackplacements[trackid]
-
-                    singletrack_laned = pldata['laned'] if 'laned' in pltrack else 0
-
-                    if singletrack_laned == 0: 
-                        print('[song-convert] r2m: inst non-laned:', trackid)
-                        singletrack_pl = pltrack['notes'] if 'notes' in pltrack else []
-                        makeplaylistrow(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color, None, None)
-                    else:
-                        print('[song-convert] r2m: inst laned:', trackid)
-                        t_laneorder = pltrack['laneorder']
-                        t_lanedata = pltrack['lanedata']
-                        for laneid in t_laneorder:
-                            lane_data = t_lanedata[laneid]
-                            l_name = lane_data['name'] if 'name' in lane_data else None
-                            l_color = lane_data['color'] if 'color' in lane_data else None
-                            if 'notes' in lane_data:
-                                makeplaylistrow(cvpj_proj, plnum, trackid, lane_data['notes'], m_name, m_color, l_name, l_color)
-                                plnum += 1
-                    if singletrack_laned == 0 and ishybrid == False: plnum += 1
-
-            if singletrack_data['type'] == 'audio':
-                if trackid in t_s_trackplacements:
-                    pltrack = t_s_trackplacements[trackid]
-                    print('[song-convert] r2m: audio non-laned:', trackid)
-                    singletrack_pl = pltrack['audio'] if 'audio' in pltrack else []
-                    makeplaylistrow_audio(cvpj_proj, plnum, trackid, singletrack_pl, m_name, m_color)
-                    plnum += 1
-
-    return json.dumps(cvpj_proj)
+	convproj_obj.track_data = {}
+	convproj_obj.track_order = []
+	convproj_obj.type = 'm'

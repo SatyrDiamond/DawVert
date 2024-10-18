@@ -1,0 +1,2707 @@
+{
+    "drums": {
+        "objects": {
+            "Agogo Bells 1": {
+                "visual": {
+                    "name": "Agogo Bells 1"
+                }
+            },
+            "Agogo Bells 2": {
+                "visual": {
+                    "name": "Agogo Bells 2"
+                }
+            },
+            "Applause 1": {
+                "visual": {
+                    "name": "Applause 1"
+                }
+            },
+            "Applause 2": {
+                "visual": {
+                    "name": "Applause 2"
+                }
+            },
+            "Bongo 1": {
+                "visual": {
+                    "name": "Bongo 1"
+                }
+            },
+            "Bongo 2": {
+                "visual": {
+                    "name": "Bongo 2"
+                }
+            },
+            "Bongo 3": {
+                "visual": {
+                    "name": "Bongo 3"
+                }
+            },
+            "Bongo 4": {
+                "visual": {
+                    "name": "Bongo 4"
+                }
+            },
+            "Bongo 5": {
+                "visual": {
+                    "name": "Bongo 5"
+                }
+            },
+            "Bongo 6": {
+                "visual": {
+                    "name": "Bongo 6"
+                }
+            },
+            "Bongo 7": {
+                "visual": {
+                    "name": "Bongo 7"
+                }
+            },
+            "Bongo 8": {
+                "visual": {
+                    "name": "Bongo 8"
+                }
+            },
+            "Bongo 9": {
+                "visual": {
+                    "name": "Bongo 9"
+                }
+            },
+            "Brush Tap 1": {
+                "visual": {
+                    "name": "Brush Tap 1"
+                }
+            },
+            "Brush Tap 2": {
+                "visual": {
+                    "name": "Brush Tap 2"
+                }
+            },
+            "Castanets 1": {
+                "visual": {
+                    "name": "Castanets 1"
+                }
+            },
+            "Castanets 2": {
+                "visual": {
+                    "name": "Castanets 2"
+                }
+            },
+            "Castanets 3": {
+                "visual": {
+                    "name": "Castanets 3"
+                }
+            },
+            "Castanets 4": {
+                "visual": {
+                    "name": "Castanets 4"
+                }
+            },
+            "Claves 1": {
+                "visual": {
+                    "name": "Claves 1"
+                }
+            },
+            "Claves 2": {
+                "visual": {
+                    "name": "Claves 2"
+                }
+            },
+            "Conga 1": {
+                "visual": {
+                    "name": "Conga 1"
+                }
+            },
+            "Conga 2": {
+                "visual": {
+                    "name": "Conga 2"
+                }
+            },
+            "Conga 3": {
+                "visual": {
+                    "name": "Conga 3"
+                }
+            },
+            "Conga 4": {
+                "visual": {
+                    "name": "Conga 4"
+                }
+            },
+            "Conga 5": {
+                "visual": {
+                    "name": "Conga 5"
+                }
+            },
+            "Conga 6": {
+                "visual": {
+                    "name": "Conga 6"
+                }
+            },
+            "Conga 7": {
+                "visual": {
+                    "name": "Conga 7"
+                }
+            },
+            "Conga 8": {
+                "visual": {
+                    "name": "Conga 8"
+                }
+            },
+            "Conga 9": {
+                "visual": {
+                    "name": "Conga 9"
+                }
+            },
+            "Cowbell 1": {
+                "visual": {
+                    "name": "Cowbell 1"
+                }
+            },
+            "Cowbell 2": {
+                "visual": {
+                    "name": "Cowbell 2"
+                }
+            },
+            "Cowbell 3": {
+                "visual": {
+                    "name": "Cowbell 3"
+                }
+            },
+            "Crash Cymbal 1": {
+                "visual": {
+                    "name": "Crash Cymbal 1"
+                }
+            },
+            "Crash Cymbal 2": {
+                "visual": {
+                    "name": "Crash Cymbal 2"
+                }
+            },
+            "Crash Cymbal 3": {
+                "visual": {
+                    "name": "Crash Cymbal 3"
+                }
+            },
+            "Crash Cymbal 4": {
+                "visual": {
+                    "name": "Crash Cymbal 4"
+                }
+            },
+            "Crash Cymbal 5": {
+                "visual": {
+                    "name": "Crash Cymbal 5"
+                }
+            },
+            "Cuica 1": {
+                "visual": {
+                    "name": "Cuica 1"
+                }
+            },
+            "Cuica 2": {
+                "visual": {
+                    "name": "Cuica 2"
+                }
+            },
+            "Cuica 3": {
+                "visual": {
+                    "name": "Cuica 3"
+                }
+            },
+            "Cuica 4": {
+                "visual": {
+                    "name": "Cuica 4"
+                }
+            },
+            "Drum Roll 1": {
+                "visual": {
+                    "name": "Drum Roll 1"
+                }
+            },
+            "Drum Roll 2": {
+                "visual": {
+                    "name": "Drum Roll 2"
+                }
+            },
+            "Filter Snap": {
+                "visual": {
+                    "name": "Filter Snap"
+                }
+            },
+            "Finger Snap 1": {
+                "visual": {
+                    "name": "Finger Snap 1"
+                }
+            },
+            "Finger Snap 2": {
+                "visual": {
+                    "name": "Finger Snap 2"
+                }
+            },
+            "Finger Snap 3": {
+                "visual": {
+                    "name": "Finger Snap 3"
+                }
+            },
+            "Hand Clap 1": {
+                "visual": {
+                    "name": "Hand Clap 1"
+                }
+            },
+            "Hand Clap 2": {
+                "visual": {
+                    "name": "Hand Clap 2"
+                }
+            },
+            "Hand Clap 3": {
+                "visual": {
+                    "name": "Hand Clap 3"
+                }
+            },
+            "Hand Clap 4": {
+                "visual": {
+                    "name": "Hand Clap 4"
+                }
+            },
+            "Hand Clap 5": {
+                "visual": {
+                    "name": "Hand Clap 5"
+                }
+            },
+            "Hi-hat 1": {
+                "visual": {
+                    "name": "Hi-hat 1"
+                }
+            },
+            "Hi-hat 2": {
+                "visual": {
+                    "name": "Hi-hat 2"
+                }
+            },
+            "Hi-hat 3": {
+                "visual": {
+                    "name": "Hi-hat 3"
+                }
+            },
+            "Hi-hat 4": {
+                "visual": {
+                    "name": "Hi-hat 4"
+                }
+            },
+            "Hi-hat 5": {
+                "visual": {
+                    "name": "Hi-hat 5"
+                }
+            },
+            "Hi-hat 6": {
+                "visual": {
+                    "name": "Hi-hat 6"
+                }
+            },
+            "Hi-hat 7": {
+                "visual": {
+                    "name": "Hi-hat 7"
+                }
+            },
+            "Hi-hat 8": {
+                "visual": {
+                    "name": "Hi-hat 8"
+                }
+            },
+            "Hi-hat 9": {
+                "visual": {
+                    "name": "Hi-hat 9"
+                }
+            },
+            "Jingle Bell 1": {
+                "visual": {
+                    "name": "Jingle Bell 1"
+                }
+            },
+            "Jingle Bell 2": {
+                "visual": {
+                    "name": "Jingle Bell 2"
+                }
+            },
+            "Kick 1": {
+                "visual": {
+                    "name": "Kick 1"
+                }
+            },
+            "Kick 2": {
+                "visual": {
+                    "name": "Kick 2"
+                }
+            },
+            "Kick 3": {
+                "visual": {
+                    "name": "Kick 3"
+                }
+            },
+            "Kick 4": {
+                "visual": {
+                    "name": "Kick 4"
+                }
+            },
+            "Kick 5": {
+                "visual": {
+                    "name": "Kick 5"
+                }
+            },
+            "Kick 6": {
+                "visual": {
+                    "name": "Kick 6"
+                }
+            },
+            "Kick 7": {
+                "visual": {
+                    "name": "Kick 7"
+                }
+            },
+            "Kick 8": {
+                "visual": {
+                    "name": "Kick 8"
+                }
+            },
+            "Kick 9": {
+                "visual": {
+                    "name": "Kick 9"
+                }
+            },
+            "Metronome Click 1": {
+                "visual": {
+                    "name": "Metronome Click 1"
+                }
+            },
+            "Metronome Click 2": {
+                "visual": {
+                    "name": "Metronome Click 2"
+                }
+            },
+            "Metronome Click 3": {
+                "visual": {
+                    "name": "Metronome Click 3"
+                }
+            },
+            "Metronome Click 4": {
+                "visual": {
+                    "name": "Metronome Click 4"
+                }
+            },
+            "Rattle Snake 1": {
+                "visual": {
+                    "name": "Rattle Snake 1"
+                }
+            },
+            "Rattle Snake 2": {
+                "visual": {
+                    "name": "Rattle Snake 2"
+                }
+            },
+            "Retro Arp 01": {
+                "visual": {
+                    "name": "Retro Arp 01"
+                }
+            },
+            "Retro Arp 02": {
+                "visual": {
+                    "name": "Retro Arp 02"
+                }
+            },
+            "Retro Arp 03": {
+                "visual": {
+                    "name": "Retro Arp 03"
+                }
+            },
+            "Retro Arp 04": {
+                "visual": {
+                    "name": "Retro Arp 04"
+                }
+            },
+            "Retro Arp 05": {
+                "visual": {
+                    "name": "Retro Arp 05"
+                }
+            },
+            "Retro Arp 06": {
+                "visual": {
+                    "name": "Retro Arp 06"
+                }
+            },
+            "Retro Arp 07": {
+                "visual": {
+                    "name": "Retro Arp 07"
+                }
+            },
+            "Retro Arp 08": {
+                "visual": {
+                    "name": "Retro Arp 08"
+                }
+            },
+            "Retro Arp 09": {
+                "visual": {
+                    "name": "Retro Arp 09"
+                }
+            },
+            "Retro Arp 10": {
+                "visual": {
+                    "name": "Retro Arp 10"
+                }
+            },
+            "Retro Arp 11": {
+                "visual": {
+                    "name": "Retro Arp 11"
+                }
+            },
+            "Retro Arp 12": {
+                "visual": {
+                    "name": "Retro Arp 12"
+                }
+            },
+            "Retro Arp 13": {
+                "visual": {
+                    "name": "Retro Arp 13"
+                }
+            },
+            "Retro Beep 1": {
+                "visual": {
+                    "name": "Retro Beep 1"
+                }
+            },
+            "Retro Beep 2": {
+                "visual": {
+                    "name": "Retro Beep 2"
+                }
+            },
+            "Retro Beep 3": {
+                "visual": {
+                    "name": "Retro Beep 3"
+                }
+            },
+            "Retro Beep 4": {
+                "visual": {
+                    "name": "Retro Beep 4"
+                }
+            },
+            "Retro Beep 5": {
+                "visual": {
+                    "name": "Retro Beep 5"
+                }
+            },
+            "Retro Beep 6": {
+                "visual": {
+                    "name": "Retro Beep 6"
+                }
+            },
+            "Retro Beep 7": {
+                "visual": {
+                    "name": "Retro Beep 7"
+                }
+            },
+            "Retro Beep 8": {
+                "visual": {
+                    "name": "Retro Beep 8"
+                }
+            },
+            "Retro Beep 9": {
+                "visual": {
+                    "name": "Retro Beep 9"
+                }
+            },
+            "Retro Bell 1": {
+                "visual": {
+                    "name": "Retro Bell 1"
+                }
+            },
+            "Retro Bell 2": {
+                "visual": {
+                    "name": "Retro Bell 2"
+                }
+            },
+            "Retro Bell 3": {
+                "visual": {
+                    "name": "Retro Bell 3"
+                }
+            },
+            "Retro Bongo 1": {
+                "visual": {
+                    "name": "Retro Bongo 1"
+                }
+            },
+            "Retro Bongo 2": {
+                "visual": {
+                    "name": "Retro Bongo 2"
+                }
+            },
+            "Retro Conga 1": {
+                "visual": {
+                    "name": "Retro Conga 1"
+                }
+            },
+            "Retro Conga 2": {
+                "visual": {
+                    "name": "Retro Conga 2"
+                }
+            },
+            "Retro Conga 3": {
+                "visual": {
+                    "name": "Retro Conga 3"
+                }
+            },
+            "Retro Conga 4": {
+                "visual": {
+                    "name": "Retro Conga 4"
+                }
+            },
+            "Retro Crash Cymbal 1": {
+                "visual": {
+                    "name": "Retro Crash Cymbal 1"
+                }
+            },
+            "Retro Crash Cymbal 2": {
+                "visual": {
+                    "name": "Retro Crash Cymbal 2"
+                }
+            },
+            "Retro Crash Cymbal 3": {
+                "visual": {
+                    "name": "Retro Crash Cymbal 3"
+                }
+            },
+            "Retro Crash Cymbal 4": {
+                "visual": {
+                    "name": "Retro Crash Cymbal 4"
+                }
+            },
+            "Retro Crash Cymbal 5": {
+                "visual": {
+                    "name": "Retro Crash Cymbal 5"
+                }
+            },
+            "Retro Crash Cymbal 6": {
+                "visual": {
+                    "name": "Retro Crash Cymbal 6"
+                }
+            },
+            "Retro Filter Snap": {
+                "visual": {
+                    "name": "Retro Filter Snap"
+                }
+            },
+            "Retro Finger Snap": {
+                "visual": {
+                    "name": "Retro Finger Snap"
+                }
+            },
+            "Retro Guiro 1": {
+                "visual": {
+                    "name": "Retro Guiro 1"
+                }
+            },
+            "Retro Guiro 2": {
+                "visual": {
+                    "name": "Retro Guiro 2"
+                }
+            },
+            "Retro Hand Clap 1": {
+                "visual": {
+                    "name": "Retro Hand Clap 1"
+                }
+            },
+            "Retro Hand Clap 2": {
+                "visual": {
+                    "name": "Retro Hand Clap 2"
+                }
+            },
+            "Retro Hand Clap 3": {
+                "visual": {
+                    "name": "Retro Hand Clap 3"
+                }
+            },
+            "Retro Hand Clap 4": {
+                "visual": {
+                    "name": "Retro Hand Clap 4"
+                }
+            },
+            "Retro Hi-hat 01": {
+                "visual": {
+                    "name": "Retro Hi-hat 01"
+                }
+            },
+            "Retro Hi-hat 02": {
+                "visual": {
+                    "name": "Retro Hi-hat 02"
+                }
+            },
+            "Retro Hi-hat 03": {
+                "visual": {
+                    "name": "Retro Hi-hat 03"
+                }
+            },
+            "Retro Hi-hat 04": {
+                "visual": {
+                    "name": "Retro Hi-hat 04"
+                }
+            },
+            "Retro Hi-hat 05": {
+                "visual": {
+                    "name": "Retro Hi-hat 05"
+                }
+            },
+            "Retro Hi-hat 06": {
+                "visual": {
+                    "name": "Retro Hi-hat 06"
+                }
+            },
+            "Retro Hi-hat 07": {
+                "visual": {
+                    "name": "Retro Hi-hat 07"
+                }
+            },
+            "Retro Hi-hat 08": {
+                "visual": {
+                    "name": "Retro Hi-hat 08"
+                }
+            },
+            "Retro Hi-hat 09": {
+                "visual": {
+                    "name": "Retro Hi-hat 09"
+                }
+            },
+            "Retro Hi-hat 10": {
+                "visual": {
+                    "name": "Retro Hi-hat 10"
+                }
+            },
+            "Retro Jingle Bell": {
+                "visual": {
+                    "name": "Retro Jingle Bell"
+                }
+            },
+            "Retro Kick 01": {
+                "visual": {
+                    "name": "Retro Kick 01"
+                }
+            },
+            "Retro Kick 02": {
+                "visual": {
+                    "name": "Retro Kick 02"
+                }
+            },
+            "Retro Kick 03": {
+                "visual": {
+                    "name": "Retro Kick 03"
+                }
+            },
+            "Retro Kick 04": {
+                "visual": {
+                    "name": "Retro Kick 04"
+                }
+            },
+            "Retro Kick 05": {
+                "visual": {
+                    "name": "Retro Kick 05"
+                }
+            },
+            "Retro Kick 06": {
+                "visual": {
+                    "name": "Retro Kick 06"
+                }
+            },
+            "Retro Kick 07": {
+                "visual": {
+                    "name": "Retro Kick 07"
+                }
+            },
+            "Retro Kick 08": {
+                "visual": {
+                    "name": "Retro Kick 08"
+                }
+            },
+            "Retro Kick 09": {
+                "visual": {
+                    "name": "Retro Kick 09"
+                }
+            },
+            "Retro Kick 10": {
+                "visual": {
+                    "name": "Retro Kick 10"
+                }
+            },
+            "Retro Kick 11": {
+                "visual": {
+                    "name": "Retro Kick 11"
+                }
+            },
+            "Retro Kick 12": {
+                "visual": {
+                    "name": "Retro Kick 12"
+                }
+            },
+            "Retro Kick 13": {
+                "visual": {
+                    "name": "Retro Kick 13"
+                }
+            },
+            "Retro Kick 14": {
+                "visual": {
+                    "name": "Retro Kick 14"
+                }
+            },
+            "Retro Kick 15": {
+                "visual": {
+                    "name": "Retro Kick 15"
+                }
+            },
+            "Retro Kick 16": {
+                "visual": {
+                    "name": "Retro Kick 16"
+                }
+            },
+            "Retro Laser": {
+                "visual": {
+                    "name": "Retro Laser"
+                }
+            },
+            "Retro Metronome Click 1": {
+                "visual": {
+                    "name": "Retro Metronome Click 1"
+                }
+            },
+            "Retro Metronome Click 2": {
+                "visual": {
+                    "name": "Retro Metronome Click 2"
+                }
+            },
+            "Retro Metronome Click 3": {
+                "visual": {
+                    "name": "Retro Metronome Click 3"
+                }
+            },
+            "Retro Noise 01": {
+                "visual": {
+                    "name": "Retro Noise 01"
+                }
+            },
+            "Retro Noise 02": {
+                "visual": {
+                    "name": "Retro Noise 02"
+                }
+            },
+            "Retro Noise 03": {
+                "visual": {
+                    "name": "Retro Noise 03"
+                }
+            },
+            "Retro Noise 04": {
+                "visual": {
+                    "name": "Retro Noise 04"
+                }
+            },
+            "Retro Noise 05": {
+                "visual": {
+                    "name": "Retro Noise 05"
+                }
+            },
+            "Retro Noise 06": {
+                "visual": {
+                    "name": "Retro Noise 06"
+                }
+            },
+            "Retro Noise 07": {
+                "visual": {
+                    "name": "Retro Noise 07"
+                }
+            },
+            "Retro Noise 08": {
+                "visual": {
+                    "name": "Retro Noise 08"
+                }
+            },
+            "Retro Noise 09": {
+                "visual": {
+                    "name": "Retro Noise 09"
+                }
+            },
+            "Retro Noise 10": {
+                "visual": {
+                    "name": "Retro Noise 10"
+                }
+            },
+            "Retro Noise 11": {
+                "visual": {
+                    "name": "Retro Noise 11"
+                }
+            },
+            "Retro Noise 12": {
+                "visual": {
+                    "name": "Retro Noise 12"
+                }
+            },
+            "Retro Noise 13": {
+                "visual": {
+                    "name": "Retro Noise 13"
+                }
+            },
+            "Retro Noise 14": {
+                "visual": {
+                    "name": "Retro Noise 14"
+                }
+            },
+            "Retro Noise 15": {
+                "visual": {
+                    "name": "Retro Noise 15"
+                }
+            },
+            "Retro Noise 16": {
+                "visual": {
+                    "name": "Retro Noise 16"
+                }
+            },
+            "Retro Reverse Cymbal 1": {
+                "visual": {
+                    "name": "Retro Reverse Cymbal 1"
+                }
+            },
+            "Retro Reverse Cymbal 2": {
+                "visual": {
+                    "name": "Retro Reverse Cymbal 2"
+                }
+            },
+            "Retro Snare 01": {
+                "visual": {
+                    "name": "Retro Snare 01"
+                }
+            },
+            "Retro Snare 02": {
+                "visual": {
+                    "name": "Retro Snare 02"
+                }
+            },
+            "Retro Snare 03": {
+                "visual": {
+                    "name": "Retro Snare 03"
+                }
+            },
+            "Retro Snare 04": {
+                "visual": {
+                    "name": "Retro Snare 04"
+                }
+            },
+            "Retro Snare 05": {
+                "visual": {
+                    "name": "Retro Snare 05"
+                }
+            },
+            "Retro Snare 06": {
+                "visual": {
+                    "name": "Retro Snare 06"
+                }
+            },
+            "Retro Snare 07": {
+                "visual": {
+                    "name": "Retro Snare 07"
+                }
+            },
+            "Retro Snare 08": {
+                "visual": {
+                    "name": "Retro Snare 08"
+                }
+            },
+            "Retro Snare 09": {
+                "visual": {
+                    "name": "Retro Snare 09"
+                }
+            },
+            "Retro Snare 10": {
+                "visual": {
+                    "name": "Retro Snare 10"
+                }
+            },
+            "Retro Snare 11": {
+                "visual": {
+                    "name": "Retro Snare 11"
+                }
+            },
+            "Retro Snare 12": {
+                "visual": {
+                    "name": "Retro Snare 12"
+                }
+            },
+            "Retro Sticks 1": {
+                "visual": {
+                    "name": "Retro Sticks 1"
+                }
+            },
+            "Retro Sticks 2": {
+                "visual": {
+                    "name": "Retro Sticks 2"
+                }
+            },
+            "Retro Sticks 3": {
+                "visual": {
+                    "name": "Retro Sticks 3"
+                }
+            },
+            "Retro Tom 01": {
+                "visual": {
+                    "name": "Retro Tom 01"
+                }
+            },
+            "Retro Tom 02": {
+                "visual": {
+                    "name": "Retro Tom 02"
+                }
+            },
+            "Retro Tom 03": {
+                "visual": {
+                    "name": "Retro Tom 03"
+                }
+            },
+            "Retro Tom 04": {
+                "visual": {
+                    "name": "Retro Tom 04"
+                }
+            },
+            "Retro Tom 05": {
+                "visual": {
+                    "name": "Retro Tom 05"
+                }
+            },
+            "Retro Tom 06": {
+                "visual": {
+                    "name": "Retro Tom 06"
+                }
+            },
+            "Retro Tom 07": {
+                "visual": {
+                    "name": "Retro Tom 07"
+                }
+            },
+            "Retro Tom 08": {
+                "visual": {
+                    "name": "Retro Tom 08"
+                }
+            },
+            "Retro Tom 09": {
+                "visual": {
+                    "name": "Retro Tom 09"
+                }
+            },
+            "Retro Tom 10": {
+                "visual": {
+                    "name": "Retro Tom 10"
+                }
+            },
+            "Retro Triangle": {
+                "visual": {
+                    "name": "Retro Triangle"
+                }
+            },
+            "Retro Whistle 1": {
+                "visual": {
+                    "name": "Retro Whistle 1"
+                }
+            },
+            "Retro Whistle 2": {
+                "visual": {
+                    "name": "Retro Whistle 2"
+                }
+            },
+            "Retro Woodblock 1": {
+                "visual": {
+                    "name": "Retro Woodblock 1"
+                }
+            },
+            "Retro Woodblock 2": {
+                "visual": {
+                    "name": "Retro Woodblock 2"
+                }
+            },
+            "Retro Woodblock 3": {
+                "visual": {
+                    "name": "Retro Woodblock 3"
+                }
+            },
+            "Reverse Cymbal 1": {
+                "visual": {
+                    "name": "Reverse Cymbal 1"
+                }
+            },
+            "Reverse Cymbal 2": {
+                "visual": {
+                    "name": "Reverse Cymbal 2"
+                }
+            },
+            "Reverse Cymbal 3": {
+                "visual": {
+                    "name": "Reverse Cymbal 3"
+                }
+            },
+            "Reverse Cymbal 4": {
+                "visual": {
+                    "name": "Reverse Cymbal 4"
+                }
+            },
+            "Reverse Cymbal 5": {
+                "visual": {
+                    "name": "Reverse Cymbal 5"
+                }
+            },
+            "Reverse Cymbal 6": {
+                "visual": {
+                    "name": "Reverse Cymbal 6"
+                }
+            },
+            "Ride Bell 1": {
+                "visual": {
+                    "name": "Ride Bell 1"
+                }
+            },
+            "Ride Bell 2": {
+                "visual": {
+                    "name": "Ride Bell 2"
+                }
+            },
+            "Ride Bell 3": {
+                "visual": {
+                    "name": "Ride Bell 3"
+                }
+            },
+            "Ride Cymbal 1": {
+                "visual": {
+                    "name": "Ride Cymbal 1"
+                }
+            },
+            "Ride Cymbal 2": {
+                "visual": {
+                    "name": "Ride Cymbal 2"
+                }
+            },
+            "Ride Cymbal 3": {
+                "visual": {
+                    "name": "Ride Cymbal 3"
+                }
+            },
+            "Scratch 1": {
+                "visual": {
+                    "name": "Scratch 1"
+                }
+            },
+            "Scratch 2": {
+                "visual": {
+                    "name": "Scratch 2"
+                }
+            },
+            "Scratch 3": {
+                "visual": {
+                    "name": "Scratch 3"
+                }
+            },
+            "Shaker 1": {
+                "visual": {
+                    "name": "Shaker 1"
+                }
+            },
+            "Shaker 2": {
+                "visual": {
+                    "name": "Shaker 2"
+                }
+            },
+            "Shaker 3": {
+                "visual": {
+                    "name": "Shaker 3"
+                }
+            },
+            "Shaker 4": {
+                "visual": {
+                    "name": "Shaker 4"
+                }
+            },
+            "Shaker 5": {
+                "visual": {
+                    "name": "Shaker 5"
+                }
+            },
+            "Shaker 6": {
+                "visual": {
+                    "name": "Shaker 6"
+                }
+            },
+            "Shaker 7": {
+                "visual": {
+                    "name": "Shaker 7"
+                }
+            },
+            "Shaker 8": {
+                "visual": {
+                    "name": "Shaker 8"
+                }
+            },
+            "Shaker 9": {
+                "visual": {
+                    "name": "Shaker 9"
+                }
+            },
+            "Snare 1": {
+                "visual": {
+                    "name": "Snare 1"
+                }
+            },
+            "Snare 2": {
+                "visual": {
+                    "name": "Snare 2"
+                }
+            },
+            "Snare 3": {
+                "visual": {
+                    "name": "Snare 3"
+                }
+            },
+            "Snare 4": {
+                "visual": {
+                    "name": "Snare 4"
+                }
+            },
+            "Snare 5": {
+                "visual": {
+                    "name": "Snare 5"
+                }
+            },
+            "Snare 6": {
+                "visual": {
+                    "name": "Snare 6"
+                }
+            },
+            "Snare 7": {
+                "visual": {
+                    "name": "Snare 7"
+                }
+            },
+            "Snare 8": {
+                "visual": {
+                    "name": "Snare 8"
+                }
+            },
+            "Snare 9": {
+                "visual": {
+                    "name": "Snare 9"
+                }
+            },
+            "Sticks 1": {
+                "visual": {
+                    "name": "Sticks 1"
+                }
+            },
+            "Sticks 2": {
+                "visual": {
+                    "name": "Sticks 2"
+                }
+            },
+            "Sticks 3": {
+                "visual": {
+                    "name": "Sticks 3"
+                }
+            },
+            "Surdo": {
+                "visual": {
+                    "name": "Surdo"
+                }
+            },
+            "Taiko 1": {
+                "visual": {
+                    "name": "Taiko 1"
+                }
+            },
+            "Taiko 2": {
+                "visual": {
+                    "name": "Taiko 2"
+                }
+            },
+            "Taiko 3": {
+                "visual": {
+                    "name": "Taiko 3"
+                }
+            },
+            "Tambourine 1": {
+                "visual": {
+                    "name": "Tambourine 1"
+                }
+            },
+            "Tambourine 2": {
+                "visual": {
+                    "name": "Tambourine 2"
+                }
+            },
+            "Tambourine 3": {
+                "visual": {
+                    "name": "Tambourine 3"
+                }
+            },
+            "Tambourine 4": {
+                "visual": {
+                    "name": "Tambourine 4"
+                }
+            },
+            "Timbale 1": {
+                "visual": {
+                    "name": "Timbale 1"
+                }
+            },
+            "Timbale 2": {
+                "visual": {
+                    "name": "Timbale 2"
+                }
+            },
+            "Timbale 3": {
+                "visual": {
+                    "name": "Timbale 3"
+                }
+            },
+            "Timbale 4": {
+                "visual": {
+                    "name": "Timbale 4"
+                }
+            },
+            "Timbale 5": {
+                "visual": {
+                    "name": "Timbale 5"
+                }
+            },
+            "Tom 1": {
+                "visual": {
+                    "name": "Tom 1"
+                }
+            },
+            "Tom 2": {
+                "visual": {
+                    "name": "Tom 2"
+                }
+            },
+            "Tom 3": {
+                "visual": {
+                    "name": "Tom 3"
+                }
+            },
+            "Tom 4": {
+                "visual": {
+                    "name": "Tom 4"
+                }
+            },
+            "Tom 5": {
+                "visual": {
+                    "name": "Tom 5"
+                }
+            },
+            "Tom 6": {
+                "visual": {
+                    "name": "Tom 6"
+                }
+            },
+            "Tom 7": {
+                "visual": {
+                    "name": "Tom 7"
+                }
+            },
+            "Tom 8": {
+                "visual": {
+                    "name": "Tom 8"
+                }
+            },
+            "Tom 9": {
+                "visual": {
+                    "name": "Tom 9"
+                }
+            },
+            "Triangle 1": {
+                "visual": {
+                    "name": "Triangle 1"
+                }
+            },
+            "Triangle 2": {
+                "visual": {
+                    "name": "Triangle 2"
+                }
+            },
+            "Vibra Slap 1": {
+                "visual": {
+                    "name": "Vibra Slap 1"
+                }
+            },
+            "Vibra Slap 2": {
+                "visual": {
+                    "name": "Vibra Slap 2"
+                }
+            },
+            "Whistle 1": {
+                "visual": {
+                    "name": "Whistle 1"
+                }
+            },
+            "Whistle 2": {
+                "visual": {
+                    "name": "Whistle 2"
+                }
+            },
+            "Wind Chimes 1": {
+                "visual": {
+                    "name": "Wind Chimes 1"
+                }
+            },
+            "Wind Chimes 2": {
+                "visual": {
+                    "name": "Wind Chimes 2"
+                }
+            },
+            "Wind Chimes 3": {
+                "visual": {
+                    "name": "Wind Chimes 3"
+                }
+            },
+            "Wind Chimes 4": {
+                "visual": {
+                    "name": "Wind Chimes 4"
+                }
+            },
+            "Woodblock 1": {
+                "visual": {
+                    "name": "Woodblock 1"
+                }
+            },
+            "Woodblock 2": {
+                "visual": {
+                    "name": "Woodblock 2"
+                }
+            },
+            "Woodblock 3": {
+                "visual": {
+                    "name": "Woodblock 3"
+                }
+            }
+        }
+    },
+    "inst": {
+        "objects": {
+            "Accordion": {
+                "visual": {
+                    "name": "Accordion"
+                }
+            },
+            "Agogo": {
+                "visual": {
+                    "name": "Agogo"
+                }
+            },
+            "Balafon": {
+                "visual": {
+                    "name": "Balafon"
+                }
+            },
+            "Banjo 1": {
+                "visual": {
+                    "name": "Banjo 1"
+                }
+            },
+            "Banjo 2": {
+                "visual": {
+                    "name": "Banjo 2"
+                }
+            },
+            "Bass 1": {
+                "visual": {
+                    "name": "Bass 1"
+                }
+            },
+            "Bass 2": {
+                "visual": {
+                    "name": "Bass 2"
+                }
+            },
+            "Bass 3": {
+                "visual": {
+                    "name": "Bass 3"
+                }
+            },
+            "Bass 4": {
+                "visual": {
+                    "name": "Bass 4"
+                }
+            },
+            "Bass 5": {
+                "visual": {
+                    "name": "Bass 5"
+                }
+            },
+            "Bass 6": {
+                "visual": {
+                    "name": "Bass 6"
+                }
+            },
+            "Bass 7": {
+                "visual": {
+                    "name": "Bass 7"
+                }
+            },
+            "Bass 8": {
+                "visual": {
+                    "name": "Bass 8"
+                }
+            },
+            "Bass 9": {
+                "visual": {
+                    "name": "Bass 9"
+                }
+            },
+            "Bassoon 1": {
+                "visual": {
+                    "name": "Bassoon 1"
+                }
+            },
+            "Bassoon 2": {
+                "visual": {
+                    "name": "Bassoon 2"
+                }
+            },
+            "Brass": {
+                "visual": {
+                    "name": "Brass"
+                }
+            },
+            "Celesta": {
+                "visual": {
+                    "name": "Celesta"
+                }
+            },
+            "Cello": {
+                "visual": {
+                    "name": "Cello"
+                }
+            },
+            "Choir 1": {
+                "visual": {
+                    "name": "Choir 1"
+                }
+            },
+            "Choir 2": {
+                "visual": {
+                    "name": "Choir 2"
+                }
+            },
+            "Choir 3": {
+                "visual": {
+                    "name": "Choir 3"
+                }
+            },
+            "Choir 4": {
+                "visual": {
+                    "name": "Choir 4"
+                }
+            },
+            "Choir 5": {
+                "visual": {
+                    "name": "Choir 5"
+                }
+            },
+            "Church Organ": {
+                "visual": {
+                    "name": "Church Organ"
+                }
+            },
+            "Clarinet 1": {
+                "visual": {
+                    "name": "Clarinet 1"
+                }
+            },
+            "Clarinet 2": {
+                "visual": {
+                    "name": "Clarinet 2"
+                }
+            },
+            "Clavinet 1": {
+                "visual": {
+                    "name": "Clavinet 1"
+                }
+            },
+            "Clavinet 2": {
+                "visual": {
+                    "name": "Clavinet 2"
+                }
+            },
+            "Clavinet 3": {
+                "visual": {
+                    "name": "Clavinet 3"
+                }
+            },
+            "Clavinet 4": {
+                "visual": {
+                    "name": "Clavinet 4"
+                }
+            },
+            "Contrabass": {
+                "visual": {
+                    "name": "Contrabass"
+                }
+            },
+            "Cowbell": {
+                "visual": {
+                    "name": "Cowbell"
+                }
+            },
+            "Electric Piano 1": {
+                "visual": {
+                    "name": "Electric Piano 1"
+                }
+            },
+            "Electric Piano 2": {
+                "visual": {
+                    "name": "Electric Piano 2"
+                }
+            },
+            "Electric Piano 3": {
+                "visual": {
+                    "name": "Electric Piano 3"
+                }
+            },
+            "Electric Piano 4": {
+                "visual": {
+                    "name": "Electric Piano 4"
+                }
+            },
+            "FX 01": {
+                "visual": {
+                    "name": "FX 01"
+                }
+            },
+            "FX 02": {
+                "visual": {
+                    "name": "FX 02"
+                }
+            },
+            "FX 03": {
+                "visual": {
+                    "name": "FX 03"
+                }
+            },
+            "FX 04": {
+                "visual": {
+                    "name": "FX 04"
+                }
+            },
+            "FX 05": {
+                "visual": {
+                    "name": "FX 05"
+                }
+            },
+            "FX 06": {
+                "visual": {
+                    "name": "FX 06"
+                }
+            },
+            "FX 07": {
+                "visual": {
+                    "name": "FX 07"
+                }
+            },
+            "FX 08": {
+                "visual": {
+                    "name": "FX 08"
+                }
+            },
+            "FX 09": {
+                "visual": {
+                    "name": "FX 09"
+                }
+            },
+            "FX 10": {
+                "visual": {
+                    "name": "FX 10"
+                }
+            },
+            "FX 11": {
+                "visual": {
+                    "name": "FX 11"
+                }
+            },
+            "FX 12": {
+                "visual": {
+                    "name": "FX 12"
+                }
+            },
+            "FX 13": {
+                "visual": {
+                    "name": "FX 13"
+                }
+            },
+            "FX 14": {
+                "visual": {
+                    "name": "FX 14"
+                }
+            },
+            "FX 15": {
+                "visual": {
+                    "name": "FX 15"
+                }
+            },
+            "FX 16": {
+                "visual": {
+                    "name": "FX 16"
+                }
+            },
+            "FX 17": {
+                "visual": {
+                    "name": "FX 17"
+                }
+            },
+            "FX 18": {
+                "visual": {
+                    "name": "FX 18"
+                }
+            },
+            "FX 19": {
+                "visual": {
+                    "name": "FX 19"
+                }
+            },
+            "FX 20": {
+                "visual": {
+                    "name": "FX 20"
+                }
+            },
+            "FX 21": {
+                "visual": {
+                    "name": "FX 21"
+                }
+            },
+            "FX 22": {
+                "visual": {
+                    "name": "FX 22"
+                }
+            },
+            "FX 23": {
+                "visual": {
+                    "name": "FX 23"
+                }
+            },
+            "FX 24": {
+                "visual": {
+                    "name": "FX 24"
+                }
+            },
+            "FX 25": {
+                "visual": {
+                    "name": "FX 25"
+                }
+            },
+            "Flute 1": {
+                "visual": {
+                    "name": "Flute 1"
+                }
+            },
+            "Flute 2": {
+                "visual": {
+                    "name": "Flute 2"
+                }
+            },
+            "Flute 3": {
+                "visual": {
+                    "name": "Flute 3"
+                }
+            },
+            "Flute 4": {
+                "visual": {
+                    "name": "Flute 4"
+                }
+            },
+            "Gamelan": {
+                "visual": {
+                    "name": "Gamelan"
+                }
+            },
+            "Guitar 1": {
+                "visual": {
+                    "name": "Guitar 1"
+                }
+            },
+            "Guitar 2": {
+                "visual": {
+                    "name": "Guitar 2"
+                }
+            },
+            "Guitar 3": {
+                "visual": {
+                    "name": "Guitar 3"
+                }
+            },
+            "Guitar 4": {
+                "visual": {
+                    "name": "Guitar 4"
+                }
+            },
+            "Guitar 5": {
+                "visual": {
+                    "name": "Guitar 5"
+                }
+            },
+            "Guitar 6": {
+                "visual": {
+                    "name": "Guitar 6"
+                }
+            },
+            "Guitar 7": {
+                "visual": {
+                    "name": "Guitar 7"
+                }
+            },
+            "Guitar 8": {
+                "visual": {
+                    "name": "Guitar 8"
+                }
+            },
+            "Guzheng": {
+                "visual": {
+                    "name": "Guzheng"
+                }
+            },
+            "Harp 1": {
+                "visual": {
+                    "name": "Harp 1"
+                }
+            },
+            "Harp 2": {
+                "visual": {
+                    "name": "Harp 2"
+                }
+            },
+            "Harp 3": {
+                "visual": {
+                    "name": "Harp 3"
+                }
+            },
+            "Harp 4": {
+                "visual": {
+                    "name": "Harp 4"
+                }
+            },
+            "Harp 5": {
+                "visual": {
+                    "name": "Harp 5"
+                }
+            },
+            "Harpsichord": {
+                "visual": {
+                    "name": "Harpsichord"
+                }
+            },
+            "Hit 1": {
+                "visual": {
+                    "name": "Hit 1"
+                }
+            },
+            "Hit 2": {
+                "visual": {
+                    "name": "Hit 2"
+                }
+            },
+            "Honky-tonk 1": {
+                "visual": {
+                    "name": "Honky-tonk 1"
+                }
+            },
+            "Honky-tonk 2": {
+                "visual": {
+                    "name": "Honky-tonk 2"
+                }
+            },
+            "Kalimba": {
+                "visual": {
+                    "name": "Kalimba"
+                }
+            },
+            "Koto": {
+                "visual": {
+                    "name": "Koto"
+                }
+            },
+            "Lead 1": {
+                "visual": {
+                    "name": "Lead 1"
+                }
+            },
+            "Lead 2": {
+                "visual": {
+                    "name": "Lead 2"
+                }
+            },
+            "Lead 3": {
+                "visual": {
+                    "name": "Lead 3"
+                }
+            },
+            "Lead 4": {
+                "visual": {
+                    "name": "Lead 4"
+                }
+            },
+            "Lead 5": {
+                "visual": {
+                    "name": "Lead 5"
+                }
+            },
+            "Lead 6": {
+                "visual": {
+                    "name": "Lead 6"
+                }
+            },
+            "Lead 7": {
+                "visual": {
+                    "name": "Lead 7"
+                }
+            },
+            "Lead 8": {
+                "visual": {
+                    "name": "Lead 8"
+                }
+            },
+            "Lead 9": {
+                "visual": {
+                    "name": "Lead 9"
+                }
+            },
+            "Marimba": {
+                "visual": {
+                    "name": "Marimba"
+                }
+            },
+            "Music Box": {
+                "visual": {
+                    "name": "Music Box"
+                }
+            },
+            "Oboe": {
+                "visual": {
+                    "name": "Oboe"
+                }
+            },
+            "Ocarina": {
+                "visual": {
+                    "name": "Ocarina"
+                }
+            },
+            "Organ 1": {
+                "visual": {
+                    "name": "Organ 1"
+                }
+            },
+            "Organ 2": {
+                "visual": {
+                    "name": "Organ 2"
+                }
+            },
+            "Organ 3": {
+                "visual": {
+                    "name": "Organ 3"
+                }
+            },
+            "Organ 4": {
+                "visual": {
+                    "name": "Organ 4"
+                }
+            },
+            "Pad 1": {
+                "visual": {
+                    "name": "Pad 1"
+                }
+            },
+            "Pad 2": {
+                "visual": {
+                    "name": "Pad 2"
+                }
+            },
+            "Pad 3": {
+                "visual": {
+                    "name": "Pad 3"
+                }
+            },
+            "Pad 4": {
+                "visual": {
+                    "name": "Pad 4"
+                }
+            },
+            "Pad 5": {
+                "visual": {
+                    "name": "Pad 5"
+                }
+            },
+            "Pad 6": {
+                "visual": {
+                    "name": "Pad 6"
+                }
+            },
+            "Pad 7": {
+                "visual": {
+                    "name": "Pad 7"
+                }
+            },
+            "Pad 8": {
+                "visual": {
+                    "name": "Pad 8"
+                }
+            },
+            "Pad 9": {
+                "visual": {
+                    "name": "Pad 9"
+                }
+            },
+            "Percussive Organ 1": {
+                "visual": {
+                    "name": "Percussive Organ 1"
+                }
+            },
+            "Percussive Organ 2": {
+                "visual": {
+                    "name": "Percussive Organ 2"
+                }
+            },
+            "Percussive Organ 3": {
+                "visual": {
+                    "name": "Percussive Organ 3"
+                }
+            },
+            "Piano 1": {
+                "visual": {
+                    "name": "Piano 1"
+                }
+            },
+            "Piano 2": {
+                "visual": {
+                    "name": "Piano 2"
+                }
+            },
+            "Piano 3": {
+                "visual": {
+                    "name": "Piano 3"
+                }
+            },
+            "Piano 4": {
+                "visual": {
+                    "name": "Piano 4"
+                }
+            },
+            "Pizzicato 1": {
+                "visual": {
+                    "name": "Pizzicato 1"
+                }
+            },
+            "Pizzicato 2": {
+                "visual": {
+                    "name": "Pizzicato 2"
+                }
+            },
+            "Pizzicato 3": {
+                "visual": {
+                    "name": "Pizzicato 3"
+                }
+            },
+            "Pizzicato 4": {
+                "visual": {
+                    "name": "Pizzicato 4"
+                }
+            },
+            "Pizzicato 5": {
+                "visual": {
+                    "name": "Pizzicato 5"
+                }
+            },
+            "Pizzicato 6": {
+                "visual": {
+                    "name": "Pizzicato 6"
+                }
+            },
+            "Rabab": {
+                "visual": {
+                    "name": "Rabab"
+                }
+            },
+            "Recorder": {
+                "visual": {
+                    "name": "Recorder"
+                }
+            },
+            "Retro Bass 01": {
+                "visual": {
+                    "name": "Retro Bass 01"
+                }
+            },
+            "Retro Bass 02": {
+                "visual": {
+                    "name": "Retro Bass 02"
+                }
+            },
+            "Retro Bass 03": {
+                "visual": {
+                    "name": "Retro Bass 03"
+                }
+            },
+            "Retro Bass 04": {
+                "visual": {
+                    "name": "Retro Bass 04"
+                }
+            },
+            "Retro Bass 05": {
+                "visual": {
+                    "name": "Retro Bass 05"
+                }
+            },
+            "Retro Bass 06": {
+                "visual": {
+                    "name": "Retro Bass 06"
+                }
+            },
+            "Retro Bass 07": {
+                "visual": {
+                    "name": "Retro Bass 07"
+                }
+            },
+            "Retro Bass 08": {
+                "visual": {
+                    "name": "Retro Bass 08"
+                }
+            },
+            "Retro Bass 09": {
+                "visual": {
+                    "name": "Retro Bass 09"
+                }
+            },
+            "Retro Bass 10": {
+                "visual": {
+                    "name": "Retro Bass 10"
+                }
+            },
+            "Retro Bass 11": {
+                "visual": {
+                    "name": "Retro Bass 11"
+                }
+            },
+            "Retro Bass 12": {
+                "visual": {
+                    "name": "Retro Bass 12"
+                }
+            },
+            "Retro Lead 01": {
+                "visual": {
+                    "name": "Retro Lead 01"
+                }
+            },
+            "Retro Lead 02": {
+                "visual": {
+                    "name": "Retro Lead 02"
+                }
+            },
+            "Retro Lead 03": {
+                "visual": {
+                    "name": "Retro Lead 03"
+                }
+            },
+            "Retro Lead 04": {
+                "visual": {
+                    "name": "Retro Lead 04"
+                }
+            },
+            "Retro Lead 05": {
+                "visual": {
+                    "name": "Retro Lead 05"
+                }
+            },
+            "Retro Lead 06": {
+                "visual": {
+                    "name": "Retro Lead 06"
+                }
+            },
+            "Retro Lead 07": {
+                "visual": {
+                    "name": "Retro Lead 07"
+                }
+            },
+            "Retro Lead 08": {
+                "visual": {
+                    "name": "Retro Lead 08"
+                }
+            },
+            "Retro Lead 09": {
+                "visual": {
+                    "name": "Retro Lead 09"
+                }
+            },
+            "Retro Lead 10": {
+                "visual": {
+                    "name": "Retro Lead 10"
+                }
+            },
+            "Retro Lead 11": {
+                "visual": {
+                    "name": "Retro Lead 11"
+                }
+            },
+            "Retro Lead 12": {
+                "visual": {
+                    "name": "Retro Lead 12"
+                }
+            },
+            "Retro Lead 13": {
+                "visual": {
+                    "name": "Retro Lead 13"
+                }
+            },
+            "Retro Lead 14": {
+                "visual": {
+                    "name": "Retro Lead 14"
+                }
+            },
+            "Retro Lead 15": {
+                "visual": {
+                    "name": "Retro Lead 15"
+                }
+            },
+            "Retro Lead 16": {
+                "visual": {
+                    "name": "Retro Lead 16"
+                }
+            },
+            "Retro Lead 17": {
+                "visual": {
+                    "name": "Retro Lead 17"
+                }
+            },
+            "Retro Lead 18": {
+                "visual": {
+                    "name": "Retro Lead 18"
+                }
+            },
+            "Retro Lead 19": {
+                "visual": {
+                    "name": "Retro Lead 19"
+                }
+            },
+            "Retro Lead 20": {
+                "visual": {
+                    "name": "Retro Lead 20"
+                }
+            },
+            "Retro Lead 21": {
+                "visual": {
+                    "name": "Retro Lead 21"
+                }
+            },
+            "Retro Lead 22": {
+                "visual": {
+                    "name": "Retro Lead 22"
+                }
+            },
+            "Retro Lead 23": {
+                "visual": {
+                    "name": "Retro Lead 23"
+                }
+            },
+            "Retro Lead 24": {
+                "visual": {
+                    "name": "Retro Lead 24"
+                }
+            },
+            "Retro Lead 25": {
+                "visual": {
+                    "name": "Retro Lead 25"
+                }
+            },
+            "Retro Lead 26": {
+                "visual": {
+                    "name": "Retro Lead 26"
+                }
+            },
+            "Retro Lead 27": {
+                "visual": {
+                    "name": "Retro Lead 27"
+                }
+            },
+            "Retro Lead 28": {
+                "visual": {
+                    "name": "Retro Lead 28"
+                }
+            },
+            "Retro Pad 01": {
+                "visual": {
+                    "name": "Retro Pad 01"
+                }
+            },
+            "Retro Pad 02": {
+                "visual": {
+                    "name": "Retro Pad 02"
+                }
+            },
+            "Retro Pad 03": {
+                "visual": {
+                    "name": "Retro Pad 03"
+                }
+            },
+            "Retro Pad 04": {
+                "visual": {
+                    "name": "Retro Pad 04"
+                }
+            },
+            "Retro Pad 05": {
+                "visual": {
+                    "name": "Retro Pad 05"
+                }
+            },
+            "Retro Pad 06": {
+                "visual": {
+                    "name": "Retro Pad 06"
+                }
+            },
+            "Retro Pad 07": {
+                "visual": {
+                    "name": "Retro Pad 07"
+                }
+            },
+            "Retro Pad 08": {
+                "visual": {
+                    "name": "Retro Pad 08"
+                }
+            },
+            "Retro Pad 09": {
+                "visual": {
+                    "name": "Retro Pad 09"
+                }
+            },
+            "Retro Pad 10": {
+                "visual": {
+                    "name": "Retro Pad 10"
+                }
+            },
+            "Retro Pad 11": {
+                "visual": {
+                    "name": "Retro Pad 11"
+                }
+            },
+            "Retro Pad 12": {
+                "visual": {
+                    "name": "Retro Pad 12"
+                }
+            },
+            "Retro Pad 13": {
+                "visual": {
+                    "name": "Retro Pad 13"
+                }
+            },
+            "Retro Pad 14": {
+                "visual": {
+                    "name": "Retro Pad 14"
+                }
+            },
+            "Retro Pad 15": {
+                "visual": {
+                    "name": "Retro Pad 15"
+                }
+            },
+            "Retro Pad 16": {
+                "visual": {
+                    "name": "Retro Pad 16"
+                }
+            },
+            "Retro Pad 17": {
+                "visual": {
+                    "name": "Retro Pad 17"
+                }
+            },
+            "Retro Pad 18": {
+                "visual": {
+                    "name": "Retro Pad 18"
+                }
+            },
+            "Retro Pad 19": {
+                "visual": {
+                    "name": "Retro Pad 19"
+                }
+            },
+            "Retro Pad 20": {
+                "visual": {
+                    "name": "Retro Pad 20"
+                }
+            },
+            "Retro Pad 21": {
+                "visual": {
+                    "name": "Retro Pad 21"
+                }
+            },
+            "Retro Pad 22": {
+                "visual": {
+                    "name": "Retro Pad 22"
+                }
+            },
+            "Retro Pad 23": {
+                "visual": {
+                    "name": "Retro Pad 23"
+                }
+            },
+            "Retro Synth 01": {
+                "visual": {
+                    "name": "Retro Synth 01"
+                }
+            },
+            "Retro Synth 02": {
+                "visual": {
+                    "name": "Retro Synth 02"
+                }
+            },
+            "Retro Synth 03": {
+                "visual": {
+                    "name": "Retro Synth 03"
+                }
+            },
+            "Retro Synth 04": {
+                "visual": {
+                    "name": "Retro Synth 04"
+                }
+            },
+            "Retro Synth 05": {
+                "visual": {
+                    "name": "Retro Synth 05"
+                }
+            },
+            "Retro Synth 06": {
+                "visual": {
+                    "name": "Retro Synth 06"
+                }
+            },
+            "Retro Synth 07": {
+                "visual": {
+                    "name": "Retro Synth 07"
+                }
+            },
+            "Retro Synth 08": {
+                "visual": {
+                    "name": "Retro Synth 08"
+                }
+            },
+            "Retro Synth 09": {
+                "visual": {
+                    "name": "Retro Synth 09"
+                }
+            },
+            "Retro Synth 10": {
+                "visual": {
+                    "name": "Retro Synth 10"
+                }
+            },
+            "Retro Synth 11": {
+                "visual": {
+                    "name": "Retro Synth 11"
+                }
+            },
+            "Retro Synth 12": {
+                "visual": {
+                    "name": "Retro Synth 12"
+                }
+            },
+            "Retro Synth 13": {
+                "visual": {
+                    "name": "Retro Synth 13"
+                }
+            },
+            "Retro Synth 14": {
+                "visual": {
+                    "name": "Retro Synth 14"
+                }
+            },
+            "Retro Synth 15": {
+                "visual": {
+                    "name": "Retro Synth 15"
+                }
+            },
+            "Retro Synth 16": {
+                "visual": {
+                    "name": "Retro Synth 16"
+                }
+            },
+            "Retro Synth 17": {
+                "visual": {
+                    "name": "Retro Synth 17"
+                }
+            },
+            "Rhodes": {
+                "visual": {
+                    "name": "Rhodes"
+                }
+            },
+            "Santur": {
+                "visual": {
+                    "name": "Santur"
+                }
+            },
+            "Saxophone 1": {
+                "visual": {
+                    "name": "Saxophone 1"
+                }
+            },
+            "Saxophone 2": {
+                "visual": {
+                    "name": "Saxophone 2"
+                }
+            },
+            "Saxophone 3": {
+                "visual": {
+                    "name": "Saxophone 3"
+                }
+            },
+            "Saxophone 4": {
+                "visual": {
+                    "name": "Saxophone 4"
+                }
+            },
+            "Scratch 1": {
+                "visual": {
+                    "name": "Scratch 1"
+                }
+            },
+            "Scratch 2": {
+                "visual": {
+                    "name": "Scratch 2"
+                }
+            },
+            "Scratch 3": {
+                "visual": {
+                    "name": "Scratch 3"
+                }
+            },
+            "Scratch 4": {
+                "visual": {
+                    "name": "Scratch 4"
+                }
+            },
+            "Shamisen 1": {
+                "visual": {
+                    "name": "Shamisen 1"
+                }
+            },
+            "Shamisen 2": {
+                "visual": {
+                    "name": "Shamisen 2"
+                }
+            },
+            "Shanai": {
+                "visual": {
+                    "name": "Shanai"
+                }
+            },
+            "Sitar": {
+                "visual": {
+                    "name": "Sitar"
+                }
+            },
+            "Strings 1": {
+                "visual": {
+                    "name": "Strings 1"
+                }
+            },
+            "Strings 2": {
+                "visual": {
+                    "name": "Strings 2"
+                }
+            },
+            "Strings 3": {
+                "visual": {
+                    "name": "Strings 3"
+                }
+            },
+            "Strings 4": {
+                "visual": {
+                    "name": "Strings 4"
+                }
+            },
+            "Strings 5": {
+                "visual": {
+                    "name": "Strings 5"
+                }
+            },
+            "Strings 6": {
+                "visual": {
+                    "name": "Strings 6"
+                }
+            },
+            "Synth 1": {
+                "visual": {
+                    "name": "Synth 1"
+                }
+            },
+            "Synth 2": {
+                "visual": {
+                    "name": "Synth 2"
+                }
+            },
+            "Synth 3": {
+                "visual": {
+                    "name": "Synth 3"
+                }
+            },
+            "Synth 4": {
+                "visual": {
+                    "name": "Synth 4"
+                }
+            },
+            "Synth 5": {
+                "visual": {
+                    "name": "Synth 5"
+                }
+            },
+            "Synth 6": {
+                "visual": {
+                    "name": "Synth 6"
+                }
+            },
+            "Tremolo Strings 1": {
+                "visual": {
+                    "name": "Tremolo Strings 1"
+                }
+            },
+            "Tremolo Strings 2": {
+                "visual": {
+                    "name": "Tremolo Strings 2"
+                }
+            },
+            "Tremolo Strings 3": {
+                "visual": {
+                    "name": "Tremolo Strings 3"
+                }
+            },
+            "Trombone": {
+                "visual": {
+                    "name": "Trombone"
+                }
+            },
+            "Trumpet": {
+                "visual": {
+                    "name": "Trumpet"
+                }
+            },
+            "Tuba": {
+                "visual": {
+                    "name": "Tuba"
+                }
+            },
+            "Ukulele": {
+                "visual": {
+                    "name": "Ukulele"
+                }
+            },
+            "Vibraphone": {
+                "visual": {
+                    "name": "Vibraphone"
+                }
+            },
+            "Viola": {
+                "visual": {
+                    "name": "Viola"
+                }
+            },
+            "Violin": {
+                "visual": {
+                    "name": "Violin"
+                }
+            },
+            "Voice 1": {
+                "visual": {
+                    "name": "Voice 1"
+                }
+            },
+            "Voice 2": {
+                "visual": {
+                    "name": "Voice 2"
+                }
+            },
+            "Voice 3": {
+                "visual": {
+                    "name": "Voice 3"
+                }
+            },
+            "Voice 4": {
+                "visual": {
+                    "name": "Voice 4"
+                }
+            },
+            "Voice 5": {
+                "visual": {
+                    "name": "Voice 5"
+                }
+            },
+            "Voice 6": {
+                "visual": {
+                    "name": "Voice 6"
+                }
+            },
+            "Wah Wah 1": {
+                "visual": {
+                    "name": "Wah Wah 1"
+                }
+            },
+            "Wah Wah 2": {
+                "visual": {
+                    "name": "Wah Wah 2"
+                }
+            },
+            "Wah Wah 3": {
+                "visual": {
+                    "name": "Wah Wah 3"
+                }
+            }
+        }
+    },
+    "track": {
+        "colorset": {
+            "main": [
+                [
+                    0.14,
+                    1.0,
+                    0.6
+                ],
+                [
+                    1.0,
+                    0.87,
+                    0.18
+                ],
+                [
+                    0.76,
+                    0.41,
+                    1.0
+                ],
+                [
+                    0.97,
+                    0.51,
+                    0.0
+                ],
+                [
+                    0.76,
+                    0.76,
+                    0.76
+                ],
+                [
+                    0.76,
+                    0.58,
+                    0.38
+                ],
+                [
+                    0.47,
+                    0.49,
+                    0.88
+                ],
+                [
+                    0.59,
+                    0.73,
+                    0.23
+                ],
+                [
+                    0.88,
+                    0.35,
+                    0.53
+                ]
+            ]
+        },
+        "objects": {}
+    }
+}

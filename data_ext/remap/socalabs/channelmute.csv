@@ -1,0 +1,6 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2,vst3,vst3
+paramid,extid,def,min,max,visname,paramnum,visname,paramnum,visname
+mutel,muteL,0.0,0.0,1.0,Mute L,0,Mute L,0,Mute L
+levell,levelL,0.0,-100.0,6.0,Level L,1,Level L,1,Level L
+muter,muteR,0.0,0.0,1.0,Mute R,2,Mute R,2,Mute R
+levelr,levelR,0.0,-100.0,6.0,Level R,3,Level R,3,Level R

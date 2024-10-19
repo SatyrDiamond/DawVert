@@ -402,17 +402,20 @@ class output_reaper(plugins.base):
 
 			tracknum += 1
 
-		if convproj_obj.trackroute:
-			for tracknum, trackid in enumerate(convproj_obj.track_order):
-				if trackid in convproj_obj.trackroute:
-					sends_obj = convproj_obj.trackroute[trackid]
-					tracksendnum = convproj_obj.track_order.index(trackid)
-					trackdata[tracknum].mainsend['tracknum'] = int(sends_obj.to_master_active)
-					for target, send_obj in sends_obj.iter():
-						trackrecnum = convproj_obj.track_order.index(target)
-						auxrecv_obj = trackdata[trackrecnum].add_auxrecv()
-						auxrecv_obj['tracknum'] = tracksendnum
-						auxrecv_obj['vol'] = send_obj.params.get('amount', 1).value
-						auxrecv_obj['pan'] = send_obj.params.get('pan', 0).value
+		try:
+			if convproj_obj.trackroute:
+				for tracknum, trackid in enumerate(convproj_obj.track_order):
+					if trackid in convproj_obj.trackroute:
+						sends_obj = convproj_obj.trackroute[trackid]
+						tracksendnum = convproj_obj.track_order.index(trackid)
+						trackdata[tracknum].mainsend['tracknum'] = int(sends_obj.to_master_active)
+						for target, send_obj in sends_obj.iter():
+							trackrecnum = convproj_obj.track_order.index(target)
+							auxrecv_obj = trackdata[trackrecnum].add_auxrecv()
+							auxrecv_obj['tracknum'] = tracksendnum
+							auxrecv_obj['vol'] = send_obj.params.get('amount', 1).value
+							auxrecv_obj['pan'] = send_obj.params.get('pan', 0).value
+		except:
+			pass
 		
 		project_obj.save_to_file(output_file)

@@ -24,7 +24,7 @@ def autopoints_get(autoloc, add, mul):
 	sngauto = []
 	if_found, autopoints = convproj_obj.automation.get_autopoints(autoloc)
 	if if_found:
-		for autopoint in autopoints.iter():
+		for autopoint in autopoints:
 			sngauto.append({"pos": autopoint.pos, "value": (autopoint.value/mul)-add})
 	return sngauto
 

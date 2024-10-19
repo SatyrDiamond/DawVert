@@ -149,7 +149,7 @@ class cvpj_s_automation:
 	def convert____pl_ticks_____pl_points(self):
 
 		if self.u_pl_ticks:
-			for x in self.pl_ticks.iter():
+			for x in self.pl_ticks:
 				pl = self.add_pl_points()
 				pl.time = x.time.copy()
 				pl.muted = x.muted
@@ -171,7 +171,7 @@ class cvpj_s_automation:
 
 	def convert____pl_points__nopl_points(self):
 		if self.u_pl_points:
-			for x in self.pl_points.iter():
+			for x in self.pl_points:
 				x.remove_cut()
 				for c, p in enumerate(x.data.points):
 					self.add_autopoint(p.pos+x.time.position, p.value, p.type if c != 0 else 'instant')
@@ -197,7 +197,7 @@ class cvpj_s_automation:
 
 			s, e = self.nopl_points.get_durpos()
 
-			for m, point in enumerate(self.nopl_points.iter()):
+			for m, point in enumerate(self.nopl_points):
 				difpos = point.pos-oldpos
 
 				diffval = (point.value != oldval) if point.type == 'normal' else False
@@ -305,16 +305,16 @@ class cvpj_automation:
 			#print(x.ljust(30), '|',int(v.u_pl_points), int(v.u_nopl_points), '|', int(v.u_pl_ticks), int(v.u_nopl_ticks), '|')
 			if v.u_pl_points:
 				print(x, '- pl_points')
-				for d in v.pl_points.iter(): print(d)
+				for d in v.pl_points: print(d)
 			if v.u_nopl_points:
 				print(x, '- nopl_points')
-				for d in v.nopl_points.iter(): print(d)
+				for d in v.nopl_points: print(d)
 			if v.u_pl_ticks:
 				print(x, '- pl_ticks')
-				for d in v.pl_ticks.iter(): print(d)
+				for d in v.pl_ticks: print(d)
 			if v.u_nopl_ticks:
 				print(x, '- nopl_ticks')
-				for d in v.nopl_ticks.iter(): print(d)
+				for d in v.nopl_ticks: print(d)
 
 	def change_timings(self, time_ppq, time_float):
 		for autopath, autodata in self.data.items():

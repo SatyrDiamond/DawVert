@@ -85,7 +85,7 @@ class extplugin(plugins.base):
 		
 		plugin_obj.replace('external', 'vst2', None)
 		manu_obj.remap_cvpj_to_ext__post('wolfshaper', plugintype)
-		for p in plugin_obj.env_points_get('shape').iter():
+		for p in plugin_obj.env_points_get('shape'):
 			tension = p.tension
 			if p.type == 'normal': pointtype = 0
 			elif p.type in ['doublecurve', 'doublecurve2', 'doublecurve3']: pointtype = 1

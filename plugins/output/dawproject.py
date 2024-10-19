@@ -30,14 +30,14 @@ def do_visual_clip(visual_obj, dp_clip):
 def do_autopoints(autopoints_obj, dppoints_obj):
 	if autopoints_obj.val_type == 'float':
 		autopoints_obj.remove_instant()
-		for autopoint_obj in autopoints_obj.iter():
+		for autopoint_obj in autopoints_obj:
 			dppoint_obj = points.dawproject_realpoint()
 			dppoint_obj.time = autopoint_obj.pos
 			dppoint_obj.value = autopoint_obj.value
 			if autopoint_obj.type != 'instant': dppoint_obj.interpolation = "linear" 
 			dppoints_obj.points.append(dppoint_obj)
 	if autopoints_obj.val_type == 'bool':
-		for autopoint_obj in autopoints_obj.iter():
+		for autopoint_obj in autopoints_obj:
 			dppoint_obj = points.dawproject_boolpoint()
 			dppoint_obj.time = autopoint_obj.pos
 			dppoint_obj.value = bool(autopoint_obj.value)
@@ -588,7 +588,7 @@ class output_dawproject(plugins.base):
 			dp_timesig = project_obj.arrangement.timesignatureautomation = points.dawproject_points_timesig()
 			dp_timesig.id = 'main__timesig'
 
-			for pos, value in convproj_obj.timesig_auto.iter():
+			for pos, value in convproj_obj.timesig_auto:
 				point_obj = points.dawproject_timesigpoint()
 				point_obj.time = pos
 				point_obj.numerator = value[0]

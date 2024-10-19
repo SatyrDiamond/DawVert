@@ -12,7 +12,7 @@ def create_auto(project_obj, convproj_obj, os_target, os_param, autoloc, mul):
 	auto_found, auto_points = convproj_obj.automation.get_autopoints(autoloc)
 
 	if auto_found:
-		for auto_point in auto_points.iter():
+		for auto_point in auto_points:
 			os_marker = proj_onlineseq.onlineseq_marker(None)
 			os_marker.pos = auto_point.pos
 			os_marker.value = auto_point.value*mul

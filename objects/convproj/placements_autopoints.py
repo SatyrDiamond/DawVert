@@ -54,9 +54,6 @@ class cvpj_placements_autopoints:
 	def funcval(self, i_function):
 		for pl in self.data: pl.data.funcval(i_function)
 
-	def iter(self):
-		for x in self.data: yield x
-
 	def check(self):
 		return len(self.data) != 0
 

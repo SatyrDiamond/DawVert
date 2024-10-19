@@ -317,11 +317,11 @@ def create_points(plugin_obj, envname, lfopoints):
 		lfo_points = []
 		lfo_pud = []
 		prevval = 1
-		for ap in autopoints_obj.iter(): 
+		for ap in autopoints_obj: 
 			lfo_points += [ap.pos, 1-ap.value]
 			lfo_pud.append((prevval-ap.value)>=0)
 			prevval = ap.value
-		lfo_powers = [ap.tension*10 for ap in autopoints_obj.iter()]
+		lfo_powers = [ap.tension*10 for ap in autopoints_obj]
 		for n, p in enumerate(lfo_pud[1:]):
 			if not p: lfo_powers[n] *= -1
 		lfopoints['num_points'] = autopoints_obj.count()

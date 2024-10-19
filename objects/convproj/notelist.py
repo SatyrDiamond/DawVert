@@ -562,13 +562,13 @@ class cvpj_notelist:
 			note['dur'] += dur
 
 	def auto_add_slide(self, t_inst, t_pos, t_dur, t_key, t_vol, t_extra):
-		for note in self.data:
+		for note in self.cursor:
 			n_inst = note['assoc_inst'] if note['is_inst'] else None
 			s_inst = self.data.v_assoc_inst.index(t_inst) if t_inst in self.data.v_assoc_inst else None
 
 			match_pos = (note['pos'] <= t_pos < note['pos']+note['dur'])
 			match_inst = n_inst == s_inst
-
+			
 			if note['used'] and match_pos and match_inst:
 				sn_pos = t_pos - note['pos']
 				sn_key = t_key

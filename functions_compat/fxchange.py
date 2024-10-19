@@ -242,7 +242,8 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				if is_fx_used and (fxnum not in used_fxchans): used_fxchans.append(fxnum)
 
 				for target in fxdata.sends.data:
-					if target not in used_fxchans: used_fxchans.append(target)
+					if target not in used_fxchans and target>0: 
+						used_fxchans.append(target)
 				track_obj.fxrack_channel = -1
 
 		used_fxchans = sorted(used_fxchans)

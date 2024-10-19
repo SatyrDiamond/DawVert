@@ -162,9 +162,6 @@ class cvpj_autopoints:
 			for note in ta_sorted[p]: new_a.append(note)
 		self.points = new_a
 
-	def iter(self):
-		for p in self.points: yield p
-
 	def check(self):
 		return len(self.points) != 0
 

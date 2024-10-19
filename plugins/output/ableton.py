@@ -76,7 +76,7 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 					alsevent.Time = -63072000
 					alsevent.Value = firstval
 					AutomationEnvelope_obj.Automation.Events.append([0, 'FloatEvent', alsevent])
-					for num, autopoint in enumerate(autopoints.iter()):
+					for num, autopoint in enumerate(autopoints):
 						alsevent = proj_ableton.ableton_FloatEvent(None)
 						alsevent.Time = autopoint.pos
 						alsevent.Value = autopoint.value
@@ -86,7 +86,7 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 					alsevent.Time = -63072000
 					alsevent.Value = firstval
 					AutomationEnvelope_obj.Automation.Events.append([0, 'BoolEvent', alsevent])
-					for num, autopoint in enumerate(autopoints.iter()):
+					for num, autopoint in enumerate(autopoints):
 						alsevent = proj_ableton.ableton_BoolEvent(None)
 						alsevent.Time = autopoint.pos
 						alsevent.Value = autopoint.value
@@ -594,7 +594,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 									PerNoteEventList_obj = proj_ableton.ableton_PerNoteEventList(None)
 									PerNoteEventList_obj.CC = atype
 									PerNoteEventList_obj.NoteId = t_id
-									for autopoint_obj in d.iter():
+									for autopoint_obj in d:
 										PerNoteEvent_obj = proj_ableton.ableton_x_PerNoteEvent(None)
 										PerNoteEvent_obj.TimeOffset = autopoint_obj.pos
 										PerNoteEvent_obj.Value = autopoint_obj.value*autodiv
@@ -617,7 +617,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 					if mpeid:
 						clipenv.PointeeId = mpeid
-						for num, autopoint in enumerate(x.iter()):
+						for num, autopoint in enumerate(x):
 							alsevent = proj_ableton.ableton_FloatEvent(None)
 							alsevent.Time = autopoint.pos
 							alsevent.Value = autopoint.value
@@ -927,7 +927,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 					if mpeid:
 						clipenv.PointeeId = mpeid
-						for num, autopoint in enumerate(x.iter()):
+						for num, autopoint in enumerate(x):
 							alsevent = proj_ableton.ableton_FloatEvent(None)
 							alsevent.Time = autopoint.pos
 							alsevent.Value = autopoint.value
@@ -1113,13 +1113,13 @@ class output_ableton(plugins.base):
 				firstpoint = ta_points.points[0]
 				firstval = firstpoint.value
 				tempoauto.Automation.Events[0][2].Value = firstval
-				for num, autopoint in enumerate(ta_points.iter()):
+				for num, autopoint in enumerate(ta_points):
 					alsevent = proj_ableton.ableton_FloatEvent(None)
 					alsevent.Time = autopoint.pos
 					alsevent.Value = autopoint.value
 					tempoauto.Automation.Events.append([num+1, 'FloatEvent', alsevent])
 
-		for num, tsd in enumerate(convproj_obj.timesig_auto.iter()):
+		for num, tsd in enumerate(convproj_obj.timesig_auto):
 			pos, value = tsd
 			alsevent = proj_ableton.ableton_EnumEvent(None)
 			alsevent.Time = pos

@@ -288,7 +288,7 @@ class output_cvpjs(plugins.base):
 				for fl_note in fl_notes[poslist]:
 					fl_pattern_obj.notes.append(fl_note)
 
-			for pos, value in nle_obj.timesig_auto.iter():
+			for pos, value in nle_obj.timesig_auto:
 				flp_timemarker_obj = arrangement.flp_timemarker()
 				flp_timemarker_obj.pos = pos
 				flp_timemarker_obj.type = 8
@@ -378,7 +378,7 @@ class output_cvpjs(plugins.base):
 			playlistposvalues = FL_Playlist_Sorted[itemposition]
 			for itemrow in playlistposvalues: arrangement_obj.items.append(itemrow)
 
-		for pos, value in convproj_obj.timesig_auto.iter():
+		for pos, value in convproj_obj.timesig_auto:
 			flp_timemarker_obj = arrangement.flp_timemarker()
 			flp_timemarker_obj.pos = pos
 			flp_timemarker_obj.type = 8

@@ -31,10 +31,6 @@ class cvpj_autoticks:
 	def copy(self):
 		return copy.deepcopy(self)
 
-	def iter(self):
-		for p, v in self.points.items(): 
-			yield p, v
-
 	def add_point(self, p_pos, p_val):
 		self.points[p_pos] = p_val
 
@@ -138,7 +134,7 @@ class cvpj_autoticks:
 
 		points_out = []
 
-		for p, v in self.iter():
+		for p, v in self.__iter__():
 			cp = p-pp
 			cv = abs(v-pv)
 
@@ -163,7 +159,7 @@ class cvpj_autoticks:
 
 		pointspl = []
 		first = True
-		for cur_pos, cur_val in self.iter():
+		for cur_pos, cur_val in self.__iter__():
 			pos_dif = prev_pos.do_value(cur_pos)
 			val_dif = prev_val.do_value(cur_val)
 			cur_minus = val_dif>=0

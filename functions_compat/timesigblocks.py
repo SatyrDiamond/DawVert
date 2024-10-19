@@ -14,9 +14,9 @@ def create_points_cut(convproj_obj, mode):
 	timesigposs = []
 
 	if mode == 0:
-		for p, v in convproj_obj.timesig_auto.iter(): timesigposs.append([p, v[0]*ppq])
+		for p, v in convproj_obj.timesig_auto: timesigposs.append([p, v[0]*ppq])
 	if mode == 1:
-		for p, v in convproj_obj.timesig_auto.iter(): timesigposs.append([p, v[0]*v[1]*ppq])
+		for p, v in convproj_obj.timesig_auto: timesigposs.append([p, v[0]*v[1]*ppq])
 
 	if timesigposs == []: timesigposs.append([0, int(4*ppq)])
 	timesigposs.append([songduration, None])

@@ -104,7 +104,7 @@ def fix_value(val_type, value):
 def parse_auto(lmms_points, autopoints_obj):
 	curpoint = 0
 	auto_points = {}
-	for point in autopoints_obj.iter():
+	for point in autopoints_obj:
 		if point.pos in auto_points: 
 			auto_points[point.pos-1] = auto_points[point.pos]
 			del auto_points[point.pos]
@@ -125,7 +125,7 @@ def make_auto_track(autoidnum, autodata, visualname, automode):
 	lmms_track.type = 5
 	lmms_track.name = visualname
 
-	for autopl_obj in autodata.iter():
+	for autopl_obj in autodata:
 		autopl_obj.remove_cut()
 		lmms_autopat = proj_lmms.lmms_automationpattern()
 		lmms_autopat.pos = autopl_obj.time.position

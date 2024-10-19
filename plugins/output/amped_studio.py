@@ -17,7 +17,7 @@ audioidnum = 0
 
 def convauto(autopoints, param_obj):
 	ampedauto = []
-	for autopoint in autopoints.iter():
+	for autopoint in autopoints:
 		value = xtramath.between_to_one(param_obj.min, param_obj.max, autopoint.value)
 		ampedauto.append({"pos": autopoint.pos/4, "value": value})
 	return ampedauto

@@ -30,7 +30,7 @@ class timesigblocks:
 		else:
 			outstart = 0
 
-		ts_parts = [x for x in convproj_obj.timesig_auto.iter()]
+		ts_parts = [x for x in convproj_obj.timesig_auto]
 
 		if not ts_parts: 
 			if mode == 1: self.endsplit(songduration, timesig_num*timesig_dem*ppq, outstart)

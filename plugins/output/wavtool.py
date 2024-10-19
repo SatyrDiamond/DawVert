@@ -87,7 +87,7 @@ def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoi
 	wavtool_obj.devices.add_cable(wt_autoid_AutoStrip, 'output', wt_autoid_AutoPortalIn, 'input')
 
 	wt_points = []
-	for point in autopoints.iter():
+	for point in autopoints:
 		wt_points.append({"time": point.pos, "value": point.value, "exponent": 1, "lifted": False})
 
 	wavtool_track = proj_wavtool.wavtool_track(None)

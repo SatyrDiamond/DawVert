@@ -34,9 +34,6 @@ e.g:
 
 ## Command Line Options
 ```
-GM Soundfont File Path (for GM MIDI instruments): 
---soundfont <sf2 file>
-
 Song Number (used for Multi-Song inputs): 
 --songnum <number>
 
@@ -48,8 +45,6 @@ MultipleIndexed2Multiple:
 
 e.g: 
     python3 dawvert_cmd.py --soundfont "MuseScore_General.sf2" -it notessimo_v2 -i song.note -ot flp -o out.flp
-
-    python3 dawvert_cmd.py --samplefolder "a diffrent folder" -i "song.s3m" -ot lmms -o out.mmp
 
     python3 dawvert_cmd.py --songnum 3 -it famistudio_txt -i "song.txt" -ot lmms -o out.mmp
 ```
@@ -65,6 +60,11 @@ av
 beautifulsoup4
 blackboxprotobuf
 git+https://github.com/Perlence/rpp
+```
+
+## Required Libraries for UI
+```
+PyQt6
 ```
 
 ## Optional Libraries
@@ -83,6 +83,7 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | R | ```midi``` | MIDI |
 | R | ```muse``` | MusE Sequencer |
 | R | ```reaper``` | Reaper |
+| R | ```dawproject``` | DawProject |
 
 ## (Some) Supported Inputs
 [Full List...](docs/input_plugins.md)
@@ -92,6 +93,7 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | R-M | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | M-I | ```flp``` | FL Studio | ```.flp``` | ✔️ |
 | R | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ |
+| R | ```dawproject``` | DawProject | ```.dawproject``` | ✔️ |
 | R | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ |
 | M | ```mod``` | ProTracker | ```.mod``` | ❌ | 
 | M | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | 
@@ -100,6 +102,7 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 | M | ```umx``` | Unreal Music Package  | ```.umx``` | ✔️ | 
 | R | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ |
 | M | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ |
+| M-S | ```serato``` | Serato Studio | ```.ssp``` | ✔️ |
 | M-I | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | 
 | M-I | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | 
 

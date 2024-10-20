@@ -9,7 +9,8 @@ import varint
 from functions import data_values
 from objects import globalstore
 from functions_plugin_ext import plugin_vst2
-#from functions_plugin_ext import plugin_vst3
+from functions_plugin_ext import plugin_clap
+from functions_plugin_ext import plugin_vst3
 from io import BytesIO
 from objects.file import audio_wav
 from objects.data_bytes import bytereader
@@ -101,28 +102,36 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			chunktype = fl_plugstr.uint32()
 			chunksize = fl_plugstr.uint32()
 			fl_plugstr.skip(4)
-			chunkdata = fl_plugstr.raw(chunksize)
 
-			if chunktype == 1: wrapperdata['midi'] = chunkdata
-			if chunktype == 2: wrapperdata['flags'] = chunkdata
-			if chunktype == 30: wrapperdata['io'] = chunkdata
-			if chunktype == 32: wrapperdata['outputs'] = chunkdata
-			if chunktype == 50: wrapperdata['plugin_info'] = chunkdata
-			if chunktype == 51: wrapperdata['fourid'] = int.from_bytes(chunkdata, "little")
-			if chunktype == 52: wrapperdata['16id'] = chunkdata
-			if chunktype == 53: wrapperdata['state'] = chunkdata
-			if chunktype == 54: wrapperdata['name'] = chunkdata.decode()
-			if chunktype == 55: wrapperdata['file'] = chunkdata.decode()
-			if chunktype == 56: wrapperdata['vendor'] = chunkdata.decode()
-			if chunktype == 57: wrapperdata['57'] = chunkdata
+			if chunktype == 50: 
+				wrapperdata['plugin_info'] = [fl_plugstr.uint32(), fl_plugstr.raw(chunksize-4)]
+			else:
+				chunkdata = fl_plugstr.raw(chunksize)
+				if chunktype == 1: wrapperdata['midi'] = chunkdata
+				elif chunktype == 2: wrapperdata['flags'] = chunkdata
+				elif chunktype == 30: wrapperdata['io'] = chunkdata
+				elif chunktype == 32: wrapperdata['outputs'] = chunkdata
+				elif chunktype == 51: wrapperdata['fourid'] = int.from_bytes(chunkdata, "little")
+				elif chunktype == 52: wrapperdata['16id'] = chunkdata
+				elif chunktype == 53: wrapperdata['state'] = chunkdata
+				elif chunktype == 54: wrapperdata['name'] = chunkdata.decode()
+				elif chunktype == 55: wrapperdata['file'] = chunkdata.decode()
+				elif chunktype == 56: wrapperdata['vendor'] = chunkdata.decode()
+				elif chunktype == 57: wrapperdata['57'] = chunkdata
+				elif chunktype == 58: wrapperdata['clapid'] = chunkdata.decode()
+				#else: print(chunktype, chunkdata)
 
 			#print(' >I', chunktype, chunkdata[0:100])
 
 		if 'plugin_info' in wrapperdata:
 
-			wrapper_vsttype = int.from_bytes(wrapperdata['plugin_info'][0:4], "little")
-			if 'fourid' in wrapperdata:
+			wrapper_vsttype = wrapperdata['plugin_info'][0]
 
+			#print(wrapper_vsttype, wrapperdata['name'])
+
+			if wrapper_vsttype in [4,0]:
+				if wrapper_vsttype == 0: plugin_obj.role == 'fx'
+				if wrapper_vsttype == 4: plugin_obj.role == 'synth'
 				plugin_obj.type_set('external', 'vst2', 'win')
 				pluginstate = wrapperdata['state']
 				wrapper_vststate = pluginstate[0:9]
@@ -130,7 +139,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				wrapper_vstpad = pluginstate[13:17]
 				wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
 				wrapper_vstdata = pluginstate[21:]
-
+				if 'fourid' in wrapperdata: plugin_obj.datavals_global.add('id', wrapperdata['fourid'])
 				if 'name' in wrapperdata: plugin_obj.datavals_global.add('name', wrapperdata['name'])
 
 				if wrapper_vststate[0:4] == b'\xf7\xff\xff\xff' and wrapper_vststate[5:9] == b'\xfe\xff\xff\xff':
@@ -180,35 +189,49 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 							convproj_obj.automation.calc(['id_plug', pluginid, str(x)], 'floatbyteint2float', 0, 0, 0, 0)
 							convproj_obj.automation.move(['id_plug', pluginid, str(x)], ['plugin',pluginid,'ext_param_'+str(x)])
 
-			#elif '16id' in wrapperdata:
+			if wrapper_vsttype in [12,11] and 'state' in wrapperdata:
+				plugin_obj.type_set('external', 'clap', 'win')
+				pluginstate = wrapperdata['state']
+
+				if wrapper_vsttype == 11: plugin_obj.role == 'fx'
+				if wrapper_vsttype == 12: plugin_obj.role == 'synth'
+
+				wrapper_vstdata = pluginstate[4:]
+
+				if 'clapid' in wrapperdata: 
+					plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, wrapperdata['clapid'], wrapper_vstdata)
+					if 'name' in wrapperdata: plugin_obj.datavals_global.add('name', wrapperdata['name'])
+				elif 'name' in wrapperdata: 
+					plugin_clap.replace_data(convproj_obj, plugin_obj, 'name', None, wrapperdata['name'], wrapper_vstdata)
+
+				for autoloc, autodata in convproj_obj.automation.iter_nopl_points(filter=['id_plug', pluginid]):
+					convproj_obj.automation.calc(autoloc.get_list(), 'floatbyteint2float', 0, 0, 0, 0)
+					convproj_obj.automation.move(autoloc.get_list(), ['plugin',pluginid,'ext_param_'+str(autoloc[-1])])
+
+			#if wrapper_vsttype in [8,7] and 'state' in wrapperdata:
+			#	plugin_obj.type_set('external', 'vst3', 'win')
 			#	pluginstate = wrapperdata['state']
-			#	pluginstate_str = BytesIO(pluginstate)
-			#	stateheader = pluginstate_str.read(80)
+#
+			#	if wrapper_vsttype == 7: plugin_obj.role == 'fx'
+			#	if wrapper_vsttype == 8: plugin_obj.role == 'synth'
+#
+			#	if 'name' in wrapperdata: 
+			#		#plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', None, wrapperdata['name'], wrapper_vstdata)
+#
+			#		pluginstate_str = BytesIO(pluginstate)
+			#		vststatedata = {}
+#
+			#		while pluginstate_str.tell() < len(pluginstate):
+			#			chunktype = int.from_bytes(pluginstate_str.read(4), 'little')
+			#			chunksize = int.from_bytes(pluginstate_str.read(4), 'little')
+			#			pluginstate_str.read(4)
+			#			chunkdata = pluginstate_str.read(chunksize)
+			#			vststatedata[chunktype] = chunkdata
+#
+			#		print(vststatedata)
 
-			#	vststatedata = {}
-
-			#	while pluginstate_str.tell() < len(pluginstate):
-			#		chunktype = int.from_bytes(pluginstate_str.read(4), 'little')
-			#		chunksize = int.from_bytes(pluginstate_str.read(4), 'little')
-			#		pluginstate_str.read(4)
-			#		chunkdata = pluginstate_str.read(chunksize)
-			#		vststatedata[chunktype] = chunkdata
-
-				#print(vststatedata[3])
-
-			#	somedata = BytesIO(vststatedata[4])
-			#	somedata_num = int.from_bytes(somedata.read(4), 'little')
-
-				#print(wrapperdata['name'])
-
-				#for _ in range(somedata_num):
-				#	somedata_b = somedata.read(4)
-				#	somedata_p = int.from_bytes(somedata_b, 'little')
-				#	print(somedata_b.hex(), end=' ')
-
-				#exit()
-
-			#	plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', 'win', wrapperdata['name'], vststatedata[3] if 3 in vststatedata else b'')
+					#somedata = BytesIO(vststatedata[4])
+					#somedata_num = int.from_bytes(somedata.read(4), 'little')
 
 	# ------------------------------------------------------------------------------------------- Inst
 
@@ -369,32 +392,32 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 	# ------------------------------------------------------------------------------------------- FX
 
-	elif flplugin.name == 'fruity convolver':
-		try:
-			fl_plugstr.read(20)
-			fromstorage = fl_plugstr.int8()
-			filename = data_bytes.readstring_lenbyte(fl_plugstr, 1, 'little', None)
-			if fromstorage == 0:
-				audiosize = fl_plugstr.uint32()
-				filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
-				with open(filename, "wb") as customconvolverfile:
-					customconvolverfile.write(fl_plugstr.read(audiosize))
-			plugin_obj.type_set('native', 'flstudio', flplugin.name)
-			plugin_obj.datavals.add('file', filename.decode())
-			fl_plugstr.read(36)
-			autodata = {}
-			for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
-				autodata_table = decode_pointdata(fl_plugstr)
-				autopoints_obj = plugin_obj.env_points_add(autoname, 4, True, 'float')
-				for point in autodata_table:
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = point[0]
-					autopoint_obj.value = point[1][0]
-					autopoint_obj.type = envshapes[point[3]]
-					autopoint_obj.tension = point[2]
-				autodata[autoname] = autodata_table
-		except:
-			pass
+	#elif flplugin.name == 'fruity convolver':
+	#	try:
+	#		fl_plugstr.read(20)
+	#		fromstorage = fl_plugstr.int8()
+	#		filename = data_bytes.readstring_lenbyte(fl_plugstr, 1, 'little', None)
+	#		if fromstorage == 0:
+	#			audiosize = fl_plugstr.uint32()
+	#			filename = os.path.join(foldername, pluginid+'_custom_audio.wav')
+	#			with open(filename, "wb") as customconvolverfile:
+	#				customconvolverfile.write(fl_plugstr.read(audiosize))
+	#		plugin_obj.type_set('native', 'flstudio', flplugin.name)
+	#		plugin_obj.datavals.add('file', filename.decode())
+	#		fl_plugstr.read(36)
+	#		autodata = {}
+	#		for autoname in ['pan', 'vol', 'stereo', 'allpurpose', 'eq']:
+	#			autodata_table = decode_pointdata(fl_plugstr)
+	#			autopoints_obj = plugin_obj.env_points_add(autoname, 4, True, 'float')
+	#			for point in autodata_table:
+	#				autopoint_obj = autopoints_obj.add_point()
+	#				autopoint_obj.pos = point[0]
+	#				autopoint_obj.value = point[1][0]
+	#				autopoint_obj.type = envshapes[point[3]]
+	#				autopoint_obj.tension = point[2]
+	#			autodata[autoname] = autodata_table
+	#	except:
+	#		pass
 		
 
 
@@ -542,7 +565,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			print(flplugin.name, flplugin.params.hex())
 			fldf = globalstore.datadef.get('fl_studio')
 			dfdict = fldf.parse(flplugin.name, flplugin.params)
-			print(dfdict)
+			for x in dfdict.items():
+				print(x)
 
 		dfdict = plugin_obj.from_bytes(flplugin.params, 'fl_studio', 'fl_studio', 'plugin', flplugin.name, None)
 

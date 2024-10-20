@@ -1034,3 +1034,14 @@ part|byte|
 part|byte|display_on
 part|byte|display_mono
 part|raw.256|
+
+area_struct|spreader
+part|int|version
+part|s_int|spread
+part|s_int|stereo_sep
+part|s_int|low_bypass
+part|s_int|mono
+part|s_int|enabled
+part|s_int|theme
+part|byte|prefx
+part|byte|postfx

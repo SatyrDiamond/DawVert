@@ -212,7 +212,7 @@ class input_flp(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
 	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio 12-21'
+	def get_name(self): return 'FL Studio 12-24'
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['flp']

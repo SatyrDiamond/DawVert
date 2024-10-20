@@ -59,7 +59,7 @@ class rpp_project:
 		self.render_stems = rvs(0, float, True)
 		self.render_dither = rvs(0, float, True)
 		self.timelockmode = rvs(1, float, True)
-		self.tempoenvlockmode = rvs(1, float, True)
+		self.tempoenvlockmode = rvs(2, float, True)
 		self.itemmix = rvs(1, float, True)
 		self.takelane = rvs(1, float, True)
 		self.lock = rvs(1, float, True)

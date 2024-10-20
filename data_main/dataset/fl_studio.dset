@@ -1373,7 +1373,64 @@
                     "prefx": {"max": 1,"noauto": true,"type": "int"},
                     "postfx": {"max": 1,"noauto": true,"type": "int"}
                 }
+            },
+            "kepler": {
+                "datadef_name": "fl_studio",
+                "datadef_struct": "kepler",
+                "group": "inst",
+                "params": {
+                    "unk_1":                 {"def": 0, "noauto": true,"type": "int"},
+                    "unk_2":                 {"def": 169, "noauto": true,"type": "int"},
+                    "unk_3":                 {"def": 0, "noauto": true,"type": "int"},
+                    "name":                  {"def": "Kepler-1", "noauto": true,"type": "string"},
+                    "unk_4":                 {"def": 4, "noauto": true,"type": "int"},
+                    "unk_5":                 {"def": 34, "noauto": true,"type": "int"},
+      
+                    "arpeggio":              {"max": 1, "noauto": false,"type": "float"},
+                    "arpeggio_mode":         {"max": 1, "noauto": false,"type": "float"},
+                    "arpeggio_range":        {"max": 1, "noauto": false,"type": "float"},
+                    "arpeggio_rate":         {"max": 1, "noauto": false,"type": "float"},
+                    "tempo_sync_arp_rate":   {"max": 1, "noauto": false,"type": "float"},
+                    "lfo_rate":              {"max": 1, "noauto": false,"type": "float"},
+                    "tempo_sync_lfo_rate":   {"max": 1, "noauto": false,"type": "float"},
+                    "lfo_delay_time":        {"max": 1, "noauto": false,"type": "float"},
+                    "lfo_trigger_mode":      {"max": 1, "noauto": false,"type": "float"},
+                    "ufo_trigger":           {"max": 1, "noauto": false,"type": "float"},
+                    "dco_lfo":               {"max": 1, "noauto": false,"type": "float"},
+                    "dco_pwm":               {"max": 1, "noauto": false,"type": "float"},
+                    "dco_source":            {"max": 1, "noauto": false,"type": "float"},
+                    "dco_pulse_active":      {"max": 1, "noauto": false,"type": "float"},
+                    "dco_saw_active":        {"max": 1, "noauto": false,"type": "float"},
+                    "dco_sub_active":        {"max": 1, "noauto": false,"type": "float"},
+                    "dco_sub_osc":           {"max": 1, "noauto": false,"type": "float"},
+                    "dco_noise":             {"max": 1, "noauto": false,"type": "float"},
+                    "hpf_frequency":         {"max": 1, "noauto": false,"type": "float"},
+                    "vcf_frequency":         {"max": 1, "noauto": false,"type": "float"},
+                    "vce_reso":              {"max": 1, "noauto": false,"type": "float"},
+                    "vcf_polarity":          {"max": 1, "noauto": false,"type": "float"},
+                    "vcf_env":               {"max": 1, "noauto": false,"type": "float"},
+                    "vcf_lfo":               {"max": 1, "noauto": false,"type": "float"},
+                    "vcf_kb":                {"max": 1, "noauto": false,"type": "float"},
+                    "vca_source":            {"max": 1, "noauto": false,"type": "float"},
+                    "env_att":               {"max": 1, "noauto": false,"type": "float"},
+                    "env_dec":               {"max": 1, "noauto": false,"type": "float"},
+                    "env_sus":               {"max": 1, "noauto": false,"type": "float"},
+                    "env_rel":               {"max": 1, "noauto": false,"type": "float"},
+                    "mode":                  {"max": 1, "noauto": false,"type": "float"},
+                    "hold":                  {"max": 1, "noauto": false,"type": "float"},
+                    "octave":                {"max": 1, "noauto": false,"type": "float"},
+                    "volume":                {"max": 1, "noauto": false,"type": "float"},
+
+                    "vel_to_vol":            {"max": 1, "noauto": true,"type": "float"},
+                    "align_sub_osc_phase":   {"max": 1, "noauto": true,"type": "float"},
+
+                    "quan_first_arp_step":   {"max": 1, "noauto": true,"type": "int"},
+                    "chorus_noise_gate":     {"max": 1, "noauto": true,"type": "int"},
+                    "chorus_noise":          {"max": 1, "noauto": true,"type": "int"},
+                    "hq_mode":               {"max": 1, "noauto": true,"type": "int"}
+                }
             }
+
         }
     }
 }

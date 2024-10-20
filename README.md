@@ -108,3 +108,8 @@ xmodits_py - for extracting Impulse Tracker and FastTracker2 Samples
 
 ## VST Plugins
 [Full List...](docs/vsts.md)
+
+## Mirrors
+[Gitlab](https://gitlab.com/SatyrDiamond/DawVert)
+
+[Codeberg](https://codeberg.org/SatyrDiamond/DawVert)

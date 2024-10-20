@@ -30,10 +30,21 @@ class plugsearch(plugins.base):
 		path_flstudio_vst2_fx = os.path.join(path_flstudio, "Effects", "VST")
 		path_flstudio_vst3_inst = os.path.join(path_flstudio, "Generators", "VST3")
 		path_flstudio_vst3_fx = os.path.join(path_flstudio, "Effects", "VST3")
+		path_flstudio_clap_inst = os.path.join(path_flstudio, "Generators", "CLAP")
+		path_flstudio_clap_fx = os.path.join(path_flstudio, "Effects", "CLAP")
 
 		vst2count = 0
 		vst3count = 0
-		for pathtype in [ ['vst2',path_flstudio_vst2_inst],['vst2',path_flstudio_vst2_fx],['vst3',path_flstudio_vst3_inst],['vst3',path_flstudio_vst3_fx] ]:
+		clapcount = 0
+
+		for pathtype in [ 
+				['clap',path_flstudio_clap_inst],
+				['clap',path_flstudio_clap_fx],
+				['vst2',path_flstudio_vst2_inst],
+				['vst2',path_flstudio_vst2_fx],
+				['vst3',path_flstudio_vst3_inst],
+				['vst3',path_flstudio_vst3_fx]
+				]:
 			if os.path.exists(pathtype[1]): 
 				for filename in os.listdir(pathtype[1]):
 					if '.nfo' in filename:
@@ -70,4 +81,13 @@ class plugsearch(plugins.base):
 											if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': pluginfo_obj.path_64bit = dict_vstinfo['ps_file_filename_'+str(filenum)]
 										vst3count += 1
 
-		print('[fl_studio] VST2: '+str(vst2count)+', VST3: '+str(vst3count))
+							if pathtype[0] == 'clap':
+								if 'ps_file_idstring_'+str(filenum) in dict_vstinfo:
+									if os.path.exists(dict_vstinfo['ps_file_filename_'+str(filenum)]):
+										with globalstore.extplug.add('clap', 'win') as pluginfo_obj:
+											pluginfo_obj.id = dict_vstinfo['ps_file_idstring_'+str(filenum)]
+											pluginfo_obj.name = dict_vstinfo['ps_file_name_'+str(filenum)]
+											if 'ps_file_vendorname_'+str(filenum) in dict_vstinfo: pluginfo_obj.creator = dict_vstinfo['ps_file_vendorname_'+str(filenum)]
+										clapcount += 1
+
+		print('[fl_studio] VST2: '+str(vst2count)+', VST3: '+str(vst3count)+', CLAP: '+str(clapcount))

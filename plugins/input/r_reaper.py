@@ -31,7 +31,7 @@ def reaper_color_to_cvpj_color(i_color, isreversed):
 		if isreversed == True: return [bytecolors[0],bytecolors[1],bytecolors[2]]
 		else: return [bytecolors[2],bytecolors[1],bytecolors[0]]
 	else:
-		return [0.51, 0.54, 0.54]
+		return [60, 60, 60]
 
 class midi_notes():
 	def __init__(self): 
@@ -161,7 +161,8 @@ class input_reaper(plugins.base):
 
 			track_obj = convproj_obj.add_track(cvpj_trackid, 'hybrid', 1, False)
 			track_obj.visual.name = rpp_track.name.get()
-			track_obj.visual.color.set_float(reaper_color_to_cvpj_color(rpp_track.peakcol.get(), True))
+
+			track_obj.visual.color.set_int(reaper_color_to_cvpj_color(rpp_track.peakcol.get(), True))
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
 

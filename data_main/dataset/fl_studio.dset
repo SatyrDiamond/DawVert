@@ -1364,11 +1364,11 @@
                 "group": "fx",
                 "params": {
                     "version": {"max": 65539,"name": "Version","noauto": true,"type": "int"},
-                    "spread": {"max": 10000,"noauto": false,"type": "int"},
-                    "stereo_sep": {"max": 10000,"min": -10000,"noauto": false,"type": "int"},
-                    "low_bypass": {"max": 1000000,"min": 1000,"noauto": false,"type": "int"},
-                    "mono": {"max": 1,"noauto": false,"type": "int"},
-                    "enabled": {"max": 1,"noauto": false,"type": "int"},
+                    "spread": {"num": 0, "max": 10000,"noauto": false,"type": "int"},
+                    "stereo_sep": {"num": 1, "max": 10000,"min": -10000,"noauto": false,"type": "int"},
+                    "low_bypass": {"num": 2, "max": 1000000,"min": 1000,"noauto": false,"type": "int"},
+                    "mono": {"num": 3, "max": 1,"noauto": false,"type": "int"},
+                    "enabled": {"num": 4, "max": 1,"noauto": false,"type": "int"},
                     "theme": {"max": 1,"noauto": true,"type": "int"},
                     "prefx": {"max": 1,"noauto": true,"type": "int"},
                     "postfx": {"max": 1,"noauto": true,"type": "int"}

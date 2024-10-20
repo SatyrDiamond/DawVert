@@ -26,7 +26,7 @@ class rpp_item:
 		self.color = rvs(0, int, False)
 		self.guid = rvs("", str, True)
 		self.source = None
-		self.beat = rvs(1, int, False)
+		self.beat = rvs(1, int, True)
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):

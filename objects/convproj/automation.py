@@ -273,6 +273,9 @@ class cvpj_autoloc:
 	def __getitem__(self, p):
 		return self.autoloc[p]
 
+	def get_list(self):
+		return self.autoloc
+
 	def startswith(self, inlist):
 		return self.autoloc[0:len(inlist)]==inlist if inlist else False
 

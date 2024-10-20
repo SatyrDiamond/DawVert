@@ -3,7 +3,6 @@
         "objects": {
             "3x osc": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "3x_osc",
                 "group": "inst",
                 "params": {
@@ -94,7 +93,6 @@
             },
             "effector": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "## DISABLED effector",
                 "group": "fx",
                 "params": {
@@ -171,7 +169,6 @@
             },
             "fruity compressor": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_compressor",
                 "group": "fx",
                 "params": {
@@ -186,7 +183,6 @@
             },
             "fruity formula controller": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_formula_controller",
                 "group": "fx",
                 "params": {
@@ -200,7 +196,6 @@
             },
             "frequency shifter": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "frequency_shifter",
                 "group": "fx",
                 "params": {
@@ -220,7 +215,6 @@
             },
             "fruit kick": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruit_kick",
                 "group": "inst",
                 "params": {
@@ -235,7 +229,6 @@
             },
             "fruity 7 band eq": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_7_band_eq",
                 "group": "fx",
                 "params": {
@@ -251,7 +244,6 @@
             },
             "fruity balance": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_balance",
                 "group": "fx",
                 "params": {
@@ -261,7 +253,6 @@
             },
             "fruity bass boost": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_bass_boost",
                 "group": "fx",
                 "params": {
@@ -272,7 +263,6 @@
             },
             "fruity big clock": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_big_clock",
                 "group": "fx",
                 "params": {
@@ -283,7 +273,6 @@
             },
             "fruity blood overdrive": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_blood_overdrive",
                 "group": "fx",
                 "params": {
@@ -300,7 +289,6 @@
             },
             "fruity center": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_center",
                 "group": "fx",
                 "params": {
@@ -310,7 +298,6 @@
             },
             "fruity chorus": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_chorus",
                 "group": "fx",
                 "params": {
@@ -331,7 +318,6 @@
             },
             "fruity delay": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_delay",
                 "group": "fx",
                 "params": {
@@ -346,7 +332,6 @@
             },
             "fruity delay 2": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_delay_2",
                 "group": "fx",
                 "params": {
@@ -362,7 +347,6 @@
             },
             "fruity delay 3": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_delay_3",
                 "group": "fx",
                 "params": {
@@ -623,7 +607,6 @@
             },
             "fruity dx10": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_dx10",
                 "group": "inst",
                 "params": {
@@ -654,7 +637,6 @@
             },
             "fruity fast dist": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_fast_dist",
                 "group": "fx",
                 "params": {
@@ -667,7 +649,6 @@
             },
             "fruity fast lp": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_fast_lp",
                 "group": "fx",
                 "params": {
@@ -678,7 +659,6 @@
             },
             "fruity filter": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_filter",
                 "group": "fx",
                 "params": {
@@ -694,7 +674,6 @@
             },
             "fruity flanger": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_flanger",
                 "group": "fx",
                 "params": {
@@ -715,7 +694,6 @@
             },
             "fruity flangus": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_flangus",
                 "group": "fx",
                 "params": {
@@ -731,7 +709,6 @@
             },
             "fruity free filter": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_free_filter",
                 "group": "fx",
                 "params": {
@@ -745,7 +722,6 @@
             },
             "fruity limiter": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_limiter",
                 "group": "fx",
                 "params": {
@@ -779,7 +755,6 @@
             },
             "fruity multiband compressor": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_multiband_compressor",
                 "group": "fx",
                 "params": {
@@ -818,7 +793,6 @@
             },
             "fruity mute 2": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_mute_2",
                 "group": "fx",
                 "params": {
@@ -829,7 +803,6 @@
             },
             "fruity panomatic": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_panomatic",
                 "group": "fx",
                 "params": {
@@ -843,7 +816,6 @@
             },
             "fruity parametric eq": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_parametric_eq",
                 "group": "fx",
                 "params": {
@@ -880,7 +852,6 @@
             },
             "fruity parametric eq 2": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_parametric_eq_2",
                 "group": "fx",
                 "params": {
@@ -925,7 +896,6 @@
             },
             "fruity phase inverter": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_phase_inverter",
                 "group": "fx",
                 "params": {
@@ -935,7 +905,6 @@
             },
             "fruity phaser": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_phaser",
                 "group": "fx",
                 "params": {
@@ -953,7 +922,6 @@
             },
             "fruity reeverb": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_reeverb",
                 "group": "fx",
                 "params": {
@@ -972,7 +940,6 @@
             },
             "fruity reeverb 2": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_reeverb_2",
                 "group": "fx",
                 "params": {
@@ -998,7 +965,6 @@
             },
             "fruity soft clipper": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_soft_clipper",
                 "group": "fx",
                 "params": {
@@ -1008,7 +974,6 @@
             },
             "fruity spectroman": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_spectroman",
                 "group": "fx",
                 "params": {
@@ -1023,7 +988,6 @@
             },
             "fruity stereo enhancer": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_stereo_enhancer",
                 "group": "fx",
                 "params": {
@@ -1037,7 +1001,6 @@
             },
             "fruity stereo shaper": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "fruity_stereo_shaper",
                 "group": "fx",
                 "params": {
@@ -1080,7 +1043,6 @@
             },
             "plucked!": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "plucked!",
                 "group": "inst",
                 "params": {
@@ -1110,7 +1072,6 @@
             },
             "simsynth": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "simsynth",
                 "group": "inst",
                 "params": {
@@ -1183,7 +1144,6 @@
             },
             "soundgoodizer": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "soundgoodizer",
                 "group": "fx",
                 "params": {
@@ -1194,7 +1154,6 @@
             },
             "transient processor": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "transient_processor",
                 "group": "fx",
                 "params": {
@@ -1214,7 +1173,6 @@
             },
             "tuner": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "tuner",
                 "group": "fx",
                 "params": {
@@ -1290,7 +1248,6 @@
             },
             "wasp": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "wasp",
                 "group": "inst",
                 "params": {
@@ -1340,7 +1297,6 @@
             },
             "wasp xt": {
                 "datadef_name": "fl_studio",
-                "datadef": "./data_main/datadef/fl_studio.dset",
                 "datadef_struct": "wasp_xt",
                 "group": "inst",
                 "params": {
@@ -1400,6 +1356,22 @@
                     "version": {"max": 1,"name": "Version","noauto": true,"type": "int"},
                     "vol": {"max": 1,"noauto": false,"type": "int"},
                     "wnoise": {"max": 1,"noauto": false,"type": "int"}
+                }
+            },
+            "spreader": {
+                "datadef_name": "fl_studio",
+                "datadef_struct": "spreader",
+                "group": "fx",
+                "params": {
+                    "version": {"max": 65539,"name": "Version","noauto": true,"type": "int"},
+                    "spread": {"max": 10000,"noauto": false,"type": "int"},
+                    "stereo_sep": {"max": 10000,"min": -10000,"noauto": false,"type": "int"},
+                    "low_bypass": {"max": 1000000,"min": 1000,"noauto": false,"type": "int"},
+                    "mono": {"max": 1,"noauto": false,"type": "int"},
+                    "enabled": {"max": 1,"noauto": false,"type": "int"},
+                    "theme": {"max": 1,"noauto": true,"type": "int"},
+                    "prefx": {"max": 1,"noauto": true,"type": "int"},
+                    "postfx": {"max": 1,"noauto": true,"type": "int"}
                 }
             }
         }

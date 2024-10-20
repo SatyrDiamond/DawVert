@@ -14,6 +14,8 @@ from io import BytesIO
 from objects.file import audio_wav
 from objects.data_bytes import bytereader
 
+DEBUGSTUFF = False
+
 def get_sample(i_value):
 	if i_value != None:
 		if i_value[0:21] == "%FLStudioFactoryData%":
@@ -535,7 +537,18 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 	else:
 		plugin_obj.type_set('native', 'flstudio', flplugin.name)
+
+		if DEBUGSTUFF:
+			print(flplugin.name, flplugin.params.hex())
+			fldf = globalstore.datadef.get('fl_studio')
+			dfdict = fldf.parse(flplugin.name, flplugin.params)
+			print(dfdict)
+
 		dfdict = plugin_obj.from_bytes(flplugin.params, 'fl_studio', 'fl_studio', 'plugin', flplugin.name, None)
+
+		if DEBUGSTUFF:
+			plugin_obj.params.debugtxt()
+
 		if dfdict and flplugin.name == 'simsynth':
 			try:
 				if not False in [(x in dfdict) for x in ('amp_att','amp_dec','amp_sus','amp_rel')]:

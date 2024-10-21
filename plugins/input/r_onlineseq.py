@@ -107,10 +107,13 @@ class input_onlinesequencer(plugins.base):
 					osc_data = plugin_obj.osc_add()
 					osc_data.prop.shape = ['sine', 'square', 'saw', 'triangle'][s_synthdata.shape]
 
-					if s_synthdata.env:
-						env_data = s_synthdata.env
-						if env_data.enabled:
-							plugin_obj.env_asdr_add('vol', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 1)
+					if s_synthdata.env_vol:
+						env_data = s_synthdata.env_vol
+						if env_data.enabled: plugin_obj.env_asdr_add('vol', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 1)
+
+					if s_synthdata.env_filt:
+						env_data = s_synthdata.env_filt
+						if env_data.enabled: plugin_obj.env_asdr_add('cutoff', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 6000)
 
 					if s_synthdata.lfo_on:
 						lfo_obj = plugin_obj.lfo_add(['vol','pitch','cutoff'][s_synthdata.lfo_dest])

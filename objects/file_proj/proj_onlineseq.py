@@ -64,8 +64,8 @@ class onlineseq_synth_env:
 class onlineseq_synth:
 	def __init__(self, pd):
 		self.shape = 0
-		self.env = None
-		self.env_b = None
+		self.env_vol = None
+		self.env_filt = None
 		self.filter_freq = 0
 		self.filter_reso = 0
 		self.filter_type = 0
@@ -78,8 +78,8 @@ class onlineseq_synth:
 
 		if pd != None:
 			if '1' in pd: self.shape = int(pd['1'])
-			if '2' in pd: self.env = onlineseq_synth_env(pd['2'])
-			if '3' in pd: self.env_b = onlineseq_synth_env(pd['3'])
+			if '2' in pd: self.env_vol = onlineseq_synth_env(pd['2'])
+			if '3' in pd: self.env_filt = onlineseq_synth_env(pd['3'])
 			if '4' in pd: self.filter_freq = int2float(int(pd['4']))
 			if '5' in pd: self.filter_reso = int2float(int(pd['5']))
 			if '6' in pd: self.filter_type = int(pd['6'])
@@ -93,8 +93,8 @@ class onlineseq_synth:
 	def write(self):
 		outjson = {}
 		if self.shape != 0: outjson['1'] = self.shape 
-		if self.env: outjson['2'] = self.env.write()
-		if self.env_b: outjson['3'] = self.env_b.write()
+		if self.env_vol: outjson['2'] = self.env.write()
+		if self.env_filt: outjson['3'] = self.env_filt.write()
 		if self.filter_freq != 0: outjson['4'] = int2float(self.filter_freq)
 		if self.filter_reso != 0: outjson['5'] = int2float(self.filter_reso)
 		if self.filter_type != 0: outjson['6'] = self.filter_type

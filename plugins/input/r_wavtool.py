@@ -467,8 +467,8 @@ class input_wavtool(plugins.base):
 					loopon = True
 					if not wavtool_clip.loopEnabled: loopon = wavtool_clip.loopEnabled
 
-					placement_obj.fade_in['duration'] = wavtool_clip.fadeIn
-					placement_obj.fade_out['duration'] = wavtool_clip.fadeOut
+					placement_obj.fade_in.set_dur(wavtool_clip.fadeIn, 'beats')
+					placement_obj.fade_out.set_dur(wavtool_clip.fadeOut, 'beats')
 
 					wt_clip_transpose = wavtool_clip.transpose
 					wt_warp_enabled = wavtool_clip.warp['enabled'] if 'enabled' in wavtool_clip.warp else False

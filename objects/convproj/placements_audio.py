@@ -87,6 +87,12 @@ class cvpj_placements_audio:
 					cutplpl_obj.time.cut_start = cutpoint[2]
 					new_data.append(cutplpl_obj)
 			else: new_data.append(audiopl_obj)
+
+			for n, x in enumerate(new_data):
+				#print(len(new_data)-1, n, x)
+				if not n==len(new_data)-1: x.fade_out.clear()
+				if not n==0: x.fade_in.clear()
+
 		self.data = new_data
 
 	def eq_content(self, pl, prev):
@@ -145,8 +151,8 @@ class cvpj_placement_audio:
 		self.muted = False
 		self.sample = sample_entry.cvpj_sample_entry()
 		self.visual = self.sample.visual
-		self.fade_in = {}
-		self.fade_out = {}
+		self.fade_in = placements.cvpj_placement_fade()
+		self.fade_out = placements.cvpj_placement_fade()
 		self.auto = {}
 
 	def changestretch(self, convproj_obj, target, tempo):

@@ -122,5 +122,5 @@ class cvpj_placement_index:
 		self.time = placements.cvpj_placement_timing()
 		self.fromindex = ''
 		self.muted = False
-		self.fade_in = {}
-		self.fade_out = {}
+		self.fade_in = placements.cvpj_placement_fade()
+		self.fade_out = placements.cvpj_placement_fade()

@@ -127,6 +127,7 @@ class cvpj_plugin_state:
 			if fldso and fldf:
 				if fldso.datadef.struct: dfdict = fldf.parse(fldso.datadef.struct, in_bytes)
 				elif structname: dfdict = fldf.parse(structname, in_bytes)
+
 				self.dset_obj__add_param(fldso, dfdict)
 				return dfdict
 			return {}

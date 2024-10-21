@@ -13,6 +13,33 @@ from objects.convproj import placements_audio
 from objects.convproj import placements_index
 from objects.convproj import time
 
+class cvpj_placement_fade:
+	__slots__ = ['dur','time_type','skew','slope']
+
+	def __init__(self):
+		self.dur = 0
+		self.time_type = 'seconds'
+		self.skew = 0
+		self.slope = 0
+
+	def clear(self):
+		self.dur = 0
+		self.time_type = 'seconds'
+		self.skew = 0
+		self.slope = 0
+
+	def set_dur(self, dur, time_type):
+		self.dur = dur
+		self.time_type = time_type
+
+	def get_dur_beat(self, tempo):
+		if self.time_type == 'seconds': return self.dur*(tempo/120)*2
+		if self.time_type == 'beats': return self.dur
+
+	def get_dur_seconds(self, tempo):
+		if self.time_type == 'beats': return self.dur/(tempo/120)/2
+		if self.time_type == 'seconds': return self.dur
+
 class cvpj_placement_timing:
 	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend']
 	def __init__(self):

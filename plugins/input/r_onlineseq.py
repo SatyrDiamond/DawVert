@@ -35,7 +35,11 @@ class input_onlinesequencer(plugins.base):
 		if not project_obj.load_from_file(input_file): exit()
 
 		used_fx = {}
-		for instid, instparam in project_obj.params.items(): used_fx[instid] = instparam.used_fx
+		synthdata = {}
+		for instid, instparam in project_obj.params.items(): 
+			used_fx[instid] = instparam.used_fx
+		for instid, instparam in project_obj.params.items(): 
+			synthdata[instid] = instparam.synth
 		for target, params in project_obj.seperate_markers().items(): 
 			if target != -1:
 				if ((3 in params) or (4 in params) or (5 in params)) and 'eq' not in used_fx[target]: used_fx[instid].append('eq')
@@ -84,7 +88,7 @@ class input_onlinesequencer(plugins.base):
 			if midifound: 
 				track_obj.to_midi(convproj_obj, trackid, True)
 			else:
-				if instid in [13,14,15,16]: 
+				if trueinstid in [13,14,15,16]: 
 					plugin_obj = convproj_obj.add_plugin(trackid, 'universal', 'synth-osc', None)
 					plugin_obj.role = 'synth'
 					track_obj.inst_pluginid = trackid
@@ -93,6 +97,31 @@ class input_onlinesequencer(plugins.base):
 					if instid == 14: osc_data.prop.shape = 'square'
 					if instid == 15: osc_data.prop.shape = 'saw'
 					if instid == 16: osc_data.prop.shape = 'triangle'
+				
+				if trueinstid == 55:
+					s_synthdata = synthdata[instid]
+					plugin_obj = convproj_obj.add_plugin(trackid, 'universal', 'synth-osc', None)
+					plugin_obj.role = 'synth'
+					filter_obj = plugin_obj.filter
+					track_obj.inst_pluginid = trackid
+					osc_data = plugin_obj.osc_add()
+					osc_data.prop.shape = ['sine', 'square', 'saw', 'triangle'][s_synthdata.shape]
+
+					if s_synthdata.env:
+						env_data = s_synthdata.env
+						if env_data.enabled:
+							plugin_obj.env_asdr_add('vol', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 1)
+
+					if s_synthdata.lfo_on:
+						lfo_obj = plugin_obj.lfo_add(['vol','pitch','cutoff'][s_synthdata.lfo_dest])
+						lfo_obj.amount = s_synthdata.lfo_amount if s_synthdata.lfo_dest != 1 else s_synthdata.lfo_amount/100
+						if s_synthdata.lfo_freq_custom: lfo_obj.time.set_hz(s_synthdata.lfo_freq)
+						else: lfo_obj.time.set_frac(1, int(s_synthdata.lfo_freq), '', convproj_obj)
+
+					filter_obj.on = True
+					filter_obj.freq = s_synthdata.filter_freq
+					filter_obj.q = ((s_synthdata.filter_reso+1)/11)**2.5
+					filter_obj.type.set(['low_pass','band_pass','high_pass'][s_synthdata.filter_type], None)
 
 			if instid in project_obj.params:
 				i_params = project_obj.params[instid]

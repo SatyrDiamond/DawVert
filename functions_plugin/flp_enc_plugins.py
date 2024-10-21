@@ -19,6 +19,13 @@ def wrapper_addchunk(wrapper_data, chunkid, chunkdata):
 	wrapper_data.uint32(0)
 	wrapper_data.raw(chunkdata)
 
+def wrapper_addchunk_plugtype(wrapper_data, chunkid, plugtype, chunkdata):
+	wrapper_data.uint32(chunkid)
+	wrapper_data.uint32(len(chunkdata)+4)
+	wrapper_data.uint32(0)
+	wrapper_data.uint32(plugtype)
+	wrapper_data.raw(chunkdata)
+
 	#print('O< ', chunkid, chunkdata[0:100])
 
 def setparams(convproj_obj, plugin_obj):
@@ -268,6 +275,7 @@ def setparams(convproj_obj, plugin_obj):
 	
 			wrapper_data = bytewriter.bytewriter()
 			wrapper_data.raw(b'\n\x00\x00\x00')
+			wrapper_addchunk_plugtype(wrapper_data, 50, 4 if plugin_obj.role == 'synth' else 0, b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 			if vst_fourid != None: wrapper_addchunk(wrapper_data, 51, vst_fourid.to_bytes(4, "little") )
 			wrapper_addchunk(wrapper_data, 57, b'`\t\x00\x00' )
 			if vst_name != None: wrapper_addchunk(wrapper_data, 54, vst_name.encode() )

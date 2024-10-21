@@ -38,6 +38,74 @@ class onlineseq_marker:
 		if self.type != 0: outjson['5'] = self.type
 		return outjson
 
+class onlineseq_synth_env:
+	def __init__(self, pd):
+		self.enabled = 0
+		self.attack = 0
+		self.decay = 0
+		self.sustain = 0
+		self.release = 0
+		if pd != None:
+			if '1' in pd: self.enabled = int(pd['1'])
+			if '2' in pd: self.attack = int2float(int(pd['2']))
+			if '4' in pd: self.decay = int2float(int(pd['4']))
+			if '5' in pd: self.sustain = int2float(int(pd['5']))
+			if '6' in pd: self.release = int2float(int(pd['6']))
+
+	def write(self):
+		outjson = {}
+		if self.enabled != 0: outjson['1'] = self.enabled
+		if self.attack != 0: outjson['2'] = float2int(self.attack)
+		if self.decay != 0: outjson['4'] = float2int(self.decay)
+		if self.sustain != 0: outjson['5'] = float2int(self.sustain)
+		if self.release != 0: outjson['6'] = float2int(self.release)
+		return outjson
+
+class onlineseq_synth:
+	def __init__(self, pd):
+		self.shape = 0
+		self.env = None
+		self.env_b = None
+		self.filter_freq = 0
+		self.filter_reso = 0
+		self.filter_type = 0
+		self.lfo_on = 0
+		self.lfo_shape = 0
+		self.lfo_freq = 0
+		self.lfo_freq_custom = 0
+		self.lfo_amount = 0
+		self.lfo_dest = 0
+
+		if pd != None:
+			if '1' in pd: self.shape = int(pd['1'])
+			if '2' in pd: self.env = onlineseq_synth_env(pd['2'])
+			if '3' in pd: self.env_b = onlineseq_synth_env(pd['3'])
+			if '4' in pd: self.filter_freq = int2float(int(pd['4']))
+			if '5' in pd: self.filter_reso = int2float(int(pd['5']))
+			if '6' in pd: self.filter_type = int(pd['6'])
+			if '7' in pd: self.lfo_on = int(pd['7'])
+			if '8' in pd: self.lfo_shape = int(pd['8'])
+			if '9' in pd: self.lfo_freq = int2float(int(pd['9']))
+			if '10' in pd: self.lfo_amount = int2float(int(pd['10']))
+			if '11' in pd: self.lfo_dest = int(pd['11'])
+			if '12' in pd: self.lfo_freq_custom = int(pd['12'])
+
+	def write(self):
+		outjson = {}
+		if self.shape != 0: outjson['1'] = self.shape 
+		if self.env: outjson['2'] = self.env.write()
+		if self.env_b: outjson['3'] = self.env_b.write()
+		if self.filter_freq != 0: outjson['4'] = int2float(self.filter_freq)
+		if self.filter_reso != 0: outjson['5'] = int2float(self.filter_reso)
+		if self.filter_type != 0: outjson['6'] = self.filter_type
+		if self.lfo_on != 0: outjson['7'] = self.lfo_on
+		if self.lfo_shape != 0: outjson['8'] = self.lfo_shape
+		if self.lfo_freq != 0: outjson['9'] = int2float(self.lfo_freq)
+		if self.lfo_amount != 0: outjson['10'] = int2float(self.lfo_amount)
+		if self.lfo_dest != 0: outjson['11'] = self.lfo_dest
+		if self.lfo_freq_custom != 0: outjson['12'] = self.lfo_freq_custom
+		return outjson
+
 class onlineseq_inst_param:
 	def __init__(self, pd):
 		self.vol = 1
@@ -58,6 +126,7 @@ class onlineseq_inst_param:
 		self.bitcrush_level = 0.5
 		self.name = None
 		self.used_fx = []
+		self.synth = None
 
 		if pd != None:
 			if '1' in pd: self.vol = int2float(int(pd['1']))
@@ -77,6 +146,7 @@ class onlineseq_inst_param:
 			if '13' in pd: self.distort_wet = int2float(int(pd['13']))
 			if '15' in pd: self.name = pd['15']
 
+			if '14' in pd: self.synth = onlineseq_synth(pd['14'])
 			if '18' in pd: self.bitcrush_on = int(pd['18'])
 			if '19' in pd: self.bitcrush_depth = int(pd['19'])
 			if '20' in pd: self.bitcrush_level = int2float(int(pd['20']))
@@ -106,6 +176,7 @@ class onlineseq_inst_param:
 		if self.bitcrush_on != 0: outjson['18'] = self.bitcrush_on
 		if self.bitcrush_depth != 16: outjson['19'] = self.bitcrush_depth
 		if self.bitcrush_level != 0.5: outjson['20'] = float2int(self.bitcrush_level)
+		if self.synth != None: outjson['14'] = self.synth.write()
 
 		return outjson
 

@@ -601,9 +601,10 @@ class input_flp(plugins.base):
 					if playlistline in temp_pl_track:
 						placement_obj = temp_pl_track[playlistline].placements.add_audio_indexed()
 						placement_obj.time.set_posdur(item.position, item.length)
-						placement_obj.fade_in['duration'] = (item.f_in_dur/flp_obj.ppq)*2
-						placement_obj.fade_out['duration'] = (item.f_out_dur/flp_obj.ppq)*2
-	
+
+						placement_obj.fade_in.set_dur(item.f_in_dur/1000, 'seconds')
+						placement_obj.fade_out.set_dur(item.f_out_dur/1000, 'seconds')
+
 						placement_obj.muted = bool(item.flags & 0b0001000000000000)
 						placement_obj.fromindex = 'FLSample' + str(item.itemindex)
 						stretch_obj = samplestretch[item.itemindex] if item.itemindex in samplestretch else None

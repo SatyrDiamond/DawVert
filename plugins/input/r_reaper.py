@@ -98,6 +98,14 @@ def do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, asdrname):
 	if not loop_on: plugin_obj.env_asdr_add(asdrname, 0, env_attack*dur_sec, 0, env_decay*15, env_sustain, env_release*dur_sec, 1)
 	else: plugin_obj.env_asdr_add(asdrname, 0, env_attack*2, 0, env_decay*15, env_sustain, env_release*2, 1)
 
+def do_fade(fade_data, fadevals, tempomul): 
+	fade_data.set_dur(fadevals['fade_time'], 'seconds')
+	if fadevals['fade_type'] == 3: fade_data.slope = 1
+	if fadevals['fade_type'] == 1: fade_data.slope = 0.5
+	if fadevals['fade_type'] == 0: fade_data.slope = 0
+	if fadevals['fade_type'] == 2: fade_data.slope = -0.5
+	if fadevals['fade_type'] == 4: fade_data.slope = -1
+
 class input_reaper(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -346,6 +354,10 @@ class input_reaper(plugins.base):
 					placement_obj.sample.pan = cvpj_pan
 					placement_obj.sample.pitch = cvpj_audio_pitch
 					placement_obj.sample.vol = cvpj_vol
+
+					do_fade(placement_obj.fade_in, rpp_trackitem.fadein, tempomul)
+					do_fade(placement_obj.fade_out, rpp_trackitem.fadeout, tempomul)
+
 					sampleref_obj = convproj_obj.add_sampleref(cvpj_audio_file, cvpj_audio_file, None)
 					sampleref_obj.find_relative('projectfile')
 

@@ -871,12 +871,12 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
 				als_audioclip.Disabled = audiopl_obj.muted
 
-				if 'duration' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in['duration']/8
-				if 'skew' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in['skew']
-				if 'slope' in audiopl_obj.fade_in: als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in['slope']
-				if 'duration' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutLength = audiopl_obj.fade_out['duration']/8
-				if 'skew' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutCurveSkew = audiopl_obj.fade_out['skew']
-				if 'slope' in audiopl_obj.fade_out: als_audioclip.Fades.FadeOutCurveSlope = audiopl_obj.fade_out['slope']
+				als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in.get_dur_beat(bpm)
+				als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in.skew
+				als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in.slope
+				als_audioclip.Fades.FadeOutLength = audiopl_obj.fade_out.get_dur_beat(bpm)
+				als_audioclip.Fades.FadeOutCurveSkew = audiopl_obj.fade_out.skew
+				als_audioclip.Fades.FadeOutCurveSlope = audiopl_obj.fade_out.slope
 	
 				sample_obj = audiopl_obj.sample
 				stretch_obj = copy.deepcopy(sample_obj.stretch)

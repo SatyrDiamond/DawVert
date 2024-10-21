@@ -495,12 +495,12 @@ class input_ableton(plugins.base):
 						placement_obj.sample.pitch = audio_placement_PitchCoarse + audio_placement_PitchFine/100
 
 						if clipobj.Fade:
-							placement_obj.fade_in['duration'] = clipobj.Fades.FadeInLength*8
-							placement_obj.fade_in['skew'] = clipobj.Fades.FadeInCurveSkew
-							placement_obj.fade_in['slope'] = clipobj.Fades.FadeInCurveSlope
-							placement_obj.fade_out['duration'] = clipobj.Fades.FadeOutLength*8
-							placement_obj.fade_out['skew'] = clipobj.Fades.FadeOutCurveSkew
-							placement_obj.fade_out['slope'] = clipobj.Fades.FadeOutCurveSlope
+							placement_obj.fade_in.set_dur(clipobj.Fades.FadeInLength, 'beats')
+							placement_obj.fade_in.skew = clipobj.Fades.FadeInCurveSkew
+							placement_obj.fade_in.slope = clipobj.Fades.FadeInCurveSlope
+							placement_obj.fade_out.set_dur(clipobj.Fades.FadeOutLength, 'beats')
+							placement_obj.fade_out.skew = clipobj.Fades.FadeOutCurveSkew
+							placement_obj.fade_out.slope = clipobj.Fades.FadeOutCurveSlope
 
 						stretch_obj = placement_obj.sample.stretch
 

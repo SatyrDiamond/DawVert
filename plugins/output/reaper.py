@@ -265,6 +265,11 @@ def file_source(rpp_source_obj, fileref_obj, filename):
 	elif fileref_obj.file.extension == 'ogg': rpp_source_obj.type = 'VORBIS'
 	else: rpp_source_obj.type = 'WAVE'
 
+def do_fade(fade_data, fadevals, bpm): 
+	fadevals['fade_time'] = fade_data.get_dur_seconds(bpm)
+	fadevals['fade_type'] = 2
+	fadevals['curve'] = 0
+
 class output_reaper(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -377,6 +382,9 @@ class output_reaper(plugins.base):
 				if audiopl_obj.visual.name: rpp_item_obj.name.set(audiopl_obj.visual.name)
 				rpp_item_obj.volpan['vol'] = audiopl_obj.sample.vol
 				rpp_item_obj.volpan['pan'] = audiopl_obj.sample.pan
+
+				do_fade(audiopl_obj.fade_in, rpp_item_obj.fadein, reaper_tempo)
+				do_fade(audiopl_obj.fade_out, rpp_item_obj.fadeout, reaper_tempo)
 
 				rpp_item_obj.playrate['rate'] = audiorate
 				rpp_item_obj.playrate['preserve_pitch'] = int(audiopl_obj.sample.stretch.preserve_pitch)

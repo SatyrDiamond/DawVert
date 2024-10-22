@@ -795,7 +795,7 @@ class lmms_track:
 		for xmlpart in xmldata:
 			if xmlpart.tag == 'instrumenttrack':
 				self.instrumenttrack.read(xmlpart)
-			if xmlpart.tag == 'bbtrack':
+			if xmlpart.tag in ['bbtrack', 'patterntrack']:
 				self.bbtrack.read(xmlpart)
 			if xmlpart.tag == 'sampletrack':
 				self.sampletrack.read(xmlpart)
@@ -811,7 +811,7 @@ class lmms_track:
 				sampletco_obj = lmms_sampletco()
 				sampletco_obj.read(xmlpart)
 				self.sampletcos.append(sampletco_obj)
-			if xmlpart.tag == 'bbtco':
+			if xmlpart.tag in ['bbtco', 'patternclip']:
 				bbtco_obj = lmms_bbtco()
 				bbtco_obj.read(xmlpart)
 				self.bbtcos.append(bbtco_obj)

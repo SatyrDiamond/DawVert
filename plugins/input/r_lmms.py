@@ -21,7 +21,9 @@ from objects.inst_params import chip_sid
 
 def get_sample(i_value):
 	if i_value:
-		if not os.path.exists(i_value):
+		ifsampfac = i_value.startswith('factorysample:')
+		if not os.path.exists(i_value) or ifsampfac:
+			if ifsampfac: i_value = i_value[14:]
 			for t in [
 			'/usr/share/lmms/samples/', 
 			'C:\\Program Files\\LMMS\\data\\samples\\'

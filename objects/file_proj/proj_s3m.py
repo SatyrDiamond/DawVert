@@ -5,6 +5,7 @@ from objects.data_bytes import bytereader
 from objects import audio_data
 from objects.exceptions import ProjectFileParserException
 from functions import data_bytes
+import numpy as np
 import os
 
 import logging
@@ -59,19 +60,40 @@ class s3m_instrument:
 				self.song_file.seek(self.sampleloc)
 				os.makedirs(samplefolder, exist_ok=True)
 				t_samplelen = self.length if not self.double else self.length*2
-				wave_sampledata = self.song_file.read(t_samplelen)
 				wave_bits = 8 if not self.double else 16
 				wave_channels = 1 if not self.stereo else 2
-				if self.double == 0 and self.stereo == 1: wave_sampledata = data_bytes.mono2stereo(wave_sampledata, fs.read(t_samplelen), 1)
-				if self.double == 1 and self.stereo == 1: wave_sampledata = data_bytes.mono2stereo(wave_sampledata, fs.read(t_samplelen), 2)
-				if self.double == 0 and s3m_samptype == 1: wave_sampledata = data_bytes.unsign_8(wave_sampledata)
-				if self.double == 1 and s3m_samptype == 2: wave_sampledata = data_bytes.unsign_16(wave_sampledata)
+
 				audio_obj = audio_data.audio_obj()
 				audio_obj.rate = self.c2spd
 				audio_obj.channels = wave_channels
-				if wave_bits == 8: audio_obj.set_codec('uint8')
-				if wave_bits == 16: audio_obj.set_codec('int16')
-				audio_obj.pcm_from_bytes(wave_sampledata)
+
+				if self.double == 0:
+					audio_obj.set_codec('uint8')
+					if not self.stereo: 
+						outdata = np.zeros(t_samplelen, dtype=np.uint8)
+						tempsample = np.frombuffer(self.song_file.read(t_samplelen), dtype=np.uint8)
+						outdata[:len(tempsample)*2] = tempsample
+					else:
+						outdata = np.zeros(t_samplelen*2, dtype=np.uint8)
+						tempsample = np.frombuffer(self.song_file.read(t_samplelen), dtype=np.uint8)
+						outdata[:len(tempsample)*2][0::2] = tempsample
+						tempsample = np.frombuffer(self.song_file.read(t_samplelen), dtype=np.uint8)
+						outdata[:len(tempsample)*2][1::2] = tempsample
+
+				if self.double == 1: 
+					audio_obj.set_codec('uint16')
+					if not self.stereo: 
+						outdata = np.zeros(t_samplelen//2, dtype=np.uint16)
+						tempsample = np.frombuffer(self.song_file.read(t_samplelen), dtype=np.uint16)
+						outdata[:len(tempsample)] = tempsample
+					else:
+						outdata = np.zeros(t_samplelen*2, dtype=np.uint16)
+						tempsample = np.frombuffer(self.song_file.read(t_samplelen), dtype=np.uint16)
+						outdata[:len(tempsample)*2][0::2] = tempsample
+						tempsample = np.frombuffer(self.song_file.read(t_samplelen), dtype=np.uint16)
+						outdata[:len(tempsample)*2][1::2] = tempsample
+
+				audio_obj.pcm_from_list(outdata)
 				if self.loopon: audio_obj.loop = [self.loopStart, self.loopEnd-1]
 				audio_obj.to_file_wav(wave_path)
 

@@ -12,6 +12,7 @@ from functions import note_data
 from functions import data_bytes
 from functions import xtramath
 from functions import extpluglog
+from objects.data_bytes import bytereader
 from objects.convproj import wave
 
 from functions_plugin_ext import plugin_vst2
@@ -48,8 +49,13 @@ def make_flvst2(plugin_obj):
 def make_sslf(plugin_obj):
 	ilchunk = plugin_obj.rawdata_get('fl')
 	dataout = b''
-	for chunkdata in data_bytes.iff_read(ilchunk, 0):
-		if chunkdata[0] == b'SSLF': dataout = chunkdata[1]
+	if ilchunk:
+		sslf_data = bytereader.bytereader()
+		sslf_data.load_raw(ilchunk)
+		main_iff_obj = sslf_data.chunk_objmake()
+		tlvfound = False
+		for chunk_obj in main_iff_obj.iter(0, sslf_data.end):
+			if chunk_obj.id == b'SSLF': dataout = sslf_data.raw(chunk_obj.size)
 	return dataout
 
 class plugconv(plugins.base):

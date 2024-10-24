@@ -6,7 +6,7 @@ import json
 import os.path
 import struct
 import numpy as np
-from functions import colors
+from objects import colors
 from functions import xtramath
 from objects import globalstore
 

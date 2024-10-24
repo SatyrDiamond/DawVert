@@ -5,7 +5,6 @@ import plugins
 import json
 import lxml.etree as ET
 from functions import xtramath
-from functions import colors
 from objects import globalstore
 from objects import counter
 import math

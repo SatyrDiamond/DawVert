@@ -5,7 +5,7 @@ import plugins
 import json
 import lxml.etree as ET
 from functions import xtramath
-from functions import colors
+from objects import colors
 from functions import data_values
 from objects.data_bytes import bytewriter
 from objects.file_proj import proj_ableton

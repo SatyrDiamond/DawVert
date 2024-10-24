@@ -26,7 +26,7 @@ class input_orgyana(plugins.base):
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_orgyana
-		from functions import colors
+		from objects import colors
 		from objects import audio_data
 
 		convproj_obj.type = 'r'

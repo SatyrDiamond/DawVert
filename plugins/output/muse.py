@@ -8,7 +8,6 @@ import mido
 import zlib
 import base64
 import math
-from functions import colors
 
 import logging
 logger_output = logging.getLogger('output')

@@ -10,7 +10,6 @@ import zipfile
 import io
 import uuid
 from functions import xtramath
-from functions import colors
 from functions import data_values
 from objects import globalstore
 

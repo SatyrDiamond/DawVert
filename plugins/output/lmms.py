@@ -10,7 +10,6 @@ import struct
 from pathlib import Path
 from objects import globalstore
 from functions import data_values
-from functions import colors
 import xml.etree
 
 import logging

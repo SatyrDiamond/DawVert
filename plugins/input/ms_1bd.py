@@ -3,7 +3,7 @@
 
 import plugins
 import os
-from functions import colors
+from objects import colors
 from objects import globalstore
 
 import logging

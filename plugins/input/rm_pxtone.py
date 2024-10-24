@@ -71,7 +71,7 @@ class input_pxtone(plugins.base):
 		elif bytesdata == b'PTTUNE--20071119': return True
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
-		from functions import colors
+		from objects import colors
 		from objects import audio_data
 		from objects.file_proj import proj_pxtone
 		

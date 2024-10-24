@@ -12,7 +12,6 @@ from rpp import Element
 from objects import globalstore
 from functions import data_bytes
 from functions import data_values
-from functions import colors
 from functions import xtramath
 
 import logging

@@ -34,7 +34,7 @@ class input_piyopiyo(plugins.base):
 		else: return False
 
 	def parse(self, convproj_obj, input_file, dv_config):
-		from functions import colors
+		from objects import colors
 		from objects.file_proj import proj_piyopiyo
 
 		convproj_obj.type = 'r'

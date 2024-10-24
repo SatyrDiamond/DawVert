@@ -465,6 +465,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 					if outshort:
 						self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(outshort))
 						return outshort != None
+					elif plugnames:
+						dawvert_core.input_set(plugnames[0])
+						return False
+				return False
 			except:
 				pass
 

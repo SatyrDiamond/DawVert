@@ -218,6 +218,17 @@ class plugin_selector:
 						return shortname
 		self.unset()
 
+	def set_auto_keepset(self, indata):
+		if self.plugintype in self.pluginlist:
+			for shortname, dvplugin in self.pluginlist[self.plugintype].items():
+				if dvplugin.supported_autodetect:
+					detected_format = dvplugin.plug_obj.detect(indata)
+					if detected_format:
+						self.selected_shortname = shortname
+						self.selected_plugin = self.pluginlist[self.plugintype][shortname]
+						logger_plugins.info('Auto-Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
+						return shortname
+
 	def get_prop_obj(self):
 		return self.selected_plugin.prop_obj if self.selected_plugin else None
 

@@ -97,10 +97,10 @@ class ConversionWorker(QtCore.QObject):
 			else:
 				dv_core.config_data.set_projname_path(file_name)
 
-			#os.makedirs(dv_core.config_data.path_samples_extracted, exist_ok=True)
-			#os.makedirs(dv_core.config_data.path_samples_downloaded, exist_ok=True)
-			#os.makedirs(dv_core.config_data.path_samples_generated, exist_ok=True)
-			#os.makedirs(dv_core.config_data.path_samples_converted, exist_ok=True)
+			os.makedirs(dv_core.config_data.path_samples_extracted, exist_ok=True)
+			os.makedirs(dv_core.config_data.path_samples_downloaded, exist_ok=True)
+			os.makedirs(dv_core.config_data.path_samples_generated, exist_ok=True)
+			os.makedirs(dv_core.config_data.path_samples_converted, exist_ok=True)
 
 			filesearcher.reset()
 			filesearcher.add_basepath('projectfile', os.path.dirname(in_file))
@@ -455,7 +455,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		filename = self.ui.InputFilePath.text()
 		if os.path.exists(filename):
 			try:
-				detect_plugin_found = dawvert_core.input_autoset(filename)
+				detect_plugin_found = dawvert_core.input_autoset_keepset(filename)
 				plugnames = dawvert_core.input_get_plugins()
 				if detect_plugin_found:
 					self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(detect_plugin_found))

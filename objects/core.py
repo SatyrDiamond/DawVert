@@ -230,7 +230,9 @@ class core:
 	def input_unset(self, pluginname): 
 		return self.currentplug_input.unset()
 
-	def input_autoset(self, in_file): return self.currentplug_input.set_auto_keepset(in_file)
+	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
+
+	def input_autoset_keepset(self, in_file): return self.currentplug_input.set_auto_keepset(in_file)
 
 	def input_autoset_fileext(self, in_file):
 		fileext = pathlib.Path(in_file).suffix

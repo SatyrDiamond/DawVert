@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import colors
+from objects import colors
 from objects import globalstore
 import plugins
 import zipfile

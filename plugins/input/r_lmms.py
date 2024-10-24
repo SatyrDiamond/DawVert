@@ -12,7 +12,6 @@ import xml.etree.ElementTree as ET
 from objects import counter
 from objects import globalstore
 from objects import auto_id
-from functions import colors
 from objects.convproj import placements_notes
 from objects.convproj import placements_audio
 from objects.inst_params import fx_delay

@@ -4,7 +4,6 @@
 import numpy as np
 
 from functions import data_values
-from functions import colors
 from functions import value_midi
 
 from objects import datastore

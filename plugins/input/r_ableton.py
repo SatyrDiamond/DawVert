@@ -367,7 +367,7 @@ class input_ableton(plugins.base):
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 
 	def parse(self, convproj_obj, input_file, dv_config):
-		from functions import colors
+		from objects import colors
 		from objects.file_proj import proj_ableton
 		from objects import auto_id
 

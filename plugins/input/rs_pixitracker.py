@@ -26,7 +26,7 @@ class input_cvpj_f(plugins.base):
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects import audio_data
-		from functions import colors
+		from objects import colors
 		from objects.file_proj import proj_piximod
 
 		convproj_obj.type = 'rs'

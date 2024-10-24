@@ -21,7 +21,7 @@ class input_ex_basic_pitch(plugins.base):
 		from basic_pitch import ICASSP_2022_MODEL_PATH
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(1, False)
+		convproj_obj.set_timings(4, False)
 		convproj_obj.params.add('bpm', 120, 'float')
 
 		model_output, midi_data, note_events = predict(input_file)

@@ -10,7 +10,6 @@ import lxml.etree as ET
 import os
 import math
 import base64
-from functions import colors
 from functions import xtramath
 
 def addsample(zip_wt, filepath, alredyexists): 

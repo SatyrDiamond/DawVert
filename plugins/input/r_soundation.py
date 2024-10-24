@@ -54,7 +54,7 @@ class input_soundation(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 
 	def parse(self, i_convproj_obj, input_file, dv_config):
-		from functions import colors
+		from objects import colors
 		from objects.file_proj import proj_soundation
 
 		global dataset
@@ -110,8 +110,6 @@ class input_soundation(plugins.base):
 			tracknum += 1
 			sound_chan_type = soundation_channel.type
 			cvpj_trackid = 'soundation'+str(tracknum)
-			#if soundation_channel.color: 
-			#	trackcolor = colors.hex_to_rgb_float(soundation_channel.color)
 
 			if sound_chan_type == 'master':
 				track_obj = convproj_obj.track_master

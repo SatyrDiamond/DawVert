@@ -4,7 +4,7 @@
 from functions import data_bytes
 from functions import data_values
 from functions import xtramath
-from functions import colors
+from objects import colors
 from objects import globalstore
 from objects.exceptions import ProjectFileParserException
 import plugins

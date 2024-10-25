@@ -22,6 +22,19 @@ def convauto(autopoints, param_obj):
 		ampedauto.append({"pos": autopoint.pos/4, "value": value})
 	return ampedauto
 
+def createclip(audiopl_obj, audio_id):
+	from objects.file_proj import proj_amped
+	amped_audclip = proj_amped.amped_clip(None)
+	amped_audclip.contentGuid.is_custom = True
+	amped_audclip.contentGuid.id = audio_id[audiopl_obj.sample.sampleref]
+	amped_audclip.position = 0
+	amped_audclip.gain = audiopl_obj.sample.vol
+	amped_audclip.length = audiopl_obj.time.duration*4
+	amped_audclip.offset = 0
+	amped_audclip.stretch = audiopl_obj.sample.stretch.calc_real_size
+	amped_audclip.pitchShift = audiopl_obj.sample.pitch
+	return amped_audclip
+
 def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, amped_auto):
 	paramout = []
 	paramlist = plugin_obj.params.list()
@@ -287,19 +300,19 @@ class output_amped(plugins.base):
 			for audiopl_obj in track_obj.placements.pl_audio:
 				amped_offset = 0
 				if audiopl_obj.time.cut_type == 'cut': amped_offset = audiopl_obj.time.cut_start
-
-				amped_audclip = proj_amped.amped_clip(None)
-				amped_audclip.contentGuid.is_custom = True
-				amped_audclip.contentGuid.id = audio_id[audiopl_obj.sample.sampleref]
-				amped_audclip.position = 0
-				amped_audclip.gain = audiopl_obj.sample.vol
-				amped_audclip.length = audiopl_obj.time.duration*4
-				amped_audclip.offset = 0
-				amped_audclip.stretch = audiopl_obj.sample.stretch.calc_real_size
-				amped_audclip.pitchShift = audiopl_obj.sample.pitch
-
 				amped_region = amped_track.add_region(audiopl_obj.time.position, audiopl_obj.time.duration, amped_offset, counter_id.get())
-				amped_region.clips = [amped_audclip]
+				amped_region.clips = [createclip(audiopl_obj, audio_id)]
+
+			for nestedaudiopl_obj in track_obj.placements.pl_audio_nested:
+				if len(nestedaudiopl_obj.events):
+					amped_region = amped_track.add_region(nestedaudiopl_obj.time.position, nestedaudiopl_obj.time.duration, 0, counter_id.get())
+					for insideaudiopl_obj in nestedaudiopl_obj.events: 
+						amped_audclip = createclip(insideaudiopl_obj, audio_id)
+						amped_audclip.position = insideaudiopl_obj.time.position/4
+						amped_audclip.length = insideaudiopl_obj.time.duration/4
+						if insideaudiopl_obj.time.cut_type == 'cut': 
+							amped_audclip.offset = (insideaudiopl_obj.time.cut_start/4)
+						amped_region.clips.append(amped_audclip)
 
 			amped_track.devices += amped_parse_effects(amped_track, convproj_obj, track_obj.fxslots_audio, amped_track.automations)
 			amped_obj.tracks.append(amped_track)

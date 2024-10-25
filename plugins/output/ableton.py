@@ -1022,6 +1022,14 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				als_audioclip.Loop.HiddenLoopStart = 0
 				als_audioclip.Loop.HiddenLoopEnd = clip_duration+clip_loop_start
 
+				if audiopl_obj.time.cut_type == 'cut':
+					als_audioclip.Loop.LoopEnd -= clip_loop_start/2
+					pass
+				elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+					pass
+				else:
+					pass
+
 	if track_obj.type in ['instrument', 'audio']:
 		do_effects(convproj_obj, als_track, track_obj.fxslots_audio)
 		track_sendholders = als_track.DeviceChain.Mixer.Sends

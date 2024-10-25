@@ -203,7 +203,7 @@ class cvpj_placements_nested_audio:
 	def remove_loops(self, out__placement_loop):
 		new_data = []
 		for audiopl_obj in self.data: 
-			if audiopl_obj.cut_type in ['loop', 'loop_off', 'loop_adv'] and audiopl_obj.cut_type not in out__placement_loop:
+			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'] and audiopl_obj.time.cut_type not in out__placement_loop:
 				loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
 				for cutpoint in xtramath.cutloop(audiopl_obj.time.position, audiopl_obj.time.duration, loop_start, loop_loopstart, loop_loopend):
 					cutplpl_obj = copy.deepcopy(audiopl_obj)
@@ -219,12 +219,14 @@ class cvpj_placements_nested_audio:
 		for pl in self.data: pl.change_seconds(is_seconds, bpm)
 
 class cvpj_placement_nested_audio:
-	__slots__ = ['time','visual','events']
+	__slots__ = ['time','visual','events','fade_in','fade_out']
 
 	def __init__(self):
 		self.time = placements.cvpj_placement_timing()
 		self.visual = visual.cvpj_visual()
 		self.events = []
+		self.fade_in = placements.cvpj_placement_fade()
+		self.fade_out = placements.cvpj_placement_fade()
 
 	def add(self):
 		apl_obj = cvpj_placement_audio()

@@ -225,6 +225,10 @@ def do_audio(convproj_obj, npa_obj, audio_obj):
 	return sampleref_obj
 
 def do_audioclip(convproj_obj, npa_obj, inclip):
+	if inclip.fadeTimeUnit == 'beats':
+		if inclip.fadeInTime: npa_obj.fade_in.set_dur(inclip.FadeInLength, 'beats')
+		if inclip.fadeOutTime: npa_obj.fade_out.set_dur(inclip.FadeInLength, 'beats')
+
 	if inclip.audio: 
 		sampleref_obj = do_audio(convproj_obj, npa_obj, inclip.audio)
 	if inclip.warps:
@@ -279,6 +283,10 @@ def do_clips(convproj_obj, track_obj, clip, clips):
 	if clip.name: placement_obj.visual.name = clip.name
 	if clip.color: placement_obj.visual.color.set_hex(clip.color.upper())
 	docliptime(placement_obj.time, clip)
+
+	if clip.fadeTimeUnit == 'beats':
+		if clip.fadeInTime: placement_obj.fade_in.set_dur(clip.fadeInTime, 'beats')
+		if clip.fadeOutTime: placement_obj.fade_out.set_dur(clip.fadeOutTime, 'beats')
 
 	for inclip in clips.clips:
 		npa_obj = placement_obj.add()

@@ -301,7 +301,9 @@ class output_amped(plugins.base):
 				amped_offset = 0
 				if audiopl_obj.time.cut_type == 'cut': amped_offset = audiopl_obj.time.cut_start
 				amped_region = amped_track.add_region(audiopl_obj.time.position, audiopl_obj.time.duration, amped_offset, counter_id.get())
-				amped_region.clips = [createclip(audiopl_obj, audio_id)]
+				amped_audclip = createclip(audiopl_obj, audio_id)
+				amped_audclip.fadeIn = audiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
+				amped_region.clips = [amped_audclip]
 
 			for nestedaudiopl_obj in track_obj.placements.pl_audio_nested:
 				if len(nestedaudiopl_obj.events):
@@ -310,6 +312,7 @@ class output_amped(plugins.base):
 						amped_audclip = createclip(insideaudiopl_obj, audio_id)
 						amped_audclip.position = insideaudiopl_obj.time.position/4
 						amped_audclip.length = insideaudiopl_obj.time.duration/4
+						amped_audclip.fadeIn = insideaudiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
 						if insideaudiopl_obj.time.cut_type == 'cut': 
 							amped_audclip.offset = (insideaudiopl_obj.time.cut_start/4)
 						amped_region.clips.append(amped_audclip)

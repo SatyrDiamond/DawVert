@@ -12,8 +12,7 @@ def get_bitnums_int(x):
     return [i for i in range(x.bit_length()) if ((1 << i) & x)]
 
 def get_bitnums(x):
-    x = int.from_bytes(x, 'little')
-    return [i for i in range(x.bit_length()) if ((1 << i) & x)]
+    return get_bitnums_int(int.from_bytes(x, 'little'))
 
 def set_bitnums(x, n):
 	outvals = 0

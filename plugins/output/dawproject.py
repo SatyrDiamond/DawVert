@@ -234,6 +234,7 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 		dp_clip_obj.lanes = inlane_obj
 
 	dp_clips_obj.clips.append(dp_clip_obj)
+	return dp_clip_obj
 
 def make_clips(starttxt, convproj_obj, track_obj, lane_obj, trackid):
 	for notespl_obj in track_obj.placements.pl_notes:
@@ -271,7 +272,10 @@ def make_clips(starttxt, convproj_obj, track_obj, lane_obj, trackid):
 		make_time(clip_obj, audiopl_obj.time)
 		do_visual_clip(audiopl_obj.visual, clip_obj)
 		clip_obj.clips = clips.dawproject_clips()
-		make_audioclip(convproj_obj, audiopl_obj, clip_obj.clips, False)
+		dp_clip_obj = make_audioclip(convproj_obj, audiopl_obj, clip_obj.clips, False)
+		dp_clip_obj.fadeTimeUnit = 'beats'
+		dp_clip_obj.fadeInTime = audiopl_obj.fade_in.get_dur_seconds(bpm)
+		dp_clip_obj.fadeOutTime = audiopl_obj.fade_out.get_dur_seconds(bpm)
 		lane_obj.clips.clips.append(clip_obj)
 
 	for nestedaudiopl_obj in track_obj.placements.pl_audio_nested:
@@ -493,6 +497,7 @@ class output_dawproject(plugins.base):
 
 		global arrangement_obj
 		global dawproject_zip
+		global bpm
 
 		convproj_obj.change_timings(1, True)
 
@@ -505,7 +510,7 @@ class output_dawproject(plugins.base):
 
 		dp_tempo = project_obj.transport.Tempo
 		dp_tempo.used = True
-		dp_tempo.value = convproj_obj.params.get('bpm', 120).value
+		bpm = dp_tempo.value = convproj_obj.params.get('bpm', 120).value
 		dp_tempo.id = 'main__bpm'
 
 		dp_timesig = project_obj.transport.TimeSignature

@@ -604,13 +604,13 @@ class cvpj_project:
 		elif self.type == 'rs' and out_type == 'r': convert_rs2r.convert(self)
 
 		elif self.type == 'ms' and out_type == 'mi': 
-			convert_ms2rm.convert(self)
+			convert_ms2rm.convert(self, out_dawinfo)
 			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type)
 			convert_rm2m.convert(self, True)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'ms' and out_type == 'r': 
-			convert_ms2rm.convert(self)
+			convert_ms2rm.convert(self, out_dawinfo)
 			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type)
 			convert_rm2r.convert(self)
 

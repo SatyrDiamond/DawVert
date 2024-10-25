@@ -142,6 +142,15 @@ class cvpj_placements:
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
 			self.pl_audio.merge_crop(pl_obj.pl_audio, pos, dur, visualfill)
 
+	def merge_crop_nestedaudio(self, pl_obj, pos, dur, visualfill):
+		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
+			self.pl_notes.merge_crop(pl_obj.pl_notes, pos, dur, visualfill)
+		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
+			placement_obj = self.add_nested_audio()
+			placement_obj.time.set_posdur(pos, dur)
+			placement_obj.events = copy.deepcopy(pl_obj.pl_audio)
+			if visualfill: placement_obj.visual = visualfill
+
 	def get_dur(self):
 		#print(self.pl_notes.get_dur(),self.pl_audio.get_dur(),self.notelist.get_dur())
 		return max(self.pl_notes.get_dur(),self.pl_audio.get_dur(),self.pl_notes_indexed.get_dur(),self.pl_audio_indexed.get_dur(),self.notelist.get_dur())
@@ -183,6 +192,9 @@ class cvpj_placements:
 		if not self.is_indexed: 
 			for x in self.pl_audio: 
 				x.changestretch(convproj_obj, target, tempo)
+			for x in self.pl_audio_nested: 
+				for i in x.events: 
+					i.changestretch(convproj_obj, target, tempo)
 
 	def change_timings(self, time_ppq, time_float):
 		self.notelist.change_timings(time_ppq, time_float)
@@ -205,6 +217,7 @@ class cvpj_placements:
 
 		for pl in self.pl_audio_nested:
 			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			for x in pl.events: x.time.change_timing(self.time_ppq, time_ppq, time_float)
 
 		self.time_ppq = time_ppq
 		self.time_float = time_float

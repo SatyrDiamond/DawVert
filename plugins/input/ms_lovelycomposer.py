@@ -161,6 +161,9 @@ class input_lc(plugins.base):
 		project_obj = proj_lovelycomposer.LCMusic()
 		if not project_obj.load_from_file(input_file): exit()
 
+		if project_obj.title: convproj_obj.metadata.name = project_obj.title
+		if project_obj.editor: convproj_obj.metadata.author = project_obj.editor
+
 		globalstore.dataset.load('lovelycomposer', './data_main/dataset/lovelycomposer.dset')
 		colordata = colors.colorset.from_dataset('lovelycomposer', 'track', 'main')
 

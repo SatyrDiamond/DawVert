@@ -129,8 +129,6 @@ class LCMusic:
 		self.pan_law_type = 0
 		self.compatibility_mode = 0
 		self.sel_scale_key = 0
-		self.title = ''
-		self.editor = ''
 		self.ex_filename = ''
 		self.abrepeat_a = None
 		self.abrepeat_b = None
@@ -138,6 +136,9 @@ class LCMusic:
 		self.wave_memory_table_list = []
 		self.wave_memory_type_list = []
 		self.wave_memory_effect_list = []
+
+		self.title = None
+		self.editor = None
 
 	def get_channel(self, num):
 		voi_notes = self.channels.ch[num].sl
@@ -187,6 +188,10 @@ class LCMusic:
 		try:
 			song_file = open(input_file, 'r')
 			for num, lined in enumerate(song_file.readlines()):
+				if num == 0: 
+					metadata = json.loads(lined)
+					if 'title' in metadata: self.title = metadata['title']
+					if 'editor' in metadata: self.editor = metadata['editor']
 				if num == 1: self.load(json.loads(lined))
 		except UnicodeDecodeError:
 			raise ProjectFileParserException('famistudio_txt: File is not text')

@@ -208,6 +208,9 @@ class cvpj_placements:
 
 		for pl in self.pl_audio:
 			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			if pl.auto:
+				for mpename, autodata in pl.auto.items():
+					autodata.change_timings(time_ppq, time_float)
 
 		for pl in self.pl_notes_indexed:
 			pl.time.change_timing(self.time_ppq, time_ppq, time_float)

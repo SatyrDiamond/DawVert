@@ -57,6 +57,17 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 	plugin_obj.visual.from_dset('boscaceoil', 'fx', FX_NAMES[fx_type], True)
 	convproj_obj.track_master.fxslots_audio.append('master-effect')
 
+def add_filter(convproj_obj, instnum, cutoff, resonance):
+	cvpj_instid = 'ceol_'+str(instnum).zfill(2)
+	fx_id = cvpj_instid+'_filter'
+	plugin_obj = convproj_obj.add_plugin(fx_id, 'universal', 'filter', None)
+	plugin_obj.filter.on = True
+	plugin_obj.filter.type.set('low_pass', None)
+	plugin_obj.filter.freq = xtramath.midi_filter(cutoff/100)
+	plugin_obj.filter.q = resonance+1
+	plugin_obj.role = 'effect'
+	return fx_id
+
 class input_ceol(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -93,6 +104,8 @@ class input_ceol(plugins.base):
 		# ---------- Instruments ----------
 
 		t_key_offset = []
+		inst_filters = {}
+		inst_objs = {}
 
 		for instnum, ceol_inst_obj in enumerate(project_obj.instruments):
 			cvpj_instid = 'ceol_'+str(instnum).zfill(2)
@@ -124,6 +137,7 @@ class input_ceol(plugins.base):
 
 				plugin_obj, inst_obj.pluginid = opm_obj.to_cvpj_genid(convproj_obj)
 			
+			inst_objs[ceol_inst_obj.inst] = inst_obj
 			if ceol_inst_obj.inst == 363: t_key_offset.append(60)
 			elif ceol_inst_obj.inst == 364: t_key_offset.append(48)
 			elif ceol_inst_obj.inst == 365: t_key_offset.append(24)
@@ -132,22 +146,22 @@ class input_ceol(plugins.base):
 			inst_obj.params.add('vol', ceol_inst_obj.volume/256, 'float')
 
 			if ceol_inst_obj.cutoff < 110:
-				fx_id = cvpj_instid+'_filter'
-				plugin_obj = convproj_obj.add_plugin(fx_id, 'universal', 'filter', None)
-				plugin_obj.filter.on = True
-				plugin_obj.filter.type.set('low_pass', None)
-				plugin_obj.filter.freq = xtramath.midi_filter(ceol_inst_obj.cutoff/100)
-				plugin_obj.filter.q = ceol_inst_obj.resonance+1
-				plugin_obj.role = 'effect'
-				inst_obj.fxslots_audio.append(fx_id)
+				inst_filters[instnum] = add_filter(convproj_obj, instnum, ceol_inst_obj.cutoff, ceol_inst_obj.resonance)
+				inst_obj.fxslots_audio.append(inst_filters[instnum])
 
 		# ---------- Patterns ----------
 		for patnum, ceol_pat_obj in enumerate(project_obj.patterns):
 			cvpj_pat_id = 'ceol_'+str(patnum).zfill(3)
 
+			patinstid = 'ceol_'+str(ceol_pat_obj.inst).zfill(2)
+
+			notevols = {}
+			if ceol_pat_obj.recordfilter is not None:
+				for n, x in enumerate(ceol_pat_obj.recordfilter[:,0]):
+					notevols[n] = x/256
+
 			nle_obj = convproj_obj.add_notelistindex(cvpj_pat_id)
-			for ceol_note_obj in ceol_pat_obj.notes:
-				nle_obj.notelist.add_m('ceol_'+str(ceol_pat_obj.inst).zfill(2), ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], 1, {})
+			for ceol_note_obj in ceol_pat_obj.notes: nle_obj.notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, {})
 			nle_obj.visual.name = str(patnum)
 			nle_obj.visual.color.set_float(data_values.list__optionalindex(ceol_pat_obj.palette, [0.55, 0.55, 0.55], CEOL_COLORS))
 
@@ -157,12 +171,66 @@ class input_ceol(plugins.base):
 
 		# ---------- Placement ----------
 
+		prev_pl = None
 		for plpos, row_data in enumerate(project_obj.spots):
+			after_filter = [[-1, -1] for x in range(8)]
 			for plnum, plpatnum in enumerate(row_data):
+
 				if plpatnum != -1:
 					cvpj_placement = convproj_obj.playlist[plnum].placements.add_notes_indexed()
 					cvpj_placement.fromindex = 'ceol_'+str(plpatnum).zfill(3)
 					cvpj_placement.time.set_block_posdur(plpos, project_obj.pattern_length)
+
+					ceol_pat_obj = project_obj.patterns[plpatnum]
+					recordfilter = ceol_pat_obj.recordfilter
+
+					if recordfilter is not None:
+						after_filter[plnum][0] = plpos
+						after_filter[plnum][1] = ceol_pat_obj.inst
+						if ceol_pat_obj.inst not in inst_filters: 
+							inst_filters[ceol_pat_obj.inst] = add_filter(convproj_obj, ceol_pat_obj.inst, ceol_inst_obj.cutoff, ceol_inst_obj.resonance)
+							inst_objs[ceol_pat_obj.inst].fxslots_audio.append(inst_filters[ceol_pat_obj.inst])
+
+						patinstid = 'ceol_'+str(ceol_pat_obj.inst).zfill(2)
+
+						autofilterfxid = patinstid+'_filter'
+						recordfilter_freq = [xtramath.midi_filter(x/100) for x in recordfilter[:,1]]
+
+						f_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'freq'], 'float')
+						f_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
+						for n, x in enumerate(recordfilter_freq):
+							autopoint_obj = f_autopl_obj.data.add_point()
+							autopoint_obj.pos = n
+							autopoint_obj.value = x
+
+						recordfilter_reso = [x+1 for x in recordfilter[:,2]]
+						q_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'q'], 'float')
+						q_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
+						for n, x in enumerate(recordfilter_reso):
+							autopoint_obj = q_autopl_obj.data.add_point()
+							autopoint_obj.pos = n
+							autopoint_obj.value = x
+
+			if prev_pl != None:
+				for n in range(8):
+					if prev_pl[n][0] != -1 and after_filter[n][0] == -1:
+						instnum = prev_pl[n][1]
+						patinstid = 'ceol_'+str(instnum).zfill(2)
+						autofilterfxid = patinstid+'_filter'
+
+						ceol_inst_obj = project_obj.instruments[instnum]
+
+						f_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'freq'], 'float')
+						f_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
+						autopoint_obj = f_autopl_obj.data.add_point()
+						autopoint_obj.value = xtramath.midi_filter(ceol_inst_obj.cutoff)
+
+						q_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'q'], 'float')
+						q_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
+						autopoint_obj = q_autopl_obj.data.add_point()
+						autopoint_obj.value = ceol_inst_obj.resonance+1
+
+			prev_pl = after_filter
 
 		# ---------- Output ----------
 		convproj_obj.add_timesig_lengthbeat(project_obj.pattern_length, project_obj.bar_length)

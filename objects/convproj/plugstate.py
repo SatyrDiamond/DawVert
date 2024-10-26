@@ -74,6 +74,7 @@ class cvpj_poly:
 		self.slide_always = False
 		self.porta_octive_scale = False
 		self.slide_slope = 0
+		self.defined = False
 
 class cvpj_plugin_state:
 	def __init__(self):

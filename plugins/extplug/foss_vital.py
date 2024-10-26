@@ -561,8 +561,8 @@ class extplugin(plugins.base):
 
 					lfo_obj = plugin_obj.lfo_add(starttxt)
 
-					lfo_obj.type = 'env'
-					lfo_obj.nameid = starttxt
+					lfo_obj.prop.type = 'env'
+					lfo_obj.prop.nameid = starttxt
 
 					lfo_obj.predelay = lfo_delay_time
 					if not lfo_smooth_mode: lfo_obj.attack = lfo_fade_time
@@ -837,12 +837,13 @@ class extplugin(plugins.base):
 								vs[lstarttxt+'stereo'] = float(x.stereo)
 
 		poly_obj = plugin_obj.poly
-		vs['polyphony'] = poly_obj.max if poly_obj.limited else 32
-		if poly_obj.porta: 
-			vs['portamento_force'] = int(poly_obj.slide_always)
-			vs['portamento_scale'] = poly_obj.porta_octive_scale
-			vs['portamento_slope'] = poly_obj.slide_slope
-			vs['portamento_time'] = math.sqrt(poly_obj.porta_time.speed_seconds**2)
+		if poly_obj.defined:
+			vs['polyphony'] = poly_obj.max if poly_obj.limited else 32
+			if poly_obj.porta: 
+				vs['portamento_force'] = int(poly_obj.slide_always)
+				vs['portamento_scale'] = poly_obj.porta_octive_scale
+				vs['portamento_slope'] = poly_obj.slide_slope
+				vs['portamento_time'] = math.sqrt(poly_obj.porta_time.speed_seconds**2)
 
 		manu_obj.remap_cvpj_to_ext__post('vital', plugintype)
 

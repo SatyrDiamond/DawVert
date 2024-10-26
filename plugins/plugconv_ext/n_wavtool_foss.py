@@ -4,7 +4,6 @@
 import plugins
 import struct
 from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext import params_os_vital
 from functions import extpluglog
 
 loaded_plugtransform = False

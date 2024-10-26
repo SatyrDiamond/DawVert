@@ -46,7 +46,7 @@ class ceol_pattern:
 				song_file.skip(2)
 				self.notes.append(note_obj)
 			if song_file.uint16():
-				self.recordfilter = song_file.table16([32, 3])
+				self.recordfilter = song_file.table16([16, 3])
 
 class ceol_song:
 	def __init__(self):
@@ -74,6 +74,7 @@ class ceol_song:
 		song_file = bytereader.bytereader()
 		song_file.load_raw(ceol_array.tobytes())
 		self.versionnum = song_file.uint16()
+
 		self.swing = song_file.uint16()
 		self.effect_type = song_file.uint16()
 		self.effect_value = song_file.uint16()
@@ -82,6 +83,7 @@ class ceol_song:
 		self.bar_length = song_file.uint16()
 		self.instruments = [ceol_instrument(song_file) for x in range(song_file.uint16())]
 		self.patterns = [ceol_pattern(song_file) for x in range(song_file.uint16())]
+
 		self.length = song_file.uint16()
 		self.loopstart = song_file.uint16()
 		self.loopend = song_file.uint16()

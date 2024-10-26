@@ -7,6 +7,33 @@ import os
 
 from objects.convproj import fileref
 
+def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval):
+	autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+	autopl_obj.time.set_posdur(plpos, pldur)
+
+	autopoint_obj = autopl_obj.data.add_point()
+	autopoint_obj.pos = 1
+	autopoint_obj.value = startval
+	autopoint_obj.type = 'normal'
+
+	autopoint_obj = autopl_obj.data.add_point()
+	autopoint_obj.pos = pldur-0.0001
+	autopoint_obj.value = endval
+	autopoint_obj.type = 'normal'
+
+def make_auto_clip(placement_obj, mpetype, plpos, pldur, startval, endval):
+	autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
+
+	autopoint_obj = autopoints_obj.add_point()
+	autopoint_obj.pos = 0
+	autopoint_obj.value = startval
+	autopoint_obj.type = 'normal'
+
+	autopoint_obj = autopoints_obj.add_point()
+	autopoint_obj.pos = (pldur)
+	autopoint_obj.value = endval
+	autopoint_obj.type = 'normal'
+
 class input_fruitytracks(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -19,6 +46,7 @@ class input_fruitytracks(plugins.base):
 		in_dict['audio_filetypes'] = ['wav', 'mp3']
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['rate']
+		in_dict['auto_types'] = ['pl_points']
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
 		bytestream.seek(0)
@@ -45,7 +73,8 @@ class input_fruitytracks(plugins.base):
 		bpmticks = 5512
 
 		for tracknum, ftr_track in enumerate(project_obj.tracks):
-			track_obj = convproj_obj.add_track(str(tracknum), 'audio', 1, False)
+			trackid = str(tracknum)
+			track_obj = convproj_obj.add_track(trackid, 'audio', 1, False)
 			track_obj.visual.name = ftr_track.name if ftr_track.name else 'Track '+str(tracknum)
 			track_obj.params.add('pan', (ftr_track.pan-64)/64, 'float')
 			track_obj.params.add('vol', ftr_track.vol/128, 'float')
@@ -61,11 +90,15 @@ class input_fruitytracks(plugins.base):
 
 				plpos = (ftr_clip.pos/bpmticks)/bpmdiv
 				if ftr_clip.stretch == 0:
-					placement_obj.time.set_posdur(plpos, (ftr_clip.dur/bpmticks))
+					pldur = (ftr_clip.dur/bpmticks)
 					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks))
 				else:
 					audduration = sampleref_obj.dur_sec*8
-					placement_obj.time.set_posdur(plpos, (ftr_clip.dur/bpmticks)/bpmdiv)
+					pldur = (ftr_clip.dur/bpmticks)/bpmdiv
 					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks)/bpmdiv)
 					placement_obj.sample.stretch.algorithm = 'resample'
 					placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
+				placement_obj.time.set_posdur(plpos, pldur)
+
+				make_auto_clip(placement_obj, 'gain', plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128)
+				make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64)

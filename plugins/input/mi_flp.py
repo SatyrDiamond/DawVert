@@ -424,6 +424,7 @@ class input_flp(plugins.base):
 					poly_obj.limited = polynum != 0
 					poly_obj.mono = bool(fl_channel_obj.poly.flags&1)
 					poly_obj.slide_always = bool(fl_channel_obj.poly.flags&2)
+					poly_obj.defined = True
 
 					if poly_obj.slide_always: 
 						poly_obj.porta_time.set_steps_nonsync((fl_channel_obj.poly.slide/1024)**(16/4), flp_obj.tempo)

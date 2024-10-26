@@ -93,10 +93,10 @@ lc_instlist[72] = ['FastArp Sine'    ,'FA-Sine'   ,0  ,0  ,0  ,False ,False]
 lc_instlist[73] =['FastArp TiltedSaw','FA-TiltSaw',0  ,0  ,0  ,False ,False]
 lc_instlist[74] = ['FastArp Noise'   ,'FA-Noise'  ,0  ,0  ,0  ,False ,False]
 
-lc_instlist[120] = ['Tone A'         ,'ToneA'     ,0  ,0  ,0  ,False ,False]
-lc_instlist[121] = ['Tone B'         ,'ToneB'     ,0  ,0  ,0  ,False ,False]
-lc_instlist[122] = ['Tone C'         ,'ToneC'     ,0  ,0  ,0  ,False ,False]
-lc_instlist[123] = ['Tone D'         ,'ToneD'     ,0  ,0  ,0  ,False ,False]
+lc_instlist[120] = ['Tone A'         ,'ToneA'     ,0  ,1  ,0  ,False ,False]
+lc_instlist[121] = ['Tone B'         ,'ToneB'     ,0  ,1  ,0  ,False ,False]
+lc_instlist[122] = ['Tone C'         ,'ToneC'     ,0  ,1  ,0  ,False ,False]
+lc_instlist[123] = ['Tone D'         ,'ToneD'     ,0  ,1  ,0  ,False ,False]
 
 lc_instlist[128]= ['_EXT'            ,'_EXT'      ,0  ,0  ,0  ,False ,False]
 lc_instlist[129]= ['_EXT_E'          ,'_EXT'      ,0  ,1  ,0  ,False ,False]
@@ -322,6 +322,12 @@ class input_lc(plugins.base):
 						osc_data.prop.type = 'wave'
 						osc_data.prop.nameid = 'main'
 						customtone(project_obj, 3, osc_data, plugin_obj)
+
+					if instdata[1] in ['ToneA','ToneB','ToneC','ToneD'] and project_obj.wave_memory_effect_list: 
+						tonenum = ['ToneA','ToneB','ToneC','ToneD'].index(instdata[1])
+
+						plugin_obj.type_set('native', 'lovelycomposer', 'custom')
+						plugin_obj.datavals.add('effect', project_obj.wave_memory_effect_list[tonenum])
 					#else: 
 					#	inst_plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', instdata[1])
 			else:

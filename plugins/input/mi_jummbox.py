@@ -64,7 +64,7 @@ class jummbox_autotype():
 			if self.param == 2:    return ['master', 'vol'], 0, 0.01
 			elif self.param == 1:  return ['main', 'bpm'], 30, 1
 			elif self.param == 3:  return ['slot', 'main_reverb', 'wet'], 0, 1/32
-			elif self.param == 17: return ['main', 'detune'], 250, 0.01
+			elif self.param == 17: return ['main', 'pitch'], 250, 0.01
 		else:
 			auto_cvpj_instid = 'bb_ch'+str(self.tracknum+1)+'_inst'+str(self.instrument+1)
 			if self.param == 6:    return ['track', auto_cvpj_instid, 'pan'], -50, 0.02

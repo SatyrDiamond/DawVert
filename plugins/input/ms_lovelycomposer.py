@@ -151,6 +151,7 @@ class input_lc(plugins.base):
 		in_dict['file_ext'] = ['jsonl']
 		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
+		in_dict['auto_types'] = ['pl_points']
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_lovelycomposer
@@ -349,7 +350,7 @@ class input_lc(plugins.base):
 			scenepl_obj.duration = patlen
 			scenepl_obj.id = str(pat_num)
 
-			autopl_obj = convproj_obj.automation.add_pl_points('main/bpm', 'float')
+			autopl_obj = convproj_obj.automation.add_pl_points(['main', 'bpm'], 'float')
 			autopl_obj.time.set_posdur(curpos, patlen)
 			autopoint_obj = autopl_obj.data.add_point()
 			autopoint_obj.value = decode_tempo(voi_note.play_speed)

@@ -47,6 +47,7 @@ class plugconv(plugins.base):
 					lfo_obj = plugin_obj.lfo_add('vital_lfo_1')
 					lfo_obj.prop.type = 'env'
 					lfo_obj.prop.nameid = 'lc_fx'
+					lfo_obj.loop_on = False
 
 					hzd = 8 if customfx == 'D' else 2
 
@@ -73,6 +74,7 @@ class plugconv(plugins.base):
 					lfo_obj = plugin_obj.lfo_add('vital_lfo_1')
 					lfo_obj.prop.type = 'env'
 					lfo_obj.prop.nameid = 'lc_fx'
+					lfo_obj.loop_on = False
 					lfo_obj.time.set_hz(8)
 					autopoints_obj = plugin_obj.env_points_add('lc_fx', 1, True, 'float')
 
@@ -96,6 +98,7 @@ class plugconv(plugins.base):
 					lfo_obj = plugin_obj.lfo_add('vital_lfo_1')
 					lfo_obj.prop.type = 'env'
 					lfo_obj.prop.nameid = 'lc_fx'
+					lfo_obj.loop_on = False
 					lfo_obj.time.set_hz(4)
 					autopoints_obj = plugin_obj.env_points_add('lc_fx', 1, True, 'float')
 
@@ -123,6 +126,7 @@ class plugconv(plugins.base):
 					lfo_obj = plugin_obj.lfo_add('vital_lfo_1')
 					lfo_obj.prop.type = 'env'
 					lfo_obj.prop.nameid = 'lc_fx'
+					lfo_obj.loop_on = False
 					lfo_obj.time.set_hz(12)
 					autopoints_obj = plugin_obj.env_points_add('lc_fx', 1, True, 'float')
 

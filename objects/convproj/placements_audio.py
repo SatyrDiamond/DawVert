@@ -200,6 +200,10 @@ class cvpj_placements_nested_audio:
 			for note in ta_sorted[p]: new_a.append(note)
 		self.data = new_a
 
+	def changestretch(self, convproj_obj, target, tempo):
+		for audiopl_obj in self.data:
+			audiopl_obj.changestretch(convproj_obj, target, tempo)
+
 	def remove_loops(self, out__placement_loop):
 		new_data = []
 		for audiopl_obj in self.data: 

@@ -114,8 +114,6 @@ def make_track(convproj_obj, sb_track, groupname, num):
 		if sb_track.blockContainers:
 			for block in sb_track.blockContainers[0].blocks:
 				placement_obj = track_obj.placements.add_audio()
-
-				#placement_obj = track_obj.placements.add_nested_audio()
 				clipmetadata = sb_track.metadata
 				placement_obj.visual.name = block.name
 				if 'TrackColor' in clipmetadata: placement_obj.visual.color.set_hex(clipmetadata['TrackColor'])

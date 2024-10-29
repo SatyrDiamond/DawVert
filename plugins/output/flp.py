@@ -491,6 +491,6 @@ class output_cvpjs(plugins.base):
 							slotnum += 1
 							if slotnum == 10: break
 			else:
-				logger_output.warning('Mixer Channel "'+str(fx_num)+'" dosent exist.')
+				logger_output.warning('Mixer Channel "'+str(fx_num)+'" does not exist.')
 
 		flp_obj.make(output_file)

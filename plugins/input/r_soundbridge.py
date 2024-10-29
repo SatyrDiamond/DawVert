@@ -11,10 +11,10 @@ from objects.convproj import fileref
 from functions import xtramath
 import math
 
-sb_auto_dtype = np.dtype([('id', '>f'),('pos', '>f')])
+sb_auto_dtype = np.dtype([('val', '>f'),('unk1', '>f'),('unk2', '>f'),('pos', '>I')])
 
 def decode_chunk(statedata):
-	statedata = statedata.replace('.', '+')
+	statedata = statedata.replace('.', '/')
 	return base64.b64decode(statedata)
 
 def parse_auto(notes_data):
@@ -22,8 +22,31 @@ def parse_auto(notes_data):
 	unk_y = notes_data.read(4)
 	dataread = notes_data.read()
 	numnotes = len(dataread)//sb_auto_dtype.itemsize
-	notedata = np.frombuffer(dataread[0:numnotes*sb_auto_dtype.itemsize], dtype=sb_auto_dtype)
-	return notedata
+	autodata = np.frombuffer(dataread[0:numnotes*sb_auto_dtype.itemsize], dtype=sb_auto_dtype)
+	return autodata[np.where(autodata['unk1']!=0)]
+
+def add_auto(convproj_obj, autoloc, sb_blocks, add, mul):
+	for block in sb_blocks:
+		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+		autopl_obj.time.position = block.position
+		autopl_obj.time.duration = block.framesCount
+		for point in parse_auto(io.BytesIO(decode_chunk(block.blockData))):
+			autopoint_obj = autopl_obj.data.add_point()
+			autopoint_obj.pos = point['pos']
+			autopoint_obj.value = (point['val']+add)*mul
+			autopoint_obj.type = 'normal'
+
+def add_auto_eq(convproj_obj, autoloc, sb_blocks, val, invert):
+	for block in sb_blocks:
+		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+		autopl_obj.time.position = block.position
+		autopl_obj.time.duration = block.framesCount
+		for point in parse_auto(io.BytesIO(decode_chunk(block.blockData))):
+			autopoint_obj = autopl_obj.data.add_point()
+			autopoint_obj.pos = point['pos']
+			autopoint_obj.value = point['val']==val
+			if invert: autopoint_obj.value = not autopoint_obj.value
+			autopoint_obj.type = 'instant'
 
 sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('unk2', 'B')])
 
@@ -62,18 +85,22 @@ def make_track(convproj_obj, sb_track, groupname, num):
 			placement_obj = track_obj.placements.add_notes()
 			placement_obj.time.set_posdur(block.position, block.positionEnd-block.positionStart)
 			if block.loopEnabled: placement_obj.time.set_loop_data(block.loopOffset, block.loopOffset, block.framesCount)
-			blockdata = base64.b64decode(block.blockData + '==')
+			else: placement_obj.time.set_offset(block.positionStart)
+			blockdata = decode_chunk(block.blockData)
 			for note in parse_notes(io.BytesIO(blockdata)): placement_obj.notelist.add_r(note['pos'], note['dur'], note['key']-60, note['vol']/127, None)
 		if sb_track.midiInstrument:
 			midiinst = sb_track.midiInstrument
 			uiddata = decode_chunk(midiinst.uid)
 			statedata = decode_chunk(midiinst.state)
-			if len(uiddata) == 16 and statedata:
-				if uiddata[0:8] == b'\x00\x00\x00\x00SV2T':
-					plugin_obj, track_obj.inst_pluginid = convproj_obj.add_plugin_genid('external', 'vst2', 'win')
-					plugin_obj.role = 'synth'
-					if statedata[28:32] == b'FBCh':
-						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, struct.unpack('>I', uiddata[8:12])[0], 'chunk', statedata[180:], None)
+			try:
+				if len(uiddata) == 16 and statedata:
+					if uiddata[0:8] == b'\x00\x00\x00\x00SV2T':
+						plugin_obj, track_obj.inst_pluginid = convproj_obj.add_plugin_genid('external', 'vst2', 'win')
+						plugin_obj.role = 'synth'
+						if statedata[28:32] == b'FBCh':
+							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, struct.unpack('>I', uiddata[8:12])[0], 'chunk', statedata[180:], None)
+			except:
+				pass
 
 	if sb_track.type == 3:
 		track_obj = convproj_obj.add_track(cvpj_trackid, 'audio', 1, False)
@@ -121,22 +148,34 @@ def make_track(convproj_obj, sb_track, groupname, num):
 				if splitret[0]=='' and splitret[1].isnumeric() and splitret[2]=='R':
 					sendautoid = cvpj_trackid+'__'+'return__'+str(splitret[1])
 					track_obj.sends.add('return__'+str(splitret[1]), sendautoid, x.defaultValue)
+					add_auto(convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
+		for x in sb_track.automationContainer.automationTracks:
+			if x.parameterIndex == 2: add_auto(convproj_obj, ['track', cvpj_trackid, 'vol'], x.blocks, 0, 1)
+			if x.parameterIndex == 3: add_auto(convproj_obj, ['track', cvpj_trackid, 'pan'], x.blocks, -.5, 2)
 
 	if sb_track.type == 2:
-		return_obj = convproj_obj.track_master.add_return('return__'+str(returnids))
-		return_obj.visual.name = sb_track.name
-		return_obj.visual.color.set_hex(trackcolor)
-		add_params(sb_track.state, return_obj.params)
+		returnid = 'return__'+str(returnids)
+		track_obj = convproj_obj.track_master.add_return(returnid)
+		track_obj.visual.name = sb_track.name
+		track_obj.visual.color.set_hex(trackcolor)
+		add_params(sb_track.state, track_obj.params)
 		returnids += 1
+		for x in sb_track.automationContainer.automationTracks:
+			if x.parameterIndex == 2: add_auto(convproj_obj, ['return', returnid, 'vol'], x.blocks, 0, 1)
+			if x.parameterIndex == 3: add_auto(convproj_obj, ['return', returnid, 'pan'], x.blocks, -.5, 2)
 
 	if sb_track.type == 1:
 		track_obj = convproj_obj.add_group(cvpj_trackid)
 		track_obj.visual.name = sb_track.name
 		track_obj.visual.color.set_hex(trackcolor)
 		add_params(sb_track.state, track_obj.params)
+		for x in sb_track.automationContainer.automationTracks:
+			if x.parameterIndex == 2: add_auto(convproj_obj, ['group', cvpj_trackid, 'vol'], x.blocks, 0, 1)
+			if x.parameterIndex == 3: add_auto(convproj_obj, ['group', cvpj_trackid, 'pan'], x.blocks, -.5, 2)
 
 		for gnum, gb_track in enumerate(sb_track.tracks):
 			make_track(convproj_obj, gb_track, cvpj_trackid, gnum)
+
 
 class input_cvpj_f(plugins.base):
 	def __init__(self): pass

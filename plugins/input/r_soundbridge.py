@@ -113,14 +113,15 @@ def make_track(convproj_obj, sb_track, groupname, num):
 			track_obj.sends.to_master_active = False
 		if sb_track.blockContainers:
 			for block in sb_track.blockContainers[0].blocks:
-				placement_obj = track_obj.placements.add_nested_audio()
+				placement_obj = track_obj.placements.add_audio()
+
+				#placement_obj = track_obj.placements.add_nested_audio()
 				clipmetadata = sb_track.metadata
 				placement_obj.visual.name = block.name
 				if 'TrackColor' in clipmetadata: placement_obj.visual.color.set_hex(clipmetadata['TrackColor'])
 				placement_obj.time.set_posdur(block.position, block.framesCount)
-				for blockevent in block.events:
-					placement_obj = placement_obj.add()
-					placement_obj.time.set_posdur(blockevent.position, blockevent.framesCount)
+				if block.events:
+					blockevent = block.events[0]
 					placement_obj.time.set_offset(blockevent.positionStart)
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = blockevent.fileName
@@ -188,7 +189,6 @@ class input_cvpj_f(plugins.base):
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp']
-		in_dict['audio_nested'] = True
 	def supported_autodetect(self): return True
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_soundbridge

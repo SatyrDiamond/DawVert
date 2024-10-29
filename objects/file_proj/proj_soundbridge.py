@@ -397,14 +397,14 @@ class soundbridge_event:
 		if 'loopEnabled' in trackattrib: self.loopEnabled = int(xml_proj.get('loopEnabled'))
 		if 'tempo' in trackattrib: self.tempo = xml_proj.get('tempo')
 		if 'inverse' in trackattrib: self.inverse = xml_proj.get('inverse')
-		if 'gain' in trackattrib: self.gain = xml_proj.get('gain')
-		if 'fadeInLength' in trackattrib: self.fadeInLength = xml_proj.get('fadeInLength')
-		if 'fadeOutLength' in trackattrib: self.fadeOutLength = xml_proj.get('fadeOutLength')
+		if 'gain' in trackattrib: self.gain = float(xml_proj.get('gain'))
+		if 'fadeInLength' in trackattrib: self.fadeInLength = int(xml_proj.get('fadeInLength'))
+		if 'fadeOutLength' in trackattrib: self.fadeOutLength = int(xml_proj.get('fadeOutLength'))
 		if 'fadeInCurve' in trackattrib: self.fadeInCurve = xml_proj.get('fadeInCurve')
 		if 'fadeOutCurve' in trackattrib: self.fadeOutCurve = xml_proj.get('fadeOutCurve')
 		if 'fadeInConvexity' in trackattrib: self.fadeInConvexity = xml_proj.get('fadeInConvexity')
 		if 'fadeOutConvexity' in trackattrib: self.fadeOutConvexity = xml_proj.get('fadeOutConvexity')
-		if 'pitch' in trackattrib: self.pitch = xml_proj.get('pitch')
+		if 'pitch' in trackattrib: self.pitch = float(xml_proj.get('pitch'))
 		if 'fileName' in trackattrib: self.fileName = xml_proj.get('fileName')
 		for xmlpart in xml_proj:
 			if xmlpart.tag == 'stretchMarks': 
@@ -725,7 +725,7 @@ class soundbridge_tempo_section:
 
 class soundbridge_tempo:
 	def __init__(self, xml_proj):
-		self.tempo = 4
+		self.tempo = 120
 		self.version = 1
 		self.sections = []
 		self.metadata = {}

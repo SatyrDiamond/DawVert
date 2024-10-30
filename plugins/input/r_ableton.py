@@ -349,6 +349,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 	return middlenote, issampler
 
+AUDCLIPVERBOSE = False
+
 class input_ableton(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -414,6 +416,15 @@ class input_ableton(plugins.base):
 
 		returnid = 1
 
+		if AUDCLIPVERBOSE:
+			for x in ['cut_type', 'IsWarped', "Duration",
+				"StartRelative", "LoopStart",
+				"LoopEnd", "LoopOn", 
+				"HidLoopStart", "HidLoopEnd"]:
+				print(  str(x)[0:9].ljust(10), end=' ' )
+			print()
+
+							
 		for tracktype, als_track in project_obj.Tracks:
 			track_mixer = als_track.DeviceChain.Mixer
 
@@ -528,6 +539,7 @@ class input_ableton(plugins.base):
 								stretch_obj.params['formants'] = clipobj.ComplexProFormants
 								stretch_obj.params['envelope'] = clipobj.ComplexProEnvelope
 
+							#print('i')
 							for _, WarpMarker in clipobj.WarpMarkers.items():
 								warp_point_obj = stretch_obj.add_warp_point()
 								warp_point_obj.beat = WarpMarker.BeatTime
@@ -555,6 +567,18 @@ class input_ableton(plugins.base):
 								placement_obj.time.set_offset(clipobj.Loop.LoopStart*4)
 							else:
 								placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+
+						if AUDCLIPVERBOSE:
+							for x in [
+								placement_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'], clipobj.IsWarped,
+								clipobj.CurrentEnd-clipobj.CurrentStart,
+								clipobj.Loop.StartRelative, clipobj.Loop.LoopStart,
+								clipobj.Loop.LoopEnd, clipobj.Loop.LoopOn,
+								clipobj.Loop.HiddenLoopStart, clipobj.Loop.HiddenLoopEnd
+								]:
+								print(  str(x)[0:9].ljust(10), end=' ' )
+							print()
+
 
 			elif tracktype == 'return':
 				cvpj_returntrackid = 'return_'+str(returnid)

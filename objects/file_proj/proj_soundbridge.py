@@ -795,16 +795,19 @@ class soundbridge_timeline:
 	def __init__(self):
 		self.timeSignature = soundbridge_timeSignature(None)
 		self.tempo = soundbridge_tempo(None)
+		self.markers = []
 
 	def read(self, xml_proj):
 		for xmlpart in xml_proj:
 			if xmlpart.tag == 'timeSignature': self.timeSignature = soundbridge_timeSignature(xmlpart)
-			if xmlpart.tag == 'tempo': self.tempo = soundbridge_tempo(xmlpart)
+			elif xmlpart.tag == 'tempo': self.tempo = soundbridge_tempo(xmlpart)
+			elif xmlpart.tag == 'marker': self.markers.append(soundbridge_marker(xmlpart))
 
 	def write(self, xml_proj):
 		tempxml = ET.SubElement(xml_proj, 'timeline')
 		self.timeSignature.write(tempxml)
 		self.tempo.write(tempxml)
+		for x in self.markers: x.write(markersxml)
 
 # --------------------------------------------------------- TIMELINE ---------------------------------------------------------
 

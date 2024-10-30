@@ -480,6 +480,217 @@ def add_group(convproj_obj, project_obj, groupid):
 
 	return groupnumid
 
+def do_audio_mpe(audiopl_obj, als_track):
+	track_mixer = als_track.DeviceChain.Mixer
+	mainseq = als_track.DeviceChain.MainSequencer
+
+	for i, d in enumerate(audiopl_obj.auto.items()):
+		n, x = d
+		clipenv = ableton_AutomationEnvelope(None)
+
+		mpeid = None
+
+		if n == 'pan': mpeid = track_mixer.Pan.ModulationTarget.id
+		if n == 'gain': mpeid = mainseq.VolumeModulationTarget.id
+		if n == 'pitch': mpeid = mainseq.TranspositionModulationTarget.id
+
+		if mpeid:
+			clipenv.PointeeId = mpeid
+			for num, autopoint in enumerate(x):
+				alsevent = proj_ableton.ableton_FloatEvent(None)
+				alsevent.Time = autopoint.pos
+				alsevent.Value = autopoint.value
+				clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
+
+			als_audioclip.Envelopes[i] = clipenv
+
+def do_audio_stretch(als_audioclip, stretch_obj):
+	if not stretch_obj.preserve_pitch: 
+		als_audioclip.WarpMode = 3
+	else:
+		if stretch_obj.algorithm == 'transient':
+			als_audioclip.WarpMode = 0
+			if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
+			if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
+			if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
+		elif stretch_obj.algorithm == 'ableton_tones':
+			als_audioclip.WarpMode = 1
+			if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
+		elif stretch_obj.algorithm == 'ableton_texture':
+			als_audioclip.WarpMode = 2
+			if 'GranularityTexture' in stretch_obj.params: als_audioclip.GranularityTexture = stretch_obj.params['GranularityTexture']
+			if 'FluctuationTexture' in stretch_obj.params: als_audioclip.FluctuationTexture = stretch_obj.params['FluctuationTexture']
+		elif stretch_obj.algorithm == 'ableton_complex':
+			als_audioclip.WarpMode = 4
+		elif stretch_obj.algorithm == 'ableton_complexpro':
+			als_audioclip.WarpMode = 6
+			if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
+			if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
+		else:
+			als_audioclip.WarpMode = 4
+
+class timestate():
+	def __init__(self, audiopl_obj):
+		self.position = audiopl_obj.time.position
+		self.duration = audiopl_obj.time.duration
+		self.startrel = 0
+		self.loop_start = 0
+		self.loop_end = audiopl_obj.time.duration
+		self.loop_on = False
+
+AUDCLIPVERBOSE = False
+
+def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
+	for clipid, audiopl_obj in enumerate(pls_audio):
+		als_audioclip = als_track.add_audioclip(clipid)
+		als_audioclip.Disabled = audiopl_obj.muted
+
+		als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in.get_dur_beat(bpm)
+		als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in.skew
+		als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in.slope
+		als_audioclip.Fades.FadeOutLength = audiopl_obj.fade_out.get_dur_beat(bpm)
+		als_audioclip.Fades.FadeOutCurveSkew = audiopl_obj.fade_out.skew
+		als_audioclip.Fades.FadeOutCurveSlope = audiopl_obj.fade_out.slope
+	
+		sample_obj = audiopl_obj.sample
+		stretch_obj = copy.deepcopy(sample_obj.stretch)
+
+		do_audio_stretch(als_audioclip, stretch_obj)
+
+		als_audioclip.PitchCoarse = round(sample_obj.pitch)
+		als_audioclip.PitchFine = (sample_obj.pitch-round(sample_obj.pitch))*100
+		als_audioclip.SampleVolume = sample_obj.vol
+	
+		ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+
+		do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
+
+
+		do_audio_mpe(audiopl_obj, als_track)
+
+		ats = timestate(audiopl_obj)
+		ats.position = audiopl_obj.time.position
+		ats.duration = audiopl_obj.time.duration
+		ats.startrel = 0
+		ats.loop_start = 0
+		ats.loop_end = audiopl_obj.time.duration
+		ats.loop_on = False
+	
+		second_dur = sampleref_obj.dur_sec
+
+		if audiopl_obj.time.cut_type == 'cut':
+			ats.startrel = 0
+			ats.loop_start = audiopl_obj.time.cut_start
+			ats.loop_end = ats.duration+(audiopl_obj.time.cut_start*1.5)
+			als_audioclip.Loop.HiddenLoopStart = 0
+			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
+		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+			ats.loop_on = True
+			ats.startrel, ats.loop_start, ats.loop_end = audiopl_obj.time.get_loop_data()
+			als_audioclip.Loop.HiddenLoopStart = 0
+			als_audioclip.Loop.HiddenLoopEnd = ats.loop_end
+		else:
+			ats.loop_start = 0
+			ats.loop_end = audiopl_obj.time.duration
+			if stretch_obj.is_warped:
+				s = second_dur*2
+				speed = stretch_obj.calc_warp_speed()
+				s *= speed
+				als_audioclip.Loop.HiddenLoopStart = ats.loop_end - s
+			else: als_audioclip.Loop.HiddenLoopStart = 0
+			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
+	
+		if not stretch_obj.is_warped:
+			if ref_found: 
+				second_dur = sampleref_obj.dur_sec
+
+				if stretch_obj.uses_tempo:
+					als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+					ats.loop_end += ats.startrel/2
+					if ats.loop_on: 
+						stretch_obj.set_rate_speed(bpm, 1, False)
+						als_audioclip.IsWarped = True
+					else:
+						ats.startrel = 0
+				else:
+					if not ats.loop_on:
+						als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+						if stretch_obj.calc_tempo_size == 1:
+							ats.duration = min(ats.duration, (second_dur*2*stretch_obj.calc_tempo_size))
+							ats.loop_start /= 2
+							ats.loop_end = (ats.startrel+(ats.duration/2))
+						else:
+							ats.startrel = 0
+					else:
+						als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+						ats.loop_end += ats.startrel
+						if ats.loop_on: 
+							stretch_obj.set_rate_speed(bpm, 1, False)
+							als_audioclip.IsWarped = True
+
+			else:
+				warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+				warpmarker_obj.BeatTime = 0
+				warpmarker_obj.SecTime = 0
+				als_audioclip.WarpMarkers[1] = warpmarker_obj
+
+				warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+				warpmarker_obj.BeatTime = 0.03125
+				warpmarker_obj.SecTime = 0.03125
+				als_audioclip.WarpMarkers[2] = warpmarker_obj
+
+		else:
+			als_audioclip.IsWarped = True
+
+
+			#print('o')
+			for num, warp_point_obj in enumerate(stretch_obj.iter_warp_points()):
+				warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+				warpmarker_obj.BeatTime = warp_point_obj.beat
+				warpmarker_obj.SecTime = warp_point_obj.second
+
+				#print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
+
+				als_audioclip.WarpMarkers[num+1] = warpmarker_obj
+
+			lastpoint = stretch_obj.warppoints[-1]
+
+			warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+			warpmarker_obj.BeatTime = lastpoint.beat+0.03125
+			warpmarker_obj.SecTime = lastpoint.second+((0.03125/2)/lastpoint.speed)
+			als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
+
+			#print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
+
+
+
+		als_audioclip.Time = ats.position
+		als_audioclip.CurrentStart = ats.position
+		als_audioclip.CurrentEnd = ats.position+ats.duration
+		als_audioclip.Loop.StartRelative = ats.startrel
+		als_audioclip.Loop.LoopStart = ats.loop_start
+		als_audioclip.Loop.LoopEnd = ats.loop_end
+		als_audioclip.Loop.LoopOn = ats.loop_on
+
+		if audiopl_obj.time.cut_type == 'cut':
+			als_audioclip.Loop.LoopEnd -= ats.loop_start/2
+			pass
+		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+			pass
+		else:
+			pass
+
+		if AUDCLIPVERBOSE:
+			for x in [
+				audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'], int(als_audioclip.IsWarped),
+				als_audioclip.CurrentEnd-als_audioclip.CurrentStart,
+				als_audioclip.Loop.StartRelative, als_audioclip.Loop.LoopStart,
+				als_audioclip.Loop.LoopEnd, int(als_audioclip.Loop.LoopOn),
+				als_audioclip.Loop.HiddenLoopStart, als_audioclip.Loop.HiddenLoopEnd
+				]:
+				print(  str(x)[0:9].ljust(10), end=' ' )
+			print()
+
 def add_track(convproj_obj, project_obj, trackid, track_obj):
 	track_obj.placements.pl_notes.sort()
 	track_color = track_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
@@ -865,170 +1076,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 		if not DEBUG_IGNORE_PLACEMENTS:
 			track_obj.placements.pl_audio.sort()
-			for clipid, audiopl_obj in enumerate(track_obj.placements.pl_audio):
-				als_audioclip = als_track.add_audioclip(clipid)
-				als_audioclip.Color = audiopl_obj.visual.color.closest_color_index(colordata, track_color)
-				if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
-				als_audioclip.Disabled = audiopl_obj.muted
-
-				als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in.get_dur_beat(bpm)
-				als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in.skew
-				als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in.slope
-				als_audioclip.Fades.FadeOutLength = audiopl_obj.fade_out.get_dur_beat(bpm)
-				als_audioclip.Fades.FadeOutCurveSkew = audiopl_obj.fade_out.skew
-				als_audioclip.Fades.FadeOutCurveSlope = audiopl_obj.fade_out.slope
-	
-				sample_obj = audiopl_obj.sample
-				stretch_obj = copy.deepcopy(sample_obj.stretch)
-
-				if not stretch_obj.preserve_pitch: als_audioclip.WarpMode = 3
-				else:
-					if stretch_obj.algorithm == 'transient':
-						als_audioclip.WarpMode = 0
-						if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
-						if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
-						if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
-					elif stretch_obj.algorithm == 'ableton_tones':
-						als_audioclip.WarpMode = 1
-						if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
-					elif stretch_obj.algorithm == 'ableton_texture':
-						als_audioclip.WarpMode = 2
-						if 'GranularityTexture' in stretch_obj.params: als_audioclip.GranularityTexture = stretch_obj.params['GranularityTexture']
-						if 'FluctuationTexture' in stretch_obj.params: als_audioclip.FluctuationTexture = stretch_obj.params['FluctuationTexture']
-					elif stretch_obj.algorithm == 'ableton_complex':
-						als_audioclip.WarpMode = 4
-					elif stretch_obj.algorithm == 'ableton_complexpro':
-						als_audioclip.WarpMode = 6
-						if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
-						if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
-					else:
-						als_audioclip.WarpMode = 4
-
-				als_audioclip.PitchCoarse = round(sample_obj.pitch)
-				als_audioclip.PitchFine = (sample_obj.pitch-round(sample_obj.pitch))*100
-				als_audioclip.SampleVolume = sample_obj.vol
-	
-				ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
-
-				do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
-
-				track_mixer = als_track.DeviceChain.Mixer
-				mainseq = als_track.DeviceChain.MainSequencer
-
-				for i, d in enumerate(audiopl_obj.auto.items()):
-					n, x = d
-					clipenv = ableton_AutomationEnvelope(None)
-
-					mpeid = None
-
-					if n == 'pan': mpeid = track_mixer.Pan.ModulationTarget.id
-					if n == 'gain': mpeid = mainseq.VolumeModulationTarget.id
-					if n == 'pitch': mpeid = mainseq.TranspositionModulationTarget.id
-
-					if mpeid:
-						clipenv.PointeeId = mpeid
-						for num, autopoint in enumerate(x):
-							alsevent = proj_ableton.ableton_FloatEvent(None)
-							alsevent.Time = autopoint.pos
-							alsevent.Value = autopoint.value
-							clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
-
-						als_audioclip.Envelopes[i] = clipenv
-
-
-
-
-				clip_position = audiopl_obj.time.position
-				clip_duration = audiopl_obj.time.duration
-				clip_startrel = 0
-				clip_loop_start = 0
-				clip_loop_end = audiopl_obj.time.duration
-				clip_loop_on = False
-	
-				if audiopl_obj.time.cut_type == 'cut':
-					clip_startrel = audiopl_obj.time.cut_start
-					clip_loop_start = audiopl_obj.time.cut_start
-					clip_loop_end = clip_loop_start+clip_duration
-				elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
-					clip_loop_on = True
-					clip_startrel, clip_loop_start, clip_loop_end = audiopl_obj.time.get_loop_data()
-				else:
-					clip_loop_start = 0
-					clip_loop_end = audiopl_obj.time.duration
-	
-				second_dur = sampleref_obj.dur_sec
-
-				if not stretch_obj.is_warped:
-					if ref_found: 
-						second_dur = sampleref_obj.dur_sec
-
-						if stretch_obj.uses_tempo:
-							als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-							clip_loop_end += clip_startrel/2
-							if clip_loop_on: 
-								stretch_obj.set_rate_speed(bpm, 1, False)
-								als_audioclip.IsWarped = True
-							else:
-								clip_startrel = 0
-						else:
-							if not clip_loop_on:
-								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-								if stretch_obj.calc_tempo_size == 1:
-									clip_duration = min(clip_duration, (second_dur*2*stretch_obj.calc_tempo_size))
-									clip_loop_start /= 2
-									clip_loop_end = (clip_startrel+(clip_duration/2))
-								else:
-									clip_startrel = 0
-							else:
-								als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-								clip_loop_end += clip_startrel
-								if clip_loop_on: 
-									stretch_obj.set_rate_speed(bpm, 1, False)
-									als_audioclip.IsWarped = True
-
-					else:
-						warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-						warpmarker_obj.BeatTime = 0
-						warpmarker_obj.SecTime = 0
-						als_audioclip.WarpMarkers[1] = warpmarker_obj
-
-						warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-						warpmarker_obj.BeatTime = 0.03125
-						warpmarker_obj.SecTime = 0.03125
-						als_audioclip.WarpMarkers[2] = warpmarker_obj
-
-				else:
-					als_audioclip.IsWarped = True
-					for num, warp_point_obj in enumerate(stretch_obj.iter_warp_points()):
-						warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-						warpmarker_obj.BeatTime = warp_point_obj.beat*2
-						warpmarker_obj.SecTime = warp_point_obj.second*2
-						als_audioclip.WarpMarkers[num+1] = warpmarker_obj
-
-					lastpoint = stretch_obj.warppoints[-1]
-
-					warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-					warpmarker_obj.BeatTime = lastpoint.beat+0.03125
-					warpmarker_obj.SecTime = lastpoint.second+((0.03125/2)/lastpoint.speed)
-					als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
-
-				als_audioclip.Time = clip_position
-				als_audioclip.CurrentStart = clip_position
-				als_audioclip.CurrentEnd = clip_position+clip_duration
-				als_audioclip.Loop.StartRelative = clip_startrel
-				als_audioclip.Loop.LoopStart = clip_loop_start
-				als_audioclip.Loop.LoopEnd = clip_loop_end
-				als_audioclip.Loop.LoopOn = clip_loop_on
-				als_audioclip.Loop.HiddenLoopStart = 0
-				als_audioclip.Loop.HiddenLoopEnd = clip_duration+clip_loop_start
-
-				if audiopl_obj.time.cut_type == 'cut':
-					als_audioclip.Loop.LoopEnd -= clip_loop_start/2
-					pass
-				elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
-					pass
-				else:
-					pass
+			do_audioclips(convproj_obj, track_obj.placements.pl_audio, track_color, als_track)
 
 	if track_obj.type in ['instrument', 'audio']:
 		do_effects(convproj_obj, als_track, track_obj.fxslots_audio)
@@ -1085,6 +1133,14 @@ class output_ableton(plugins.base):
 		global ids_group_cvpj_als
 		global master_returns
 		global bpm
+
+		if AUDCLIPVERBOSE:
+			for x in ['cut_type', 'IsWarped', "Duration",
+				"StartRelative", "LoopStart",
+				"LoopEnd", "LoopOn", 
+				"HidLoopStart", "HidLoopEnd"]:
+				print(  str(x)[0:9].ljust(10), end=' ' )
+			print()
 
 		convproj_obj.change_timings(1, True)
 		project_obj = proj_ableton.ableton_liveset()

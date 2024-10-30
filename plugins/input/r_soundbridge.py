@@ -113,13 +113,14 @@ def make_track(convproj_obj, sb_track, groupname, num):
 			track_obj.sends.to_master_active = False
 		if sb_track.blockContainers:
 			for block in sb_track.blockContainers[0].blocks:
-				placement_obj = track_obj.placements.add_audio()
+				placement_obj = track_obj.placements.add_nested_audio()
 				clipmetadata = sb_track.metadata
 				placement_obj.visual.name = block.name
 				if 'TrackColor' in clipmetadata: placement_obj.visual.color.set_hex(clipmetadata['TrackColor'])
 				placement_obj.time.set_posdur(block.position, block.framesCount)
-				if block.events:
-					blockevent = block.events[0]
+				for blockevent in block.events:
+					placement_obj = placement_obj.add()
+					placement_obj.time.set_posdur(blockevent.position, blockevent.framesCount)
 					placement_obj.time.set_offset(blockevent.positionStart)
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = blockevent.fileName
@@ -187,6 +188,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp']
+		in_dict['audio_nested'] = True
 	def supported_autodetect(self): return True
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_soundbridge
@@ -210,6 +212,16 @@ class input_cvpj_f(plugins.base):
 
 		sb_timeSignature = project_obj.timeline.timeSignature
 		sb_tempo = project_obj.timeline.tempo
+
+		for marker in project_obj.timeline.markers:
+			timemarker_obj = convproj_obj.add_timemarker()
+			timemarker_obj.position = marker.position
+			if marker.label: timemarker_obj.visual.name = marker.label
+			if marker.tag: 
+				try:
+					timemarker_obj.visual.color.set_hex(marker.tag)
+				except:
+					pass
 
 		convproj_obj.timesig[0] = sb_timeSignature.timeSigNumerator
 		convproj_obj.timesig[1] = sb_timeSignature.timeSigDenominator

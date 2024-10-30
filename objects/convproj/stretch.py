@@ -3,6 +3,7 @@
 
 from dataclasses import dataclass
 from dataclasses import field
+from functions import xtramath
 
 class cvpj_warp_point:
 	def __init__(self):
@@ -51,6 +52,14 @@ class cvpj_stretch:
 		for x in self.warppoints:
 			yield x
 
+	def debugtxt_warp(self):
+		print('warps')
+		for x in self.iter_warp_points():
+			print('warp', end=' ')
+			for d in [x.beat, x.second, x.speed]:
+				print(str(d).ljust(20), end=' ')
+		print('')
+
 	def calc_warp_points(self):
 		if self.warppoints:
 			numpoints = len(self.warppoints)-1
@@ -71,6 +80,16 @@ class cvpj_stretch:
 
 			#for warp_point_obj in self.warppoints:
 			#	print(warp_point_obj.beat, warp_point_obj.second, warp_point_obj.speed)
+
+	def calc_warp_speed(self):
+		if self.warppoints:
+			speedpoints = [x.speed for x in self.warppoints]
+			if None not in speedpoints:
+				return xtramath.average(speedpoints)
+			else:
+				return 1
+		else:
+			return 1
 
 	def __bool__(self):
 		return self.is_warped or (self.calc_tempo_speed != 1) or self.uses_tempo

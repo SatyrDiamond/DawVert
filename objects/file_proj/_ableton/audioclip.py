@@ -68,6 +68,10 @@ class ableton_AudioClip:
 		self.MarkersGenerated = get_bool(xmltag, 'MarkersGenerated', False)
 		self.IsSongTempoMaster = get_bool(xmltag, 'IsSongTempoMaster', False)
 
+	def set_dur(self, duration):
+		self.CurrentStart = float(get_value(xmltag, 'CurrentStart', 0))
+		self.CurrentEnd = self.CurrentStart*duration
+
 	def write(self, xmltag):
 		xmltag.set('Time', "%g"%self.Time)
 		self.LomId.write(xmltag)

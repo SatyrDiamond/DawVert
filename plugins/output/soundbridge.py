@@ -50,7 +50,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 		sb_grouptrack = proj_soundbridge.soundbridge_track(None)
 		make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.fxslots_audio)
 		sb_grouptrack.type = 1
-		sb_grouptrack.state = set_params(group_obj.params)
+		#sb_grouptrack.state = set_params(group_obj.params)
 
 		make_autocontains_master(convproj_obj, sb_grouptrack, group_obj.params, ['group', groupid])
 
@@ -70,6 +70,7 @@ sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '
 def make_auto(convproj_obj, autoloc, blocks, add, mul, trackmeta):
 	from objects.file_proj import proj_soundbridge
 	aid_found, aid_data = convproj_obj.automation.get(autoloc, 'float')
+
 	if aid_found:
 		if aid_data.pl_points:
 			for autopl_obj in aid_data.pl_points:
@@ -87,6 +88,8 @@ def make_auto(convproj_obj, autoloc, blocks, add, mul, trackmeta):
 				block.muted = 0
 				block.version = 1
 
+
+
 				if autopl_obj.time.cut_type == 'cut':
 					block.positionStart, block.loopOffset, block.positionEnd = autopl_obj.time.get_loop_data()
 					block.loopOffset = max(block.loopOffset, 0)
@@ -102,7 +105,7 @@ def make_auto(convproj_obj, autoloc, blocks, add, mul, trackmeta):
 					autoarray[n]['pos'] = int(a.pos)
 					autoarray[n]['val'] = (a.value/mul)-add
 
-				block.blockData = encode_chunk(b'\x00\x00\x00\x14'+autoarray.tobytes())
+				block.blockData = encode_chunk(b'\x00\x00\x00\x14'+autoarray.tobytes()+(b'\x00'*16))
 
 				blocks.append(block)
 
@@ -532,7 +535,7 @@ class output_soundbridge(plugins.base):
 
 							stretch_obj.fix_single_warp(convproj_obj, sp_obj)
 
-							warp_offset = stretch_obj.fix_warp_offset(convproj_obj, sp_obj)
+							warp_offset = stretch_obj.fix_warps(convproj_obj, sp_obj)
 
 							#stretch_obj.debugtxt_warp()
 

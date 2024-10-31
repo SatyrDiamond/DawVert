@@ -290,6 +290,40 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 
 	return sb_plugin
 
+def time_add(event, time_obj, otherblock):
+
+	loop_1, loop_2, loop_3 = time_obj.get_loop_data()
+
+	while loop_1<0:
+		loop_1 += loop_3
+
+	if time_obj.cut_type == 'cut':
+		event.positionStart = loop_1
+		event.loopOffset = loop_2
+		event.positionEnd = loop_3-loop_1
+		event.loopOffset = max(event.loopOffset, 0)
+		event.positionStart = max(event.positionStart, 0)
+		event.positionEnd = time_obj.duration+event.positionStart
+		if otherblock:
+			otherblock.framesCount = time_obj.duration+event.positionStart
+		
+	elif time_obj.cut_type == 'loop':
+		event.positionStart = loop_1
+		event.loopOffset = loop_2
+		event.positionEnd = loop_3
+		event.loopEnabled = 1
+		event.loopOffset = max(event.loopOffset, 0)
+		event.positionStart = max(event.positionStart, 0)
+
+	elif time_obj.cut_type == 'loop_off':
+		event.loopOffset = loop_1
+		event.positionStart = loop_2
+		event.positionEnd = loop_3
+
+		event.loopEnabled = 1
+		event.loopOffset = max(event.loopOffset, 0)
+		event.positionStart = max(event.positionStart, 0)
+
 class output_soundbridge(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -299,7 +333,7 @@ class output_soundbridge(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'soundbridge'
 		in_dict['auto_types'] = ['pl_points']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_off']
 		in_dict['plugin_included'] = []
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['placement_cut'] = True
@@ -364,8 +398,10 @@ class output_soundbridge(plugins.base):
 		for groupid, insidegroup in convproj_obj.iter_group_inside():
 			sb_tracks = project_obj.masterTrack
 
-			if insidegroup: make_group(convproj_obj, groupid, groups_data, groups_data[insidegroup].tracks)
-			else: make_group(convproj_obj, groupid, groups_data, sb_tracks)
+			if insidegroup: 
+				make_group(convproj_obj, groupid, groups_data, groups_data[insidegroup])
+			else: 
+				make_group(convproj_obj, groupid, groups_data, sb_tracks)
 
 		for trackid, track_obj in convproj_obj.iter_track():
 			sb_tracks = project_obj.masterTrack.tracks
@@ -408,28 +444,7 @@ class output_soundbridge(plugins.base):
 					block.loopEnabled = 0
 					block.muted = 0
 
-					if notespl_obj.time.cut_type == 'cut':
-						block.positionStart, block.loopOffset, block.positionEnd = notespl_obj.time.get_loop_data()
-						block.loopOffset = max(block.loopOffset, 0)
-						block.positionStart = max(block.positionStart, 0)
-						block.positionEnd += block.positionStart
-
-					elif notespl_obj.time.cut_type == 'loop':
-						event.loopOffset, event.positionStart, event.positionEnd = notespl_obj.time.get_loop_data()
-						event.loopEnabled = 1
-						event.loopOffset = max(event.loopOffset, 0)
-						event.positionStart = max(event.positionStart, 0)
-
-					elif notespl_obj.time.cut_type in ['loop_off', 'loop_adv']:
-						loop_1, loop_2, loop_3 = notespl_obj.time.get_loop_data()
-
-						event.loopOffset = loop_2
-						event.positionStart = loop_2
-						event.positionEnd = loop_3
-
-						event.loopEnabled = 1
-						event.loopOffset = max(event.loopOffset, 0)
-						event.positionStart = max(event.positionStart, 0)
+					time_add(block, notespl_obj.time, None)
 
 					numnote = 0
 					for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
@@ -508,40 +523,26 @@ class output_soundbridge(plugins.base):
 							event.fadeOutConvexity = 0.5
 							event.pitch = pow(2, sp_obj.pitch/12)
 							event.fileName = audio_ids[sp_obj.sampleref]
-		
-							if audiopl_obj.time.cut_type == 'cut':
-								event.positionStart, event.loopOffset, event.positionEnd = audiopl_obj.time.get_loop_data()
-								event.loopOffset = max(event.loopOffset, 0)
-								event.positionStart = max(event.positionStart, 0)
-								event.positionEnd += event.positionStart
-		
-							elif audiopl_obj.time.cut_type == 'loop':
-								event.loopOffset, event.positionStart, event.positionEnd = audiopl_obj.time.get_loop_data()
-								event.loopEnabled = 1
-								event.loopOffset = max(event.loopOffset, 0)
-								event.positionStart = max(event.positionStart, 0)
 
-							elif audiopl_obj.time.cut_type in ['loop_off', 'loop_adv']:
-								loop_1, loop_2, loop_3 = audiopl_obj.time.get_loop_data()
-
-								event.loopOffset = loop_2
-								event.positionStart = loop_2
-								event.positionEnd = loop_3
-
-								event.loopEnabled = 1
-								event.loopOffset = max(event.loopOffset, 0)
-								event.positionStart = max(event.positionStart, 0)
+							time_add(event, audiopl_obj.time, block)
 
 							event.stretchMarks = []
 
 							stretch_obj = audiopl_obj.sample.stretch
 
 							stretch_obj.fix_single_warp(convproj_obj, sp_obj)
-							warp_offset = stretch_obj.fix_warp_offset()
+
+							warp_offset = stretch_obj.fix_warp_offset(convproj_obj, sp_obj)
+
+							#stretch_obj.debugtxt_warp()
 
 							event.positionStart += warp_offset*22050
 							event.loopOffset += warp_offset*22050
 							event.positionEnd += warp_offset*22050
+
+							event.positionStart = int(event.positionStart)
+							event.loopOffset = int(event.loopOffset)
+							event.positionEnd = int(event.positionEnd)
 
 							warp_points = [x for x in stretch_obj.iter_warp_points()]
 

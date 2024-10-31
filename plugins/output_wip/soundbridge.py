@@ -299,9 +299,9 @@ def time_add(event, time_obj, otherblock):
 		loop_1 += loop_3
 
 	if time_obj.cut_type == 'cut':
-		event.positionStart = loop_1
-		event.loopOffset = loop_2
-		event.positionEnd = loop_3-loop_1
+		event.positionStart = time_obj.cut_start
+		event.loopOffset = 0
+		event.positionEnd = event.framesCount-time_obj.cut_start
 		event.loopOffset = max(event.loopOffset, 0)
 		event.positionStart = max(event.positionStart, 0)
 		event.positionEnd = time_obj.duration+event.positionStart
@@ -320,7 +320,6 @@ def time_add(event, time_obj, otherblock):
 		event.loopOffset = loop_1
 		event.positionStart = loop_2
 		event.positionEnd = loop_3
-
 		event.loopEnabled = 1
 		event.loopOffset = max(event.loopOffset, 0)
 		event.positionStart = max(event.positionStart, 0)

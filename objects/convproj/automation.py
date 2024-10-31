@@ -31,6 +31,16 @@ class cvpj_s_automation:
 		self.time_float = time_float
 		self.valtype = valtype
 
+	def __repr__(self):
+		outtxt = ''
+		if self.u_pl_points: outtxt += 'pl_points '
+		if self.u_pl_ticks: outtxt += 'pl_ticks '
+		if self.u_nopl_points: outtxt += 'nopl_points '
+		if self.u_nopl_ticks: outtxt += 'nopl_ticks '
+
+		return 'AutoSet '+ outtxt
+
+
 	def sort(self):
 		if self.u_pl_points: self.pl_points.sort()
 
@@ -214,6 +224,7 @@ class cvpj_s_automation:
 				pl = self.add_pl_points()
 				pl.time.position = ppl[0]
 				pl.time.duration = ppl[1]-pl.time.position
+
 				for point in ppl[2]:
 					autopoint_obj = pl.data.add_point()
 					autopoint_obj.pos = point.pos-ppl[0]
@@ -221,7 +232,7 @@ class cvpj_s_automation:
 					autopoint_obj.type = point.type
 					autopoint_obj.tension = point.tension
 					autopoint_obj.extra = point.extra
-					
+
 		self.u_nopl_points = False
 		self.nopl_points = None
 

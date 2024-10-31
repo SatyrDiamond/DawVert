@@ -101,7 +101,7 @@ class cvpj_stretch:
 				warp_point_obj.second = sampleref_obj.dur_sec
 				warp_point_obj.speed = firstpoint.speed
 				
-	def fix_warp_offset(self, convproj_obj, sp_obj):
+	def fix_warps(self, convproj_obj, sp_obj):
 		offset = 0
 		if self.warppoints:
 			if len(self.warppoints)>1:

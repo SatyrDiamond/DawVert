@@ -215,7 +215,7 @@ class cvpj_stretch:
 		self.calc_real_speed = self.calc_tempo_speed/self.calc_bpm_speed
 		self.calc_real_size = self.calc_tempo_size/self.calc_bpm_size
 
-	def changestretch(self, samplereflist, sampleref, target, tempo, ppq):
+	def changestretch(self, samplereflist, sampleref, target, tempo, ppq, pitch):
 		iffound = sampleref in samplereflist
 		pos_offset = 0
 		cut_offset = 0
@@ -226,19 +226,34 @@ class cvpj_stretch:
 			sampleref_obj = samplereflist[sampleref]
 
 			if not self.is_warped and target == 'warp':
-				pos_real = sampleref_obj.dur_sec*self.calc_tempo_size
 				self.warppoints = []
 				self.is_warped = True
 
-				warp_point_obj = self.add_warp_point()
-				warp_point_obj.beat = 0
-				warp_point_obj.second = 0
-				warp_point_obj.speed = self.calc_tempo_size
+				if self.uses_tempo:
+					pos_real = sampleref_obj.dur_sec*self.calc_tempo_size
+	
+					warp_point_obj = self.add_warp_point()
+					warp_point_obj.beat = 0
+					warp_point_obj.second = 0
+					warp_point_obj.speed = self.calc_tempo_size
+	
+					warp_point_obj = self.add_warp_point()
+					warp_point_obj.beat = pos_real*2
+					warp_point_obj.second = sampleref_obj.dur_sec
+					warp_point_obj.speed = self.calc_tempo_size
+				else:
+					pos_real = sampleref_obj.dur_sec*self.calc_real_size
+	
+					pitch = pow(2, -pitch/12)
 
-				warp_point_obj = self.add_warp_point()
-				warp_point_obj.beat = pos_real*2
-				warp_point_obj.second = sampleref_obj.dur_sec
-				warp_point_obj.speed = self.calc_tempo_size
+					warp_point_obj = self.add_warp_point()
+					warp_point_obj.beat = 0
+					warp_point_obj.second = 0
+	
+					warp_point_obj = self.add_warp_point()
+					warp_point_obj.beat = pos_real*2*self.calc_bpm_size*pitch
+					warp_point_obj.second = sampleref_obj.dur_sec
+
 
 			finalspeed = 1
 			if self.is_warped and target == 'rate':

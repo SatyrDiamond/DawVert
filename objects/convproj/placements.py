@@ -107,6 +107,16 @@ class cvpj_placement_timing:
 		loop_loopend = self.cut_loopend if self.cut_loopend>0 else self.duration
 		return loop_start, loop_loopstart, loop_loopend
 
+	def loop_scale(self, v):
+		self.cut_start *= v
+		self.cut_loopstart *= v
+		self.cut_loopend *= v
+
+	def loop_shift(self, v):
+		self.cut_start += v
+		self.cut_loopstart += v
+		self.cut_loopend += v
+
 	def get_end(self):
 		return self.position+self.duration
 
@@ -198,10 +208,16 @@ class cvpj_placements:
 
 	def add_audio_indexed(self): return self.pl_audio_indexed.add()
 
+	def all_stretch_set_pitch_nonsync(self):
+		if not self.is_indexed: 
+			self.pl_audio.all_stretch_set_pitch_nonsync()
+			for x in self.pl_audio_nested: 
+				for i in x.events: 
+					i.all_stretch_set_pitch_nonsync()
+
 	def changestretch(self, convproj_obj, target, tempo):
 		if not self.is_indexed: 
-			for x in self.pl_audio: 
-				x.changestretch(convproj_obj, target, tempo)
+			self.pl_audio.changestretch(convproj_obj, target, tempo)
 			for x in self.pl_audio_nested: 
 				for i in x.events: 
 					i.changestretch(convproj_obj, target, tempo)

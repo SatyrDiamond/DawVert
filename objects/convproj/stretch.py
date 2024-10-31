@@ -56,9 +56,9 @@ class cvpj_stretch:
 		print('warps')
 		for x in self.iter_warp_points():
 			print('warp', end=' ')
-			for d in [x.beat, x.second, x.speed]:
+			for d in [x.beat, x.second*x.speed*2, x.second, x.speed]:
 				print(str(d).ljust(20), end=' ')
-		print('')
+			print('')
 
 	def calc_warp_points(self):
 		if self.warppoints:

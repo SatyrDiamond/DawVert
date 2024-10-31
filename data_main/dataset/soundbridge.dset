@@ -636,12 +636,12 @@
                         "def": 0.0,
                         "type": "float"
                     },
-                    "__unk_7":
+                    "link_channels":
                     {
                         "def": 1.0,
                         "type": "float"
                     },
-                    "__unk_8":
+                    "mode":
                     {
                         "def": 0.0,
                         "type": "float"

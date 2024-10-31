@@ -48,8 +48,11 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 	if groupid not in groups_data and groupid in convproj_obj.groups:
 		group_obj = convproj_obj.groups[groupid]
 		sb_grouptrack = proj_soundbridge.soundbridge_track(None)
+		make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.fxslots_audio)
 		sb_grouptrack.type = 1
 		sb_grouptrack.state = set_params(group_obj.params)
+
+		make_autocontains_master(convproj_obj, sb_grouptrack, group_obj.params, ['group', groupid])
 
 		sb_maintrack.tracks.append(sb_grouptrack)
 		if group_obj.visual.name: sb_grouptrack.name = group_obj.visual.name
@@ -300,6 +303,8 @@ class output_soundbridge(plugins.base):
 		in_dict['plugin_included'] = []
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['placement_cut'] = True
+		#in_dict['plugin_included'] = ['native:soundbridge']
+		in_dict['plugin_ext'] = ['vst2']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2
@@ -327,8 +332,11 @@ class output_soundbridge(plugins.base):
 
 		master_track = convproj_obj.track_master
 
+		make_plugins_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master.fxslots_audio)
+
 		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = '#'+master_track.visual.color.get_hex()
 
+		project_obj.masterTrack.state = set_params(master_track.params)
 		make_autocontains_master(convproj_obj, project_obj.masterTrack, master_track.params, ['master'])
 
 		master_returns = master_track.returns
@@ -456,6 +464,7 @@ class output_soundbridge(plugins.base):
 				sb_track.blockContainers = []
 				make_autocontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
+				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)
 
 				blockContainer = proj_soundbridge.soundbridge_blockContainer(None)
 
@@ -524,12 +533,21 @@ class output_soundbridge(plugins.base):
 								event.positionStart = max(event.positionStart, 0)
 
 							event.stretchMarks = []
+
+							#audiopl_obj.sample.stretch.debugtxt_warp()
+
 							for warp_point_obj in audiopl_obj.sample.stretch.iter_warp_points():
 								stretchMark = proj_soundbridge.soundbridge_stretchMark(None)
-								stretchMark.newPosition = int(warp_point_obj.beat*22050)
-								stretchMark.initPosition = int(warp_point_obj.second*(sampleref_obj.hz))
+								stretchMark.newPosition = warp_point_obj.beat
+								stretchMark.initPosition = warp_point_obj.second
+
+								stretchMark.newPosition *= 44100/2
+								stretchMark.initPosition *= sampleref_obj.hz
+
+								stretchMark.newPosition = int(stretchMark.newPosition)
+								stretchMark.initPosition = int(stretchMark.initPosition)
 								event.stretchMarks.append(stretchMark)
-		
+
 							block.events.append(event)
 					blockContainer.blocks.append(block)
 
@@ -548,6 +566,7 @@ class output_soundbridge(plugins.base):
 			sb_track.blockContainers = []
 			make_autocontains(convproj_obj, sb_track, return_obj.params, 1, ['return', returnid])
 			make_sends(convproj_obj, sb_track, return_obj.sends)
+			make_plugins_fx(convproj_obj, sb_track, return_obj.fxslots_audio)
 			sb_tracks.append(sb_track)
 
 		if convproj_obj.loop_active:

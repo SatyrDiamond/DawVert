@@ -1,0 +1,694 @@
+{
+    "plugin":
+    {
+        "objects":
+        {
+            "eq":
+            {
+                "params":
+                {
+                    "ls_hz":
+                    {
+                        "def": 0.17964816093444824,
+                        "type": "float"
+                    },
+                    "ls_q":
+                    {
+                        "def": 0.02552301064133644,
+                        "type": "float"
+                    },
+                    "ls_gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "ls_unknown":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "ls_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "p1_hz":
+                    {
+                        "def": 0.32009994983673096,
+                        "type": "float"
+                    },
+                    "p1_q":
+                    {
+                        "def": 0.02552301064133644,
+                        "type": "float"
+                    },
+                    "p1_gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "p1_unknown":
+                    {
+                        "def": 0.75,
+                        "type": "float"
+                    },
+                    "p1_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "p2_hz":
+                    {
+                        "def": 0.4793013632297516,
+                        "type": "float"
+                    },
+                    "p2_q":
+                    {
+                        "def": 0.02552301064133644,
+                        "type": "float"
+                    },
+                    "p2_gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "p2_unknown":
+                    {
+                        "def": 0.75,
+                        "type": "float"
+                    },
+                    "p2_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "p3_hz":
+                    {
+                        "def": 0.6421933770179749,
+                        "type": "float"
+                    },
+                    "p3_q":
+                    {
+                        "def": 0.02552301064133644,
+                        "type": "float"
+                    },
+                    "p3_gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "p3_unknown":
+                    {
+                        "def": 0.75,
+                        "type": "float"
+                    },
+                    "p3_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "p4_hz":
+                    {
+                        "def": 0.784538209438324,
+                        "type": "float"
+                    },
+                    "p4_q":
+                    {
+                        "def": 0.02552301064133644,
+                        "type": "float"
+                    },
+                    "p4_gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "p4_unknown":
+                    {
+                        "def": 0.75,
+                        "type": "float"
+                    },
+                    "p4_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "hs_hz":
+                    {
+                        "def": 0.8922606706619263,
+                        "type": "float"
+                    },
+                    "hs_q":
+                    {
+                        "def": 0.02552301064133644,
+                        "type": "float"
+                    },
+                    "hs_gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "hs_unknown":
+                    {
+                        "def": 0.6666666865348816,
+                        "type": "float"
+                    },
+                    "hs_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "analyzer":
+            {
+                "params":
+                {}
+            },
+            "filter_unit":
+            {
+                "params":
+                {
+                    "type":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "freq":
+                    {
+                        "def": 0.9253513813018799,
+                        "type": "float"
+                    },
+                    "q":
+                    {
+                        "def": 0.22142857313156128,
+                        "type": "float"
+                    },
+                    "unknown":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    }
+                }
+            },
+            "chorus_flanger":
+            {
+                "params":
+                {
+                    "lfo_depth":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "lfo_rate_nonsync":
+                    {
+                        "def": 0.2157806158065796,
+                        "type": "float"
+                    },
+                    "delay_time":
+                    {
+                        "def": 0.3586023151874542,
+                        "type": "float"
+                    },
+                    "feedback":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_5":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "__unk_6":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lpf_fb":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "stereo_fade":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "wet":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "shape":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_11":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate_sync":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate_sync_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "delay":
+            {
+                "params":
+                {
+                    "lfo_depth":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate_nonsync":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "time_nonsync":
+                    {
+                        "def": 0.16951797902584076,
+                        "type": "float"
+                    },
+                    "feedback":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_5":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_6":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "lpf_fb":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "stereo_fade":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "wet":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "shape":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_11":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "time_sync":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "time_sync_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate_sync":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate_sync_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "phaser":
+            {
+                "params":
+                {
+                    "lfo_depth":
+                    {
+                        "def": 0.25,
+                        "type": "float"
+                    },
+                    "lfo_rate":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "feedback":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_4":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "__unk_5":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lpf_fb":
+                    {
+                        "def": -0.0,
+                        "type": "float"
+                    },
+                    "stereo_fade":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "wet":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "shape":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_10":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate_sync":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_sync_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "bit_crusher":
+            {
+                "params":
+                {
+                    "bits":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "downsample":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "clip_lvl":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "clip_mode":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "reverb":
+            {
+                "params":
+                {
+                    "freeze":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "wet":
+                    {
+                        "def": 0.30000001192092896,
+                        "type": "float"
+                    },
+                    "pre_delay":
+                    {
+                        "def": 0.27633580565452576,
+                        "type": "float"
+                    },
+                    "bass_boost":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "high_cut_freq":
+                    {
+                        "def": 0.7561100721359253,
+                        "type": "float"
+                    },
+                    "high_cut_amount":
+                    {
+                        "def": 0.20000000298023224,
+                        "type": "float"
+                    },
+                    "time":
+                    {
+                        "def": 0.43369054794311523,
+                        "type": "float"
+                    },
+                    "el_rl_balance":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "er":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "lr":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "liveness":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "diffusion":
+                    {
+                        "def": 0.6000000238418579,
+                        "type": "float"
+                    },
+                    "steepness":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "quality":
+                    {
+                        "def": 0.3333333432674408,
+                        "type": "float"
+                    }
+                }
+            },
+            "resonance_filter":
+            {
+                "params":
+                {
+                    "lfo_depth":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate":
+                    {
+                        "def": 0.32419005036354065,
+                        "type": "float"
+                    },
+                    "freq":
+                    {
+                        "def": 0.9273644685745239,
+                        "type": "float"
+                    },
+                    "q":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "__unk_5":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "shape":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_7":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_rate_sync":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "lfo_sync_on":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "noise_gate":
+            {
+                "params":
+                {
+                    "threshold":
+                    {
+                        "def": 0.8500000238418579,
+                        "type": "float"
+                    },
+                    "__unk_2":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "attack":
+                    {
+                        "def": 0.5215842723846436,
+                        "type": "float"
+                    },
+                    "release":
+                    {
+                        "def": 0.033080581575632095,
+                        "type": "float"
+                    },
+                    "gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "lookahead":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "link_channels":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "compressor_expander":
+            {
+                "params":
+                {
+                    "threshold":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "ratio":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "attack":
+                    {
+                        "def": 0.44370245933532715,
+                        "type": "float"
+                    },
+                    "release":
+                    {
+                        "def": 0.1030171662569046,
+                        "type": "float"
+                    },
+                    "gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "lookahead":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "__unk_7":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    },
+                    "__unk_8":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    }
+                }
+            },
+            "limiter":
+            {
+                "params":
+                {
+                    "threshold":
+                    {
+                        "def": 0.9962499737739563,
+                        "type": "float"
+                    },
+                    "__unk_2":
+                    {
+                        "def": 0.0,
+                        "type": "float"
+                    },
+                    "attack":
+                    {
+                        "def": 3.190811824359617E-17,
+                        "type": "float"
+                    },
+                    "release":
+                    {
+                        "def": 0.37997010350227356,
+                        "type": "float"
+                    },
+                    "gain":
+                    {
+                        "def": 0.5,
+                        "type": "float"
+                    },
+                    "lookahead":
+                    {
+                        "def": 0.3333333432674408,
+                        "type": "float"
+                    },
+                    "link_channels":
+                    {
+                        "def": 1.0,
+                        "type": "float"
+                    }
+                }
+            }
+        }
+    }
+}

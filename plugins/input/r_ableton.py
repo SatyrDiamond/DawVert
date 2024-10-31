@@ -351,6 +351,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 AUDCLIPVERBOSE = False
 
+AUDWARPVERBOSE = False
+
 class input_ableton(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'input'
@@ -539,11 +541,12 @@ class input_ableton(plugins.base):
 								stretch_obj.params['formants'] = clipobj.ComplexProFormants
 								stretch_obj.params['envelope'] = clipobj.ComplexProEnvelope
 
-							#print('i')
+							if AUDWARPVERBOSE: print('i')
 							for _, WarpMarker in clipobj.WarpMarkers.items():
 								warp_point_obj = stretch_obj.add_warp_point()
 								warp_point_obj.beat = WarpMarker.BeatTime
 								warp_point_obj.second = WarpMarker.SecTime
+								if AUDWARPVERBOSE: print(str(WarpMarker.BeatTime).ljust(18), WarpMarker.SecTime)
 
 							stretch_obj.calc_warp_points()
 							stretch_obj.rem_last_warp_point()

@@ -476,6 +476,15 @@ class cvpj_automation:
 				paramnum = int(paramname[10:])
 				yield autoloc, autodata, paramnum
 
+	def iter_pl_points_external(self, pluginid):
+		for autoloc, autodata in self.iter_pl_points(filter=['plugin', pluginid]):
+			paramname = autoloc[-1]
+			if paramname.startswith('ext_param_'):
+				paramnum = int(paramname[10:])
+				yield autoloc, autodata, paramnum
+
+
+
 
 
 

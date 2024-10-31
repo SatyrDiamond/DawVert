@@ -39,7 +39,7 @@ def encode_chunk(inbytes):
 
 def set_params(params_obj):
 	mute = 0.5 if params_obj.get('enabled', True).value else 1
-	vol = params_obj.get('vol', 1).value
+	vol = params_obj.get('vol', 1).value*0.824999988079071
 	pan = params_obj.get('pan', 0).value/2 + 0.5
 	return encode_chunk(struct.pack('>ffff', *(mute, vol, vol, pan)))
 
@@ -56,7 +56,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 
 		sb_maintrack.tracks.append(sb_grouptrack)
 		if group_obj.visual.name: sb_grouptrack.name = group_obj.visual.name
-		sb_grouptrack.metadata["SequencerTrackCollapsedState"] = 0
+		sb_grouptrack.metadata["SequencerTrackCollapsedState"] = 8
 		sb_grouptrack.metadata["SequencerTrackHeightState"] = 43
 		if group_obj.visual.color: 
 			sb_grouptrack.metadata["TrackColor"] = '#'+group_obj.visual.color.get_hex()
@@ -111,7 +111,7 @@ def make_autocontains_master(convproj_obj, sb_track, params_obj, startauto):
 	from objects.file_proj import proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
-	vol = params_obj.get('vol', 1).value
+	vol = params_obj.get('vol', 1).value*0.824999988079071
 	pan = params_obj.get('pan', 0).value/0.5 + 0.5
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -134,7 +134,7 @@ def make_autocontains(convproj_obj, sb_track, params_obj, n, startauto):
 	from objects.file_proj import proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
-	vol = params_obj.get('vol', 1).value
+	vol = params_obj.get('vol', 1).value*0.824999988079071
 	pan = params_obj.get('pan', 0).value/0.5 + 0.5
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -340,6 +340,7 @@ class output_soundbridge(plugins.base):
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['audio_filetypes'] = ['wav', 'mp3']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2

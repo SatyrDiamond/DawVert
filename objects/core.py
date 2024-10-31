@@ -157,7 +157,8 @@ pluginsets_input = {
 }
 
 pluginsets_output = {
-'main': ['', 'Main']
+'main': ['', 'Main'],
+'wip': ['wip', 'WIP']
 }
 
 class core:

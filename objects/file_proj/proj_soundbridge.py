@@ -88,8 +88,20 @@ class soundbridge_pool:
 		self.videoSources = []
 		self.trackNameExtensions = []
 		self.blockNameExtensions = []
-		self.blockSourceNameExtension = 100
+		self.blockSourceNameExtension = 0
 		if xml_proj is not None: self.read(xml_proj)
+
+	def defualts(self):
+		for x in range(5):
+			tne = soundbridge_trackNameExtension(None)
+			tne.trackType = x
+			tne.value = 0
+			self.trackNameExtensions.append(tne)
+		for x in range(5):
+			tne = soundbridge_blockNameExtension(None)
+			tne.trackType = x
+			tne.value = 0
+			self.blockNameExtensions.append(tne)
 
 	def read(self, xml_proj):
 		for xmlpart in xml_proj:
@@ -187,40 +199,6 @@ class soundbridge_automationContainer:
 
 # --------------------------------------------------------- PLUGINS ---------------------------------------------------------
 
-class soundbridge_midiInstrument:
-	def __init__(self, xml_proj):
-		self.uid = ""
-		self.vendor = ""
-		self.name = ""
-		self.sideChainBufferType = 1
-		self.state = None
-		self.automationContainer = soundbridge_automationContainer(None)
-		self.metadata = {}
-		if xml_proj is not None: self.read(xml_proj)
-
-	def read(self, xml_proj):
-		trackattrib = xml_proj.attrib
-		if 'uid' in trackattrib: self.uid = xml_proj.get("uid")
-		if 'vendor' in trackattrib: self.vendor = xml_proj.get("vendor")
-		if 'name' in trackattrib: self.name = xml_proj.get("name")
-		if 'sideChainBufferType' in trackattrib: self.sideChainBufferType = int(xml_proj.get("sideChainBufferType"))
-		for xmlpart in xml_proj:
-			if xmlpart.tag == 'state': self.state = xmlpart.text
-			if xmlpart.tag == 'metaData': self.metadata = metadata_to_dict(xmlpart)
-			if xmlpart.tag == 'automationContainer': self.automationContainer = soundbridge_automationContainer(None)
-
-	def write(self, xml_proj):
-		tempxml = ET.SubElement(xml_proj, 'midiInstrument')
-		tempxml.set('uid', str(self.uid))
-		tempxml.set('vendor', str(self.vendor))
-		tempxml.set('name', str(self.name))
-		tempxml.set('sideChainBufferType', str(self.sideChainBufferType))
-		if self.state: 
-			statexml = ET.SubElement(tempxml, 'state')
-			statexml.text = self.state
-		self.automationContainer.write(tempxml, 'automationContainer')
-		dict_to_metadata(self.metadata, tempxml)
-
 class soundbridge_audioUnit:
 	def __init__(self, xml_proj):
 		self.uid = ""
@@ -241,10 +219,10 @@ class soundbridge_audioUnit:
 		for xmlpart in xml_proj:
 			if xmlpart.tag == 'state': self.state = xmlpart.text
 			if xmlpart.tag == 'metaData': self.metadata = metadata_to_dict(xmlpart)
-			if xmlpart.tag == 'automationContainer': self.automationContainer = soundbridge_automationContainer(None)
+			if xmlpart.tag == 'automationContainer': self.automationContainer = soundbridge_automationContainer(xmlpart)
 
-	def write(self, xml_proj):
-		tempxml = ET.SubElement(xml_proj, 'audioUnit')
+	def write(self, xml_proj, tagname):
+		tempxml = ET.SubElement(xml_proj, tagname)
 		tempxml.set('uid', str(self.uid))
 		tempxml.set('vendor', str(self.vendor))
 		tempxml.set('name', str(self.name))
@@ -272,7 +250,7 @@ class soundbridge_marker:
 
 	def read(self, xml_proj):
 		trackattrib = xml_proj.attrib
-		if 'position' in trackattrib: self.position = xml_proj.get('position')
+		if 'position' in trackattrib: self.position = int(xml_proj.get('position'))
 		if 'tag' in trackattrib: self.tag = xml_proj.get('tag')
 		if 'label' in trackattrib: self.label = xml_proj.get('label')
 		if 'comment' in trackattrib: self.comment = xml_proj.get('comment')
@@ -385,6 +363,7 @@ class soundbridge_event:
 		self.pitch = None
 		self.fileName = None
 		self.stretchMarks = []
+		self.automationBlocks = []
 		if xml_proj is not None: self.read(xml_proj)
 
 	def read(self, xml_proj):
@@ -410,6 +389,9 @@ class soundbridge_event:
 			if xmlpart.tag == 'stretchMarks': 
 				for xmlinpart in xmlpart:
 					if xmlinpart.tag == 'stretchMark': self.stretchMarks.append(soundbridge_stretchMark(xmlinpart))
+			elif xmlpart.tag == 'automationBlocks': 
+				for xmlinpart in xmlpart:
+					if xmlinpart.tag == 'block': self.automationBlocks.append(soundbridge_block(xmlinpart))
 
 	def write(self, xml_proj):
 		tempxml = ET.SubElement(xml_proj, "event")
@@ -433,6 +415,7 @@ class soundbridge_event:
 		xml_stretchMarks = ET.SubElement(tempxml, 'stretchMarks')
 		for x in self.stretchMarks: x.write(xml_stretchMarks)
 		xml_automationBlocks = ET.SubElement(tempxml, 'automationBlocks')
+		for x in self.automationBlocks: x.write(xml_automationBlocks)
 
 class soundbridge_block:
 	def __init__(self, xml_proj):
@@ -552,7 +535,7 @@ class soundbridge_blockContainer:
 
 class soundbridge_videotrack:
 	def __init__(self, xml_proj):
-		self.name = "Master"
+		self.name = "Video"
 		self.blocks = None
 		self.metadata = {}
 		if xml_proj is not None: self.read(xml_proj)
@@ -567,6 +550,9 @@ class soundbridge_videotrack:
 				self.blocks = []
 				for xmlinpart in xmlpart:
 					if xmlinpart.tag == 'block': self.blocks.append(soundbridge_block(xmlinpart))
+
+	def defualts(self):
+		self.metadata['Color'] = "#ff414a"
 
 	def write(self, xml_proj):
 		tempxml = ET.SubElement(xml_proj, 'videoTrack')
@@ -606,7 +592,22 @@ class soundbridge_track:
 		self.pitchTempoProcessorMode = None
 		self.blocks = None
 		self.midiUnits = None
+		self.sourceBufferType = None
+		self.tag = 'track'
 		if xml_proj is not None: self.read(xml_proj)
+
+	def defualts_master(self):
+		self.name = 'Master'
+		self.type = 0
+		self.armed = 0
+		self.monitored = 0
+		self.automationArmed = 0
+		self.audioUnitsBypass = 0
+		self.latencyOffset = 0
+		self.inverse = 0
+		self.timeBaseMode = 0
+		self.state = 'PwAAAD9TMzM.UzMzPwAAAA=='
+		self.metadata['TrackColor'] = "#ffad41"
 
 	def read(self, xml_proj):
 		self.tag = xml_proj.tag
@@ -621,6 +622,7 @@ class soundbridge_track:
 		if 'inverse' in trackattrib: self.inverse = int(xml_proj.get("inverse"))
 		if 'timeBaseMode' in trackattrib: self.timeBaseMode = int(xml_proj.get("timeBaseMode"))
 		if 'channelCount' in trackattrib: self.channelCount = int(xml_proj.get("channelCount"))
+		if 'sourceBufferType' in trackattrib: self.sourceBufferType = int(xml_proj.get("sourceBufferType"))
 		if 'pitchTempoProcessorMode' in trackattrib: self.pitchTempoProcessorMode = int(xml_proj.get("pitchTempoProcessorMode"))
 		for xmlpart in xml_proj:
 			if xmlpart.tag == 'track': self.tracks.append(soundbridge_track(xmlpart))
@@ -649,7 +651,7 @@ class soundbridge_track:
 				self.midiUnits = []
 			elif xmlpart.tag == 'midiInput': self.midiInput = soundbridge_deviceRoute(xmlpart)
 			elif xmlpart.tag == 'midiOutput': self.midiOutput = soundbridge_deviceRoute(xmlpart)
-			elif xmlpart.tag == 'midiInstrument': self.midiInstrument = soundbridge_midiInstrument(xmlpart)
+			elif xmlpart.tag == 'midiInstrument': self.midiInstrument = soundbridge_audioUnit(xmlpart)
 
 	def write(self, xml_proj):
 		tempxml = ET.SubElement(xml_proj, self.tag)
@@ -669,7 +671,7 @@ class soundbridge_track:
 			statexml.text = self.state
 		xmlau = ET.SubElement(tempxml, 'audioUnits')
 		for x in self.audioUnits:
-			x.write(xmlau)
+			x.write(xmlau, 'audioUnit')
 		self.automationContainer.write(tempxml, 'automationContainer')
 		self.sendsAutomationContainer.write(tempxml, 'sendsAutomationContainer')
 		dict_to_metadata(self.metadata, tempxml)
@@ -690,13 +692,15 @@ class soundbridge_track:
 		if self.midiUnits != None:
 			blockContainersxml = ET.SubElement(tempxml, 'midiUnits')
 
-		if self.midiInstrument: self.midiInstrument.write(tempxml)
+		if self.midiInstrument: self.midiInstrument.write(tempxml, 'midiInstrument')
 
 		if self.audioInput: self.audioInput.write(tempxml, 'audioInput')
 
 		if self.midiInput: self.midiInput.write(tempxml, 'midiInput')
 		if self.midiOutput: self.midiOutput.write(tempxml, 'midiOutput')
 
+		if self.sourceBufferType is not None: tempxml.set('sourceBufferType', str(self.sourceBufferType))
+		
 		for x in self.tracks: x.write(tempxml)
 
 # --------------------------------------------------------- SONG ---------------------------------------------------------
@@ -744,7 +748,7 @@ class soundbridge_tempo:
 		tempxml.set('tempo', str(self.tempo))
 		tempxml.set('version', str(self.version))
 		for x in self.sections: x.write(tempxml)
-		dict_to_metadata(self.metadata, tempxml)
+		if self.metadata: dict_to_metadata(self.metadata, tempxml)
 
 class soundbridge_timeSignature_section:
 	def __init__(self, xml_proj):
@@ -789,7 +793,7 @@ class soundbridge_timeSignature:
 		tempxml.set('timeSigNumerator', str(self.timeSigNumerator))
 		tempxml.set('timeSigDenominator', str(self.timeSigDenominator))
 		for x in self.sections: x.write(tempxml)
-		dict_to_metadata(self.metadata, tempxml)
+		if self.metadata: dict_to_metadata(self.metadata, tempxml)
 
 class soundbridge_timeline:
 	def __init__(self):
@@ -822,13 +826,31 @@ class soundbridge_song:
 		self.timesigNumerator = 4
 		self.timesigDenominator = 4
 
-		self.pool = None
-		self.masterTrack = None
-		self.videoTrack = None
+		self.pool = soundbridge_pool(None)
+		self.masterTrack = soundbridge_track(None)
+		self.masterTrack.tag = 'masterTrack'
+		self.videoTrack = soundbridge_videotrack(None)
+		self.videoTrack.tag = 'videoTrack'
+		self.videoTrack.blocks = []
 		self.timeline = soundbridge_timeline()
 		self.metadata = {}
+		self.metadata["SequencerHorizontalZoom"] = "85.435113"
+		self.metadata["SequencerMarkerRadius"] = "7"
+		self.metadata["SequencerTrackControlsWidth"] = "220"
+		self.metadata["SequencerVerticalZoom"] = "1.948717"
+		self.metadata["SequencerWaveformScale"] = "1.000000"
+		self.metadata["TrackColor"] = "#91b0ff"
+		self.metadata["TransportCount"] = "false"
+		self.metadata["TransportFollow"] = "false"
+		self.metadata["TransportLoop"] = "false"
+		self.metadata["TransportMetronome"] = "false"
+		self.metadata["TransportPlayPositionL"] = "0"
+		self.metadata["TransportPlayPositionR"] = "88200"
+		self.metadata["TransportSnap"] = "true"
+		self.metadata["TransportSnapIndex"] = "2"
 
 	def load_from_file(self, input_file):
+		self.metadata = {}
 		parser = ET.XMLParser(recover=True, encoding='utf-8')
 		xml_data = ET.parse(input_file, parser)
 		xml_proj = xml_data.getroot()
@@ -873,7 +895,7 @@ class soundbridge_song:
 		self.timeline.write(xml_proj)
 
 		outfile = ET.ElementTree(xml_proj)
-		ET.indent(outfile)
+		ET.indent(outfile, space="    ", level=0)
 		outfile.write(output_file, encoding='utf-8', xml_declaration = True)
 
 #test_obj = soundbridge_song()

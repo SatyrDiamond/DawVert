@@ -153,7 +153,8 @@ pluginsets_input = {
 'vgm': ['vgm', 'VGM'],
 'exper': ['exper', 'Experiments'],
 'gameres': ['gameres', 'Game Mod'],
-'ai': ['ai', 'AI']
+'ai': ['ai', 'AI'],
+'wip': ['wip', 'WIP']
 }
 
 pluginsets_output = {
@@ -237,12 +238,13 @@ class core:
 
 	def input_autoset_fileext(self, in_file):
 		fileext = pathlib.Path(in_file).suffix
+		shortname = None
 		for shortname, plug_obj, prop_obj in self.currentplug_input.iter():
 			if prop_obj.file_ext_detect:
 				if fileext.lower() in ['.'+x.lower() for x in prop_obj.file_ext]:
 					self.input_set(shortname)
 					return shortname
-		self.input_unset(shortname)
+		if shortname: self.input_unset(shortname)
 
 	def output_load_plugins(self, pluginset):
 		if pluginset in pluginsets_output: 

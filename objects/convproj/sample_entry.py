@@ -121,3 +121,9 @@ class cvpj_sample_entry:
 		slice_obj = cvpj_sample_slice()
 		self.slicer_slices.append(slice_obj)
 		return slice_obj
+
+	def stretch_get_pitch_nonsync(self):
+		if not self.stretch.is_warped:
+			if not self.stretch.uses_tempo:
+				return pow(2, -self.pitch/12)
+		return 1

@@ -144,6 +144,14 @@ class cvpj_placements_audio:
 
 		self.data = new_data_audio
 
+	def all_stretch_set_pitch_nonsync(self):
+		for x in self.data: x.all_stretch_set_pitch_nonsync()
+
+	def changestretch(self, convproj_obj, target, tempo):
+		for x in self.data:
+			x.changestretch(convproj_obj, target, tempo)
+
+
 class cvpj_placement_audio:
 	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto']
 
@@ -157,7 +165,8 @@ class cvpj_placement_audio:
 		self.auto = {}
 
 	def changestretch(self, convproj_obj, target, tempo):
-		pos_offset, cut_offset, finalspeed = self.sample.stretch.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq)
+		stretch_obj = self.sample.stretch
+		pos_offset, cut_offset, finalspeed = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
 
 		if self.time.cut_type == 'cut':
 			self.time.cut_start += cut_offset
@@ -172,6 +181,10 @@ class cvpj_placement_audio:
 	def add_autopoints(self, a_type, ppq_time, ppq_float):
 		self.auto[a_type] = autopoints.cvpj_autopoints(ppq_time, ppq_float, 'float')
 		return self.auto[a_type]
+
+	def all_stretch_set_pitch_nonsync(self):
+		pitch = self.sample.stretch_get_pitch_nonsync()
+		self.time.loop_scale(pitch)
 
 class cvpj_placements_nested_audio:
 	__slots__ = ['data']

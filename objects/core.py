@@ -154,7 +154,8 @@ pluginsets_input = {
 'exper': ['exper', 'Experiments'],
 'gameres': ['gameres', 'Game Mod'],
 'ai': ['ai', 'AI'],
-'wip': ['wip', 'WIP']
+'wip': ['wip', 'WIP'],
+'debug': ['debug', 'Debug']
 }
 
 pluginsets_output = {

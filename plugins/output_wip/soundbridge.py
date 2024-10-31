@@ -461,7 +461,15 @@ class output_soundbridge(plugins.base):
 					if notespl_obj.visual.color: 
 						block.metadata["BlockColor"] = '#'+notespl_obj.visual.color.get_hex()
 
-					block.blockData = encode_chunk(b'\x00\x00\x00\x14'+notearray.tobytes()+(b'\x00'*16))
+					datasize = sb_notes_dtype.itemsize*numnotes
+
+					outbytes = b'\x00\x00\x00\x14'+notearray.tobytes()
+					padsize = 4*numnotes
+					outbytes += b'\x00'*padsize
+					#print(len(outbytes)-4)
+					#print(notearray)
+
+					block.blockData = encode_chunk(outbytes)
 					block.automationBlocks = []
 
 					sb_track.blocks.append(block)

@@ -539,6 +539,7 @@ class timestate():
 		self.loop_on = False
 
 AUDCLIPVERBOSE = False
+AUDWARPVERBOSE = False
 
 def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 	for clipid, audiopl_obj in enumerate(pls_audio):
@@ -642,14 +643,13 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		else:
 			als_audioclip.IsWarped = True
 
-
-			#print('o')
+			if AUDWARPVERBOSE: print('o')
 			for num, warp_point_obj in enumerate(stretch_obj.iter_warp_points()):
 				warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
 				warpmarker_obj.BeatTime = warp_point_obj.beat
 				warpmarker_obj.SecTime = warp_point_obj.second
 
-				#print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
+				if AUDWARPVERBOSE: print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
 
 				als_audioclip.WarpMarkers[num+1] = warpmarker_obj
 
@@ -660,7 +660,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			warpmarker_obj.SecTime = lastpoint.second+((0.03125/2)/lastpoint.speed)
 			als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
 
-			#print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
+			if AUDWARPVERBOSE: print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
 
 
 

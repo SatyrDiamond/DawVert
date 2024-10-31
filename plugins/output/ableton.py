@@ -538,7 +538,7 @@ class timestate():
 		self.loop_end = audiopl_obj.time.duration
 		self.loop_on = False
 
-AUDCLIPVERBOSE = True
+AUDCLIPVERBOSE = False
 AUDWARPVERBOSE = False
 
 def do_audioclips(convproj_obj, pls_audio, track_color, als_track):

@@ -91,6 +91,48 @@ class cvpj_stretch:
 		else:
 			return 1
 
+	def fix_single_warp(self, convproj_obj, sp_obj):
+		if len(self.warppoints) == 1:
+			firstpoint = self.warppoints[0]
+			ref_found, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+			if ref_found:
+				warp_point_obj = self.add_warp_point()
+				warp_point_obj.beat = sampleref_obj.dur_sec*firstpoint.speed*2
+				warp_point_obj.second = sampleref_obj.dur_sec
+				warp_point_obj.speed = firstpoint.speed
+				
+	def fix_warp_offset(self):
+		offset = 0
+		if self.warppoints:
+			if len(self.warppoints)>1:
+				firstpoint = self.warppoints[0]
+				dursec = self.get_dur_sec()
+				durbeat = self.get_dur_beat()
+				
+				if firstpoint.beat==0 and firstpoint.second>0:
+					firstpoint.beat = (firstpoint.second/dursec)*durbeat
+					warp_point_obj = cvpj_warp_point()
+					warp_point_obj.speed = firstpoint.speed
+					self.warppoints.insert(0, warp_point_obj)
+					offset = firstpoint.beat
+		return offset
+
+
+	def get_dur_beat(self):
+		if self.warppoints:
+			lastpoint = self.warppoints[-1]
+			firstpoint = self.warppoints[0]
+			return lastpoint.second*firstpoint.speed*2
+		else:
+			return 0
+
+	def get_dur_sec(self):
+		if self.warppoints:
+			return self.warppoints[-1].second
+		else:
+			return 0
+
+
 	def __bool__(self):
 		return self.is_warped or (self.calc_tempo_speed != 1) or self.uses_tempo
 

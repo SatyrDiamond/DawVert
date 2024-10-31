@@ -349,7 +349,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 	return middlenote, issampler
 
-AUDCLIPVERBOSE = True
+AUDCLIPVERBOSE = False
 
 AUDWARPVERBOSE = False
 

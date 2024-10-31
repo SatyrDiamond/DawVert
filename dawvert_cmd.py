@@ -26,6 +26,7 @@ parser.add_argument("-it", default=None)
 parser.add_argument("-ips", default='main')
 parser.add_argument("-o", default=None)
 parser.add_argument("-ot", default=None)
+parser.add_argument("-ops", default='main')
 parser.add_argument("--soundfont", default=None)
 parser.add_argument("--songnum", default=1)
 parser.add_argument("--extrafile", default=None)
@@ -53,6 +54,7 @@ elif not os.path.exists(in_file):
 	exit()
 
 pluginset = 'main'
+opluginset = 'main'
 dawvert_core = core.core()
 
 if args.pq == True: 
@@ -69,6 +71,7 @@ if args.songnum != None: core.config_data.songnum = int(args.songnum)
 if args.extrafile != None: core.config_data.path_extrafile = args.extrafile
 if args.mi2m__output_unused_nle == True: core.config_data.flags_convproj.append('mi2m-output-unused-nle')
 if args.ips: pluginset = args.ips
+if args.ips: opluginset = args.ops
 if args.splitter_mode != None: core.config_data.splitter_mode = int(args.splitter_mode)
 if args.splitter_detect_start != None: core.config_data.splitter_detect_start = bool(int(args.splitter_detect_start))
 
@@ -78,7 +81,7 @@ plug_conv.load_plugins()
 
 # -------------------------------------------------------------- Output Plugin List -------------------------------------------------------------
 
-dawvert_core.output_load_plugins('main')
+dawvert_core.output_load_plugins(opluginset)
 
 # -------------------------------------------------------------- Input Format--------------------------------------------------------------
 

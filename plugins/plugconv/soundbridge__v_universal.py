@@ -72,7 +72,7 @@ class plugconv(plugins.base):
 			fil_pd = [plugin_obj.named_filter_get('peak_'+str(peak_num+1)) for peak_num in range(4)]
 			fil_hs = plugin_obj.named_filter_get('high_shelf')
 
-			plugin_obj.replace('universal', 'soundbridge', "eq")
+			plugin_obj.replace('native', 'soundbridge', "eq")
 			eq_get(fil_ls, plugin_obj.params, 'ls_')
 			eq_get(fil_pd[0], plugin_obj.params, 'p1_')
 			eq_get(fil_pd[1], plugin_obj.params, 'p2_')
@@ -86,7 +86,7 @@ class plugconv(plugins.base):
 			filter_type = 0
 			if plugin_obj.filter.type.type in filter_list:
 				filter_type = filter_list.index(plugin_obj.filter.type.type)
-			plugin_obj.replace('universal', 'soundbridge', "filter_unit")
+			plugin_obj.replace('native', 'soundbridge', "filter_unit")
 			plugin_obj.params.add('type', filter_type/3, 'float')
 			plugin_obj.params.add('freq', (math.log(max(26, plugin_obj.filter.freq)/26) / math.log((1000*(20/26)))), 'float')
 			plugin_obj.params.add('q', xtramath.between_to_one(0.20, 3, plugin_obj.filter.q), 'float')
@@ -115,7 +115,7 @@ class plugconv(plugins.base):
 			lookahead = bisect.bisect_left(limiter_lookahead, lookahead)
 			lookahead = min(lookahead, 3)/3
 
-			plugin_obj.replace('universal', 'soundbridge', "compressor_expander")
+			plugin_obj.replace('native', 'soundbridge', "compressor_expander")
 			plugin_obj.params.add('gain', gain, 'float')
 			plugin_obj.params.add('threshold', threshold, 'float')
 			plugin_obj.params.add('attack', attack, 'float')
@@ -134,7 +134,7 @@ class plugconv(plugins.base):
 
 			bits -= 1
 
-			plugin_obj.replace('universal', 'soundbridge', "bit_crusher")
+			plugin_obj.replace('native', 'soundbridge', "bit_crusher")
 			plugin_obj.params.add('bits', xtramath.clamp(bits/30, 0, 1), 'float')
 			plugin_obj.params.add('downsample', xtramath.clamp(22050/(freq*40), 0, 1), 'float')
 			return 0

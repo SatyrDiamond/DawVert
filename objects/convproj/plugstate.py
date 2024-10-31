@@ -135,6 +135,17 @@ class cvpj_plugin_state:
 		except:
 			return {}
 
+	def from_bytes_debug(self, in_bytes, df_name, structname): 
+		fldf = globalstore.datadef.get(df_name)
+
+		try:
+			if fldf:
+				dfdict = fldf.parse(structname, in_bytes)
+				for x, d in dfdict.items():
+					print(x, d)
+		except:
+			pass
+
 	def to_bytes(self, ds_name, df_name, cat_name, obj_name, structname): 
 		fldf = globalstore.datadef.get(df_name)
 		fldso = globalstore.dataset.get_obj(ds_name, 'plugin', obj_name)

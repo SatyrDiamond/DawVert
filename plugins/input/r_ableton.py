@@ -194,7 +194,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				plugin_obj.datavals_global.add('numparams', vst_NumberOfParameters)
 
 				vst_version = int(VstPluginInfo['Version'])
-				plugin_obj.datavals_global.add('version_bytes', list(struct.unpack('BBBB', struct.pack('i', vst_version))) )
+				plugin_obj.datavals_global.add('version_bytes', vst_version)
 
 				Preset = VstPluginInfo['Preset']
 				Preset = VstPluginInfo['Preset'][list(Preset)[0]]
@@ -349,7 +349,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 	return middlenote, issampler
 
-AUDCLIPVERBOSE = False
+AUDCLIPVERBOSE = True
 
 AUDWARPVERBOSE = False
 
@@ -363,7 +363,7 @@ class input_ableton(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['als']
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
@@ -419,11 +419,11 @@ class input_ableton(plugins.base):
 		returnid = 1
 
 		if AUDCLIPVERBOSE:
-			for x in ['cut_type', 'IsWarped', "Duration",
+			for x in ['cut_type', 'cut_type', 'IsWarped', "Duration",
 				"StartRelative", "LoopStart",
 				"LoopEnd", "LoopOn", 
 				"HidLoopStart", "HidLoopEnd"]:
-				print(  str(x)[0:9].ljust(10), end=' ' )
+				print(  str(x)[0:11].ljust(12), end=' ' )
 			print()
 
 							
@@ -499,7 +499,7 @@ class input_ableton(plugins.base):
 										autopoint_obj.value = mobj.Value
 
 						if clipobj.Loop.LoopOn:
-							placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+							placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 						else:
 							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
 
@@ -569,17 +569,17 @@ class input_ableton(plugins.base):
 							if clipobj.Loop.LoopOn == 0:
 								placement_obj.time.set_offset(clipobj.Loop.LoopStart*4)
 							else:
-								placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+								placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 
 						if AUDCLIPVERBOSE:
 							for x in [
-								placement_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'], clipobj.IsWarped,
+								placement_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'], placement_obj.time.cut_type, clipobj.IsWarped,
 								clipobj.CurrentEnd-clipobj.CurrentStart,
 								clipobj.Loop.StartRelative, clipobj.Loop.LoopStart,
 								clipobj.Loop.LoopEnd, clipobj.Loop.LoopOn,
 								clipobj.Loop.HiddenLoopStart, clipobj.Loop.HiddenLoopEnd
 								]:
-								print(  str(x)[0:9].ljust(10), end=' ' )
+								print(  str(x)[0:11].ljust(12), end=' ' )
 							print()
 
 
@@ -661,7 +661,7 @@ class input_ableton(plugins.base):
 										autopoint_obj.value = mobj.Value
 
 						if clipobj.Loop.LoopOn == 1:
-							placement_obj.time.set_loop_data(clipobj.Loop.StartRelative*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+							placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 						else:
 							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
 

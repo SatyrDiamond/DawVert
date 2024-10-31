@@ -84,7 +84,7 @@ def make_time(clip_obj, cvpjtime_obj):
 	clip_obj.time = cvpjtime_obj.position
 	clip_obj.duration = cvpjtime_obj.duration
 	clip_obj.playStart = cvpjtime_obj.cut_start
-	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv']:
+	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off']:
 		clip_obj.loopStart = cvpjtime_obj.cut_loopstart
 		clip_obj.loopEnd = cvpjtime_obj.cut_loopend
 
@@ -484,7 +484,7 @@ class output_dawproject(plugins.base):
 	def gettype(self): return 'r'
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'dawproject'
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv','loop_adv_off']
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']

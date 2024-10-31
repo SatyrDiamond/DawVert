@@ -538,7 +538,7 @@ class timestate():
 		self.loop_end = audiopl_obj.time.duration
 		self.loop_on = False
 
-AUDCLIPVERBOSE = False
+AUDCLIPVERBOSE = True
 AUDWARPVERBOSE = False
 
 def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
@@ -585,7 +585,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			ats.loop_end = ats.duration+(audiopl_obj.time.cut_start*1.5)
 			als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
-		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']:
 			ats.loop_on = True
 			ats.startrel, ats.loop_start, ats.loop_end = audiopl_obj.time.get_loop_data()
 			als_audioclip.Loop.HiddenLoopStart = 0
@@ -667,7 +667,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		als_audioclip.Time = ats.position
 		als_audioclip.CurrentStart = ats.position
 		als_audioclip.CurrentEnd = ats.position+ats.duration
-		als_audioclip.Loop.StartRelative = ats.startrel
+		als_audioclip.Loop.StartRelative = ats.startrel-ats.loop_start
 		als_audioclip.Loop.LoopStart = ats.loop_start
 		als_audioclip.Loop.LoopEnd = ats.loop_end
 		als_audioclip.Loop.LoopOn = ats.loop_on
@@ -675,20 +675,20 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		if audiopl_obj.time.cut_type == 'cut':
 			als_audioclip.Loop.LoopEnd -= ats.loop_start/2
 			pass
-		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']:
 			pass
 		else:
 			pass
 
 		if AUDCLIPVERBOSE:
 			for x in [
-				audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'], int(als_audioclip.IsWarped),
+				audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'], audiopl_obj.time.cut_type, int(als_audioclip.IsWarped),
 				als_audioclip.CurrentEnd-als_audioclip.CurrentStart,
 				als_audioclip.Loop.StartRelative, als_audioclip.Loop.LoopStart,
 				als_audioclip.Loop.LoopEnd, int(als_audioclip.Loop.LoopOn),
 				als_audioclip.Loop.HiddenLoopStart, als_audioclip.Loop.HiddenLoopEnd
 				]:
-				print(  str(x)[0:9].ljust(10), end=' ' )
+				print(  str(x)[0:11].ljust(12), end=' ' )
 			print()
 
 def add_track(convproj_obj, project_obj, trackid, track_obj):
@@ -757,7 +757,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					als_midiclip.Loop.LoopOn = False
 					als_midiclip.Loop.LoopStart = notespl_obj.time.cut_start
 					als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+notespl_obj.time.duration
-				elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
+				elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']:
 					als_midiclip.Loop.LoopOn = True
 					als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = notespl_obj.time.get_loop_data()
 				else:
@@ -1117,7 +1117,7 @@ class output_ableton(plugins.base):
 		in_dict['plugin_arch'] = [64]
 		in_dict['file_ext'] = 'als'
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_stretch'] = ['warp', 'rate']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
@@ -1135,11 +1135,11 @@ class output_ableton(plugins.base):
 		global bpm
 
 		if AUDCLIPVERBOSE:
-			for x in ['cut_type', 'IsWarped', "Duration",
+			for x in ['cut_type', 'cut_type', 'IsWarped', "Duration",
 				"StartRelative", "LoopStart",
 				"LoopEnd", "LoopOn", 
 				"HidLoopStart", "HidLoopEnd"]:
-				print(  str(x)[0:9].ljust(10), end=' ' )
+				print(  str(x)[0:11].ljust(12), end=' ' )
 			print()
 
 		convproj_obj.change_timings(1, True)

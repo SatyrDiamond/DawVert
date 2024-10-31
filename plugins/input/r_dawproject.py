@@ -315,7 +315,7 @@ class input_dawproject(plugins.base):
 			return False
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['dawproject']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']

@@ -60,8 +60,8 @@ part|float_b|attack
 part|float_b|release
 part|float_b|gain
 part|float_b|lookahead
-part|float_b|__unk_7
-part|float_b|__unk_8
+part|float_b|link_channels
+part|float_b|mode
 
 area_struct|limiter
 part|float_b|threshold

@@ -329,7 +329,7 @@ class output_soundbridge(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
 	def get_shortname(self): return 'soundbridge'
-	def get_name(self): return 'SoundBridge'
+	def get_name(self): return 'SoundBridge (WIP)'
 	def gettype(self): return 'r'
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'soundbridge'

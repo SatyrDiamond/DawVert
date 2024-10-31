@@ -40,6 +40,15 @@ class cvpj_placement_fade:
 		if self.time_type == 'beats': return self.dur/(tempo/120)/2
 		if self.time_type == 'seconds': return self.dur
 
+#					|_______|_______|_______|_______|_______|_______|_______|_______|
+#	loop			Start/LoopStart                                                 LoopEnd
+#	loop_off		LoopStart                       Start                           LoopEnd
+#	loop_adv		Start                           LoopStart                       LoopEnd
+#	loop_adv_off	        Start                   LoopStart                       LoopEnd
+
+
+
+
 class cvpj_placement_timing:
 	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend']
 	def __init__(self):
@@ -84,7 +93,8 @@ class cvpj_placement_timing:
 		self.cut_loopend = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_loopend)
 
 	def set_loop_data(self, start, loopstart, loopend):
-		if loopstart: self.cut_type = 'loop_adv'
+		if loopstart and start: self.cut_type = 'loop_adv_off'
+		elif loopstart: self.cut_type = 'loop_adv'
 		elif start: self.cut_type = 'loop_off'
 		elif loopend: self.cut_type = 'loop'
 		self.cut_start = start

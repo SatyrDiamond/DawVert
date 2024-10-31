@@ -77,9 +77,10 @@ class cvpj_placements_audio:
 	def remove_loops(self, out__placement_loop):
 		new_data = []
 		for audiopl_obj in self.data: 
-			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'] and audiopl_obj.time.cut_type not in out__placement_loop:
+			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'] and audiopl_obj.time.cut_type not in out__placement_loop:
 				loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
-				for cutpoint in xtramath.cutloop(audiopl_obj.time.position, audiopl_obj.time.duration, loop_start, loop_loopstart, loop_loopend):
+				duration = audiopl_obj.time.duration
+				for cutpoint in xtramath.cutloop(audiopl_obj.time.position, duration, loop_start, loop_loopstart, loop_loopend):
 					cutplpl_obj = copy.deepcopy(audiopl_obj)
 					cutplpl_obj.time.position = cutpoint[0]
 					cutplpl_obj.time.duration = cutpoint[1]

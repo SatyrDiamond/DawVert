@@ -310,7 +310,7 @@ class output_soundbridge(plugins.base):
 		from functions_plugin_ext import plugin_vst2
 		global sb_returns
 
-		convproj_obj.change_timings(88200/4, False)
+		convproj_obj.change_timings(22050, False)
 
 		project_obj = proj_soundbridge.soundbridge_song()
 		project_obj.masterTrack.defualts_master()
@@ -534,9 +534,18 @@ class output_soundbridge(plugins.base):
 
 							event.stretchMarks = []
 
-							#audiopl_obj.sample.stretch.debugtxt_warp()
+							stretch_obj = audiopl_obj.sample.stretch
 
-							for warp_point_obj in audiopl_obj.sample.stretch.iter_warp_points():
+							stretch_obj.fix_single_warp(convproj_obj, sp_obj)
+							warp_offset = stretch_obj.fix_warp_offset()
+
+							event.positionStart += warp_offset*22050
+							event.loopOffset += warp_offset*22050
+							event.positionEnd += warp_offset*22050
+
+							warp_points = [x for x in stretch_obj.iter_warp_points()]
+
+							for warp_point_obj in warp_points:
 								stretchMark = proj_soundbridge.soundbridge_stretchMark(None)
 								stretchMark.newPosition = warp_point_obj.beat
 								stretchMark.initPosition = warp_point_obj.second
@@ -547,6 +556,8 @@ class output_soundbridge(plugins.base):
 								stretchMark.newPosition = int(stretchMark.newPosition)
 								stretchMark.initPosition = int(stretchMark.initPosition)
 								event.stretchMarks.append(stretchMark)
+
+							#print(warp_points)
 
 							block.events.append(event)
 					blockContainer.blocks.append(block)

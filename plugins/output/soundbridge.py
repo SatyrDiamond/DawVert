@@ -88,8 +88,6 @@ def make_auto(convproj_obj, autoloc, blocks, add, mul, trackmeta):
 				block.muted = 0
 				block.version = 1
 
-
-
 				if autopl_obj.time.cut_type == 'cut':
 					block.positionStart, block.loopOffset, block.positionEnd = autopl_obj.time.get_loop_data()
 					block.loopOffset = max(block.loopOffset, 0)
@@ -340,8 +338,9 @@ class output_soundbridge(plugins.base):
 		in_dict['plugin_included'] = []
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['placement_cut'] = True
-		#in_dict['plugin_included'] = ['native:soundbridge']
+		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['fxtype'] = 'groupreturn'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2

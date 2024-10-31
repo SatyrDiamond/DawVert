@@ -100,14 +100,16 @@ def import_presetdata(convproj_obj, plugin_obj, byr_stream, platform):
 	vst_prog = fxp_obj.program
 	if vst_prog.type in [1,4]:
 		fpch = vst_prog.data
-		plugin_obj.datavals_global.add('fourid', fpch.fourid)
+		if fpch.fourid: plugin_obj.datavals_global.add('fourid', fpch.fourid)
+		else: fpch.fourid = plugin_obj.datavals_global.get('fourid', 0)
 		pluginfo_obj = replace_data(convproj_obj, plugin_obj, 'id', platform, fpch.fourid, 'chunk', fpch.chunk, None)
 		plugin_obj.datavals_global.add('version_bytes', fpch.version)
 		if vst_prog.type == 4: plugin_obj.datavals_global.add('is_bank', True)
 		return pluginfo_obj
 	if vst_prog.type == 2:
 		fxck = vst_prog.data
-		plugin_obj.datavals_global.add('fourid', fxck.fourid)
+		if fxck.fourid: plugin_obj.datavals_global.add('fourid', fxck.fourid)
+		else: fxck.fourid = plugin_obj.datavals_global.get('fourid', 0)
 		pluginfo_obj = replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'param', None, fxck.num_params)
 		plugin_obj.datavals_global.add('version_bytes', fxck.version)
 		for c, p in enumerate(fxck.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')

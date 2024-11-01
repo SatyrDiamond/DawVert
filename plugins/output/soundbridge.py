@@ -341,19 +341,18 @@ class output_soundbridge(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
 	def get_shortname(self): return 'soundbridge'
-	def get_name(self): return 'SoundBridge (WIP)'
+	def get_name(self): return 'SoundBridge'
 	def gettype(self): return 'r'
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'soundbridge'
-		in_dict['auto_types'] = ['pl_points']
-		in_dict['placement_loop'] = ['loop', 'loop_off']
-		in_dict['plugin_included'] = []
-		in_dict['audio_stretch'] = ['warp']
-		in_dict['placement_cut'] = True
-		in_dict['plugin_included'] = ['native:soundbridge']
-		in_dict['plugin_ext'] = ['vst2']
-		in_dict['fxtype'] = 'groupreturn'
 		in_dict['audio_filetypes'] = ['wav']
+		in_dict['audio_stretch'] = ['warp']
+		in_dict['auto_types'] = ['pl_points']
+		in_dict['file_ext'] = 'soundbridge'
+		in_dict['fxtype'] = 'groupreturn'
+		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off']
+		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_included'] = ['native:soundbridge']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2

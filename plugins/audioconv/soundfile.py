@@ -25,7 +25,11 @@ class input_soundfile(plugins.base):
 		inputbuf = open(inpath, 'rb')
 		data, samplerate = soundfile.read(inputbuf)
 		sampleref_obj.fileref.set_folder(None, outpath, 0)
-		outpath = sampleref_obj.fileref.get_path(None, False)
+		outpath = sampleref_obj.fileref.copy()
+		outpath.file.extension = 'wav'
+		outpath = outpath.get_path(None, False)
 		wav_buf = io.BytesIO()
 		soundfile.write(outpath, data, samplerate)
 		wav_buf.seek(0)
+		sampleref_obj.fileref.file.extension = 'wav'
+		return outpath

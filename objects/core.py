@@ -155,7 +155,7 @@ pluginsets_input = {
 'gameres': ['gameres', 'Game Mod'],
 'ai': ['ai', 'AI'],
 'wip': ['wip', 'WIP'],
-'debug': ['debug', 'Debug']
+#'debug': ['debug', 'Debug']
 }
 
 pluginsets_output = {

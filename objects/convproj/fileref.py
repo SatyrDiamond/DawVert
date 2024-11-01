@@ -143,7 +143,7 @@ class cvpj_filename:
 	def set(self, basename):
 		self.used = True
 		self.basename = basename
-		filenamesplit = self.basename.split('.', 1)
+		filenamesplit = self.basename.rsplit('.', 1)
 		self.filename = filenamesplit[0]
 		if len(filenamesplit) > 1: 
 			self.extension = filenamesplit[1]

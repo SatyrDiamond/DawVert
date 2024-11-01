@@ -103,7 +103,11 @@ def make_auto(convproj_obj, autoloc, blocks, add, mul, trackmeta):
 					autoarray[n]['pos'] = int(a.pos)
 					autoarray[n]['val'] = (a.value/mul)-add
 
-				block.blockData = encode_chunk(b'\x00\x00\x00\x14'+autoarray.tobytes()+(b'\x00'*16))
+				outbytes = b'\x00\x00\x00\x14'+autoarray.tobytes()
+				padsize = 4*len(autopl_obj.data)
+				outbytes += b'\x00'*padsize
+
+				block.blockData = encode_chunk(outbytes)
 
 				blocks.append(block)
 

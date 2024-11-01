@@ -340,7 +340,7 @@ class output_soundbridge(plugins.base):
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
-		in_dict['audio_filetypes'] = ['wav', 'mp3']
+		in_dict['audio_filetypes'] = ['wav']
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2
@@ -383,17 +383,24 @@ class output_soundbridge(plugins.base):
 		used_filenames = {}
 		for sampleref_id, sampleref_obj in convproj_obj.iter_samplerefs():
 			if sampleref_obj.fileref.exists('win'):
-				filename = str(sampleref_obj.fileref.file)
-				if filename not in used_filenames: used_filenames[filename] = 0
-				used_filenames[filename] += 1
-				outaud_filename = filename+('_'+str(used_filenames[filename]) if used_filenames[filename]>1 else '')
-				movefilename = sampleref_obj.fileref.get_path('win', False)
-				shutil.copyfile(movefilename, os.path.join(output_file, outaud_filename))
+				obj_filename = sampleref_obj.fileref.get_path('win', False)
+				obj_outfilename = sampleref_obj.fileref.copy()
+				obj_outfilename.file.extension = 'wav'
+
+				filename = str(obj_filename)
+				outfilename = os.path.join(output_file, str(obj_outfilename.file))
+
+				try:
+					shutil.copyfile(filename, outfilename)
+				except:
+					pass
+
 				audio_ids[sampleref_id] = sampleref_obj.fileref.file
 
 				audioSource = proj_soundbridge.soundbridge_audioSource(None)
-				audioSource.fileName = str(sampleref_obj.fileref.file)
-				audioSource.sourceFileName = movefilename.replace('\\', '/')
+
+				audioSource.fileName = str(obj_outfilename.file)
+				audioSource.sourceFileName = filename.replace('\\', '/')
 				project_obj.pool.audioSources.append(audioSource)
 
 		groups_data = {}

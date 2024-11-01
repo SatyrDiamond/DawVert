@@ -5,6 +5,7 @@ import plugins
 import json
 import struct
 import os
+import math
 import numpy as np
 import base64
 from objects import globalstore
@@ -37,9 +38,14 @@ def encode_chunk(inbytes):
 	statedata = statedata.replace('/', '.')
 	return statedata
 
+def calc_vol(vol):
+	vol = vol**(1/4)
+	vol = (vol*0.824999988079071)
+	return vol
+	
 def set_params(params_obj):
 	mute = 0.5 if params_obj.get('enabled', True).value else 1
-	vol = params_obj.get('vol', 1).value*0.824999988079071
+	vol = calc_vol(params_obj.get('vol', 1).value)
 	pan = params_obj.get('pan', 0).value/2 + 0.5
 	return encode_chunk(struct.pack('>ffff', *(mute, vol, vol, pan)))
 
@@ -67,7 +73,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 
 sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '>f')])
 
-def make_auto(convproj_obj, autoloc, blocks, add, mul, trackmeta):
+def make_auto(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta):
 	from objects.file_proj import proj_soundbridge
 	aid_found, aid_data = convproj_obj.automation.get(autoloc, 'float')
 
@@ -101,7 +107,10 @@ def make_auto(convproj_obj, autoloc, blocks, add, mul, trackmeta):
 				autoarray['unk2'] = 1
 				for n, a in enumerate(autopl_obj.data):
 					autoarray[n]['pos'] = int(a.pos)
-					autoarray[n]['val'] = (a.value/mul)-add
+					if valtype == 'vol':
+						autoarray[n]['val'] = calc_vol(a.value)
+					else:
+						autoarray[n]['val'] = (a.value/mul)-add
 
 				outbytes = b'\x00\x00\x00\x14'+autoarray.tobytes()
 				padsize = 4*len(autopl_obj.data)
@@ -115,7 +124,7 @@ def make_autocontains_master(convproj_obj, sb_track, params_obj, startauto):
 	from objects.file_proj import proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
-	vol = params_obj.get('vol', 1).value*0.824999988079071
+	vol = calc_vol(params_obj.get('vol', 1).value)
 	pan = params_obj.get('pan', 0).value/0.5 + 0.5
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -123,7 +132,7 @@ def make_autocontains_master(convproj_obj, sb_track, params_obj, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = vol
-	make_auto(convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
+	make_auto('vol', convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -131,14 +140,14 @@ def make_autocontains_master(convproj_obj, sb_track, params_obj, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = pan
-	make_auto(convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
+	make_auto(None, convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
 def make_autocontains(convproj_obj, sb_track, params_obj, n, startauto):
 	from objects.file_proj import proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
-	vol = params_obj.get('vol', 1).value*0.824999988079071
+	vol = calc_vol(params_obj.get('vol', 1).value)
 	pan = params_obj.get('pan', 0).value/0.5 + 0.5
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -161,7 +170,7 @@ def make_autocontains(convproj_obj, sb_track, params_obj, n, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = vol
-	make_auto(convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
+	make_auto('vol', convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -169,7 +178,7 @@ def make_autocontains(convproj_obj, sb_track, params_obj, n, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = pan
-	make_auto(convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
+	make_auto(None, convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
 def make_sends(convproj_obj, sb_track, sends_obj):
@@ -192,7 +201,7 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 	for i, x in sends_obj.iter():
 		automationTrack = cur_returns[i]
 		automationTrack.defaultValue = x.params.get('amount', 0).value
-		if x.sendautoid: make_auto(convproj_obj, ['send', x.sendautoid, 'amount'], automationTrack.blocks, 0, 1, sb_track.metadata)
+		if x.sendautoid: make_auto(None, convproj_obj, ['send', x.sendautoid, 'amount'], automationTrack.blocks, 0, 1, sb_track.metadata)
 		values[sb_returns.index(i)] = automationTrack.defaultValue
 
 	sb_track.sendsAutomationContainer.state = encode_chunk(struct.pack('>'+('f'*len(values)), *values))
@@ -253,7 +262,7 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 				statewriter.raw(b'\x00'*128)
 				statewriter.raw(vstchunk[56:])
 			if vsttype == b'FPCh':
-				statewriter.raw(b'FPCh')
+				statewriter.raw(b'FBCh')
 				statewriter.raw(vstchunk[12:16])
 				statewriter.raw(b'\x00\x00\x00\x00')
 				statewriter.raw(b'\x00\x00\x00\x00')
@@ -288,7 +297,7 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 			automationTrack.mode = 3
 			automationTrack.enabled = 1
 			automationTrack.defaultValue = plugin_obj.params.get(paramid, 0)
-			make_auto(convproj_obj, autoloc.get_list(), automationTrack.blocks, 0, 1, sb_track.metadata)
+			make_auto(None, convproj_obj, autoloc.get_list(), automationTrack.blocks, 0, 1, sb_track.metadata)
 			sb_plugin.automationContainer.automationTracks.append(automationTrack)
 	else:
 		logger_output.warning('VST2 plugin not placed: no ID found.')
@@ -441,7 +450,13 @@ class output_soundbridge(plugins.base):
 							sb_track.midiInstrument = make_vst2(convproj_obj, plugin_obj, True, track_obj.inst_pluginid, sb_track)
 
 
+				middlenote = track_obj.datavals.get('middlenote', 0)
+
+				plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+				if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
+
 				for notespl_obj in track_obj.placements.pl_notes:
+					notespl_obj.notelist.mod_transpose(-middlenote)
 					notespl_obj.notelist.mod_limit(-60, 67)
 					numnotes = len(notespl_obj.notelist)
 					notearray = np.zeros(numnotes, dtype=sb_notes_dtype)

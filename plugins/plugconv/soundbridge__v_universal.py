@@ -45,7 +45,7 @@ class plugconv(plugins.base):
 			link_channels = plugin_obj.params.get('link_channels', True).value
 
 			threshold = (80-threshold)/80
-			attack = math.log10(attack / 0.1) / math.log10(1000)
+			attack = math.log10(max(attack, 0.1) / 0.1) / math.log10(1000)
 			release = (release / 3) ** (1 / 2.4)
 			gain = ((gain/36)/2)+0.5
 			lookahead = bisect.bisect_left(limiter_lookahead, lookahead)
@@ -107,7 +107,7 @@ class plugconv(plugins.base):
 			link_channels = plugin_obj.params.get('link_channels', True).value
 
 			threshold = (80-threshold)/80
-			attack = math.log10(attack / 0.1) / math.log10(1000)
+			attack = math.log10(max(attack, 0.1) / 0.1) / math.log10(1000)
 			release = (release / 3) ** (1 / 2.4)
 			gain = ((gain/36)/2)+0.5
 			ratio = 1-(1/ratio)

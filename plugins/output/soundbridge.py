@@ -253,9 +253,9 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 			statewriter = bytewriter.bytewriter()
 			statewriter.raw(b'CcnK')
 			statewriter.raw(b'\x14\x00\x00\x00')
-			statewriter.raw(b'\x00\x00\x00\x00'*1)
+			statewriter.raw(b'\x00\x00\x00\x00')
 			statewriter.raw(disabledbyte)
-			statewriter.raw(b'\x00\x00\x00\x00'*1)
+			statewriter.raw(b'\x00\x00\x00\x00')
 			statewriter.raw(b'CcnK')
 			statewriter.raw(b'\x00\x00\x00\x00')
 

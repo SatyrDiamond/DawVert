@@ -246,10 +246,16 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 		if len(vstchunk)>12:
 			vsttype = vstchunk[8:12]
 
+			fx_on, fx_wet = plugin_obj.fxdata_get()
+
+			disabledbyte = struct.pack('>f', int(not int(fx_on)))
+
 			statewriter = bytewriter.bytewriter()
 			statewriter.raw(b'CcnK')
 			statewriter.raw(b'\x14\x00\x00\x00')
-			statewriter.raw(b'\x00\x00\x00\x00'*3)
+			statewriter.raw(b'\x00\x00\x00\x00'*1)
+			statewriter.raw(disabledbyte)
+			statewriter.raw(b'\x00\x00\x00\x00'*1)
 			statewriter.raw(b'CcnK')
 			statewriter.raw(b'\x00\x00\x00\x00')
 

@@ -22,7 +22,7 @@ class qsound():
 		self.codec_lib = None
 
 	def load_lib(self):
-		libloadstat = globalstore.extlib.load('adpcm_qsound', "./libs/bs_codec")
+		libloadstat = globalstore.extlib.load_native('adpcm_qsound', "bs_codec")
 		self.codec_lib = globalstore.extlib.get('adpcm_qsound')
 		if libloadstat == 1: 
 			self.codec_lib.bs_decode.argtypes = [POINTER(c_ubyte), POINTER(c_int16), c_long]
@@ -43,7 +43,7 @@ class oki():
 		self.codec_lib = None
 
 	def load_lib(self):
-		libloadstat = globalstore.extlib.load('adpcm_oki', "./libs/oki_codec")
+		libloadstat = globalstore.extlib.load_native('adpcm_oki', "oki_codec")
 		self.codec_lib = globalstore.extlib.get('adpcm_oki')
 		if libloadstat == 1: 
 			self.codec_lib.oki6258_decode.argtypes = [POINTER(c_ubyte), POINTER(c_int16), c_long]
@@ -76,7 +76,7 @@ class yamaha_a():
 		self.codec_lib = None
 
 	def load_lib(self):
-		libloadstat = globalstore.extlib.load('adpcm_yamaha_a', "./libs/yma_codec")
+		libloadstat = globalstore.extlib.load_native('adpcm_yamaha_a', "yma_codec")
 		self.codec_lib = globalstore.extlib.get('adpcm_yamaha_a')
 		if libloadstat == 1: 
 			self.codec_lib.yma_decode.argtypes = [POINTER(c_ubyte), POINTER(c_int16), c_long]
@@ -97,7 +97,7 @@ class yamaha_b():
 		self.codec_lib = None
 
 	def load_lib(self):
-		libloadstat = globalstore.extlib.load('adpcm_yamaha_b', "./libs/ymb_codec")
+		libloadstat = globalstore.extlib.load_native('adpcm_yamaha_b', "ymb_codec")
 		self.codec_lib = globalstore.extlib.get('adpcm_yamaha_b')
 		if libloadstat == 1: 
 			self.codec_lib.ymb_decode.argtypes = [POINTER(c_ubyte), POINTER(c_int16), c_long]
@@ -118,7 +118,7 @@ class yamaha_z():
 		self.codec_lib = None
 
 	def load_lib(self):
-		libloadstat = globalstore.extlib.load('adpcm_yamaha_z', "./libs/ymz_codec")
+		libloadstat = globalstore.extlib.load_native('adpcm_yamaha_z', "ymz_codec")
 		self.codec_lib = globalstore.extlib.get('adpcm_yamaha_z')
 		if libloadstat == 1:
 			self.codec_lib.aica_decode.argtypes = [POINTER(c_ubyte), POINTER(c_int16), c_long]

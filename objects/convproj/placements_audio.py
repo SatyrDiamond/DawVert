@@ -237,12 +237,13 @@ class cvpj_placements_nested_audio:
 		for pl in self.data: pl.change_seconds(is_seconds, bpm)
 
 class cvpj_placement_nested_audio:
-	__slots__ = ['time','visual','events','fade_in','fade_out']
+	__slots__ = ['time','visual','events','fade_in','fade_out','muted']
 
 	def __init__(self):
 		self.time = placements.cvpj_placement_timing()
 		self.visual = visual.cvpj_visual()
 		self.events = []
+		self.muted = False
 		self.fade_in = placements.cvpj_placement_fade()
 		self.fade_out = placements.cvpj_placement_fade()
 

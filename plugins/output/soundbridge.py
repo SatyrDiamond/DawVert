@@ -469,7 +469,7 @@ class output_soundbridge(plugins.base):
 					block.loopOffset = 0
 					block.framesCount = notespl_obj.time.duration
 					block.loopEnabled = 0
-					block.muted = 0
+					block.muted = int(notespl_obj.muted)
 
 					time_add(block, notespl_obj.time, None)
 
@@ -526,7 +526,7 @@ class output_soundbridge(plugins.base):
 
 					block.position = audiopl_obj.time.position
 					block.framesCount = audiopl_obj.time.duration
-					block.muted = 0
+					block.muted = int(audiopl_obj.muted)
 					block.timeBaseMode = 0
 
 					if audiopl_obj.visual.color: 

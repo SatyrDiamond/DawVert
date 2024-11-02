@@ -28,7 +28,7 @@ class openmpt():
 		self.mod = None
 
 	def load_lib(self):
-		libloadstat = globalstore.extlib.load('libopenmpt', "./libs/libopenmpt")
+		libloadstat = globalstore.extlib.load_native('libopenmpt', "libopenmpt")
 		self.libopenmpt = globalstore.extlib.get('libopenmpt')
 		if libloadstat == 1: 
 			self.libopenmpt.openmpt_module_get_order_name.restype = ctypes.c_char_p

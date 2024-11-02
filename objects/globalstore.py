@@ -11,6 +11,7 @@ from objects.datastorage import dataset as ds_class
 from objects.datastorage import idvals as iv_class
 from objects.datastorage import paramremap as pr_class
 from objects.datastorage import plugts as pts_class
+import sys
 
 logger_globalstore = logging.getLogger('globalstore')
 
@@ -64,14 +65,48 @@ class extplug:
 		if plugtype == 'ladspa': return ep_class.ladspa.count()
 		if plugtype == 'all': return ep_class.vst2.count()+ep_class.vst3.count()+ep_class.clap.count()
 
+def extlib_check_bits():
+	osbits = 64 if sys.maxsize > 2**32 else 32
+	return osbits
+
+def extlib_get_ostype():
+	if sys.platform == 'win32': return 'win'
+	elif sys.platform == 'cygwin': return 'cygwin'
+	elif sys.platform == 'linux': return 'linux'
+	elif sys.platform == 'linux2': return 'linux'
+	elif sys.platform == 'msys': return 'win'
+	elif sys.platform == 'darwin': return 'mac'
+	elif sys.platform == 'freebsd7': return 'freebsd7'
+	elif sys.platform == 'freebsd8': return 'freebsd8'
+	elif sys.platform == 'freebsdN': return 'freebsdn'
+	elif sys.platform == 'openbsd6': return 'openbsd6'
+	else: return 'unix'
+
+def extlib_get_ext():
+	if sys.platform == 'win32': return '.dll'
+	elif sys.platform == 'cygwin': return '.dll'
+	elif sys.platform == 'msys': return '.dll'
+	elif sys.platform == 'darwin': return '.dylib'
+	else: return '.so'
+
 class extlib:
 	loaded_parts = {}
+
+	def load_native(nameid, dllname):
+		osbits = str(extlib_check_bits())
+		filepath = os.path.join('.', 'libs', extlib_get_ostype()+'_'+osbits, dllname+extlib_get_ext())
+		extlib.load(nameid, filepath)
+
 	def load(nameid, filepath):
 		if nameid not in extlib.loaded_parts:
 			try:
-				extlib.loaded_parts[nameid] = cdll.LoadLibrary(filepath)
-				logger_globalstore.info('extlib: Loaded "'+filepath+'" as '+nameid)
-				return 1
+				if os.path.exists(filepath):
+					extlib.loaded_parts[nameid] = cdll.LoadLibrary(filepath)
+					logger_globalstore.info('extlib: Loaded "'+filepath+'" as '+nameid)
+					return 1
+				else:
+					logger_globalstore.warning('extlib: file "'+filepath+"\" dosen't exist.")
+					return -1
 			except: return -1
 		else: return 0
 

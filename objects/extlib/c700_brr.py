@@ -10,7 +10,7 @@ class brr():
 		self.codec_lib = None
 
 	def load_lib(self):
-		libloadstat = globalstore.extlib.load('brr', "./libs/brr_codec.dll")
+		libloadstat = globalstore.extlib.load_native('brr', "brr_codec")
 		self.codec_lib = globalstore.extlib.get('brr')
 		if libloadstat == 1: 
 			brr_decode = self.codec_lib._Z9brrdecodePhPsii

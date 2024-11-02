@@ -62,6 +62,8 @@ blackboxprotobuf
 git+https://github.com/Perlence/rpp
 ```
 
+[.dlls/.so](https://github.com/SatyrDiamond/DawVert-Libs)
+
 ## Required Libraries for UI
 ```
 PyQt6

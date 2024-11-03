@@ -103,14 +103,15 @@ class pluginfo:
 			self.path_32bit = p_path_unix
 			self.path_64bit = p_path_unix
 
-
+def get_def_platform():
+	platform_architecture = platform.architecture()
+	if platform_architecture[1] == 'WindowsPE': return 'win'
+	else: return 'lin'
 
 class extplug_db:
 	os.makedirs(os.getcwd() + '/__config/', exist_ok=True)
 
-	platform_architecture = platform.architecture()
-	if platform_architecture[1] == 'WindowsPE': platformtxt = 'win'
-	else: platformtxt = 'lin'
+	platformtxt = get_def_platform()
 
 	db_plugins = None
 
@@ -247,7 +248,7 @@ class vst2:
 	def get(bycat, in_val, in_platformtxt, cpu_arch_list):
 		founddata = None
 	
-		if in_platformtxt == None: in_platformtxt = platformtxt
+		if in_platformtxt == None: in_platformtxt = get_def_platform()
 	
 		if extplug_db.db_plugins:
 			if bycat == 'id':

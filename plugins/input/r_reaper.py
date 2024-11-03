@@ -200,7 +200,35 @@ class input_reaper(plugins.base):
 							else:
 								plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'vst2', None)
 								plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
-								pluginfo_obj = plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', rpp_extplug.data_chunk, None)
+
+								pluginfo_obj = globalstore.extplug.get('vst2', 'id', fourid, None, [64, 32])
+
+								try:
+									vstdataconreader = bytereader.bytereader()
+									vstdataconreader.load_raw(rpp_extplug.data_con)
+									vstdataconreader.skip(4) # id
+									vstdataconreader.skip(4) # unknown 2
+									num_inchannels = vstdataconreader.uint32()
+									vstdataconreader.skip(4) # 1
+									aud_in_chan = [vstdataconreader.flags64() for x in range(num_inchannels)]
+									aud_out_chan = [vstdataconreader.flags64() for x in range(pluginfo_obj.audio_num_outputs)]
+									chunk_size = vstdataconreader.uint32() # chunk size
+									uses_chunk = vstdataconreader.uint32() # uses chunk
+									programnum = vstdataconreader.uint16() # program
+									vstdataconreader.skip(1) # 16
+									vstdataconreader.skip(1) # 16
+
+									plugin_obj.clear_prog_keep(programnum)
+									if uses_chunk:
+										plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', rpp_extplug.data_chunk, None)
+									else:
+										numparams = (len(rpp_extplug.data_chunk)//4)-2
+										vstparams = struct.unpack('f'*numparams, rpp_extplug.data_chunk[8:])
+										plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'param', None, numparams)
+										for n, v in enumerate(vstparams):
+											param_obj = plugin_obj.params.add('ext_param_'+str(n), v, 'float')
+								except:
+									pass
 
 								for parmenv in rpp_plugin.parmenv:
 									if parmenv.is_param:

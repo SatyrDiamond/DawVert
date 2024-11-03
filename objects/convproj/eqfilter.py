@@ -23,7 +23,7 @@ class cvpj_eq:
 
 	def __iter__(self):
 		for x in self.bands:
-			yield x, self.plugin_obj.named_filter[x]
+			yield x, self.plugin_obj.named_filter[x] if x in self.plugin_obj.named_filter else cvpj_filter()
 
 	def add(self):
 		filter_id = self.basename+'_'+str(self.filtnum)

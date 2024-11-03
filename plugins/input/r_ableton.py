@@ -657,7 +657,7 @@ class input_ableton(plugins.base):
 								for mid, mtype, mobj in e.Automation.Events:
 									if mtype == 'FloatEvent':
 										autopoint_obj = autopoints_obj.add_point()
-										autopoint_obj.pos = mobj.Time
+										autopoint_obj.pos = mobj.Time*4
 										autopoint_obj.value = mobj.Value
 
 						if clipobj.Loop.LoopOn == 1:

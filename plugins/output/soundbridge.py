@@ -58,7 +58,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 		sb_grouptrack.type = 1
 		#sb_grouptrack.state = set_params(group_obj.params)
 
-		make_autocontains_master(convproj_obj, sb_grouptrack, group_obj.params, ['group', groupid])
+		make_auto_contains_master(convproj_obj, sb_grouptrack, group_obj.params, ['group', groupid])
 
 		sb_maintrack.tracks.append(sb_grouptrack)
 		if group_obj.visual.name: sb_grouptrack.name = group_obj.visual.name
@@ -73,7 +73,23 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 
 sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '>f')])
 
-def make_auto(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta):
+def make_auto(autopoints_obj, valtype, add, mul):
+	autoarray = np.zeros(len(autopoints_obj), dtype=sb_auto_dtype)
+	autoarray['unk1'] = 0.99
+	autoarray['unk2'] = 1
+	for n, a in enumerate(autopoints_obj):
+		autoarray[n]['pos'] = int(max(a.pos, 0))
+		if valtype == 'vol':
+			autoarray[n]['val'] = calc_vol(a.value)
+		else:
+			autoarray[n]['val'] = (a.value/mul)-add
+
+	outbytes = b'\x00\x00\x00\x14'+autoarray.tobytes()
+	padsize = 4*len(autopoints_obj)
+	outbytes += b'\x00'*padsize
+	return encode_chunk(outbytes)
+
+def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta):
 	from objects.file_proj import proj_soundbridge
 	aid_found, aid_data = convproj_obj.automation.get(autoloc, 'float')
 
@@ -102,25 +118,11 @@ def make_auto(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta):
 				if 'TrackColor' in trackmeta:
 					block.metadata["BlockColor"] = trackmeta["TrackColor"]
 
-				autoarray = np.zeros(len(autopl_obj.data), dtype=sb_auto_dtype)
-				autoarray['unk1'] = 0.99
-				autoarray['unk2'] = 1
-				for n, a in enumerate(autopl_obj.data):
-					autoarray[n]['pos'] = int(a.pos)
-					if valtype == 'vol':
-						autoarray[n]['val'] = calc_vol(a.value)
-					else:
-						autoarray[n]['val'] = (a.value/mul)-add
-
-				outbytes = b'\x00\x00\x00\x14'+autoarray.tobytes()
-				padsize = 4*len(autopl_obj.data)
-				outbytes += b'\x00'*padsize
-
-				block.blockData = encode_chunk(outbytes)
+				block.blockData = make_auto(autopl_obj.data, valtype,add, mul)
 
 				blocks.append(block)
 
-def make_autocontains_master(convproj_obj, sb_track, params_obj, startauto):
+def make_auto_contains_master(convproj_obj, sb_track, params_obj, startauto):
 	from objects.file_proj import proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
@@ -132,7 +134,7 @@ def make_autocontains_master(convproj_obj, sb_track, params_obj, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = vol
-	make_auto('vol', convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
+	make_auto_track('vol', convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -140,10 +142,10 @@ def make_autocontains_master(convproj_obj, sb_track, params_obj, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = pan
-	make_auto(None, convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
+	make_auto_track(None, convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
-def make_autocontains(convproj_obj, sb_track, params_obj, n, startauto):
+def make_auto_trackcontains(convproj_obj, sb_track, params_obj, n, startauto):
 	from objects.file_proj import proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
@@ -170,7 +172,7 @@ def make_autocontains(convproj_obj, sb_track, params_obj, n, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = vol
-	make_auto('vol', convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
+	make_auto_track('vol', convproj_obj, startauto+['vol'], automationTrack.blocks, 0, 1, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
 	automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
@@ -178,7 +180,7 @@ def make_autocontains(convproj_obj, sb_track, params_obj, n, startauto):
 	automationTrack.mode = 3
 	automationTrack.enabled = 1
 	automationTrack.defaultValue = pan
-	make_auto(None, convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
+	make_auto_track(None, convproj_obj, startauto+['pan'], automationTrack.blocks, -.5, 2, sb_track.metadata)
 	automationTracks.append(automationTrack)
 
 def make_sends(convproj_obj, sb_track, sends_obj):
@@ -201,7 +203,7 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 	for i, x in sends_obj.iter():
 		automationTrack = cur_returns[i]
 		automationTrack.defaultValue = x.params.get('amount', 0).value
-		if x.sendautoid: make_auto(None, convproj_obj, ['send', x.sendautoid, 'amount'], automationTrack.blocks, 0, 1, sb_track.metadata)
+		if x.sendautoid: make_auto_track(None, convproj_obj, ['send', x.sendautoid, 'amount'], automationTrack.blocks, 0, 1, sb_track.metadata)
 		values[sb_returns.index(i)] = automationTrack.defaultValue
 
 	sb_track.sendsAutomationContainer.state = encode_chunk(struct.pack('>'+('f'*len(values)), *values))
@@ -303,7 +305,7 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 			automationTrack.mode = 3
 			automationTrack.enabled = 1
 			automationTrack.defaultValue = plugin_obj.params.get(paramid, 0)
-			make_auto(None, convproj_obj, autoloc.get_list(), automationTrack.blocks, 0, 1, sb_track.metadata)
+			make_auto_track(None, convproj_obj, autoloc.get_list(), automationTrack.blocks, 0, 1, sb_track.metadata)
 			sb_plugin.automationContainer.automationTracks.append(automationTrack)
 	else:
 		logger_output.warning('VST2 plugin not placed: no ID found.')
@@ -391,7 +393,7 @@ class output_soundbridge(plugins.base):
 		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = '#'+master_track.visual.color.get_hex()
 
 		project_obj.masterTrack.state = set_params(master_track.params)
-		make_autocontains_master(convproj_obj, project_obj.masterTrack, master_track.params, ['master'])
+		make_auto_contains_master(convproj_obj, project_obj.masterTrack, master_track.params, ['master'])
 
 		master_returns = master_track.returns
 
@@ -444,7 +446,7 @@ class output_soundbridge(plugins.base):
 				sb_track.midiInput.externalDeviceIndex = 0
 				sb_track.midiOutput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.blocks = []
-				make_autocontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
+				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
 				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)
 
@@ -497,11 +499,43 @@ class output_soundbridge(plugins.base):
 					outbytes = b'\x00\x00\x00\x14'+notearray.tobytes()
 					padsize = 4*numnotes
 					outbytes += b'\x00'*padsize
-					#print(len(outbytes)-4)
-					#print(notearray)
 
 					block.blockData = encode_chunk(outbytes)
 					block.automationBlocks = []
+
+					for n, x in notespl_obj.auto.items():
+
+						autonum = None
+						valmul = 1
+						valadd = 0
+
+						if n == 'midi_pressure': 
+							autonum = 0
+							valmul = 127
+						if n == 'midi_pitch': 
+							autonum = 1
+							valmul = 8192*2
+							valadd = -0.5
+						if n.startswith('midi_cc_'): 
+							autonum = int(n[8:])+1
+							valmul = 127
+
+						if autonum is not None:
+							autoblock = proj_soundbridge.soundbridge_block(None)
+							autoblock.index = autonum
+							autoblock.name = ""
+							autoblock.timeBaseMode = 0
+							autoblock.position = 0
+							autoblock.positionStart = block.positionStart
+							autoblock.positionEnd = block.positionEnd
+							autoblock.loopOffset = block.loopOffset
+							autoblock.framesCount = block.framesCount
+							autoblock.loopEnabled = block.loopEnabled
+							autoblock.muted = 0
+							autoblock.version = 1
+							autoblock.blockData = make_auto(x, None, valadd, valmul)
+
+							block.automationBlocks.append(autoblock)
 
 					sb_track.blocks.append(block)
 
@@ -518,7 +552,7 @@ class output_soundbridge(plugins.base):
 				sb_track.pitchTempoProcessorMode = 2
 				sb_track.audioInput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.blockContainers = []
-				make_autocontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
+				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
 				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)
 
@@ -617,7 +651,7 @@ class output_soundbridge(plugins.base):
 			sb_track.sourceBufferType = 2
 			sb_track.audioOutput = proj_soundbridge.soundbridge_deviceRoute(None)
 			sb_track.blockContainers = []
-			make_autocontains(convproj_obj, sb_track, return_obj.params, 1, ['return', returnid])
+			make_auto_trackcontains(convproj_obj, sb_track, return_obj.params, 1, ['return', returnid])
 			make_sends(convproj_obj, sb_track, return_obj.sends)
 			make_plugins_fx(convproj_obj, sb_track, return_obj.fxslots_audio)
 			sb_tracks.append(sb_track)

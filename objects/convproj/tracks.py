@@ -147,7 +147,7 @@ class cvpj_lane:
 		self.placements = placements.cvpj_placements(time_ppq, time_float, uses_placements, is_indexed)
 
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -174,6 +174,7 @@ class cvpj_track:
 		self.scenes = {}
 		self.audio_channels = 2
 		self.is_drum = False
+		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq, time_float)
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -301,6 +302,7 @@ class cvpj_track:
 			lane_obj.placements.change_timings(time_ppq, time_float)
 		self.time_float = time_float
 		self.time_ppq = time_ppq
+		self.timemarkers.change_timings(time_ppq, time_float)
 
 	def add_return(self, returnid):
 		return_obj = cvpj_return_track()
@@ -310,3 +312,6 @@ class cvpj_track:
 	def iter_return(self):
 		for returnid, return_obj in self.returns.items():
 			yield returnid, return_obj
+
+	def add_timemarker(self):
+		return self.timemarkers.add()

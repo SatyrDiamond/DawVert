@@ -12,7 +12,6 @@ import xml.etree.ElementTree as ET
 
 class ableton_MainSequencer:
 	def __init__(self, xmltag, tracktype):
-
 		self.tracktype = tracktype
 		self.ClipSlotList = {}
 		self.MidiControllers = {}

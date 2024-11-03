@@ -133,6 +133,7 @@ class cvpj_plugin:
 		old_audios = self.audios
 		old_modulations = self.modulations
 
+		self.current_program = prenum
 		self.programs = {prenum: plugstate.cvpj_plugin_state()}
 		self.state = self.programs[prenum]
 
@@ -182,6 +183,13 @@ class cvpj_plugin:
 		self.type.set(i_category, i_type, i_subtype)
 		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.set_program(0)
+		self.program_used = False
+		self.data = {}
+
+	def replace_keepprog(self, i_category, i_type, i_subtype):
+		self.type.set(i_category, i_type, i_subtype)
+		self.programs = {self.current_program: plugstate.cvpj_plugin_state()}
+		self.clear_prog_keep(self.current_program)
 		self.program_used = False
 		self.data = {}
 

@@ -715,8 +715,8 @@ class soundbridge_tempo_section:
 	def __init__(self, xml_proj):
 		self.position = 0
 		self.length = 4
-		self.startTempo = 4
-		self.endTempo = 4
+		self.startTempo = 120
+		self.endTempo = 120
 		if xml_proj is not None: self.read(xml_proj)
 
 	def read(self, xml_proj):

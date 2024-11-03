@@ -420,6 +420,8 @@ class cvpj_placements:
 					cutplpl_obj.time.cut_type = 'cut'
 					cutplpl_obj.time.cut_start += scs
 					cutplpl_obj.muted = nestedpl_obj.muted
+					if not cutplpl_obj.visual.name: 
+						cutplpl_obj.visual.name = nestedpl_obj.visual.name
 					self.pl_audio.data.append(cutplpl_obj)
 
 		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio()

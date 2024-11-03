@@ -291,10 +291,11 @@ class cvpj_visual_ui:
 		return bool(self.other) and self.height!=1
 
 class cvpj_visual:
-	__slots__ = ['name','color']
+	__slots__ = ['name','color','comment']
 	def __init__(self):
 		self.name = None
 		self.color = cvpj_color()
+		self.comment = None
 
 	def __bool__(self):
 		return bool(self.name) and bool(self.color)

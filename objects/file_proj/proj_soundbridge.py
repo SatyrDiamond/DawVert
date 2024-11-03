@@ -246,6 +246,7 @@ class soundbridge_marker:
 		self.top = None
 		self.right = None
 		self.bottom = None
+		self.linearTimeBase = None
 		if xml_proj is not None: self.read(xml_proj)
 
 	def read(self, xml_proj):
@@ -259,18 +260,20 @@ class soundbridge_marker:
 		if 'top' in trackattrib: self.top = xml_proj.get('top')
 		if 'right' in trackattrib: self.right = xml_proj.get('right')
 		if 'bottom' in trackattrib: self.bottom = xml_proj.get('bottom')
+		if 'linearTimeBase' in trackattrib: self.linearTimeBase = xml_proj.get('linearTimeBase')
 
 	def write(self, xml_proj):
 		tempxml = ET.SubElement(xml_proj, "marker")
-		tempxml.set('position', str(self.position))
-		tempxml.set('tag', str(self.tag))
-		tempxml.set('label', str(self.label))
-		tempxml.set('comment', str(self.comment))
-		tempxml.set('state', str(self.state))
-		tempxml.set('left', str(self.left))
-		tempxml.set('top', str(self.top))
-		tempxml.set('right', str(self.right))
-		tempxml.set('bottom', str(self.bottom))
+		if self.position is not None: tempxml.set('position', str(self.position))
+		if self.tag is not None: tempxml.set('tag', str(self.tag))
+		if self.label is not None: tempxml.set('label', str(self.label))
+		if self.comment is not None: tempxml.set('comment', str(self.comment))
+		if self.state is not None: tempxml.set('state', str(self.state))
+		if self.left is not None: tempxml.set('left', str(self.left))
+		if self.top is not None: tempxml.set('top', str(self.top))
+		if self.right is not None: tempxml.set('right', str(self.right))
+		if self.bottom is not None: tempxml.set('bottom', str(self.bottom))
+		if self.linearTimeBase is not None: tempxml.set('linearTimeBase', str(self.linearTimeBase))
 
 class soundbridge_deviceRoute:
 	def __init__(self, xml_proj):
@@ -817,7 +820,7 @@ class soundbridge_timeline:
 		tempxml = ET.SubElement(xml_proj, 'timeline')
 		self.timeSignature.write(tempxml)
 		self.tempo.write(tempxml)
-		for x in self.markers: x.write(markersxml)
+		for x in self.markers: x.write(tempxml)
 
 # --------------------------------------------------------- TIMELINE ---------------------------------------------------------
 

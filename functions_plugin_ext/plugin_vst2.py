@@ -44,7 +44,7 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, datatype, da
 	pluginfo_obj = globalstore.extplug.get('vst2', bycat, in_val, platformtxt, cpu_arch_list)
 
 	if pluginfo_obj.out_exists:
-		if plugin_obj.type.type != 'vst2': plugin_obj.replace('external', 'vst2', platformtxt)
+		if plugin_obj.type.type != 'vst2': plugin_obj.replace_keepprog('external', 'vst2', platformtxt)
 		else: plugin_obj.type.subtype = platformtxt
 
 		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(cpu_arch_list)

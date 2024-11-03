@@ -13,6 +13,7 @@ from objects import globalstore
 from functions import data_bytes
 from functions import data_values
 from functions import xtramath
+from objects.data_bytes import bytewriter
 
 import logging
 logger_output = logging.getLogger('output')
@@ -129,13 +130,28 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				if vst_fx_datatype == 'param': 
 					floatdata = []
 					for num in range(vst_fx_numparams):
-						floatdata.append(float(plugin_obj.params.get('vst_param_'+str(num), 0).value))
-					vstparams = struct.pack('f'*vst_fx_numparams, *floatdata)
+						floatdata.append(float(plugin_obj.params.get('ext_param_'+str(num), 0).value))
+					vstparams = b'\xef\xbe\xad\xde\r\xf0\xad\xde'+struct.pack('f'*vst_fx_numparams, *floatdata)
 					vstparamsnum = len(vstparams)
 
-				vstheader_ints = (vst_fx_fourid, 4276969198,0,2,1,0,2,0,vstparamsnum,1,1048576)
+				pluginfo_obj = globalstore.extplug.get('vst2', 'id', vst_fx_fourid, None, [64, 32])
 
-				rpp_vst_obj.data_con = struct.pack('IIIIIIIIIII', *vstheader_ints)
+				vsthdrwriter = bytewriter.bytewriter()
+				vsthdrwriter.uint32(vst_fx_fourid)
+				vsthdrwriter.uint32(4276969198)
+				vsthdrwriter.uint32(2)
+				vsthdrwriter.uint32(1)
+				for _ in range(pluginfo_obj.audio_num_inputs):
+					vsthdrwriter.flags64([33])
+				for n in range(pluginfo_obj.audio_num_outputs):
+					vsthdrwriter.flags64([n])
+				vsthdrwriter.uint32(vstparamsnum)
+				vsthdrwriter.uint32(vst_fx_datatype == 'chunk')
+				vsthdrwriter.uint16(plugin_obj.current_program)
+				vsthdrwriter.uint8(16)
+				vsthdrwriter.uint8(0)
+
+				rpp_vst_obj.data_con = vsthdrwriter.getvalue()
 				if vstparams: rpp_vst_obj.data_chunk = vstparams
 				rpp_plug_obj.bypass['bypass'] = not fx_on
 				rpp_plug_obj.wet['wet'] = fx_wet

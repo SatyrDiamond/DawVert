@@ -41,6 +41,11 @@ class bytewriter:
 	pack_s_int = struct.Struct('<i').pack
 	pack_s_int_b = struct.Struct('>i').pack
    
+	pack_long = struct.Struct('<Q').pack
+	pack_long_b = struct.Struct('>Q').pack
+	pack_s_long = struct.Struct('<q').pack
+	pack_s_long_b = struct.Struct('>q').pack
+	
 	pack_float = struct.Struct('<f').pack
 	pack_float_b = struct.Struct('>f').pack
 	pack_double = struct.Struct('<d').pack
@@ -96,6 +101,19 @@ class bytewriter:
 		self.buf.write(self.pack_s_int_b(value))
 		self.end += 4
 
+	def uint64(self, value):
+		self.buf.write(self.pack_long(value))
+		self.end += 4
+	def uint64_b(self, value):
+		self.buf.write(self.pack_long_b(value))
+		self.end += 4
+	def int64(self, value):
+		self.buf.write(self.pack_s_long(value))
+		self.end += 4
+	def int64_b(self, value):
+		self.buf.write(self.pack_s_long_b(value))
+		self.end += 4
+
 	def float(self, value):
 		self.buf.write(self.pack_float(value))
 		self.end += 4
@@ -121,6 +139,9 @@ class bytewriter:
 		self.end += 3
 	def flags32(self, value):
 		self.buf.write(set_bitnums(value, 4))
+		self.end += 4
+	def flags64(self, value):
+		self.buf.write(set_bitnums(value, 8))
 		self.end += 4
 
 	def bool8(self, value):

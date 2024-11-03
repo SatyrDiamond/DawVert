@@ -91,6 +91,11 @@ class bytereader:
 	unpack_double = struct.Struct('<d').unpack
 	unpack_double_b = struct.Struct('>d').unpack
 
+	unpack_long = struct.Struct('<Q').unpack
+	unpack_long_b = struct.Struct('>Q').unpack
+	unpack_s_long = struct.Struct('<q').unpack
+	unpack_s_long_b = struct.Struct('>q').unpack
+	
 	def __init__(self):
 		self.buf = None
 		self.start = 0
@@ -190,6 +195,11 @@ class bytereader:
 	def int32(self): return self.unpack_s_int(self.buf.read(4))[0]
 	def int32_b(self): return self.unpack_s_int_b(self.buf.read(4))[0]
 
+	def uint64(self): return self.unpack_long(self.buf.read(8))[0]
+	def uint64_b(self): return self.unpack_long_b(self.buf.read(8))[0]
+	def int64(self): return self.unpack_s_long(self.buf.read(8))[0]
+	def int64_b(self): return self.unpack_s_long_b(self.buf.read(8))[0]
+
 	def float(self): return self.unpack_float(self.buf.read(4))[0]
 	def float_b(self): return self.unpack_float_b(self.buf.read(4))[0]
 
@@ -200,6 +210,7 @@ class bytereader:
 	def flags16(self): return get_bitnums_int(self.uint16())
 	def flags24(self): return get_bitnums_int(self.uint24())
 	def flags32(self): return get_bitnums_int(self.uint32())
+	def flags64(self): return get_bitnums_int(self.uint64())
 
 	def table8(self, tabledata):
 		numbytes = np.prod(tabledata)

@@ -830,7 +830,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 						clipenv.PointeeId = mpeid
 						for num, autopoint in enumerate(x):
 							alsevent = proj_ableton.ableton_FloatEvent(None)
-							alsevent.Time = autopoint.pos
+							alsevent.Time = autopoint.pos/4
 							alsevent.Value = autopoint.value
 							clipenv.Automation.Events.append([num+1, 'FloatEvent', alsevent])
 

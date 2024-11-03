@@ -231,6 +231,8 @@ class cvpj_placements:
 				pl.notelist.change_timings(time_ppq, time_float)
 				pl.timesig_auto.change_timings(time_ppq, time_float)
 				pl.timemarkers.change_timings(time_ppq, time_float)
+				for mpename, autodata in pl.auto.items():
+					autodata.change_timings(time_ppq, time_float)
 
 		for pl in self.pl_audio:
 			pl.time.change_timing(self.time_ppq, time_ppq, time_float)

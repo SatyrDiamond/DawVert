@@ -439,6 +439,7 @@ class soundbridge_block:
 		self.loopEnabled = None
 		self.stretchMarks = None
 		self.version = None
+		self.index = None
 		if xml_proj is not None: self.read(xml_proj)
 
 	def read(self, xml_proj):
@@ -453,6 +454,7 @@ class soundbridge_block:
 		if 'loopEnabled' in trackattrib: self.loopEnabled = int(xml_proj.get('loopEnabled'))
 		if 'muted' in trackattrib: self.muted = int(xml_proj.get('muted'))
 		if 'framesCount' in trackattrib: self.framesCount = int(xml_proj.get('framesCount'))
+		if 'index' in trackattrib: self.index = int(xml_proj.get('index'))
 		if 'fileName' in trackattrib: self.filename = xml_proj.get('fileName')
 		if 'version' in trackattrib: self.version = xml_proj.get('version')
 		for xmlpart in xml_proj:
@@ -468,6 +470,8 @@ class soundbridge_block:
 				self.crossfades = []
 			elif xmlpart.tag == 'automationBlocks': 
 				self.automationBlocks = []
+				for xmlinpart in xmlpart:
+					if xmlinpart.tag == 'block': self.automationBlocks.append(soundbridge_block(xmlinpart))
 			elif xmlpart.tag == 'stretchMarks': 
 				self.stretchMarks = []
 				for xmlinpart in xmlpart:
@@ -488,6 +492,7 @@ class soundbridge_block:
 		if self.filename is not None: tempxml.set('fileName', str(self.filename))
 		if self.loopEnabled is not None: tempxml.set('loopEnabled', str(self.loopEnabled))
 		if self.version is not None: tempxml.set('version', str(self.version))
+		if self.index is not None: tempxml.set('index', str(self.index))
 
 		dict_to_metadata(self.metadata, tempxml)
 
@@ -501,6 +506,7 @@ class soundbridge_block:
 			for x in self.events: x.write(xml_events)
 		if self.automationBlocks is not None:
 			xml_automationBlocks = ET.SubElement(tempxml, 'automationBlocks')
+			for x in self.automationBlocks: x.write(xml_automationBlocks)
 		if self.stretchMarks is not None:
 			xml_stretchMarks = ET.SubElement(tempxml, 'stretchMarks')
 			for x in self.stretchMarks: x.write(xml_stretchMarks)

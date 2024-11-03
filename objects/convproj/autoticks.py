@@ -149,12 +149,12 @@ class cvpj_autoticks:
 
 		return points_out
 
-	def to_points(self):
+	def to_points(self, ppqdiv):
 		prev_pos = data_values.dif_val(0)
 		prev_val = data_values.dif_val(0)
 		prev_minus = False
 
-		tres_pos = self.time_ppq//8
+		tres_pos = self.time_ppq//ppqdiv
 		tres = 0.02
 
 		pointspl = []

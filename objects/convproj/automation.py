@@ -14,13 +14,14 @@ import logging
 logger_automation = logging.getLogger('automation')
 
 class cvpj_s_automation:
-	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype']
+	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres']
 	def __init__(self, time_ppq, time_float, valtype):
 		self.pl_points = None
 		self.pl_ticks = None
 		self.nopl_points = None
 		self.nopl_ticks = None
 		self.id = ''
+		self.conv_tres = 1
 
 		self.u_pl_points = False
 		self.u_pl_ticks = False
@@ -148,7 +149,7 @@ class cvpj_s_automation:
 
 	def convert__nopl_ticks___nopl_points(self):
 		if self.u_nopl_ticks:
-			points_out = self.nopl_ticks.to_points()
+			points_out = self.nopl_ticks.to_points(8*self.conv_tres)
 
 			for x in points_out:
 				self.add_autopoint(x[0], x[1], 'normal' if x[2] else 'instant')
@@ -164,7 +165,7 @@ class cvpj_s_automation:
 				pl.time = x.time.copy()
 				pl.muted = x.muted
 				pl.visual = x.visual
-				points_out = x.data.to_points()
+				points_out = x.data.to_points(8*self.conv_tres)
 				for x in points_out:
 					autopoint_obj = pl.data.add_point()
 					autopoint_obj.pos = x[0]
@@ -349,6 +350,8 @@ class cvpj_automation:
 		if (autopath not in self.data) or (replace):
 			self.data[autopath] = cvpj_s_automation(self.time_ppq, self.time_float, valtype)
 			self.data[autopath].id = self.auto_num.get()
+			if autopath == ['main', 'bpm']:
+				self.data[autopath].conv_tres = 8
 
 	def get(self, autopath, valtype):
 		autopath = cvpj_autoloc(autopath)

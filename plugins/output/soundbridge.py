@@ -345,6 +345,16 @@ def time_add(event, time_obj, otherblock):
 		event.loopOffset = max(event.loopOffset, 0)
 		event.positionStart = max(event.positionStart, 0)
 
+def add_tempo_section(sb_tempo_obj, position, length, startTempo, endTempo):
+	from objects.file_proj import proj_soundbridge
+	temposection = proj_soundbridge.soundbridge_tempo_section(None)
+	temposection.position = position
+	temposection.length = length
+	temposection.startTempo = startTempo
+	temposection.endTempo = endTempo
+	sb_tempo_obj.sections.append(temposection)
+
+
 class output_soundbridge(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -655,6 +665,32 @@ class output_soundbridge(plugins.base):
 			make_sends(convproj_obj, sb_track, return_obj.sends)
 			make_plugins_fx(convproj_obj, sb_track, return_obj.fxslots_audio)
 			sb_tracks.append(sb_track)
+
+		aid_found, aid_data = convproj_obj.automation.get(['main', 'bpm'], 'float')
+		if aid_found:
+			aid_data.convert____pl_points__nopl_points()
+
+			if aid_data.u_nopl_points:
+				if len(aid_data.nopl_points):
+					numpoints = len(aid_data.nopl_points)
+
+					sb_tempo_obj = project_obj.timeline.tempo
+
+					prev_val = data_values.dif_val(aid_data.nopl_points[0].value)
+					first_pos = aid_data.nopl_points[0].pos
+					first_val = aid_data.nopl_points[0].value
+
+					aid_data.nopl_points.sort()
+
+					for n, autopoint_obj in enumerate(aid_data.nopl_points):
+						val_dif = prev_val.do_value(autopoint_obj.value)
+						s_block_pos = aid_data.nopl_points[n-1].pos if n>0 else 0
+						s_block_val = aid_data.nopl_points[n-1].value
+						e_block_pos = autopoint_obj.pos
+						e_block_val = autopoint_obj.value if not autopoint_obj.type == 'instant' else s_block_val
+						add_tempo_section(sb_tempo_obj, s_block_pos, e_block_pos-s_block_pos, s_block_val, e_block_val)
+						if autopoint_obj.type == 'instant' and n == numpoints-1:
+							add_tempo_section(sb_tempo_obj, e_block_pos, e_block_pos+22050, autopoint_obj.value, autopoint_obj.value)
 
 		if convproj_obj.loop_active:
 			project_obj.metadata['TransportLoop'] = 'true'

@@ -54,6 +54,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 	if groupid not in groups_data and groupid in convproj_obj.groups:
 		group_obj = convproj_obj.groups[groupid]
 		sb_grouptrack = proj_soundbridge.soundbridge_track(None)
+		do_markers(group_obj.timemarkers, sb_grouptrack.markers)
 		make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.fxslots_audio)
 		sb_grouptrack.type = 1
 		#sb_grouptrack.state = set_params(group_obj.params)
@@ -352,6 +353,17 @@ def add_tempo_section(sb_tempo_obj, position, length, startTempo, endTempo):
 	temposection.endTempo = endTempo
 	sb_tempo_obj.sections.append(temposection)
 
+def do_markers(timemarkers_obj, sb_markers):
+	from objects.file_proj import proj_soundbridge
+	for num, timemarker_obj in enumerate(timemarkers_obj):
+		sb_marker = proj_soundbridge.soundbridge_marker(None)
+		sb_marker.label = timemarker_obj.visual.name if timemarker_obj.visual.name else ''
+		sb_marker.comment = timemarker_obj.visual.comment if timemarker_obj.visual.comment else ''
+		if timemarker_obj.visual.color:
+			sb_marker.tag = '#'+timemarker_obj.visual.color.get_hex()
+		sb_marker.position = timemarker_obj.position
+		sb_marker.linearTimeBase = 0
+		sb_markers.append(sb_marker)
 
 class output_soundbridge(plugins.base):
 	def __init__(self): pass
@@ -452,7 +464,10 @@ class output_soundbridge(plugins.base):
 				if track_obj.visual.color: sb_track.metadata["TrackColor"] = '#'+track_obj.visual.color.get_hex()
 				sb_track.midiInput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.midiInput.externalDeviceIndex = 0
+				sb_track.midiInput.channelIndex = track_obj.midi.in_chan-1
 				sb_track.midiOutput = proj_soundbridge.soundbridge_deviceRoute(None)
+				sb_track.midiOutput.externalDeviceIndex = -1
+				sb_track.midiOutput.channelIndex = track_obj.midi.out_chan-1
 				sb_track.blocks = []
 				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
@@ -641,7 +656,22 @@ class output_soundbridge(plugins.base):
 								stretchMark.initPosition = int(stretchMark.initPosition)
 								event.stretchMarks.append(stretchMark)
 
-							#print(warp_points)
+							for n, x in audiopl_obj.auto.items():
+								if n == 'gain':
+									autoblock = proj_soundbridge.soundbridge_block(None)
+									autoblock.index = 0
+									autoblock.name = ""
+									autoblock.timeBaseMode = 0
+									autoblock.position = 0
+									autoblock.positionStart = event.positionStart
+									autoblock.positionEnd = event.positionEnd
+									autoblock.loopOffset = event.loopOffset
+									autoblock.framesCount = event.framesCount
+									autoblock.loopEnabled = event.loopEnabled
+									autoblock.muted = 0
+									autoblock.version = 1
+									autoblock.blockData = make_auto(x, None, 0, 1)
+									event.automationBlocks.append(autoblock)
 
 							block.events.append(event)
 					blockContainer.blocks.append(block)
@@ -698,6 +728,8 @@ class output_soundbridge(plugins.base):
 			project_obj.metadata['TransportLoop'] = 'false'
 			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.start_pos
 			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.get_dur()
+
+		do_markers(convproj_obj.timemarkers, project_obj.timeline.markers)
 
 		outfile = os.path.join(output_file, '')
 		os.makedirs(output_file, exist_ok=True)

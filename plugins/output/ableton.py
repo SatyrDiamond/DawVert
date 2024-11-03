@@ -480,7 +480,7 @@ def add_group(convproj_obj, project_obj, groupid):
 
 	return groupnumid
 
-def do_audio_mpe(audiopl_obj, als_track):
+def do_audio_mpe(audiopl_obj, als_track, als_audioclip):
 	track_mixer = als_track.DeviceChain.Mixer
 	mainseq = als_track.DeviceChain.MainSequencer
 
@@ -566,8 +566,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 
 		do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
 
-
-		do_audio_mpe(audiopl_obj, als_track)
+		do_audio_mpe(audiopl_obj, als_track, als_audioclip)
 
 		ats = timestate(audiopl_obj)
 		ats.position = audiopl_obj.time.position

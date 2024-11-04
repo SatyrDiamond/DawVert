@@ -504,7 +504,7 @@
             },
             "Collision": {
                 "data": {
-                    "group": "inst"
+                    "group": "synth"
                 },
                 "params": {
                     "ChannelPressureOn": {"def": 0,"max": 0,"name": "ChannelPressureOn","noauto": true,"type": "int"},
@@ -1164,7 +1164,7 @@
             },
             "InstrumentImpulse": {
                 "data": {
-                    "group": "inst"
+                    "group": "synth"
                 },
                 "params": {
                     "DecayDecay.0": {"def": 2000.0,"max": 10000.0,"min": 5.0,"name": "DecayDecay.0","type": "float"},
@@ -1408,7 +1408,7 @@
             },
             "InstrumentVector": {
                 "data": {
-                    "group": "inst"
+                    "group": "synth"
                 },
                 "params": {
                     "AmpEnvelopeDisplayMode": {"def": 0,"max": 0,"name": "AmpEnvelopeDisplayMode","noauto": true,"type": "int"},
@@ -1561,7 +1561,7 @@
             },
             "LoungeLizard": {
                 "data": {
-                    "group": "inst"
+                    "group": "synth"
                 },
                 "params": {
                     "DamperAmount": {"def": 0.5,"name": "DamperAmount","type": "float"},
@@ -1651,7 +1651,7 @@
             },
             "Operator": {
                 "data": {
-                    "group": "inst"
+                    "group": "synth"
                 },
                 "params": {
                     "EnvScale/EnvTime": {"def": -15.0,"max": 100.0,"min": -100.0,"name": "EnvScale/EnvTime","type": "float"},
@@ -2195,7 +2195,7 @@
             },
             "StringStudio": {
                 "data": {
-                    "group": "inst"
+                    "group": "synth"
                 },
                 "params": {
                     "BodyDecay": {"def": 0.0,"name": "BodyDecay","type": "float"},
@@ -2364,7 +2364,7 @@
             },
             "UltraAnalog": {
                 "data": {
-                    "group": "inst"
+                    "group": "synth"
                 },
                 "params": {
                     "KeyboardDetune": {"def": 0.0,"name": "KeyboardDetune","type": "float"},

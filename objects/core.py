@@ -150,10 +150,11 @@ class dawinfo:
 
 pluginsets_input = {
 'main': ['', 'Main'],
-'vgm': ['vgm', 'VGM'],
 'exper': ['exper', 'Experiments'],
-'gameres': ['gameres', 'Game Mod'],
 'ai': ['ai', 'AI'],
+'vgm': ['vgm', 'VGM'],
+'gameres': ['gameres', 'Game Mod'],
+'gamespec': ['gamespec', 'Game Specific'],
 'wip': ['wip', 'WIP'],
 #'debug': ['debug', 'Debug']
 }

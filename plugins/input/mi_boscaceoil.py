@@ -52,7 +52,7 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 		plugin_obj.filter.type.set('high_pass', None)
 		plugin_obj.filter.freq = xtramath.midi_filter(fx_value/100)
 		
-	plugin_obj.role = 'effect'
+	plugin_obj.role = 'fx'
 
 	plugin_obj.visual.from_dset('boscaceoil', 'fx', FX_NAMES[fx_type], True)
 	convproj_obj.track_master.fxslots_audio.append('master-effect')

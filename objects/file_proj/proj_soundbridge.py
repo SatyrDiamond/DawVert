@@ -863,7 +863,7 @@ class soundbridge_song:
 		parser = ET.XMLParser(recover=True, encoding='utf-8')
 		xml_data = ET.parse(input_file, parser)
 		xml_proj = xml_data.getroot()
-		if xml_proj == None: raise ProjectFileParserException('temper: no XML root found')
+		if xml_proj == None: raise ProjectFileParserException('soundbridge: no XML root found')
 
 		projattrib = xml_proj.attrib
 

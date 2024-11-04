@@ -48,7 +48,7 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 				fxplugid = trackid+'_fx_'+str(fxnum)
 				fxtype = fx_effect[10:] if fx_effect.startswith(':/effects/') else fx_effect
 				fxplugin_obj = convproj_obj.add_plugin(fxplugid, 'native', 'serato-fx', fxtype)
-				fxplugin_obj.role = 'effect'
+				fxplugin_obj.role = 'fx'
 				if 'value' in pfe: fxplugin_obj.params.add('amount', pfe['value'], 'float')
 				fxslots_audio.append(fxplugid)
 

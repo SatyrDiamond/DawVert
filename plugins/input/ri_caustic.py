@@ -48,7 +48,7 @@ def add_caustic_fx(convproj_obj, track_obj, caustic_fx, start_plugid):
 		if caustic_fx_data.fx_type not in [4294967295, -1]:
 			fxtype = caustic_fxtype[caustic_fx_data.fx_type]
 			plugin_obj = convproj_obj.add_plugin(fx_pluginid, 'native', 'caustic', fxtype)
-			plugin_obj.role = 'effect'
+			plugin_obj.role = 'fx'
 			plugin_obj.fxdata_add(bool(not int(controls_data[5])), 1)
 			plugin_obj.visual.from_dset('caustic', 'plugin_fx', fxtype, True)
 

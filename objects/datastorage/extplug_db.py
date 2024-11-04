@@ -366,6 +366,8 @@ class vst3:
 			return 0
 
 class clap:
+	exe_txt_start = "SELECT name, id, creator, category, version, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, path_win, path_unix FROM clap"
+
 	def add(pluginfo_obj, platformtxt):
 		if pluginfo_obj.id and extplug_db.db_plugins:
 			extplug_db.db_plugins.execute("INSERT OR IGNORE INTO clap (id) VALUES (?)", (pluginfo_obj.id,))
@@ -389,15 +391,15 @@ class clap:
 	
 		if extplug_db.db_plugins:
 			if bycat == 'id':
-				founddata = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE id = ?", (in_val,)).fetchone()
+				founddata = extplug_db.db_plugins.execute(clap.exe_txt_start+" WHERE id = ?", (in_val,)).fetchone()
 	
 			if bycat == 'name':
-				founddata = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE name = ?", (in_val,)).fetchone()
+				founddata = extplug_db.db_plugins.execute(clap.exe_txt_start+" WHERE name = ?", (in_val,)).fetchone()
 	
 			if bycat == 'path':
 				patharch = 'win' if in_platformtxt == 'win' else 'unix'
 				in_val = in_val.replace('/', '\\')
-				founddata = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE path_"+patharch+" = ?", (in_val,)).fetchone()
+				founddata = extplug_db.db_plugins.execute(clap.exe_txt_start+" WHERE path_"+patharch+" = ?", (in_val,)).fetchone()
 
 		pluginfo_obj = pluginfo()
 		if founddata: pluginfo_obj.from_sql_clap(founddata, in_platformtxt)

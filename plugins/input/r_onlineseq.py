@@ -135,7 +135,7 @@ class input_onlinesequencer(plugins.base):
 				if 'bitcrush' in s_used_fx:
 					pluginid = trackid+'_bitcrush'
 					plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'bitcrush', None)
-					plugin_obj.role = 'effect'
+					plugin_obj.role = 'fx'
 					plugin_obj.params.add('bits', i_params.bitcrush_depth, 'float')
 					track_obj.fxslots_audio.append(pluginid)
 
@@ -152,7 +152,7 @@ class input_onlinesequencer(plugins.base):
 				if 'distort' in s_used_fx:
 					pluginid = trackid+'_distort'
 					plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'onlineseq', 'distort')
-					plugin_obj.role = 'effect'
+					plugin_obj.role = 'fx'
 					plugin_obj.fxdata_add(True, i_params.distort_wet)
 					plugin_obj.params.add('distort_type', i_params.distort_type, 'int')
 					plugin_obj.visual.name = 'Distortion'
@@ -161,7 +161,7 @@ class input_onlinesequencer(plugins.base):
 				if 'reverb' in s_used_fx:
 					pluginid = trackid+'_reverb'
 					plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'onlineseq', 'reverb')
-					plugin_obj.role = 'effect'
+					plugin_obj.role = 'fx'
 					plugin_obj.fxdata_add(bool(i_params.reverb_on), i_params.reverb_wet)
 					plugin_obj.params.add('reverb_type', i_params.reverb_type, 'int')
 					plugin_obj.visual.name = 'Reverb'
@@ -170,7 +170,7 @@ class input_onlinesequencer(plugins.base):
 				if 'eq' in s_used_fx:
 					pluginid = trackid+'_eq'
 					plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'onlineseq', 'eq')
-					plugin_obj.role = 'effect'
+					plugin_obj.role = 'fx'
 					plugin_obj.fxdata_add(bool(i_params.enable_eq), 1)
 					plugin_obj.params.add('eq_high', i_params.eq_high, 'float')
 					plugin_obj.params.add('eq_mid', i_params.eq_mid, 'float')

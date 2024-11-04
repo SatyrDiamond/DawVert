@@ -146,8 +146,14 @@ class cvpj_lane:
 		self.datavals = params.cvpj_datavals()
 		self.placements = placements.cvpj_placements(time_ppq, time_float, uses_placements, is_indexed)
 
+class cvpj_armstate:
+	def __init__(self):
+		self.on = False
+		self.in_keys = False
+		self.in_audio = False
+
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','inst_pluginid','datavals','visual','visual_ui','params','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -175,6 +181,7 @@ class cvpj_track:
 		self.audio_channels = 2
 		self.is_drum = False
 		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq, time_float)
+		self.armed = cvpj_armstate()
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -248,6 +255,7 @@ class cvpj_track:
 		c_obj.group = self.group
 		c_obj.returns = self.returns
 		c_obj.notelist_index = self.notelist_index
+		c_obj.armed = copy.deepcopy(self.armed)
 		return c_obj
 
 	def make_base_inst(self, inst_obj):
@@ -315,3 +323,8 @@ class cvpj_track:
 
 	def add_timemarker(self):
 		return self.timemarkers.add()
+
+	def plugin_autoplace(self, plugin_obj, pluginid):
+		if plugin_obj.role == 'fx': self.fxslots_audio.append(pluginid)
+		elif plugin_obj.role == 'notefx': self.fxslots_notes.append(pluginid)
+		elif plugin_obj.role == 'synth': self.inst_pluginid = pluginid

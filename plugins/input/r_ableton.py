@@ -241,12 +241,10 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 						param_val = doparam(param_value.value, cvpj_param_name, 'float', 0, ['plugin', pluginid, cvpj_param_name], None)
 						plugin_obj.params.add_named(cvpj_param_name, param_val, 'float', str(param_name))
 
-				if 2 in binflags:
-					plugin_obj.role = 'inst'
-					track_obj.inst_pluginid = pluginid
-				else:
-					plugin_obj.role = 'effect'
-					track_obj.fxslots_audio.append(pluginid)
+				if 2 in binflags: plugin_obj.role = 'synth'
+				else: plugin_obj.role = 'fx'
+
+				track_obj.plugin_autoplace(plugin_obj, pluginid)
 
 			if '0/Vst3PluginInfo' in PluginDesc:
 				VstPluginInfo = PluginDesc['0/Vst3PluginInfo']
@@ -275,10 +273,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				plugin_obj.datavals.add('id', hexuuid)
 				plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, hexuuid, ProcessorState)
 
-				if plugin_obj.role == 'synth': plugin_obj.role = 'inst'
-
-				if plugin_obj.role == 'effect': track_obj.fxslots_audio.append(pluginid)
-				elif plugin_obj.role == 'inst': track_obj.inst_pluginid = pluginid
+				track_obj.plugin_autoplace(plugin_obj, pluginid)
 
 				paramorder = []
 				for n, p in parampaths['ParameterList'].items():
@@ -304,8 +299,6 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 			if fldso:
 				device_type = fldso.data['group'] if 'group' in fldso.data else 'fx'
-				if device_type == 'inst': track_obj.inst_pluginid = pluginid
-				if device_type: plugin_obj.role = device_type
 
 				foundlists = findlists(parampaths)
 
@@ -320,8 +313,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 					plugin_obj.dset_param__add(param_id, outval, dset_param)
 
-				if plugin_obj.role == 'fx':
-					track_obj.fxslots_audio.append(pluginid)
+				track_obj.plugin_autoplace(plugin_obj, pluginid)
 
 			#if device.name == 'InstrumentVector':
 			#	modcons = []
@@ -456,6 +448,12 @@ class input_ableton(plugins.base):
 
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 
+				mainseq = als_track.DeviceChain.MainSequencer
+
+				if mainseq.Recorder.IsArmed:
+					track_obj.armed.on = True
+					track_obj.armed.in_keys = True
+
 			elif tracktype == 'audio':
 				fxloc = ['track', track_id]
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
@@ -470,8 +468,13 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 				
+				mainseq = als_track.DeviceChain.MainSequencer
+
+				if mainseq.Recorder.IsArmed:
+					track_obj.armed.on = True
+					track_obj.armed.in_audio = True
+
 				if not DEBUG_DISABLE_PLACEMENTS:
-					mainseq = als_track.DeviceChain.MainSequencer
 					
 					for clipid, cliptype, clipobj in mainseq.ClipTimeable.Events:
 						placement_obj = track_obj.placements.add_audio()

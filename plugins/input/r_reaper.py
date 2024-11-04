@@ -174,6 +174,10 @@ class input_reaper(plugins.base):
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
 
+			track_obj.armed.on = bool(rpp_track.rec['armed'])
+			track_obj.armed.in_keys = bool(rpp_track.rec['armed'])
+			track_obj.armed.in_audio = bool(rpp_track.rec['armed'])
+			
 			fxids = []
 
 			samplers = []
@@ -235,8 +239,7 @@ class input_reaper(plugins.base):
 										do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 								if fourid == 1919118692: track_obj.fxslots_notes.append(fxid)
-								elif plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
-								elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+								else: track_obj.plugin_autoplace(plugin_obj, fxid)
 
 						else:
 							plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'vst3', None)
@@ -250,8 +253,7 @@ class input_reaper(plugins.base):
 									chunk = preset_data.raw(chunk_size)
 
 									pluginfo_obj = plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.vst3_uuid, chunk)
-									if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
-									elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+									track_obj.plugin_autoplace(plugin_obj, fxid)
 								except:
 									pass
 
@@ -263,8 +265,7 @@ class input_reaper(plugins.base):
 						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'clap', None)
 						plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.clap_id, rpp_extplug.data_chunk)
 						plugin_obj.visual.name = rpp_extplug.clap_name
-						if plugin_obj.role == 'synth': track_obj.inst_pluginid = fxid
-						elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(fxid)
+						track_obj.plugin_autoplace(plugin_obj, fxid)
 
 						for parmenv in rpp_plugin.parmenv:
 							if parmenv.is_param:

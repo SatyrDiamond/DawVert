@@ -62,7 +62,7 @@ class cvpj_plugin:
 		self.visual_custom = {}
 		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.audioports = cvpj_audioports()
-		self.role = 'effect'
+		self.role = 'fx'
 		self.midi = midi_inst.cvpj_midi_inst()
 		self.current_program = 0
 		self.program_used = False

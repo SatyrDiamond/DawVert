@@ -44,7 +44,7 @@ class fx_delay:
 			else:
 				plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'delay', None)
 			
-		plugin_obj.role = 'effect'
+		plugin_obj.role = 'fx'
 
 		plugin_obj.datavals.add('mode', self.mode)
 		plugin_obj.datavals.add('submode', self.submode)

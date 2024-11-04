@@ -7,6 +7,8 @@ from os.path import exists
 from objects import globalstore
 import uuid
 
+def get_type(indata): return 'synth' if indata == "synth" else 'fx'
+
 class plugsearch(plugins.base):
 	def __init__(self): pass
 	def get_shortname(self): return 'fl_studio'
@@ -64,7 +66,8 @@ class plugsearch(plugins.base):
 											pluginfo_obj.id = dict_vstinfo['ps_file_magic_'+str(filenum)]
 											pluginfo_obj.name = dict_vstinfo['ps_file_name_'+str(filenum)]
 											if 'ps_file_vendorname_'+str(filenum) in dict_vstinfo: pluginfo_obj.creator = dict_vstinfo['ps_file_vendorname_'+str(filenum)]
-											if 'ps_file_category_'+str(filenum) in dict_vstinfo: pluginfo_obj.type = dict_vstinfo['ps_file_category_'+str(filenum)].lower()
+											if 'ps_file_category_'+str(filenum) in dict_vstinfo: 
+												pluginfo_obj.type = get_type(dict_vstinfo['ps_file_category_'+str(filenum)].lower())
 											if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '32': pluginfo_obj.path_32bit = dict_vstinfo['ps_file_filename_'+str(filenum)]
 											if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': pluginfo_obj.path_64bit = dict_vstinfo['ps_file_filename_'+str(filenum)]
 										vst2count += 1

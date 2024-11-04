@@ -106,8 +106,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				plugin_obj, pluginid = juceobj.to_cvpj(convproj_obj, None)
 				plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
 	
-				if plugin_obj.role == 'synth': track_obj.inst_pluginid = pluginid
-				elif plugin_obj.role == 'effect': track_obj.fxslots_audio.append(pluginid)
+				track_obj.plugin_autoplace(plugin_obj, pluginid)
 	
 				if pluginid:
 					if wf_plugin.windowX and wf_plugin.windowY:

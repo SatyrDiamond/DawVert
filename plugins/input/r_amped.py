@@ -152,7 +152,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			elif amped_tr_device.label == 'Amp Sim Utility': 
 				plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', amped_tr_device.label)
 				plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
-				plugin_obj.role = 'effect'
+				plugin_obj.role = 'fx'
 				track_obj.fxslots_audio.append(pluginid)
 
 			if amped_tr_device.label in ['OBXD', 'Augur', 'Dexed', 'Europa']:
@@ -278,7 +278,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 		elif devicetype == ['EqualizerPro', 'Equalizer']:
 			track_obj.fxslots_audio.append(pluginid)
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', 'EqualizerPro')
-			plugin_obj.role = 'effect'
+			plugin_obj.role = 'fx'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
@@ -288,7 +288,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 		'Reverb', 'Tremolo', 'BitCrusher', 'Tremolo', 'Vibrato', 'Compressor', 'Expander']:
 			track_obj.fxslots_audio.append(pluginid)
 			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'amped', amped_tr_device.className)
-			plugin_obj.role = 'effect'
+			plugin_obj.role = 'fx'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
@@ -386,6 +386,7 @@ class input_amped(plugins.base):
 
 		for amped_track in amped_obj.tracks:
 			amped_tr_id = str(amped_track.id)
+			amped_armed = amped_track.armed if amped_track.armed else None
 
 			track_obj = convproj_obj.add_track(amped_tr_id, 'hybrid', 1, False)
 			track_obj.visual.name = amped_track.name
@@ -394,6 +395,12 @@ class input_amped(plugins.base):
 			track_obj.params.add('pan', amped_track.pan, 'float')
 			track_obj.params.add('enabled', bool(not amped_track.mute), 'bool')
 			track_obj.params.add('solo', bool(amped_track.solo), 'bool')
+
+			if amped_track.armed:
+				amped_armed = amped_track.armed
+				track_obj.armed.in_audio = amped_armed['mic'] if 'mic' in amped_armed else False
+				track_obj.armed.in_keys = amped_armed['keys'] if 'keys' in amped_armed else False
+				track_obj.armed.on = track_obj.armed.in_audio or track_obj.armed.in_keys
 
 			amped_autodata = {}
 			for amped_automation in amped_track.automations:

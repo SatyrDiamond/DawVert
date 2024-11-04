@@ -344,6 +344,8 @@ class output_reaper(plugins.base):
 			rpp_track_obj.volpan['vol'] = track_obj.params.get('vol', 1.0).value
 			rpp_track_obj.volpan['pan'] = track_obj.params.get('pan', 0).value
 
+			rpp_track_obj.rec['armed'] = int(track_obj.armed.on)
+
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
 			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)

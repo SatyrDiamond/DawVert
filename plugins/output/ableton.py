@@ -200,7 +200,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
 		vstname = os.path.basename(vstpath).split('.')[0]
 		vstversion = plugin_obj.datavals_global.get('version_bytes', 0)
-		is_instrument = plugin_obj.role == 'inst'
+		is_instrument = plugin_obj.role == 'synth'
 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 		als_device = als_track.DeviceChain.add_device('PluginDevice')
@@ -304,7 +304,7 @@ def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 		wobj = convproj_obj.window_data_get(['plugin', pluginid])
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
 		vstname = plugin_obj.datavals_global.get('name', 0)
-		is_instrument = plugin_obj.role == 'inst'
+		is_instrument = plugin_obj.role == 'synth'
 
 		Fields = [int(vstid[0:8], 16), int(vstid[8:16], 16), int(vstid[16:24], 16), int(vstid[24:32], 16)]
 		devicetype = 1 if is_instrument else 2
@@ -576,7 +576,10 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		ats.loop_end = audiopl_obj.time.duration
 		ats.loop_on = False
 	
-		second_dur = sampleref_obj.dur_sec
+		if sampleref_obj:
+			second_dur = sampleref_obj.dur_sec if sampleref_obj.dur_sec else 1
+		else:
+			second_dur = 8
 
 		if audiopl_obj.time.cut_type == 'cut':
 			ats.startrel = 0
@@ -722,6 +725,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			issampler = False
 
 		mainseq = als_track.DeviceChain.MainSequencer
+		mainseq.Recorder.IsArmed = track_obj.armed.in_keys
 
 		midicc = {}
 
@@ -1071,7 +1075,8 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			als_track.TrackGroupId = groupnumid
 			als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
 
-		#print('NEW TRACK', tracknumid, trackid, groupnumid)
+		mainseq = als_track.DeviceChain.MainSequencer
+		mainseq.Recorder.IsArmed = track_obj.armed.in_audio
 
 		if not DEBUG_IGNORE_PLACEMENTS:
 			track_obj.placements.pl_audio.sort()

@@ -469,6 +469,9 @@ class output_soundbridge(plugins.base):
 				sb_track.midiOutput.externalDeviceIndex = -1
 				sb_track.midiOutput.channelIndex = track_obj.midi.out_chan-1
 				sb_track.blocks = []
+
+				sb_track.armed = int(track_obj.armed.in_keys)
+
 				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
 				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)
@@ -575,6 +578,9 @@ class output_soundbridge(plugins.base):
 				sb_track.pitchTempoProcessorMode = 2
 				sb_track.audioInput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.blockContainers = []
+
+				sb_track.armed = int(track_obj.armed.in_audio)
+				
 				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
 				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)

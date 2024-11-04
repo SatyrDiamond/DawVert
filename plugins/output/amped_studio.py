@@ -26,7 +26,7 @@ def createclip(audiopl_obj, audio_id):
 	from objects.file_proj import proj_amped
 	amped_audclip = proj_amped.amped_clip(None)
 	amped_audclip.contentGuid.is_custom = True
-	amped_audclip.contentGuid.id = audio_id[audiopl_obj.sample.sampleref]
+	amped_audclip.contentGuid.id = audio_id[audiopl_obj.sample.sampleref] if audiopl_obj.sample.sampleref in audio_id else ''
 	amped_audclip.position = 0
 	amped_audclip.gain = audiopl_obj.sample.vol
 	amped_audclip.length = audiopl_obj.time.duration*4
@@ -175,6 +175,11 @@ class output_amped(plugins.base):
 			amped_track.volume = track_obj.params.get('vol', 1.0).value
 			amped_track.mute = not track_obj.params.get('on', True).value
 			amped_track.solo = bool(track_obj.params.get('solo', False).value)
+
+			amped_track.armed = {
+				'mic': track_obj.armed.in_audio,
+				'keys': track_obj.armed.in_keys
+			}
 
 			inst_supported = False
 			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)

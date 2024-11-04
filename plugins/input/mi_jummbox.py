@@ -101,13 +101,13 @@ def text_instid(channum, instnum):
 def addfx(convproj_obj, inst_obj, fxgroupname, cvpj_instid, fxname, fxsubname):
 	fx_pluginid = cvpj_instid+'_'+fxname
 	plugin_obj = convproj_obj.add_plugin(fx_pluginid, fxgroupname, fxname, fxsubname)
-	plugin_obj.role = 'effect'
+	plugin_obj.role = 'fx'
 	inst_obj.fxslots_audio.append(fx_pluginid)
 	return plugin_obj
 
 def add_eq_data(inst_obj, cvpj_instid, eqfiltbands):
 	plugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'eq', 'bands')
-	plugin_obj.role = 'effect'
+	plugin_obj.role = 'fx'
 	plugin_obj.visual.name = 'EQ'
 	for eqfiltdata in eqfiltbands:
 		eqgain_pass = eqfiltdata['linearGain']

@@ -60,6 +60,11 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, data):
 
 		plugin_obj.datavals_global.add('datatype', 'chunk')
 		plugin_obj.rawdata_add('chunk', data)
+	else:
+		pluginname = plugin_obj.datavals_global.get('name', None)
+		outtxt = '"'+str(in_val)+'" from '+str(bycat)
+		if pluginname: outtxt = pluginname
+		logger_plugins.warning('vst3: plugin not found in database: '+outtxt)
 
 	return pluginfo_obj
 

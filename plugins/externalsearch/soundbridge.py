@@ -12,7 +12,7 @@ import base64
 import struct
 import uuid
 
-w_regkey_cakewalk = 'SOFTWARE\\SoundBridge\\SoundBridge\\PluginCache.x64'
+w_regkey_soundbridge64 = 'SOFTWARE\\SoundBridge\\SoundBridge\\PluginCache.x64'
 
 def reg_get(name, regpath):
 	try:
@@ -31,18 +31,17 @@ def reg_list(winregpath):
 		while True:
 			try:
 				keypath = winreg.EnumKey(winregobj, i)
-				pathlist.append(w_regkey_cakewalk + '\\' + keypath)
+				pathlist.append(w_regkey_soundbridge64 + '\\' + keypath)
 				i += 1
 			except WindowsError: 
 				break
 	except: 
-		print('f')
 		pass
 	return pathlist
 
 def reg_checkexist(winregpath):
 	try:
-		winregobj_cakewalk = winreg.OpenKey(winreg.HKEY_CURRENT_USER, winregpath)
+		winreg.OpenKey(winreg.HKEY_CURRENT_USER, winregpath)
 		return True
 	except: return False
 
@@ -80,9 +79,9 @@ class plugsearch(plugins.base):
 		vst2count = 0
 		vst3count = 0
 
-		vstlist = reg_list(w_regkey_cakewalk)
+		vstlist = reg_list(w_regkey_soundbridge64)
 
-		if reg_checkexist(w_regkey_cakewalk):
+		if reg_checkexist(w_regkey_soundbridge64):
 			for vstplugin in vstlist:
 				registry_key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, vstplugin, 0, winreg.KEY_READ)
 				try: PluginData = winreg.QueryValueEx(registry_key, 'PluginData')[0]

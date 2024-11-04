@@ -79,7 +79,7 @@ class plugsearch(plugins.base):
 							pluginfo_obj.name = vst_name
 							if vst_is64 == 1: pluginfo_obj.path_64bit = vst_path
 							else: pluginfo_obj.path_32bit = vst_path
-							pluginfo_obj.type = 'synth' if vst_isSynth else 'effect'
+							pluginfo_obj.type = 'synth' if vst_isSynth else 'fx'
 							if vst_Vendor != None: pluginfo_obj.creator = vst_Vendor
 							pluginfo_obj.audio_num_inputs = vst_numInputs
 							pluginfo_obj.audio_num_outputs = vst_numOutputs

@@ -325,7 +325,7 @@ class input_soundation(plugins.base):
 
 			for soundation_effect in soundation_channel.effects:
 				plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', soundation_effect.identifier)
-				plugin_obj.role = 'effect'
+				plugin_obj.role = 'fx'
 				plugin_obj.fxdata_add(not soundation_effect.bypass, 1)
 				track_obj.fxslots_audio.append(pluginid)
 				autoall_sng_to_cvpj(convproj_obj, pluginid, soundation_effect, plugin_obj, soundation_effect.identifier)

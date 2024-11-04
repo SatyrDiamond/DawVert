@@ -40,7 +40,7 @@ class plugsearch(plugins.base):
 							if vst2data_fourid < 0: vst2data_fourid = int(x_pluginfo.get('id')) + 2**32
 
 							if vst_category == 'Instrument': vst2data_type = 'synth'
-							elif vst_category == 'Effect': vst2data_type = 'effect'
+							elif vst_category == 'Effect': vst2data_type = 'fx'
 							else: vst2data_type = None
 
 							if vst2data_type:

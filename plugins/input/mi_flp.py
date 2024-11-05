@@ -45,8 +45,6 @@ def conv_color(b_color):
 def flpauto_to_cvpjauto(i_value):
 	out = [None, 0, 1]
 
-	#print(i_value)
-
 	if i_value[0] == 'fx':
 		if i_value[2] == 'plugin':
 			pluginid = 'FLPlug_F_'+str(i_value[1])+'_'+str(i_value[3])
@@ -279,6 +277,8 @@ class input_flp(plugins.base):
 		globalstore.datadef.load('fl_studio', './data_main/datadef/fl_studio.ddef')
 		globalstore.dataset.load('fl_studio', './data_main/dataset/fl_studio.dset')
 
+		wrapper_plugids = []
+
 		convproj_obj.set_timings(flp_obj.ppq, False)
 		convproj_obj.timesig[0] = flp_obj.numerator
 		convproj_obj.timesig[1] = int(((flp_obj.denominator/4)**-1)*4)
@@ -288,6 +288,9 @@ class input_flp(plugins.base):
 		convproj_obj.params.add('shuffle', flp_obj.shuffle/128, 'float')
 
 		convproj_obj.params.add('vol', flp_obj.initfxvals.initvals['main/vol']/12800 if 'main/vol' in flp_obj.initfxvals.initvals else 1, 'float')
+
+		#for x in flp_obj.startvals.initvals.items():
+		#	print(x)
 
 		id_inst = {}
 		id_pat = {}
@@ -346,6 +349,9 @@ class input_flp(plugins.base):
 					if fl_channel_obj.plugin.name != None: 
 						inst_obj.pluginid = 'FLPlug_G_'+str(channelnum)
 						plugin_obj = flp_dec_plugins.getparams(convproj_obj, inst_obj.pluginid, fl_channel_obj.plugin, samplefolder, flp_obj.zipfile)
+						if fl_channel_obj.plugin.name == 'fruity wrapper':
+							wrapper_plugids.append(inst_obj.pluginid)
+
 						if fl_channel_obj.samplefilename:
 							sp_obj = plugin_obj.samplepart_add('audiofile')
 							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
@@ -574,7 +580,7 @@ class input_flp(plugins.base):
 						if color != b'HQV\x00': playlist_obj.visual.color.set_int([color[0],color[1],color[2]])
 						temp_pl_track[playlistline] = playlist_obj
 
-				if item.itemindex > item.patternbase:
+				if item.itemindex > item.patternbase and playlistline in temp_pl_track:
 					placement_obj = temp_pl_track[playlistline].placements.add_notes_indexed()
 					placement_obj.time.set_posdur(item.position, item.length)
 					placement_obj.muted = bool(item.flags & 0b0001000000000000)
@@ -681,13 +687,19 @@ class input_flp(plugins.base):
 				route_wet = flp_obj.initfxvals.initvals[autoloctxt_wet]/12800 if autoloctxt_wet in flp_obj.initfxvals.initvals else 1
 
 				if slot_obj:
-					pluginid = 'FLPlug_F_'+str(mixer_id)+'_'+str(slot_id)
-					plugin_obj = flp_dec_plugins.getparams(convproj_obj, pluginid, slot_obj.plugin, samplefolder, flp_obj.zipfile)
-					plugin_obj.fxdata_add(bool(route_on), route_wet)
-					plugin_obj.role = 'effect'
-					if slot_obj.name: plugin_obj.visual.name = slot_obj.name
-					if slot_obj.color: plugin_obj.visual.color.set_int(conv_color(slot_obj.color))
-					fxchannel_obj.fxslots_audio.append(pluginid)
+					try:
+						pluginid = 'FLPlug_F_'+str(mixer_id)+'_'+str(slot_id)
+						plugin_obj = flp_dec_plugins.getparams(convproj_obj, pluginid, slot_obj.plugin, samplefolder, flp_obj.zipfile)
+						plugin_obj.fxdata_add(bool(route_on), route_wet)
+						plugin_obj.role = 'effect'
+						if slot_obj.name: plugin_obj.visual.name = slot_obj.name
+						if slot_obj.color: plugin_obj.visual.color.set_int(conv_color(slot_obj.color))
+						if slot_obj.plugin.name == 'fruity wrapper':
+							wrapper_plugids.append(pluginid)
+
+						fxchannel_obj.fxslots_audio.append(pluginid)
+					except:
+						pass
 
 			eq_fxid = 'FLPlug_ME_'+str(mixer_id)
 
@@ -746,6 +758,21 @@ class input_flp(plugins.base):
 		convproj_obj.do_actions.append('do_addloop')
 
 		convproj_obj.loop_end = convproj_obj.get_dur()
+
+		convproj_obj.automation.attempt_after()
+
+		movequeue = []
+		autodata = convproj_obj.automation.data
+		for wrapper_plugid in wrapper_plugids:
+			for n, x in autodata.items():
+				if n.startswith(['id_plug',wrapper_plugid]):
+					#convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
+					autol = n.get_list()
+					movequeue.append([autol, ['plugin',autol[1],'ext_param_'+autol[2]]])
+
+		for autopath, to_autopath in movequeue:
+			convproj_obj.automation.calc(autopath, 'floatbyteint2float', 0, 0, 0, 0)
+			convproj_obj.automation.move(autopath, to_autopath)
 
 		if flp_obj.title: convproj_obj.metadata.name = flp_obj.title
 		if flp_obj.author: convproj_obj.metadata.author = flp_obj.author

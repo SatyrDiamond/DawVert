@@ -300,7 +300,7 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 		for autoloc, autodata, paramnum in convproj_obj.automation.iter_pl_points_external(pluginid):
 			paramid = 'ext_param_'+str(paramnum)
 			automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
-			automationTrack.parameterIndex = paramnum
+			automationTrack.parameterIndex = paramnum+1
 			automationTrack.mode = 3
 			automationTrack.enabled = 1
 			automationTrack.defaultValue = plugin_obj.params.get(paramid, 0)

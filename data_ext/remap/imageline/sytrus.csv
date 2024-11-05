@@ -1,0 +1,599 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+param_0,88,0,160,Main - Master level,0,Main - Master level
+param_1,128,-128,128,Main - Master LFO level,1,Main - Master LFO level
+param_2,0,-24,24,Main - Master pitch,2,Main - Master pitch
+param_3,128,0,256,Main - Volume attack,3,Main - Volume attack
+param_4,165,0,256,Main - Volume decay,4,Main - Volume decay
+param_5,0,-128,128,Main - Volume sustain,5,Main - Volume sustain
+param_6,166,0,256,Main - Volume release,6,Main - Volume release
+param_7,128,0,256,Main - Filter attack,7,Main - Filter attack
+param_8,128,0,256,Main - Filter decay,8,Main - Filter decay
+param_9,0,-128,128,Main - Filter sustain,9,Main - Filter sustain
+param_10,128,0,256,Main - Filter release,10,Main - Filter release
+param_11,6,1,9,Main - Unison order,11,Main - Unison order
+param_12,58,0,128,Main - Unison panning,12,Main - Unison panning
+param_13,128,16,128,Main - Unison volume,13,Main - Unison volume
+param_14,158,0,256,Main - Unison pitch,14,Main - Unison pitch
+param_15,0,0,96,Main - Unison sub level,15,Main - Unison sub level
+param_16,128,0,128,Main - Unison phase,16,Main - Unison phase
+param_17,27,0,192,Main - Unison envelope,17,Main - Unison envelope
+param_18,512,0,512,Main - Modulation X,18,Main - Modulation X
+param_19,442,0,512,Main - Modulation Y,19,Main - Modulation Y
+param_20,0,0,256,Operator 1 - Starting p,20,Operator 1 - Starting p
+param_21,256,-256,256,Operator 1 - Volume,21,Operator 1 - Volume
+param_22,1200,0,4800,Operator 1 - Pitch enve,22,Operator 1 - Pitch enve
+param_23,128,0,256,Operator 1 - Panning -,23,Operator 1 - Panning -
+param_24,128,0,256,Operator 1 - Panning -,24,Operator 1 - Panning -
+param_25,0,0,128,Operator 1 - Panning -,25,Operator 1 - Panning -
+param_26,128,-128,256,Operator 1 - Panning -,26,Operator 1 - Panning -
+param_27,40000,512,65536,Operator 1 - Panning -,27,Operator 1 - Panning -
+param_28,0,-128,128,Operator 1 - Panning -,28,Operator 1 - Panning -
+param_29,0,-128,128,Operator 1 - Panning -,29,Operator 1 - Panning -
+param_30,0,-112,112,Operator 1 - Panning -,30,Operator 1 - Panning -
+param_31,128,0,256,Operator 1 - Volume - A,31,Operator 1 - Volume - A
+param_32,128,0,256,Operator 1 - Volume - D,32,Operator 1 - Volume - D
+param_33,0,-128,128,Operator 1 - Volume - S,33,Operator 1 - Volume - S
+param_34,128,0,256,Operator 1 - Volume - R,34,Operator 1 - Volume - R
+param_35,40000,512,65536,Operator 1 - Volume - L,35,Operator 1 - Volume - L
+param_36,0,-128,128,Operator 1 - Volume - L,36,Operator 1 - Volume - L
+param_37,0,-128,128,Operator 1 - Volume - L,37,Operator 1 - Volume - L
+param_38,0,-112,112,Operator 1 - Volume - L,38,Operator 1 - Volume - L
+param_39,128,0,256,Operator 1 - Input modu,39,Operator 1 - Input modu
+param_40,128,0,256,Operator 1 - Input modu,40,Operator 1 - Input modu
+param_41,0,-128,128,Operator 1 - Input modu,41,Operator 1 - Input modu
+param_42,128,0,256,Operator 1 - Input modu,42,Operator 1 - Input modu
+param_43,40000,512,65536,Operator 1 - Input modu,43,Operator 1 - Input modu
+param_44,0,-128,128,Operator 1 - Input modu,44,Operator 1 - Input modu
+param_45,0,-128,128,Operator 1 - Input modu,45,Operator 1 - Input modu
+param_46,0,-112,112,Operator 1 - Input modu,46,Operator 1 - Input modu
+param_47,128,0,256,Operator 1 - Pitch - At,47,Operator 1 - Pitch - At
+param_48,128,0,256,Operator 1 - Pitch - De,48,Operator 1 - Pitch - De
+param_49,0,-128,128,Operator 1 - Pitch - Su,49,Operator 1 - Pitch - Su
+param_50,128,0,256,Operator 1 - Pitch - Re,50,Operator 1 - Pitch - Re
+param_51,40000,512,65536,Operator 1 - Pitch - LF,51,Operator 1 - Pitch - LF
+param_52,0,-128,128,Operator 1 - Pitch - LF,52,Operator 1 - Pitch - LF
+param_53,0,-128,128,Operator 1 - Pitch - LF,53,Operator 1 - Pitch - LF
+param_54,0,-112,112,Operator 1 - Pitch - LF,54,Operator 1 - Pitch - LF
+param_55,128,0,256,Operator 1 - Phase - At,55,Operator 1 - Phase - At
+param_56,128,0,256,Operator 1 - Phase - De,56,Operator 1 - Phase - De
+param_57,0,-128,128,Operator 1 - Phase - Su,57,Operator 1 - Phase - Su
+param_58,128,0,256,Operator 1 - Phase - Re,58,Operator 1 - Phase - Re
+param_59,40000,512,65536,Operator 1 - Phase - LF,59,Operator 1 - Phase - LF
+param_60,0,-128,128,Operator 1 - Phase - LF,60,Operator 1 - Phase - LF
+param_61,0,-128,128,Operator 1 - Phase - LF,61,Operator 1 - Phase - LF
+param_62,0,-112,112,Operator 1 - Phase - LF,62,Operator 1 - Phase - LF
+param_63,128,0,256,Operator 1 - Plucked da,63,Operator 1 - Plucked da
+param_64,128,0,256,Operator 1 - Plucked da,64,Operator 1 - Plucked da
+param_65,0,-128,128,Operator 1 - Plucked da,65,Operator 1 - Plucked da
+param_66,128,0,256,Operator 1 - Plucked da,66,Operator 1 - Plucked da
+param_67,40000,512,65536,Operator 1 - Plucked da,67,Operator 1 - Plucked da
+param_68,0,-128,128,Operator 1 - Plucked da,68,Operator 1 - Plucked da
+param_69,0,-128,128,Operator 1 - Plucked da,69,Operator 1 - Plucked da
+param_70,0,-112,112,Operator 1 - Plucked da,70,Operator 1 - Plucked da
+param_71,0,0,256,Operator 2 - Starting p,71,Operator 2 - Starting p
+param_72,256,-256,256,Operator 2 - Volume,72,Operator 2 - Volume
+param_73,1200,0,4800,Operator 2 - Pitch enve,73,Operator 2 - Pitch enve
+param_74,128,0,256,Operator 2 - Panning -,74,Operator 2 - Panning -
+param_75,128,0,256,Operator 2 - Panning -,75,Operator 2 - Panning -
+param_76,0,0,128,Operator 2 - Panning -,76,Operator 2 - Panning -
+param_77,128,-128,256,Operator 2 - Panning -,77,Operator 2 - Panning -
+param_78,40000,512,65536,Operator 2 - Panning -,78,Operator 2 - Panning -
+param_79,0,-128,128,Operator 2 - Panning -,79,Operator 2 - Panning -
+param_80,0,-128,128,Operator 2 - Panning -,80,Operator 2 - Panning -
+param_81,0,-112,112,Operator 2 - Panning -,81,Operator 2 - Panning -
+param_82,128,0,256,Operator 2 - Volume - A,82,Operator 2 - Volume - A
+param_83,128,0,256,Operator 2 - Volume - D,83,Operator 2 - Volume - D
+param_84,0,-128,128,Operator 2 - Volume - S,84,Operator 2 - Volume - S
+param_85,128,0,256,Operator 2 - Volume - R,85,Operator 2 - Volume - R
+param_86,40000,512,65536,Operator 2 - Volume - L,86,Operator 2 - Volume - L
+param_87,0,-128,128,Operator 2 - Volume - L,87,Operator 2 - Volume - L
+param_88,0,-128,128,Operator 2 - Volume - L,88,Operator 2 - Volume - L
+param_89,0,-112,112,Operator 2 - Volume - L,89,Operator 2 - Volume - L
+param_90,128,0,256,Operator 2 - Input modu,90,Operator 2 - Input modu
+param_91,128,0,256,Operator 2 - Input modu,91,Operator 2 - Input modu
+param_92,0,-128,128,Operator 2 - Input modu,92,Operator 2 - Input modu
+param_93,128,0,256,Operator 2 - Input modu,93,Operator 2 - Input modu
+param_94,40000,512,65536,Operator 2 - Input modu,94,Operator 2 - Input modu
+param_95,0,-128,128,Operator 2 - Input modu,95,Operator 2 - Input modu
+param_96,0,-128,128,Operator 2 - Input modu,96,Operator 2 - Input modu
+param_97,0,-112,112,Operator 2 - Input modu,97,Operator 2 - Input modu
+param_98,128,0,256,Operator 2 - Pitch - At,98,Operator 2 - Pitch - At
+param_99,128,0,256,Operator 2 - Pitch - De,99,Operator 2 - Pitch - De
+param_100,0,-128,128,Operator 2 - Pitch - Su,100,Operator 2 - Pitch - Su
+param_101,128,0,256,Operator 2 - Pitch - Re,101,Operator 2 - Pitch - Re
+param_102,40000,512,65536,Operator 2 - Pitch - LF,102,Operator 2 - Pitch - LF
+param_103,0,-128,128,Operator 2 - Pitch - LF,103,Operator 2 - Pitch - LF
+param_104,0,-128,128,Operator 2 - Pitch - LF,104,Operator 2 - Pitch - LF
+param_105,0,-112,112,Operator 2 - Pitch - LF,105,Operator 2 - Pitch - LF
+param_106,128,0,256,Operator 2 - Phase - At,106,Operator 2 - Phase - At
+param_107,128,0,256,Operator 2 - Phase - De,107,Operator 2 - Phase - De
+param_108,0,-128,128,Operator 2 - Phase - Su,108,Operator 2 - Phase - Su
+param_109,128,0,256,Operator 2 - Phase - Re,109,Operator 2 - Phase - Re
+param_110,40000,512,65536,Operator 2 - Phase - LF,110,Operator 2 - Phase - LF
+param_111,0,-128,128,Operator 2 - Phase - LF,111,Operator 2 - Phase - LF
+param_112,0,-128,128,Operator 2 - Phase - LF,112,Operator 2 - Phase - LF
+param_113,0,-112,112,Operator 2 - Phase - LF,113,Operator 2 - Phase - LF
+param_114,128,0,256,Operator 2 - Plucked da,114,Operator 2 - Plucked da
+param_115,128,0,256,Operator 2 - Plucked da,115,Operator 2 - Plucked da
+param_116,0,-128,128,Operator 2 - Plucked da,116,Operator 2 - Plucked da
+param_117,128,0,256,Operator 2 - Plucked da,117,Operator 2 - Plucked da
+param_118,40000,512,65536,Operator 2 - Plucked da,118,Operator 2 - Plucked da
+param_119,0,-128,128,Operator 2 - Plucked da,119,Operator 2 - Plucked da
+param_120,0,-128,128,Operator 2 - Plucked da,120,Operator 2 - Plucked da
+param_121,0,-112,112,Operator 2 - Plucked da,121,Operator 2 - Plucked da
+param_122,0,0,256,Operator 3 - Starting p,122,Operator 3 - Starting p
+param_123,256,-256,256,Operator 3 - Volume,123,Operator 3 - Volume
+param_124,1200,0,4800,Operator 3 - Pitch enve,124,Operator 3 - Pitch enve
+param_125,128,0,256,Operator 3 - Panning -,125,Operator 3 - Panning -
+param_126,128,0,256,Operator 3 - Panning -,126,Operator 3 - Panning -
+param_127,0,0,128,Operator 3 - Panning -,127,Operator 3 - Panning -
+param_128,128,-128,256,Operator 3 - Panning -,128,Operator 3 - Panning -
+param_129,40000,512,65536,Operator 3 - Panning -,129,Operator 3 - Panning -
+param_130,0,-128,128,Operator 3 - Panning -,130,Operator 3 - Panning -
+param_131,0,-128,128,Operator 3 - Panning -,131,Operator 3 - Panning -
+param_132,0,-112,112,Operator 3 - Panning -,132,Operator 3 - Panning -
+param_133,128,0,256,Operator 3 - Volume - A,133,Operator 3 - Volume - A
+param_134,128,0,256,Operator 3 - Volume - D,134,Operator 3 - Volume - D
+param_135,0,-128,128,Operator 3 - Volume - S,135,Operator 3 - Volume - S
+param_136,128,0,256,Operator 3 - Volume - R,136,Operator 3 - Volume - R
+param_137,40000,512,65536,Operator 3 - Volume - L,137,Operator 3 - Volume - L
+param_138,0,-128,128,Operator 3 - Volume - L,138,Operator 3 - Volume - L
+param_139,0,-128,128,Operator 3 - Volume - L,139,Operator 3 - Volume - L
+param_140,0,-112,112,Operator 3 - Volume - L,140,Operator 3 - Volume - L
+param_141,128,0,256,Operator 3 - Input modu,141,Operator 3 - Input modu
+param_142,128,0,256,Operator 3 - Input modu,142,Operator 3 - Input modu
+param_143,0,-128,128,Operator 3 - Input modu,143,Operator 3 - Input modu
+param_144,128,0,256,Operator 3 - Input modu,144,Operator 3 - Input modu
+param_145,40000,512,65536,Operator 3 - Input modu,145,Operator 3 - Input modu
+param_146,0,-128,128,Operator 3 - Input modu,146,Operator 3 - Input modu
+param_147,0,-128,128,Operator 3 - Input modu,147,Operator 3 - Input modu
+param_148,0,-112,112,Operator 3 - Input modu,148,Operator 3 - Input modu
+param_149,128,0,256,Operator 3 - Pitch - At,149,Operator 3 - Pitch - At
+param_150,128,0,256,Operator 3 - Pitch - De,150,Operator 3 - Pitch - De
+param_151,0,-128,128,Operator 3 - Pitch - Su,151,Operator 3 - Pitch - Su
+param_152,128,0,256,Operator 3 - Pitch - Re,152,Operator 3 - Pitch - Re
+param_153,40000,512,65536,Operator 3 - Pitch - LF,153,Operator 3 - Pitch - LF
+param_154,0,-128,128,Operator 3 - Pitch - LF,154,Operator 3 - Pitch - LF
+param_155,0,-128,128,Operator 3 - Pitch - LF,155,Operator 3 - Pitch - LF
+param_156,0,-112,112,Operator 3 - Pitch - LF,156,Operator 3 - Pitch - LF
+param_157,128,0,256,Operator 3 - Phase - At,157,Operator 3 - Phase - At
+param_158,128,0,256,Operator 3 - Phase - De,158,Operator 3 - Phase - De
+param_159,0,-128,128,Operator 3 - Phase - Su,159,Operator 3 - Phase - Su
+param_160,128,0,256,Operator 3 - Phase - Re,160,Operator 3 - Phase - Re
+param_161,40000,512,65536,Operator 3 - Phase - LF,161,Operator 3 - Phase - LF
+param_162,0,-128,128,Operator 3 - Phase - LF,162,Operator 3 - Phase - LF
+param_163,0,-128,128,Operator 3 - Phase - LF,163,Operator 3 - Phase - LF
+param_164,0,-112,112,Operator 3 - Phase - LF,164,Operator 3 - Phase - LF
+param_165,128,0,256,Operator 3 - Plucked da,165,Operator 3 - Plucked da
+param_166,128,0,256,Operator 3 - Plucked da,166,Operator 3 - Plucked da
+param_167,0,-128,128,Operator 3 - Plucked da,167,Operator 3 - Plucked da
+param_168,128,0,256,Operator 3 - Plucked da,168,Operator 3 - Plucked da
+param_169,40000,512,65536,Operator 3 - Plucked da,169,Operator 3 - Plucked da
+param_170,0,-128,128,Operator 3 - Plucked da,170,Operator 3 - Plucked da
+param_171,0,-128,128,Operator 3 - Plucked da,171,Operator 3 - Plucked da
+param_172,0,-112,112,Operator 3 - Plucked da,172,Operator 3 - Plucked da
+param_173,0,0,256,Operator 4 - Starting p,173,Operator 4 - Starting p
+param_174,256,-256,256,Operator 4 - Volume,174,Operator 4 - Volume
+param_175,1200,0,4800,Operator 4 - Pitch enve,175,Operator 4 - Pitch enve
+param_176,128,0,256,Operator 4 - Panning -,176,Operator 4 - Panning -
+param_177,128,0,256,Operator 4 - Panning -,177,Operator 4 - Panning -
+param_178,0,0,128,Operator 4 - Panning -,178,Operator 4 - Panning -
+param_179,128,-128,256,Operator 4 - Panning -,179,Operator 4 - Panning -
+param_180,40000,512,65536,Operator 4 - Panning -,180,Operator 4 - Panning -
+param_181,0,-128,128,Operator 4 - Panning -,181,Operator 4 - Panning -
+param_182,0,-128,128,Operator 4 - Panning -,182,Operator 4 - Panning -
+param_183,0,-112,112,Operator 4 - Panning -,183,Operator 4 - Panning -
+param_184,128,0,256,Operator 4 - Volume - A,184,Operator 4 - Volume - A
+param_185,128,0,256,Operator 4 - Volume - D,185,Operator 4 - Volume - D
+param_186,0,-128,128,Operator 4 - Volume - S,186,Operator 4 - Volume - S
+param_187,128,0,256,Operator 4 - Volume - R,187,Operator 4 - Volume - R
+param_188,40000,512,65536,Operator 4 - Volume - L,188,Operator 4 - Volume - L
+param_189,0,-128,128,Operator 4 - Volume - L,189,Operator 4 - Volume - L
+param_190,0,-128,128,Operator 4 - Volume - L,190,Operator 4 - Volume - L
+param_191,0,-112,112,Operator 4 - Volume - L,191,Operator 4 - Volume - L
+param_192,128,0,256,Operator 4 - Input modu,192,Operator 4 - Input modu
+param_193,128,0,256,Operator 4 - Input modu,193,Operator 4 - Input modu
+param_194,0,-128,128,Operator 4 - Input modu,194,Operator 4 - Input modu
+param_195,128,0,256,Operator 4 - Input modu,195,Operator 4 - Input modu
+param_196,40000,512,65536,Operator 4 - Input modu,196,Operator 4 - Input modu
+param_197,0,-128,128,Operator 4 - Input modu,197,Operator 4 - Input modu
+param_198,0,-128,128,Operator 4 - Input modu,198,Operator 4 - Input modu
+param_199,0,-112,112,Operator 4 - Input modu,199,Operator 4 - Input modu
+param_200,128,0,256,Operator 4 - Pitch - At,200,Operator 4 - Pitch - At
+param_201,128,0,256,Operator 4 - Pitch - De,201,Operator 4 - Pitch - De
+param_202,0,-128,128,Operator 4 - Pitch - Su,202,Operator 4 - Pitch - Su
+param_203,128,0,256,Operator 4 - Pitch - Re,203,Operator 4 - Pitch - Re
+param_204,40000,512,65536,Operator 4 - Pitch - LF,204,Operator 4 - Pitch - LF
+param_205,0,-128,128,Operator 4 - Pitch - LF,205,Operator 4 - Pitch - LF
+param_206,0,-128,128,Operator 4 - Pitch - LF,206,Operator 4 - Pitch - LF
+param_207,0,-112,112,Operator 4 - Pitch - LF,207,Operator 4 - Pitch - LF
+param_208,128,0,256,Operator 4 - Phase - At,208,Operator 4 - Phase - At
+param_209,128,0,256,Operator 4 - Phase - De,209,Operator 4 - Phase - De
+param_210,0,-128,128,Operator 4 - Phase - Su,210,Operator 4 - Phase - Su
+param_211,128,0,256,Operator 4 - Phase - Re,211,Operator 4 - Phase - Re
+param_212,40000,512,65536,Operator 4 - Phase - LF,212,Operator 4 - Phase - LF
+param_213,0,-128,128,Operator 4 - Phase - LF,213,Operator 4 - Phase - LF
+param_214,0,-128,128,Operator 4 - Phase - LF,214,Operator 4 - Phase - LF
+param_215,0,-112,112,Operator 4 - Phase - LF,215,Operator 4 - Phase - LF
+param_216,128,0,256,Operator 4 - Plucked da,216,Operator 4 - Plucked da
+param_217,128,0,256,Operator 4 - Plucked da,217,Operator 4 - Plucked da
+param_218,0,-128,128,Operator 4 - Plucked da,218,Operator 4 - Plucked da
+param_219,128,0,256,Operator 4 - Plucked da,219,Operator 4 - Plucked da
+param_220,40000,512,65536,Operator 4 - Plucked da,220,Operator 4 - Plucked da
+param_221,0,-128,128,Operator 4 - Plucked da,221,Operator 4 - Plucked da
+param_222,0,-128,128,Operator 4 - Plucked da,222,Operator 4 - Plucked da
+param_223,0,-112,112,Operator 4 - Plucked da,223,Operator 4 - Plucked da
+param_224,0,0,256,Operator 5 - Starting p,224,Operator 5 - Starting p
+param_225,256,-256,256,Operator 5 - Volume,225,Operator 5 - Volume
+param_226,1200,0,4800,Operator 5 - Pitch enve,226,Operator 5 - Pitch enve
+param_227,128,0,256,Operator 5 - Panning -,227,Operator 5 - Panning -
+param_228,128,0,256,Operator 5 - Panning -,228,Operator 5 - Panning -
+param_229,0,0,128,Operator 5 - Panning -,229,Operator 5 - Panning -
+param_230,128,-128,256,Operator 5 - Panning -,230,Operator 5 - Panning -
+param_231,40000,512,65536,Operator 5 - Panning -,231,Operator 5 - Panning -
+param_232,0,-128,128,Operator 5 - Panning -,232,Operator 5 - Panning -
+param_233,0,-128,128,Operator 5 - Panning -,233,Operator 5 - Panning -
+param_234,0,-112,112,Operator 5 - Panning -,234,Operator 5 - Panning -
+param_235,128,0,256,Operator 5 - Volume - A,235,Operator 5 - Volume - A
+param_236,128,0,256,Operator 5 - Volume - D,236,Operator 5 - Volume - D
+param_237,0,-128,128,Operator 5 - Volume - S,237,Operator 5 - Volume - S
+param_238,128,0,256,Operator 5 - Volume - R,238,Operator 5 - Volume - R
+param_239,40000,512,65536,Operator 5 - Volume - L,239,Operator 5 - Volume - L
+param_240,0,-128,128,Operator 5 - Volume - L,240,Operator 5 - Volume - L
+param_241,0,-128,128,Operator 5 - Volume - L,241,Operator 5 - Volume - L
+param_242,0,-112,112,Operator 5 - Volume - L,242,Operator 5 - Volume - L
+param_243,128,0,256,Operator 5 - Input modu,243,Operator 5 - Input modu
+param_244,128,0,256,Operator 5 - Input modu,244,Operator 5 - Input modu
+param_245,0,-128,128,Operator 5 - Input modu,245,Operator 5 - Input modu
+param_246,128,0,256,Operator 5 - Input modu,246,Operator 5 - Input modu
+param_247,40000,512,65536,Operator 5 - Input modu,247,Operator 5 - Input modu
+param_248,0,-128,128,Operator 5 - Input modu,248,Operator 5 - Input modu
+param_249,0,-128,128,Operator 5 - Input modu,249,Operator 5 - Input modu
+param_250,0,-112,112,Operator 5 - Input modu,250,Operator 5 - Input modu
+param_251,128,0,256,Operator 5 - Pitch - At,251,Operator 5 - Pitch - At
+param_252,128,0,256,Operator 5 - Pitch - De,252,Operator 5 - Pitch - De
+param_253,0,-128,128,Operator 5 - Pitch - Su,253,Operator 5 - Pitch - Su
+param_254,128,0,256,Operator 5 - Pitch - Re,254,Operator 5 - Pitch - Re
+param_255,40000,512,65536,Operator 5 - Pitch - LF,255,Operator 5 - Pitch - LF
+param_256,0,-128,128,Operator 5 - Pitch - LF,256,Operator 5 - Pitch - LF
+param_257,0,-128,128,Operator 5 - Pitch - LF,257,Operator 5 - Pitch - LF
+param_258,0,-112,112,Operator 5 - Pitch - LF,258,Operator 5 - Pitch - LF
+param_259,128,0,256,Operator 5 - Phase - At,259,Operator 5 - Phase - At
+param_260,128,0,256,Operator 5 - Phase - De,260,Operator 5 - Phase - De
+param_261,0,-128,128,Operator 5 - Phase - Su,261,Operator 5 - Phase - Su
+param_262,128,0,256,Operator 5 - Phase - Re,262,Operator 5 - Phase - Re
+param_263,40000,512,65536,Operator 5 - Phase - LF,263,Operator 5 - Phase - LF
+param_264,0,-128,128,Operator 5 - Phase - LF,264,Operator 5 - Phase - LF
+param_265,0,-128,128,Operator 5 - Phase - LF,265,Operator 5 - Phase - LF
+param_266,0,-112,112,Operator 5 - Phase - LF,266,Operator 5 - Phase - LF
+param_267,128,0,256,Operator 5 - Plucked da,267,Operator 5 - Plucked da
+param_268,128,0,256,Operator 5 - Plucked da,268,Operator 5 - Plucked da
+param_269,0,-128,128,Operator 5 - Plucked da,269,Operator 5 - Plucked da
+param_270,128,0,256,Operator 5 - Plucked da,270,Operator 5 - Plucked da
+param_271,40000,512,65536,Operator 5 - Plucked da,271,Operator 5 - Plucked da
+param_272,0,-128,128,Operator 5 - Plucked da,272,Operator 5 - Plucked da
+param_273,0,-128,128,Operator 5 - Plucked da,273,Operator 5 - Plucked da
+param_274,0,-112,112,Operator 5 - Plucked da,274,Operator 5 - Plucked da
+param_275,0,0,256,Operator 6 - Starting p,275,Operator 6 - Starting p
+param_276,256,-256,256,Operator 6 - Volume,276,Operator 6 - Volume
+param_277,1200,0,4800,Operator 6 - Pitch enve,277,Operator 6 - Pitch enve
+param_278,128,0,256,Operator 6 - Panning -,278,Operator 6 - Panning -
+param_279,128,0,256,Operator 6 - Panning -,279,Operator 6 - Panning -
+param_280,0,0,128,Operator 6 - Panning -,280,Operator 6 - Panning -
+param_281,128,-128,256,Operator 6 - Panning -,281,Operator 6 - Panning -
+param_282,40000,512,65536,Operator 6 - Panning -,282,Operator 6 - Panning -
+param_283,0,-128,128,Operator 6 - Panning -,283,Operator 6 - Panning -
+param_284,0,-128,128,Operator 6 - Panning -,284,Operator 6 - Panning -
+param_285,0,-112,112,Operator 6 - Panning -,285,Operator 6 - Panning -
+param_286,128,0,256,Operator 6 - Volume - A,286,Operator 6 - Volume - A
+param_287,128,0,256,Operator 6 - Volume - D,287,Operator 6 - Volume - D
+param_288,0,-128,128,Operator 6 - Volume - S,288,Operator 6 - Volume - S
+param_289,128,0,256,Operator 6 - Volume - R,289,Operator 6 - Volume - R
+param_290,40000,512,65536,Operator 6 - Volume - L,290,Operator 6 - Volume - L
+param_291,0,-128,128,Operator 6 - Volume - L,291,Operator 6 - Volume - L
+param_292,0,-128,128,Operator 6 - Volume - L,292,Operator 6 - Volume - L
+param_293,0,-112,112,Operator 6 - Volume - L,293,Operator 6 - Volume - L
+param_294,128,0,256,Operator 6 - Input modu,294,Operator 6 - Input modu
+param_295,128,0,256,Operator 6 - Input modu,295,Operator 6 - Input modu
+param_296,0,-128,128,Operator 6 - Input modu,296,Operator 6 - Input modu
+param_297,128,0,256,Operator 6 - Input modu,297,Operator 6 - Input modu
+param_298,40000,512,65536,Operator 6 - Input modu,298,Operator 6 - Input modu
+param_299,0,-128,128,Operator 6 - Input modu,299,Operator 6 - Input modu
+param_300,0,-128,128,Operator 6 - Input modu,300,Operator 6 - Input modu
+param_301,0,-112,112,Operator 6 - Input modu,301,Operator 6 - Input modu
+param_302,128,0,256,Operator 6 - Pitch - At,302,Operator 6 - Pitch - At
+param_303,128,0,256,Operator 6 - Pitch - De,303,Operator 6 - Pitch - De
+param_304,0,-128,128,Operator 6 - Pitch - Su,304,Operator 6 - Pitch - Su
+param_305,128,0,256,Operator 6 - Pitch - Re,305,Operator 6 - Pitch - Re
+param_306,40000,512,65536,Operator 6 - Pitch - LF,306,Operator 6 - Pitch - LF
+param_307,0,-128,128,Operator 6 - Pitch - LF,307,Operator 6 - Pitch - LF
+param_308,0,-128,128,Operator 6 - Pitch - LF,308,Operator 6 - Pitch - LF
+param_309,0,-112,112,Operator 6 - Pitch - LF,309,Operator 6 - Pitch - LF
+param_310,128,0,256,Operator 6 - Phase - At,310,Operator 6 - Phase - At
+param_311,128,0,256,Operator 6 - Phase - De,311,Operator 6 - Phase - De
+param_312,0,-128,128,Operator 6 - Phase - Su,312,Operator 6 - Phase - Su
+param_313,128,0,256,Operator 6 - Phase - Re,313,Operator 6 - Phase - Re
+param_314,40000,512,65536,Operator 6 - Phase - LF,314,Operator 6 - Phase - LF
+param_315,0,-128,128,Operator 6 - Phase - LF,315,Operator 6 - Phase - LF
+param_316,0,-128,128,Operator 6 - Phase - LF,316,Operator 6 - Phase - LF
+param_317,0,-112,112,Operator 6 - Phase - LF,317,Operator 6 - Phase - LF
+param_318,128,0,256,Operator 6 - Plucked da,318,Operator 6 - Plucked da
+param_319,128,0,256,Operator 6 - Plucked da,319,Operator 6 - Plucked da
+param_320,0,-128,128,Operator 6 - Plucked da,320,Operator 6 - Plucked da
+param_321,128,0,256,Operator 6 - Plucked da,321,Operator 6 - Plucked da
+param_322,40000,512,65536,Operator 6 - Plucked da,322,Operator 6 - Plucked da
+param_323,0,-128,128,Operator 6 - Plucked da,323,Operator 6 - Plucked da
+param_324,0,-128,128,Operator 6 - Plucked da,324,Operator 6 - Plucked da
+param_325,0,-112,112,Operator 6 - Plucked da,325,Operator 6 - Plucked da
+param_326,1,0,5,Filter 1 - Filter mode,326,Filter 1 - Filter mode
+param_327,128,0,256,Filter 1 - Cutoff envel,327,Filter 1 - Cutoff envel
+param_328,128,0,256,Filter 1 - Cutoff frequ,328,Filter 1 - Cutoff frequ
+param_329,0,0,256,Filter 1 - Resonance /,329,Filter 1 - Resonance /
+param_330,128,0,128,Filter 1 - Low / gain /,330,Filter 1 - Low / gain /
+param_331,0,0,128,Filter 1 - Band,331,Filter 1 - Band
+param_332,0,0,128,Filter 1 - High,332,Filter 1 - High
+param_333,64,64,192,Filter 1 - Waveshaper p,333,Filter 1 - Waveshaper p
+param_334,128,0,128,Filter 1 - Waveshaper m,334,Filter 1 - Waveshaper m
+param_335,0,-256,256,Filter 1 - To next filt,335,Filter 1 - To next filt
+param_336,128,0,256,Filter 1 - Panning - At,336,Filter 1 - Panning - At
+param_337,128,0,256,Filter 1 - Panning - De,337,Filter 1 - Panning - De
+param_338,0,-128,128,Filter 1 - Panning - Su,338,Filter 1 - Panning - Su
+param_339,128,0,256,Filter 1 - Panning - Re,339,Filter 1 - Panning - Re
+param_340,40000,512,65536,Filter 1 - Panning - LF,340,Filter 1 - Panning - LF
+param_341,0,-128,128,Filter 1 - Panning - LF,341,Filter 1 - Panning - LF
+param_342,0,-128,128,Filter 1 - Panning - LF,342,Filter 1 - Panning - LF
+param_343,0,-112,112,Filter 1 - Panning - LF,343,Filter 1 - Panning - LF
+param_344,128,0,256,Filter 1 - Volume - Att,344,Filter 1 - Volume - Att
+param_345,128,0,256,Filter 1 - Volume - Dec,345,Filter 1 - Volume - Dec
+param_346,0,-128,128,Filter 1 - Volume - Sus,346,Filter 1 - Volume - Sus
+param_347,128,0,256,Filter 1 - Volume - Rel,347,Filter 1 - Volume - Rel
+param_348,40000,512,65536,Filter 1 - Volume - LFO,348,Filter 1 - Volume - LFO
+param_349,0,-128,128,Filter 1 - Volume - LFO,349,Filter 1 - Volume - LFO
+param_350,0,-128,128,Filter 1 - Volume - LFO,350,Filter 1 - Volume - LFO
+param_351,0,-112,112,Filter 1 - Volume - LFO,351,Filter 1 - Volume - LFO
+param_352,128,0,256,Filter 1 - Filter cutof,352,Filter 1 - Filter cutof
+param_353,128,0,256,Filter 1 - Filter cutof,353,Filter 1 - Filter cutof
+param_354,0,-128,128,Filter 1 - Filter cutof,354,Filter 1 - Filter cutof
+param_355,128,0,256,Filter 1 - Filter cutof,355,Filter 1 - Filter cutof
+param_356,40000,512,65536,Filter 1 - Filter cutof,356,Filter 1 - Filter cutof
+param_357,0,-128,128,Filter 1 - Filter cutof,357,Filter 1 - Filter cutof
+param_358,0,-128,128,Filter 1 - Filter cutof,358,Filter 1 - Filter cutof
+param_359,0,-112,112,Filter 1 - Filter cutof,359,Filter 1 - Filter cutof
+param_360,128,0,256,Filter 1 - Filter reson,360,Filter 1 - Filter reson
+param_361,128,0,256,Filter 1 - Filter reson,361,Filter 1 - Filter reson
+param_362,0,-128,128,Filter 1 - Filter reson,362,Filter 1 - Filter reson
+param_363,128,0,256,Filter 1 - Filter reson,363,Filter 1 - Filter reson
+param_364,40000,512,65536,Filter 1 - Filter reson,364,Filter 1 - Filter reson
+param_365,0,-128,128,Filter 1 - Filter reson,365,Filter 1 - Filter reson
+param_366,0,-128,128,Filter 1 - Filter reson,366,Filter 1 - Filter reson
+param_367,0,-112,112,Filter 1 - Filter reson,367,Filter 1 - Filter reson
+param_368,128,0,256,Filter 1 - Filter low /,368,Filter 1 - Filter low /
+param_369,128,0,256,Filter 1 - Filter low /,369,Filter 1 - Filter low /
+param_370,0,-128,128,Filter 1 - Filter low /,370,Filter 1 - Filter low /
+param_371,128,0,256,Filter 1 - Filter low /,371,Filter 1 - Filter low /
+param_372,40000,512,65536,Filter 1 - Filter low /,372,Filter 1 - Filter low /
+param_373,0,-128,128,Filter 1 - Filter low /,373,Filter 1 - Filter low /
+param_374,0,-128,128,Filter 1 - Filter low /,374,Filter 1 - Filter low /
+param_375,0,-112,112,Filter 1 - Filter low /,375,Filter 1 - Filter low /
+param_376,128,0,256,Filter 1 - Filter band,376,Filter 1 - Filter band
+param_377,128,0,256,Filter 1 - Filter band,377,Filter 1 - Filter band
+param_378,0,-128,128,Filter 1 - Filter band,378,Filter 1 - Filter band
+param_379,128,0,256,Filter 1 - Filter band,379,Filter 1 - Filter band
+param_380,40000,512,65536,Filter 1 - Filter band,380,Filter 1 - Filter band
+param_381,0,-128,128,Filter 1 - Filter band,381,Filter 1 - Filter band
+param_382,0,-128,128,Filter 1 - Filter band,382,Filter 1 - Filter band
+param_383,0,-112,112,Filter 1 - Filter band,383,Filter 1 - Filter band
+param_384,128,0,256,Filter 1 - Filter high,384,Filter 1 - Filter high
+param_385,128,0,256,Filter 1 - Filter high,385,Filter 1 - Filter high
+param_386,0,-128,128,Filter 1 - Filter high,386,Filter 1 - Filter high
+param_387,128,0,256,Filter 1 - Filter high,387,Filter 1 - Filter high
+param_388,40000,512,65536,Filter 1 - Filter high,388,Filter 1 - Filter high
+param_389,0,-128,128,Filter 1 - Filter high,389,Filter 1 - Filter high
+param_390,0,-128,128,Filter 1 - Filter high,390,Filter 1 - Filter high
+param_391,0,-112,112,Filter 1 - Filter high,391,Filter 1 - Filter high
+param_392,128,0,256,Filter 1 - Waveshaper -,392,Filter 1 - Waveshaper -
+param_393,128,0,256,Filter 1 - Waveshaper -,393,Filter 1 - Waveshaper -
+param_394,0,-128,128,Filter 1 - Waveshaper -,394,Filter 1 - Waveshaper -
+param_395,128,0,256,Filter 1 - Waveshaper -,395,Filter 1 - Waveshaper -
+param_396,40000,512,65536,Filter 1 - Waveshaper -,396,Filter 1 - Waveshaper -
+param_397,0,-128,128,Filter 1 - Waveshaper -,397,Filter 1 - Waveshaper -
+param_398,0,-128,128,Filter 1 - Waveshaper -,398,Filter 1 - Waveshaper -
+param_399,0,-112,112,Filter 1 - Waveshaper -,399,Filter 1 - Waveshaper -
+param_400,1,0,5,Filter 2 - Filter mode,400,Filter 2 - Filter mode
+param_401,128,0,256,Filter 2 - Cutoff envel,401,Filter 2 - Cutoff envel
+param_402,128,0,256,Filter 2 - Cutoff frequ,402,Filter 2 - Cutoff frequ
+param_403,0,0,256,Filter 2 - Resonance /,403,Filter 2 - Resonance /
+param_404,128,0,128,Filter 2 - Low / gain /,404,Filter 2 - Low / gain /
+param_405,0,0,128,Filter 2 - Band,405,Filter 2 - Band
+param_406,0,0,128,Filter 2 - High,406,Filter 2 - High
+param_407,64,64,192,Filter 2 - Waveshaper p,407,Filter 2 - Waveshaper p
+param_408,128,0,128,Filter 2 - Waveshaper m,408,Filter 2 - Waveshaper m
+param_409,0,-256,256,Filter 2 - To next filt,409,Filter 2 - To next filt
+param_410,128,0,256,Filter 2 - Panning - At,410,Filter 2 - Panning - At
+param_411,128,0,256,Filter 2 - Panning - De,411,Filter 2 - Panning - De
+param_412,0,-128,128,Filter 2 - Panning - Su,412,Filter 2 - Panning - Su
+param_413,128,0,256,Filter 2 - Panning - Re,413,Filter 2 - Panning - Re
+param_414,40000,512,65536,Filter 2 - Panning - LF,414,Filter 2 - Panning - LF
+param_415,0,-128,128,Filter 2 - Panning - LF,415,Filter 2 - Panning - LF
+param_416,0,-128,128,Filter 2 - Panning - LF,416,Filter 2 - Panning - LF
+param_417,0,-112,112,Filter 2 - Panning - LF,417,Filter 2 - Panning - LF
+param_418,128,0,256,Filter 2 - Volume - Att,418,Filter 2 - Volume - Att
+param_419,128,0,256,Filter 2 - Volume - Dec,419,Filter 2 - Volume - Dec
+param_420,0,-128,128,Filter 2 - Volume - Sus,420,Filter 2 - Volume - Sus
+param_421,128,0,256,Filter 2 - Volume - Rel,421,Filter 2 - Volume - Rel
+param_422,40000,512,65536,Filter 2 - Volume - LFO,422,Filter 2 - Volume - LFO
+param_423,0,-128,128,Filter 2 - Volume - LFO,423,Filter 2 - Volume - LFO
+param_424,0,-128,128,Filter 2 - Volume - LFO,424,Filter 2 - Volume - LFO
+param_425,0,-112,112,Filter 2 - Volume - LFO,425,Filter 2 - Volume - LFO
+param_426,128,0,256,Filter 2 - Filter cutof,426,Filter 2 - Filter cutof
+param_427,128,0,256,Filter 2 - Filter cutof,427,Filter 2 - Filter cutof
+param_428,0,-128,128,Filter 2 - Filter cutof,428,Filter 2 - Filter cutof
+param_429,128,0,256,Filter 2 - Filter cutof,429,Filter 2 - Filter cutof
+param_430,40000,512,65536,Filter 2 - Filter cutof,430,Filter 2 - Filter cutof
+param_431,0,-128,128,Filter 2 - Filter cutof,431,Filter 2 - Filter cutof
+param_432,0,-128,128,Filter 2 - Filter cutof,432,Filter 2 - Filter cutof
+param_433,0,-112,112,Filter 2 - Filter cutof,433,Filter 2 - Filter cutof
+param_434,128,0,256,Filter 2 - Filter reson,434,Filter 2 - Filter reson
+param_435,128,0,256,Filter 2 - Filter reson,435,Filter 2 - Filter reson
+param_436,0,-128,128,Filter 2 - Filter reson,436,Filter 2 - Filter reson
+param_437,128,0,256,Filter 2 - Filter reson,437,Filter 2 - Filter reson
+param_438,40000,512,65536,Filter 2 - Filter reson,438,Filter 2 - Filter reson
+param_439,0,-128,128,Filter 2 - Filter reson,439,Filter 2 - Filter reson
+param_440,0,-128,128,Filter 2 - Filter reson,440,Filter 2 - Filter reson
+param_441,0,-112,112,Filter 2 - Filter reson,441,Filter 2 - Filter reson
+param_442,128,0,256,Filter 2 - Filter low /,442,Filter 2 - Filter low /
+param_443,128,0,256,Filter 2 - Filter low /,443,Filter 2 - Filter low /
+param_444,0,-128,128,Filter 2 - Filter low /,444,Filter 2 - Filter low /
+param_445,128,0,256,Filter 2 - Filter low /,445,Filter 2 - Filter low /
+param_446,40000,512,65536,Filter 2 - Filter low /,446,Filter 2 - Filter low /
+param_447,0,-128,128,Filter 2 - Filter low /,447,Filter 2 - Filter low /
+param_448,0,-128,128,Filter 2 - Filter low /,448,Filter 2 - Filter low /
+param_449,0,-112,112,Filter 2 - Filter low /,449,Filter 2 - Filter low /
+param_450,128,0,256,Filter 2 - Filter band,450,Filter 2 - Filter band
+param_451,128,0,256,Filter 2 - Filter band,451,Filter 2 - Filter band
+param_452,0,-128,128,Filter 2 - Filter band,452,Filter 2 - Filter band
+param_453,128,0,256,Filter 2 - Filter band,453,Filter 2 - Filter band
+param_454,40000,512,65536,Filter 2 - Filter band,454,Filter 2 - Filter band
+param_455,0,-128,128,Filter 2 - Filter band,455,Filter 2 - Filter band
+param_456,0,-128,128,Filter 2 - Filter band,456,Filter 2 - Filter band
+param_457,0,-112,112,Filter 2 - Filter band,457,Filter 2 - Filter band
+param_458,128,0,256,Filter 2 - Filter high,458,Filter 2 - Filter high
+param_459,128,0,256,Filter 2 - Filter high,459,Filter 2 - Filter high
+param_460,0,-128,128,Filter 2 - Filter high,460,Filter 2 - Filter high
+param_461,128,0,256,Filter 2 - Filter high,461,Filter 2 - Filter high
+param_462,40000,512,65536,Filter 2 - Filter high,462,Filter 2 - Filter high
+param_463,0,-128,128,Filter 2 - Filter high,463,Filter 2 - Filter high
+param_464,0,-128,128,Filter 2 - Filter high,464,Filter 2 - Filter high
+param_465,0,-112,112,Filter 2 - Filter high,465,Filter 2 - Filter high
+param_466,128,0,256,Filter 2 - Waveshaper -,466,Filter 2 - Waveshaper -
+param_467,128,0,256,Filter 2 - Waveshaper -,467,Filter 2 - Waveshaper -
+param_468,0,-128,128,Filter 2 - Waveshaper -,468,Filter 2 - Waveshaper -
+param_469,128,0,256,Filter 2 - Waveshaper -,469,Filter 2 - Waveshaper -
+param_470,40000,512,65536,Filter 2 - Waveshaper -,470,Filter 2 - Waveshaper -
+param_471,0,-128,128,Filter 2 - Waveshaper -,471,Filter 2 - Waveshaper -
+param_472,0,-128,128,Filter 2 - Waveshaper -,472,Filter 2 - Waveshaper -
+param_473,0,-112,112,Filter 2 - Waveshaper -,473,Filter 2 - Waveshaper -
+param_474,1,0,5,Filter 3 - Filter mode,474,Filter 3 - Filter mode
+param_475,128,0,256,Filter 3 - Cutoff envel,475,Filter 3 - Cutoff envel
+param_476,128,0,256,Filter 3 - Cutoff frequ,476,Filter 3 - Cutoff frequ
+param_477,0,0,256,Filter 3 - Resonance /,477,Filter 3 - Resonance /
+param_478,128,0,128,Filter 3 - Low / gain /,478,Filter 3 - Low / gain /
+param_479,0,0,128,Filter 3 - Band,479,Filter 3 - Band
+param_480,0,0,128,Filter 3 - High,480,Filter 3 - High
+param_481,64,64,192,Filter 3 - Waveshaper p,481,Filter 3 - Waveshaper p
+param_482,128,0,128,Filter 3 - Waveshaper m,482,Filter 3 - Waveshaper m
+param_483,128,0,256,Filter 3 - Panning - At,483,Filter 3 - Panning - At
+param_484,128,0,256,Filter 3 - Panning - De,484,Filter 3 - Panning - De
+param_485,0,-128,128,Filter 3 - Panning - Su,485,Filter 3 - Panning - Su
+param_486,128,0,256,Filter 3 - Panning - Re,486,Filter 3 - Panning - Re
+param_487,40000,512,65536,Filter 3 - Panning - LF,487,Filter 3 - Panning - LF
+param_488,0,-128,128,Filter 3 - Panning - LF,488,Filter 3 - Panning - LF
+param_489,0,-128,128,Filter 3 - Panning - LF,489,Filter 3 - Panning - LF
+param_490,0,-112,112,Filter 3 - Panning - LF,490,Filter 3 - Panning - LF
+param_491,128,0,256,Filter 3 - Volume - Att,491,Filter 3 - Volume - Att
+param_492,128,0,256,Filter 3 - Volume - Dec,492,Filter 3 - Volume - Dec
+param_493,0,-128,128,Filter 3 - Volume - Sus,493,Filter 3 - Volume - Sus
+param_494,128,0,256,Filter 3 - Volume - Rel,494,Filter 3 - Volume - Rel
+param_495,40000,512,65536,Filter 3 - Volume - LFO,495,Filter 3 - Volume - LFO
+param_496,0,-128,128,Filter 3 - Volume - LFO,496,Filter 3 - Volume - LFO
+param_497,0,-128,128,Filter 3 - Volume - LFO,497,Filter 3 - Volume - LFO
+param_498,0,-112,112,Filter 3 - Volume - LFO,498,Filter 3 - Volume - LFO
+param_499,128,0,256,Filter 3 - Filter cutof,499,Filter 3 - Filter cutof
+param_500,128,0,256,Filter 3 - Filter cutof,500,Filter 3 - Filter cutof
+param_501,0,-128,128,Filter 3 - Filter cutof,501,Filter 3 - Filter cutof
+param_502,128,0,256,Filter 3 - Filter cutof,502,Filter 3 - Filter cutof
+param_503,40000,512,65536,Filter 3 - Filter cutof,503,Filter 3 - Filter cutof
+param_504,0,-128,128,Filter 3 - Filter cutof,504,Filter 3 - Filter cutof
+param_505,0,-128,128,Filter 3 - Filter cutof,505,Filter 3 - Filter cutof
+param_506,0,-112,112,Filter 3 - Filter cutof,506,Filter 3 - Filter cutof
+param_507,128,0,256,Filter 3 - Filter reson,507,Filter 3 - Filter reson
+param_508,128,0,256,Filter 3 - Filter reson,508,Filter 3 - Filter reson
+param_509,0,-128,128,Filter 3 - Filter reson,509,Filter 3 - Filter reson
+param_510,128,0,256,Filter 3 - Filter reson,510,Filter 3 - Filter reson
+param_511,40000,512,65536,Filter 3 - Filter reson,511,Filter 3 - Filter reson
+param_512,0,-128,128,Filter 3 - Filter reson,512,Filter 3 - Filter reson
+param_513,0,-128,128,Filter 3 - Filter reson,513,Filter 3 - Filter reson
+param_514,0,-112,112,Filter 3 - Filter reson,514,Filter 3 - Filter reson
+param_515,128,0,256,Filter 3 - Filter low /,515,Filter 3 - Filter low /
+param_516,128,0,256,Filter 3 - Filter low /,516,Filter 3 - Filter low /
+param_517,0,-128,128,Filter 3 - Filter low /,517,Filter 3 - Filter low /
+param_518,128,0,256,Filter 3 - Filter low /,518,Filter 3 - Filter low /
+param_519,40000,512,65536,Filter 3 - Filter low /,519,Filter 3 - Filter low /
+param_520,0,-128,128,Filter 3 - Filter low /,520,Filter 3 - Filter low /
+param_521,0,-128,128,Filter 3 - Filter low /,521,Filter 3 - Filter low /
+param_522,0,-112,112,Filter 3 - Filter low /,522,Filter 3 - Filter low /
+param_523,128,0,256,Filter 3 - Filter band,523,Filter 3 - Filter band
+param_524,128,0,256,Filter 3 - Filter band,524,Filter 3 - Filter band
+param_525,0,-128,128,Filter 3 - Filter band,525,Filter 3 - Filter band
+param_526,128,0,256,Filter 3 - Filter band,526,Filter 3 - Filter band
+param_527,40000,512,65536,Filter 3 - Filter band,527,Filter 3 - Filter band
+param_528,0,-128,128,Filter 3 - Filter band,528,Filter 3 - Filter band
+param_529,0,-128,128,Filter 3 - Filter band,529,Filter 3 - Filter band
+param_530,0,-112,112,Filter 3 - Filter band,530,Filter 3 - Filter band
+param_531,128,0,256,Filter 3 - Filter high,531,Filter 3 - Filter high
+param_532,128,0,256,Filter 3 - Filter high,532,Filter 3 - Filter high
+param_533,0,-128,128,Filter 3 - Filter high,533,Filter 3 - Filter high
+param_534,128,0,256,Filter 3 - Filter high,534,Filter 3 - Filter high
+param_535,40000,512,65536,Filter 3 - Filter high,535,Filter 3 - Filter high
+param_536,0,-128,128,Filter 3 - Filter high,536,Filter 3 - Filter high
+param_537,0,-128,128,Filter 3 - Filter high,537,Filter 3 - Filter high
+param_538,0,-112,112,Filter 3 - Filter high,538,Filter 3 - Filter high
+param_539,128,0,256,Filter 3 - Waveshaper -,539,Filter 3 - Waveshaper -
+param_540,128,0,256,Filter 3 - Waveshaper -,540,Filter 3 - Waveshaper -
+param_541,0,-128,128,Filter 3 - Waveshaper -,541,Filter 3 - Waveshaper -
+param_542,128,0,256,Filter 3 - Waveshaper -,542,Filter 3 - Waveshaper -
+param_543,40000,512,65536,Filter 3 - Waveshaper -,543,Filter 3 - Waveshaper -
+param_544,0,-128,128,Filter 3 - Waveshaper -,544,Filter 3 - Waveshaper -
+param_545,0,-128,128,Filter 3 - Waveshaper -,545,Filter 3 - Waveshaper -
+param_546,0,-112,112,Filter 3 - Waveshaper -,546,Filter 3 - Waveshaper -
+param_547,0,-128,128,Effects - Panning,547,Effects - Panning
+param_548,1,0,9,Effects - Chorus order,548,Effects - Chorus order
+param_549,712,0,1024,Effects - Chorus depth,549,Effects - Chorus depth
+param_550,796,0,1024,Effects - Chorus speed,550,Effects - Chorus speed
+param_551,68,0,128,Effects - Chorus delay,551,Effects - Chorus delay
+param_552,128,0,128,Effects - Chorus spread,552,Effects - Chorus spread
+param_553,-32,-128,128,Effects - Chorus cross,553,Effects - Chorus cross
+param_554,128,-128,128,Effects - Chorus volume,554,Effects - Chorus volume
+param_555,128,0,128,Effects - Send level,555,Effects - Send level
+param_556,64,0,127,Effects - Delay feedbac,556,Effects - Delay feedbac
+param_557,96,0,384,Effects - Delay time,557,Effects - Delay time
+param_558,-116,-512,512,Effects - Delay time st,558,Effects - Delay time st
+param_559,64,-128,128,Effects - Delay volume,559,Effects - Delay volume
+param_560,1,0,2,Effects - Delay feedbac,560,Effects - Delay feedbac
+param_561,64,0,127,Effects - Delay feedbac,561,Effects - Delay feedbac
+param_562,144,0,384,Effects - Delay time,562,Effects - Delay time
+param_563,360,-512,512,Effects - Delay time st,563,Effects - Delay time st
+param_564,84,-128,128,Effects - Delay volume,564,Effects - Delay volume
+param_565,2,0,2,Effects - Delay feedbac,565,Effects - Delay feedbac
+param_566,64,0,127,Effects - Delay feedbac,566,Effects - Delay feedbac
+param_567,144,0,384,Effects - Delay time,567,Effects - Delay time
+param_568,0,-512,512,Effects - Delay time st,568,Effects - Delay time st
+param_569,64,-128,128,Effects - Delay volume,569,Effects - Delay volume
+param_570,0,0,2,Effects - Delay feedbac,570,Effects - Delay feedbac
+param_571,128,0,256,Effects - Panning - Att,571,Effects - Panning - Att
+param_572,128,0,256,Effects - Panning - Dec,572,Effects - Panning - Dec
+param_573,0,-128,128,Effects - Panning - Sus,573,Effects - Panning - Sus
+param_574,128,0,256,Effects - Panning - Rel,574,Effects - Panning - Rel
+param_575,40000,512,65536,Effects - Panning - LFO,575,Effects - Panning - LFO
+param_576,0,-128,128,Effects - Panning - LFO,576,Effects - Panning - LFO
+param_577,0,-128,128,Effects - Panning - LFO,577,Effects - Panning - LFO
+param_578,0,-112,112,Effects - Panning - LFO,578,Effects - Panning - LFO
+param_579,128,0,256,Effects - Volume - Atta,579,Effects - Volume - Atta
+param_580,128,0,256,Effects - Volume - Deca,580,Effects - Volume - Deca
+param_581,0,-128,128,Effects - Volume - Sust,581,Effects - Volume - Sust
+param_582,128,0,256,Effects - Volume - Rele,582,Effects - Volume - Rele
+param_583,40000,512,65536,Effects - Volume - LFO,583,Effects - Volume - LFO
+param_584,0,-128,128,Effects - Volume - LFO,584,Effects - Volume - LFO
+param_585,0,-128,128,Effects - Volume - LFO,585,Effects - Volume - LFO
+param_586,0,-112,112,Effects - Volume - LFO,586,Effects - Volume - LFO
+param_587,820,-1800,1800,Main - EQ band 1 level,587,Main - EQ band 1 level
+param_588,-460,-1800,1800,Main - EQ band 2 level,588,Main - EQ band 2 level
+param_589,540,-1800,1800,Main - EQ band 3 level,589,Main - EQ band 3 level
+param_590,19857,0,65536,Main - EQ band 1 freq,590,Main - EQ band 1 freq
+param_591,29305,0,65536,Main - EQ band 2 freq,591,Main - EQ band 2 freq
+param_592,42769,0,65536,Main - EQ band 3 freq,592,Main - EQ band 3 freq
+param_593,17500,0,65536,Main - EQ band 1 width,593,Main - EQ band 1 width
+param_594,17500,0,65536,Main - EQ band 2 width,594,Main - EQ band 2 width
+param_595,17628,0,65536,Main - EQ band 3 width,595,Main - EQ band 3 width
+param_596,0,0,1,Main - Portamento,596,Main - Portamento

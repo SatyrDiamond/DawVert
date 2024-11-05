@@ -12,6 +12,7 @@ from functions import note_data
 from functions import data_bytes
 from functions import xtramath
 from functions import extpluglog
+from objects import globalstore
 from objects.data_bytes import bytereader
 from objects.convproj import wave
 
@@ -76,6 +77,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1145918257):
 				extpluglog.extpluglist.success('FL Studio', 'Drumaxx')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1145918257, 'chunk', make_sslf(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'Drumaxx')
 				return True
 
 		# ---------------------------------------- FL Slayer ----------------------------------------
@@ -158,6 +160,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229484653):
 				extpluglog.extpluglist.success('FL Studio', 'Harmless')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229484653, 'chunk', make_flvst2(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'Harmless')
 				return True
 
 		# ---------------------------------------- Harmor ----------------------------------------
@@ -166,6 +169,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229483375):
 				extpluglog.extpluglist.success('FL Studio', 'Harmor')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229483375, 'chunk', make_flvst2(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'Harmor')
 				return True
 
 		# ---------------------------------------- morphine ----------------------------------------
@@ -174,6 +178,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1299149382):
 				extpluglog.extpluglist.success('FL Studio', 'Morphine')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1299149382, 'chunk', make_sslf(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'Morphine')
 				return True
 
 		# ---------------------------------------- poizone ----------------------------------------
@@ -182,6 +187,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1398893394):
 				extpluglog.extpluglist.success('FL Studio', 'PoiZone')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1398896471, 'chunk', make_sslf(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'PoiZone')
 				return True
 
 		# ---------------------------------------- sakura ----------------------------------------
@@ -190,6 +196,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1398893394):
 				extpluglog.extpluglist.success('FL Studio', 'Sakura')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1398893394, 'chunk', make_sslf(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'Sakura')
 				return True
 
 		# ---------------------------------------- sawer ----------------------------------------
@@ -198,6 +205,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1398888274):
 				extpluglog.extpluglist.success('FL Studio', 'Sawer')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1398888274, 'chunk', make_sslf(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'Sawer')
 				return True
 
 		# ---------------------------------------- Sytrus ----------------------------------------
@@ -213,6 +221,11 @@ class plugconv(plugins.base):
 				fldata.headertype = 4
 
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1400468594, 'chunk', fldata.write(), None)
+				plugin_obj.datavals_global.add('name', 'Sytrus')
+
+				globalstore.paramremap.load('sytrus', '.\\data_ext\\remap\\imageline\\sytrus.csv')
+				manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
+				manu_obj.remap_cvpj_to_ext_opt('sytrus', 'vst2')
 				return True
 
 		# ---------------------------------------- Toxic Biohazard ----------------------------------------
@@ -221,6 +234,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1416591412):
 				extpluglog.extpluglist.success('FL Studio', 'Toxic Biohazard')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1416591412, 'chunk', make_sslf(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'Toxic Biohazard')
 				return True
 
 		# ---------------------------------------- equo ----------------------------------------
@@ -229,6 +243,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1162958159):
 				extpluglog.extpluglist.success('FL Studio', 'EQUO')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1162958159, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL EQUO')
 				return True
 
 		# ---------------------------------------- fruity delay 2 ----------------------------------------
@@ -237,6 +252,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1178874454):
 				extpluglog.extpluglist.success('FL Studio', 'Delay')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1178874454, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Delay')
 				return True
 
 		# ---------------------------------------- fruity delay bank ----------------------------------------
@@ -245,6 +261,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1147945582):
 				extpluglog.extpluglist.success('FL Studio', 'Delay Bank')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1147945582, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Delay Bank')
 				return True
 
 		# ---------------------------------------- fruity delay 2 ----------------------------------------
@@ -253,6 +270,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1181509491):
 				extpluglog.extpluglist.success('FL Studio', 'Flangus')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1181509491, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Flangus')
 				return True
 
 		# ---------------------------------------- fruity love philter ----------------------------------------
@@ -261,6 +279,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229737040):
 				extpluglog.extpluglist.success('FL Studio', 'Love Philter')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229737040, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Love Philter')
 				return True
 
 		# ---------------------------------------- multiband compressor ----------------------------------------
@@ -269,6 +288,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179476547):
 				extpluglog.extpluglist.success('FL Studio', 'Multiband Compressor')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179476547, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Multiband Compressor')
 				return True
 
 		# ---------------------------------------- gross beat ----------------------------------------
@@ -277,6 +297,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179545410):
 				extpluglog.extpluglist.success('FL Studio', 'Gross Beat')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229406821, 'chunk', make_flvst2(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Gross Beat')
 				return True
 
 		# ---------------------------------------- hardcore ----------------------------------------
@@ -285,6 +306,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1212371505):
 				extpluglog.extpluglist.success('FL Studio', 'Hardcore')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1212371505, 'chunk', make_sslf(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Hardcore')
 				return True
 
 		# ---------------------------------------- maximus ----------------------------------------
@@ -293,6 +315,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179545410):
 				extpluglog.extpluglist.success('FL Studio', 'Maximus')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229807992, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Maximus')
 				return True
 
 		# ---------------------------------------- notebook ----------------------------------------
@@ -301,6 +324,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179545410):
 				extpluglog.extpluglist.success('FL Studio', 'Notebook')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179545410, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Notebook')
 				return True
 
 		# ---------------------------------------- parametric eq ----------------------------------------
@@ -309,6 +333,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179665750):
 				extpluglog.extpluglist.success('FL Studio', 'Parametric EQ')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179665750, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Parametric EQ')
 				return True
 
 		# ---------------------------------------- parametric eq 2 ----------------------------------------
@@ -317,6 +342,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1346720050):
 				extpluglog.extpluglist.success('FL Studio', 'Parametric EQ 2')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1346720050, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Parametric EQ 2')
 				return True
 
 		# ---------------------------------------- fruity spectroman ----------------------------------------
@@ -325,6 +351,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179873357):
 				extpluglog.extpluglist.success('FL Studio', 'Spectroman')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179873357, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Spectroman')
 				return True
 
 		# ---------------------------------------- fruity stereo enhancer ----------------------------------------
@@ -333,6 +360,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179862358):
 				extpluglog.extpluglist.success('FL Studio', 'Stereo Enhancer')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179862358, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Stereo Enhancer')
 				return True
 
 		# ---------------------------------------- fruity vocoder ----------------------------------------
@@ -341,6 +369,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179407983):
 				extpluglog.extpluglist.success('FL Studio', 'Vocoder')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179407983, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Vocoder')
 				return True
 
 		# ---------------------------------------- fruity waveshaper ----------------------------------------
@@ -356,4 +385,5 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229748067):
 				extpluglog.extpluglist.success('FL Studio', 'Wave Candy')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229748067, 'chunk', make_flvst1(plugin_obj), None)
+				plugin_obj.datavals_global.add('name', 'IL Wave Candy')
 				return True

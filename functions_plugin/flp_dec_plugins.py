@@ -155,11 +155,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 						plugin_obj.datavals_global.add('all_params_used', False)
 
-						if numparams != -1:
-							for x in range(numparams):
-								convproj_obj.automation.calc(['id_plug', pluginid, str(x)], 'floatbyteint2float', 0, 0, 0, 0)
-								convproj_obj.automation.move(['id_plug', pluginid, str(x)], ['plugin',pluginid,'ext_param_'+str(x)])
-
 					if wrapper_vststate[4] in [5, 4]:
 						stream_data = bytereader.bytereader()
 						stream_data.load_raw(wrapper_vstdata)
@@ -185,10 +180,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 						plugin_obj.datavals_global.add('all_params_used', True)
 						plugin_obj.set_program(wrapper_vstprogram)
 
-						for x in range(vst_total_params):
-							convproj_obj.automation.calc(['id_plug', pluginid, str(x)], 'floatbyteint2float', 0, 0, 0, 0)
-							convproj_obj.automation.move(['id_plug', pluginid, str(x)], ['plugin',pluginid,'ext_param_'+str(x)])
-
 			if wrapper_vsttype in [12,11] and 'state' in wrapperdata:
 				plugin_obj.type_set('external', 'clap', 'win')
 				pluginstate = wrapperdata['state']
@@ -203,10 +194,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					if 'name' in wrapperdata: plugin_obj.datavals_global.add('name', wrapperdata['name'])
 				elif 'name' in wrapperdata: 
 					plugin_clap.replace_data(convproj_obj, plugin_obj, 'name', None, wrapperdata['name'], wrapper_vstdata)
-
-				for autoloc, autodata in convproj_obj.automation.iter_nopl_points(filter=['id_plug', pluginid]):
-					convproj_obj.automation.calc(autoloc.get_list(), 'floatbyteint2float', 0, 0, 0, 0)
-					convproj_obj.automation.move(autoloc.get_list(), ['plugin',pluginid,'ext_param_'+str(autoloc[-1])])
 
 			#if wrapper_vsttype in [8,7] and 'state' in wrapperdata:
 			#	plugin_obj.type_set('external', 'vst3', 'win')
@@ -593,10 +580,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		if fldso:
 			for param_id, dset_param in fldso.params.iter():
 				if dset_param.num != -1:
-					#print(dset_param.num, param_id, dset_param)
+					#print('FS', dset_param.num, param_id, dset_param, pluginid)
 					convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
 
-
+		#print(convproj_obj.automation.data)
 		#plugin_obj.params.debugtxt()
 		#exit()
 	# ------------------------------------------------------------------------------------------- Other

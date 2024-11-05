@@ -179,3 +179,16 @@ class plug_manu:
 				paramnum = p_ext['paramnum']
 				if paramnum > -1:
 					self.to_param('param'+str(paramnum), 'ext_param_'+str(paramnum), p_ext['visname'])
+
+	def remap_cvpj_to_ext_opt(self, remapname, ext_type):
+		prm = globalstore.paramremap.get(remapname)
+		foundparams = self.plugin_obj.params.list()
+		auto_obj = self.convproj_obj.automation
+		if prm:
+			for p_cvpj, p_ext in prm.iter_cvpj_ext(ext_type):
+				paramnum = p_ext['paramnum']
+				if paramnum > -1:
+					if self.plugin_obj.params not in foundparams:
+						orgid = ['plugin',self.pluginid,p_cvpj['paramid']]
+						auto_obj.calc(orgid, 'to_one', p_cvpj['min'], p_cvpj['max'], 0, 0)
+						auto_obj.move(orgid, ['plugin',self.pluginid,'ext_param_'+str(paramnum)])

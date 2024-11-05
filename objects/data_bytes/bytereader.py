@@ -96,11 +96,13 @@ class bytereader:
 	unpack_s_long = struct.Struct('<q').unpack
 	unpack_s_long_b = struct.Struct('>q').unpack
 	
-	def __init__(self):
+	def __init__(self, *argv):
 		self.buf = None
 		self.start = 0
 		self.end = 0
 		self.iso_range = []
+		if argv:
+			self.load_raw(argv[0])
 
 	def chunk_objmake(self): 
 		return iff_chunkdata(self)

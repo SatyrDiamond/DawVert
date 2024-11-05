@@ -295,16 +295,23 @@ class cvpj_autoloc:
 		self.autoloc = listin+self.autoloc[startlen:]
 
 class cvpj_automation:
-	__slots__ = ['data','time_ppq','time_float','auto_num']
+	__slots__ = ['data','time_ppq','time_float','auto_num','movenotfound']
 	def __init__(self, time_ppq, time_float):
 		self.data = {}
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.auto_num = counter.counter(200000, 'auto_')
+		self.movenotfound = []
 
 	def __setitem__(self, p, v):
 		autoloc = cvpj_autoloc(p)
 		self.autoloc[autoloc] = v
+
+	def attempt_after(self):
+		for autopath, to_autopath in self.movenotfound:
+			if autopath in self.data: 
+				logger_automation.info('Moving '+str(autopath)+' to '+str(to_autopath))
+				self.data[to_autopath] = self.data.pop(autopath)
 
 	def list(self):
 		return list(self.data)
@@ -375,11 +382,13 @@ class cvpj_automation:
 	def move(self, autopath, to_autopath):
 		autopath = cvpj_autoloc(autopath)
 		to_autopath = cvpj_autoloc(to_autopath)
+
 		if autopath in self.data: 
 			logger_automation.info('Moving '+str(autopath)+' to '+str(to_autopath))
 			self.data[to_autopath] = self.data.pop(autopath)
 		else:
-			logger_automation.debug('Moving '+str(autopath)+' to '+str(to_autopath))
+			self.movenotfound.append([autopath, to_autopath])
+			logger_automation.debug('(not found) Moving '+str(autopath)+' to '+str(to_autopath))
 
 	def copy(self, autopath, to_autopath):
 		autopath = cvpj_autoloc(autopath)

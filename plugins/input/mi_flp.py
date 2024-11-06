@@ -653,39 +653,35 @@ class input_flp(plugins.base):
 				else:
 					if item.itemindex in id_auto and item.itemindex in flp_obj.remote_assoc:
 						fl_autopoints = id_auto[item.itemindex]
-						fl_remotectrl = flp_obj.remote_assoc[item.itemindex]
 
-						autoloc = fl_remotectrl.autoloc
-						autotxt = autoloc.to_loctxt()
-						autoloc, amin, amax = flpauto_to_cvpjauto_points(autotxt.split('/'))
+						for fl_remotectrl in flp_obj.remote_assoc[item.itemindex]:
 
-						if autoloc: 
+							autoloc = fl_remotectrl.autoloc
+							autotxt = autoloc.to_loctxt()
+							autoloc, amin, amax = flpauto_to_cvpjauto_points(autotxt.split('/'))
+	
+							if autoloc: 
+								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+								autopl_obj.time.set_posdur(item.position, item.length)
+								if item.startoffset not in [4294967295, 3212836864]: 
+									if item.startoffset > 0:
+										posdata = item.startoffset
+										posdata = posdata/0.008
+										autopl_obj.time.set_offset(posdata*flp_obj.ppq)
 
-							autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-
-							autopl_obj.time.set_posdur(item.position, item.length)
-							if item.startoffset not in [4294967295, 3212836864]: 
-								if item.startoffset > 0:
-									posdata = item.startoffset
-									posdata = posdata/0.008
-
-									autopl_obj.time.set_offset(posdata*flp_obj.ppq)
-
-							#print(autoloc, amin, amax)
-
-							curpos = 0
-							for point in fl_autopoints.points:
-								curpos += point.pos
-
-								auto_pos = int(curpos*flp_obj.ppq)
-								auto_val = xtramath.between_from_one(amin, amax, point.val)
-
-								autopoint_obj = autopl_obj.data.add_point()
-								autopoint_obj.pos = auto_pos
-								autopoint_obj.value = auto_val
-								autopoint_obj.type = 'normal' if point.type!=2 else 'instant'
-
-								#print(auto_pos, auto_val)
+								curpos = 0
+								for point in fl_autopoints.points:
+									curpos += point.pos
+	
+									auto_pos = int(curpos*flp_obj.ppq)
+									auto_val = xtramath.between_from_one(amin, amax, point.val)
+	
+									autopoint_obj = autopl_obj.data.add_point()
+									autopoint_obj.pos = auto_pos
+									autopoint_obj.value = auto_val
+									autopoint_obj.type = 'normal' if point.type!=2 else 'instant'
+	
+									#print(auto_pos, auto_val)
 
 					if playlistline in temp_pl_track:
 						placement_obj = temp_pl_track[playlistline].placements.add_audio_indexed()

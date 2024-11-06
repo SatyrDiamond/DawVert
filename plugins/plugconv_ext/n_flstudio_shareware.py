@@ -314,6 +314,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Hardcore')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1212371505, 'chunk', make_sslf(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'IL Hardcore')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'hardcore')
 				return True
 
 		# ---------------------------------------- maximus ----------------------------------------
@@ -323,6 +324,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Maximus')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229807992, 'chunk', make_flvst1(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'IL Maximus')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'maximus')
 				return True
 
 		# ---------------------------------------- notebook ----------------------------------------

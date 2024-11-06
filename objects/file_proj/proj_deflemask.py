@@ -4,7 +4,6 @@
 import struct
 import zlib
 from functions import data_bytes
-from io import BytesIO
 from objects.data_bytes import bytereader
 from objects.inst_params import fm_opn2
 from objects.inst_params import chip_sid

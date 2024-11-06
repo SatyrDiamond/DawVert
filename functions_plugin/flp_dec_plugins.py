@@ -580,10 +580,12 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		if fldso:
 			for param_id, dset_param in fldso.params.iter():
 				if dset_param.num != -1:
-					#print('FS', dset_param.num, param_id, dset_param, pluginid)
-					convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
+					#print('FS', flplugin.name, dset_param.num, param_id, dset_param, pluginid)
+					convproj_obj.automation.calc(['id_plug_points', pluginid, str(dset_param.num)], 'from_one', dset_param.min, dset_param.max, 0, 0)
 
-		#print(convproj_obj.automation.data)
+					convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
+					convproj_obj.automation.move(['id_plug_points', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
+
 		#plugin_obj.params.debugtxt()
 		#exit()
 	# ------------------------------------------------------------------------------------------- Other

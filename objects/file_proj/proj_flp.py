@@ -58,6 +58,39 @@ class flp_pattern:
 		self.name = None
 		self.timemarkers = []
 
+
+class debug_eventview:
+	def __init__(self):
+		self.eventtable = None
+
+	def load(self):
+		if not self.eventtable:
+			with open('data_debug/flp_eventname.txt') as f:
+			    lines = f.readlines()
+
+			self.eventtable = []
+			for line in lines:
+			    idname = line.rstrip().split()
+			    if len(idname) > 1:
+			        self.eventtable.append([idname[0], idname[1]])
+			    else:
+			        self.eventtable.append([idname[0], '_unknown'])
+
+	def view_event(self, event_id, eeval):
+		d = self.eventtable[event_id]
+
+		if event_id <= 63 and event_id >= 0: print('INT8, ', end=' ')
+		if event_id <= 127 and event_id >= 64: print('INT16,', end=' ')
+		if event_id <= 191 and event_id >= 128: print('INT32,', end=' ')
+		if event_id <= 224 and event_id >= 192: 
+			print('TEXT, ', end=' ')
+			eeval = 'HEX '+eeval.hex()
+		if event_id <= 255 and event_id >= 225: 
+			print('RAW,  ', end=' ')
+			eeval = 'HEX '+eeval.hex()
+
+		print(str(d[0]).ljust(5), d[1].ljust(18), eeval)
+
 class flp_project:
 	def __init__(self):
 		self.main = {}
@@ -96,6 +129,8 @@ class flp_project:
 		self.current_ch_obj = None
 
 		self.current_track = 0
+
+		self.current_ctrl = None
 
 		self.slotstore = None
 
@@ -249,15 +284,12 @@ class flp_project:
 		#Init Controls
 		elif event_id == 216: self.startvals.read(event_data)
 		elif event_id == 225: self.initfxvals.read(event_data)
-		#elif event_id == 227: 
-		#	event_bio = BytesIO(event_data)
-		#	autoloc = auto.flp_autoloc()
-		#	event_bio.read(2)
-		#	remote_id = int.from_bytes(event_bio.read(4), "little")
-		#	event_bio.read(2)
-		#	remote_auto = int.from_bytes(event_bio.read(4), "little")
-		#	autoloc.decode(remote_auto)
-		#	self.remote_assoc[remote_id] = autoloc
+		elif event_id == 227: 
+			self.current_ctrl = flp_auto = auto.flp_remotecontrol()
+			flp_auto.read(event_data)
+			self.remote_assoc[flp_auto.channel] = flp_auto
+		elif event_id == 230: 
+			self.current_ctrl.formula = decodetext(self.version_split, event_data)
 
 		#Channel
 		elif event_id == 64: 
@@ -312,7 +344,11 @@ class flp_project:
 			elif event_id == 221: self.current_ch_obj.poly.read(event_data)
 
 
-			#elif event_id == 234: 
+			elif event_id == 234: 
+				auto_obj = auto.flp_autopoints()
+				auto_obj.read(event_data)
+				self.current_ch_obj.autopoints = auto_obj
+
 			#	event_bio = BytesIO(event_data)
 			#	print( 'header', struct.unpack('biiii', event_bio.read(20) ))
 			#	num_points = int.from_bytes(event_bio.read(4), "little")
@@ -385,6 +421,21 @@ class flp_project:
 			elif event_id == 154: self.mixer[self.fx_num].inchannum = event_data
 			elif event_id == 147: self.mixer[self.fx_num].outchannum = event_data
 			elif event_id == 204: self.fx_name = decodetext(self.version_split, event_data)
+
+	def view_tlv(self, inputfile):
+		song_data = bytereader.bytereader()
+		song_data.load_file(inputfile)
+
+		debugv = debug_eventview()
+		debugv.load()
+
+		main_iff_obj = song_data.chunk_objmake()
+		tlvfound = False
+		for chunk_obj in main_iff_obj.iter(0, song_data.end):
+			if chunk_obj.id == b'FLdt':
+				tlvfound = True
+				for event_id, event_data in format_flp_tlv.decode(song_data, chunk_obj.end): 
+					debugv.view_event(event_id, event_data)
 
 	def read(self, inputfile):
 		song_data = bytereader.bytereader()
@@ -476,7 +527,12 @@ class flp_project:
 			format_flp_tlv.write_tlv(chunkdata, 226, b'\xfd\x00\x00\x00\x00\x00\x00\x00\x80\x90\xff\x0f\x04\x00\x00\x00\xd5\x01\x00\x00')
 			format_flp_tlv.write_tlv(chunkdata, 226, b'\xff\x00\x00\x00\xff\x00\x00\x00\x04\x00\xff\x0f\x04\x00\x00\x00\x00\xfe\xff\xff')
 
-			#print('')
+			for _, remotectrl in self.remote_assoc.items():
+				bytes_remote, isvalid = remotectrl.write()
+				if isvalid: 
+					format_flp_tlv.write_tlv(chunkdata, 227, bytes_remote)
+					if remotectrl.formula:
+						format_flp_tlv.write_tlv(chunkdata, 230, utf16encode(remotectrl.formula))
 
 			for chnum, chdat in self.channels.items():
 				format_flp_tlv.write_tlv(chunkdata, 64, chnum)

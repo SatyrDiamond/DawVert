@@ -1,0 +1,10 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+input_pan,0,-128,128,Input panning,0,Input panning
+input_vol,0,0,160,Input volume,1,Input volume
+dry,0,0,160,Dry level,2,Dry level
+fb_vol,0,0,127,Feedback level,3,Feedback level
+time,0,0,768,Time,4,Time
+time_stereo_offset,0,0,128,Time stereo offset,5,Time stereo offset
+fb_mode,0,-512,512,Feedback mode,6,Feedback mode
+fb_cut,0,0,2,Cutoff freq,7,Cutoff freq

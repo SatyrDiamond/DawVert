@@ -1,0 +1,46 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+param_0,0,0,256,Master IN Lvl,0,Master IN Lvl
+param_1,0,0,256,Master OUT Lvl,1,Master OUT Lvl
+param_2,0,0,256,EQ Enable,2,EQ Enable
+param_3,0,0,256,EQ Band 1,3,EQ Band 1
+param_4,0,0,256,EQ Band 2,4,EQ Band 2
+param_5,0,0,256,EQ Band 3,5,EQ Band 3
+param_6,0,0,256,EQ Band 4,6,EQ Band 4
+param_7,0,0,256,EQ Band 5,7,EQ Band 5
+param_8,0,0,256,EQ Band 6,8,EQ Band 6
+param_9,0,0,256,EQ Band 7,9,EQ Band 7
+param_10,0,0,256,EQ Band 8,10,EQ Band 8
+param_11,0,0,256,unknown,11,unknown
+param_12,0,0,256,unknown,12,unknown
+param_13,0,0,256,Box1 - Param 1,13,Box1 - Param 1
+param_14,0,0,256,Box1 - Param 2,14,Box1 - Param 2
+param_15,0,0,256,Box1 - Param 3,15,Box1 - Param 3
+param_16,0,0,256,Box1 - Param 4,16,Box1 - Param 4
+param_17,0,0,256,Box1 - Param 5,17,Box1 - Param 5
+param_18,0,0,256,Box2 - Param 1,18,Box2 - Param 1
+param_19,0,0,256,Box2 - Param 2,19,Box2 - Param 2
+param_20,0,0,256,Box2 - Param 3,20,Box2 - Param 3
+param_21,0,0,256,Box2 - Param 4,21,Box2 - Param 4
+param_22,0,0,256,Box2 - Param 5,22,Box2 - Param 5
+param_23,0,0,256,Box3 - Param 1,23,Box3 - Param 1
+param_24,0,0,256,Box3 - Param 2,24,Box3 - Param 2
+param_25,0,0,256,Box3 - Param 3,25,Box3 - Param 3
+param_26,0,0,256,Box3 - Param 4,26,Box3 - Param 4
+param_27,0,0,256,Box3 - Param 5,27,Box3 - Param 5
+param_28,0,0,256,Box4 - Param 1,28,Box4 - Param 1
+param_29,0,0,256,Box4 - Param 2,29,Box4 - Param 2
+param_30,0,0,256,Box4 - Param 3,30,Box4 - Param 3
+param_31,0,0,256,Box4 - Param 4,31,Box4 - Param 4
+param_32,0,0,256,Box4 - Param 5,32,Box4 - Param 5
+param_33,0,0,256,Box5 - Param 1,33,Box5 - Param 1
+param_34,0,0,256,Box5 - Param 2,34,Box5 - Param 2
+param_35,0,0,256,Box5 - Param 3,35,Box5 - Param 3
+param_36,0,0,256,Box5 - Param 4,36,Box5 - Param 4
+param_37,0,0,256,Box5 - Param 5,37,Box5 - Param 5
+param_38,0,0,256,unknown,38,unknown
+param_39,0,0,256,Box 1 Enable,39,Box 1 Enable
+param_40,0,0,256,Box 2 Enable,40,Box 2 Enable
+param_41,0,0,256,Box 3 Enable,41,Box 3 Enable
+param_42,0,0,256,Box 4 Enable,42,Box 4 Enable
+param_43,0,0,256,Box 5 Enable,43,Box 5 Enable

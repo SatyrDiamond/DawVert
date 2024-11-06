@@ -1,0 +1,10 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+ord,0,0,9,Order,0,Order
+depth,0,0,1024,Depth,1,Depth
+speed,0,0,1024,Speed,2,Speed
+delay,0,0,128,Delay,3,Delay
+spread,0,0,128,Spread,4,Spread
+cross,0,-128,128,Cross,5,Cross
+dry,0,-128,128,Dry level,6,Dry level
+wet,0,-128,128,Wet level,7,Wet level

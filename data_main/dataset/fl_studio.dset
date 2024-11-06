@@ -2145,6 +2145,21 @@
                     "param_98": {"num": 98, "min": 0, "max": 1000,"name": "Compression level","type": "int"},
                     "param_99": {"num": 99, "min": 0, "max": 1,"name": "Velocity to unison pitc","type": "int"}
                 }
+            },
+            "gross beat": {
+                "datadef_name": "fl_studio",
+                "group": "fx",
+                "params": {
+                    "param_0": {"num": 0, "min": 0, "max": 35,"name": "Time slot","type": "int"},
+                    "param_1": {"num": 1, "min": 0, "max": 35,"name": "Volume slot","type": "int"},
+                    "param_2": {"num": 2, "min": 0, "max": 256,"name": "Time mix","type": "int"},
+                    "param_3": {"num": 3, "min": 0, "max": 256,"name": "Volume mix","type": "int"},
+                    "param_4": {"num": 4, "min": 0, "max": 10000,"name": "Vol. smoothing attack","type": "int"},
+                    "param_5": {"num": 5, "min": 0, "max": 10000,"name": "Vol. smoothing release","type": "int"},
+                    "param_6": {"num": 6, "min": -256, "max": 256,"name": "Volume envelope tension","type": "int"},
+                    "param_7": {"num": 7, "min": 0, "max": 1,"name": "Hold delay (bar repeat)","type": "int"},
+                    "param_8": {"num": 8, "min": 0, "max": 65536,"name": "Time offset (scratching","type": "int"}
+                }
             }
         }
     }

@@ -1,0 +1,11 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+param_0,0,0,35,Time slot,0,Time slot
+param_1,0,0,35,Volume slot,1,Volume slot
+param_2,0,0,256,Time mix,2,Time mix
+param_3,0,0,256,Volume mix,3,Volume mix
+param_4,0,0,10000,Vol. smoothing attack,4,Vol. smoothing attack
+param_5,0,0,10000,Vol. smoothing release,5,Vol. smoothing release
+param_6,0,-256,256,Volume envelope tension,6,Volume envelope tension
+param_7,0,0,1,Hold delay (bar repeat),7,Hold delay (bar repeat)
+param_8,0,0,65536,Time offset (scratching,8,Time offset (scratching

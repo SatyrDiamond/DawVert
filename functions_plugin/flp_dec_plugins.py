@@ -455,7 +455,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		plugin_obj.params.add_named('freq_bandwidth', fl_plugstr.uint32(), 'int', "Freq BandWidth")
 		plugin_obj.params.add_named('env_att', fl_plugstr.uint32(), 'int', "Env Att")
 		plugin_obj.params.add_named('env_rel', fl_plugstr.uint32(), 'int', "Env Rel")
-		fl_plugstr.skip(4)
+		plugin_obj.params.add_named('hold', fl_plugstr.uint32(), 'int', "Hold")
 		plugin_obj.params.add_named('mix_mod', fl_plugstr.uint32(), 'int', "Mix Mod")
 		plugin_obj.params.add_named('mix_car', fl_plugstr.uint32(), 'int', "Mix Car")
 		plugin_obj.params.add_named('mix_wet', fl_plugstr.uint32(), 'int', "Mix Wet")

@@ -389,4 +389,5 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Wave Candy')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229748067, 'chunk', make_flvst1(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'IL Wave Candy')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'wave candy')
 				return True

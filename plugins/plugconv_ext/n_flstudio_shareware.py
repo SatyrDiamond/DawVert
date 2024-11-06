@@ -276,6 +276,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Flangus')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1181509491, 'chunk', make_flvst1(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'IL Flangus')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'flangus')
 				return True
 
 		# ---------------------------------------- fruity love philter ----------------------------------------
@@ -303,6 +304,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Gross Beat')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229406821, 'chunk', make_flvst2(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'IL Gross Beat')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'gross beat')
 				return True
 
 		# ---------------------------------------- hardcore ----------------------------------------

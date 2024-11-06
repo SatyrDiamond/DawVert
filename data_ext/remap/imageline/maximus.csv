@@ -1,0 +1,61 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+param_0,0,0,65536,Low band frequency,0,Low band frequency
+param_1,0,0,1,Low band slope,1,Low band slope
+param_2,0,0,65536,High band frequency,2,High band frequency
+param_3,0,0,1,High band slope,3,High band slope
+param_4,0,0,10000,LMH lookahead delay,4,LMH lookahead delay
+param_5,0,0,1000,LMH mix,5,LMH mix
+param_6,0,-1,65536,Low cut,6,Low cut
+param_7,0,0,3,Low band mode,7,Low band mode
+param_8,0,0,2000,Low band pre gain,8,Low band pre gain
+param_9,0,0,2000,Low band post gain,9,Low band post gain
+param_10,0,-1000,1000,Low band stereo separat,10,Low band stereo separat
+param_11,0,-1000,1000,Low band soft saturatio,11,Low band soft saturatio
+param_12,0,0,2000,Low band soft saturatio,12,Low band soft saturatio
+param_13,0,0,10000,Low band attack time,13,Low band attack time
+param_14,0,0,10000,Low band release 2 time,14,Low band release 2 time
+param_15,0,1,8,Low band attack / relea,15,Low band attack / relea
+param_16,0,0,10000,Low band release time,16,Low band release time
+param_17,0,1,8,Low band release curve,17,Low band release curve
+param_18,0,0,10000,Low band sustain window,18,Low band sustain window
+param_19,0,0,1,Low band sustain mode,19,Low band sustain mode
+param_20,0,0,3,Mid band mode,20,Mid band mode
+param_21,0,0,2000,Mid band pre gain,21,Mid band pre gain
+param_22,0,0,2000,Mid band post gain,22,Mid band post gain
+param_23,0,-1000,1000,Mid band stereo separat,23,Mid band stereo separat
+param_24,0,-1000,1000,Mid band soft saturatio,24,Mid band soft saturatio
+param_25,0,0,2000,Mid band soft saturatio,25,Mid band soft saturatio
+param_26,0,0,10000,Mid band attack time,26,Mid band attack time
+param_27,0,0,10000,Mid band release 2 time,27,Mid band release 2 time
+param_28,0,1,8,Mid band attack / relea,28,Mid band attack / relea
+param_29,0,0,10000,Mid band release time,29,Mid band release time
+param_30,0,1,8,Mid band release curve,30,Mid band release curve
+param_31,0,0,10000,Mid band sustain window,31,Mid band sustain window
+param_32,0,0,1,Mid band sustain mode,32,Mid band sustain mode
+param_33,0,0,3,High band mode,33,High band mode
+param_34,0,0,2000,High band pre gain,34,High band pre gain
+param_35,0,0,2000,High band post gain,35,High band post gain
+param_36,0,-1000,1000,High band stereo separa,36,High band stereo separa
+param_37,0,-1000,1000,High band soft saturati,37,High band soft saturati
+param_38,0,0,2000,High band soft saturati,38,High band soft saturati
+param_39,0,0,10000,High band attack time,39,High band attack time
+param_40,0,0,10000,High band release 2 tim,40,High band release 2 tim
+param_41,0,1,8,High band attack / rele,41,High band attack / rele
+param_42,0,0,10000,High band release time,42,High band release time
+param_43,0,1,8,High band release curve,43,High band release curve
+param_44,0,0,10000,High band sustain windo,44,High band sustain windo
+param_45,0,0,1,High band sustain mode,45,High band sustain mode
+param_46,0,0,3,Master mode,46,Master mode
+param_47,0,0,2000,Master pre gain,47,Master pre gain
+param_48,0,0,2000,Master post gain,48,Master post gain
+param_49,0,-1000,1000,Master stereo separatio,49,Master stereo separatio
+param_50,0,-1000,1000,Master soft saturation,50,Master soft saturation
+param_51,0,0,2000,Master soft saturation,51,Master soft saturation
+param_52,0,0,10000,Master attack time,52,Master attack time
+param_53,0,0,10000,Master release 2 time,53,Master release 2 time
+param_54,0,1,8,Master attack / release,54,Master attack / release
+param_55,0,0,10000,Master release time,55,Master release time
+param_56,0,1,8,Master release curve,56,Master release curve
+param_57,0,0,10000,Master sustain window,57,Master sustain window
+param_58,0,0,1,Master sustain mode,58,Master sustain mode

@@ -59,6 +59,11 @@ def make_sslf(plugin_obj):
 			if chunk_obj.id == b'SSLF': dataout = sslf_data.raw(chunk_obj.size)
 	return dataout
 
+def param_auto(convproj_obj, pluginid, plugin_obj, name):
+	globalstore.paramremap.load(name, '.\\data_ext\\remap\\imageline\\'+name+'.csv')
+	manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
+	manu_obj.remap_cvpj_to_ext_opt(name, 'vst2')
+
 class plugconv(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'plugconv_ext'
@@ -223,9 +228,7 @@ class plugconv(plugins.base):
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1400468594, 'chunk', fldata.write(), None)
 				plugin_obj.datavals_global.add('name', 'Sytrus')
 
-				globalstore.paramremap.load('sytrus', '.\\data_ext\\remap\\imageline\\sytrus.csv')
-				manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
-				manu_obj.remap_cvpj_to_ext_opt('sytrus', 'vst2')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'sytrus')
 				return True
 
 		# ---------------------------------------- Toxic Biohazard ----------------------------------------

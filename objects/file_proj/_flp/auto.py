@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later 
 
-from io import BytesIO
+from objects.data_bytes import bytereader
 
 class flp_autoloc:
 	def __init__(self):
@@ -238,7 +238,8 @@ class flp_autoloc:
 				elif self.loc[4] == 'env_dec_ten': icrc_control += 15
 				elif self.loc[4] == 'env_rel_ten': icrc_control += 16
 				else: valid_auto = False
-			elif self.loc[2] == 'plugin': icrc_control = self.loc[3]+(128<<8)
+			elif self.loc[2] == 'plugin': 
+				icrc_control = int(self.loc[3])+(128<<8)
 			else: valid_auto = False
 		elif self.loc[0] == 'fx':
 			icrc_group += (2<<12)+(int(self.loc[1])<<6)
@@ -285,19 +286,80 @@ class flp_autoloc:
 
 		if self.debugprint: print(icrc_control.to_bytes(2, 'big')[::-1].hex()+icrc_group.to_bytes(2, 'big')[::-1].hex(),'|',icrc_control, icrc_group, '|',self.loc,'|',valid_auto)
 
-		bytes_out = icrc_control.to_bytes(2, 'big')[::-1]+icrc_group.to_bytes(2, 'big')[::-1]
+		bytes_out = icrc_control.to_bytes(2, 'big')[::-1]+int(icrc_group).to_bytes(2, 'big')[::-1]
 		return bytes_out, valid_auto
+
+class flp_autopoint:
+	def __init__(self, event_bio):
+		self.pos = 0
+		self.val = 0
+		self.tension = 0
+		self.type = 0
+		self.selected = 0
+		self.t_sign = 0
+		if event_bio is not None:
+			self.read(event_bio)
+
+	def read(self, event_bio):
+		self.pos = event_bio.double()
+		self.val = event_bio.double()
+		self.tension = event_bio.float()
+		self.type = event_bio.uint16()
+		self.selected = event_bio.uint8()
+		self.t_sign = event_bio.uint8()
+
+class flp_autopoints:
+	def __init__(self):
+		pass
+
+	def read(self, event_data):
+		event_bio = bytereader.bytereader(event_data)
+		self.version = event_bio.uint32()
+		_unk1 = event_bio.uint32() # 64
+		_unk2 = event_bio.uint32() # 1024
+		_unk3 = event_bio.uint8() # 768
+		_unk4 = event_bio.uint32() # 768
+		numpoints = event_bio.uint32() # 0
+		self.points = [flp_autopoint(event_bio) for x in range(numpoints)]
+
+class flp_remotecontrol:
+	def __init__(self):
+		self.channel = 0
+		self.autoloc = flp_autoloc()
+		self.flags = 8
+		self.smooth = 469
+		self.formula = ''
+
+	def read(self, event_data):
+		event_bio = bytereader.bytereader(event_data)
+		event_bio.skip(2)
+		self.channel = event_bio.uint32()
+		event_bio.skip(2)
+		self.autoloc.decode(event_bio.uint32())
+		self.flags = event_bio.uint32()
+		self.smooth = event_bio.uint32()
+
+	def write(self):
+		autohex, isvalid = self.autoloc.encode()
+
+		bytes_remote = b'\x00\x00'
+		bytes_remote += self.channel.to_bytes(4, "little")
+		bytes_remote += b'\x00\x00'
+		bytes_remote += autohex
+		bytes_remote += self.flags.to_bytes(4, "little")
+		bytes_remote += self.smooth.to_bytes(4, "little")
+		return bytes_remote, isvalid
 
 class flp_initvals:
 	def __init__(self):
 		self.initvals = {}
 
 	def read(self, event_data):
-		event_bio = BytesIO(event_data)
+		event_bio = bytereader.bytereader(event_data)
 		while event_bio.tell() < len(event_data):
 			icrc_dummy = event_bio.read(4)
-			icrc_loc = int.from_bytes(event_bio.read(4), 'little', signed=True)
-			icrc_value = int.from_bytes(event_bio.read(4), 'little', signed=True)
+			icrc_loc = event_bio.int32()
+			icrc_value = event_bio.int32()
 			autoloc_obj = flp_autoloc()
 			autoloc_obj.decode(icrc_loc)
 			self.initvals[autoloc_obj.to_loctxt()] = icrc_value

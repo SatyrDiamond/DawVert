@@ -418,7 +418,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		plugin_obj.type_set('native', 'flstudio', flplugin.name)
 		version = fl_plugstr.uint32()
 		if (version == 0 and flplugin.name == 'fruity notebook 2') or (version == 1000 and flplugin.name == 'fruity notebook'): 
-			plugin_obj.datavals.add('currentpage', fl_plugstr.uint32())
+			plugin_obj.params.add('currentpage', fl_plugstr.uint32(), 'int')
 			pagesdata = {}
 			while True:
 				pagenum = fl_plugstr.uint32()
@@ -576,18 +576,15 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			except:
 				pass
 
-		fldso = globalstore.dataset.get_obj('fl_studio', 'plugin', flplugin.name)
-		if fldso:
-			for param_id, dset_param in fldso.params.iter():
-				if dset_param.num != -1:
-					#print('FS', flplugin.name, dset_param.num, param_id, dset_param, pluginid)
-					convproj_obj.automation.calc(['id_plug_points', pluginid, str(dset_param.num)], 'from_one', dset_param.min, dset_param.max, 0, 0)
+	fldso = globalstore.dataset.get_obj('fl_studio', 'plugin', flplugin.name)
+	if fldso:
+		for param_id, dset_param in fldso.params.iter():
+			if dset_param.num != -1:
+				#print('FS', flplugin.name, dset_param.num, param_id, dset_param, pluginid)
+				convproj_obj.automation.calc(['id_plug_points', pluginid, str(dset_param.num)], 'from_one', dset_param.min, dset_param.max, 0, 0)
+				convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
+				convproj_obj.automation.move(['id_plug_points', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
 
-					convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
-					convproj_obj.automation.move(['id_plug_points', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
-
-		#plugin_obj.params.debugtxt()
-		#exit()
 	# ------------------------------------------------------------------------------------------- Other
 
 	if plugin_obj.type.type != 'fruity wrapper': plugin_obj.rawdata_add('fl', flplugin.params)

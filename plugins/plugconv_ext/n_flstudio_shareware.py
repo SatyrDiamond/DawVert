@@ -334,6 +334,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Notebook')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179545410, 'chunk', make_flvst1(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'IL Notebook')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'notebook')
 				return True
 
 		# ---------------------------------------- parametric eq ----------------------------------------

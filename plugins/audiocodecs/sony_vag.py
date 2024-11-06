@@ -3,7 +3,7 @@
 
 import plugins
 import numpy as np
-import io
+from io import BytesIO
 
 class input_codec(plugins.base):
 	def is_dawvert_plugin(self): return 'audiocodec'
@@ -16,7 +16,7 @@ class input_codec(plugins.base):
 
 	def decode(self, in_bytes, audio_obj):
 		import av
-		vag_audio = io.BytesIO(in_bytes)
+		vag_audio = BytesIO(in_bytes)
 
 		try:
 			container = av.open(vag_audio, format='vag')

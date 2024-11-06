@@ -10,7 +10,6 @@ import zipfile
 import base64
 import logging
 import numpy as np
-from io import BytesIO
 
 logger_input = logging.getLogger('input')
 

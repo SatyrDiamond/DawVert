@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later 
 
-from io import BytesIO
 from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 

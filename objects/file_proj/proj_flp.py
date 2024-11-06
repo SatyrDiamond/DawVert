@@ -196,8 +196,8 @@ class flp_project:
 			self.internal_cur_timemarkers = self.current_pat_obj.timemarkers
 
 		elif event_id == 223:
-			event_bio = BytesIO(event_data)
-			while event_bio.tell() < len(event_data):
+			event_bio = bytereader.bytereader(event_data)
+			while event_bio.remaining():
 				pos, autov, val = struct.unpack('IIi', event_bio.read(12))
 				if autov not in self.current_pat_obj.automation: self.current_pat_obj.automation[autov] = []
 				self.current_pat_obj.automation[autov].append([pos, val])
@@ -287,7 +287,8 @@ class flp_project:
 		elif event_id == 227: 
 			self.current_ctrl = flp_auto = auto.flp_remotecontrol()
 			flp_auto.read(event_data)
-			self.remote_assoc[flp_auto.channel] = flp_auto
+			if flp_auto.channel not in self.remote_assoc: self.remote_assoc[flp_auto.channel] = []
+			self.remote_assoc[flp_auto.channel].append(flp_auto)
 		elif event_id == 230: 
 			self.current_ctrl.formula = decodetext(self.version_split, event_data)
 
@@ -527,12 +528,13 @@ class flp_project:
 			format_flp_tlv.write_tlv(chunkdata, 226, b'\xfd\x00\x00\x00\x00\x00\x00\x00\x80\x90\xff\x0f\x04\x00\x00\x00\xd5\x01\x00\x00')
 			format_flp_tlv.write_tlv(chunkdata, 226, b'\xff\x00\x00\x00\xff\x00\x00\x00\x04\x00\xff\x0f\x04\x00\x00\x00\x00\xfe\xff\xff')
 
-			for _, remotectrl in self.remote_assoc.items():
-				bytes_remote, isvalid = remotectrl.write()
-				if isvalid: 
-					format_flp_tlv.write_tlv(chunkdata, 227, bytes_remote)
-					if remotectrl.formula:
-						format_flp_tlv.write_tlv(chunkdata, 230, utf16encode(remotectrl.formula))
+			for _, m in self.remote_assoc.items():
+				for remotectrl in m:
+					bytes_remote, isvalid = remotectrl.write()
+					if isvalid: 
+						format_flp_tlv.write_tlv(chunkdata, 227, bytes_remote)
+						if remotectrl.formula:
+							format_flp_tlv.write_tlv(chunkdata, 230, utf16encode(remotectrl.formula))
 
 			for chnum, chdat in self.channels.items():
 				format_flp_tlv.write_tlv(chunkdata, 64, chnum)

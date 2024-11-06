@@ -4,7 +4,6 @@
 from objects.exceptions import ProjectFileParserException
 from objects.data_bytes import bytereader
 from objects.inst_params import fm_opl
-from io import BytesIO
 
 def decode_events(song_file):
 	sop_eventdata = []

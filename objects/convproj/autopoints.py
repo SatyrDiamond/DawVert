@@ -69,6 +69,12 @@ class cvpj_autopoints:
 		for x in self.points:
 			yield x
 
+	def merge(self, other):
+		other = copy.deepcopy(other)
+		other.change_timings(self.time_ppq, self.time_float)
+		self.points += other.points
+		self.sort()
+
 	def clear(self):
 		self.data = {}
 		self.points = []
@@ -135,7 +141,12 @@ class cvpj_autopoints:
 					cp.value = xtramath.between_from_one(cp.value, np.value, betpos)
 					cp.pos = startat
 		
-			if xtramath.is_between(cp.pos, np.pos, endat):
+			endcon = xtramath.is_between(cp.pos, np.pos, endat)
+			if endcon: 
+				endcon = endat!=np.pos
+				end_point += 1
+				
+			if endcon:
 				if cp.type != 'instant':
 					betpos = xtramath.between_to_one(cp.pos, np.pos, endat)
 					cp.value = xtramath.between_from_one(cp.value, np.value, betpos)

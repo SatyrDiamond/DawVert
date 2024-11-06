@@ -64,6 +64,11 @@ class cvpj_autoticks:
 	#	for p in self.points: 
 	#		self.points[p += pos] == self.points[p]
 
+	def merge(self, other):
+		other = copy.deepcopy(other)
+		other.change_timings(self.time_ppq, self.time_float)
+		for p, x in other.points.items(): self.points[p] = x
+
 	def calc(self, mathtype, val1, val2, val3, val4):
 		for p in self.points: self.points[p] = xtramath.do_math(self.points[p], mathtype, val1, val2, val3, val4)
 

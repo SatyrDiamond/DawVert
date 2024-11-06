@@ -41,6 +41,32 @@ class cvpj_s_automation:
 
 		return 'AutoSet '+ outtxt
 
+	def merge(self, other):
+		other = copy.deepcopy(other)
+		other.change_timings(self.time_ppq, self.time_float)
+
+		if not self.u_pl_points:
+			self.u_pl_points = other.u_pl_points
+			self.pl_points = other.pl_points
+
+		if not self.u_pl_ticks:
+			self.u_pl_ticks = other.u_pl_ticks
+			self.pl_ticks = other.pl_ticks
+
+		if not self.u_nopl_points:
+			self.u_nopl_points = other.u_nopl_points
+			self.nopl_points = other.nopl_points
+		else:
+			self.u_nopl_ticks = True
+			self.nopl_points.merge(other.nopl_points)
+
+		if not self.u_nopl_ticks:
+			self.u_nopl_ticks = other.u_nopl_ticks
+			self.nopl_ticks = other.nopl_ticks
+		else:
+			self.u_nopl_ticks = True
+			self.nopl_ticks.merge(other.nopl_ticks)
+
 
 	def sort(self):
 		if self.u_pl_points: self.pl_points.sort()
@@ -295,19 +321,24 @@ class cvpj_autoloc:
 		self.autoloc = listin+self.autoloc[startlen:]
 
 class cvpj_automation:
-	__slots__ = ['data','time_ppq','time_float','auto_num','movenotfound']
+	__slots__ = ['data','time_ppq','time_float','auto_num','movenotfound','calcnotfound']
 	def __init__(self, time_ppq, time_float):
 		self.data = {}
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.auto_num = counter.counter(200000, 'auto_')
 		self.movenotfound = []
+		self.calcnotfound = []
 
 	def __setitem__(self, p, v):
 		autoloc = cvpj_autoloc(p)
 		self.autoloc[autoloc] = v
 
 	def attempt_after(self):
+		for autopath, mathtype, val1, val2, val3, val4 in self.calcnotfound:
+			if autopath in self.data: 
+				self.data[autopath].calc(mathtype, val1, val2, val3, val4)
+
 		for autopath, to_autopath in self.movenotfound:
 			if autopath in self.data: 
 				logger_automation.info('Moving '+str(autopath)+' to '+str(to_autopath))
@@ -385,7 +416,10 @@ class cvpj_automation:
 
 		if autopath in self.data: 
 			logger_automation.info('Moving '+str(autopath)+' to '+str(to_autopath))
-			self.data[to_autopath] = self.data.pop(autopath)
+			if to_autopath not in self.data:
+				self.data[to_autopath] = self.data.pop(autopath)
+			else:
+				self.data[to_autopath].merge(self.data.pop(autopath))
 		else:
 			self.movenotfound.append([autopath, to_autopath])
 			logger_automation.debug('(not found) Moving '+str(autopath)+' to '+str(to_autopath))
@@ -398,7 +432,7 @@ class cvpj_automation:
 			self.data[to_autopath] = copy.deepcopy(self.data[autopath])
 			self.data[to_autopath].id = self.auto_num.get()
 		else:
-			logger_automation.debug('Copying '+str(autopath)+' to '+str(to_autopath))
+			logger_automation.debug('(not found) Copying '+str(autopath)+' to '+str(to_autopath))
 
 	def move_group(self, autopath, fval, tval):
 		self.move(autopath+[fval], autopath+[tval])
@@ -424,7 +458,10 @@ class cvpj_automation:
 	def calc(self, autopath, mathtype, val1, val2, val3, val4):
 		autopath = cvpj_autoloc(autopath)
 		logger_automation.info('Math '+str(autopath))
-		if autopath in self.data: self.data[autopath].calc(mathtype, val1, val2, val3, val4)
+		if autopath in self.data:
+			self.data[autopath].calc(mathtype, val1, val2, val3, val4)
+		else:
+			self.calcnotfound.append([autopath, mathtype, val1, val2, val3, val4])
 
 
 

@@ -74,6 +74,38 @@ def flpauto_to_cvpjauto(i_value):
 
 	return out
 
+def flpauto_to_cvpjauto_points(i_value):
+	out = [None, 0, 1]
+
+	if i_value[0] == 'fx':
+		if i_value[2] == 'plugin':
+			pluginid = 'FLPlug_F_'+str(i_value[1])+'_'+str(i_value[3])
+			out = [['id_plug_points', pluginid, i_value[4]], 0, 1]
+
+	if i_value[0] == 'chan':
+		cvpj_instid = 'FLInst' + str(i_value[1])
+		if i_value[2] == 'param':
+			if i_value[3] == 'vol': out = [['inst', cvpj_instid, 'vol'], 0, 1]
+			if i_value[3] == 'pan': out = [['inst', cvpj_instid, 'pan'], 1, -1]
+		if i_value[2] == 'plugin':
+			pluginid = 'FLPlug_G_'+str(i_value[1])
+			out = [['id_plug_points', pluginid, i_value[3]], 0, 1]
+
+	if i_value[0] == 'main':
+		if i_value[1] == 'tempo': out = [['main', 'bpm'], 10, 522]
+		if i_value[1] == 'pitch': out = [['main', 'pitch'], -12, 12]
+	if i_value[0] == 'fx':
+		if i_value[2] == 'param':
+			if i_value[3] == 'vol': out = [['fxmixer', i_value[1], 'vol'], 0, 1.25]
+			if i_value[3] == 'pan': out = [['fxmixer', i_value[1], 'pan'], 1, -1]
+		if i_value[2] == 'slot':
+			if i_value[4] == 'wet': out = [['slot', 'FLPlug_F_'+i_value[1]+'_'+i_value[3], 'wet'], 0, 1]
+			if i_value[4] == 'on': out = [['slot', 'FLPlug_F_'+i_value[1]+'_'+i_value[3], 'enabled'], 0, 1]
+		if i_value[2] == 'route':
+			out = [[('send' if i_value[3] else 'send_master'), 'send_'+str(i_value[1])+'_'+str(i_value[3]), 'amount'], 0, 1]
+
+	return out
+
 
 def get_sample(i_value):
 	if i_value != None:
@@ -82,6 +114,9 @@ def get_sample(i_value):
 			return restpath
 		elif i_value[0:18] == "%FLStudioUserData%":
 			restpath = i_value[18:]
+			return restpath
+		elif i_value[0:14] == "%FLStudioData%":
+			restpath = i_value[14:]
 			return restpath
 		elif i_value[0:13] == "%USERPROFILE%":
 			restpath = i_value[13:]
@@ -201,9 +236,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 	return sre_obj, sampleref_obj
 
 
-
-
-
+DEBUGAUTOTICKS = False
 
 
 class input_flp(plugins.base):
@@ -214,7 +247,7 @@ class input_flp(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['flp']
-		in_dict['auto_types'] = ['pl_ticks']
+		in_dict['auto_types'] = ['pl_ticks', 'pl_points']
 		in_dict['track_lanes'] = True
 		in_dict['placement_cut'] = True
 		in_dict['fxtype'] = 'rack'
@@ -293,6 +326,7 @@ class input_flp(plugins.base):
 		#	print(x)
 
 		id_inst = {}
+		id_auto = {}
 		id_pat = {}
 		sampleinfo = {}
 		samplestretch = {}
@@ -474,6 +508,9 @@ class input_flp(plugins.base):
 				if sampleref_obj.found:
 					samplestretch[instrument] = sre_obj.stretch
 
+			if fl_channel_obj.type == 5:
+				id_auto[channelnum] = fl_channel_obj.autopoints 
+
 			instdata_chans.append(spdata)
 
 		autoticks_pat = {}
@@ -593,6 +630,7 @@ class input_flp(plugins.base):
 						tickdata = autoticks_pat[patnum]
 						autodata = [placement_obj.time.position, placement_obj.time.duration, item.startoffset]
 						autod = autoticks_pat
+
 						for autoid, autodata in tickdata.items():
 							autoloc, aadd, adiv = flpauto_to_cvpjauto(autoid.split('/'))
 
@@ -600,11 +638,55 @@ class input_flp(plugins.base):
 								for x in autodata: x[1] = struct.unpack('I', struct.pack('i', x[1]))[0]
 
 							if autoloc: 
+								if DEBUGAUTOTICKS: t = []
+
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
 								autopl_obj.time = placement_obj.time.copy()
-								for pos, val in autodata: autopl_obj.data.add_point(pos, val/adiv)
+								for pos, val in autodata: 
+									autopl_obj.data.add_point(pos, val/adiv)
+									if DEBUGAUTOTICKS: t.append(val)
+
+								if DEBUGAUTOTICKS:
+									print(autoloc, min(t), max(t))
+
 
 				else:
+					if item.itemindex in id_auto and item.itemindex in flp_obj.remote_assoc:
+						fl_autopoints = id_auto[item.itemindex]
+						fl_remotectrl = flp_obj.remote_assoc[item.itemindex]
+
+						autoloc = fl_remotectrl.autoloc
+						autotxt = autoloc.to_loctxt()
+						autoloc, amin, amax = flpauto_to_cvpjauto_points(autotxt.split('/'))
+
+						if autoloc: 
+
+							autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+
+							autopl_obj.time.set_posdur(item.position, item.length)
+							if item.startoffset not in [4294967295, 3212836864]: 
+								if item.startoffset > 0:
+									posdata = item.startoffset
+									posdata = posdata/0.008
+
+									autopl_obj.time.set_offset(posdata*flp_obj.ppq)
+
+							#print(autoloc, amin, amax)
+
+							curpos = 0
+							for point in fl_autopoints.points:
+								curpos += point.pos
+
+								auto_pos = int(curpos*flp_obj.ppq)
+								auto_val = xtramath.between_from_one(amin, amax, point.val)
+
+								autopoint_obj = autopl_obj.data.add_point()
+								autopoint_obj.pos = auto_pos
+								autopoint_obj.value = auto_val
+								autopoint_obj.type = 'normal' if point.type!=2 else 'instant'
+
+								#print(auto_pos, auto_val)
+
 					if playlistline in temp_pl_track:
 						placement_obj = temp_pl_track[playlistline].placements.add_audio_indexed()
 						placement_obj.time.set_posdur(item.position, item.length)
@@ -762,16 +844,26 @@ class input_flp(plugins.base):
 		convproj_obj.automation.attempt_after()
 
 		movequeue = []
+		movequeue_points = []
+
 		autodata = convproj_obj.automation.data
 		for wrapper_plugid in wrapper_plugids:
 			for n, x in autodata.items():
 				if n.startswith(['id_plug',wrapper_plugid]):
-					#convproj_obj.automation.move(['id_plug', pluginid, str(dset_param.num)], ['plugin',pluginid,param_id])
 					autol = n.get_list()
 					movequeue.append([autol, ['plugin',autol[1],'ext_param_'+autol[2]]])
 
+		for wrapper_plugid in wrapper_plugids:
+			for n, x in autodata.items():
+				if n.startswith(['id_plug_points',wrapper_plugid]):
+					autol = n.get_list()
+					movequeue_points.append([autol, ['plugin',autol[1],'ext_param_'+autol[2]]])
+
 		for autopath, to_autopath in movequeue:
 			convproj_obj.automation.calc(autopath, 'floatbyteint2float', 0, 0, 0, 0)
+			convproj_obj.automation.move(autopath, to_autopath)
+
+		for autopath, to_autopath in movequeue_points:
 			convproj_obj.automation.move(autopath, to_autopath)
 
 		if flp_obj.title: convproj_obj.metadata.name = flp_obj.title
@@ -779,3 +871,6 @@ class input_flp(plugins.base):
 		if flp_obj.genre: convproj_obj.metadata.genre = flp_obj.genre
 		if flp_obj.url: convproj_obj.metadata.url = flp_obj.url
 		if flp_obj.comment: convproj_obj.metadata.comment_text = flp_obj.comment
+
+		#for n, d in convproj_obj.automation.data.items():
+		#	print(n, [x.value for x in d.pl_points.data[0].data])

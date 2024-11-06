@@ -1,0 +1,102 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+param_0,0,-1000,1000,Phase randomness,0,Phase randomness
+param_1,0,0,1024,Low harmonics protectio,1,Low harmonics protectio
+param_2,0,0,2048,Sub harmonic 1,2,Sub harmonic 1
+param_3,0,0,2048,Sub harmonic 3,3,Sub harmonic 3
+param_4,0,0,2048,Sub harmonic 4,4,Sub harmonic 4
+param_5,0,-1024,1024,Timbre EQ band 1,5,Timbre EQ band 1
+param_6,0,-1024,1024,Timbre EQ band 2,6,Timbre EQ band 2
+param_7,0,-1024,1024,Timbre EQ band 3,7,Timbre EQ band 3
+param_8,0,-1024,1024,Timbre EQ band 4,8,Timbre EQ band 4
+param_9,0,-1024,1024,Timbre EQ band 5,9,Timbre EQ band 5
+param_10,0,-1024,1024,Timbre EQ band 6,10,Timbre EQ band 6
+param_11,0,0,1000,Harmonic mask 1/12,11,Harmonic mask 1/12
+param_12,0,0,1000,Harmonic mask 2/12,12,Harmonic mask 2/12
+param_13,0,0,1000,Harmonic mask 3/12,13,Harmonic mask 3/12
+param_14,0,0,1000,Harmonic mask 4/12,14,Harmonic mask 4/12
+param_15,0,0,1000,Harmonic mask 5/12,15,Harmonic mask 5/12
+param_16,0,0,1000,Harmonic mask 6/12,16,Harmonic mask 6/12
+param_17,0,0,1000,Harmonic mask 7/12,17,Harmonic mask 7/12
+param_18,0,0,1000,Harmonic mask 8/12,18,Harmonic mask 8/12
+param_19,0,0,1000,Harmonic mask 9/12,19,Harmonic mask 9/12
+param_20,0,0,1000,Harmonic mask 10/12,20,Harmonic mask 10/12
+param_21,0,0,1000,Harmonic mask 11/12,21,Harmonic mask 11/12
+param_22,0,0,1000,Harmonic mask 12/12,22,Harmonic mask 12/12
+param_23,0,0,1000,Harmonic mask mix,23,Harmonic mask mix
+param_24,0,-1000,1000,Harmonic mask mix LFO a,24,Harmonic mask mix LFO a
+param_25,0,0,1000,Stereo tremolo depth,25,Stereo tremolo depth
+param_26,0,0,1000,Volume env attack lengt,26,Volume env attack lengt
+param_27,0,0,1000,Volume env decay length,27,Volume env decay length
+param_28,0,0,1000,Volume env release leng,28,Volume env release leng
+param_29,0,0,1,Velocity to attack,29,Velocity to attack
+param_30,0,0,1,Release velocity to rel,30,Release velocity to rel
+param_31,0,0,1000,Pluck decay length,31,Pluck decay length
+param_32,0,0,1,Velocity to pluck decay,32,Velocity to pluck decay
+param_33,0,0,1,Alternate pluck mode,33,Alternate pluck mode
+param_34,0,0,1,Pluck uses harmonic mas,34,Pluck uses harmonic mas
+param_35,0,0,1,Pluck only on release,35,Pluck only on release
+param_36,0,0,2000,Master volume,36,Master volume
+param_37,0,0,1,Velocity to volume,37,Velocity to volume
+param_38,0,-2400,2400,Master pitch,38,Master pitch
+param_39,0,-2400,2400,Detuning,39,Detuning
+param_40,0,-1000,1000,Grittiness,40,Grittiness
+param_41,0,0,1000,Pitch vibrato depth,41,Pitch vibrato depth
+param_42,0,-1000,1000,Pitch LFO amount,42,Pitch LFO amount
+param_43,0,0,1,Portamento mode,43,Portamento mode
+param_44,0,0,1,Monophonic mode,44,Monophonic mode
+param_45,0,-1000,1000,Portamento / legato tim,45,Portamento / legato tim
+param_46,0,0,1,Velocity / release to p,46,Velocity / release to p
+param_47,0,0,0,Adaptive filter envelop,47,Adaptive filter envelop
+param_48,0,0,1000,Filter env attack lengt,48,Filter env attack lengt
+param_49,0,0,1000,Filter env decay length,49,Filter env decay length
+param_50,0,-1000,1000,Filter env attack slope,50,Filter env attack slope
+param_51,0,-1000,1000,Filter env decay slope,51,Filter env decay slope
+param_52,0,-1000,1000,Filter env amount,52,Filter env amount
+param_53,0,0,1,Velocity to filter env,53,Velocity to filter env
+param_54,0,0,8192,Filter frequency,54,Filter frequency
+param_55,0,0,1,Filter scale,55,Filter scale
+param_56,0,0,1000,Filter width,56,Filter width
+param_57,0,-2000,2000,Key to filter frequency,57,Key to filter frequency
+param_58,0,-1000,1000,Filter LFO amount,58,Filter LFO amount
+param_59,0,0,1000,Resonance amount,59,Resonance amount
+param_60,0,0,1,Resonance scale,60,Resonance scale
+param_61,0,-2400,2400,Resonance offset / nois,61,Resonance offset / nois
+param_62,0,0,2048,Resonance self-oscillat,62,Resonance self-oscillat
+param_63,0,0,1,Adaptive width,63,Adaptive width
+param_64,0,0,1,Track filter frequency,64,Track filter frequency
+param_65,0,1,9,Unison order,65,Unison order
+param_66,0,97,103,Unison panning,66,Unison panning
+param_67,0,0,256,Unison pitch thickness,67,Unison pitch thickness
+param_68,0,0,128,Unison phase,68,Unison phase
+param_69,0,0,128,Unison variation,69,Unison variation
+param_70,0,0,2,Unison type,70,Unison type
+param_71,0,0,1000,Phaser mix,71,Phaser mix
+param_72,0,0,2,Phaser scale,72,Phaser scale
+param_73,0,0,10000,Phaser width,73,Phaser width
+param_74,0,-1000,1000,Phaser width LFO amount,74,Phaser width LFO amount
+param_75,0,0,999,Phaser offset,75,Phaser offset
+param_76,0,-1000,1000,Phaser offset LFO amoun,76,Phaser offset LFO amoun
+param_77,0,-8000,8000,Phaser offset motion sp,77,Phaser offset motion sp
+param_78,0,-2000,2000,Key to phaser offset,78,Key to phaser offset
+param_79,0,0,1000,Harmonizer mix,79,Harmonizer mix
+param_80,0,0,1000,Harmonizer width,80,Harmonizer width
+param_81,0,-1000,1000,Harmonizer width LFO am,81,Harmonizer width LFO am
+param_82,0,0,1,Velocity to harmonizer,82,Velocity to harmonizer
+param_83,0,0,1024,Harmonizer strength,83,Harmonizer strength
+param_84,0,0,4,Harmonizer type,84,Harmonizer type
+param_85,0,0,3,Harmonizer position,85,Harmonizer position
+param_86,0,0,13,LFO shape / source,86,LFO shape / source
+param_87,0,0,0,Global / retriggered LF,87,Global / retriggered LF
+param_88,0,0,1000,LFO attack,88,LFO attack
+param_89,0,-8000,8000,LFO speed,89,LFO speed
+param_90,0,0,9,Chorus type,90,Chorus type
+param_91,0,0,1000,Chorus mix,91,Chorus mix
+param_92,0,0,3,Delay type,92,Delay type
+param_93,0,0,1000,Delay input level,93,Delay input level
+param_94,0,0,900,Delay feedback level,94,Delay feedback level
+param_95,0,0,384,Delay time,95,Delay time
+param_96,0,0,6,Reverb type,96,Reverb type
+param_97,0,0,1000,Reverb wet level,97,Reverb wet level
+param_98,0,0,1000,Compression level,98,Compression level
+param_99,0,0,1,Velocity to unison pitc,99,Velocity to unison pitc

@@ -166,6 +166,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Harmless')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229484653, 'chunk', make_flvst2(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'Harmless')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'harmless')
 				return True
 
 		# ---------------------------------------- Harmor ----------------------------------------
@@ -256,6 +257,7 @@ class plugconv(plugins.base):
 				extpluglog.extpluglist.success('FL Studio', 'Delay')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1178874454, 'chunk', make_flvst1(plugin_obj), None)
 				plugin_obj.datavals_global.add('name', 'IL Delay')
+				param_auto(convproj_obj, pluginid, plugin_obj, 'fruity delay 2')
 				return True
 
 		# ---------------------------------------- fruity delay bank ----------------------------------------

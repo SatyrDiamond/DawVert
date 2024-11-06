@@ -1,0 +1,133 @@
+cvpj,cvpj,cvpj,cvpj,cvpj,vst2,vst2
+paramid,def,min,max,visname,paramnum,visname
+dry,0,0,128,Dry,0,Dry
+wet,0,0,128,Wet,1,Wet
+in,0,0,128,Input,2,Input
+fb,0,0,128,Feedback,3,Feedback
+bank_1_v/pan,0,0,128,Delay 1 - Input panning,4,Delay 1 - Input panning
+bank_1_v/vol,0,0,160,Delay 1 - Input volume,5,Delay 1 - Input volume
+bank_1_v/filter_cutoff,0,0,65536,Delay 1 - Input filter,6,Delay 1 - Input filter
+bank_1_v/filter_res,0,0,65536,Delay 1 - Input filter,7,Delay 1 - Input filter
+bank_1_v/filter_gain,0,0,256,Delay 1 - Input filter,8,Delay 1 - Input filter
+bank_1_v/feedback_pan,0,0,128,Delay 1 - Feedback pann,9,Delay 1 - Feedback pann
+bank_1_v/feedback_vol,0,0,128,Delay 1 - Feedback volu,10,Delay 1 - Feedback volu
+bank_1_v/feedback_sep,0,0,128,Delay 1 - Feedback ster,11,Delay 1 - Feedback ster
+bank_1_v/feedback_time,0,0,7680,Delay 1 - Time,12,Delay 1 - Time
+bank_1_v/feedback_ofs,0,0,512,Delay 1 - Time stereo o,13,Delay 1 - Time stereo o
+bank_1_v/fbfilter_cut,0,0,65536,Delay 1 - Feedback filt,14,Delay 1 - Feedback filt
+bank_1_v/fbfilter_res,0,0,65536,Delay 1 - Feedback filt,15,Delay 1 - Feedback filt
+bank_1_v/fbfilter_gain,0,0,256,Delay 1 - Feedback filt,16,Delay 1 - Feedback filt
+bank_1_v/out_pan,0,0,128,Delay 1 - Output pannin,17,Delay 1 - Output pannin
+bank_1_v/out_vol,0,0,160,Delay 1 - Output volume,18,Delay 1 - Output volume
+bank_1_v/out_next,0,-1,160,Delay 1 - To next delay,19,Delay 1 - To next delay
+bank_2_v/pan,0,0,128,Delay 2 - Input panning,20,Delay 2 - Input panning
+bank_2_v/vol,0,0,160,Delay 2 - Input volume,21,Delay 2 - Input volume
+bank_2_v/filter_cutoff,0,0,65536,Delay 2 - Input filter,22,Delay 2 - Input filter
+bank_2_v/filter_res,0,0,65536,Delay 2 - Input filter,23,Delay 2 - Input filter
+bank_2_v/filter_gain,0,0,256,Delay 2 - Input filter,24,Delay 2 - Input filter
+bank_2_v/feedback_pan,0,0,128,Delay 2 - Feedback pann,25,Delay 2 - Feedback pann
+bank_2_v/feedback_vol,0,0,128,Delay 2 - Feedback volu,26,Delay 2 - Feedback volu
+bank_2_v/feedback_sep,0,0,128,Delay 2 - Feedback ster,27,Delay 2 - Feedback ster
+bank_2_v/feedback_time,0,0,7680,Delay 2 - Time,28,Delay 2 - Time
+bank_2_v/feedback_ofs,0,0,512,Delay 2 - Time stereo o,29,Delay 2 - Time stereo o
+bank_2_v/fbfilter_cut,0,0,65536,Delay 2 - Feedback filt,30,Delay 2 - Feedback filt
+bank_2_v/fbfilter_res,0,0,65536,Delay 2 - Feedback filt,31,Delay 2 - Feedback filt
+bank_2_v/fbfilter_gain,0,0,256,Delay 2 - Feedback filt,32,Delay 2 - Feedback filt
+bank_2_v/out_pan,0,0,128,Delay 2 - Output pannin,33,Delay 2 - Output pannin
+bank_2_v/out_vol,0,0,160,Delay 2 - Output volume,34,Delay 2 - Output volume
+bank_2_v/out_next,0,-1,160,Delay 2 - To next delay,35,Delay 2 - To next delay
+bank_3_v/pan,0,0,128,Delay 3 - Input panning,36,Delay 3 - Input panning
+bank_3_v/vol,0,0,160,Delay 3 - Input volume,37,Delay 3 - Input volume
+bank_3_v/filter_cutoff,0,0,65536,Delay 3 - Input filter,38,Delay 3 - Input filter
+bank_3_v/filter_res,0,0,65536,Delay 3 - Input filter,39,Delay 3 - Input filter
+bank_3_v/filter_gain,0,0,256,Delay 3 - Input filter,40,Delay 3 - Input filter
+bank_3_v/feedback_pan,0,0,128,Delay 3 - Feedback pann,41,Delay 3 - Feedback pann
+bank_3_v/feedback_vol,0,0,128,Delay 3 - Feedback volu,42,Delay 3 - Feedback volu
+bank_3_v/feedback_sep,0,0,128,Delay 3 - Feedback ster,43,Delay 3 - Feedback ster
+bank_3_v/feedback_time,0,0,7680,Delay 3 - Time,44,Delay 3 - Time
+bank_3_v/feedback_ofs,0,0,512,Delay 3 - Time stereo o,45,Delay 3 - Time stereo o
+bank_3_v/fbfilter_cut,0,0,65536,Delay 3 - Feedback filt,46,Delay 3 - Feedback filt
+bank_3_v/fbfilter_res,0,0,65536,Delay 3 - Feedback filt,47,Delay 3 - Feedback filt
+bank_3_v/fbfilter_gain,0,0,256,Delay 3 - Feedback filt,48,Delay 3 - Feedback filt
+bank_3_v/out_pan,0,0,128,Delay 3 - Output pannin,49,Delay 3 - Output pannin
+bank_3_v/out_vol,0,0,160,Delay 3 - Output volume,50,Delay 3 - Output volume
+bank_3_v/out_next,0,-1,160,Delay 3 - To next delay,51,Delay 3 - To next delay
+bank_4_v/pan,0,0,128,Delay 4 - Input panning,52,Delay 4 - Input panning
+bank_4_v/vol,0,0,160,Delay 4 - Input volume,53,Delay 4 - Input volume
+bank_4_v/filter_cutoff,0,0,65536,Delay 4 - Input filter,54,Delay 4 - Input filter
+bank_4_v/filter_res,0,0,65536,Delay 4 - Input filter,55,Delay 4 - Input filter
+bank_4_v/filter_gain,0,0,256,Delay 4 - Input filter,56,Delay 4 - Input filter
+bank_4_v/feedback_pan,0,0,128,Delay 4 - Feedback pann,57,Delay 4 - Feedback pann
+bank_4_v/feedback_vol,0,0,128,Delay 4 - Feedback volu,58,Delay 4 - Feedback volu
+bank_4_v/feedback_sep,0,0,128,Delay 4 - Feedback ster,59,Delay 4 - Feedback ster
+bank_4_v/feedback_time,0,0,7680,Delay 4 - Time,60,Delay 4 - Time
+bank_4_v/feedback_ofs,0,0,512,Delay 4 - Time stereo o,61,Delay 4 - Time stereo o
+bank_4_v/fbfilter_cut,0,0,65536,Delay 4 - Feedback filt,62,Delay 4 - Feedback filt
+bank_4_v/fbfilter_res,0,0,65536,Delay 4 - Feedback filt,63,Delay 4 - Feedback filt
+bank_4_v/fbfilter_gain,0,0,256,Delay 4 - Feedback filt,64,Delay 4 - Feedback filt
+bank_4_v/out_pan,0,0,128,Delay 4 - Output pannin,65,Delay 4 - Output pannin
+bank_4_v/out_vol,0,0,160,Delay 4 - Output volume,66,Delay 4 - Output volume
+bank_4_v/out_next,0,-1,160,Delay 4 - To next delay,67,Delay 4 - To next delay
+bank_5_v/pan,0,0,128,Delay 5 - Input panning,68,Delay 5 - Input panning
+bank_5_v/vol,0,0,160,Delay 5 - Input volume,69,Delay 5 - Input volume
+bank_5_v/filter_cutoff,0,0,65536,Delay 5 - Input filter,70,Delay 5 - Input filter
+bank_5_v/filter_res,0,0,65536,Delay 5 - Input filter,71,Delay 5 - Input filter
+bank_5_v/filter_gain,0,0,256,Delay 5 - Input filter,72,Delay 5 - Input filter
+bank_5_v/feedback_pan,0,0,128,Delay 5 - Feedback pann,73,Delay 5 - Feedback pann
+bank_5_v/feedback_vol,0,0,128,Delay 5 - Feedback volu,74,Delay 5 - Feedback volu
+bank_5_v/feedback_sep,0,0,128,Delay 5 - Feedback ster,75,Delay 5 - Feedback ster
+bank_5_v/feedback_time,0,0,7680,Delay 5 - Time,76,Delay 5 - Time
+bank_5_v/feedback_ofs,0,0,512,Delay 5 - Time stereo o,77,Delay 5 - Time stereo o
+bank_5_v/fbfilter_cut,0,0,65536,Delay 5 - Feedback filt,78,Delay 5 - Feedback filt
+bank_5_v/fbfilter_res,0,0,65536,Delay 5 - Feedback filt,79,Delay 5 - Feedback filt
+bank_5_v/fbfilter_gain,0,0,256,Delay 5 - Feedback filt,80,Delay 5 - Feedback filt
+bank_5_v/out_pan,0,0,128,Delay 5 - Output pannin,81,Delay 5 - Output pannin
+bank_5_v/out_vol,0,0,160,Delay 5 - Output volume,82,Delay 5 - Output volume
+bank_5_v/out_next,0,-1,160,Delay 5 - To next delay,83,Delay 5 - To next delay
+bank_6_v/pan,0,0,128,Delay 6 - Input panning,84,Delay 6 - Input panning
+bank_6_v/vol,0,0,160,Delay 6 - Input volume,85,Delay 6 - Input volume
+bank_6_v/filter_cutoff,0,0,65536,Delay 6 - Input filter,86,Delay 6 - Input filter
+bank_6_v/filter_res,0,0,65536,Delay 6 - Input filter,87,Delay 6 - Input filter
+bank_6_v/filter_gain,0,0,256,Delay 6 - Input filter,88,Delay 6 - Input filter
+bank_6_v/feedback_pan,0,0,128,Delay 6 - Feedback pann,89,Delay 6 - Feedback pann
+bank_6_v/feedback_vol,0,0,128,Delay 6 - Feedback volu,90,Delay 6 - Feedback volu
+bank_6_v/feedback_sep,0,0,128,Delay 6 - Feedback ster,91,Delay 6 - Feedback ster
+bank_6_v/feedback_time,0,0,7680,Delay 6 - Time,92,Delay 6 - Time
+bank_6_v/feedback_ofs,0,0,512,Delay 6 - Time stereo o,93,Delay 6 - Time stereo o
+bank_6_v/fbfilter_cut,0,0,65536,Delay 6 - Feedback filt,94,Delay 6 - Feedback filt
+bank_6_v/fbfilter_res,0,0,65536,Delay 6 - Feedback filt,95,Delay 6 - Feedback filt
+bank_6_v/fbfilter_gain,0,0,256,Delay 6 - Feedback filt,96,Delay 6 - Feedback filt
+bank_6_v/out_pan,0,0,128,Delay 6 - Output pannin,97,Delay 6 - Output pannin
+bank_6_v/out_vol,0,0,160,Delay 6 - Output volume,98,Delay 6 - Output volume
+bank_6_v/out_next,0,-1,160,Delay 6 - To next delay,99,Delay 6 - To next delay
+bank_7_v/pan,0,0,128,Delay 7 - Input panning,100,Delay 7 - Input panning
+bank_7_v/vol,0,0,160,Delay 7 - Input volume,101,Delay 7 - Input volume
+bank_7_v/filter_cutoff,0,0,65536,Delay 7 - Input filter,102,Delay 7 - Input filter
+bank_7_v/filter_res,0,0,65536,Delay 7 - Input filter,103,Delay 7 - Input filter
+bank_7_v/filter_gain,0,0,256,Delay 7 - Input filter,104,Delay 7 - Input filter
+bank_7_v/feedback_pan,0,0,128,Delay 7 - Feedback pann,105,Delay 7 - Feedback pann
+bank_7_v/feedback_vol,0,0,128,Delay 7 - Feedback volu,106,Delay 7 - Feedback volu
+bank_7_v/feedback_sep,0,0,128,Delay 7 - Feedback ster,107,Delay 7 - Feedback ster
+bank_7_v/feedback_time,0,0,7680,Delay 7 - Time,108,Delay 7 - Time
+bank_7_v/feedback_ofs,0,0,512,Delay 7 - Time stereo o,109,Delay 7 - Time stereo o
+bank_7_v/fbfilter_cut,0,0,65536,Delay 7 - Feedback filt,110,Delay 7 - Feedback filt
+bank_7_v/fbfilter_res,0,0,65536,Delay 7 - Feedback filt,111,Delay 7 - Feedback filt
+bank_7_v/fbfilter_gain,0,0,256,Delay 7 - Feedback filt,112,Delay 7 - Feedback filt
+bank_7_v/out_pan,0,0,128,Delay 7 - Output pannin,113,Delay 7 - Output pannin
+bank_7_v/out_vol,0,0,160,Delay 7 - Output volume,114,Delay 7 - Output volume
+bank_7_v/out_next,0,-1,160,Delay 7 - To next delay,115,Delay 7 - To next delay
+bank_8_v/pan,0,0,128,Delay 8 - Input panning,116,Delay 8 - Input panning
+bank_8_v/vol,0,0,160,Delay 8 - Input volume,117,Delay 8 - Input volume
+bank_8_v/filter_cutoff,0,0,65536,Delay 8 - Input filter,118,Delay 8 - Input filter
+bank_8_v/filter_res,0,0,65536,Delay 8 - Input filter,119,Delay 8 - Input filter
+bank_8_v/filter_gain,0,0,256,Delay 8 - Input filter,120,Delay 8 - Input filter
+bank_8_v/feedback_pan,0,0,128,Delay 8 - Feedback pann,121,Delay 8 - Feedback pann
+bank_8_v/feedback_vol,0,0,128,Delay 8 - Feedback volu,122,Delay 8 - Feedback volu
+bank_8_v/feedback_sep,0,0,128,Delay 8 - Feedback ster,123,Delay 8 - Feedback ster
+bank_8_v/feedback_time,0,0,7680,Delay 8 - Time,124,Delay 8 - Time
+bank_8_v/feedback_ofs,0,0,512,Delay 8 - Time stereo o,125,Delay 8 - Time stereo o
+bank_8_v/fbfilter_cut,0,0,65536,Delay 8 - Feedback filt,126,Delay 8 - Feedback filt
+bank_8_v/fbfilter_res,0,0,65536,Delay 8 - Feedback filt,127,Delay 8 - Feedback filt
+bank_8_v/fbfilter_gain,0,0,256,Delay 8 - Feedback filt,128,Delay 8 - Feedback filt
+bank_8_v/out_pan,0,0,128,Delay 8 - Output pannin,129,Delay 8 - Output pannin
+bank_8_v/out_vol,0,0,160,Delay 8 - Output volume,130,Delay 8 - Output volume

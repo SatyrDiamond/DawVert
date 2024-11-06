@@ -99,20 +99,24 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 			for autopl_obj in aid_data.pl_points:
 				autopl_obj.data.remove_instant()
 
+				time_obj = autopl_obj.time
+
 				block = proj_soundbridge.soundbridge_block(None)
 				block.name = ""
 				block.timeBaseMode = 0
-				block.position = autopl_obj.time.position
+				block.position = time_obj.position
 				block.positionStart = 0
-				block.positionEnd = autopl_obj.time.duration
+				block.positionEnd = time_obj.duration
 				block.loopOffset = 0
-				block.framesCount = autopl_obj.time.duration
+				block.framesCount = time_obj.duration
 				block.loopEnabled = 0
 				block.muted = 0
 				block.version = 1
 
 				if autopl_obj.time.cut_type == 'cut':
-					block.positionStart, block.loopOffset, block.positionEnd = autopl_obj.time.get_loop_data()
+					block.positionStart = time_obj.cut_start
+					block.loopOffset = time_obj.cut_start
+					block.positionEnd += time_obj.cut_start
 					block.loopOffset = max(block.loopOffset, 0)
 					block.positionStart = max(block.positionStart, 0)
 

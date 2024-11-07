@@ -83,9 +83,9 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 	fl_plugstr.load_raw(flplugin.params if flplugin.params else b'')
 	flplugin.name = flplugin.name.lower()
 
-	plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'flstudio', flplugin.name)
+	plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'flstudio', flplugin.name)
 
-	windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+	windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
 	windata_obj.pos_x = flplugin.window_p_x
 	windata_obj.pos_y = flplugin.window_p_y
 	windata_obj.size_x = flplugin.window_s_x
@@ -259,7 +259,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		asdflfo_rel = flsf_asdf_R/1024 if flsf_asdf_R != -1 else 0
 		asdflfo_amt = int( (flsf_asdf_A == flsf_asdf_D == flsf_asdf_S == flsf_asdf_R == -1) == False )
 
-		fileref_obj = convproj_obj.add_fileref(flsf_filename, flsf_filename, 'win')
+		fileref_obj = convproj_obj.fileref__add(flsf_filename, flsf_filename, 'win')
 		
 		if zipfile:
 			foundnames = [x for x in zipfile.namelist() if fileref_obj.file.basename in x]
@@ -308,7 +308,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		sre_obj = plugin_obj.samplepart_add('sample')
 
 		if slicer_filename != "": 
-			sampleref_obj = convproj_obj.add_sampleref(slicer_filename, slicer_filename, 'win')
+			sampleref_obj = convproj_obj.sampleref__add(slicer_filename, slicer_filename, 'win')
 			if zipfile: sampleref_obj.find_relative('extracted')
 			sampleref_obj.find_relative('projectfile')
 			sampleref_obj.find_relative('factorysamples')
@@ -522,10 +522,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			try:
 				with open(outfilename, "wb") as slicexfile: slicexfile.write(wavedata)
 			except PermissionError: pass
-			sampleref_obj = convproj_obj.add_sampleref(outfilename, outfilename, 'win')
+			sampleref_obj = convproj_obj.sampleref__add(outfilename, outfilename, 'win')
 			sre_obj.from_sampleref(convproj_obj, outfilename)
 		else:
-			sampleref_obj = convproj_obj.add_sampleref(slicex_filename, slicex_filename, 'win')
+			sampleref_obj = convproj_obj.sampleref__add(slicex_filename, slicex_filename, 'win')
 			sre_obj.from_sampleref(convproj_obj, slicex_filename)
 
 		sampleref_obj.find_relative('extracted')

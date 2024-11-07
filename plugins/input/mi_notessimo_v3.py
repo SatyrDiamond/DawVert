@@ -84,7 +84,7 @@ class sample_manager():
 					try: project_obj.zip_data.extract(zipfilepath, path=samplefolder, pwd=None)
 					except: pass
 					realfilepath = os.path.join(samplefolder,zipfilepath)
-					sampleref_obj = convproj_obj.add_sampleref(sample_id, realfilepath, None)
+					sampleref_obj = convproj_obj.sampleref__add(sample_id, realfilepath, None)
 			samplekey = do_key(notet_sample.pitch, notet_sample.octave, notet_sample.accidental)
 			return sample_id, notet_sample, samplekey, sampleref_obj
 		return None, None, 0
@@ -119,7 +119,7 @@ class inst_manager():
 			sp_obj.end = sampleref_obj.dur_samples
 
 	def add_inst(convproj_obj, instid, project_obj, maindata_obj):
-		inst_obj = convproj_obj.add_instrument(instid)
+		inst_obj = convproj_obj.instrument__add(instid)
 		midifound = inst_obj.from_dataset('notessimo_v3', 'inst', instid, True)
 		if midifound: inst_obj.to_midi(convproj_obj, instid, True)
 		#inst_obj.fxrack_channel = 1 if inst_obj.midi.out_inst.drum else inst_manager.fxnum
@@ -148,7 +148,7 @@ class inst_manager():
 			sampleids = [d.sample_1 for _, d in notet_inst.sets.items() if d.sample_1]
 
 			if sampleids:
-				plugin_obj = convproj_obj.add_plugin(instid, 'universal', 'sampler', 'multi')
+				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				inst_obj.pluginid = instid
 
@@ -156,7 +156,7 @@ class inst_manager():
 					inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data)
 
 			elif notet_inst.sample:
-				plugin_obj = convproj_obj.add_plugin(instid, 'universal', 'sampler', 'single')
+				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'single')
 				plugin_obj.role = 'synth'
 				inst_obj.pluginid = instid
 
@@ -180,7 +180,7 @@ class inst_manager():
 				#inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data)
 
 		#if inst_obj.fxrack_channel == 1:
-		#	fxchan_data = convproj_obj.add_fxchan(inst_manager.fxnum)
+		#	fxchan_data = convproj_obj.fx__chan__add(inst_manager.fxnum)
 		#	fxchan_data.visual.name = inst_obj.visual.name
 		#	fxchan_data.visual.color = inst_obj.visual.color.copy()
 		#	inst_manager.fxnum += 1
@@ -241,7 +241,7 @@ class input_notessimo_v3(plugins.base):
 		sheetrealsize = {}
 
 		for sheet_id, sheet_data in project_obj.sheets.items():
-			nle_obj = convproj_obj.add_notelistindex(sheet_id)
+			nle_obj = convproj_obj.notelistindex__add(sheet_id)
 			nle_obj.visual.name = sheet_data.name
 			incolor(sheet_data.color, nle_obj.visual)
 
@@ -255,7 +255,7 @@ class input_notessimo_v3(plugins.base):
 		firstlayer = True
 		for layer_id, layer_data in notet_cursong_data.layers.items():
 			if layer_data.spots:
-				playlist_obj = convproj_obj.add_playlist(layer_id, 1, True)
+				playlist_obj = convproj_obj.playlist__add(layer_id, 1, True)
 				durposdata = do_layers(project_obj, layer_data)
 
 				for pos, dur, sid, tempo in durposdata:
@@ -271,7 +271,7 @@ class input_notessimo_v3(plugins.base):
 
 				firstlayer = False
 
-		fxchan_data = convproj_obj.add_fxchan(1)
+		fxchan_data = convproj_obj.fx__chan__add(1)
 		fxchan_data.visual.name = 'Drums'
 
 		for used_inst in used_insts:

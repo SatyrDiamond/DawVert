@@ -30,7 +30,7 @@ def autopoints_get(autoloc, add, mul):
 def add_fx(convproj_obj, soundation_channel, fxchain_audio):
 	from objects.file_proj import proj_soundation
 	for pluginid in fxchain_audio:
-		plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
 			if plugin_obj.check_wildmatch('native', 'soundation', None):
 				fx_on, fx_wet = plugin_obj.fxdata_get()
@@ -145,7 +145,7 @@ class output_soundation(plugins.base):
 
 		sng_channels = []
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			soundation_channel = proj_soundation.soundation_channel(None)
 
 			if track_obj.type == 'instrument': soundation_channel.type = 'instrument'
@@ -169,7 +169,7 @@ class output_soundation(plugins.base):
 				soundation_instrument.rackName = ''
 				soundation_instrument.identifier = ''
 				inst_supported = False
-				plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+				plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 				if plugin_found:
 					if plugin_obj.check_match('universal', 'sampler', 'single'):
 						inst_supported = True
@@ -199,7 +199,7 @@ class output_soundation(plugins.base):
 						soundation_instrument.params.add('portamento_time', 0.1, [])
 
 						sp_obj = plugin_obj.samplepart_get('sample')
-						_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+						_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 						sp_obj.convpoints_percent(sampleref_obj)
 
 						filename = sp_obj.get_filepath(convproj_obj, None)
@@ -372,7 +372,7 @@ class output_soundation(plugins.base):
 					soundation_region.type = 1
 
 					audiofilename = ''
-					ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+					ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 					if ref_found: audiofilename = sampleref_obj.fileref.get_path(None, False)
 
 					zipfilename = addsample(zip_sngz, audiofilename, False)

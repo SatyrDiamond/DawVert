@@ -54,7 +54,7 @@ class single_patsong:
 		used_inst = []
 
 		for ch_num, chan_obj in enumerate(self.channels):
-			playlist_obj = convproj_obj.add_playlist(ch_num, True, False)
+			playlist_obj = convproj_obj.playlist__add(ch_num, True, False)
 			playlist_obj.visual.name = chan_obj.name
 			playlist_obj.visual.color = chan_obj.color
 
@@ -73,7 +73,7 @@ class single_patsong:
 				cur_pl_pos += tpl[0]
 
 		patlentable = [x[0] for x in playstr.notestreams[0].placements]
-		convproj_obj.patlenlist_to_timemarker(patlentable[:-1], -1)
+		convproj_obj.timemarker__from_patlenlist(patlentable[:-1], -1)
 
 		return used_inst
 

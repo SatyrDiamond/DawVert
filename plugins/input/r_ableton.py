@@ -14,9 +14,9 @@ import os
 DEBUG_DISABLE_PLACEMENTS = False
 DEBUG_DISABLE_SAMPLER = False
 	
-def get_sampleref(convproj_obj, alssampleref_obj):
+def sampleref__get(convproj_obj, alssampleref_obj):
 	filename = alssampleref_obj.FileRef.Path
-	sampleref_obj = convproj_obj.add_sampleref(filename, filename, 'win')
+	sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
 	sampleref_obj.dur_samples = alssampleref_obj.DefaultDuration
 	sampleref_obj.hz = alssampleref_obj.DefaultSampleRate
 	sampleref_obj.timebase = sampleref_obj.hz
@@ -61,7 +61,7 @@ def findlists(parampaths):
 	return parsedout
 
 def do_samplepart(convproj_obj, sp_obj, SamplePart):
-	samplerefid = get_sampleref(convproj_obj, SamplePart.SampleRef)
+	samplerefid = sampleref__get(convproj_obj, SamplePart.SampleRef)
 	sp_obj.sampleref = samplerefid
 	sp_obj.point_value_type = "samples"
 	sp_obj.start = float(SamplePart.SampleStart)
@@ -130,14 +130,14 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				SamplePart = SampleParts.value[next(iter(SampleParts.value))]
 				middlenote = int(SamplePart.RootKey)-60
 				track_obj.datavals.add('middlenote', middlenote-60)
-				plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, None, None)
+				plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, None, None)
 				do_samplepart(convproj_obj, sp_obj, SamplePart)
 				sp_obj.reverse = int(parampaths['Player/Reverse'])
 				sp_obj.vol = float(SamplePart.Volume)
 				sp_obj.pan = float(SamplePart.Panorama)
 
 			elif numzones>1:
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'sampler', 'multi')
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				for num, SamplePart in SampleParts.value.items():
 					key_r = [int(SamplePart.KeyRange.Min), int(SamplePart.KeyRange.Max)]
@@ -180,14 +180,14 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				vst_flags = int(VstPluginInfo['Flags'])
 				binflags = data_bytes.get_bitnums_int(vst_flags)
 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'external', 'vst2', 'win')
-				windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', 'win')
+				windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
 				windata_obj.pos_x = int(VstPluginInfo['WinPosX'])
 				windata_obj.pos_y = int(VstPluginInfo['WinPosY'])
 
 				if 'Path' in VstPluginInfo:
 					vst_Path = str(VstPluginInfo['Path']).replace('/','\\')
-					convproj_obj.add_fileref(vst_Path, vst_Path, 'win')
+					convproj_obj.fileref__add(vst_Path, vst_Path, 'win')
 					plugin_obj.filerefs['plugin'] = vst_Path
 
 				plugin_obj.datavals_global.add('fourid', vst_UniqueId)
@@ -253,8 +253,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				vst_WinPosX = int(VstPluginInfo['WinPosX'])
 				vst_WinPosY = int(VstPluginInfo['WinPosY'])
 
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'external', 'vst3', 'win')
-				windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst3', 'win')
+				windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
 				windata_obj.pos_x = vst_WinPosX
 				windata_obj.pos_y = vst_WinPosY
 
@@ -294,7 +294,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 		else:
 			fldso = globalstore.dataset.get_obj('ableton', 'plugin', device.name)
 
-			plugin_obj = convproj_obj.add_plugin(pluginid, 'native', 'ableton', device.name)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'ableton', device.name)
 			plugin_obj.role = 'fx'
 
 			if fldso:
@@ -333,8 +333,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				#	SpriteName2 = parampaths['SpriteName2']
 				#	UserSprite1 = parampaths['UserSprite1/Value']
 				#	UserSprite2 = parampaths['UserSprite2/Value']
-				#	UserSprite1 = get_sampleref(convproj_obj, UserSprite1[0][0]['SampleRef']) if 0 in UserSprite1 else None
-				#	UserSprite2 = get_sampleref(convproj_obj, UserSprite2[0][0]['SampleRef']) if 0 in UserSprite2 else None
+				#	UserSprite1 = sampleref__get(convproj_obj, UserSprite1[0][0]['SampleRef']) if 0 in UserSprite1 else None
+				#	UserSprite2 = sampleref__get(convproj_obj, UserSprite2[0][0]['SampleRef']) if 0 in UserSprite2 else None
 				#	if UserSprite1: plugin_obj.samplerefs['sample1'] = UserSprite1
 				#	if UserSprite2: plugin_obj.samplerefs['sample2'] = UserSprite2
 			#	exit()
@@ -395,7 +395,7 @@ class input_ableton(plugins.base):
 		timesigid = int(project_obj.MasterTrack.DeviceChain.Mixer.TimeSignature.AutomationTarget.id)
 
 		for _, loc in project_obj.Locators.items():
-			timemarker_obj = convproj_obj.add_timemarker()
+			timemarker_obj = convproj_obj.timemarker__add()
 			timemarker_obj.visual.name = loc.Name
 			timemarker_obj.position = loc.Time
 
@@ -438,7 +438,7 @@ class input_ableton(plugins.base):
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
 				track_on = doparam(track_mixer.Speaker, 'On', 'bool', 1, fxloc+['enabled'], None)
 
-				track_obj = convproj_obj.add_track(track_id, 'instrument', 1, False)
+				track_obj = convproj_obj.track__add(track_id, 'instrument', 1, False)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, track_color)
 
@@ -460,7 +460,7 @@ class input_ableton(plugins.base):
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
 				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
 
-				track_obj = convproj_obj.add_track(track_id, 'audio', 1, False)
+				track_obj = convproj_obj.track__add(track_id, 'audio', 1, False)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, track_color)
 
@@ -483,7 +483,7 @@ class input_ableton(plugins.base):
 						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
 						placement_obj.muted = clipobj.Disabled
 						placement_obj.sample.vol = clipobj.SampleVolume
-						placement_obj.sample.sampleref = get_sampleref(convproj_obj, clipobj.SampleRef)
+						placement_obj.sample.sampleref = sampleref__get(convproj_obj, clipobj.SampleRef)
 
 						for _, e in clipobj.Envelopes.items():
 							mpetype = None
@@ -592,7 +592,7 @@ class input_ableton(plugins.base):
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
 				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
-				track_obj = convproj_obj.track_master.add_return(cvpj_returntrackid)
+				track_obj = convproj_obj.track_master.fx__return__add(cvpj_returntrackid)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, track_color)
 				track_obj.params.add('vol', track_vol, 'float')
@@ -606,7 +606,7 @@ class input_ableton(plugins.base):
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
 				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
 
-				track_obj = convproj_obj.add_group(cvpj_grouptrackid)
+				track_obj = convproj_obj.fx__group__add(cvpj_grouptrackid)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, track_color)
 				track_obj.params.add('vol', track_vol, 'float')

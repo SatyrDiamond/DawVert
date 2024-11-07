@@ -216,7 +216,7 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 def make_plugins_fx(convproj_obj, sb_track, fxslots_audio):
 	from objects.file_proj import proj_soundbridge
 	for pluginid in fxslots_audio:
-		plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
 			if plugin_obj.check_wildmatch('native', 'soundbridge', None):
 				if plugin_obj.type.subtype in native_names:
@@ -425,7 +425,7 @@ class output_soundbridge(plugins.base):
 
 		audio_ids = {}
 		used_filenames = {}
-		for sampleref_id, sampleref_obj in convproj_obj.iter_samplerefs():
+		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			if sampleref_obj.fileref.exists('win'):
 				obj_filename = sampleref_obj.fileref.get_path('win', False)
 				obj_outfilename = sampleref_obj.fileref.copy()
@@ -448,7 +448,7 @@ class output_soundbridge(plugins.base):
 				project_obj.pool.audioSources.append(audioSource)
 
 		groups_data = {}
-		for groupid, insidegroup in convproj_obj.iter_group_inside():
+		for groupid, insidegroup in convproj_obj.group__iter_inside():
 			sb_tracks = project_obj.masterTrack
 
 			if insidegroup: 
@@ -456,7 +456,7 @@ class output_soundbridge(plugins.base):
 			else: 
 				make_group(convproj_obj, groupid, groups_data, sb_tracks)
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			sb_tracks = project_obj.masterTrack.tracks
 
 			if track_obj.group: sb_tracks = groups_data[track_obj.group].tracks
@@ -481,7 +481,7 @@ class output_soundbridge(plugins.base):
 				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)
 
 				if track_obj.inst_pluginid:
-					plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+					plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 					if plugin_found: 
 						if plugin_obj.check_wildmatch('external', 'vst2', None):
 							sb_track.midiInstrument = make_vst2(convproj_obj, plugin_obj, True, track_obj.inst_pluginid, sb_track)
@@ -489,7 +489,7 @@ class output_soundbridge(plugins.base):
 
 				middlenote = track_obj.datavals.get('middlenote', 0)
 
-				plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+				plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 				if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 				for notespl_obj in track_obj.placements.pl_notes:
@@ -609,7 +609,7 @@ class output_soundbridge(plugins.base):
 					block.events = []
 
 					sp_obj = audiopl_obj.sample
-					ref_found, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+					ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
 					if ref_found:
 						if sampleref_obj.found:

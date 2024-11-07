@@ -20,7 +20,7 @@ def decode_color(color):
 	return int.from_bytes(bytes(color.get_int()), "little")
 
 def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj):
-	ref_found, sampleref_obj = convproj_obj.get_sampleref(sre_obj.sampleref)
+	ref_found, sampleref_obj = convproj_obj.sampleref__get(sre_obj.sampleref)
 	fl_channel_obj.samplefilename = sre_obj.get_filepath(convproj_obj, 'win')
 
 	if isaudioclip:
@@ -147,7 +147,7 @@ class output_cvpjs(plugins.base):
 			samples_id[sampleentry] = g_inst_id_count
 			g_inst_id_count += 1
 
-		for inst_id, inst_obj in convproj_obj.iter_instrument():
+		for inst_id, inst_obj in convproj_obj.instrument__iter():
 			fl_channel_obj = channel.flp_channel()
 			fl_channel_obj.basicparams.volume = inst_obj.params.get('vol',1).value**0.75
 			fl_channel_obj.basicparams.pan = inst_obj.params.get('pan',0).value
@@ -166,7 +166,7 @@ class output_cvpjs(plugins.base):
 			fl_channel_obj.type = 0
 			fl_channel_obj.plugin.name = ''
 
-			plugin_found, plugin_obj = convproj_obj.get_plugin(inst_obj.pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(inst_obj.pluginid)
 			if plugin_found:
 				if plugin_obj.check_match('universal', 'sampler', 'single'):
 					fl_channel_obj.type = 0
@@ -185,7 +185,7 @@ class output_cvpjs(plugins.base):
 					fl_channel_obj.plugin.params = fl_pluginparams
 					fl_channel_obj.params.unkflag1 = 1
 					fl_channel_obj.plugin.generator = True
-					windowdata_obj = convproj_obj.window_data_get(['plugin', inst_obj.pluginid])
+					windowdata_obj = convproj_obj.viswindow__get(['plugin', inst_obj.pluginid])
 					if windowdata_obj.pos_x != -1: fl_channel_obj.plugin.window_p_x = windowdata_obj.pos_x
 					if windowdata_obj.pos_y != -1: fl_channel_obj.plugin.window_p_y = windowdata_obj.pos_y
 					if windowdata_obj.size_x != -1: fl_channel_obj.plugin.window_s_x = windowdata_obj.size_x
@@ -212,7 +212,7 @@ class output_cvpjs(plugins.base):
 						
 			flp_obj.channels[g_inst_id[inst_id]] = fl_channel_obj
 
-		for samp_id, sre_obj in convproj_obj.iter_sampleindex():
+		for samp_id, sre_obj in convproj_obj.sampleindex__iter():
 			fl_channel_obj = channel.flp_channel()
 			fl_channel_obj.type = 4
 
@@ -222,7 +222,7 @@ class output_cvpjs(plugins.base):
 
 		pat_id = {}
 		pat_id_count = 1
-		for nle_id, nle_obj in convproj_obj.iter_notelistindex():
+		for nle_id, nle_obj in convproj_obj.notelistindex__iter():
 			pat_id[nle_id] = pat_id_count
 			pat_id_count += 1
 
@@ -316,7 +316,7 @@ class output_cvpjs(plugins.base):
 
 		if not DEBUG_IGNORE_PLACEMENTS:
 
-			for idnum, playlist_obj in convproj_obj.iter_playlist():
+			for idnum, playlist_obj in convproj_obj.playlist__iter():
 	
 				idnum = int(idnum)+1
 	
@@ -424,7 +424,7 @@ class output_cvpjs(plugins.base):
 			flp_obj.initfxvals.initvals[fxptxt+'eq2_width'] = 17500
 			flp_obj.initfxvals.initvals[fxptxt+'eq3_width'] = 17500
 
-		convproj_obj.fxchan_removeloopcrash()
+		convproj_obj.fx__chan__removeloopcrash()
 
 		if 0 not in convproj_obj.fxrack:
 			fl_fxchan = flp_obj.mixer[0]
@@ -473,7 +473,7 @@ class output_cvpjs(plugins.base):
 
 				slotnum = 0
 				for pluginid in fxchannel_obj.fxslots_audio:
-					plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+					plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 					if plugin_found: 
 						fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(convproj_obj, plugin_obj)
 						if fl_plugin != None:

@@ -228,7 +228,7 @@ class output_wavtool(plugins.base):
 		#	wavtool_obj.devices.add_cable(wt_trackid_ChanStrip, 'output', wt_trackid_BusSend, 'input')
 		#	wavtool_obj.devices.add_cable(wt_trackid_BusSend, 'output', 'masterBus', 'inputs['+wt_trackid+']')
 
-		for cvpj_trackid, track_obj in convproj_obj.iter_track():
+		for cvpj_trackid, track_obj in convproj_obj.track__iter():
 
 			if True:
 				wt_trackid = 'DawVert-Track-'+cvpj_trackid
@@ -285,7 +285,7 @@ class output_wavtool(plugins.base):
 					pluginid = track_obj.inst_pluginid
 					middlenote = track_obj.datavals.get('middlenote', 0)+60
 					inst_supported = False
-					plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+					plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 
 					if plugin_found:
 						adsr_obj = plugin_obj.env_asdr_get('vol')
@@ -304,7 +304,7 @@ class output_wavtool(plugins.base):
 							inst_supported = True
 							
 							sp_obj = plugin_obj.samplepart_get('sample')
-							_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+							_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
 							filename = sp_obj.get_filepath(convproj_obj, None)
 							audiouuid = addsample(zip_wt, filename, True) if os.path.exists(filename) else ''
@@ -409,7 +409,7 @@ class output_wavtool(plugins.base):
 						wavtool_clip.type = "Audio"
 
 						audiofilename = ''
-						ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+						ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 						if ref_found: audiofilename = sampleref_obj.fileref.get_path(None, False)
 
 						audioBufferId = addsample(zip_wt, audiofilename, False)

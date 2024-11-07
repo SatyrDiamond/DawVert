@@ -46,7 +46,7 @@ class input_cvpj_f(plugins.base):
 		for instnum, pixi_sound in enumerate(project_obj.sounds):
 			cvpj_instid = 'pixi_'+str(instnum)
 
-			track_obj = convproj_obj.add_track(cvpj_instid, 'instrument', 1, False)
+			track_obj = convproj_obj.track__add(cvpj_instid, 'instrument', 1, False)
 			track_obj.visual.name = 'Inst #'+str(instnum+1)
 			track_obj.visual.color.set_float(colordata.getcolor())
 			track_obj.params.add('pitch', (pixi_sound.fine/100)+(0.2 if pixi_sound.channels == 1 else 0.4), 'float')
@@ -62,7 +62,7 @@ class input_cvpj_f(plugins.base):
 			audio_obj.pcm_from_bytes(pixi_sound.data)
 			audio_obj.to_file_wav(wave_path)
 
-			plugin_obj, track_obj.inst_pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
+			plugin_obj, track_obj.inst_pluginid, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 			samplepart_obj.point_value_type = "samples"
 			if pixi_sound.end != 0:
@@ -72,7 +72,7 @@ class input_cvpj_f(plugins.base):
 
 		for pat_num, pat_data_r in project_obj.patterns.items():
 			sceneid = str(pat_num)
-			convproj_obj.add_scene(sceneid)
+			convproj_obj.scene__add(sceneid)
 
 			pat_data = np.rot90(pat_data_r.data)
 			numtracks = len(pat_data)
@@ -98,7 +98,7 @@ class input_cvpj_f(plugins.base):
 				if len(instnote):
 
 					cvpj_instid = 'pixi_'+str(instnum)
-					trscene_obj = convproj_obj.add_track_scene(cvpj_instid, sceneid, 'main')
+					trscene_obj = convproj_obj.track__add_scene(cvpj_instid, sceneid, 'main')
 					placement_obj = trscene_obj.add_notes()
 					placement_obj.visual.name = 'Pat #'+str(pat_num+1)
 					placement_obj.time.set_posdur(0, pat_data_r.length)
@@ -109,7 +109,7 @@ class input_cvpj_f(plugins.base):
 		curpos = 0
 		for pat_num in project_obj.order:
 			size = project_obj.patterns[pat_num].length
-			scenepl_obj = convproj_obj.add_scenepl()
+			scenepl_obj = convproj_obj.scene__add_pl()
 			scenepl_obj.position = curpos
 			scenepl_obj.duration = size
 			scenepl_obj.id = str(pat_num)

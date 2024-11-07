@@ -21,23 +21,23 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 		plugin_obj.fxdata_add(1, 0.5)
 
 	elif fx_type == 1: #chorus
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'chorus', None)
+		plugin_obj = convproj_obj.plugin__add('master-effect', 'simple', 'chorus', None)
 		plugin_obj.params.add('amount', fx_value/100, 'float')
 
 	elif fx_type == 2: #reverb
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'reverb', None)
+		plugin_obj = convproj_obj.plugin__add('master-effect', 'simple', 'reverb', None)
 		plugin_obj.fxdata_add(1, (0.3)*(fx_value/100))
 
 	elif fx_type == 3: #distortion
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'distortion', None)
+		plugin_obj = convproj_obj.plugin__add('master-effect', 'simple', 'distortion', None)
 		plugin_obj.params.add('amount', fx_value/100, 'float')
 
 	elif fx_type == 4: #low_boost
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'simple', 'bassboost', None)
+		plugin_obj = convproj_obj.plugin__add('master-effect', 'simple', 'bassboost', None)
 		plugin_obj.fxdata_add(1, fx_value/100)
 
 	elif fx_type == 5: #compressor
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'compressor', None)
+		plugin_obj = convproj_obj.plugin__add('master-effect', 'universal', 'compressor', None)
 		plugin_obj.params.add('attack', 0.1, 'float')
 		plugin_obj.params.add('pregain', 0, 'float')
 		plugin_obj.params.add('knee', 6, 'float')
@@ -47,7 +47,7 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 		plugin_obj.params.add('threshold', -20, 'float')
 
 	elif fx_type == 6: #high_pass
-		plugin_obj = convproj_obj.add_plugin('master-effect', 'universal', 'filter', None)
+		plugin_obj = convproj_obj.plugin__add('master-effect', 'universal', 'filter', None)
 		plugin_obj.filter.on = True
 		plugin_obj.filter.type.set('high_pass', None)
 		plugin_obj.filter.freq = xtramath.midi_filter(fx_value/100)
@@ -60,7 +60,7 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 def add_filter(convproj_obj, instnum, cutoff, resonance):
 	cvpj_instid = 'ceol_'+str(instnum).zfill(2)
 	fx_id = cvpj_instid+'_filter'
-	plugin_obj = convproj_obj.add_plugin(fx_id, 'universal', 'filter', None)
+	plugin_obj = convproj_obj.plugin__add(fx_id, 'universal', 'filter', None)
 	plugin_obj.filter.on = True
 	plugin_obj.filter.type.set('low_pass', None)
 	plugin_obj.filter.freq = xtramath.midi_filter(cutoff/100)
@@ -113,20 +113,20 @@ class input_ceol(plugins.base):
 			cvpj_instcolor = data_values.list__optionalindex(ceol_inst_obj.palette, [0.55, 0.55, 0.55], CEOL_COLORS)
 
 			if ceol_inst_obj.inst <= 127:
-				inst_obj = convproj_obj.add_instrument(cvpj_instid)
+				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.color.set_float(cvpj_instcolor)
 				inst_obj.midi.out_inst.patch = ceol_inst_obj.inst
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
 			elif ceol_inst_obj.inst == 365: 
-				inst_obj = convproj_obj.add_instrument(cvpj_instid)
+				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.name = 'MIDI Drums'
 				inst_obj.visual.color.set_float(cvpj_instcolor)
 				inst_obj.midi.out_inst.drum = True
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
 			else: 
-				inst_obj = convproj_obj.add_instrument(cvpj_instid)
+				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.color.set_float(cvpj_instcolor)
 				inst_obj.from_dataset("boscaceoil", 'inst', str(ceol_inst_obj.inst), False)
 
@@ -160,13 +160,13 @@ class input_ceol(plugins.base):
 				for n, x in enumerate(ceol_pat_obj.recordfilter[:,0]):
 					notevols[n] = x/256
 
-			nle_obj = convproj_obj.add_notelistindex(cvpj_pat_id)
+			nle_obj = convproj_obj.notelistindex__add(cvpj_pat_id)
 			for ceol_note_obj in ceol_pat_obj.notes: nle_obj.notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, {})
 			nle_obj.visual.name = str(patnum)
 			nle_obj.visual.color.set_float(data_values.list__optionalindex(ceol_pat_obj.palette, [0.55, 0.55, 0.55], CEOL_COLORS))
 
 		for num in range(8):
-			playlist_obj = convproj_obj.add_playlist(num, 1, True)
+			playlist_obj = convproj_obj.playlist__add(num, 1, True)
 			playlist_obj.visual.color.set_float([0.43, 0.52, 0.55] if (num % 2) == 0 else [0.31, 0.40, 0.42])
 
 		# ---------- Placement ----------

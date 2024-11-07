@@ -228,6 +228,7 @@ class input_jummbox(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['native:jummbox','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
+		in_dict['projtype'] = 'mi'
 
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):

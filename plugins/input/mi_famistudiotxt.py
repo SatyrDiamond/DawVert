@@ -273,9 +273,10 @@ class input_famistudio(plugins.base):
 		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['nopl_points', 'pl_points']
 		in_dict['track_lanes'] = True
-		in_dict['fxtype'] = 'rack'
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['chip:epsm_rhythm','chip:fds','chip:fm:epsm','chip:fm:vrc7','chip:namco163_famistudio','universal:sampler:multi','universal:synth-osc']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'mi'
 	def supported_autodetect(self): return False
 	def parse(self, i_convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_famistudiotxt
@@ -284,6 +285,7 @@ class input_famistudio(plugins.base):
 		global convproj_obj
 		convproj_obj = i_convproj_obj
 
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'mi'
 		convproj_obj.set_timings(4, True)
 

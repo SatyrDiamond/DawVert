@@ -69,10 +69,10 @@ def autoloc_getname(autopath):
 
 plugin_id_counter = idcounter.counter(1000, 'plugin_')
 
-
-
-
-
+def routetrackord(trackord, groupdata, outl, insidegroup):
+	for t, i in trackord:
+		outl.append([t, i, insidegroup])
+		if t == 'GROUP': routetrackord(groupdata[i], groupdata, outl, i)
 
 class groupassoc():
 	def __init__(self):
@@ -125,7 +125,7 @@ class cvpj_scenepl:
 class cvpj_project:
 	def __init__(self):
 		self.type = None
-		self.fxtype = None
+		self.fxtype = 'none'
 
 		self.time_ppq = 96
 		self.time_float = False
@@ -295,6 +295,26 @@ class cvpj_project:
 		for groupid, insidegroup in groups_assoc.iter(None):
 			yield groupid, insidegroup
 
+	def group__iter_stream_inside(self):
+		track_group = {}
+		track_nongroup = []
+
+		for groupid, group_obj in self.fx__group__iter():
+			if group_obj.group:
+				if group_obj.group not in track_group: track_group[group_obj.group] = []
+				track_group[group_obj.group].append(['GROUP', groupid])
+			else: track_nongroup.append(['GROUP', groupid])
+
+		for trackid, track_obj in self.track__iter():
+			if track_obj.group: 
+				if track_obj.group not in track_group: track_group[track_obj.group] = []
+				track_group[track_obj.group].append(['TRACK', trackid])
+			else: track_nongroup.append(['TRACK', trackid])
+
+		outl = []
+		routetrackord(track_nongroup, track_group, outl, None)
+		return outl
+
 # --------------------------------------------------------- SCENE ---------------------------------------------------------
 
 	def scene__add(self, i_sceneid):
@@ -335,9 +355,8 @@ class cvpj_project:
 
 # --------------------------------------------------------- TRACKS ---------------------------------------------------------
 
-	def track__find(self, trackid):
-		if trackid in self.track_data: return True, self.track_data[trackid]
-		else: return False, None
+	def track__get(self, trackid):
+		return self.track_data[trackid] if trackid in self.track_data else None
 
 	def track__iter(self):
 		for trackid in self.track_order:
@@ -446,26 +465,27 @@ class cvpj_project:
 
 # --------------------------------------------------------- FX ---------------------------------------------------------
 
-	def fx__chan__remove_unused(self):
-		unused_fx = list(self.fxrack)
-		for trackid, track_obj in self.track_data.items():
-			if track_obj.fxrack_channel in unused_fx: unused_fx.remove(track_obj.fxrack_channel)
-
-		for n, d in self.fxrack.items():
-			if d.visual or d.visual_ui or d.fxslots_audio or d.fxslots_mixer:
-				if n in unused_fx: unused_fx.remove(n)
-			if d.sends.to_master_active:
-				if 0 in unused_fx: unused_fx.remove(0)
-			for i in list(d.sends.data):
-				if i in unused_fx: unused_fx.remove(i)
-
-		for x in unused_fx: del self.fxrack[x]
-		logger_project.info('Removed '+str(len(unused_fx))+' FX Channels')
-
 	def fx__chan__add(self, fxnum):
 		logger_project.info('FX Channel - '+str(fxnum))
 		if fxnum not in self.fxrack: self.fxrack[fxnum] = cvpj_fxchannel()
 		return self.fxrack[fxnum]
+
+	def fx__chan__get(self, fxnum):
+		return self.fxrack[fxnum] if fxnum in self.fxrack else None
+
+	def fx__chan__remove(self, fxnum):
+		if fxnum in self.fxrack:
+			del self.fxrack[fxnum]
+			return True
+		else:
+			return False
+
+	def fx__chan__iter(self):
+		for num, fxchannel_obj in self.fxrack.items():
+			yield num, fxchannel_obj
+
+	def fx__chan__clear(self):
+		self.fxrack = {}
 
 	def fx__chan__removeloopcrash(self):
 		targalredy = {}
@@ -482,6 +502,23 @@ class cvpj_project:
 		for target,fx_num in crashfounds:
 			del self.fxrack[target].sends.data[fx_num]
 
+	def fx__chan__remove_unused(self):
+		unused_fx = list(self.fxrack)
+		for trackid, track_obj in self.track_data.items():
+			if track_obj.fxrack_channel in unused_fx: unused_fx.remove(track_obj.fxrack_channel)
+
+		for n, d in self.fxrack.items():
+			if d.visual or d.visual_ui or d.fxslots_audio or d.fxslots_mixer:
+				if n in unused_fx: unused_fx.remove(n)
+			if d.sends.to_master_active:
+				if 0 in unused_fx: unused_fx.remove(0)
+			for i in list(d.sends.data):
+				if i in unused_fx: unused_fx.remove(i)
+
+		for x in unused_fx: del self.fxrack[x]
+		logger_project.info('Removed '+str(len(unused_fx))+' FX Channels')
+
+
 	def fx__route__add(self, trackid):
 		if trackid not in self.trackroute: 
 			#cpr_int('[project] Track Route - '+str(trackid), 'yellow')
@@ -489,18 +526,24 @@ class cvpj_project:
 			self.trackroute[trackid] = sends.cvpj_sends()
 		return self.trackroute[trackid]
 
+	def fx__route__clear(self):
+		self.trackroute = {}
+
+
 	def fx__group__add(self, groupid):
 		logger_project.info('Group - '+groupid)
 		self.groups[groupid] = tracks.cvpj_track('group', self.time_ppq, self.time_float, False, False)
 		return self.groups[groupid]
 
-	def fx__group__find(self, groupid):
-		if groupid in self.groups: return True, self.groups[groupid]
-		else: return False, None
+	def fx__group__get(self, groupid):
+		return self.groups[groupid] if groupid in self.groups else None
 
 	def fx__group__iter(self):
 		for groupid, group_obj in self.groups.items():
 			yield groupid, group_obj
+
+	def fx__group__clear(self):
+		self.groups = {}
 
 	def fx__group__count_usage(self):
 		groupcount = [x.group for _, x in self.groups.items() if x.group != None]
@@ -512,9 +555,13 @@ class cvpj_project:
 		unusedgroups = [x for x in list(self.groups) if x not in groupcount]
 		for x in unusedgroups: del self.groups[x]
 
+
 	def fx__return__add(self, track_id):
 		self.track_returns[track_id] = tracks.cvpj_track('return', self.time_ppq, self.time_float, False, False)
 		return self.track_returns[track_id]
+
+	def fx__return__clear(self):
+		self.track_returns = {}
 
 # --------------------------------------------------------- NOTELIST INDEX ---------------------------------------------------------
 

@@ -94,6 +94,7 @@ class output_cvpjs(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['projtype'] = 'mi'
 	def parse(self, convproj_obj, output_file):
 		from bs4 import BeautifulSoup
 		from functions_plugin import flp_enc_plugins
@@ -430,7 +431,7 @@ class output_cvpjs(plugins.base):
 			fl_fxchan = flp_obj.mixer[0]
 			fl_fxchan.docked_center, fl_fxchan.docked_pos = False, False
 
-		for fx_num, fxchannel_obj in convproj_obj.fxrack.items():
+		for fx_num, fxchannel_obj in convproj_obj.fx__chan__iter():
 			if fx_num in flp_obj.mixer:
 				fl_fxchan = flp_obj.mixer[fx_num]
 				if fxchannel_obj.visual.name: fl_fxchan.name = fxchannel_obj.visual.name

@@ -332,6 +332,9 @@ class cvpj_visual:
 		self.from_dset('midi', startcat, dset_inst, overwrite)
 		self.from_dset('midi', startcat, dset_fb, overwrite)
 
+	def copy(self):
+		return copy.deepcopy(self)
+
 class cvpj_metadata:
 	def __init__(self):
 		self.name = ''

@@ -138,6 +138,10 @@ class cvpj_return_track:
 		self.fxslots_mixer = []
 		self.sends = sends.cvpj_sends()
 
+	def plugin_autoplace(self, plugin_obj, pluginid):
+		if plugin_obj.role == 'fx': self.fxslots_audio.append(pluginid)
+		elif plugin_obj.role == 'notefx': self.fxslots_notes.append(pluginid)
+
 class cvpj_lane:
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.visual = visual.cvpj_visual()

@@ -53,7 +53,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 				matrix = devicedata.data['matrix'] if 'matrix' in devicedata.data else {}
 
 				if devicedata.sourceId == 'df142a04-31c6-4495-a8a4-c49f8429d557':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'native', 'wavtool', 'wavetable')
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'native', 'wavtool', 'wavetable')
 					instrument_dev = deviceid
 					wavetableA = base64.b64decode(constantsdata["wavetableA"]) if "wavetableA" in constantsdata else None
 					wavetableB = base64.b64decode(constantsdata["wavetableB"]) if "wavetableB" in constantsdata else None
@@ -107,7 +107,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					inst_fallback = deviceid
 
 				elif devicedata.sourceId == 'd694ef91-e624-404d-8e34-829d9c1c04b3':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'synth-osc', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'synth-osc', None)
 					inst_fallback = deviceid
 					instrument_dev = deviceid
 					osc_data = plugin_obj.osc_add()
@@ -122,7 +122,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					plugin_obj.env_asdr_add('vol', 0, attack, 0, decay, sustain, release, 1)
 
 				elif devicedata.sourceId == 'c2fc1730-9cc9-4643-bb54-9435a920c927':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'sampler', 'multi')
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'sampler', 'multi')
 					inst_fallback = deviceid
 					plugin_obj.role = 'synth'
 					instrument_dev = deviceid
@@ -134,7 +134,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						if "sample"+endstr in constantsdata:
 							bufferid = constantsdata["sample"+endstr]
 							wave_path = extract_audio(bufferid)
-							convproj_obj.add_sampleref(bufferid, wave_path, None)
+							convproj_obj.sampleref__add(bufferid, wave_path, None)
 					
 							attack = inputdata["attack"+endstr]/48000 if "attack"+endstr in inputdata else 0.1
 							decay = inputdata["decay"+endstr]/48000 if "decay"+endstr in inputdata else 0.1
@@ -164,7 +164,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					if 'sample1All' in constantsdata:
 						bufferid = constantsdata['sample1All']
 						wave_path = extract_audio(bufferid)
-						plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(deviceid, wave_path, None, sampleid=bufferid)
+						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(deviceid, wave_path, None, sampleid=bufferid)
 						instrument_dev = deviceid
 
 						attack = inputdata["attack"]/48000 if "attack" in inputdata else 0.001
@@ -177,7 +177,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						track_obj.datavals.add('middlenote', constantsdata["sample1Pitch"]-60 if "sample1Pitch" in constantsdata else 0)
 						
 				elif devicedata.sourceId == '84345e98-f3a7-43b2-b2f2-61bf7c475248':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'sampler', 'multi')
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'sampler', 'multi')
 					inst_fallback = deviceid
 
 					attack = inputdata["attack"]/48000 if "attack" in inputdata else 0.001
@@ -213,14 +213,14 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 									kr = range_notes[keynum]
 									vr = range_vel[velnum]
 									wave_path = extract_audio(bufferid)
-									sampleref_obj = convproj_obj.add_sampleref(bufferid, wave_path, None)
+									sampleref_obj = convproj_obj.sampleref__add(bufferid, wave_path, None)
 									sp_obj = plugin_obj.sampleregion_add(kr[0]-60, kr[1]-60, range_base[keynum]-60, None, samplepartid=deviceid+'_'+samplel)
 									sp_obj.vel_min = vr[0]/127
 									sp_obj.vel_max = vr[1]/127
 									sp_obj.sampleref = bufferid
 
 				elif devicedata.sourceId == 'bc24f717-88d0-4a99-b0ac-b61d4281c7c3':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'limiter', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'limiter', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.params.add('attack', 0.05, 'float')
 					plugin_obj.params.add('release', inputdata['release']/48000 if 'release' in inputdata else 0.3, 'float')
@@ -228,13 +228,13 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == '50413fcd-de89-4db3-a308-095102c24f81':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'clipper', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'clipper', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.params.add('pregain', inputdata['gain'] if 'gain' in inputdata else 0, 'float')
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == 'ad949dc9-c921-429d-b08e-c62eaae5e382':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'compressor', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'compressor', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.params.add('attack', inputdata['attack']/48000 if 'attack' in inputdata else 0.001, 'float')
 					plugin_obj.params.add('release', inputdata['release']/48000 if 'release' in inputdata else 0.03, 'float')
@@ -244,7 +244,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == 'e0665a05-221d-42c6-9ff6-2ece5c20f80c':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'gate', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'gate', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.params.add('attack', inputdata['attack']/48000 if 'attack' in inputdata else 0.0001, 'float')
 					plugin_obj.params.add('release', inputdata['release']/48000 if 'release' in inputdata else 0.015, 'float')
@@ -254,7 +254,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == 'c70556bf-0ba7-4283-a3cc-f2722ee390ec':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'reverb', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'reverb', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(1, inputdata['mix'] if 'mix' in inputdata else 1)
 					plugin_obj.params.add('wet', 1, 'float')
@@ -262,13 +262,13 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == '3e2e3ece-476a-42f9-b740-7da8f5e37cc8':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'convolver', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'convolver', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.fxdata_add(1, inputdata['mix'] if 'mix' in inputdata else 1)
 					bufferid = constantsdata['impulseResponse'] if 'impulseResponse' in constantsdata else None
 					if bufferid:
 						wave_path = extract_audio(bufferid)
-						convproj_obj.add_sampleref(bufferid, wave_path, None)
+						convproj_obj.sampleref__add(bufferid, wave_path, None)
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = wave_path
 					effects.append(deviceid)
@@ -294,21 +294,21 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == '833b0ed8-575a-4dec-baa0-8d8ef7910aca':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'native', 'wavtool', 'Overdrive125')
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'native', 'wavtool', 'Overdrive125')
 					plugin_obj.role = 'effect'
 					plugin_obj.params.add('pre', inputdata['pre'] if 'pre' in inputdata else 0, 'float')
 					plugin_obj.params.add('post', inputdata['post'] if 'post' in inputdata else 0, 'float')
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == 'b64cf1c9-db3b-4031-9325-2a933f9893c2':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'bitcrush', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'bitcrush', None)
 					plugin_obj.role = 'effect'
 					plugin_obj.params.add('bits', inputdata['bitDepth'] if 'bitDepth' in inputdata else 6, 'float')
 					plugin_obj.params.add('freq', inputdata['targetSampleRate'] if 'targetSampleRate' in inputdata else 8000, 'float')
 					effects.append(deviceid)
 
 				elif devicedata.sourceId == '95c16c68-cd38-4459-8616-d0c1364650ac':
-					plugin_obj = convproj_obj.add_plugin(deviceid, 'universal', 'flanger', None)
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'flanger', None)
 					plugin_obj.role = 'effect'
 
 					lfoAmount = inputdata['lfoAmount'] if 'lfoAmount' in inputdata else 7.5
@@ -338,7 +338,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					encodedSig = encodedState[0:96]
 					encodedData = encodedState[96:]
 					if encodedData[0:4] == b'CcnK':
-						plugin_obj = convproj_obj.add_plugin(deviceid, 'external', 'vst2', 'win')
+						plugin_obj = convproj_obj.plugin__add(deviceid, 'external', 'vst2', 'win')
 						plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, encodedData, None)
 					if encodedData[0:4] == b'VC2!':
 						pluginstate_x = data_vc2xml.get(encodedData)
@@ -427,7 +427,7 @@ class input_wavtool(plugins.base):
 
 			logger_input.info(''+wavtool_track.type+' Track: '+wavtool_track.name)
 			if wavtool_track.type == 'MIDI':
-				track_obj = convproj_obj.add_track(trackid, 'instrument', 1, False)
+				track_obj = convproj_obj.track__add(trackid, 'instrument', 1, False)
 				track_obj.visual.name = wavtool_track.name
 				track_obj.visual.color.set_hex(wavtool_track.color)
 				track_obj.params.add('vol', wavtool_track.gain, 'float')
@@ -444,7 +444,7 @@ class input_wavtool(plugins.base):
 				add_devices(convproj_obj, track_obj, trackid, wavtool_obj.devices)
 
 			if wavtool_track.type == 'Audio':
-				track_obj = convproj_obj.add_track(trackid, 'audio', 1, False)
+				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
 				track_obj.visual.name = wavtool_track.name
 				track_obj.visual.color.set_hex(wavtool_track.color)
 				track_obj.params.add('vol', wavtool_track.gain, 'float')
@@ -459,7 +459,7 @@ class input_wavtool(plugins.base):
 					sp_obj = placement_obj.sample
 
 					audio_filename = extract_audio(wavtool_clip.audioBufferId)
-					convproj_obj.add_sampleref(wavtool_clip.audioBufferId, audio_filename, None)
+					convproj_obj.sampleref__add(wavtool_clip.audioBufferId, audio_filename, None)
 					sp_obj.sampleref = wavtool_clip.audioBufferId
 
 					loopon = True

@@ -93,7 +93,7 @@ class input_pxtone(plugins.base):
 
 		for voicenum, voice_obj in project_obj.voices.items():
 			cvpj_instid = 'ptcop_'+str(voicenum)
-			inst_obj = convproj_obj.add_instrument(cvpj_instid)
+			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			inst_obj.visual.name = voice_obj.name
 			#inst_obj.visual.color.set_float([0.14, 0.00, 0.29])
 
@@ -105,7 +105,7 @@ class input_pxtone(plugins.base):
 				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
 				ogg_fileobj = open(ogg_path, 'wb')
 				ogg_fileobj.write(voice_obj.data)
-				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(ogg_path, None)
+				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler__genid(ogg_path, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
 				inst_obj.pluginid = pluginid
@@ -120,7 +120,7 @@ class input_pxtone(plugins.base):
 				audio_obj.pcm_from_bytes(voice_obj.data)
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
+				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
 				if len(voice_obj.data) <= 256: 
@@ -136,7 +136,7 @@ class input_pxtone(plugins.base):
 			unit_notes = project_obj.events.data[np.where(project_obj.events.data['unitnum'] == unitnum)[0]]
 
 			cvpj_trackid = str(unitnum+1)
-			track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
+			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 			track_obj.visual.name = unit_obj.name
 			track_obj.visual.color.set_float(colordata.getcolor())
 

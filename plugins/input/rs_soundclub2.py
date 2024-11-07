@@ -58,7 +58,7 @@ class input_soundclub2(plugins.base):
 		for instnum, sn2_inst_obj in enumerate(project_obj.instruments):
 			cvpj_instid = 'sn2_'+str(instnum)
 
-			track_obj = convproj_obj.add_track(cvpj_instid, 'instrument', 1, False)
+			track_obj = convproj_obj.track__add(cvpj_instid, 'instrument', 1, False)
 			track_obj.visual.name = sn2_inst_obj.name
 			track_obj.params.add('vol', 0.3, 'float')
 
@@ -72,7 +72,7 @@ class input_soundclub2(plugins.base):
 				if sn2_inst_obj.loopstart != -1: audio_obj.loop = [sn2_inst_obj.loopstart, sn2_inst_obj.samplesize]
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, track_obj.inst_pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
+				plugin_obj, track_obj.inst_pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				sp_obj.point_value_type = "samples"
@@ -88,7 +88,7 @@ class input_soundclub2(plugins.base):
 
 		for patnum, sn2_pat_obj in enumerate(project_obj.patterns):
 			sceneid = str(patnum)
-			convproj_obj.add_scene(sceneid)
+			convproj_obj.scene__add(sceneid)
 
 			scenedur = 0
 			repeatnotes = {}
@@ -98,7 +98,7 @@ class input_soundclub2(plugins.base):
 				else: repeatnotes[patvoice_obj.instid] += 1
 				laneid = str(repeatnotes[patvoice_obj.instid])
 				cvpj_instid = 'sn2_'+str(patvoice_obj.instid)
-				trscene_obj = convproj_obj.add_track_scene(cvpj_instid, sceneid, laneid)
+				trscene_obj = convproj_obj.track__add_scene(cvpj_instid, sceneid, laneid)
 				placement_obj = trscene_obj.add_notes()
 				placement_obj.visual.name = sn2_pat_obj.name
 
@@ -145,7 +145,7 @@ class input_soundclub2(plugins.base):
 		curpos = 0
 		for pat_num in project_obj.sequence:
 			size = scenedurs[pat_num]
-			scenepl_obj = convproj_obj.add_scenepl()
+			scenepl_obj = convproj_obj.scene__add_pl()
 			scenepl_obj.position = curpos
 			scenepl_obj.duration = size
 			scenepl_obj.id = str(pat_num)

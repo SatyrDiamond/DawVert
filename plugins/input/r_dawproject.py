@@ -69,7 +69,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 		plugin_obj = None
 
 		if device.plugintype == 'Vst3Plugin':
-			plugin_obj = convproj_obj.add_plugin(device.id, 'external', 'vst3', None)
+			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'vst3', None)
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			vst3_state = zip_data.read(str(device.state))
 			plugin_vst3.import_presetdata_raw(convproj_obj, plugin_obj, vst3_state, None)
@@ -78,7 +78,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
 
 		if device.plugintype == 'Vst2Plugin':
-			plugin_obj = convproj_obj.add_plugin(device.id, 'external', 'vst2', None)
+			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'vst2', None)
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			vst2_state = zip_data.read(str(device.state))
 			plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, vst2_state, None)
@@ -87,7 +87,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
 
 		if device.plugintype == 'ClapPlugin':
-			plugin_obj = convproj_obj.add_plugin(device.id, 'external', 'clap', None)
+			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'clap', None)
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			clap_state = zip_data.read(str(device.state))
 			plugin_clap.import_presetdata_raw(convproj_obj, plugin_obj, clap_state, None)
@@ -114,7 +114,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		track_obj = None
 
 		if dp_track.contentType == 'notes' and dp_channel.role == 'regular': 
-			track_obj = convproj_obj.add_track(dp_track.id, 'instrument', 1, False)
+			track_obj = convproj_obj.track__add(dp_track.id, 'instrument', 1, False)
 			do_visual(track_obj, dp_track)
 			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
@@ -123,7 +123,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
 		if dp_track.contentType == 'audio' and dp_channel.role == 'regular': 
-			track_obj = convproj_obj.add_track(dp_track.id, 'audio', 1, False)
+			track_obj = convproj_obj.track__add(dp_track.id, 'audio', 1, False)
 			do_visual(track_obj, dp_track)
 			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
@@ -132,7 +132,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
 		if dp_track.contentType == 'audio notes' and dp_channel.role == 'regular': 
-			track_obj = convproj_obj.add_track(dp_track.id, 'hybrid', 1, False)
+			track_obj = convproj_obj.track__add(dp_track.id, 'hybrid', 1, False)
 			do_visual(track_obj, dp_track)
 			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
@@ -141,7 +141,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
 		if dp_track.contentType == 'tracks' and dp_channel.role == 'master': 
-			track_obj = convproj_obj.add_group(dp_track.id)
+			track_obj = convproj_obj.fx__group__add(dp_track.id)
 			do_visual(track_obj, dp_track)
 			do_groupparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
 			do_tracks(convproj_obj, dp_track.tracks, dp_track.id)
@@ -151,7 +151,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 			if dp_channel.solo: track_obj.params.add('solo', dp_channel.solo=='true', 'bool')
 
 		if dp_track.contentType == 'audio' and dp_channel.role == 'effect': 
-			return_obj = convproj_obj.track_master.add_return(dp_track.id)
+			return_obj = convproj_obj.track_master.fx__return__add(dp_track.id)
 			do_visual(return_obj, dp_track)
 			do_returnparams(convproj_obj, dp_channel, return_obj.params, dp_track.id)
 			do_sends(convproj_obj, return_obj, dp_channel)
@@ -212,7 +212,7 @@ def do_audio(convproj_obj, npa_obj, audio_obj):
 	extfilepath = os.path.join(samplefolder, filepath)
 	try: zip_data.extract(filepath, path=samplefolder, pwd=None)
 	except: pass
-	sampleref_obj = convproj_obj.add_sampleref(filepath, extfilepath, None)
+	sampleref_obj = convproj_obj.sampleref__add(filepath, extfilepath, None)
 	if not sampleref_obj.dur_samples and not sampleref_obj.dur_sec:
 		if samplerate:
 			sampleref_obj.hz = samplerate
@@ -396,7 +396,7 @@ class input_dawproject(plugins.base):
 		if project_obj.arrangement.markers:
 			markers = project_obj.arrangement.markers.markers
 			for marker in markers:
-				timemarker_obj = convproj_obj.add_timemarker()
+				timemarker_obj = convproj_obj.timemarker__add()
 				if marker.name: timemarker_obj.visual.name = marker.name
 				if marker.color: timemarker_obj.visual.color.set_hex(marker.color)
 				timemarker_obj.position = marker.time

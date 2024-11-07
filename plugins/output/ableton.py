@@ -119,7 +119,7 @@ def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, dur_sec, pitch):
 	return warpenabled, 1 if stretch_obj.uses_tempo else 1/(2**(pitch/12))
 
 def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample, warpprop):
-	iffound, sampleref_obj = convproj_obj.get_sampleref(cvpj_samplepart.sampleref)
+	iffound, sampleref_obj = convproj_obj.sampleref__get(cvpj_samplepart.sampleref)
 
 	if iffound:
 		cvpj_samplepart.convpoints_samples(sampleref_obj)
@@ -196,7 +196,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 	visname = plugin_obj.datavals_global.get('name', '')
 
 	if ((vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk') and vstid:
-		wobj = convproj_obj.window_data_get(['plugin', pluginid])
+		wobj = convproj_obj.viswindow__get(['plugin', pluginid])
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
 		vstname = os.path.basename(vstpath).split('.')[0]
 		vstversion = plugin_obj.datavals_global.get('version_bytes', 0)
@@ -301,7 +301,7 @@ def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 		paramkeys = {}
 		paramkeys['PluginDesc'] = ableton_parampart.as_numset('Vst3PluginInfo')
 		pluginfo = paramkeys['PluginDesc']['0/Vst3PluginInfo'] = {}
-		wobj = convproj_obj.window_data_get(['plugin', pluginid])
+		wobj = convproj_obj.viswindow__get(['plugin', pluginid])
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
 		vstname = plugin_obj.datavals_global.get('name', 0)
 		is_instrument = plugin_obj.role == 'synth'
@@ -411,7 +411,7 @@ def add_plugindevice_native(als_track, convproj_obj, plugin_obj, pluginid):
 #	if not DEBUG_IGNORE_FX:
 #		for pluginid in fxslots_notes:
 #
-#			plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+#			plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 #			if plugin_found:
 #
 #				#print(plugin_obj.type)
@@ -432,7 +432,7 @@ def do_effects(convproj_obj, als_track, fxslots_audio):
 	if not DEBUG_IGNORE_FX:
 		for plugid in fxslots_audio:
 
-			plugin_found, plugin_obj = convproj_obj.get_plugin(plugid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(plugid)
 			if plugin_found:
 
 				als_device = None
@@ -454,7 +454,7 @@ def get_timesig(timesig):
 	outval = timesig_denominator*100 + timesig_numerator+(2-timesig_denominator)
 	return outval
 
-def add_group(convproj_obj, project_obj, groupid):
+def addgrp(convproj_obj, project_obj, groupid):
 	global counter_track
 	global colordata
 	global ids_group_cvpj_als
@@ -471,7 +471,7 @@ def add_group(convproj_obj, project_obj, groupid):
 		do_param(convproj_obj, group_obj.params, 'pan', 0, 'float', ['group', groupid, 'pan'], als_gtrack.DeviceChain.Mixer.Pan, als_gtrack.AutomationEnvelopes)
 		ids_group_cvpj_als[groupid] = groupnumid
 		if group_obj.group:
-			als_gtrack.TrackGroupId = add_group(convproj_obj, project_obj, group_obj.group)
+			als_gtrack.TrackGroupId = addgrp(convproj_obj, project_obj, group_obj.group)
 			als_gtrack.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
 		#print('NEW GROUP', groupid, groupnumid)
 	else:
@@ -562,7 +562,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		als_audioclip.PitchFine = (sample_obj.pitch-round(sample_obj.pitch))*100
 		als_audioclip.SampleVolume = sample_obj.vol
 	
-		ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+		ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 
 		do_sampleref(convproj_obj, als_audioclip.SampleRef, sampleref_obj)
 
@@ -700,7 +700,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 	groupnumid = None
 	if track_obj.group:
 		if track_obj.group in convproj_obj.groups:
-			groupnumid = add_group(convproj_obj, project_obj, track_obj.group)
+			groupnumid = addgrp(convproj_obj, project_obj, track_obj.group)
 			
 	if track_obj.type == 'instrument':
 		tracknumid = counter_track.get()
@@ -718,7 +718,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 		#print('NEW TRACK', tracknumid, trackid, groupnumid)
 
-		plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+		plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 		if plugin_found:
 			issampler = plugin_obj.check_wildmatch('universal', 'sampler', None)
 		else:
@@ -1099,14 +1099,14 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 def do_tracks(convproj_obj, project_obj, current_grouptab, track_group, groups_used, debugtxt):
 	for tracktype, tid in current_grouptab:
 		if tracktype == 'GROUP' and tid not in groups_used and tid in track_group:
-			add_group(convproj_obj, project_obj, tid)
+			addgrp(convproj_obj, project_obj, tid)
 			groups_used.append(tid)
 			do_tracks(convproj_obj, project_obj, track_group[tid], track_group, groups_used, 'GROUP: '+tid)
 		if tracktype == 'TRACK':
 			track_obj = convproj_obj.track_data[tid]
 			if track_obj.group:
 				if track_obj.group not in groups_used:
-					add_group(convproj_obj, project_obj, track_obj.group)
+					addgrp(convproj_obj, project_obj, track_obj.group)
 					groups_used.append(track_obj.group)
 			add_track(convproj_obj, project_obj, tid, track_obj)
 		#print(debugtxt.ljust(20), tracktype, tid)
@@ -1204,7 +1204,7 @@ class output_ableton(plugins.base):
 		track_nongroup = []
 		groups_used = []
 
-		convproj_obj.remove_unused_groups()
+		convproj_obj.fx__group__remove_unused()
 
 		for groupid, group_obj in convproj_obj.groups.items():
 			if group_obj.group:
@@ -1212,7 +1212,7 @@ class output_ableton(plugins.base):
 				track_group[group_obj.group].append(['GROUP', groupid])
 			else: track_nongroup.append(['GROUP', groupid])
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			if track_obj.group: 
 				if track_obj.group not in track_group: track_group[track_obj.group] = []
 				track_group[track_obj.group].append(['TRACK', trackid])

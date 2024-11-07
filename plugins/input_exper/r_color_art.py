@@ -32,7 +32,7 @@ class input_color_art(plugins.base):
 
 		for height in range(h-1):
 			trackid = str('track'+str(height))
-			track_obj = convproj_obj.add_track(trackid, 'instrument', 1, False)
+			track_obj = convproj_obj.track__add(trackid, 'instrument', 1, False)
 			track_obj.visual.name = '.'
 			for width in range(w):
 				coordinate = width, height

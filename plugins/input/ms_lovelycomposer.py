@@ -170,7 +170,7 @@ class input_lc(plugins.base):
 
 		for pat_num in range(len(project_obj.rhythms.ry)):
 			sceneid = str(pat_num)
-			convproj_obj.add_scene(sceneid)
+			convproj_obj.scene__add(sceneid)
 
 		for tracknum in range(5):
 			cvpj_instid = str(tracknum+1)
@@ -179,7 +179,7 @@ class input_lc(plugins.base):
 			vol = xtramath.from_db(project_obj.ui_mixer_expression_list[tracknum]/2)
 			pan = [0,-1,1][project_obj.mixer_output_channel_list[tracknum]]
 
-			track_obj = convproj_obj.add_track(cvpj_instid, 'instruments', 1, False)
+			track_obj = convproj_obj.track__add(cvpj_instid, 'instruments', 1, False)
 			track_obj.params.add('vol', vol, 'float')
 			track_obj.params.add('pan', pan, 'float')
 			track_obj.params.add('enabled', not project_obj.mixer_channel_switch_list[tracknum], 'bool')
@@ -220,7 +220,7 @@ class input_lc(plugins.base):
 						if instid<128: prev_inst = instid
 
 					if t_notelist:
-						trscene_obj = convproj_obj.add_track_scene(cvpj_instid, str(patnum), 'main')
+						trscene_obj = convproj_obj.track__add_scene(cvpj_instid, str(patnum), 'main')
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.time.set_posdur(0, voi_note.play_notes)
 						cvpj_notelist = placement_obj.notelist
@@ -264,7 +264,7 @@ class input_lc(plugins.base):
 
 
 					if t_chordlist:
-						trscene_obj = convproj_obj.add_track_scene(cvpj_instid, str(patnum), 'main')
+						trscene_obj = convproj_obj.track__add_scene(cvpj_instid, str(patnum), 'main')
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.time.set_posdur(0, voi_note.play_notes)
 						cvpj_notelist = placement_obj.notelist
@@ -279,11 +279,11 @@ class input_lc(plugins.base):
 
 					cvpj_ninstid = '_'.join([str(tracknum),lc_instlist[used_instnum][1]])
 
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 					plugin_obj.role = 'synth'
 					osc_data = plugin_obj.osc_add()
 		
-					inst_obj = convproj_obj.add_instrument(cvpj_ninstid)
+					inst_obj = convproj_obj.instrument__add(cvpj_ninstid)
 					inst_obj.pluginid = pluginid
 					inst_obj.visual.name = instdata[1]
 					inst_obj.visual.color.set_float(color)
@@ -335,7 +335,7 @@ class input_lc(plugins.base):
 					#else: 
 					#	inst_plugindata = plugins.cvpj_plugin('deftype', 'lovelycomposer', instdata[1])
 			else:
-				inst_obj = convproj_obj.add_instrument('chord')
+				inst_obj = convproj_obj.instrument__add('chord')
 				inst_obj.visual.name = 'Chord'
 				inst_obj.visual.color.set_float(color)
 	
@@ -345,7 +345,7 @@ class input_lc(plugins.base):
 		for pat_num, voi_note in enumerate(voi_notes):
 			patlen = voi_note.play_notes
 			patternlen.append(patlen)
-			scenepl_obj = convproj_obj.add_scenepl()
+			scenepl_obj = convproj_obj.scene__add_pl()
 			scenepl_obj.position = curpos
 			scenepl_obj.duration = patlen
 			scenepl_obj.id = str(pat_num)

@@ -70,14 +70,14 @@ class input_s3m(plugins.base):
 			else: cvpj_inst_name = ' '
 
 			wave_path = samplefolder+str(s3m_numinst).zfill(2)+'.wav'
-			inst_obj = convproj_obj.add_instrument(cvpj_instid)
+			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			inst_obj.visual.name = cvpj_inst_name
 			inst_obj.visual.color.set_float([0.32, 0.27, 0.16] if not s3m_inst.type else [0.65, 0.57, 0.33])
 			inst_obj.params.add('vol', 0.3, 'float')
 
 			if s3m_inst.type == 1:
 				s3m_inst.rip_sample(samplefolder, project_obj.samptype, wave_path)
-				plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
+				plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 				sp_obj.point_value_type = "samples"
 
 				if s3m_inst.sampleloc != 0 and s3m_inst.length != 0:

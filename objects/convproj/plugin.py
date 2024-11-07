@@ -342,19 +342,19 @@ class cvpj_plugin:
 			
 	# -------------------------------------------------- fileref_global
 
-	def get_fileref_global(self, fileref_name, convproj_obj): 
+	def fileref__get_global(self, fileref_name, convproj_obj): 
 		if fileref_name in self.filerefs_global:
 			fileref_id = self.filerefs_global[fileref_name]
-			return convproj_obj.get_fileref(fileref_id)
+			return convproj_obj.fileref__get(fileref_id)
 		return False, None
 
 	def getpath_fileref_global(self, convproj_obj, refname, os_type, nofile): 
-		ref_found, fileref_obj = self.get_fileref_global(refname, convproj_obj)
+		ref_found, fileref_obj = self.fileref__get_global(refname, convproj_obj)
 		return fileref_obj.get_path(os_type, nofile) if ref_found else ''
 
 	# -------------------------------------------------- fileref
-	def get_fileref(self, fileref_name, convproj_obj): 
-		return self.state.get_fileref(fileref_name, convproj_obj)
+	def fileref__get(self, fileref_name, convproj_obj): 
+		return self.state.fileref__get(fileref_name, convproj_obj)
 
 	def getpath_fileref(self, convproj_obj, refname, os_type, nofile): 
 		return self.state.getpath_fileref(convproj_obj, refname, os_type, nofile)

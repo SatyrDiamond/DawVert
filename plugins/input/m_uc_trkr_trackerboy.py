@@ -99,13 +99,13 @@ class input_trackerboy(plugins.base):
 				instnum, channum = chinst
 				instid = instname+'_'+str(channum)+'_'+str(instnum)
 
-				inst_obj = convproj_obj.add_instrument(instid)
+				inst_obj = convproj_obj.instrument__add(instid)
 				inst_obj.fxrack_channel = channum+1
 
 				insttype = patterndata_obj.get_channel_insttype(channum)
 				inst_obj.visual.from_dset('trackerboy', 'chip', insttype, False)
 
-				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+				plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 				plugin_obj.role = 'synth'
 				osc_data = plugin_obj.osc_add()
 				if instname == 'pulse': osc_data.prop.shape = 'square'

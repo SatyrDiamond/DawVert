@@ -25,7 +25,7 @@ class plugconv(plugins.base):
 				params_serato = params_nf_serato_sampler.serato_sampler_data()
 	
 				sp_obj = plugin_obj.samplepart_get('sample')
-				_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+				_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 	
 				slicepad = params_serato.slicePalette["slicePad"]
 	

@@ -56,7 +56,7 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 	outdata = []
 	for pluginid in fxchain_audio:
 		out_auto = []
-		plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
 			fx_on, fx_wet = plugin_obj.fxdata_get()
 			fx_on = not fx_on
@@ -160,14 +160,14 @@ class output_amped(plugins.base):
 		amped_filenames = {}
 		audioidnum = 0
 
-		for sampleref_id, sampleref_obj in convproj_obj.iter_samplerefs():
+		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			audio_id[sampleref_id] = audioidnum
 			filepath = sampleref_obj.fileref.get_path(None, False)
 			if os.path.exists(filepath): zip_amped.write(filepath, str(audioidnum))
 			amped_filenames[audioidnum] = sampleref_obj.fileref.file.basename
 			audioidnum += 1
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			amped_track = proj_amped.amped_track(None)
 			amped_track.id = counter_id.get()
 			amped_track.name = track_obj.visual.name if track_obj.visual.name else ''
@@ -182,7 +182,7 @@ class output_amped(plugins.base):
 			}
 
 			inst_supported = False
-			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 			if plugin_found:
 
 				if plugin_obj.check_match('external', 'discodsp', 'obxd'):

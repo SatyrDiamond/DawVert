@@ -47,7 +47,7 @@ class input_orgyana(plugins.base):
 			if len(orgtrack_obj.notes) != 0:
 
 				idval = 'org_'+str(tracknum)
-				track_obj = convproj_obj.add_track(idval, 'instrument', 0, False)
+				track_obj = convproj_obj.track__add(idval, 'instrument', 0, False)
 				if tracknum > 7: 
 					track_obj.visual.from_dset('orgyana', 'drums', str(orgtrack_obj.instrument), False)
 					track_obj.is_drum = True
@@ -59,13 +59,13 @@ class input_orgyana(plugins.base):
 							audio_obj.rate = orgsamp_obj.drum_rate
 							audio_obj.pcm_from_list(orgsamp_obj.drum_data[orgtrack_obj.instrument])
 							audio_obj.to_file_wav(drum_filename)
-						plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(drum_filename, None)
+						plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(drum_filename, None)
 						sp_obj.trigger = 'oneshot'
 						track_obj.inst_pluginid = pluginid
 				else: 
 					track_obj.visual.name = "Melody "+str(tracknum+1)
 					if orgsamp_obj.loaded:
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 						track_obj.inst_pluginid = pluginid
 						osc_data = plugin_obj.osc_add()
 						osc_data.prop.type = 'wave'

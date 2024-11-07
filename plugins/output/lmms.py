@@ -84,7 +84,7 @@ def filternum(i_filtertype):
 	return lmms_filternum
 
 def add_window_data(lobj, w_group, w_name, w_pos, w_size, w_open, w_max):
-	wobj = cvpj_obj.window_data_get([w_group, w_name])
+	wobj = cvpj_obj.viswindow__get([w_group, w_name])
 	if w_pos != None and wobj.pos_x == -1 and wobj.pos_y == -1: wobj.pos_x, wobj.pos_y = w_pos
 	if w_size != None and wobj.size_x == -1 and wobj.size_y == -1: wobj.size_x, wobj.size_y = w_size
 	lobj.visible = int(wobj.open if wobj.open != -1 else w_open)
@@ -275,7 +275,7 @@ def encode_fxchain(lmms_fxchain, track_obj, trackname, autoloc):
 
 	#paramauto(lmms_fxchain.enabled, track_obj.params, 'fx_enabled', False, None, autoloc, trackname, 'FX Enabled')
 	for pluginid in track_obj.fxslots_audio:
-		plugin_found, plugin_obj = cvpj_obj.get_plugin(pluginid)
+		plugin_found, plugin_obj = cvpj_obj.plugin__get(pluginid)
 		if plugin_found: 
 			effect_obj = proj_lmms.lmms_effect()
 			encode_effectslot(effect_obj, plugin_obj, pluginid)
@@ -372,7 +372,7 @@ class output_lmms(plugins.base):
 		head_obj.timesig_numerator.value = cvpj_obj.timesig[0]
 		head_obj.timesig_denominator.value = cvpj_obj.timesig[1]
 
-		for trackid, track_obj in cvpj_obj.iter_track():
+		for trackid, track_obj in cvpj_obj.track__iter():
 			autoloc = ['track', trackid]
 			trackname = track_obj.visual.name if track_obj.visual.name else 'noname'
 			trackcolor = track_obj.visual.color
@@ -399,7 +399,7 @@ class output_lmms(plugins.base):
 					paramauto(insttrack_obj.pitch, track_obj.params, 'pitch', 0, [0, 100], autoloc, trackname, 'Pitch')
 
 					for pluginid in track_obj.fxslots_notes:
-						plugin_found, plugin_obj = cvpj_obj.get_plugin(pluginid)
+						plugin_found, plugin_obj = cvpj_obj.plugin__get(pluginid)
 						if plugin_found:
 							if plugin_obj.check_match('universal', 'arpeggiator', None):
 								arp_obj = insttrack_obj.arpeggiator
@@ -431,14 +431,14 @@ class output_lmms(plugins.base):
 
 					middlenotefix = 0
 
-					plugin_found, plugin_obj = cvpj_obj.get_plugin(track_obj.inst_pluginid)
+					plugin_found, plugin_obj = cvpj_obj.plugin__get(track_obj.inst_pluginid)
 					if plugin_found:
 						if plugin_obj.check_match('universal', 'sampler', 'single') or plugin_obj.check_match('universal', 'sampler', 'drumsynth'):
 							lmms_inst_obj.name = 'audiofileprocessor'
 							lmms_plug_obj.name = 'audiofileprocessor'
 
 							sp_obj = plugin_obj.samplepart_get('sample')
-							_, sampleref_obj = cvpj_obj.get_sampleref(sp_obj.sampleref)
+							_, sampleref_obj = cvpj_obj.sampleref__get(sp_obj.sampleref)
 							sp_obj.convpoints_percent(sampleref_obj)
 
 							lmms_plug_obj.add_param('reversed', int(sp_obj.reverse))
@@ -467,7 +467,7 @@ class output_lmms(plugins.base):
 							bank, patch = plugin_obj.midi.to_sf2()
 							lmms_plug_obj.add_param('bank', bank)
 							lmms_plug_obj.add_param('patch', patch)
-							ref_found, fileref_obj = plugin_obj.get_fileref('file', cvpj_obj)
+							ref_found, fileref_obj = plugin_obj.fileref__get('file', cvpj_obj)
 							if ref_found: lmms_plug_obj.add_param('src', fileref_obj.get_path(None, False))
 							paramauto(lmms_plug_obj.add_param('gain', 1), plugin_obj.params, 'gain', 1, None, ['plugin', track_obj.inst_pluginid], 'Plugin', 'gain')
 							middlenotefix += 12
@@ -562,7 +562,7 @@ class output_lmms(plugins.base):
 						lmms_sampletco = proj_lmms.lmms_sampletco()
 						lmms_sampletco.pos = int(audiopl_obj.time.position)
 						lmms_sampletco.len = int(audiopl_obj.time.duration)
-						ref_found, sampleref_obj = cvpj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+						ref_found, sampleref_obj = cvpj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 						if ref_found: lmms_sampletco.src = sampleref_obj.fileref.get_path(None, False)
 						lmms_sampletco.muted = int(audiopl_obj.muted)
 						if audiopl_obj.visual.color: lmms_sampletco.color = '#' + audiopl_obj.visual.color.get_hex()

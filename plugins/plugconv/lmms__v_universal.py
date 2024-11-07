@@ -109,7 +109,7 @@ class plugconv(plugins.base):
 						wave_path = os.path.join(samplefolder, pluginid+'_wave.wav')
 						wave_obj = plugin_obj.wave_get(osc_obj.prop.nameid)
 						wave_obj.to_audio(wave_path)
-						convproj_obj.add_sampleref(pluginid+'_wave', wave_path, None)
+						convproj_obj.sampleref__add(pluginid+'_wave', wave_path, None)
 						sp_obj = plugin_obj.samplepart_add('userwavefile0')
 						sp_obj.sampleref = pluginid+'_wave'
 					return 0

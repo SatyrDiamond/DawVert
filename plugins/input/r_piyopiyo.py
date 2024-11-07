@@ -53,12 +53,12 @@ class input_piyopiyo(plugins.base):
 			keyoffset = (pmdtrack_obj.octave-2)*12
 
 			idval = str(tracknum)
-			track_obj = convproj_obj.add_track(idval, 'instrument', 0, False)
+			track_obj = convproj_obj.track__add(idval, 'instrument', 0, False)
 			track_obj.visual.name = 'Inst #'+str(tracknum+1)
 			track_obj.visual.color.set_float(colordata.getcolornum(tracknum))
 			track_obj.params.add('vol', pmdtrack_obj.volume/250, 'float')
 
-			plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 			plugin_obj.role = 'synth'
 			osc_data = plugin_obj.osc_add()
 			osc_data.prop.type = 'wave'
@@ -70,27 +70,27 @@ class input_piyopiyo(plugins.base):
 			track_obj.inst_pluginid = pluginid
 			parse_notes(convproj_obj, idval, project_obj.notes_data[tracknum], track_obj, keyoffset)
 
-		track_obj = convproj_obj.add_track("3", 'instrument', False, False)
+		track_obj = convproj_obj.track__add("3", 'instrument', False, False)
 		track_obj.visual.name = 'Drums'
 		track_obj.visual.color.set_float(colordata.getcolornum(3))
 		track_obj.params.add('vol', (project_obj.perc_volume/250)/3, 'float')
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+		plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 		plugin_obj.role = 'synth'
 		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.is_drum = True
 		track_obj.inst_pluginid = pluginid
 
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS1', os.path.join(extpath_path,'BASS1.wav'), None)
+		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_BASS1', os.path.join(extpath_path,'BASS1.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_BASS2', os.path.join(extpath_path,'BASS2.wav'), None)
+		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_BASS2', os.path.join(extpath_path,'BASS2.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SNARE1', os.path.join(extpath_path,'SNARE1.wav'), None)
+		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_SNARE1', os.path.join(extpath_path,'SNARE1.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT1', os.path.join(extpath_path,'HAT1.wav'), None)
+		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_HAT1', os.path.join(extpath_path,'HAT1.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_HAT2', os.path.join(extpath_path,'HAT2.wav'), None)
+		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_HAT2', os.path.join(extpath_path,'HAT2.wav'), None)
 		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.add_sampleref('PIYOPIYO_SYMBAL1', os.path.join(extpath_path,'SYMBAL1.wav'), None)
+		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_SYMBAL1', os.path.join(extpath_path,'SYMBAL1.wav'), None)
 		sampleref_obj.find_relative('external_data')
 
 		sp_obj = plugin_obj.sampleregion_add(-12, -12, -12, None)

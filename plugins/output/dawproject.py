@@ -134,7 +134,7 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 	dp_warps = None
 	zip_filepath = None
 	filepath = None
-	ref_found, sampleref_obj = convproj_obj.get_sampleref(samplepart_obj.sampleref)
+	ref_found, sampleref_obj = convproj_obj.sampleref__get(samplepart_obj.sampleref)
 	if ref_found: 
 		filepath = sampleref_obj.fileref.get_path(None, False)
 		basename = sampleref_obj.fileref.file.basename
@@ -342,7 +342,7 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	from functions_plugin_ext import plugin_vst3
 	from functions_plugin_ext import plugin_clap
 
-	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 	if plugin_found:
 		dp_device = None
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
@@ -523,7 +523,7 @@ class output_dawproject(plugins.base):
 
 		groups_data = {}
 
-		for groupid, insidegroup in convproj_obj.iter_group_inside():
+		for groupid, insidegroup in convproj_obj.group__iter_inside():
 			grp_lane_obj = make_lane('group__'+groupid)
 			cvpj_group = convproj_obj.groups[groupid]
 			dp_group = maketrack_group(convproj_obj, cvpj_group, groupid, grp_lane_obj)
@@ -533,7 +533,7 @@ class output_dawproject(plugins.base):
 			else:
 				project_obj.tracks.append(dp_group)
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 
 			if track_obj.type in ['instrument', 'audio', 'hybrid']:
 				lane_obj = make_lane('track__'+trackid)

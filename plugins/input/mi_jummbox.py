@@ -100,7 +100,7 @@ def text_instid(channum, instnum):
 
 def addfx(convproj_obj, inst_obj, fxgroupname, cvpj_instid, fxname, fxsubname):
 	fx_pluginid = cvpj_instid+'_'+fxname
-	plugin_obj = convproj_obj.add_plugin(fx_pluginid, fxgroupname, fxname, fxsubname)
+	plugin_obj = convproj_obj.plugin__add(fx_pluginid, fxgroupname, fxname, fxsubname)
 	plugin_obj.role = 'fx'
 	inst_obj.fxslots_audio.append(fx_pluginid)
 	return plugin_obj
@@ -263,7 +263,7 @@ class input_jummbox(plugins.base):
 		durpos = jummbox_obj.get_durpos()
 
 		convproj_obj.timesig = [4,8]
-		convproj_obj.patlenlist_to_timemarker(durpos, -1)
+		convproj_obj.timemarker__from_patlenlist(durpos, -1)
 
 		for channum, bb_chan in enumerate(jummbox_obj.channels):
 			if bb_chan.type in ['pitch', 'drum']:
@@ -287,12 +287,12 @@ class input_jummbox(plugins.base):
 					if ds_bb:
 						if ds_bb.used != False:
 							midifound = True
-							inst_obj, plugin_obj = convproj_obj.add_instrument_from_dset(cvpj_instid, preset, 'beepbox', preset, None, bb_color)
+							inst_obj, plugin_obj = convproj_obj.instrument__add_from_dset(cvpj_instid, preset, 'beepbox', preset, None, bb_color)
 
 					if not midifound:
-						inst_obj = convproj_obj.add_instrument(cvpj_instid)
+						inst_obj = convproj_obj.instrument__add(cvpj_instid)
 						inst_obj.pluginid = cvpj_instid
-						plugin_obj = convproj_obj.add_plugin(cvpj_instid, 'native', 'jummbox', bb_inst.type)
+						plugin_obj = convproj_obj.plugin__add(cvpj_instid, 'native', 'jummbox', bb_inst.type)
 
 						if 'unison' in bb_inst.data: plugin_obj.datavals.add('unison', bb_inst.data['unison'])
 
@@ -378,7 +378,7 @@ class input_jummbox(plugins.base):
 					nid_name = 'Ch#'+str(channum+1)+' Pat#'+str(patnum+1)
 					cvpj_patid = text_patternid(channum, patnum)
 					if bb_pat.notes:
-						nle_obj = convproj_obj.add_notelistindex(cvpj_patid)
+						nle_obj = convproj_obj.notelistindex__add(cvpj_patid)
 						nle_obj.visual.name = nid_name
 						nle_obj.visual.color.set_float(bb_color)
 						for note in bb_pat.notes:
@@ -419,7 +419,7 @@ class input_jummbox(plugins.base):
 				for seqpos, patnum in enumerate(bb_chan.sequence):
 					bb_partdur = durpos[seqpos]
 					if patnum != 0:
-						playlist_obj = convproj_obj.add_playlist(channum, True, True)
+						playlist_obj = convproj_obj.playlist__add(channum, True, True)
 						playlist_obj.visual.color.set_float(bb_color)
 						cvpj_placement = playlist_obj.placements.add_notes_indexed()
 						cvpj_placement.fromindex = text_patternid(channum, patnum-1)

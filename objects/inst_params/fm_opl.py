@@ -83,13 +83,13 @@ class opl_inst:
 		self.pseudo4 = False
 
 	def to_cvpj_genid(self, convproj_obj):
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('chip', 'fm', 'opl'+str(self.version))
+		plugin_obj, pluginid = convproj_obj.plugin__add__genid('chip', 'fm', 'opl'+str(self.version))
 		plugin_obj.role = 'synth'
 		self.internal_add_params(plugin_obj)
 		return plugin_obj, pluginid
 
 	def to_cvpj(self, convproj_obj, pluginid):
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'chip', 'fm', 'opl'+str(self.version))
+		plugin_obj = convproj_obj.plugin__add(pluginid, 'chip', 'fm', 'opl'+str(self.version))
 		plugin_obj.role = 'synth'
 		self.internal_add_params(plugin_obj)
 		return plugin_obj

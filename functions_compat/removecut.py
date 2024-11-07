@@ -9,7 +9,7 @@ def process(convproj_obj, in__placement_cut, out__placement_cut, out_type):
 				playlist_obj.placements.remove_cut()
 			return True
 		elif convproj_obj.type == 'r':
-			for trackid, track_obj in convproj_obj.iter_track():
+			for trackid, track_obj in convproj_obj.track__iter():
 				track_obj.placements.remove_cut()
 				for trackid, lane_obj in track_obj.lanes.items(): lane_obj.placements.remove_cut()
 			return True

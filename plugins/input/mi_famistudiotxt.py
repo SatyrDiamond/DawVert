@@ -53,7 +53,7 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 	instname = fst_Instrument.Name
 
 	cvpj_instid = WaveType+'-'+instname
-	inst_obj = convproj_obj.add_instrument(cvpj_instid)
+	inst_obj = convproj_obj.instrument__add(cvpj_instid)
 	inst_obj.fxrack_channel = fx_num
 	inst_obj.params.add('vol', 0.2, 'float')
 
@@ -61,7 +61,7 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 		if WaveType == 'Square1' or WaveType == 'Square2': wavetype = 'square'
 		if WaveType == 'Triangle': wavetype = 'triangle'
 		if WaveType == 'Noise': wavetype = 'noise'
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = wavetype
 		add_envelopes(plugin_obj, fst_Instrument)
@@ -75,19 +75,19 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 	if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
 		if WaveType == 'VRC6Saw': wavetype = 'saw'
 		if WaveType == 'VRC6Square': wavetype = 'square'
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = wavetype
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'FDS':
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('chip', 'fds', None)
+		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'fds', None)
 		add_envelopes(plugin_obj, fst_Instrument)
 		add_envelope(plugin_obj, fst_Instrument, 'wave', 'FDSWave')
 
 	if WaveType == 'N163':
 		inst_obj.params.add('vol', 1, 'float')
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('native', 'namco163_famistudio', None)
+		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('native', 'namco163_famistudio', None)
 		osc_obj = plugin_obj.osc_add()
 		osc_obj.prop.type = 'wavetable'
 		osc_obj.prop.nameid = 'main'
@@ -95,18 +95,18 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 		add_envelope(plugin_obj, fst_Instrument, 'wave', 'N163Wave')
 
 	if WaveType == 'S5B':
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'MMC5':
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 
 	if WaveType == 'EPSMSquare':
-		plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 		add_envelopes(plugin_obj, fst_Instrument)
@@ -121,12 +121,12 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 		instpan += int(bool(fst_Instrument.Regs[1] & 0x40))
 		inst_obj.params.add('pan', instpan, 'float')
 
-	if WaveType == 'EPSM_Kick': plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('chip', 'epsm_rhythm', 'kick')
-	if WaveType == 'EPSM_Snare': plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('chip', 'epsm_rhythm', 'snare')
-	if WaveType == 'EPSM_Cymbal': plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('chip', 'epsm_rhythm', 'cymbal')
-	if WaveType == 'EPSM_HiHat': plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('chip', 'epsm_rhythm', 'hihat')
-	if WaveType == 'EPSM_Tom': plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('chip', 'epsm_rhythm', 'tom')
-	if WaveType == 'EPSM_Rimshot': plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('chip', 'epsm_rhythm', 'rimshot')
+	if WaveType == 'EPSM_Kick': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'kick')
+	if WaveType == 'EPSM_Snare': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'snare')
+	if WaveType == 'EPSM_Cymbal': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'cymbal')
+	if WaveType == 'EPSM_HiHat': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'hihat')
+	if WaveType == 'EPSM_Tom': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'tom')
+	if WaveType == 'EPSM_Rimshot': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'rimshot')
 
 	plugin_obj.role = 'synth'
 
@@ -143,14 +143,14 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 	instname = fst_instrument.Name if fst_instrument != None else None
 	cvpj_instid = 'DPCM-'+instname if instname != None else 'DPCM'
 
-	inst_obj = convproj_obj.add_instrument(cvpj_instid)
+	inst_obj = convproj_obj.instrument__add(cvpj_instid)
 	inst_obj.params.add('vol', 0.6, 'float')
 	inst_obj.params.add('usemasterpitch', False, 'bool')
 	inst_obj.visual.name = 'DPCM'
 	inst_obj.visual.from_dset('famistudio', 'chip', 'DPCM', False)
 	inst_obj.fxrack_channel = fx_num
 	inst_obj.is_drum = True
-	plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+	plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 	plugin_obj.role = 'synth'
 
 	for key, dpcmmap in DPCMMappings.data.items():
@@ -165,7 +165,7 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 			audio_obj.rate = dpcm_rate_arr[dpcm_pitch]
 			audio_obj.to_file_wav(filename)
 			correct_key = key+24
-			sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
+			sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 			sp_obj = plugin_obj.sampleregion_add(correct_key, correct_key, correct_key, None)
 			sp_obj.visual.name = dpcm_sample
 			sp_obj.sampleref = filename
@@ -331,7 +331,7 @@ class input_famistudio(plugins.base):
 				for x in fs_pattern.Notes:
 					if x.Instrument != None and x.Instrument not in used_insts:
 						used_insts.append(x.Instrument)
-			fxchannel_obj = convproj_obj.add_fxchan(fxchan)
+			fxchannel_obj = convproj_obj.fx__chan__add(fxchan)
 
 			if WaveType != 'DPCM':
 				fxchannel_obj.visual.from_dset('famistudio', 'chip', WaveType, True)
@@ -342,7 +342,7 @@ class input_famistudio(plugins.base):
 				for inst in used_insts: create_dpcm_inst(project_obj.Instruments[inst].DPCMMappings, project_obj.DPCMSamples, channum, project_obj.Instruments[inst])
 				fxchannel_obj.visual.from_dset('famistudio', 'chip', 'DPCM', True)
 
-			playlist_obj = convproj_obj.add_playlist(channum, 1, True)
+			playlist_obj = convproj_obj.playlist__add(channum, 1, True)
 			playlist_obj.visual.name = fst_channel.Type
 			playlist_obj.visual.color.set_float([0.13, 0.15, 0.16])
 
@@ -353,7 +353,7 @@ class input_famistudio(plugins.base):
 
 			for patid, patdata in fst_channel.Patterns.items():
 				cvpj_patid = fst_channel.Type+'-'+patid+'-'+str(fst_currentsong.PatternSettings.bpm)
-				nle_obj = convproj_obj.add_notelistindex(cvpj_patid)
+				nle_obj = convproj_obj.notelistindex__add(cvpj_patid)
 				nle_obj.visual.name = patid+' ('+fst_channel.Type+')'
 				nle_obj.visual.color.set_float([0.13, 0.15, 0.16])
 				parse_notes(nle_obj.notelist, patdata.Notes, fst_channel.Type, NoteLength, project_obj.Arpeggios)
@@ -363,7 +363,7 @@ class input_famistudio(plugins.base):
 					for pattemp in pattemps:
 						notemul = fst_currentsong.PatternSettings.bpm/pattemp
 						cvpj_patid = fst_channel.Type+'-'+patid+'-'+str(pattemp)
-						nle_obj = convproj_obj.add_notelistindex(cvpj_patid)
+						nle_obj = convproj_obj.notelistindex__add(cvpj_patid)
 						nle_obj.visual.name = patid+' ('+fst_channel.Type+')'
 						nle_obj.visual.color.set_float([0.13, 0.15, 0.16])
 						parse_notes(nle_obj.notelist, patdata.Notes, fst_channel.Type, NoteLength*notemul, project_obj.Arpeggios)
@@ -377,7 +377,7 @@ class input_famistudio(plugins.base):
 					make_auto(convproj_obj, fst_channel.Patterns[patid].Notes, NoteLength, BPMNoteMul[pattime], cvpj_placement.time.position, cvpj_placement.time.duration, fxchan)
 
 		convproj_obj.add_timesig_lengthbeat(fst_currentsong.PatternLength, fst_currentsong.PatternSettings.BeatLength)
-		convproj_obj.patlenlist_to_timemarker(PatternLengthList, fst_currentsong.LoopPoint)
+		convproj_obj.timemarker__from_patlenlist(PatternLengthList, fst_currentsong.LoopPoint)
 
 		if project_obj.Name: convproj_obj.metadata.name = project_obj.Name
 		if project_obj.Author: convproj_obj.metadata.author = project_obj.Author

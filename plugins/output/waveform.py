@@ -45,7 +45,7 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_waveform
 	from objects.inst_params import juce_plugin
 
-	plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
+	plugin_found, plugin_obj = convproj_obj.plugin__get(cvpj_fxid)
 	if plugin_found: 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
@@ -163,7 +163,7 @@ class output_waveform_edit(plugins.base):
 
 		groups_data = {}
 
-		for groupid, insidegroup in convproj_obj.iter_group_inside():
+		for groupid, insidegroup in convproj_obj.group__iter_inside():
 			wf_tracks = project_obj.tracks
 
 			if insidegroup: 
@@ -171,7 +171,7 @@ class output_waveform_edit(plugins.base):
 			else:
 				make_group(convproj_obj, groupid, groups_data, counter_id, wf_tracks)
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			wf_tracks = project_obj.tracks
 
 			if track_obj.group: wf_tracks = groups_data[track_obj.group].tracks
@@ -184,7 +184,7 @@ class output_waveform_edit(plugins.base):
 			wf_inst_plugin = get_plugin(convproj_obj, track_obj.inst_pluginid, True)
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			if middlenote != 0:

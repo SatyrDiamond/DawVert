@@ -25,7 +25,7 @@ class input_petaporon(plugins.base):
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 
-		track_obj = convproj_obj.add_track('flipper', 'instrument', 0, False)
+		track_obj = convproj_obj.track__add('flipper', 'instrument', 0, False)
 		track_obj.visual.name = 'Flipper Zero'
 		track_obj.visual.color.set_float([0.94, 0.58, 0.23])
 

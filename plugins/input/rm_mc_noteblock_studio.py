@@ -42,13 +42,13 @@ class input_gt_mnbs(plugins.base):
 
 		for instnum in range(16):
 			instid = 'NoteBlock'+str(instnum)
-			inst_obj = convproj_obj.add_instrument(instid)
+			inst_obj = convproj_obj.instrument__add(instid)
 			midifound = inst_obj.from_dataset('noteblockstudio', 'inst', str(instnum), True)
 			if midifound: inst_obj.to_midi(convproj_obj, instid, True)
 
 		for nbs_layer, layer_obj in enumerate(project_obj.layers):
 			cvpj_trackid = str(nbs_layer+1)
-			track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 1, False)
+			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 1, False)
 			track_obj.visual.name = layer_obj.name if layer_obj.name else cvpj_trackid
 			track_obj.params.add('vol', layer_obj.vol/100, 'float')
 			track_obj.params.add('pan', (layer_obj.stereo/100)-1, 'float')
@@ -57,11 +57,11 @@ class input_gt_mnbs(plugins.base):
 		custominstid = 16
 		for custominstid, custom_obj in enumerate(project_obj.custom):
 			instid = 'NoteBlock'+str(custominstid+16)
-			inst_obj = convproj_obj.add_instrument(instid)
+			inst_obj = convproj_obj.instrument__add(instid)
 			inst_obj.visual.name = custom_obj.name
 			inst_obj.visual.color.set_hsv(custominstid*0.2, 1, 0.5)
 			inst_obj.datavals.add('middlenote', -(custom_obj.key-51))
-			plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.add_plugin_sampler(instid, custom_obj.file, None)
+			plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(instid, custom_obj.file, None)
 			if sampleref_obj: sampleref_obj.find_relative('mnbs_sounds')
 			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			inst_obj.pluginid = instid

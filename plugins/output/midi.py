@@ -47,7 +47,7 @@ class output_cvpj_f(plugins.base):
 		autotrack.append(mido.MetaMessage('set_tempo', tempo=midi_tempo, time=0))
 		multi_miditrack.append(autotrack)
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			miditrack = mido.MidiTrack()
 
 			midi_channel = None

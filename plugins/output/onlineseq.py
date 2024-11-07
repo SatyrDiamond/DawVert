@@ -45,13 +45,13 @@ class output_onlineseq(plugins.base):
 
 		repeatedolinst = {}
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			onlineseqinst = 43
 			midiinst = None
 
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 
 			midi_found, midi_inst = track_obj.get_midi(convproj_obj)
 			

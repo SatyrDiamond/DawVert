@@ -27,7 +27,7 @@ class plugconv(plugins.base):
 			if plugin_obj.type.subtype in ['harmonics']: plugin_obj.harmonics_get('harmonics').to_audio(wave_path)
 
 			plugin_obj.replace('native', 'lmms', 'tripleoscillator')
-			convproj_obj.add_sampleref(pluginid+'_wave', wave_path, None)
+			convproj_obj.sampleref__add(pluginid+'_wave', wave_path, None)
 
 			sampleid = pluginid+'_wave'
 			sp_obj = plugin_obj.samplepart_add('userwavefile0')

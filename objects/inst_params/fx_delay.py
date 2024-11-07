@@ -40,9 +40,9 @@ class fx_delay:
 		else:
 			on, wet = True, 1
 			if pluginid != None:
-				plugin_obj = convproj_obj.add_plugin(pluginid, 'universal', 'delay', None)
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'delay', None)
 			else:
-				plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'delay', None)
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'delay', None)
 			
 		plugin_obj.role = 'fx'
 

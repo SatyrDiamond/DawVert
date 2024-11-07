@@ -65,7 +65,7 @@ class input_cvpj_f(plugins.base):
 		for tracknum, mmc_track in enumerate(mmc_tracks):
 			cvpj_instid = 'CH'+str(tracknum)
 
-			track_obj = convproj_obj.add_track(cvpj_instid, 'instrument', 0, False)
+			track_obj = convproj_obj.track__add(cvpj_instid, 'instrument', 0, False)
 
 			track_obj.visual.name = cvpj_instid
 			track_obj.visual.color.set_float(maincolor)

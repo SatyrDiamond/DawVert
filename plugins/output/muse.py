@@ -47,7 +47,7 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 
 	pluginsupported = False
 
-	plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+	plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 	if plugin_found: 
 		if plugin_obj.check_match('external', 'vst2', 'win'):
 			pluginsupported = True
@@ -80,7 +80,7 @@ def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
 	global synthidnum
 	logger_output.info('MusE:  Midi Track '+str(tracknum)+(': '+trackname if trackname else ''))
 
-	muse_track = project_obj.add_track('miditrack')
+	muse_track = project_obj.track__add('miditrack')
 	muse_track.name = trackname
 	if track_obj.visual.color: muse_track.color = '#'+track_obj.visual.color.get_hex()
 	muse_track.height = 70
@@ -118,7 +118,7 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 	logger_output.info('MusE:  Wave Track '+str(tracknum)+(': '+track_obj.visual.name if track_obj.visual.name else ''))
 	addroute_audio(project_obj, tracknum, 0)
 
-	muse_track = project_obj.add_track('wavetrack')
+	muse_track = project_obj.track__add('wavetrack')
 	muse_track.name = track_obj.visual.name
 	muse_track.channels = 2
 	if track_obj.visual.color: muse_track.color = '#'+track_obj.visual.color.get_hex()
@@ -137,7 +137,7 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 		offset = audiopl_obj.time.cut_start
 		frameval = int((offset*(wavetime))*(120/muse_bpm))
 
-		ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+		ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 		if ref_found: 
 			frameval *= sampleref_obj.hz/WAVE_FREQUENCY
 
@@ -208,7 +208,7 @@ class output_cvpj(plugins.base):
 
 		project_obj.tracks.append(muse_track)
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 
 			if track_obj.type == 'instrument':
 				if track_obj.is_laned:

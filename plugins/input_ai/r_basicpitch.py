@@ -26,7 +26,7 @@ class input_ex_basic_pitch(plugins.base):
 
 		model_output, midi_data, note_events = predict(input_file)
 
-		track_obj, plugin_obj = convproj_obj.add_track_midi('basicpitch', 'basicpitch', 0, 0, False, 1, False)
+		track_obj, plugin_obj = convproj_obj.track__addspec__midi('basicpitch', 'basicpitch', 0, 0, False, 1, False)
 
 		for note_event in note_events:
 			track_obj.placements.notelist.add_r(

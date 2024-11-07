@@ -203,9 +203,10 @@ class input_notessimo_v3(plugins.base):
 		in_dict['file_ext'] = ['note']
 		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['pl_points']
-		in_dict['fxtype'] = 'rack'
 		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:midi']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'mi'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_notessimo_v3
@@ -215,6 +216,7 @@ class input_notessimo_v3(plugins.base):
 		samplefolder = dv_config.path_samples_extracted
 
 		# ---------- CVPJ Start ----------
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'mi'
 		convproj_obj.set_timings(4, True)
 

@@ -390,13 +390,14 @@ class input_wavtool(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['zip']
-		in_dict['fxtype'] = 'track'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_included'] = ['native:wavtool','universal:sampler:single','universal:sampler:multi']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['fxtype'] = 'route'
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_wavtool
@@ -404,6 +405,7 @@ class input_wavtool(plugins.base):
 		global zip_data
 		global samplefolder
 
+		convproj_obj.fxtype = 'route'
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)
 

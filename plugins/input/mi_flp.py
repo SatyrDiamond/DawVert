@@ -250,13 +250,14 @@ class input_flp(plugins.base):
 		in_dict['auto_types'] = ['pl_ticks', 'pl_points']
 		in_dict['track_lanes'] = True
 		in_dict['placement_cut'] = True
-		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
 		in_dict['fxchain_mixer'] = True
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'mi'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		try:
@@ -275,6 +276,7 @@ class input_flp(plugins.base):
 		from objects.file_proj import proj_flp
 		from objects.inst_params import fx_delay
 
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'mi'
 
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\", 'win')

@@ -51,26 +51,27 @@ def set_params(params_obj):
 
 def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 	from objects.file_proj import proj_soundbridge
-	if groupid not in groups_data and groupid in convproj_obj.groups:
-		group_obj = convproj_obj.groups[groupid]
-		sb_grouptrack = proj_soundbridge.soundbridge_track(None)
-		do_markers(group_obj.timemarkers, sb_grouptrack.markers)
-		make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.fxslots_audio)
-		sb_grouptrack.type = 1
-		#sb_grouptrack.state = set_params(group_obj.params)
+	if groupid not in groups_data:
+		group_obj = convproj_obj.fx__group__get(groupid)
+		if group_obj:
+			sb_grouptrack = proj_soundbridge.soundbridge_track(None)
+			do_markers(group_obj.timemarkers, sb_grouptrack.markers)
+			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.fxslots_audio)
+			sb_grouptrack.type = 1
+			#sb_grouptrack.state = set_params(group_obj.params)
 
-		make_auto_contains_master(convproj_obj, sb_grouptrack, group_obj.params, ['group', groupid])
+			make_auto_contains_master(convproj_obj, sb_grouptrack, group_obj.params, ['group', groupid])
 
-		sb_maintrack.tracks.append(sb_grouptrack)
-		if group_obj.visual.name: sb_grouptrack.name = group_obj.visual.name
-		sb_grouptrack.metadata["SequencerTrackCollapsedState"] = 8
-		sb_grouptrack.metadata["SequencerTrackHeightState"] = 43
-		if group_obj.visual.color: 
-			sb_grouptrack.metadata["TrackColor"] = '#'+group_obj.visual.color.get_hex()
-		else:
-			sb_grouptrack.metadata["TrackColor"] = '#b0ff91'
+			sb_maintrack.tracks.append(sb_grouptrack)
+			if group_obj.visual.name: sb_grouptrack.name = group_obj.visual.name
+			sb_grouptrack.metadata["SequencerTrackCollapsedState"] = 8
+			sb_grouptrack.metadata["SequencerTrackHeightState"] = 43
+			if group_obj.visual.color: 
+				sb_grouptrack.metadata["TrackColor"] = '#'+group_obj.visual.color.get_hex()
+			else:
+				sb_grouptrack.metadata["TrackColor"] = '#b0ff91'
 
-		groups_data[groupid] = sb_grouptrack
+			groups_data[groupid] = sb_grouptrack
 
 sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '>f')])
 
@@ -385,6 +386,7 @@ class output_soundbridge(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_included'] = ['native:soundbridge']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2

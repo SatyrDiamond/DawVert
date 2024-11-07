@@ -141,9 +141,9 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				vsthdrwriter.uint32(4276969198)
 				vsthdrwriter.uint32(2)
 				vsthdrwriter.uint32(1)
-				for _ in range(pluginfo_obj.audio_num_inputs):
+				for _ in range(pluginfo_obj.audio_num_inputs if pluginfo_obj.audio_num_inputs else 2):
 					vsthdrwriter.flags64([33])
-				for n in range(pluginfo_obj.audio_num_outputs):
+				for n in range(pluginfo_obj.audio_num_outputs if pluginfo_obj.audio_num_inputs else 2):
 					vsthdrwriter.flags64([n])
 				vsthdrwriter.uint32(vstparamsnum)
 				vsthdrwriter.uint32(vst_fx_datatype == 'chunk')

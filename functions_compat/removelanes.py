@@ -35,7 +35,7 @@ def process_r(convproj_obj, out_dawinfo):
 				insidegroup = len(track_obj.lanes)>1 and out_fxtype == 'groupreturn'
 
 				if insidegroup:
-					group_obj = convproj_obj.add_group(trackid)
+					group_obj = convproj_obj.fx__group__add(trackid)
 					group_obj.visual = copy.deepcopy(track_obj.visual)
 					for paramid in track_obj.params.list():
 						track_obj.params.move(group_obj.params, paramid)

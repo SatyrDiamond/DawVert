@@ -74,7 +74,7 @@ class input_fruitytracks(plugins.base):
 
 		for tracknum, ftr_track in enumerate(project_obj.tracks):
 			trackid = str(tracknum)
-			track_obj = convproj_obj.add_track(trackid, 'audio', 1, False)
+			track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
 			track_obj.visual.name = ftr_track.name if ftr_track.name else 'Track '+str(tracknum)
 			track_obj.params.add('pan', (ftr_track.pan-64)/64, 'float')
 			track_obj.params.add('vol', ftr_track.vol/128, 'float')
@@ -83,7 +83,7 @@ class input_fruitytracks(plugins.base):
 				placement_obj = track_obj.placements.add_audio()
 				placement_obj.visual.name = ftr_clip.name
 
-				sampleref_obj = convproj_obj.add_sampleref(ftr_clip.file, ftr_clip.file, 'win')
+				sampleref_obj = convproj_obj.sampleref__add(ftr_clip.file, ftr_clip.file, 'win')
 				sampleref_obj.find_relative('projectfile')
 				sampleref_obj.find_relative('fruitytracks')
 				placement_obj.sample.sampleref = ftr_clip.file

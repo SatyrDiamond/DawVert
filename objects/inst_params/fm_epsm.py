@@ -95,12 +95,12 @@ class epsm_inst:
 		return opn_obj
 
 	def to_cvpj_genid(self, convproj_obj):
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('chip', 'fm', 'epsm')
+		plugin_obj, pluginid = convproj_obj.plugin__add__genid('chip', 'fm', 'epsm')
 		self.internal_add_params(plugin_obj)
 		return plugin_obj, pluginid
 
 	def to_cvpj(self, convproj_obj, pluginid):
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'chip', 'fm', 'epsm')
+		plugin_obj = convproj_obj.plugin__add(pluginid, 'chip', 'fm', 'epsm')
 		self.internal_add_params(plugin_obj)
 		return plugin_obj
 

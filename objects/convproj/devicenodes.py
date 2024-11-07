@@ -26,7 +26,7 @@ class cvpj_devnode_semisep:
 		self.tracks = {}
 		self.cables = []
 
-	def add_track(self, i_track):
+	def track__add(self, i_track):
 		self.tracks[i_track] = {}
 
 	def add_device(self, i_track, i_id):

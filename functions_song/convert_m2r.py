@@ -21,7 +21,7 @@ def convert(convproj_obj):
 
 	track_stor = {}
 	for inst_id, inst_obj in convproj_obj.instruments.items():
-		track_obj = convproj_obj.add_track(inst_id, 'instrument', uses_placements, is_indexed)
+		track_obj = convproj_obj.track__add(inst_id, 'instrument', uses_placements, is_indexed)
 		track_obj.visual = copy.deepcopy(inst_obj.visual)
 		track_obj.params = copy.deepcopy(inst_obj.params)
 		track_obj.datavals = copy.deepcopy(inst_obj.datavals)
@@ -68,7 +68,7 @@ def convert(convproj_obj):
 
 		for fx_num, placements in fxrack_audio_pl.items():
 			cvpj_trackid = str(pl_id)+'_audio_'+str(fx_num)
-			track_obj = convproj_obj.add_track(cvpj_trackid, 'audio', uses_placements, is_indexed)
+			track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', uses_placements, is_indexed)
 			if track_obj.fxrack_channel not in fxrack_order: fxrack_order[track_obj.fxrack_channel] = []
 			fxrack_order[track_obj.fxrack_channel].append(cvpj_trackid)
 			track_obj.visual = copy.deepcopy(playlist_obj.visual)
@@ -81,7 +81,7 @@ def convert(convproj_obj):
 	for n, t in fxrack_order.items():
 		for n in t: convproj_obj.track_order.append(n)
 
-	convproj_obj.do_lanefit()
+	convproj_obj.main__do_lanefit()
 
 	convproj_obj.automation.move_everything(['inst'], ['track'])
 

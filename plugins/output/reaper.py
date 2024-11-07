@@ -295,7 +295,7 @@ class output_reaper(plugins.base):
 		in_dict['file_ext'] = 'rpp'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []
-		in_dict['fxtype'] = 'track'
+		in_dict['fxtype'] = 'route'
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['auto_types'] = ['nopl_points']
@@ -303,6 +303,7 @@ class output_reaper(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain

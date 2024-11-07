@@ -79,6 +79,7 @@ class input_ceol(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = []
 		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','chip:fm:opm','universal:filter','universal:midi']
+		in_dict['projtype'] = 'mi'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_boscaceoil

@@ -492,6 +492,7 @@ class output_dawproject(plugins.base):
 		in_dict['audio_nested'] = True
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_dawproject
 
@@ -525,8 +526,8 @@ class output_dawproject(plugins.base):
 
 		for groupid, insidegroup in convproj_obj.group__iter_inside():
 			grp_lane_obj = make_lane('group__'+groupid)
-			cvpj_group = convproj_obj.groups[groupid]
-			dp_group = maketrack_group(convproj_obj, cvpj_group, groupid, grp_lane_obj)
+			group_obj = convproj_obj.fx__group__get(groupid)
+			dp_group = maketrack_group(convproj_obj, group_obj, groupid, grp_lane_obj)
 			groups_data[groupid] = dp_group
 			if insidegroup: 
 				groups_data[insidegroup].tracks.append(dp_group)

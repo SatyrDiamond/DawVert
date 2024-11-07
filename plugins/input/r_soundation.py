@@ -52,6 +52,8 @@ class input_soundation(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['fxtype'] = 'route'
+		in_dict['projtype'] = 'r'
 
 	def parse(self, i_convproj_obj, input_file, dv_config):
 		from objects import colors
@@ -85,6 +87,7 @@ class input_soundation(plugins.base):
 			except:
 				raise ProjectFileParserException('soundation: file is not Zipped or JSON')
 
+		convproj_obj.fxtype = 'route'
 		convproj_obj.type = 'r'
 
 		globalstore.dataset.load('soundation', './data_main/dataset/soundation.dset')

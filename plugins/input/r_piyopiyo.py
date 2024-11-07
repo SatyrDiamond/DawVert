@@ -25,6 +25,7 @@ class input_piyopiyo(plugins.base):
 		in_dict['plugin_included'] = ['universal:synth-osc','universal:sampler:multi']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

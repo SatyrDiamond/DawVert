@@ -322,11 +322,15 @@ class input_dawproject(plugins.base):
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_nested'] = True
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
+		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
+
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_dawproject
 		from objects import auto_id
 
 		convproj_obj.type = 'r'
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.set_timings(1, True)
 
 		global autoid_assoc

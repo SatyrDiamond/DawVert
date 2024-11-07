@@ -102,6 +102,8 @@ class input_cvpj_r(plugins.base):
 		in_dict['plugin_included'] = ['native:caustic','universal:sampler:single','universal:sampler:multi']
 		in_dict['fxchain_mixer'] = True
 		in_dict['audio_filetypes'] = ['wav']
+		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'ri'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects import audio_data
@@ -109,6 +111,7 @@ class input_cvpj_r(plugins.base):
 		
 		global dataset
 
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'ri'
 		convproj_obj.set_timings(1, True)
 

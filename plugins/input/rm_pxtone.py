@@ -62,6 +62,7 @@ class input_pxtone(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['audio_filetypes'] = ['wav','ogg']
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

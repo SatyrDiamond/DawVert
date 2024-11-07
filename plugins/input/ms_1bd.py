@@ -50,6 +50,7 @@ class input_1bitdragon(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['1bd']
 		in_dict['track_lanes'] = True
+		in_dict['projtype'] = 'ms'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_1bitdragon
 

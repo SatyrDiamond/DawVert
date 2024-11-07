@@ -18,6 +18,7 @@ class input_famitracker_txt(plugins.base):
 		in_dict['file_ext_detect'] = False
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'm'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_famitracker
 		from objects.tracker import pat_multi
@@ -25,6 +26,8 @@ class input_famitracker_txt(plugins.base):
 		project_obj = proj_famitracker.famitracker_project()
 		if not project_obj.load_from_file(input_file): exit()
 
+		convproj_obj.fxtype = 'rack'
+		
 		if project_obj.title: convproj_obj.metadata.name = project_obj.title
 		if project_obj.author: convproj_obj.metadata.author = project_obj.author
 		if project_obj.copyright: 

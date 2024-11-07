@@ -84,10 +84,11 @@ class output_soundation(plugins.base):
 		in_dict['file_ext'] = 'sngz'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []
-		in_dict['fxtype'] = 'track'
+		in_dict['fxtype'] = 'route'
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation','universal:midi']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['placement_loop'] = ['loop', 'loop_off']
+		in_dict['projtype'] = 'r'
 
 	def parse(self, i_convproj_obj, output_file):
 		from objects.file_proj import proj_soundation

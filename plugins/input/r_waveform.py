@@ -258,11 +258,14 @@ class input_cvpj_f(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_waveform
 		global cvpj_l
 
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 

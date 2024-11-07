@@ -18,6 +18,7 @@ class input_onlinesequencer(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_onlineseq

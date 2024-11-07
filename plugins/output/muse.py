@@ -80,7 +80,7 @@ def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
 	global synthidnum
 	logger_output.info('MusE:  Midi Track '+str(tracknum)+(': '+trackname if trackname else ''))
 
-	muse_track = project_obj.track__add('miditrack')
+	muse_track = project_obj.add_track('miditrack')
 	muse_track.name = trackname
 	if track_obj.visual.color: muse_track.color = '#'+track_obj.visual.color.get_hex()
 	muse_track.height = 70
@@ -118,7 +118,7 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 	logger_output.info('MusE:  Wave Track '+str(tracknum)+(': '+track_obj.visual.name if track_obj.visual.name else ''))
 	addroute_audio(project_obj, tracknum, 0)
 
-	muse_track = project_obj.track__add('wavetrack')
+	muse_track = project_obj.add_track('wavetrack')
 	muse_track.name = track_obj.visual.name
 	muse_track.channels = 2
 	if track_obj.visual.color: muse_track.color = '#'+track_obj.visual.color.get_hex()
@@ -183,6 +183,7 @@ class output_cvpj(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
+		in_dict['projtype'] = 'r'
 	def getsupportedplugformats(self): return ['vst2']
 	def getsupportedplugins(self): return []
 	def getfileextension(self): return 'med'

@@ -337,6 +337,7 @@ class input_amped(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
+		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_amped

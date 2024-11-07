@@ -31,6 +31,7 @@ class output_cvpj_f(plugins.base):
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		import mido
 

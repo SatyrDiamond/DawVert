@@ -16,6 +16,7 @@ class input_cvpj_f(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['auto_types'] = ['pl_points']
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		output = False

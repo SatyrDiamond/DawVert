@@ -27,6 +27,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from functions import note_data

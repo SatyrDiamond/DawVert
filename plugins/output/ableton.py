@@ -461,7 +461,7 @@ def addgrp(convproj_obj, project_obj, groupid):
 
 	ingroupid = None
 	if groupid not in ids_group_cvpj_als:
-		group_obj = convproj_obj.groups[groupid]
+		group_obj = convproj_obj.fx__group__get(groupid)
 		groupnumid = counter_track.get()
 		als_gtrack = project_obj.add_group_track(groupnumid)
 		do_effects(convproj_obj, als_gtrack, group_obj.fxslots_audio)
@@ -699,7 +699,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 	groupnumid = None
 	if track_obj.group:
-		if track_obj.group in convproj_obj.groups:
+		if convproj_obj.fx__group__get(track_obj.group):
 			groupnumid = addgrp(convproj_obj, project_obj, track_obj.group)
 			
 	if track_obj.type == 'instrument':
@@ -1103,12 +1103,13 @@ def do_tracks(convproj_obj, project_obj, current_grouptab, track_group, groups_u
 			groups_used.append(tid)
 			do_tracks(convproj_obj, project_obj, track_group[tid], track_group, groups_used, 'GROUP: '+tid)
 		if tracktype == 'TRACK':
-			track_obj = convproj_obj.track_data[tid]
-			if track_obj.group:
-				if track_obj.group not in groups_used:
-					addgrp(convproj_obj, project_obj, track_obj.group)
-					groups_used.append(track_obj.group)
-			add_track(convproj_obj, project_obj, tid, track_obj)
+			track_obj = convproj_obj.track__get(tid)
+			if track_obj:
+				if track_obj.group:
+					if track_obj.group not in groups_used:
+						addgrp(convproj_obj, project_obj, track_obj.group)
+						groups_used.append(track_obj.group)
+				add_track(convproj_obj, project_obj, tid, track_obj)
 		#print(debugtxt.ljust(20), tracktype, tid)
 
 class output_ableton(plugins.base):
@@ -1128,6 +1129,7 @@ class output_ableton(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, output_file):
 		global counter_track
@@ -1206,7 +1208,7 @@ class output_ableton(plugins.base):
 
 		convproj_obj.fx__group__remove_unused()
 
-		for groupid, group_obj in convproj_obj.groups.items():
+		for groupid, group_obj in convproj_obj.fx__group__iter():
 			if group_obj.group:
 				if group_obj.group not in track_group: track_group[group_obj.group] = []
 				track_group[group_obj.group].append(['GROUP', groupid])

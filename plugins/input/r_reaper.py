@@ -115,7 +115,6 @@ class input_reaper(plugins.base):
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['rpp']
-		in_dict['fxtype'] = 'track'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []
 		in_dict['time_seconds'] = True
@@ -125,6 +124,8 @@ class input_reaper(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
+		in_dict['fxtype'] = 'route'
+		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_reaper
@@ -145,6 +146,7 @@ class input_reaper(plugins.base):
 		globalstore.datadef.load('reaper', './data_main/datadef/reaper.ddef')
 		datadef_obj = globalstore.datadef.get('reaper')
 
+		convproj_obj.fxtype = 'route'
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 

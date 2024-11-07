@@ -31,6 +31,7 @@ class input_petaporon(plugins.base):
 		in_dict['file_ext_detect'] = False
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects import colors
 		bytestream = open(input_file, 'r')

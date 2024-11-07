@@ -24,12 +24,14 @@ class input_mariopaint_smp(plugins.base):
 		in_dict['file_ext_detect'] = False
 		in_dict['track_lanes'] = True
 		in_dict['track_nopl'] = True
-		in_dict['fxtype'] = 'rack'
 		in_dict['plugin_included'] = ['universal:midi']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.songinput import mariopaint
 
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'
 		mariopaint_obj = mariopaint.mariopaint_song()
 

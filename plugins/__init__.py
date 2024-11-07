@@ -25,8 +25,9 @@ class info_daw:
 		self.fxrack_params = ['vol','enabled']
 		self.auto_types = []
 		self.fxchain_mixer = False
-		self.fxtype = 'groupreturn'
+		self.fxtype = 'none'
 		self.time_seconds = False
+		self.projtype = '?'
 
 	def from_dict(self, indict):
 		if 'file_ext' in indict: self.file_ext = indict['file_ext']
@@ -48,6 +49,7 @@ class info_daw:
 		if 'fxchain_mixer' in indict: self.fxchain_mixer = indict['fxchain_mixer']
 		if 'fxtype' in indict: self.fxtype = indict['fxtype']
 		if 'time_seconds' in indict: self.time_seconds = indict['time_seconds']
+		if 'projtype' in indict: self.projtype = indict['projtype']
 
 class info_plugconv:
 	def __init__(self):
@@ -301,6 +303,9 @@ class base:
 
 	def get_list_names(plug_type):
 		return [n.name for _, n in base.loaded_plugins[plug_type].items()] if plug_type in base.loaded_plugins else []
+
+	def get_list_prop_obj(plug_type):
+		return [n.prop_obj for _, n in base.loaded_plugins[plug_type].items()] if plug_type in base.loaded_plugins else []
 
 	def load_plugindir(plug_type, plugsetname):
 		if plug_type in base.loaded_plugins: del base.loaded_plugins[plug_type]

@@ -23,12 +23,13 @@ class input_mmf(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mmf']
-		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['audio_filetypes'] = ['wav']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
@@ -42,6 +43,7 @@ class input_mmf(plugins.base):
 		from objects.songinput import midi_in
 		from objects.file_proj import proj_mmf
 
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_mmf.smaf_song()

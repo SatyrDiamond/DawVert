@@ -72,7 +72,7 @@ class cvpj_midiport:
 		self.basevelocity = 63
 
 class cvpj_instrument:
-	__slots__ = ['visual','params','datavals','midi','fxrack_channel','fxslots_notes','fxslots_audio','pluginid','is_drum']
+	__slots__ = ['visual','params','datavals','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','pluginid','is_drum']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
@@ -82,6 +82,7 @@ class cvpj_instrument:
 		self.fxrack_channel = -1
 		self.fxslots_notes = []
 		self.fxslots_audio = []
+		self.fxslots_mixer = []
 		self.pluginid = ''
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):

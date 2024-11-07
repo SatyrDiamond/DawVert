@@ -35,6 +35,8 @@ class input_audiosanua(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['audio_filetypes'] = ['wav', 'mp3']
 		in_dict['plugin_included'] = ['native:audiosauna', 'universal:sampler:multi', 'universal:bitcrush']
+		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return True
 	def detect(self, input_file): 
 		try:
@@ -47,6 +49,8 @@ class input_audiosanua(plugins.base):
 		from objects.file_proj import proj_audiosauna
 
 		global cvpj_l
+
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(128, False)
 

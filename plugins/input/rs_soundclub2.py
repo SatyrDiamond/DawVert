@@ -36,6 +36,7 @@ class input_soundclub2(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
+		in_dict['projtype'] = 'rs'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

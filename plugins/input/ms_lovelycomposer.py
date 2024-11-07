@@ -152,6 +152,7 @@ class input_lc(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
 		in_dict['auto_types'] = ['pl_points']
+		in_dict['projtype'] = 'ms'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_lovelycomposer

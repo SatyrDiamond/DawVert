@@ -63,6 +63,7 @@ class input_serato(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['file_ext'] = ['ssp']
 		in_dict['audio_stretch'] = ['rate']
+		in_dict['projtype'] = 'ms'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_serato

@@ -18,6 +18,7 @@ class input_gt_mnbs(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:midi']
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_nbs

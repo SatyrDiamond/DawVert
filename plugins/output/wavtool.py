@@ -116,6 +116,7 @@ class output_wavtool(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from functions_plugin_ext import plugin_vst2
 		from objects.file_proj import proj_wavtool
@@ -195,7 +196,7 @@ class output_wavtool(plugins.base):
 			wt_trackauto = make_automation('vol', 'master', 'gain', 'masterFader', 'master', mas_cvpjauto_vol, 'AAAAAA', False)
 			wavtool_obj.tracks[wt_trackauto.id] = wt_trackauto
 
-		#for groupid, group_obj in convproj_obj.groups.items():
+		#for groupid, group_obj in convproj_obj.fx__group__iter():
 #
 		#	if True:
 		#		wt_trackid = 'DawVert-Group-'+groupid

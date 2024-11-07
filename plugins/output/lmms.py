@@ -339,6 +339,7 @@ class output_lmms(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['plugin_ext'] = ['vst2','ladspa']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['projtype'] = 'r'
 		
 	def parse(self, i_cvpj_obj, output_file):
 		from objects.file_proj import proj_lmms
@@ -571,7 +572,7 @@ class output_lmms(plugins.base):
 
 					encode_fxchain(samptrack_obj.fxchain, track_obj, trackname, autoloc)
 
-		for num, fxchannel_obj in cvpj_obj.fxrack.items():
+		for num, fxchannel_obj in cvpj_obj.fx__chan__iter():
 			autoloc = ['fxmixer', str(num)]
 			autoname = 'FX' + str(num)
 

@@ -361,6 +361,8 @@ class input_ableton(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects import colors
@@ -376,6 +378,7 @@ class input_ableton(plugins.base):
 		xmlstring = ""
 
 		convproj_obj.type = 'r'
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.set_timings(4, True)
 		autoid_assoc = auto_id.convproj2autoid(4, True)
 

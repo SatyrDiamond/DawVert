@@ -47,6 +47,7 @@ class input_fruitytracks(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['pl_points']
+		in_dict['projtype'] = 'r'
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
 		bytestream.seek(0)

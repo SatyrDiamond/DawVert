@@ -109,19 +109,18 @@ def get_plugins(convproj_obj, wf_plugins, cvpj_fxids):
 
 def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
 	from objects.file_proj import proj_waveform
-	if groupid not in groups_data and groupid in convproj_obj.groups:
-		group_obj = convproj_obj.groups[groupid]
-		wf_foldertrack = proj_waveform.waveform_foldertrack()
-		wf_foldertrack.id_num = counter_id.get()
-		wf_maintrack.append(wf_foldertrack)
-		if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
-		if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
-		get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.fxslots_audio)
-
-		make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
-		make_level_plugin(wf_foldertrack)
-
-		groups_data[groupid] = wf_foldertrack
+	if groupid not in groups_data:
+		group_obj = convproj_obj.fx__group__get(groupid)
+		if group_obj:
+			wf_foldertrack = proj_waveform.waveform_foldertrack()
+			wf_foldertrack.id_num = counter_id.get()
+			wf_maintrack.append(wf_foldertrack)
+			if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
+			if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
+			get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.fxslots_audio)
+			make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
+			make_level_plugin(wf_foldertrack)
+			groups_data[groupid] = wf_foldertrack
 
 class output_waveform_edit(plugins.base):
 	def __init__(self): pass
@@ -139,6 +138,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_waveform
 		global dataset

@@ -83,6 +83,7 @@ class input_it(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
+		in_dict['projtype'] = 'm'
 	def supported_autodetect(self): return True
 
 	def detect_bytes(self, in_bytes):

@@ -663,7 +663,6 @@ class input_lmms(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mmp', 'mmpz']
-		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['enabled','vol']
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['auto_types'] = ['pl_points']
@@ -671,6 +670,8 @@ class input_lmms(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single','chip:fm:opl2','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'ladspa']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		try:
@@ -692,6 +693,7 @@ class input_lmms(plugins.base):
 
 		globalstore.dataset.load('lmms', './data_main/dataset/lmms.dset')
 
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(48, False)
 

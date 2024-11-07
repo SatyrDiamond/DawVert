@@ -15,12 +15,15 @@ class input_deflemask(plugins.base):
 		in_dict['file_ext'] = ['dmf']
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'm'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_deflemask
 		from objects.tracker import pat_multi
 		from objects import audio_data
 		project_obj = proj_deflemask.deflemask_project()
 		if not project_obj.load_from_file(input_file): exit()
+
+		convproj_obj.fxtype = 'rack'
 
 		samplefolder = dv_config.path_samples_extracted
 

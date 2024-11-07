@@ -16,6 +16,7 @@ class input_orgyana(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')

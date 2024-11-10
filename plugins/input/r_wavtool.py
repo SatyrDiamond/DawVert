@@ -471,9 +471,14 @@ class input_wavtool(plugins.base):
 					placement_obj.fade_out.set_dur(wavtool_clip.fadeOut, 'beats')
 
 					wt_clip_transpose = wavtool_clip.transpose
-					wt_warp_enabled = wavtool_clip.warp['enabled'] if 'enabled' in wavtool_clip.warp else False
-					wt_warp_anchors = wavtool_clip.warp['anchors'] if 'anchors' in wavtool_clip.warp else {}
-					wt_warp_sourceBPM = wavtool_clip.warp['sourceBPM'] if 'sourceBPM' in wavtool_clip.warp else 120
+					if wavtool_clip.warp:
+						wt_warp_enabled = wavtool_clip.warp['enabled'] if 'enabled' in wavtool_clip.warp else False
+						wt_warp_anchors = wavtool_clip.warp['anchors'] if 'anchors' in wavtool_clip.warp else {}
+						wt_warp_sourceBPM = wavtool_clip.warp['sourceBPM'] if 'sourceBPM' in wavtool_clip.warp else 120
+					else:
+						wt_warp_enabled = False
+						wt_warp_anchors = {}
+						wt_warp_sourceBPM = 120
 					wt_warp_numanchors = len(wt_warp_anchors)
 
 					sourcebpmmod = wt_warp_sourceBPM/120

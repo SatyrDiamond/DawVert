@@ -59,7 +59,7 @@ class plugsearch(plugins.base):
 					vst_uniqueId = clapsplit[3]
 					with globalstore.extplug.add('clap', 'win') as pluginfo_obj:
 						pluginfo_obj.id = vst_uniqueId
-						pluginfo_obj.patht = clapsplit[0]
+						pluginfo_obj.path_64bit = clapsplit[0]
 						pluginfo_obj.name = clapsplit[1]
 						pluginfo_obj.creator = clapsplit[2]
 					clapcount += 1

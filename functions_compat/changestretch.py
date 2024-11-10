@@ -14,12 +14,12 @@ def process(convproj_obj, in__placement_audio_stretch, out__placement_audio_stre
 
 		if convproj_obj.type in ['r', 'rm']: 
 
-			for trackid, track_obj in convproj_obj.iter_track(): 
+			for trackid, track_obj in convproj_obj.track__iter(): 
 				track_obj.placements.all_stretch_set_pitch_nonsync()
 				for laneid, lane_obj in track_obj.lanes.items(): 
 					lane_obj.placements.all_stretch_set_pitch_nonsync()
 
-			for trackid, track_obj in convproj_obj.iter_track(): 
+			for trackid, track_obj in convproj_obj.track__iter(): 
 				track_obj.placements.changestretch(convproj_obj, target, tempo)
 				for laneid, lane_obj in track_obj.lanes.items(): 
 					lane_obj.placements.changestretch(convproj_obj, target, tempo)

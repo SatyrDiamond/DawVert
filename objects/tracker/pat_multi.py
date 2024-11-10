@@ -72,11 +72,11 @@ class multi_patsong:
 		used_inst = {}
 
 		for ch_num, chan_obj in enumerate(self.channels):
-			playlist_obj = convproj_obj.add_playlist(ch_num, True, False)
+			playlist_obj = convproj_obj.playlist__add(ch_num, True, False)
 			if chan_obj.name: playlist_obj.visual.name = chan_obj.name
 			if chan_obj.color: playlist_obj.visual.color.set_float(chan_obj.color)
 
-			fxchannel_obj = convproj_obj.add_fxchan(ch_num+1)
+			fxchannel_obj = convproj_obj.fx__chan__add(ch_num+1)
 			if self.dataset_name and self.dataset_cat:
 				fxchannel_obj.visual.from_dset(self.dataset_name, self.dataset_cat, chan_obj.insttype, True)
 				playlist_obj.visual.from_dset(self.dataset_name, self.dataset_cat, chan_obj.insttype, False)
@@ -100,6 +100,6 @@ class multi_patsong:
 				cur_pl_pos += tpl[0]
 
 		patlentable = [x[0] for x in playstr.notestreams[0].placements]
-		convproj_obj.patlenlist_to_timemarker(patlentable[:-1], -1)
+		convproj_obj.timemarker__from_patlenlist(patlentable[:-1], -1)
 
 		return used_inst

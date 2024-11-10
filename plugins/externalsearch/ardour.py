@@ -17,7 +17,7 @@ class plugsearch(plugins.base):
 	def import_plugins(self):
 		searchpath = None
 		if globalstore.os_platform == 'win': searchpath = os.path.join(globalstore.home_folder, "AppData", "Local", "Ardour8", "cache", "vst")
-		if globalstore.os_platform == 'lin': searchpath = os.path.join(globalstore.home_folder, ".cache", "ardour6", "vst")
+		if globalstore.os_platform == 'lin': searchpath = os.path.join(globalstore.home_folder, ".cache", "ardour8", "vst")
 		if searchpath:
 			vst2count = 0
 			vst3count = 0

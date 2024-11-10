@@ -16,6 +16,7 @@ class input_adlib_rol(plugins.base):
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['chip:fm:opl2']
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
@@ -42,7 +43,7 @@ class input_adlib_rol(plugins.base):
 				if used:
 					instname = adlibbnk_obj.names[instnum].replace(" ", "")
 					instname_upper = instname.upper()
-					inst_obj = convproj_obj.add_instrument(instname_upper)
+					inst_obj = convproj_obj.instrument__add(instname_upper)
 					midifound = inst_obj.from_dataset('adlib_rol', 'inst', instname_upper, True)
 					if midifound: inst_obj.to_midi_noplug()
 					inst_obj.pluginid = instname_upper
@@ -53,7 +54,7 @@ class input_adlib_rol(plugins.base):
 			if instlist:
 				for instid in instlist.objects.list():
 					instname_upper = instid.upper()
-					inst_obj = convproj_obj.add_instrument(instname_upper)
+					inst_obj = convproj_obj.instrument__add(instname_upper)
 					midifound = inst_obj.from_dataset('adlib_rol', 'inst', instname_upper, True)
 					if midifound: inst_obj.to_midi(convproj_obj, instname_upper, True)
 
@@ -66,7 +67,7 @@ class input_adlib_rol(plugins.base):
 
 		for tracknum, rol_track in enumerate(project_obj.tracks):
 			cvpj_trackid = 'track'+str(tracknum+1)
-			track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
+			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 			track_obj.visual.name = rol_track.voice.name
 
 			curtrackpos = 0

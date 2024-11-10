@@ -50,6 +50,7 @@ class input_1bitdragon(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['1bd']
 		in_dict['track_lanes'] = True
+		in_dict['projtype'] = 'ms'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_1bitdragon
 
@@ -80,7 +81,7 @@ class input_1bitdragon(plugins.base):
 
 		track_data = []
 		for plnum in range(9):
-			track_obj = convproj_obj.add_track(str(plnum), 'instruments', 1, False)
+			track_obj = convproj_obj.track__add(str(plnum), 'instruments', 1, False)
 
 			track_obj.visual.color.from_colorset_num(colordata, plnum)
 			track_data.append(track_obj)
@@ -91,7 +92,7 @@ class input_1bitdragon(plugins.base):
 		used_drums = {}
 		curpos = 0
 		for blocknum, block_obj in enumerate(project_obj.blocks):
-			convproj_obj.add_scene(str(blocknum))
+			convproj_obj.scene__add(str(blocknum))
 
 			for inst in block_obj.instruments:
 				instid = inst.get_instid()
@@ -104,7 +105,7 @@ class input_1bitdragon(plugins.base):
 				dur = max([len(x) for x in instdata])
 
 				if dur:
-					trscene_obj = convproj_obj.add_track_scene(str(instnum), str(blocknum), 'main')
+					trscene_obj = convproj_obj.track__add_scene(str(instnum), str(blocknum), 'main')
 					placement_obj = trscene_obj.add_notes()
 					placement_obj.visual.name = block_obj.instruments[3-instnum].preset
 					placement_obj.time.set_posdur(0, 128)
@@ -121,7 +122,7 @@ class input_1bitdragon(plugins.base):
 			ids_drums = [x.get_instid() for x in block_obj.drums]
 			for drumnum, drumdata in enumerate(block_obj.n_drums):
 				if drumdata:
-					trscene_obj = convproj_obj.add_track_scene(str(8-drumnum), str(blocknum), 'main')
+					trscene_obj = convproj_obj.track__add_scene(str(8-drumnum), str(blocknum), 'main')
 					placement_obj = trscene_obj.add_notes()
 					placement_obj.visual.name = block_obj.drums[4-drumnum].preset
 					placement_obj.time.set_posdur(0, 128)
@@ -130,7 +131,7 @@ class input_1bitdragon(plugins.base):
 						vol = notedata['velocity'] if 'velocity' in notedata else 1
 						placement_obj.notelist.add_m(ids_drums[4-drumnum], pos, dur, 0, vol, None)
 
-			scenepl_obj = convproj_obj.add_scenepl()
+			scenepl_obj = convproj_obj.scene__add_pl()
 			scenepl_obj.position = curpos
 			scenepl_obj.duration = curpos+128
 			scenepl_obj.id = str(blocknum)
@@ -140,7 +141,7 @@ class input_1bitdragon(plugins.base):
 		for instid, instdata in used_inst.items():
 			instname = instdata.preset
  
-			inst_obj = convproj_obj.add_instrument(instid)
+			inst_obj = convproj_obj.instrument__add(instid)
 			inst_obj.visual.name = instname
 			inst_obj.params.add('enabled', instdata.on, 'int')
 			inst_obj.params.add('vol', instdata.volume, 'float')
@@ -150,14 +151,14 @@ class input_1bitdragon(plugins.base):
 
 			if instname not in instnames:
 				onebit_ext.save_audio(instname, audiofilepath)
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(audiofilepath, None)
+				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 				instnames.append(instname)
 
 		for drumid, drumdata in used_drums.items():
 			instname = drumdata.preset
 			
-			inst_obj = convproj_obj.add_instrument(drumid)
+			inst_obj = convproj_obj.instrument__add(drumid)
 			inst_obj.visual.name = instname
 			inst_obj.params.add('enabled', drumdata.on, 'int')
 			inst_obj.params.add('vol', drumdata.volume, 'float')
@@ -168,7 +169,7 @@ class input_1bitdragon(plugins.base):
 
 			if instname not in instnames:
 				onebit_ext.save_audio(instname, audiofilepath)
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(audiofilepath, None)
+				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 				instnames.append(instname)
 
@@ -177,7 +178,7 @@ class input_1bitdragon(plugins.base):
 		convproj_obj.track_master.params.add('vol', project_obj.volume, 'float')
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 
-		plugin_obj = convproj_obj.add_plugin('master-reverb', 'simple', 'reverb', None)
+		plugin_obj = convproj_obj.plugin__add('master-reverb', 'simple', 'reverb', None)
 		plugin_obj.role = 'fx'
 		plugin_obj.visual.name = 'Reverb'
 		plugin_obj.fxdata_add(project_obj.reverb, 0.5)

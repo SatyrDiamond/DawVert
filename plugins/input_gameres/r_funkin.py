@@ -45,7 +45,7 @@ class input_ex_basic_pitch(plugins.base):
 
 			for x in range(numchars):
 				trackid = notedif+str(x)
-				track_obj = convproj_obj.add_track(trackid, 'instrument', 1, False)
+				track_obj = convproj_obj.track__add(trackid, 'instrument', 1, False)
 				track_obj.visual.name = 'pyr_'+str(x)+','+notedif
 				track_obj.visual.color.set_float(charcolors[(numchars-x)-1])
 				placement_obj = track_obj.placements.add_notes()

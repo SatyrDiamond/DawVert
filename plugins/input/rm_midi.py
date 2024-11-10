@@ -51,11 +51,12 @@ class input_midi(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mid']
-		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
@@ -64,6 +65,7 @@ class input_midi(plugins.base):
 		if bytesdata == b'MThd': return True
 		else: return False
 	def parse(self, convproj_obj, input_file, dv_config):
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'
 
 		midiread_obj = reader_midifile_class()

@@ -212,6 +212,7 @@ class wavtool_project:
 		self.focusedSignal = None
 		self.deviceRouting = {}
 		self.devices = wavtool_connections()
+		self.bpmAutomation = []
 
 		self.devices.add_track('master')
 
@@ -264,6 +265,7 @@ class wavtool_project:
 			if 'timelineSelectionEnd' in pd: self.timelineSelectionEnd = pd['timelineSelectionEnd'] 
 			if 'countIn' in pd: self.countIn = pd['countIn'] 
 			if 'focusedSignal' in pd: self.focusedSignal = pd['focusedSignal'] 
+			if 'bpmAutomation' in pd: self.bpmAutomation = pd['bpmAutomation']
 
 
 	def write(self):
@@ -276,7 +278,7 @@ class wavtool_project:
 		wt_out['loopLifted'] = self.loopLifted
 		wt_out['loopEnabled'] = self.loopEnabled
 		wt_out['bpm'] = int(self.bpm)
-		wt_out['bpmAutomation'] = []
+		wt_out['bpmAutomation'] = self.bpmAutomation
 		wt_out['markers'] = []
 		wt_out['beatNumerator'] = self.beatNumerator
 		wt_out['beatDenominator'] = self.beatDenominator

@@ -9,7 +9,7 @@ def process(convproj_obj, in__placement_loop, out__placement_loop, out_type):
 	if (cond_loop and cond_action):
 
 		if convproj_obj.type in ['r', 'ri', 'rm']: 
-			for trackid, track_obj in convproj_obj.iter_track(): 
+			for trackid, track_obj in convproj_obj.track__iter(): 
 				track_obj.placements.add_loops(out__placement_loop)
 				for laneid, lane_obj in track_obj.lanes.items(): 
 					lane_obj.placements.add_loops(out__placement_loop)

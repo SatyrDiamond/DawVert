@@ -47,7 +47,7 @@ def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, a
 		if ap_f: 
 			if ap_d.u_nopl_points:
 				autospec = {"type": "numeric", "min": param_obj.min, "max": param_obj.max, "curve": 0, "step": 0}
-				amped_auto = amped_track.add_auto(paramid, True, amped_device.id, convauto(cvpj_points, param_obj), autospec)
+				amped_auto = amped_track.add_auto(paramid, True, amped_device.id, convauto(ap_d.nopl_points, param_obj), autospec)
 
 		amped_device.add_param(paramnum, ampedpid, param_obj.value)
 	return paramout
@@ -56,7 +56,7 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 	outdata = []
 	for pluginid in fxchain_audio:
 		out_auto = []
-		plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
 			fx_on, fx_wet = plugin_obj.fxdata_get()
 			fx_on = not fx_on
@@ -126,6 +126,7 @@ class output_amped(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_amped
 
@@ -160,14 +161,14 @@ class output_amped(plugins.base):
 		amped_filenames = {}
 		audioidnum = 0
 
-		for sampleref_id, sampleref_obj in convproj_obj.iter_samplerefs():
+		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			audio_id[sampleref_id] = audioidnum
 			filepath = sampleref_obj.fileref.get_path(None, False)
 			if os.path.exists(filepath): zip_amped.write(filepath, str(audioidnum))
 			amped_filenames[audioidnum] = sampleref_obj.fileref.file.basename
 			audioidnum += 1
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			amped_track = proj_amped.amped_track(None)
 			amped_track.id = counter_id.get()
 			amped_track.name = track_obj.visual.name if track_obj.visual.name else ''
@@ -182,7 +183,7 @@ class output_amped(plugins.base):
 			}
 
 			inst_supported = False
-			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 			if plugin_found:
 
 				if plugin_obj.check_match('external', 'discodsp', 'obxd'):

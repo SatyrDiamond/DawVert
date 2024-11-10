@@ -254,6 +254,7 @@ class cvpj_stretch:
 					warp_point_obj.beat = pos_real*2*self.calc_bpm_size*pitch
 					warp_point_obj.second = sampleref_obj.dur_sec
 
+				self.calc_warp_points()
 
 			finalspeed = 1
 			if self.is_warped and target == 'rate':

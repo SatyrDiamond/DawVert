@@ -91,6 +91,8 @@ class plugsearch(plugins.base):
 											pluginfo_obj.id = dict_vstinfo['ps_file_idstring_'+str(filenum)]
 											pluginfo_obj.name = dict_vstinfo['ps_file_name_'+str(filenum)]
 											if 'ps_file_vendorname_'+str(filenum) in dict_vstinfo: pluginfo_obj.creator = dict_vstinfo['ps_file_vendorname_'+str(filenum)]
+											if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '32': pluginfo_obj.path_32bit = dict_vstinfo['ps_file_filename_'+str(filenum)]
+											if dict_vstinfo['ps_file_bitsize_'+str(filenum)] == '64': pluginfo_obj.path_64bit = dict_vstinfo['ps_file_filename_'+str(filenum)]
 										clapcount += 1
 
 		print('[fl_studio] VST2: '+str(vst2count)+', VST3: '+str(vst3count)+', CLAP: '+str(clapcount))

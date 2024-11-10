@@ -57,21 +57,21 @@ class plugsearch(plugins.base):
 					#   db_plugins.execute("UPDATE ladspa SET audio_num_inputs = ? WHERE name = ?", (x_pluginfo.get('numInputs'), ladspa_name,))
 					#   db_plugins.execute("UPDATE ladspa SET audio_num_outputs = ? WHERE name = ?", (x_pluginfo.get('numOutputs'), ladspa_name,))
 
-					if vst_format == 'LV2':
-						vst_name = x_pluginfo.get('name')
-						vst_inst = x_pluginfo.get('isInstrument')
-						if vst_inst == '1': plugdata_type = 'synth'
-						if vst_inst == '0': plugdata_type = 'fx'
-
-						with globalstore.extplug.add('lv2', globalstore.os_platform) as pluginfo_obj:
-							pluginfo_obj.type = plugdata_type
-							pluginfo_obj.id = x_pluginfo.get('uniqueId')
-							pluginfo_obj.name = x_pluginfo.get('name')
-							pluginfo_obj.path_64bit = x_pluginfo.get('file')
-							pluginfo_obj.creator = x_pluginfo.get('manufacturer')
-							pluginfo_obj.version = x_pluginfo.get('version')
-							pluginfo_obj.audio_num_inputs = x_pluginfo.get('numInputs')
-							pluginfo_obj.audio_num_outputs = x_pluginfo.get('numOutputs')
+					#if vst_format == 'LV2':
+					#	vst_name = x_pluginfo.get('name')
+					#	vst_inst = x_pluginfo.get('isInstrument')
+					#	if vst_inst == '1': plugdata_type = 'synth'
+					#	if vst_inst == '0': plugdata_type = 'fx'
+#
+					#	with globalstore.extplug.add('lv2', globalstore.os_platform) as pluginfo_obj:
+					#		pluginfo_obj.type = plugdata_type
+					#		pluginfo_obj.id = x_pluginfo.get('uniqueId')
+					#		pluginfo_obj.name = x_pluginfo.get('name')
+					#		pluginfo_obj.path_64bit = x_pluginfo.get('file')
+					#		pluginfo_obj.creator = x_pluginfo.get('manufacturer')
+					#		pluginfo_obj.version = x_pluginfo.get('version')
+					#		pluginfo_obj.audio_num_inputs = x_pluginfo.get('numInputs')
+					#		pluginfo_obj.audio_num_outputs = x_pluginfo.get('numOutputs')
 
 			print('[waveform] VST2: '+str(vst2count))
 			return True

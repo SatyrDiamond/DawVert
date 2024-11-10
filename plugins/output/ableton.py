@@ -582,7 +582,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			second_dur = 8
 
 		if audiopl_obj.time.cut_type == 'cut':
-			ats.startrel = 0
+			ats.startrel = audiopl_obj.time.cut_start
 			ats.loop_start = audiopl_obj.time.cut_start
 			ats.loop_end = ats.duration+(audiopl_obj.time.cut_start*1.5)
 			als_audioclip.Loop.HiddenLoopStart = 0
@@ -603,46 +603,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			else: als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
 	
-		if not stretch_obj.is_warped:
-			if ref_found: 
-				second_dur = sampleref_obj.dur_sec
-
-				if stretch_obj.uses_tempo:
-					als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-					ats.loop_end += ats.startrel/2
-					if ats.loop_on: 
-						stretch_obj.set_rate_speed(bpm, 1, False)
-						als_audioclip.IsWarped = True
-					else:
-						ats.startrel = 0
-				else:
-					if not ats.loop_on:
-						als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-						if stretch_obj.calc_tempo_size == 1:
-							ats.duration = min(ats.duration, (second_dur*2*stretch_obj.calc_tempo_size))
-							ats.loop_start /= 2
-							ats.loop_end = (ats.startrel+(ats.duration/2))
-						else:
-							ats.startrel = 0
-					else:
-						als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
-						ats.loop_end += ats.startrel
-						if ats.loop_on: 
-							stretch_obj.set_rate_speed(bpm, 1, False)
-							als_audioclip.IsWarped = True
-
-			else:
-				warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-				warpmarker_obj.BeatTime = 0
-				warpmarker_obj.SecTime = 0
-				als_audioclip.WarpMarkers[1] = warpmarker_obj
-
-				warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
-				warpmarker_obj.BeatTime = 0.03125
-				warpmarker_obj.SecTime = 0.03125
-				als_audioclip.WarpMarkers[2] = warpmarker_obj
-
-		else:
+		if stretch_obj.is_warped:
 			als_audioclip.IsWarped = True
 
 			if AUDWARPVERBOSE: print('o')
@@ -663,7 +624,48 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			als_audioclip.WarpMarkers[len(stretch_obj.warppoints)+1] = warpmarker_obj
 
 			if AUDWARPVERBOSE: print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
+		else:
+			do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
 
+		#if not stretch_obj.is_warped:
+		#	if ref_found: 
+		#		second_dur = sampleref_obj.dur_sec
+#
+		#		if stretch_obj.uses_tempo:
+		#			als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+		#			ats.loop_end += ats.startrel
+		#			if ats.loop_on: 
+		#				stretch_obj.set_rate_speed(bpm, 1, False)
+		#				als_audioclip.IsWarped = True
+		#			else:
+		#				ats.startrel = 0
+		#		else:
+		#			if not ats.loop_on:
+		#				als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+		#				if stretch_obj.calc_tempo_size == 1:
+		#					ats.duration = min(ats.duration, (second_dur*2*stretch_obj.calc_tempo_size))
+		#					ats.loop_start /= 2
+		#					ats.loop_end = (ats.startrel+(ats.duration/2))
+		#				else:
+		#					ats.startrel = 0
+		#			else:
+		#				als_audioclip.IsWarped, ratespeed = do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+		#				ats.loop_end += ats.startrel
+		#				if ats.loop_on: 
+		#					stretch_obj.set_rate_speed(bpm, 1, False)
+		#					als_audioclip.IsWarped = True
+#
+		#	else:
+		#		warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+		#		warpmarker_obj.BeatTime = 0
+		#		warpmarker_obj.SecTime = 0
+		#		als_audioclip.WarpMarkers[1] = warpmarker_obj
+#
+		#		warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
+		#		warpmarker_obj.BeatTime = 0.03125
+		#		warpmarker_obj.SecTime = 0.03125
+		#		als_audioclip.WarpMarkers[2] = warpmarker_obj
+#
 
 
 		als_audioclip.Time = ats.position
@@ -755,7 +757,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				notespl_obj.notelist.notemod_conv()
 				notespl_obj.notelist.mod_limit(-60, 67)
 				notespl_obj.notelist.remove_overlap()
-	
+
 				if notespl_obj.time.cut_type == 'cut':
 					als_midiclip.Loop.LoopOn = False
 					als_midiclip.Loop.LoopStart = notespl_obj.time.cut_start
@@ -1123,7 +1125,7 @@ class output_ableton(plugins.base):
 		in_dict['file_ext'] = 'als'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
-		in_dict['audio_stretch'] = ['warp', 'rate']
+		in_dict['audio_stretch'] = ['warp']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['auto_types'] = ['nopl_points']

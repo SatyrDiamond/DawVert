@@ -18,7 +18,7 @@ class plugconv(plugins.base):
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 		
 		if plugin_obj.type.check_wildmatch('native', 'serato-inst', 'instrument'):
-			isfound, fileref = plugin_obj.get_fileref('instrument', convproj_obj)
+			isfound, fileref = plugin_obj.fileref__get('instrument', convproj_obj)
 			if isfound:
 				filepath = fileref.get_path(None, False)
 				if os.path.exists(filepath):
@@ -42,7 +42,7 @@ class plugconv(plugins.base):
 								#trigger_velocity_min = sample['trigger_velocity_min'] if "trigger_velocity_min" in sample else 1
 								#trigger_velocity_max = sample['trigger_velocity_max'] if "trigger_velocity_max" in sample else 127
 	
-								sampleref_obj = convproj_obj.add_sampleref(fullpath, fullpath, None)
+								sampleref_obj = convproj_obj.sampleref__add(fullpath, fullpath, None)
 								sp_obj = plugin_obj.sampleregion_add(trigger_note_min-60, trigger_note_max-60, nominal_note-60, None)
 								sp_obj.from_sampleref_obj(sampleref_obj)
 								sp_obj.sampleref = fullpath

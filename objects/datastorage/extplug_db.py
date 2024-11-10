@@ -84,7 +84,7 @@ class pluginfo:
 			self.path_64bit = p_path_64bit_unix
 
 	def from_sql_clap(self, indata, platformtxt):
-		p_name, p_id, p_creator, p_category, p_version, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_path_win, p_path_unix = indata
+		p_name, p_id, p_creator, p_category, p_version, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix = indata
 		self.out_exists = True
 		self.name = p_name
 		self.id = p_id
@@ -178,8 +178,10 @@ class extplug_db:
 				audio_num_outputs integer,
 				midi_num_inputs integer,
 				midi_num_outputs integer,
-				path_win text,
-				path_unix text,
+				path_32bit_win text,
+				path_64bit_win text,
+				path_32bit_unix text,
+				path_64bit_unix text,
 				UNIQUE(id)
 			)''')
 		
@@ -366,7 +368,7 @@ class vst3:
 			return 0
 
 class clap:
-	exe_txt_start = "SELECT name, id, creator, category, version, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, path_win, path_unix FROM clap"
+	exe_txt_start = "SELECT name, id, creator, category, version, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix FROM clap"
 
 	def add(pluginfo_obj, platformtxt):
 		if pluginfo_obj.id and extplug_db.db_plugins:
@@ -379,11 +381,17 @@ class clap:
 			if pluginfo_obj.audio_num_outputs: extplug_db.db_plugins.execute("UPDATE clap SET audio_num_outputs = ? WHERE id = ?", (pluginfo_obj.audio_num_outputs, pluginfo_obj.id,))
 			if pluginfo_obj.midi_num_inputs: extplug_db.db_plugins.execute("UPDATE clap SET midi_num_inputs = ? WHERE id = ?", (pluginfo_obj.midi_num_inputs, pluginfo_obj.id,))
 			if pluginfo_obj.midi_num_outputs: extplug_db.db_plugins.execute("UPDATE clap SET midi_num_outputs = ? WHERE id = ?", (pluginfo_obj.midi_num_outputs, pluginfo_obj.id,))
-			if pluginfo_obj.path:
-				if os.path.exists(pluginfo_obj.path):
-					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE clap SET path_win = ? WHERE id = ?", (pluginfo_obj.path, pluginfo_obj.id,))
-					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE clap SET path_unix = ? WHERE id = ?", (pluginfo_obj.path, pluginfo_obj.id,))
-
+	
+			if pluginfo_obj.path_32bit:
+				if os.path.exists(pluginfo_obj.path_32bit):
+					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE clap SET path_32bit_win = ? WHERE id = ?", (pluginfo_obj.path_32bit, pluginfo_obj.id,))
+					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE clap SET path_32bit_unix = ? WHERE id = ?", (pluginfo_obj.path_32bit, pluginfo_obj.id,))
+	
+			if pluginfo_obj.path_64bit:
+				if os.path.exists(pluginfo_obj.path_64bit):
+					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE clap SET path_64bit_win = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
+					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE clap SET path_64bit_unix = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
+	
 	def get(bycat, in_val, in_platformtxt, cpu_arch_list):
 		founddata = None
 	
@@ -399,7 +407,10 @@ class clap:
 			if bycat == 'path':
 				patharch = 'win' if in_platformtxt == 'win' else 'unix'
 				in_val = in_val.replace('/', '\\')
-				founddata = extplug_db.db_plugins.execute(clap.exe_txt_start+" WHERE path_"+patharch+" = ?", (in_val,)).fetchone()
+				founddata_path32 = extplug_db.db_plugins.execute(clap.exe_txt_start+" WHERE path_32bit_"+patharch+" = ?", (in_val,)).fetchone()
+				founddata_path64 = extplug_db.db_plugins.execute(clap.exe_txt_start+" WHERE path_64bit_"+patharch+" = ?", (in_val,)).fetchone()
+				if founddata_path32 and 32 in cpu_arch_list: founddata = founddata_path32
+				if founddata_path64 and 64 in cpu_arch_list: founddata = founddata_path64
 
 		pluginfo_obj = pluginfo()
 		if founddata: pluginfo_obj.from_sql_clap(founddata, in_platformtxt)

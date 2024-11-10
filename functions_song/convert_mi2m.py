@@ -14,7 +14,7 @@ def convert(convproj_obj, dv_config):
 	nle_list = [x for x in convproj_obj.notelist_index]
 	used_nle = []
 
-	for pl_id, playlist_obj in convproj_obj.iter_playlist():
+	for pl_id, playlist_obj in convproj_obj.playlist__iter():
 		used_nle += [x.fromindex for x in playlist_obj.placements.pl_notes_indexed.data]
 
 	unused_nle = list(set(nle_list))
@@ -26,7 +26,7 @@ def convert(convproj_obj, dv_config):
 		pl_obj_found = None
 		maxdur = convproj_obj.get_dur()
 
-		for pl_id, playlist_obj in convproj_obj.iter_playlist():
+		for pl_id, playlist_obj in convproj_obj.playlist__iter():
 			if not playlist_obj.placements.get_dur():
 				pl_obj_found = playlist_obj
 				break
@@ -36,7 +36,7 @@ def convert(convproj_obj, dv_config):
 		num = 0
 		while True:
 			if num not in usednums:
-				pl_obj_found = convproj_obj.add_playlist(num, 1, True)
+				pl_obj_found = convproj_obj.playlist__add(num, 1, True)
 				pl_obj_found.visual.name = '>>> UNUSED'
 				break
 			num += 1
@@ -57,7 +57,7 @@ def convert(convproj_obj, dv_config):
 
 				startpos += nledur
 
-	for pl_id, playlist_obj in convproj_obj.iter_playlist():
+	for pl_id, playlist_obj in convproj_obj.playlist__iter():
 		playlist_obj.placements.unindex_notes(convproj_obj.notelist_index)
 		playlist_obj.placements.unindex_audio(convproj_obj.sample_index)
 

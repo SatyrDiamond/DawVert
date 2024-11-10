@@ -115,7 +115,6 @@ class input_reaper(plugins.base):
 	def supported_autodetect(self): return False
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['rpp']
-		in_dict['fxtype'] = 'track'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []
 		in_dict['time_seconds'] = True
@@ -125,6 +124,8 @@ class input_reaper(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
+		in_dict['fxtype'] = 'route'
+		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_reaper
@@ -145,6 +146,7 @@ class input_reaper(plugins.base):
 		globalstore.datadef.load('reaper', './data_main/datadef/reaper.ddef')
 		datadef_obj = globalstore.datadef.get('reaper')
 
+		convproj_obj.fxtype = 'route'
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 
@@ -167,7 +169,7 @@ class input_reaper(plugins.base):
 
 			trackroute = [rpp_track.mainsend['tracknum'], rpp_track.auxrecv]
 
-			track_obj = convproj_obj.add_track(cvpj_trackid, 'hybrid', 1, False)
+			track_obj = convproj_obj.track__add(cvpj_trackid, 'hybrid', 1, False)
 			track_obj.visual.name = rpp_track.name.get()
 
 			track_obj.visual.color.set_int(reaper_color_to_cvpj_color(rpp_track.peakcol.get(), True))
@@ -202,7 +204,7 @@ class input_reaper(plugins.base):
 										samplers.append([filenames, dfdict])
 
 							else:
-								plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'vst2', None)
+								plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'vst2', None)
 								plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 
 								pluginfo_obj = globalstore.extplug.get('vst2', 'id', fourid, None, [64, 32])
@@ -242,7 +244,7 @@ class input_reaper(plugins.base):
 								else: track_obj.plugin_autoplace(plugin_obj, fxid)
 
 						else:
-							plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'vst3', None)
+							plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'vst3', None)
 							plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 							if len(rpp_extplug.data_chunk)>8:
 								try:
@@ -262,7 +264,7 @@ class input_reaper(plugins.base):
 									do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'CLAP':
-						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'clap', None)
+						plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'clap', None)
 						plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.clap_id, rpp_extplug.data_chunk)
 						plugin_obj.visual.name = rpp_extplug.clap_name
 						track_obj.plugin_autoplace(plugin_obj, fxid)
@@ -272,7 +274,7 @@ class input_reaper(plugins.base):
 								do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'JS':
-						plugin_obj = convproj_obj.add_plugin(fxid, 'external', 'jesusonic', rpp_extplug.js_id)
+						plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'jesusonic', rpp_extplug.js_id)
 						plugin_obj.role = 'effect'
 						plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 						for n, v in enumerate(rpp_extplug.data):
@@ -290,12 +292,12 @@ class input_reaper(plugins.base):
 				if len(outsamplers) == 1:
 					filename, samplerj = outsamplers[0]
 					track_obj.inst_pluginid = sampler_id
-					plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(sampler_id, filename, 'win')
+					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(sampler_id, filename, 'win')
 					do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
 					do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')
 
 				if len(outsamplers) > 1:
-					plugin_obj, track_obj.inst_pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+					plugin_obj, track_obj.inst_pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
 
 					key_start = 0
@@ -306,7 +308,7 @@ class input_reaper(plugins.base):
 						filename, samplerj = d
 						sampmode = samplerj['mode'] if 'mode' in samplerj else 0
 
-						sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
+						sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 
 						if sampmode == 2:
 							key_start = int((samplerj['key_start'] if 'key_start' in samplerj else 0)*127)
@@ -387,7 +389,7 @@ class input_reaper(plugins.base):
 					do_fade(placement_obj.fade_in, rpp_trackitem.fadein, tempomul)
 					do_fade(placement_obj.fade_out, rpp_trackitem.fadeout, tempomul)
 
-					sampleref_obj = convproj_obj.add_sampleref(cvpj_audio_file, cvpj_audio_file, None)
+					sampleref_obj = convproj_obj.sampleref__add(cvpj_audio_file, cvpj_audio_file, None)
 					sampleref_obj.find_relative('projectfile')
 
 					placement_obj.sample.sampleref = cvpj_audio_file
@@ -408,7 +410,7 @@ class input_reaper(plugins.base):
 			do_auto(convproj_obj, rpp_track.muteenv, ['track', cvpj_trackid, 'enabled'], True, 'bool', False)
 
 			track_obj.placements.sort()
-			convproj_obj.add_trackroute(cvpj_trackid)
+			convproj_obj.fx__route__add(cvpj_trackid)
 			trackdata.append([cvpj_trackid, trackroute])
 
 		for to_track, trackroute in trackdata:

@@ -35,7 +35,7 @@ class juce_plugin:
 		chunkdata = juce_memoryblock.fromJuceBase64Encoding(self.memoryblock)
 
 		if not pluginid:
-			plugin_obj, pluginid = convproj_obj.add_plugin_genid('external', self.plugtype, None)
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', self.plugtype, None)
 			plugin_obj.role = 'effect'
 
 		if self.plugtype == 'vst2':
@@ -48,7 +48,7 @@ class juce_plugin:
 					if self.filename:
 						if os.path.exists(self.filename):
 							vst2_pathid = pluginid+'_vstpath'
-							convproj_obj.add_fileref(vst2_pathid, self.filename)
+							convproj_obj.fileref__add(vst2_pathid, self.filename)
 							plugin_obj.filerefs_global['plugin'] = vst2_pathid
 			else: plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, chunkdata, None)
 			name = plugin_obj.datavals_global.get('name', None)
@@ -63,7 +63,7 @@ class juce_plugin:
 					if self.filename:
 						if os.path.exists(self.filename):
 							vst3_pathid = pluginid+'_vstpath'
-							convproj_obj.add_fileref(vst3_pathid, self.filename)
+							convproj_obj.fileref__add(vst3_pathid, self.filename)
 							plugin_obj.filerefs_global['plugin'] = vst3_pathid
 
 		return plugin_obj, pluginid

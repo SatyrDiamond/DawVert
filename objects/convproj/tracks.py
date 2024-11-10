@@ -72,7 +72,7 @@ class cvpj_midiport:
 		self.basevelocity = 63
 
 class cvpj_instrument:
-	__slots__ = ['visual','params','datavals','midi','fxrack_channel','fxslots_notes','fxslots_audio','pluginid','is_drum']
+	__slots__ = ['visual','params','datavals','midi','fxrack_channel','fxslots_notes','fxslots_audio','fxslots_mixer','pluginid','is_drum']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
@@ -82,6 +82,7 @@ class cvpj_instrument:
 		self.fxrack_channel = -1
 		self.fxslots_notes = []
 		self.fxslots_audio = []
+		self.fxslots_mixer = []
 		self.pluginid = ''
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
@@ -118,7 +119,7 @@ class cvpj_instrument:
 		m_inst = midi_obj.patch
 		m_drum = midi_obj.drum
 		m_dev = midi_obj.device
-		plugin_obj = convproj_obj.add_plugin_midi(plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev)
+		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev)
 		plugin_obj.role = 'synth'
 		self.pluginid = plug_id
 		self.params.add('usemasterpitch', not m_drum, 'bool')
@@ -210,7 +211,7 @@ class cvpj_track:
 		m_inst = midi_obj.patch
 		m_drum = midi_obj.drum
 		m_dev = midi_obj.device
-		plugin_obj = convproj_obj.add_plugin_midi(plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev)
+		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev)
 		plugin_obj.role = 'synth'
 		self.inst_pluginid = plug_id
 		self.params.add('usemasterpitch', not m_drum, 'bool')
@@ -222,16 +223,16 @@ class cvpj_track:
 		for _, lane in self.lanes.items(): used_insts += lane.placements.used_insts()
 		return list(set(used_insts))
 
-	def add_scene(self, i_id, i_lane):
+	def scene__add(self, i_id, i_lane):
 		if i_id not in self.scenes: self.scenes[i_id] = {}
 		if i_lane not in self.scenes[i_id]: self.scenes[i_id][i_lane] = placements.cvpj_placements(self.time_ppq, self.time_float, self.uses_placements, self.is_indexed)
 		return self.scenes[i_id][i_lane]
 
 	def get_midi(self, convproj_obj):
-		plugin_found, plugin_obj = convproj_obj.get_plugin(self.inst_pluginid)
+		plugin_found, plugin_obj = convproj_obj.plugin__get(self.inst_pluginid)
 		return plugin_found, plugin_obj.midi if plugin_found else midi_inst.cvpj_midi_inst()
 
-	def add_return(self, returnid):
+	def fx__return__add(self, returnid):
 		self.returns[returnid] = cvpj_track('return', self.time_ppq, self.time_float, False, False)
 		return self.returns[returnid]
 
@@ -274,7 +275,7 @@ class cvpj_track:
 		track_obj.fxslots_audio = inst_obj.fxslots_audio
 		return track_obj
 
-	def add_notelistindex(self, i_id):
+	def notelistindex__add(self, i_id):
 		self.notelist_index[i_id] = cvpj_nle(self.time_ppq, self.time_float)
 		return self.notelist_index[i_id]
 
@@ -316,7 +317,7 @@ class cvpj_track:
 		self.time_ppq = time_ppq
 		self.timemarkers.change_timings(time_ppq, time_float)
 
-	def add_return(self, returnid):
+	def fx__return__add(self, returnid):
 		return_obj = cvpj_return_track()
 		self.returns[returnid] = return_obj
 		return return_obj
@@ -325,7 +326,7 @@ class cvpj_track:
 		for returnid, return_obj in self.returns.items():
 			yield returnid, return_obj
 
-	def add_timemarker(self):
+	def timemarker__add(self):
 		return self.timemarkers.add()
 
 	def plugin_autoplace(self, plugin_obj, pluginid):

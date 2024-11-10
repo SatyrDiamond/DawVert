@@ -45,7 +45,7 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_waveform
 	from objects.inst_params import juce_plugin
 
-	plugin_found, plugin_obj = convproj_obj.get_plugin(cvpj_fxid)
+	plugin_found, plugin_obj = convproj_obj.plugin__get(cvpj_fxid)
 	if plugin_found: 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
@@ -109,19 +109,18 @@ def get_plugins(convproj_obj, wf_plugins, cvpj_fxids):
 
 def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
 	from objects.file_proj import proj_waveform
-	if groupid not in groups_data and groupid in convproj_obj.groups:
-		group_obj = convproj_obj.groups[groupid]
-		wf_foldertrack = proj_waveform.waveform_foldertrack()
-		wf_foldertrack.id_num = counter_id.get()
-		wf_maintrack.append(wf_foldertrack)
-		if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
-		if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
-		get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.fxslots_audio)
-
-		make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
-		make_level_plugin(wf_foldertrack)
-
-		groups_data[groupid] = wf_foldertrack
+	if groupid not in groups_data:
+		group_obj = convproj_obj.fx__group__get(groupid)
+		if group_obj:
+			wf_foldertrack = proj_waveform.waveform_foldertrack()
+			wf_foldertrack.id_num = counter_id.get()
+			wf_maintrack.append(wf_foldertrack)
+			if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
+			if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
+			get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.fxslots_audio)
+			make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
+			make_level_plugin(wf_foldertrack)
+			groups_data[groupid] = wf_foldertrack
 
 class output_waveform_edit(plugins.base):
 	def __init__(self): pass
@@ -139,6 +138,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_waveform
 		global dataset
@@ -163,7 +163,7 @@ class output_waveform_edit(plugins.base):
 
 		groups_data = {}
 
-		for groupid, insidegroup in convproj_obj.iter_group_inside():
+		for groupid, insidegroup in convproj_obj.group__iter_inside():
 			wf_tracks = project_obj.tracks
 
 			if insidegroup: 
@@ -171,7 +171,7 @@ class output_waveform_edit(plugins.base):
 			else:
 				make_group(convproj_obj, groupid, groups_data, counter_id, wf_tracks)
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			wf_tracks = project_obj.tracks
 
 			if track_obj.group: wf_tracks = groups_data[track_obj.group].tracks
@@ -184,7 +184,7 @@ class output_waveform_edit(plugins.base):
 			wf_inst_plugin = get_plugin(convproj_obj, track_obj.inst_pluginid, True)
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			if middlenote != 0:

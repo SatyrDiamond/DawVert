@@ -212,7 +212,7 @@ class input_petaporon(plugins.base):
 					vaginst = apeinst_obj.insts[inst['inst']]
 	
 					inst_obj = convproj_obj.instruments[instid]
-					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+					plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
 					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 
@@ -220,7 +220,7 @@ class input_petaporon(plugins.base):
 						sample_offset = str(v['offset'])
 						sample_id = '_'.join([str(inst['inst']), str(n), sample_offset])
 						wav_path = samplefolder + str(v['offset']) + '.wav'
-						sampleref_obj = convproj_obj.add_sampleref(sample_id, wav_path, None)
+						sampleref_obj = convproj_obj.sampleref__add(sample_id, wav_path, None)
 						sp_obj = plugin_obj.sampleregion_add(v['key_min']-60, v['key_max']-60, v['key_root']-60, None, samplepartid=sample_id)
 						sp_obj.sampleref = sample_id
 						sp_obj.from_sampleref(convproj_obj, sp_obj.sampleref)

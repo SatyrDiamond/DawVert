@@ -42,14 +42,14 @@ class midi_instruments:
 				str(inst['drum'])])
 			midiinst = int(inst['inst']) if inst['inst']!=255 else 0
 
-			inst_obj = convproj_obj.add_instrument(instid)
+			inst_obj = convproj_obj.instrument__add(instid)
 
 			inst_obj.visual.name = inst['custom_name'] if inst['custom_name'] else None
 			if inst['custom_color_used']: 
 				inst_obj.visual.color.set_int([x for x in inst['custom_color']])
 			inst_obj.visual.from_dset_midi(inst['bank_hi'], inst['bank'], midiinst, inst['drum'], device, False)
 
-			plugin_obj = convproj_obj.add_plugin_midi(instid, int(inst['bank_hi']), int(inst['bank']), int(midiinst), int(inst['drum']), device)
+			plugin_obj = convproj_obj.plugin__addspec__midi(instid, int(inst['bank_hi']), int(inst['bank']), int(midiinst), int(inst['drum']), device)
 			plugin_obj.role = 'synth'
 			inst_obj.pluginid = instid
 			inst_obj.fxrack_channel = int(inst['chan'])+1+fx_offset

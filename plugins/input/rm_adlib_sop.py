@@ -19,6 +19,7 @@ class input_sop(plugins.base):
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['chip:fm:opl2','chip:fm:opl3']
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
@@ -45,7 +46,7 @@ class input_sop(plugins.base):
 		sop_data_inst = []
 		for instnum, opli in enumerate(project_obj.insts):
 			cvpj_instname = str(instnum)
-			inst_obj = convproj_obj.add_instrument(cvpj_instname)
+			inst_obj = convproj_obj.instrument__add(cvpj_instname)
 			inst_obj.pluginid = cvpj_instname
 			inst_obj.visual.name = opli.name_long if not opli.name_long else opli.name
 			inst_obj.visual.color.set_float(maincolor)
@@ -56,7 +57,7 @@ class input_sop(plugins.base):
 			trackname_endtext = endtxt[soptrack.chanmode]
 
 			cvpj_trackid = str(tracknum)
-			track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
+			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 			track_obj.visual.name = '#'+str(cvpj_trackid)+' '+str()+trackname_endtext
 			track_obj.visual.color.set_float(maincolor)
 			

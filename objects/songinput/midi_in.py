@@ -141,7 +141,7 @@ class midi_song:
 			for tracknum, track in enumerate(self.miditracks):
 				cvpj_trackid = 'track_'+str(tracknum)
 
-				track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
+				track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 				track_obj.visual.name = track.track_name
 				if not self.nocolor: track_obj.visual.color.set_int(track.track_color)
 
@@ -163,7 +163,7 @@ class midi_song:
 				cvpj_trackid = 'chan_'+str(usedchan)
 				chantxt = 'Chan #'+str(usedchan+1)
 
-				track_obj = convproj_obj.add_track(cvpj_trackid, 'instruments', 0, False)
+				track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 
 				track.notes.to_cvpj(track_obj.placements.notelist, 0, usedchan)
 
@@ -194,26 +194,26 @@ class midi_song:
 		for bpm in self.auto_bpm:
 			convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', bpm['pos'], bpm['tempo'])
 
-		fxchannel_obj = convproj_obj.add_fxchan(0)
+		fxchannel_obj = convproj_obj.fx__chan__add(0)
 		fxchannel_obj.visual.name = "Master"
 		fxchannel_obj.visual.color.set_float([0.3, 0.3, 0.3])
 
 		if self.nocolor: fxchannel_obj.visual.color.remove()
 
 		if self.auto_chan.fx_used['reverb']:
-			reverb_fxchannel_obj = convproj_obj.add_fxchan(self.song_channels+1+self.fx_offset)
+			reverb_fxchannel_obj = convproj_obj.fx__chan__add(self.song_channels+1+self.fx_offset)
 			reverb_fxchannel_obj.visual.name = 'Reverb'
 			reverb_fxchannel_obj.visual_ui.other['docked'] = 1
-			plugin_obj, reverb_pluginid = convproj_obj.add_plugin_genid('simple', 'reverb', None)
+			plugin_obj, reverb_pluginid = convproj_obj.plugin__add__genid('simple', 'reverb', None)
 			plugin_obj.visual.name = 'Reverb'
 			plugin_obj.fxdata_add(1, 0.5)
 			reverb_fxchannel_obj.fxslots_audio.append(reverb_pluginid)
 
-		for fx_num in range(self.fx_offset): fxchannel_obj = convproj_obj.add_fxchan(fx_num+1)
+		for fx_num in range(self.fx_offset): fxchannel_obj = convproj_obj.fx__chan__add(fx_num+1)
 
 		for ch_num in range(self.song_channels):
 			fx_num = ch_num+1+self.fx_offset
-			fxchannel_obj = convproj_obj.add_fxchan(ch_num+1+self.fx_offset)
+			fxchannel_obj = convproj_obj.fx__chan__add(ch_num+1+self.fx_offset)
 			fxchannel_obj.sends.add(0, None, 1)
 
 			used_fx = self.auto_chan.fx_used_chans[ch_num]
@@ -232,7 +232,7 @@ class midi_song:
 			if used_fx['chorus']:
 				chorus_size = start_ctrls[93]/127 if 93 in start_ctrls else 0
 				chorus_pluginid = str(fx_num+1)+'_chorus'
-				chorus_plugin_obj = convproj_obj.add_plugin(chorus_pluginid, 'simple', 'chorus', None)
+				chorus_plugin_obj = convproj_obj.plugin__add(chorus_pluginid, 'simple', 'chorus', None)
 				chorus_plugin_obj.visual.name = 'Chorus'
 				chorus_plugin_obj.params.add('amount', chorus_size, 'float')
 				fxchannel_obj.fxslots_audio.append(chorus_pluginid)

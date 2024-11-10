@@ -77,7 +77,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				for wf_smpl_part, wf_smpl_data in sampledata:
 					if wf_smpl_part == 'SOUNDLAYER': soundlayers.append(wf_smpl_data)
 				if len(soundlayers)>1:
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					track_obj.inst_pluginid = pluginid
 					for soundlayer in soundlayers:
 						sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
@@ -87,7 +87,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 						soundlayer_samplepart(sp_obj, soundlayer)
 				elif len(soundlayers)==1:
 					soundlayer = soundlayers[0]
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'single')
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
 					track_obj.inst_pluginid = pluginid
 					sp_obj = plugin_obj.samplepart_add('sample')
 					soundlayer_samplepart(sp_obj, soundlayer)
@@ -110,7 +110,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 	
 				if pluginid:
 					if wf_plugin.windowX and wf_plugin.windowY:
-						windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+						windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
 						windata_obj.pos_x = wf_plugin.windowX
 						windata_obj.pos_y = wf_plugin.windowY
 
@@ -123,12 +123,12 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				pass
 
 	elif wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'tracktion', wf_plugin.plugtype)
+		plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'tracktion', wf_plugin.plugtype)
 		plugin_obj.role = 'effect'
 		plugin_obj.fxdata_add(wf_plugin.enabled, None)
 
 		if wf_plugin.windowX and wf_plugin.windowY:
-			windata_obj = convproj_obj.window_data_add(['plugin',pluginid])
+			windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
 			windata_obj.pos_x = wf_plugin.windowX
 			windata_obj.pos_y = wf_plugin.windowY
 
@@ -153,7 +153,7 @@ autonames = {
 
 def do_foldertrack(convproj_obj, wf_track, counter_track): 
 	groupid = str(wf_track.id_num)
-	track_obj = convproj_obj.add_group(groupid)
+	track_obj = convproj_obj.fx__group__add(groupid)
 	track_obj.visual.name = wf_track.name
 	track_obj.visual.color.set_hex(wf_track.colour)
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
@@ -236,7 +236,7 @@ def do_tracks(convproj_obj, in_tracks, counter_track, groupid):
 	for wf_track in in_tracks:
 		tracknum = counter_track.get()
 		if isinstance(wf_track, proj_waveform.waveform_track):
-			track_obj = convproj_obj.add_track(str(tracknum), 'instrument', 1, False)
+			track_obj = convproj_obj.track__add(str(tracknum), 'instrument', 1, False)
 			if groupid: track_obj.group = groupid
 			do_track(convproj_obj, wf_track, track_obj)
 		if isinstance(wf_track, proj_waveform.waveform_foldertrack):
@@ -258,11 +258,14 @@ class input_cvpj_f(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['fxtype'] = 'groupreturn'
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_waveform
 		global cvpj_l
 
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 

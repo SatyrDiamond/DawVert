@@ -55,14 +55,14 @@ class mariopaint_song():
 
 	def to_cvpj(self, convproj_obj):
 		convproj_obj.set_timings(4, False)
-		track_obj = convproj_obj.add_track('main', 'instruments', 0, False)
+		track_obj = convproj_obj.track__add('main', 'instruments', 0, False)
 		globalstore.dataset.load('mariopaint', './data_main/dataset/mariopaint.dset')
 
 		outtempo, notelen = xtramath.get_lower_tempo(self.tempo, 1, 180)
 
 		for pos, chord_obj in self.chords.items():
 			if chord_obj.bookmark:
-				timemarker_obj = convproj_obj.add_timemarker()
+				timemarker_obj = convproj_obj.timemarker__add()
 				timemarker_obj.visual.name = 'Bookmark'
 				timemarker_obj.type = 'text'
 				timemarker_obj.position = (pos/notelen)
@@ -74,10 +74,10 @@ class mariopaint_song():
 		used_inst = track_obj.placements.notelist.get_used_inst()
 
 		for instnum, instname in enumerate(used_inst): 
-			inst_obj = convproj_obj.add_instrument(instname)
+			inst_obj = convproj_obj.instrument__add(instname)
 			midifound = inst_obj.from_dataset('mariopaint', 'inst', instname, True)
 			if midifound: inst_obj.to_midi(convproj_obj, instname, False)
-			fxchan_data = convproj_obj.add_fxchan(instnum+1)
+			fxchan_data = convproj_obj.fx__chan__add(instnum+1)
 			fxchan_data.visual = copy.deepcopy(inst_obj.visual)
 			inst_obj.fxrack_channel = instnum+1
 			

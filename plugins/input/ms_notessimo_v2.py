@@ -18,9 +18,10 @@ class input_notessimo_v2(plugins.base):
 		in_dict['file_ext'] = ['note']
 		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['pl_points']
-		in_dict['fxtype'] = 'rack'
 		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:midi']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'ms'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_notessimo_v2
@@ -29,6 +30,7 @@ class input_notessimo_v2(plugins.base):
 		used_insts = []
 
 		# ---------- CVPJ Start ----------
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'ms'
 		convproj_obj.set_timings(4, True)
 
@@ -54,7 +56,7 @@ class input_notessimo_v2(plugins.base):
 
 		cvpj_tracks = []
 		for layernum in range(9):
-			track_obj = convproj_obj.add_track(str(layernum+1), 'instruments', 1, False) 
+			track_obj = convproj_obj.track__add(str(layernum+1), 'instruments', 1, False) 
 			track_obj.visual.name = 'Layer #'+str(layernum+1)
 
 		tempo_len = []
@@ -65,31 +67,31 @@ class input_notessimo_v2(plugins.base):
 			tempo_len.append([mss_tempo, notelen])
 			if x.notes:
 				sceneid = str(pat_num)
-				convproj_obj.add_scene(sceneid)
+				convproj_obj.scene__add(sceneid)
 				layers = [[] for x in range(9)]
 				for note in x.notes: 
 					layers[note.layer].append(note)
 					if note.inst not in used_insts: used_insts.append(note.inst)
 				for l_num, layer in enumerate(layers):
 					if layer:
-						trscene_obj = convproj_obj.add_track_scene(str(l_num+1), sceneid, 'main')
+						trscene_obj = convproj_obj.track__add_scene(str(l_num+1), sceneid, 'main')
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.visual.name = 'Pat #'+str(pat_num+1)+', Layer #'+str(l_num+1)
 						placement_obj.time.set_posdur(0, x.size)
 						for nnn in layer: placement_obj.notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, {})
 
-		fxchan_data = convproj_obj.add_fxchan(1)
+		fxchan_data = convproj_obj.fx__chan__add(1)
 		fxchan_data.visual.name = 'Drums'
 
 		fxnum = 2
 		for used_inst in used_insts:
 			cvpj_instid = str(used_inst)
-			inst_obj = convproj_obj.add_instrument(cvpj_instid)
+			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			midifound = inst_obj.from_dataset('notessimo_v2', 'inst', cvpj_instid, True)
 			if midifound: inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 			inst_obj.fxrack_channel = 1 if inst_obj.midi.out_inst.drum else fxnum
 			if midifound:
-				fxchan_data = convproj_obj.add_fxchan(fxnum)
+				fxchan_data = convproj_obj.fx__chan__add(fxnum)
 				fxchan_data.visual.name = inst_obj.visual.name
 				fxchan_data.visual.color = inst_obj.visual.color.copy()
 				fxnum += 1
@@ -98,7 +100,7 @@ class input_notessimo_v2(plugins.base):
 		for pat_num in project_obj.order:
 			tempo, notelen = tempo_len[pat_num]
 			size = ((project_obj.patterns[pat_num].size)-32)*notelen
-			scenepl_obj = convproj_obj.add_scenepl()
+			scenepl_obj = convproj_obj.scene__add_pl()
 			scenepl_obj.position = curpos
 			scenepl_obj.duration = size
 			scenepl_obj.id = str(pat_num)

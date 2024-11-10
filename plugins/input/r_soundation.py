@@ -52,6 +52,8 @@ class input_soundation(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
+		in_dict['fxtype'] = 'route'
+		in_dict['projtype'] = 'r'
 
 	def parse(self, i_convproj_obj, input_file, dv_config):
 		from objects import colors
@@ -85,6 +87,7 @@ class input_soundation(plugins.base):
 			except:
 				raise ProjectFileParserException('soundation: file is not Zipped or JSON')
 
+		convproj_obj.fxtype = 'route'
 		convproj_obj.type = 'r'
 
 		globalstore.dataset.load('soundation', './data_main/dataset/soundation.dset')
@@ -126,7 +129,7 @@ class input_soundation(plugins.base):
 				if sound_chan_type == 'instrument': track_type = 'instrument'
 				if sound_chan_type == 'effect': track_type = 'fx'
 				if sound_chan_type == 'audio': track_type = 'audio'
-				track_obj = convproj_obj.add_track(cvpj_trackid, track_type, 1, False)
+				track_obj = convproj_obj.track__add(cvpj_trackid, track_type, 1, False)
 				track_obj.visual.name = soundation_channel.userSetName if soundation_channel.userSetName else soundation_channel.name
 				#if soundation_channel.color: track_obj.visual.color.set_float([trackcolor[0], trackcolor[1], trackcolor[2]])
 
@@ -164,7 +167,7 @@ class input_soundation(plugins.base):
 									zip_data.extract(filename, path=samplefolder, pwd=None)
 									filename = samplefolder+filename
 
-							convproj_obj.add_sampleref(orgname, filename, 'None')
+							convproj_obj.sampleref__add(orgname, filename, 'None')
 
 							sp_obj.sampleref = orgname
 
@@ -195,7 +198,7 @@ class input_soundation(plugins.base):
 								zip_data.extract(filename, path=samplefolder, pwd=None)
 								filename = samplefolder+filename
 
-						plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(pluginid, filename, None)
+						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, filename, None)
 						track_obj.inst_pluginid = pluginid
 
 						get_asdr(plugin_obj, soundation_inst)
@@ -228,7 +231,7 @@ class input_soundation(plugins.base):
 						if v_interpolation_mode > 1: sp_obj.interpolation = "sinc"
 
 					elif instpluginname == 'com.soundation.drummachine':
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', instpluginname)
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 						track_obj.is_drum = True
@@ -239,7 +242,7 @@ class input_soundation(plugins.base):
 						plugin_obj.datavals.add('kit_name', kit_name)
 
 					elif instpluginname == 'com.soundation.europa':
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('user', 'reasonstudios', 'europa')
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('user', 'reasonstudios', 'europa')
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 
@@ -250,7 +253,7 @@ class input_soundation(plugins.base):
 								plugin_obj.dset_param__add(param_id, outval, dset_param)
 
 					elif instpluginname == 'com.soundation.GM-2':
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', instpluginname)
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 						get_asdr(plugin_obj, soundation_inst)
@@ -264,14 +267,14 @@ class input_soundation(plugins.base):
 								pass
 
 					elif instpluginname == 'com.soundation.noiser':
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', instpluginname)
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 						track_obj.is_drum = True
 						get_asdr(plugin_obj, soundation_inst)
 							
 					elif instpluginname == 'com.soundation.SAM-1':
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', instpluginname)
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 						get_asdr(plugin_obj, soundation_inst)
@@ -280,7 +283,7 @@ class input_soundation(plugins.base):
 							plugin_obj.datavals.add('sample_pack', sample_pack)
 
 					elif instpluginname in ['com.soundation.fm_synth', 'com.soundation.mono', 'com.soundation.spc', 'com.soundation.supersaw', 'com.soundation.the_wub_machine', 'com.soundation.va_synth']:
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', instpluginname)
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 
@@ -299,7 +302,7 @@ class input_soundation(plugins.base):
 							get_asdr(plugin_obj, soundation_inst)
 
 					elif instpluginname == 'com.soundation.simple':
-						plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', instpluginname)
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
 						track_obj.inst_pluginid = pluginid
 						get_asdr(plugin_obj, soundation_inst)
@@ -324,7 +327,7 @@ class input_soundation(plugins.base):
 							get_param(soundation_inst, plugin_obj, paramid, ['plugin', pluginid, paramid], True)
 
 			for soundation_effect in soundation_channel.effects:
-				plugin_obj, pluginid = convproj_obj.add_plugin_genid('native', 'soundation', soundation_effect.identifier)
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', soundation_effect.identifier)
 				plugin_obj.role = 'fx'
 				plugin_obj.fxdata_add(not soundation_effect.bypass, 1)
 				track_obj.fxslots_audio.append(pluginid)

@@ -52,6 +52,12 @@ dawvert_config__nopl_splitter['mode'] = dv_core.config_data.splitter_mode
 dawvert_config__nopl_splitter['detect_start'] = dv_core.config_data.splitter_detect_start
 dawvert_config__mi2m = {}
 
+def debugtxt(intxt):
+	if intxt == 'route': return 'RO'
+	if intxt == 'rack': return 'CH'
+	if intxt == 'groupreturn': return 'GR'
+	return '__'
+
 class ConversionWorker(QtCore.QObject):
 	finished = QtCore.pyqtSignal()
 	update_ui = QtCore.pyqtSignal(list)
@@ -281,6 +287,8 @@ configparts_mi2m = {
 	'output_unused_nle': ['bool', 'OutUnused']
 }
 
+DEBUG_VIEW = 0
+
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 	def __init__(self, *args, obj=None, **kwargs):
 		super(MainWindow, self).__init__(*args, **kwargs)
@@ -500,7 +508,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			self.ui.SubStatusText.setText('')
 			return False
 		elif not outstate:
-			self.ui.StatusText.setText('Status: Not Ready')
+			if not DEBUG_VIEW: self.ui.StatusText.setText('Status: Not Ready')
+			else: self.ui.StatusText.setText('Status: Not Ready (DEBUG VIEW ON)')
 			if not in_file: self.ui.SubStatusText.setText('No input file.')
 			elif not out_file: self.ui.SubStatusText.setText('No output file.')
 			elif not inplug: self.ui.SubStatusText.setText('Input plugin not selected.')
@@ -515,7 +524,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 				self.ui.SubStatusText.setText(out_usable_msg)
 			return False
 		else:
-			self.ui.StatusText.setText('Status: Ready')
+			if not DEBUG_VIEW: self.ui.StatusText.setText('Status: Ready')
+			else: self.ui.StatusText.setText('Status: Ready (DEBUG VIEW ON)')
 			self.ui.SubStatusText.setText('')
 			return True
 
@@ -541,8 +551,19 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def __update_input_plugins(self):
 		self.ui.ListWidget_InPlugin.clear()
-		for x in dawvert_core.input_get_plugins_names():
-			self.ui.ListWidget_InPlugin.addItem(x)
+		if not DEBUG_VIEW:
+			for x in dawvert_core.input_get_plugins_names():
+				self.ui.ListWidget_InPlugin.addItem(x)
+		else:
+			props = dawvert_core.input_get_plugins_props()
+			for n, x in enumerate(dawvert_core.input_get_plugins_names()):
+				o = x
+				fxt = debugtxt(props[n].fxtype)
+				fdt = props[n].projtype.upper()
+				if DEBUG_VIEW == 1: o = ('[%s] ' % fxt)+o
+				if DEBUG_VIEW == 2: o = ('[%s] ' % fdt)+o
+				if DEBUG_VIEW == 3: o = ('[%s:%s] ' % (fxt, fdt)+o)
+				self.ui.ListWidget_InPlugin.addItem(o)
 
 	def __change_output_plugset(self, num):
 		plugsetname = dawvert_core.output_get_pluginsets_index(num)
@@ -571,8 +592,20 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
 	def __update_output_plugins(self):
 		self.ui.ListWidget_OutPlugin.clear()
-		for x in dawvert_core.output_get_plugins_names():
-			self.ui.ListWidget_OutPlugin.addItem(x)
+		if not DEBUG_VIEW:
+			for x in dawvert_core.output_get_plugins_names():
+				self.ui.ListWidget_OutPlugin.addItem(x)
+		else:
+			props = dawvert_core.output_get_plugins_props()
+			for n, x in enumerate(dawvert_core.output_get_plugins_names()):
+				o = x
+				fxt = debugtxt(props[n].fxtype)
+				fdt = props[n].projtype.upper()
+				if DEBUG_VIEW == 1: o = ('[%s] ' % fxt)+o
+				if DEBUG_VIEW == 2: o = ('[%s] ' % fdt)+o
+				if DEBUG_VIEW == 3: o = ('[%s:%s] ' % (fxt, fdt)+o)
+				self.ui.ListWidget_OutPlugin.addItem(o)
+
 
 	def __update_ui_ele(self, n):
 		update_type, update_data = n

@@ -67,7 +67,7 @@ def idsamp_spobj(it_samp, sp_obj):
 
 def add_single_sampler(convproj_obj, it_samp, sampleidnum):
 	filename = samplefolder+str(sampleidnum)+'.wav'
-	plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filename, None)
+	plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(filename, None)
 	idsamp_spobj(it_samp, sp_obj)
 	sample_vibrato(it_samp, plugin_obj)
 	return plugin_obj, pluginid, sampleref_obj
@@ -83,6 +83,7 @@ class input_it(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
+		in_dict['projtype'] = 'm'
 	def supported_autodetect(self): return True
 
 	def detect_bytes(self, in_bytes):
@@ -212,7 +213,7 @@ class input_it(plugins.base):
 				bn_s_t_ifsame = data_values.list__ifallsame(bn_s_t[12:108])
 				if bn_s_t_ifsame: bn_s_t_f = bn_s_t[12]
 
-				inst_obj = convproj_obj.add_instrument(it_instname)
+				inst_obj = convproj_obj.instrument__add(it_instname)
 				inst_obj.visual.name = cvpj_instname
 				inst_obj.visual.color.set_float(MAINCOLOR)
 
@@ -224,18 +225,18 @@ class input_it(plugins.base):
 								inst_obj.visual.name = project_obj.samples[bn_s_t_f[1]-1].dosfilename
 
 				if it_inst.pitch_pan_separation:
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'pitch_pan_separation', None)
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'pitch_pan_separation', None)
 					plugin_obj.params.add('range', 1/(it_inst.pitch_pan_separation/32), 'float')
 					plugin_obj.datavals.add('center_note', it_inst.pitch_pan_center)
 					inst_obj.fxslots_notes.append(pluginid)
 
 				if it_inst.randomvariation_volume:
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'random_variation', 'vol')
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'random_variation', 'vol')
 					plugin_obj.params.add('amount', it_inst.randomvariation_volume, 'float')
 					inst_obj.fxslots_notes.append(pluginid)
 
 				if it_inst.randomvariation_pan:
-					plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'random_variation', 'pan')
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'random_variation', 'pan')
 					plugin_obj.params.add('amount', it_inst.randomvariation_pan, 'float')
 					inst_obj.fxslots_notes.append(pluginid)
 
@@ -252,7 +253,7 @@ class input_it(plugins.base):
 					inst_used = True
 					sampleregions = data_values.list__to_reigons(bn_s_t, 60)
 
-					plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+					plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					plugin_obj.datavals.add('point_value_type', "samples")
 
 					global_vol = it_inst.global_vol/128
@@ -262,7 +263,7 @@ class input_it(plugins.base):
 						instrumentnum = sampleregion[0][1]
 
 						filename = samplefolder + str(instrumentnum) + '.wav'
-						sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
+						sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 						sp_obj = plugin_obj.sampleregion_add(sampleregion[1], sampleregion[2], -(sampleregion[0][0]-60), None)
 						sp_obj.sampleref = filename
 						if instrumentnum-1 < len(project_obj.samples): 
@@ -310,7 +311,7 @@ class input_it(plugins.base):
 				cvpj_instname = get_name(it_samp.name, it_samp.dosfilename)
 				track_volume = 0.3*calc_samp_vol(it_samp)
 
-				inst_obj = convproj_obj.add_instrument(it_instname)
+				inst_obj = convproj_obj.instrument__add(it_instname)
 				inst_obj.visual.name = cvpj_instname
 				inst_obj.visual.color.set_float(MAINCOLOR)
 				plugin_obj, inst_obj.pluginid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, samplecount+1)

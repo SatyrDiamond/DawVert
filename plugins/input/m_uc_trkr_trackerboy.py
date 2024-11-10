@@ -48,12 +48,15 @@ class input_trackerboy(plugins.base):
 		in_dict['file_ext'] = ['tbm']
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'm'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_trackerboy
 		from objects.tracker import pat_multi
 		project_obj = proj_trackerboy.trackerboy_project()
 		if not project_obj.load_from_file(input_file): exit()
 
+		convproj_obj.fxtype = 'rack'
+		
 		samplefolder = dv_config.path_samples_extracted
 
 		globalstore.dataset.load('trackerboy', './data_main/dataset/trackerboy.dset')
@@ -99,13 +102,13 @@ class input_trackerboy(plugins.base):
 				instnum, channum = chinst
 				instid = instname+'_'+str(channum)+'_'+str(instnum)
 
-				inst_obj = convproj_obj.add_instrument(instid)
+				inst_obj = convproj_obj.instrument__add(instid)
 				inst_obj.fxrack_channel = channum+1
 
 				insttype = patterndata_obj.get_channel_insttype(channum)
 				inst_obj.visual.from_dset('trackerboy', 'chip', insttype, False)
 
-				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+				plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 				plugin_obj.role = 'synth'
 				osc_data = plugin_obj.osc_add()
 				if instname == 'pulse': osc_data.prop.shape = 'square'

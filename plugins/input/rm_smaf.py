@@ -23,12 +23,13 @@ class input_mmf(plugins.base):
 	def get_priority(self): return 0
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mmf']
-		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['audio_filetypes'] = ['wav']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'rm'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		bytestream = open(input_file, 'rb')
@@ -42,6 +43,7 @@ class input_mmf(plugins.base):
 		from objects.songinput import midi_in
 		from objects.file_proj import proj_mmf
 
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_mmf.smaf_song()
@@ -99,7 +101,7 @@ class input_mmf(plugins.base):
 					audio_obj.rate = hz
 					audio_obj.to_file_wav(wav_path)
 
-					sampleref_obj = convproj_obj.add_sampleref(wav_path, wav_path, None)
+					sampleref_obj = convproj_obj.sampleref__add(wav_path, wav_path, None)
 
 				for x in song_obj.instruments.midi_instruments.data:
 					if x['bank'] == 124: 
@@ -124,7 +126,7 @@ class input_mmf(plugins.base):
 				maxnum = 0
 				for soundnum, sounddata in track.audio.items():
 					strnum = str(soundnum).zfill(2)
-					audtrack_obj = convproj_obj.add_track('audio'+strnum, 'audio', 1, False)
+					audtrack_obj = convproj_obj.track__add('audio'+strnum, 'audio', 1, False)
 					audtrack_obj.fxrack_channel = 1
 					audtrack_obj.visual.name = 'Sound #'+str(soundnum)
 					audtrack_obj.params.add('vol', 0.3, 'float')

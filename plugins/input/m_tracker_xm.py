@@ -43,6 +43,7 @@ class input_xm(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
+		in_dict['projtype'] = 'm'
 	def supported_autodetect(self): return True
 
 	def detect_bytes(self, in_bytes):
@@ -133,7 +134,7 @@ class input_xm(plugins.base):
 		for instnum, xm_inst in enumerate(project_obj.instruments):
 			cvpj_instid = TEXTSTART + str(instnum+1)
 
-			inst_obj = convproj_obj.add_instrument(cvpj_instid)
+			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			inst_obj.visual.name = xm_inst.name
 			inst_obj.visual.color.set_float(MAINCOLOR)
 			inst_obj.params.add('vol', 0.3, 'float')
@@ -148,7 +149,7 @@ class input_xm(plugins.base):
 				inst_obj.params.add('vol', 0.3*(trsamp.vol), 'float')
 				filename = samplefolder+str(xm_cursamplenum)+'.wav'
 
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(filename, None)
+				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(filename, None)
 				sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = trsamp.get_loop()
 				if not sp_obj.loop_active: sp_obj.loop_end = trsamp.length
 				sp_obj.end = trsamp.length
@@ -156,10 +157,10 @@ class input_xm(plugins.base):
 			else:
 				inst_used = True
 				inst_obj.params.add('vol', 0.3, 'float')
-				plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'multi')
+				plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 				for instnum, r_start, e_end in sampleregions:
 					filename = samplefolder + str(xm_cursamplenum+instnum) + '.wav'
-					sampleref_obj = convproj_obj.add_sampleref(filename, filename, None)
+					sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 					trsamp = xm_inst.samp_head[instnum]
 					sp_obj = plugin_obj.sampleregion_add(r_start, e_end, 0, None)
 					sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = trsamp.get_loop()

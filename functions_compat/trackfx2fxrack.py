@@ -11,7 +11,7 @@ logger_compat = logging.getLogger('compat')
 def list2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removeboth, autoloc):
 	fx_name = starttext+data_obj.visual.name if data_obj.visual.name else starttext+defualtname
 
-	fxchannel_obj = convproj_obj.add_fxchan(fxnum)
+	fxchannel_obj = convproj_obj.fx__chan__add(fxnum)
 	fxchannel_obj.visual.name = fx_name
 	if data_obj.visual.color: fxchannel_obj.visual.color = data_obj.visual.color.copy()
 	fxchannel_obj.fxslots_audio = data_obj.fxslots_audio.copy()
@@ -72,7 +72,7 @@ def process_r(convproj_obj):
 def process_m(convproj_obj):
 	if not convproj_obj.fxrack:
 		logger_compat.info('trackfx2fxrack: Master to FX 0')
-		fxchannel_obj = convproj_obj.add_fxchan(0)
+		fxchannel_obj = convproj_obj.fx__chan__add(0)
 		fxchannel_obj.visual = copy.deepcopy(convproj_obj.track_master.visual)
 		fxchannel_obj.params = copy.deepcopy(convproj_obj.track_master.params)
 		fxchannel_obj.fxslots_audio = convproj_obj.track_master.fxslots_audio.copy()
@@ -84,8 +84,8 @@ def process_m(convproj_obj):
 		convproj_obj.automation.move(['master','pan'], ['fxmixer','0','pan'])
 
 		fxnum = 1
-		for inst_id, inst_obj in convproj_obj.iter_instrument():
-			fxchannel_obj = convproj_obj.add_fxchan(fxnum)
+		for inst_id, inst_obj in convproj_obj.instrument__iter():
+			fxchannel_obj = convproj_obj.fx__chan__add(fxnum)
 			fxchannel_obj.visual = copy.deepcopy(inst_obj.visual)
 			fxchannel_obj.params = copy.deepcopy(inst_obj.params)
 			fxchannel_obj.fxslots_audio = inst_obj.fxslots_audio.copy()

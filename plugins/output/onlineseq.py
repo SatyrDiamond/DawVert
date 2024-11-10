@@ -32,6 +32,7 @@ class output_onlineseq(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_onlineseq
 
@@ -45,13 +46,13 @@ class output_onlineseq(plugins.base):
 
 		repeatedolinst = {}
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			onlineseqinst = 43
 			midiinst = None
 
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 
 			midi_found, midi_inst = track_obj.get_midi(convproj_obj)
 			

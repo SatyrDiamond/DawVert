@@ -47,7 +47,7 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 
 	pluginsupported = False
 
-	plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+	plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 	if plugin_found: 
 		if plugin_obj.check_match('external', 'vst2', 'win'):
 			pluginsupported = True
@@ -137,7 +137,7 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 		offset = audiopl_obj.time.cut_start
 		frameval = int((offset*(wavetime))*(120/muse_bpm))
 
-		ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+		ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 		if ref_found: 
 			frameval *= sampleref_obj.hz/WAVE_FREQUENCY
 
@@ -183,6 +183,7 @@ class output_cvpj(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
+		in_dict['projtype'] = 'r'
 	def getsupportedplugformats(self): return ['vst2']
 	def getsupportedplugins(self): return []
 	def getfileextension(self): return 'med'
@@ -208,7 +209,7 @@ class output_cvpj(plugins.base):
 
 		project_obj.tracks.append(muse_track)
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 
 			if track_obj.type == 'instrument':
 				if track_obj.is_laned:

@@ -24,6 +24,7 @@ class input_mod(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
+		in_dict['projtype'] = 'm'
 	def supported_autodetect(self): return False
 
 	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
@@ -53,7 +54,7 @@ class input_mod(plugins.base):
 
 			pluginid = 'sampler_'+strnum
 
-			inst_obj = convproj_obj.add_instrument(cvpj_instid)
+			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			inst_obj.visual.name = sample_obj.name if not IGNORE_ERRORS else re.sub(r'[\x00-\x1f\x7f-\x9f]', '', sample_obj.name)
 			inst_obj.visual.color.set_float(MAINCOLOR)
 			inst_obj.params.add('vol', 0.3, 'float')
@@ -77,7 +78,7 @@ class input_mod(plugins.base):
 
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler_genid(wave_path, None)
+				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 				sp_obj.point_value_type = "samples"
 				sp_obj.loop_active = loopstart != 0 and loopend != 2
 				sp_obj.loop_start = loopstart

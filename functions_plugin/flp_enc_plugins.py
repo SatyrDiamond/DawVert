@@ -39,7 +39,7 @@ def setparams(convproj_obj, plugin_obj):
 		fl_plugin = 'fruity slicer'
 
 		sre_obj = plugin_obj.samplepart_get('sample')
-		ref_found, sampleref_obj = convproj_obj.get_sampleref(sre_obj.sampleref)
+		ref_found, sampleref_obj = convproj_obj.sampleref__get(sre_obj.sampleref)
 
 		slicer_beats = plugin_obj.datavals.get('beats', 4)
 		slicer_bpm = plugin_obj.datavals.get('bpm', 4)
@@ -187,7 +187,7 @@ def setparams(convproj_obj, plugin_obj):
 		asdr_vol = plugin_obj.env_asdr_get('vol')
 		lfo_pitch = plugin_obj.lfo_get('pitch')
 
-		ref_found, fileref_obj = plugin_obj.get_fileref('file', convproj_obj)
+		ref_found, fileref_obj = plugin_obj.fileref__get('file', convproj_obj)
 		sf2_file = fileref_obj.get_path('win', False) if ref_found else ''
 		sf2_bank, sf2_patch = plugin_obj.midi.to_sf2()
 
@@ -214,7 +214,7 @@ def setparams(convproj_obj, plugin_obj):
 		vst_fourid = plugin_obj.datavals_global.get('fourid', 0)
 		vst_name = plugin_obj.datavals_global.get('name', None)
 
-		ref_found, fileref_obj = plugin_obj.get_fileref_global('plugin', convproj_obj)
+		ref_found, fileref_obj = plugin_obj.fileref__get_global('plugin', convproj_obj)
 		vst_path = fileref_obj.get_path('win', False) if ref_found else None
 
 		isvalid = True

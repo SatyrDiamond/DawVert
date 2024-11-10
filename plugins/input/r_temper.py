@@ -16,6 +16,7 @@ class input_cvpj_f(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['auto_types'] = ['pl_points']
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		output = False
@@ -49,7 +50,7 @@ class input_cvpj_f(plugins.base):
 		for tracknum, tmp_track in enumerate(project_obj.track):
 			cvpj_trackid = 'track_'+str(tracknum)
 			if tmp_track.phrases:
-				track_obj = convproj_obj.add_track(cvpj_trackid, 'instrument', 1, False)
+				track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 				track_obj.params.add('vol', 1, 'float')
 				track_obj.params.add('pan', 0, 'float')
 				if tmp_track.customname: track_obj.visual.name = tmp_track.customname
@@ -88,7 +89,7 @@ class input_cvpj_f(plugins.base):
 
 
 			elif tmp_track.audios:
-				track_obj = convproj_obj.add_track(str(tracknum), 'audio', 1, False)
+				track_obj = convproj_obj.track__add(str(tracknum), 'audio', 1, False)
 				if tmp_track.customname: track_obj.visual.name = tmp_track.customname
 				else: track_obj.visual.name = tmp_track.name
 				track_obj.visual.color.set_float([0.66, 0.73, 0.66])
@@ -97,6 +98,6 @@ class input_cvpj_f(plugins.base):
 					curpos += audio.td
 					placement_obj = track_obj.placements.add_audio()
 					placement_obj.time.set_posdur(curpos, audio.end)
-					convproj_obj.add_sampleref(audio.file, audio.file)
+					convproj_obj.sampleref__add(audio.file, audio.file)
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = audio.file

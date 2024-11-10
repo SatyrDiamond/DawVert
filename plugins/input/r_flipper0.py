@@ -13,6 +13,7 @@ class input_petaporon(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['fmf']
 		in_dict['track_nopl'] = True
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_flipperzero
 		from functions import note_data
@@ -25,7 +26,7 @@ class input_petaporon(plugins.base):
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 
-		track_obj = convproj_obj.add_track('flipper', 'instrument', 0, False)
+		track_obj = convproj_obj.track__add('flipper', 'instrument', 0, False)
 		track_obj.visual.name = 'Flipper Zero'
 		track_obj.visual.color.set_float([0.94, 0.58, 0.23])
 

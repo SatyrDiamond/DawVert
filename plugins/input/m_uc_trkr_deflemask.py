@@ -15,12 +15,15 @@ class input_deflemask(plugins.base):
 		in_dict['file_ext'] = ['dmf']
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'm'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects.file_proj import proj_deflemask
 		from objects.tracker import pat_multi
 		from objects import audio_data
 		project_obj = proj_deflemask.deflemask_project()
 		if not project_obj.load_from_file(input_file): exit()
+
+		convproj_obj.fxtype = 'rack'
 
 		samplefolder = dv_config.path_samples_extracted
 
@@ -88,7 +91,7 @@ class input_deflemask(plugins.base):
 				audio_obj.pcm_from_list(sample_obj.data)
 				audio_obj.to_file_wav(wave_path)
 				sampleid = 'sample_'+str(n).zfill(2)
-				convproj_obj.add_sampleref(sampleid, wave_path, None)
+				convproj_obj.sampleref__add(sampleid, wave_path, None)
 				sampleparts.append([sampleid, sample_obj.name])
 			else:
 				sampleparts.append([None, ''])
@@ -98,7 +101,7 @@ class input_deflemask(plugins.base):
 				instnum, channum = chinst
 				instid = instname+'_'+str(channum)+'_'+str(instnum)
 
-				inst_obj = convproj_obj.add_instrument(instid)
+				inst_obj = convproj_obj.instrument__add(instid)
 				inst_obj.fxrack_channel = channum+1
 
 				insttype = patterndata_obj.get_channel_insttype(channum)
@@ -114,7 +117,7 @@ class input_deflemask(plugins.base):
 						plugin_obj, inst_obj.pluginid = dmf_inst.fm_data.to_cvpj_genid(convproj_obj)
 	
 					if dmf_inst.mode == 0:
-						plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+						plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 						plugin_obj.role = 'synth'
 						osc_data = plugin_obj.osc_add()
 						if insttype == 'square': osc_data.prop.shape = 'square'
@@ -139,7 +142,7 @@ class input_deflemask(plugins.base):
 						inst_obj.visual.color.set_float([.9,.9,.9])
 						inst_obj.is_drum = True
 
-						plugin_obj, inst_obj.pluginid = convproj_obj.add_plugin_genid('universal', 'sampler', 'single')
+						plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = sampleid
 						plugin_obj.datavals.add('point_value_type', "samples")

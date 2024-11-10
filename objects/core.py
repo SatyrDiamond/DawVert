@@ -207,6 +207,8 @@ class core:
 
 	def input_get_plugins_names(self): return dv_plugins.get_list_names('input')
 
+	def input_get_plugins_props(self): return dv_plugins.get_list_prop_obj('input')
+
 	def input_get_plugins_index(self, num): 
 		pluglist = dv_plugins.get_list('input')
 		if num != -1:
@@ -257,6 +259,8 @@ class core:
 	def output_get_plugins(self): return dv_plugins.get_list('output')
 
 	def output_get_plugins_names(self): return dv_plugins.get_list_names('output')
+
+	def output_get_plugins_props(self): return dv_plugins.get_list_prop_obj('output')
 
 	def output_get_plugins_index(self, num):
 		pluglist = dv_plugins.get_list('output')
@@ -311,8 +315,8 @@ class core:
 
 		logger_core.info('' + convproj.typelist[in_type] + ' > ' + convproj.typelist[out_type])
 
-		self.convproj_obj.change_projtype(in_dawinfo, out_dawinfo, out_type, dv_config)
-		if 'do_sorttracks' in self.convproj_obj.do_actions: self.convproj_obj.sort_tracks()
+		self.convproj_obj.main__change_type(in_dawinfo, out_dawinfo, out_type, dv_config)
+		if 'do_sorttracks' in self.convproj_obj.do_actions: self.convproj_obj.main__sort_tracks()
 
 		isconverted = False
 		for sampleref_id, sampleref_obj in self.convproj_obj.samplerefs.items():

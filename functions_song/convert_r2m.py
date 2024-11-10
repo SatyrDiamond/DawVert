@@ -11,7 +11,7 @@ def convert(convproj_obj):
 	logger_project.info('ProjType Convert: Regular > Multiple')
 
 	plnum = -1
-	for trackid, track_obj in convproj_obj.iter_track():
+	for trackid, track_obj in convproj_obj.track__iter():
 
 		used_inst = False
 		if track_obj.type == 'instruments': used_inst = True
@@ -22,7 +22,7 @@ def convert(convproj_obj):
 		if not track_obj.is_laned:
 			plnum += 1
 			logger_project.info('r2m: non-laned: '+trackid)
-			playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
+			playlist_obj = convproj_obj.playlist__add(plnum, track_obj.uses_placements, track_obj.is_indexed)
 			playlist_obj.visual = copy.deepcopy(track_obj.visual)
 			playlist_obj.visual_ui = copy.deepcopy(track_obj.visual_ui)
 			playlist_obj.placements = copy.deepcopy(track_obj.placements)
@@ -31,7 +31,7 @@ def convert(convproj_obj):
 			logger_project.info('r2m: laned: '+trackid)
 			for lane_id, lane_obj in track_obj.lanes.items():
 				plnum += 1
-				playlist_obj = convproj_obj.add_playlist(plnum, track_obj.uses_placements, track_obj.is_indexed)
+				playlist_obj = convproj_obj.playlist__add(plnum, track_obj.uses_placements, track_obj.is_indexed)
 				playlist_obj.visual = copy.deepcopy(track_obj.visual)
 				if lane_obj.visual.name: playlist_obj.visual.name += ' ('+lane_obj.visual.name+')'
 				playlist_obj.visual_ui = copy.deepcopy(lane_obj.visual_ui)
@@ -41,7 +41,7 @@ def convert(convproj_obj):
 				playlist_obj.placements.add_inst_to_notes(trackid)
 
 		if used_inst:
-			inst_obj = convproj_obj.add_instrument(trackid)
+			inst_obj = convproj_obj.instrument__add(trackid)
 			inst_obj.visual = copy.deepcopy(track_obj.visual)
 			inst_obj.params = copy.deepcopy(track_obj.params)
 			inst_obj.datavals = copy.deepcopy(track_obj.datavals)

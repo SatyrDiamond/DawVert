@@ -44,7 +44,7 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, data):
 		else: plugin_obj.type.subtype = platformtxt
 		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(cpu_arch_list)
 		if vst_cpuarch and vst_path:
-			convproj_obj.add_fileref(vst_path, vst_path, None)
+			convproj_obj.fileref__add(vst_path, vst_path, None)
 			plugin_obj.filerefs_global['plugin'] = vst_path
 			plugin_obj.datavals_global.add('cpu_arch', vst_cpuarch)
 

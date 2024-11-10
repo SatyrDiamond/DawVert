@@ -29,7 +29,7 @@ class to_numdata:
 		nogroup_trk = []
 		groups_inside = {}
 
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			if track_obj.group != None:
 				if track_obj.group not in group_trk: group_trk[track_obj.group] = []
 				group_trk[track_obj.group].append(trackid)
@@ -60,17 +60,20 @@ class to_numdata:
 				for trackid in group_trk[groupid]:
 					self.trackfx_to_numdata_track(convproj_obj, trackid, self.idnum_group[groupid])
 
+		groupidnum = None
+
 		for groupidnum in groups_inside:
 			self.output_ids[groupidnum][3] = [self.idnum_group[groups_inside[groupidnum]], 1, None]
 
 		for trackid in nogroup_trk:
 			self.trackfx_to_numdata_track(convproj_obj, trackid, None)
 
-		for groupid in group_trk:
-			if groupid:
-				group_obj = convproj_obj.groups[groupid]
-				for sendid, send_obj in group_obj.sends.iter():
-					send_amt = send_obj.params.get('amount',1).value
-					self.output_ids[groupidnum][4].append([self.idnum_group[groupid], send_amt, send_obj.sendautoid])
+		if groupidnum:
+			for groupid in group_trk:
+				if groupid:
+					group_obj = convproj_obj.groups[groupid]
+					for sendid, send_obj in group_obj.sends.iter():
+						send_amt = send_obj.params.get('amount',1).value
+						self.output_ids[groupidnum][4].append([self.idnum_group[groupid], send_amt, send_obj.sendautoid])
 
 		return self.output_ids

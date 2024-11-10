@@ -9,7 +9,7 @@ logger_project = logging.getLogger('project')
 def convert(convproj_obj, out_dawinfo):
 	logger_project.info('ProjType Convert: MultipleScened > RegularMultiple')
 
-	for trackid, track_obj in convproj_obj.iter_track():
+	for trackid, track_obj in convproj_obj.track__iter():
 		lanes = []
 
 		for _, v in track_obj.scenes.items():

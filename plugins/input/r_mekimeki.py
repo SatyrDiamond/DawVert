@@ -27,6 +27,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
+		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False
 	def parse(self, convproj_obj, input_file, dv_config):
 		from functions import note_data
@@ -65,7 +66,7 @@ class input_cvpj_f(plugins.base):
 		for tracknum, mmc_track in enumerate(mmc_tracks):
 			cvpj_instid = 'CH'+str(tracknum)
 
-			track_obj = convproj_obj.add_track(cvpj_instid, 'instrument', 0, False)
+			track_obj = convproj_obj.track__add(cvpj_instid, 'instrument', 0, False)
 
 			track_obj.visual.name = cvpj_instid
 			track_obj.visual.color.set_float(maincolor)

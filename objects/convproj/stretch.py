@@ -94,7 +94,7 @@ class cvpj_stretch:
 	def fix_single_warp(self, convproj_obj, sp_obj):
 		if len(self.warppoints) == 1:
 			firstpoint = self.warppoints[0]
-			ref_found, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+			ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 			if ref_found:
 				warp_point_obj = self.add_warp_point()
 				warp_point_obj.beat = sampleref_obj.dur_sec*firstpoint.speed*2

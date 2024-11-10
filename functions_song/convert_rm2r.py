@@ -23,7 +23,7 @@ def convert(convproj_obj):
 
 	nonmultitrack = []
 	splitted_trks = {}
-	for trackid, track_obj in convproj_obj.iter_track():
+	for trackid, track_obj in convproj_obj.track__iter():
 
 		if track_obj.type == 'instruments':
 			splitted_pl = track_obj.placements.inst_split()

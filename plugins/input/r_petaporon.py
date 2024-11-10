@@ -31,6 +31,7 @@ class input_petaporon(plugins.base):
 		in_dict['file_ext_detect'] = False
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, input_file, dv_config):
 		from objects import colors
 		bytestream = open(input_file, 'r')
@@ -68,10 +69,10 @@ class input_petaporon(plugins.base):
 		for instnum in range(10):
 			instid = 'petaporon'+str(instnum)
 
-			track_obj = convproj_obj.add_track(instid, 'instrument', 0, False)
+			track_obj = convproj_obj.track__add(instid, 'instrument', 0, False)
 			track_obj.visual.name = 'Inst #'+str(instnum+1)
 			track_obj.visual.color.set_float(colordata.getcolornum(instnum))
-			plugin_obj, pluginid = convproj_obj.add_plugin_genid('universal', 'synth-osc', None)
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 			plugin_obj.role = 'synth'
 			track_obj.inst_pluginid = pluginid
 

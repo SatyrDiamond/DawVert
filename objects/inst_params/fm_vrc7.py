@@ -112,13 +112,13 @@ class vrc7_inst:
 		return opl_obj
 
 	def to_cvpj_genid(self, convproj_obj):
-		plugin_obj, pluginid = convproj_obj.add_plugin_genid('chip', 'fm', 'vrc7')
+		plugin_obj, pluginid = convproj_obj.plugin__add__genid('chip', 'fm', 'vrc7')
 		plugin_obj.role = 'synth'
 		self.internal_add_params(plugin_obj)
 		return plugin_obj, pluginid
 
 	def to_cvpj(self, convproj_obj, pluginid):
-		plugin_obj = convproj_obj.add_plugin(pluginid, 'chip', 'fm', 'vrc7')
+		plugin_obj = convproj_obj.plugin__add(pluginid, 'chip', 'fm', 'vrc7')
 		plugin_obj.role = 'synth'
 		self.internal_add_params(plugin_obj)
 		return plugin_obj

@@ -152,7 +152,7 @@ def get_sample(i_value):
 
 def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, dv_config):
 	filename_sample = get_sample(fl_channel_obj.samplefilename)
-	sampleref_obj = convproj_obj.add_sampleref(filename_sample, filename_sample, 'win')
+	sampleref_obj = convproj_obj.sampleref__add(filename_sample, filename_sample, 'win')
 
 	if flp_obj.zipped: sampleref_obj.find_relative('extracted')
 	sampleref_obj.find_relative('projectfile')
@@ -250,13 +250,14 @@ class input_flp(plugins.base):
 		in_dict['auto_types'] = ['pl_ticks', 'pl_points']
 		in_dict['track_lanes'] = True
 		in_dict['placement_cut'] = True
-		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
 		in_dict['fxchain_mixer'] = True
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['fxtype'] = 'rack'
+		in_dict['projtype'] = 'mi'
 	def supported_autodetect(self): return True
 	def detect(self, input_file):
 		try:
@@ -275,6 +276,7 @@ class input_flp(plugins.base):
 		from objects.file_proj import proj_flp
 		from objects.inst_params import fx_delay
 
+		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'mi'
 
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\", 'win')
@@ -346,7 +348,7 @@ class input_flp(plugins.base):
 			if fl_channel_obj.type in [0,1,2,3]:
 				cvpj_instid = 'FLInst' + str(instrument)
 
-				inst_obj = convproj_obj.add_instrument(cvpj_instid)
+				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 
 				inst_obj.visual.name = fl_channel_obj.name if fl_channel_obj.name else ''
 				inst_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
@@ -366,7 +368,7 @@ class input_flp(plugins.base):
 				plugin_obj = None
 				if fl_channel_obj.type == 0:
 					inst_obj.pluginid = 'FLPlug_G_'+str(channelnum)
-					plugin_obj, sampleref_obj, sp_obj = convproj_obj.add_plugin_sampler(inst_obj.pluginid, get_sample(fl_channel_obj.samplefilename), 'win')
+					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(inst_obj.pluginid, get_sample(fl_channel_obj.samplefilename), 'win')
 					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
@@ -472,7 +474,7 @@ class input_flp(plugins.base):
 					plugin_obj.role = 'synth'
 
 				notefx_pluginid = 'FLPlug_GA_'+str(channelnum)
-				plugin_obj = convproj_obj.add_plugin(notefx_pluginid, 'universal', 'arpeggiator', None)
+				plugin_obj = convproj_obj.plugin__add(notefx_pluginid, 'universal', 'arpeggiator', None)
 				plugin_obj.fxdata_add(fl_channel_obj.params.arpdirection, None)
 				plugin_obj.role = 'notefx'
 				inst_obj.fxslots_notes.append(notefx_pluginid)
@@ -502,7 +504,7 @@ class input_flp(plugins.base):
 				id_inst[str(instrument)] = 'FLInst' + str(instrument)
 
 			if fl_channel_obj.type == 4:
-				sre_obj = convproj_obj.add_sampleindex('FLSample' + str(instrument))
+				sre_obj = convproj_obj.sampleindex__add('FLSample' + str(instrument))
 				samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dv_config)
 
 				if sampleref_obj.found:
@@ -521,7 +523,7 @@ class input_flp(plugins.base):
 
 		for pattern, fl_pattern in flp_obj.patterns.items():
 
-			nle_obj = convproj_obj.add_notelistindex('FLPat' + str(pattern))
+			nle_obj = convproj_obj.notelistindex__add('FLPat' + str(pattern))
 
 			autoticks_pat[pattern] = fl_pattern.automation
 
@@ -596,7 +598,7 @@ class input_flp(plugins.base):
 
 			#for track_id, track_obj in fl_arrangement.tracks.items():
 			#	if track_id in used_tracks:
-			#		playlist_obj = convproj_obj.add_playlist(str(track_id), True, True)
+			#		playlist_obj = convproj_obj.playlist__add(str(track_id), True, True)
 			#		if track_obj.color: playlist_obj.visual.color = conv_color(track_obj.color)
 			#		if track_obj.name: playlist_obj.visual.name = track_obj.name
 			#		playlist_obj.visual_ui.height = track_obj.height
@@ -612,7 +614,7 @@ class input_flp(plugins.base):
 
 				if playlistline not in temp_pl_track:
 					if playlistline in fl_arrangement.tracks: 
-						playlist_obj = convproj_obj.add_playlist(playlistline-1, 1, True)
+						playlist_obj = convproj_obj.playlist__add(playlistline-1, 1, True)
 						color = fl_arrangement.tracks[playlistline].color.to_bytes(4, "little")
 						if color != b'HQV\x00': playlist_obj.visual.color.set_int([color[0],color[1],color[2]])
 						temp_pl_track[playlistline] = playlist_obj
@@ -704,7 +706,7 @@ class input_flp(plugins.base):
 				if fl_timemark.type == 8:
 					convproj_obj.timesig_auto.add_point(fl_timemark.pos, [fl_timemark.numerator, fl_timemark.denominator])
 				else:
-					timemarker_obj = convproj_obj.add_timemarker()
+					timemarker_obj = convproj_obj.timemarker__add()
 					timemarker_obj.visual.name = fl_timemark.name
 					timemarker_obj.position = fl_timemark.pos
 					if fl_timemark.type == 5: timemarker_obj.type = 'start'
@@ -724,7 +726,7 @@ class input_flp(plugins.base):
 
 		for mixer_id, mixer_obj in flp_obj.mixer.items():
 
-			fxchannel_obj = convproj_obj.add_fxchan(mixer_id)
+			fxchannel_obj = convproj_obj.fx__chan__add(mixer_id)
 			if mixer_obj.name: fxchannel_obj.visual.name = mixer_obj.name
 			if mixer_obj.color: 
 				if mixer_obj.color not in [9801863, 8814968]:
@@ -797,7 +799,7 @@ class input_flp(plugins.base):
 			if mixer_eq != [[0, 0], [0, 0], [0, 0]]: eq_used = False
 
 			if eq_used:
-				plugin_obj = convproj_obj.add_plugin(eq_fxid, 'universal', 'eq', 'bands')
+				plugin_obj = convproj_obj.plugin__add(eq_fxid, 'universal', 'eq', 'bands')
 				for n, e in enumerate(mixer_eq):
 					eq_freq, eq_level = e
 					eq_level /= 65536

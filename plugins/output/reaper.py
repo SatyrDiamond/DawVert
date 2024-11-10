@@ -66,13 +66,13 @@ def add_auto(rpp_env, autopoints_obj):
 		rpp_env.points.append([x.pos_real, x.value])
 
 def add_plugin(rpp_fxchain, pluginid, convproj_obj):
-	plugin_found, plugin_obj = convproj_obj.get_plugin(pluginid)
+	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 	if plugin_found:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
 			sp_obj = plugin_obj.samplepart_get('sample')
-			_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+			_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 			sp_obj.convpoints_samples(sampleref_obj)
 
 			sampler_params = base_sampler.copy()
@@ -102,7 +102,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 
 				sampler_params['pitch_start'] = (pitch/80)/2 + 0.5
 				sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
-				_, sampleref_obj = convproj_obj.get_sampleref(sp_obj.sampleref)
+				_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 				do_sample_part(sampler_params, sampleref_obj, sp_obj)
 				make_sampler(rpp_fxchain, sampler_params)
 
@@ -141,9 +141,9 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				vsthdrwriter.uint32(4276969198)
 				vsthdrwriter.uint32(2)
 				vsthdrwriter.uint32(1)
-				for _ in range(pluginfo_obj.audio_num_inputs):
+				for _ in range(pluginfo_obj.audio_num_inputs if pluginfo_obj.audio_num_inputs else 2):
 					vsthdrwriter.flags64([33])
-				for n in range(pluginfo_obj.audio_num_outputs):
+				for n in range(pluginfo_obj.audio_num_outputs if pluginfo_obj.audio_num_inputs else 2):
 					vsthdrwriter.flags64([n])
 				vsthdrwriter.uint32(vstparamsnum)
 				vsthdrwriter.uint32(vst_fx_datatype == 'chunk')
@@ -295,7 +295,7 @@ class output_reaper(plugins.base):
 		in_dict['file_ext'] = 'rpp'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []
-		in_dict['fxtype'] = 'track'
+		in_dict['fxtype'] = 'route'
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['auto_types'] = ['nopl_points']
@@ -303,6 +303,7 @@ class output_reaper(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
+		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):
 		from objects.file_proj import proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain
@@ -328,12 +329,12 @@ class output_reaper(plugins.base):
 		rpp_project.tempo['num'] = convproj_obj.timesig[0]
 		rpp_project.tempo['denom'] = convproj_obj.timesig[1]
 
-		track_uuids = ['{'+str(uuid.uuid4())+'}' for _ in convproj_obj.iter_track()]
+		track_uuids = ['{'+str(uuid.uuid4())+'}' for _ in convproj_obj.track__iter()]
 
 		trackdata = []
 
 		tracknum = 0
-		for trackid, track_obj in convproj_obj.iter_track():
+		for trackid, track_obj in convproj_obj.track__iter():
 			track_uuid = track_uuids[tracknum]
 
 			rpp_track_obj = rpp_project.add_track()
@@ -348,7 +349,7 @@ class output_reaper(plugins.base):
 
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			plugin_found, plugin_obj = convproj_obj.get_plugin(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
 			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			rpp_track_obj.fxchain = rpp_fxchain.rpp_fxchain()
@@ -407,7 +408,7 @@ class output_reaper(plugins.base):
 				rpp_item_obj.playrate['preserve_pitch'] = int(audiopl_obj.sample.stretch.preserve_pitch)
 				rpp_item_obj.playrate['pitch'] = audiopl_obj.sample.pitch
 
-				ref_found, sampleref_obj = convproj_obj.get_sampleref(audiopl_obj.sample.sampleref)
+				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 				if ref_found:
 					fileref_obj = sampleref_obj.fileref
 					filename = fileref_obj.get_path(None, False)

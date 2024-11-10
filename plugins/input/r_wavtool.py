@@ -393,6 +393,7 @@ class input_wavtool(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp']
+		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_included'] = ['native:wavtool','universal:sampler:single','universal:sampler:multi']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
@@ -517,5 +518,10 @@ class input_wavtool(plugins.base):
 
 		convproj_obj.timesig = [wavtool_obj.beatNumerator, wavtool_obj.beatDenominator]
 		convproj_obj.params.add('bpm', wavtool_obj.bpm, 'float')
+
+		for x in wavtool_obj.bpmAutomation:
+			point_tempo = x['value'] if 'value' in x else 120
+			point_time = x['time'] if 'time' in x else 0
+			convproj_obj.automation.add_autopoint(['main','bpm'], 'float', point_time, point_tempo, 'instant')
 
 		convproj_obj.metadata.name = wavtool_obj.name

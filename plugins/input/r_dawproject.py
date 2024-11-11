@@ -96,7 +96,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
 				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
 
-		if plugin_obj:
+		if plugin_obj and track_obj:
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			if device.deviceRole == 'instrument' and not ismaster:
 				plugin_obj.role = 'inst'

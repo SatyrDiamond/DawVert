@@ -1,0 +1,255 @@
+0 Enabled
+1 NoteOn
+2 Vol
+3 Pan
+4 MIDIChan
+5 MIDINote
+6 MIDIPatch
+7 MIDIBank
+8 
+9 LoopActive
+10 ShowInfo
+11 Shuffle
+12 MainVol
+13 Stretch
+14 Pitchable
+15 Zipped
+16 Delay_Flags
+17 Numerator
+18 Denominator
+19 UseLoopPoints
+20 LoopType
+21 ChanType
+22 MixSliceNum
+23 PanVolumeTab
+24 NStepsShown
+25 SSLength
+26 SSLoop
+27 FXProps
+28 Registered
+29 APDC
+30 TruncateClipNotes
+31 EEAutoMode
+32 
+33 TimeMarkerNumerator
+34 TimeMarkerDenominator
+35 
+36 
+37 
+38 
+39 
+40 
+41 
+42 
+43 
+44 
+45 
+46 
+47 
+48 
+49 
+50 
+51 
+52 
+53 
+54 
+55 
+56 
+57 
+58 
+59 
+60 
+61 
+62 
+63 
+64 NewChan
+65 NewPat
+66 Tempo
+67 CurrentPatNum
+68 PatData
+69 FX
+70 Fade_Stereo
+71 CutOff
+72 DotVol
+73 DotPan
+74 PreAmp
+75 Decay
+76 Attack
+77 DotNote
+78 DotPitch
+79 DotMix
+80 MainPitch
+81 RandChan
+82 MixChan
+83 Resonance
+84 OldSongLoopPos
+85 StDel
+86 FX3
+87 DotReso
+88 DotCutOff
+89 ShiftDelay
+90 LoopEndBar
+91 Dot
+92 DotShift
+93 TempoFine
+94 LayerChan
+95 FXIcon
+96 
+97 
+98 FXToSlotNum
+99 NewArrangement
+100 CurrentArrangementNum
+101 
+102 
+103 
+104 
+105 
+106 
+107 
+108 
+109 
+110 
+111 
+112 
+113 
+114 
+115 
+116 
+117 
+118 
+119 
+120 
+121 
+122 
+123 
+124 
+125 
+126 
+127 
+128 Color
+129 PlayListItem
+130 Echo
+131 FXSine
+132 CutCutBy
+133 WindowH
+134 
+135 MiddleNote
+136 Reserved
+137 MainResoCutOff
+138 DelayReso
+139 Reverb
+140 StretchTime
+141 SSNote
+142 FineTune
+143 SampleFlags
+144 LayerFlags
+145 ChanFilterNum
+146 CurrentFilterNum
+147 FXOutChanNum
+148 NewTimeMarker
+149 FXColor
+150 PatColor
+151 PatAutoMode
+152 SongLoopPos
+153 AUSmpRate
+154 FXInChanNum
+155 PluginIcon
+156 FineTempo
+157 
+158 
+159 
+160 
+161 
+162 
+163 
+164 
+165 
+166 
+167 
+168 
+169 
+170 
+171 
+172 
+173 
+174 
+175 
+176 
+177 
+178 
+179 
+180 
+181 
+182 
+183 
+184 
+185 
+186 
+187 
+188 
+189 
+190 
+191 
+192 ChanName
+193 PatName
+194 Title
+195 Comment
+196 SampleFileName
+197 URL
+198 CommentRTF
+199 Version
+200 RegName
+201 DefPluginName
+202 ProjectDataPath
+203 PluginName
+204 FXName
+205 TimeMarkerName
+206 Genre
+207 Author
+208 MIDICtrls
+209 Delay
+210 TS404Params
+211 DelayLine
+212 NewPlugin
+213 PluginParams
+214 Reserved2
+215 ChanParams
+216 CtrlRecChan
+217 PLSel
+218 Envelope
+219 BasicChanParams
+220 OldFilterParams
+221 ChanPoly
+222 NoteEvents
+223 AutomationData
+224 PatternNotes
+225 InitCtrlRecChan
+226 RemoteCtrl_MIDI
+227 RemoteCtrl_Int
+228 Tracking
+229 ChanOfsLevels
+230 RemoteCtrlFormula
+231 ChanGroupName
+232 RegBlackList
+233 PlayListItems
+234 ChanAC
+235 FXRouting
+236 FXParams
+237 ProjectTime
+238 PLTrackInfo
+239 PLTrackName
+240 
+241 ArrangementName
+242 
+243 
+244 
+245 
+246 
+247 
+248 
+249 
+250 
+251 
+252 
+253 
+254

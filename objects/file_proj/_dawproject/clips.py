@@ -235,10 +235,16 @@ class dawproject_lane:
 		self.points = []
 		self.track = ''
 		self.id = ''
+		self.fadeTimeUnit = None
+		self.fadeInTime = None
+		self.fadeOutTime = None
 
 	def read(self, xml_data):
 		if 'track' in xml_data.attrib: self.track = xml_data.attrib['track']
 		if 'id' in xml_data.attrib: self.id = xml_data.attrib['id']
+		if 'fadeTimeUnit' in xml_data.attrib: self.fadeTimeUnit = xml_data.attrib['fadeTimeUnit']
+		if 'fadeInTime' in xml_data.attrib: self.fadeInTime = float(xml_data.attrib['fadeInTime'])
+		if 'fadeOutTime' in xml_data.attrib: self.fadeOutTime = float(xml_data.attrib['fadeOutTime'])
 		for x_part in xml_data:
 			if x_part.tag == 'Clips': 
 				self.clips = dawproject_clips()
@@ -261,4 +267,7 @@ class dawproject_lane:
 		if self.clips: self.clips.write(tempxml)
 		if self.warps: self.warps.write(tempxml)
 		if self.audio: self.audio.write(tempxml)
+		if self.fadeTimeUnit != None: tempxml.set('fadeTimeUnit', str(self.fadeTimeUnit))
+		if self.fadeInTime != None: tempxml.set('fadeInTime', str(self.fadeInTime))
+		if self.fadeOutTime != None: tempxml.set('fadeOutTime', str(self.fadeOutTime))
 		for x in self.points: x.write(tempxml, 'Points')

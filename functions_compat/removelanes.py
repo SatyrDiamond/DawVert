@@ -48,6 +48,8 @@ def process_r(convproj_obj, out_dawinfo):
 
 				for laneid, lane_obj in track_obj.lanes.items():
 					cvpj_trackid = trackid+'_lane_'+laneid
+					if not insidegroup:
+						convproj_obj.automation.move_everything(['track', trackid], ['track', cvpj_trackid])
 					sep_track_obj = track_obj.make_base()
 					sep_track_obj.visual.name = tracklanename(sep_track_obj.visual.name, lane_obj.visual.name)
 					sep_track_obj.visual.color.merge(lane_obj.visual.color)

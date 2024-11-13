@@ -9,36 +9,36 @@ from objects import globalstore
 import logging
 logger_input = logging.getLogger('input')
 
-try: 
-	import UnityPy
-	from UnityPy.helpers import TypeTreeHelper
-	TypeTreeHelper.read_typetree_c = False
-except: UnityPy_exists = False
-else: UnityPy_exists = True
+#try: 
+#	import UnityPy
+#	from UnityPy.helpers import TypeTreeHelper
+#	TypeTreeHelper.read_typetree_c = False
+#except: UnityPy_exists = False
+#else: UnityPy_exists = True
 
-class onebit_external:
-	def __init__(self):
-		self.loaded = False
-		self.env = None
-		self.audiofiles = {}
-
-	def load_file(self, filepath):
-		if os.path.exists(filepath):
-			if UnityPy_exists:
-				self.env = UnityPy.load(filepath)
-				for obj in self.env.objects:
-					data = obj.read()
-					if obj.type.name == 'AudioClip': self.audiofiles[data.name] = data
-			else:
-				logger_input.warning('1bitdragon resource file found but UnityPy is missing.')
-
-	def save_audio(self, audioname, filepath):
-		if audioname in self.audiofiles:
-			data = self.audiofiles[audioname]
-			if data.samples:
-				firstname = list(data.samples)
-				with open(filepath, "wb") as f: f.write(data.samples[firstname[0]])
-				logger_input.info('extracted '+audioname+' as '+filepath)
+#class onebit_external:
+#	def __init__(self):
+#		self.loaded = False
+#		self.env = None
+#		self.audiofiles = {}
+#
+#	def load_file(self, filepath):
+#		if os.path.exists(filepath):
+#			if UnityPy_exists:
+#				self.env = UnityPy.load(filepath)
+#				for obj in self.env.objects:
+#					data = obj.read()
+#					if obj.type.name == 'AudioClip': self.audiofiles[data.name] = data
+#			else:
+#				logger_input.warning('1bitdragon resource file found but UnityPy is missing.')
+#
+#	def save_audio(self, audioname, filepath):
+#		if audioname in self.audiofiles:
+#			data = self.audiofiles[audioname]
+#			if data.samples:
+#				firstname = list(data.samples)
+#				with open(filepath, "wb") as f: f.write(data.samples[firstname[0]])
+#				logger_input.info('extracted '+audioname+' as '+filepath)
 
 class input_1bitdragon(plugins.base):
 	def __init__(self): pass
@@ -60,8 +60,8 @@ class input_1bitdragon(plugins.base):
 		project_obj = proj_1bitdragon.onebitd_song()
 		if not project_obj.load_from_file(input_file): exit()
 
-		onebit_ext = onebit_external()
-		onebit_ext.load_file(os.path.join(dv_config.path_external_data,'1bitdragon','1BITDRAGON_Data','resources.assets'))
+		#onebit_ext = onebit_external()
+		#onebit_ext.load_file(os.path.join(dv_config.path_external_data,'1bitdragon','1BITDRAGON_Data','resources.assets'))
 
 		globalstore.dataset.load('1bitdragon', './data_main/dataset/1bitdragon.dset')
 		colordata = colors.colorset.from_dataset('1bitdragon', 'track', 'main')
@@ -149,11 +149,11 @@ class input_1bitdragon(plugins.base):
 			audiofilepath = os.path.join(dv_config.path_samples_extracted, str(instname)+'.wav')
 			inst_obj.datavals.add('middlenote', -3)
 
-			if instname not in instnames:
-				onebit_ext.save_audio(instname, audiofilepath)
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
-				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
-				instnames.append(instname)
+			#if instname not in instnames:
+			#	onebit_ext.save_audio(instname, audiofilepath)
+			#	plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
+			#	plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
+			#	instnames.append(instname)
 
 		for drumid, drumdata in used_drums.items():
 			instname = drumdata.preset
@@ -167,11 +167,11 @@ class input_1bitdragon(plugins.base):
 			audiofilepath = os.path.join(dv_config.path_samples_extracted, str(instname)+'.wav')
 			inst_obj.datavals.add('middlenote', -3)
 
-			if instname not in instnames:
-				onebit_ext.save_audio(instname, audiofilepath)
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
-				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
-				instnames.append(instname)
+			#if instname not in instnames:
+			#	onebit_ext.save_audio(instname, audiofilepath)
+			#	plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
+			#	plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
+			#	instnames.append(instname)
 
 		convproj_obj.do_actions.append('do_lanefit')
 

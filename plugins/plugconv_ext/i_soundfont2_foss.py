@@ -4,6 +4,7 @@
 import plugins
 
 from functions import extpluglog
+from functions_plugin_ext import plugin_vst2
 
 class plugconv(plugins.base):
 	def __init__(self): pass
@@ -14,7 +15,7 @@ class plugconv(plugins.base):
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
 		from functions_plugin_ext import params_os_juicysfplugin
-		from functions_plugin_ext import plugin_vst2
+
 		if 'vst2' in extplugtype:
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'juicysfplugin', '')
 			if plugin_vst2.check_exists('id', 1249076848):

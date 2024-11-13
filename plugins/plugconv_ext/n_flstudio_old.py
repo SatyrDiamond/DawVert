@@ -23,7 +23,7 @@ class plugconv(plugins.base):
 		if flpluginname == 'fruity blood overdrive' and use_vst2:
 			extpluglog.extpluglist.add('Old', 'VST2', 'Blood Overdrive', '')
 
-			if plugin_vst2.check_exists('id', 1112297284) and use_nonfree:
+			if plugin_vst2.check_exists('id', 1112297284):
 				extpluglog.extpluglist.success('FL Studio', 'Fruity Blood Overdrive')
 				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'nf_vst2_fruity_blood_overdrive', convproj_obj, pluginid)
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name', 'win', 'BloodOverdrive', 'param', None, 6)

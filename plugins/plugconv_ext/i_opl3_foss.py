@@ -2,9 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-from functions_plugin_ext import params_os_adlplug
-from functions_plugin_ext import plugin_vst2
 from functions import extpluglog
+from functions_plugin_ext import plugin_vst2
 
 opadltxt = ['m1', 'c1', 'm2', 'c2']
 
@@ -16,6 +15,7 @@ class plugconv(plugins.base):
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
 	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+		from functions_plugin_ext import params_os_adlplug
 
 		if 'vst2' in extplugtype:
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'ADLplug', '')

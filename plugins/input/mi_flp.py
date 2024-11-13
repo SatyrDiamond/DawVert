@@ -54,7 +54,7 @@ def flpauto_to_cvpjauto(i_value):
 		cvpj_instid = 'FLInst' + str(i_value[1])
 		if i_value[2] == 'param':
 			if i_value[3] == 'vol': out = [['inst', cvpj_instid, 'vol'], 0, 16000]
-			if i_value[3] == 'pan': out = [['inst', cvpj_instid, 'pan'], 0, 6400]
+			if i_value[3] == 'pan': out = [['inst', cvpj_instid, 'pan'], -6400, 6400]
 		if i_value[2] == 'plugin':
 			pluginid = 'FLPlug_G_'+str(i_value[1])
 			out = [['id_plug', pluginid, i_value[3]], 0, 1]
@@ -86,7 +86,7 @@ def flpauto_to_cvpjauto_points(i_value):
 		cvpj_instid = 'FLInst' + str(i_value[1])
 		if i_value[2] == 'param':
 			if i_value[3] == 'vol': out = [['inst', cvpj_instid, 'vol'], 0, 1]
-			if i_value[3] == 'pan': out = [['inst', cvpj_instid, 'pan'], 1, -1]
+			if i_value[3] == 'pan': out = [['inst', cvpj_instid, 'pan'], -1, 1]
 		if i_value[2] == 'plugin':
 			pluginid = 'FLPlug_G_'+str(i_value[1])
 			out = [['id_plug_points', pluginid, i_value[3]], 0, 1]
@@ -645,7 +645,7 @@ class input_flp(plugins.base):
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
 								autopl_obj.time = placement_obj.time.copy()
 								for pos, val in autodata: 
-									autopl_obj.data.add_point(pos, val/adiv)
+									autopl_obj.data.add_point(pos, (val+aadd)/adiv)
 									if DEBUGAUTOTICKS: t.append(val)
 
 								if DEBUGAUTOTICKS:

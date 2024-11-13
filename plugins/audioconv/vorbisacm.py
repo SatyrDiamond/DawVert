@@ -3,7 +3,6 @@
 
 import plugins
 import io
-from objects.data_bytes import riff_chunks
 import importlib.util
 
 class input_soundfile(plugins.base):
@@ -21,6 +20,7 @@ class input_soundfile(plugins.base):
 		return usable, usable_meg
 	def convert_file(self, sampleref_obj, to_type, outpath):
 		import soundfile
+		from objects.data_bytes import riff_chunks
 		if sampleref_obj.fileref.file.extension == 'wav':
 			input_file = sampleref_obj.fileref.get_path(None, False)
 			riff_data = riff_chunks.riff_chunk()

@@ -489,5 +489,5 @@ class output_wavtool(plugins.base):
 		zip_wt.close()
 		open(output_file, 'wb').write(zip_bio.getbuffer())
 
-		with open('wavtool_debug.json', "w") as fileout:
-			json.dump(wavtool_obj.write(), fileout, indent=4)
+		#with open('wavtool_debug.json', "w") as fileout:
+		#	json.dump(wavtool_obj.write(), fileout, indent=4)

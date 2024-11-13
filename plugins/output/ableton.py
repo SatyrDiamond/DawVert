@@ -549,6 +549,8 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		als_audioclip.Color = audiopl_obj.visual.color.closest_color_index(colordata, track_color)
 		if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
 
+		als_audioclip.Fades.IsDefaultFadeIn = False
+		als_audioclip.Fades.IsDefaultFadeOut = False
 		als_audioclip.Fades.FadeInLength = audiopl_obj.fade_in.get_dur_beat(bpm)
 		als_audioclip.Fades.FadeInCurveSkew = audiopl_obj.fade_in.skew
 		als_audioclip.Fades.FadeInCurveSlope = audiopl_obj.fade_in.slope

@@ -22,8 +22,6 @@ def internal_addloops(pldata, eq_connect, loopcompat):
 		if not eq_connect(pl, prev, loopcompat):
 			new_data.append(pl)
 		else:
-			print(pl.time.cut_type, loopcompat)
-
 			prevreal = new_data[-1]
 			prevreal.time.duration += pl.time.duration
 			if prevreal.time.cut_type == 'none': 

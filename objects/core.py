@@ -155,13 +155,13 @@ pluginsets_input = {
 'vgm': ['vgm', 'VGM'],
 'gameres': ['gameres', 'Game Mod'],
 'gamespec': ['gamespec', 'Game Specific'],
-'wip': ['wip', 'WIP'],
-#'debug': ['debug', 'Debug']
+'old': ['old', 'Old/Broken']
 }
 
 pluginsets_output = {
 'main': ['', 'Main'],
-'wip': ['wip', 'WIP']
+'wip': ['wip', 'WIP'],
+'old': ['old', 'Old/Broken']
 }
 
 class core:

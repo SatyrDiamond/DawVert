@@ -13,6 +13,59 @@ from objects.convproj import placements_audio
 from objects.convproj import placements_index
 from objects.convproj import time
 
+def internal_addloops(pldata, eq_connect, loopcompat):
+	old_data = copy.deepcopy(pldata)
+	new_data = []
+
+	prev = None
+	for pl in old_data:
+		if not eq_connect(pl, prev, loopcompat):
+			new_data.append(pl)
+		else:
+			print(pl.time.cut_type, loopcompat)
+
+			prevreal = new_data[-1]
+			prevreal.time.duration += pl.time.duration
+			if prevreal.time.cut_type == 'none': 
+				prevreal.time.cut_type = 'loop'
+				prevreal.time.cut_loopend = pl.time.duration
+			if 'loop_adv' in loopcompat:
+				if prevreal.time.cut_type == 'cut': 
+					prevreal.time.cut_type = 'loop_off'
+					prevreal.time.cut_loopstart = pl.time.cut_start
+					prevreal.time.cut_loopend = pl.time.duration+pl.time.cut_start
+		prev = pl
+
+	return new_data
+
+def internal_removeloops(pldata, out__placement_loop):
+	new_data = []
+	for oldpl_obj in pldata: 
+		if oldpl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'] and oldpl_obj.time.cut_type not in out__placement_loop:
+			loop_start, loop_loopstart, loop_loopend = oldpl_obj.time.get_loop_data()
+			for cutpoint in xtramath.cutloop(oldpl_obj.time.position, oldpl_obj.time.duration, loop_start, loop_loopstart, loop_loopend):
+				cutplpl_obj = copy.deepcopy(oldpl_obj)
+				cutplpl_obj.time.position = cutpoint[0]
+				cutplpl_obj.time.duration = cutpoint[1]
+				cutplpl_obj.time.cut_type = 'cut'
+				cutplpl_obj.time.cut_start = cutpoint[2]
+				new_data.append(cutplpl_obj)
+		else: new_data.append(oldpl_obj)
+	return new_data
+
+def internal_sort(pldata):
+	ta_bsort = {}
+	ta_sorted = {}
+	new_a = []
+	for n in self.data:
+		if n.time.position not in ta_bsort: ta_bsort[n.time.position] = []
+		ta_bsort[n.time.position].append(n)
+	ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))
+	for p in ta_sorted:
+		for note in ta_sorted[p]: new_a.append(note)
+	return new_a
+
+
 class cvpj_placement_fade:
 	__slots__ = ['dur','time_type','skew','slope']
 

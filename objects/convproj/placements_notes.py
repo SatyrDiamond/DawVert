@@ -62,16 +62,7 @@ class cvpj_placements_notes:
 		return pl_obj
 
 	def sort(self):
-		ta_bsort = {}
-		ta_sorted = {}
-		new_a = []
-		for n in self.data:
-			if n.time.position not in ta_bsort: ta_bsort[n.time.position] = []
-			ta_bsort[n.time.position].append(n)
-		ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))
-		for p in ta_sorted:
-			for x in ta_sorted[p]: new_a.append(x)
-		self.data = new_a
+		self.data = placements.internal_sort(self.data)
 
 	def get_dur(self):
 		duration_final = 0
@@ -99,21 +90,6 @@ class cvpj_placements_notes:
 				x.time.cut_start = 0
 				x.time.cut_type = None
 
-	def remove_loops(self, out__placement_loop):
-		new_data = []
-		for notespl_obj in self.data: 
-			if notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'] and notespl_obj.time.cut_type not in out__placement_loop:
-				loop_start, loop_loopstart, loop_loopend = notespl_obj.time.get_loop_data()
-				for cutpoint in xtramath.cutloop(notespl_obj.time.position, notespl_obj.time.duration, loop_start, loop_loopstart, loop_loopend):
-					cutplpl_obj = copy.deepcopy(notespl_obj)
-					cutplpl_obj.time.position = cutpoint[0]
-					cutplpl_obj.time.duration = cutpoint[1]
-					cutplpl_obj.time.cut_type = 'cut'
-					cutplpl_obj.time.cut_start = cutpoint[2]
-					new_data.append(cutplpl_obj)
-			else: new_data.append(notespl_obj)
-		self.data = new_data
-
 	def eq_content(self, pl, prev):
 		if prev:
 			isvalid_a = pl.notelist==prev.notelist
@@ -139,28 +115,10 @@ class cvpj_placements_notes:
 			return False
 
 	def add_loops(self, loopcompat):
+		self.data = placements.internal_addloops(self.data, self.eq_connect, loopcompat)
 
-		old_data_notes = copy.deepcopy(self.data)
-		new_data_notes = []
-
-		prev = None
-		for pl in old_data_notes:
-			if not self.eq_connect(pl, prev, loopcompat):
-				new_data_notes.append(pl)
-			else:
-				prevreal = new_data_notes[-1]
-				prevreal.time.duration += pl.time.duration
-				if prevreal.time.cut_type == 'none': 
-					prevreal.time.cut_type = 'loop'
-					prevreal.time.cut_loopend = pl.time.duration
-				if 'loop_adv' in loopcompat:
-					if prevreal.time.cut_type == 'cut': 
-						prevreal.time.cut_type = 'loop_off'
-						prevreal.time.cut_loopstart = pl.time.cut_start
-						prevreal.time.cut_loopend = pl.time.duration+pl.time.cut_start
-			prev = pl
-
-		self.data = new_data_notes
+	def remove_loops(self, out__placement_loop):
+		self.data = placements.internal_removeloops(self.data, out__placement_loop)
 
 	def remove_overlaps(self):
 		old_data_notes = copy.deepcopy(self.data)

@@ -332,7 +332,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['pl_points']
-		in_dict['file_ext'] = 'soundbridge'
+		in_dict['file_ext'] = ['soundbridge']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']

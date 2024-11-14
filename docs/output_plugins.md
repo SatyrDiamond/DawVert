@@ -17,4 +17,6 @@
 | R | ```main``` | ```waveform_edit``` | Waveform Edit |
 
 ## Old
+| DataType | PluginSet | Short Name | Name |
+| --- | --- | --- | :--- |
 | R | ```old``` | ```wavtool``` | Wavtool |

@@ -4,11 +4,12 @@
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info |
 | --- | --- | --- | :--- | :--- | :--- | :--- |
 | M-I | ```main``` | ```flp``` | FL Studio | ```.flp``` | ✔️ | FL 20+ or higher |
-| M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
 | R | ```main``` | ```ableton``` | Ableton Live 11 | ```.als``` | ✔️ | 11 only |
 | R | ```main``` | ```lmms``` | LMMS | ```.mmp```/```.mmpz``` | ✔️ | Stable and Alpha |
 | R | ```main``` | ```reaper``` | Reaper | ```.rpp``` | ✔️ | |
 | R | ```main``` | ```dawproject``` | DawProject | ```.dawproject``` | ✔️ | |
+| M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
+| R | ```main``` | ```soundbridge``` | SoundBridge | ```.soundbridge``` | ✔️ | |
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 

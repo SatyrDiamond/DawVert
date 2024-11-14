@@ -55,7 +55,7 @@ def internal_sort(pldata):
 	ta_bsort = {}
 	ta_sorted = {}
 	new_a = []
-	for n in self.data:
+	for n in pldata:
 		if n.time.position not in ta_bsort: ta_bsort[n.time.position] = []
 		ta_bsort[n.time.position].append(n)
 	ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))

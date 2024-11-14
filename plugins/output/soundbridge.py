@@ -370,6 +370,8 @@ def do_markers(timemarkers_obj, sb_markers):
 		sb_marker.linearTimeBase = 0
 		sb_markers.append(sb_marker)
 
+PROJECT_FREQ = 22050
+
 class output_soundbridge(plugins.base):
 	def __init__(self): pass
 	def is_dawvert_plugin(self): return 'output'
@@ -392,12 +394,13 @@ class output_soundbridge(plugins.base):
 		from functions_plugin_ext import plugin_vst2
 		global sb_returns
 
-		convproj_obj.change_timings(22050, False)
+		convproj_obj.change_timings(PROJECT_FREQ, False)
 
 		project_obj = proj_soundbridge.soundbridge_song()
 		project_obj.masterTrack.defualts_master()
 		project_obj.pool.defualts()
 		project_obj.videoTrack.defualts()
+		project_obj.sampleRate = PROJECT_FREQ*2
 
 		globalstore.datadef.load('soundbridge', './data_main/datadef/soundbridge.ddef')
 		globalstore.dataset.load('soundbridge', './data_main/dataset/soundbridge.dset')
@@ -625,8 +628,8 @@ class output_soundbridge(plugins.base):
 							event.tempo = 120
 							event.inverse = 0
 							event.gain = xtramath.to_db(sp_obj.vol)
-							event.fadeInLength = int(audiopl_obj.fade_in.get_dur_beat(tempo)*22050)
-							event.fadeOutLength = int(audiopl_obj.fade_out.get_dur_beat(tempo)*22050)
+							event.fadeInLength = int(audiopl_obj.fade_in.get_dur_beat(tempo)*PROJECT_FREQ)
+							event.fadeOutLength = int(audiopl_obj.fade_out.get_dur_beat(tempo)*PROJECT_FREQ)
 							event.fadeInCurve = 4
 							event.fadeOutCurve = 4
 							event.fadeInConvexity = 0.5
@@ -646,9 +649,9 @@ class output_soundbridge(plugins.base):
 
 							#stretch_obj.debugtxt_warp()
 
-							event.positionStart += warp_offset*22050
-							event.loopOffset += warp_offset*22050
-							event.positionEnd += warp_offset*22050
+							event.positionStart += warp_offset*PROJECT_FREQ
+							event.loopOffset += warp_offset*PROJECT_FREQ
+							event.positionEnd += warp_offset*PROJECT_FREQ
 
 							event.positionStart = int(event.positionStart)
 							event.loopOffset = int(event.loopOffset)
@@ -661,7 +664,7 @@ class output_soundbridge(plugins.base):
 								stretchMark.newPosition = warp_point_obj.beat
 								stretchMark.initPosition = warp_point_obj.second
 
-								stretchMark.newPosition *= 44100/2
+								stretchMark.newPosition *= project_obj.sampleRate/2
 								stretchMark.initPosition *= sampleref_obj.hz
 
 								stretchMark.newPosition = int(stretchMark.newPosition)
@@ -730,7 +733,7 @@ class output_soundbridge(plugins.base):
 						e_block_val = autopoint_obj.value if not autopoint_obj.type == 'instant' else s_block_val
 						add_tempo_section(sb_tempo_obj, s_block_pos, e_block_pos-s_block_pos, s_block_val, e_block_val)
 						if autopoint_obj.type == 'instant' and n == numpoints-1:
-							add_tempo_section(sb_tempo_obj, e_block_pos, e_block_pos+22050, autopoint_obj.value, autopoint_obj.value)
+							add_tempo_section(sb_tempo_obj, e_block_pos, e_block_pos+PROJECT_FREQ, autopoint_obj.value, autopoint_obj.value)
 
 		if convproj_obj.loop_active:
 			project_obj.metadata['TransportLoop'] = 'true'

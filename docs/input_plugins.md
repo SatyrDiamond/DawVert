@@ -30,7 +30,6 @@
 | M-I | ```main``` | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | |
 | M-S | ```main``` | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
 | M-S | ```main``` | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ | |
-| R | ```main``` | ```mekimekichip``` | メキメキチップ (MekiMeki Chip) | ```.json``` | ❌ | |
 | R-S | ```main``` | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | |
 
 ## Web
@@ -47,7 +46,6 @@
 ## Other
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| R | ```main``` | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | 
 | R-I | ```main``` | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
 | R-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | R-M | ```main``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
@@ -83,3 +81,9 @@
 | DataType | PluginSet | Short Name | Name | Info |
 | --- | --- | --- | :--- | :--- |
 | R | ```ai``` | ```basic_pitch``` | [Basic Pitch](https://github.com/spotify/basic-pitch) | Audio File | audio-to-MIDI converter with pitch bend detection
+
+## Life Support
+| DataType | PluginSet | Short Name | Name | Info |
+| --- | --- | --- | :--- | :--- |
+| R | ```old``` | ```mekimekichip``` | メキメキチップ (MekiMeki Chip) | ```.json``` | ❌ | no mekimeki BOY |
+| R | ```old``` | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | timing is wrong |

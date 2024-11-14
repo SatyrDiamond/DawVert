@@ -1,18 +1,20 @@
 
 # Supported Outputs
 ## DAWs
-| DataType | Short Name | Name |
-| --- | --- | :--- |
-| R | ```ableton``` | Ableton Live 11 |
-| R | ```amped``` | Amped Studio |
-| R | ```dawproject``` | dawproject |
-| M-I | ```flp``` | FL Studio |
-| R | ```lmms``` | LMMS |
-| R | ```midi``` | MIDI |
-| R | ```muse``` | MusE Sequencer |
-| R | ```onlineseq``` | Online Sequencer |
-| R | ```soundbridge``` | SoundBridge |
-| R | ```reaper``` | Reaper |
-| R | ```soundation``` | Soundation |
-| R | ```waveform_edit``` | Waveform Edit |
-| R | ```wavtool``` | Wavtool |
+| DataType | PluginSet | Short Name | Name |
+| --- | --- | --- | :--- |
+| R | ```main``` | ```ableton``` | Ableton Live 11 |
+| R | ```main``` | ```amped``` | Amped Studio |
+| R | ```main``` | ```dawproject``` | dawproject |
+| M-I | ```main``` | ```flp``` | FL Studio |
+| R | ```main``` | ```lmms``` | LMMS |
+| R | ```main``` | ```midi``` | MIDI |
+| R | ```main``` | ```muse``` | MusE Sequencer |
+| R | ```main``` | ```onlineseq``` | Online Sequencer |
+| R | ```main``` | ```soundbridge``` | SoundBridge |
+| R | ```main``` | ```reaper``` | Reaper |
+| R | ```main``` | ```soundation``` | Soundation |
+| R | ```main``` | ```waveform_edit``` | Waveform Edit |
+
+## Old
+| R | ```old``` | ```wavtool``` | Wavtool |

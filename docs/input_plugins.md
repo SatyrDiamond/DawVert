@@ -83,7 +83,7 @@
 | R | ```ai``` | ```basic_pitch``` | [Basic Pitch](https://github.com/spotify/basic-pitch) | Audio File | audio-to-MIDI converter with pitch bend detection
 
 ## Life Support
-| DataType | PluginSet | Short Name | Name | Info |
+| DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info |
 | --- | --- | --- | :--- | :--- |
 | R | ```old``` | ```mekimekichip``` | メキメキチップ (MekiMeki Chip) | ```.json``` | ❌ | no mekimeki BOY |
 | R | ```old``` | ```flipper``` | Flipper Music Format | ```.fmf``` | ❌ | timing is wrong |

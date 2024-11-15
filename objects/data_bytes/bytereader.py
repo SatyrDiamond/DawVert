@@ -50,10 +50,13 @@ class iff_chunkdata:
 	def read(self, end):
 		chunk_obj = chunk_loc(self.byteread, self.sizedata)
 		chunk_obj.id = self.byteread.read(self.sizedata.size_id)
-		chunk_obj.size = self.sizedata.unpackfunc(self.byteread.read(self.sizedata.size_chunk))[0]
-		chunk_obj.start = self.byteread.tell()
-		chunk_obj.end = chunk_obj.start+chunk_obj.size
-		isvalid = chunk_obj.end <= end
+		if chunk_obj.id:
+			chunk_obj.size = self.sizedata.unpackfunc(self.byteread.read(self.sizedata.size_chunk))[0]
+			chunk_obj.start = self.byteread.tell()
+			chunk_obj.end = chunk_obj.start+chunk_obj.size
+			isvalid = chunk_obj.end <= end
+		else:
+			isvalid = False
 		return isvalid, chunk_obj
 
 	def iter(self, start, end):

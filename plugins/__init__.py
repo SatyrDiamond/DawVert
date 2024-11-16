@@ -10,7 +10,8 @@ class info_daw:
 	def __init__(self):
 		self.file_ext = []
 		self.file_ext_detect = True
-		self.plugin_arch = [32, 64]
+		self.plugin_ext_arch = [32, 64]
+		self.plugin_ext_platforms = ['win', 'unix']
 		self.plugin_ext = []
 		self.plugin_included = []
 		self.audio_filetypes = []
@@ -32,7 +33,8 @@ class info_daw:
 	def from_dict(self, indict):
 		if 'file_ext' in indict: self.file_ext = indict['file_ext']
 		if 'file_ext_detect' in indict: self.file_ext_detect = indict['file_ext_detect']
-		if 'plugin_arch' in indict: self.plugin_arch = indict['plugin_arch']
+		if 'plugin_ext_arch' in indict: self.plugin_ext_arch = indict['plugin_ext_arch']
+		if 'plugin_ext_platforms' in indict: self.plugin_ext_platforms = indict['plugin_ext_platforms']
 		if 'plugin_ext' in indict: self.plugin_ext = indict['plugin_ext']
 		if 'plugin_included' in indict: self.plugin_included = indict['plugin_included']
 		if 'audio_filetypes' in indict: self.audio_filetypes = indict['audio_filetypes']

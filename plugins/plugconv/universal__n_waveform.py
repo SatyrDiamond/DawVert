@@ -181,6 +181,11 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/waveform_univ.pltr', 'limiter', convproj_obj, pluginid)
 			return 1
 			
+		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'spectrum'):
+			extpluglog.convinternal('Waveform', 'Spectrum Analyzer', 'Universal', 'Spectrum Analyzer')
+			plugin_obj.replace('universal', 'spectrum_analyzer', None)
+			return 1
+
 		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'djeq'):
 			extpluglog.convinternal('Waveform', 'DJ EQ', 'Universal', '3-Band EQ')
 			freq1 = plugin_obj.params.get('freq1', 59.213096618652344).value

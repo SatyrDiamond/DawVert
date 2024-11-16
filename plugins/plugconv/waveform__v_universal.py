@@ -55,6 +55,11 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/univ_waveform.pltr', 'gate', convproj_obj, pluginid)
 			return 0
 
+		if plugin_obj.type.check_wildmatch('universal', 'spectrum_analyzer', None):
+			extpluglog.convinternal('Universal', 'Spectrum Analyzer', 'Waveform', 'Spectrum Analyzer')
+			plugin_obj.replace('native', 'tracktion', 'spectrum')
+			return 1
+
 		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
 		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
 

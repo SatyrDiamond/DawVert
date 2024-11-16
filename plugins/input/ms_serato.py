@@ -102,7 +102,7 @@ class input_serato(plugins.base):
 							plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(cvpj_instid_p, samplepath, 'win')
 							inst_obj = convproj_obj.instrument__add(cvpj_instid_p)
 							inst_obj.is_drum = True
-							inst_obj.pluginid = cvpj_instid_p
+							inst_obj.plugslots.set_synth(cvpj_instid_p)
 							inst_obj.visual.name = urllib.parse.unquote(samplefile).split('/')[-1]
 
 							if drumsamp.color:
@@ -125,7 +125,8 @@ class input_serato(plugins.base):
 				inst_obj.visual.name = scene_deck.name
 				inst_obj.visual.color.set_float([0.48, 0.35, 0.84])
 				inst_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
-				plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('native', 'serato-inst', 'instrument')
+				plugin_obj, synthid = convproj_obj.plugin__add__genid('native', 'serato-inst', 'instrument')
+				inst_obj.plugslots.set_synth(synthid)
 				instrument_file = parse_filepath(scene_deck.instrument_file)
 				convproj_obj.fileref__add(scene_deck.instrument_file, instrument_file, 'win')
 				plugin_obj.filerefs['instrument'] = scene_deck.instrument_file
@@ -135,8 +136,9 @@ class input_serato(plugins.base):
 			if scene_deck.type == 'sample':
 				if useaudioclips == False:
 					inst_obj = convproj_obj.instrument__add(cvpj_instid)
-					plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('native', 'serato-inst', 'sampler')
-	
+					plugin_obj, synthid = convproj_obj.plugin__add__genid('native', 'serato-inst', 'sampler')
+					inst_obj.plugslots.set_synth(synthid)
+
 					if scene_deck.sample_file:
 						inst_obj.visual.name = urllib.parse.unquote(scene_deck.sample_file).split('/')[-1]
 						samplepath = parse_filepath(scene_deck.sample_file)
@@ -187,7 +189,7 @@ class input_serato(plugins.base):
 			track_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
 			track_obj.params.add('pan', scene_strip.pan, 'float')
 
-			do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.fxslots_audio)
+			do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
 
 		for num, scene in enumerate(project_obj.scenes):
 			sceneid = 'scene_'+str(num+1)
@@ -312,7 +314,7 @@ class input_serato(plugins.base):
 		if 'label' in project_obj.metadata: convproj_obj.metadata.comment_text = project_obj.metadata['label']
 
 		#for trackid, track_obj in convproj_obj.track__iter():
-		#	print(track_obj.fxslots_audio)
+		#	print(track_obj.plugslots.slots_audio)
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')

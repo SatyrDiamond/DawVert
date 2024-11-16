@@ -199,7 +199,7 @@ class input_soundation(plugins.base):
 								filename = samplefolder+filename
 
 						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, filename, None)
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 
 						get_asdr(plugin_obj, soundation_inst)
 
@@ -233,7 +233,7 @@ class input_soundation(plugins.base):
 					elif instpluginname == 'com.soundation.drummachine':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 						track_obj.is_drum = True
 
 						kit_name = get_paramval(soundation_inst, 'kit_name')
@@ -244,7 +244,7 @@ class input_soundation(plugins.base):
 					elif instpluginname == 'com.soundation.europa':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('user', 'reasonstudios', 'europa')
 						plugin_obj.role = 'synth'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 
 						fldso = globalstore.dataset.get_obj('synth_nonfree', 'plugin', 'europa')
 						if fldso:
@@ -255,7 +255,7 @@ class input_soundation(plugins.base):
 					elif instpluginname == 'com.soundation.GM-2':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 						get_asdr(plugin_obj, soundation_inst)
 						if 'sample_pack' in soundation_inst.params.data:
 							sample_pack = get_paramval(soundation_inst, 'sample_pack')
@@ -269,14 +269,14 @@ class input_soundation(plugins.base):
 					elif instpluginname == 'com.soundation.noiser':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 						track_obj.is_drum = True
 						get_asdr(plugin_obj, soundation_inst)
 							
 					elif instpluginname == 'com.soundation.SAM-1':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 						get_asdr(plugin_obj, soundation_inst)
 						if 'sample_pack' in soundation_inst.params.data:
 							sample_pack = get_paramval(soundation_inst, 'sample_pack')
@@ -285,7 +285,7 @@ class input_soundation(plugins.base):
 					elif instpluginname in ['com.soundation.fm_synth', 'com.soundation.mono', 'com.soundation.spc', 'com.soundation.supersaw', 'com.soundation.the_wub_machine', 'com.soundation.va_synth']:
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 
 						fldso = globalstore.dataset.get_obj('soundation', 'plugin', instpluginname)
 						if fldso:
@@ -304,7 +304,7 @@ class input_soundation(plugins.base):
 					elif instpluginname == 'com.soundation.simple':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)
 						plugin_obj.role = 'synth'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 						get_asdr(plugin_obj, soundation_inst)
 						asdrf_a = get_paramval(soundation_inst, 'filter_attack')
 						asdrf_s = get_paramval(soundation_inst, 'filter_decay')
@@ -330,5 +330,5 @@ class input_soundation(plugins.base):
 				plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', soundation_effect.identifier)
 				plugin_obj.role = 'fx'
 				plugin_obj.fxdata_add(not soundation_effect.bypass, 1)
-				track_obj.fxslots_audio.append(pluginid)
+				track_obj.plugslots.slots_audio.append(pluginid)
 				autoall_sng_to_cvpj(convproj_obj, pluginid, soundation_effect, plugin_obj, soundation_effect.identifier)

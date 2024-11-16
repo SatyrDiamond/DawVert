@@ -47,7 +47,7 @@ class input_sop(plugins.base):
 		for instnum, opli in enumerate(project_obj.insts):
 			cvpj_instname = str(instnum)
 			inst_obj = convproj_obj.instrument__add(cvpj_instname)
-			inst_obj.pluginid = cvpj_instname
+			inst_obj.plugslots.set_synth(cvpj_instname)
 			inst_obj.visual.name = opli.name_long if not opli.name_long else opli.name
 			inst_obj.visual.color.set_float(maincolor)
 			inst_obj.is_drum = opli.perc_type!=0

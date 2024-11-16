@@ -55,7 +55,7 @@ def add_master_fx(convproj_obj, fx_type, fx_value):
 	plugin_obj.role = 'fx'
 
 	plugin_obj.visual.from_dset('boscaceoil', 'fx', FX_NAMES[fx_type], True)
-	convproj_obj.track_master.fxslots_audio.append('master-effect')
+	convproj_obj.track_master.plugslots.slots_audio.append('master-effect')
 
 def add_filter(convproj_obj, instnum, cutoff, resonance):
 	cvpj_instid = 'ceol_'+str(instnum).zfill(2)
@@ -136,8 +136,10 @@ class input_ceol(plugins.base):
 				if idval_inst: valsoundid = idval_inst.get_idval(str(ceol_inst_obj.inst), 'valsoundid')
 				opm_obj.from_valsound(valsoundid)
 
-				plugin_obj, inst_obj.pluginid = opm_obj.to_cvpj_genid(convproj_obj)
-			
+				plugin_obj, synthid = opm_obj.to_cvpj_genid(convproj_obj)
+				inst_obj.plugslots.set_synth(synthid)
+
+
 			inst_objs[ceol_inst_obj.inst] = inst_obj
 			if ceol_inst_obj.inst == 363: t_key_offset.append(60)
 			elif ceol_inst_obj.inst == 364: t_key_offset.append(48)
@@ -148,7 +150,7 @@ class input_ceol(plugins.base):
 
 			if ceol_inst_obj.cutoff < 110:
 				inst_filters[instnum] = add_filter(convproj_obj, instnum, ceol_inst_obj.cutoff, ceol_inst_obj.resonance)
-				inst_obj.fxslots_audio.append(inst_filters[instnum])
+				inst_obj.plugslots.slots_audio.append(inst_filters[instnum])
 
 		# ---------- Patterns ----------
 		for patnum, ceol_pat_obj in enumerate(project_obj.patterns):
@@ -190,7 +192,7 @@ class input_ceol(plugins.base):
 						after_filter[plnum][1] = ceol_pat_obj.inst
 						if ceol_pat_obj.inst not in inst_filters: 
 							inst_filters[ceol_pat_obj.inst] = add_filter(convproj_obj, ceol_pat_obj.inst, ceol_inst_obj.cutoff, ceol_inst_obj.resonance)
-							inst_objs[ceol_pat_obj.inst].fxslots_audio.append(inst_filters[ceol_pat_obj.inst])
+							inst_objs[ceol_pat_obj.inst].plugslots.slots_audio.append(inst_filters[ceol_pat_obj.inst])
 
 						patinstid = 'ceol_'+str(ceol_pat_obj.inst).zfill(2)
 

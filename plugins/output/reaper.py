@@ -349,7 +349,7 @@ class output_reaper(plugins.base):
 
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			rpp_track_obj.fxchain = rpp_fxchain.rpp_fxchain()
@@ -365,8 +365,6 @@ class output_reaper(plugins.base):
 				rpp_vst_obj.vst_lib = 'reacontrolmidi.dll'
 				rpp_vst_obj.vst_fourid = 1919118692
 				rpp_vst_obj.vst_uuid = '56535472636D64726561636F6E74726F'
-
-			add_plugin(rpp_track_obj.fxchain, track_obj.inst_pluginid, convproj_obj)
 
 			for notespl_obj in track_obj.placements.pl_notes:
 
@@ -420,8 +418,10 @@ class output_reaper(plugins.base):
 						rpp_insource_obj = rpp_source_obj.source = rpp_source.rpp_source()
 						file_source(rpp_insource_obj, fileref_obj, filename)
 
+			for fxid in track_obj.plugslots.slots_synths:
+				add_plugin(rpp_track_obj.fxchain, fxid, convproj_obj)
 
-			for fxid in track_obj.fxslots_audio:
+			for fxid in track_obj.plugslots.slots_audio:
 				add_plugin(rpp_track_obj.fxchain, fxid, convproj_obj)
 
 			trackdata.append(rpp_track_obj)

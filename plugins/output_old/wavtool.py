@@ -283,7 +283,7 @@ class output_wavtool(plugins.base):
 				device_obj.y = 35.75
 
 				if track_obj.type == 'instrument':
-					pluginid = track_obj.inst_pluginid
+					pluginid = track_obj.plugslots.synth
 					middlenote = track_obj.datavals.get('middlenote', 0)+60
 					inst_supported = False
 					plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)

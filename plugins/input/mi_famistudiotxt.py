@@ -57,11 +57,13 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 	inst_obj.fxrack_channel = fx_num
 	inst_obj.params.add('vol', 0.2, 'float')
 
+	synthid = None
+
 	if WaveType == 'Square1' or WaveType == 'Square2' or WaveType == 'Triangle' or WaveType == 'Noise':
 		if WaveType == 'Square1' or WaveType == 'Square2': wavetype = 'square'
 		if WaveType == 'Triangle': wavetype = 'triangle'
 		if WaveType == 'Noise': wavetype = 'noise'
-		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = wavetype
 		add_envelopes(plugin_obj, fst_Instrument)
@@ -69,25 +71,25 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 	if WaveType == 'VRC7FM':
 		inst_obj.params.add('vol', 1, 'float')
 		opl2_obj = fst_Instrument.FM.to_opl2()
-		plugin_obj, inst_obj.pluginid = opl2_obj.to_cvpj_genid(convproj_obj)
+		plugin_obj, synthid = opl2_obj.to_cvpj_genid(convproj_obj)
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
 		if WaveType == 'VRC6Saw': wavetype = 'saw'
 		if WaveType == 'VRC6Square': wavetype = 'square'
-		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = wavetype
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'FDS':
-		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'fds', None)
+		plugin_obj, synthid = convproj_obj.plugin__add__genid('chip', 'fds', None)
 		add_envelopes(plugin_obj, fst_Instrument)
 		add_envelope(plugin_obj, fst_Instrument, 'wave', 'FDSWave')
 
 	if WaveType == 'N163':
 		inst_obj.params.add('vol', 1, 'float')
-		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('native', 'namco163_famistudio', None)
+		plugin_obj, synthid = convproj_obj.plugin__add__genid('native', 'namco163_famistudio', None)
 		osc_obj = plugin_obj.osc_add()
 		osc_obj.prop.type = 'wavetable'
 		osc_obj.prop.nameid = 'main'
@@ -95,18 +97,18 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 		add_envelope(plugin_obj, fst_Instrument, 'wave', 'N163Wave')
 
 	if WaveType == 'S5B':
-		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'MMC5':
-		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 
 	if WaveType == 'EPSMSquare':
-		plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 		add_envelopes(plugin_obj, fst_Instrument)
@@ -115,20 +117,22 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 		inst_obj.params.add('vol', 0.6, 'float')
 		instvolume = 0.7
 		opn2_obj = fst_Instrument.FM.to_opn2()
-		plugin_obj, inst_obj.pluginid = opn2_obj.to_cvpj_genid(convproj_obj)
+		plugin_obj, synthid = opn2_obj.to_cvpj_genid(convproj_obj)
 		instpan = 0
 		instpan += int(bool(fst_Instrument.Regs[1] & 0x80))*-1
 		instpan += int(bool(fst_Instrument.Regs[1] & 0x40))
 		inst_obj.params.add('pan', instpan, 'float')
 
-	if WaveType == 'EPSM_Kick': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'kick')
-	if WaveType == 'EPSM_Snare': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'snare')
-	if WaveType == 'EPSM_Cymbal': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'cymbal')
-	if WaveType == 'EPSM_HiHat': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'hihat')
-	if WaveType == 'EPSM_Tom': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'tom')
-	if WaveType == 'EPSM_Rimshot': plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'rimshot')
+	if WaveType == 'EPSM_Kick': plugin_obj, synthid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'kick')
+	if WaveType == 'EPSM_Snare': plugin_obj, synthid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'snare')
+	if WaveType == 'EPSM_Cymbal': plugin_obj, synthid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'cymbal')
+	if WaveType == 'EPSM_HiHat': plugin_obj, synthid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'hihat')
+	if WaveType == 'EPSM_Tom': plugin_obj, synthid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'tom')
+	if WaveType == 'EPSM_Rimshot': plugin_obj, synthid = convproj_obj.plugin__add__genid('chip', 'epsm_rhythm', 'rimshot')
 
 	plugin_obj.role = 'synth'
+
+	if synthid: inst_obj.plugslots.set_synth(synthid)
 
 	inst_obj.visual.name = instname
 	inst_obj.visual.from_dset('famistudio', 'chip', WaveType, False)
@@ -150,8 +154,10 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 	inst_obj.visual.from_dset('famistudio', 'chip', 'DPCM', False)
 	inst_obj.fxrack_channel = fx_num
 	inst_obj.is_drum = True
-	plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+	plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 	plugin_obj.role = 'synth'
+
+	inst_obj.plugslots.set_synth(synthid)
 
 	for key, dpcmmap in DPCMMappings.data.items():
 		dpcm_pitch = int(dpcmmap['Pitch'])

@@ -365,10 +365,12 @@ class input_flp(plugins.base):
 
 				chan_range[channelnum] = [fl_channel_obj.params.keyrange_min, fl_channel_obj.params.keyrange_max]
 
+				instplugid = 'FLPlug_G_'+str(channelnum)
+
 				plugin_obj = None
 				if fl_channel_obj.type == 0:
-					inst_obj.pluginid = 'FLPlug_G_'+str(channelnum)
-					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(inst_obj.pluginid, get_sample(fl_channel_obj.samplefilename), 'win')
+					inst_obj.plugslots.set_synth(instplugid)
+					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(instplugid, get_sample(fl_channel_obj.samplefilename), 'win')
 					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
@@ -383,10 +385,10 @@ class input_flp(plugins.base):
 
 				if fl_channel_obj.type == 2:
 					if fl_channel_obj.plugin.name != None: 
-						inst_obj.pluginid = 'FLPlug_G_'+str(channelnum)
-						plugin_obj = flp_dec_plugins.getparams(convproj_obj, inst_obj.pluginid, fl_channel_obj.plugin, samplefolder, flp_obj.zipfile)
+						inst_obj.plugslots.set_synth(instplugid)
+						plugin_obj = flp_dec_plugins.getparams(convproj_obj, instplugid, fl_channel_obj.plugin, samplefolder, flp_obj.zipfile)
 						if fl_channel_obj.plugin.name == 'fruity wrapper':
-							wrapper_plugids.append(inst_obj.pluginid)
+							wrapper_plugids.append(instplugid)
 
 						if fl_channel_obj.samplefilename:
 							sp_obj = plugin_obj.samplepart_add('audiofile')
@@ -410,7 +412,7 @@ class input_flp(plugins.base):
 						timing_obj = delay_obj.timing_add(0)
 						timing_obj.set_steps(fl_delay.time, convproj_obj)
 						chfxplugin_obj = delay_obj.to_cvpj(convproj_obj, chanfxpid)
-						inst_obj.fxslots_audio.append(chanfxpid)
+						inst_obj.plugslots.slots_audio.append(chanfxpid)
 
 					vol_enabled = bool(fl_asdr_obj_vol.el_env_enabled)
 
@@ -477,7 +479,7 @@ class input_flp(plugins.base):
 				plugin_obj = convproj_obj.plugin__add(notefx_pluginid, 'universal', 'arpeggiator', None)
 				plugin_obj.fxdata_add(fl_channel_obj.params.arpdirection, None)
 				plugin_obj.role = 'notefx'
-				inst_obj.fxslots_notes.append(notefx_pluginid)
+				inst_obj.plugslots.slots_notes.append(notefx_pluginid)
 
 				if fl_channel_obj.params.arpdirection:
 					plugin_obj.datavals.add('gate', fl_channel_obj.params.arpgate/48)
@@ -777,7 +779,7 @@ class input_flp(plugins.base):
 						if slot_obj.plugin.name == 'fruity wrapper':
 							wrapper_plugids.append(pluginid)
 
-						fxchannel_obj.fxslots_audio.append(pluginid)
+						fxchannel_obj.plugslots.slots_audio.append(pluginid)
 					except:
 						pass
 
@@ -811,7 +813,7 @@ class input_flp(plugins.base):
 					filter_obj.freq = eq_freq
 					filter_obj.type.set(['low_shelf','peak','high_shelf'][n], None)
 					filter_obj.gain = eq_level
-				fxchannel_obj.fxslots_mixer.append(eq_fxid)
+				fxchannel_obj.plugslots.slots_mixer.append(eq_fxid)
 
 		#if len(flp_obj.arrangements) == 0 and len(FL_Patterns) == 1 and len(FL_Channels) == 0:
 		#	fst_chan_notelist = [[] for x in range(16)]

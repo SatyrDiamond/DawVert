@@ -57,7 +57,7 @@ def add_caustic_fx(convproj_obj, track_obj, caustic_fx, start_plugid):
 					outval = controls_data[int(param_id)] if int(param_id) in controls_data else None
 					plugin_obj.dset_param__add(param_id, outval, dset_param)
 
-			track_obj.fxslots_audio.append(fx_pluginid)
+			track_obj.plugslots.slots_audio.append(fx_pluginid)
 
 def loopmode_cvpj(wavdata, sp_obj): 
 	lm = wavdata['mode']
@@ -150,7 +150,7 @@ class input_cvpj_r(plugins.base):
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, True)
 			track_obj.visual.from_dset('caustic', 'plugin_inst', machine.mach_id, True)
 			if machine.name: track_obj.visual.name = machine.name
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			cvpj_tracks.append(track_obj)
 
 			# -------------------------------- PCMSynth --------------------------------
@@ -312,14 +312,14 @@ class input_cvpj_r(plugins.base):
 			plugin_obj.params.add('bass', mixer_tracks[machnum].eq_low, 'float')
 			plugin_obj.params.add('mid', mixer_tracks[machnum].eq_mid, 'float')
 			plugin_obj.params.add('high', mixer_tracks[machnum].eq_high, 'float')
-			track_obj.fxslots_mixer.append(mixereq_plugid)
+			track_obj.plugslots.slots_mixer.append(mixereq_plugid)
 
 			width_plugid = 'machine'+str(machnum)+'_width'
 			plugin_obj = convproj_obj.plugin__add(width_plugid, 'universal', 'width', None)
 			plugin_obj.visual.name = 'Width'
 			plugin_obj.visual.color.set_float([0.66, 0.61, 0.76])
 			plugin_obj.params.add('width', mixer_tracks[machnum].width, 'float')
-			track_obj.fxslots_mixer.append(width_plugid)
+			track_obj.plugslots.slots_mixer.append(width_plugid)
 		
 		for x in project_obj.seqn.parts:
 			x['key'] = x['key']%100 + (x['key']//100)*16
@@ -405,9 +405,9 @@ class input_cvpj_r(plugins.base):
 				return_obj = convproj_obj.track_master.fx__return__add(fxid)
 				return_obj.visual.name = plugin_obj.visual.name
 				return_obj.visual.color = plugin_obj.visual.color.copy()
-				return_obj.fxslots_audio.append(fxid)
+				return_obj.plugslots.slots_audio.append(fxid)
 			else:
-				convproj_obj.track_master.fxslots_audio.append(fxid)
+				convproj_obj.track_master.plugslots.slots_audio.append(fxid)
 
 			if fxid == 'master_delay': plugin_obj.fxdata_add(not bool(master_controls_data[40]), 1)
 			if fxid == 'master_reverb': plugin_obj.fxdata_add(not bool(master_controls_data[41]), 1)

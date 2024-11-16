@@ -464,7 +464,7 @@ def addgrp(convproj_obj, project_obj, groupid):
 		group_obj = convproj_obj.fx__group__get(groupid)
 		groupnumid = counter_track.get()
 		als_gtrack = project_obj.add_group_track(groupnumid)
-		do_effects(convproj_obj, als_gtrack, group_obj.fxslots_audio)
+		do_effects(convproj_obj, als_gtrack, group_obj.plugslots.slots_audio)
 		als_gtrack.Color = group_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
 		if group_obj.visual.name: als_gtrack.Name.UserName = fixtxt(group_obj.visual.name)
 		do_param(convproj_obj, group_obj.params, 'vol', 1, 'float', ['group', groupid, 'vol'], als_gtrack.DeviceChain.Mixer.Volume, als_gtrack.AutomationEnvelopes)
@@ -712,7 +712,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 	if track_obj.type == 'instrument':
 		tracknumid = counter_track.get()
 		als_track = project_obj.add_midi_track(tracknumid)
-		#do_note_effects(convproj_obj, als_track, track_obj.fxslots_notes)
+		#do_note_effects(convproj_obj, als_track, track_obj.plugslots.slots_notes)
 		als_track.Color = track_color
 		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
@@ -725,7 +725,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 		#print('NEW TRACK', tracknumid, trackid, groupnumid)
 
-		plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
+		plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 		if plugin_found:
 			issampler = plugin_obj.check_wildmatch('universal', 'sampler', None)
 		else:
@@ -861,19 +861,19 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
 					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-				add_plugindevice_native(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
+				add_plugindevice_native(als_track, convproj_obj, plugin_obj, track_obj.plugslots.synth)
 
 			if plugin_obj.check_match('external', 'vst2', 'win'):
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
 					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-				add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
+				add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, track_obj.plugslots.synth)
 
 			if plugin_obj.check_match('external', 'vst3', 'win'):
 				if middlenote != 0:
 					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
 					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
-				add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, track_obj.inst_pluginid)
+				add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, track_obj.plugslots.synth)
 
 			if plugin_obj.check_match('universal', 'sampler', 'multi'):
 				is_sampler = True
@@ -1090,7 +1090,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			do_audioclips(convproj_obj, track_obj.placements.pl_audio, track_color, als_track)
 
 	if track_obj.type in ['instrument', 'audio']:
-		do_effects(convproj_obj, als_track, track_obj.fxslots_audio)
+		do_effects(convproj_obj, als_track, track_obj.plugslots.slots_audio)
 		track_sendholders = als_track.DeviceChain.Mixer.Sends
 		numsend = 0
 		for returnid, x in master_returns.items():
@@ -1205,7 +1205,7 @@ class output_ableton(plugins.base):
 
 		master_returns = convproj_obj.track_master.returns
 
-		do_effects(convproj_obj, als_mastertrack, convproj_obj.track_master.fxslots_audio)
+		do_effects(convproj_obj, als_mastertrack, convproj_obj.track_master.plugslots.slots_audio)
 
 		ids_group_cvpj_als = {}
 
@@ -1232,7 +1232,7 @@ class output_ableton(plugins.base):
 		for returnid, return_obj in convproj_obj.track_master.iter_return():
 			tracknumid = counter_track.get()
 			als_track = project_obj.add_return_track(tracknumid)
-			do_effects(convproj_obj, als_track, return_obj.fxslots_audio)
+			do_effects(convproj_obj, als_track, return_obj.plugslots.slots_audio)
 			do_param(convproj_obj, return_obj.params, 'vol', 1, 'float', ['return', returnid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 			do_param(convproj_obj, return_obj.params, 'pan', 0, 'float', ['return', returnid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
 			als_track.Color = return_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)

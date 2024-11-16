@@ -247,7 +247,7 @@ class plugconv(plugins.base):
 			delay_obj.feedback_cross[1] = crossR/100
 			delay_obj.cut_low = lowcut
 			delay_obj.cut_high = highcut
-			plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
+			plugin_obj, pluginid = delay_obj.to_cvpj(convproj_obj, pluginid)
 			plugin_obj.fxdata_add(None, mix)
 
 		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'naturalReverb'):

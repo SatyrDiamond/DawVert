@@ -292,9 +292,10 @@ class input_reaper(plugins.base):
 				if len(outsamplers) == 1:
 					filename, samplerj = outsamplers[0]
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(sampler_id, filename, 'win')
-					do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
-					do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')
-					track_obj.plugslots.plugin_autoplace(plugin_obj, sampler_id)
+					if sampleref_obj:
+						do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
+						do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')
+						track_obj.plugslots.plugin_autoplace(plugin_obj, sampler_id)
 
 				if len(outsamplers) > 1:
 					plugin_obj = convproj_obj.plugin__add(sampler_id, 'universal', 'sampler', 'multi')
@@ -311,7 +312,7 @@ class input_reaper(plugins.base):
 
 						sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 
-						if sampmode == 2:
+						if sampmode == 2 and sampleref_obj:
 							key_start = int((samplerj['key_start'] if 'key_start' in samplerj else 0)*127)
 							key_end = int((samplerj['key_end'] if 'key_end' in samplerj else 1)*127)
 							pitch_start = int((samplerj['pitch_start'] if 'pitch_start' in samplerj else 0)*160)-80

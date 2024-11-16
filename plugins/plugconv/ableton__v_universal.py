@@ -99,6 +99,11 @@ class plugconv(plugins.base):
 			manu_obj.to_param('refrence', 'TuningFreq', None)
 			return 1
 
+		if plugin_obj.type.check_wildmatch('universal', 'spectrum_analyzer', None):
+			extpluglog.convinternal('Universal', 'Spectrum Analyzer', 'Ableton', 'Spectrum Analyzer')
+			plugin_obj.replace('native', 'ableton', 'SpectrumAnalyzer')
+			return 1
+
 		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'Ableton', 'Eq8')
 			abe_starttxt = "Bands.0/ParameterA/"

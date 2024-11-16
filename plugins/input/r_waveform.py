@@ -214,9 +214,9 @@ def do_track(convproj_obj, wf_track, track_obj):
 		placement_obj.time.position_real = midiclip.start
 		placement_obj.time.duration_real = midiclip.length
 		if midiclip.loopStartBeats == 0 and midiclip.loopLengthBeats == 0:
-			placement_obj.time.set_offset(midiclip.offset)
+			placement_obj.time.set_offset(midiclip.offset*4)
 		else:
-			placement_obj.cut_loop_data(midiclip.offset, midiclip.loopStartBeats, midiclip.loopStartBeats+midiclip.loopLengthBeats)
+			placement_obj.time.set_loop_data(midiclip.offset*4, midiclip.loopStartBeats*4, (midiclip.loopStartBeats+midiclip.loopLengthBeats)*4)
 	
 		for note in midiclip.sequence.notes:
 			placement_obj.notelist.add_r(note.pos*4, note.dur*4, note.key-60, note.vel/100, {})

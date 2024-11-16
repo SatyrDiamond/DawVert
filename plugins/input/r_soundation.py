@@ -191,7 +191,8 @@ class input_soundation(plugins.base):
 						filename = None
 						if 'sample' in soundation_inst.data:
 							sample_d = soundation_inst.data['sample']
-							if 'url' in sample_d: filename = sample_d['url']
+							if sample_d:
+								if 'url' in sample_d: filename = sample_d['url']
 
 						if zip_data and filename:
 							if filename in zip_data.namelist():
@@ -249,7 +250,7 @@ class input_soundation(plugins.base):
 						fldso = globalstore.dataset.get_obj('synth_nonfree', 'plugin', 'europa')
 						if fldso:
 							for param_id, dset_param in fldso.params.iter():
-								outval = get_paramval(soundation_inst, "/custom_properties/"+param_id)
+								outval = get_paramval(soundation_inst, "/custom_properties/"+dset_param.name)
 								plugin_obj.dset_param__add(param_id, outval, dset_param)
 
 					elif instpluginname == 'com.soundation.GM-2':

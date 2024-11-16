@@ -356,4 +356,9 @@ class plugconv(plugins.base):
 				plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
 				return 1
 
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity spectroman'):
+			extpluglog.convinternal('FL Studio', 'Fruity Spectroman', 'Universal', 'Spectrum Analyzer')
+			plugin_obj.replace('universal', 'spectrum_analyzer', None)
+			return 1
+
 		return 2

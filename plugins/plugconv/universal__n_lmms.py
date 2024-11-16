@@ -91,4 +91,9 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('gain_in', eq_Inputgain, 'float')
 			return 1
 			
+		if plugin_obj.type.check_wildmatch('native', 'lmms', 'spectrumanalyzer'):
+			extpluglog.convinternal('LMMS', 'SpectrumAnalyzer', 'Universal', 'Spectrum Analyzer')
+			plugin_obj.replace('universal', 'spectrum_analyzer', None)
+			return 1
+
 		return 2

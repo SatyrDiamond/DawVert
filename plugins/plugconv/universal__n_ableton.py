@@ -135,6 +135,11 @@ class plugconv(plugins.base):
 			plugin_obj.plugts_transform('./data_main/plugts/ableton_univ.pltr', 'filtereq3', convproj_obj, pluginid)
 			return 1
 
+		if plugin_obj.type.check_wildmatch('native', 'ableton', 'SpectrumAnalyzer'):
+			extpluglog.convinternal('Ableton', 'SpectrumAnalyzer', 'Universal', 'Spectrum Analyzer')
+			plugin_obj.replace('universal', 'spectrum_analyzer', None)
+			return 1
+
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'FrequencyShifter'):
 			p_Coarse = plugin_obj.params.get("Coarse", 0).value
 			p_Fine = plugin_obj.params.get("Fine", 0).value

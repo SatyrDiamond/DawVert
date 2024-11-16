@@ -200,4 +200,9 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['n_filter', pluginid, 'low_pass', 'freq'], ['plugin', pluginid, "LPfreq"])
 			return 0
 
+		if plugin_obj.type.check_wildmatch('universal', 'spectrum_analyzer', None):
+			extpluglog.convinternal('Universal', 'Spectrum Analyzer', 'LMMS', 'Spectrum Analyzer')
+			plugin_obj.replace('native', 'lmms', 'spectrumanalyzer')
+			return 0
+
 		return 2

@@ -117,6 +117,14 @@ class plugconv(plugins.base):
 				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
 
+		if plugin_obj.type.check_wildmatch('universal', 'spectrumanalyzer', None):
+			extpluglog.extpluglist.add('FOSS', 'VST2', 'SpectrumAnalyzer', 'SocaLabs')
+			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'spectrumanalyzer')
+			if exttype:
+				extpluglog.extpluglist.success('Universal', 'Spectrum Analyzer')
+				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
+				return True
+
 		if plugin_obj.type.check_wildmatch('universal', 'synth-osc', None):
 			if plugin_obj.oscs:
 				osc_obj = plugin_obj.oscs[0]

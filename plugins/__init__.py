@@ -229,15 +229,17 @@ class plugin_selector:
 		if self.plugintype in self.pluginlist:
 			for shortname, dvplugin in self.pluginlist[self.plugintype].items():
 				if dvplugin.supported_autodetect:
-					try:
-						detected_format = dvplugin.plug_obj.detect(indata)
-						if detected_format:
-							self.selected_shortname = shortname
-							self.selected_plugin = self.pluginlist[self.plugintype][shortname]
-							logger_plugins.info('Auto-Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
-							return shortname
-					except PermissionError:
-						pass
+					funclist = dir(dvplugin.plug_obj)
+					if 'detect' in funclist:
+						try:
+							detected_format = dvplugin.plug_obj.detect(indata)
+							if detected_format:
+								self.selected_shortname = shortname
+								self.selected_plugin = self.pluginlist[self.plugintype][shortname]
+								logger_plugins.info('Auto-Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
+								return shortname
+						except PermissionError:
+							pass
 
 	def get_prop_obj(self):
 		return self.selected_plugin.prop_obj if self.selected_plugin else None

@@ -483,7 +483,7 @@ class plugconv(plugins.base):
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'spectrumanalyzer')
 			if exttype:
 				extpluglog.extpluglist.success('FL Studio', 'Fruity Spectroman')
-				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'vst2_fruity_spectroman', convproj_obj, pluginid)
+				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'fruity_spectroman__socalabs', convproj_obj, pluginid)
 				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
@@ -493,7 +493,7 @@ class plugconv(plugins.base):
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'stereoprocessor')
 			if exttype:
 				extpluglog.extpluglist.success('FL Studio', 'Fruity Stereo Enhancer')
-				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'vst2_fruity_stereo_enhancer', convproj_obj, pluginid)
+				plugin_obj.plugts_transform('./data_ext/plugts/flstudio_vst.pltr', 'fruity_stereo_enhancer__socalabs', convproj_obj, pluginid)
 				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 

@@ -38,4 +38,4 @@ class juicysfplugin_data:
 
 	def to_cvpj_vst2(self, convproj_obj, plugin_obj):
 		plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'any', 1249076848, 'chunk', data_vc2xml.make(self.jsfp_xml), None)
-		plugin_obj.move_prog(self.program-1)
+		plugin_obj.move_prog(self.program)

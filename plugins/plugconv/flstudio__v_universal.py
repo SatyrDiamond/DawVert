@@ -96,4 +96,9 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('frequency', p_frequency*70000, 'int')
 			plugin_obj.params.add('freqtype', not p_freqtype, 'int')
 
+		if plugin_obj.type.check_wildmatch('universal', 'spectrum_analyzer', None):
+			extpluglog.convinternal('Universal', 'Spectrum Analyzer', 'FL Studio', 'Fruity Spectroman')
+			plugin_obj.replace('native', 'flstudio', 'fruity spectroman')
+			return 0
+
 		return 2

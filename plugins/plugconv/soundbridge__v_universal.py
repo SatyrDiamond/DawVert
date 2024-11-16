@@ -139,4 +139,9 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('downsample', xtramath.clamp(22050/(freq*40), 0, 1), 'float')
 			return 0
 
+		if plugin_obj.type.check_wildmatch('universal', 'spectrum_analyzer', None):
+			extpluglog.convinternal('Universal', 'Spectrum Analyzer', 'SoundBridge', 'Analyzer')
+			plugin_obj.replace('native', 'soundbridge', 'analyzer')
+			return 1
+
 		return 2

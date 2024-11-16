@@ -5,6 +5,7 @@ import plugins
 
 import struct
 from functions_plugin_ext import plugin_vst2
+from functions import extpluglog
 
 class plugconv(plugins.base):
 	def __init__(self): pass

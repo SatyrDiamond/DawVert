@@ -228,17 +228,17 @@ class input_it(plugins.base):
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'pitch_pan_separation', None)
 					plugin_obj.params.add('range', 1/(it_inst.pitch_pan_separation/32), 'float')
 					plugin_obj.datavals.add('center_note', it_inst.pitch_pan_center)
-					inst_obj.fxslots_notes.append(pluginid)
+					inst_obj.plugslots.slots_notes.append(pluginid)
 
 				if it_inst.randomvariation_volume:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'random_variation', 'vol')
 					plugin_obj.params.add('amount', it_inst.randomvariation_volume, 'float')
-					inst_obj.fxslots_notes.append(pluginid)
+					inst_obj.plugslots.slots_notes.append(pluginid)
 
 				if it_inst.randomvariation_pan:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'random_variation', 'pan')
 					plugin_obj.params.add('amount', it_inst.randomvariation_pan, 'float')
-					inst_obj.fxslots_notes.append(pluginid)
+					inst_obj.plugslots.slots_notes.append(pluginid)
 
 				inst_used = False
 				if bn_s_t_ifsame == True:
@@ -247,14 +247,16 @@ class input_it(plugins.base):
 						it_samp = project_obj.samples[bn_s_t_f[1]-1]
 						global_vol = it_inst.global_vol/128
 						track_volume = 0.3*global_vol*calc_samp_vol(it_samp)
-						plugin_obj, inst_obj.pluginid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, bn_s_t_f[1])
+						plugin_obj, synthid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, bn_s_t_f[1])
+						inst_obj.plugslots.set_synth(synthid)
 						inst_used = True
 				else:
 					inst_used = True
 					sampleregions = data_values.list__to_reigons(bn_s_t, 60)
 
-					plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+					plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					plugin_obj.datavals.add('point_value_type', "samples")
+					inst_obj.plugslots.set_synth(synthid)
 
 					global_vol = it_inst.global_vol/128
 					track_volume = 0.3*global_vol
@@ -300,7 +302,7 @@ class input_it(plugins.base):
 
 				if it_inst.filtermode == 1: plugin_obj.filter.type = 'high_pass'
 
-				if it_inst.pluginnum: inst_obj.fxslots_audio.append('FX'+str(it_inst.pluginnum))
+				if it_inst.pluginnum: inst_obj.plugslots.slots_audio.append('FX'+str(it_inst.pluginnum))
 
 				inst_obj.params.add('vol', track_volume, 'float')
 				if it_inst.default_pan < 128: inst_obj.params.add('pan', (it_inst.default_pan/32)-1, 'float')
@@ -314,7 +316,8 @@ class input_it(plugins.base):
 				inst_obj = convproj_obj.instrument__add(it_instname)
 				inst_obj.visual.name = cvpj_instname
 				inst_obj.visual.color.set_float(MAINCOLOR)
-				plugin_obj, inst_obj.pluginid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, samplecount+1)
+				plugin_obj, synthid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, samplecount+1)
+				inst_obj.plugslots.set_synth(synthid)
 				inst_obj.params.add('vol', track_volume, 'float')
 
 		convproj_obj.track_master.params.add('vol', project_obj.globalvol/128, 'float')

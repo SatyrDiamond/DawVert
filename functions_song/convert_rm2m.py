@@ -27,8 +27,8 @@ def convert(convproj_obj, change_instnames):
 			newinstid = 'rm2m__'+trackid+'__'+instid
 			if instid in old_instruments:
 				new_inst = copy.deepcopy(old_instruments[instid])
-				if new_inst.pluginid not in used_plugins:
-					used_plugins.append(new_inst.pluginid)
+				if new_inst.plugslots.synth not in used_plugins:
+					used_plugins.append(new_inst.plugslots.synth)
 				convproj_obj.instruments[newinstid] = new_inst
 				convproj_obj.instruments_order.append(newinstid)
 			else:
@@ -71,7 +71,7 @@ def convert(convproj_obj, change_instnames):
 						nlp.notelist.appendtxt_inst('rm2m__'+trackid+'__', '')
 
 	for fxnum, fxchan_obj in convproj_obj.fxrack.items():
-		for x in fxchan_obj.fxslots_audio: used_plugins.append(x)
+		for x in fxchan_obj.plugslots.slots_audio: used_plugins.append(x)
 
 	for plugid in used_plugins:
 		if plugid:

@@ -423,7 +423,7 @@ def maketrack_notes(convproj_obj, track_obj, trackid, lane_obj):
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
-	do_devices(convproj_obj, dp_channel, lane_obj, track_obj.inst_pluginid, track_obj.fxslots_audio)
+	do_devices(convproj_obj, dp_channel, lane_obj, track_obj.plugslots.synth, track_obj.plugslots.slots_audio)
 	return dp_track
 
 def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
@@ -432,7 +432,7 @@ def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
-	do_devices(convproj_obj, dp_channel, lane_obj, None, track_obj.fxslots_audio)
+	do_devices(convproj_obj, dp_channel, lane_obj, None, track_obj.plugslots.slots_audio)
 	return dp_track
 
 def maketrack_hybrid(convproj_obj, track_obj, trackid, lane_obj):
@@ -441,7 +441,7 @@ def maketrack_hybrid(convproj_obj, track_obj, trackid, lane_obj):
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
-	do_devices(convproj_obj, dp_channel, lane_obj, track_obj.inst_pluginid, track_obj.fxslots_audio)
+	do_devices(convproj_obj, dp_channel, lane_obj, track_obj.plugslots.synth, track_obj.plugslots.slots_audio)
 	return dp_track
 
 def maketrack_group(convproj_obj, group_obj, trackid, lane_obj):
@@ -450,7 +450,7 @@ def maketrack_group(convproj_obj, group_obj, trackid, lane_obj):
 	do_visual(group_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, group_obj.params, dp_channel, dp_track.id+'__param__', ['group', trackid])
 	make_clips(dp_track.id, convproj_obj, group_obj, lane_obj, trackid)
-	do_devices(convproj_obj, dp_channel, lane_obj, None, group_obj.fxslots_audio)
+	do_devices(convproj_obj, dp_channel, lane_obj, None, group_obj.plugslots.slots_audio)
 	return dp_track
 
 def maketrack_return(convproj_obj, return_obj, returnid):
@@ -458,7 +458,7 @@ def maketrack_return(convproj_obj, return_obj, returnid):
 	do_visual(return_obj.visual, dp_track)
 	lane_obj = make_lane('return__'+returnid)
 	do_params(convproj_obj, lane_obj, return_obj.params, dp_channel, dp_track.id+'__param__', ['return', returnid])
-	do_devices(convproj_obj, dp_channel, lane_obj, None, return_obj.fxslots_audio)
+	do_devices(convproj_obj, dp_channel, lane_obj, None, return_obj.plugslots.slots_audio)
 	return dp_track
 
 def maketrack_master(convproj_obj, track_obj, arrangement):
@@ -468,7 +468,7 @@ def maketrack_master(convproj_obj, track_obj, arrangement):
 	lane_obj = make_lane('mastertrack')
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['master'])
 	autofound, autoseries = convproj_obj.automation.get(['main', 'bpm'], 'float')
-	do_devices(convproj_obj, dp_channel, lane_obj, None, track_obj.fxslots_audio)
+	do_devices(convproj_obj, dp_channel, lane_obj, None, track_obj.plugslots.slots_audio)
 	if autofound:
 		tempoauto = arrangement.tempoautomation = points.dawproject_points()
 		tempoauto.unit = 'bpm'

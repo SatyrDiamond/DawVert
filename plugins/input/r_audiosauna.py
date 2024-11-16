@@ -84,7 +84,7 @@ class input_audiosanua(plugins.base):
 		plugin_obj.params.add_named("damage", project_obj.dlyDamage/100, 'float', "Damage")
 		plugin_obj.params.add_named("feedback", project_obj.dlyFeed/100, 'float', "Feedback")
 		plugin_obj.params.add_named("sync", project_obj.dlySync, 'bool', "Sync")
-		return_obj.fxslots_audio.append(pluginid)
+		return_obj.plugslots.slots_audio.append(pluginid)
 
 		# ------------------------------------------ Reverb ------------------------------------------
 		return_obj = convproj_obj.track_master.fx__return__add('audiosauna_send_reverb')
@@ -97,7 +97,7 @@ class input_audiosanua(plugins.base):
 		plugin_obj.params.add_named("time", project_obj.rvbTime, 'float', 'Time')
 		plugin_obj.params.add_named("feedback", project_obj.rvbFeed/100, 'float', 'Feedback')
 		plugin_obj.params.add_named("width", project_obj.rvbWidth/100, 'float', 'Width')
-		return_obj.fxslots_audio.append(pluginid)
+		return_obj.plugslots.slots_audio.append(pluginid)
 
 		# ------------------------------------------ Tracks ------------------------------------------
 		for as_channum, as_chan in project_obj.channels.items():
@@ -139,7 +139,7 @@ class input_audiosanua(plugins.base):
 				if as_device.deviceType == 1 or as_device.deviceType == 0:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'audiosauna', audiosanua_device_id[as_device.deviceType])
 					plugin_obj.role = 'synth'
-					track_obj.inst_pluginid = pluginid
+					track_obj.plugslots.set_synth(pluginid)
 
 					fldso = globalstore.dataset.get_obj('audiosauna', 'plugin', str(as_device.deviceType))
 					if fldso:
@@ -215,7 +215,7 @@ class input_audiosanua(plugins.base):
 					fx_plugin_obj.visual.name = 'Distortion'
 					fx_plugin_obj.params.add_named("overdrive", overdrive, 'float', 'Overdrive')
 					fx_plugin_obj.params.add_named("modulate", modulate, 'float', 'Modulate')
-					track_obj.fxslots_audio.append(fx_pluginid)
+					track_obj.plugslots.slots_audio.append(fx_pluginid)
 
 				# bitcrush
 				bitrateval = float(getvalue(as_device.params, 'bitrate'))
@@ -225,7 +225,7 @@ class input_audiosanua(plugins.base):
 					fx_plugin_obj.visual.name = 'Bitcrush'
 					fx_plugin_obj.params.add("bits", 16, 'float')
 					fx_plugin_obj.params.add("freq", 22050/bitrateval, 'float')
-					track_obj.fxslots_audio.append(fx_pluginid)
+					track_obj.plugslots.slots_audio.append(fx_pluginid)
 
 				# chorus
 				chorus_wet = float(getvalue(as_device.params, 'chorusMix' if as_device in [0,1] else 'chorusDryWet'))/100
@@ -238,7 +238,7 @@ class input_audiosanua(plugins.base):
 					fx_plugin_obj.fxdata_add(True, chorus_wet)
 					fx_plugin_obj.params.add_named("speed", chorus_speed, 'float', 'Speed')
 					fx_plugin_obj.params.add_named("size", chorus_size, 'float', 'Size')
-					track_obj.fxslots_audio.append(fx_pluginid)
+					track_obj.plugslots.slots_audio.append(fx_pluginid)
 		
 				# amp
 				ampval = float(getvalue(as_device.params, 'masterAmp'))/100

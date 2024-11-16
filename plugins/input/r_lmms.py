@@ -485,7 +485,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			if lmms_track.color: track_obj.visual.color.set_hex(lmms_track.color)
 			elif plug_color: track_obj.visual.color = plug_color
 
-			track_obj.inst_pluginid = instpluginid
+			track_obj.plugslots.set_synth(instpluginid)
 			if plugin_obj: asdflfo_get(insttr_obj, plugin_obj)
 
 			midiport_obj = insttr_obj.midiport
@@ -499,7 +499,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.midi.out_inst.key = int(midiport_obj.fixedoutputnote)
 			track_obj.midi.basevelocity = int(midiport_obj.basevelocity)
 
-			track_obj.fxslots_audio += decodefxchain(convproj_obj, insttr_obj.fxchain)
+			track_obj.plugslots.slots_audio += decodefxchain(convproj_obj, insttr_obj.fxchain)
 
 			if insttr_obj.fxch != -1: track_obj.fxrack_channel = int(insttr_obj.fxch)
 
@@ -558,7 +558,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			nfx_plugin_obj.datavals.add('skip_rate', int(arpeggiator_obj.arpskip))
 			nfx_plugin_obj.datavals.add('cycle', int(arpeggiator_obj.arpcycle))
 	
-			track_obj.fxslots_notes.append(pluginid)
+			track_obj.plugslots.slots_notes.append(pluginid)
 
 			# ------------------------------- chordcreator -------------------------------
 			chordcreator_obj = insttr_obj.chordcreator
@@ -572,7 +572,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			chord_obj.find_by_id(0, chordids[int(chordcreator_obj.chord)])
 			nfx_plugin_obj.datavals.add('range', int(chordcreator_obj.chordrange))
 	
-			track_obj.fxslots_notes.append(pluginid)
+			track_obj.plugslots.slots_notes.append(pluginid)
 
 		elif lmms_track.type == 1: 
 			bbtrack_obj = lmms_track.bbtrack
@@ -622,7 +622,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.params.add('vol', cvpj_vol, 'float')
 			track_obj.params.add('pan', cvpj_pan, 'float')
 
-			track_obj.fxslots_audio += decodefxchain(convproj_obj, samptr_obj.fxchain)
+			track_obj.plugslots.slots_audio += decodefxchain(convproj_obj, samptr_obj.fxchain)
 			
 			if samptr_obj.fxch != -1: track_obj.fxrack_channel = int(samptr_obj.fxch)
 
@@ -731,7 +731,7 @@ class input_lmms(plugins.base):
 			fxchannel_obj.params.add('vol', chan_vol, 'float')
 			fxchannel_obj.params.add('enabled', lmms_fxchannel.muted.value, 'bool')
 
-			fxchannel_obj.fxslots_audio += decodefxchain(convproj_obj, lmms_fxchannel.fxchain)
+			fxchannel_obj.plugslots.slots_audio += decodefxchain(convproj_obj, lmms_fxchannel.fxchain)
 			
 			fxchannel_obj.sends.to_master_active = False
 

@@ -51,7 +51,8 @@ class midi_instruments:
 
 			plugin_obj = convproj_obj.plugin__addspec__midi(instid, int(inst['bank_hi']), int(inst['bank']), int(midiinst), int(inst['drum']), device)
 			plugin_obj.role = 'synth'
-			inst_obj.pluginid = instid
+			inst_obj.plugslots.set_synth(instid)
+
 			inst_obj.fxrack_channel = int(inst['chan'])+1+fx_offset
 
 			if inst['drum']: inst_obj.visual.color.set_float([0.81, 0.80, 0.82])

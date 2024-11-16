@@ -274,7 +274,7 @@ def encode_fxchain(lmms_fxchain, track_obj, trackname, autoloc):
 	from objects.file_proj import proj_lmms
 
 	#paramauto(lmms_fxchain.enabled, track_obj.params, 'fx_enabled', False, None, autoloc, trackname, 'FX Enabled')
-	for pluginid in track_obj.fxslots_audio:
+	for pluginid in track_obj.plugslots.slots_audio:
 		plugin_found, plugin_obj = cvpj_obj.plugin__get(pluginid)
 		if plugin_found: 
 			effect_obj = proj_lmms.lmms_effect()
@@ -399,7 +399,7 @@ class output_lmms(plugins.base):
 					paramauto(insttrack_obj.usemasterpitch, track_obj.params, 'usemasterpitch', not track_obj.is_drum, None, autoloc, trackname, 'Use Master Pitch')
 					paramauto(insttrack_obj.pitch, track_obj.params, 'pitch', 0, [0, 100], autoloc, trackname, 'Pitch')
 
-					for pluginid in track_obj.fxslots_notes:
+					for pluginid in track_obj.plugslots.slots_notes:
 						plugin_found, plugin_obj = cvpj_obj.plugin__get(pluginid)
 						if plugin_found:
 							if plugin_obj.check_match('universal', 'arpeggiator', None):
@@ -432,7 +432,7 @@ class output_lmms(plugins.base):
 
 					middlenotefix = 0
 
-					plugin_found, plugin_obj = cvpj_obj.plugin__get(track_obj.inst_pluginid)
+					plugin_found, plugin_obj = cvpj_obj.plugin__get(track_obj.plugslots.synth)
 					if plugin_found:
 						if plugin_obj.check_match('universal', 'sampler', 'single') or plugin_obj.check_match('universal', 'sampler', 'drumsynth'):
 							lmms_inst_obj.name = 'audiofileprocessor'
@@ -470,21 +470,21 @@ class output_lmms(plugins.base):
 							lmms_plug_obj.add_param('patch', patch)
 							ref_found, fileref_obj = plugin_obj.fileref__get('file', cvpj_obj)
 							if ref_found: lmms_plug_obj.add_param('src', fileref_obj.get_path(None, False))
-							paramauto(lmms_plug_obj.add_param('gain', 1), plugin_obj.params, 'gain', 1, None, ['plugin', track_obj.inst_pluginid], 'Plugin', 'gain')
+							paramauto(lmms_plug_obj.add_param('gain', 1), plugin_obj.params, 'gain', 1, None, ['plugin', track_obj.plugslots.synth], 'Plugin', 'gain')
 							middlenotefix += 12
 
 						elif plugin_obj.check_match('external', 'vst2', 'win'):
 							if 'plugin' in plugin_obj.filerefs_global:
 								lmms_inst_obj.name = 'vestige'
 								lmms_plug_obj.name = 'vestige'
-								middlenotefix += setvstparams(lmms_plug_obj, plugin_obj, track_obj.inst_pluginid, None)
+								middlenotefix += setvstparams(lmms_plug_obj, plugin_obj, track_obj.plugslots.synth, None)
 							else:
 								logger_output.warning('VST2 plugin not placed: file path not found.')
 
 						elif plugin_obj.check_wildmatch('native', 'lmms', None):
 							lmms_inst_obj.name = plugin_obj.type.subtype
 							lmms_plug_obj.name = plugin_obj.type.subtype
-							dset_plugparams(plugin_obj.type.subtype, track_obj.inst_pluginid, lmms_plug_obj, plugin_obj)
+							dset_plugparams(plugin_obj.type.subtype, track_obj.plugslots.synth, lmms_plug_obj, plugin_obj)
 
 							if plugin_obj.type.subtype == 'zynaddsubfx':
 								zdata = plugin_obj.rawdata_get('data')

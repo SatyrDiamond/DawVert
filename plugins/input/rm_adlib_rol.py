@@ -46,9 +46,9 @@ class input_adlib_rol(plugins.base):
 					inst_obj = convproj_obj.instrument__add(instname_upper)
 					midifound = inst_obj.from_dataset('adlib_rol', 'inst', instname_upper, True)
 					if midifound: inst_obj.to_midi_noplug()
-					inst_obj.pluginid = instname_upper
+					inst_obj.plugslots.set_synth(instname_upper)
 					opli = adlibbnk_obj.get_inst_index(instnum)
-					opli.to_cvpj(convproj_obj, inst_obj.pluginid)
+					opli.to_cvpj(convproj_obj, inst_obj.plugslots.synth)
 		else:
 			instlist = globalstore.dataset.get_cat('adlib_rol', 'inst')
 			if instlist:

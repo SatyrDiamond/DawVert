@@ -68,7 +68,7 @@ class input_piyopiyo(plugins.base):
 			wave_obj.set_all_range(pmdtrack_obj.waveform, -128, 128)
 			plugin_obj.env_blocks_add('vol', pmdtrack_obj.envelope, 1/64, 128, None, None)
 			plugin_obj.env_points_from_blocks('vol')
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			parse_notes(convproj_obj, idval, project_obj.notes_data[tracknum], track_obj, keyoffset)
 
 		track_obj = convproj_obj.track__add("3", 'instrument', False, False)
@@ -79,7 +79,7 @@ class input_piyopiyo(plugins.base):
 		plugin_obj.role = 'synth'
 		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.is_drum = True
-		track_obj.inst_pluginid = pluginid
+		track_obj.plugslots.set_synth(pluginid)
 
 		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_BASS1', os.path.join(extpath_path,'BASS1.wav'), None)
 		sampleref_obj.find_relative('external_data')

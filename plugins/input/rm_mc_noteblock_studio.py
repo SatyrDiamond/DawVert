@@ -65,7 +65,7 @@ class input_gt_mnbs(plugins.base):
 			plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(instid, custom_obj.file, None)
 			if sampleref_obj: sampleref_obj.find_relative('mnbs_sounds')
 			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
-			inst_obj.pluginid = instid
+			inst_obj.plugslots.set_synth(instid)
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')

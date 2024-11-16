@@ -78,7 +78,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 					if wf_smpl_part == 'SOUNDLAYER': soundlayers.append(wf_smpl_data)
 				if len(soundlayers)>1:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
-					track_obj.inst_pluginid = pluginid
+					track_obj.plugslots.set_synth(pluginid)
 					for soundlayer in soundlayers:
 						sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
 						sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 60
@@ -88,7 +88,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				elif len(soundlayers)==1:
 					soundlayer = soundlayers[0]
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
-					track_obj.inst_pluginid = pluginid
+					track_obj.plugslots.set_synth(pluginid)
 					sp_obj = plugin_obj.samplepart_add('sample')
 					soundlayer_samplepart(sp_obj, soundlayer)
 			except:
@@ -142,8 +142,8 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 					convproj_obj.automation.add_autopoint_real(['plugin',pluginid,autocurves.paramid], 'float', time, val, 'normal')
 
 		plugin_obj.fxdata_add(wf_plugin.enabled, 1)
-		if wf_plugin.plugtype not in ['4osc']: track_obj.fxslots_audio.append(pluginid)
-		else: track_obj.inst_pluginid = pluginid
+		if wf_plugin.plugtype not in ['4osc']: track_obj.plugslots.slots_audio.append(pluginid)
+		else: track_obj.plugslots.set_synth(pluginid)
 
 autonames = {
 	'PITCHBEND': 'pitch',

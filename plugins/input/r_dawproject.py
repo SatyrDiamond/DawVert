@@ -100,10 +100,10 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			if device.deviceRole == 'instrument' and not ismaster:
 				plugin_obj.role = 'inst'
-				track_obj.inst_pluginid = device.id
+				track_obj.plugslots.set_synth(device.id)
 			elif device.deviceRole == 'audioFX':
 				plugin_obj.role = 'effect'
-				track_obj.fxslots_audio.append(device.id)
+				track_obj.plugslots.slots_audio.append(device.id)
 
 def do_tracks(convproj_obj, dp_tracks, groupid):
 	global samplefolder

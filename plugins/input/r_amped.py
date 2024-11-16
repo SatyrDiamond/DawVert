@@ -153,16 +153,16 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'amped', amped_tr_device.label)
 				plugin_obj.datavals.add('data', amped_tr_device.data['wamPreset'])
 				plugin_obj.role = 'fx'
-				track_obj.fxslots_audio.append(pluginid)
+				track_obj.plugslots.slots_audio.append(pluginid)
 
 			if amped_tr_device.label in ['OBXD', 'Augur', 'Dexed', 'Europa']:
-				track_obj.inst_pluginid = pluginid
+				track_obj.plugslots.set_synth(pluginid)
 				plugin_obj.role = 'synth'
 
 		elif devicetype == ['Drumpler', 'Drumpler']:
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
 			plugin_obj.role = 'synth'
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			track_obj.is_drum = True
 
 			drumplerdata = {}
@@ -191,7 +191,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 						if 'name' in padpart: sp_obj.visual.name = padpart['name']
 
 		elif devicetype == ['SF2', 'GM Player']:
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 
 			value_patch = 0
 			value_bank = 0
@@ -207,7 +207,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			param_obj = plugin_obj.params.add_named('gain', value_gain, 'float', 'Gain')
 
 		elif devicetype == ['Granny', 'Granny']:
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'amped', 'Granny')
 			plugin_obj.role = 'synth'
 
@@ -219,14 +219,14 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
 		elif devicetype == ['Volt', 'VOLT']:
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'amped', 'Volt')
 			plugin_obj.role = 'synth'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
 			do_idauto(convproj_obj, amped_autodata, devid, amped_tr_device.params, pluginid)
 
 		elif devicetype == ['VoltMini', 'VOLT Mini']:
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'amped', 'VoltMini')
 			plugin_obj.role = 'synth'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
@@ -253,7 +253,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			volt_lfo(plugin_obj, 'part/1/lfo/1/', 'modenv', 1)
 
 		elif devicetype == ['Sampler', 'Sampler']:
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			samplerdata = {}
 			for param in amped_tr_device.params: data_values.dict__nested_add_value(samplerdata, param.name.split('/'), param.value)
 
@@ -276,7 +276,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				#sp_obj.sampleref = get_contentGuid(samplerdata_zonefile[samplerdata_zp])
 
 		elif devicetype == ['EqualizerPro', 'Equalizer']:
-			track_obj.fxslots_audio.append(pluginid)
+			track_obj.plugslots.slots_audio.append(pluginid)
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'amped', 'EqualizerPro')
 			plugin_obj.role = 'fx'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)
@@ -286,7 +286,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 		'CompressorMini', 'Delay', 'Distortion', 'Equalizer', 
 		'Flanger', 'Gate', 'Limiter', 'LimiterMini', 'Phaser', 
 		'Reverb', 'Tremolo', 'BitCrusher', 'Tremolo', 'Vibrato', 'Compressor', 'Expander']:
-			track_obj.fxslots_audio.append(pluginid)
+			track_obj.plugslots.slots_audio.append(pluginid)
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'amped', amped_tr_device.className)
 			plugin_obj.role = 'fx'
 			do_idparams(amped_tr_device.params, plugin_obj, amped_tr_device.className)

@@ -14,10 +14,10 @@ def list2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, removebot
 	fxchannel_obj = convproj_obj.fx__chan__add(fxnum)
 	fxchannel_obj.visual.name = fx_name
 	if data_obj.visual.color: fxchannel_obj.visual.color = data_obj.visual.color.copy()
-	fxchannel_obj.fxslots_audio = data_obj.fxslots_audio.copy()
-	fxchannel_obj.fxslots_mixer = data_obj.fxslots_mixer.copy()
-	data_obj.fxslots_audio = []
-	data_obj.fxslots_mixer = []
+	fxchannel_obj.plugslots.slots_audio = data_obj.plugslots.slots_audio.copy()
+	fxchannel_obj.plugslots.slots_mixer = data_obj.plugslots.slots_mixer.copy()
+	data_obj.plugslots.slots_audio = []
+	data_obj.plugslots.slots_mixer = []
 
 	vol = data_obj.params.get('vol', 1).value
 	data_obj.params.remove('vol')
@@ -75,10 +75,10 @@ def process_m(convproj_obj):
 		fxchannel_obj = convproj_obj.fx__chan__add(0)
 		fxchannel_obj.visual = copy.deepcopy(convproj_obj.track_master.visual)
 		fxchannel_obj.params = copy.deepcopy(convproj_obj.track_master.params)
-		fxchannel_obj.fxslots_audio = convproj_obj.track_master.fxslots_audio.copy()
-		fxchannel_obj.fxslots_mixer = convproj_obj.track_master.fxslots_mixer.copy()
-		convproj_obj.track_master.fxslots_audio = []
-		convproj_obj.track_master.fxslots_mixer = []
+		fxchannel_obj.plugslots.slots_audio = convproj_obj.track_master.plugslots.slots_audio.copy()
+		fxchannel_obj.plugslots.slots_mixer = convproj_obj.track_master.plugslots.slots_mixer.copy()
+		convproj_obj.track_master.plugslots.slots_audio = []
+		convproj_obj.track_master.plugslots.slots_mixer = []
 
 		convproj_obj.automation.move(['master','vol'], ['fxmixer','0','vol'])
 		convproj_obj.automation.move(['master','pan'], ['fxmixer','0','pan'])
@@ -88,8 +88,8 @@ def process_m(convproj_obj):
 			fxchannel_obj = convproj_obj.fx__chan__add(fxnum)
 			fxchannel_obj.visual = copy.deepcopy(inst_obj.visual)
 			fxchannel_obj.params = copy.deepcopy(inst_obj.params)
-			fxchannel_obj.fxslots_audio = inst_obj.fxslots_audio.copy()
-			inst_obj.fxslots_audio = []
+			fxchannel_obj.plugslots.slots_audio = inst_obj.plugslots.slots_audio.copy()
+			inst_obj.plugslots.slots_audio = []
 			inst_obj.fxrack_channel = fxnum
 			fxchannel_obj.visual.name = inst_obj.visual.name
 			fxchannel_obj.visual.color = inst_obj.visual.color

@@ -114,11 +114,13 @@ class input_deflemask(plugins.base):
 					#print(dmf_inst.mode, insttype, instnum, channum)
 
 					if dmf_inst.mode == 1 and insttype == 'opn2':
-						plugin_obj, inst_obj.pluginid = dmf_inst.fm_data.to_cvpj_genid(convproj_obj)
-	
+						plugin_obj, synthid = dmf_inst.fm_data.to_cvpj_genid(convproj_obj)
+						inst_obj.plugslots.set_synth(synthid)
+
 					if dmf_inst.mode == 0:
-						plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+						plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 						plugin_obj.role = 'synth'
+						inst_obj.plugslots.set_synth(synthid)
 						osc_data = plugin_obj.osc_add()
 						if insttype == 'square': osc_data.prop.shape = 'square'
 						if insttype == 'triangle': osc_data.prop.shape = 'triangle'
@@ -142,7 +144,9 @@ class input_deflemask(plugins.base):
 						inst_obj.visual.color.set_float([.9,.9,.9])
 						inst_obj.is_drum = True
 
-						plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
+						plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
+						plugin_obj.role = 'synth'
+						inst_obj.plugslots.set_synth(synthid)
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = sampleid
 						plugin_obj.datavals.add('point_value_type', "samples")

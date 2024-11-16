@@ -285,7 +285,7 @@ class input_lc(plugins.base):
 					osc_data = plugin_obj.osc_add()
 		
 					inst_obj = convproj_obj.instrument__add(cvpj_ninstid)
-					inst_obj.pluginid = pluginid
+					inst_obj.plugslots.set_synth(pluginid)
 					inst_obj.visual.name = instdata[1]
 					inst_obj.visual.color.set_float(color)
 					inst_obj.is_drum = instdata[1] in ['Noise', 'FreqNoise']

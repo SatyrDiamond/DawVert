@@ -25,11 +25,9 @@ def convert(convproj_obj):
 		track_obj.visual = copy.deepcopy(inst_obj.visual)
 		track_obj.params = copy.deepcopy(inst_obj.params)
 		track_obj.datavals = copy.deepcopy(inst_obj.datavals)
-		track_obj.inst_pluginid = inst_obj.pluginid
 		track_obj.fxrack_channel = inst_obj.fxrack_channel
 		track_obj.midi = copy.deepcopy(inst_obj.midi)
-		track_obj.fxslots_notes = inst_obj.fxslots_notes
-		track_obj.fxslots_audio = inst_obj.fxslots_audio
+		track_obj.plugslots = copy.deepcopy(inst_obj.plugslots)
 		track_obj.is_drum = inst_obj.is_drum
 		track_stor[inst_id] = track_obj
 		if track_obj.fxrack_channel not in fxrack_order: 

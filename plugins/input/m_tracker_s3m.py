@@ -86,7 +86,7 @@ class input_s3m(plugins.base):
 					sp_obj.loop_start = s3m_inst.loopStart
 					sp_obj.loop_end = s3m_inst.loopEnd
 
-				inst_obj.pluginid = pluginid
+				inst_obj.plugslots.set_synth(pluginid)
 
 		patterndata_obj = pat_single.single_patsong(32, TEXTSTART, MAINCOLOR)
 		patterndata_obj.orders = t_orderlist

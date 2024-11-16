@@ -207,7 +207,7 @@ class midi_song:
 			plugin_obj, reverb_pluginid = convproj_obj.plugin__add__genid('simple', 'reverb', None)
 			plugin_obj.visual.name = 'Reverb'
 			plugin_obj.fxdata_add(1, 0.5)
-			reverb_fxchannel_obj.fxslots_audio.append(reverb_pluginid)
+			reverb_fxchannel_obj.plugslots.slots_audio.append(reverb_pluginid)
 
 		for fx_num in range(self.fx_offset): fxchannel_obj = convproj_obj.fx__chan__add(fx_num+1)
 
@@ -235,7 +235,7 @@ class midi_song:
 				chorus_plugin_obj = convproj_obj.plugin__add(chorus_pluginid, 'simple', 'chorus', None)
 				chorus_plugin_obj.visual.name = 'Chorus'
 				chorus_plugin_obj.params.add('amount', chorus_size, 'float')
-				fxchannel_obj.fxslots_audio.append(chorus_pluginid)
+				fxchannel_obj.plugslots.slots_audio.append(chorus_pluginid)
 
 			inst_chan = self.instruments.find_idx_chan(ch_num)
 			if len(inst_chan):

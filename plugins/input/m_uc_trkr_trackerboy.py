@@ -108,8 +108,10 @@ class input_trackerboy(plugins.base):
 				insttype = patterndata_obj.get_channel_insttype(channum)
 				inst_obj.visual.from_dset('trackerboy', 'chip', insttype, False)
 
-				plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+				plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 				plugin_obj.role = 'synth'
+				inst_obj.plugslots.set_synth(synthid)
+
 				osc_data = plugin_obj.osc_add()
 				if instname == 'pulse': osc_data.prop.shape = 'square'
 				if instname == 'noise': 

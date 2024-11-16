@@ -155,7 +155,7 @@ class output_amped(plugins.base):
 		amped_obj.createdWith = "DawVert"
 		amped_obj.settings = {"deviceDelayCompensation": True}
 		amped_obj.masterTrack.volume = convproj_obj.track_master.params.get('vol', 1).value
-		#amped_obj.masterTrack.devices = amped_parse_effects(None, convproj_obj, convproj_obj.track_master.fxslots_audio, None)
+		#amped_obj.masterTrack.devices = amped_parse_effects(None, convproj_obj, convproj_obj.track_master.plugslots.slots_audio, None)
 
 		audio_id = {}
 		amped_filenames = {}
@@ -183,7 +183,7 @@ class output_amped(plugins.base):
 			}
 
 			inst_supported = False
-			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 			if plugin_found:
 
 				if plugin_obj.check_match('external', 'discodsp', 'obxd'):
@@ -225,7 +225,7 @@ class output_amped(plugins.base):
 					if plugin_obj.type.subtype == "Volt": amped_device = amped_track.add_device('Volt', 'VOLT', counter_devid.get())
 					if plugin_obj.type.subtype == "VoltMini": amped_device = amped_track.add_device('VoltMini', 'VOLT Mini', counter_devid.get())
 					if plugin_obj.type.subtype == "Granny": amped_device = amped_track.add_device('Granny', 'Granny', counter_devid.get())
-					do_idparams(amped_track, convproj_obj, plugin_obj, track_obj.inst_pluginid, amped_device, amped_track.automations)
+					do_idparams(amped_track, convproj_obj, plugin_obj, track_obj.plugslots.synth, amped_device, amped_track.automations)
 					amped_track.devices.append(amped_device)
 					amped_device.bypass = False
 
@@ -323,7 +323,7 @@ class output_amped(plugins.base):
 							amped_audclip.offset = (insideaudiopl_obj.time.cut_start/4)
 						amped_region.clips.append(amped_audclip)
 
-			amped_track.devices += amped_parse_effects(amped_track, convproj_obj, track_obj.fxslots_audio, amped_track.automations)
+			amped_track.devices += amped_parse_effects(amped_track, convproj_obj, track_obj.plugslots.slots_audio, amped_track.automations)
 			amped_obj.tracks.append(amped_track)
 
 		amped_obj.metronome = {"active": False, "level": 1}

@@ -167,7 +167,7 @@ class output_cvpjs(plugins.base):
 			fl_channel_obj.type = 0
 			fl_channel_obj.plugin.name = ''
 
-			plugin_found, plugin_obj = convproj_obj.plugin__get(inst_obj.pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(inst_obj.plugslots.synth)
 			if plugin_found:
 				if plugin_obj.check_match('universal', 'sampler', 'single'):
 					fl_channel_obj.type = 0
@@ -186,7 +186,7 @@ class output_cvpjs(plugins.base):
 					fl_channel_obj.plugin.params = fl_pluginparams
 					fl_channel_obj.params.unkflag1 = 1
 					fl_channel_obj.plugin.generator = True
-					windowdata_obj = convproj_obj.viswindow__get(['plugin', inst_obj.pluginid])
+					windowdata_obj = convproj_obj.viswindow__get(['plugin', inst_obj.plugslots.synth])
 					if windowdata_obj.pos_x != -1: fl_channel_obj.plugin.window_p_x = windowdata_obj.pos_x
 					if windowdata_obj.pos_y != -1: fl_channel_obj.plugin.window_p_y = windowdata_obj.pos_y
 					if windowdata_obj.size_x != -1: fl_channel_obj.plugin.window_s_x = windowdata_obj.size_x
@@ -473,7 +473,7 @@ class output_cvpjs(plugins.base):
 				if fx_num == 0: fxchannel_obj.outchannum = 1
 
 				slotnum = 0
-				for pluginid in fxchannel_obj.fxslots_audio:
+				for pluginid in fxchannel_obj.plugslots.slots_audio:
 					plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 					if plugin_found: 
 						fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(convproj_obj, plugin_obj)

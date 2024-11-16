@@ -137,7 +137,7 @@ class output_soundation(plugins.base):
 		soundation_channel.volumeAutomation = autopoints_get(['master','vol'], 0, 1)
 		soundation_channel.panAutomation = autopoints_get(['master','pan'], -1, 2)
 
-		add_fx(convproj_obj, soundation_channel, convproj_obj.track_master.fxslots_audio)
+		add_fx(convproj_obj, soundation_channel, convproj_obj.track_master.plugslots.slots_audio)
 		soundation_obj.channels.append(soundation_channel)
 
 		#auto_volpan(convproj_obj, sng_master, ['master'])
@@ -160,12 +160,12 @@ class output_soundation(plugins.base):
 			soundation_channel.pan = 0.5 + track_obj.params.get('pan', 0).value/2
 			soundation_channel.mute = not track_obj.params.get('enabled', True).value
 
-			add_fx(convproj_obj, soundation_channel, track_obj.fxslots_audio)
+			add_fx(convproj_obj, soundation_channel, track_obj.plugslots.slots_audio)
 			soundation_channel.volumeAutomation = autopoints_get(['track',trackid,'vol'], 0, 1)
 			soundation_channel.panAutomation = autopoints_get(['track',trackid,'pan'], -1, 2)
 
 			if track_obj.type == 'instrument':
-				pluginid = track_obj.inst_pluginid
+				pluginid = track_obj.plugslots.synth
 				soundation_instrument = proj_soundation.soundation_device(None)
 				soundation_instrument.rackName = ''
 				soundation_instrument.identifier = ''

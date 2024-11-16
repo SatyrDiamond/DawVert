@@ -151,7 +151,7 @@ class input_1bitdragon(plugins.base):
 
 			#if instname not in instnames:
 			#	onebit_ext.save_audio(instname, audiofilepath)
-			#	plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
+			#	plugin_obj, inst_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
 			#	plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			#	instnames.append(instname)
 
@@ -169,7 +169,7 @@ class input_1bitdragon(plugins.base):
 
 			#if instname not in instnames:
 			#	onebit_ext.save_audio(instname, audiofilepath)
-			#	plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
+			#	plugin_obj, inst_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
 			#	plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			#	instnames.append(instname)
 
@@ -182,4 +182,4 @@ class input_1bitdragon(plugins.base):
 		plugin_obj.role = 'fx'
 		plugin_obj.visual.name = 'Reverb'
 		plugin_obj.fxdata_add(project_obj.reverb, 0.5)
-		convproj_obj.track_master.fxslots_audio.append('master-reverb')
+		convproj_obj.track_master.plugslots.slots_audio.append('master-reverb')

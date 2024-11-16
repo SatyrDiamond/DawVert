@@ -123,8 +123,9 @@ class input_famitracker_txt(plugins.base):
 
 						if insttype == 'dpcm':
 							inst_obj.is_drum = True
-							plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+							plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 							plugin_obj.role = 'synth'
+							inst_obj.plugslots.set_synth(synthid)
 							for _, dpcm_key in ft_inst.dpcm_keys.items():
 								if dpcm_key.id in project_obj.dpcm:
 									filename = samplefolder+'dpcmg_'+str(dpcm_key.id)+'_'+str(dpcm_key.pitch)+'.wav'
@@ -140,8 +141,9 @@ class input_famitracker_txt(plugins.base):
 									sp_obj.sampleref = filename
 
 						else:
-							plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+							plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 							plugin_obj.role = 'synth'
+							inst_obj.plugslots.set_synth(synthid)
 							osc_data = plugin_obj.osc_add()
 							if insttype in ['square1', 'square2']: osc_data.prop.shape = 'square'
 							if insttype == 'triangle': osc_data.prop.shape = 'triangle'
@@ -164,19 +166,23 @@ class input_famitracker_txt(plugins.base):
 					if ft_inst.chip == 'VRC6':
 
 						if insttype == 'vrc6_square':
-							plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+							plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 							plugin_obj.role = 'synth'
+							inst_obj.plugslots.set_synth(synthid)
 							osc_data = plugin_obj.osc_add()
 							osc_data.prop.shape = 'square'
 
 						if insttype == 'vrc6_saw':
-							plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+							plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 							plugin_obj.role = 'synth'
+							inst_obj.plugslots.set_synth(synthid)
 							osc_data = plugin_obj.osc_add()
 							osc_data.prop.shape = 'saw'
 
 					if ft_inst.chip == 'FDS' and insttype == 'fds':
-						plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+						plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+						plugin_obj.role = 'synth'
+						inst_obj.plugslots.set_synth(synthid)
 						osc_data = plugin_obj.osc_add()
 						osc_data.prop.type = 'wave'
 						osc_data.prop.nameid = 'main'

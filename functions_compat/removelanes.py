@@ -41,10 +41,10 @@ def process_r(convproj_obj, out_dawinfo):
 						track_obj.params.move(group_obj.params, paramid)
 						convproj_obj.automation.move(['track',trackid,paramid], ['group',trackid,paramid])
 						track_obj.params.move(group_obj.params, paramid)
-					group_obj.fxslots_notes = track_obj.fxslots_notes
-					group_obj.fxslots_audio = track_obj.fxslots_audio
-					track_obj.fxslots_notes = []
-					track_obj.fxslots_audio = []
+					group_obj.plugslots.slots_notes = track_obj.plugslots.slots_notes
+					group_obj.plugslots.slots_audio = track_obj.plugslots.slots_audio
+					track_obj.plugslots.slots_notes = []
+					track_obj.plugslots.slots_audio = []
 
 				for laneid, lane_obj in track_obj.lanes.items():
 					cvpj_trackid = trackid+'_lane_'+laneid

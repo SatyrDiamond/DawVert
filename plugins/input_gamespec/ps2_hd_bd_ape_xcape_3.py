@@ -212,9 +212,11 @@ class input_petaporon(plugins.base):
 					vaginst = apeinst_obj.insts[inst['inst']]
 	
 					inst_obj = convproj_obj.instruments[instid]
-					plugin_obj, inst_obj.pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+					plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
 					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
+
+					inst_obj.plugslots.set_synth(synthid)
 
 					for n, v in enumerate(vaginst):
 						sample_offset = str(v['offset'])

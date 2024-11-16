@@ -15,10 +15,10 @@ def move_fx0_to_mastertrack(convproj_obj):
 		convproj_obj.automation.move(['fxmixer','0','pan'], ['master', 'pan'])
 		fxchannel_obj.params.move(convproj_obj.track_master.params, 'vol')
 		fxchannel_obj.params.move(convproj_obj.track_master.params, 'pan')
-		convproj_obj.track_master.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
-		convproj_obj.track_master.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
-		fxchannel_obj.fxslots_audio = []
-		fxchannel_obj.fxslots_mixer = []
+		convproj_obj.track_master.plugslots.slots_audio = fxchannel_obj.plugslots.slots_audio.copy()
+		convproj_obj.track_master.plugslots.slots_mixer = fxchannel_obj.plugslots.slots_mixer.copy()
+		fxchannel_obj.plugslots.slots_audio = []
+		fxchannel_obj.plugslots.slots_mixer = []
 		del convproj_obj.fxrack[0]
 
 def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, doboth, autoloc):
@@ -27,10 +27,10 @@ def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, doboth, 
 	fxchannel_obj = convproj_obj.fx__chan__add(fxnum)
 	fxchannel_obj.visual.name = fx_name
 	if data_obj.visual.color: fxchannel_obj.visual.color = data_obj.visual.color.copy()
-	fxchannel_obj.fxslots_audio = data_obj.fxslots_audio.copy()
-	fxchannel_obj.fxslots_mixer = data_obj.fxslots_mixer.copy()
-	data_obj.fxslots_audio = []
-	data_obj.fxslots_mixer = []
+	fxchannel_obj.plugslots.slots_audio = data_obj.plugslots.slots_audio.copy()
+	fxchannel_obj.plugslots.slots_mixer = data_obj.plugslots.slots_mixer.copy()
+	data_obj.plugslots.slots_audio = []
+	data_obj.plugslots.slots_mixer = []
 
 	vol = data_obj.params.get('vol', 1).value
 	data_obj.params.remove('vol')
@@ -82,10 +82,10 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 		fxchannel_obj = convproj_obj.fx__chan__add(0)
 		fxchannel_obj.visual = copy.deepcopy(convproj_obj.track_master.visual)
 		fxchannel_obj.params = copy.deepcopy(convproj_obj.track_master.params)
-		fxchannel_obj.fxslots_audio = convproj_obj.track_master.fxslots_audio.copy()
-		fxchannel_obj.fxslots_mixer = convproj_obj.track_master.fxslots_mixer.copy()
-		convproj_obj.track_master.fxslots_audio = []
-		convproj_obj.track_master.fxslots_mixer = []
+		fxchannel_obj.plugslots.slots_audio = convproj_obj.track_master.plugslots.slots_audio.copy()
+		fxchannel_obj.plugslots.slots_mixer = convproj_obj.track_master.plugslots.slots_mixer.copy()
+		convproj_obj.track_master.plugslots.slots_audio = []
+		convproj_obj.track_master.plugslots.slots_mixer = []
 		convproj_obj.automation.move(['master','vol'], ['fxmixer','0','vol'])
 		convproj_obj.automation.move(['master','pan'], ['fxmixer','0','pan'])
 		for count, iterval in enumerate(convproj_obj.instrument__iter()):
@@ -94,10 +94,10 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 			fxchannel_obj = convproj_obj.fx__chan__add(fxnum)
 			fxchannel_obj.visual = copy.deepcopy(inst_obj.visual)
 			fxchannel_obj.params = copy.deepcopy(inst_obj.params)
-			fxchannel_obj.fxslots_audio = inst_obj.fxslots_audio.copy()
-			fxchannel_obj.fxslots_mixer = inst_obj.fxslots_mixer.copy()
-			inst_obj.fxslots_audio = []
-			inst_obj.fxslots_mixer = []
+			fxchannel_obj.plugslots.slots_audio = inst_obj.plugslots.slots_audio.copy()
+			fxchannel_obj.plugslots.slots_mixer = inst_obj.plugslots.slots_mixer.copy()
+			inst_obj.plugslots.slots_audio = []
+			inst_obj.plugslots.slots_mixer = []
 			inst_obj.fxrack_channel = fxnum
 			fxchannel_obj.visual = inst_obj.visual.copy()
 			convproj_obj.automation.move(['track',inst_id,'vol'], ['fxmixer',str(fxnum),'vol'])
@@ -203,9 +203,9 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				convproj_obj.automation.move(['fxmixer',str(fx_num),'vol'], ['group',groupid,'vol'])
 				fxchannel_obj.params.move(group_obj.params, 'vol')
 				fxchannel_obj.params.move(group_obj.params, 'pan')
-				group_obj.fxslots_audio = fxchannel_obj.fxslots_audio.copy()
-				group_obj.fxslots_mixer = fxchannel_obj.fxslots_mixer.copy()
-				fxchannel_obj.fxslots_audio = []
+				group_obj.plugslots.slots_audio = fxchannel_obj.plugslots.slots_audio.copy()
+				group_obj.plugslots.slots_mixer = fxchannel_obj.plugslots.slots_mixer.copy()
+				fxchannel_obj.plugslots.slots_audio = []
 				fxtracks = fx_trackids[fx_num]
 				if fxchannel_obj.visual.name: group_obj.visual.name = fxchannel_obj.visual.name
 				elif len(fxtracks) == 1: 
@@ -257,7 +257,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				is_fx_used = False
 				if fxdata.visual.name != None: is_fx_used = True
 				if fxdata.visual.color != None: is_fx_used = True
-				if fxdata.fxslots_audio != []: is_fx_used = True
+				if fxdata.plugslots.slots_audio != []: is_fx_used = True
 				if is_fx_used and (fxnum not in used_fxchans): used_fxchans.append(fxnum)
 
 				for target in fxdata.sends.data:
@@ -279,8 +279,8 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 			fx_obj.params.move(track_obj.params, 'pan')
 			track_obj.visual = fx_obj.visual
 			track_obj.visual.name = '[FX '+str(fxnum)+'] '+(track_obj.visual.name if track_obj.visual.name else '')
-			track_obj.fxslots_audio = fx_obj.fxslots_audio.copy()
-			fx_obj.fxslots_audio = []
+			track_obj.plugslots.slots_audio = fx_obj.plugslots.slots_audio.copy()
+			fx_obj.plugslots.slots_audio = []
 
 			convproj_obj.trackroute['fxrack_'+str(fxnum)].to_master_active = fx_obj.sends.to_master_active
 

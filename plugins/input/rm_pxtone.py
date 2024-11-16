@@ -109,7 +109,7 @@ class input_pxtone(plugins.base):
 				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler__genid(ogg_path, None)
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
-				inst_obj.pluginid = pluginid
+				inst_obj.plugslots.set_synth(pluginid)
 
 			if voice_obj.type == 'pcm':
 				cvpj_instvol = 0.4
@@ -128,7 +128,7 @@ class input_pxtone(plugins.base):
 					samplepart_obj.loop_start = 0
 					samplepart_obj.loop_end = len(voice_obj.data)
 					samplepart_obj.loop_active = True
-				inst_obj.pluginid = pluginid
+				inst_obj.plugslots.set_synth(pluginid)
 
 			inst_obj.params.add('vol', cvpj_instvol, 'float')
 			inst_obj.datavals.add('middlenote', voice_obj.basic_key_field-60)

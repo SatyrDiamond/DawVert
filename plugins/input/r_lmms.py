@@ -670,6 +670,8 @@ class input_lmms(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single','chip:fm:opl2','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'ladspa']
+		in_dict['plugin_ext_arch'] = [32, 64]
+		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return True

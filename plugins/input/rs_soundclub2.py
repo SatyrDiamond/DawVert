@@ -73,7 +73,7 @@ class input_soundclub2(plugins.base):
 				if sn2_inst_obj.loopstart != -1: audio_obj.loop = [sn2_inst_obj.loopstart, sn2_inst_obj.samplesize]
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, track_obj.inst_pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+				plugin_obj, track_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				sp_obj.point_value_type = "samples"

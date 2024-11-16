@@ -47,7 +47,7 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 
 	pluginsupported = False
 
-	plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
+	plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 	if plugin_found: 
 		if plugin_obj.check_match('external', 'vst2', 'win'):
 			pluginsupported = True

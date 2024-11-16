@@ -92,7 +92,7 @@ class input_onlinesequencer(plugins.base):
 				if trueinstid in [13,14,15,16]: 
 					plugin_obj = convproj_obj.plugin__add(trackid, 'universal', 'synth-osc', None)
 					plugin_obj.role = 'synth'
-					track_obj.inst_pluginid = trackid
+					track_obj.plugslots.set_synth(trackid)
 					osc_data = plugin_obj.osc_add()
 					if instid == 13: osc_data.prop.shape = 'sine'
 					if instid == 14: osc_data.prop.shape = 'square'
@@ -104,7 +104,7 @@ class input_onlinesequencer(plugins.base):
 					plugin_obj = convproj_obj.plugin__add(trackid, 'universal', 'synth-osc', None)
 					plugin_obj.role = 'synth'
 					filter_obj = plugin_obj.filter
-					track_obj.inst_pluginid = trackid
+					track_obj.plugslots.set_synth(trackid)
 					osc_data = plugin_obj.osc_add()
 					osc_data.prop.shape = ['sine', 'square', 'saw', 'triangle'][s_synthdata.shape]
 
@@ -138,7 +138,7 @@ class input_onlinesequencer(plugins.base):
 					plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'bitcrush', None)
 					plugin_obj.role = 'fx'
 					plugin_obj.params.add('bits', i_params.bitcrush_depth, 'float')
-					track_obj.fxslots_audio.append(pluginid)
+					track_obj.plugslots.slots_audio.append(pluginid)
 
 				if 'delay' in s_used_fx:
 					pluginid = trackid+'_delay'
@@ -157,7 +157,7 @@ class input_onlinesequencer(plugins.base):
 					plugin_obj.fxdata_add(True, i_params.distort_wet)
 					plugin_obj.params.add('distort_type', i_params.distort_type, 'int')
 					plugin_obj.visual.name = 'Distortion'
-					track_obj.fxslots_audio.append(pluginid)
+					track_obj.plugslots.slots_audio.append(pluginid)
 	
 				if 'reverb' in s_used_fx:
 					pluginid = trackid+'_reverb'
@@ -166,7 +166,7 @@ class input_onlinesequencer(plugins.base):
 					plugin_obj.fxdata_add(bool(i_params.reverb_on), i_params.reverb_wet)
 					plugin_obj.params.add('reverb_type', i_params.reverb_type, 'int')
 					plugin_obj.visual.name = 'Reverb'
-					track_obj.fxslots_audio.append(pluginid)
+					track_obj.plugslots.slots_audio.append(pluginid)
 	
 				if 'eq' in s_used_fx:
 					pluginid = trackid+'_eq'
@@ -177,7 +177,7 @@ class input_onlinesequencer(plugins.base):
 					plugin_obj.params.add('eq_mid', i_params.eq_mid, 'float')
 					plugin_obj.params.add('eq_low', i_params.eq_low, 'float')
 					plugin_obj.visual.name = 'EQ'
-					track_obj.fxslots_audio.append(pluginid)
+					track_obj.plugslots.slots_audio.append(pluginid)
 
 			track_obj.placements.notelist.clear_size(len(notes))
 

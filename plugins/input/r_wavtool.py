@@ -371,16 +371,16 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					used_con.append(d_in)
 					d_in = connections[d_in]
 					if d_in == instrument_dev: 
-						track_obj.inst_pluginid = instrument_dev
+						track_obj.plugslots.set_synth(instrument_dev)
 						logger_input.info('Instrument Device: '+instrument_dev)
 					if d_in in effects: 
-						track_obj.fxslots_audio.append(d_in)
+						track_obj.plugslots.slots_audio.append(d_in)
 						logger_input.info('FX Device: '+d_in)
 				else:
 					break
 
-		if not track_obj.inst_pluginid: 
-			track_obj.inst_pluginid = inst_fallback
+		if not track_obj.plugslots.synth: 
+			track_obj.plugslots.set_synth(inst_fallback)
 
 class input_wavtool(plugins.base):
 	def __init__(self): pass

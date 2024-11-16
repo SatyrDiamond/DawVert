@@ -117,7 +117,7 @@ def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
 			wf_maintrack.append(wf_foldertrack)
 			if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
 			if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
-			get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.fxslots_audio)
+			get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.plugslots.slots_audio)
 			make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
 			make_level_plugin(wf_foldertrack)
 			groups_data[groupid] = wf_foldertrack
@@ -159,7 +159,7 @@ class output_waveform_edit(plugins.base):
 
 		counter_id = counter.counter(1000, '')
 
-		get_plugins(convproj_obj, project_obj.masterplugins, convproj_obj.track_master.fxslots_audio)
+		get_plugins(convproj_obj, project_obj.masterplugins, convproj_obj.track_master.plugslots.slots_audio)
 
 		groups_data = {}
 
@@ -181,10 +181,10 @@ class output_waveform_edit(plugins.base):
 			if track_obj.visual.name: wf_track.name = track_obj.visual.name
 			if track_obj.visual.color: wf_track.colour ='ff'+track_obj.visual.color.get_hex()
 			
-			wf_inst_plugin = get_plugin(convproj_obj, track_obj.inst_pluginid, True)
+			wf_inst_plugin = get_plugin(convproj_obj, track_obj.plugslots.synth, True)
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
+			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			if middlenote != 0:
@@ -196,7 +196,7 @@ class output_waveform_edit(plugins.base):
 
 			if wf_inst_plugin: wf_track.plugins.append(wf_inst_plugin)
 
-			get_plugins(convproj_obj, wf_track.plugins, track_obj.fxslots_audio)
+			get_plugins(convproj_obj, wf_track.plugins, track_obj.plugslots.slots_audio)
 
 			for notespl_obj in track_obj.placements.pl_notes:
 				wf_midiclip = proj_waveform.waveform_midiclip()

@@ -120,7 +120,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 		if device.name in ['OriginalSimpler', 'MultiSampler'] and not DEBUG_DISABLE_SAMPLER:
 			issampler = True
-			track_obj.inst_pluginid = pluginid
+			track_obj.plugslots.set_synth(pluginid)
 			SampleParts = parampaths['Player/MultiSampleMap/SampleParts']
 
 			plugin_obj = None

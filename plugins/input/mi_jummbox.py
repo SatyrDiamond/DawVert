@@ -102,7 +102,7 @@ def addfx(convproj_obj, inst_obj, fxgroupname, cvpj_instid, fxname, fxsubname):
 	fx_pluginid = cvpj_instid+'_'+fxname
 	plugin_obj = convproj_obj.plugin__add(fx_pluginid, fxgroupname, fxname, fxsubname)
 	plugin_obj.role = 'fx'
-	inst_obj.fxslots_audio.append(fx_pluginid)
+	inst_obj.plugslots.slots_audio.append(fx_pluginid)
 	return plugin_obj
 
 def add_eq_data(inst_obj, cvpj_instid, eqfiltbands):
@@ -191,7 +191,7 @@ def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 		fxplugin_obj, _ = delay_obj.to_cvpj(convproj_obj, fx_pluginid)
 		fxplugin_obj.visual.name = 'Echo'
 		fxplugin_obj.fxdata_add(1, 0.5)
-		inst_obj.fxslots_audio.append(fx_pluginid)
+		inst_obj.plugslots.slots_audio.append(fx_pluginid)
 		
 	if 'distortion' in bb_fx.used:
 		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'distortion', None)
@@ -292,7 +292,7 @@ class input_jummbox(plugins.base):
 
 					if not midifound:
 						inst_obj = convproj_obj.instrument__add(cvpj_instid)
-						inst_obj.pluginid = cvpj_instid
+						inst_obj.plugslots.set_synth(cvpj_instid)
 						plugin_obj = convproj_obj.plugin__add(cvpj_instid, 'native', 'jummbox', bb_inst.type)
 
 						if 'unison' in bb_inst.data: plugin_obj.datavals.add('unison', bb_inst.data['unison'])

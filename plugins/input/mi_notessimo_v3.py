@@ -150,7 +150,7 @@ class inst_manager():
 			if sampleids:
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
-				inst_obj.pluginid = instid
+				inst_obj.plugslots.set_synth(instid)
 
 				for setnum, set_data in notet_inst.sets.items():
 					inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data)
@@ -158,7 +158,7 @@ class inst_manager():
 			elif notet_inst.sample:
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'single')
 				plugin_obj.role = 'synth'
-				inst_obj.pluginid = instid
+				inst_obj.plugslots.set_synth(instid)
 
 				sampleid, notet_sample, samplekey, sampleref_obj = sample_manager.add_sample(notet_data, convproj_obj, notet_inst.sample)
 

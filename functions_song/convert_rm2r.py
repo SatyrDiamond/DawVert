@@ -46,7 +46,7 @@ def convert(convproj_obj):
 	
 					new_track_obj = track_obj.make_base_inst(inst_obj)
 					new_track_obj.is_drum = inst_obj.is_drum
-					used_plugins.append(new_track_obj.inst_pluginid)
+					used_plugins.append(new_track_obj.plugslots.synth)
 	
 					if new_track_obj.fxrack_channel == -1: new_track_obj.fxrack_channel = track_obj.fxrack_channel
 	
@@ -84,11 +84,11 @@ def convert(convproj_obj):
 		convproj_obj.track_data[trackid] = track_obj
 		convproj_obj.track_order.append(trackid)
 
-		for fxid in track_obj.fxslots_audio:
+		for fxid in track_obj.plugslots.slots_audio:
 			used_plugins.append(fxid)
 
 	for num, fxchannel_obj in convproj_obj.fxrack.items():
-		used_plugins += fxchannel_obj.fxslots_audio
+		used_plugins += fxchannel_obj.plugslots.slots_audio
 
 	used_plugins = set(used_plugins)
 	if '' in used_plugins: used_plugins.remove('')

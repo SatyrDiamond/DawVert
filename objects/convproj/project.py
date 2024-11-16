@@ -108,8 +108,7 @@ class cvpj_fxchannel:
 		self.visual = visual.cvpj_visual()
 		self.visual_ui = visual.cvpj_visual_ui()
 		self.params = params.cvpj_paramset()
-		self.fxslots_audio = []
-		self.fxslots_mixer = []
+		self.plugslots = tracks.cvpj_plugslots()
 		self.sends = sends.cvpj_sends()
 
 class cvpj_scene:
@@ -380,7 +379,7 @@ class cvpj_project:
 		track_obj.midi.out_inst.patch = m_inst
 		track_obj.midi.out_inst.bank = m_bank
 		track_obj.midi.out_inst.drum = m_drum
-		track_obj.inst_pluginid = plug_id
+		track_obj.plugslots.set_synth(plug_id)
 		track_obj.params.add('usemasterpitch', not m_drum, 'bool')
 		return track_obj, plugin_obj
 
@@ -420,7 +419,7 @@ class cvpj_project:
 			plugin_obj = self.plugin__add(plug_id, None, None, None)
 			plugin_obj.role = 'synth'
 			track_obj = self.track__add(track_id, 'instrument', uses_pl, indexed)
-			track_obj.inst_pluginid = plug_id
+			track_obj.plugslots.set_synth(plug_id)
 			track_obj.visual.name = def_name
 			track_obj.visual.color = def_color
 			track_obj.visual.from_dset_opt(dset_name, 'inst', ds_id)
@@ -508,7 +507,7 @@ class cvpj_project:
 			if track_obj.fxrack_channel in unused_fx: unused_fx.remove(track_obj.fxrack_channel)
 
 		for n, d in self.fxrack.items():
-			if d.visual or d.visual_ui or d.fxslots_audio or d.fxslots_mixer:
+			if d.visual or d.visual_ui or d.plugslots.slots_audio or d.plugslots.slots_mixer:
 				if n in unused_fx: unused_fx.remove(n)
 			if d.sends.to_master_active:
 				if 0 in unused_fx: unused_fx.remove(0)

@@ -322,6 +322,8 @@ class input_dawproject(plugins.base):
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['audio_nested'] = True
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
+		in_dict['plugin_ext_arch'] = [32, 64]
+		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 

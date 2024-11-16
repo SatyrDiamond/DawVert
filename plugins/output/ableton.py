@@ -1126,13 +1126,14 @@ class output_ableton(plugins.base):
 	def get_shortname(self): return 'ableton'
 	def gettype(self): return 'r'
 	def get_prop(self, in_dict): 
-		in_dict['plugin_arch'] = [64]
 		in_dict['file_ext'] = 'als'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['plugin_ext_arch'] = [32, 64]
+		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['fxtype'] = 'groupreturn'

@@ -397,6 +397,8 @@ class input_wavtool(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_included'] = ['native:wavtool','universal:sampler:single','universal:sampler:multi']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['plugin_ext_arch'] = [64]
+		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False

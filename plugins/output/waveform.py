@@ -137,6 +137,8 @@ class output_waveform_edit(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext_arch'] = [32, 64]
+		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):

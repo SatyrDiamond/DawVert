@@ -181,10 +181,12 @@ class output_cvpj(plugins.base):
 		in_dict['plugin_arch'] = [64]
 		in_dict['track_lanes'] = True
 		in_dict['placement_cut'] = True
+		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext_arch'] = [64]
+		in_dict['plugin_ext_platforms'] = ['unix']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['projtype'] = 'r'
-	def getsupportedplugformats(self): return ['vst2']
 	def getsupportedplugins(self): return []
 	def getfileextension(self): return 'med'
 	def parse(self, convproj_obj, output_file):

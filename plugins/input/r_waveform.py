@@ -258,6 +258,8 @@ class input_cvpj_f(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
+		in_dict['plugin_ext_arch'] = [64]
+		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False

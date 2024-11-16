@@ -377,17 +377,6 @@ class plugconv(plugins.base):
 				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 
-		if plugin_obj.type.subtype == 'spectrumanalyzer':
-			extpluglog.extpluglist.add('FOSS', 'VST', 'SpectrumAnalyzer', 'SocaLabs')
-			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'spectrumanalyzer')
-			if exttype:
-				extpluglog.extpluglist.success('LMMS', 'Spectrum Analyzer')
-				plugin_obj.replace('user', 'socalabs', 'spectrumanalyzer')
-				plugin_obj.params.add('mode', 0.0, 'float')
-				plugin_obj.params.add('log', 1.0, 'float')
-				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
-				return True
-
 		if plugin_obj.type.subtype == 'stereoenhancer':
 			extpluglog.extpluglist.add('FOSS', 'VST', 'Wider', 'Airwindows')
 			exttype = plugins.base.extplug_exists('airwindows', extplugtype, 'Wider')

@@ -256,6 +256,8 @@ class input_flp(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
 		in_dict['fxchain_mixer'] = True
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext_arch'] = [32, 64]
+		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
 	def supported_autodetect(self): return True

@@ -387,6 +387,8 @@ class output_soundbridge(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off']
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext_arch'] = [64]
+		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['projtype'] = 'r'
 	def parse(self, convproj_obj, output_file):

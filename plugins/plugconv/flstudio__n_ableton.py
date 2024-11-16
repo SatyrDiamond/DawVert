@@ -92,13 +92,5 @@ class plugconv(plugins.base):
 		#		plugin_obj.params.add(starttxtv+'/fbfilter_res', (p_BandWidth/9)*65536, 'int')
 		#		plugin_obj.params.add(starttxtv+'/feedback_vol', p_Feedback*128, 'int')
 
-		if plugin_obj.type.check_wildmatch('native', 'ableton', 'SpectrumAnalyzer'):
-			extpluglog.convinternal('Ableton', 'SpectrumAnalyzer', 'FL Studio', 'Fruity Spectroman')
-			plugin_obj.replace('native', 'flstudio', 'fruity spectroman')
-			plugin_obj.params.add('amp', 65, 'int')
-			plugin_obj.params.add('scale', 128, 'int')
-			plugin_obj.datavals.add('version', 100)
-			return 0
-
 		return 2
 

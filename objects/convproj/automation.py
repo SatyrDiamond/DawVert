@@ -457,10 +457,11 @@ class cvpj_automation:
 
 	def calc(self, autopath, mathtype, val1, val2, val3, val4):
 		autopath = cvpj_autoloc(autopath)
-		logger_automation.info('Math '+str(autopath))
 		if autopath in self.data:
+			logger_automation.info('Math '+str(autopath))
 			self.data[autopath].calc(mathtype, val1, val2, val3, val4)
 		else:
+			logger_automation.debug('(not found) Math '+str(autopath))
 			self.calcnotfound.append([autopath, mathtype, val1, val2, val3, val4])
 
 

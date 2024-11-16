@@ -122,6 +122,9 @@ class plugconv(plugins.base):
 			exttype = plugins.base.extplug_exists('socalabs', extplugtype, 'spectrumanalyzer')
 			if exttype:
 				extpluglog.extpluglist.success('Universal', 'Spectrum Analyzer')
+				plugin_obj.replace('user', 'socalabs', 'spectrumanalyzer')
+				plugin_obj.params.add('mode', 0.0, 'float')
+				plugin_obj.params.add('log', 1.0, 'float')
 				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True
 

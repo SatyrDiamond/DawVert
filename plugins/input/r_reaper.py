@@ -240,7 +240,7 @@ class input_reaper(plugins.base):
 									if parmenv.is_param:
 										do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
-								if fourid == 1919118692: track_obj.fxslots_notes.append(fxid)
+								if fourid == 1919118692: track_obj.plugslots.slots_notes.append(fxid)
 								else: track_obj.plugin_autoplace(plugin_obj, fxid)
 
 						else:
@@ -275,13 +275,13 @@ class input_reaper(plugins.base):
 
 					if rpp_plugin.type == 'JS':
 						plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'jesusonic', rpp_extplug.js_id)
-						plugin_obj.role = 'effect'
+						plugin_obj.role = 'fx'
 						plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 						for n, v in enumerate(rpp_extplug.data):
 							if v != '-': plugin_obj.datavals.add(str(n), v)
-						track_obj.fxslots_audio.append(fxid)
+						track_obj.plugin_autoplace(plugin_obj, fxid)
 
-			if not track_obj.inst_pluginid and samplers:
+			if samplers:
 				outsamplers = []
 				for f, x in samplers:
 					for o in f:
@@ -291,14 +291,15 @@ class input_reaper(plugins.base):
 
 				if len(outsamplers) == 1:
 					filename, samplerj = outsamplers[0]
-					track_obj.inst_pluginid = sampler_id
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(sampler_id, filename, 'win')
 					do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
 					do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')
+					track_obj.plugslots.plugin_autoplace(plugin_obj, sampler_id)
 
 				if len(outsamplers) > 1:
-					plugin_obj, track_obj.inst_pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+					plugin_obj = convproj_obj.plugin__add(sampler_id, 'universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
+					track_obj.plugslots.plugin_autoplace(plugin_obj, sampler_id)
 
 					key_start = 0
 					key_end = 127

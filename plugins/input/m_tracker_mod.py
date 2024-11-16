@@ -78,7 +78,7 @@ class input_mod(plugins.base):
 
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, inst_obj.pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+				plugin_obj, inst_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 				sp_obj.point_value_type = "samples"
 				sp_obj.loop_active = loopstart != 0 and loopend != 2
 				sp_obj.loop_start = loopstart

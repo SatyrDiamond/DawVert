@@ -149,7 +149,7 @@ def do_fx(convproj_obj, sb_track, track_obj):
 	for x in sb_track.audioUnits:
 		pluginid = create_plugin(convproj_obj, x, False)
 		if pluginid:
-			track_obj.fxslots_audio.append(pluginid)
+			track_obj.plugslots.slots_audio.append(pluginid)
 
 def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 	global global_returnids
@@ -207,7 +207,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 		if sb_track.midiInstrument:
 			midiinst = sb_track.midiInstrument
-			track_obj.inst_pluginid = create_plugin(convproj_obj, midiinst, True)
+			track_obj.plugslots.set_synth( create_plugin(convproj_obj, midiinst, True) )
 
 		if sb_track.midiInput:
 			track_obj.midi.in_chan = sb_track.midiInput.channelIndex+1

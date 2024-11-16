@@ -56,7 +56,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 		if group_obj:
 			sb_grouptrack = proj_soundbridge.soundbridge_track(None)
 			do_markers(group_obj.timemarkers, sb_grouptrack.markers)
-			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.fxslots_audio)
+			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.plugslots.slots_audio)
 			sb_grouptrack.type = 1
 			#sb_grouptrack.state = set_params(group_obj.params)
 
@@ -417,7 +417,7 @@ class output_soundbridge(plugins.base):
 
 		master_track = convproj_obj.track_master
 
-		make_plugins_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master.fxslots_audio)
+		make_plugins_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master.plugslots.slots_audio)
 
 		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = '#'+master_track.visual.color.get_hex()
 
@@ -483,18 +483,18 @@ class output_soundbridge(plugins.base):
 
 				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
-				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)
+				make_plugins_fx(convproj_obj, sb_track, track_obj.plugslots.slots_audio)
 
-				if track_obj.inst_pluginid:
-					plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
+				if track_obj.plugslots.synth:
+					plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 					if plugin_found: 
 						if plugin_obj.check_wildmatch('external', 'vst2', None):
-							sb_track.midiInstrument = make_vst2(convproj_obj, plugin_obj, True, track_obj.inst_pluginid, sb_track)
+							sb_track.midiInstrument = make_vst2(convproj_obj, plugin_obj, True, track_obj.plugslots.synth, sb_track)
 
 
 				middlenote = track_obj.datavals.get('middlenote', 0)
 
-				plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.inst_pluginid)
+				plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 				if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 				for notespl_obj in track_obj.placements.pl_notes:
@@ -592,7 +592,7 @@ class output_soundbridge(plugins.base):
 				
 				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
-				make_plugins_fx(convproj_obj, sb_track, track_obj.fxslots_audio)
+				make_plugins_fx(convproj_obj, sb_track, track_obj.plugslots.slots_audio)
 
 				blockContainer = proj_soundbridge.soundbridge_blockContainer(None)
 
@@ -706,7 +706,7 @@ class output_soundbridge(plugins.base):
 			sb_track.blockContainers = []
 			make_auto_trackcontains(convproj_obj, sb_track, return_obj.params, 1, ['return', returnid])
 			make_sends(convproj_obj, sb_track, return_obj.sends)
-			make_plugins_fx(convproj_obj, sb_track, return_obj.fxslots_audio)
+			make_plugins_fx(convproj_obj, sb_track, return_obj.plugslots.slots_audio)
 			sb_tracks.append(sb_track)
 
 		aid_found, aid_data = convproj_obj.automation.get(['main', 'bpm'], 'float')

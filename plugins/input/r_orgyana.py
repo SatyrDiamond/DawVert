@@ -62,18 +62,18 @@ class input_orgyana(plugins.base):
 							audio_obj.to_file_wav(drum_filename)
 						plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(drum_filename, None)
 						sp_obj.trigger = 'oneshot'
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 				else: 
 					track_obj.visual.name = "Melody "+str(tracknum+1)
 					if orgsamp_obj.loaded:
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 						osc_data = plugin_obj.osc_add()
 						osc_data.prop.type = 'wave'
 						osc_data.prop.nameid = 'main'
 						wave_obj = plugin_obj.wave_add('main')
 						wave_obj.set_all_range(list(orgsamp_obj.sample_data[orgtrack_obj.instrument]), -128, 128)
-						track_obj.inst_pluginid = pluginid
+						track_obj.plugslots.set_synth(pluginid)
 
 				track_obj.visual.color.set_float(colordata.getcolornum(tracknum))
 				track_obj.params.add('pitch', (orgtrack_obj.pitch-1000)/1800, 'float')

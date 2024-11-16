@@ -337,6 +337,8 @@ class input_cvpj_f(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext_arch'] = [64]
+		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['audio_nested'] = True
 	def supported_autodetect(self): return True

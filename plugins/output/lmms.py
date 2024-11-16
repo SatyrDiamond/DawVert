@@ -338,6 +338,8 @@ class output_lmms(plugins.base):
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['plugin_ext'] = ['vst2','ladspa']
+		in_dict['plugin_ext_arch'] = [32, 64]
+		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['projtype'] = 'r'
 		

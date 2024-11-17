@@ -1,0 +1,4509 @@
+{
+	"plugin": {
+		"objects": {
+			"acceleration2": {
+				"params": {
+					"limit": { "type": "float", "def": 0.3199999928474426, "name": "Limit", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1633903981,
+					"vst2_name": "Acceleration2"
+				}
+			},
+			"acceleration": {
+				"params": {
+					"limit": { "type": "float", "def": 0.3199999928474426, "name": "Limit", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1633903980,
+					"vst2_name": "Acceleration"
+				}
+			},
+			"adclip7": {
+				"params": {
+					"boost": { "type": "float", "def": 0.0, "name": "Boost", "num": 0},
+					"soften": { "type": "float", "def": 0.5, "name": "Soften", "num": 1},
+					"enhance": { "type": "float", "def": 0.5, "name": "Enhance", "num": 2},
+					"mode": { "type": "float", "def": 0.0, "name": "Mode", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1633969010,
+					"vst2_name": "ADClip7"
+				}
+			},
+			"adclip8": {
+				"params": {
+					"boost": { "type": "float", "def": 0.0, "name": "Boost", "num": 0},
+					"ceiling": { "type": "float", "def": 0.8830000162124634, "name": "Ceiling", "num": 1},
+					"mode": { "type": "float", "def": 0.0, "name": "Mode", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1633969011,
+					"vst2_name": "ADClip8"
+				}
+			},
+			"adt": {
+				"params": {
+					"headrm": { "type": "float", "def": 0.5, "name": "Headrm", "num": 0},
+					"a_delay": { "type": "float", "def": 0.5, "name": "A Delay", "num": 1},
+					"a_level": { "type": "float", "def": 0.5, "name": "A Level", "num": 2},
+					"b_delay": { "type": "float", "def": 0.5, "name": "B Delay", "num": 3},
+					"b_level": { "type": "float", "def": 0.5, "name": "B Level", "num": 4},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1633772660,
+					"vst2_name": "ADT"
+				}
+			},
+			"air2": {
+				"params": {
+					"hiss": { "type": "float", "def": 0.5, "name": "Hiss", "num": 0},
+					"glitter": { "type": "float", "def": 0.5, "name": "Glitter", "num": 1},
+					"air": { "type": "float", "def": 0.5, "name": "Air", "num": 2},
+					"silk": { "type": "float", "def": 0.0, "name": "Silk", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1634302323,
+					"vst2_name": "Air2"
+				}
+			},
+			"air3": {
+				"params": {
+					"air": { "type": "float", "def": 0.5, "name": "Air", "num": 0},
+					"gnd": { "type": "float", "def": 0.5, "name": "Gnd", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1634302324,
+					"vst2_name": "Air3"
+				}
+			},
+			"air4": {
+				"params": {
+					"air": { "type": "float", "def": 0.5, "name": "Air", "num": 0},
+					"gnd": { "type": "float", "def": 0.5, "name": "Gnd", "num": 1},
+					"darkf": { "type": "float", "def": 0.5199999809265137, "name": "DarkF", "num": 2},
+					"ratio": { "type": "float", "def": 0.0, "name": "Ratio", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1634302325,
+					"vst2_name": "Air4"
+				}
+			},
+			"air": {
+				"params": {
+					"22k_tap": { "type": "float", "def": 0.5, "name": "22K tap", "num": 0},
+					"15k_tap": { "type": "float", "def": 0.5, "name": "15K tap", "num": 1},
+					"11k_tap": { "type": "float", "def": 0.5, "name": "11K tap", "num": 2},
+					"filters": { "type": "float", "def": 0.0, "name": "filters", "num": 3},
+					"output_l": { "type": "float", "def": 1.0, "name": "Output L", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1634302322,
+					"vst2_name": "Air"
+				}
+			},
+			"apicolypse": {
+				"params": {
+					"hardns": { "type": "float", "def": 0.699999988079071, "name": "Hardns", "num": 0},
+					"persnlty": { "type": "float", "def": 0.3333333134651184, "name": "Persnlty", "num": 1},
+					"drive": { "type": "float", "def": 0.3333333134651184, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1634756963,
+					"vst2_name": "Apicolypse"
+				}
+			},
+			"aquickvoiceclip": {
+				"params": {
+					"highpass": { "type": "float", "def": 0.41999998688697815, "name": "Highpass", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1634825827,
+					"vst2_name": "AQuickVoiceClip"
+				}
+			},
+			"atmospherebuss": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1635017331,
+					"vst2_name": "AtmosphereBuss"
+				}
+			},
+			"atmospherechannel": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1635017576,
+					"vst2_name": "AtmosphereChannel"
+				}
+			},
+			"aura": {
+				"params": {
+					"voicing": { "type": "float", "def": 0.5, "name": "Voicing", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1635086945,
+					"vst2_name": "Aura"
+				}
+			},
+			"autopan": {
+				"params": {
+					"rate": { "type": "float", "def": 0.10000000149011612, "name": "Rate", "num": 0},
+					"phase": { "type": "float", "def": 0.5, "name": "Phase", "num": 1},
+					"wide": { "type": "float", "def": 0.0, "name": "Wide", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1635087472,
+					"vst2_name": "AutoPan"
+				}
+			},
+			"average": {
+				"params": {
+					"average": { "type": "float", "def": 0.0, "name": "Average", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1635149170,
+					"vst2_name": "Average"
+				}
+			},
+			"avermatrix": {
+				"params": {
+					"average": { "type": "float", "def": 0.0, "name": "Average", "num": 0},
+					"depth": { "type": "float", "def": 0.0, "name": "Depth", "num": 1},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1635152493,
+					"vst2_name": "AverMatrix"
+				}
+			},
+			"balanced": {
+				"params": {
+					"bitshift": { "type": "float", "def": 0.0, "name": "BitShift", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1650551905,
+					"vst2_name": "Balanced"
+				}
+			},
+			"bassamp": {
+				"params": {
+					"high": { "type": "float", "def": 0.75, "name": "High", "num": 0},
+					"dry": { "type": "float", "def": 0.0, "name": "Dry", "num": 1},
+					"dub": { "type": "float", "def": 0.75, "name": "Dub", "num": 2},
+					"sub": { "type": "float", "def": 0.0, "name": "Sub", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1650553697,
+					"vst2_name": "BassAmp"
+				}
+			},
+			"bassdrive": {
+				"params": {
+					"presnce": { "type": "float", "def": 0.5, "name": "Presnce", "num": 0},
+					"high": { "type": "float", "def": 0.5, "name": "High", "num": 1},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 2},
+					"low": { "type": "float", "def": 0.5, "name": "Low", "num": 3},
+					"drive": { "type": "float", "def": 0.5, "name": "Drive", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651729522,
+					"vst2_name": "BassDrive"
+				}
+			},
+			"basskit": {
+				"params": {
+					"drive": { "type": "float", "def": 0.5, "name": "Drive", "num": 0},
+					"voicing": { "type": "float", "def": 0.5, "name": "Voicing", "num": 1},
+					"bassout": { "type": "float", "def": 0.5, "name": "BassOut", "num": 2},
+					"subout": { "type": "float", "def": 0.5, "name": "SubOut", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651731316,
+					"vst2_name": "BassKit"
+				}
+			},
+			"baxandall2": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1650554978,
+					"vst2_name": "Baxandall2"
+				}
+			},
+			"baxandall": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 1},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1650554977,
+					"vst2_name": "Baxandall"
+				}
+			},
+			"beam": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"focus": { "type": "float", "def": 0.5, "name": "Focus", "num": 1},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1650811245,
+					"vst2_name": "Beam"
+				}
+			},
+			"bigamp": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"tone": { "type": "float", "def": 0.5, "name": "Tone", "num": 1},
+					"output": { "type": "float", "def": 0.800000011920929, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651074913,
+					"vst2_name": "BigAmp"
+				}
+			},
+			"biquad2": {
+				"params": {
+					"type": { "type": "float", "def": 1.0, "name": "Type", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651077477,
+					"vst2_name": "Biquad2"
+				}
+			},
+			"biquad": {
+				"params": {
+					"type": { "type": "float", "def": 1.0, "name": "Type", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 2},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651077476,
+					"vst2_name": "Biquad"
+				}
+			},
+			"biquaddouble": {
+				"params": {
+					"type": { "type": "float", "def": 1.0, "name": "Type", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 2},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651598434,
+					"vst2_name": "BiquadDouble"
+				}
+			},
+			"biquadnonlin": {
+				"params": {
+					"type": { "type": "float", "def": 0.0, "name": "Type", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"q": { "type": "float", "def": 0.707099974155426, "name": "Q", "num": 2},
+					"nonlin": { "type": "float", "def": 0.0, "name": "NonLin", "num": 3},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651076716,
+					"vst2_name": "BiquadNonLin"
+				}
+			},
+			"biquadonehalf": {
+				"params": {
+					"type": { "type": "float", "def": 0.0, "name": "Type", "num": 0},
+					"freq": { "type": "float", "def": 0.0, "name": "Freq", "num": 1},
+					"q": { "type": "float", "def": 0.0, "name": "Q", "num": 2},
+					"inv_wet": { "type": "float", "def": 0.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651077478,
+					"vst2_name": "BiquadOneHalf"
+				}
+			},
+			"biquadplus": {
+				"params": {
+					"type": { "type": "float", "def": 1.0, "name": "Type", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 2},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651077488,
+					"vst2_name": "BiquadPlus"
+				}
+			},
+			"biquadstack": {
+				"params": {
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 0},
+					"level": { "type": "float", "def": 0.5, "name": "Level", "num": 1},
+					"reso": { "type": "float", "def": 0.5, "name": "Reso", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651077483,
+					"vst2_name": "BiquadStack"
+				}
+			},
+			"biquadtriple": {
+				"params": {
+					"type": { "type": "float", "def": 1.0, "name": "Type", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 2},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651602546,
+					"vst2_name": "BiquadTriple"
+				}
+			},
+			"bite": {
+				"params": {
+					"bite": { "type": "float", "def": 0.5, "name": "Bite", "num": 0},
+					"output_l": { "type": "float", "def": 1.0, "name": "Output L", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651078245,
+					"vst2_name": "Bite"
+				}
+			},
+			"bitglitter": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"glitter": { "type": "float", "def": 0.0, "name": "Glitter", "num": 1},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651795828,
+					"vst2_name": "BitGlitter"
+				}
+			},
+			"bitshiftgain": {
+				"params": {
+					"bitshift": { "type": "float", "def": 0.5, "name": "BitShift", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651798888,
+					"vst2_name": "BitShiftGain"
+				}
+			},
+			"bitshiftpan": {
+				"params": {
+					"vol": { "type": "float", "def": 0.5, "name": "Vol", "num": 0},
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651078256,
+					"vst2_name": "BitShiftPan"
+				}
+			},
+			"blockparty": {
+				"params": {
+					"pound": { "type": "float", "def": 0.0, "name": "Pound", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651273579,
+					"vst2_name": "BlockParty"
+				}
+			},
+			"brassrider": {
+				"params": {
+					"thresh": { "type": "float", "def": 0.0, "name": "Thresh", "num": 0},
+					"dry_wet": { "type": "float", "def": 0.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651667826,
+					"vst2_name": "BrassRider"
+				}
+			},
+			"brightambience2": {
+				"params": {
+					"start": { "type": "float", "def": 0.20000000298023224, "name": "Start", "num": 0},
+					"length": { "type": "float", "def": 0.20000000298023224, "name": "Length", "num": 1},
+					"feedbck": { "type": "float", "def": 0.0, "name": "Feedbck", "num": 2},
+					"dry_wet": { "type": "float", "def": 0.5, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651663203,
+					"vst2_name": "BrightAmbience2"
+				}
+			},
+			"brightambience3": {
+				"params": {
+					"start": { "type": "float", "def": 1.0, "name": "Start", "num": 0},
+					"length": { "type": "float", "def": 0.0, "name": "Length", "num": 1},
+					"feedback": { "type": "float", "def": 0.0, "name": "Feedback", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651663204,
+					"vst2_name": "BrightAmbience3"
+				}
+			},
+			"brightambience": {
+				"params": {
+					"dry_wet": { "type": "float", "def": 0.0, "name": "Dry/Wet", "num": 0},
+					"sustain": { "type": "float", "def": 0.0, "name": "Sustain", "num": 1},
+					"decay": { "type": "float", "def": 0.0, "name": "Decay", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651663202,
+					"vst2_name": "BrightAmbience"
+				}
+			},
+			"buildatpdf": {
+				"params": {
+					"first": { "type": "float", "def": 0.5, "name": "First", "num": 0},
+					"second": { "type": "float", "def": 0.5, "name": "Second", "num": 1},
+					"third": { "type": "float", "def": 0.5, "name": "Third", "num": 2},
+					"fourth": { "type": "float", "def": 0.5, "name": "Fourth", "num": 3},
+					"fifth": { "type": "float", "def": 0.5, "name": "Fifth", "num": 4},
+					"sixth": { "type": "float", "def": 0.5, "name": "Sixth", "num": 5},
+					"seventh": { "type": "float", "def": 0.5, "name": "Seventh", "num": 6},
+					"eighth": { "type": "float", "def": 0.5, "name": "Eighth", "num": 7},
+					"ninth": { "type": "float", "def": 0.5, "name": "Ninth", "num": 8},
+					"tenth": { "type": "float", "def": 0.5, "name": "Tenth", "num": 9}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651274864,
+					"vst2_name": "BuildATPDF"
+				}
+			},
+			"busscolors4": {
+				"params": {
+					"color": { "type": "float", "def": 0.0, "name": "Color", "num": 0},
+					"input_tr": { "type": "float", "def": 0.5, "name": "Input Tr", "num": 1},
+					"output_t": { "type": "float", "def": 0.5, "name": "Output T", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651729204,
+					"vst2_name": "BussColors4"
+				}
+			},
+			"buttercomp2": {
+				"params": {
+					"compress": { "type": "float", "def": 0.0, "name": "Compress", "num": 0},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651794801,
+					"vst2_name": "ButterComp2"
+				}
+			},
+			"buttercomp": {
+				"params": {
+					"compress": { "type": "float", "def": 0.0, "name": "Compress", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1651794800,
+					"vst2_name": "ButterComp"
+				}
+			},
+			"c5rawbuss": {
+				"params": {
+					"center": { "type": "float", "def": 0.0, "name": "Center", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247149,
+					"vst2_name": "C5RawBuss"
+				}
+			},
+			"c5rawchannel": {
+				"params": {
+					"center": { "type": "float", "def": 0.0, "name": "Center", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247150,
+					"vst2_name": "C5RawChannel"
+				}
+			},
+			"cabs": {
+				"params": {
+					"cabtype": { "type": "float", "def": 0.0, "name": "CabType", "num": 0},
+					"intense": { "type": "float", "def": 0.6600000262260437, "name": "Intense", "num": 1},
+					"rm_loud": { "type": "float", "def": 0.33000001311302185, "name": "Rm Loud", "num": 2},
+					"cabsize": { "type": "float", "def": 0.6600000262260437, "name": "CabSize", "num": 3},
+					"offaxis": { "type": "float", "def": 0.33000001311302185, "name": "OffAxis", "num": 4},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1801544314,
+					"vst2_name": "Cabs"
+				}
+			},
+			"calibre": {
+				"params": {
+					"hardns": { "type": "float", "def": 0.7400000095367432, "name": "Hardns", "num": 0},
+					"persnlty": { "type": "float", "def": 0.3333333134651184, "name": "Persnlty", "num": 1},
+					"drive": { "type": "float", "def": 0.3333333134651184, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668047474,
+					"vst2_name": "Calibre"
+				}
+			},
+			"capacitor2": {
+				"params": {
+					"lowpass": { "type": "float", "def": 1.0, "name": "Lowpass", "num": 0},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 1},
+					"nonlin": { "type": "float", "def": 0.0, "name": "NonLin", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667330146,
+					"vst2_name": "Capacitor2"
+				}
+			},
+			"capacitor": {
+				"params": {
+					"lowpass": { "type": "float", "def": 1.0, "name": "Lowpass", "num": 0},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667330145,
+					"vst2_name": "Capacitor"
+				}
+			},
+			"chamber2": {
+				"params": {
+					"delay": { "type": "float", "def": 0.3400000035762787, "name": "Delay", "num": 0},
+					"regen": { "type": "float", "def": 0.3100000023841858, "name": "Regen", "num": 1},
+					"thick": { "type": "float", "def": 0.2800000011920929, "name": "Thick", "num": 2},
+					"wet": { "type": "float", "def": 0.25, "name": "Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667788082,
+					"vst2_name": "Chamber2"
+				}
+			},
+			"chamber": {
+				"params": {
+					"bigness": { "type": "float", "def": 0.3499999940395355, "name": "Bigness", "num": 0},
+					"longness": { "type": "float", "def": 0.3499999940395355, "name": "Longness", "num": 1},
+					"liteness": { "type": "float", "def": 0.3499999940395355, "name": "Liteness", "num": 2},
+					"darkness": { "type": "float", "def": 0.3499999940395355, "name": "Darkness", "num": 3},
+					"wetness": { "type": "float", "def": 0.3499999940395355, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667785069,
+					"vst2_name": "Chamber"
+				}
+			},
+			"channel4": {
+				"params": {
+					"console": { "type": "float", "def": 0.0, "name": "Console", "num": 0},
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667785012,
+					"vst2_name": "Channel4"
+				}
+			},
+			"channel5": {
+				"params": {
+					"console": { "type": "float", "def": 0.0, "name": "Console", "num": 0},
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667785013,
+					"vst2_name": "Channel5"
+				}
+			},
+			"channel6": {
+				"params": {
+					"console": { "type": "float", "def": 0.0, "name": "Console", "num": 0},
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667785014,
+					"vst2_name": "Channel6"
+				}
+			},
+			"channel7": {
+				"params": {
+					"console": { "type": "float", "def": 0.0, "name": "Console", "num": 0},
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667785015,
+					"vst2_name": "Channel7"
+				}
+			},
+			"channel8": {
+				"params": {
+					"console": { "type": "float", "def": 0.0, "name": "Console", "num": 0},
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667785016,
+					"vst2_name": "Channel8"
+				}
+			},
+			"channel9": {
+				"params": {
+					"console": { "type": "float", "def": 0.0, "name": "Console", "num": 0},
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667785017,
+					"vst2_name": "Channel9"
+				}
+			},
+			"chorus": {
+				"params": {
+					"speed": { "type": "float", "def": 0.5, "name": "Speed", "num": 0},
+					"range": { "type": "float", "def": 0.5, "name": "Range", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.5, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667788658,
+					"vst2_name": "Chorus"
+				}
+			},
+			"chorusensemble": {
+				"params": {
+					"speed": { "type": "float", "def": 0.5, "name": "Speed", "num": 0},
+					"range": { "type": "float", "def": 0.5, "name": "Range", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.800000011920929, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667786094,
+					"vst2_name": "ChorusEnsemble"
+				}
+			},
+			"chromeoxide": {
+				"params": {
+					"intense": { "type": "float", "def": 0.5, "name": "Intense", "num": 0},
+					"bias": { "type": "float", "def": 0.5, "name": "Bias", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668444025,
+					"vst2_name": "ChromeOxide"
+				}
+			},
+			"cider": {
+				"params": {
+					"hardns": { "type": "float", "def": 0.699999988079071, "name": "Hardns", "num": 0},
+					"persnlty": { "type": "float", "def": 0.3333333134651184, "name": "Persnlty", "num": 1},
+					"drive": { "type": "float", "def": 0.3333333134651184, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667851378,
+					"vst2_name": "Cider"
+				}
+			},
+			"clearcoat": {
+				"params": {
+					"select": { "type": "float", "def": 0.5, "name": "Select", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668047727,
+					"vst2_name": "ClearCoat"
+				}
+			},
+			"cliponly2": {
+				"extplug_assoc": {
+					"vst2_id": 1668050810,
+					"vst2_name": "ClipOnly2"
+				}
+			},
+			"cliponly": {
+				"extplug_assoc": {
+					"vst2_id": 1668050809,
+					"vst2_name": "ClipOnly"
+				}
+			},
+			"clipsoftly": {
+				"extplug_assoc": {
+					"vst2_id": 1668509542,
+					"vst2_name": "ClipSoftly"
+				}
+			},
+			"cloudcoat": {
+				"params": {
+					"select": { "type": "float", "def": 0.5, "name": "Select", "num": 0},
+					"sustain": { "type": "float", "def": 0.5, "name": "Sustain", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668050787,
+					"vst2_name": "CloudCoat"
+				}
+			},
+			"coils2": {
+				"params": {
+					"saturate": { "type": "float", "def": 0.0, "name": "Saturate", "num": 0},
+					"cheapnes": { "type": "float", "def": 0.0, "name": "Cheapnes", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668245869,
+					"vst2_name": "Coils2"
+				}
+			},
+			"coils": {
+				"params": {
+					"saturat": { "type": "float", "def": 0.0, "name": "Saturat", "num": 0},
+					"core_dc": { "type": "float", "def": 0.5, "name": "Core DC", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668245868,
+					"vst2_name": "Coils"
+				}
+			},
+			"cojones": {
+				"params": {
+					"breathy": { "type": "float", "def": 0.5, "name": "Breathy", "num": 0},
+					"cojones": { "type": "float", "def": 0.5, "name": "Cojones", "num": 1},
+					"body": { "type": "float", "def": 0.5, "name": "Body", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1131375215,
+					"vst2_name": "Cojones"
+				}
+			},
+			"compresaturator": {
+				"params": {
+					"drive": { "type": "float", "def": 0.5, "name": "Drive", "num": 0},
+					"clamp": { "type": "float", "def": 0.5, "name": "Clamp", "num": 1},
+					"expand": { "type": "float", "def": 0.5, "name": "Expand", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668117362,
+					"vst2_name": "Compresaturator"
+				}
+			},
+			"console0buss": {
+				"params": {
+					"vol": { "type": "float", "def": 0.5, "name": "Vol", "num": 0},
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668165730,
+					"vst2_name": "Console0Buss"
+				}
+			},
+			"console0channel": {
+				"params": {
+					"vol": { "type": "float", "def": 0.5, "name": "Vol", "num": 0},
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668165731,
+					"vst2_name": "Console0Channel"
+				}
+			},
+			"console4buss": {
+				"params": {
+					"trim": { "type": "float", "def": 1.0, "name": "Trim", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247145,
+					"vst2_name": "Console4Buss"
+				}
+			},
+			"console4channel": {
+				"params": {
+					"trim": { "type": "float", "def": 1.0, "name": "Trim", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247144,
+					"vst2_name": "Console4Channel"
+				}
+			},
+			"console5buss": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247147,
+					"vst2_name": "Console5Buss"
+				}
+			},
+			"console5channel": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247146,
+					"vst2_name": "Console5Channel"
+				}
+			},
+			"console5darkch": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247148,
+					"vst2_name": "Console5DarkCh"
+				}
+			},
+			"console6buss": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247152,
+					"vst2_name": "Console6Buss"
+				}
+			},
+			"console6channel": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247151,
+					"vst2_name": "Console6Channel"
+				}
+			},
+			"console7buss": {
+				"params": {
+					"master": { "type": "float", "def": 1.0, "name": "Master", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247154,
+					"vst2_name": "Console7Buss"
+				}
+			},
+			"console7cascade": {
+				"params": {
+					"cascade": { "type": "float", "def": 0.38999998569488525, "name": "Cascade", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247155,
+					"vst2_name": "Console7Cascade"
+				}
+			},
+			"console7channel": {
+				"params": {
+					"fader": { "type": "float", "def": 0.7720000147819519, "name": "Fader", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247153,
+					"vst2_name": "Console7Channel"
+				}
+			},
+			"console7crunch": {
+				"params": {
+					"crunch": { "type": "float", "def": 0.38999998569488525, "name": "Crunch", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668247156,
+					"vst2_name": "Console7Crunch"
+				}
+			},
+			"console8busshype": {
+				"extplug_assoc": {
+					"vst2_id": 1664639592,
+					"vst2_name": "Console8BussHype"
+				}
+			},
+			"console8bussin": {
+				"extplug_assoc": {
+					"vst2_id": 1664639593,
+					"vst2_name": "Console8BussIn"
+				}
+			},
+			"console8bussout": {
+				"params": {
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1664639599,
+					"vst2_name": "Console8BussOut"
+				}
+			},
+			"console8channelhype": {
+				"extplug_assoc": {
+					"vst2_id": 1664639848,
+					"vst2_name": "Console8ChannelHype"
+				}
+			},
+			"console8channelin": {
+				"extplug_assoc": {
+					"vst2_id": 1664639849,
+					"vst2_name": "Console8ChannelIn"
+				}
+			},
+			"console8channelout": {
+				"params": {
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1664639855,
+					"vst2_name": "Console8ChannelOut"
+				}
+			},
+			"console8litebuss": {
+				"params": {
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1664639596,
+					"vst2_name": "Console8LiteBuss"
+				}
+			},
+			"console8litechannel": {
+				"params": {
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1664639852,
+					"vst2_name": "Console8LiteChannel"
+				}
+			},
+			"console8subhype": {
+				"extplug_assoc": {
+					"vst2_id": 1664643944,
+					"vst2_name": "Console8SubHype"
+				}
+			},
+			"console8subin": {
+				"extplug_assoc": {
+					"vst2_id": 1664643945,
+					"vst2_name": "Console8SubIn"
+				}
+			},
+			"console8subout": {
+				"params": {
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1664643951,
+					"vst2_name": "Console8SubOut"
+				}
+			},
+			"console9buss": {
+				"params": {
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 0},
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668168034,
+					"vst2_name": "Console9Buss"
+				}
+			},
+			"console9channel": {
+				"params": {
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 0},
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668168035,
+					"vst2_name": "Console9Channel"
+				}
+			},
+			"consolelabuss": {
+				"params": {
+					"master": { "type": "float", "def": 1.0, "name": "Master", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668047202,
+					"vst2_name": "ConsoleLABuss"
+				}
+			},
+			"consolelachannel": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 1},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 2},
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 3},
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668047203,
+					"vst2_name": "ConsoleLAChannel"
+				}
+			},
+			"consolemcbuss": {
+				"params": {
+					"master": { "type": "float", "def": 1.0, "name": "Master", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668113250,
+					"vst2_name": "ConsoleMCBuss"
+				}
+			},
+			"consolemcchannel": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"midfreq": { "type": "float", "def": 0.25, "name": "MidFreq", "num": 1},
+					"midpeak": { "type": "float", "def": 0.0, "name": "MidPeak", "num": 2},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 3},
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 4},
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668113251,
+					"vst2_name": "ConsoleMCChannel"
+				}
+			},
+			"consolemdbuss": {
+				"params": {
+					"master": { "type": "float", "def": 1.0, "name": "Master", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668113252,
+					"vst2_name": "ConsoleMDBuss"
+				}
+			},
+			"consolemdchannel": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"midfreq": { "type": "float", "def": 0.25, "name": "MidFreq", "num": 1},
+					"midpeak": { "type": "float", "def": 0.0, "name": "MidPeak", "num": 2},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 3},
+					"pan": { "type": "float", "def": 0.5, "name": "Pan", "num": 4},
+					"fader": { "type": "float", "def": 0.5, "name": "Fader", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668113253,
+					"vst2_name": "ConsoleMDChannel"
+				}
+			},
+			"contenthided": {
+				"extplug_assoc": {
+					"vst2_id": 1668180324,
+					"vst2_name": "ContentHideD"
+				}
+			},
+			"creamcoat": {
+				"params": {
+					"select": { "type": "float", "def": 0.5, "name": "Select", "num": 0},
+					"regen": { "type": "float", "def": 0.5, "name": "Regen", "num": 1},
+					"derez": { "type": "float", "def": 1.0, "name": "DeRez", "num": 2},
+					"predlay": { "type": "float", "def": 0.0, "name": "Predlay", "num": 3},
+					"wetness": { "type": "float", "def": 0.25, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668113263,
+					"vst2_name": "CreamCoat"
+				}
+			},
+			"creature": {
+				"params": {
+					"drive": { "type": "float", "def": 0.25999999046325684, "name": "Drive", "num": 0},
+					"depth": { "type": "float", "def": 0.25999999046325684, "name": "Depth", "num": 1},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668441441,
+					"vst2_name": "Creature"
+				}
+			},
+			"crickbass": {
+				"params": {
+					"drive": { "type": "float", "def": 0.5, "name": "Drive", "num": 0},
+					"tone": { "type": "float", "def": 0.5, "name": "Tone", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668442475,
+					"vst2_name": "CrickBass"
+				}
+			},
+			"crunchcoat": {
+				"params": {
+					"select": { "type": "float", "def": 0.5, "name": "Select", "num": 0},
+					"regen": { "type": "float", "def": 0.0, "name": "Regen", "num": 1},
+					"derez": { "type": "float", "def": 1.0, "name": "DeRez", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668440943,
+					"vst2_name": "CrunchCoat"
+				}
+			},
+			"crunchygroovewear": {
+				"params": {
+					"freq": { "type": "float", "def": 0.06400000303983688, "name": "Freq", "num": 0},
+					"apply": { "type": "float", "def": 1.0, "name": "Apply", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1667723894,
+					"vst2_name": "CrunchyGrooveWear"
+				}
+			},
+			"crystal": {
+				"params": {
+					"hardnss": { "type": "float", "def": 0.699999988079071, "name": "Hardnss", "num": 0},
+					"personl": { "type": "float", "def": 1.0, "name": "Personl", "num": 1},
+					"drive": { "type": "float", "def": 0.3330000042915344, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668446579,
+					"vst2_name": "Crystal"
+				}
+			},
+			"cstrip2": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 1},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 2},
+					"trebfrq": { "type": "float", "def": 0.5, "name": "TrebFrq", "num": 3},
+					"bassfrq": { "type": "float", "def": 0.5, "name": "BassFrq", "num": 4},
+					"lowcap": { "type": "float", "def": 1.0, "name": "LowCap", "num": 5},
+					"hicap": { "type": "float", "def": 0.0, "name": "HiCap", "num": 6},
+					"compres": { "type": "float", "def": 0.0, "name": "Compres", "num": 7},
+					"compspd": { "type": "float", "def": 0.0, "name": "CompSpd", "num": 8},
+					"output": { "type": "float", "def": 0.33000001311302185, "name": "Output", "num": 9}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668510770,
+					"vst2_name": "CStrip2"
+				}
+			},
+			"cstrip": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 1},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 2},
+					"lowpass": { "type": "float", "def": 1.0, "name": "Lowpass", "num": 3},
+					"trebfrq": { "type": "float", "def": 0.4000000059604645, "name": "TrebFrq", "num": 4},
+					"bassfrq": { "type": "float", "def": 0.4000000059604645, "name": "BassFrq", "num": 5},
+					"hipass": { "type": "float", "def": 0.0, "name": "Hipass", "num": 6},
+					"gate": { "type": "float", "def": 0.0, "name": "Gate", "num": 7},
+					"compres": { "type": "float", "def": 0.0, "name": "Compres", "num": 8},
+					"compspd": { "type": "float", "def": 0.0, "name": "CompSpd", "num": 9},
+					"timelag": { "type": "float", "def": 0.0, "name": "TimeLag", "num": 10},
+					"outgain": { "type": "float", "def": 0.5, "name": "OutGain", "num": 11}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668510834,
+					"vst2_name": "CStrip"
+				}
+			},
+			"curve": {
+				"extplug_assoc": {
+					"vst2_id": 1668641398,
+					"vst2_name": "curve"
+				}
+			},
+			"dark": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684107883,
+					"vst2_name": "Dark"
+				}
+			},
+			"darknoise": {
+				"params": {
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 0},
+					"dark": { "type": "float", "def": 1.0, "name": "Dark", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684762227,
+					"vst2_name": "DarkNoise"
+				}
+			},
+			"dcvoltage": {
+				"params": {
+					"voltage": { "type": "float", "def": 0.5, "name": "Voltage", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684239983,
+					"vst2_name": "DCVoltage"
+				}
+			},
+			"debess": {
+				"params": {
+					"intense": { "type": "float", "def": 0.0, "name": "Intense", "num": 0},
+					"sharp": { "type": "float", "def": 0.5, "name": "Sharp", "num": 1},
+					"depth": { "type": "float", "def": 0.5, "name": "Depth", "num": 2},
+					"filter": { "type": "float", "def": 0.5, "name": "Filter", "num": 3},
+					"sense": { "type": "float", "def": 0.0, "name": "Sense", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684365939,
+					"vst2_name": "DeBess"
+				}
+			},
+			"deckwrecka": {
+				"params": {
+					"wreck": { "type": "float", "def": 0.0, "name": "Wreck", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684764530,
+					"vst2_name": "Deckwrecka"
+				}
+			},
+			"deess": {
+				"params": {
+					"intense": { "type": "float", "def": 0.0, "name": "Intense", "num": 0},
+					"max_ds": { "type": "float", "def": 0.5, "name": "Max DS", "num": 1},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684370291,
+					"vst2_name": "DeEss"
+				}
+			},
+			"dehiss": {
+				"params": {
+					"thresh": { "type": "float", "def": 0.0, "name": "Thresh", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1147496563,
+					"vst2_name": "DeHiss"
+				}
+			},
+			"density2": {
+				"params": {
+					"density": { "type": "float", "def": 0.20000000298023224, "name": "Density", "num": 0},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684368946,
+					"vst2_name": "Density2"
+				}
+			},
+			"density": {
+				"params": {
+					"density": { "type": "float", "def": 0.20000000298023224, "name": "Density", "num": 0},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 1},
+					"out_leve": { "type": "float", "def": 1.0, "name": "Out Leve", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684369011,
+					"vst2_name": "Density"
+				}
+			},
+			"derez2": {
+				"params": {
+					"rate": { "type": "float", "def": 1.0, "name": "Rate", "num": 0},
+					"rez": { "type": "float", "def": 1.0, "name": "Rez", "num": 1},
+					"hard": { "type": "float", "def": 1.0, "name": "Hard", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701147258,
+					"vst2_name": "DeRez2"
+				}
+			},
+			"derez3": {
+				"params": {
+					"rate": { "type": "float", "def": 1.0, "name": "Rate", "num": 0},
+					"rez": { "type": "float", "def": 1.0, "name": "Rez", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1685224058,
+					"vst2_name": "DeRez3"
+				}
+			},
+			"derez": {
+				"params": {
+					"rate": { "type": "float", "def": 1.0, "name": "Rate", "num": 0},
+					"rez": { "type": "float", "def": 1.0, "name": "Rez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684370042,
+					"vst2_name": "DeRez"
+				}
+			},
+			"desk4": {
+				"params": {
+					"overdriv": { "type": "float", "def": 0.27000001072883606, "name": "Overdriv", "num": 0},
+					"hi_choke": { "type": "float", "def": 0.18000000715255737, "name": "Hi Choke", "num": 1},
+					"power_sa": { "type": "float", "def": 0.25999999046325684, "name": "Power Sa", "num": 2},
+					"frequenc": { "type": "float", "def": 0.5400000214576721, "name": "Frequenc", "num": 3},
+					"output_t": { "type": "float", "def": 0.8399999737739563, "name": "Output T", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684763753,
+					"vst2_name": "Desk4"
+				}
+			},
+			"desk": {
+				"extplug_assoc": {
+					"vst2_id": 1684370283,
+					"vst2_name": "Desk"
+				}
+			},
+			"digitalblack": {
+				"params": {
+					"thresh": { "type": "float", "def": 0.0, "name": "Thresh", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684497003,
+					"vst2_name": "DigitalBlack"
+				}
+			},
+			"dirt": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"lowpass": { "type": "float", "def": 1.0, "name": "Lowpass", "num": 1},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684632180,
+					"vst2_name": "Dirt"
+				}
+			},
+			"discontinuity": {
+				"params": {
+					"top_db": { "type": "float", "def": 0.5, "name": "Top dB", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684632419,
+					"vst2_name": "Discontinuity"
+				}
+			},
+			"distance2": {
+				"params": {
+					"atmosph": { "type": "float", "def": 0.8500000238418579, "name": "Atmosph", "num": 0},
+					"darken": { "type": "float", "def": 0.6179999709129333, "name": "Darken", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.6179999709129333, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684632437,
+					"vst2_name": "Distance2"
+				}
+			},
+			"distance3": {
+				"params": {
+					"distance": { "type": "float", "def": 0.5, "name": "Distance", "num": 0},
+					"top_db": { "type": "float", "def": 0.5, "name": "Top dB", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684632438,
+					"vst2_name": "Distance3"
+				}
+			},
+			"distance": {
+				"params": {
+					"distance": { "type": "float", "def": 0.0, "name": "Distance", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684632436,
+					"vst2_name": "Distance"
+				}
+			},
+			"distortion": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"mode": { "type": "float", "def": 0.5, "name": "Mode", "num": 1},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1685288050,
+					"vst2_name": "Distortion"
+				}
+			},
+			"ditherbox": {
+				"params": {
+					"type": { "type": "float", "def": 0.8600000143051147, "name": "Type", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684632680,
+					"vst2_name": "Ditherbox"
+				}
+			},
+			"ditherfloat": {
+				"params": {
+					"offset": { "type": "float", "def": 0.0, "name": "Offset", "num": 0},
+					"dither": { "type": "float", "def": 1.0, "name": "Dither", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1685350502,
+					"vst2_name": "DitherFloat"
+				}
+			},
+			"dithermediskers": {
+				"extplug_assoc": {
+					"vst2_id": 1684890731,
+					"vst2_name": "DitherMeDiskers"
+				}
+			},
+			"dithermetimbers": {
+				"extplug_assoc": {
+					"vst2_id": 1684894818,
+					"vst2_name": "DitherMeTimbers"
+				}
+			},
+			"doublelay": {
+				"params": {
+					"detune": { "type": "float", "def": 0.20000000298023224, "name": "Detune", "num": 0},
+					"delay_l": { "type": "float", "def": 0.10000000149011612, "name": "Delay L", "num": 1},
+					"delay_r": { "type": "float", "def": 0.20000000298023224, "name": "Delay R", "num": 2},
+					"feedbk": { "type": "float", "def": 0.0, "name": "Feedbk", "num": 3},
+					"dry_wet": { "type": "float", "def": 0.6000000238418579, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684171873,
+					"vst2_name": "Doublelay"
+				}
+			},
+			"doublepaul": {
+				"extplug_assoc": {
+					"vst2_id": 1684172897,
+					"vst2_name": "DoublePaul"
+				}
+			},
+			"drive": {
+				"params": {
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 0},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 1},
+					"out_leve": { "type": "float", "def": 1.0, "name": "Out Leve", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1685219702,
+					"vst2_name": "Drive"
+				}
+			},
+			"drumslam": {
+				"params": {
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 0},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1685222252,
+					"vst2_name": "DrumSlam"
+				}
+			},
+			"dubcenter": {
+				"params": {
+					"tgrind": { "type": "float", "def": 0.8999999761581421, "name": "TGrind", "num": 0},
+					"grd_out": { "type": "float", "def": 0.5, "name": "Grd/Out", "num": 1},
+					"xover": { "type": "float", "def": 0.7400000095367432, "name": "XOver", "num": 2},
+					"bsdrive": { "type": "float", "def": 1.0, "name": "BsDrive", "num": 3},
+					"bsvoice": { "type": "float", "def": 0.949999988079071, "name": "BsVoice", "num": 4},
+					"bassout": { "type": "float", "def": 0.5, "name": "BassOut", "num": 5},
+					"sbdrive": { "type": "float", "def": 0.20000000298023224, "name": "SbDrive", "num": 6},
+					"sbvoice": { "type": "float", "def": 0.20000000298023224, "name": "SbVoice", "num": 7},
+					"subout": { "type": "float", "def": 0.5, "name": "SubOut", "num": 8},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 9}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684169588,
+					"vst2_name": "DubCenter"
+				}
+			},
+			"dubly2": {
+				"params": {
+					"encamnt": { "type": "float", "def": 0.5, "name": "EncAmnt", "num": 0},
+					"encfreq": { "type": "float", "def": 0.5, "name": "EncFreq", "num": 1},
+					"tapedrv": { "type": "float", "def": 0.0, "name": "TapeDrv", "num": 2},
+					"decamnt": { "type": "float", "def": 0.5, "name": "DecAmnt", "num": 3},
+					"decfreq": { "type": "float", "def": 0.5, "name": "DecFreq", "num": 4},
+					"out_pad": { "type": "float", "def": 0.0, "name": "Out Pad", "num": 5},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 6}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684171898,
+					"vst2_name": "Dubly2"
+				}
+			},
+			"dubly3": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"tilt": { "type": "float", "def": 0.5, "name": "Tilt", "num": 1},
+					"shape": { "type": "float", "def": 0.5, "name": "Shape", "num": 2},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684171898,
+					"vst2_name": "Dubly3"
+				}
+			},
+			"dubly": {
+				"params": {
+					"dubly": { "type": "float", "def": 0.5, "name": "Dubly", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684171897,
+					"vst2_name": "Dubly"
+				}
+			},
+			"dubsub2": {
+				"params": {
+					"headbmp": { "type": "float", "def": 0.5, "name": "HeadBmp", "num": 0},
+					"headfrq": { "type": "float", "def": 0.5, "name": "HeadFrq", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.5, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684173667,
+					"vst2_name": "DubSub2"
+				}
+			},
+			"dubsub": {
+				"params": {
+					"tgrind": { "type": "float", "def": 0.8999999761581421, "name": "TGrind", "num": 0},
+					"grd_out": { "type": "float", "def": 0.5, "name": "Grd/Out", "num": 1},
+					"xover": { "type": "float", "def": 0.7400000095367432, "name": "XOver", "num": 2},
+					"bsdrive": { "type": "float", "def": 1.0, "name": "BsDrive", "num": 3},
+					"bsvoice": { "type": "float", "def": 0.949999988079071, "name": "BsVoice", "num": 4},
+					"bassout": { "type": "float", "def": 0.5, "name": "BassOut", "num": 5},
+					"sbdrive": { "type": "float", "def": 0.20000000298023224, "name": "SbDrive", "num": 6},
+					"sbvoice": { "type": "float", "def": 0.20000000298023224, "name": "SbVoice", "num": 7},
+					"subout": { "type": "float", "def": 0.5, "name": "SubOut", "num": 8},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 9}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684173666,
+					"vst2_name": "DubSub"
+				}
+			},
+			"dustbunny": {
+				"params": {
+					"bunny": { "type": "float", "def": 0.0, "name": "Bunny", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1684172409,
+					"vst2_name": "DustBunny"
+				}
+			},
+			"dynamics": {
+				"params": {
+					"comp": { "type": "float", "def": 0.0, "name": "Comp", "num": 0},
+					"speed": { "type": "float", "def": 0.5, "name": "Speed", "num": 1},
+					"gate": { "type": "float", "def": 0.0, "name": "Gate", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1685679725,
+					"vst2_name": "Dynamics"
+				}
+			},
+			"dyno": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1685679727,
+					"vst2_name": "Dyno"
+				}
+			},
+			"edge": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"lowpass": { "type": "float", "def": 1.0, "name": "Lowpass", "num": 1},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701078885,
+					"vst2_name": "Edge"
+				}
+			},
+			"edisdim": {
+				"params": {
+					"edis_dim": { "type": "float", "def": 0.5, "name": "ediS/diM", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701078125,
+					"vst2_name": "EdIsDim"
+				}
+			},
+			"elation": {
+				"params": {
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 0},
+					"persnlty": { "type": "float", "def": 0.3333333134651184, "name": "Persnlty", "num": 1},
+					"drive": { "type": "float", "def": 0.3333333134651184, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701601652,
+					"vst2_name": "Elation"
+				}
+			},
+			"electrohat": {
+				"params": {
+					"hihat": { "type": "float", "def": 0.0, "name": "HiHat", "num": 0},
+					"trim": { "type": "float", "def": 0.5, "name": "Trim", "num": 1},
+					"bright": { "type": "float", "def": 1.0, "name": "Bright", "num": 2},
+					"output": { "type": "float", "def": 0.10000000149011612, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701602659,
+					"vst2_name": "ElectroHat"
+				}
+			},
+			"energy2": {
+				"params": {
+					"hiss": { "type": "float", "def": 0.5, "name": "Hiss", "num": 0},
+					"glitter": { "type": "float", "def": 0.5, "name": "Glitter", "num": 1},
+					"rat": { "type": "float", "def": 0.5, "name": "Rat", "num": 2},
+					"fizz": { "type": "float", "def": 0.5, "name": "Fizz", "num": 3},
+					"scrape": { "type": "float", "def": 0.5, "name": "Scrape", "num": 4},
+					"chug": { "type": "float", "def": 0.5, "name": "Chug", "num": 5},
+					"yowr": { "type": "float", "def": 0.5, "name": "Yowr", "num": 6},
+					"snarl": { "type": "float", "def": 0.5, "name": "Snarl", "num": 7},
+					"i_dr_wt": { "type": "float", "def": 1.0, "name": "I/Dr/Wt", "num": 8}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701733747,
+					"vst2_name": "Energy2"
+				}
+			},
+			"energy": {
+				"params": {
+					"hiss": { "type": "float", "def": 0.5, "name": "Hiss", "num": 0},
+					"glitter": { "type": "float", "def": 0.5, "name": "Glitter", "num": 1},
+					"rat": { "type": "float", "def": 0.5, "name": "Rat", "num": 2},
+					"fizz": { "type": "float", "def": 0.5, "name": "Fizz", "num": 3},
+					"scrape": { "type": "float", "def": 0.5, "name": "Scrape", "num": 4},
+					"chug": { "type": "float", "def": 0.5, "name": "Chug", "num": 5},
+					"yowr": { "type": "float", "def": 0.5, "name": "Yowr", "num": 6},
+					"snarl": { "type": "float", "def": 0.5, "name": "Snarl", "num": 7},
+					"i_dr_wt": { "type": "float", "def": 1.0, "name": "I/Dr/Wt", "num": 8}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701733746,
+					"vst2_name": "Energy"
+				}
+			},
+			"ensemble": {
+				"params": {
+					"ensemble": { "type": "float", "def": 0.5, "name": "Ensemble", "num": 0},
+					"fullness": { "type": "float", "def": 0.0, "name": "Fullness", "num": 1},
+					"brighten": { "type": "float", "def": 1.0, "name": "Brighten", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701737325,
+					"vst2_name": "Ensemble"
+				}
+			},
+			"eq": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 1},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 2},
+					"lowpass": { "type": "float", "def": 1.0, "name": "Lowpass", "num": 3},
+					"trebfrq": { "type": "float", "def": 0.4000000059604645, "name": "TrebFrq", "num": 4},
+					"bassfrq": { "type": "float", "def": 0.4000000059604645, "name": "BassFrq", "num": 5},
+					"hipass": { "type": "float", "def": 0.0, "name": "Hipass", "num": 6},
+					"outgain": { "type": "float", "def": 0.5, "name": "OutGain", "num": 7}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1701930353,
+					"vst2_name": "EQ"
+				}
+			},
+			"everyconsole": {
+				"params": {
+					"contype": { "type": "float", "def": 0.0, "name": "ConType", "num": 0},
+					"intrim": { "type": "float", "def": 0.5, "name": "InTrim", "num": 1},
+					"outtrim": { "type": "float", "def": 0.5, "name": "OutTrim", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1702257523,
+					"vst2_name": "EveryConsole"
+				}
+			},
+			"everyslew": {
+				"params": {
+					"slew": { "type": "float", "def": 0.0, "name": "Slew", "num": 0},
+					"depth": { "type": "float", "def": 1.0, "name": "Depth", "num": 1},
+					"halo": { "type": "float", "def": 0.1599999964237213, "name": "Halo", "num": 2},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1702261612,
+					"vst2_name": "EverySlew"
+				}
+			},
+			"everytrim": {
+				"params": {
+					"left": { "type": "float", "def": 0.5, "name": "Left", "num": 0},
+					"right": { "type": "float", "def": 0.5, "name": "Right", "num": 1},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 2},
+					"side": { "type": "float", "def": 0.5, "name": "Side", "num": 3},
+					"master": { "type": "float", "def": 0.5, "name": "Master", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1702261874,
+					"vst2_name": "EveryTrim"
+				}
+			},
+			"exciter": {
+				"params": {
+					"freq": { "type": "float", "def": 0.6000000238418579, "name": "Freq", "num": 0},
+					"excite": { "type": "float", "def": 0.0, "name": "Excite", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1702388585,
+					"vst2_name": "Exciter"
+				}
+			},
+			"facet": {
+				"params": {
+					"facet": { "type": "float", "def": 1.0, "name": "Facet", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1717790068,
+					"vst2_name": "Facet"
+				}
+			},
+			"fathomfive": {
+				"params": {
+					"root_not": { "type": "float", "def": 1.0, "name": "Root Not", "num": 0},
+					"suboctav": { "type": "float", "def": 0.0, "name": "SubOctav", "num": 1},
+					"frequenc": { "type": "float", "def": 0.5, "name": "Frequenc", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1717662829,
+					"vst2_name": "FathomFive"
+				}
+			},
+			"finalclip": {
+				"extplug_assoc": {
+					"vst2_id": 1718510448,
+					"vst2_name": "FinalClip"
+				}
+			},
+			"fireamp": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"tone": { "type": "float", "def": 0.5, "name": "Tone", "num": 1},
+					"output": { "type": "float", "def": 0.800000011920929, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718186593,
+					"vst2_name": "FireAmp"
+				}
+			},
+			"flipity": {
+				"params": {
+					"flipity": { "type": "float", "def": 0.0, "name": "Flipity", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718645881,
+					"vst2_name": "Flipity"
+				}
+			},
+			"floor": {
+				"params": {
+					"floor": { "type": "float", "def": 0.0, "name": "Floor", "num": 0},
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718382450,
+					"vst2_name": "Floor"
+				}
+			},
+			"flutter2": {
+				"params": {
+					"flutter": { "type": "float", "def": 0.5, "name": "Flutter", "num": 0},
+					"speed": { "type": "float", "def": 0.5, "name": "Speed", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718383989,
+					"vst2_name": "Flutter2"
+				}
+			},
+			"flutter": {
+				"params": {
+					"flutter": { "type": "float", "def": 0.0, "name": "Flutter", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718383988,
+					"vst2_name": "Flutter"
+				}
+			},
+			"focus": {
+				"params": {
+					"boost": { "type": "float", "def": 0.0, "name": "Boost", "num": 0},
+					"focus": { "type": "float", "def": 0.5, "name": "Focus", "num": 1},
+					"mode": { "type": "float", "def": 0.5, "name": "Mode", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718575987,
+					"vst2_name": "Focus"
+				}
+			},
+			"fracture2": {
+				"params": {
+					"drive": { "type": "float", "def": 0.10000000149011612, "name": "Drive", "num": 0},
+					"fractre": { "type": "float", "def": 0.0, "name": "Fractre", "num": 1},
+					"thresh": { "type": "float", "def": 0.5, "name": "Thresh", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718772068,
+					"vst2_name": "Fracture2"
+				}
+			},
+			"fracture": {
+				"params": {
+					"drive": { "type": "float", "def": 0.25, "name": "Drive", "num": 0},
+					"fracture": { "type": "float", "def": 0.5, "name": "Fracture", "num": 1},
+					"out_lvl": { "type": "float", "def": 1.0, "name": "Out Lvl", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718772596,
+					"vst2_name": "Fracture"
+				}
+			},
+			"fromtape": {
+				"params": {
+					"louder": { "type": "float", "def": 0.5, "name": "Louder", "num": 0},
+					"softer": { "type": "float", "def": 0.5, "name": "Softer", "num": 1},
+					"weight": { "type": "float", "def": 0.5, "name": "Weight", "num": 2},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1718776947,
+					"vst2_name": "FromTape"
+				}
+			},
+			"galactic2": {
+				"params": {
+					"drive": { "type": "float", "def": 0.5, "name": "Drive", "num": 0},
+					"sustain": { "type": "float", "def": 0.5, "name": "Sustain", "num": 1},
+					"darken": { "type": "float", "def": 0.5, "name": "Darken", "num": 2},
+					"wetness": { "type": "float", "def": 1.0, "name": "Wetness", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1734437986,
+					"vst2_name": "Galactic2"
+				}
+			},
+			"galactic3": {
+				"params": {
+					"replace": { "type": "float", "def": 0.5, "name": "Replace", "num": 0},
+					"brightns": { "type": "float", "def": 0.5, "name": "Brightns", "num": 1},
+					"detune": { "type": "float", "def": 0.5, "name": "Detune", "num": 2},
+					"derez": { "type": "float", "def": 1.0, "name": "Derez", "num": 3},
+					"bigness": { "type": "float", "def": 1.0, "name": "Bigness", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1734437987,
+					"vst2_name": "Galactic3"
+				}
+			},
+			"galactic": {
+				"params": {
+					"replace": { "type": "float", "def": 0.5, "name": "Replace", "num": 0},
+					"brightne": { "type": "float", "def": 0.5, "name": "Brightne", "num": 1},
+					"detune": { "type": "float", "def": 0.5, "name": "Detune", "num": 2},
+					"bigness": { "type": "float", "def": 1.0, "name": "Bigness", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1734437985,
+					"vst2_name": "Galactic"
+				}
+			},
+			"galacticvibe": {
+				"params": {
+					"drift": { "type": "float", "def": 0.0, "name": "Drift", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1735161442,
+					"vst2_name": "GalacticVibe"
+				}
+			},
+			"gatelope": {
+				"params": {
+					"thresh": { "type": "float", "def": 0.0, "name": "Thresh", "num": 0},
+					"trebsus": { "type": "float", "def": 1.0, "name": "TrebSus", "num": 1},
+					"basssus": { "type": "float", "def": 0.5, "name": "BassSus", "num": 2},
+					"attacks": { "type": "float", "def": 0.0, "name": "AttackS", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1735683184,
+					"vst2_name": "Gatelope"
+				}
+			},
+			"glitchshifter": {
+				"params": {
+					"note": { "type": "float", "def": 0.5, "name": "Note", "num": 0},
+					"trim": { "type": "float", "def": 0.5, "name": "Trim", "num": 1},
+					"tighten": { "type": "float", "def": 0.5, "name": "Tighten", "num": 2},
+					"feedbck": { "type": "float", "def": 0.0, "name": "Feedbck", "num": 3},
+					"dry_wet": { "type": "float", "def": 0.5, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1735158132,
+					"vst2_name": "GlitchShifter"
+				}
+			},
+			"goldenslew": {
+				"params": {
+					"slew": { "type": "float", "def": 0.0, "name": "Slew", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1734636396,
+					"vst2_name": "GoldenSlew"
+				}
+			},
+			"golem": {
+				"params": {
+					"balance": { "type": "float", "def": 0.5, "name": "Balance", "num": 0},
+					"offset": { "type": "float", "def": 0.5, "name": "Offset", "num": 1},
+					"phase": { "type": "float", "def": 0.0, "name": "Phase", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1735355501,
+					"vst2_name": "Golem"
+				}
+			},
+			"grindamp": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"tone": { "type": "float", "def": 0.5, "name": "Tone", "num": 1},
+					"output": { "type": "float", "def": 0.800000011920929, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1735550049,
+					"vst2_name": "GrindAmp"
+				}
+			},
+			"gringer": {
+				"extplug_assoc": {
+					"vst2_id": 1735551342,
+					"vst2_name": "Gringer"
+				}
+			},
+			"groovewear": {
+				"params": {
+					"wear": { "type": "float", "def": 0.06400000303983688, "name": "Wear", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1735554679,
+					"vst2_name": "GrooveWear"
+				}
+			},
+			"guitarconditioner": {
+				"extplug_assoc": {
+					"vst2_id": 1734569838,
+					"vst2_name": "GuitarConditioner"
+				}
+			},
+			"hardvacuum": {
+				"params": {
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 0},
+					"warmth": { "type": "float", "def": 0.0, "name": "Warmth", "num": 1},
+					"aura": { "type": "float", "def": 0.0, "name": "Aura", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752327286,
+					"vst2_name": "HardVacuum"
+				}
+			},
+			"hermepass": {
+				"params": {
+					"cutoff": { "type": "float", "def": 0.5, "name": "Cutoff", "num": 0},
+					"slope": { "type": "float", "def": 0.5, "name": "Slope", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1751478893,
+					"vst2_name": "Hermepass"
+				}
+			},
+			"hermetrim": {
+				"params": {
+					"left": { "type": "float", "def": 0.5, "name": "Left", "num": 0},
+					"right": { "type": "float", "def": 0.5, "name": "Right", "num": 1},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 2},
+					"side": { "type": "float", "def": 0.5, "name": "Side", "num": 3},
+					"master": { "type": "float", "def": 0.5, "name": "Master", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752003698,
+					"vst2_name": "HermeTrim"
+				}
+			},
+			"highglossdither": {
+				"extplug_assoc": {
+					"vst2_id": 1751606376,
+					"vst2_name": "HighGlossDither"
+				}
+			},
+			"highimpact": {
+				"params": {
+					"impact": { "type": "float", "def": 0.0, "name": "Impact", "num": 0},
+					"output_l": { "type": "float", "def": 0.0, "name": "Output L", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1751739760,
+					"vst2_name": "HighImpact"
+				}
+			},
+			"highpass2": {
+				"params": {
+					"hipass": { "type": "float", "def": 0.0, "name": "Hipass", "num": 0},
+					"ls_tite": { "type": "float", "def": 0.5, "name": "Ls/Tite", "num": 1},
+					"poles": { "type": "float", "def": 0.25, "name": "Poles", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752195444,
+					"vst2_name": "Highpass2"
+				}
+			},
+			"highpass": {
+				"params": {
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 0},
+					"loose_ti": { "type": "float", "def": 0.5, "name": "Loose/Ti", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752195443,
+					"vst2_name": "Highpass"
+				}
+			},
+			"holt2": {
+				"params": {
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 0},
+					"reso": { "type": "float", "def": 0.5, "name": "Reso", "num": 1},
+					"poles": { "type": "float", "def": 1.0, "name": "Poles", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752132725,
+					"vst2_name": "Holt2"
+				}
+			},
+			"holt": {
+				"params": {
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 0},
+					"reso": { "type": "float", "def": 0.5, "name": "Reso", "num": 1},
+					"poles": { "type": "float", "def": 1.0, "name": "Poles", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752132724,
+					"vst2_name": "Holt"
+				}
+			},
+			"hombre": {
+				"params": {
+					"voicing": { "type": "float", "def": 0.42100000381469727, "name": "Voicing", "num": 0},
+					"intensit": { "type": "float", "def": 0.5, "name": "Intensit", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1751999090,
+					"vst2_name": "Hombre"
+				}
+			},
+			"huge": {
+				"params": {
+					"huge": { "type": "float", "def": 0.20000000298023224, "name": "Huge", "num": 0},
+					"nasty": { "type": "float", "def": 0.20000000298023224, "name": "Nasty", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752524645,
+					"vst2_name": "Huge"
+				}
+			},
+			"hull2": {
+				"params": {
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 0},
+					"mid": { "type": "float", "def": 0.5, "name": "Mid", "num": 1},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752525933,
+					"vst2_name": "Hull2"
+				}
+			},
+			"hull": {
+				"params": {
+					"freq": { "type": "float", "def": 0.0, "name": "Freq", "num": 0},
+					"bright": { "type": "float", "def": 0.5, "name": "Bright", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752525932,
+					"vst2_name": "Hull"
+				}
+			},
+			"hype": {
+				"extplug_assoc": {
+					"vst2_id": 1752789093,
+					"vst2_name": "Hype"
+				}
+			},
+			"hypersonic": {
+				"extplug_assoc": {
+					"vst2_id": 1752789106,
+					"vst2_name": "Hypersonic"
+				}
+			},
+			"hypersonx": {
+				"params": {
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1752789112,
+					"vst2_name": "HypersonX"
+				}
+			},
+			"infinity2": {
+				"params": {
+					"filter": { "type": "float", "def": 1.0, "name": "Filter", "num": 0},
+					"size": { "type": "float", "def": 0.5, "name": "Size", "num": 1},
+					"damping": { "type": "float", "def": 0.0, "name": "Damping", "num": 2},
+					"allpass": { "type": "float", "def": 1.0, "name": "Allpass", "num": 3},
+					"feedback": { "type": "float", "def": 1.0, "name": "Feedback", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1768842858,
+					"vst2_name": "Infinity2"
+				}
+			},
+			"infinity": {
+				"params": {
+					"filter": { "type": "float", "def": 1.0, "name": "Filter", "num": 0},
+					"damping": { "type": "float", "def": 0.0, "name": "Damping", "num": 1},
+					"size": { "type": "float", "def": 0.5, "name": "Size", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1768842857,
+					"vst2_name": "Infinity"
+				}
+			},
+			"inflamer": {
+				"params": {
+					"drive": { "type": "float", "def": 0.5, "name": "Drive", "num": 0},
+					"curve": { "type": "float", "def": 0.5, "name": "Curve", "num": 1},
+					"effect": { "type": "float", "def": 1.0, "name": "Effect", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1768842860,
+					"vst2_name": "Inflamer"
+				}
+			},
+			"infrasonic": {
+				"extplug_assoc": {
+					"vst2_id": 1768842866,
+					"vst2_name": "Infrasonic"
+				}
+			},
+			"interstage": {
+				"extplug_assoc": {
+					"vst2_id": 1768846437,
+					"vst2_name": "Interstage"
+				}
+			},
+			"ironoxide5": {
+				"params": {
+					"input_tr": { "type": "float", "def": 0.5, "name": "Input Tr", "num": 0},
+					"tape_hig": { "type": "float", "def": 0.5623413324356079, "name": "Tape Hig", "num": 1},
+					"tape_low": { "type": "float", "def": 0.5623413324356079, "name": "Tape Low", "num": 2},
+					"flutter": { "type": "float", "def": 0.5, "name": "Flutter", "num": 3},
+					"noise": { "type": "float", "def": 0.5, "name": "Noise", "num": 4},
+					"output_t": { "type": "float", "def": 0.5, "name": "Output T", "num": 5},
+					"inv_dry_": { "type": "float", "def": 1.0, "name": "Inv/Dry/", "num": 6}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1717923682,
+					"vst2_name": "IronOxide5"
+				}
+			},
+			"ironoxideclassic2": {
+				"params": {
+					"input_tr": { "type": "float", "def": 0.5, "name": "Input Tr", "num": 0},
+					"tape_spe": { "type": "float", "def": 0.5623413324356079, "name": "Tape Spe", "num": 1},
+					"output_t": { "type": "float", "def": 0.5, "name": "Output T", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1717923685,
+					"vst2_name": "IronOxideClassic2"
+				}
+			},
+			"ironoxideclassic": {
+				"params": {
+					"input_tr": { "type": "float", "def": 0.5, "name": "Input Tr", "num": 0},
+					"tape_spe": { "type": "float", "def": 0.5623413324356079, "name": "Tape Spe", "num": 1},
+					"output_t": { "type": "float", "def": 0.5, "name": "Output T", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1717923683,
+					"vst2_name": "IronOxideClassic"
+				}
+			},
+			"isolator2": {
+				"params": {
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 0},
+					"reso": { "type": "float", "def": 0.0, "name": "Reso", "num": 1},
+					"high": { "type": "float", "def": 0.0, "name": "High", "num": 2},
+					"low": { "type": "float", "def": 1.0, "name": "Low", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1769172845,
+					"vst2_name": "Isolator2"
+				}
+			},
+			"isolator3": {
+				"params": {
+					"iso": { "type": "float", "def": 0.5, "name": "Iso", "num": 0},
+					"q": { "type": "float", "def": 0.0, "name": "Q", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1769172846,
+					"vst2_name": "Isolator3"
+				}
+			},
+			"isolator": {
+				"params": {
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 0},
+					"high": { "type": "float", "def": 0.0, "name": "High", "num": 1},
+					"low": { "type": "float", "def": 1.0, "name": "Low", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1769172844,
+					"vst2_name": "Isolator"
+				}
+			},
+			"kalman": {
+				"params": {
+					"kalman": { "type": "float", "def": 0.5, "name": "Kalman", "num": 0},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1802268014,
+					"vst2_name": "Kalman"
+				}
+			},
+			"kcathedral2": {
+				"params": {
+					"wetness": { "type": "float", "def": 1.0, "name": "Wetness", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1801679977,
+					"vst2_name": "kCathedral2"
+				}
+			},
+			"kcathedral3": {
+				"params": {
+					"top_db": { "type": "float", "def": 0.5, "name": "Top dB", "num": 0},
+					"regen": { "type": "float", "def": 0.5, "name": "Regen", "num": 1},
+					"derez": { "type": "float", "def": 1.0, "name": "DeRez", "num": 2},
+					"predlay": { "type": "float", "def": 0.0, "name": "Predlay", "num": 3},
+					"wetness": { "type": "float", "def": 0.25, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1801679978,
+					"vst2_name": "kCathedral3"
+				}
+			},
+			"kcathedral": {
+				"params": {
+					"wetness": { "type": "float", "def": 1.0, "name": "Wetness", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1801679976,
+					"vst2_name": "kCathedral"
+				}
+			},
+			"kchamberar": {
+				"params": {
+					"input": { "type": "float", "def": 1.0, "name": "Input", "num": 0},
+					"delay": { "type": "float", "def": 0.5, "name": "Delay", "num": 1},
+					"regen": { "type": "float", "def": 0.0, "name": "Regen", "num": 2},
+					"low_cut": { "type": "float", "def": 0.0, "name": "Low Cut", "num": 3},
+					"wetness": { "type": "float", "def": 0.5, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1801676897,
+					"vst2_name": "kChamberAR"
+				}
+			},
+			"kplatea": {
+				"params": {
+					"inputpad": { "type": "float", "def": 1.0, "name": "InputPad", "num": 0},
+					"damping": { "type": "float", "def": 0.5, "name": "Damping", "num": 1},
+					"low_cut": { "type": "float", "def": 1.0, "name": "Low Cut", "num": 2},
+					"predelay": { "type": "float", "def": 0.0, "name": "Predelay", "num": 3},
+					"wetness": { "type": "float", "def": 0.25, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1802529889,
+					"vst2_name": "kPlateA"
+				}
+			},
+			"kplateb": {
+				"params": {
+					"inputpad": { "type": "float", "def": 1.0, "name": "InputPad", "num": 0},
+					"damping": { "type": "float", "def": 0.5, "name": "Damping", "num": 1},
+					"low_cut": { "type": "float", "def": 1.0, "name": "Low Cut", "num": 2},
+					"predelay": { "type": "float", "def": 0.0, "name": "Predelay", "num": 3},
+					"wetness": { "type": "float", "def": 0.25, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1802529890,
+					"vst2_name": "kPlateB"
+				}
+			},
+			"kplatec": {
+				"params": {
+					"inputpad": { "type": "float", "def": 1.0, "name": "InputPad", "num": 0},
+					"damping": { "type": "float", "def": 0.5, "name": "Damping", "num": 1},
+					"low_cut": { "type": "float", "def": 1.0, "name": "Low Cut", "num": 2},
+					"predelay": { "type": "float", "def": 0.0, "name": "Predelay", "num": 3},
+					"wetness": { "type": "float", "def": 0.25, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1802529891,
+					"vst2_name": "kPlateC"
+				}
+			},
+			"kplated": {
+				"params": {
+					"inputpad": { "type": "float", "def": 1.0, "name": "InputPad", "num": 0},
+					"damping": { "type": "float", "def": 0.5, "name": "Damping", "num": 1},
+					"low_cut": { "type": "float", "def": 1.0, "name": "Low Cut", "num": 2},
+					"predelay": { "type": "float", "def": 0.0, "name": "Predelay", "num": 3},
+					"wetness": { "type": "float", "def": 0.25, "name": "Wetness", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1802529892,
+					"vst2_name": "kPlateD"
+				}
+			},
+			"leadamp": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"tone": { "type": "float", "def": 0.5, "name": "Tone", "num": 1},
+					"output": { "type": "float", "def": 0.800000011920929, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1818584161,
+					"vst2_name": "LeadAmp"
+				}
+			},
+			"leftomono": {
+				"extplug_assoc": {
+					"vst2_id": 1818653807,
+					"vst2_name": "LeftoMono"
+				}
+			},
+			"lilamp": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"tone": { "type": "float", "def": 0.5, "name": "Tone", "num": 1},
+					"output": { "type": "float", "def": 0.800000011920929, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1818848353,
+					"vst2_name": "LilAmp"
+				}
+			},
+			"logical4": {
+				"params": {
+					"threshol": { "type": "float", "def": 0.5, "name": "Threshol", "num": 0},
+					"ratio": { "type": "float", "def": 0.20000000298023224, "name": "Ratio", "num": 1},
+					"speed": { "type": "float", "def": 0.1920202076435089, "name": "Speed", "num": 2},
+					"makeupgn": { "type": "float", "def": 0.5, "name": "MakeupGn", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1819240310,
+					"vst2_name": "Logical4"
+				}
+			},
+			"loud": {
+				"params": {
+					"boost": { "type": "float", "def": 0.0, "name": "Boost", "num": 0},
+					"output_l": { "type": "float", "def": 1.0, "name": "Output L", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1819243876,
+					"vst2_name": "Loud"
+				}
+			},
+			"lowpass2": {
+				"params": {
+					"lowpass": { "type": "float", "def": 0.0, "name": "Lowpass", "num": 0},
+					"sft_hrd": { "type": "float", "def": 0.5, "name": "Sft/Hrd", "num": 1},
+					"poles": { "type": "float", "def": 0.25, "name": "Poles", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1819244404,
+					"vst2_name": "Lowpass2"
+				}
+			},
+			"lowpass": {
+				"params": {
+					"lowpass": { "type": "float", "def": 1.0, "name": "Lowpass", "num": 0},
+					"soft_har": { "type": "float", "def": 0.5, "name": "Soft/Har", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1819242611,
+					"vst2_name": "Lowpass"
+				}
+			},
+			"lrfliptimer": {
+				"params": {
+					"minutes": { "type": "float", "def": 0.0, "name": "Minutes", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1819436660,
+					"vst2_name": "LRFlipTimer"
+				}
+			},
+			"luxor": {
+				"params": {
+					"hardns": { "type": "float", "def": 0.699999988079071, "name": "Hardns", "num": 0},
+					"persnlty": { "type": "float", "def": 0.3333333134651184, "name": "Persnlty", "num": 1},
+					"drive": { "type": "float", "def": 0.3333333134651184, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1819637871,
+					"vst2_name": "Luxor"
+				}
+			},
+			"mackeq": {
+				"params": {
+					"trim": { "type": "float", "def": 0.10000000149011612, "name": "Trim", "num": 0},
+					"hi": { "type": "float", "def": 0.5, "name": "Hi", "num": 1},
+					"lo": { "type": "float", "def": 0.5, "name": "Lo", "num": 2},
+					"gain": { "type": "float", "def": 1.0, "name": "Gain", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1835754865,
+					"vst2_name": "MackEQ"
+				}
+			},
+			"mackity": {
+				"params": {
+					"in_trim": { "type": "float", "def": 0.10000000149011612, "name": "In Trim", "num": 0},
+					"out_pad": { "type": "float", "def": 1.0, "name": "Out Pad", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1835758713,
+					"vst2_name": "Mackity"
+				}
+			},
+			"matrixverb": {
+				"params": {
+					"filter": { "type": "float", "def": 1.0, "name": "Filter", "num": 0},
+					"damping": { "type": "float", "def": 0.0, "name": "Damping", "num": 1},
+					"speed": { "type": "float", "def": 0.0, "name": "Speed", "num": 2},
+					"vibrato": { "type": "float", "def": 0.0, "name": "Vibrato", "num": 3},
+					"rmsize": { "type": "float", "def": 0.5, "name": "RmSize", "num": 4},
+					"flavor": { "type": "float", "def": 0.5, "name": "Flavor", "num": 5},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 6}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836611170,
+					"vst2_name": "MatrixVerb"
+				}
+			},
+			"melt": {
+				"params": {
+					"depth": { "type": "float", "def": 0.25, "name": "Depth", "num": 0},
+					"range": { "type": "float", "def": 0.75, "name": "Range", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1835363444,
+					"vst2_name": "Melt"
+				}
+			},
+			"midamp": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"tone": { "type": "float", "def": 0.5, "name": "Tone", "num": 1},
+					"output": { "type": "float", "def": 0.800000011920929, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1835623521,
+					"vst2_name": "MidAmp"
+				}
+			},
+			"midside": {
+				"params": {
+					"mid_side": { "type": "float", "def": 0.5, "name": "Mid/Side", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1835299684,
+					"vst2_name": "MidSide"
+				}
+			},
+			"mojo": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836018287,
+					"vst2_name": "Mojo"
+				}
+			},
+			"monitoring2": {
+				"params": {
+					"monitor": { "type": "float", "def": 0.0, "name": "Monitor", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836019306,
+					"vst2_name": "Monitoring2"
+				}
+			},
+			"monitoring3": {
+				"params": {
+					"monitor": { "type": "float", "def": 0.0, "name": "Monitor", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836019307,
+					"vst2_name": "Monitoring3"
+				}
+			},
+			"monitoring": {
+				"params": {
+					"monitor": { "type": "float", "def": 0.0, "name": "Monitor", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836019305,
+					"vst2_name": "Monitoring"
+				}
+			},
+			"monoam": {
+				"params": {
+					"monotor": { "type": "float", "def": 0.0, "name": "Monotor", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1835954029,
+					"vst2_name": "MoNoam"
+				}
+			},
+			"msfliptimer": {
+				"params": {
+					"minutes": { "type": "float", "def": 0.0, "name": "Minutes", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836279412,
+					"vst2_name": "MSFlipTimer"
+				}
+			},
+			"multibanddistortion": {
+				"params": {
+					"freqcy": { "type": "float", "def": 0.5, "name": "Freqcy", "num": 0},
+					"h_gain": { "type": "float", "def": 0.0, "name": "H Gain", "num": 1},
+					"l_gain": { "type": "float", "def": 0.0, "name": "L Gain", "num": 2},
+					"h_hard": { "type": "float", "def": 0.0, "name": "H Hard", "num": 3},
+					"l_hard": { "type": "float", "def": 0.0, "name": "L Hard", "num": 4},
+					"h_mtrx": { "type": "float", "def": 1.0, "name": "H Mtrx", "num": 5},
+					"l_mtrx": { "type": "float", "def": 1.0, "name": "L Mtrx", "num": 6},
+					"stable": { "type": "float", "def": 1.0, "name": "Stable", "num": 7},
+					"output": { "type": "float", "def": 0.75, "name": "Output", "num": 8}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1835164788,
+					"vst2_name": "MultiBandDistortion"
+				}
+			},
+			"mv2": {
+				"params": {
+					"depth": { "type": "float", "def": 0.5, "name": "Depth", "num": 0},
+					"bright": { "type": "float", "def": 0.5, "name": "Bright", "num": 1},
+					"regen": { "type": "float", "def": 0.5, "name": "Regen", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836477815,
+					"vst2_name": "MV2"
+				}
+			},
+			"mv": {
+				"params": {
+					"depth": { "type": "float", "def": 0.5, "name": "Depth", "num": 0},
+					"bright": { "type": "float", "def": 0.5, "name": "Bright", "num": 1},
+					"regen": { "type": "float", "def": 0.5, "name": "Regen", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1836477814,
+					"vst2_name": "MV"
+				}
+			},
+			"naturalizedither": {
+				"extplug_assoc": {
+					"vst2_id": 1852077160,
+					"vst2_name": "NaturalizeDither"
+				}
+			},
+			"nc-17": {
+				"params": {
+					"louder": { "type": "float", "def": 0.0, "name": "LOUDER", "num": 0},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1852011365,
+					"vst2_name": "NC-17"
+				}
+			},
+			"neverland": {
+				"params": {
+					"hardns": { "type": "float", "def": 0.7400000095367432, "name": "Hardns", "num": 0},
+					"persnlty": { "type": "float", "def": 0.3333333134651184, "name": "Persnlty", "num": 1},
+					"drive": { "type": "float", "def": 0.3333333134651184, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1852143205,
+					"vst2_name": "Neverland"
+				}
+			},
+			"nikola": {
+				"params": {
+					"voltage": { "type": "float", "def": 0.0, "name": "Voltage", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1852402543,
+					"vst2_name": "Nikola"
+				}
+			},
+			"nodedither": {
+				"params": {
+					"node": { "type": "float", "def": 0.03999999910593033, "name": "Node", "num": 0},
+					"phase": { "type": "float", "def": 0.0, "name": "Phase", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1852793957,
+					"vst2_name": "NodeDither"
+				}
+			},
+			"noise": {
+				"params": {
+					"highcut": { "type": "float", "def": 0.5, "name": "HighCut", "num": 0},
+					"lowcut": { "type": "float", "def": 0.5, "name": "LowCut", "num": 1},
+					"lshape": { "type": "float", "def": 0.5, "name": "LShape", "num": 2},
+					"decay": { "type": "float", "def": 1.0, "name": "Decay", "num": 3},
+					"distnc": { "type": "float", "def": 0.0, "name": "Distnc", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1852795251,
+					"vst2_name": "Noise"
+				}
+			},
+			"nonlinearspace": {
+				"params": {
+					"smprate": { "type": "float", "def": 0.30000001192092896, "name": "SmpRate", "num": 0},
+					"livenes": { "type": "float", "def": 0.5, "name": "Livenes", "num": 1},
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 2},
+					"bass": { "type": "float", "def": 0.5, "name": "Bass", "num": 3},
+					"nonlin": { "type": "float", "def": 0.5, "name": "Nonlin", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1853059171,
+					"vst2_name": "NonlinearSpace"
+				}
+			},
+			"notjustanothercd": {
+				"extplug_assoc": {
+					"vst2_id": 1852465507,
+					"vst2_name": "NotJustAnotherCD"
+				}
+			},
+			"notjustanotherdither": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1852465508,
+					"vst2_name": "NotJustAnotherDither"
+				}
+			},
+			"onecornerclip": {
+				"params": {
+					"input": { "type": "float", "def": 0.3333333432674408, "name": "Input", "num": 0},
+					"pos_thr": { "type": "float", "def": 0.9660000205039978, "name": "Pos Thr", "num": 1},
+					"neg_thr": { "type": "float", "def": 0.9660000205039978, "name": "Neg Thr", "num": 2},
+					"voicing": { "type": "float", "def": 0.6179999709129333, "name": "Voicing", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1668248174,
+					"vst2_name": "OneCornerClip"
+				}
+			},
+			"orbitkick": {
+				"params": {
+					"drop": { "type": "float", "def": 0.5, "name": "Drop", "num": 0},
+					"shape": { "type": "float", "def": 0.5, "name": "Shape", "num": 1},
+					"start": { "type": "float", "def": 0.5, "name": "Start", "num": 2},
+					"finish": { "type": "float", "def": 0.5, "name": "Finish", "num": 3},
+					"thresh": { "type": "float", "def": 0.5, "name": "Thresh", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1869767284,
+					"vst2_name": "OrbitKick"
+				}
+			},
+			"overheads": {
+				"params": {
+					"compr": { "type": "float", "def": 0.0, "name": "Compr", "num": 0},
+					"sharp": { "type": "float", "def": 0.5, "name": "Sharp", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1870030194,
+					"vst2_name": "Overheads"
+				}
+			},
+			"pafnuty2": {
+				"params": {
+					"second": { "type": "float", "def": 0.5, "name": "Second", "num": 0},
+					"third": { "type": "float", "def": 0.5, "name": "Third", "num": 1},
+					"fourth": { "type": "float", "def": 0.5, "name": "Fourth", "num": 2},
+					"fifth": { "type": "float", "def": 0.5, "name": "Fifth", "num": 3},
+					"sixth": { "type": "float", "def": 0.5, "name": "Sixth", "num": 4},
+					"seventh": { "type": "float", "def": 0.5, "name": "Seventh", "num": 5},
+					"eighth": { "type": "float", "def": 0.5, "name": "Eighth", "num": 6},
+					"ninth": { "type": "float", "def": 0.5, "name": "Ninth", "num": 7},
+					"tenth": { "type": "float", "def": 0.5, "name": "Tenth", "num": 8},
+					"inv_wet": { "type": "float", "def": 0.5, "name": "Inv/Wet", "num": 9}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885431346,
+					"vst2_name": "Pafnuty2"
+				}
+			},
+			"pafnuty": {
+				"params": {
+					"second": { "type": "float", "def": 0.5, "name": "Second", "num": 0},
+					"third": { "type": "float", "def": 0.5, "name": "Third", "num": 1},
+					"fourth": { "type": "float", "def": 0.5, "name": "Fourth", "num": 2},
+					"fifth": { "type": "float", "def": 0.5, "name": "Fifth", "num": 3},
+					"sixth": { "type": "float", "def": 0.5, "name": "Sixth", "num": 4},
+					"seventh": { "type": "float", "def": 0.5, "name": "Seventh", "num": 5},
+					"eighth": { "type": "float", "def": 0.5, "name": "Eighth", "num": 6},
+					"ninth": { "type": "float", "def": 0.5, "name": "Ninth", "num": 7},
+					"tenth": { "type": "float", "def": 0.5, "name": "Tenth", "num": 8},
+					"elevnth": { "type": "float", "def": 0.5, "name": "Elevnth", "num": 9},
+					"twelvth": { "type": "float", "def": 0.5, "name": "Twelvth", "num": 10},
+					"thirtnh": { "type": "float", "def": 0.5, "name": "Thirtnh", "num": 11},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 12}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1853191289,
+					"vst2_name": "Pafnuty"
+				}
+			},
+			"parametric": {
+				"params": {
+					"tr_freq": { "type": "float", "def": 0.5, "name": "Tr Freq", "num": 0},
+					"treble": { "type": "float", "def": 0.5, "name": "Treble", "num": 1},
+					"tr_reso": { "type": "float", "def": 0.5, "name": "Tr Reso", "num": 2},
+					"hm_freq": { "type": "float", "def": 0.5, "name": "HM Freq", "num": 3},
+					"highmid": { "type": "float", "def": 0.5, "name": "HighMid", "num": 4},
+					"hm_reso": { "type": "float", "def": 0.5, "name": "HM Reso", "num": 5},
+					"lm_freq": { "type": "float", "def": 0.5, "name": "LM Freq", "num": 6},
+					"lowmid": { "type": "float", "def": 0.5, "name": "LowMid", "num": 7},
+					"lm_reso": { "type": "float", "def": 0.5, "name": "LM Reso", "num": 8},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 9}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885434465,
+					"vst2_name": "Parametric"
+				}
+			},
+			"pauldither": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885435244,
+					"vst2_name": "PaulDither"
+				}
+			},
+			"paulwide": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885435255,
+					"vst2_name": "PaulWide"
+				}
+			},
+			"pdbuss": {
+				"params": {
+					"gain": { "type": "float", "def": 1.0, "name": "Gain", "num": 0},
+					"drive": { "type": "float", "def": 1.0, "name": "Drive", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885626997,
+					"vst2_name": "PDBuss"
+				}
+			},
+			"pdchannel": {
+				"params": {
+					"gain": { "type": "float", "def": 1.0, "name": "Gain", "num": 0},
+					"drive": { "type": "float", "def": 1.0, "name": "Drive", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885627240,
+					"vst2_name": "PDChannel"
+				}
+			},
+			"peaksonly": {
+				"extplug_assoc": {
+					"vst2_id": 1885694831,
+					"vst2_name": "PeaksOnly"
+				}
+			},
+			"pear2": {
+				"params": {
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 0},
+					"nonlin": { "type": "float", "def": 0.5, "name": "NonLin", "num": 1},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 2},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885692275,
+					"vst2_name": "Pear2"
+				}
+			},
+			"pear": {
+				"params": {
+					"bitfreq": { "type": "float", "def": 1.0, "name": "bitFreq", "num": 0},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 1},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885692274,
+					"vst2_name": "Pear"
+				}
+			},
+			"phasenudge": {
+				"params": {
+					"phase_nu": { "type": "float", "def": 0.0, "name": "Phase Nu", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886613095,
+					"vst2_name": "PhaseNudge"
+				}
+			},
+			"pitchdelay": {
+				"params": {
+					"time": { "type": "float", "def": 1.0, "name": "Time", "num": 0},
+					"regen": { "type": "float", "def": 0.0, "name": "Regen", "num": 1},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 2},
+					"reso": { "type": "float", "def": 0.0, "name": "Reso", "num": 3},
+					"pitch": { "type": "float", "def": 0.5, "name": "Pitch", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886676076,
+					"vst2_name": "PitchDelay"
+				}
+			},
+			"pitchnasty": {
+				"params": {
+					"note": { "type": "float", "def": 0.0, "name": "Note", "num": 0},
+					"bend": { "type": "float", "def": 0.0, "name": "Bend", "num": 1},
+					"grind": { "type": "float", "def": 0.25, "name": "Grind", "num": 2},
+					"feedbck": { "type": "float", "def": 0.0, "name": "Feedbck", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885959278,
+					"vst2_name": "PitchNasty"
+				}
+			},
+			"platinumslew": {
+				"params": {
+					"slew": { "type": "float", "def": 0.0, "name": "Slew", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886155628,
+					"vst2_name": "PlatinumSlew"
+				}
+			},
+			"pocketverbs": {
+				"params": {
+					"type": { "type": "float", "def": 0.0, "name": "Type", "num": 0},
+					"size": { "type": "float", "def": 0.5, "name": "Size", "num": 1},
+					"gating": { "type": "float", "def": 0.0, "name": "Gating", "num": 2},
+					"dry_wet": { "type": "float", "def": 0.5, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886090850,
+					"vst2_name": "PocketVerbs"
+				}
+			},
+			"pockey2": {
+				"params": {
+					"defreq": { "type": "float", "def": 0.0, "name": "DeFreq", "num": 0},
+					"derez": { "type": "float", "def": 0.6600000262260437, "name": "DeRez", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886348140,
+					"vst2_name": "Pockey2"
+				}
+			},
+			"pockey": {
+				"params": {
+					"defreq": { "type": "float", "def": 0.0, "name": "DeFreq", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886348139,
+					"vst2_name": "Pockey"
+				}
+			},
+			"podcast": {
+				"params": {
+					"boost": { "type": "float", "def": 0.5, "name": "Boost", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886348387,
+					"vst2_name": "Podcast"
+				}
+			},
+			"podcastdeluxe": {
+				"params": {
+					"boost": { "type": "float", "def": 0.5, "name": "Boost", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886348388,
+					"vst2_name": "PodcastDeluxe"
+				}
+			},
+			"point": {
+				"params": {
+					"input_tr": { "type": "float", "def": 0.5, "name": "Input Tr", "num": 0},
+					"point": { "type": "float", "def": 0.5, "name": "Point", "num": 1},
+					"reaction": { "type": "float", "def": 0.5, "name": "Reaction", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886349684,
+					"vst2_name": "Point"
+				}
+			},
+			"pop2": {
+				"params": {
+					"compres": { "type": "float", "def": 0.5, "name": "Compres", "num": 0},
+					"attack": { "type": "float", "def": 0.5, "name": "Attack", "num": 1},
+					"release": { "type": "float", "def": 0.5, "name": "Release", "num": 2},
+					"drive": { "type": "float", "def": 0.5, "name": "Drive", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886351460,
+					"vst2_name": "Pop2"
+				}
+			},
+			"pop": {
+				"params": {
+					"intenst": { "type": "float", "def": 0.30000001192092896, "name": "Intenst", "num": 0},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886351459,
+					"vst2_name": "Pop"
+				}
+			},
+			"powersag2": {
+				"params": {
+					"range": { "type": "float", "def": 0.30000001192092896, "name": "Range", "num": 0},
+					"inv_wet": { "type": "float", "def": 0.5, "name": "Inv/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886609768,
+					"vst2_name": "PowerSag2"
+				}
+			},
+			"powersag": {
+				"params": {
+					"depth": { "type": "float", "def": 0.0, "name": "Depth", "num": 0},
+					"speed": { "type": "float", "def": 0.30000001192092896, "name": "Speed", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886609767,
+					"vst2_name": "PowerSag"
+				}
+			},
+			"precious": {
+				"params": {
+					"hardns": { "type": "float", "def": 0.699999988079071, "name": "Hardns", "num": 0},
+					"persnlty": { "type": "float", "def": 0.3333333134651184, "name": "Persnlty", "num": 1},
+					"drive": { "type": "float", "def": 0.3333333134651184, "name": "Drive", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886545251,
+					"vst2_name": "Precious"
+				}
+			},
+			"preponderant": {
+				"params": {
+					"narrow": { "type": "float", "def": 0.25, "name": "Narrow", "num": 0},
+					"medium": { "type": "float", "def": 0.5, "name": "Medium", "num": 1},
+					"wide": { "type": "float", "def": 0.75, "name": "Wide", "num": 2},
+					"resonan": { "type": "float", "def": 0.5, "name": "Resonan", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886548079,
+					"vst2_name": "Preponderant"
+				}
+			},
+			"pressure4": {
+				"params": {
+					"pressure": { "type": "float", "def": 0.0, "name": "Pressure", "num": 0},
+					"speed": { "type": "float", "def": 0.20000000298023224, "name": "Speed", "num": 1},
+					"mewiness": { "type": "float", "def": 1.0, "name": "Mewiness", "num": 2},
+					"output_g": { "type": "float", "def": 1.0, "name": "Output G", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886548788,
+					"vst2_name": "Pressure4"
+				}
+			},
+			"pressure5": {
+				"params": {
+					"pressre": { "type": "float", "def": 0.0, "name": "Pressre", "num": 0},
+					"speed": { "type": "float", "def": 0.25, "name": "Speed", "num": 1},
+					"mewines": { "type": "float", "def": 1.0, "name": "Mewines", "num": 2},
+					"pawclaw": { "type": "float", "def": 0.5, "name": "PawClaw", "num": 3},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886548789,
+					"vst2_name": "Pressure5"
+				}
+			},
+			"purestair": {
+				"params": {
+					"boost": { "type": "float", "def": 0.5, "name": "Boost", "num": 0},
+					"limit": { "type": "float", "def": 0.0, "name": "Limit", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885432178,
+					"vst2_name": "PurestAir"
+				}
+			},
+			"purestconsole2buss": {
+				"extplug_assoc": {
+					"vst2_id": 1885564772,
+					"vst2_name": "PurestConsole2Buss"
+				}
+			},
+			"purestconsole2channel": {
+				"extplug_assoc": {
+					"vst2_id": 1885564773,
+					"vst2_name": "PurestConsole2Channel"
+				}
+			},
+			"purestconsole3buss": {
+				"extplug_assoc": {
+					"vst2_id": 1885564774,
+					"vst2_name": "PurestConsole3Buss"
+				}
+			},
+			"purestconsole3channel": {
+				"extplug_assoc": {
+					"vst2_id": 1885564775,
+					"vst2_name": "PurestConsole3Channel"
+				}
+			},
+			"purestconsolebuss": {
+				"extplug_assoc": {
+					"vst2_id": 1885564770,
+					"vst2_name": "PurestConsoleBuss"
+				}
+			},
+			"purestconsolechannel": {
+				"extplug_assoc": {
+					"vst2_id": 1885564771,
+					"vst2_name": "PurestConsoleChannel"
+				}
+			},
+			"purestdrive": {
+				"params": {
+					"drive": { "type": "float", "def": 0.0, "name": "Drive", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886745188,
+					"vst2_name": "PurestDrive"
+				}
+			},
+			"purestecho": {
+				"params": {
+					"time": { "type": "float", "def": 1.0, "name": "Time", "num": 0},
+					"tap_1": { "type": "float", "def": 1.0, "name": "Tap 1", "num": 1},
+					"tap_2": { "type": "float", "def": 0.0, "name": "Tap 2", "num": 2},
+					"tap_3": { "type": "float", "def": 0.0, "name": "Tap 3", "num": 3},
+					"tap_4": { "type": "float", "def": 0.0, "name": "Tap 4", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1885692776,
+					"vst2_name": "PurestEcho"
+				}
+			},
+			"purestfade": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"fade": { "type": "float", "def": 1.0, "name": "Fade", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886745190,
+					"vst2_name": "PurestFade"
+				}
+			},
+			"purestgain": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"slow_fad": { "type": "float", "def": 1.0, "name": "Slow Fad", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886745191,
+					"vst2_name": "PurestGain"
+				}
+			},
+			"purestsquish": {
+				"params": {
+					"squish": { "type": "float", "def": 0.0, "name": "Squish", "num": 0},
+					"bassblm": { "type": "float", "def": 0.0, "name": "BassBlm", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886745457,
+					"vst2_name": "PurestSquish"
+				}
+			},
+			"purestwarm2": {
+				"params": {
+					"dry_pos": { "type": "float", "def": 0.0, "name": "Dry/Pos", "num": 0},
+					"dry_neg": { "type": "float", "def": 0.0, "name": "Dry/Neg", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886746478,
+					"vst2_name": "PurestWarm2"
+				}
+			},
+			"purestwarm": {
+				"params": {
+					"polarity": { "type": "float", "def": 0.0, "name": "Polarity", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1886746477,
+					"vst2_name": "PurestWarm"
+				}
+			},
+			"pyewacket": {
+				"params": {
+					"input_ga": { "type": "float", "def": 0.5, "name": "Input Ga", "num": 0},
+					"release": { "type": "float", "def": 0.5, "name": "Release", "num": 1},
+					"output_g": { "type": "float", "def": 0.5, "name": "Output G", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1887004023,
+					"vst2_name": "Pyewacket"
+				}
+			},
+			"rawglitters": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1918986100,
+					"vst2_name": "RawGlitters"
+				}
+			},
+			"rawtimbers": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1918989410,
+					"vst2_name": "RawTimbers"
+				}
+			},
+			"recurve": {
+				"extplug_assoc": {
+					"vst2_id": 1919247218,
+					"vst2_name": "Recurve"
+				}
+			},
+			"remap": {
+				"params": {
+					"remap": { "type": "float", "def": 0.5, "name": "Remap", "num": 0},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1919249761,
+					"vst2_name": "Remap"
+				}
+			},
+			"reseq2": {
+				"params": {
+					"msweep": { "type": "float", "def": 0.5, "name": "MSweep", "num": 0},
+					"mboost": { "type": "float", "def": 0.0, "name": "MBoost", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1919251312,
+					"vst2_name": "ResEQ2"
+				}
+			},
+			"reseq": {
+				"params": {
+					"reso_1": { "type": "float", "def": 0.0, "name": "Reso 1", "num": 0},
+					"reso_2": { "type": "float", "def": 0.0, "name": "Reso 2", "num": 1},
+					"reso_3": { "type": "float", "def": 0.0, "name": "Reso 3", "num": 2},
+					"reso_4": { "type": "float", "def": 0.0, "name": "Reso 4", "num": 3},
+					"reso_5": { "type": "float", "def": 0.0, "name": "Reso 5", "num": 4},
+					"reso_6": { "type": "float", "def": 0.0, "name": "Reso 6", "num": 5},
+					"reso_7": { "type": "float", "def": 0.0, "name": "Reso 7", "num": 6},
+					"reso_8": { "type": "float", "def": 0.0, "name": "Reso 8", "num": 7},
+					"dry_wet": { "type": "float", "def": 0.0, "name": "Dry/Wet", "num": 8}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1919251311,
+					"vst2_name": "ResEQ"
+				}
+			},
+			"reverb": {
+				"params": {
+					"big": { "type": "float", "def": 0.5, "name": "Big", "num": 0},
+					"wet": { "type": "float", "def": 0.5, "name": "Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1919252066,
+					"vst2_name": "Reverb"
+				}
+			},
+			"righteous4": {
+				"params": {
+					"ltarget": { "type": "float", "def": 0.0, "name": "LTarget", "num": 0},
+					"btdepth": { "type": "float", "def": 0.0, "name": "BtDepth", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1919510379,
+					"vst2_name": "Righteous4"
+				}
+			},
+			"rightomono": {
+				"extplug_assoc": {
+					"vst2_id": 1919382639,
+					"vst2_name": "RightoMono"
+				}
+			},
+			"sampledelay": {
+				"params": {
+					"ms": { "type": "float", "def": 0.0, "name": "ms", "num": 0},
+					"samples": { "type": "float", "def": 0.0, "name": "Samples", "num": 1},
+					"subsamp": { "type": "float", "def": 0.0, "name": "Subsamp", "num": 2},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1935765604,
+					"vst2_name": "SampleDelay"
+				}
+			},
+			"shape": {
+				"params": {
+					"shape": { "type": "float", "def": 0.5, "name": "Shape", "num": 0},
+					"neg_pos": { "type": "float", "def": 0.5, "name": "Neg/Pos", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936220528,
+					"vst2_name": "Shape"
+				}
+			},
+			"shortbuss": {
+				"params": {
+					"shortbs": { "type": "float", "def": 0.5, "name": "ShortBs", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936224884,
+					"vst2_name": "ShortBuss"
+				}
+			},
+			"sidedull": {
+				"params": {
+					"cutoff": { "type": "float", "def": 0.0, "name": "Cutoff", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936286820,
+					"vst2_name": "SideDull"
+				}
+			},
+			"sidepass": {
+				"params": {
+					"cutoff": { "type": "float", "def": 0.0, "name": "Cutoff", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936286832,
+					"vst2_name": "Sidepass"
+				}
+			},
+			"silhouette": {
+				"params": {
+					"dry_wet": { "type": "float", "def": 0.0, "name": "Dry/Wet", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936288872,
+					"vst2_name": "Silhouette"
+				}
+			},
+			"sinew": {
+				"params": {
+					"sinew": { "type": "float", "def": 0.5, "name": "Sinew", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936289399,
+					"vst2_name": "Sinew"
+				}
+			},
+			"singleendedtriode": {
+				"params": {
+					"triode": { "type": "float", "def": 0.0, "name": "Triode", "num": 0},
+					"clas_ab": { "type": "float", "def": 0.0, "name": "Clas AB", "num": 1},
+					"clas_b": { "type": "float", "def": 0.0, "name": "Clas B", "num": 2},
+					"dry_wet": { "type": "float", "def": 0.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936028786,
+					"vst2_name": "SingleEndedTriode"
+				}
+			},
+			"slew2": {
+				"params": {
+					"clamping": { "type": "float", "def": 0.0, "name": "Clamping", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936488242,
+					"vst2_name": "Slew2"
+				}
+			},
+			"slew3": {
+				"params": {
+					"clampng": { "type": "float", "def": 0.0, "name": "Clampng", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936483704,
+					"vst2_name": "Slew3"
+				}
+			},
+			"slew": {
+				"params": {
+					"clamping": { "type": "float", "def": 0.0, "name": "Clamping", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936483703,
+					"vst2_name": "Slew"
+				}
+			},
+			"slewonly": {
+				"extplug_assoc": {
+					"vst2_id": 1936486254,
+					"vst2_name": "SlewOnly"
+				}
+			},
+			"slewsonic": {
+				"params": {
+					"mute": { "type": "float", "def": 0.5, "name": "Mute", "num": 0},
+					"bright": { "type": "float", "def": 0.0, "name": "Bright", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936487278,
+					"vst2_name": "SlewSonic"
+				}
+			},
+			"smooth": {
+				"params": {
+					"smooth": { "type": "float", "def": 0.0, "name": "Smooth", "num": 0},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936551791,
+					"vst2_name": "Smooth"
+				}
+			},
+			"softgate": {
+				"params": {
+					"thresh": { "type": "float", "def": 0.5, "name": "Thresh", "num": 0},
+					"darken": { "type": "float", "def": 0.5, "name": "Darken", "num": 1},
+					"silence": { "type": "float", "def": 0.0, "name": "Silence", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1818850151,
+					"vst2_name": "SoftGate"
+				}
+			},
+			"spatializedither": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1935963250,
+					"vst2_name": "SpatializeDither"
+				}
+			},
+			"spiral2": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"highpass": { "type": "float", "def": 0.0, "name": "Highpass", "num": 1},
+					"presence": { "type": "float", "def": 0.5, "name": "Presence", "num": 2},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936746867,
+					"vst2_name": "Spiral2"
+				}
+			},
+			"spiral": {
+				"extplug_assoc": {
+					"vst2_id": 1936746866,
+					"vst2_name": "Spiral"
+				}
+			},
+			"srsly2": {
+				"params": {
+					"center": { "type": "float", "def": 0.5, "name": "Center", "num": 0},
+					"space": { "type": "float", "def": 0.5, "name": "Space", "num": 1},
+					"level": { "type": "float", "def": 1.0, "name": "Level", "num": 2},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936880493,
+					"vst2_name": "Srsly2"
+				}
+			},
+			"srsly3": {
+				"params": {
+					"center": { "type": "float", "def": 0.5, "name": "Center", "num": 0},
+					"space": { "type": "float", "def": 0.5, "name": "Space", "num": 1},
+					"level": { "type": "float", "def": 1.0, "name": "Level", "num": 2},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 3},
+					"nonlin": { "type": "float", "def": 0.5, "name": "Nonlin", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936880494,
+					"vst2_name": "Srsly3"
+				}
+			},
+			"srsly": {
+				"params": {
+					"center": { "type": "float", "def": 0.0, "name": "Center", "num": 0},
+					"space": { "type": "float", "def": 0.0, "name": "Space", "num": 1},
+					"level": { "type": "float", "def": 1.0, "name": "Level", "num": 2},
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936880492,
+					"vst2_name": "Srsly"
+				}
+			},
+			"starchild2": {
+				"params": {
+					"sustain": { "type": "float", "def": 1.0, "name": "Sustain", "num": 0},
+					"grain": { "type": "float", "def": 0.699999988079071, "name": "Grain", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.20000000298023224, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937006963,
+					"vst2_name": "StarChild2"
+				}
+			},
+			"starchild": {
+				"params": {
+					"sustain": { "type": "float", "def": 1.0, "name": "Sustain", "num": 0},
+					"grain": { "type": "float", "def": 0.699999988079071, "name": "Grain", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.20000000298023224, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937006962,
+					"vst2_name": "StarChild"
+				}
+			},
+			"stereochorus": {
+				"params": {
+					"speed": { "type": "float", "def": 0.0, "name": "Speed", "num": 0},
+					"depth": { "type": "float", "def": 0.0, "name": "Depth", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1935894643,
+					"vst2_name": "StereoChorus"
+				}
+			},
+			"stereodoubler": {
+				"params": {
+					"detune": { "type": "float", "def": 0.6000000238418579, "name": "Detune", "num": 0},
+					"dry_wet": { "type": "float", "def": 0.6000000238418579, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1935963490,
+					"vst2_name": "StereoDoubler"
+				}
+			},
+			"stereoensemble": {
+				"params": {
+					"depth": { "type": "float", "def": 0.5, "name": "Depth", "num": 0},
+					"fxlevel": { "type": "float", "def": 1.0, "name": "FXlevel", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937007982,
+					"vst2_name": "StereoEnsemble"
+				}
+			},
+			"stereofx": {
+				"params": {
+					"wide": { "type": "float", "def": 0.0, "name": "Wide", "num": 0},
+					"monobs": { "type": "float", "def": 0.0, "name": "MonoBs", "num": 1},
+					"csquish": { "type": "float", "def": 0.0, "name": "CSquish", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937008248,
+					"vst2_name": "StereoFX"
+				}
+			},
+			"stonefire": {
+				"params": {
+					"air": { "type": "float", "def": 0.5, "name": "Air", "num": 0},
+					"fire": { "type": "float", "def": 0.5, "name": "Fire", "num": 1},
+					"stone": { "type": "float", "def": 0.5, "name": "Stone", "num": 2},
+					"range": { "type": "float", "def": 0.5, "name": "Range", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937008242,
+					"vst2_name": "Stonefire"
+				}
+			},
+			"studiotan": {
+				"params": {
+					"quantzr": { "type": "float", "def": 0.0, "name": "Quantzr", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937006958,
+					"vst2_name": "StudioTan"
+				}
+			},
+			"subsonly": {
+				"extplug_assoc": {
+					"vst2_id": 1935830894,
+					"vst2_name": "SubsOnly"
+				}
+			},
+			"subtight": {
+				"params": {
+					"trim": { "type": "float", "def": 0.30000001192092896, "name": "Trim", "num": 0},
+					"steep": { "type": "float", "def": 0.5, "name": "Steep", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1935832167,
+					"vst2_name": "SubTight"
+				}
+			},
+			"surge": {
+				"params": {
+					"surge": { "type": "float", "def": 0.0, "name": "Surge", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1936877413,
+					"vst2_name": "Surge"
+				}
+			},
+			"surgetide": {
+				"params": {
+					"surgenod": { "type": "float", "def": 0.5, "name": "SurgeNod", "num": 0},
+					"surgerat": { "type": "float", "def": 0.30000001192092896, "name": "SurgeRat", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937076839,
+					"vst2_name": "SurgeTide"
+				}
+			},
+			"sweeten": {
+				"params": {
+					"sweeten": { "type": "float", "def": 0.0, "name": "Sweeten", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937204581,
+					"vst2_name": "Sweeten"
+				}
+			},
+			"swell": {
+				"params": {
+					"thresh": { "type": "float", "def": 0.8999999761581421, "name": "Thresh", "num": 0},
+					"swell": { "type": "float", "def": 0.5, "name": "Swell", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1937204588,
+					"vst2_name": "Swell"
+				}
+			},
+			"tape": {
+				"params": {
+					"slam": { "type": "float", "def": 0.5, "name": "Slam", "num": 0},
+					"bump": { "type": "float", "def": 0.5, "name": "Bump", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1952542821,
+					"vst2_name": "Tape"
+				}
+			},
+			"tapebias": {
+				"params": {
+					"bias": { "type": "float", "def": 0.5, "name": "Bias", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953522291,
+					"vst2_name": "TapeBias"
+				}
+			},
+			"tapedelay2": {
+				"params": {
+					"time": { "type": "float", "def": 1.0, "name": "Time", "num": 0},
+					"regen": { "type": "float", "def": 0.0, "name": "Regen", "num": 1},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 2},
+					"reso": { "type": "float", "def": 0.0, "name": "Reso", "num": 3},
+					"flutter": { "type": "float", "def": 0.0, "name": "Flutter", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953522797,
+					"vst2_name": "TapeDelay2"
+				}
+			},
+			"tapedelay": {
+				"params": {
+					"dry": { "type": "float", "def": 1.0, "name": "Dry", "num": 0},
+					"wet": { "type": "float", "def": 0.0, "name": "Wet", "num": 1},
+					"delay": { "type": "float", "def": 0.5, "name": "Delay", "num": 2},
+					"feedbak": { "type": "float", "def": 0.0, "name": "Feedbak", "num": 3},
+					"lean_ft": { "type": "float", "def": 1.0, "name": "Lean/Ft", "num": 4},
+					"depth": { "type": "float", "def": 0.0, "name": "Depth", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953522796,
+					"vst2_name": "TapeDelay"
+				}
+			},
+			"tapedither": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1952740456,
+					"vst2_name": "TapeDither"
+				}
+			},
+			"tapedust": {
+				"params": {
+					"dust": { "type": "float", "def": 0.0, "name": "Dust", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1952740723,
+					"vst2_name": "TapeDust"
+				}
+			},
+			"tapefat": {
+				"params": {
+					"lean_ft": { "type": "float", "def": 1.0, "name": "Lean/Ft", "num": 0},
+					"depth": { "type": "float", "def": 0.0, "name": "Depth", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1952545136,
+					"vst2_name": "TapeFat"
+				}
+			},
+			"texturize": {
+				"params": {
+					"bright": { "type": "float", "def": 0.5, "name": "Bright", "num": 0},
+					"punchy": { "type": "float", "def": 0.5, "name": "Punchy", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.5, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1952807028,
+					"vst2_name": "Texturize"
+				}
+			},
+			"texturizems": {
+				"params": {
+					"brightm": { "type": "float", "def": 0.5, "name": "BrightM", "num": 0},
+					"punchym": { "type": "float", "def": 0.5, "name": "PunchyM", "num": 1},
+					"drywetm": { "type": "float", "def": 0.5, "name": "DryWetM", "num": 2},
+					"brights": { "type": "float", "def": 0.5, "name": "BrightS", "num": 3},
+					"punchys": { "type": "float", "def": 0.5, "name": "PunchyS", "num": 4},
+					"drywets": { "type": "float", "def": 0.5, "name": "DryWetS", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1952807029,
+					"vst2_name": "TexturizeMS"
+				}
+			},
+			"thunder": {
+				"params": {
+					"thunder": { "type": "float", "def": 0.0, "name": "Thunder", "num": 0},
+					"output_t": { "type": "float", "def": 1.0, "name": "Output T", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953002862,
+					"vst2_name": "Thunder"
+				}
+			},
+			"toneslant": {
+				"params": {
+					"voicing": { "type": "float", "def": 0.0, "name": "Voicing", "num": 0},
+					"highs": { "type": "float", "def": 0.0, "name": "Highs", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953461100,
+					"vst2_name": "ToneSlant"
+				}
+			},
+			"totape5": {
+				"params": {
+					"louder": { "type": "float", "def": 0.25, "name": "Louder", "num": 0},
+					"softer": { "type": "float", "def": 0.0, "name": "Softer", "num": 1},
+					"fatter": { "type": "float", "def": 0.0, "name": "Fatter", "num": 2},
+					"flutter": { "type": "float", "def": 0.0, "name": "Flutter", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953461364,
+					"vst2_name": "ToTape5"
+				}
+			},
+			"totape6": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"soften": { "type": "float", "def": 0.5, "name": "Soften", "num": 1},
+					"head_b": { "type": "float", "def": 0.5, "name": "Head B", "num": 2},
+					"flutter": { "type": "float", "def": 0.5, "name": "Flutter", "num": 3},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953461365,
+					"vst2_name": "ToTape6"
+				}
+			},
+			"totape7": {
+				"params": {
+					"encamt": { "type": "float", "def": 0.5, "name": "EncAmt", "num": 0},
+					"encfreq": { "type": "float", "def": 0.5, "name": "EncFreq", "num": 1},
+					"tapedrv": { "type": "float", "def": 0.5, "name": "TapeDrv", "num": 2},
+					"flutter": { "type": "float", "def": 0.5, "name": "Flutter", "num": 3},
+					"flutspd": { "type": "float", "def": 0.5, "name": "FlutSpd", "num": 4},
+					"bias": { "type": "float", "def": 0.5, "name": "Bias", "num": 5},
+					"headbmp": { "type": "float", "def": 0.5, "name": "HeadBmp", "num": 6},
+					"headfrq": { "type": "float", "def": 0.5, "name": "HeadFrq", "num": 7},
+					"decamt": { "type": "float", "def": 0.5, "name": "DecAmt", "num": 8},
+					"decfreq": { "type": "float", "def": 0.5, "name": "DecFreq", "num": 9}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953461366,
+					"vst2_name": "ToTape7"
+				}
+			},
+			"totape8": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"tilt": { "type": "float", "def": 0.5, "name": "Tilt", "num": 1},
+					"shape": { "type": "float", "def": 0.5, "name": "Shape", "num": 2},
+					"flutter": { "type": "float", "def": 0.5, "name": "Flutter", "num": 3},
+					"flutspd": { "type": "float", "def": 0.5, "name": "FlutSpd", "num": 4},
+					"bias": { "type": "float", "def": 0.5, "name": "Bias", "num": 5},
+					"headbmp": { "type": "float", "def": 0.5, "name": "HeadBmp", "num": 6},
+					"headfrq": { "type": "float", "def": 0.5, "name": "HeadFrq", "num": 7},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 8}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953461367,
+					"vst2_name": "ToTape8"
+				}
+			},
+			"tovinyl4": {
+				"params": {
+					"mid_hip": { "type": "float", "def": 0.20341899991035461, "name": "Mid HiP", "num": 0},
+					"sidehip": { "type": "float", "def": 0.3424051105976105, "name": "SideHiP", "num": 1},
+					"h_limit": { "type": "float", "def": 0.3199999928474426, "name": "H Limit", "num": 2},
+					"gv_wear": { "type": "float", "def": 0.06400000303983688, "name": "Gv Wear", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953461858,
+					"vst2_name": "ToVinyl4"
+				}
+			},
+			"tpdfdither": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953522790,
+					"vst2_name": "TPDFDither"
+				}
+			},
+			"tpdfwide": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953522807,
+					"vst2_name": "TPDFWide"
+				}
+			},
+			"transdesk": {
+				"extplug_assoc": {
+					"vst2_id": 1919185771,
+					"vst2_name": "TransDesk"
+				}
+			},
+			"tremolo": {
+				"params": {
+					"speed": { "type": "float", "def": 0.5, "name": "Speed", "num": 0},
+					"depth": { "type": "float", "def": 1.0, "name": "Depth", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953654125,
+					"vst2_name": "Tremolo"
+				}
+			},
+			"tremosquare": {
+				"params": {
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953657713,
+					"vst2_name": "TremoSquare"
+				}
+			},
+			"trianglizer": {
+				"params": {
+					"tri_fat": { "type": "float", "def": 0.0, "name": "Tri/Fat", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953655137,
+					"vst2_name": "Trianglizer"
+				}
+			},
+			"triplespread": {
+				"params": {
+					"spread": { "type": "float", "def": 0.5, "name": "Spread", "num": 0},
+					"tighten": { "type": "float", "def": 0.5, "name": "Tighten", "num": 1},
+					"dry_wet": { "type": "float", "def": 0.5, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953657712,
+					"vst2_name": "TripleSpread"
+				}
+			},
+			"tube2": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"tube": { "type": "float", "def": 0.5, "name": "Tube", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953849958,
+					"vst2_name": "Tube2"
+				}
+			},
+			"tube": {
+				"params": {
+					"tube": { "type": "float", "def": 0.0, "name": "TUBE", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1953849957,
+					"vst2_name": "Tube"
+				}
+			},
+			"tubedesk": {
+				"extplug_assoc": {
+					"vst2_id": 1952740203,
+					"vst2_name": "TubeDesk"
+				}
+			},
+			"ulawdecode": {
+				"params": {
+					"gain": { "type": "float", "def": 1.0, "name": "Gain", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1970037859,
+					"vst2_name": "uLawDecode"
+				}
+			},
+			"ulawencode": {
+				"params": {
+					"gain": { "type": "float", "def": 1.0, "name": "Gain", "num": 0},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1970038115,
+					"vst2_name": "uLawEncode"
+				}
+			},
+			"ultrasonic": {
+				"extplug_assoc": {
+					"vst2_id": 1970041970,
+					"vst2_name": "Ultrasonic"
+				}
+			},
+			"ultrasoniclite": {
+				"extplug_assoc": {
+					"vst2_id": 1970041971,
+					"vst2_name": "UltrasonicLite"
+				}
+			},
+			"ultrasonicmed": {
+				"extplug_assoc": {
+					"vst2_id": 1970041972,
+					"vst2_name": "UltrasonicMed"
+				}
+			},
+			"ultrasonx": {
+				"params": {
+					"q": { "type": "float", "def": 0.5, "name": "Q", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1970041976,
+					"vst2_name": "UltrasonX"
+				}
+			},
+			"unbox": {
+				"params": {
+					"input": { "type": "float", "def": 0.5, "name": "Input", "num": 0},
+					"unbox": { "type": "float", "def": 0.0, "name": "UnBox", "num": 1},
+					"output": { "type": "float", "def": 0.5, "name": "Output", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1970168440,
+					"vst2_name": "UnBox"
+				}
+			},
+			"varimu": {
+				"params": {
+					"intensty": { "type": "float", "def": 0.0, "name": "Intensty", "num": 0},
+					"speed": { "type": "float", "def": 0.5, "name": "Speed", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1986097769,
+					"vst2_name": "VariMu"
+				}
+			},
+			"verbity2": {
+				"params": {
+					"rmsize": { "type": "float", "def": 0.5, "name": "RmSize", "num": 0},
+					"sustain": { "type": "float", "def": 0.5, "name": "Sustain", "num": 1},
+					"mulch": { "type": "float", "def": 0.5, "name": "Mulch", "num": 2},
+					"wetness": { "type": "float", "def": 1.0, "name": "Wetness", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1986163762,
+					"vst2_name": "Verbity2"
+				}
+			},
+			"verbity": {
+				"params": {
+					"bigness": { "type": "float", "def": 0.25, "name": "Bigness", "num": 0},
+					"longness": { "type": "float", "def": 0.0, "name": "Longness", "num": 1},
+					"darkness": { "type": "float", "def": 0.25, "name": "Darkness", "num": 2},
+					"wetness": { "type": "float", "def": 0.25, "name": "Wetness", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1986163833,
+					"vst2_name": "Verbity"
+				}
+			},
+			"vibrato": {
+				"params": {
+					"speed": { "type": "float", "def": 0.30000001192092896, "name": "Speed", "num": 0},
+					"depth": { "type": "float", "def": 0.0, "name": "Depth", "num": 1},
+					"fmspeed": { "type": "float", "def": 0.4000000059604645, "name": "FMSpeed", "num": 2},
+					"fmdepth": { "type": "float", "def": 0.0, "name": "FMDepth", "num": 3},
+					"inv_wet": { "type": "float", "def": 1.0, "name": "Inv/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1986617970,
+					"vst2_name": "Vibrato"
+				}
+			},
+			"vinyldither": {
+				"params": {
+					"quant": { "type": "float", "def": 1.0, "name": "Quant", "num": 0},
+					"derez": { "type": "float", "def": 0.0, "name": "DeRez", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1986294888,
+					"vst2_name": "VinylDither"
+				}
+			},
+			"voiceofthestarship": {
+				"params": {
+					"filter": { "type": "float", "def": 0.5, "name": "Filter", "num": 0},
+					"algrthm": { "type": "float", "def": 0.0, "name": "Algrthm", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1987015795,
+					"vst2_name": "VoiceOfTheStarship"
+				}
+			},
+			"voicetrick": {
+				"params": {
+					"tone": { "type": "float", "def": 1.0, "name": "Tone", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 1987342955,
+					"vst2_name": "VoiceTrick"
+				}
+			},
+			"weight": {
+				"params": {
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 0},
+					"weight": { "type": "float", "def": 0.0, "name": "Weight", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2003265652,
+					"vst2_name": "Weight"
+				}
+			},
+			"wider": {
+				"params": {
+					"width": { "type": "float", "def": 0.5, "name": "Width", "num": 0},
+					"center": { "type": "float", "def": 0.5, "name": "Center", "num": 1},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 2}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2003395698,
+					"vst2_name": "Wider"
+				}
+			},
+			"wolfbot": {
+				"extplug_assoc": {
+					"vst2_id": 2003790950,
+					"vst2_name": "Wolfbot"
+				}
+			},
+			"xbandpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"nuke": { "type": "float", "def": 0.0, "name": "Nuke", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2019713392,
+					"vst2_name": "XBandpass"
+				}
+			},
+			"xhighpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 1},
+					"nuke": { "type": "float", "def": 0.0, "name": "Nuke", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2020108656,
+					"vst2_name": "XHighpass"
+				}
+			},
+			"xlowpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 1},
+					"nuke": { "type": "float", "def": 0.0, "name": "Nuke", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2020372336,
+					"vst2_name": "XLowpass"
+				}
+			},
+			"xnotch": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 1.0, "name": "Freq", "num": 1},
+					"nuke": { "type": "float", "def": 0.0, "name": "Nuke", "num": 2},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2020503412,
+					"vst2_name": "XNotch"
+				}
+			},
+			"xregion": {
+				"params": {
+					"gain": { "type": "float", "def": 0.5, "name": "Gain", "num": 0},
+					"first": { "type": "float", "def": 0.5, "name": "First", "num": 1},
+					"last": { "type": "float", "def": 0.5, "name": "Last", "num": 2},
+					"nuke": { "type": "float", "def": 0.0, "name": "Nuke", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2020762983,
+					"vst2_name": "XRegion"
+				}
+			},
+			"ybandpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2036490608,
+					"vst2_name": "YBandpass"
+				}
+			},
+			"yhighpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2036885872,
+					"vst2_name": "YHighpass"
+				}
+			},
+			"ylowpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2037149552,
+					"vst2_name": "YLowpass"
+				}
+			},
+			"ynotbandpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2036490609,
+					"vst2_name": "YNotBandpass"
+				}
+			},
+			"ynotch": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2037280628,
+					"vst2_name": "YNotch"
+				}
+			},
+			"ynothighpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2036885873,
+					"vst2_name": "YNotHighpass"
+				}
+			},
+			"ynotlowpass": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2037149553,
+					"vst2_name": "YNotLowpass"
+				}
+			},
+			"ynotnotch": {
+				"params": {
+					"gain": { "type": "float", "def": 0.10000000149011612, "name": "Gain", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"reson8": { "type": "float", "def": 0.10000000149011612, "name": "Reson8", "num": 2},
+					"resedge": { "type": "float", "def": 0.10000000149011612, "name": "ResEdge", "num": 3},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 4},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 5}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2037280629,
+					"vst2_name": "YNotNotch"
+				}
+			},
+			"zbandpass2": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2053267825,
+					"vst2_name": "ZBandpass2"
+				}
+			},
+			"zbandpass": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2053267824,
+					"vst2_name": "ZBandpass"
+				}
+			},
+			"zhighpass2": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2053663089,
+					"vst2_name": "ZHighpass2"
+				}
+			},
+			"zhighpass": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2053663088,
+					"vst2_name": "ZHighpass"
+				}
+			},
+			"zlowpass2": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2053926769,
+					"vst2_name": "ZLowpass2"
+				}
+			},
+			"zlowpass": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2053926768,
+					"vst2_name": "ZLowpass"
+				}
+			},
+			"znotch2": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2054057845,
+					"vst2_name": "ZNotch2"
+				}
+			},
+			"znotch": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"freq": { "type": "float", "def": 0.5, "name": "Freq", "num": 1},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2054057844,
+					"vst2_name": "ZNotch"
+				}
+			},
+			"zoom": {
+				"params": {
+					"zoom": { "type": "float", "def": 0.5, "name": "Zoom", "num": 0}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2054123373,
+					"vst2_name": "Zoom"
+				}
+			},
+			"zoutputstage": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"output": { "type": "float", "def": 1.0, "name": "Output", "num": 1}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2054124916,
+					"vst2_name": "ZOutputStage"
+				}
+			},
+			"zregion2": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"first": { "type": "float", "def": 0.5, "name": "First", "num": 1},
+					"last": { "type": "float", "def": 0.5, "name": "Last", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2054317416,
+					"vst2_name": "ZRegion2"
+				}
+			},
+			"zregion": {
+				"params": {
+					"input": { "type": "float", "def": 0.10000000149011612, "name": "Input", "num": 0},
+					"first": { "type": "float", "def": 0.5, "name": "First", "num": 1},
+					"last": { "type": "float", "def": 0.5, "name": "Last", "num": 2},
+					"poles": { "type": "float", "def": 0.5, "name": "Poles", "num": 3},
+					"dry_wet": { "type": "float", "def": 1.0, "name": "Dry/Wet", "num": 4}
+				},
+				"extplug_assoc": {
+					"vst2_id": 2054317415,
+					"vst2_name": "ZRegion"
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,1578 @@
+{
+    "plugin": {
+        "objects": {
+            "main": {
+                "params": {
+                    "gain": {
+                        "type": "float",
+                        "def": 0.373737007379532,
+                        "name": "Gain",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 0
+                            },
+                            "vst2": {
+                                "num": 0
+                            }
+                        },
+                        "extplug_paramid": "Gain"
+                    },
+                    "genbandw": {
+                        "type": "float",
+                        "def": 0.95959597826004,
+                        "name": "GenBandw",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 1
+                            },
+                            "vst2": {
+                                "num": 1
+                            }
+                        },
+                        "extplug_paramid": "GenBandw"
+                    },
+                    "genharmn": {
+                        "type": "float",
+                        "def": 0.95959597826004,
+                        "name": "GenHarmn",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 2
+                            },
+                            "vst2": {
+                                "num": 2
+                            }
+                        },
+                        "extplug_paramid": "GenHarmn"
+                    },
+                    "gendamp": {
+                        "type": "float",
+                        "def": 0.0909091010689735,
+                        "name": "GenDamp",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 3
+                            },
+                            "vst2": {
+                                "num": 3
+                            }
+                        },
+                        "extplug_paramid": "GenDamp"
+                    },
+                    "genmod": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "GenMod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 4
+                            },
+                            "vst2": {
+                                "num": 4
+                            }
+                        },
+                        "extplug_paramid": "GenMod"
+                    },
+                    "genvol": {
+                        "type": "float",
+                        "def": 1.0,
+                        "name": "GenVol",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 5
+                            },
+                            "vst2": {
+                                "num": 5
+                            }
+                        },
+                        "extplug_paramid": "GenVol"
+                    },
+                    "genpan": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "GenPan",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 6
+                            },
+                            "vst2": {
+                                "num": 6
+                            }
+                        },
+                        "extplug_paramid": "GenPan"
+                    },
+                    "genslop": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "GenSlop",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 7
+                            },
+                            "vst2": {
+                                "num": 7
+                            }
+                        },
+                        "extplug_paramid": "GenSlop"
+                    },
+                    "genoct": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "GenOct",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 8
+                            },
+                            "vst2": {
+                                "num": 8
+                            }
+                        },
+                        "extplug_paramid": "GenOct"
+                    },
+                    "genglid": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "GenGlid",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 9
+                            },
+                            "vst2": {
+                                "num": 9
+                            }
+                        },
+                        "extplug_paramid": "GenGlid"
+                    },
+                    "getdetn": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "GetDetn",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 10
+                            },
+                            "vst2": {
+                                "num": 10
+                            }
+                        },
+                        "extplug_paramid": "GetDetn"
+                    },
+                    "genfreq": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "GenFreq",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 11
+                            },
+                            "vst2": {
+                                "num": 11
+                            }
+                        },
+                        "extplug_paramid": "GenFreq"
+                    },
+                    "genpoly": {
+                        "type": "float",
+                        "def": 1.0,
+                        "name": "GenPoly",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 12
+                            },
+                            "vst2": {
+                                "num": 12
+                            }
+                        },
+                        "extplug_paramid": "GenPoly"
+                    },
+                    "gendriv": {
+                        "type": "float",
+                        "def": 0.101010002195835,
+                        "name": "GenDriv",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 13
+                            },
+                            "vst2": {
+                                "num": 13
+                            }
+                        },
+                        "extplug_paramid": "GenDriv"
+                    },
+                    "genunis": {
+                        "type": "float",
+                        "def": 1.0,
+                        "name": "GenUnis",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 14
+                            },
+                            "vst2": {
+                                "num": 14
+                            }
+                        },
+                        "extplug_paramid": "GenUnis"
+                    },
+                    "gensprd": {
+                        "type": "float",
+                        "def": 0.484847992658615,
+                        "name": "GenSprd",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 15
+                            },
+                            "vst2": {
+                                "num": 15
+                            }
+                        },
+                        "extplug_paramid": "GenSprd"
+                    },
+                    "genscale": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "GenScale",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 16
+                            },
+                            "vst2": {
+                                "num": 16
+                            }
+                        },
+                        "extplug_paramid": "GenScale"
+                    },
+                    "noiseon": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "NoiseOn",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 17
+                            },
+                            "vst2": {
+                                "num": 17
+                            }
+                        },
+                        "extplug_paramid": "NoiseOn"
+                    },
+                    "noisefreq": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "NoiseFreq",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 18
+                            },
+                            "vst2": {
+                                "num": 18
+                            }
+                        },
+                        "extplug_paramid": "NoiseFreq"
+                    },
+                    "noisebw": {
+                        "type": "float",
+                        "def": 1.0,
+                        "name": "NoiseBw",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 19
+                            },
+                            "vst2": {
+                                "num": 19
+                            }
+                        },
+                        "extplug_paramid": "NoiseBw"
+                    },
+                    "fltlpon": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "FltLPOn",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 20
+                            },
+                            "vst2": {
+                                "num": 20
+                            }
+                        },
+                        "extplug_paramid": "FltLPOn"
+                    },
+                    "fltlpcut": {
+                        "type": "float",
+                        "def": 0.100000001490116,
+                        "name": "FltLPCut",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 21
+                            },
+                            "vst2": {
+                                "num": 21
+                            }
+                        },
+                        "extplug_paramid": "FltLPCut"
+                    },
+                    "fltlpres": {
+                        "type": "float",
+                        "def": 0.100000001490116,
+                        "name": "FltLPRes",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 22
+                            },
+                            "vst2": {
+                                "num": 22
+                            }
+                        },
+                        "extplug_paramid": "FltLPRes"
+                    },
+                    "flthpon": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "FltHPOn",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 23
+                            },
+                            "vst2": {
+                                "num": 23
+                            }
+                        },
+                        "extplug_paramid": "FltHPOn"
+                    },
+                    "flthpcut": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "FltHPCut",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 24
+                            },
+                            "vst2": {
+                                "num": 24
+                            }
+                        },
+                        "extplug_paramid": "FltHPCut"
+                    },
+                    "flthpres": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "FltHPRes",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 25
+                            },
+                            "vst2": {
+                                "num": 25
+                            }
+                        },
+                        "extplug_paramid": "FltHPRes"
+                    },
+                    "env1att": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Env1Att",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 26
+                            },
+                            "vst2": {
+                                "num": 26
+                            }
+                        },
+                        "extplug_paramid": "Env1Att"
+                    },
+                    "env1dec": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Env1Dec",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 27
+                            },
+                            "vst2": {
+                                "num": 27
+                            }
+                        },
+                        "extplug_paramid": "Env1Dec"
+                    },
+                    "env1sus": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Env1Sus",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 28
+                            },
+                            "vst2": {
+                                "num": 28
+                            }
+                        },
+                        "extplug_paramid": "Env1Sus"
+                    },
+                    "env1rel": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "Env1Rel",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 29
+                            },
+                            "vst2": {
+                                "num": 29
+                            }
+                        },
+                        "extplug_paramid": "Env1Rel"
+                    },
+                    "env1slp": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Env1Slp",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 30
+                            },
+                            "vst2": {
+                                "num": 30
+                            }
+                        },
+                        "extplug_paramid": "Env1Slp"
+                    },
+                    "env2att": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Env2Att",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 31
+                            },
+                            "vst2": {
+                                "num": 31
+                            }
+                        },
+                        "extplug_paramid": "Env2Att"
+                    },
+                    "env2dec": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Env2Dec",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 32
+                            },
+                            "vst2": {
+                                "num": 32
+                            }
+                        },
+                        "extplug_paramid": "Env2Dec"
+                    },
+                    "env2sus": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Env2Sus",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 33
+                            },
+                            "vst2": {
+                                "num": 33
+                            }
+                        },
+                        "extplug_paramid": "Env2Sus"
+                    },
+                    "env2rel": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "Env2Rel",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 34
+                            },
+                            "vst2": {
+                                "num": 34
+                            }
+                        },
+                        "extplug_paramid": "Env2Rel"
+                    },
+                    "env2slp": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Env2Slp",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 35
+                            },
+                            "vst2": {
+                                "num": 35
+                            }
+                        },
+                        "extplug_paramid": "Env2Slp"
+                    },
+                    "lfo1rate": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Lfo1Rate",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 36
+                            },
+                            "vst2": {
+                                "num": 36
+                            }
+                        },
+                        "extplug_paramid": "Lfo1Rate"
+                    },
+                    "lfo1dep": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Lfo1Dep",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 37
+                            },
+                            "vst2": {
+                                "num": 37
+                            }
+                        },
+                        "extplug_paramid": "Lfo1Dep"
+                    },
+                    "lfo1shp": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Lfo1Shp",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 38
+                            },
+                            "vst2": {
+                                "num": 38
+                            }
+                        },
+                        "extplug_paramid": "Lfo1Shp"
+                    },
+                    "lfo1sync": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Lfo1Sync",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 39
+                            },
+                            "vst2": {
+                                "num": 39
+                            }
+                        },
+                        "extplug_paramid": "Lfo1Sync"
+                    },
+                    "lfo2rate": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Lfo2Rate",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 40
+                            },
+                            "vst2": {
+                                "num": 40
+                            }
+                        },
+                        "extplug_paramid": "Lfo2Rate"
+                    },
+                    "lfo2dep": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Lfo2Dep",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 41
+                            },
+                            "vst2": {
+                                "num": 41
+                            }
+                        },
+                        "extplug_paramid": "Lfo2Dep"
+                    },
+                    "lfo2shp": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Lfo2Shp",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 42
+                            },
+                            "vst2": {
+                                "num": 42
+                            }
+                        },
+                        "extplug_paramid": "Lfo2Shp"
+                    },
+                    "lfo2sync": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Lfo2Sync",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 43
+                            },
+                            "vst2": {
+                                "num": 43
+                            }
+                        },
+                        "extplug_paramid": "Lfo2Sync"
+                    },
+                    "mm1source": {
+                        "type": "float",
+                        "def": 0.214285999536514,
+                        "name": "Mm1Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 44
+                            },
+                            "vst2": {
+                                "num": 44
+                            }
+                        },
+                        "extplug_paramid": "Mm1Source"
+                    },
+                    "mm1mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm1Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 45
+                            },
+                            "vst2": {
+                                "num": 45
+                            }
+                        },
+                        "extplug_paramid": "Mm1Mod"
+                    },
+                    "mm1target": {
+                        "type": "float",
+                        "def": 0.128205001354218,
+                        "name": "Mm1Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 46
+                            },
+                            "vst2": {
+                                "num": 46
+                            }
+                        },
+                        "extplug_paramid": "Mm1Target"
+                    },
+                    "mm2source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm2Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 47
+                            },
+                            "vst2": {
+                                "num": 47
+                            }
+                        },
+                        "extplug_paramid": "Mm2Source"
+                    },
+                    "mm2mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm2Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 48
+                            },
+                            "vst2": {
+                                "num": 48
+                            }
+                        },
+                        "extplug_paramid": "Mm2Mod"
+                    },
+                    "mm2target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm2Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 49
+                            },
+                            "vst2": {
+                                "num": 49
+                            }
+                        },
+                        "extplug_paramid": "Mm2Target"
+                    },
+                    "mm3source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm3Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 50
+                            },
+                            "vst2": {
+                                "num": 50
+                            }
+                        },
+                        "extplug_paramid": "Mm3Source"
+                    },
+                    "mm3mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm3Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 51
+                            },
+                            "vst2": {
+                                "num": 51
+                            }
+                        },
+                        "extplug_paramid": "Mm3Mod"
+                    },
+                    "mm3target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm3Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 52
+                            },
+                            "vst2": {
+                                "num": 52
+                            }
+                        },
+                        "extplug_paramid": "Mm3Target"
+                    },
+                    "mm4source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm4Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 53
+                            },
+                            "vst2": {
+                                "num": 53
+                            }
+                        },
+                        "extplug_paramid": "Mm4Source"
+                    },
+                    "mm4mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm4Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 54
+                            },
+                            "vst2": {
+                                "num": 54
+                            }
+                        },
+                        "extplug_paramid": "Mm4Mod"
+                    },
+                    "mm4target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm4Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 55
+                            },
+                            "vst2": {
+                                "num": 55
+                            }
+                        },
+                        "extplug_paramid": "Mm4Target"
+                    },
+                    "mm5source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm5Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 56
+                            },
+                            "vst2": {
+                                "num": 56
+                            }
+                        },
+                        "extplug_paramid": "Mm5Source"
+                    },
+                    "mm5mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm5Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 57
+                            },
+                            "vst2": {
+                                "num": 57
+                            }
+                        },
+                        "extplug_paramid": "Mm5Mod"
+                    },
+                    "mm5target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm5Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 58
+                            },
+                            "vst2": {
+                                "num": 58
+                            }
+                        },
+                        "extplug_paramid": "Mm5Target"
+                    },
+                    "mm6source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm6Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 59
+                            },
+                            "vst2": {
+                                "num": 59
+                            }
+                        },
+                        "extplug_paramid": "Mm6Source"
+                    },
+                    "mm6mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm6Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 60
+                            },
+                            "vst2": {
+                                "num": 60
+                            }
+                        },
+                        "extplug_paramid": "Mm6Mod"
+                    },
+                    "mm6target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm6Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 61
+                            },
+                            "vst2": {
+                                "num": 61
+                            }
+                        },
+                        "extplug_paramid": "Mm6Target"
+                    },
+                    "mm7source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm7Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 62
+                            },
+                            "vst2": {
+                                "num": 62
+                            }
+                        },
+                        "extplug_paramid": "Mm7Source"
+                    },
+                    "mm7mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm7Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 63
+                            },
+                            "vst2": {
+                                "num": 63
+                            }
+                        },
+                        "extplug_paramid": "Mm7Mod"
+                    },
+                    "mm7target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm7Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 64
+                            },
+                            "vst2": {
+                                "num": 64
+                            }
+                        },
+                        "extplug_paramid": "Mm7Target"
+                    },
+                    "mm8source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm8Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 65
+                            },
+                            "vst2": {
+                                "num": 65
+                            }
+                        },
+                        "extplug_paramid": "Mm8Source"
+                    },
+                    "mm8mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm8Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 66
+                            },
+                            "vst2": {
+                                "num": 66
+                            }
+                        },
+                        "extplug_paramid": "Mm8Mod"
+                    },
+                    "mm8target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm8Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 67
+                            },
+                            "vst2": {
+                                "num": 67
+                            }
+                        },
+                        "extplug_paramid": "Mm8Target"
+                    },
+                    "mm9source": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm9Source",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 68
+                            },
+                            "vst2": {
+                                "num": 68
+                            }
+                        },
+                        "extplug_paramid": "Mm9Source"
+                    },
+                    "mm9mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm9Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 69
+                            },
+                            "vst2": {
+                                "num": 69
+                            }
+                        },
+                        "extplug_paramid": "Mm9Mod"
+                    },
+                    "mm9target": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm9Target",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 70
+                            },
+                            "vst2": {
+                                "num": 70
+                            }
+                        },
+                        "extplug_paramid": "Mm9Target"
+                    },
+                    "mm10sourc": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm10Sourc",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 71
+                            },
+                            "vst2": {
+                                "num": 71
+                            }
+                        },
+                        "extplug_paramid": "Mm10Sourc"
+                    },
+                    "mm10mod": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mm10Mod",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 72
+                            },
+                            "vst2": {
+                                "num": 72
+                            }
+                        },
+                        "extplug_paramid": "Mm10Mod"
+                    },
+                    "mm10targe": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Mm10Targe",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 73
+                            },
+                            "vst2": {
+                                "num": 73
+                            }
+                        },
+                        "extplug_paramid": "Mm10Targe"
+                    },
+                    "effect1": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "Effect1",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 74
+                            },
+                            "vst2": {
+                                "num": 74
+                            }
+                        },
+                        "extplug_paramid": "Effect1"
+                    },
+                    "effect2": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect2",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 75
+                            },
+                            "vst2": {
+                                "num": 75
+                            }
+                        },
+                        "extplug_paramid": "Effect2"
+                    },
+                    "effect3": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect3",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 76
+                            },
+                            "vst2": {
+                                "num": 76
+                            }
+                        },
+                        "extplug_paramid": "Effect3"
+                    },
+                    "effect4": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect4",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 77
+                            },
+                            "vst2": {
+                                "num": 77
+                            }
+                        },
+                        "extplug_paramid": "Effect4"
+                    },
+                    "effect5": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect5",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 78
+                            },
+                            "vst2": {
+                                "num": 78
+                            }
+                        },
+                        "extplug_paramid": "Effect5"
+                    },
+                    "effect6": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect6",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 79
+                            },
+                            "vst2": {
+                                "num": 79
+                            }
+                        },
+                        "extplug_paramid": "Effect6"
+                    },
+                    "effect7": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect7",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 80
+                            },
+                            "vst2": {
+                                "num": 80
+                            }
+                        },
+                        "extplug_paramid": "Effect7"
+                    },
+                    "effect8": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect8",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 81
+                            },
+                            "vst2": {
+                                "num": 81
+                            }
+                        },
+                        "extplug_paramid": "Effect8"
+                    },
+                    "effect9": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect9",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 82
+                            },
+                            "vst2": {
+                                "num": 82
+                            }
+                        },
+                        "extplug_paramid": "Effect9"
+                    },
+                    "effect10": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "Effect10",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 83
+                            },
+                            "vst2": {
+                                "num": 83
+                            }
+                        },
+                        "extplug_paramid": "Effect10"
+                    },
+                    "distamnt": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "DistAmnt",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 84
+                            },
+                            "vst2": {
+                                "num": 84
+                            }
+                        },
+                        "extplug_paramid": "DistAmnt"
+                    },
+                    "chrsrate": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "ChrsRate",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 85
+                            },
+                            "vst2": {
+                                "num": 85
+                            }
+                        },
+                        "extplug_paramid": "ChrsRate"
+                    },
+                    "chrsdep": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "ChrsDep",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 86
+                            },
+                            "vst2": {
+                                "num": 86
+                            }
+                        },
+                        "extplug_paramid": "ChrsDep"
+                    },
+                    "delayl": {
+                        "type": "float",
+                        "def": 0.353534996509552,
+                        "name": "DelayL",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 87
+                            },
+                            "vst2": {
+                                "num": 87
+                            }
+                        },
+                        "extplug_paramid": "DelayL"
+                    },
+                    "delayr": {
+                        "type": "float",
+                        "def": 0.323231995105743,
+                        "name": "DelayR",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 88
+                            },
+                            "vst2": {
+                                "num": 88
+                            }
+                        },
+                        "extplug_paramid": "DelayR"
+                    },
+                    "delaydc": {
+                        "type": "float",
+                        "def": 0.525252997875214,
+                        "name": "DelayDc",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 89
+                            },
+                            "vst2": {
+                                "num": 89
+                            }
+                        },
+                        "extplug_paramid": "DelayDc"
+                    },
+                    "revroom": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "RevRoom",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 90
+                            },
+                            "vst2": {
+                                "num": 90
+                            }
+                        },
+                        "extplug_paramid": "RevRoom"
+                    },
+                    "revdamp": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "RevDamp",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 91
+                            },
+                            "vst2": {
+                                "num": 91
+                            }
+                        },
+                        "extplug_paramid": "RevDamp"
+                    },
+                    "revwet": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "RevWet",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 92
+                            },
+                            "vst2": {
+                                "num": 92
+                            }
+                        },
+                        "extplug_paramid": "RevWet"
+                    },
+                    "revwidth": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "RevWidth",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 93
+                            },
+                            "vst2": {
+                                "num": 93
+                            }
+                        },
+                        "extplug_paramid": "RevWidth"
+                    },
+                    "flanglfo": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "FlangLfo",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 94
+                            },
+                            "vst2": {
+                                "num": 94
+                            }
+                        },
+                        "extplug_paramid": "FlangLfo"
+                    },
+                    "flangfreq": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "FlangFreq",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 95
+                            },
+                            "vst2": {
+                                "num": 95
+                            }
+                        },
+                        "extplug_paramid": "FlangFreq"
+                    },
+                    "flangamp": {
+                        "type": "float",
+                        "def": 0.200000002980232,
+                        "name": "FlangAmp",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 96
+                            },
+                            "vst2": {
+                                "num": 96
+                            }
+                        },
+                        "extplug_paramid": "FlangAmp"
+                    },
+                    "flangwet": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "FlangWet",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 97
+                            },
+                            "vst2": {
+                                "num": 97
+                            }
+                        },
+                        "extplug_paramid": "FlangWet"
+                    },
+                    "chrsgain": {
+                        "type": "float",
+                        "def": 1.0,
+                        "name": "ChrsGain",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 98
+                            },
+                            "vst2": {
+                                "num": 98
+                            }
+                        },
+                        "extplug_paramid": "ChrsGain"
+                    },
+                    "frmttype": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "FrmtType",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 99
+                            },
+                            "vst2": {
+                                "num": 99
+                            }
+                        },
+                        "extplug_paramid": "FrmtType"
+                    },
+                    "frmtwet": {
+                        "type": "float",
+                        "def": 1.0,
+                        "name": "FrmtWet",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 100
+                            },
+                            "vst2": {
+                                "num": 100
+                            }
+                        },
+                        "extplug_paramid": "FrmtWet"
+                    },
+                    "eqlow": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "EqLow",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 101
+                            },
+                            "vst2": {
+                                "num": 101
+                            }
+                        },
+                        "extplug_paramid": "EqLow"
+                    },
+                    "eqmid": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "EqMid",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 102
+                            },
+                            "vst2": {
+                                "num": 102
+                            }
+                        },
+                        "extplug_paramid": "EqMid"
+                    },
+                    "eqhigh": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "EqHigh",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 103
+                            },
+                            "vst2": {
+                                "num": 103
+                            }
+                        },
+                        "extplug_paramid": "EqHigh"
+                    },
+                    "oscpwup": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "OscPWup",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 104
+                            },
+                            "vst2": {
+                                "num": 104
+                            }
+                        },
+                        "extplug_paramid": "OscPWup"
+                    },
+                    "oscpwdw": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "OscPWdw",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 105
+                            },
+                            "vst2": {
+                                "num": 105
+                            }
+                        },
+                        "extplug_paramid": "OscPWdw"
+                    },
+                    "fltbpon": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "FltBPOn",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 106
+                            },
+                            "vst2": {
+                                "num": 106
+                            }
+                        },
+                        "extplug_paramid": "FltBPOn"
+                    },
+                    "fltbpcut": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "FltBPCut",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 107
+                            },
+                            "vst2": {
+                                "num": 107
+                            }
+                        },
+                        "extplug_paramid": "FltBPCut"
+                    },
+                    "fltbpq": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "FltBPQ",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 108
+                            },
+                            "vst2": {
+                                "num": 108
+                            }
+                        },
+                        "extplug_paramid": "FltBPQ"
+                    },
+                    "fltnton": {
+                        "type": "float",
+                        "def": 0.0,
+                        "name": "FltNTOn",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 109
+                            },
+                            "vst2": {
+                                "num": 109
+                            }
+                        },
+                        "extplug_paramid": "FltNTOn"
+                    },
+                    "fltntcut": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "FltNTCut",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 110
+                            },
+                            "vst2": {
+                                "num": 110
+                            }
+                        },
+                        "extplug_paramid": "FltNTCut"
+                    },
+                    "fltntq": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "FltNTQ",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 111
+                            },
+                            "vst2": {
+                                "num": 111
+                            }
+                        },
+                        "extplug_paramid": "FltNTQ"
+                    }
+                }
+            }
+        }
+    }
+}

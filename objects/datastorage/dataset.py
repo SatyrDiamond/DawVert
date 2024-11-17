@@ -57,8 +57,23 @@ class dataset_objectset:
 		for name, paramd in self.data.items(): outdict[name] = paramd.write()
 		return outdict
 
+class dataset_param_extplug_assoc:
+	__slots__ = ['name','num']
+	def __init__(self, i_param):
+		self.name = ''
+		self.num = -1
+		if i_param:
+			if 'name' in i_param: self.name = i_param['name']
+			if 'num' in i_param: self.num = i_param['num']
+
+	def write(self):
+		out_data = {}
+		if self.name: out_data['name'] = self.name
+		if self.num != -1: out_data['num'] = self.num
+		return out_data
+
 class dataset_param:
-	__slots__ = ['noauto','type','defv','min','max','name','num']
+	__slots__ = ['noauto','type','defv','min','max','name','num','extplug_assoc','extplug_paramid']
 
 	def __init__(self, i_param):
 		self.noauto = False
@@ -68,6 +83,8 @@ class dataset_param:
 		self.max = 1
 		self.name = ''
 		self.num = -1
+		self.extplug_paramid = None
+		self.extplug_assoc = None
 		if i_param:
 			if 'noauto' in i_param: self.noauto = i_param['noauto']
 			if 'type' in i_param: self.type = i_param['type']
@@ -76,16 +93,31 @@ class dataset_param:
 			if 'max' in i_param: self.max = i_param['max']
 			if 'name' in i_param: self.name = i_param['name']
 			if 'num' in i_param: self.num = i_param['num']
+			if 'extplug_assoc' in i_param: 
+				self.extplug_assoc = {}
+				for k, v in i_param['extplug_assoc']: 
+					self.extplug_assoc[k] = dataset_param_extplug_assoc(v)
+			if 'extplug_paramid' in i_param: self.extplug_paramid = i_param['extplug_paramid']
+
+	def add_extplug_assoc(self, k):
+		if self.extplug_assoc is None: self.extplug_assoc = {}
+		self.extplug_assoc[k] = dataset_param_extplug_assoc(None)
+		return self.extplug_assoc[k]
 
 	def write(self):
 		out_data = {}
+		out_data['type'] = self.type
 		out_data['def'] = self.defv
 		if self.max != 1: out_data['max'] = self.max
 		if self.min != 0: out_data['min'] = self.min
 		if self.name: out_data['name'] = self.name
 		if self.noauto: out_data['noauto'] = self.noauto
-		if self.max != -1: out_data['num'] = self.num
-		out_data['type'] = self.type
+		if self.num != -1: out_data['num'] = self.num
+		if self.extplug_assoc != None: 
+			extplug_assoc = out_data['extplug_assoc'] = {}
+			for k, v in self.extplug_assoc.items(): 
+				extplug_assoc[k] = v.write()
+		if self.extplug_paramid != None: out_data['extplug_paramid'] = self.extplug_paramid
 		return out_data
 
 class dataset_drum:
@@ -153,6 +185,36 @@ class dataset_midi:
 		if self.transpose: outlist['transpose'] = self.transpose
 		return outlist
 
+class dataset_object_extplug_assoc:
+	def __init__(self):
+		self.used = False
+		self.vst2_id = None
+		self.vst3_id = None
+		self.clap_id = None
+		self.vst2_name = None
+		self.vst3_name = None
+		self.clap_name = None
+
+	def read(self, i_data):
+		if i_data:
+			self.used = True
+			if 'vst2_id' in i_data: self.vst2_id = i_data['vst2_id']
+			if 'vst3_id' in i_data: self.vst3_id = i_data['vst3_id']
+			if 'clap_id' in i_data: self.clap_id = i_data['clap_id']
+			if 'vst2_name' in i_data: self.vst2_name = i_data['vst2_name']
+			if 'vst3_name' in i_data: self.vst3_name = i_data['vst3_name']
+			if 'clap_name' in i_data: self.clap_name = i_data['clap_name']
+
+	def write(self):
+		out_data = {}
+		if self.vst2_id: out_data['vst2_id'] = self.vst2_id
+		if self.vst3_id: out_data['vst3_id'] = self.vst3_id
+		if self.clap_id: out_data['clap_id'] = self.clap_id
+		if self.vst2_name: out_data['vst2_name'] = self.vst2_name
+		if self.vst3_name: out_data['vst3_name'] = self.vst3_name
+		if self.clap_name: out_data['clap_name'] = self.clap_name
+		return out_data
+
 class dataset_object:
 	def __init__(self, i_object):
 		self.visual = dataset_visual(None)
@@ -161,6 +223,7 @@ class dataset_object:
 		self.drumset = dataset_objectset(dataset_drum)
 		self.datadef = dataset_datadef()
 		self.midi = dataset_midi()
+		self.extplug_assoc = dataset_object_extplug_assoc()
 		if i_object:
 			self.visual = dataset_visual(i_object['visual'] if 'visual' in i_object else None)
 			self.data = i_object['data'] if 'data' in i_object else {}
@@ -175,6 +238,7 @@ class dataset_object:
 			if 'datadef_struct' in i_object: self.datadef.struct = i_object['datadef_struct']
 			for name, var in i_object.items():
 				if name not in ['visual','data','params','drumset','datadef_struct','datadef_name','datadef']: self.data[name] = var
+			if 'extplug_assoc' in i_object: self.extplug_assoc.read(i_object['extplug_assoc'])
 
 	def write(self):
 		outlist = {}
@@ -184,6 +248,7 @@ class dataset_object:
 		if self.drumset.used: outlist['drumset'] = self.drumset.write()
 		if self.params.used: outlist['params'] = self.params.write()
 		if self.visual.is_used(): outlist['visual'] = self.visual.write()
+		if self.extplug_assoc.used: outlist['extplug_assoc'] = self.extplug_assoc.write()
 		return outlist
 
 	def var_get(self, v_name):
@@ -264,6 +329,7 @@ class dataset:
 		if c_name not in self.categorys: 
 			self.categorys[c_name] = dataset_category(None)
 			self.category_list.append(c_name)
+		return self.categorys[c_name]
 
 	def category_del(self, c_name):
 		if c_name in self.categorys: 

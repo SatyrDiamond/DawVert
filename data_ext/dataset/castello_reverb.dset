@@ -1,0 +1,52 @@
+{
+    "plugin": {
+        "objects": {
+            "main": {
+                "params": {
+                    "mix": {
+                        "type": "float",
+                        "def": 0.5,
+                        "name": "Mix",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 2
+                            },
+                            "vst2": {
+                                "num": 0
+                            }
+                        },
+                        "extplug_paramid": "mix"
+                    },
+                    "size": {
+                        "type": "float",
+                        "def": 0.330000042915344,
+                        "name": "Size",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 3
+                            },
+                            "vst2": {
+                                "num": 1
+                            }
+                        },
+                        "extplug_paramid": "size"
+                    },
+                    "brightness": {
+                        "type": "float",
+                        "def": 0.660000085830689,
+                        "name": "Brightness",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 4
+                            },
+                            "vst2": {
+                                "num": 2
+                            }
+                        },
+                        "extplug_paramid": "brightness"
+                    }
+                }
+            }
+        }
+    }
+}

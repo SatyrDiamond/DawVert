@@ -68,7 +68,7 @@ class cvpj_stretch:
 					next_warp = self.warppoints[n+1]
 					calc_beat = next_warp.beat - warp_point_obj.beat
 					calc_second = next_warp.second - warp_point_obj.second
-					calctempo = (calc_beat/2)/calc_second
+					calctempo = (calc_beat/2)/calc_second if calc_second else 1
 					warp_point_obj.speed = calctempo
 
 			if numpoints>2:

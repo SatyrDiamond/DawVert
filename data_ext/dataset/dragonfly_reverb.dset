@@ -1,0 +1,288 @@
+{
+    "plugin": {
+        "objects": {
+            "hall_reverb": {
+                "params": {
+                    "dry_level": {
+                        "type": "float",
+                        "def": 80.0000011920929,
+                        "max": 100.0,
+                        "name": "Dry Level",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 2
+                            },
+                            "vst2": {
+                                "num": 0
+                            }
+                        },
+                        "extplug_paramid": "dry_level"
+                    },
+                    "early_level": {
+                        "type": "float",
+                        "def": 10.0000001490116,
+                        "max": 100.0,
+                        "name": "Early Level",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 3
+                            },
+                            "vst2": {
+                                "num": 1
+                            }
+                        },
+                        "extplug_paramid": "early_level"
+                    },
+                    "late_level": {
+                        "type": "float",
+                        "def": 20.0000002980232,
+                        "max": 100.0,
+                        "name": "Late Level",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 4
+                            },
+                            "vst2": {
+                                "num": 2
+                            }
+                        },
+                        "extplug_paramid": "late_level"
+                    },
+                    "size": {
+                        "type": "float",
+                        "def": 24.000000059604652,
+                        "max": 60.0,
+                        "min": 10.0,
+                        "name": "Size",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 5
+                            },
+                            "vst2": {
+                                "num": 3
+                            }
+                        },
+                        "extplug_paramid": "size"
+                    },
+                    "width": {
+                        "type": "float",
+                        "def": 100.0,
+                        "max": 150.0,
+                        "min": 50.0,
+                        "name": "Width",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 6
+                            },
+                            "vst2": {
+                                "num": 4
+                            }
+                        },
+                        "extplug_paramid": "width"
+                    },
+                    "predelay": {
+                        "type": "float",
+                        "def": 3.99999991059303,
+                        "max": 100.0,
+                        "name": "Predelay",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 7
+                            },
+                            "vst2": {
+                                "num": 5
+                            }
+                        },
+                        "extplug_paramid": "delay"
+                    },
+                    "diffuse": {
+                        "type": "float",
+                        "def": 89.9999976158142,
+                        "max": 100.0,
+                        "name": "Diffuse",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 8
+                            },
+                            "vst2": {
+                                "num": 6
+                            }
+                        },
+                        "extplug_paramid": "diffuse"
+                    },
+                    "low_cut": {
+                        "type": "float",
+                        "def": 3.99999991059304,
+                        "max": 200.0,
+                        "name": "Low Cut",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 9
+                            },
+                            "vst2": {
+                                "num": 7
+                            }
+                        },
+                        "extplug_paramid": "low_cut"
+                    },
+                    "low_cross": {
+                        "type": "float",
+                        "def": 500.000011920929,
+                        "max": 1200.0,
+                        "min": 200.0,
+                        "name": "Low Cross",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 10
+                            },
+                            "vst2": {
+                                "num": 8
+                            }
+                        },
+                        "extplug_paramid": "low_xo"
+                    },
+                    "low_mult": {
+                        "type": "float",
+                        "def": 1.299999952316284,
+                        "max": 2.5,
+                        "min": 0.5,
+                        "name": "Low Mult",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 11
+                            },
+                            "vst2": {
+                                "num": 9
+                            }
+                        },
+                        "extplug_paramid": "low_mult"
+                    },
+                    "high_cut": {
+                        "type": "float",
+                        "def": 7599.9999642372095,
+                        "max": 16000.0,
+                        "min": 1000.0,
+                        "name": "High Cut",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 12
+                            },
+                            "vst2": {
+                                "num": 10
+                            }
+                        },
+                        "extplug_paramid": "high_cut"
+                    },
+                    "high_cross": {
+                        "type": "float",
+                        "def": 5500.000178813935,
+                        "max": 16000.0,
+                        "min": 1000.0,
+                        "name": "High Cross",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 13
+                            },
+                            "vst2": {
+                                "num": 11
+                            }
+                        },
+                        "extplug_paramid": "high_xo"
+                    },
+                    "high_mult": {
+                        "type": "float",
+                        "def": 0.500000011920929,
+                        "max": 1.2,
+                        "min": 0.2,
+                        "name": "High Mult",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 14
+                            },
+                            "vst2": {
+                                "num": 12
+                            }
+                        },
+                        "extplug_paramid": "high_mult"
+                    },
+                    "spin": {
+                        "type": "float",
+                        "def": 3.29999983310699,
+                        "max": 10.0,
+                        "name": "Spin",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 15
+                            },
+                            "vst2": {
+                                "num": 13
+                            }
+                        },
+                        "extplug_paramid": "spin"
+                    },
+                    "wander": {
+                        "type": "float",
+                        "def": 15.0,
+                        "max": 40.0,
+                        "name": "Wander",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 16
+                            },
+                            "vst2": {
+                                "num": 14
+                            }
+                        },
+                        "extplug_paramid": "wander"
+                    },
+                    "decay": {
+                        "type": "float",
+                        "def": 1.2999999620020357,
+                        "max": 10.0,
+                        "min": 0.1,
+                        "name": "Decay",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 17
+                            },
+                            "vst2": {
+                                "num": 15
+                            }
+                        },
+                        "extplug_paramid": "decay"
+                    },
+                    "early_send": {
+                        "type": "float",
+                        "def": 20.0000002980232,
+                        "max": 100.0,
+                        "name": "Early Send",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 18
+                            },
+                            "vst2": {
+                                "num": 16
+                            }
+                        },
+                        "extplug_paramid": "early_send"
+                    },
+                    "modulation": {
+                        "type": "float",
+                        "def": 15.0000005960464,
+                        "max": 100.0,
+                        "name": "Modulation",
+                        "extplug_assoc": {
+                            "vst3": {
+                                "num": 19
+                            },
+                            "vst2": {
+                                "num": 17
+                            }
+                        },
+                        "extplug_paramid": "modulation"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -102,7 +102,7 @@ def create_object(infile, objname):
 	dataset_object = dataset_cat.objects.create(objname)
 	
 	for n, x in enumerate(pmap_obj.cvpj):
-		param_obj = dataset_object.params.create(x['paramid'])
+		param_obj = dataset_object.params.adddef(x['paramid'])
 		param_obj.type = 'float'
 		param_obj.defv = x['def']
 		param_obj.min = x['min']

@@ -46,6 +46,11 @@ class dataset_objectset:
 		self.setused()
 		self.data[p_name] = self.in_obj(None) if self.in_obj else None
 		return self.data[p_name]
+	def adddef(self, p_name):
+		if p_name not in self.data:
+			self.setused()
+			self.data[p_name] = self.in_obj(None) if self.in_obj else None
+		return self.data[p_name]
 	def remove(self, p_name): 
 		if p_name in self.data: del self.data[p_name]
 	def get(self, p_name): 
@@ -95,7 +100,7 @@ class dataset_param:
 			if 'num' in i_param: self.num = i_param['num']
 			if 'extplug_assoc' in i_param: 
 				self.extplug_assoc = {}
-				for k, v in i_param['extplug_assoc']: 
+				for k, v in i_param['extplug_assoc'].items(): 
 					self.extplug_assoc[k] = dataset_param_extplug_assoc(v)
 			if 'extplug_paramid' in i_param: self.extplug_paramid = i_param['extplug_paramid']
 
@@ -107,10 +112,10 @@ class dataset_param:
 	def write(self):
 		out_data = {}
 		out_data['type'] = self.type
-		out_data['def'] = self.defv
+		if self.name: out_data['name'] = self.name
+		if self.defv != 0: out_data['def'] = self.defv
 		if self.max != 1: out_data['max'] = self.max
 		if self.min != 0: out_data['min'] = self.min
-		if self.name: out_data['name'] = self.name
 		if self.noauto: out_data['noauto'] = self.noauto
 		if self.num != -1: out_data['num'] = self.num
 		if self.extplug_assoc != None: 
@@ -142,7 +147,7 @@ class dataset_datadef:
 		self.name = None
 		self.struct = None
 
-	def is_used(self): return self.path and self.name and self.struct
+	def is_used(self): return self.path or self.name or self.struct
 
 	def read(self, i_data):
 		if i_data != None: 

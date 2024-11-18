@@ -468,16 +468,18 @@ class cvpj_project:
 
 	def sampleref__searchmissing(self, input_file):
 		dirpath = os.path.dirname(input_file)
-		files = {}
-
-		for n, file in enumerate(glob.glob(os.path.join(dirpath, '**', '*'))):
-			fileref_obj = fileref.cvpj_fileref()
-			fileref_obj.set_path(None, file, True)
-			files[str(fileref_obj.file)] = fileref_obj
-			if n == sampleref__searchmissing_limit: break
+		files = None
 
 		for sampleref_id, sampleref_obj in self.sampleref__iter():
 			if not sampleref_obj.found:
+				if files == None:
+					files = {}
+					for n, file in enumerate(glob.glob(os.path.join(dirpath, '**', '*'))):
+						fileref_obj = fileref.cvpj_fileref()
+						fileref_obj.set_path(None, file, True)
+						files[str(fileref_obj.file)] = fileref_obj
+						if n == sampleref__searchmissing_limit: break
+
 				filename = str(sampleref_obj.fileref.file)
 				if filename in files: 
 					logger_filesearch.debug('    >>| file found: searchmissing >'+sampleref_obj.fileref.get_path(None, False))

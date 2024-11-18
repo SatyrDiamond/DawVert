@@ -1,0 +1,327 @@
+{
+    "plugin": {
+        "objects": {
+            "main": {
+                "params": {
+                    "freq_start": {
+                        "type": "float",
+                        "name": "Start Freq.",
+                        "def": 150.0,
+                        "max": 3000.0,
+                        "min": 5.0,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 0
+                            }
+                        },
+                        "extplug_paramid": "pub/freq_start"
+                    },
+                    "freq_end": {
+                        "type": "float",
+                        "name": "End Freq.",
+                        "def": 40.0,
+                        "max": 2000.0,
+                        "min": 5.0,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 1
+                            }
+                        },
+                        "extplug_paramid": "pub/freq_end"
+                    },
+                    "f_env_release": {
+                        "type": "float",
+                        "name": "Length",
+                        "def": 440.0,
+                        "max": 5000.0,
+                        "min": 5.0,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 1.5
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 2
+                            }
+                        },
+                        "extplug_paramid": "pub/f_env_release"
+                    },
+                    "dist_start": {
+                        "type": "float",
+                        "name": "Dist. Start",
+                        "def": 0.8,
+                        "max": 100.0,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 3
+                            }
+                        },
+                        "extplug_paramid": "pub/dist_start"
+                    },
+                    "dist_end": {
+                        "type": "float",
+                        "name": "Dist. End",
+                        "def": 0.8,
+                        "max": 100.0,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 4
+                            }
+                        },
+                        "extplug_paramid": "pub/dist_end"
+                    },
+                    "gain": {
+                        "type": "float",
+                        "name": "Gain",
+                        "def": 1.0,
+                        "max": 2.0,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 5
+                            }
+                        },
+                        "extplug_paramid": "pub/gain"
+                    },
+                    "env_slope": {
+                        "type": "float",
+                        "name": "Env. slope",
+                        "def": 0.163,
+                        "min": 0.01,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 6
+                            }
+                        },
+                        "extplug_paramid": "pub/env_slope"
+                    },
+                    "freq_slope": {
+                        "type": "float",
+                        "name": "Freq. slope",
+                        "def": 0.06,
+                        "min": 0.001,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 7
+                            }
+                        },
+                        "extplug_paramid": "pub/freq_slope"
+                    },
+                    "noise": {
+                        "type": "float",
+                        "name": "Tone/Noise",
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 8
+                            }
+                        },
+                        "extplug_paramid": "pub/noise"
+                    },
+                    "freq_note_start": {
+                        "type": "float",
+                        "name": "Note > Start Freq",
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 9
+                            }
+                        },
+                        "extplug_paramid": "pub/freq_note_start"
+                    },
+                    "freq_note_end": {
+                        "type": "float",
+                        "name": "Note > End Freq",
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 10
+                            }
+                        },
+                        "extplug_paramid": "pub/freq_note_end"
+                    },
+                    "env_release": {
+                        "type": "float",
+                        "name": "Env Release",
+                        "def": 5.0,
+                        "max": 1000.0,
+                        "min": 1.0,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 11
+                            }
+                        },
+                        "extplug_paramid": "pub/env_release"
+                    },
+                    "phase_offs": {
+                        "type": "float",
+                        "name": "Click",
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 12
+                            }
+                        },
+                        "extplug_paramid": "pub/phase_offs"
+                    },
+                    "dist_on": {
+                        "type": "float",
+                        "name": "Dist. On",
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 13
+                            }
+                        },
+                        "extplug_paramid": "pub/dist_on"
+                    },
+                    "f1_cutoff": {
+                        "type": "float",
+                        "name": "F1 Cutoff",
+                        "def": 5000.0,
+                        "max": 22050.0,
+                        "min": 20.0,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 14
+                            }
+                        },
+                        "extplug_paramid": "pub/f1_cutoff"
+                    },
+                    "f1_res": {
+                        "type": "float",
+                        "name": "F1 Res",
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 15
+                            }
+                        },
+                        "extplug_paramid": "pub/f1_res"
+                    },
+                    "f1_drive": {
+                        "type": "float",
+                        "name": "F1 Drive",
+                        "def": 1.0,
+                        "max": 5.0,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 16
+                            }
+                        },
+                        "extplug_paramid": "pub/f1_drive"
+                    },
+                    "main_gain": {
+                        "type": "float",
+                        "name": "Main Gain",
+                        "def": 1.0,
+                        "max": 2.0,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 17
+                            }
+                        },
+                        "extplug_paramid": "pub/main_gain"
+                    },
+                    "e1_attack": {
+                        "type": "float",
+                        "name": "E1 Attack",
+                        "def": 50.0,
+                        "max": 5000.0,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 18
+                            }
+                        },
+                        "extplug_paramid": "pub/e1_attack"
+                    },
+                    "e1_decay": {
+                        "type": "float",
+                        "name": "E1 Decay",
+                        "def": 100.0,
+                        "max": 5000.0,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 19
+                            }
+                        },
+                        "extplug_paramid": "pub/e1_decay"
+                    },
+                    "e1_sustain": {
+                        "type": "float",
+                        "name": "E1 Sustain",
+                        "def": 0.75,
+                        "math_zeroone": {
+                            "type": "exp",
+                            "val": 2.0
+                        },
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 20
+                            }
+                        },
+                        "extplug_paramid": "pub/e1_sustain"
+                    },
+                    "e1_release": {
+                        "type": "float",
+                        "name": "E1 Decay",
+                        "def": 50.0,
+                        "max": 5000.0,
+                        "extplug_assoc": {
+                            "vst2": {
+                                "num": 21
+                            }
+                        },
+                        "extplug_paramid": "pub/e1_release"
+                    },
+                    "f1_type": {
+                        "type": "float",
+                        "name": "F1 Type",
+                        "extplug_assoc": {
+                            "vst2": {}
+                        },
+                        "extplug_paramid": "priv/f1_type"
+                    },
+                    "f1_on": {
+                        "type": "float",
+                        "name": "F1 On",
+                        "extplug_assoc": {
+                            "vst2": {}
+                        },
+                        "extplug_paramid": "priv/f1_on"
+                    },
+                    "midi_chan": {
+                        "type": "float",
+                        "name": "MIDI Channel",
+                        "max": 16.0,
+                        "extplug_assoc": {
+                            "vst2": {}
+                        },
+                        "extplug_paramid": "priv/midi_chan"
+                    }
+                }
+            }
+        }
+    }
+}

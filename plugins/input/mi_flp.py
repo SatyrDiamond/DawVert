@@ -116,7 +116,7 @@ def get_sample(i_value):
 			restpath = i_value[18:]
 			return restpath
 		elif i_value[0:14] == "%FLStudioData%":
-			restpath = i_value[14:]
+			restpath = 'Data\\'+i_value[14:]
 			return restpath
 		elif i_value[0:13] == "%USERPROFILE%":
 			restpath = i_value[13:]
@@ -873,6 +873,8 @@ class input_flp(plugins.base):
 		if flp_obj.genre: convproj_obj.metadata.genre = flp_obj.genre
 		if flp_obj.url: convproj_obj.metadata.url = flp_obj.url
 		if flp_obj.comment: convproj_obj.metadata.comment_text = flp_obj.comment
+
+		convproj_obj.sampleref__searchmissing(input_file)
 
 		#for n, d in convproj_obj.automation.data.items():
 		#	print(n, [x.value for x in d.pl_points.data[0].data])

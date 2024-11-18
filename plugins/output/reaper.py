@@ -147,7 +147,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 					vsthdrwriter.flags64([n])
 				vsthdrwriter.uint32(vstparamsnum)
 				vsthdrwriter.uint32(vst_fx_datatype == 'chunk')
-				vsthdrwriter.uint16(plugin_obj.current_program)
+				vsthdrwriter.int16(plugin_obj.current_program-1)
 				vsthdrwriter.uint8(16)
 				vsthdrwriter.uint8(0)
 

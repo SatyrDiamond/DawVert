@@ -7,7 +7,7 @@ relpath = os.path.abspath(dpath_befr)
 sys.path.append(relpath)
 from objects.datastorage import dataset
 
-dn = 'magical8bitplug2'
+dn = 'kickmess'
 
 infile = "..\\data_ext\\remap\\%s.csv" % dn
 
@@ -26,6 +26,10 @@ def create_object(infile, objname):
 		param_obj.max = x['max']
 		param_obj.name = x['visname']
 		param_obj.extplug_paramid = x['extid']
+
+		param_obj.math_zeroone.type = x['mathtype']
+		param_obj.math_zeroone.val = x['mathval']
+		
 		if pmap_obj.usedparamnames['vst3']:
 			if not param_obj.name: param_obj.name = pmap_obj.vst3[n]['visname']
 	

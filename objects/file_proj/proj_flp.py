@@ -290,7 +290,8 @@ class flp_project:
 			if flp_auto.channel not in self.remote_assoc: self.remote_assoc[flp_auto.channel] = []
 			self.remote_assoc[flp_auto.channel].append(flp_auto)
 		elif event_id == 230: 
-			self.current_ctrl.formula = decodetext(self.version_split, event_data)
+			if self.current_ctrl:
+				self.current_ctrl.formula = decodetext(self.version_split, event_data)
 
 		#Channel
 		elif event_id == 64: 

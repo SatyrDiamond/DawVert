@@ -77,8 +77,29 @@ class dataset_param_extplug_assoc:
 		if self.num != -1: out_data['num'] = self.num
 		return out_data
 
+class dataset_param_onemath:
+	__slots__ = ['type','val']
+	def __init__(self, i_param):
+		self.type = 'lin'
+		self.val = 1
+		if i_param: self.read(i_param)
+
+	def read(self, i_param):
+		if i_param:
+			if 'type' in i_param: self.type = i_param['type']
+			if 'val' in i_param: self.val = i_param['val']
+
+	def is_used(self):
+		return self.val != 1 or self.type != 'lin'
+
+	def write(self):
+		out_data = {}
+		if self.type != 'lin': out_data['type'] = self.type
+		if self.val != 1: out_data['val'] = self.val
+		return out_data
+
 class dataset_param:
-	__slots__ = ['noauto','type','defv','min','max','name','num','extplug_assoc','extplug_paramid']
+	__slots__ = ['noauto','type','defv','min','max','name','num','math_zeroone','extplug_assoc','extplug_paramid']
 
 	def __init__(self, i_param):
 		self.noauto = False
@@ -90,6 +111,7 @@ class dataset_param:
 		self.num = -1
 		self.extplug_paramid = None
 		self.extplug_assoc = None
+		self.math_zeroone = dataset_param_onemath(None)
 		if i_param:
 			if 'noauto' in i_param: self.noauto = i_param['noauto']
 			if 'type' in i_param: self.type = i_param['type']
@@ -98,6 +120,7 @@ class dataset_param:
 			if 'max' in i_param: self.max = i_param['max']
 			if 'name' in i_param: self.name = i_param['name']
 			if 'num' in i_param: self.num = i_param['num']
+			if 'math_zeroone' in i_param: self.math_zeroone.read(i_param['math_zeroone'])
 			if 'extplug_assoc' in i_param: 
 				self.extplug_assoc = {}
 				for k, v in i_param['extplug_assoc'].items(): 
@@ -118,6 +141,7 @@ class dataset_param:
 		if self.min != 0: out_data['min'] = self.min
 		if self.noauto: out_data['noauto'] = self.noauto
 		if self.num != -1: out_data['num'] = self.num
+		if self.math_zeroone.is_used(): out_data['math_zeroone'] = self.math_zeroone.write()
 		if self.extplug_assoc != None: 
 			extplug_assoc = out_data['extplug_assoc'] = {}
 			for k, v in self.extplug_assoc.items(): 

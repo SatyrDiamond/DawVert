@@ -226,7 +226,7 @@ class input_reaper(plugins.base):
 									vstdataconreader.skip(1) # 16
 									vstdataconreader.skip(1) # 16
 
-									plugin_obj.clear_prog_keep(programnum+1)
+									plugin_obj.clear_prog_keep(programnum)
 									if uses_chunk:
 										plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', rpp_extplug.data_chunk, None)
 									else:

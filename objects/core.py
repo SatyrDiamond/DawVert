@@ -32,8 +32,6 @@ consoleHandler = logging.StreamHandler()
 consoleHandler.setLevel(logging.DEBUG)
 consoleHandler.setFormatter(logFormatter)
 
-#logging.root.setLevel(logging.DEBUG)
-
 logger_core = logging.getLogger('core')
 logger_compat = logging.getLogger('compat')
 logger_fxchange = logging.getLogger('fxchange')
@@ -49,6 +47,7 @@ logger_plugconv_ext = logging.getLogger('plugconv_ext')
 logger_audiofile = logging.getLogger('audiofile')
 logger_projparse = logging.getLogger('projparse')
 logger_plugins = logging.getLogger('plugins')
+logger_filesearch = logging.getLogger('filesearch')
 
 logger_core.addHandler(consoleHandler)
 logger_compat.addHandler(consoleHandler)
@@ -63,6 +62,7 @@ logger_plugconv_ext.addHandler(consoleHandler)
 logger_audiofile.addHandler(consoleHandler)
 logger_projparse.addHandler(consoleHandler)
 logger_plugins.addHandler(consoleHandler)
+logger_filesearch.addHandler(consoleHandler)
 
 logger_core.setLevel(logging.INFO)
 logger_compat.setLevel(logging.INFO)
@@ -77,6 +77,24 @@ logger_plugconv_ext.setLevel(logging.INFO)
 logger_audiofile.setLevel(logging.INFO)
 logger_projparse.setLevel(logging.INFO)
 logger_plugins.setLevel(logging.INFO)
+
+log_pathsearchonly = False
+
+if log_pathsearchonly:
+	logger_core.setLevel(logging.ERROR)
+	logger_compat.setLevel(logging.ERROR)
+	logger_fxchange.setLevel(logging.ERROR)
+	logger_project.setLevel(logging.ERROR)
+	logger_filesearch.setLevel(logging.DEBUG)
+	logger_automation.setLevel(logging.ERROR)
+	logger_globalstore.setLevel(logging.ERROR)
+	logger_input.setLevel(logging.ERROR)
+	logger_output.setLevel(logging.ERROR)
+	logger_plugconv.setLevel(logging.ERROR)
+	logger_plugconv_ext.setLevel(logging.ERROR)
+	logger_audiofile.setLevel(logging.ERROR)
+	logger_projparse.setLevel(logging.ERROR)
+	logger_plugins.setLevel(logging.ERROR)
 
 class config_data:
 	path_samples_extracted = os.getcwd() + '/__samples_extracted/'

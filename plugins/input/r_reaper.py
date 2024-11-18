@@ -222,11 +222,11 @@ class input_reaper(plugins.base):
 									aud_out_chan = [vstdataconreader.flags64() for x in range(pluginfo_obj.audio_num_outputs)]
 									chunk_size = vstdataconreader.uint32() # chunk size
 									uses_chunk = vstdataconreader.uint32() # uses chunk
-									programnum = vstdataconreader.uint16() # program
+									programnum = vstdataconreader.int16() # program
 									vstdataconreader.skip(1) # 16
 									vstdataconreader.skip(1) # 16
 
-									plugin_obj.clear_prog_keep(programnum)
+									plugin_obj.clear_prog_keep(programnum+1)
 									if uses_chunk:
 										plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', rpp_extplug.data_chunk, None)
 									else:

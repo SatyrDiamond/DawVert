@@ -13,6 +13,7 @@ import copy
 import logging
 
 logger_project = logging.getLogger('project')
+logger_filesearch = logging.getLogger('filesearch')
 
 username = getpass.getuser()
 os_path = 'unix' if sys.platform != 'win32' else 'win'
@@ -43,22 +44,30 @@ class filesearcher_entry:
 	def apply(self, fileref_obj, basepaths):
 		if fileref_obj.exists(None): return True
 
-		logger_project.debug('fileref: search: '+str(self))
-
 		if self.search_type == 'full_filereplace':
 			state_obj = fileref_obj.create_state()
 			fileref_obj.set_folder_obj(self.mainpath)
 			iffound = fileref_obj.exists(None)
-			if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
-			else: fileref_obj.restore_state(state_obj)
+			if iffound: 
+				logger_filesearch.debug('    >>| file found: full_filereplace >'+fileref_obj.get_path(None, False))
+				logger_filesearch.debug('')
+			else: 
+				fileref_obj.restore_state(state_obj)
+				logger_filesearch.debug('    ..| file not found: full_filereplace > '+str(self))
+				logger_filesearch.debug('')
 			return iffound
 
 		if self.search_type == 'partial_file' and self.basepath in basepaths:
 			state_obj = fileref_obj.create_state()
 			fileref_obj.set_folder_obj(basepaths[self.basepath])
 			iffound = fileref_obj.exists(None)
-			if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
-			else: fileref_obj.restore_state(state_obj)
+			if iffound:
+				logger_filesearch.debug('    >>| file found: partial_file >'+fileref_obj.get_path(None, False))
+				logger_filesearch.debug('')
+			else:
+				fileref_obj.restore_state(state_obj)
+				logger_filesearch.debug('    ..| file not found: partial_file > '+str(self))
+				logger_filesearch.debug('')
 			return iffound
 
 		if self.search_type == 'full_append' and fileref_obj.is_file:
@@ -66,8 +75,13 @@ class filesearcher_entry:
 			if_proc = fileref_obj.complete(self.mainpath)
 			if if_proc:
 				iffound = fileref_obj.exists(None)
-				if iffound: logger_project.info('fileref: file found: '+fileref_obj.get_path(None, False))
-				else: fileref_obj.restore_state(state_obj)
+				if iffound:
+					logger_filesearch.debug('    >>| file found: full_append >'+fileref_obj.get_path(None, False))
+					logger_filesearch.debug('')
+				else:
+					fileref_obj.restore_state(state_obj)
+					logger_filesearch.debug('    ..| file not found: full_append > '+str(self))
+					logger_filesearch.debug('')
 				return iffound
 			else:
 				fileref_obj.restore_state(state_obj)
@@ -204,7 +218,7 @@ class cvpj_fileref:
 		iffound = False
 
 		if searchseries in filesearcher.searchparts:
-			logger_project.debug('fileref: search start: '+searchseries)
+			logger_filesearch.debug('>>    | search start: '+searchseries)
 			for spe in filesearcher.searchparts[searchseries]:
 				iffound = spe.apply(self, filesearcher.basepaths)
 				if iffound: break
@@ -321,7 +335,7 @@ class cvpj_fileref:
 	def exists(self, os_type):
 		if os_type not in ['unix', 'win']: os_type = os_path
 		filepath = self.get_path(os_type, False)
-		logger_project.debug('fileref: check exist: '+filepath)
+		logger_filesearch.debug('  ??  | check exist: '+filepath)
 		if os.path.exists(filepath): return os.path.isfile(filepath)
 		else: return False
 

@@ -4,6 +4,7 @@ import json
 import os
 
 from functions import data_values
+from functions import xtramath
 
 class dataset_visual:
 	def __init__(self, i_visual):
@@ -127,10 +128,26 @@ class dataset_param:
 					self.extplug_assoc[k] = dataset_param_extplug_assoc(v)
 			if 'extplug_paramid' in i_param: self.extplug_paramid = i_param['extplug_paramid']
 
+	def get_def_one(self):
+		return xtramath.between_to_one(self.min, self.max, self.defv)
+
 	def add_extplug_assoc(self, k):
 		if self.extplug_assoc is None: self.extplug_assoc = {}
-		self.extplug_assoc[k] = dataset_param_extplug_assoc(None)
-		return self.extplug_assoc[k]
+		self.extplug_assoc[exttype] = dataset_param_extplug_assoc(None)
+		return self.extplug_assoc[exttype]
+
+	def get_extplug_info(self, exttype):
+		outname = self.name
+		outnum = self.num
+
+		if self.extplug_assoc:
+			if exttype in self.extplug_assoc:
+				extdata = self.extplug_assoc[exttype]
+				if extdata.name: outname = extdata.name
+				if extdata.num != -1: outnum = extdata.num
+				if extdata.num < -1: outnum = -1
+
+		return outnum, outname
 
 	def write(self):
 		out_data = {}
@@ -282,6 +299,7 @@ class dataset_object:
 
 	def var_get(self, v_name):
 		return self.data[v_name] if v_name in self.data else None
+
 	def var_set(self, v_name, v_value):
 		if v_value != None: self.data[v_name] = v_value
 

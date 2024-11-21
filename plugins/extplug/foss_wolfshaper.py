@@ -6,6 +6,9 @@ from objects import globalstore
 from functions_plugin_ext import data_nullbytegroup
 from functions_plugin_ext import plugin_vst2
 
+DATASETPATH = './data_ext/dataset/wolf_plugins.dset'
+DATASETNAME = 'wolf_plugins'
+
 class extplugin(plugins.base):
 	def __init__(self): 
 		self.plugin_data = None
@@ -43,19 +46,19 @@ class extplugin(plugins.base):
 			return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('wolfshaper', '.\\data_ext\\remap\\wolfshaper.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
 		if self.plugin_data:
 			if len(self.plugin_data)>1:
 				ws_graph = self.plugin_data[0]
 				ws_params = self.plugin_data[1]
-				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('wolfshaper', plugintype):
+				for valuepack, extparamid, paramnum in manu_obj.dset_remap_ext_to_cvpj__pre(DATASETNAME, 'plugin', 'wolfshaper', plugintype):
 					if extparamid in ws_params: valuepack.value = float(ws_params[extparamid])
 
 				plugin_obj.replace('user', 'wolf-plugins', 'wolfshaper')
 
-				manu_obj.remap_ext_to_cvpj__post('wolfshaper', plugintype)
+				manu_obj.dset_remap_ext_to_cvpj__post(DATASETNAME, 'plugin', 'wolfshaper', plugintype)
 
 				p_graph = [x.split(',') for x in (ws_graph['graph'].split(';'))]
 
@@ -74,17 +77,17 @@ class extplugin(plugins.base):
 
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('wolfshaper', '.\\data_ext\\remap\\wolfshaper.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
 		graph = ''
 		params = {}
 
-		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('wolfshaper', plugintype):
+		for valuepack, extparamid, paramnum in manu_obj.dset_remap_cvpj_to_ext__pre(DATASETNAME, 'plugin', 'wolfshaper', plugintype):
 			params[extparamid] = float(valuepack)
 		
 		plugin_obj.replace('external', 'vst2', None)
-		manu_obj.remap_cvpj_to_ext__post('wolfshaper', plugintype)
+		manu_obj.dset_remap_cvpj_to_ext__post(DATASETNAME, 'plugin', 'wolfshaper', plugintype)
 		for p in plugin_obj.env_points_get('shape'):
 			tension = p.tension
 			if p.type == 'normal': pointtype = 0

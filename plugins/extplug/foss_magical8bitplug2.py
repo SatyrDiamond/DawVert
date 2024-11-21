@@ -9,6 +9,9 @@ from functions_plugin_ext import data_vc2xml
 from functions_plugin_ext import plugin_vst2
 from functions_plugin_ext import plugin_vst3
 
+DATASETPATH = './data_ext/dataset/magical8bitplug2.dset'
+DATASETNAME = 'magical8bitplug2'
+
 class extplugin(plugins.base):
 	def __init__(self): 
 		self.plugin_data = None
@@ -53,7 +56,7 @@ class extplugin(plugins.base):
 				return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('magical8bitplug2', '.\\data_ext\\remap\\magical8bitplug2.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
 		if self.plugin_data:
@@ -65,10 +68,10 @@ class extplugin(plugins.base):
 					param_value = float(xmlpart.get('value'))
 					params[param_id] = param_value
 
-				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('magical8bitplug2', plugintype):
+				for valuepack, extparamid, paramnum in manu_obj.dset_remap_ext_to_cvpj__pre(DATASETNAME, 'plugin', 'main', plugintype):
 					if extparamid in params: valuepack.value = params[extparamid]
 				plugin_obj.replace('user', 'yokemura', 'magical8bitplug2')
-				manu_obj.remap_ext_to_cvpj__post('magical8bitplug2', plugintype)
+				manu_obj.dset_remap_ext_to_cvpj__post(DATASETNAME, 'plugin', 'main', plugintype)
 			volumeEnv = data_xml.find_first(self.plugin_data, 'volumeEnv')
 			pitchEnv = data_xml.find_first(self.plugin_data, 'pitchEnv')
 			dutyEnv = data_xml.find_first(self.plugin_data, 'dutyEnv')
@@ -82,12 +85,12 @@ class extplugin(plugins.base):
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('magical8bitplug2', '.\\data_ext\\remap\\magical8bitplug2.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		params = {}
 		xml_m8p_root = ET.Element("root")
 		xml_m8p_params = ET.SubElement(xml_m8p_root, "Params")
-		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('magical8bitplug2', plugintype):
+		for valuepack, extparamid, paramnum in manu_obj.dset_remap_cvpj_to_ext__pre(DATASETNAME, 'plugin', 'main', plugintype):
 			temp_xml = ET.SubElement(xml_m8p_params, 'PARAM')
 			temp_xml.set('id', str(extparamid))
 			temp_xml.set('value', str(valuepack))
@@ -96,7 +99,7 @@ class extplugin(plugins.base):
 		xml_m8p_volumeEnv = ET.SubElement(xml_m8p_root, "volumeEnv")
 
 		plugin_obj.replace('external', 'vst2', None)
-		manu_obj.remap_cvpj_to_ext__post('magical8bitplug2', plugintype)
+		manu_obj.dset_remap_cvpj_to_ext__post(DATASETNAME, 'plugin', 'main', plugintype)
 		
 		for n, x in [["volumeEnv", xml_m8p_volumeEnv], ["pitchEnv", xml_m8p_pitchEnv], ["dutyEnv", xml_m8p_dutyEnv]]:
 			outdata = plugin_obj.array_get_vl(n)

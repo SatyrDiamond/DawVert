@@ -297,10 +297,51 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 		for fxnum in used_fxchans: convproj_obj.track_order.append('fxrack_'+str(fxnum))
 		return True
 
+
+
+
+
+
+
+
+
+	elif in_fxtype == 'route' and out_fxtype == 'groupreturn' and convproj_obj.type in ['r', 'ri']:
+
+		if not convproj_obj.trackroute:
+			for t in convproj_obj.track_order:
+				convproj_obj.fx__route__add(t)
+
+		fx_trackids = {}
+		for trackid, track_obj in convproj_obj.track__iter():
+			s = convproj_obj.trackroute[trackid]
+			if not s.to_master_active and s.data:
+				firstsend = list(s.data)[0]
+				if firstsend not in fx_trackids: fx_trackids[firstsend] = []
+				fx_trackids[firstsend].append(trackid)
+				track_obj.group = 'group_'+firstsend
+
+		for trackid, track_obj in fx_trackids.items():
+			track_obj = convproj_obj.track_data[trackid]
+			group_obj = convproj_obj.fx__group__add('group_'+trackid)
+			group_obj.visual = track_obj.visual.copy()
+			group_obj.plugslots.slots_audio = track_obj.plugslots.slots_audio
+			group_obj.plugslots.slots_mixer = track_obj.plugslots.slots_mixer
+
+		return True
+
+
+
+
+
+
+
+
+
+
+
 	elif in_fxtype == 'route' and out_fxtype == 'rack' and convproj_obj.type in ['r', 'ri']:
 		tracknums = {}
 
-		#track2fxrack(convproj_obj, convproj_obj.track_master, 0, 'Master', '', True, ['master'])
 		if not convproj_obj.trackroute:
 			for t in convproj_obj.track_order:
 				convproj_obj.fx__route__add(t)

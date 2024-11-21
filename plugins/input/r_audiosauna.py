@@ -33,6 +33,7 @@ class input_audiosanua(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['song']
 		in_dict['placement_cut'] = True
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_filetypes'] = ['wav', 'mp3']
 		in_dict['plugin_included'] = ['native:audiosauna', 'universal:sampler:multi', 'universal:bitcrush']
 		in_dict['fxtype'] = 'groupreturn'

@@ -85,11 +85,15 @@ class cvpj_plugslots:
 		self.synth = pluginid
 
 	def plugin_autoplace(self, plugin_obj, pluginid):
-		if plugin_obj.role == 'fx': self.slots_audio.append(pluginid)
-		elif plugin_obj.role == 'notefx': self.slots_notes.append(pluginid)
-		elif plugin_obj.role == 'synth': 
-			if not self.synth: self.synth = pluginid
-			self.slots_synths.append(pluginid)
+		if plugin_obj is not None:
+			if plugin_obj.role == 'fx': self.slots_audio.append(pluginid)
+			elif plugin_obj.role == 'notefx': self.slots_notes.append(pluginid)
+			elif plugin_obj.role == 'synth': 
+				if not self.synth: self.synth = pluginid
+				self.slots_synths.append(pluginid)
+
+	def copy(self):
+		return copy.deepcopy(self)
 
 	def __iter__(self):
 		for x in self.slots_notes: yield 'notes', x

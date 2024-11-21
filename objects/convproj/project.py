@@ -71,8 +71,6 @@ def autoloc_getname(autopath):
 
 plugin_id_counter = idcounter.counter(1000, 'plugin_')
 
-sampleref__searchmissing_limit = 1000
-
 def routetrackord(trackord, groupdata, outl, insidegroup):
 	for t, i in trackord:
 		outl.append([t, i, insidegroup])
@@ -468,25 +466,12 @@ class cvpj_project:
 
 	def sampleref__searchmissing(self, input_file):
 		dirpath = os.path.dirname(input_file)
-		files = None
+		files = self.filesearcher.searchcache
 
 		for sampleref_id, sampleref_obj in self.sampleref__iter():
 			if not sampleref_obj.found:
-				if files == None:
-					files = {}
-					for n, file in enumerate(glob.glob(os.path.join(dirpath, '**', '*'))):
-						fileref_obj = fileref.cvpj_fileref()
-						fileref_obj.set_path(None, file, True)
-						files[str(fileref_obj.file)] = fileref_obj
-						if n == sampleref__searchmissing_limit: break
-
-				filename = str(sampleref_obj.fileref.file)
-				if filename in files: 
-					logger_filesearch.debug('    >>| file found: searchmissing >'+sampleref_obj.fileref.get_path(None, False))
-					sampleref_obj.fileref = files[filename]
-					sampleref_obj.get_info()
-				else:
-					logger_filesearch.debug('    ..| file not found: searchmissing > '+str(sampleref_obj.fileref.get_path(None, False)))
+				self.filesearcher.scan_local_files(dirpath)
+				sampleref_obj.search_local()
 
 # --------------------------------------------------------- FX ---------------------------------------------------------
 

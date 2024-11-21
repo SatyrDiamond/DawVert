@@ -4,6 +4,7 @@
 import os
 import sys
 import getpass
+import glob
 
 from plugins import base as dv_plugins
 from functions import data_values
@@ -88,9 +89,36 @@ class filesearcher_entry:
 
 		return False
 
+sampleref__searchmissing_limit = 1000
+
 class filesearcher:
 	basepaths = {}
 	searchparts = {}
+	searchcache = None
+
+	def scan_local_files(dirpath):
+		filesearcher.searchcache = filesearcher.searchcache
+		if filesearcher.searchcache == None:
+			filesearcher.searchcache = {}
+			numfile = 0
+
+			for n, file in enumerate(glob.glob(os.path.join(dirpath, '*'))):
+				fileref_obj = cvpj_fileref()
+				fileref_obj.set_path(None, file, True)
+				filename = str(fileref_obj.file)
+				if filename not in filesearcher.searchcache:
+					filesearcher.searchcache[filename] = fileref_obj
+					numfile += 1
+					if numfile > sampleref__searchmissing_limit: break
+
+			for n, file in enumerate(glob.glob(os.path.join(dirpath, '**', '*'))):
+				fileref_obj = cvpj_fileref()
+				fileref_obj.set_path(None, file, True)
+				filesearcher.searchcache[str(fileref_obj.file)] = fileref_obj
+				if filename not in filesearcher.searchcache:
+					filesearcher.searchcache[filename] = fileref_obj
+					numfile += 1
+					if numfile > sampleref__searchmissing_limit: break
 
 	def add_basepath(searchseries, in_path):
 		pathdata = cvpj_fileref()
@@ -412,7 +440,6 @@ class cvpj_sampleref:
 		self.get_info()
 
 	def find_relative(self, searchseries):
-
 		if not self.found:
 			orgpath = self.fileref.get_path(None, False)
 
@@ -424,9 +451,19 @@ class cvpj_sampleref:
 
 			return iffound
 
-
-
 		return False
+
+	def search_local(self, dirpath):
+		filesearcher.scan_local_files(dirpath)
+		files = filesearcher.searchcache
+		filename = str(self.fileref.file)
+
+		if filename in files: 
+			logger_filesearch.debug('    >>| file found: searchmissing >'+self.fileref.get_path(None, False))
+			self.fileref = files[filename]
+			self.get_info()
+		else:
+			logger_filesearch.debug('    ..| file not found: searchmissing > '+str(self.fileref.get_path(None, False)))
 
 	def get_info(self):
 		wav_realpath = self.fileref.get_path(os_path, False)

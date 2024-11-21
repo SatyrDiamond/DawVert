@@ -9,6 +9,9 @@ from functions_plugin_ext import data_vc2xml
 from functions_plugin_ext import data_vstw
 from functions_plugin_ext import plugin_vst2
 
+DATASETPATH = './data_ext/dataset/tunefish4.dset'
+DATASETNAME = 'tunefish4'
+
 class extplugin(plugins.base):
 	def __init__(self): 
 		self.plugin_data = None
@@ -58,23 +61,25 @@ class extplugin(plugins.base):
 				plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', extplat, '5653545466733474756E656669736834', chunkdata)
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		globalstore.paramremap.load('tunefish4', '.\\data_ext\\remap\\tunefish4.csv')
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		if not (self.plugin_data is None):
-			for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('tunefish4', plugintype):
+			for valuepack, extparamid, paramnum in manu_obj.dset_remap_ext_to_cvpj__pre(DATASETNAME, 'plugin', 'main', plugintype):
 				if extparamid in self.plugin_data.attrib: valuepack.value = float(self.plugin_data.attrib[extparamid])
 			plugin_obj.replace('user', 'brain_control', 'tunefish4')
-			manu_obj.remap_ext_to_cvpj__post('tunefish4', plugintype)
+			manu_obj.dset_remap_ext_to_cvpj__post(DATASETNAME, 'plugin', 'main', plugintype)
 			return True
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		globalstore.paramremap.load('tunefish4', '.\\data_ext\\remap\\tunefish4.csv')
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		tf4_root = ET.Element("TF4SETTINGS")
-		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('tunefish4', plugintype):
+		for valuepack, extparamid, paramnum in manu_obj.dset_remap_cvpj_to_ext__pre(DATASETNAME, 'plugin', 'main', plugintype):
 			tf4_root.set(extparamid, str(valuepack.value))
 		plugin_obj.replace('external', 'vst2', None)
-		manu_obj.remap_cvpj_to_ext__post('tunefish4', plugintype)
+		manu_obj.dset_remap_cvpj_to_ext__post(DATASETNAME, 'plugin', 'main', plugintype)
 		self.plugin_data = tf4_root
 		return True

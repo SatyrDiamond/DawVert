@@ -7,6 +7,9 @@ from functions import data_xml
 from functions_plugin_ext import data_nullbytegroup
 from functions_plugin_ext import plugin_vst2
 
+DATASETPATH = './data_ext/dataset/castello_reverb.dset'
+DATASETNAME = 'castello_reverb'
+
 class extplugin(plugins.base):
 	def __init__(self): 
 		self.plugin_data = None
@@ -45,25 +48,25 @@ class extplugin(plugins.base):
 				return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('castello', '.\\data_ext\\remap\\castello_reverb.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		if not (self.plugin_data is None):
 			if len(self.plugin_data)>1:
 				cr_params = self.plugin_data[1]
-				for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('castello', plugintype):
+				for valuepack, extparamid, paramnum in manu_obj.dset_remap_ext_to_cvpj__pre(DATASETNAME, 'plugin', 'main', plugintype):
 					if extparamid in cr_params: valuepack.value = float(cr_params[extparamid])
 			plugin_obj.replace('user', 'lucianoiam', 'castello')
-			manu_obj.remap_ext_to_cvpj__post('castello', plugintype)
+			manu_obj.dset_remap_ext_to_cvpj__post(DATASETNAME, 'plugin', 'main', plugintype)
 			return True
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('castello', '.\\data_ext\\remap\\castello_reverb.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		params = {}
-		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('castello', plugintype):
+		for valuepack, extparamid, paramnum in manu_obj.dset_remap_cvpj_to_ext__pre(DATASETNAME, 'plugin', 'main', plugintype):
 			params[extparamid] = float(valuepack)
 		plugin_obj.replace('external', 'vst2', None)
-		manu_obj.remap_cvpj_to_ext__post('castello', plugintype)
+		manu_obj.dset_remap_cvpj_to_ext__post(DATASETNAME, 'plugin', 'main', plugintype)
 		self.plugin_data = [{'ui_size': ''}, params]
 		return True

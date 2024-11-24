@@ -780,7 +780,8 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
 					for t_key in t_keys:
 						if t_key not in t_keydata: t_keydata[t_key] = []
-						notevol = t_vol**(1/3) if issampler else t_vol
+						notevol = t_vol
+						#notevol = t_vol**(1/3) if issampler else t_vol
 						t_keydata[t_key].append([counter_note.get(), t_pos, t_dur, notevol, t_inst, t_extra, t_auto, t_slide])
 	
 				t_keydata = dict(sorted(t_keydata.items(), key=lambda item: item[0]))

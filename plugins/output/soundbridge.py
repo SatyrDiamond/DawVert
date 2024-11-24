@@ -468,6 +468,8 @@ class output_soundbridge(plugins.base):
 
 			if track_obj.group: sb_tracks = groups_data[track_obj.group].tracks
 
+			sb_track = None
+
 			if track_obj.type == 'instrument':
 				sb_track = proj_soundbridge.soundbridge_track(None)
 				sb_track.state = set_params(track_obj.params)
@@ -695,7 +697,8 @@ class output_soundbridge(plugins.base):
 
 				sb_track.blockContainers.append(blockContainer)
 
-			sb_tracks.append(sb_track)
+			if sb_track:
+				sb_tracks.append(sb_track)
 
 		for returnid, return_obj in master_returns.items():
 			sb_track = proj_soundbridge.soundbridge_track(None)

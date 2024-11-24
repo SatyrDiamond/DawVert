@@ -689,7 +689,7 @@ class input_ableton(plugins.base):
 								t_note_extra['velocity_range'] = event.VelocityDeviation
 								t_note_extra['enabled'] = event.IsEnabled
 								notevol = (event.Velocity/100)
-								if issampler: notevol = notevol**3
+								#if issampler: notevol = notevol**3
 								placement_obj.notelist.add_r(event.Time*4, event.Duration*4, kt.MidiKey-60, notevol, t_note_extra)
 								if t_note_id in t_notes_auto:
 									for atype, adata in t_notes_auto[t_note_id].items():

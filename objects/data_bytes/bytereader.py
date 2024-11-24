@@ -118,7 +118,7 @@ class bytereader:
 			self.buf = mmap.mmap(f.fileno(), 0, access = mmap.ACCESS_READ)
 			return True
 		else:
-			print('File Not Found', filename)
+			#print('File Not Found', filename)
 			return False
 
 	def load_raw(self, rawdata):

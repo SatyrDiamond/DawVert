@@ -17,7 +17,7 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = ['ableton']
 		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'AutoFilter'):
 			extpluglog.convinternal('Ableton', 'AutoFilter', 'Universal', 'Filter')

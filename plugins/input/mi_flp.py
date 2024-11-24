@@ -150,7 +150,7 @@ def get_sample(i_value):
 	#plugins.add_asdr_env(cvpj_l, pluginid, envtype, el_env_predelay, el_env_attack, el_env_hold, el_env_decay, el_env_sustain, el_env_release, el_env_aomunt)
 	#plugins.add_asdr_env_tension(cvpj_l, pluginid, envtype, el_env_attack_tension, el_env_decay_tension, el_env_release_tension)
 
-def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, dv_config):
+def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, dawvert_intent):
 	filename_sample = get_sample(fl_channel_obj.samplefilename)
 	sampleref_obj = convproj_obj.sampleref__add(filename_sample, filename_sample, 'win')
 
@@ -240,11 +240,18 @@ DEBUGAUTOTICKS = False
 
 
 class input_flp(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio 12-24'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'flp'
+	
+	def get_name(self):
+		return 'FL Studio 12-24'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['flp']
 		in_dict['auto_types'] = ['pl_ticks', 'pl_points']
@@ -260,20 +267,12 @@ class input_flp(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
-			for filename in zip_data.namelist():
-				if filename.endswith('.flp'): return True
-			return False
-		except:
-			bytestream = open(input_file, 'rb')
-			bytestream.seek(0)
-			bytesdata = bytestream.read(4)
-			if bytesdata == b'FLhd': return True
-			else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'FLhd'])
+		detectdef_obj.containers.append(['zip', '*.flp'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from functions_plugin import flp_dec_plugins
 		from objects.file_proj import proj_flp
 		from objects.inst_params import fx_delay
@@ -303,13 +302,15 @@ class input_flp(plugins.base):
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3\\", 'win')
 
 		flp_obj = proj_flp.flp_project()
-		flp_obj.read(input_file)
+
+		if dawvert_intent.input_mode == 'file':
+			flp_obj.read(dawvert_intent.input_file)
 
 		if flp_obj.zipped:
 			for filename in flp_obj.zipfile.namelist():
 				if not filename.endswith('.flp'):
 					try:
-						flp_obj.zipfile.extract(filename, path=dv_config.path_samples_extracted, pwd=None)
+						flp_obj.zipfile.extract(filename, path=dawvert_intent.path_samples['extracted'], pwd=None)
 					except PermissionError:
 						pass
 
@@ -336,7 +337,7 @@ class input_flp(plugins.base):
 		id_pat = {}
 		sampleinfo = {}
 		samplestretch = {}
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		instdata_chans = []
 
@@ -375,7 +376,7 @@ class input_flp(plugins.base):
 				if fl_channel_obj.type == 0:
 					inst_obj.plugslots.set_synth(instplugid)
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(instplugid, get_sample(fl_channel_obj.samplefilename), 'win')
-					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
+					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
 					samplepart_obj.trigger = 'normal' # if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
@@ -396,7 +397,7 @@ class input_flp(plugins.base):
 
 						if fl_channel_obj.samplefilename:
 							sp_obj = plugin_obj.samplepart_add('audiofile')
-							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
+							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
 
 				if fl_channel_obj.type == 3:
 					layer_chans[channelnum] = fl_channel_obj.layer_chans
@@ -511,7 +512,7 @@ class input_flp(plugins.base):
 
 			if fl_channel_obj.type == 4:
 				sre_obj = convproj_obj.sampleindex__add('FLSample' + str(instrument))
-				samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dv_config)
+				samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dawvert_intent)
 
 				if sampleref_obj.found:
 					samplestretch[instrument] = sre_obj.stretch

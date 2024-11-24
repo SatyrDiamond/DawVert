@@ -10,49 +10,39 @@ TEXTSTART = 's3m_inst_'
 MAINCOLOR = [0.65, 0.57, 0.33]
 
 class input_s3m(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 's3m'
-	def get_name(self): return 'Scream Tracker 3 Module'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self): 
+		return 'input'
+
+	def get_shortname(self): 
+		return 's3m'
+
+	def get_name(self): 
+		return 'Scream Tracker 3 Module'
+
+	def get_priority(self): 
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['s3m']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'm'
-	def supported_autodetect(self): return True
 
-	def detect_bytes(self, in_bytes):
-		bytestream = io.BytesIO(in_bytes)
-		return self.detect_internal(bytestream)
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([44, b'SCRM'])
 
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		return self.detect_internal(bytestream)
-
-	def detect_internal(self, bytestream):
-		bytestream.seek(44)
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'SCRM': return True
-		else: return False
-		bytestream.seek(0)
-
-	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_s3m
-		project_obj = proj_s3m.s3m_song()
-		if not project_obj.load_from_raw(input_bytes): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config)
-
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_s3m
-		project_obj = proj_s3m.s3m_song()
-		if not project_obj.load_from_file(input_file): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config)
-
-	def parse_internal(self, convproj_obj, project_obj, dv_config):
 		from objects.tracker import pat_single
-		samplefolder = dv_config.path_samples_extracted
+		
+		project_obj = proj_s3m.s3m_song()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+		if dawvert_intent.input_mode == 'bytes':
+			if not project_obj.load_from_raw(dawvert_intent.input_data): exit()
+
+		samplefolder = dawvert_intent.path_samples['extracted']
 		
 		current_tempo = project_obj.tempo
 		current_speed = project_obj.speed

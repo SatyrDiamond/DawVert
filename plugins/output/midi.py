@@ -32,7 +32,7 @@ class output_cvpj_f(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		import mido
 
 		convproj_obj.change_timings(384, False)
@@ -106,4 +106,6 @@ class output_cvpj_f(plugins.base):
 			multi_miditrack.append(miditrack)
 
 		for x in multi_miditrack: midiobj.tracks.append(x)
-		midiobj.save(output_file)
+		
+		if dawvert_intent.output_mode == 'file':
+			midiobj.save(dawvert_intent.output_file)

@@ -14,11 +14,18 @@ def get_namval(tin):
 	return n.lstrip(), v.lstrip()
 
 class input_mariopaint_smp(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mariopaint_smp'
-	def get_name(self): return 'Super Mario Paint'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mariopaint_smp'
+	
+	def get_name(self):
+		return 'Super Mario Paint'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['txt']
 		in_dict['file_ext_detect'] = False
@@ -27,15 +34,16 @@ class input_mariopaint_smp(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.songinput import mariopaint
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'
 		mariopaint_obj = mariopaint.mariopaint_song()
 
-		f_smp = open(input_file, 'r')
+		if dawvert_intent.input_mode == 'file':
+			f_smp = open(dawvert_intent.input_file, 'r')
 		try:
 			lines_smp = f_smp.readlines()
 		except UnicodeDecodeError:

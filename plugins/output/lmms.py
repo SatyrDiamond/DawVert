@@ -343,7 +343,7 @@ class output_lmms(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['projtype'] = 'r'
 		
-	def parse(self, i_cvpj_obj, output_file):
+	def parse(self, i_cvpj_obj, dawvert_intent):
 		from objects.file_proj import proj_lmms
 
 		global lmms_bpm
@@ -638,4 +638,5 @@ class output_lmms(plugins.base):
 			song_obj.timeline.lp0pos = cvpj_obj.start_pos
 			song_obj.timeline.lp1pos = cvpj_obj.get_dur()
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

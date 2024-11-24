@@ -33,49 +33,40 @@ def env_to_cvpj(xm_env, plugin_obj, ispan, fadeout):
 		if fadeout: autopoints_obj.data['fadeout'] = (256/fadeout)
 
 class input_xm(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'xm'
-	def get_name(self): return 'FastTracker 2'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+
+	def get_shortname(self):
+		return 'xm'
+
+	def get_name(self):
+		return 'FastTracker 2'
+
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['xm']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'm'
-	def supported_autodetect(self): return True
 
-	def detect_bytes(self, in_bytes):
-		bytestream = io.BytesIO(in_bytes)
-		return self.detect_internal(bytestream)
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'Extended Module: '])
 
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		return self.detect_internal(bytestream)
-
-	def detect_internal(self, bytestream):
-		bytesdata = bytestream.read(17)
-		if bytesdata == b'Extended Module: ': return True
-		else: return False
-		bytestream.seek(0)
-
-	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_xm
-		project_obj = proj_xm.xm_song()
-		if not project_obj.load_from_raw(input_bytes): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
-
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_xm
-		project_obj = proj_xm.xm_song()
-		if not project_obj.load_from_file(input_file): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
-
-	def parse_internal(self, convproj_obj, project_obj, dv_config, input_file):
 		from objects.tracker import pat_single
 		global samplefolder
-		samplefolder = dv_config.path_samples_extracted
+		
+		project_obj = proj_xm.xm_song()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+		if dawvert_intent.input_mode == 'bytes':
+			if not project_obj.load_from_raw(dawvert_intent.input_data): exit()
+
+		samplefolder = dawvert_intent.path_samples['extracted']
 		
 		patterndata_obj = pat_single.single_patsong(project_obj.num_channels, TEXTSTART, MAINCOLOR)
 		patterndata_obj.orders = project_obj.l_order

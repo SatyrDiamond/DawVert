@@ -323,11 +323,18 @@ def do_markers(convproj_obj, sb_markers):
 				pass
 
 class input_cvpj_f(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'soundbridge'
-	def get_name(self): return 'SoundBridge'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'soundbridge'
+	
+	def get_name(self):
+		return 'SoundBridge'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['audio_stretch'] = ['warp']
@@ -341,15 +348,16 @@ class input_cvpj_f(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['audio_nested'] = True
-	def supported_autodetect(self): return True
-	def parse(self, convproj_obj, input_file, dv_config):
+		
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_soundbridge
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
 
 		project_obj = proj_soundbridge.soundbridge_song()
-		project_obj.load_from_file(input_file+'\\project.xml')
+		if dawvert_intent.input_mode == 'file':
+			project_obj.load_from_file(dawvert_intent.input_file+'\\project.xml')
 
 		pfreq = int(project_obj.sampleRate)/2
 		convproj_obj.set_timings(pfreq, False)

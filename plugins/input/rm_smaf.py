@@ -16,11 +16,18 @@ def get_timebase(i_val):
 	
 
 class input_mmf(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mmf'
-	def get_name(self): return 'Mobile Music File'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mmf'
+	
+	def get_name(self):
+		return 'Mobile Music File'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mmf']
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
@@ -30,15 +37,11 @@ class input_mmf(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'MMMD': return True
-		else: return False
-		bytestream.seek(0)
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'MMMD'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.songinput import midi_in
 		from objects.file_proj import proj_mmf
@@ -47,9 +50,11 @@ class input_mmf(plugins.base):
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_mmf.smaf_song()
-		if not project_obj.load_from_file(input_file): exit()
 
-		samplefolder = dv_config.path_samples_extracted
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		firstma2 = False
 		#if True in [isinstance(x, proj_mmf.smaf_track_ma2) for x in project_obj.tracks2]:

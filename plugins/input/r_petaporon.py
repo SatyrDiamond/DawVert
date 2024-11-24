@@ -20,21 +20,29 @@ midi_inst = {
 }
 
 class input_petaporon(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'petaporon'
-	def get_name(self): return 'Petaporon'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'petaporon'
+	
+	def get_name(self):
+		return 'Petaporon'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['json']
 		in_dict['file_ext_detect'] = False
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
-		bytestream = open(input_file, 'r')
+		if dawvert_intent.input_mode == 'file':
+			bytestream = open(dawvert_intent.input_file, 'r')
 		
 		try:
 			petapo_data = json.load(bytestream)

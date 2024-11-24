@@ -54,18 +54,25 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 
 
 class input_serato(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'serato'
-	def get_name(self): return 'Serato Studio'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'serato'
+	
+	def get_name(self):
+		return 'Serato Studio'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['track_lanes'] = True
 		in_dict['file_ext'] = ['ssp']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['projtype'] = 'ms'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_serato
 		from objects.convproj import sample_entry
 
@@ -75,7 +82,8 @@ class input_serato(plugins.base):
 		useaudioclips = True
 
 		project_obj = proj_serato.serato_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		sample_data = {}
 

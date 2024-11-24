@@ -28,7 +28,7 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = ['flstudio']
 		in_dict['out_plugins'] = [['native', 'ableton', None]]
 		in_dict['out_daws'] = ['ableton']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity center'):
 			extpluglog.convinternal('FL Studio', 'Fruity Center', 'Ableton', 'StereoGain')

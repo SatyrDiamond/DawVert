@@ -23,7 +23,7 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['native', 'amped', None]]
 		in_dict['out_daws'] = ['amped']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		
 		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'Amped', 'EqualizerPro')

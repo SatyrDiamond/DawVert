@@ -21,7 +21,7 @@ class plugconv(plugins.base):
 		in_dict['in_plugin'] = ['universal', None, None]
 		in_dict['ext_formats'] = ['vst2', 'ladspa']
 		in_dict['plugincat'] = ['foss']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		if plugin_obj.type.check_wildmatch('universal', 'eq', '3band'):
 			if 'vst2' in extplugtype:
 				extpluglog.extpluglist.add('FOSS', 'VST2', '3 Band EQ', 'DISTRHO')
@@ -100,13 +100,13 @@ class plugconv(plugins.base):
 				plugin_obj.plugts_transform('./data_ext/plugts/univ_ext.pltr', 'vst2_autopan', convproj_obj, pluginid)
 				plugin_obj.user_to_external(convproj_obj, pluginid, 'vst2', 'any')
 				return True
-			if 'ladspa' in extplugtype:
-				extpluglog.extpluglist.add('FOSS', 'LADSPA', 'TAP AutoPanner', 'TAP')
-				extpluglog.extpluglist.success('Universal', 'AutoPan')
-				plugtransform.transform('./data_ext/plugts/univ_ext.pltr', 'ladspa_autopan', convproj_obj, plugin_obj, pluginid, dv_config)
-				plugin_obj.datavals.add('path', 'tap_autopan')
-				plugin_obj.datavals.add('plugin', 'tap_autopan')
-				return True
+			#if 'ladspa' in extplugtype:
+			#	extpluglog.extpluglist.add('FOSS', 'LADSPA', 'TAP AutoPanner', 'TAP')
+			#	extpluglog.extpluglist.success('Universal', 'AutoPan')
+			#	#plugtransform.transform('./data_ext/plugts/univ_ext.pltr', 'ladspa_autopan', convproj_obj, plugin_obj, pluginid, dawvert_intent)
+			#	plugin_obj.datavals.add('path', 'tap_autopan')
+			#	plugin_obj.datavals.add('plugin', 'tap_autopan')
+			#	return True
 
 		if plugin_obj.type.check_wildmatch('universal', 'reverb', None):
 			extpluglog.extpluglist.add('FOSS', 'VST2', 'Dragonfly Hall Reverb', '')

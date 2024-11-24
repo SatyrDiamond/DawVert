@@ -68,11 +68,11 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		#plugintype = cvpj_plugindata.type_get()
 
 		if plugin_obj.type.check_wildmatch('universal', 'synth-osc', None):
-			samplefolder = dv_config.path_samples_generated
+			samplefolder = dawvert_intent.path_samples['generated']
 
 			if len(plugin_obj.oscs) == 1 and not plugin_obj.env_blocks_get_exists('vol')[0] and not plugin_obj.env_points_get_exists('vol')[0]:
 				osc_obj = plugin_obj.oscs[0]

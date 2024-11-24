@@ -14,7 +14,7 @@ class plugconv(plugins.base):
 		in_dict['in_plugin'] = ['universal', None, None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['nonfree']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		if plugin_obj.type.check_wildmatch('universal', 'autotune', None):
 			if 'vst2' in extplugtype:
 				extpluglog.extpluglist.add('Nonfree', 'VST2', 'GSnap', 'GVST')

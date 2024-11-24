@@ -17,7 +17,7 @@ class plugconv(plugins.base):
 		in_dict['out_plugins'] = [['native', 'flstudio', None]]
 		in_dict['out_daws'] = ['flp']
 		
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'lmms', 'stereomatrix'):
 			extpluglog.convinternal('LMMS', 'Stereo Matrix', 'FL Studio', 'Fruity Stereo Shaper')
 			plugin_obj.plugts_transform('./data_main/plugts/lmms_flstudio.pltr', 'stereomatrix', convproj_obj, pluginid)

@@ -141,7 +141,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_waveform
 		global dataset
 
@@ -237,4 +237,5 @@ class output_waveform_edit(plugins.base):
 
 			wf_tracks.append(wf_track)
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

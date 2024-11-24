@@ -16,7 +16,7 @@ class plugconv(plugins.base):
 		in_dict['in_plugin'] = ['native', 'ableton', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['shareware']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 
 		if plugin_obj.type.subtype == 'GlueCompressor':
 			if 'vst2' in extplugtype:

@@ -13,7 +13,7 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = ['serato']
 		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		
 		if plugin_obj.type.check_wildmatch('native', 'serato-fx', 'Limiter.serato-effect-definition'):
 			extpluglog.convinternal('Serato Studio', 'Limiter', 'Universal', 'Limiter')

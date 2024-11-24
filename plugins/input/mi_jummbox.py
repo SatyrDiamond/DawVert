@@ -216,11 +216,18 @@ def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 		fxplugin_obj.fxdata_add(1, bb_fx.reverb/100)
 						
 class input_jummbox(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'jummbox'
-	def get_name(self): return 'Beepbox/Jummbox'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'jummbox'
+	
+	def get_name(self):
+		return 'Beepbox/Jummbox'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['json']
 		in_dict['file_ext_detect'] = False
@@ -230,8 +237,7 @@ class input_jummbox(plugins.base):
 		in_dict['plugin_included'] = ['native:jummbox','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
 		in_dict['projtype'] = 'mi'
 
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_jummbox
 
 		convproj_obj.type = 'mi'
@@ -245,7 +251,8 @@ class input_jummbox(plugins.base):
 		rawchipwaves_obj = rawchipwaves()
 		rawchipwaves_obj.load_from_file(os.path.join('data_main','text','beepbox_shapes.txt')) 
 
-		bytestream = open(input_file, 'r', encoding='utf8')
+		if dawvert_intent.input_mode == 'file':
+			bytestream = open(dawvert_intent.input_file, 'r', encoding='utf8')
 
 		try:
 			jummbox_json = json.load(bytestream)

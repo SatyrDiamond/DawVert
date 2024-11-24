@@ -157,12 +157,12 @@ class input_petaporon(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = []
 		in_dict['track_nopl'] = True
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 
 		convproj_obj.type = 'rm'
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples[extracted]):
 
 		path_bd = os.path.splitext(input_file)[0]+'.bd'
 		path_hd = os.path.splitext(input_file)[0]+'.hd'

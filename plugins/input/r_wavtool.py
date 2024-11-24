@@ -383,11 +383,18 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 			track_obj.plugslots.set_synth(inst_fallback)
 
 class input_wavtool(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'wavtool'
-	def get_name(self): return 'Wavtool'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'wavtool'
+	
+	def get_name(self):
+		return 'Wavtool'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['zip']
 		in_dict['placement_cut'] = True
@@ -401,8 +408,8 @@ class input_wavtool(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_wavtool
 
 		global zip_data
@@ -413,12 +420,13 @@ class input_wavtool(plugins.base):
 		convproj_obj.set_timings(1, True)
 
 		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
 		except zipfile.BadZipFile as t:
 			raise ProjectFileParserException('wavtool: Bad ZIP File: '+str(t))
 
 		json_filename = None
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 		for jsonname in zip_data.namelist():
 			if '.json' in jsonname: json_filename = jsonname
 		if not json_filename:

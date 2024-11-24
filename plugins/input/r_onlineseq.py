@@ -8,19 +8,26 @@ import struct
 def int2float(value): return struct.unpack("<f", struct.pack("<I", value))[0]
 
 class input_onlinesequencer(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'onlineseq'
-	def get_name(self): return 'Online Sequencer'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'onlineseq'
+	
+	def get_name(self):
+		return 'Online Sequencer'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['sequence']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_onlineseq
 		from objects.inst_params import fx_delay
 
@@ -33,7 +40,8 @@ class input_onlinesequencer(plugins.base):
 		globalstore.dataset.load('onlineseq', './data_main/dataset/onlineseq.dset')
 
 		project_obj = proj_onlineseq.onlineseq_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		used_fx = {}
 		synthdata = {}

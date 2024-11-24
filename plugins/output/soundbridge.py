@@ -391,7 +391,7 @@ class output_soundbridge(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2
 		global sb_returns
@@ -438,13 +438,13 @@ class output_soundbridge(plugins.base):
 				obj_outfilename = sampleref_obj.fileref.copy()
 				obj_outfilename.file.extension = 'wav'
 
-				filename = str(obj_filename)
-				outfilename = os.path.join(output_file, str(obj_outfilename.file))
-
-				try:
-					shutil.copyfile(filename, outfilename)
-				except:
-					pass
+				if dawvert_intent.output_mode == 'file':
+					filename = str(obj_filename)
+					outfilename = os.path.join(dawvert_intent.output_file, str(obj_outfilename.file))
+					try:
+						shutil.copyfile(filename, outfilename)
+					except:
+						pass
 
 				audio_ids[sampleref_id] = sampleref_obj.fileref.file
 
@@ -751,6 +751,7 @@ class output_soundbridge(plugins.base):
 
 		do_markers(convproj_obj.timemarkers, project_obj.timeline.markers)
 
-		outfile = os.path.join(output_file, '')
-		os.makedirs(output_file, exist_ok=True)
-		project_obj.write_to_file(os.path.join(output_file, 'project.xml'))
+		if dawvert_intent.output_mode == 'file':
+			outfile = os.path.join(dawvert_intent.output_file, '')
+			os.makedirs(dawvert_intent.output_file, exist_ok=True)
+			project_obj.write_to_file(os.path.join(dawvert_intent.output_file, 'project.xml'))

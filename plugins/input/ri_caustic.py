@@ -88,11 +88,18 @@ class mixertrack:
 	solo: bool = False
 
 class input_cvpj_r(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'caustic'
-	def get_name(self): return 'Caustic 3'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'caustic'
+	
+	def get_name(self):
+		return 'Caustic 3'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['caustic']
 		in_dict['placement_cut'] = True
@@ -104,8 +111,11 @@ class input_cvpj_r(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'ri'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'RACK'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.file_proj import proj_caustic
 		
@@ -118,9 +128,10 @@ class input_cvpj_r(plugins.base):
 		globalstore.dataset.load('caustic', './data_main/dataset/caustic.dset')
 
 		project_obj = proj_caustic.caustic_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		mixer_tracks = [mixertrack() for x in range(14)]
 

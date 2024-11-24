@@ -1140,7 +1140,7 @@ class output_ableton(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 		
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		global counter_track
 		global counter_note
 		global counter_keytrack
@@ -1265,4 +1265,5 @@ class output_ableton(plugins.base):
 		project_obj.Transport.LoopStart = convproj_obj.loop_start
 		project_obj.Transport.LoopLength = convproj_obj.loop_end-convproj_obj.loop_start
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

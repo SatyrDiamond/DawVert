@@ -15,7 +15,7 @@ class plugconv(plugins.base):
 		in_dict['in_plugin'] = ['native', 'wavtool', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 
 		if plugin_obj.type.check_match('native', 'wavtool', 'wavetable'):
 			extpluglog.extpluglist.add('FOSS', 'VST', 'Vital', '')

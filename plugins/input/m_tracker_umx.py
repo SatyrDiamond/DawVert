@@ -25,28 +25,33 @@ TRACKER_FORMATS = {
 IGNORE_ERRORS = False
 
 class input_mod(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'umx'
-	def get_name(self): return 'Unreal Package Container'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+
+	def get_shortname(self):
+		return 'umx'
+
+	def get_name(self):
+		return 'Unreal Package Container'
+
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict):
 		in_dict['file_ext'] = ['umx']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'\xc1\x83\x2a\x9e': return True
-		else: return False
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'\xc1\x83\x2a\x9e'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_umx
 		project_obj = proj_umx.umx_file()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		isdetected = None
 		if "Music" not in project_obj.nametable:

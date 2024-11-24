@@ -15,7 +15,7 @@ class plugconv(plugins.base):
 		in_dict['in_plugin'] = ['native', 'directx', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 
 		if plugin_obj.type.check_match('native', 'directx', 'Distortion'):

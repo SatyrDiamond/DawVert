@@ -33,7 +33,7 @@ class output_onlineseq(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_onlineseq
 
 		convproj_obj.change_timings(4, True)
@@ -95,4 +95,5 @@ class output_onlineseq(plugins.base):
 		create_auto(project_obj, convproj_obj, 0, 0, ['main', 'bpm'], 1)
 		create_auto(project_obj, convproj_obj, 0, 8, ['master', 'vol'], 1)
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

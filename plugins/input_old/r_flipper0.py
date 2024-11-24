@@ -14,7 +14,7 @@ class input_petaporon(plugins.base):
 		in_dict['file_ext'] = ['fmf']
 		in_dict['track_nopl'] = True
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_flipperzero
 		from functions import note_data
 

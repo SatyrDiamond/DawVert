@@ -8,19 +8,26 @@ import plugins
 from objects import globalstore
 
 class input_gt_mnbs(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mnbs'
-	def get_name(self): return 'Minecraft Note Block Studio'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mnbs'
+	
+	def get_name(self):
+		return 'Minecraft Note Block Studio'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['nbs']
 		in_dict['track_nopl'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:midi']
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_nbs
 		from objects.convproj import fileref
 
@@ -30,7 +37,8 @@ class input_gt_mnbs(plugins.base):
 		fileref.filesearcher.add_searchpath_partial('mnbs_sounds', '../Data/Sounds', 'projectfile')
 
 		project_obj = proj_nbs.nbs_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		globalstore.dataset.load('noteblockstudio', './data_main/dataset/noteblockstudio.dset')
 

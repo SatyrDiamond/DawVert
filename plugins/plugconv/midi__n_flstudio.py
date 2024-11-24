@@ -16,7 +16,7 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = ['flp']
 		in_dict['out_plugins'] = [['universal', 'midi', None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		flpluginname = plugin_obj.type.subtype.lower()
 
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'boobass'):

@@ -227,7 +227,7 @@ class cvpj_project:
 	def add_autopoints_twopoints(self, autopath, v_type, twopoints):
 		for x in twopoints: self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
-	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dv_config):
+	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		compactclass = song_compat.song_compat()
 
 		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type)
@@ -244,9 +244,9 @@ class cvpj_project:
 			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
 			convert_m2mi.convert(self)
 
-		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dv_config)
+		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dawvert_intent)
 		elif self.type == 'mi' and out_type == 'r': 
-			convert_mi2m.convert(self, dv_config)
+			convert_mi2m.convert(self, dawvert_intent)
 			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
 			convert_m2r.convert(self)
 	

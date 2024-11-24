@@ -90,7 +90,7 @@ class output_soundation(plugins.base):
 		in_dict['placement_loop'] = ['loop']
 		in_dict['projtype'] = 'r'
 
-	def parse(self, i_convproj_obj, output_file):
+	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_soundation
 
 		global convproj_obj
@@ -431,8 +431,9 @@ class output_soundation(plugins.base):
 
 		jsonwrite = soundation_obj.write()
 
-		zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
-		zip_sngz.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			#zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
+			#zip_sngz.close()
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
 
 		#with open('soundation_debug', "w") as fileout: json.dump(jsonwrite, fileout, indent=4)

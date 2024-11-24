@@ -15,26 +15,29 @@ def parse_notes(convproj_obj, trackid, notes_data, track_obj, keyoffset):
 			convproj_obj.automation.add_autotick(['track', trackid, 'pan'], 'float', pos, (pan-4)/3)
 
 class input_piyopiyo(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'piyopiyo'
-	def get_name(self): return 'PiyoPiyo'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'piyopiyo'
+	
+	def get_name(self):
+		return 'PiyoPiyo'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['pmd']
 		in_dict['plugin_included'] = ['universal:synth-osc','universal:sampler:multi']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(3)
-		if bytesdata == b'PMD': return True
-		else: return False
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'PMD'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj import proj_piyopiyo
 
@@ -42,9 +45,10 @@ class input_piyopiyo(plugins.base):
 		convproj_obj.set_timings(4, True)
 
 		project_obj = proj_piyopiyo.piyopiyo_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
-		extpath_path = os.path.join(dv_config.path_external_data, 'piyopiyo')
+		extpath_path = os.path.join(dawvert_intent.path_external_data, 'piyopiyo')
 
 		globalstore.dataset.load('piyopiyo', './data_main/dataset/piyopiyo.dset')
 		colordata = colors.colorset.from_dataset('piyopiyo', 'inst', 'main')

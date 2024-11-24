@@ -22,7 +22,7 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['native', 'soundation', None]]
 		in_dict['out_daws'] = ['soundation']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		
 		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
 		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')

@@ -97,7 +97,7 @@ class output_cvpjs(plugins.base):
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['projtype'] = 'mi'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from bs4 import BeautifulSoup
 		from functions_plugin import flp_enc_plugins
 		from objects.file_proj import proj_flp
@@ -496,4 +496,5 @@ class output_cvpjs(plugins.base):
 			else:
 				logger_output.warning('Mixer Channel "'+str(fx_num)+'" does not exist.')
 
-		flp_obj.make(output_file)
+		if dawvert_intent.output_mode == 'file':
+			flp_obj.make(dawvert_intent.output_file)

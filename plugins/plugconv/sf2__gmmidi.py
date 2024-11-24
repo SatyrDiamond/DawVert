@@ -17,17 +17,18 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['universal', 'soundfont2', None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
 		sf2_loc = None
-		if dv_config.path_soundfont: sf2_loc = dv_config.path_soundfont
+		if 'global' in dawvert_intent.paths_soundfonts:
+			sf2_loc = dawvert_intent.paths_soundfonts['global']
 
 		if sf2_loc == None: 
 			mididevice = plugin_obj.datavals.get('device', 'gm')
-			if mididevice in dv_config.paths_soundfonts:
-				if dv_config.paths_soundfonts[mididevice]:
+			if mididevice in dawvert_intent.paths_soundfonts:
+				if dawvert_intent.paths_soundfonts[mididevice]:
 					logger_plugconv.info('Using '+mididevice.upper()+' SF2.')
-					sf2_loc = dv_config.paths_soundfonts[mididevice]
+					sf2_loc = dawvert_intent.paths_soundfonts[mididevice]
 
 		if sf2_loc:
 			extpluglog.convinternal('MIDI', 'MIDI', 'SoundFont2', 'SoundFont2')

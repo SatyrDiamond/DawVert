@@ -14,7 +14,7 @@ class input_ex_basic_pitch(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'json'
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse(self, convproj_obj, dawvert_intent):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(600, False)
 		convproj_obj.params.add('bpm', 120, 'float')

@@ -127,7 +127,7 @@ class output_amped(plugins.base):
 		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_amped
 
 		global counter_id
@@ -332,4 +332,5 @@ class output_amped(plugins.base):
 		zip_amped.writestr('amped-studio-project.json', json.dumps(amped_obj.write()))
 		zip_amped.writestr('filenames.json', json.dumps(amped_filenames))
 		zip_amped.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())

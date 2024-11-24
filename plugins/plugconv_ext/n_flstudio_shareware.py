@@ -71,7 +71,7 @@ class plugconv(plugins.base):
 		in_dict['in_plugin'] = ['native', 'flstudio', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['shareware']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		flpluginname = plugin_obj.type.subtype.lower()
 
 		use_vst2 = 'vst2' in extplugtype

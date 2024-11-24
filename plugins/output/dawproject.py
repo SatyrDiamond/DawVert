@@ -495,7 +495,7 @@ class output_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_dawproject
 
 		global arrangement_obj
@@ -621,4 +621,5 @@ class output_dawproject(plugins.base):
 		dawproject_zip.writestr('metadata.xml', project_obj.save_metadata())
 		dawproject_zip.close()
 
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())

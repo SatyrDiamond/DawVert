@@ -8,32 +8,36 @@ import plugins
 import json
 
 class input_cvpj_f(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'temper'
-	def get_name(self): return 'Temper'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'temper'
+	
+	def get_name(self):
+		return 'Temper'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		output = False
-		try:
-			tree = ET.parse(input_file)
-			root = tree.getroot()
-			if root.tag == "music-sequence": output = True
-		except ET.ParseError: output = False
-		return output
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.type = 'xml'
+		detectdef_obj.headers.append(['music-sequence'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_temper
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(6716, False)
 
 		project_obj = proj_temper.temper_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		curpos = 0
 		for metaevent in project_obj.meta_track:

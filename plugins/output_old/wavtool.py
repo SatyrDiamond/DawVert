@@ -117,7 +117,7 @@ class output_wavtool(plugins.base):
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from functions_plugin_ext import plugin_vst2
 		from objects.file_proj import proj_wavtool
 

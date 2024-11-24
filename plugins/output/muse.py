@@ -189,7 +189,7 @@ class output_cvpj(plugins.base):
 		in_dict['projtype'] = 'r'
 	def getsupportedplugins(self): return []
 	def getfileextension(self): return 'med'
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_muse
 		global tracknum
 		global synthidnum
@@ -249,4 +249,5 @@ class output_cvpj(plugins.base):
 		#	timesig_point.denom = value[1]
 		#	project_obj.siglist.append(timesig_point)
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

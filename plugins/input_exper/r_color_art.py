@@ -15,7 +15,7 @@ class input_color_art(plugins.base):
 		usable = importlib.util.find_spec('PIL')
 		usable_meg = 'Pillow is not installed. do "pip install pillow"' if not usable else ''
 		return usable, usable_meg
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse(self, convproj_obj, dawvert_intent):
 		from PIL import Image
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, False)

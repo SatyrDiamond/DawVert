@@ -14,11 +14,11 @@ class plugconv(plugins.base):
 		in_dict['in_daws'] = ['jummbox']
 		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_matchmulti('native', 'jummbox', ['custom chip', 'chip', 'harmonics']):
 			extpluglog.convinternal('Beepbox', plugin_obj.type.subtype, 'LMMS', 'TripleOscillator')
 
-			samplefolder = dv_config.path_samples_generated
+			samplefolder = dawvert_intent.path_samples['generated']
 
 			os.makedirs(samplefolder, exist_ok=True)
 			wave_path = os.path.join(samplefolder, pluginid+'_wave.wav')

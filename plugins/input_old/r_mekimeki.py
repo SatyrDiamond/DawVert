@@ -29,7 +29,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['projtype'] = 'r'
 	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse(self, convproj_obj, dawvert_intent):
 		from functions import note_data
 
 		bytestream = open(input_file, 'r')
@@ -47,7 +47,7 @@ class input_cvpj_f(plugins.base):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
 
-		#if 'debug' in dv_config:
+		#if 'debug' in dawvert_intent:
 		#	with open(input_file+'_pritty', "w") as fileout: json.dump(mmc_main, fileout, indent=4, sort_keys=True)
 
 		mmc_tracks = mmc_main["Tracks"]

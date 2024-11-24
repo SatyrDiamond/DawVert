@@ -16,7 +16,7 @@ class plugconv(plugins.base):
 		in_dict['in_plugin'] = ['synth-nonfree', None, None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['shareware']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		globalstore.dataset.load('synth_nonfree', './data_ext/dataset/synth_nonfree.dset')
 
 		plugname = plugin_obj.type.subtype

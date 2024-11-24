@@ -9,33 +9,36 @@ panvals = [1, 0, -1]
 maincolor = [0.39, 0.16, 0.78]
 
 class input_sop(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'adlib_sop'
-	def get_name(self): return 'Note Sequencer'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'adlib_sop'
+	
+	def get_name(self):
+		return 'Note Sequencer'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['sop']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['chip:fm:opl2','chip:fm:opl3']
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(7)
-		if bytesdata == b'sopepos': return True
-		else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_adlib_sop
 
-		song_file = open(input_file, 'rb')
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'sopepos'])
+
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import proj_adlib_sop
 
 		convproj_obj.type = 'rm'
 		
 		project_obj = proj_adlib_sop.adlib_sop_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.set_timings(project_obj.tickBeat, False)
 		convproj_obj.metadata.name = project_obj.title

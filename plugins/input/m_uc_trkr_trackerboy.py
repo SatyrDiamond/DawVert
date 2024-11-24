@@ -38,30 +38,41 @@ def parse_fx_event(r_row, pat_obj, fx_p, fx_v):
 		pat_obj.cell_g_param(r_row, 'global_volume', global_volume)
 
 class input_trackerboy(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'trackerboy'
-	def get_name(self): return 'Trackerboy'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'trackerboy'
+	
+	def get_name(self):
+		return 'Trackerboy'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['tbm']
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'm'
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'\x00TRACKERBOY\x00'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_trackerboy
 		from objects.tracker import pat_multi
 		project_obj = proj_trackerboy.trackerboy_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.fxtype = 'rack'
 		
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		globalstore.dataset.load('trackerboy', './data_main/dataset/trackerboy.dset')
 
-		tbm_cursong = project_obj.songs[dv_config.songnum-1]
+		tbm_cursong = project_obj.songs[dawvert_intent.songnum]
 
 		if project_obj.title: convproj_obj.metadata.name = project_obj.title
 		if project_obj.artist: convproj_obj.metadata.author = project_obj.artist

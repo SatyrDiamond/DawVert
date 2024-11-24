@@ -424,19 +424,19 @@ class cvpj_plugin:
 					
 	# -------------------------------------------------- convert
 
-	def convert_internal(self, convproj_obj, pluginid, target_daw, dv_config):
+	def convert_internal(self, convproj_obj, pluginid, target_daw, dawvert_intent):
 		plugconv_int_selector = dv_plugins.create_selector('plugconv')
 		converted_val = 2
 		for shortname, dvplug_obj, prop_obj in plugconv_int_selector.iter():
 			ismatch = self.check_str_multi(prop_obj.in_plugins)
 			correctdaw = (target_daw in prop_obj.out_daws) if prop_obj.out_daws else True
 			if ismatch and correctdaw:
-				converted_val_p = dvplug_obj.convert(convproj_obj, self, pluginid, dv_config)
+				converted_val_p = dvplug_obj.convert(convproj_obj, self, pluginid, dawvert_intent)
 				if converted_val_p < converted_val: converted_val = converted_val_p
 				if converted_val == 0: break
 		return converted_val
 
-	def convert_external(self, convproj_obj, pluginid, target_extplugs, dv_config):
+	def convert_external(self, convproj_obj, pluginid, target_extplugs, dawvert_intent):
 		from functions import extpluglog
 		plugconv_ext_selector = dv_plugins.create_selector('plugconv_ext')
 		extpluglog.extpluglist.clear()
@@ -444,10 +444,10 @@ class cvpj_plugin:
 		for shortname, dvplug_obj, prop_obj in plugconv_ext_selector.iter():
 			ismatch = self.check_wildmatch(prop_obj.in_plugin[0], prop_obj.in_plugin[1], prop_obj.in_plugin[2])
 			extmatch = True in [(x in target_extplugs) for x in prop_obj.ext_formats]
-			catmatch = data_values.list__only_values(prop_obj.plugincat, dv_config.extplug_cat)
+			catmatch = data_values.list__only_values(prop_obj.plugincat, dawvert_intent.extplug_cat)
 	
 			if ismatch and extmatch and catmatch:
-				ext_conv_val = dvplug_obj.convert(convproj_obj, self, pluginid, dv_config, target_extplugs)
+				ext_conv_val = dvplug_obj.convert(convproj_obj, self, pluginid, dawvert_intent, target_extplugs)
 				if ext_conv_val: break
 		return ext_conv_val
 

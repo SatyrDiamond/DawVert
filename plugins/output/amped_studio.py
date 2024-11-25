@@ -112,11 +112,18 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 	return outdata
 
 class output_amped(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Amped Studio'
-	def get_shortname(self): return 'amped'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Amped Studio'
+	
+	def get_shortname(self):
+		return 'amped'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'amped'
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
@@ -127,6 +134,7 @@ class output_amped(plugins.base):
 		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
+		
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_amped
 

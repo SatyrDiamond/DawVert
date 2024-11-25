@@ -10,12 +10,14 @@ from functions import extpluglog
 import lxml.etree as ET
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv_ext'
+	def is_dawvert_plugin(self):
+		return 'plugconv_ext'
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugin'] = ['synth-nonfree', None, None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['shareware']
+
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		globalstore.dataset.load('synth_nonfree', './data_ext/dataset/synth_nonfree.dset')
 

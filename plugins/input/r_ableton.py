@@ -372,6 +372,11 @@ class input_ableton(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.type = 'xml'
+		detectdef_obj.headers.append(['Ableton'])
+		detectdef_obj.containers.append(['gzip'])
+
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj import proj_ableton

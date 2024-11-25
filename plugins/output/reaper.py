@@ -286,11 +286,18 @@ def do_fade(fade_data, fadevals, bpm):
 	fadevals['curve'] = 0
 
 class output_reaper(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'REAPER'
-	def get_shortname(self): return 'reaper'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'REAPER'
+	
+	def get_shortname(self):
+		return 'reaper'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'rpp'
 		in_dict['placement_cut'] = True
@@ -306,6 +313,7 @@ class output_reaper(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
 		in_dict['projtype'] = 'r'
+	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain

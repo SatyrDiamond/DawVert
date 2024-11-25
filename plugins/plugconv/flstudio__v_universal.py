@@ -36,16 +36,19 @@ def eq2q_freq(filter_obj):
 	return (math.log(max(20, filter_obj.freq)/20) / math.log(1000)) if filter_obj.freq != 0 else 0
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return 100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['native', 'flstudio', None]]
 		in_dict['out_daws'] = ['flp']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		
+
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):	
 		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'FL Studio', 'Fruity Parametric EQ 2')
 			plugin_obj.replace('native', 'flstudio', 'fruity parametric eq 2')

@@ -171,11 +171,18 @@ def add_timesig(x_siglist, pos, numerator, denominator):
 	addvalue(x_sig, 'denom', str(int(denominator)))
 
 class output_cvpj(plugins.base):
-	def __init__(self): pass
-	def get_name(self): return 'MusE'
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'muse'
-	def gettype(self): return 'r'
+	def get_name(self):
+		return 'MusE'
+	
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'muse'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'med'
 		in_dict['plugin_arch'] = [64]
@@ -187,8 +194,7 @@ class output_cvpj(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['projtype'] = 'r'
-	def getsupportedplugins(self): return []
-	def getfileextension(self): return 'med'
+	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_muse
 		global tracknum

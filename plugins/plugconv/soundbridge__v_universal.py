@@ -24,16 +24,19 @@ def eq_get(filter_obj, params_obj, starttxt):
 	params_obj.add(starttxt+'on', int(filter_obj.on), 'float')
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return 100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['native', 'soundbridge', None]]
 		in_dict['out_daws'] = ['soundbridge']
+
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		
 		if plugin_obj.type.check_match('universal', 'limiter', None):
 			extpluglog.convinternal('Universal', 'Limiter', 'SoundBridge', 'Limiter')
 

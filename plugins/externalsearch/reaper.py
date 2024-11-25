@@ -7,11 +7,18 @@ import plugins
 import configparser
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'reaper'
-	def get_name(self): return 'Reaper'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['win', 'lin']
+	def get_shortname(self):
+		return 'reaper'
+	
+	def get_name(self):
+		return 'Reaper'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict):
+		in_dict['supported_os'] = ['win', 'lin']
+	
 	def import_plugins(self):
 		if globalstore.os_platform == 'win': searchpath = os.path.join(globalstore.home_folder, "AppData", "Roaming", "REAPER")
 		else: searchpath = os.path.join(globalstore.home_folder, ".config", "REAPER")

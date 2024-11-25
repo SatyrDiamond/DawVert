@@ -123,11 +123,18 @@ def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
 			groups_data[groupid] = wf_foldertrack
 
 class output_waveform_edit(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Waveform Edit'
-	def get_shortname(self): return 'waveform_edit'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Waveform Edit'
+	
+	def get_shortname(self):
+		return 'waveform_edit'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'tracktionedit'
 		in_dict['placement_cut'] = True
@@ -141,6 +148,7 @@ class output_waveform_edit(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
+		
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_waveform
 		global dataset

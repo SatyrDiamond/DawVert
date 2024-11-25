@@ -17,22 +17,30 @@ maincolor = [0.42, 0.59, 0.24]
 scaletable = [[0,0,0,0,0,0,0], [0,0,-1,0,0,-1,-1], [0,1,1,1,0,1,0], [0,-1,-1,-1,-1,-1,-1]]
 
 class input_cvpj_f(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mekimekichip'
-	def get_name(self): return 'メキメキチップ (MekiMeki Chip) (old)'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mekimekichip'
+	
+	def get_name(self):
+		return 'メキメキチップ (MekiMeki Chip) (old)'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['json']
 		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return False
+
 	def parse(self, convproj_obj, dawvert_intent):
 		from functions import note_data
 
-		bytestream = open(input_file, 'r')
+		if dawvert_intent.input_mode == 'file':
+			bytestream = open(dawvert_intent.input_file, 'r')
 		
 		try: 
 			file_data = bytestream.read()

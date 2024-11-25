@@ -15,16 +15,19 @@ def eqpro_filterid(filter_type):
 	return band_type
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return 100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['native', 'amped', None]]
 		in_dict['out_daws'] = ['amped']
+
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		
 		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			extpluglog.convinternal('Universal', 'Filter', 'Amped', 'EqualizerPro')
 			plugin_obj.replace('native', 'amped', 'EqualizerPro')

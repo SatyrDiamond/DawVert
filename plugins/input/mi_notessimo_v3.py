@@ -215,6 +215,10 @@ class input_notessimo_v3(plugins.base):
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
 		
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.container_only = True
+		detectdef_obj.containers.append(['zip', 'sheets.xml'])
+
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_notessimo_v3
 
@@ -243,7 +247,7 @@ class input_notessimo_v3(plugins.base):
 
 		songlist = list(project_obj.songs)
 
-		notet_cursong_id = songlist[vert_intent.songnum]
+		notet_cursong_id = songlist[dawvert_intent.songnum]
 		notet_cursong_data = project_obj.songs[notet_cursong_id]
 
 		used_insts = []

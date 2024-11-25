@@ -373,11 +373,18 @@ def do_markers(timemarkers_obj, sb_markers):
 PROJECT_FREQ = 22050
 
 class output_soundbridge(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'soundbridge'
-	def get_name(self): return 'SoundBridge'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'soundbridge'
+	
+	def get_name(self):
+		return 'SoundBridge'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['audio_stretch'] = ['warp']
@@ -391,6 +398,7 @@ class output_soundbridge(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['projtype'] = 'r'
+	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2

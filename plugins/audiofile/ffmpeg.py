@@ -5,16 +5,26 @@ import plugins
 import importlib.util
 
 class input_pyav(plugins.base):
-	def is_dawvert_plugin(self): return 'audiofile'
-	def get_shortname(self): return 'ffmpeg'
-	def get_name(self): return 'FFmpeg'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
-	def get_prop(self, in_dict): in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg', 'wv']
+	def is_dawvert_plugin(self):
+		return 'audiofile'
+	
+	def get_shortname(self):
+		return 'ffmpeg'
+	
+	def get_name(self):
+		return 'FFmpeg'
+	
+	def get_priority(self):
+		return 0
+	
 	def usable(self): 
 		usable = importlib.util.find_spec('av')
 		usable_meg = '"av" package is not installed.' if not usable else ''
 		return usable, usable_meg
+		
+	def get_prop(self, in_dict): 
+		in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg', 'wv']
+
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		import av
 		valid = False

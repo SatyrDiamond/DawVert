@@ -56,14 +56,6 @@ class input_mariopaint_mss(plugins.base):
 		detectdef_obj.type = 'xml'
 		detectdef_obj.headers.append(['MarioSequencerSong'])
 
-	def detect(self, input_file):
-		output = False
-		try:
-			tree = ET.parse(input_file)
-			root = tree.getroot()
-			if root.tag == "MarioSequencerSong": output = True
-		except ET.ParseError: output = False
-		return output
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.songinput import mariopaint
 

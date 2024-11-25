@@ -78,11 +78,18 @@ DEBUG_IGNORE_PLACEMENTS = False
 DEBUG_IGNORE_PATTERNS = False
 
 class output_cvpjs(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio 20'
-	def gettype(self): return 'mi'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'flp'
+	
+	def get_name(self):
+		return 'FL Studio 20'
+	
+	def gettype(self):
+		return 'mi'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'flp'
 		in_dict['auto_types'] = ['pl_ticks']
@@ -97,6 +104,7 @@ class output_cvpjs(plugins.base):
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['projtype'] = 'mi'
+	
 	def parse(self, convproj_obj, dawvert_intent):
 		from bs4 import BeautifulSoup
 		from functions_plugin import flp_enc_plugins

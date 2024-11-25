@@ -7,16 +7,19 @@ import json
 from functions import extpluglog
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return -100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'serato-inst', 'instrument']]
 		in_dict['in_daws'] = ['serato']
 		in_dict['out_plugins'] = [['universal', 'sampler', None]]
 		in_dict['out_daws'] = []
+
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		
 		if plugin_obj.type.check_wildmatch('native', 'serato-inst', 'instrument'):
 			isfound, fileref = plugin_obj.fileref__get('instrument', convproj_obj)
 			if isfound:

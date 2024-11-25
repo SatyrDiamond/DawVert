@@ -19,11 +19,18 @@ def add_cmd(i_list, i_pos, i_cmd):
 	i_list[i_pos].append(i_cmd)
 
 class output_cvpj_f(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'MIDI'
-	def get_shortname(self): return 'midi'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'MIDI'
+	
+	def get_shortname(self):
+		return 'midi'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'mid'
 		in_dict['fxtype'] = 'rack'
@@ -32,6 +39,7 @@ class output_cvpj_f(plugins.base):
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['projtype'] = 'r'
+	
 	def parse(self, convproj_obj, dawvert_intent):
 		import mido
 

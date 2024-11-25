@@ -22,17 +22,25 @@ def create_auto(project_obj, convproj_obj, os_target, os_param, autoloc, mul):
 			project_obj.markers.append(os_marker)
 
 class output_onlineseq(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'onlineseq'
-	def get_name(self): return 'Online Sequencer'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'onlineseq'
+	
+	def get_name(self):
+		return 'Online Sequencer'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'sequence'
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
 		in_dict['projtype'] = 'r'
+	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_onlineseq
 

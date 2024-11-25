@@ -14,16 +14,19 @@ def oldcalc_filterfreq_1(value):
 	return filter_cutoff
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flp']
 		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity 7 band eq'):
 			extpluglog.convinternal('FL Studio', 'Fruity 7 Band Equalizer', 'Universal', 'EQ Bands')
 

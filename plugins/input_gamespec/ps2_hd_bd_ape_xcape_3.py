@@ -57,7 +57,9 @@ class apeescape:
 
 	def load_from_file(self, input_file):
 		byr_stream = bytereader.bytereader()
-		byr_stream.load_file(input_file)
+
+		if dawvert_intent.input_mode == 'file':
+			byr_stream.load_file(dawvert_intent.input_file)
 
 		hd_size = byr_stream.uint32()
 		bd_size = byr_stream.uint32()
@@ -149,20 +151,28 @@ class reader_midifile_class():
 			elif type(msg) == MidiEvents.EndOfTrackEvent:    break
 
 class input_petaporon(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'ps2_hd_bd_ape_xcape_3'
-	def get_name(self): return 'Ape Escape 3'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'ps2_hd_bd_ape_xcape_3'
+	
+	def get_name(self):
+		return 'Ape Escape 3'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = []
 		in_dict['track_nopl'] = True
+
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 
 		convproj_obj.type = 'rm'
 
-		samplefolder = dawvert_intent.path_samples[extracted]):
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		path_bd = os.path.splitext(input_file)[0]+'.bd'
 		path_hd = os.path.splitext(input_file)[0]+'.hd'

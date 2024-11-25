@@ -477,11 +477,18 @@ def maketrack_master(convproj_obj, track_obj, arrangement):
 
 
 class output_dawproject(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'dawproject'
-	def get_name(self): return 'DawProject'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'dawproject'
+	
+	def get_name(self):
+		return 'DawProject'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'dawproject'
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv','loop_adv_off']
@@ -495,6 +502,7 @@ class output_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
+	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_dawproject
 

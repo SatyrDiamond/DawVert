@@ -3,17 +3,24 @@
 
 import os
 import plugins
+from objects import globalstore
 from os.path import exists
 from pathlib import Path
 import xml.etree.ElementTree as ET
-from objects import globalstore
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'ardour'
-	def get_name(self): return 'Ardour'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['win', 'lin']
+	def get_shortname(self):
+		return 'ardour'
+	
+	def get_name(self):
+		return 'Ardour'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict):
+		in_dict['supported_os'] = ['win', 'lin']
+
 	def import_plugins(self):
 		searchpath = None
 		if globalstore.os_platform == 'win': searchpath = os.path.join(globalstore.home_folder, "AppData", "Local", "Ardour8", "cache", "vst")

@@ -108,6 +108,7 @@ class dawvert_intent:
 		self.output_file = ''
 		self.output_mode = 'file'
 		self.output_params = {}
+		self.output_samples = ''
 
 		self.plugin_set = True
 		self.plugin_input = None
@@ -119,8 +120,8 @@ class dawvert_intent:
 		self.path_soundfonts = {}
 		self.path_external_data = ''
 
-		self.splitter_mode = {}
-		self.splitter_detect_start = {}
+		self.splitter_mode = 0
+		self.splitter_detect_start = False
 
 		self.flags_compat = []
 		self.flag_overwrite = False

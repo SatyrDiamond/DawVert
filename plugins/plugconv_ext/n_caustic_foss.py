@@ -8,12 +8,14 @@ from functions import extpluglog
 from functions_plugin_ext import plugin_vst2
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv_ext'
+	def is_dawvert_plugin(self):
+		return 'plugconv_ext'
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugin'] = ['native', 'caustic', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
+
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 
 		if plugin_obj.type.subtype == 'ORGN':

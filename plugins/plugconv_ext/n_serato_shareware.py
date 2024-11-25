@@ -7,17 +7,16 @@ import math
 from functions_plugin_ext import plugin_vst2
 from functions_plugin_ext_nonfree import params_nf_serato_sampler
 
-loaded_plugtransform = False
-
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv_ext'
+	def is_dawvert_plugin(self):
+		return 'plugconv_ext'
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugin'] = ['native', 'serato-inst', 'sampler']
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['shareware']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		if 'vst2' in extplugtype:
 			extpluglog.extpluglist.add('Shareware', 'VST2', 'Serato Sample', 'Serato')
 			if plugin_vst2.check_exists('id', 1399681132):

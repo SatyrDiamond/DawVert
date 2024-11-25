@@ -14,13 +14,19 @@ def muse_getvalue(fallback, xmldata, name):
 		else: return outval[0].text
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'wavtool'
-	def get_name(self): return 'Wavtool'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['win']
-	def import_plugins(self):
+	def get_shortname(self):
+		return 'wavtool'
+	
+	def get_name(self):
+		return 'Wavtool'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict): 
+		in_dict['supported_os'] = ['win']
 
+	def import_plugins(self):
 		path_wavtool = os.path.join(globalstore.home_folder, "AppData", "Roaming", "WavTool Bridge", 'WavTool Bridge.settings')
 		vst2count = 0
 

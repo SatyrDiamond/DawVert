@@ -326,11 +326,18 @@ def asdrlfo_set(plugin_obj, eldata):
 	asdrlfo(plugin_obj, eldata.elres, 'reso')
 
 class output_lmms(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'LMMS'
-	def get_shortname(self): return 'lmms'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'LMMS'
+	
+	def get_shortname(self):
+		return 'lmms'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'mmp'
 		in_dict['fxtype'] = 'rack'

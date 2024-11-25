@@ -21,9 +21,12 @@ def fl_to_freq(value):
 	return int((preval**2)*32768)
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return -100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'ableton', None]]
 		in_dict['in_daws'] = ['ableton']
@@ -31,7 +34,6 @@ class plugconv(plugins.base):
 		in_dict['out_daws'] = ['flp']
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Vocoder'):
 			extpluglog.convinternal('Ableton', 'Vocoder', 'FL Studio', 'Fruity Vocoder')
 			als_BandCount = als_voc_bandnums[int(plugin_obj.datavals.get('FilterBank/BandCount', 4))]

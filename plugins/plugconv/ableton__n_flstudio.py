@@ -20,16 +20,19 @@ def als_calc_pitch(infreq):
 	return Coarse, Fine
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return -100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flstudio']
 		in_dict['out_plugins'] = [['native', 'ableton', None]]
 		in_dict['out_daws'] = ['ableton']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity center'):
 			extpluglog.convinternal('FL Studio', 'Fruity Center', 'Ableton', 'StereoGain')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)

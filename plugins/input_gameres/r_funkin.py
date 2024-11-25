@@ -7,19 +7,26 @@ import logging
 logger_input = logging.getLogger('input')
 
 class input_ex_basic_pitch(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'funkin'
-	def get_name(self): return 'Friday Night Funkin'
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'funkin'
+	
+	def get_name(self):
+		return 'Friday Night Funkin'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'json'
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+
 	def parse(self, convproj_obj, dawvert_intent):
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(600, False)
 		convproj_obj.params.add('bpm', 120, 'float')
 
-		bytestream = open(input_file, 'r', encoding='utf8')
+		if dawvert_intent.input_mode == 'file':
+			bytestream = open(dawvert_intent.input_file, 'r', encoding='utf8')
 
 		try:
 			funkin_json = json.load(bytestream)

@@ -5,16 +5,19 @@ import plugins
 from functions import extpluglog
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return -100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native','soundation', None]]
 		in_dict['in_daws'] = ['soundation']
 		in_dict['out_plugins'] = [['native',' ableton', None]]
 		in_dict['out_daws'] = ['ableton']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.check_wildmatch('native', 'soundation', 'com.soundation.va_synth'):
 			extpluglog.convinternal('Soundation', 'VA Synth', 'Ableton', 'UltraAnalog')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)

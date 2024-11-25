@@ -1121,11 +1121,18 @@ def do_tracks(convproj_obj, project_obj, current_grouptab, track_group, groups_u
 		#print(debugtxt.ljust(20), tracktype, tid)
 
 class output_ableton(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Ableton Live 11'
-	def get_shortname(self): return 'ableton'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Ableton Live 11'
+	
+	def get_shortname(self):
+		return 'ableton'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'als'
 		in_dict['placement_cut'] = True

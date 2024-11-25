@@ -6,14 +6,18 @@ import plugins
 from functions import extpluglog
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return -100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'jummbox', None]]
 		in_dict['in_daws'] = ['jummbox']
 		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
+	
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_matchmulti('native', 'jummbox', ['custom chip', 'chip', 'harmonics']):
 			extpluglog.convinternal('Beepbox', plugin_obj.type.subtype, 'LMMS', 'TripleOscillator')

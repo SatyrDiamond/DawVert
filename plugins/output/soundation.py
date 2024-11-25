@@ -75,11 +75,18 @@ def addsample(zip_sngz, filepath, alredyexists):
 	return zipfilename
 
 class output_soundation(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Soundation'
-	def get_shortname(self): return 'soundation'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Soundation'
+	
+	def get_shortname(self):
+		return 'soundation'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'sngz'
 		in_dict['placement_cut'] = True

@@ -7,13 +7,11 @@ from functions import plug_conv
 from objects import core as dv_core
 from objects import globalstore
 from objects.exceptions import ProjectFileParserException
-
+from pathlib import Path
 from plugins import base as dv_plugins
 
-from pathlib import Path
 from PyQt6 import QtWidgets, uic, QtCore, QtGui
 from PyQt6.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QFileDialog
-from threading import Thread
 
 import logging
 import os
@@ -38,9 +36,9 @@ dragdroploctexts = ['Beside Original', 'In "output" folder', 'Always out.*']
 globalstore.extplug.load()
 
 dawvert_intent = dv_core.dawvert_intent()
+dawvert_intent.config_load('./__config/config.ini')
 
 dawvert_core = dv_core.core()
-dawvert_core.config.load('./__config/config.ini')
 
 dawvert_config__main = {}
 dawvert_config__main['songnum'] = dawvert_intent.songnum

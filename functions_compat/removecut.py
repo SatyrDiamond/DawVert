@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-def process(convproj_obj, in__placement_cut, out__placement_cut, out_type):
+def process(convproj_obj, in__placement_cut, out__placement_cut, out_type, dawvert_intent):
 
 	if in__placement_cut == True and out__placement_cut == False:
 		if convproj_obj.type == 'm':

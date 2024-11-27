@@ -61,6 +61,10 @@ class input_soundation(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
 
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'FLhd'])
+		detectdef_obj.containers.append(['zip', '*.sng'])
+
 	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj import proj_soundation

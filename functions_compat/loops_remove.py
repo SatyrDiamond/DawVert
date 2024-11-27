@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-def process(convproj_obj, in__placement_loop, out__placement_loop, out_type):
+def process(convproj_obj, in__placement_loop, out__placement_loop, out_type, dawvert_intent):
 	remainingplloop = [e for e in in__placement_loop if e not in out__placement_loop]
 	if (in__placement_loop != [] and remainingplloop != []):
 

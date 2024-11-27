@@ -270,10 +270,6 @@ class input_waveform_edit(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.type = 'xml'
-		detectdef_obj.headers.append(['EDIT'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_waveform
 		global cvpj_l

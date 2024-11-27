@@ -118,10 +118,11 @@ class input_it(plugins.base):
 		while -2 in table_orders: table_orders.remove(-2)
 		while -1 in table_orders: table_orders.remove(-1)
 		
-		if xmodits_exists == True and input_file:
-			if not os.path.exists(samplefolder): os.makedirs(samplefolder)
-			try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
-			except: pass
+		if dawvert_intent.input_mode == 'file':
+			if xmodits_exists == True and dawvert_intent.input_file:
+				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
+				try: xmodits.dump(dawvert_intent.input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
+				except: pass
 
 		patterndata_obj = pat_single.single_patsong(64, TEXTSTART, MAINCOLOR)
 		patterndata_obj.orders = table_orders

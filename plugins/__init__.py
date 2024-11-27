@@ -328,17 +328,20 @@ class plugin_selector:
 			outname = None
 
 			for shortname, detectdef_obj in outd:
-				detectf = detectdef_obj.detect_container__file(inpath)
-				if detectf: outname = shortname
-				elif not detectdef_obj.container_only:
-					ddd = detectdef_obj.detect_headers__file(inpath)
-					if ddd: 
-						outname = shortname
+				try:
+					detectf = detectdef_obj.detect_container__file(inpath)
+					if detectf: outname = shortname
+					elif not detectdef_obj.container_only:
+						ddd = detectdef_obj.detect_headers__file(inpath)
+						if ddd: 
+							outname = shortname
+				except:
+					pass
 
 			if outname:
 				self.selected_shortname = outname
 				self.selected_plugin = self.pluginlist[self.plugintype][outname]
-				logger_plugins.info('Auto-Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
+				logger_plugins.info('Auto-Set '+self.plugintype+' plugin from data: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
 				return outname
 
 	def get_prop_obj(self):

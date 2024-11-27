@@ -103,7 +103,7 @@ def process_m(convproj_obj):
 		return True
 	else: return False
 
-def process(convproj_obj, in_compat, out_compat, out_type):
+def process(convproj_obj, in_compat, out_compat, out_type, dawvert_intent):
 	if in_compat == False and out_compat == True:
 		if convproj_obj.type in ['r', 'ri', 'rm']: return process_r(convproj_obj)
 		elif convproj_obj.type in ['m', 'mi']: return process_m(convproj_obj)

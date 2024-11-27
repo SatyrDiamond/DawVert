@@ -230,7 +230,7 @@ class cvpj_project:
 	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		compactclass = song_compat.song_compat()
 
-		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type)
+		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
 		if self.type == 'ri' and out_type == 'mi': convert_ri2mi.convert(self)
 		elif self.type == 'ri' and out_type == 'r': convert_ri2r.convert(self)
@@ -241,39 +241,39 @@ class cvpj_project:
 		elif self.type == 'r' and out_type == 'm': convert_r2m.convert(self)
 		elif self.type == 'r' and out_type == 'mi': 
 			convert_r2m.convert(self)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dawvert_intent)
 		elif self.type == 'mi' and out_type == 'r': 
 			convert_mi2m.convert(self, dawvert_intent)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2r.convert(self)
 	
 		elif self.type == 'rm' and out_type == 'r': convert_rm2r.convert(self)
 		elif self.type == 'rm' and out_type == 'm': convert_rm2m.convert(self, True)
 		elif self.type == 'rm' and out_type == 'mi': 
 			convert_rm2m.convert(self, True)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'rs' and out_type == 'mi': 
 			convert_rs2r.convert(self)
 			convert_r2m.convert(self)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'rs' and out_type == 'r': convert_rs2r.convert(self)
 
 		elif self.type == 'ms' and out_type == 'mi': 
 			convert_ms2rm.convert(self, out_dawinfo)
-			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2m.convert(self, True)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'ms' and out_type == 'r': 
 			convert_ms2rm.convert(self, out_dawinfo)
-			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2r.convert(self)
 
 		elif self.type == out_type: 
@@ -283,7 +283,7 @@ class cvpj_project:
 			logger_project.error(typelist[in_type]+' to '+typelist[out_type]+' is not supported.')
 			exit()
 
-		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type)
+		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
 # --------------------------------------------------------- GROUPS ---------------------------------------------------------
 

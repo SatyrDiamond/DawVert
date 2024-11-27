@@ -115,10 +115,11 @@ class input_xm(plugins.base):
 			for fxnum, plugdata in project_obj.plugins.items():
 				plugdata.to_cvpj(fxnum, convproj_obj)
 
-		if xmodits_exists == True:
-			if not os.path.exists(samplefolder): os.makedirs(samplefolder)
-			try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
-			except: pass
+		if dawvert_intent.input_mode == 'file':
+			if xmodits_exists == True:
+				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
+				try: xmodits.dump(dawvert_intent.input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
+				except: pass
 
 		xm_cursamplenum = 1
 

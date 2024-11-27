@@ -368,7 +368,8 @@ class input_cvpj_f(plugins.base):
 		for audiosource in project_obj.pool.audioSources:
 			filename = audiosource.fileName
 			ofilename = filename
-			if input_file.endswith('.soundbridge'): ofilename = os.path.join(input_file, filename)
+			if dawvert_intent.input_file.endswith('.soundbridge'): 
+				ofilename = os.path.join(dawvert_intent.input_file, filename)
 			sampleref_obj = convproj_obj.sampleref__add(filename, ofilename, None)
 
 		master_track = project_obj.masterTrack

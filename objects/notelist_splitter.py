@@ -4,7 +4,6 @@
 from objects import regions
 import numpy as np
 from functions import xtramath
-from objects import core
 
 class timesigblocks:
 	def __init__(self):
@@ -12,11 +11,11 @@ class timesigblocks:
 		self.splitts = []
 		self.timesigposs = []
 
-	def create_points_cut(self, convproj_obj):
+	def create_points_cut(self, convproj_obj, dawvert_intent):
 		self.timesigposs = []
 
-		mode = core.config_data.splitter_mode
-		detect_start = core.config_data.splitter_mode
+		mode = dawvert_intent.splitter_mode if dawvert_intent else 0
+		detect_start = dawvert_intent.splitter_detect_start if dawvert_intent else False
 
 		ppq = convproj_obj.time_ppq
 		songduration = convproj_obj.get_dur()+ppq

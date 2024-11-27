@@ -42,7 +42,6 @@ parser.add_argument("-pq", action='store_true')
 args = parser.parse_args()
 
 dawvert_core = core.core()
-dawvert_core.config.load('./__config/config.ini')
 if args.pq == True: dawvert_core.logger_only_plugconv()
 if args.q == True: logging.disable(logging.INFO)
 
@@ -58,6 +57,7 @@ if not args.o:
 	exit()
 
 dawvert_intent = core.dawvert_intent()
+dawvert_intent.config_load('./__config/config.ini')
 dawvert_intent.plugin_set = True
 dawvert_intent.input_file = args.i
 dawvert_intent.output_file = args.o
@@ -96,10 +96,10 @@ filesearcher.add_basepath('dawvert', scriptfiledir)
 filesearcher.add_searchpath_partial('projectfile', '.', 'projectfile')
 filesearcher.add_searchpath_full_append('projectfile', os.path.dirname(dawvert_intent.input_file), None)
 
-filesearcher.add_searchpath_full_filereplace('extracted', dawvert_core.config.path_samples_extracted, None)
-filesearcher.add_searchpath_full_filereplace('downloaded', dawvert_core.config.path_samples_downloaded, None)
-filesearcher.add_searchpath_full_filereplace('generated', dawvert_core.config.path_samples_generated, None)
-filesearcher.add_searchpath_full_filereplace('converted', dawvert_core.config.path_samples_converted, None)
+filesearcher.add_searchpath_full_filereplace('extracted', dawvert_intent.path_samples['extracted'], None)
+filesearcher.add_searchpath_full_filereplace('downloaded', dawvert_intent.path_samples['downloaded'], None)
+filesearcher.add_searchpath_full_filereplace('generated', dawvert_intent.path_samples['generated'], None)
+filesearcher.add_searchpath_full_filereplace('converted', dawvert_intent.path_samples['converted'], None)
 filesearcher.add_searchpath_full_filereplace('external_data', os.path.join(scriptfiledir, '__external_data'), None)
 
 if os.path.isfile(dawvert_intent.output_file) and not dawvert_intent.flag_overwrite:

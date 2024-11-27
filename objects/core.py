@@ -129,6 +129,8 @@ class dawvert_intent:
 		self.extplug_cat = []
 		self.songnum = 0
 
+		self.custom_config = {}
+
 		self.set_defualt_path()
 
 	def set_defualt_path(self):
@@ -151,44 +153,12 @@ class dawvert_intent:
 		os.makedirs(self.path_samples['generated'], exist_ok=True)
 		os.makedirs(self.path_samples['converted'], exist_ok=True)
 
-class config_data:
-	path_samples_extracted = os.getcwd() + '/__samples_extracted/'
-	path_samples_downloaded = os.getcwd() + '/__samples_downloaded/'
-	path_samples_generated = os.getcwd() + '/__samples_generated/'
-	path_samples_converted = os.getcwd() + '/__samples_converted/'
-	path_external_data = os.getcwd() + '/_external_data/'
-	path_extrafile = None
-	path_soundfont = None
-	paths_soundfonts = {}
-	allow_download = True
-	songnum = 1
-	extplug_cat = []
-	flags_convproj = []
-	flags_core = []
-	splitter_mode = 0
-	splitter_detect_start = False
-	searchpaths = []
-
-	def set_defualt_path(self):
-		config_data.path_samples_extracted = os.getcwd() + '/__samples_extracted/'
-		config_data.path_samples_downloaded = os.getcwd() + '/__samples_downloaded/'
-		config_data.path_samples_generated = os.getcwd() + '/__samples_generated/'
-		config_data.path_samples_converted = os.getcwd() + '/__samples_converted/'
-
-	def set_projname_path(self, file_name):
-		self.set_defualt_path()
-		config_data.path_samples_extracted += file_name + '/'
-		config_data.path_samples_downloaded += file_name + '/'
-		config_data.path_samples_generated += file_name + '/'
-		config_data.path_samples_converted += file_name + '/'
-
-	def load(self, filepath):
-		global paths_soundfonts
+	def config_load(self, filepath):
 		config = configparser.ConfigParser()
 		if os.path.exists(filepath):
 			config.read_file(open(filepath))
 			for devtype in ['gm', 'xg', 'gs', 'mt32', 'mariopaint']:
-				try: self.paths_soundfonts[devtype] = config.get('soundfont2', devtype)
+				try: self.path_soundfonts[devtype] = config.get('soundfont2', devtype)
 				except: pass
 			for plugcat in ['foss', 'nonfree', 'shareware', 'old']:
 				try:
@@ -242,8 +212,6 @@ class core:
 		platform_architecture = platform.architecture()
 		if platform_architecture[1] == 'WindowsPE': self.platform_id = 'win'
 		else: self.platform_id = 'lin'
-
-		self.config = config_data()
 
 		self.currentplug_input = dv_plugins.create_selector('input')
 		self.currentplug_output = dv_plugins.create_selector('output')

@@ -194,7 +194,7 @@ class dawinfo:
 pluginsets_input = {
 'main': ['', 'Main'],
 'exper': ['exper', 'Experiments'],
-'ai': ['ai', 'AI'],
+'nn': ['nn', 'NeuralNet'],
 'vgm': ['vgm', 'VGM'],
 'gameres': ['gameres', 'Game Mod'],
 'gamespec': ['gamespec', 'Game Specific'],

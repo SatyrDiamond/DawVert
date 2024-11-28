@@ -68,12 +68,35 @@ class input_mmf(plugins.base):
 			#			track_obj = song_obj.create_track(len(track.sequence))
 			#			firstma2 = True
 			#		
+			#			track_obj.track_name = 'MA2 #'+str(grpnum)
+#
 			#		curpos = 0
 			#		for msg in track.sequence:
-			#			curpos += msg.deltaTime
-			#			if isinstance(msg, proj_mmf.ma2_event_note):
-			#				track_obj.note_dur(curpos, msg.channel+(grpnum*4), msg.note_key+36+(msg.note_oct*12), 100, msg.duration)
-
+			#			curpos += msg.resttime
+#
+			#			channel = msg.channel+(grpnum*4)
+#
+			#			if msg.event_type == 'note':
+			#				track_obj.note_dur(curpos, channel, msg.note_key+36+(msg.note_oct*12), 100, msg.duration)
+#
+			#			elif msg.event_type == 'program':
+			#				track_obj.program_change(curpos, channel, msg.value)
+#
+			#			elif msg.event_type == 'bank':
+			#				track_obj.control_change(curpos, channel, 0, msg.value)
+#
+			#			elif msg.event_type == 'volume':
+			#				track_obj.control_change(curpos, channel, 7, msg.value)
+#
+			#			elif msg.event_type == 'pan':
+			#				track_obj.control_change(curpos, channel, 10, msg.value)
+#
+			#			elif msg.event_type == 'expression':
+			#				track_obj.control_change(curpos, channel, 11, msg.value)
+#
+			#			else:
+			#				print(msg.event_type)
+#
 			#song_obj.postprocess()
 			#song_obj.to_cvpj(convproj_obj)
 

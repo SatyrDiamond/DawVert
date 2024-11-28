@@ -35,7 +35,7 @@ class input_cvpj_f(plugins.base):
 		from objects.file_proj import proj_piximod
 
 		convproj_obj.type = 'rs'
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4, True) 
 
 		globalstore.dataset.load('pixitracker', './data_main/dataset/pixitracker.dset')
 		colordata = colors.colorset.from_dataset('pixitracker', 'inst', 'main')
@@ -77,6 +77,8 @@ class input_cvpj_f(plugins.base):
 				samplepart_obj.end = pixi_sound.end
 				samplepart_obj.length = len(pixi_sound.data)//pixi_sound.channels
 
+		swing = project_obj.shuffle/100
+
 		for pat_num, pat_data_r in project_obj.patterns.items():
 			sceneid = str(pat_num)
 			convproj_obj.scene__add(sceneid)
@@ -111,7 +113,15 @@ class input_cvpj_f(plugins.base):
 					placement_obj.time.set_posdur(0, pat_data_r.length)
 
 					for nnn in instnote:
-						if nnn[2]: placement_obj.notelist.add_r(nnn[4], nnn[5], nnn[0]-78, nnn[2]/100, {})
+						pos = nnn[4]
+						dur = nnn[5]
+						if pos%2:
+							pos += swing
+							dur -= swing
+						else:
+							dur += swing
+
+						if nnn[2]: placement_obj.notelist.add_r(pos, dur, nnn[0]-78, nnn[2]/100, {})
 
 		curpos = 0
 		for pat_num in project_obj.order:

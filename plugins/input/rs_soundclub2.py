@@ -101,6 +101,9 @@ class input_soundclub2(plugins.base):
 			repeatnotes = {}
 
 			for patvoice_obj in sn2_pat_obj.voices:
+
+				panpoints = {}
+
 				if patvoice_obj.instid not in repeatnotes: repeatnotes[patvoice_obj.instid] = 1
 				else: repeatnotes[patvoice_obj.instid] += 1
 				laneid = str(repeatnotes[patvoice_obj.instid])
@@ -131,7 +134,10 @@ class input_soundclub2(plugins.base):
 							for s_pos, s_len, s_key in scnote_obj.porta: placement_obj.notelist.last_add_slide(s_pos, s_len, s_key-36, n_curvol, None)
 
 					elif event.type == 20: n_curvol = event.value/31
-					elif event.type == 21: n_curpan = (event.value-15)/-15
+					elif event.type == 21: 
+						n_curpan = (event.value-15)/-15
+						panpoints[curpos] = n_curpan
+
 					elif event.type == 54: 
 						t_active_notes[event.p_key] = t_active_notes[event.value]
 						t_active_notes[event.p_key].porta.append([curpos-t_active_notes[event.value].start, event.p_len, event.p_key])
@@ -144,6 +150,13 @@ class input_soundclub2(plugins.base):
 				placement_obj.visual.name = sn2_pat_obj.name
 
 				placement_obj.time.set_block_dur(curpos, 32)
+
+				if panpoints:
+					autopoints_obj = placement_obj.add_autopoints('pan')
+					for p, v in panpoints.items():
+						autopoint_obj = autopoints_obj.add_point()
+						autopoint_obj.pos = p
+						autopoint_obj.value = v
 
 			scenedurs.append(scenedur)
 
@@ -165,6 +178,7 @@ class input_soundclub2(plugins.base):
 				autopoint_obj = autopl_obj.data.add_point()
 				autopoint_obj.pos = pat_tempo[0]
 				autopoint_obj.value = decode_tempopl(pat_tempo[1], globaltempo)
+				autopoint_obj.type = 'instant'
 
 			curpos += size
 

@@ -877,6 +877,7 @@ class input_flp(plugins.base):
 		if flp_obj.genre: convproj_obj.metadata.genre = flp_obj.genre
 		if flp_obj.url: convproj_obj.metadata.url = flp_obj.url
 		if flp_obj.comment: convproj_obj.metadata.comment_text = flp_obj.comment
+		convproj_obj.metadata.show = flp_obj.showinfo
 
 		if dawvert_intent.input_mode == 'file':
 			convproj_obj.sampleref__searchmissing(dawvert_intent.input_file)

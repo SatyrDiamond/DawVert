@@ -135,8 +135,11 @@ class output_cvpjs(plugins.base):
 			flp_obj.comment = convproj_obj.metadata.comment_text
 		flp_obj.comment = flp_obj.comment.replace("\r\n", "\r").replace("\n", "\r")
 
-		if flp_obj.title or flp_obj.author or flp_obj.url or flp_obj.genre or flp_obj.comment:
-			flp_obj.showinfo = 1
+		if convproj_obj.metadata.show == -1:
+			if flp_obj.title or flp_obj.author or flp_obj.url or flp_obj.genre or flp_obj.comment:
+				flp_obj.showinfo = 1
+		else:
+			flp_obj.showinfo = convproj_obj.metadata.show
 
 		flp_obj.tempo = convproj_obj.params.get('bpm',120).value
 

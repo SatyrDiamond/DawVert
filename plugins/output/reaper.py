@@ -340,6 +340,20 @@ class output_reaper(plugins.base):
 		rpp_project.tempo['num'] = convproj_obj.timesig[0]
 		rpp_project.tempo['denom'] = convproj_obj.timesig[1]
 
+		if convproj_obj.metadata.name:
+			rpp_project.title.set(convproj_obj.metadata.name)
+		if convproj_obj.metadata.author:
+			rpp_project.author.set(convproj_obj.metadata.author)
+		for t in convproj_obj.metadata.comment_text.replace("\r\n", "\r").replace("\n", "\r").split('\r'):
+			rpp_project.notes_data.append(t)
+		if convproj_obj.metadata.show == 1:
+			rpp_project.notes_vals.read([3,3])
+
+		rpp_project.loop.set(int(convproj_obj.transport.loop_active))
+		rpp_project.selection['start'] = convproj_obj.transport.loop_start
+		rpp_project.selection['end'] = convproj_obj.transport.loop_end
+		rpp_project.cursor.set(convproj_obj.transport.current_pos)
+
 		track_uuids = ['{'+str(uuid.uuid4())+'}' for _ in convproj_obj.track__iter()]
 
 		for num, timemarker_obj in enumerate(convproj_obj.timemarkers):

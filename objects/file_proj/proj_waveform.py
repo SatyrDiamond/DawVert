@@ -29,7 +29,7 @@ class waveform_transport:
 		if position != None: self.position = float(position)
 		if scrubInterval != None: self.scrubInterval = float(scrubInterval)
 		if start != None: self.start = float(start)
-		if looping != None: self.looping = int(start)
+		if looping != None: self.looping = float(start)
 		if loopPoint1 != None: self.loopPoint1 = float(loopPoint1)
 		if loopPoint2 != None: self.loopPoint2 = float(loopPoint2)
 

@@ -242,7 +242,6 @@ def do_tracks(convproj_obj, in_tracks, counter_track, groupid):
 		if isinstance(wf_track, proj_waveform.waveform_foldertrack):
 			do_foldertrack(convproj_obj, wf_track, counter_track)
 
-
 class input_waveform_edit(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -299,6 +298,16 @@ class input_waveform_edit(plugins.base):
 		for wf_plugin in project_obj.masterplugins:
 			do_plugin(convproj_obj, wf_plugin, convproj_obj.track_master)
 
+		transport_obj = project_obj.transport
+
+		convproj_obj.transport.loop_active = bool(transport_obj.looping)
+		convproj_obj.transport.loop_start = max(0, transport_obj.loopPoint1)
+		convproj_obj.transport.loop_end = max(0, transport_obj.loopPoint2)
+		convproj_obj.transport.start_pos = max(0, transport_obj.start)
+		convproj_obj.transport.current_pos = transport_obj.position
+		convproj_obj.transport.is_seconds = True
+		convproj_obj.timemarkers.is_seconds = True
+		
 		tracknum = 0
 		counter_track = counter.counter(1000, '')
 

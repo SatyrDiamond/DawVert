@@ -68,6 +68,7 @@ class input_mariopaint_smp(plugins.base):
 						mp_note = mp_chord.add_note()
 
 						notesplit = s.split(' ')
+
 						mp_note.inst = smpnames[notesplit[0]]
 						notetxt = notesplit[1]
 						smpnote_size = len(notetxt)

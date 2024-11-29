@@ -156,9 +156,9 @@ class output_amped(plugins.base):
 		amped_obj = proj_amped.amped_project(None)
 		amped_obj.tempo = int(convproj_obj.params.get('bpm', 120).value)
 		amped_obj.timesig_num, amped_obj.timesig_den = convproj_obj.timesig
-		amped_obj.loop_active = convproj_obj.loop_active
-		amped_obj.loop_start = convproj_obj.loop_start
-		amped_obj.loop_end = convproj_obj.loop_end
+		amped_obj.loop_active = convproj_obj.transport.loop_active
+		amped_obj.loop_start = convproj_obj.transport.loop_start
+		amped_obj.loop_end = convproj_obj.transport.loop_end
 
 		amped_obj.createdWith = "DawVert"
 		amped_obj.settings = {"deviceDelayCompensation": True}

@@ -1180,6 +1180,13 @@ class output_ableton(plugins.base):
 
 		project_obj.add_settempotimeig(bpm, get_timesig(convproj_obj.timesig))
 
+		transport_obj = project_obj.Transport
+
+		transport_obj.LoopOn = int(convproj_obj.transport.loop_active)
+		transport_obj.LoopStart = convproj_obj.transport.loop_start
+		transport_obj.LoopLength = convproj_obj.transport.loop_end
+		transport_obj.CurrentTime = convproj_obj.transport.current_pos
+
 		als_mastertrack = project_obj.MasterTrack
 		als_mastermixer = als_mastertrack.DeviceChain.Mixer
 		als_masterauto = als_mastertrack.AutomationEnvelopes
@@ -1267,10 +1274,6 @@ class output_ableton(plugins.base):
 		for num, alsdata in enumerate(convproj_obj.track_master.iter_return()):
 			returnid, return_obj = alsdata
 			project_obj.SendsPre[num] = False
-
-		project_obj.Transport.LoopOn = convproj_obj.loop_active
-		project_obj.Transport.LoopStart = convproj_obj.loop_start
-		project_obj.Transport.LoopLength = convproj_obj.loop_end-convproj_obj.loop_start
 
 		if dawvert_intent.output_mode == 'file':
 			project_obj.save_to_file(dawvert_intent.output_file)

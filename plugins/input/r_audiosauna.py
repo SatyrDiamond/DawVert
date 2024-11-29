@@ -296,6 +296,6 @@ class input_audiosanua(plugins.base):
 				lfo_obj.time.set_seconds(g_lfo_speed)
 				lfo_obj.amount = c_lfo_amount
 
-		convproj_obj.loop_active = project_obj.appUseLoop
-		convproj_obj.loop_start = project_obj.appLoopStart
-		convproj_obj.loop_end = project_obj.appLoopEnd
+		convproj_obj.transport.loop_active = project_obj.appUseLoop
+		convproj_obj.transport.loop_start = project_obj.appLoopStart
+		convproj_obj.transport.loop_end = project_obj.appLoopEnd

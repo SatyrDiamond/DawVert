@@ -716,11 +716,12 @@ class input_flp(plugins.base):
 					timemarker_obj = convproj_obj.timemarker__add()
 					timemarker_obj.visual.name = fl_timemark.name
 					timemarker_obj.position = fl_timemark.pos
-					if fl_timemark.type == 5: timemarker_obj.type = 'start'
+					if fl_timemark.type == 5: 
+						convproj_obj.transport.start_pos = timemarker_obj.position
 					if fl_timemark.type == 4: 
 						timemarker_obj.type = 'loop'
-						convproj_obj.loop_start = timemarker_obj.position
-						convproj_obj.loop_active = True
+						convproj_obj.transport.loop_start = timemarker_obj.position
+						convproj_obj.transport.loop_active = True
 					if fl_timemark.type == 1: timemarker_obj.type = 'markerloop'
 					if fl_timemark.type == 2: timemarker_obj.type = 'markerskip'
 					if fl_timemark.type == 3: timemarker_obj.type = 'pause'
@@ -844,7 +845,7 @@ class input_flp(plugins.base):
 		convproj_obj.do_actions.append('do_lanefit')
 		convproj_obj.do_actions.append('do_addloop')
 
-		convproj_obj.loop_end = convproj_obj.get_dur()
+		convproj_obj.transport.loop_end = convproj_obj.get_dur()
 
 		convproj_obj.automation.attempt_after()
 

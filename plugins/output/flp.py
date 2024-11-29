@@ -389,6 +389,18 @@ class output_cvpjs(plugins.base):
 			playlistposvalues = FL_Playlist_Sorted[itemposition]
 			for itemrow in playlistposvalues: arrangement_obj.items.append(itemrow)
 
+		if convproj_obj.transport.loop_active:
+			flp_timemarker_obj = arrangement.flp_timemarker()
+			flp_timemarker_obj.pos = convproj_obj.transport.loop_start
+			flp_timemarker_obj.type = 4
+			arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
+		if convproj_obj.transport.start_pos:
+			flp_timemarker_obj = arrangement.flp_timemarker()
+			flp_timemarker_obj.pos = convproj_obj.transport.start_pos
+			flp_timemarker_obj.type = 5
+			arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
 		for pos, value in convproj_obj.timesig_auto:
 			flp_timemarker_obj = arrangement.flp_timemarker()
 			flp_timemarker_obj.pos = pos
@@ -403,9 +415,7 @@ class output_cvpjs(plugins.base):
 			flp_timemarker_obj.pos = timemarker_obj.position
 			flp_timemarker_obj.type = 0
 			flp_timemarker_obj.name = timemarker_obj.visual.name if timemarker_obj.visual.name else ""
-			if timemarker_obj.type == 'start': flp_timemarker_obj.type = 5
-			elif timemarker_obj.type == 'loop': flp_timemarker_obj.type = 4
-			elif timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
+			if timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
 			elif timemarker_obj.type == 'markerskip': flp_timemarker_obj.type = 2
 			elif timemarker_obj.type == 'pause': flp_timemarker_obj.type = 3
 			elif timemarker_obj.type == 'punchin': flp_timemarker_obj.type = 9

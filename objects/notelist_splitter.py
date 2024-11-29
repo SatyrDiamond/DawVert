@@ -23,8 +23,8 @@ class timesigblocks:
 		timesig_num, timesig_dem = convproj_obj.timesig
 
 		if detect_start:
-			startpos = convproj_obj.loop_start if convproj_obj.loop_start else 0
-			if not startpos: startpos = convproj_obj.start_pos if convproj_obj.start_pos else 0
+			startpos = convproj_obj.transport.loop_start if convproj_obj.transport.loop_start else 0
+			if not startpos: startpos = convproj_obj.transport.start_pos if convproj_obj.transport.start_pos else 0
 			outstart = startpos if mode in [1] else 0
 		else:
 			outstart = 0

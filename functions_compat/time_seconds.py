@@ -12,6 +12,9 @@ def process(convproj_obj, in_compat, out_compat, out_type, dawvert_intent):
 
 	if is_seconds:
 		if convproj_obj.type in ['r', 'rm', 'ri']: 
+			convproj_obj.transport.change_seconds(is_seconds==1, tempo, ppq)
+			convproj_obj.timemarkers.change_seconds(is_seconds==1, tempo, ppq)
+
 			for trackid, track_obj in convproj_obj.track__iter(): 
 				track_obj.placements.change_seconds(is_seconds==1, tempo, ppq)
 				for laneid, lane_obj in track_obj.lanes.items(): 

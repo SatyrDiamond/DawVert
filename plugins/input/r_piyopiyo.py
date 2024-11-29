@@ -134,6 +134,6 @@ class input_piyopiyo(plugins.base):
 		convproj_obj.do_actions.append('do_singlenotelistcut')
 		convproj_obj.params.add('bpm', (120/project_obj.musicwait)*120, 'float')
 
-		convproj_obj.loop_active = True
-		convproj_obj.loop_start = project_obj.loopstart
-		convproj_obj.loop_end = project_obj.loopend
+		convproj_obj.transport.loop_active = True
+		convproj_obj.transport.loop_start = project_obj.loopstart
+		convproj_obj.transport.loop_end = project_obj.loopend

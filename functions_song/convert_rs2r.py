@@ -9,6 +9,16 @@ logger_project = logging.getLogger('project')
 def convert(convproj_obj):
 	logger_project.info('ProjType Convert: RegularScened > Regular')
 
+	if 'markers_from_scene' in convproj_obj.do_actions:
+		prevsceneid = None
+		for scenepl in convproj_obj.scene_placements:
+			if scenepl.id != prevsceneid:
+				timemarker_obj = convproj_obj.timemarker__add()
+				timemarker_obj.position = scenepl.position
+				if scenepl.id in convproj_obj.scenes:
+					timemarker_obj.visual = convproj_obj.scenes[scenepl.id].visual.copy()
+				prevsceneid = scenepl.id
+
 	for trackid, track_obj in convproj_obj.track__iter():
 		lanes = []
 		for _, v in track_obj.scenes.items():

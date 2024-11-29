@@ -469,9 +469,9 @@ class output_wavtool(plugins.base):
 						wavtool_obj.tracks[wt_trackauto.id] = wt_trackauto
 
 		wavtool_obj.id = "DawVertConverted-"+str(uuid.uuid4())
-		wavtool_obj.loopStart = max(convproj_obj.loop_start, 0)
-		wavtool_obj.loopEnd = max(convproj_obj.loop_end, 0)
-		wavtool_obj.loopEnabled = convproj_obj.loop_active
+		wavtool_obj.loopStart = max(convproj_obj.transport.loop_start, 0)
+		wavtool_obj.loopEnd = max(convproj_obj.transport.loop_end, 0)
+		wavtool_obj.loopEnabled = convproj_obj.transport.loop_active
 		wavtool_obj.bpm = bpm
 		wavtool_obj.beatNumerator, wavtool_obj.beatDenominator = convproj_obj.timesig
 		wavtool_obj.name = convproj_obj.metadata.name
@@ -483,9 +483,9 @@ class output_wavtool(plugins.base):
 		wavtool_obj.focusedTrackId = 'DawVert-Track-'+convproj_obj.track_order[0]
 		wavtool_obj.selectedDeviceId = "metronome"
 
-		wavtool_obj.loopStart = convproj_obj.loop_start
-		wavtool_obj.loopEnd = convproj_obj.loop_end
-		wavtool_obj.loopEnabled = convproj_obj.loop_active
+		wavtool_obj.loopStart = convproj_obj.transport.loop_start
+		wavtool_obj.loopEnd = convproj_obj.transport.loop_end
+		wavtool_obj.loopEnabled = convproj_obj.transport.loop_active
 
 		zip_wt.writestr('WavTool Project.json', json.dumps(wavtool_obj.write()))
 		zip_wt.close()

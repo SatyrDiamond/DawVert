@@ -416,6 +416,13 @@ class input_ableton(plugins.base):
 			timemarker_obj.visual.name = loc.Name
 			timemarker_obj.position = loc.Time
 
+		transport_obj = project_obj.Transport
+
+		convproj_obj.transport.loop_active = bool(transport_obj.LoopOn)
+		convproj_obj.transport.loop_start = transport_obj.LoopStart
+		convproj_obj.transport.loop_end = transport_obj.LoopLength
+		convproj_obj.transport.current_pos = transport_obj.CurrentTime
+
 		do_automation(convproj_obj, project_obj.MasterTrack.AutomationEnvelopes)
 
 		convproj_obj.track_master.visual.name = project_obj.MasterTrack.Name.EffectiveName

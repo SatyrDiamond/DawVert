@@ -71,6 +71,7 @@ class rpp_value:
 
 	def __setitem__(self, varname, data):
 		self.values[self.names.index(varname)] = data
+		
 	def __getitem__(self, varname):
 		return self.values[self.names.index(varname)]
 

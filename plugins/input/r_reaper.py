@@ -167,9 +167,27 @@ class input_reaper(plugins.base):
 		tempomul = bpm/120
 		convproj_obj.timesig = [int(rpp_project.tempo['num']), int(rpp_project.tempo['denom'])]
 
+		loop_active = bool(rpp_project.loop.get())
+		loop_start = rpp_project.selection['start']
+		loop_size = rpp_project.selection['end']
+
+		convproj_obj.transport.is_seconds = True
+		convproj_obj.timemarkers.is_seconds = True
+
+		if loop_active and loop_size:
+			convproj_obj.transport.loop_active = loop_active
+			convproj_obj.transport.loop_start = loop_start
+			convproj_obj.transport.loop_end = loop_size
+
 		trackdata = []
 
 		used_trackids = []
+
+		for marker in rpp_project.markers:
+			timemarker_obj = convproj_obj.timemarker__add()
+			timemarker_obj.position = marker[1]
+			if marker[2]: timemarker_obj.visual.name = marker[2]
+			if marker[4]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[4], True))
 
 		for tracknum, rpp_track in enumerate(rpp_project.tracks):
 			cvpj_trackid = rpp_track.trackid.get()
@@ -302,6 +320,7 @@ class input_reaper(plugins.base):
 				if len(outsamplers) == 1:
 					filename, samplerj = outsamplers[0]
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(sampler_id, filename, 'win')
+
 					if sampleref_obj:
 						do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
 						do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')

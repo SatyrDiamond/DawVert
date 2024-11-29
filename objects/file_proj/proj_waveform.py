@@ -9,21 +9,27 @@ logger_projparse = logging.getLogger('projparse')
 
 class waveform_transport:
 	def __init__(self):
+		self.looping = 0
 		self.endToEnd = 1
 		self.position = 0.5
 		self.scrubInterval = 0.1581309034119588
 		self.loopPoint1 = -1
 		self.loopPoint2 = -1
+		self.start = -1
 
 	def load(self, xmldata):
+		looping = xmldata.get('looping')
 		endToEnd = xmldata.get('endToEnd')
 		position = xmldata.get('position')
 		scrubInterval = xmldata.get('scrubInterval')
+		start = xmldata.get('start')
 		loopPoint1 = xmldata.get('loopPoint1')
 		loopPoint2 = xmldata.get('loopPoint2')
 		if endToEnd != None: self.endToEnd = int(endToEnd)
 		if position != None: self.position = float(position)
 		if scrubInterval != None: self.scrubInterval = float(scrubInterval)
+		if start != None: self.start = float(start)
+		if looping != None: self.looping = int(start)
 		if loopPoint1 != None: self.loopPoint1 = float(loopPoint1)
 		if loopPoint2 != None: self.loopPoint2 = float(loopPoint2)
 
@@ -32,6 +38,8 @@ class waveform_transport:
 		tempxml.set('endToEnd', str(self.endToEnd))
 		tempxml.set('position', str(self.position))
 		tempxml.set('scrubInterval', str(self.scrubInterval))
+		tempxml.set('looping', str(int(self.looping)))
+		if self.start >= 0: tempxml.set('start', str(self.start))
 		if self.loopPoint1 >= 0: tempxml.set('loopPoint1', str(self.loopPoint1))
 		if self.loopPoint2 >= 0: tempxml.set('loopPoint2', str(self.loopPoint2))
 

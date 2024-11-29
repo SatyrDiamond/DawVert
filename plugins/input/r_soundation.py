@@ -115,9 +115,9 @@ class input_soundation(plugins.base):
 		convproj_obj.timesig = [int(timeSignaturesplit[0]), int(timeSignaturesplit[1])]
 		convproj_obj.params.add('bpm', soundation_obj.bpm, 'float')
 
-		convproj_obj.loop_active = soundation_obj.looping
-		convproj_obj.loop_start = soundation_obj.loopStart
-		convproj_obj.loop_end = soundation_obj.loopEnd
+		convproj_obj.transport.loop_active = soundation_obj.looping
+		convproj_obj.transport.loop_start = soundation_obj.loopStart
+		convproj_obj.transport.loop_end = soundation_obj.loopEnd
 
 		tracknum = 0
 		for soundation_channel in soundation_obj.channels:

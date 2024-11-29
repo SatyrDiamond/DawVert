@@ -75,7 +75,8 @@ class input_notessimo_v2(plugins.base):
 			tempo_len.append([mss_tempo, notelen])
 			if x.notes:
 				sceneid = str(pat_num)
-				convproj_obj.scene__add(sceneid)
+				scene_obj = convproj_obj.scene__add(sceneid)
+				scene_obj.visual.name = 'Pat #'+str(pat_num+1)
 				layers = [[] for x in range(9)]
 				for note in x.notes: 
 					layers[note.layer].append(note)

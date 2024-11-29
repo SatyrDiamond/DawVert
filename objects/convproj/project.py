@@ -123,6 +123,41 @@ class cvpj_scenepl:
 		self.duration = 0
 		self.id = ''
 
+class cvpj_transport:
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+
+		self.is_seconds = False
+
+		self.loop_active = False
+		self.loop_start = 0
+		self.loop_end = 0
+		self.start_pos = 0
+
+		self.current_pos = 0
+
+	def change_timings(self, time_ppq, time_float):
+		if not self.is_seconds:
+			self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
+			self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
+			self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
+			self.current_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.current_pos)
+
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if is_seconds and not self.is_seconds:
+			self.loop_start = xtramath.step2sec(self.loop_start, bpm)/(ppq/4)
+			self.loop_end = xtramath.step2sec(self.loop_end, bpm)/(ppq/4)
+			self.start_pos = xtramath.step2sec(self.start_pos, bpm)/(ppq/4)
+			self.current_pos = xtramath.step2sec(self.current_pos, bpm)/(ppq/4)
+			self.is_seconds = True
+		elif self.is_seconds:
+			self.loop_start = xtramath.sec2step(self.loop_start, bpm)
+			self.loop_end = xtramath.sec2step(self.loop_end, bpm)
+			self.start_pos = xtramath.sec2step(self.start_pos, bpm)
+			self.current_pos = xtramath.sec2step(self.current_pos, bpm)
+			self.is_seconds = False
+		
 class cvpj_project:
 	def __init__(self):
 		self.type = None
@@ -148,10 +183,7 @@ class cvpj_project:
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
 		self.metadata = visual.cvpj_metadata()
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
-		self.loop_active = False
-		self.loop_start = 0
-		self.loop_end = 0
-		self.start_pos = 0
+		self.transport = cvpj_transport(self.time_ppq, self.time_float)
 		self.filerefs = {}
 		self.samplerefs = {}
 		self.window_data = {}
@@ -182,6 +214,7 @@ class cvpj_project:
 		self.automation.time_ppq = self.time_ppq
 		self.automation.time_float = self.time_float
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
+		self.transport = cvpj_transport(self.time_ppq, self.time_float)
 
 	def change_timings(self, time_ppq, time_float):
 		logger_project.info('Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
@@ -195,10 +228,8 @@ class cvpj_project:
 			n.notelist.change_timings(time_ppq, time_float)
 			n.timesig_auto.change_timings(time_ppq, time_float)
 		self.timemarkers.change_timings(time_ppq, time_float)
-		self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
-		self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
-		self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
 		self.timesig_auto.change_timings(time_ppq, time_float)
+		self.transport.change_timings(time_ppq, time_float)
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.automation.change_timings(time_ppq, time_float)

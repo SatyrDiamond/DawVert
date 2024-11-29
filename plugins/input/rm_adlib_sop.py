@@ -71,14 +71,17 @@ class input_sop(plugins.base):
 				if event[1] == 'VOL': 
 					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'vol'], 'float', curtick, event[2]/127)
 
-				if event[1] == 'PAN': 
+				elif event[1] == 'PAN': 
 					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pan'], 'float', curtick, panvals[event[2]])
 
-				if event[1] == 'INST': 
+				elif event[1] == 'INST': 
 					instpos.append([curtick, str(event[2])])
 
-				if event[1] == 'NOTE': 
+				elif event[1] == 'NOTE': 
 					track_obj.placements.notelist.add_m(None, curtick, event[3], event[2]-60, 1, {})
+
+				#else:
+				#	print(event)
 
 			track_obj.placements.notelist.add_instpos(instpos)
 

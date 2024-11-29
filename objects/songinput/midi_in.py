@@ -276,13 +276,13 @@ class midi_song:
 					prevval = value
 
 		if self.loop_start != None and self.loop_end != None: 
-			convproj_obj.loop_active = True
-			convproj_obj.loop_start = self.loop_start
-			convproj_obj.loop_end = self.loop_end
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = self.loop_start
+			convproj_obj.transport.loop_end = self.loop_end
 		elif self.loop_start != None and self.loop_end == None: 
-			convproj_obj.loop_active = True
-			convproj_obj.loop_start = self.loop_start
-			convproj_obj.loop_end = np.max(self.endpos_chan)
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = self.loop_start
+			convproj_obj.transport.loop_end = np.max(self.endpos_chan)
 
 		if self.start_pos_est:
 			self.start_pos = min(self.startpos_chan)
@@ -300,4 +300,5 @@ class midi_song:
 			if len(tempom): convproj_obj.params.add('bpm', tempom[-1]['tempo'], 'float')
 			else: convproj_obj.params.add('bpm', tb_d[0]['tempo'], 'float')
 		
-		convproj_obj.start_pos = self.start_pos
+		if self.start_pos:
+			convproj_obj.transport.start_pos = self.start_pos

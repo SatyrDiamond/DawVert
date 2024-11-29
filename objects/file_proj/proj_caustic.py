@@ -504,7 +504,8 @@ class caustic_project:
 		for chunk_obj in main_iff_obj.iter(0, song_data.end):
 			if chunk_obj.id == b'RACK':
 				rackchunkfound = True
-				header = song_data.read(264)
+				header = song_data.read(4)
+				name = song_data.read(260)
 				while chunk_obj.end > song_data.tell():
 					chunk_datatype = song_data.read(4)
 					logger_projparse.info('caustic3: main | chunk: '+str(chunk_datatype))

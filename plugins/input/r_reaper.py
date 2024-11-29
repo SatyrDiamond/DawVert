@@ -162,6 +162,10 @@ class input_reaper(plugins.base):
 
 		rpp_project = project_obj.project
 
+		convproj_obj.metadata.name = rpp_project.title.get()
+		convproj_obj.metadata.author = rpp_project.author.get()
+		convproj_obj.metadata.comment_text = '\n'.join(rpp_project.notes_data)
+
 		bpm = rpp_project.tempo['tempo']
 		convproj_obj.params.add('bpm', bpm, 'float')
 		tempomul = bpm/120
@@ -173,6 +177,8 @@ class input_reaper(plugins.base):
 
 		convproj_obj.transport.is_seconds = True
 		convproj_obj.timemarkers.is_seconds = True
+
+		convproj_obj.transport.current_pos = rpp_project.cursor.get()
 
 		if loop_active and loop_size:
 			convproj_obj.transport.loop_active = loop_active

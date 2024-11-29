@@ -355,6 +355,7 @@ class cvpj_metadata:
 		self.songwriter = ''
 		self.producer = ''
 		self.copyright = ''
+		self.show = -1
 
 class cvpj_window_data:
 	__slots__ = ['pos_x','pos_y','size_x','size_y','open','detatched','maximized','minimized']

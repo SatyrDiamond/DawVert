@@ -38,9 +38,13 @@ class rpp_project:
 		self.masterhwout = rvd([0,0,1,0,0,0,0,-1], None, None, True)
 		self.master_nch = rvd([2,2], None, None, True)
 		self.master_volume = rvd([1,0,-1,-1,1], None, None, True)
+		self.notes_vals = rvd([0,2], None, [int, int], True)
+		self.notes_data = []
 		self.record_cfg = b''
 		self.applyfx_cfg = b''
 		self.render_cfg = b''
+		self.title = rvs('', str, False)
+		self.author = rvs('', str, False)
 		self.ripple = rvs(0, float, True)
 		self.autoxfade = rvs(1, float, True)
 		self.envattach = rvs(3, float, True)
@@ -82,6 +86,8 @@ class rpp_project:
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
+			if name == 'TITLE': self.title.set(values[0])
+			if name == 'AUTHOR': self.author.set(values[0])
 			if name == 'RECORD_CFG': self.record_cfg = reaper_func.getbin(inside_dat)
 			if name == 'APPLYFX_CFG': self.applyfx_cfg = reaper_func.getbin(inside_dat)
 			if name == 'RENDER_CFG': self.render_cfg = reaper_func.getbin(inside_dat)
@@ -146,6 +152,13 @@ class rpp_project:
 			if name == 'MASTER_SEL': self.master_sel.set(values[0])
 			if name == 'MASTERPLAYSPEEDENV': self.masterplayspeedenv.read(inside_dat, values)
 			if name == 'TEMPOENVEX': self.tempoenvex.read(inside_dat, values)
+			if name == 'NOTES':
+				self.notes_vals.read(values)
+				for x in inside_dat:
+					if x:
+						if x[0] == '|':
+							self.notes_data.append(x[1:])
+
 			if name == 'MASTERFXLIST': 
 				fxchain_obj = rpp_fxchain.rpp_fxchain()
 				fxchain_obj.load(inside_dat)
@@ -168,6 +181,11 @@ class rpp_project:
 		return track_obj
 
 	def write(self, rpp_data):
+		self.title.write('TITLE',rpp_data)
+		self.author.write('AUTHOR',rpp_data)
+		rpp_notes = robj('NOTES',[self.notes_vals.values])
+		for x in self.notes_data: rpp_notes.children.append('|'+x)
+		rpp_data.children.append(rpp_notes)
 		self.ripple.write('RIPPLE',rpp_data)
 		self.groupoverride.write('GROUPOVERRIDE', rpp_data)
 		self.autoxfade.write('AUTOXFADE',rpp_data)

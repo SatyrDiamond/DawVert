@@ -130,9 +130,9 @@ class output_soundation(plugins.base):
 		beatNumerator, beatDenominator = convproj_obj.timesig
 		soundation_obj.timeSignature = str(beatNumerator)+'/'+str(beatDenominator)
 
-		soundation_obj.looping = convproj_obj.loop_active
-		soundation_obj.loopStart = convproj_obj.loop_start
-		soundation_obj.loopEnd = convproj_obj.loop_end
+		soundation_obj.looping = convproj_obj.transport.loop_active
+		soundation_obj.loopStart = convproj_obj.transport.loop_start
+		soundation_obj.loopEnd = convproj_obj.transport.loop_end
 
 		bpmdiv = 120/bpm
 
@@ -402,9 +402,9 @@ class output_soundation(plugins.base):
 
 			sng_channels.append(soundation_channel)
 
-		soundation_obj.looping = convproj_obj.loop_active
-		soundation_obj.loopStart = int(convproj_obj.loop_start)
-		soundation_obj.loopEnd = int(convproj_obj.loop_end)
+		soundation_obj.looping = convproj_obj.transport.loop_active
+		soundation_obj.loopStart = int(convproj_obj.transport.loop_start)
+		soundation_obj.loopEnd = int(convproj_obj.transport.loop_end)
 
 		#iseffectexists = 'fx' in [convproj_obj.track_data[x].type for x in convproj_obj.track_order]
 #

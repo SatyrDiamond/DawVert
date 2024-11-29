@@ -479,9 +479,9 @@ class input_jummbox(plugins.base):
 		#if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
 		#	introbars = sum(patlentable[0:jummbox_json['introBars']])
 		#	loopbars = (sum(patlentable[0:jummbox_json['loopBars']]) + introbars)
-		#	convproj_obj.loop_active = True
-		#	convproj_obj.loop_start = introbars
-		#	convproj_obj.loop_end = loopbars if loopbars else patlentable[-1]
+		#	convproj_obj.transport.loop_active = True
+		#	convproj_obj.transport.loop_start = introbars
+		#	convproj_obj.transport.loop_end = loopbars if loopbars else patlentable[-1]
 
 		#convproj_obj.automation.sort()
 

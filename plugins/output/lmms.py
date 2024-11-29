@@ -636,13 +636,13 @@ class output_lmms(plugins.base):
 			if cvpj_obj.metadata.comment_datatype == 'text': 
 				song_obj.projectnotes.text += cvpj_obj.metadata.comment_text.replace('\n', '<br/>').replace('\r', '<br/>')
 
-		if cvpj_obj.loop_active:
-			song_obj.timeline.lpstate = int(cvpj_obj.loop_active)
-			song_obj.timeline.lp0pos = cvpj_obj.loop_start
-			song_obj.timeline.lp1pos = cvpj_obj.loop_end
+		if cvpj_obj.transport.loop_active:
+			song_obj.timeline.lpstate = int(cvpj_obj.transport.loop_active)
+			song_obj.timeline.lp0pos = cvpj_obj.transport.loop_start
+			song_obj.timeline.lp1pos = cvpj_obj.transport.loop_end
 		else:
 			song_obj.timeline.lpstate = 1
-			song_obj.timeline.lp0pos = cvpj_obj.start_pos
+			song_obj.timeline.lp0pos = cvpj_obj.transport.start_pos
 			song_obj.timeline.lp1pos = cvpj_obj.get_dur()
 
 		if dawvert_intent.output_mode == 'file':

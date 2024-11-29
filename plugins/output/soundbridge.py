@@ -748,13 +748,13 @@ class output_soundbridge(plugins.base):
 						if autopoint_obj.type == 'instant' and n == numpoints-1:
 							add_tempo_section(sb_tempo_obj, e_block_pos, e_block_pos+PROJECT_FREQ, autopoint_obj.value, autopoint_obj.value)
 
-		if convproj_obj.loop_active:
+		if convproj_obj.transport.loop_active:
 			project_obj.metadata['TransportLoop'] = 'true'
-			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.loop_start
-			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.loop_end
+			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.transport.loop_start
+			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.transport.loop_end
 		else:
 			project_obj.metadata['TransportLoop'] = 'false'
-			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.start_pos
+			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.transport.start_pos
 			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.get_dur()
 
 		do_markers(convproj_obj.timemarkers, project_obj.timeline.markers)

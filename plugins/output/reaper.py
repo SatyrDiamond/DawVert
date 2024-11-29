@@ -67,6 +67,7 @@ def add_auto(rpp_env, autopoints_obj):
 
 def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+
 	if plugin_found:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 
@@ -340,6 +341,12 @@ class output_reaper(plugins.base):
 		rpp_project.tempo['denom'] = convproj_obj.timesig[1]
 
 		track_uuids = ['{'+str(uuid.uuid4())+'}' for _ in convproj_obj.track__iter()]
+
+		for num, timemarker_obj in enumerate(convproj_obj.timemarkers):
+			name = timemarker_obj.visual.name if timemarker_obj.visual.name else ''
+			color = cvpj_color_to_reaper_color(timemarker_obj.visual.color) if timemarker_obj.visual.color else 0
+			outmarker = [num+1, timemarker_obj.position, name, 0, color, 1, 'R', '{'+str(uuid.uuid4()).upper()+'}', 0]
+			rpp_project.markers.append(outmarker)
 
 		trackdata = []
 

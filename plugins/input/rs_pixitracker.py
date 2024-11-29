@@ -81,7 +81,9 @@ class input_cvpj_f(plugins.base):
 
 		for pat_num, pat_data_r in project_obj.patterns.items():
 			sceneid = str(pat_num)
-			convproj_obj.scene__add(sceneid)
+
+			scene_obj = convproj_obj.scene__add(sceneid)
+			scene_obj.visual.name = 'Pat #'+str(pat_num+1)
 
 			pat_data = np.rot90(pat_data_r.data)
 			numtracks = len(pat_data)
@@ -105,7 +107,6 @@ class input_cvpj_f(plugins.base):
 
 			for instnum, instnote in enumerate(instnotes):
 				if len(instnote):
-
 					cvpj_instid = 'pixi_'+str(instnum)
 					trscene_obj = convproj_obj.track__add_scene(cvpj_instid, sceneid, 'main')
 					placement_obj = trscene_obj.add_notes()

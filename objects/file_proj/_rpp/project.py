@@ -6,6 +6,9 @@ from objects.file_proj._rpp import env as rpp_env
 rvd = reaper_func.rpp_value
 rvs = reaper_func.rpp_value.single_var
 robj = reaper_func.rpp_obj
+ts = reaper_func.to_string
+
+markertypes = [int, float, str, int, int, int, str, str, int]
 
 class rpp_project:
 	def __init__(self):
@@ -28,8 +31,8 @@ class rpp_project:
 		self.samplerate = rvd([44100,0,0], None, None, True)
 		self.tempo = rvd([120,4,4], ['tempo','num','denom'], None, True)
 		self.playrate = rvd([1,0,0.25,4.0], None, None, True)
-		self.selection = rvd([0,0], None, None, True)
-		self.selection2 = rvd([0,0], None, None, True)
+		self.selection = rvd([0,0], ['start','end'], [float, float], True)
+		self.selection2 = rvd([0,0], ['start','end'], [float, float], True)
 		self.mastertrackheight = rvd([0,0], None, None, True)
 		self.mastertrackview = rvd([0,0.6667,0.5,0.5,0,0,0,0,0,0,0,0,0,0], None, None, True)
 		self.masterhwout = rvd([0,0,1,0,0,0,0,-1], None, None, True)
@@ -75,6 +78,7 @@ class rpp_project:
 		self.masterplayspeedenv = rpp_env.rpp_env()
 		self.tempoenvex = rpp_env.rpp_env()
 		self.tracks = []
+		self.markers = []
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -150,7 +154,13 @@ class rpp_project:
 				track_obj = rpp_track.rpp_track()
 				track_obj.load(inside_dat)
 				self.tracks.append(track_obj)
-
+			if name == 'MARKER': 
+				marker = rvd(
+					[0,0,'',0,0,1,'R','',0], 
+					['id','pos','name','unk1','color','unk2','unk3','unk4','unk5'], 
+					[int, float, str, int, int, int, str, str, int], True)
+				marker.read(values)
+				self.markers.append(marker.values)
 
 	def add_track(self):
 		track_obj = rpp_track.rpp_track()
@@ -225,6 +235,9 @@ class rpp_project:
 
 		self.masterplayspeedenv.write('MASTERPLAYSPEEDENV', rpp_data)
 		self.tempoenvex.write('TEMPOENVEX', rpp_data)
+
+		for p in self.markers:
+			rpp_data.children.append(['MARKER']+[ts(markertypes[n], x) for n, x in enumerate(p)])
 
 		for track in self.tracks:
 			rpp_trackdata = robj('TRACK',[track.trackid.get()])

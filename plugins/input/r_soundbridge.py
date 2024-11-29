@@ -410,6 +410,6 @@ class input_cvpj_f(plugins.base):
 			autopoint_obj.type = 'normal'
 
 		projmeta = project_obj.metadata
-		if 'TransportLoop' in projmeta: convproj_obj.loop_active = projmeta['TransportLoop'] == 'true'
-		if 'TransportPlayPositionL' in projmeta: convproj_obj.loop_start = int(projmeta['TransportPlayPositionL'])
-		if 'TransportPlayPositionR' in projmeta: convproj_obj.loop_end = int(projmeta['TransportPlayPositionR'])
+		if 'TransportLoop' in projmeta: convproj_obj.transport.loop_active = projmeta['TransportLoop'] == 'true'
+		if 'TransportPlayPositionL' in projmeta: convproj_obj.transport.loop_start = int(projmeta['TransportPlayPositionL'])
+		if 'TransportPlayPositionR' in projmeta: convproj_obj.transport.loop_end = int(projmeta['TransportPlayPositionR'])

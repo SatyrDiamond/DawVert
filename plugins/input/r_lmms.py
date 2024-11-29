@@ -764,9 +764,9 @@ class input_lmms(plugins.base):
 		add_window_data(song_obj.automationeditor, convproj_obj, 'main', 'automation_editor')
 		add_window_data(song_obj.projectnotes.window, convproj_obj, 'main', 'project_notes')
 
-		convproj_obj.loop_active = bool(int(song_obj.timeline.lpstate))
-		convproj_obj.loop_start = song_obj.timeline.lp0pos
-		convproj_obj.loop_end = song_obj.timeline.lp1pos
+		convproj_obj.transport.loop_active = bool(int(song_obj.timeline.lpstate))
+		convproj_obj.transport.loop_start = song_obj.timeline.lp0pos
+		convproj_obj.transport.loop_end = song_obj.timeline.lp1pos
 		
 		#convproj_obj.do_actions.append('force_addloop')
 

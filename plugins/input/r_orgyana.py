@@ -107,6 +107,6 @@ class input_orgyana(plugins.base):
 		convproj_obj.timesig = [project_obj.stepsperbar, project_obj.beatsperstep]
 
 		if project_obj.loop_beginning != 0: 
-			convproj_obj.loop_active = True
-			convproj_obj.loop_start = project_obj.loop_beginning
-			convproj_obj.loop_end = project_obj.loop_end
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = project_obj.loop_beginning
+			convproj_obj.transport.loop_end = project_obj.loop_end

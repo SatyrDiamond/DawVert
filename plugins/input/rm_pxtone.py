@@ -161,9 +161,9 @@ class input_pxtone(plugins.base):
 			track_obj.placements.notelist.notemod_conv()
 
 		if project_obj.repeat != 0: 
-			convproj_obj.loop_active = True
-			convproj_obj.loop_start = project_obj.repeat
-			convproj_obj.loop_end = project_obj.last
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = project_obj.repeat
+			convproj_obj.transport.loop_end = project_obj.last
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')

@@ -167,6 +167,14 @@ class output_waveform_edit(plugins.base):
 		project_obj.temposequence.tempo[0] = [bpm, 1]
 		project_obj.temposequence.timesig[0] = convproj_obj.timesig
 
+		transport_obj = project_obj.transport
+
+		transport_obj.looping = int(convproj_obj.transport.loop_active)
+		transport_obj.loopPoint1 = float(convproj_obj.transport.loop_start)
+		transport_obj.loopPoint2 = float(convproj_obj.transport.loop_end)
+		transport_obj.start = float(convproj_obj.transport.start_pos)
+		transport_obj.position = float(convproj_obj.transport.current_pos)
+
 		counter_id = counter.counter(1000, '')
 
 		get_plugins(convproj_obj, project_obj.masterplugins, convproj_obj.track_master.plugslots.slots_audio)

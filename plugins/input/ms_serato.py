@@ -218,7 +218,12 @@ class input_serato(plugins.base):
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.time.set_posdur(0, scene.length)
 						for note in deck_sequence.notes:
-							if note.start < scene.length:
+							valid = False
+							if scene.length != None:
+								if note.start < scene.length:
+									valid = True
+							else: valid = True
+							if valid:
 								key = note.number+note.channel
 								if key >= 60: key -= 60
 								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_'+str(key), note.start, note.duration, 0, note.velocity/100, None)
@@ -306,7 +311,10 @@ class input_serato(plugins.base):
 											if 'pitch_shift' in cuedata: samplepart_copy.pitch += cuedata['pitch_shift']
 											if 'reverse' in cuedata: samplepart_copy.reverse = cuedata['reverse']
 
-
+		convproj_obj.transport.loop_active = project_obj.arrangement.loop_active
+		convproj_obj.transport.loop_start = project_obj.arrangement.loop_start
+		convproj_obj.transport.loop_end = project_obj.arrangement.loop_end
+		
 		for arrangement in project_obj.arrangement.tracks:
 			if arrangement.type == 'scene':
 				for clip in arrangement.clips:

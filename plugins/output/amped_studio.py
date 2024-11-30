@@ -159,6 +159,7 @@ class output_amped(plugins.base):
 		amped_obj.loop_active = convproj_obj.transport.loop_active
 		amped_obj.loop_start = convproj_obj.transport.loop_start
 		amped_obj.loop_end = convproj_obj.transport.loop_end
+		amped_obj.playheadPosition = convproj_obj.transport.current_pos
 
 		amped_obj.createdWith = "DawVert"
 		amped_obj.settings = {"deviceDelayCompensation": True}

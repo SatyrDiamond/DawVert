@@ -12,6 +12,7 @@ class single_patsong:
 		self.text_inst_start = text_inst_start
 		self.maincolor = maincolor
 		self.orders = []
+		self.timepoints = []
 
 	def pattern_add(self, pat_num, num_rows):
 		pat_obj = single_pattern(self.num_chans, num_rows)
@@ -37,7 +38,9 @@ class single_patsong:
 		playstr.init_tempo(s_bpm, s_speed)
 		for _ in range(self.num_chans): playstr.add_channel(text_inst_start)
 
-		for n in self.orders:
+		#markerpos = []
+
+		for i, n in enumerate(self.orders):
 			if n in self.patdata:
 				singlepat_obj = self.patdata[n]
 				playstr.init_patinfo(singlepat_obj.num_rows, n)
@@ -74,6 +77,13 @@ class single_patsong:
 
 		patlentable = [x[0] for x in playstr.notestreams[0].placements]
 		convproj_obj.timemarker__from_patlenlist(patlentable[:-1], -1)
+
+		c = 0
+		for p, x in enumerate(patlentable):
+			if p in self.timepoints:
+				timemarker_obj = convproj_obj.timemarker__add()
+				timemarker_obj.position = c
+			c += x
 
 		return used_inst
 

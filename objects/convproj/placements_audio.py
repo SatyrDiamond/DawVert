@@ -68,16 +68,36 @@ class cvpj_placements_audio:
 	def remove_loops(self, out__placement_loop):
 		new_data = []
 		for audiopl_obj in self.data: 
-			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'] and audiopl_obj.time.cut_type not in out__placement_loop:
+			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_eq', 'loop_adv', 'loop_adv_off'] and audiopl_obj.time.cut_type not in out__placement_loop:
+
 				loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
-				duration = audiopl_obj.time.duration
-				for cutpoint in xtramath.cutloop(audiopl_obj.time.position, duration, loop_start, loop_loopstart, loop_loopend):
+				if audiopl_obj.time.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
+					dur = audiopl_obj.time.duration
+					offset = audiopl_obj.time.cut_start
+	
 					cutplpl_obj = copy.deepcopy(audiopl_obj)
-					cutplpl_obj.time.position = cutpoint[0]
-					cutplpl_obj.time.duration = cutpoint[1]
-					cutplpl_obj.time.cut_type = 'cut'
-					cutplpl_obj.time.cut_start = cutpoint[2]
+					cutplpl_obj.time.duration = min(loop_loopend-offset, dur)
+					cutplpl_obj.time.set_offset(audiopl_obj.time.cut_start)
 					new_data.append(cutplpl_obj)
+	
+					if dur>loop_loopend:
+						cutplpl_obj = copy.deepcopy(audiopl_obj)
+						cutplpl_obj.time.position += loop_loopend-offset
+						cutplpl_obj.time.duration = (dur-loop_loopend)+offset
+						cutplpl_obj.time.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
+						new_data.append(cutplpl_obj)
+
+				else:
+					loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
+					duration = audiopl_obj.time.duration
+					duration = duration+audiopl_obj.time.cut_start if audiopl_obj.time.cut_type == 'loop_eq' else duration
+					for cutpoint in xtramath.cutloop(audiopl_obj.time.position, duration, loop_start, loop_loopstart, loop_loopend):
+						cutplpl_obj = copy.deepcopy(audiopl_obj)
+						cutplpl_obj.time.position = cutpoint[0]
+						cutplpl_obj.time.duration = cutpoint[1]
+						cutplpl_obj.time.cut_type = 'cut'
+						cutplpl_obj.time.cut_start = cutpoint[2]
+						new_data.append(cutplpl_obj)
 			else: new_data.append(audiopl_obj)
 
 			for n, x in enumerate(new_data):

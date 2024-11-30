@@ -333,7 +333,7 @@ def time_add(event, time_obj, otherblock):
 		if otherblock:
 			otherblock.framesCount = time_obj.duration+event.positionStart
 		
-	elif time_obj.cut_type == 'loop':
+	elif time_obj.cut_type in ['loop', 'loop_eq']:
 		event.positionStart = loop_1
 		event.loopOffset = loop_2
 		event.positionEnd = loop_3
@@ -392,7 +392,7 @@ class output_soundbridge(plugins.base):
 		in_dict['file_ext'] = 'soundbridge'
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win']

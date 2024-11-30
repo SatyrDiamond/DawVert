@@ -338,7 +338,7 @@ class output_soundation(plugins.base):
 						soundation_region.length = notespl_obj.time.cut_loopend
 						soundation_region.loopcount = notespl_obj.time.duration/notespl_obj.time.cut_loopend
 
-					if notespl_obj.time.cut_type == 'cut': 
+					if notespl_obj.time.cut_type in ['cut']: 
 						soundation_region.contentPosition = -(notespl_obj.time.cut_start)
 
 					soundation_region.type = 2
@@ -439,8 +439,8 @@ class output_soundation(plugins.base):
 		jsonwrite = soundation_obj.write()
 
 		if dawvert_intent.output_mode == 'file':
-			#zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
-			#zip_sngz.close()
+			zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
+			zip_sngz.close()
 			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
 
 		#with open('soundation_debug', "w") as fileout: json.dump(jsonwrite, fileout, indent=4)

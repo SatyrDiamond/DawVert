@@ -122,7 +122,6 @@ class input_reaper(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['rpp']
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = []
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']

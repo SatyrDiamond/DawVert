@@ -398,7 +398,7 @@ class input_wavtool(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['zip']
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']

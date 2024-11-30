@@ -296,6 +296,7 @@ class input_audiosanua(plugins.base):
 				lfo_obj.time.set_seconds(g_lfo_speed)
 				lfo_obj.amount = c_lfo_amount
 
+		convproj_obj.transport.current_pos = max(0, project_obj.appPlayHeadPosition)
 		convproj_obj.transport.loop_active = project_obj.appUseLoop
 		convproj_obj.transport.loop_start = project_obj.appLoopStart
 		convproj_obj.transport.loop_end = project_obj.appLoopEnd

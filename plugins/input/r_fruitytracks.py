@@ -72,10 +72,22 @@ class input_fruitytracks(plugins.base):
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
-		convproj_obj.params.add('vol', project_obj.vol/128, 'float')
+		convproj_obj.track_master.params.add('vol', project_obj.vol/128, 'float')
 
 		bpmdiv = 120/project_obj.bpm
 		bpmticks = 5512
+
+		if project_obj.title: convproj_obj.metadata.name = project_obj.title
+		if project_obj.url: convproj_obj.metadata.url = project_obj.url
+		if project_obj.comment:
+			convproj_obj.metadata.comment_text = project_obj.comment
+			convproj_obj.metadata.comment_datatype = 'rtf'
+		convproj_obj.metadata.show = project_obj.showinfo
+
+		if project_obj.loopend:
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = (project_obj.loopstart/bpmticks)/bpmdiv
+			convproj_obj.transport.loop_end = ((project_obj.loopstart+project_obj.loopend)/bpmticks)/bpmdiv
 
 		for tracknum, ftr_track in enumerate(project_obj.tracks):
 			trackid = str(tracknum)

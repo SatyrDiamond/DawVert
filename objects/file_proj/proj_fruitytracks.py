@@ -98,6 +98,7 @@ class ftr_song:
 		self.url = ''
 		self.comment = ''
 		self.video = ''
+		self.showinfo = 0
 		self.vol = 100
 		self.loopstart = 0
 		self.loopend = 0
@@ -158,6 +159,7 @@ class ftr_song:
 						cur_clip.muted = event_data
 						cur_track.clips.append(cur_clip)
 
+					elif event_id == 10: self.showinfo = event_data
 					elif event_id == 12: self.vol = event_data
 
 					elif event_id == 66: self.bpm = event_data

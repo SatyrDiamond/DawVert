@@ -1184,7 +1184,7 @@ class output_ableton(plugins.base):
 
 		transport_obj.LoopOn = int(convproj_obj.transport.loop_active)
 		transport_obj.LoopStart = convproj_obj.transport.loop_start
-		transport_obj.LoopLength = convproj_obj.transport.loop_end
+		transport_obj.LoopLength = convproj_obj.transport.loop_end-convproj_obj.transport.loop_start
 		transport_obj.CurrentTime = convproj_obj.transport.current_pos
 
 		als_mastertrack = project_obj.MasterTrack

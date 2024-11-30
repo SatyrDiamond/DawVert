@@ -118,6 +118,12 @@ class input_it(plugins.base):
 		while -2 in table_orders: table_orders.remove(-2)
 		while -1 in table_orders: table_orders.remove(-1)
 		
+		breakcounts = [0]
+		for x in project_obj.l_order:
+			if x not in [-1, -2]: breakcounts.append(0)
+			else: breakcounts[-1] += 1
+		timepoints = [n for n, x in enumerate(breakcounts) if x]
+
 		if dawvert_intent.input_mode == 'file':
 			if xmodits_exists == True and dawvert_intent.input_file:
 				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
@@ -126,6 +132,7 @@ class input_it(plugins.base):
 
 		patterndata_obj = pat_single.single_patsong(64, TEXTSTART, MAINCOLOR)
 		patterndata_obj.orders = table_orders
+		patterndata_obj.timepoints = timepoints
 
 		for patnum, itpat_obj in enumerate(project_obj.patterns):
 			if itpat_obj.used:

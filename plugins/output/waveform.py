@@ -138,7 +138,7 @@ class output_waveform_edit(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'tracktionedit'
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
 		in_dict['time_seconds'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
@@ -225,10 +225,17 @@ class output_waveform_edit(plugins.base):
 				wf_midiclip.start = notespl_obj.time.position_real
 				wf_midiclip.length = notespl_obj.time.duration_real
 
+				boffset = (offset/8)*tempomul
+				toffset = (offset/4)*tempomul
+
 				if notespl_obj.time.cut_type == 'cut':
-					wf_midiclip.offset = (offset/8)*tempomul
-				elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
-					wf_midiclip.offset = (offset/8)*tempomul
+					wf_midiclip.offset = boffset
+				elif notespl_obj.time.cut_type == 'loop_eq':
+					wf_midiclip.offset = 0
+					wf_midiclip.loopStartBeats = toffset
+					wf_midiclip.loopLengthBeats = (loopend/4)-toffset
+				elif notespl_obj.time.cut_type in ['loop', 'loop_off']:
+					wf_midiclip.offset = boffset
 					wf_midiclip.loopStartBeats = (loopstart/4)
 					wf_midiclip.loopLengthBeats = (loopend/4)
 

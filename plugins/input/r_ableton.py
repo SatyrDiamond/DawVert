@@ -361,7 +361,7 @@ class input_ableton(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['als']
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
@@ -688,7 +688,10 @@ class input_ableton(plugins.base):
 										autopoint_obj.value = mobj.Value
 
 						if clipobj.Loop.LoopOn == 1:
-							placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+							cut_start = (clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4
+							loop_start = clipobj.Loop.LoopStart*4
+							loop_end = clipobj.Loop.LoopEnd*4
+							placement_obj.time.set_loop_data(cut_start, loop_start, loop_end)
 						else:
 							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
 

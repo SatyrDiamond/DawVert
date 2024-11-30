@@ -7,6 +7,7 @@ from functions import data_values
 import numpy as np
 import copy
 import hashlib
+import os
 
 class pitchmod:
 	def __init__(self, c_note):
@@ -809,6 +810,38 @@ class cvpj_notelist:
 
 	def appendtxt_inst(self, start, end):
 		self.data.appendtxt_inst(start, end)
+
+	def midi_from(self, input_file):
+		from objects.songinput import midi_in
+		from objects_midi.parser import MidiFile
+		from objects.songinput._midi_multi import notes
+		from objects_midi import events as MidiEvents
+		
+
+		if os.path.exists(input_file):
+			midifile = MidiFile.fromFile(input_file)
+			self.time_ppq = midifile.ppqn
+			self.time_float = False
+			if midifile.tracks:
+				events = midifile.tracks[0].events
+				numevents = len(events)
+				notes_obj = notes.midi_notes_multi(numevents)
+
+				curpos = 0
+				for msg in midifile.tracks[0].events:
+					curpos += msg.deltaTime
+					if type(msg) == MidiEvents.NoteOnEvent:
+						if msg.velocity != 0: notes_obj.note_on(curpos, msg.channel, msg.note, msg.velocity)
+						else: notes_obj.note_off(curpos, msg.channel, msg.note)
+					elif type(msg) == MidiEvents.NoteOffEvent:
+						notes_obj.note_off(curpos, msg.channel, msg.note)
+
+				self.clear_size(numevents)
+
+				for n in notes_obj.data.data:
+					if n['complete']:
+						self.add_r(int(n['start']), int(n['end']-n['start']), int(n['key'])-60, float(n['vol'])/127, None)
+
 
 	#def multikey_comb(self):
 	#	prev_note = None

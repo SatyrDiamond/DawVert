@@ -241,7 +241,7 @@ class input_jummbox(plugins.base):
 		from objects.file_proj import proj_jummbox
 
 		convproj_obj.type = 'mi'
-		convproj_obj.set_timings(16, True)
+		convproj_obj.set_timings(8, True)
 
 		globalstore.dataset.load('beepbox', './data_main/dataset/beepbox.dset')
 
@@ -271,7 +271,7 @@ class input_jummbox(plugins.base):
 		durpos = jummbox_obj.get_durpos()
 
 		convproj_obj.timesig = [4,8]
-		convproj_obj.timemarker__from_patlenlist(durpos, -1)
+		convproj_obj.timemarker__from_patlenlist(durpos, jummbox_obj.introBars)
 
 		for channum, bb_chan in enumerate(jummbox_obj.channels):
 			if bb_chan.type in ['pitch', 'drum']:

@@ -101,7 +101,7 @@ class ConversionWorker(QtCore.QObject):
 				dv_core.config_data.path_samples_converted = outsamples+'converted/'
 
 			else:
-				dv_core.config_data.set_projname_path(file_name)
+				dawvert_core.config.set_projname_path(file_name)
 
 			os.makedirs(dv_core.config_data.path_samples_extracted, exist_ok=True)
 			os.makedirs(dv_core.config_data.path_samples_downloaded, exist_ok=True)

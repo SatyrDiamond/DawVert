@@ -25,6 +25,12 @@ class bandlab_automation:
 	def read(self, indata):
 		self.points = [bandlab_autopoint(x) for x in indata]
 
+	def add_point(self, position, value):
+		point = bandlab_autopoint(None)
+		point.position = position
+		point.value = value
+		self.points.append(point)
+
 	def write(self):
 		return [x.write() for x in self.points]
 
@@ -244,7 +250,7 @@ class bandlab_track:
 		self.colorName = "Green"
 
 		self.effects = []
-		self.effectsData = {}
+		self.effectsData = None
 
 		self.id = ""
 		self.inputEffect = 0

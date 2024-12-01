@@ -81,12 +81,13 @@ class output_midi(plugins.base):
 				blx_track = proj_bandlab.bandlab_track(None) 
 				blx_track.automation = proj_bandlab.bandlab_track_automation(None)
 				blx_track.automation.id = str(uuid.uuid4())
-				blx_track.autoPitch = proj_bandlab.bandlab_autoPitch(None)
 				blx_track.id = str(uuid.uuid4())
-				blx_track.effectsData = {"displayName": None, "link": None, "originalPresetId": None}
 				auxsend_obj = proj_bandlab.bandlab_auxSend(None)
 				auxsend_obj.id = 'aux1'
 				blx_track.auxSends.append(auxsend_obj)
+
+				do_automation(convproj_obj, ['track', trackid, 'pan'], blx_track.automation.pan)
+				do_automation(convproj_obj, ['track', trackid, 'vol'], blx_track.automation.volume)
 
 				blx_track.order = tracknum
 
@@ -100,7 +101,11 @@ class output_midi(plugins.base):
 				blx_track.volume = track_obj.params.get('vol', 1).value
 				blx_track.pan = track_obj.params.get('pan', 0).value
 
+				make_plugins_fx(convproj_obj, blx_track.effects, track_obj.plugslots.slots_audio)
+
 				if track_obj.type == 'audio':
+					blx_track.effectsData = {"displayName": None, "link": None, "originalPresetId": None}
+					blx_track.autoPitch = proj_bandlab.bandlab_autoPitch(None)
 					track_obj.placements.pl_audio.sort()
 					for audiopl_obj in track_obj.placements.pl_audio:
 						blx_region = proj_bandlab.bandlab_region(None)
@@ -118,6 +123,10 @@ class output_midi(plugins.base):
 						blx_region.sampleId = sampleref_assoc[sp_obj.sampleref]
 						blx_region.file = sampleref_assoc[sp_obj.sampleref]+'.'+sampleref_ext[sp_obj.sampleref]
 						blx_track.regions.append(blx_region)
+
+				if track_obj.type == 'instrument':
+					blx_track.type = 'piano'
+					blx_track.soundbank = 'studio-grand-v2-v4'
 
 				project_obj.tracks.append(blx_track)
 
@@ -144,6 +153,37 @@ class output_midi(plugins.base):
 			os.makedirs(foldpath, exist_ok=True)
 			outpath = os.path.join(folder, namet, filename)
 			project_obj.save_to_file(outpath)
+
+def do_automation(convproj_obj, autoloc, blx_auto):
+	ap_f, ap_d = convproj_obj.automation.get(autoloc, 'float')
+	if ap_f: 
+		if ap_d.u_nopl_points:
+			for autopoint in ap_d.nopl_points:
+				blx_auto.add_point(autopoint.pos_real, autopoint.value)
+
+def make_plugins_fx(convproj_obj, effects, fxslots_audio):
+	from objects.file_proj import proj_bandlab
+	for pluginid in fxslots_audio:
+		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+		if plugin_found: 
+			if plugin_obj.check_wildmatch('native', 'bandlab', None):
+				blx_effect = proj_bandlab.bandlab_effect(None)
+				blx_effect.slug = plugin_obj.type.subtype
+
+				paramlist = plugin_obj.datavals.list()
+				if paramlist:
+					for param_id in paramlist:
+						blx_effect.params[param_id] = plugin_obj.datavals.get(param_id, '')
+						blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
+
+				paramlist = plugin_obj.params.list()
+				if paramlist:
+					for param_id in paramlist:
+						blx_effect.params[param_id] = plugin_obj.params.get(param_id, 0).value
+						blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
+						do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id])
+
+				effects.append(blx_effect)
 
 def add_region_common(blx_region, audiopl_obj, blx_track, tempomul):
 	blx_region.trackId = blx_track.id

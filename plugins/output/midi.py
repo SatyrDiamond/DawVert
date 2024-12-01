@@ -18,7 +18,7 @@ def add_cmd(i_list, i_pos, i_cmd):
 	if i_pos not in i_list: i_list[i_pos] = []
 	i_list[i_pos].append(i_cmd)
 
-class output_cvpj_f(plugins.base):
+class output_midi(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
 	

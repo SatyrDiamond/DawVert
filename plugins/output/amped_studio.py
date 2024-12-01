@@ -112,11 +112,18 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 	return outdata
 
 class output_amped(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Amped Studio'
-	def get_shortname(self): return 'amped'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Amped Studio'
+	
+	def get_shortname(self):
+		return 'amped'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'amped'
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
@@ -127,7 +134,8 @@ class output_amped(plugins.base):
 		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+		
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_amped
 
 		global counter_id
@@ -148,9 +156,10 @@ class output_amped(plugins.base):
 		amped_obj = proj_amped.amped_project(None)
 		amped_obj.tempo = int(convproj_obj.params.get('bpm', 120).value)
 		amped_obj.timesig_num, amped_obj.timesig_den = convproj_obj.timesig
-		amped_obj.loop_active = convproj_obj.loop_active
-		amped_obj.loop_start = convproj_obj.loop_start
-		amped_obj.loop_end = convproj_obj.loop_end
+		amped_obj.loop_active = convproj_obj.transport.loop_active
+		amped_obj.loop_start = convproj_obj.transport.loop_start
+		amped_obj.loop_end = convproj_obj.transport.loop_end
+		amped_obj.playheadPosition = convproj_obj.transport.current_pos
 
 		amped_obj.createdWith = "DawVert"
 		amped_obj.settings = {"deviceDelayCompensation": True}
@@ -332,4 +341,5 @@ class output_amped(plugins.base):
 		zip_amped.writestr('amped-studio-project.json', json.dumps(amped_obj.write()))
 		zip_amped.writestr('filenames.json', json.dumps(amped_filenames))
 		zip_amped.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())

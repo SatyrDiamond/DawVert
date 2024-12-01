@@ -25,11 +25,18 @@ delay_sync = [[1, 64, ''],[1, 64, 't'],[1, 64, 'd'],[1, 32, ''],[1, 32, 't'],[1,
 op_lfo_shapes = ['saw','square','triangle','random','sine']
 
 class input_audiosanua(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'audiosauna'
-	def get_name(self): return 'AudioSauna'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'audiosauna'
+	
+	def get_name(self):
+		return 'AudioSauna'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['song']
 		in_dict['placement_cut'] = True
@@ -38,15 +45,11 @@ class input_audiosanua(plugins.base):
 		in_dict['plugin_included'] = ['native:audiosauna', 'universal:sampler:multi', 'universal:bitcrush']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return True
-	def detect(self, input_file): 
-		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
-			if 'songdata.xml' in zip_data.namelist(): return True
-			else: return False
-		except:
-			return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.containers.append(['zip', 'songdata.xml'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_audiosauna
 
 		global cvpj_l
@@ -60,8 +63,9 @@ class input_audiosanua(plugins.base):
 		colordata = colors.colorset.from_dataset('audiosauna', 'track', 'main')
 
 		project_obj = proj_audiosauna.audiosauna_song()
-		zip_data = project_obj.load_from_file(input_file)
-		samplefolder = dv_config.path_samples_extracted
+		if dawvert_intent.input_mode == 'file':
+			zip_data = project_obj.load_from_file(dawvert_intent.input_file)
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		# ------------------------------------------ Main ------------------------------------------
 		convproj_obj.params.add('bpm', project_obj.appTempo, 'float')
@@ -292,6 +296,7 @@ class input_audiosanua(plugins.base):
 				lfo_obj.time.set_seconds(g_lfo_speed)
 				lfo_obj.amount = c_lfo_amount
 
-		convproj_obj.loop_active = project_obj.appUseLoop
-		convproj_obj.loop_start = project_obj.appLoopStart
-		convproj_obj.loop_end = project_obj.appLoopEnd
+		convproj_obj.transport.current_pos = max(0, project_obj.appPlayHeadPosition)
+		convproj_obj.transport.loop_active = project_obj.appUseLoop
+		convproj_obj.transport.loop_start = project_obj.appLoopStart
+		convproj_obj.transport.loop_end = project_obj.appLoopEnd

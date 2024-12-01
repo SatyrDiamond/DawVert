@@ -592,7 +592,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			ats.loop_end = ats.duration+(audiopl_obj.time.cut_start*1.5)
 			als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
-		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']:
+		elif audiopl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
 			ats.loop_on = True
 			ats.startrel, ats.loop_start, ats.loop_end = audiopl_obj.time.get_loop_data()
 			als_audioclip.Loop.HiddenLoopStart = 0
@@ -684,14 +684,14 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		if audiopl_obj.time.cut_type == 'cut':
 			als_audioclip.Loop.LoopEnd -= ats.loop_start/2
 			pass
-		elif audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']:
+		elif audiopl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
 			pass
 		else:
 			pass
 
 		if AUDCLIPVERBOSE:
 			for x in [
-				audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'], audiopl_obj.time.cut_type, int(als_audioclip.IsWarped),
+				audiopl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'], audiopl_obj.time.cut_type, int(als_audioclip.IsWarped),
 				als_audioclip.CurrentEnd-als_audioclip.CurrentStart,
 				als_audioclip.Loop.StartRelative, als_audioclip.Loop.LoopStart,
 				als_audioclip.Loop.LoopEnd, int(als_audioclip.Loop.LoopOn),
@@ -767,9 +767,10 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					als_midiclip.Loop.LoopOn = False
 					als_midiclip.Loop.LoopStart = notespl_obj.time.cut_start
 					als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+notespl_obj.time.duration
-				elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']:
+				elif notespl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
 					als_midiclip.Loop.LoopOn = True
 					als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = notespl_obj.time.get_loop_data()
+					als_midiclip.Loop.StartRelative -= als_midiclip.Loop.LoopStart
 				else:
 					als_midiclip.Loop.LoopOn = False
 					als_midiclip.Loop.LoopStart = 0
@@ -1121,15 +1122,22 @@ def do_tracks(convproj_obj, project_obj, current_grouptab, track_group, groups_u
 		#print(debugtxt.ljust(20), tracktype, tid)
 
 class output_ableton(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Ableton Live 11'
-	def get_shortname(self): return 'ableton'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Ableton Live 11'
+	
+	def get_shortname(self):
+		return 'ableton'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'als'
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
@@ -1140,7 +1148,7 @@ class output_ableton(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 		
-	def parse(self, convproj_obj, output_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		global counter_track
 		global counter_note
 		global counter_keytrack
@@ -1172,6 +1180,13 @@ class output_ableton(plugins.base):
 		bpm = convproj_obj.params.get('bpm', 120).value
 
 		project_obj.add_settempotimeig(bpm, get_timesig(convproj_obj.timesig))
+
+		transport_obj = project_obj.Transport
+
+		transport_obj.LoopOn = int(convproj_obj.transport.loop_active)
+		transport_obj.LoopStart = convproj_obj.transport.loop_start
+		transport_obj.LoopLength = convproj_obj.transport.loop_end-convproj_obj.transport.loop_start
+		transport_obj.CurrentTime = convproj_obj.transport.current_pos
 
 		als_mastertrack = project_obj.MasterTrack
 		als_mastermixer = als_mastertrack.DeviceChain.Mixer
@@ -1261,8 +1276,5 @@ class output_ableton(plugins.base):
 			returnid, return_obj = alsdata
 			project_obj.SendsPre[num] = False
 
-		project_obj.Transport.LoopOn = convproj_obj.loop_active
-		project_obj.Transport.LoopStart = convproj_obj.loop_start
-		project_obj.Transport.LoopLength = convproj_obj.loop_end-convproj_obj.loop_start
-
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

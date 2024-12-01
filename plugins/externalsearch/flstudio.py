@@ -10,13 +10,19 @@ import uuid
 def get_type(indata): return 'synth' if indata == "synth" else 'fx'
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'fl_studio'
-	def get_name(self): return 'FL Studio'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['win']
+	def get_shortname(self):
+		return 'fl_studio'
+	
+	def get_name(self):
+		return 'FL Studio'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict):
+		in_dict['supported_os'] = ['win']
+	
 	def import_plugins(self):
-
 		flpath = [
 		os.path.join(globalstore.home_folder, "Documents\\Image-Line\\FL Studio\\Presets\\Plugin database\\Installed"),
 		'C:\\Program Files (x86)\\Image-Line\\Shared\\Data\\FL Studio\\Presets\\Plugin database\\Installed'

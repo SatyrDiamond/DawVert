@@ -16,11 +16,18 @@ def get_timebase(i_val):
 	
 
 class input_mmf(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mmf'
-	def get_name(self): return 'Mobile Music File'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mmf'
+	
+	def get_name(self):
+		return 'Mobile Music File'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mmf']
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
@@ -30,15 +37,11 @@ class input_mmf(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'MMMD': return True
-		else: return False
-		bytestream.seek(0)
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'MMMD'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.songinput import midi_in
 		from objects.file_proj import proj_mmf
@@ -47,9 +50,11 @@ class input_mmf(plugins.base):
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_mmf.smaf_song()
-		if not project_obj.load_from_file(input_file): exit()
 
-		samplefolder = dv_config.path_samples_extracted
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		firstma2 = False
 		#if True in [isinstance(x, proj_mmf.smaf_track_ma2) for x in project_obj.tracks2]:
@@ -63,12 +68,35 @@ class input_mmf(plugins.base):
 			#			track_obj = song_obj.create_track(len(track.sequence))
 			#			firstma2 = True
 			#		
+			#			track_obj.track_name = 'MA2 #'+str(grpnum)
+#
 			#		curpos = 0
 			#		for msg in track.sequence:
-			#			curpos += msg.deltaTime
-			#			if isinstance(msg, proj_mmf.ma2_event_note):
-			#				track_obj.note_dur(curpos, msg.channel+(grpnum*4), msg.note_key+36+(msg.note_oct*12), 100, msg.duration)
-
+			#			curpos += msg.resttime
+#
+			#			channel = msg.channel+(grpnum*4)
+#
+			#			if msg.event_type == 'note':
+			#				track_obj.note_dur(curpos, channel, msg.note_key+36+(msg.note_oct*12), 100, msg.duration)
+#
+			#			elif msg.event_type == 'program':
+			#				track_obj.program_change(curpos, channel, msg.value)
+#
+			#			elif msg.event_type == 'bank':
+			#				track_obj.control_change(curpos, channel, 0, msg.value)
+#
+			#			elif msg.event_type == 'volume':
+			#				track_obj.control_change(curpos, channel, 7, msg.value)
+#
+			#			elif msg.event_type == 'pan':
+			#				track_obj.control_change(curpos, channel, 10, msg.value)
+#
+			#			elif msg.event_type == 'expression':
+			#				track_obj.control_change(curpos, channel, 11, msg.value)
+#
+			#			else:
+			#				print(msg.event_type)
+#
 			#song_obj.postprocess()
 			#song_obj.to_cvpj(convproj_obj)
 

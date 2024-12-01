@@ -69,25 +69,33 @@ def add_filter(convproj_obj, instnum, cutoff, resonance):
 	return fx_id
 
 class input_ceol(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'ceol'
-	def get_name(self): return 'Bosca Ceoil'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'ceol'
+	
+	def get_name(self):
+		return 'Bosca Ceoil'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['ceol']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = []
 		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','chip:fm:opm','universal:filter','universal:midi']
 		in_dict['projtype'] = 'mi'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_boscaceoil
 		from objects.inst_params import fm_opm
 		global ceol_data
 		
 		project_obj = proj_boscaceoil.ceol_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		# ---------- CVPJ Start ----------
 		convproj_obj.type = 'mi'

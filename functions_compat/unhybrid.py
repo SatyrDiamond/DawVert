@@ -52,7 +52,7 @@ def process_r(convproj_obj):
 
 	return True
 
-def process(convproj_obj, in__track_hybrid, out__track_hybrid, out_type):
+def process(convproj_obj, in__track_hybrid, out__track_hybrid, out_type, dawvert_intent):
 	if in__track_hybrid == True and out__track_hybrid == False:
 		if convproj_obj.type in ['r', 'ri', 'rm']: return process_r(convproj_obj)
 		else: return False

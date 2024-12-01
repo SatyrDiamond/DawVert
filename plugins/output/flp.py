@@ -78,11 +78,18 @@ DEBUG_IGNORE_PLACEMENTS = False
 DEBUG_IGNORE_PATTERNS = False
 
 class output_cvpjs(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio 20'
-	def gettype(self): return 'mi'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'flp'
+	
+	def get_name(self):
+		return 'FL Studio 20'
+	
+	def gettype(self):
+		return 'mi'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'flp'
 		in_dict['auto_types'] = ['pl_ticks']
@@ -97,7 +104,8 @@ class output_cvpjs(plugins.base):
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['projtype'] = 'mi'
-	def parse(self, convproj_obj, output_file):
+	
+	def parse(self, convproj_obj, dawvert_intent):
 		from bs4 import BeautifulSoup
 		from functions_plugin import flp_enc_plugins
 		from objects.file_proj import proj_flp
@@ -127,8 +135,11 @@ class output_cvpjs(plugins.base):
 			flp_obj.comment = convproj_obj.metadata.comment_text
 		flp_obj.comment = flp_obj.comment.replace("\r\n", "\r").replace("\n", "\r")
 
-		if flp_obj.title or flp_obj.author or flp_obj.url or flp_obj.genre or flp_obj.comment:
-			flp_obj.showinfo = 1
+		if convproj_obj.metadata.show == -1:
+			if flp_obj.title or flp_obj.author or flp_obj.url or flp_obj.genre or flp_obj.comment:
+				flp_obj.showinfo = 1
+		else:
+			flp_obj.showinfo = convproj_obj.metadata.show
 
 		flp_obj.tempo = convproj_obj.params.get('bpm',120).value
 
@@ -381,6 +392,18 @@ class output_cvpjs(plugins.base):
 			playlistposvalues = FL_Playlist_Sorted[itemposition]
 			for itemrow in playlistposvalues: arrangement_obj.items.append(itemrow)
 
+		if convproj_obj.transport.loop_active:
+			flp_timemarker_obj = arrangement.flp_timemarker()
+			flp_timemarker_obj.pos = convproj_obj.transport.loop_start
+			flp_timemarker_obj.type = 4
+			arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
+		if convproj_obj.transport.start_pos:
+			flp_timemarker_obj = arrangement.flp_timemarker()
+			flp_timemarker_obj.pos = convproj_obj.transport.start_pos
+			flp_timemarker_obj.type = 5
+			arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
 		for pos, value in convproj_obj.timesig_auto:
 			flp_timemarker_obj = arrangement.flp_timemarker()
 			flp_timemarker_obj.pos = pos
@@ -395,9 +418,7 @@ class output_cvpjs(plugins.base):
 			flp_timemarker_obj.pos = timemarker_obj.position
 			flp_timemarker_obj.type = 0
 			flp_timemarker_obj.name = timemarker_obj.visual.name if timemarker_obj.visual.name else ""
-			if timemarker_obj.type == 'start': flp_timemarker_obj.type = 5
-			elif timemarker_obj.type == 'loop': flp_timemarker_obj.type = 4
-			elif timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
+			if timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
 			elif timemarker_obj.type == 'markerskip': flp_timemarker_obj.type = 2
 			elif timemarker_obj.type == 'pause': flp_timemarker_obj.type = 3
 			elif timemarker_obj.type == 'punchin': flp_timemarker_obj.type = 9
@@ -496,4 +517,5 @@ class output_cvpjs(plugins.base):
 			else:
 				logger_output.warning('Mixer Channel "'+str(fx_num)+'" does not exist.')
 
-		flp_obj.make(output_file)
+		if dawvert_intent.output_mode == 'file':
+			flp_obj.make(dawvert_intent.output_file)

@@ -7,24 +7,32 @@ import plugins
 dpcm_rate_arr = [4181.71,4709.93,5264.04,5593.04,6257.95,7046.35,7919.35,8363.42,9419.86,11186.1,12604.0,13982.6,16884.6,21306.8,24858.0,33143.9]
 
 class input_famitracker_txt(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'famitracker_txt'
-	def get_name(self): return 'Famitracker Text'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'famitracker_txt'
+	
+	def get_name(self):
+		return 'Famitracker Text'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['txt']
 		in_dict['file_ext_detect'] = False
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'm'
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_famitracker
 		from objects.tracker import pat_multi
 		from objects import audio_data
 		project_obj = proj_famitracker.famitracker_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.fxtype = 'rack'
 		
@@ -35,7 +43,7 @@ class input_famitracker_txt(plugins.base):
 			else: convproj_obj.metadata.copyright = project_obj.copyright
 		if project_obj.comment: convproj_obj.metadata.comment_text = '\n'.join(project_obj.comment)
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		globalstore.dataset.load('chip_nes', './data_main/dataset/chip_nes.dset')
 

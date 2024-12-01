@@ -33,7 +33,7 @@ def commalist2plugtypes(inputdata):
 
 plugconv_int_selector = dv_plugins.create_selector('plugconv')
 
-def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dv_config):
+def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dawvert_intent):
 	plugqueue = []
 
 	for shortname, dvplugin in plugconv_int_selector.iter_dvp():
@@ -51,13 +51,13 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, dv_config):
 			plugin_obj.external_make_compat(convproj_obj, out_dawinfo.plugin_ext)
 
 		if not is_external:
-			converted_val = plugin_obj.convert_internal(convproj_obj, pluginid, out_dawname, dv_config)
+			converted_val = plugin_obj.convert_internal(convproj_obj, pluginid, out_dawname, dawvert_intent)
 
 			ext_conv_val = False
 			notsupported = not plugin_obj.check_str_multi(outdaw_plugs)
 
 			if converted_val and notsupported:
-				ext_conv_val = plugin_obj.convert_external(convproj_obj, pluginid, out_dawinfo.plugin_ext, dv_config)
+				ext_conv_val = plugin_obj.convert_external(convproj_obj, pluginid, out_dawinfo.plugin_ext, dawvert_intent)
 
 			if converted_val==2 and not ext_conv_val and notsupported and str(plugin_obj.type) not in norepeat:
 				logger_plugconv.warning('       | No equivalent to "'+str(plugin_obj.type)+'" found or not supported')

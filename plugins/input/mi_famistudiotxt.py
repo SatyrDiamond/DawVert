@@ -269,11 +269,18 @@ def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
 
 
 class input_famistudio(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'famistudio_txt'
-	def get_name(self): return 'FamiStudio Text'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'famistudio_txt'
+	
+	def get_name(self):
+		return 'FamiStudio Text'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['txt']
 		in_dict['file_ext_detect'] = False
@@ -283,8 +290,8 @@ class input_famistudio(plugins.base):
 		in_dict['plugin_included'] = ['chip:epsm_rhythm','chip:fds','chip:fm:epsm','chip:fm:vrc7','chip:namco163_famistudio','universal:sampler:multi','universal:synth-osc']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
-	def supported_autodetect(self): return False
-	def parse(self, i_convproj_obj, input_file, dv_config):
+		
+	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_famistudiotxt
 		
 		global samplefolder
@@ -296,14 +303,16 @@ class input_famistudio(plugins.base):
 		convproj_obj.set_timings(4, True)
 
 		globalstore.dataset.load('famistudio', './data_main/dataset/famistudio.dset')
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		project_obj = proj_famistudiotxt.famistudiotxt_project()
-		if not project_obj.load_from_file(input_file): exit()
+
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		songnamelist = list(project_obj.Songs.keys())
 
-		fst_currentsong = project_obj.Songs[songnamelist[dv_config.songnum-1]]
+		fst_currentsong = project_obj.Songs[songnamelist[dawvert_intent.songnum]]
 
 		PatternLengthList = [fst_currentsong.PatternLength for x in range(fst_currentsong.PatternSettings.Length)]
 		BPMList = [fst_currentsong.PatternSettings.bpm for x in range(fst_currentsong.PatternSettings.Length)]

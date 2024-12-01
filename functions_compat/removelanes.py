@@ -68,7 +68,7 @@ def process_r(convproj_obj, out_dawinfo):
 					if insidegroup: group_obj.visual.color = copy.deepcopy(allcolor)
 	return True
 
-def process(convproj_obj, in__track_lanes, out_dawinfo, out_type):
+def process(convproj_obj, in__track_lanes, out_dawinfo, out_type, dawvert_intent):
 	if in__track_lanes == True and out_dawinfo.track_lanes == False:
 		if convproj_obj.type in ['r', 'ri', 'rm']: return process_r(convproj_obj, out_dawinfo)
 		else: return False

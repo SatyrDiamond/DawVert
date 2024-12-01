@@ -73,54 +73,44 @@ def add_single_sampler(convproj_obj, it_samp, sampleidnum):
 	return plugin_obj, pluginid, sampleref_obj
 
 class input_it(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'it'
-	def get_name(self): return 'Impulse Tracker'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self): 
+		return 'input'
+
+	def get_shortname(self): 
+		return 'it'
+
+	def get_name(self): 
+		return 'Impulse Tracker'
+
+	def get_priority(self): 
+		return 0
+
 	def get_prop(self, in_dict):
 		in_dict['file_ext'] = ['it']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'm'
-	def supported_autodetect(self): return True
 
-	def detect_bytes(self, in_bytes):
-		bytestream = io.BytesIO(in_bytes)
-		return self.detect_internal(bytestream)
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'IMPM'])
 
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		return self.detect_internal(bytestream)
-
-	def detect_internal(self, bytestream):
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'IMPM': return True
-		else: return False
-		bytestream.seek(0)
-
-	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_it
-		project_obj = proj_it.it_song()
-		if not project_obj.load_from_raw(input_bytes): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
-
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_it
-		project_obj = proj_it.it_song()
-		if not project_obj.load_from_file(input_file): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config, input_file)
-
-	def parse_internal(self, convproj_obj, project_obj, dv_config, input_file):
 		from objects.tracker import pat_single
 		global samplefolder
+
+		project_obj = proj_it.it_song()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+		if dawvert_intent.input_mode == 'bytes':
+			if not project_obj.load_from_raw(dawvert_intent.input_data): exit()
 
 		try: import xmodits
 		except: xmodits_exists = False
 		else: xmodits_exists = True
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 		
 		it_useinst = 2 in project_obj.flags
 
@@ -128,13 +118,21 @@ class input_it(plugins.base):
 		while -2 in table_orders: table_orders.remove(-2)
 		while -1 in table_orders: table_orders.remove(-1)
 		
-		if xmodits_exists == True and input_file:
-			if not os.path.exists(samplefolder): os.makedirs(samplefolder)
-			try: xmodits.dump(input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
-			except: pass
+		breakcounts = [0]
+		for x in project_obj.l_order:
+			if x not in [-1, -2]: breakcounts.append(0)
+			else: breakcounts[-1] += 1
+		timepoints = [n for n, x in enumerate(breakcounts) if x]
+
+		if dawvert_intent.input_mode == 'file':
+			if xmodits_exists == True and dawvert_intent.input_file:
+				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
+				try: xmodits.dump(dawvert_intent.input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
+				except: pass
 
 		patterndata_obj = pat_single.single_patsong(64, TEXTSTART, MAINCOLOR)
 		patterndata_obj.orders = table_orders
+		patterndata_obj.timepoints = timepoints
 
 		for patnum, itpat_obj in enumerate(project_obj.patterns):
 			if itpat_obj.used:

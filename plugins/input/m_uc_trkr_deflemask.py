@@ -5,27 +5,39 @@ from objects import globalstore
 import plugins
 
 class input_deflemask(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'deflemask'
-	def get_name(self): return 'Deflemask'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self): 
+		return 'input'
+
+	def get_shortname(self): 
+		return 'deflemask'
+
+	def get_name(self): 
+		return 'Deflemask'
+
+	def get_priority(self): 
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['dmf']
 		in_dict['track_lanes'] = True
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'm'
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'.DelekDefleMask.'])
+		detectdef_obj.containers.append(['zlib'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_deflemask
 		from objects.tracker import pat_multi
 		from objects import audio_data
 		project_obj = proj_deflemask.deflemask_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.fxtype = 'rack'
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		globalstore.dataset.load('furnace', './data_main/dataset/furnace.dset')
 

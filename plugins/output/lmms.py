@@ -326,11 +326,18 @@ def asdrlfo_set(plugin_obj, eldata):
 	asdrlfo(plugin_obj, eldata.elres, 'reso')
 
 class output_lmms(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'LMMS'
-	def get_shortname(self): return 'lmms'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'LMMS'
+	
+	def get_shortname(self):
+		return 'lmms'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'mmp'
 		in_dict['fxtype'] = 'rack'
@@ -343,7 +350,7 @@ class output_lmms(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['projtype'] = 'r'
 		
-	def parse(self, i_cvpj_obj, output_file):
+	def parse(self, i_cvpj_obj, dawvert_intent):
 		from objects.file_proj import proj_lmms
 
 		global lmms_bpm
@@ -629,13 +636,14 @@ class output_lmms(plugins.base):
 			if cvpj_obj.metadata.comment_datatype == 'text': 
 				song_obj.projectnotes.text += cvpj_obj.metadata.comment_text.replace('\n', '<br/>').replace('\r', '<br/>')
 
-		if cvpj_obj.loop_active:
-			song_obj.timeline.lpstate = int(cvpj_obj.loop_active)
-			song_obj.timeline.lp0pos = cvpj_obj.loop_start
-			song_obj.timeline.lp1pos = cvpj_obj.loop_end
+		if cvpj_obj.transport.loop_active:
+			song_obj.timeline.lpstate = int(cvpj_obj.transport.loop_active)
+			song_obj.timeline.lp0pos = cvpj_obj.transport.loop_start
+			song_obj.timeline.lp1pos = cvpj_obj.transport.loop_end
 		else:
 			song_obj.timeline.lpstate = 1
-			song_obj.timeline.lp0pos = cvpj_obj.start_pos
+			song_obj.timeline.lp0pos = cvpj_obj.transport.start_pos
 			song_obj.timeline.lp1pos = cvpj_obj.get_dur()
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

@@ -76,7 +76,8 @@ class sn2_pattern:
 			if subchunk_obj.id == b'tem': 
 				pointssize = subchunk_obj.size//8
 				#print('[soundclub2]	  Tempo Points:',pointssize)
-				self.tempos.append([song_file.uint32(), song_file.uint8(), song_file.uint8(), song_file.uint8(), song_file.uint8()])
+				for x  in range(pointssize):
+					self.tempos.append([song_file.uint32(), song_file.uint8(), song_file.uint8(), song_file.uint8(), song_file.uint8()])
 
 			if subchunk_obj.id == b'voi': 
 				voice_obj = sn2_voice(song_file, subchunk_obj.end)

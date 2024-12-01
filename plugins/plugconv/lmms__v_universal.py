@@ -60,19 +60,21 @@ def getslope(slopeval):
 	return outval
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return 100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['universal', None, None]]
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
-		#plugintype = cvpj_plugindata.type_get()
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('universal', 'synth-osc', None):
-			samplefolder = dv_config.path_samples_generated
+			samplefolder = dawvert_intent.path_samples['generated']
 
 			if len(plugin_obj.oscs) == 1 and not plugin_obj.env_blocks_get_exists('vol')[0] and not plugin_obj.env_points_get_exists('vol')[0]:
 				osc_obj = plugin_obj.oscs[0]

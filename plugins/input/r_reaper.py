@@ -107,16 +107,21 @@ def do_fade(fade_data, fadevals, tempomul):
 	if fadevals['fade_type'] == 4: fade_data.slope = -1
 
 class input_reaper(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'reaper'
-	def get_name(self): return 'REAPER'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'reaper'
+	
+	def get_name(self):
+		return 'REAPER'
+	
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['rpp']
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = []
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
@@ -129,20 +134,22 @@ class input_reaper(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
 		
-	def parse(self, convproj_obj, input_file, dv_config):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_reaper
 		from functions_plugin_ext import plugin_vst2
 		from functions_plugin_ext import plugin_vst3
 		from functions_plugin_ext import plugin_clap
 
-		bytestream = open(input_file, 'r')
+		if dawvert_intent.input_mode == 'file':
+			bytestream = open(dawvert_intent.input_file, 'r')
 		try:
 			rpp_data = rpp.load(bytestream)
 		except UnicodeDecodeError:
 			raise ProjectFileParserException('reaper: File is not text')
 
 		project_obj = proj_reaper.rpp_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		globalstore.dataset.load('reaper', './data_main/dataset/reaper.dset')
 		globalstore.datadef.load('reaper', './data_main/datadef/reaper.ddef')
@@ -154,14 +161,38 @@ class input_reaper(plugins.base):
 
 		rpp_project = project_obj.project
 
+		convproj_obj.metadata.name = rpp_project.title.get()
+		convproj_obj.metadata.author = rpp_project.author.get()
+		convproj_obj.metadata.comment_text = '\n'.join(rpp_project.notes_data)
+
 		bpm = rpp_project.tempo['tempo']
 		convproj_obj.params.add('bpm', bpm, 'float')
 		tempomul = bpm/120
 		convproj_obj.timesig = [int(rpp_project.tempo['num']), int(rpp_project.tempo['denom'])]
 
+		loop_active = bool(rpp_project.loop.get())
+		loop_start = rpp_project.selection['start']
+		loop_size = rpp_project.selection['end']
+
+		convproj_obj.transport.is_seconds = True
+		convproj_obj.timemarkers.is_seconds = True
+
+		convproj_obj.transport.current_pos = rpp_project.cursor.get()
+
+		if loop_active and loop_size:
+			convproj_obj.transport.loop_active = loop_active
+			convproj_obj.transport.loop_start = loop_start
+			convproj_obj.transport.loop_end = loop_size
+
 		trackdata = []
 
 		used_trackids = []
+
+		for marker in rpp_project.markers:
+			timemarker_obj = convproj_obj.timemarker__add()
+			timemarker_obj.position = marker[1]
+			if marker[2]: timemarker_obj.visual.name = marker[2]
+			if marker[4]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[4], True))
 
 		for tracknum, rpp_track in enumerate(rpp_project.tracks):
 			cvpj_trackid = rpp_track.trackid.get()
@@ -294,6 +325,7 @@ class input_reaper(plugins.base):
 				if len(outsamplers) == 1:
 					filename, samplerj = outsamplers[0]
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(sampler_id, filename, 'win')
+
 					if sampleref_obj:
 						do_samplepart_loop(samplerj, sp_obj, sampleref_obj)
 						do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, 'vol')

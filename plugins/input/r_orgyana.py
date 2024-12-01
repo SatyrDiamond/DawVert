@@ -6,26 +6,30 @@ import plugins
 import os
 
 class input_orgyana(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'orgyana'
-	def get_name(self): return 'Orgyana'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'orgyana'
+	
+	def get_name(self):
+		return 'Orgyana'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['org']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(6)
-		if bytesdata == b'Org-02' or bytesdata == b'Org-03': return True
-		else: return False
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'Org-02'])
+		detectdef_obj.headers.append([0, b'Org-03'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_orgyana
 		from objects import colors
 		from objects import audio_data
@@ -37,9 +41,10 @@ class input_orgyana(plugins.base):
 		colordata = colors.colorset.from_dataset('orgyana', 'track', 'orgmaker_2')
 
 		project_obj = proj_orgyana.orgyana_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
-		orgsamp_filename = os.path.join(dv_config.path_external_data, 'orgyana', 'orgsamp.dat')
+		orgsamp_filename = os.path.join(dawvert_intent.path_external_data, 'orgyana', 'orgsamp.dat')
 
 		orgsamp_obj = proj_orgyana.orgyana_orgsamp()
 		if os.path.exists(orgsamp_filename): orgsamp_obj.load_from_file(orgsamp_filename)
@@ -53,7 +58,7 @@ class input_orgyana(plugins.base):
 					track_obj.visual.from_dset('orgyana', 'drums', str(orgtrack_obj.instrument), False)
 					track_obj.is_drum = True
 					if orgsamp_obj.loaded:
-						drum_filename = os.path.join(dv_config.path_samples_extracted+'orgmaker_drum_'+str(orgtrack_obj.instrument)+'.wav')
+						drum_filename = os.path.join(dawvert_intent.path_samples['extracted']+'orgmaker_drum_'+str(orgtrack_obj.instrument)+'.wav')
 						if not os.path.exists(drum_filename):
 							audio_obj = audio_data.audio_obj()
 							audio_obj.set_codec('int8')
@@ -102,6 +107,6 @@ class input_orgyana(plugins.base):
 		convproj_obj.timesig = [project_obj.stepsperbar, project_obj.beatsperstep]
 
 		if project_obj.loop_beginning != 0: 
-			convproj_obj.loop_active = True
-			convproj_obj.loop_start = project_obj.loop_beginning
-			convproj_obj.loop_end = project_obj.loop_end
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = project_obj.loop_beginning
+			convproj_obj.transport.loop_end = project_obj.loop_end

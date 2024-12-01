@@ -44,11 +44,18 @@ class reader_midifile_class():
 			elif type(msg) == MidiEvents.EndOfTrackEvent:    break
 
 class input_midi(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'midi'
-	def get_name(self): return 'MIDI'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'midi'
+	
+	def get_name(self):
+		return 'MIDI'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mid']
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
@@ -57,20 +64,18 @@ class input_midi(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'MThd': return True
-		else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'MThd'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'
 
 		midiread_obj = reader_midifile_class()
 
-		numchans, ppq, song_obj = midiread_obj.do_song(input_file)
+		if dawvert_intent.input_mode == 'file':
+			numchans, ppq, song_obj = midiread_obj.do_song(dawvert_intent.input_file)
 		logger_input.info('PPQ: ' + str(ppq))
 		convproj_obj.set_timings(ppq, False)
 

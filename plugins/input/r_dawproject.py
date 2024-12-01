@@ -300,22 +300,21 @@ def do_clips(convproj_obj, track_obj, clip, clips):
 				do_audioauto(npa_obj, points)
 
 class input_dawproject(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'dawproject'
-	def get_name(self): return 'DawProject'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return True
-	def detect(self, input_file): 
-		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
-			if 'project.xml' in zip_data.namelist(): return True
-			else: return False
-		except:
-			return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'dawproject'
+	
+	def get_name(self):
+		return 'DawProject'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['dawproject']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']
@@ -327,7 +326,10 @@ class input_dawproject(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.containers.append(['zip', 'project.xml'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_dawproject
 		from objects import auto_id
 
@@ -344,11 +346,12 @@ class input_dawproject(plugins.base):
 
 		autoid_assoc = auto_id.convproj2autoid(48, False)
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		project_obj = proj_dawproject.dawproject_song()
 		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
 		except zipfile.BadZipFile as t:
 			raise ProjectFileParserException('dawproject: Bad ZIP File: '+str(t))
 

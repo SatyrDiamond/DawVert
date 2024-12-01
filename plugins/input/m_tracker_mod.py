@@ -14,35 +14,37 @@ MAINCOLOR = [0.47, 0.47, 0.47]
 IGNORE_ERRORS = False
 
 class input_mod(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mod'
-	def get_name(self): return 'Protracker Module'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+
+	def get_shortname(self):
+		return 'mod'
+
+	def get_name(self):
+		return 'Protracker Module'
+
+	def get_priority(self):
+		return 0
+		
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mod']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'm'
-	def supported_autodetect(self): return False
 
-	def parse_bytes(self, convproj_obj, input_bytes, dv_config, input_file):
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_mod
-		project_obj = proj_mod.mod_song()
-		if not project_obj.load_from_raw(input_bytes, IGNORE_ERRORS): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config)
-
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_mod
-		project_obj = proj_mod.mod_song()
-		if not project_obj.load_from_file(input_file, IGNORE_ERRORS): exit()
-		self.parse_internal(convproj_obj, project_obj, dv_config)
-
-	def parse_internal(self, convproj_obj, project_obj, dv_config):
 		from objects.tracker import pat_single
 		from objects import audio_data
-		samplefolder = dv_config.path_samples_extracted
+		
+		project_obj = proj_mod.mod_song()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file, IGNORE_ERRORS): exit()
+		if dawvert_intent.input_mode == 'bytes':
+			if not project_obj.load_from_raw(dawvert_intent.input_data, IGNORE_ERRORS): exit()
+
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		cvpj_bpm = 125
 		current_speed = 6

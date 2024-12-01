@@ -2,20 +2,24 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import numpy as np
-from io import BytesIO
 
 class input_codec(plugins.base):
-	def is_dawvert_plugin(self): return 'audiocodec'
-	def get_shortname(self): return 'sony_vag'
-
-	def get_name(self): return 'Sony VAG'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'audiocodec'
+	
+	def get_shortname(self):
+		return 'sony_vag'
+	
+	def get_name(self):
+		return 'Sony VAG'
+	
 	def get_prop(self, in_dict): 
 		in_dict['decode_supported'] = True
 
 	def decode(self, in_bytes, audio_obj):
 		import av
+		import numpy as np
+		from io import BytesIO
 		vag_audio = BytesIO(in_bytes)
 
 		try:

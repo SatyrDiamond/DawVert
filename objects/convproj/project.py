@@ -123,6 +123,41 @@ class cvpj_scenepl:
 		self.duration = 0
 		self.id = ''
 
+class cvpj_transport:
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+
+		self.is_seconds = False
+
+		self.loop_active = False
+		self.loop_start = 0
+		self.loop_end = 0
+		self.start_pos = 0
+
+		self.current_pos = 0
+
+	def change_timings(self, time_ppq, time_float):
+		if not self.is_seconds:
+			self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
+			self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
+			self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
+			self.current_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.current_pos)
+
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if is_seconds and not self.is_seconds:
+			self.loop_start = xtramath.step2sec(self.loop_start, bpm)/(ppq/4)
+			self.loop_end = xtramath.step2sec(self.loop_end, bpm)/(ppq/4)
+			self.start_pos = xtramath.step2sec(self.start_pos, bpm)/(ppq/4)
+			self.current_pos = xtramath.step2sec(self.current_pos, bpm)/(ppq/4)
+			self.is_seconds = True
+		elif self.is_seconds:
+			self.loop_start = xtramath.sec2step(self.loop_start, bpm)
+			self.loop_end = xtramath.sec2step(self.loop_end, bpm)
+			self.start_pos = xtramath.sec2step(self.start_pos, bpm)
+			self.current_pos = xtramath.sec2step(self.current_pos, bpm)
+			self.is_seconds = False
+		
 class cvpj_project:
 	def __init__(self):
 		self.type = None
@@ -148,10 +183,7 @@ class cvpj_project:
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
 		self.metadata = visual.cvpj_metadata()
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
-		self.loop_active = False
-		self.loop_start = 0
-		self.loop_end = 0
-		self.start_pos = 0
+		self.transport = cvpj_transport(self.time_ppq, self.time_float)
 		self.filerefs = {}
 		self.samplerefs = {}
 		self.window_data = {}
@@ -182,6 +214,7 @@ class cvpj_project:
 		self.automation.time_ppq = self.time_ppq
 		self.automation.time_float = self.time_float
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
+		self.transport = cvpj_transport(self.time_ppq, self.time_float)
 
 	def change_timings(self, time_ppq, time_float):
 		logger_project.info('Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
@@ -195,10 +228,8 @@ class cvpj_project:
 			n.notelist.change_timings(time_ppq, time_float)
 			n.timesig_auto.change_timings(time_ppq, time_float)
 		self.timemarkers.change_timings(time_ppq, time_float)
-		self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
-		self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
-		self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
 		self.timesig_auto.change_timings(time_ppq, time_float)
+		self.transport.change_timings(time_ppq, time_float)
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.automation.change_timings(time_ppq, time_float)
@@ -227,10 +258,10 @@ class cvpj_project:
 	def add_autopoints_twopoints(self, autopath, v_type, twopoints):
 		for x in twopoints: self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
-	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dv_config):
+	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		compactclass = song_compat.song_compat()
 
-		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type)
+		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
 		if self.type == 'ri' and out_type == 'mi': convert_ri2mi.convert(self)
 		elif self.type == 'ri' and out_type == 'r': convert_ri2r.convert(self)
@@ -241,39 +272,39 @@ class cvpj_project:
 		elif self.type == 'r' and out_type == 'm': convert_r2m.convert(self)
 		elif self.type == 'r' and out_type == 'mi': 
 			convert_r2m.convert(self)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
-		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dv_config)
+		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dawvert_intent)
 		elif self.type == 'mi' and out_type == 'r': 
-			convert_mi2m.convert(self, dv_config)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			convert_mi2m.convert(self, dawvert_intent)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2r.convert(self)
 	
 		elif self.type == 'rm' and out_type == 'r': convert_rm2r.convert(self)
 		elif self.type == 'rm' and out_type == 'm': convert_rm2m.convert(self, True)
 		elif self.type == 'rm' and out_type == 'mi': 
 			convert_rm2m.convert(self, True)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'rs' and out_type == 'mi': 
 			convert_rs2r.convert(self)
 			convert_r2m.convert(self)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'rs' and out_type == 'r': convert_rs2r.convert(self)
 
 		elif self.type == 'ms' and out_type == 'mi': 
 			convert_ms2rm.convert(self, out_dawinfo)
-			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2m.convert(self, True)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'ms' and out_type == 'r': 
 			convert_ms2rm.convert(self, out_dawinfo)
-			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2r.convert(self)
 
 		elif self.type == out_type: 
@@ -283,7 +314,7 @@ class cvpj_project:
 			logger_project.error(typelist[in_type]+' to '+typelist[out_type]+' is not supported.')
 			exit()
 
-		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type)
+		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
 # --------------------------------------------------------- GROUPS ---------------------------------------------------------
 
@@ -466,11 +497,11 @@ class cvpj_project:
 
 	def sampleref__searchmissing(self, input_file):
 		dirpath = os.path.dirname(input_file)
-		files = self.filesearcher.searchcache
+		files = fileref.filesearcher.searchcache
 
 		for sampleref_id, sampleref_obj in self.sampleref__iter():
 			if not sampleref_obj.found:
-				self.filesearcher.scan_local_files(dirpath)
+				fileref.filesearcher.scan_local_files(dirpath)
 				sampleref_obj.search_local()
 
 # --------------------------------------------------------- FX ---------------------------------------------------------

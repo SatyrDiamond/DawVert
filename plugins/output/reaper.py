@@ -67,6 +67,7 @@ def add_auto(rpp_env, autopoints_obj):
 
 def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+
 	if plugin_found:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 
@@ -286,11 +287,18 @@ def do_fade(fade_data, fadevals, bpm):
 	fadevals['curve'] = 0
 
 class output_reaper(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'REAPER'
-	def get_shortname(self): return 'reaper'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'REAPER'
+	
+	def get_shortname(self):
+		return 'reaper'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'rpp'
 		in_dict['placement_cut'] = True
@@ -306,7 +314,8 @@ class output_reaper(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain
 		from objects.file_proj._rpp import source as rpp_source
@@ -331,7 +340,27 @@ class output_reaper(plugins.base):
 		rpp_project.tempo['num'] = convproj_obj.timesig[0]
 		rpp_project.tempo['denom'] = convproj_obj.timesig[1]
 
+		if convproj_obj.metadata.name:
+			rpp_project.title.set(convproj_obj.metadata.name)
+		if convproj_obj.metadata.author:
+			rpp_project.author.set(convproj_obj.metadata.author)
+		for t in convproj_obj.metadata.comment_text.replace("\r\n", "\r").replace("\n", "\r").split('\r'):
+			rpp_project.notes_data.append(t)
+		if convproj_obj.metadata.show == 1:
+			rpp_project.notes_vals.read([3,3])
+
+		rpp_project.loop.set(int(convproj_obj.transport.loop_active))
+		rpp_project.selection['start'] = convproj_obj.transport.loop_start
+		rpp_project.selection['end'] = convproj_obj.transport.loop_end
+		rpp_project.cursor.set(convproj_obj.transport.current_pos)
+
 		track_uuids = ['{'+str(uuid.uuid4())+'}' for _ in convproj_obj.track__iter()]
+
+		for num, timemarker_obj in enumerate(convproj_obj.timemarkers):
+			name = timemarker_obj.visual.name if timemarker_obj.visual.name else ''
+			color = cvpj_color_to_reaper_color(timemarker_obj.visual.color) if timemarker_obj.visual.color else 0
+			outmarker = [num+1, timemarker_obj.position, name, 0, color, 1, 'R', '{'+str(uuid.uuid4()).upper()+'}', 0]
+			rpp_project.markers.append(outmarker)
 
 		trackdata = []
 
@@ -445,4 +474,5 @@ class output_reaper(plugins.base):
 							auxrecv_obj['pan'] = send_obj.params.get('pan', 0).value
 
 		
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

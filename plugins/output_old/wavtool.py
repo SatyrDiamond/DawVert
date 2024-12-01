@@ -20,14 +20,8 @@ def addsample(zip_wt, filepath, alredyexists):
 			audio_id[filepath] = datauuid
 			if os.path.exists(filepath):
 				filename, filetype = os.path.basename(filepath).split('.')
-
 				if datauuid not in zip_wt.namelist():
-					if filetype in ['wav', 'mp3']:
-						zip_wt.write(filepath, datauuid+'.'+filetype)
-					else:
-						zip_wt.writestr(datauuid+'.wav', audio.convert_to_wav(filepath))
-
-				zip_wt.write(filepath, datauuid+'.'+filetype)
+					zip_wt.write(filepath, datauuid+'.'+filetype)
 			datauuid = audio_id[filepath]
 		else:
 			datauuid = audio_id[filepath]
@@ -102,11 +96,18 @@ def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoi
 
 
 class output_wavtool(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Wavtool'
-	def get_shortname(self): return 'wavtool'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Wavtool'
+	
+	def get_shortname(self):
+		return 'wavtool'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'zip'
 		in_dict['placement_cut'] = True
@@ -117,7 +118,8 @@ class output_wavtool(plugins.base):
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from functions_plugin_ext import plugin_vst2
 		from objects.file_proj import proj_wavtool
 
@@ -467,9 +469,9 @@ class output_wavtool(plugins.base):
 						wavtool_obj.tracks[wt_trackauto.id] = wt_trackauto
 
 		wavtool_obj.id = "DawVertConverted-"+str(uuid.uuid4())
-		wavtool_obj.loopStart = max(convproj_obj.loop_start, 0)
-		wavtool_obj.loopEnd = max(convproj_obj.loop_end, 0)
-		wavtool_obj.loopEnabled = convproj_obj.loop_active
+		wavtool_obj.loopStart = max(convproj_obj.transport.loop_start, 0)
+		wavtool_obj.loopEnd = max(convproj_obj.transport.loop_end, 0)
+		wavtool_obj.loopEnabled = convproj_obj.transport.loop_active
 		wavtool_obj.bpm = bpm
 		wavtool_obj.beatNumerator, wavtool_obj.beatDenominator = convproj_obj.timesig
 		wavtool_obj.name = convproj_obj.metadata.name
@@ -481,13 +483,15 @@ class output_wavtool(plugins.base):
 		wavtool_obj.focusedTrackId = 'DawVert-Track-'+convproj_obj.track_order[0]
 		wavtool_obj.selectedDeviceId = "metronome"
 
-		wavtool_obj.loopStart = convproj_obj.loop_start
-		wavtool_obj.loopEnd = convproj_obj.loop_end
-		wavtool_obj.loopEnabled = convproj_obj.loop_active
+		wavtool_obj.loopStart = convproj_obj.transport.loop_start
+		wavtool_obj.loopEnd = convproj_obj.transport.loop_end
+		wavtool_obj.loopEnabled = convproj_obj.transport.loop_active
 
 		zip_wt.writestr('WavTool Project.json', json.dumps(wavtool_obj.write()))
 		zip_wt.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
 
 		#with open('wavtool_debug.json', "w") as fileout:
 		#	json.dump(wavtool_obj.write(), fileout, indent=4)

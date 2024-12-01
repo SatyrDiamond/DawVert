@@ -194,11 +194,18 @@ def incolor(value, visual_obj):
 			visual_obj.color.set_int([colorval[0], colorval[1], colorval[2]])
 
 class input_notessimo_v3(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'notessimo_v3'
-	def get_name(self): return 'Notessimo V3'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'notessimo_v3'
+	
+	def get_name(self):
+		return 'Notessimo V3'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['note']
 		in_dict['file_ext_detect'] = False
@@ -207,13 +214,17 @@ class input_notessimo_v3(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+		
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.container_only = True
+		detectdef_obj.containers.append(['zip', 'sheets.xml'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_notessimo_v3
 
 		global sheetrealsize
 		global samplefolder
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		# ---------- CVPJ Start ----------
 		convproj_obj.fxtype = 'rack'
@@ -222,11 +233,12 @@ class input_notessimo_v3(plugins.base):
 
 		globalstore.dataset.load('notessimo_v3', './data_main/dataset/notessimo_v3.dset')
 		
-		extpath_path = os.path.join(dv_config.path_external_data, 'notessimo_v3', 'notessimo_v3_data.zip')
+		extpath_path = os.path.join(dawvert_intent.path_external_data, 'notessimo_v3', 'notessimo_v3_data.zip')
 
 		# ---------- File ----------
 		project_obj = proj_notessimo_v3.notev3_file()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		maindata_obj = proj_notessimo_v3.notev3_file()
 		if os.path.exists(extpath_path): 
@@ -235,7 +247,7 @@ class input_notessimo_v3(plugins.base):
 
 		songlist = list(project_obj.songs)
 
-		notet_cursong_id = songlist[dv_config.songnum-1]
+		notet_cursong_id = songlist[dawvert_intent.songnum]
 		notet_cursong_data = project_obj.songs[notet_cursong_id]
 
 		used_insts = []

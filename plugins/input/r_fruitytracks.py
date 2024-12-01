@@ -35,11 +35,18 @@ def make_auto_clip(placement_obj, mpetype, plpos, pldur, startval, endval):
 	autopoint_obj.type = 'normal'
 
 class input_fruitytracks(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'fruitytracks'
-	def get_name(self): return 'FruityTracks'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+
+	def get_shortname(self):
+		return 'fruitytracks'
+
+	def get_name(self):
+		return 'FruityTracks'
+
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['ftr']
 		in_dict['placement_cut'] = True
@@ -48,15 +55,11 @@ class input_fruitytracks(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['projtype'] = 'r'
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(4)
-		if bytesdata == b'FThd': return True
-		else: return False
-	def supported_autodetect(self): return True
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'FThd'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_fruitytracks
 
 		convproj_obj.type = 'r'
@@ -65,13 +68,26 @@ class input_fruitytracks(plugins.base):
 		fileref.filesearcher.add_searchpath_partial('fruitytracks', '../Samples/', 'projectfile')
 
 		project_obj = proj_fruitytracks.ftr_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
-		convproj_obj.params.add('vol', project_obj.vol/128, 'float')
+		convproj_obj.track_master.params.add('vol', project_obj.vol/128, 'float')
 
 		bpmdiv = 120/project_obj.bpm
 		bpmticks = 5512
+
+		if project_obj.title: convproj_obj.metadata.name = project_obj.title
+		if project_obj.url: convproj_obj.metadata.url = project_obj.url
+		if project_obj.comment:
+			convproj_obj.metadata.comment_text = project_obj.comment
+			convproj_obj.metadata.comment_datatype = 'rtf'
+		convproj_obj.metadata.show = project_obj.showinfo
+
+		if project_obj.loopend:
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = (project_obj.loopstart/bpmticks)/bpmdiv
+			convproj_obj.transport.loop_end = ((project_obj.loopstart+project_obj.loopend)/bpmticks)/bpmdiv
 
 		for tracknum, ftr_track in enumerate(project_obj.tracks):
 			trackid = str(tracknum)

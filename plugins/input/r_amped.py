@@ -313,20 +313,21 @@ def ampedauto_to_cvpjauto(autopoints):
 	for autopoint in autopoints: yield autopoint['pos'], autopoint['value']
 
 class input_amped(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'amped'
-	def get_name(self): return 'Amped Studio'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return True
-	def detect(self, input_file): 
-		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
-			if 'amped-studio-project.json' in zip_data.namelist(): return True
-			else: return False
-		except:
-			return False
-
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'amped'
+	
+	def get_name(self):
+		return 'Amped Studio'
+	
+	def get_priority(self):
+		return 0
+	
+	def supported_autodetect(self):
+		return True
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['amped']
 		in_dict['track_lanes'] = True
@@ -339,13 +340,17 @@ class input_amped(plugins.base):
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.containers.append(['zip', 'amped-studio-project.json'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_amped
 
 		global samplefolder
 
 		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
 		except zipfile.BadZipFile as t:
 			raise ProjectFileParserException('amped: Bad ZIP File: '+str(t))
 
@@ -355,7 +360,7 @@ class input_amped(plugins.base):
 		globalstore.dataset.load('amped', './data_main/dataset/amped.dset')
 		globalstore.dataset.load('synth_nonfree', './data_main/dataset/synth_nonfree.dset')
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		try:
 			jsonfilenames = zip_data.read('filenames.json')
@@ -382,6 +387,11 @@ class input_amped(plugins.base):
 		convproj_obj.timesig = [amped_obj.timesig_num, amped_obj.timesig_den]
 
 		convproj_obj.track_master.params.add('vol', amped_obj.masterTrack.volume, 'float')
+
+		convproj_obj.transport.loop_active = amped_obj.loop_active
+		convproj_obj.transport.loop_start = amped_obj.loop_start
+		convproj_obj.transport.loop_end = amped_obj.loop_end
+		convproj_obj.transport.current_pos = amped_obj.playheadPosition
 
 		encode_devices(convproj_obj, amped_obj.masterTrack.devices, convproj_obj.track_master, None)
 

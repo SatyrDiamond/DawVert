@@ -32,11 +32,18 @@ class mss_chord():
 		self.speedmark = -1
 
 class input_mariopaint_mss(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mariopaint_mss'
-	def get_name(self): return 'Advanced Mario Sequencer'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mariopaint_mss'
+	
+	def get_name(self):
+		return 'Advanced Mario Sequencer'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mss']
 		in_dict['track_lanes'] = True
@@ -44,16 +51,12 @@ class input_mariopaint_mss(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		output = False
-		try:
-			tree = ET.parse(input_file)
-			root = tree.getroot()
-			if root.tag == "MarioSequencerSong": output = True
-		except ET.ParseError: output = False
-		return output
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.type = 'xml'
+		detectdef_obj.headers.append(['MarioSequencerSong'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.songinput import mariopaint
 
 		convproj_obj.fxtype = 'rack'
@@ -61,7 +64,8 @@ class input_mariopaint_mss(plugins.base):
 		mariopaint_obj = mariopaint.mariopaint_song()
 
 		try: 
-			tree = ET.parse(input_file)
+			if dawvert_intent.input_mode == 'file':
+				tree = ET.parse(dawvert_intent.input_file)
 		except ET.ParseError as t:
 			raise ProjectFileParserException('mariopaint_mss: XML parsing error: '+str(t))
 

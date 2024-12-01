@@ -9,11 +9,18 @@ import struct
 import zlib
 
 class input_notessimo_v2(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'notessimo_v2'
-	def get_name(self): return 'Notessimo V2'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'notessimo_v2'
+	
+	def get_name(self):
+		return 'Notessimo V2'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['note']
 		in_dict['file_ext_detect'] = False
@@ -22,8 +29,8 @@ class input_notessimo_v2(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'ms'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_notessimo_v2
 
 		global used_insts
@@ -38,7 +45,8 @@ class input_notessimo_v2(plugins.base):
 		
 		# ---------- File ----------
 		project_obj = proj_notessimo_v2.notev2_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.metadata.name = project_obj.name
 		convproj_obj.metadata.author = project_obj.author
@@ -67,7 +75,8 @@ class input_notessimo_v2(plugins.base):
 			tempo_len.append([mss_tempo, notelen])
 			if x.notes:
 				sceneid = str(pat_num)
-				convproj_obj.scene__add(sceneid)
+				scene_obj = convproj_obj.scene__add(sceneid)
+				scene_obj.visual.name = 'Pat #'+str(pat_num+1)
 				layers = [[] for x in range(9)]
 				for note in x.notes: 
 					layers[note.layer].append(note)

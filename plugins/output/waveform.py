@@ -123,15 +123,22 @@ def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
 			groups_data[groupid] = wf_foldertrack
 
 class output_waveform_edit(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Waveform Edit'
-	def get_shortname(self): return 'waveform_edit'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Waveform Edit'
+	
+	def get_shortname(self):
+		return 'waveform_edit'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'tracktionedit'
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
 		in_dict['time_seconds'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
@@ -141,7 +148,8 @@ class output_waveform_edit(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+		
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_waveform
 		global dataset
 
@@ -158,6 +166,14 @@ class output_waveform_edit(plugins.base):
 
 		project_obj.temposequence.tempo[0] = [bpm, 1]
 		project_obj.temposequence.timesig[0] = convproj_obj.timesig
+
+		transport_obj = project_obj.transport
+
+		transport_obj.looping = int(convproj_obj.transport.loop_active)
+		transport_obj.loopPoint1 = float(convproj_obj.transport.loop_start)
+		transport_obj.loopPoint2 = float(convproj_obj.transport.loop_end)
+		transport_obj.start = float(convproj_obj.transport.start_pos)
+		transport_obj.position = float(convproj_obj.transport.current_pos)
 
 		counter_id = counter.counter(1000, '')
 
@@ -209,10 +225,17 @@ class output_waveform_edit(plugins.base):
 				wf_midiclip.start = notespl_obj.time.position_real
 				wf_midiclip.length = notespl_obj.time.duration_real
 
+				boffset = (offset/8)*tempomul
+				toffset = (offset/4)*tempomul
+
 				if notespl_obj.time.cut_type == 'cut':
-					wf_midiclip.offset = (offset/8)*tempomul
-				elif notespl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv']:
-					wf_midiclip.offset = (offset/8)*tempomul
+					wf_midiclip.offset = boffset
+				elif notespl_obj.time.cut_type == 'loop_eq':
+					wf_midiclip.offset = 0
+					wf_midiclip.loopStartBeats = toffset
+					wf_midiclip.loopLengthBeats = (loopend/4)-toffset
+				elif notespl_obj.time.cut_type in ['loop', 'loop_off']:
+					wf_midiclip.offset = boffset
 					wf_midiclip.loopStartBeats = (loopstart/4)
 					wf_midiclip.loopLengthBeats = (loopend/4)
 
@@ -237,4 +260,5 @@ class output_waveform_edit(plugins.base):
 
 			wf_tracks.append(wf_track)
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

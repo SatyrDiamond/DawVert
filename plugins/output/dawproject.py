@@ -84,7 +84,7 @@ def make_time(clip_obj, cvpjtime_obj):
 	clip_obj.time = cvpjtime_obj.position
 	clip_obj.duration = cvpjtime_obj.duration
 	clip_obj.playStart = cvpjtime_obj.cut_start
-	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off']:
+	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off','loop_eq']:
 		clip_obj.loopStart = cvpjtime_obj.cut_loopstart
 		clip_obj.loopEnd = cvpjtime_obj.cut_loopend
 
@@ -477,14 +477,21 @@ def maketrack_master(convproj_obj, track_obj, arrangement):
 
 
 class output_dawproject(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'dawproject'
-	def get_name(self): return 'DawProject'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'dawproject'
+	
+	def get_name(self):
+		return 'DawProject'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'dawproject'
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv','loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv','loop_adv_off']
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']
@@ -495,7 +502,8 @@ class output_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_dawproject
 
 		global arrangement_obj
@@ -621,4 +629,5 @@ class output_dawproject(plugins.base):
 		dawproject_zip.writestr('metadata.xml', project_obj.save_metadata())
 		dawproject_zip.close()
 
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())

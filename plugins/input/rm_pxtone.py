@@ -51,11 +51,18 @@ class pxtone_cmdstream():
 		self.notestart = int(i_pos)
 
 class input_pxtone(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'ptcop'
-	def get_name(self): return 'PxTone'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'ptcop'
+	
+	def get_name(self):
+		return 'PxTone'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['ptcop']
 		in_dict['auto_types'] = ['nopl_ticks']
@@ -63,15 +70,12 @@ class input_pxtone(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['audio_filetypes'] = ['wav','ogg']
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(16)
-		if bytesdata == b'PTCOLLAGE-071119': return True
-		elif bytesdata == b'PTTUNE--20071119': return True
-		else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'PTCOLLAGE-071119'])
+		detectdef_obj.headers.append([0, b'PTTUNE--20071119'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects import audio_data
 		from objects.file_proj import proj_pxtone
@@ -79,13 +83,14 @@ class input_pxtone(plugins.base):
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_pxtone.ptcop_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 		project_obj.postprocess()
 
 		globalstore.dataset.load('pxtone', './data_main/dataset/pxtone.dset')
 		colordata = colors.colorset.from_dataset('pxtone', 'track', 'main')
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		timebase = 480
 		if project_obj.header == b'PTCOLLAGE-071119': timebase = 480
@@ -96,7 +101,8 @@ class input_pxtone(plugins.base):
 			cvpj_instid = 'ptcop_'+str(voicenum)
 			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			inst_obj.visual.name = voice_obj.name
-			#inst_obj.visual.color.set_float([0.14, 0.00, 0.29])
+			inst_obj.visual.color.set_float([0.14, 0.00, 0.29])
+			inst_obj.visual.color.priority = -1
 
 			cvpj_instvol = 1.0
 
@@ -155,9 +161,9 @@ class input_pxtone(plugins.base):
 			track_obj.placements.notelist.notemod_conv()
 
 		if project_obj.repeat != 0: 
-			convproj_obj.loop_active = True
-			convproj_obj.loop_start = project_obj.repeat
-			convproj_obj.loop_end = project_obj.last
+			convproj_obj.transport.loop_active = True
+			convproj_obj.transport.loop_start = project_obj.repeat
+			convproj_obj.transport.loop_end = project_obj.last
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')

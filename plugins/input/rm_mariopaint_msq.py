@@ -36,11 +36,18 @@ def readpart(msq_score_str):
 	return msq_notes
 
 class input_mariopaint_msq(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mariopaint_msq'
-	def get_name(self): return 'MarioSequencer'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mariopaint_msq'
+	
+	def get_name(self):
+		return 'MarioSequencer'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['msq']
 		in_dict['track_lanes'] = True
@@ -48,8 +55,8 @@ class input_mariopaint_msq(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+	
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.songinput import mariopaint
 
 		convproj_obj.fxtype = 'rack'
@@ -57,7 +64,8 @@ class input_mariopaint_msq(plugins.base):
 		mariopaint_obj = mariopaint.mariopaint_song()
 
 		msq_values = {}
-		f_msq = open(input_file, 'r')
+		if dawvert_intent.input_mode == 'file':
+			f_msq = open(dawvert_intent.input_file, 'r')
 
 		try:
 			lines_msq = f_msq.readlines()

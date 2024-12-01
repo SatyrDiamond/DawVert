@@ -242,13 +242,19 @@ def do_tracks(convproj_obj, in_tracks, counter_track, groupid):
 		if isinstance(wf_track, proj_waveform.waveform_foldertrack):
 			do_foldertrack(convproj_obj, wf_track, counter_track)
 
-
-class input_cvpj_f(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'waveform_edit'
-	def get_name(self): return 'Waveform'
-	def get_priority(self): return 0
+class input_waveform_edit(plugins.base):
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'waveform_edit'
+	
+	def get_name(self):
+		return 'Waveform'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['tracktionedit']
 		in_dict['placement_cut'] = True
@@ -262,8 +268,8 @@ class input_cvpj_f(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_waveform
 		global cvpj_l
 
@@ -274,7 +280,8 @@ class input_cvpj_f(plugins.base):
 		globalstore.dataset.load('waveform', './data_main/dataset/waveform.dset')
 
 		project_obj = proj_waveform.waveform_edit()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		if project_obj.temposequence.tempo:
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))
@@ -291,6 +298,16 @@ class input_cvpj_f(plugins.base):
 		for wf_plugin in project_obj.masterplugins:
 			do_plugin(convproj_obj, wf_plugin, convproj_obj.track_master)
 
+		transport_obj = project_obj.transport
+
+		convproj_obj.transport.loop_active = bool(transport_obj.looping)
+		convproj_obj.transport.loop_start = max(0, transport_obj.loopPoint1)
+		convproj_obj.transport.loop_end = max(0, transport_obj.loopPoint2)
+		convproj_obj.transport.start_pos = max(0, transport_obj.start)
+		convproj_obj.transport.current_pos = transport_obj.position
+		convproj_obj.transport.is_seconds = True
+		convproj_obj.timemarkers.is_seconds = True
+		
 		tracknum = 0
 		counter_track = counter.counter(1000, '')
 

@@ -346,16 +346,22 @@ AUDCLIPVERBOSE = False
 AUDWARPVERBOSE = False
 
 class input_ableton(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'ableton'
-	def get_name(self): return 'Ableton Live 11'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'ableton'
+	
+	def get_name(self):
+		return 'Ableton Live 11'
+	
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['als']
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
@@ -366,7 +372,12 @@ class input_ableton(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 
-	def parse(self, convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.type = 'xml'
+		detectdef_obj.headers.append(['Ableton'])
+		detectdef_obj.containers.append(['gzip'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj import proj_ableton
 		from objects import auto_id
@@ -388,7 +399,8 @@ class input_ableton(plugins.base):
 		colordata = colors.colorset.from_dataset('ableton', 'track', 'main')
 
 		project_obj = proj_ableton.ableton_liveset()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		mastermixer = project_obj.MasterTrack.DeviceChain.Mixer
 
@@ -403,6 +415,13 @@ class input_ableton(plugins.base):
 			timemarker_obj = convproj_obj.timemarker__add()
 			timemarker_obj.visual.name = loc.Name
 			timemarker_obj.position = loc.Time
+
+		transport_obj = project_obj.Transport
+
+		convproj_obj.transport.loop_active = bool(transport_obj.LoopOn)
+		convproj_obj.transport.loop_start = transport_obj.LoopStart
+		convproj_obj.transport.loop_end = transport_obj.LoopLength
+		convproj_obj.transport.current_pos = transport_obj.CurrentTime
 
 		do_automation(convproj_obj, project_obj.MasterTrack.AutomationEnvelopes)
 
@@ -669,7 +688,10 @@ class input_ableton(plugins.base):
 										autopoint_obj.value = mobj.Value
 
 						if clipobj.Loop.LoopOn == 1:
-							placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+							cut_start = (clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4
+							loop_start = clipobj.Loop.LoopStart*4
+							loop_end = clipobj.Loop.LoopEnd*4
+							placement_obj.time.set_loop_data(cut_start, loop_start, loop_end)
 						else:
 							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
 

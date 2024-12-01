@@ -41,27 +41,35 @@ logger_input = logging.getLogger('input')
 #				logger_input.info('extracted '+audioname+' as '+filepath)
 
 class input_1bitdragon(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return '1bitdragon'
-	def get_name(self): return '1BITDRAGON'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return '1bitdragon'
+	
+	def get_name(self):
+		return '1BITDRAGON'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['1bd']
 		in_dict['track_lanes'] = True
 		in_dict['projtype'] = 'ms'
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_1bitdragon
 
 		convproj_obj.set_timings(4, True)
 		convproj_obj.type = 'ms'
 
 		project_obj = proj_1bitdragon.onebitd_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		#onebit_ext = onebit_external()
-		#onebit_ext.load_file(os.path.join(dv_config.path_external_data,'1bitdragon','1BITDRAGON_Data','resources.assets'))
+		#onebit_ext.load_file(os.path.join(dawvert_intent.path_external_data,'1bitdragon','1BITDRAGON_Data','resources.assets'))
 
 		globalstore.dataset.load('1bitdragon', './data_main/dataset/1bitdragon.dset')
 		colordata = colors.colorset.from_dataset('1bitdragon', 'track', 'main')
@@ -146,7 +154,7 @@ class input_1bitdragon(plugins.base):
 			inst_obj.params.add('enabled', instdata.on, 'int')
 			inst_obj.params.add('vol', instdata.volume, 'float')
 
-			audiofilepath = os.path.join(dv_config.path_samples_extracted, str(instname)+'.wav')
+			audiofilepath = os.path.join(dawvert_intent.path_samples['extracted'], str(instname)+'.wav')
 			inst_obj.datavals.add('middlenote', -3)
 
 			#if instname not in instnames:
@@ -164,7 +172,7 @@ class input_1bitdragon(plugins.base):
 			inst_obj.params.add('vol', drumdata.volume, 'float')
 			inst_obj.is_drum = True
 
-			audiofilepath = os.path.join(dv_config.path_samples_extracted, str(instname)+'.wav')
+			audiofilepath = os.path.join(dawvert_intent.path_samples['extracted'], str(instname)+'.wav')
 			inst_obj.datavals.add('middlenote', -3)
 
 			#if instname not in instnames:

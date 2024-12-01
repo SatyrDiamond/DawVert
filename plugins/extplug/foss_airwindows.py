@@ -7,6 +7,10 @@ import os
 import logging
 import numpy as np
 from functions_plugin_ext import plugin_vst2
+from objects import globalstore
+
+DATASETPATH = './data_ext/dataset/airwindows.dset'
+DATASETNAME = 'airwindows'
 
 logger_plugins = logging.getLogger('plugins')
 
@@ -95,6 +99,7 @@ class extplugin(plugins.base):
 				param_obj.visual.name = dbd['params']['visname'][n]
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		if not (self.plugin_data is None):
 			dbd, paramdata = self.plugin_data
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
@@ -107,6 +112,7 @@ class extplugin(plugins.base):
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		arwindb.load_db()
 		namefound = np.where(plugin_obj.type.subtype==arwindb.dbdata['name'])[0]
 		if len(namefound):

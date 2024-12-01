@@ -18,16 +18,19 @@ def djeq_calc_gain(lvl): return math.log2((lvl*2)**13.8) if lvl else -100
 def reverb_calc_freq(freq): return 13.75**(1+(freq*2.821))
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'tracktion', None]]
 		in_dict['in_daws'] = ['waveform_edit']
 		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'chorusEffect'):
 			extpluglog.convinternal('Waveform', 'chorusEffect', 'Universal', 'Chorus')
 			p_delay = plugin_obj.params.get('delay', 10).value/1000

@@ -7,6 +7,9 @@ from objects import globalstore
 from functions_plugin_ext import plugin_vst2
 from functions import data_values
 
+DATASETPATH = './data_ext/dataset/kickmess.dset'
+DATASETNAME = 'kickmess'
+
 class extplugin(plugins.base):
 	def __init__(self): 
 		self.plugin_data = None
@@ -26,7 +29,7 @@ class extplugin(plugins.base):
 		return outlist
 
 	def check_plug(self, plugin_obj): 
-		if plugin_obj.check_wildmatch('external','vst2', None):
+		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			if plugin_obj.datavals_global.match('fourid', 934843292): return 'vst2'
 		return None
 
@@ -61,25 +64,25 @@ class extplugin(plugins.base):
 			plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', extplat, 934843292, 'chunk', chunkdata, None)
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('kickmess', '.\\data_ext\\remap\\kickmess.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
 		if self.plugin_data:
-			for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre__one('kickmess', plugintype):
+			for valuepack, extparamid, paramnum in manu_obj.dset_remap_ext_to_cvpj__pre__one(DATASETNAME, 'plugin', 'main', plugintype):
 				outval = data_values.dict__nested_get_value(self.plugin_data, extparamid.split('/'))
 				if not (outval is None): valuepack.value = float(outval)
 			plugin_obj.replace('user', 'weirdconstructor', 'kickmess')
-			manu_obj.remap_ext_to_cvpj__post('kickmess', plugintype)
+			manu_obj.dset_remap_ext_to_cvpj__post(DATASETNAME, 'plugin', 'main', plugintype)
 			return True
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('kickmess', '.\\data_ext\\remap\\kickmess.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		self.plugin_data = {}
-		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre__one('kickmess', plugintype):
+		for valuepack, extparamid, paramnum in manu_obj.dset_remap_cvpj_to_ext__pre__one(DATASETNAME, 'plugin', 'main', plugintype):
 			data_values.dict__nested_add_value(self.plugin_data, extparamid.split('/'), valuepack.value)
 
 		plugin_obj.replace('external', 'vst2', None)
-		manu_obj.remap_cvpj_to_ext__post('kickmess', plugintype)
+		manu_obj.dset_remap_cvpj_to_ext__post(DATASETNAME, 'plugin', 'main', plugintype)
 		return True

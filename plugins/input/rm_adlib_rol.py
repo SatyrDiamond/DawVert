@@ -6,38 +6,43 @@ import plugins
 from objects import globalstore
 
 class input_adlib_rol(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'adlib_rol'
-	def get_name(self): return 'AdLib Visual Composer'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'adlib_rol'
+	
+	def get_name(self):
+		return 'AdLib Visual Composer'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['rol']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['chip:fm:opl2']
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(4)
-		bytesdata = bytestream.read(40)
-		if bytesdata == b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00': return True
-		else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([4, b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_adlib_rol
 		from objects.file import adlib_bnk
 
 		convproj_obj.type = 'rm'
 
 		project_obj = proj_adlib_rol.adlib_rol_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		globalstore.dataset.load('adlib_rol', './data_main/dataset/adlib_rol.dset')
 
-		if dv_config.path_extrafile:
+		if 'extra_file' in dawvert_intent.input_params:
 			adlibbnk_obj = adlib_bnk.bnk_file()
-			adlibbnk_obj.read_file(dv_config.path_extrafile)
+			adlibbnk_obj.read_file(dawvert_intent.input_params['extra_file'])
 			for instnum, used in enumerate(adlibbnk_obj.used):
 
 				if used:

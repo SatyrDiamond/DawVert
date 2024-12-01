@@ -5,22 +5,30 @@ import plugins
 import importlib.util
 
 class input_color_art(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'color_art'
-	def get_name(self): return 'Color Art'
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'color_art'
+	
+	def get_name(self):
+		return 'Color Art'
+	
 	def get_prop(self, in_dict): 
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+
 	def usable(self): 
 		usable = importlib.util.find_spec('PIL')
 		usable_meg = 'Pillow is not installed. do "pip install pillow"' if not usable else ''
 		return usable, usable_meg
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from PIL import Image
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, False)
 
-		im = Image.open(input_file)
+		if dawvert_intent.input_mode == 'file':
+			im = Image.open(dawvert_intent.input_file)
 
 		w, h = im.size
 

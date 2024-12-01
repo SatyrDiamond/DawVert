@@ -333,7 +333,7 @@ def time_add(event, time_obj, otherblock):
 		if otherblock:
 			otherblock.framesCount = time_obj.duration+event.positionStart
 		
-	elif time_obj.cut_type == 'loop':
+	elif time_obj.cut_type in ['loop', 'loop_eq']:
 		event.positionStart = loop_1
 		event.loopOffset = loop_2
 		event.positionEnd = loop_3
@@ -373,11 +373,18 @@ def do_markers(timemarkers_obj, sb_markers):
 PROJECT_FREQ = 22050
 
 class output_soundbridge(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'soundbridge'
-	def get_name(self): return 'SoundBridge'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'soundbridge'
+	
+	def get_name(self):
+		return 'SoundBridge'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['audio_stretch'] = ['warp']
@@ -385,13 +392,14 @@ class output_soundbridge(plugins.base):
 		in_dict['file_ext'] = 'soundbridge'
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off']
+		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+	
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_soundbridge
 		from functions_plugin_ext import plugin_vst2
 		global sb_returns
@@ -438,13 +446,13 @@ class output_soundbridge(plugins.base):
 				obj_outfilename = sampleref_obj.fileref.copy()
 				obj_outfilename.file.extension = 'wav'
 
-				filename = str(obj_filename)
-				outfilename = os.path.join(output_file, str(obj_outfilename.file))
-
-				try:
-					shutil.copyfile(filename, outfilename)
-				except:
-					pass
+				if dawvert_intent.output_mode == 'file':
+					filename = str(obj_filename)
+					outfilename = os.path.join(dawvert_intent.output_file, str(obj_outfilename.file))
+					try:
+						shutil.copyfile(filename, outfilename)
+					except:
+						pass
 
 				audio_ids[sampleref_id] = sampleref_obj.fileref.file
 
@@ -740,17 +748,18 @@ class output_soundbridge(plugins.base):
 						if autopoint_obj.type == 'instant' and n == numpoints-1:
 							add_tempo_section(sb_tempo_obj, e_block_pos, e_block_pos+PROJECT_FREQ, autopoint_obj.value, autopoint_obj.value)
 
-		if convproj_obj.loop_active:
+		if convproj_obj.transport.loop_active:
 			project_obj.metadata['TransportLoop'] = 'true'
-			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.loop_start
-			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.loop_end
+			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.transport.loop_start
+			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.transport.loop_end
 		else:
 			project_obj.metadata['TransportLoop'] = 'false'
-			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.start_pos
+			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.transport.start_pos
 			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.get_dur()
 
 		do_markers(convproj_obj.timemarkers, project_obj.timeline.markers)
 
-		outfile = os.path.join(output_file, '')
-		os.makedirs(output_file, exist_ok=True)
-		project_obj.write_to_file(os.path.join(output_file, 'project.xml'))
+		if dawvert_intent.output_mode == 'file':
+			outfile = os.path.join(dawvert_intent.output_file, '')
+			os.makedirs(dawvert_intent.output_file, exist_ok=True)
+			project_obj.write_to_file(os.path.join(dawvert_intent.output_file, 'project.xml'))

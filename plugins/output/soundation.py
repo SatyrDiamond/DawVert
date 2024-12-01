@@ -75,11 +75,18 @@ def addsample(zip_sngz, filepath, alredyexists):
 	return zipfilename
 
 class output_soundation(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Soundation'
-	def get_shortname(self): return 'soundation'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Soundation'
+	
+	def get_shortname(self):
+		return 'soundation'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'sngz'
 		in_dict['placement_cut'] = True
@@ -90,7 +97,7 @@ class output_soundation(plugins.base):
 		in_dict['placement_loop'] = ['loop']
 		in_dict['projtype'] = 'r'
 
-	def parse(self, i_convproj_obj, output_file):
+	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_soundation
 
 		global convproj_obj
@@ -123,9 +130,9 @@ class output_soundation(plugins.base):
 		beatNumerator, beatDenominator = convproj_obj.timesig
 		soundation_obj.timeSignature = str(beatNumerator)+'/'+str(beatDenominator)
 
-		soundation_obj.looping = convproj_obj.loop_active
-		soundation_obj.loopStart = convproj_obj.loop_start
-		soundation_obj.loopEnd = convproj_obj.loop_end
+		soundation_obj.looping = convproj_obj.transport.loop_active
+		soundation_obj.loopStart = convproj_obj.transport.loop_start
+		soundation_obj.loopEnd = convproj_obj.transport.loop_end
 
 		bpmdiv = 120/bpm
 
@@ -331,7 +338,7 @@ class output_soundation(plugins.base):
 						soundation_region.length = notespl_obj.time.cut_loopend
 						soundation_region.loopcount = notespl_obj.time.duration/notespl_obj.time.cut_loopend
 
-					if notespl_obj.time.cut_type == 'cut': 
+					if notespl_obj.time.cut_type in ['cut']: 
 						soundation_region.contentPosition = -(notespl_obj.time.cut_start)
 
 					soundation_region.type = 2
@@ -395,9 +402,9 @@ class output_soundation(plugins.base):
 
 			sng_channels.append(soundation_channel)
 
-		soundation_obj.looping = convproj_obj.loop_active
-		soundation_obj.loopStart = int(convproj_obj.loop_start)
-		soundation_obj.loopEnd = int(convproj_obj.loop_end)
+		soundation_obj.looping = convproj_obj.transport.loop_active
+		soundation_obj.loopStart = int(convproj_obj.transport.loop_start)
+		soundation_obj.loopEnd = int(convproj_obj.transport.loop_end)
 
 		#iseffectexists = 'fx' in [convproj_obj.track_data[x].type for x in convproj_obj.track_order]
 #
@@ -431,8 +438,9 @@ class output_soundation(plugins.base):
 
 		jsonwrite = soundation_obj.write()
 
-		zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
-		zip_sngz.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
+			zip_sngz.close()
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
 
 		#with open('soundation_debug', "w") as fileout: json.dump(jsonwrite, fileout, indent=4)

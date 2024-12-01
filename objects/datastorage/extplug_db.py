@@ -368,7 +368,7 @@ class vst3:
 			return 0
 
 class clap:
-	exe_txt_start = "SELECT name, id, creator, category, version, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix FROM clap"
+	exe_txt_start = "SELECT name, id, creator, category, version, audio_num_inputs, audio_num_outputs, midi_num_inputs, midi_num_outputs, path_32bit_win, path_64bit_win, path_32bit_unix, path_64bit_unix FROM clap"
 
 	def add(pluginfo_obj, platformtxt):
 		if pluginfo_obj.id and extplug_db.db_plugins:

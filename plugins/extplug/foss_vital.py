@@ -23,6 +23,9 @@ list_phase_style = [None,'clear','vocode']
 
 tempo_frac = [[0,0],[32,1],[16,1],[8,1],[4,1],[2,1],[1,1],[1,2],[1,4],[1,8],[1,16],[1,32],[1,64]]
 
+DATASETPATH = './data_ext/dataset/vital.dset'
+DATASETNAME = 'vital'
+
 def calc_filter_freq_from(value):
 	return note_data.note_to_freq(value-72)
 
@@ -422,7 +425,7 @@ class extplugin(plugins.base):
 
 	#def extract_params(self):
 	#	if not (self.plugin_data is None):
-	#		for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('vital', plugintype):
+	#		for valuepack, extparamid, paramnum in manu_obj.dset_remap_ext_to_cvpj__pre(DATASETNAME, 'plugin', 'main', plugintype):
 
 	def encode_data(self, plugintype, convproj_obj, plugin_obj, extplat):
 		if not (self.plugin_data is None):
@@ -435,7 +438,7 @@ class extplugin(plugins.base):
 				plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, 'audio.vital.synth', jsonout)
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('vital', './data_ext/remap/vital.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
 		if not (self.plugin_data is None):
@@ -451,7 +454,7 @@ class extplugin(plugins.base):
 			v_synth_version = vd['synth_version'] if 'synth_version' in vd else ''
 			v_settings = vd['settings'] if 'settings' in vd else {}
 
-			for valuepack, extparamid, paramnum in manu_obj.remap_ext_to_cvpj__pre('vital', plugintype):
+			for valuepack, extparamid, paramnum in manu_obj.dset_remap_ext_to_cvpj__pre(DATASETNAME, 'plugin', 'main', plugintype):
 				if extparamid in v_settings: valuepack.value = v_settings[extparamid]
 				else: v_settings[extparamid] = valuepack.value
 
@@ -677,12 +680,12 @@ class extplugin(plugins.base):
 			plugin_obj.datavals.add('comments', v_comments)
 			plugin_obj.datavals.add('preset_name', v_preset_name)
 			plugin_obj.datavals.add('preset_style', v_preset_style)
-			manu_obj.remap_ext_to_cvpj__post('vital', plugintype)
+			manu_obj.dset_remap_ext_to_cvpj__post(DATASETNAME, 'plugin', 'main', plugintype)
 			return True
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
-		globalstore.paramremap.load('vital', './data_ext/remap/vital.csv')
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 		vd = {}
 		vd['author'] = plugin_obj.datavals.get('author', '')
@@ -702,7 +705,7 @@ class extplugin(plugins.base):
 		vl = vs['lfos'] = [{"name": "Triangle","num_points": 3,"points":[0.0,1.0,0.5,0.0,1.0,1.0],"powers":[0.0,0.0,0.0],"smooth": False} for x in range(8)]
 		vwt = vs['wavetables'] = [{"author": '', 'full_normalize': True, 'groups': [], "name": '', "remove_all_dc": True, "version": "1.0.6"} for _ in range(3)]
 
-		for valuepack, extparamid, paramnum in manu_obj.remap_cvpj_to_ext__pre('vital', plugintype): 
+		for valuepack, extparamid, paramnum in manu_obj.dset_remap_cvpj_to_ext__pre(DATASETNAME, 'plugin', 'main', plugintype): 
 			vs[extparamid] = valuepack.value
 
 		modulation_imported = plugin_obj.datavals.get('modulation_imported', False)
@@ -845,7 +848,7 @@ class extplugin(plugins.base):
 				vs['portamento_slope'] = poly_obj.slide_slope
 				vs['portamento_time'] = math.sqrt(poly_obj.porta_time.speed_seconds**2)
 
-		manu_obj.remap_cvpj_to_ext__post('vital', plugintype)
+		manu_obj.dset_remap_cvpj_to_ext__post(DATASETNAME, 'plugin', 'main', plugintype)
 
 		self.plugin_data = dict(sorted(vd.items()))
 

@@ -142,26 +142,34 @@ def customtone(project_obj, tonenum, osc_data, plugin_obj):
 		wave_obj.set_all_range(wave_data, -32, 32)
 
 class input_lc(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'lovelycomposer'
-	def get_name(self): return 'Lovely Composer'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'lovelycomposer'
+	
+	def get_name(self):
+		return 'Lovely Composer'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['jsonl']
 		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['projtype'] = 'ms'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_lovelycomposer
 
 		convproj_obj.type = 'ms'
 		convproj_obj.set_timings(4, False)
 
 		project_obj = proj_lovelycomposer.LCMusic()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		if project_obj.title: convproj_obj.metadata.name = project_obj.title
 		if project_obj.editor: convproj_obj.metadata.author = project_obj.editor

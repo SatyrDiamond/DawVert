@@ -27,14 +27,15 @@ def exp_curve(x, i_var):
 	return ((abs(x%(2)-1)-0.5)*2)**2
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv_ext'
+	def is_dawvert_plugin(self):
+		return 'plugconv_ext'
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugin'] = ['native', 'lmms', None]
 		in_dict['ext_formats'] = ['vst2']
 		in_dict['plugincat'] = ['foss']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config, extplugtype):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent, extplugtype):
 		if plugin_obj.type.subtype == 'bitinvader':
 			extpluglog.extpluglist.add('FOSS', 'VST', 'Vital', '')
 			exttype = plugins.base.extplug_exists('vital', extplugtype, None)
@@ -229,7 +230,7 @@ class plugconv(plugins.base):
 		#	extpluglog.extpluglist.add('FOSS', 'VST2', 'SID', 'SocaLabs')
 		#	if plugin_vst2.check_exists('id', 1399415908):
 		#		extpluglog.extpluglist.success('LMMS', 'SID')
-		#		plugtransform.transform('./data_ext/plugts/lmms_vst2.pltr', 'vst2_sid', convproj_obj, plugin_obj, pluginid, dv_config)
+		#		plugtransform.transform('./data_ext/plugts/lmms_vst2.pltr', 'vst2_sid', convproj_obj, plugin_obj, pluginid, dawvert_intent)
 		#		data_socalabs = params_os_socalabs.socalabs_data()
 		#		plugin_obj.params.add("a1", plugtransform.get_storedval('a1'))
 		#		plugin_obj.params.add("a2", plugtransform.get_storedval('a2'))

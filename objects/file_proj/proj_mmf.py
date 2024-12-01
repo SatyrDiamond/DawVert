@@ -8,18 +8,7 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
-def calc_gatetime_2(song_file):
-	t_durgate = []
-	t_durgate_value = song_file.uint8()
-	t_durgate.append(t_durgate_value&127)
-	if bool(t_durgate_value&128) == True: 
-		t_durgate_value = song_file.uint8()
-		t_durgate.append(t_durgate_value&127)
-	t_durgate.reverse()
-
-	out_duration = 0
-	for shift, note_durbyte in enumerate(t_durgate): out_duration += note_durbyte << shift*7
-	return out_duration
+verbose = False
 
 def calc_gatetime_3(song_file):
 	t_durgate = []
@@ -36,8 +25,6 @@ def calc_gatetime_3(song_file):
 	out_duration = 0
 	for shift, note_durbyte in enumerate(t_durgate): out_duration += note_durbyte << shift*7
 	return out_duration
-
-verbose = False
 
 class smaf_track_ma3:
 	def __init__(self, song_file, end):
@@ -121,31 +108,113 @@ class smaf_track_ma3:
 						hz = song_file.uint16_b()
 						self.audio[audnum] = [hz, song_file.raw(mtsp_chunk_obj.size-3)]
 
+VERBOSE_FILTER_CHANNEL = -2
 
-@dataclass
-class ma2_event_note:
-	deltaTime: int = 0
-	channel: int = 0
-	note_key: int = 0
-	note_oct: int = 0
-	duration: int = 0
+def calc_gatetime_2(song_file):
+	t_durgate = []
+	t_durgate_value = song_file.uint8()
+	t_durgate.append(t_durgate_value&127)
+	if bool(t_durgate_value&128) == True: 
+		t_durgate_value = song_file.uint8()
+		t_durgate.append(t_durgate_value&127)
+	t_durgate.reverse()
 
-@dataclass
-class ma2_event_value:
-	deltaTime: int = 0
-	channel: int = 0
-	event_type: str = ''
-	value: int = 0
-	is_short: bool = False
+	out_duration = 0
+	for shift, note_durbyte in enumerate(t_durgate): out_duration += note_durbyte << shift*7
+	return out_duration
 
-@dataclass
-class ma2_none:
-	deltaTime: int = 0
+class smaf_event_ma2:
+	def __init__(self, song_file):
+		self.deltaTime = 0
+		self.channel = 0
+		self.event_type = ''
+		self.value = 0
+		self.is_short = False
+		self.note_key = 0
+		self.note_oct = 0
+		self.duration = 0
+		self.data = b''
 
-@dataclass
-class ma2_sysex:
-	deltaTime: int = 0
-	data: bytes = b''
+		self.resttime = calc_gatetime_2(song_file)
+		self.ch_oc, self.notenum = song_file.bytesplit()
+
+		if (self.ch_oc, self.notenum) == (0, 0):
+			ch_b, p_type = song_file.bytesplit()
+			channel = ch_b>>2
+			shortcmd = ch_b&3
+
+			if shortcmd==2:
+				self.channel = channel
+				self.is_short = True
+				self.event_type = 'modulation'
+				self.value = p_type
+
+			elif shortcmd==0:
+				self.channel = channel
+				self.is_short = True
+				self.event_type = 'expression'
+				self.value = p_type
+
+			elif shortcmd==3 and p_type==0:
+				self.channel = channel
+				self.event_type = 'program'
+				self.value = song_file.uint8()
+
+			elif shortcmd==3 and p_type==1:
+				self.channel = channel
+				self.event_type = 'bank'
+				self.value = song_file.uint8()
+
+			elif shortcmd==3 and p_type==2:
+				self.channel = channel
+				self.event_type = 'octave_shift'
+				self.value = song_file.uint8()
+
+			elif shortcmd==3 and p_type==3:
+				self.channel = channel
+				self.event_type = 'modulation'
+				self.value = song_file.uint8()
+
+			elif shortcmd==3 and p_type==7:
+				self.channel = channel
+				self.event_type = 'volume'
+				self.value = song_file.uint8()
+
+			elif shortcmd==3 and p_type==10:
+				self.channel = channel
+				self.event_type = 'pan'
+				self.value = song_file.uint8()
+
+			elif shortcmd==3 and p_type==11:
+				self.channel = channel
+				self.event_type = 'expression'
+				self.value = song_file.uint8()
+
+			else:
+				logger_projparse.info('mmf: unknown type: '+str(ch_b)+' '+str(p_type))
+
+			if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
+				print(self.channel, '|', self.event_type.ljust(16), '|', self.resttime, self.value)
+
+		elif (self.ch_oc, self.notenum) == (15, 15):
+			nval = song_file.uint8()
+			if nval:
+				self.event_type = 'sysex'
+			else:
+				self.event_type = 'nop'
+
+			if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
+				print(self.channel, '|', self.event_type.ljust(16), '|', self.resttime, self.data)
+
+		else:
+			self.note_key = self.notenum
+			self.note_oct = self.ch_oc&3
+			self.channel = self.ch_oc>>2
+			self.duration = calc_gatetime_2(song_file)
+			self.event_type = 'note'
+
+			if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
+				print(self.channel, '|', self.event_type.ljust(16), '|', self.note_key, self.note_oct)
 
 class smaf_track_ma2:
 	def __init__(self, song_file, end):
@@ -162,121 +231,15 @@ class smaf_track_ma2:
 		trk_iff_obj = song_file.chunk_objmake()
 		trk_iff_obj.set_sizes(4, 4, True)
 		for chunk_obj in trk_iff_obj.iter(song_file.tell(), end):
-			logger_projparse.info('mmf: MA2 chunk'+str(chunk_obj.id))
+			logger_projparse.info('mmf: MA2 chunk '+str(chunk_obj.id))
 
 			if chunk_obj.id == b'Mtsu': self.setup = song_file.raw(chunk_obj.size)
 
 			if chunk_obj.id == b'Mtsq':
 				self.sequence = []
-				while song_file.tell() < chunk_obj.end:
-					resttime = calc_gatetime_2(song_file)
-					ch_oc, notenum = song_file.bytesplit()
-
-					if (ch_oc, notenum) == (15, 15):
-							nval = song_file.uint8()
-							if not nval:
-								event_obj = ma2_none()
-								event_obj.deltaTime = resttime
-								self.sequence.append(event_obj)
-							else:
-								event_obj = ma2_sysex()
-								event_obj.deltaTime = resttime
-								event_obj.data = song_file.raw(song_file.uint8())
-								self.sequence.append(event_obj)
-
-
-					elif (ch_oc, notenum) == (0, 0):
-						ch_b, p_type = song_file.bytesplit()
-						channel = ch_b>>2
-						shortcmd = ch_b&3
-
-						if shortcmd==2:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.is_short = True
-							event_obj.event_type = 'modulation'
-							event_obj.value = p_type
-							self.sequence.append(event_obj)
-
-						elif shortcmd==0:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.is_short = True
-							event_obj.event_type = 'expression'
-							event_obj.value = p_type
-							self.sequence.append(event_obj)
-
-						elif shortcmd==3 and p_type==0:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.event_type = 'program'
-							event_obj.value = song_file.uint8()
-							self.sequence.append(event_obj)
-
-						elif shortcmd==3 and p_type==1:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.event_type = 'bank'
-							event_obj.value = song_file.uint8()
-							self.sequence.append(event_obj)
-
-						elif shortcmd==3 and p_type==2:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.event_type = 'octave_shift'
-							event_obj.value = song_file.uint8()
-							self.sequence.append(event_obj)
-
-						elif shortcmd==3 and p_type==3:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.event_type = 'modulation'
-							event_obj.value = song_file.uint8()
-							self.sequence.append(event_obj)
-
-						elif shortcmd==3 and p_type==7:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.event_type = 'volume'
-							event_obj.value = song_file.uint8()
-							self.sequence.append(event_obj)
-
-						elif shortcmd==3 and p_type==10:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.event_type = 'pan'
-							event_obj.value = song_file.uint8()
-							self.sequence.append(event_obj)
-
-						elif shortcmd==3 and p_type==11:
-							event_obj = ma2_event_value()
-							event_obj.deltaTime = resttime
-							event_obj.channel = channel
-							event_obj.event_type = 'expression'
-							event_obj.value = song_file.uint8()
-							self.sequence.append(event_obj)
-
-						else:
-							logger_projparse.info('mmf: unknown types types: '+str(ch_b)+' '+str(p_type))
-
-					else:
-						event_obj = ma2_event_note()
-						event_obj.deltaTime = resttime
-						event_obj.note_key = notenum
-						event_obj.note_oct = ch_oc&3
-						event_obj.channel = ch_oc>>2
-						event_obj.duration = calc_gatetime_2(song_file)
-						self.sequence.append(event_obj)
-
-
+				while song_file.tell() < chunk_obj.end-1:
+					self.sequence.append(smaf_event_ma2(song_file))
+					
 class smaf_song:
 	def __init__(self):
 		self.title = None
@@ -319,6 +282,6 @@ class smaf_song:
 			if chunk_obj.id[:3] == b'MTR':
 				mmf_tracknum = chunk_obj.id[3:][0]
 				if mmf_tracknum in range(5, 8): self.tracks3[mmf_tracknum-5] = smaf_track_ma3(song_file, chunk_obj.end)
-				#if mmf_tracknum in range(1, 5): self.tracks2[mmf_tracknum-1] = smaf_track_ma2(song_file, chunk_obj.end)
+				if mmf_tracknum in range(1, 5): self.tracks2[mmf_tracknum-1] = smaf_track_ma2(song_file, chunk_obj.end)
 		
 		return True

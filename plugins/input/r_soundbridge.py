@@ -323,11 +323,18 @@ def do_markers(convproj_obj, sb_markers):
 				pass
 
 class input_cvpj_f(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'soundbridge'
-	def get_name(self): return 'SoundBridge'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'soundbridge'
+	
+	def get_name(self):
+		return 'SoundBridge'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['audio_stretch'] = ['warp']
@@ -341,15 +348,16 @@ class input_cvpj_f(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
 		in_dict['audio_nested'] = True
-	def supported_autodetect(self): return True
-	def parse(self, convproj_obj, input_file, dv_config):
+		
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_soundbridge
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
 
 		project_obj = proj_soundbridge.soundbridge_song()
-		project_obj.load_from_file(input_file+'\\project.xml')
+		if dawvert_intent.input_mode == 'file':
+			project_obj.load_from_file(dawvert_intent.input_file+'\\project.xml')
 
 		pfreq = int(project_obj.sampleRate)/2
 		convproj_obj.set_timings(pfreq, False)
@@ -360,7 +368,8 @@ class input_cvpj_f(plugins.base):
 		for audiosource in project_obj.pool.audioSources:
 			filename = audiosource.fileName
 			ofilename = filename
-			if input_file.endswith('.soundbridge'): ofilename = os.path.join(input_file, filename)
+			if dawvert_intent.input_file.endswith('.soundbridge'): 
+				ofilename = os.path.join(dawvert_intent.input_file, filename)
 			sampleref_obj = convproj_obj.sampleref__add(filename, ofilename, None)
 
 		master_track = project_obj.masterTrack
@@ -401,6 +410,6 @@ class input_cvpj_f(plugins.base):
 			autopoint_obj.type = 'normal'
 
 		projmeta = project_obj.metadata
-		if 'TransportLoop' in projmeta: convproj_obj.loop_active = projmeta['TransportLoop'] == 'true'
-		if 'TransportPlayPositionL' in projmeta: convproj_obj.loop_start = int(projmeta['TransportPlayPositionL'])
-		if 'TransportPlayPositionR' in projmeta: convproj_obj.loop_end = int(projmeta['TransportPlayPositionR'])
+		if 'TransportLoop' in projmeta: convproj_obj.transport.loop_active = projmeta['TransportLoop'] == 'true'
+		if 'TransportPlayPositionL' in projmeta: convproj_obj.transport.loop_start = int(projmeta['TransportPlayPositionL'])
+		if 'TransportPlayPositionR' in projmeta: convproj_obj.transport.loop_end = int(projmeta['TransportPlayPositionR'])

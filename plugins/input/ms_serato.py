@@ -54,18 +54,25 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 
 
 class input_serato(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'serato'
-	def get_name(self): return 'Serato Studio'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'serato'
+	
+	def get_name(self):
+		return 'Serato Studio'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['track_lanes'] = True
 		in_dict['file_ext'] = ['ssp']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['projtype'] = 'ms'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_serato
 		from objects.convproj import sample_entry
 
@@ -75,7 +82,8 @@ class input_serato(plugins.base):
 		useaudioclips = True
 
 		project_obj = proj_serato.serato_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		sample_data = {}
 
@@ -210,7 +218,12 @@ class input_serato(plugins.base):
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.time.set_posdur(0, scene.length)
 						for note in deck_sequence.notes:
-							if note.start < scene.length:
+							valid = False
+							if scene.length != None:
+								if note.start < scene.length:
+									valid = True
+							else: valid = True
+							if valid:
 								key = note.number+note.channel
 								if key >= 60: key -= 60
 								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_'+str(key), note.start, note.duration, 0, note.velocity/100, None)
@@ -298,7 +311,10 @@ class input_serato(plugins.base):
 											if 'pitch_shift' in cuedata: samplepart_copy.pitch += cuedata['pitch_shift']
 											if 'reverse' in cuedata: samplepart_copy.reverse = cuedata['reverse']
 
-
+		convproj_obj.transport.loop_active = project_obj.arrangement.loop_active
+		convproj_obj.transport.loop_start = project_obj.arrangement.loop_start
+		convproj_obj.transport.loop_end = project_obj.arrangement.loop_end
+		
 		for arrangement in project_obj.arrangement.tracks:
 			if arrangement.type == 'scene':
 				for clip in arrangement.clips:
@@ -317,4 +333,5 @@ class input_serato(plugins.base):
 		#	print(track_obj.plugslots.slots_audio)
 
 		convproj_obj.do_actions.append('do_addloop')
+		convproj_obj.do_actions.append('markers_from_scene')
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')

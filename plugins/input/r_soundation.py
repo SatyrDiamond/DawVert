@@ -39,12 +39,18 @@ def autopoints_set(autoloc, points, add, mul):
 		convproj_obj.automation.add_autopoint(autoloc, 'float', point['pos'], (point['value']+add)*mul, 'normal')
 
 class input_soundation(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'soundation'
-	def get_name(self): return 'Soundation'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'soundation'
+	
+	def get_name(self):
+		return 'Soundation'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['sng', 'sngz']
 		in_dict['placement_cut'] = True
@@ -55,7 +61,10 @@ class input_soundation(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
 
-	def parse(self, i_convproj_obj, input_file, dv_config):
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.containers.append(['zip', '*.sng'])
+
+	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj import proj_soundation
 
@@ -67,7 +76,8 @@ class input_soundation(plugins.base):
 		soundation_obj = None
 
 		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
 			sngname = None
 			for filename in zip_data.namelist():
 				if filename.endswith('.sng'):
@@ -81,7 +91,8 @@ class input_soundation(plugins.base):
 		except:
 			zip_data = None
 			try:
-				bytestream = open(input_file, 'r')
+				if dawvert_intent.input_mode == 'file':
+					bytestream = open(dawvert_intent.input_file, 'r')
 				sndstat_data = json.load(bytestream)
 				soundation_obj = proj_soundation.soundation_project(sndstat_data)
 			except:
@@ -93,7 +104,7 @@ class input_soundation(plugins.base):
 		globalstore.dataset.load('soundation', './data_main/dataset/soundation.dset')
 		globalstore.dataset.load('synth_nonfree', './data_main/dataset/synth_nonfree.dset')
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		timeSignaturesplit = soundation_obj.timeSignature.split('/')
 
@@ -103,9 +114,9 @@ class input_soundation(plugins.base):
 		convproj_obj.timesig = [int(timeSignaturesplit[0]), int(timeSignaturesplit[1])]
 		convproj_obj.params.add('bpm', soundation_obj.bpm, 'float')
 
-		convproj_obj.loop_active = soundation_obj.looping
-		convproj_obj.loop_start = soundation_obj.loopStart
-		convproj_obj.loop_end = soundation_obj.loopEnd
+		convproj_obj.transport.loop_active = soundation_obj.looping
+		convproj_obj.transport.loop_start = soundation_obj.loopStart
+		convproj_obj.transport.loop_end = soundation_obj.loopEnd
 
 		tracknum = 0
 		for soundation_channel in soundation_obj.channels:

@@ -7,42 +7,48 @@ import numpy as np
 from objects import globalstore
 
 class input_cvpj_f(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'pixitracker'
-	def get_name(self): return 'Pixitracker'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return True
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'pixitracker'
+	
+	def get_name(self):
+		return 'Pixitracker'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['piximod']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'rs'
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(8)
-		if bytesdata == b'PIXIMOD1': return True
-		else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'PIXIMOD1'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects import colors
 		from objects.file_proj import proj_piximod
 
 		convproj_obj.type = 'rs'
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4, True) 
 
 		globalstore.dataset.load('pixitracker', './data_main/dataset/pixitracker.dset')
 		colordata = colors.colorset.from_dataset('pixitracker', 'inst', 'main')
 
 		project_obj = proj_piximod.piximod_song()
-		if not project_obj.load_from_file(input_file): exit()
+
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 		convproj_obj.track_master.params.add('vol', project_obj.vol/100, 'float')
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 		
 		for instnum, pixi_sound in enumerate(project_obj.sounds):
 			cvpj_instid = 'pixi_'+str(instnum)
@@ -71,9 +77,13 @@ class input_cvpj_f(plugins.base):
 				samplepart_obj.end = pixi_sound.end
 				samplepart_obj.length = len(pixi_sound.data)//pixi_sound.channels
 
+		swing = project_obj.shuffle/100
+
 		for pat_num, pat_data_r in project_obj.patterns.items():
 			sceneid = str(pat_num)
-			convproj_obj.scene__add(sceneid)
+
+			scene_obj = convproj_obj.scene__add(sceneid)
+			scene_obj.visual.name = 'Pat #'+str(pat_num+1)
 
 			pat_data = np.rot90(pat_data_r.data)
 			numtracks = len(pat_data)
@@ -97,7 +107,6 @@ class input_cvpj_f(plugins.base):
 
 			for instnum, instnote in enumerate(instnotes):
 				if len(instnote):
-
 					cvpj_instid = 'pixi_'+str(instnum)
 					trscene_obj = convproj_obj.track__add_scene(cvpj_instid, sceneid, 'main')
 					placement_obj = trscene_obj.add_notes()
@@ -105,7 +114,15 @@ class input_cvpj_f(plugins.base):
 					placement_obj.time.set_posdur(0, pat_data_r.length)
 
 					for nnn in instnote:
-						if nnn[2]: placement_obj.notelist.add_r(nnn[4], nnn[5], nnn[0]-78, nnn[2]/100, {})
+						pos = nnn[4]
+						dur = nnn[5]
+						if pos%2:
+							pos += swing
+							dur -= swing
+						else:
+							dur += swing
+
+						if nnn[2]: placement_obj.notelist.add_r(pos, dur, nnn[0]-78, nnn[2]/100, {})
 
 		curpos = 0
 		for pat_num in project_obj.order:

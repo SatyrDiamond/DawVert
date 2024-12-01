@@ -14,11 +14,12 @@ class cvpj_timemarker:
 		self.duration = 0
 
 class cvpj_timemarkers:
-	__slots__ = ['data', 'time_ppq', 'time_float']
+	__slots__ = ['data', 'time_ppq', 'time_float', 'is_seconds']
 	def __init__(self, time_ppq, time_float):
 		self.data = []
 		self.time_ppq = time_ppq
 		self.time_float = time_float
+		self.is_seconds = False
 
 	def __getitem__(self, v):
 		return self.data[v]
@@ -38,6 +39,18 @@ class cvpj_timemarkers:
 		return timemarker_obj
 
 	def change_timings(self, time_ppq, time_float):
-		for m in self.data: m.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.position)
-		self.time_ppq = time_ppq
-		self.time_float = time_float
+		if not self.is_seconds:
+			for m in self.data: m.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.position)
+			self.time_ppq = time_ppq
+			self.time_float = time_float
+		
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if is_seconds and not self.is_seconds:
+			for x in self.data: 
+				x.position = xtramath.step2sec(x.position, bpm)/(ppq/4)
+				self.is_seconds = True
+		elif self.is_seconds:
+			for x in self.data: 
+				x.position = xtramath.sec2step(x.position, bpm)
+				self.is_seconds = False
+		

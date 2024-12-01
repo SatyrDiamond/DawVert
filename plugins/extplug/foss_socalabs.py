@@ -21,6 +21,9 @@ dt_socalabsdb = np.dtype([
 		('vst3_id', np.str_, 32)
 		])
 
+DATASETPATH = './data_ext/dataset/socalabs.dset'
+DATASETNAME = 'socalabs'
+
 class socalabsdb():
 	dbdata = np.zeros(0, dtype=dt_socalabsdb)
 	db_filename = './data_ext/json/socalabs.json'
@@ -105,6 +108,7 @@ class extplugin(plugins.base):
 			return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		if self.plugin_data:
 			plugname = self.plugin_data[0]['name']
 			manufile = '.\\data_ext\\remap\\socalabs\\'+plugname+'.csv'
@@ -129,6 +133,7 @@ class extplugin(plugins.base):
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		socalabsdb.load_db()
 		namefound = np.where(plugin_obj.type.subtype==socalabsdb.dbdata['name'])[0]
 		if len(namefound):

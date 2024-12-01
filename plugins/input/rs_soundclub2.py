@@ -26,25 +26,29 @@ def decode_tempo(in_val): return (1/((in_val/40)/2+0.5))*120
 def decode_tempopl(in_val, globaltempo): return ((((in_val-30)*-6)+60)/120)*globaltempo
 
 class input_soundclub2(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'soundclub2'
-	def get_name(self): return 'Sound Club 2'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'soundclub2'
+	
+	def get_name(self):
+		return 'Sound Club 2'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['sn2']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'rs'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		bytestream = open(input_file, 'rb')
-		bytestream.seek(0)
-		bytesdata = bytestream.read(3)
-		if bytesdata == b'SN2': return True
-		else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
+		
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'SN2'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.file_proj import proj_soundclub2
 		
@@ -52,9 +56,11 @@ class input_soundclub2(plugins.base):
 		convproj_obj.set_timings(4, False)
 
 		project_obj = proj_soundclub2.sn2_song()
-		if not project_obj.load_from_file(input_file): exit()
 
-		samplefolder = dv_config.path_samples_extracted
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		samplefolder = dawvert_intent.path_samples['extracted']
 		
 		for instnum, sn2_inst_obj in enumerate(project_obj.instruments):
 			cvpj_instid = 'sn2_'+str(instnum)
@@ -73,7 +79,8 @@ class input_soundclub2(plugins.base):
 				if sn2_inst_obj.loopstart != -1: audio_obj.loop = [sn2_inst_obj.loopstart, sn2_inst_obj.samplesize]
 				audio_obj.to_file_wav(wave_path)
 
-				plugin_obj, track_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+				plugin_obj, synthid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+				track_obj.plugslots.set_synth(synthid)
 
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				sp_obj.point_value_type = "samples"
@@ -89,12 +96,16 @@ class input_soundclub2(plugins.base):
 
 		for patnum, sn2_pat_obj in enumerate(project_obj.patterns):
 			sceneid = str(patnum)
-			convproj_obj.scene__add(sceneid)
+			scene_obj = convproj_obj.scene__add(sceneid)
+			scene_obj.visual.name = sn2_pat_obj.name
 
 			scenedur = 0
 			repeatnotes = {}
 
 			for patvoice_obj in sn2_pat_obj.voices:
+
+				panpoints = {}
+
 				if patvoice_obj.instid not in repeatnotes: repeatnotes[patvoice_obj.instid] = 1
 				else: repeatnotes[patvoice_obj.instid] += 1
 				laneid = str(repeatnotes[patvoice_obj.instid])
@@ -125,7 +136,10 @@ class input_soundclub2(plugins.base):
 							for s_pos, s_len, s_key in scnote_obj.porta: placement_obj.notelist.last_add_slide(s_pos, s_len, s_key-36, n_curvol, None)
 
 					elif event.type == 20: n_curvol = event.value/31
-					elif event.type == 21: n_curpan = (event.value-15)/-15
+					elif event.type == 21: 
+						n_curpan = (event.value-15)/-15
+						panpoints[curpos] = n_curpan
+
 					elif event.type == 54: 
 						t_active_notes[event.p_key] = t_active_notes[event.value]
 						t_active_notes[event.p_key].porta.append([curpos-t_active_notes[event.value].start, event.p_len, event.p_key])
@@ -138,6 +152,13 @@ class input_soundclub2(plugins.base):
 				placement_obj.visual.name = sn2_pat_obj.name
 
 				placement_obj.time.set_block_dur(curpos, 32)
+
+				if panpoints:
+					autopoints_obj = placement_obj.add_autopoints('pan')
+					for p, v in panpoints.items():
+						autopoint_obj = autopoints_obj.add_point()
+						autopoint_obj.pos = p
+						autopoint_obj.value = v
 
 			scenedurs.append(scenedur)
 
@@ -159,6 +180,7 @@ class input_soundclub2(plugins.base):
 				autopoint_obj = autopl_obj.data.add_point()
 				autopoint_obj.pos = pat_tempo[0]
 				autopoint_obj.value = decode_tempopl(pat_tempo[1], globaltempo)
+				autopoint_obj.type = 'instant'
 
 			curpos += size
 

@@ -6,21 +6,29 @@ import math
 import plugins
 
 from objects import globalstore
+from functions import xtramath
 
 class input_gt_mnbs(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'mnbs'
-	def get_name(self): return 'Minecraft Note Block Studio'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'mnbs'
+	
+	def get_name(self):
+		return 'Minecraft Note Block Studio'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['nbs']
 		in_dict['track_nopl'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:midi']
 		in_dict['projtype'] = 'rm'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_nbs
 		from objects.convproj import fileref
 
@@ -30,15 +38,20 @@ class input_gt_mnbs(plugins.base):
 		fileref.filesearcher.add_searchpath_partial('mnbs_sounds', '../Data/Sounds', 'projectfile')
 
 		project_obj = proj_nbs.nbs_song()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		globalstore.dataset.load('noteblockstudio', './data_main/dataset/noteblockstudio.dset')
+
+		tempo = (project_obj.tempo/800)*120
+
+		outtempo, notelen = xtramath.get_lower_tempo(tempo, 1, 180)
 
 		convproj_obj.metadata.name = project_obj.name
 		convproj_obj.metadata.author = project_obj.author
 		convproj_obj.metadata.original_author = project_obj.orgauthor
 		convproj_obj.metadata.comment_text = project_obj.description
-		convproj_obj.params.add('bpm', (project_obj.tempo/800)*120, 'float')
+		convproj_obj.params.add('bpm', outtempo, 'float')
 		convproj_obj.timesig = [project_obj.numerator, 4]
 
 		for instnum in range(16):
@@ -50,10 +63,11 @@ class input_gt_mnbs(plugins.base):
 		for nbs_layer, layer_obj in enumerate(project_obj.layers):
 			cvpj_trackid = str(nbs_layer+1)
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 1, False)
-			track_obj.visual.name = layer_obj.name if layer_obj.name else cvpj_trackid
+			track_obj.visual.name = layer_obj.name if layer_obj.name else 'Layer #'+cvpj_trackid
 			track_obj.params.add('vol', layer_obj.vol/100, 'float')
 			track_obj.params.add('pan', (layer_obj.stereo/100)-1, 'float')
-			for note_obj in layer_obj.notes: track_obj.placements.notelist.add_m('NoteBlock'+str(note_obj.inst), note_obj.pos, 2, note_obj.key-39, note_obj.vel/100, {'pan': (note_obj.pan/100)-1, 'finepitch': note_obj.pitch})
+			for note_obj in layer_obj.notes: 
+				track_obj.placements.notelist.add_m('NoteBlock'+str(note_obj.inst), note_obj.pos*notelen, 2*notelen, note_obj.key-39, note_obj.vel/100, {'pan': (note_obj.pan/100)-1, 'finepitch': note_obj.pitch})
 
 		custominstid = 16
 		for custominstid, custom_obj in enumerate(project_obj.custom):

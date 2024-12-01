@@ -111,6 +111,9 @@ class serato_arrangement_track:
 class serato_arrangement:
 	def __init__(self, json_data):
 		self.tracks = [serato_arrangement_track(x) for x in json_data['tracks']] if 'tracks' in json_data else []
+		self.loop_start = json_data['loop_start'] if 'loop_start' in json_data else 0
+		self.loop_end = json_data['loop_end'] if 'loop_end' in json_data else 0
+		self.loop_active = json_data['loop_active'] if 'loop_active' in json_data else False
 
 class serato_song:
 	def __init__(self):

@@ -45,7 +45,10 @@ class vst2_fxChunkSet:
 			self.fourid = byr_stream.uint32_b()
 			self.version = byr_stream.uint32_b()
 			self.num_programs = byr_stream.uint32_b()
-			self.prgname = byr_stream.string(28)
+			try:
+				self.prgname = byr_stream.string(28)
+			except:
+				pass
 			self.chunk = byr_stream.raw(byr_stream.uint32_b())
 
 	def write(self):

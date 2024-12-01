@@ -4,13 +4,13 @@
 from objects.convproj import placements
 from objects import notelist_splitter
 
-def process(convproj_obj, in__track_nopl, out__track_nopl, out_type):
+def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_intent):
 
 	if in__track_nopl == True and out__track_nopl == False:
 
 		if convproj_obj.type in (['r'] if 'r' in out_type else ['r', 'rm']): 
 			timesigblocks_obj = notelist_splitter.timesigblocks()
-			timesigblocks_obj.create_points_cut(convproj_obj)
+			timesigblocks_obj.create_points_cut(convproj_obj, dawvert_intent)
 
 			if 'do_singlenotelistcut' in convproj_obj.do_actions:
 				npsplit = notelist_splitter.cvpj_notelist_splitter(timesigblocks_obj, convproj_obj.time_ppq, 1)

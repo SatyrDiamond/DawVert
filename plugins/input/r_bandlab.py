@@ -99,7 +99,7 @@ class input_cvpj_f(plugins.base):
 					placement_obj.fade_in.set_dur(blx_region.fadeIn, 'seconds')
 					placement_obj.fade_out.set_dur(blx_region.fadeOut, 'seconds')
 
-			if blx_track.type in ['piano', 'creators-kit']:
+			else:
 				track_obj = convproj_obj.track__add(blx_track.id, 'instrument', 1, False)
 				do_track_common(convproj_obj, track_obj, blx_track)
 				for blx_region in blx_track.regions:

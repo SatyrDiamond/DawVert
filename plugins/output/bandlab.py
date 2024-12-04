@@ -114,9 +114,10 @@ class output_midi(plugins.base):
 					for audiopl_obj in track_obj.placements.pl_audio:
 						blx_region = proj_bandlab.bandlab_region(None)
 
-						add_region_common(blx_region, audiopl_obj, blx_track, tempomul)
-
 						sp_obj = audiopl_obj.sample
+
+						add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False)
+
 						blx_region.pitchShift = sp_obj.pitch
 						blx_region.gain = sp_obj.vol
 						blx_region.playbackRate = sp_obj.stretch.calc_tempo_speed
@@ -146,7 +147,7 @@ class output_midi(plugins.base):
 							project_obj.samples.append(bl_sample)
 
 						blx_region = proj_bandlab.bandlab_region(None)
-						add_region_common(blx_region, notespl_obj, blx_track, tempomul)
+						add_region_common(blx_region, notespl_obj, blx_track, tempomul, True)
 						blx_region.file = uuiddata+'.mid'
 						blx_track.regions.append(blx_region)
 
@@ -171,7 +172,7 @@ class output_midi(plugins.base):
 				a_in = sampleref_obj.fileref.get_path(None, False)
 				a_out = os.path.join(folder, namet, 'Assets', 'Audio', outfile)
 				try:
-					shutil.copyfile(a_in, a_out)
+					sampleref_obj.copy_resample(None, a_out)
 				except:
 					pass
 
@@ -210,7 +211,7 @@ def make_plugins_fx(convproj_obj, effects, fxslots_audio):
 
 				effects.append(blx_effect)
 
-def add_region_common(blx_region, audiopl_obj, blx_track, tempomul):
+def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi):
 	blx_region.trackId = blx_track.id
 	blx_region.id = str(uuid.uuid4())
 	blx_region.startPosition = audiopl_obj.time.position/2
@@ -221,8 +222,7 @@ def add_region_common(blx_region, audiopl_obj, blx_track, tempomul):
 
 	blx_region.sampleStartPosition += blx_region.startPosition
 
-	cut_start = (audiopl_obj.time.cut_start)/2
-	cut_loopend = (audiopl_obj.time.cut_loopend)/2
+	cut_start = audiopl_obj.time.cut_start
 
 	if cut_type == 'cut':
-		blx_region.sampleOffset += cut_start
+		blx_region.sampleOffset += cut_start/2

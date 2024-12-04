@@ -4,7 +4,9 @@
 import numpy
 from objects.file import audio_wav
 from plugins import base as dv_plugins
+import os
 import copy
+from scipy import signal
 
 class codec_obj:
 	def __init__(self, codectype):
@@ -48,7 +50,7 @@ class audio_obj:
 
 	def __init__(self):
 		self.is_pcm = True
-		self.data = []
+		self.data = numpy.zeros(0)
 
 		self.loop = None
 
@@ -62,9 +64,22 @@ class audio_obj:
 	def set_codec(self, codectype): 
 		self.codec.set_codec(codectype)
 		self.pcm_from_list([])
-	def pcm_from_stream(self, in_arr, in_size): self.data = numpy.fromfile(in_arr, dtype=self.codec.get_dtype(), count=in_size*(self.codec.pcm_bits//8))
-	def pcm_from_bytes(self, in_arr): self.data = numpy.frombuffer(in_arr, dtype=self.codec.get_dtype())
-	def pcm_from_list(self, in_arr): self.data = numpy.asarray(in_arr, dtype=self.codec.get_dtype())
+
+# -------------------------------- data --------------------------------
+
+	def pcm_from_stream(self, in_arr, in_size): 
+		self.data = numpy.fromfile(in_arr, dtype=self.codec.get_dtype(), count=in_size*(self.codec.pcm_bits//8))
+		numpy.reshape(self.data, (-1, self.channels))
+
+	def pcm_from_bytes(self, in_arr): 
+		self.data = numpy.frombuffer(in_arr, dtype=self.codec.get_dtype())
+		numpy.reshape(self.data, (-1, self.channels))
+
+	def pcm_from_list(self, in_arr): 
+		self.data = numpy.asarray(in_arr, dtype=self.codec.get_dtype())
+		numpy.reshape(self.data, (-1, self.channels))
+
+# -------------------------------- signed --------------------------------
 
 	def pcm_to_signed(self):
 		#print("pcm_to_signed")
@@ -83,6 +98,8 @@ class audio_obj:
 			if codec_obj.pcm_bits == 8: self.data = (self.data+128).astype('uint8')
 			if codec_obj.pcm_bits == 16: self.data = (self.data+32768).astype('uint16')
 			if codec_obj.pcm_bits == 32: self.data = (self.data+2147483648).astype('uint32')
+
+# -------------------------------- bits --------------------------------
 
 	def pcm_bits_up(self, n_bits):
 		codec_obj = self.codec
@@ -110,6 +127,8 @@ class audio_obj:
 		if codec_obj.pcm_bits < n_bits: self.pcm_bits_up(n_bits)
 		if codec_obj.pcm_bits > n_bits: self.pcm_bits_down(n_bits)
 
+# -------------------------------- codec --------------------------------
+
 	def pcm_to_float(self):
 		codec_obj = self.codec
 		if not codec_obj.pcm_uses_float and codec_obj.is_pcm:
@@ -132,7 +151,6 @@ class audio_obj:
 	def pcm_changecodec(self, newcodec):
 		codec_obj = self.codec
 		o_pcm, o_float, o_bits, o_signed = codec_obj.is_pcm, codec_obj.pcm_uses_float, codec_obj.pcm_bits, codec_obj.pcm_signed
-		codec_obj.codectxt_from(newcodec)
 		is_pcm, pcm_uses_float, pcm_bits, pcm_signed = codec_obj.codectxt_from(newcodec)
 
 		if o_pcm and is_pcm:
@@ -145,6 +163,54 @@ class audio_obj:
 			if o_float and (not pcm_uses_float):
 				self.pcm_from_float(pcm_bits)
 				if not pcm_signed: self.pcm_to_unsigned()
+
+# -------------------------------- channels --------------------------------
+
+	def pcm_chan_from_one(self, channels):
+		oldd = self.data
+		self.data = numpy.zeros((len(self), channels), dtype=self.data.dtype)
+		for x in range(channels): self.data[:,x] = oldd
+
+	def pcm_chan_to_one(self, channels):
+		numchans = self.channels/channels
+		olddata = self.data.copy()
+
+		self.data = self.data[:,0]//numchans
+		for x in range(channels):
+			self.data += (olddata[:,x+1]//numchans)
+
+	def pcm_changechannels(self, channels):
+		if channels < self.channels:
+			if channels == 1:
+				self.pcm_chan_to_one(channels)
+			else:
+				self.pcm_chan_to_one(channels)
+				self.pcm_chan_from_one(channels)
+
+		elif self.channels < channels:
+			if self.channels == 1:
+				self.pcm_chan_from_one(channels)
+			else:
+				self.pcm_chan_to_one(channels)
+				self.pcm_chan_from_one(channels)
+
+		self.channels = channels
+
+# -------------------------------- resample --------------------------------
+
+	def resample(self, samplerate):
+		if len(self.data):
+			if samplerate != self.rate:
+				self.pcm_changecodec('float')
+				orgnumsamples = len(self.data)
+				numsamples = int(orgnumsamples*(samplerate/self.rate))
+				codec_obj = self.codec
+				codectxt = codec_obj.codectxt_to()
+				self.data = signal.resample_poly(self.data, numsamples, orgnumsamples)
+				self.rate = samplerate
+				self.pcm_changecodec(codectxt)
+
+# -------------------------------- codec --------------------------------
 
 	def decode_from_codec(self, codecname, in_bytes):
 		codecname = audio_obj.audiocodec_selector.set(codecname)
@@ -162,8 +228,48 @@ class audio_obj:
 			else: print('[plugins] codec: encoding unsupported:', codecname)
 		else: print('[plugins] codec: not found', codecname)
 
+# -------------------------------- codec --------------------------------
+
+	def output_as(self, codec, channels, samplerate):
+		c = copy.deepcopy(self)
+		if codec: c.pcm_changecodec(codec)
+		if channels: c.pcm_changechannels(channels)
+		if samplerate: c.pcm_changechannels(samplerate)
+		return c
+
+	def change(self, codec, channels, samplerate):
+		if codec: self.pcm_changecodec(codec)
+		if channels: self.pcm_changechannels(channels)
+		if samplerate: self.pcm_changechannels(samplerate)
+
+# -------------------------------- raw --------------------------------
+
 	def to_raw(self):
 		return self.data.tobytes() if len(self.data) else b''
+
+	def to_file_raw(self, file_path):
+		print('-- to_file_raw',file_path)
+		fid = open(file_path, 'wb')
+		fid.write(self.to_raw())
+
+# -------------------------------- wav --------------------------------
+
+	def from_file_wav(self, wavfile):
+		if os.path.exists(wavfile):
+			wavfile_obj = audio_wav.wav_main()
+			wavfile_obj.read(wavfile)
+
+			self.channels = wavfile_obj.channels
+			self.rate = wavfile_obj.rate
+
+			if wavfile_obj.format != 3:
+				if wavfile_obj.bits == 32: self.set_codec('int32')
+				if wavfile_obj.bits == 16: self.set_codec('int16')
+				if wavfile_obj.bits == 8: self.set_codec('uint8')
+			else:
+				self.set_codec('float')
+
+			self.pcm_from_list(wavfile_obj.data.copy())
 
 	def to_file_wav(self, file_path):
 		if len(self.data):
@@ -171,9 +277,3 @@ class audio_obj:
 			wavfile_obj.read_audioobj(self)
 			if self.loop: wavfile_obj.add_loop(self.loop[0], self.loop[1])
 			wavfile_obj.write(file_path)
-
-	def to_file_raw(self, file_path):
-		print('-- to_file_raw',file_path)
-		fid = open(file_path, 'wb')
-		fid.write(self.to_raw())
-

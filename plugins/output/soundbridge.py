@@ -8,11 +8,10 @@ import os
 import math
 import numpy as np
 import base64
-from objects import globalstore
 from functions import data_values
 from functions import xtramath
+from objects import globalstore
 from objects.data_bytes import bytewriter
-import shutil
 import logging
 
 logger_output = logging.getLogger('output')
@@ -449,10 +448,7 @@ class output_soundbridge(plugins.base):
 				if dawvert_intent.output_mode == 'file':
 					filename = str(obj_filename)
 					outfilename = os.path.join(dawvert_intent.output_file, str(obj_outfilename.file))
-					try:
-						shutil.copyfile(filename, outfilename)
-					except:
-						pass
+					sampleref_obj.copy_resample(None, outfilename)
 
 				audio_ids[sampleref_id] = sampleref_obj.fileref.file
 

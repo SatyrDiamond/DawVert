@@ -205,6 +205,10 @@ class wav_main:
 				if self.bits == 32: 
 					audio_obj.pcm_to_signed()
 					self.data = numpy.asarray(audio_obj.data, dtype=numpy.int32)
+			else:
+				self.format = 3
+				self.bits = 32
+				self.data = numpy.asarray(audio_obj.data, dtype=numpy.float32)
 		self.set_blksize()
 
 	def read_bytes(self, rawdata):

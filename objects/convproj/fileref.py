@@ -6,6 +6,7 @@ import sys
 import getpass
 import glob
 
+from objects import audio_data
 from plugins import base as dv_plugins
 from functions import data_values
 from objects.convproj import visual
@@ -452,6 +453,20 @@ class cvpj_sampleref:
 			return iffound
 
 		return False
+
+	def copy_resample(self, os_type, outfilename):
+		try:
+			filename = self.fileref.get_path(None, False)
+			if not os.path.exists(outfilename):
+				audiof_obj = audio_data.audio_obj()
+				audiof_obj.from_file_wav(filename)
+				logger_project.warning('Resampling '+str(self.fileref.file))
+				audiof_obj.resample(44100)
+				audiof_obj.to_file_wav(outfilename)
+				self.set_path(os_type, outfilename)
+			sampleref_obj.hz = 44100
+		except:
+			pass
 
 	def search_local(self, dirpath):
 		filesearcher.scan_local_files(dirpath)

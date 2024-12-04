@@ -811,12 +811,15 @@ class cvpj_notelist:
 	def appendtxt_inst(self, start, end):
 		self.data.appendtxt_inst(start, end)
 
+	def getvalue(self):
+		nl = self.data.nl
+		return nl[np.nonzero(nl['used'])].tobytes()
+
 	def midi_from(self, input_file):
 		from objects.songinput import midi_in
 		from objects_midi.parser import MidiFile
 		from objects.songinput._midi_multi import notes
 		from objects_midi import events as MidiEvents
-		
 
 		if os.path.exists(input_file):
 			midifile = MidiFile.fromFile(input_file)
@@ -842,6 +845,43 @@ class cvpj_notelist:
 					if n['complete']:
 						self.add_r(int(n['start']), int(n['end']-n['start']), int(n['key'])-60, float(n['vol'])/127, None)
 
+	def midi_to(self, output_file, tempo):
+		import mido
+
+		outnl = self.__copy__()
+		outnl.change_timings(480, False)
+		
+		midiobj = mido.MidiFile()
+		midiobj.ticks_per_beat = 480
+
+		miditrack = mido.MidiTrack()
+
+		i_list = {}
+
+		outnl.sort()
+		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in outnl.iter():
+			for t_key in t_keys:
+				cvmi_n_pos = int(t_pos)
+				cvmi_n_dur = int(t_dur)
+				cvmi_n_key = int(t_key)+60
+				cvmi_n_vol = xtramath.clamp(int(t_vol*127), 0, 127)
+				data_values.list__addpend(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
+				data_values.list__addpend(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
+
+		i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
+
+		midi_tempo = mido.bpm2tempo(tempo)
+		miditrack.append(mido.MetaMessage('set_tempo', tempo=midi_tempo, time=0))
+
+		prevpos = 0
+		for i_list_e in i_list:
+			for midi_notedata in i_list[i_list_e]:
+				if midi_notedata[0] == 'note_on': miditrack.append(mido.Message('note_on', channel=0, note=midi_notedata[1], velocity=midi_notedata[2], time=i_list_e-prevpos))
+				if midi_notedata[0] == 'note_off': miditrack.append(mido.Message('note_off', channel=0, note=midi_notedata[1], time=i_list_e-prevpos))
+				prevpos = i_list_e
+
+		midiobj.tracks.append(miditrack)
+		midiobj.save(output_file)
 
 	#def multikey_comb(self):
 	#	prev_note = None

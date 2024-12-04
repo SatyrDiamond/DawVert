@@ -2,6 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import re
+import hashlib
+import uuid
 
 class dif_val:
 	def __init__(self, inval):
@@ -87,6 +89,10 @@ def dict__closest(i_dict, in_value): # UNUSED
 	for num in i_dict:
 		if num <= in_value: outnum = num
 	return outnum
+
+def list__addpend(l, p, data):
+	if p not in l: l[p] = []
+	l[p].append(data)
 
 # -------------------- list --------------------
 
@@ -228,3 +234,10 @@ def assoc_remap(i_assoc_org, i_assoc_new):
 			nextnew += 1
 			outputs.append(n)
 	return outputs, remap
+
+# -------------------- other --------------------
+
+def bytes__to_uuid(data): # UNUSED
+	m = hashlib.md5()
+	m.update(data)
+	return uuid.UUID( m.hexdigest())

@@ -6,6 +6,7 @@ import json
 import uuid
 import os
 import shutil
+from functions import data_values
 from functions import xtramath
 
 class output_midi(plugins.base):
@@ -25,8 +26,8 @@ class output_midi(plugins.base):
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'flac']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['projtype'] = 'r'
+		in_dict['audio_stretch'] = ['rate']
 		in_dict['fxtype'] = 'groupreturn'
-		in_dict['time_seconds'] = True
 		in_dict['file_ext'] = 'blx'
 		in_dict['placement_cut'] = True
 		in_dict['plugin_included'] = ['native:bandlab']
@@ -34,7 +35,7 @@ class output_midi(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_bandlab
 
-		convproj_obj.change_timings(4, False)
+		convproj_obj.change_timings(1, False)
 		
 		project_obj = proj_bandlab.bandlab_project()
 
@@ -62,8 +63,11 @@ class output_midi(plugins.base):
 
 		sampleref_assoc = {}
 		sampleref_ext = {}
+
+		notelist_assoc = {}
+
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
-			uuiddata = str(uuid.uuid4())
+			uuiddata = str( data_values.bytes__to_uuid( sampleref_id.encode() ) )
 			sampleref_assoc[sampleref_id] = uuiddata
 			sampleref_ext[sampleref_id] = sampleref_obj.fileref.file.extension
 
@@ -115,7 +119,7 @@ class output_midi(plugins.base):
 						sp_obj = audiopl_obj.sample
 						blx_region.pitchShift = sp_obj.pitch
 						blx_region.gain = sp_obj.vol
-						blx_region.playbackRate = sp_obj.stretch.calc_real_speed
+						blx_region.playbackRate = sp_obj.stretch.calc_tempo_speed
 
 						blx_region.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
 						blx_region.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
@@ -127,6 +131,24 @@ class output_midi(plugins.base):
 				if track_obj.type == 'instrument':
 					blx_track.type = 'piano'
 					blx_track.soundbank = 'studio-grand-v2-v4'
+
+					track_obj.placements.pl_audio.sort()
+					for notespl_obj in track_obj.placements.pl_notes:
+						notebytes = notespl_obj.notelist.getvalue()
+						uuiddata = str( data_values.bytes__to_uuid( notebytes ) )
+
+						if uuiddata not in notelist_assoc:
+							notelist_assoc[uuiddata] = notespl_obj.notelist
+							bl_sample = proj_bandlab.bandlab_sample(None) 
+							bl_sample.creatorId = creatorId
+							bl_sample.isMidi = True
+							bl_sample.id = uuiddata
+							project_obj.samples.append(bl_sample)
+
+						blx_region = proj_bandlab.bandlab_region(None)
+						add_region_common(blx_region, notespl_obj, blx_track, tempomul)
+						blx_region.file = uuiddata+'.mid'
+						blx_track.regions.append(blx_region)
 
 				project_obj.tracks.append(blx_track)
 
@@ -140,6 +162,9 @@ class output_midi(plugins.base):
 			os.makedirs(os.path.join(folder, namet, 'Assets'), exist_ok=True)
 			os.makedirs(os.path.join(folder, namet, 'Assets', 'Audio'), exist_ok=True)
 			os.makedirs(os.path.join(folder, namet, 'Assets', 'MIDI'), exist_ok=True)
+
+			for notelist_id, notelist_obj in notelist_assoc.items():
+				notelist_obj.midi_to(os.path.join(folder, namet, 'Assets', 'MIDI', notelist_id+'.mid'), bpm)
 
 			for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 				outfile = sampleref_assoc[sampleref_id]+'.'+sampleref_ext[sampleref_id]
@@ -159,7 +184,7 @@ def do_automation(convproj_obj, autoloc, blx_auto):
 	if ap_f: 
 		if ap_d.u_nopl_points:
 			for autopoint in ap_d.nopl_points:
-				blx_auto.add_point(autopoint.pos_real, autopoint.value)
+				blx_auto.add_point(autopoint.pos, autopoint.value)
 
 def make_plugins_fx(convproj_obj, effects, fxslots_audio):
 	from objects.file_proj import proj_bandlab
@@ -188,16 +213,16 @@ def make_plugins_fx(convproj_obj, effects, fxslots_audio):
 def add_region_common(blx_region, audiopl_obj, blx_track, tempomul):
 	blx_region.trackId = blx_track.id
 	blx_region.id = str(uuid.uuid4())
-	blx_region.startPosition = audiopl_obj.time.position_real
-	blx_region.endPosition = blx_region.startPosition+audiopl_obj.time.duration_real
+	blx_region.startPosition = audiopl_obj.time.position/2
+	blx_region.endPosition = blx_region.startPosition+(audiopl_obj.time.duration/2)
 	blx_region.name = audiopl_obj.visual.name
 
 	cut_type = audiopl_obj.time.cut_type
 
 	blx_region.sampleStartPosition += blx_region.startPosition
 
-	cut_start = (audiopl_obj.time.cut_start*tempomul)/8
-	cut_loopend = (audiopl_obj.time.cut_loopend*tempomul)/8
+	cut_start = (audiopl_obj.time.cut_start)/2
+	cut_loopend = (audiopl_obj.time.cut_loopend)/2
 
 	if cut_type == 'cut':
 		blx_region.sampleOffset += cut_start

@@ -245,7 +245,7 @@ class bandlab_track:
 		self.autoPitch = None
 		self.auxSends = []
 
-		self.canEdit = False
+		self.canEdit = True
 		self.color = "#AECA59"
 		self.colorName = "Green"
 
@@ -441,7 +441,7 @@ class bandlab_project:
 		self.modifiedOn = ''
 		self.parentId = ''
 		self.place = ''
-		self.post = ''
+		self.post = {}
 		self.postId = ''
 
 		self.counters = {}

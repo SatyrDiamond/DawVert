@@ -44,6 +44,9 @@ class codec_obj:
 			elif self.pcm_bits == 16: return numpy.int16 if self.pcm_signed else numpy.uint16
 			elif self.pcm_bits == 32: return numpy.int32 if self.pcm_signed else numpy.uint32
 
+
+VERBOSE = False
+
 class audio_obj:
 
 	audiocodec_selector = dv_plugins.create_selector('audiocodec')
@@ -62,6 +65,7 @@ class audio_obj:
 		return len(self.data)
 
 	def set_codec(self, codectype): 
+		if VERBOSE: print("set_codec", codectype)
 		self.codec.set_codec(codectype)
 		self.pcm_from_list([])
 
@@ -82,7 +86,7 @@ class audio_obj:
 # -------------------------------- signed --------------------------------
 
 	def pcm_to_signed(self):
-		#print("pcm_to_signed")
+		if VERBOSE: print("> pcm_to_signed")
 		codec_obj = self.codec
 		if not codec_obj.pcm_signed and codec_obj.is_pcm:
 			codec_obj.pcm_signed = True
@@ -91,7 +95,7 @@ class audio_obj:
 			if codec_obj.pcm_bits == 32: self.data = (self.data-2147483648).astype('int32')
 
 	def pcm_to_unsigned(self):
-		#print("pcm_to_unsigned")
+		if VERBOSE: print("> pcm_to_unsigned")
 		codec_obj = self.codec
 		if codec_obj.pcm_signed and codec_obj.is_pcm:
 			codec_obj.pcm_signed = False
@@ -102,26 +106,29 @@ class audio_obj:
 # -------------------------------- bits --------------------------------
 
 	def pcm_bits_up(self, n_bits):
+		if VERBOSE: print("> pcm_bits_up")
 		codec_obj = self.codec
 		if not codec_obj.pcm_uses_float and codec_obj.is_pcm:
 			if codec_obj.pcm_bits == 8:
-				if n_bits == 16: self.data = self.data.astype('uint16')*(256)
-				if n_bits == 32: self.data = self.data.astype('uint32')*((1<<24)+(1<<16)+(1<<8)+1)
+				if n_bits == 16: self.data = self.data.astype('uint16' if not codec_obj.pcm_signed else 'int16')*(256)
+				if n_bits == 32: self.data = self.data.astype('uint32' if not codec_obj.pcm_signed else 'int32')*((1<<24)+(1<<16)+(1<<8)+1)
 			if codec_obj.pcm_bits == 16:
-				if n_bits == 32: self.data = self.data.astype('uint32')*((256*256)+1)
+				if n_bits == 32: self.data = self.data.astype('uint32' if not codec_obj.pcm_signed else 'int32')*((256*256)+1)
 			codec_obj.pcm_bits = n_bits
 
 	def pcm_bits_down(self, n_bits):
+		if VERBOSE: print("> pcm_bits_down")
 		codec_obj = self.codec
 		if not codec_obj.pcm_uses_float and codec_obj.is_pcm:
 			if codec_obj.pcm_bits == 16:
-				if n_bits == 8: self.data = (self.data//256).astype('uint8')
+				if n_bits == 8: self.data = (self.data//256).astype('uint8' if not codec_obj.pcm_signed else 'int8')
 			if codec_obj.pcm_bits == 32:
-				if n_bits == 16: self.data = (self.data>>16).astype('uint16')
-				if n_bits == 8: self.data = (self.data>>24).astype('uint8')
+				if n_bits == 16: self.data = (self.data>>16).astype('uint16' if not codec_obj.pcm_signed else 'int16')
+				if n_bits == 8: self.data = (self.data>>24).astype('uint8' if not codec_obj.pcm_signed else 'int8')
 			codec_obj.pcm_bits = n_bits
 
 	def pcm_change_bits(self, n_bits):
+		if VERBOSE: print("> pcm_change_bits")
 		codec_obj = self.codec
 		#print("pcm_change_bits", codec_obj.pcm_bits, n_bits)
 		if codec_obj.pcm_bits < n_bits: self.pcm_bits_up(n_bits)
@@ -130,6 +137,7 @@ class audio_obj:
 # -------------------------------- codec --------------------------------
 
 	def pcm_to_float(self):
+		if VERBOSE: print("> pcm_to_float")
 		codec_obj = self.codec
 		if not codec_obj.pcm_uses_float and codec_obj.is_pcm:
 			self.pcm_to_signed()
@@ -139,6 +147,7 @@ class audio_obj:
 			if codec_obj.pcm_bits == 32: self.data = self.data.astype('float32')/2147483648
 
 	def pcm_from_float(self, n_bits):
+		if VERBOSE: print("> pcm_to_float")
 		codec_obj = self.codec
 		if codec_obj.pcm_uses_float and codec_obj.is_pcm:
 			codec_obj.pcm_signed = True
@@ -149,6 +158,7 @@ class audio_obj:
 			if n_bits == 32: self.data = (self.data*2147483648).astype('int32')
 
 	def pcm_changecodec(self, newcodec):
+		if VERBOSE: print("pcm_changecodec", newcodec)
 		codec_obj = self.codec
 		o_pcm, o_float, o_bits, o_signed = codec_obj.is_pcm, codec_obj.pcm_uses_float, codec_obj.pcm_bits, codec_obj.pcm_signed
 		is_pcm, pcm_uses_float, pcm_bits, pcm_signed = codec_obj.codectxt_from(newcodec)
@@ -167,19 +177,23 @@ class audio_obj:
 # -------------------------------- channels --------------------------------
 
 	def pcm_chan_from_one(self, channels):
+		if VERBOSE: print("pcm_chan_from_one", channels)
 		oldd = self.data
 		self.data = numpy.zeros((len(self), channels), dtype=self.data.dtype)
 		for x in range(channels): self.data[:,x] = oldd
 
 	def pcm_chan_to_one(self, channels):
+		if VERBOSE: print("pcm_chan_to_one", channels)
 		numchans = self.channels/channels
+		oldcodec = self.codec.codectxt_to()
+		self.pcm_to_float()
 		olddata = self.data.copy()
-
-		self.data = self.data[:,0]//numchans
-		for x in range(channels):
-			self.data += (olddata[:,x+1]//numchans)
+		self.data = self.data[:,0]/numchans
+		for x in range(channels): self.data += (olddata[:,x+1]/numchans)
+		self.pcm_changecodec(oldcodec)
 
 	def pcm_changechannels(self, channels):
+		if VERBOSE: print("pcm_changechannels", channels)
 		if channels < self.channels:
 			if channels == 1:
 				self.pcm_chan_to_one(channels)
@@ -193,6 +207,11 @@ class audio_obj:
 			else:
 				self.pcm_chan_to_one(channels)
 				self.pcm_chan_from_one(channels)
+
+		else:
+			print('prob')
+
+		print(self.channels, channels)
 
 		self.channels = channels
 
@@ -213,6 +232,7 @@ class audio_obj:
 # -------------------------------- codec --------------------------------
 
 	def decode_from_codec(self, codecname, in_bytes):
+		self.data = numpy.zeros(0)
 		codecname = audio_obj.audiocodec_selector.set(codecname)
 		if codecname:
 			selected_plugin = audio_obj.audiocodec_selector.selected_plugin
@@ -234,13 +254,13 @@ class audio_obj:
 		c = copy.deepcopy(self)
 		if codec: c.pcm_changecodec(codec)
 		if channels: c.pcm_changechannels(channels)
-		if samplerate: c.pcm_changechannels(samplerate)
+		if samplerate: c.resample(samplerate)
 		return c
 
 	def change(self, codec, channels, samplerate):
 		if codec: self.pcm_changecodec(codec)
 		if channels: self.pcm_changechannels(channels)
-		if samplerate: self.pcm_changechannels(samplerate)
+		if samplerate: self.resample(samplerate)
 
 # -------------------------------- raw --------------------------------
 
@@ -248,7 +268,6 @@ class audio_obj:
 		return self.data.tobytes() if len(self.data) else b''
 
 	def to_file_raw(self, file_path):
-		print('-- to_file_raw',file_path)
 		fid = open(file_path, 'wb')
 		fid.write(self.to_raw())
 
@@ -272,8 +291,7 @@ class audio_obj:
 			self.pcm_from_list(wavfile_obj.data.copy())
 
 	def to_file_wav(self, file_path):
-		if len(self.data):
-			wavfile_obj = audio_wav.wav_main()
-			wavfile_obj.read_audioobj(self)
-			if self.loop: wavfile_obj.add_loop(self.loop[0], self.loop[1])
-			wavfile_obj.write(file_path)
+		wavfile_obj = audio_wav.wav_main()
+		wavfile_obj.read_audioobj(self)
+		if self.loop: wavfile_obj.add_loop(self.loop[0], self.loop[1])
+		wavfile_obj.write(file_path)

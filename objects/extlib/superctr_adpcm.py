@@ -31,11 +31,12 @@ class qsound():
 	def decode(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: audio_obj.pcm_from_list(decfunc16byte(self.codec_lib.bs_decode, indata))
 
 	def encode(self, audio_obj):
 		self.load_lib()
-		audio_obj.pcm_changecodec('int16')
+		audio_obj = audio_obj.output_as('int16', 1, 0)
 		if self.codec_lib: return encfunc16byte(self.codec_lib.bs_encode, audio_obj.to_raw())
 
 class oki():
@@ -54,11 +55,13 @@ class oki():
 	def decode_oki6258(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: audio_obj.pcm_from_list(decfunc16byte(self.codec_lib.oki6258_decode, indata))
 
 	def decode(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: audio_obj.pcm_from_list(decfunc16byte(self.codec_lib.oki_decode, indata))
 
 	def encode_oki6258(self, audio_obj):
@@ -68,7 +71,7 @@ class oki():
 
 	def encode(self, audio_obj):
 		self.load_lib()
-		audio_obj.pcm_changecodec('int16')
+		audio_obj = audio_obj.output_as('int16', 1, 0)
 		if self.codec_lib: return encfunc16byte(self.codec_lib.oki_encode, audio_obj.to_raw())
 
 class yamaha_a():
@@ -85,11 +88,12 @@ class yamaha_a():
 	def decode(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: audio_obj.pcm_from_list(decfunc16byte(self.codec_lib.yma_decode, indata))
 
 	def encode(self, audio_obj):
 		self.load_lib()
-		audio_obj.pcm_changecodec('int16')
+		audio_obj = audio_obj.output_as('int16', 1, 0)
 		if self.codec_lib: return encfunc16byte(self.codec_lib.yma_encode, audio_obj.to_raw())
 
 class yamaha_b():
@@ -106,11 +110,12 @@ class yamaha_b():
 	def decode(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: audio_obj.pcm_from_list(decfunc16byte(self.codec_lib.ymb_decode, indata))
 
 	def encode(self, audio_obj):
 		self.load_lib()
-		audio_obj.pcm_changecodec('int16')
+		audio_obj = audio_obj.output_as('int16', 1, 0)
 		if self.codec_lib: return encfunc16byte(self.codec_lib.ymb_encode, audio_obj.to_raw())
 
 class yamaha_z():
@@ -129,19 +134,21 @@ class yamaha_z():
 	def decode_aica(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: audio_obj.pcm_from_list(decfunc16byte(self.codec_lib.aica_decode, indata))
 
 	def decode(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: audio_obj.pcm_from_list(decfunc16byte(self.codec_lib.ymz_decode, indata))
 
 	def encode_aica(self, audio_obj):
 		self.load_lib()
-		audio_obj.pcm_changecodec('int16')
+		audio_obj = audio_obj.output_as('int16', 1, 0)
 		if self.codec_lib: return encfunc16byte(self.codec_lib.aica_encode, audio_obj.to_raw())
 
 	def encode(self, audio_obj):
 		self.load_lib()
-		audio_obj.pcm_changecodec('int16')
+		audio_obj = audio_obj.output_as('int16', 1, 0)
 		if self.codec_lib: return encfunc16byte(self.codec_lib.ymz_encode, audio_obj.to_raw())

@@ -24,6 +24,7 @@ class brr():
 	def decode(self, indata, audio_obj):
 		self.load_lib()
 		audio_obj.set_codec('int16')
+		audio_obj.channels = 1
 		if self.codec_lib: 
 			p_inp = helperfunc.castptr_ubyte_data(indata)
 			p_outp = helperfunc.castptr_int16_blank(len(indata)*2)
@@ -32,7 +33,7 @@ class brr():
 
 	def encode(self, audio_obj):
 		self.load_lib()
-		audio_obj.pcm_changecodec('int16')
+		audio_obj = audio_obj.output_as('int16', 1, 0)
 		if self.codec_lib: 
 			rawdata = audio_obj.to_raw()
 			outlen = len(rawdata)//2

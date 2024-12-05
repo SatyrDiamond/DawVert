@@ -679,9 +679,9 @@ class input_flp(plugins.base):
 										autopl_obj.time.set_offset(posdata*flp_obj.ppq)
 
 								curpos = 0
-								for point in fl_autopoints.points:
+								for point, tension in fl_autopoints:
 									curpos += point.pos
-	
+
 									auto_pos = int(curpos*flp_obj.ppq)
 									auto_val = xtramath.between_from_one(amin, amax, point.val)
 	
@@ -689,6 +689,7 @@ class input_flp(plugins.base):
 									autopoint_obj.pos = auto_pos
 									autopoint_obj.value = auto_val
 									autopoint_obj.type = 'normal' if point.type!=2 else 'instant'
+									autopoint_obj.tension = tension
 	
 									#print(auto_pos, auto_val)
 

@@ -19,6 +19,7 @@ class input_codec(plugins.base):
 	def decode(self, in_bytes, audio_obj):
 		import numpy as np
 		from functions import xtramath
+		
 		dpcm_samp = np.zeros(len(in_bytes)*8, dtype=np.float32)
 		dpcm_current = 0
 

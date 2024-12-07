@@ -133,52 +133,53 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				if wrapper_vsttype == 0: plugin_obj.role == 'fx'
 				if wrapper_vsttype == 4: plugin_obj.role == 'synth'
 				plugin_obj.type_set('external', 'vst2', 'win')
-				pluginstate = wrapperdata['state']
-				wrapper_vststate = pluginstate[0:9]
-				wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
-				wrapper_vstpad = pluginstate[13:17]
-				wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
-				wrapper_vstdata = pluginstate[21:]
 				if 'fourid' in wrapperdata: plugin_obj.datavals_global.add('id', wrapperdata['fourid'])
 				if 'name' in wrapperdata: plugin_obj.datavals_global.add('name', wrapperdata['name'])
-
-				if wrapper_vststate[0:4] == b'\xf7\xff\xff\xff' and wrapper_vststate[5:9] == b'\xfe\xff\xff\xff':
-
-					if wrapper_vststate[4] in [13, 12]:
-						plugin_obj.clear_prog_keep(wrapper_vstprogram)
-						plugin_obj.rawdata_add('chunk', wrapper_vstdata)
-
-						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'chunk', wrapper_vstdata, None)
-						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
-
-						numparams = plugin_obj.datavals_global.get('numparams', -1) 
-
-						plugin_obj.datavals_global.add('all_params_used', False)
-
-					if wrapper_vststate[4] in [5, 4]:
-						stream_data = bytereader.bytereader()
-						stream_data.load_raw(wrapper_vstdata)
-						vst_total_params = stream_data.uint32()
-						vst_params_data = stream_data.l_float(vst_total_params)
-						vst_num_names = stream_data.uint32()
-						vst_names = []
-						for _ in range(vst_num_names):
-							vst_names.append(stream_data.string(25, encoding='utf-8'))
-
-						numparamseach = vst_total_params//vst_num_names
-						bankparams = data_values.list__chunks(vst_params_data, numparamseach)
-
-						plugin_obj.clear_prog_keep(0)
-						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'param', None, numparamseach)
-
-						for num in range(vst_num_names):
-							plugin_obj.set_program(num)
-							plugin_obj.preset.name = vst_names[num]
-							for paramnum in range(numparamseach): 
-								plugin_obj.params.add('ext_param_'+str(paramnum), bankparams[num][paramnum], 'float')
-
-						plugin_obj.datavals_global.add('all_params_used', True)
-						plugin_obj.set_program(wrapper_vstprogram)
+				if 'state' in wrapperdata:
+					pluginstate = wrapperdata['state']
+					wrapper_vststate = pluginstate[0:9]
+					wrapper_vstsize = int.from_bytes(pluginstate[9:13], "little")
+					wrapper_vstpad = pluginstate[13:17]
+					wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
+					wrapper_vstdata = pluginstate[21:]
+	
+					if wrapper_vststate[0:4] == b'\xf7\xff\xff\xff' and wrapper_vststate[5:9] == b'\xfe\xff\xff\xff':
+	
+						if wrapper_vststate[4] in [13, 12]:
+							plugin_obj.clear_prog_keep(wrapper_vstprogram)
+							plugin_obj.rawdata_add('chunk', wrapper_vstdata)
+	
+							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'chunk', wrapper_vstdata, None)
+							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
+	
+							numparams = plugin_obj.datavals_global.get('numparams', -1) 
+	
+							plugin_obj.datavals_global.add('all_params_used', False)
+	
+						if wrapper_vststate[4] in [5, 4]:
+							stream_data = bytereader.bytereader()
+							stream_data.load_raw(wrapper_vstdata)
+							vst_total_params = stream_data.uint32()
+							vst_params_data = stream_data.l_float(vst_total_params)
+							vst_num_names = stream_data.uint32()
+							vst_names = []
+							for _ in range(vst_num_names):
+								vst_names.append(stream_data.string(25, encoding='utf-8'))
+	
+							numparamseach = vst_total_params//vst_num_names
+							bankparams = data_values.list__chunks(vst_params_data, numparamseach)
+	
+							plugin_obj.clear_prog_keep(0)
+							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'param', None, numparamseach)
+	
+							for num in range(vst_num_names):
+								plugin_obj.set_program(num)
+								plugin_obj.preset.name = vst_names[num]
+								for paramnum in range(numparamseach): 
+									plugin_obj.params.add('ext_param_'+str(paramnum), bankparams[num][paramnum], 'float')
+	
+							plugin_obj.datavals_global.add('all_params_used', True)
+							plugin_obj.set_program(wrapper_vstprogram)
 
 			if wrapper_vsttype in [12,11] and 'state' in wrapperdata:
 				plugin_obj.type_set('external', 'clap', 'win')

@@ -466,11 +466,11 @@ class cvpj_project:
 
 	def sampleref__searchmissing(self, input_file):
 		dirpath = os.path.dirname(input_file)
-		files = self.filesearcher.searchcache
+		#files = fileref.filesearcher.searchcache
 
 		for sampleref_id, sampleref_obj in self.sampleref__iter():
 			if not sampleref_obj.found:
-				self.filesearcher.scan_local_files(dirpath)
+				fileref.filesearcher.scan_local_files(dirpath)
 				sampleref_obj.search_local()
 
 # --------------------------------------------------------- FX ---------------------------------------------------------

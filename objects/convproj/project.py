@@ -471,7 +471,7 @@ class cvpj_project:
 		for sampleref_id, sampleref_obj in self.sampleref__iter():
 			if not sampleref_obj.found:
 				fileref.filesearcher.scan_local_files(dirpath)
-				sampleref_obj.search_local()
+				sampleref_obj.search_local(dirpath)
 
 # --------------------------------------------------------- FX ---------------------------------------------------------
 

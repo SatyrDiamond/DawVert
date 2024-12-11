@@ -29,7 +29,7 @@ class waveform_transport:
 		if position != None: self.position = float(position)
 		if scrubInterval != None: self.scrubInterval = float(scrubInterval)
 		if start != None: self.start = float(start)
-		if looping != None: self.looping = float(start)
+		if looping != None: self.looping = float(looping)
 		if loopPoint1 != None: self.loopPoint1 = float(loopPoint1)
 		if loopPoint2 != None: self.loopPoint2 = float(loopPoint2)
 
@@ -64,7 +64,10 @@ class waveform_seq_pitch:
 
 	def load(self, xmldata):
 		for subxml in xmldata:
-			if subxml.tag == 'PITCH': self.sequence[float(subxml.get('startBeat'))] = int(subxml.get('pitch'))
+			if subxml.tag == 'PITCH': 
+				startpos = subxml.get('startBeat')
+				if not startpos: startpos = subxml.get('start')
+				if startpos: self.sequence[float(startpos)] = int(subxml.get('pitch'))
 
 	def write(self, xmldata):
 		tempxml = ET.SubElement(xmldata, "PITCHSEQUENCE")
@@ -147,7 +150,7 @@ class waveform_plugin:
 			elif n == 'presetDirty': self.presetDirty = int(v)
 			elif n == 'windowX': self.windowX = int(v)
 			elif n == 'windowY': self.windowY = int(v)
-			elif n == 'width': self.width = int(v)
+			elif n == 'width': self.width = float(v)
 			elif n == 'height': self.height = int(v)
 			elif n == 'quickParamName': self.quickParamName = v
 			else: self.params[n] = v

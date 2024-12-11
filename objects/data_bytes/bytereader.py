@@ -10,17 +10,36 @@ from contextlib import contextmanager
 class chunk_size:
 	def __init__(self):
 		self.size_id = 4
+		self.size_id_num = False
 		self.size_chunk = 4
 		self.endian = False
 		self.unpackfunc = struct.Struct('<I').unpack
+		self.unpackfunc_id = struct.Struct('4s').unpack
 
 	def set_sizes(self, size_id, size_chunk, endian):
 		self.size_id = size_id
 		self.size_chunk = size_chunk
 		self.endian = endian
+		self.size_id_num = False
+		self.set_unpackfunc()
+
+	def set_sizes_num(self, size_id, size_chunk, endian):
+		self.size_id = size_id
+		self.size_chunk = size_chunk
+		self.endian = endian
+		self.size_id_num = True
+		self.set_unpackfunc()
+
+	def set_unpackfunc(self):
 		if self.size_chunk == 1: self.unpackfunc = struct.Struct('B').unpack
 		if self.size_chunk == 2: self.unpackfunc = struct.Struct('>H' if self.endian else '<H').unpack
 		if self.size_chunk == 4: self.unpackfunc = struct.Struct('>I' if self.endian else '<I').unpack
+		if not self.size_id_num:
+			self.unpackfunc_id = struct.Struct(str(self.size_id)+'s').unpack
+		else:
+			if self.size_id == 1: self.unpackfunc_id = struct.Struct('B').unpack
+			if self.size_id == 2: self.unpackfunc_id = struct.Struct('>H' if self.endian else '<H').unpack
+			if self.size_id == 4: self.unpackfunc_id = struct.Struct('>I' if self.endian else '<I').unpack
 
 class chunk_loc:
 	def __init__(self, byteread, sizedata):
@@ -47,10 +66,13 @@ class iff_chunkdata:
 	def set_sizes(self, size_id, size_chunk, endian):
 		self.sizedata.set_sizes(size_id, size_chunk, endian)
 
+	def set_sizes_num(self, size_id, size_chunk, endian):
+		self.sizedata.set_sizes_num(size_id, size_chunk, endian)
+
 	def read(self, end):
 		chunk_obj = chunk_loc(self.byteread, self.sizedata)
-		chunk_obj.id = self.byteread.read(self.sizedata.size_id)
-		if chunk_obj.id:
+		chunk_obj.id = self.sizedata.unpackfunc_id(self.byteread.read(self.sizedata.size_id))[0]
+		if chunk_obj.id or self.sizedata.size_id_num:
 			chunk_obj.size = self.sizedata.unpackfunc(self.byteread.read(self.sizedata.size_chunk))[0]
 			chunk_obj.start = self.byteread.tell()
 			chunk_obj.end = chunk_obj.start+chunk_obj.size
@@ -69,7 +91,6 @@ class iff_chunkdata:
 			yield chunk_obj
 			self.byteread.seek(bpos+chunk_obj.size)
 		self.byteread.seek(pos)
-
 
 
 def get_bitnums_int(x):

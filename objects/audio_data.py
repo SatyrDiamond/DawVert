@@ -208,11 +208,6 @@ class audio_obj:
 				self.pcm_chan_to_one(channels)
 				self.pcm_chan_from_one(channels)
 
-		else:
-			print('prob')
-
-		print(self.channels, channels)
-
 		self.channels = channels
 
 # -------------------------------- resample --------------------------------

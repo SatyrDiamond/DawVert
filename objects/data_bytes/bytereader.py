@@ -71,7 +71,9 @@ class iff_chunkdata:
 
 	def read(self, end):
 		chunk_obj = chunk_loc(self.byteread, self.sizedata)
-		chunk_obj.id = self.sizedata.unpackfunc_id(self.byteread.read(self.sizedata.size_id))[0]
+		sizebytes = self.byteread.read(self.sizedata.size_id)
+		if not len(sizebytes): return False, chunk_obj
+		chunk_obj.id = self.sizedata.unpackfunc_id(sizebytes)[0]
 		if chunk_obj.id or self.sizedata.size_id_num:
 			chunk_obj.size = self.sizedata.unpackfunc(self.byteread.read(self.sizedata.size_chunk))[0]
 			chunk_obj.start = self.byteread.tell()
@@ -91,6 +93,7 @@ class iff_chunkdata:
 			yield chunk_obj
 			self.byteread.seek(bpos+chunk_obj.size)
 		self.byteread.seek(pos)
+
 
 
 def get_bitnums_int(x):

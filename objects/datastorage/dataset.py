@@ -2,11 +2,16 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 import json
 import os
+import importlib.util
 
 from functions import data_values
 from functions import xtramath
 
+rapidjson_usable = importlib.util.find_spec('rapidjson')
+
 class dataset_visual:
+	__slots__ = ['name', 'color']
+
 	def __init__(self, i_visual):
 		if i_visual:
 			self.name = i_visual['name'] if 'name' in i_visual else None
@@ -30,6 +35,7 @@ class dataset_visual:
 			self.color = i_visual['color'] if 'color' in i_visual else None
 
 class dataset_objectset:
+	__slots__ = ['data', 'used', 'in_obj']
 	def __init__(self, in_obj):
 		self.data = {}
 		self.used = False
@@ -56,6 +62,8 @@ class dataset_objectset:
 		if p_name in self.data: del self.data[p_name]
 	def get(self, p_name): 
 		return self.data[p_name] if p_name in self.data else None
+	def __iter__(self): 
+		for d in self.data.__iter__(): yield d
 	def iter(self): 
 		for n, d in self.data.items(): yield n, d
 	def write(self): 
@@ -167,6 +175,7 @@ class dataset_param:
 		return out_data
 
 class dataset_drum:
+	__slots__ = ['visual']
 	def __init__(self, i_drum):
 		self.visual = dataset_visual(i_drum['visual'] if 'visual' in i_drum else None) if i_drum else dataset_visual(None)
 
@@ -176,6 +185,7 @@ class dataset_drum:
 		return outlist
 
 class dataset_value:
+	__slots__ = ['value']
 	def __init__(self, indata):
 		self.value = indata
 
@@ -183,6 +193,7 @@ class dataset_value:
 		return self.value
 
 class dataset_datadef:
+	__slots__ = ['path', 'name', 'struct']
 	def __init__(self):
 		self.path = None
 		self.name = None
@@ -203,7 +214,30 @@ class dataset_datadef:
 		if self.struct: outlist['struct'] = self.struct
 		return outlist
 
+class dataset_dataset_ext:
+	__slots__ = ['id', 'category', 'object']
+	def __init__(self):
+		self.id = None
+		self.category = None
+		self.object = None
+
+	def is_used(self): return self.id or self.category or self.object
+
+	def read(self, i_data):
+		if i_data != None: 
+			self.id = i_data['id'] if 'id' in i_data else None
+			self.category = i_data['category'] if 'category' in i_data else None
+			self.object = i_data['object'] if 'object' in i_data else None
+
+	def write(self):
+		outlist = {}
+		if self.id: outlist['id'] = self.id
+		if self.category: outlist['category'] = self.category
+		if self.object: outlist['object'] = self.object
+		return outlist
+
 class dataset_midi:
+	__slots__ = ['used', 'bank', 'bank_hi', 'is_drum', 'patch', 'transpose']
 	def __init__(self):
 		self.used = False
 		self.bank = 0
@@ -232,6 +266,7 @@ class dataset_midi:
 		return outlist
 
 class dataset_object_extplug_assoc:
+	__slots__ = ['vst2_id', 'vst3_id', 'clap_id', 'vst2_name', 'vst3_name', 'clap_name', 'used']
 	def __init__(self):
 		self.used = False
 		self.vst2_id = None
@@ -262,12 +297,14 @@ class dataset_object_extplug_assoc:
 		return out_data
 
 class dataset_object:
+	__slots__ = ['visual', 'data', 'params', 'drumset', 'datadef', 'dataset_ext', 'midi', 'extplug_assoc']
 	def __init__(self, i_object):
 		self.visual = dataset_visual(None)
 		self.data = {}
 		self.params = dataset_objectset(dataset_param)
 		self.drumset = dataset_objectset(dataset_drum)
 		self.datadef = dataset_datadef()
+		self.dataset_ext = dataset_dataset_ext()
 		self.midi = dataset_midi()
 		self.extplug_assoc = dataset_object_extplug_assoc()
 		if i_object:
@@ -283,8 +320,14 @@ class dataset_object:
 			if 'datadef_name' in i_object: self.datadef.name = i_object['datadef_name']
 			if 'datadef_struct' in i_object: self.datadef.struct = i_object['datadef_struct']
 			for name, var in i_object.items():
-				if name not in ['visual','data','params','drumset','datadef_struct','datadef_name','datadef']: self.data[name] = var
-			if 'extplug_assoc' in i_object: self.extplug_assoc.read(i_object['extplug_assoc'])
+				if name not in ['visual','data','params','drumset','datadef_struct','datadef_name','datadef','extplug_assoc','dataset_ext']: 
+					self.data[name] = var
+			if 'extplug_assoc' in i_object:
+				self.extplug_assoc.read(i_object['extplug_assoc'])
+				if 'extplug_assoc' in self.data: del self.data['extplug_assoc']
+			if 'dataset_ext' in i_object:
+				self.dataset_ext.read(i_object['dataset_ext'])
+				if 'dataset_ext' in self.data: del self.data['dataset_ext']
 
 	def write(self):
 		outlist = {}
@@ -295,6 +338,7 @@ class dataset_object:
 		if self.params.used: outlist['params'] = self.params.write()
 		if self.visual.is_used(): outlist['visual'] = self.visual.write()
 		if self.extplug_assoc.used: outlist['extplug_assoc'] = self.extplug_assoc.write()
+		if self.dataset_ext.is_used(): outlist['dataset_ext'] = self.dataset_ext.write()
 		return outlist
 
 	def var_get(self, v_name):
@@ -307,6 +351,7 @@ def midid_to_num(i_bank, i_patch, i_isdrum): return i_bank*256 + i_patch + int(i
 def midid_from_num(value): return (value>>8), (value%128), int(bool(value&0b10000000))
 
 class dataset_group:
+	__slots__ = ['visual']
 	def __init__(self, i_group):
 		self.visual = dataset_visual(None)
 		if i_group:
@@ -319,14 +364,26 @@ class dataset_group:
 
 class dataset_category:
 	def __init__(self, i_category):
+		self.cache_ids_vst2 = {}
+		self.cache_ids_vst3 = {}
+		self.cache_ids_clap = {}
 		self.colorset = dataset_objectset(dataset_value)
 		self.midi_to = dataset_objectset(dataset_value)
 		self.groups = dataset_objectset(dataset_group)
 		self.objects = dataset_objectset(dataset_object)
+		self.ext_dataset_ids = {}
+
 		if i_category:
+			if 'ext_dataset_ids' in i_category: self.ext_dataset_ids = i_category['ext_dataset_ids']
 			if 'colorset' in i_category: self.colorset.read(i_category['colorset'])
 			if 'groups' in i_category: self.groups.read(i_category['groups'])
-			if 'objects' in i_category: self.objects.read(i_category['objects'])
+			if 'objects' in i_category: 
+				self.objects.read(i_category['objects'])
+				for n, x in self.objects.iter():
+					extassoc = x.extplug_assoc
+					if extassoc.vst2_id: self.cache_ids_vst2[extassoc.vst2_id] = n
+					if extassoc.vst3_id: self.cache_ids_vst3[extassoc.vst3_id] = n
+					if extassoc.clap_id: self.cache_ids_clap[extassoc.clap_id] = n
 
 			if 'midi_to' in i_category: 
 				for objname, midiinst in i_category['midi_to'].items():
@@ -340,13 +397,13 @@ class dataset_category:
 					objd.midi.is_drum = midiinst == 128
 					objd.midi.patch = midiinst%128
 
-
 	def write(self):
 		outdata = {}
 		if self.midi_to.used: outdata['midi_to'] = self.midi_to.write()
 		if self.colorset.used: outdata['colorset'] = self.colorset.write()
 		if self.groups.used: outdata['groups'] = self.groups.write()
 		if self.objects.used: outdata['objects'] = self.objects.write()
+		if self.ext_dataset_ids: outdata['ext_dataset_ids'] = self.ext_dataset_ids
 		return outdata
 
 
@@ -358,7 +415,12 @@ class dataset:
 		if in_dataset != None:
 			if os.path.exists(in_dataset):
 				f = open(in_dataset, "r")
-				dataset = json.load(f)
+				if rapidjson_usable:
+					import rapidjson
+					dataset = rapidjson.load(f)
+				else:
+					dataset = json.load(f)
+
 				for x, d in dataset.items():
 					self.categorys[x] = dataset_category(d)
 					self.category_list.append(x)
@@ -370,7 +432,12 @@ class dataset:
 		for n, c in self.categorys.items():
 			outjson[n] = c.write()
 
-		f.write(json.dumps(outjson, indent=4))
+		if rapidjson_usable:
+			import rapidjson
+			f.write(rapidjson.dumps(outjson, indent=4))
+		else:
+			f.write(json.dumps(outjson, indent=4))
+		
 
 	def category_add(self, c_name):
 		if c_name not in self.categorys: 

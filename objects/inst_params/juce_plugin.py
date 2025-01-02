@@ -5,7 +5,7 @@ import os
 from functions_plugin_ext import plugin_vst2
 from functions_plugin_ext import plugin_vst3
 from functions_plugin_ext import data_vc2xml
-from functions_plugin import juce_memoryblock
+from functions.juce import juce_memoryblock
 from functions import data_xml
 
 class juce_plugin:

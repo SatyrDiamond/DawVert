@@ -64,7 +64,7 @@ def soundlayer_samplepart(sp_obj, soundlayer):
 	if 'looped' in soundlayer: sp_obj.loop_active = soundlayer['looped']
 
 def do_plugin(convproj_obj, wf_plugin, track_obj): 
-	from functions_plugin import juce_memoryblock
+	from functions.juce import juce_memoryblock
 
 	if wf_plugin.plugtype == 'vst':
 		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''

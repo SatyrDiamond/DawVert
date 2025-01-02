@@ -2,11 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import numpy
-from objects.file import audio_wav
-from plugins import base as dv_plugins
 import os
 import copy
-from scipy import signal
 
 class codec_obj:
 	def __init__(self, codectype):
@@ -49,7 +46,7 @@ VERBOSE = False
 
 class audio_obj:
 
-	audiocodec_selector = dv_plugins.create_selector('audiocodec')
+	audiocodec_selector = None
 
 	def __init__(self):
 		self.is_pcm = True
@@ -213,6 +210,7 @@ class audio_obj:
 # -------------------------------- resample --------------------------------
 
 	def resample(self, samplerate):
+		from scipy import signal
 		if len(self.data):
 			if samplerate != self.rate:
 				self.pcm_changecodec('float')
@@ -226,7 +224,13 @@ class audio_obj:
 
 # -------------------------------- codec --------------------------------
 
+	def load_plugins(self):
+		if audio_obj.audiocodec_selector is None:
+			from plugins import base as dv_plugins
+			audio_obj.audiocodec_selector = dv_plugins.create_selector('audiocodec')
+
 	def decode_from_codec(self, codecname, in_bytes):
+		self.load_plugins()
 		self.data = numpy.zeros(0)
 		codecname = audio_obj.audiocodec_selector.set(codecname)
 		if codecname:
@@ -236,6 +240,10 @@ class audio_obj:
 		else: print('[plugins] codec: not found', codecname)
 
 	def encode_to_codec(self, codecname):
+		self.load_plugins()
+		if audio_obj.audiocodec_selector is None:
+			from plugins import base as dv_plugins
+			audio_obj.audiocodec_selector = dv_plugins.create_selector('audiocodec')
 		codecname = audio_obj.audiocodec_selector.set(codecname)
 		if codecname:
 			selected_plugin = audio_obj.audiocodec_selector.selected_plugin
@@ -269,6 +277,7 @@ class audio_obj:
 # -------------------------------- wav --------------------------------
 
 	def from_file_wav(self, wavfile):
+		from objects.file import audio_wav
 		if os.path.exists(wavfile):
 			wavfile_obj = audio_wav.wav_main()
 			wavfile_obj.read(wavfile)

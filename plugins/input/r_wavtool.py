@@ -27,7 +27,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 	from functions_plugin_ext import plugin_vst2
 	from functions_plugin_ext import plugin_vst3
 	from objects.inst_params import fx_delay
-	from functions_plugin import juce_memoryblock
+	from functions.juce import juce_memoryblock
 	from functions_plugin_ext import data_vc2xml
 	if trackid in devices_obj.tracks:
 		device_track = devices_obj.tracks[trackid]

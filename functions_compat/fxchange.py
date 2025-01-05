@@ -19,6 +19,7 @@ def move_fx0_to_mastertrack(convproj_obj):
 		convproj_obj.track_master.plugslots.slots_mixer = fxchannel_obj.plugslots.slots_mixer.copy()
 		fxchannel_obj.plugslots.slots_audio = []
 		fxchannel_obj.plugslots.slots_mixer = []
+		convproj_obj.track_master.latency_offset = fxchannel_obj.latency_offset
 		del convproj_obj.fxrack[0]
 
 def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, doboth, autoloc):
@@ -205,6 +206,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 				fxchannel_obj.params.move(group_obj.params, 'pan')
 				group_obj.plugslots.slots_audio = fxchannel_obj.plugslots.slots_audio.copy()
 				group_obj.plugslots.slots_mixer = fxchannel_obj.plugslots.slots_mixer.copy()
+				group_obj.latency_offset = fxchannel_obj.latency_offset
 				fxchannel_obj.plugslots.slots_audio = []
 				fxtracks = fx_trackids[fx_num]
 				if fxchannel_obj.visual.name: group_obj.visual.name = fxchannel_obj.visual.name

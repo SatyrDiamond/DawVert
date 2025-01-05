@@ -15,6 +15,8 @@ from objects import globalstore
 from objects.data_bytes import bytewriter
 import logging
 
+PROJECT_FREQ = 22050
+
 logger_output = logging.getLogger('output')
 
 sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('unk2', 'B')])
@@ -55,6 +57,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 		group_obj = convproj_obj.fx__group__get(groupid)
 		if group_obj:
 			sb_grouptrack = proj_soundbridge.soundbridge_track(None)
+			sb_grouptrack.latencyOffset = int(group_obj.latency_offset*(PROJECT_FREQ/500))
 			do_markers(group_obj.timemarkers, sb_grouptrack.markers)
 			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.plugslots.slots_audio)
 			sb_grouptrack.type = 1
@@ -395,8 +398,6 @@ def do_markers(timemarkers_obj, sb_markers):
 		sb_marker.linearTimeBase = 0
 		sb_markers.append(sb_marker)
 
-PROJECT_FREQ = 22050
-
 class output_soundbridge(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
@@ -512,6 +513,7 @@ class output_soundbridge(plugins.base):
 				sb_track.midiOutput.externalDeviceIndex = -1
 				sb_track.midiOutput.channelIndex = track_obj.midi.out_chan-1
 				sb_track.blocks = []
+				sb_track.latencyOffset = int(track_obj.latency_offset*(PROJECT_FREQ/500))
 
 				sb_track.armed = int(track_obj.armed.in_keys)
 
@@ -622,6 +624,7 @@ class output_soundbridge(plugins.base):
 				sb_track.pitchTempoProcessorMode = 2
 				sb_track.audioInput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.blockContainers = []
+				sb_track.latencyOffset = int(track_obj.latency_offset*(PROJECT_FREQ/500))
 
 				sb_track.armed = int(track_obj.armed.in_audio)
 				
@@ -740,6 +743,7 @@ class output_soundbridge(plugins.base):
 			sb_track.sourceBufferType = 2
 			sb_track.audioOutput = proj_soundbridge.soundbridge_deviceRoute(None)
 			sb_track.blockContainers = []
+			sb_track.latencyOffset = int(track_obj.latency_offset*(PROJECT_FREQ/500))
 			make_auto_trackcontains(convproj_obj, sb_track, return_obj.params, 1, ['return', returnid])
 			make_sends(convproj_obj, sb_track, return_obj.sends)
 			make_plugins_fx(convproj_obj, sb_track, return_obj.plugslots.slots_audio)

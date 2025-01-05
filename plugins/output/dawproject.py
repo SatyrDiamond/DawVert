@@ -346,12 +346,12 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	if plugin_found:
 		dp_device = None
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			fourid = plugin_obj.datavals_global.get('fourid', None)
+			fourid = plugin_obj.external_info.fourid
 			if fourid:
 				dp_device = device.dawproject_device('Vst2Plugin')
 				dp_device.deviceID = fourid
-				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-				dp_device.name = plugin_obj.datavals_global.get('name', None)
+				dp_device.deviceName = plugin_obj.external_info.name
+				dp_device.name = plugin_obj.external_info.name
 
 				fxpdata = plugin_vst2.export_presetdata(plugin_obj)
 				statepath = 'plugins/'+str(uuid.uuid4())+'.fxp'
@@ -365,12 +365,12 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				logger_output.warning('VST2 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			vstid = plugin_obj.datavals_global.get('id', None)
+			vstid = plugin_obj.external_info.id
 			if vstid:
 				dp_device = device.dawproject_device('Vst3Plugin')
 				dp_device.deviceID = vstid
-				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-				dp_device.name = plugin_obj.datavals_global.get('name', None)
+				dp_device.deviceName = plugin_obj.external_info.name
+				dp_device.name = plugin_obj.external_info.name
 
 				fxpdata = plugin_vst3.export_presetdata(plugin_obj)
 				statepath = 'plugins/'+str(uuid.uuid4())+'.vstpreset'
@@ -382,12 +382,12 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				logger_output.warning('VST3 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'clap', None):
-			clapid = plugin_obj.datavals_global.get('id', None)
+			clapid = plugin_obj.external_info.id
 			if clapid:
 				dp_device = device.dawproject_device('ClapPlugin')
-				dp_device.deviceID = plugin_obj.datavals_global.get('id', None)
-				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-				dp_device.name = plugin_obj.datavals_global.get('name', None)
+				dp_device.deviceID = plugin_obj.external_info.id
+				dp_device.deviceName = plugin_obj.external_info.name
+				dp_device.name = plugin_obj.external_info.name
 
 				fxpdata = plugin_clap.export_presetdata(plugin_obj)
 				if fxpdata:

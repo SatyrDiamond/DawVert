@@ -22,10 +22,10 @@ class juce_plugin:
 		if plugin_obj.type.type == 'vst2':
 			chunkdata = plugin_vst2.export_presetdata(plugin_obj)
 			self.plugtype = 'vst2'
-			self.name = plugin_obj.datavals_global.get('basename', None)
-			self.manufacturer = plugin_obj.datavals_global.get('creator', None)
+			self.name = plugin_obj.external_info.basename
+			self.manufacturer = plugin_obj.external_info.creator
 			self.filename = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-			self.fourid = plugin_obj.datavals_global.get('fourid', None)
+			self.fourid = plugin_obj.external_info.fourid
 			self.memoryblock = juce_memoryblock.toJuceBase64Encoding(chunkdata)
 
 	def to_cvpj(self, convproj_obj, pluginid):
@@ -43,15 +43,15 @@ class juce_plugin:
 				pluginfo_obj = plugin_vst2.replace_data(convproj_obj, plugin_obj, 'basename', None, self.name, 'chunk', chunkdata, None)
 				if not pluginfo_obj.out_exists: pluginfo_obj = plugin_vst2.replace_data(convproj_obj, plugin_obj, 'path', None, self.filename, 'chunk', chunkdata, None)
 				if not pluginfo_obj.out_exists: 
-					if self.name: plugin_obj.datavals_global.add('basename', self.name)
-					if self.manufacturer: plugin_obj.datavals_global.add('creator', self.manufacturer)
+					if self.name: plugin_obj.external_info.basename = self.name
+					if self.manufacturer: plugin_obj.external_info.creator = self.manufacturer
 					if self.filename:
 						if os.path.exists(self.filename):
 							vst2_pathid = pluginid+'_vstpath'
 							convproj_obj.fileref__add(vst2_pathid, self.filename)
 							plugin_obj.filerefs_global['plugin'] = vst2_pathid
 			else: plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, chunkdata, None)
-			name = plugin_obj.datavals_global.get('name', None)
+			name = plugin_obj.external_info.name
 
 		if self.plugtype == 'vst3':
 			pluginstate_x = data_vc2xml.get(chunkdata)

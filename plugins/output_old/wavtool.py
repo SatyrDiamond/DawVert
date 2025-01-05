@@ -324,7 +324,7 @@ class output_wavtool(plugins.base):
 						#if plugin_obj.check_match('vst2', 'win'):
 						#	inst_supported = True
 						#	device_obj = wavtool_obj.devices.add_device(wt_trackid, wt_trackid_Instrument)
-						#	device_obj.name = plugin_obj.datavals_global.get('name', '')
+						#	device_obj.name = plugin_obj.external_info.name
 						#	device_obj.type = 'Bridge'
 						#	device_obj.x = 160
 						#	device_obj.y = 10
@@ -335,8 +335,8 @@ class output_wavtool(plugins.base):
 						#	chunkdata += b'\x00'*64
 						#	chunkdata += statedata
 #
-						#	device_obj.data['sourceName'] = plugin_obj.datavals_global.get('name', '')
-						#	device_obj.data['sourceManufacturer'] = plugin_obj.datavals_global.get('creator', '')
+						#	device_obj.data['sourceName'] = plugin_obj.external_info.name
+						#	device_obj.data['sourceManufacturer'] = plugin_obj.external_info.creator
 						#	device_obj.data['inputSpec'] = {'midiInput': {'type': 'MIDI', 'name': 'In', 'expose': True}}
 						#	device_obj.data['outputSpec'] = {'audioOutput': {'type': 'Stereo', 'name': 'Out', 'expose': True}}
 						#	device_obj.data['encodedState'] = base64.b64encode(chunkdata).decode()

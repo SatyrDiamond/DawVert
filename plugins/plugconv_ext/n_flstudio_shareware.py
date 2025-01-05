@@ -84,7 +84,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1145918257):
 				extpluglog.extpluglist.success('FL Studio', 'Drumaxx')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1145918257, 'chunk', make_sslf(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'Drumaxx')
+				plugin_obj.external_info.name = 'Drumaxx'
 				return True
 
 		# ---------------------------------------- FL Slayer ----------------------------------------
@@ -167,7 +167,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229484653):
 				extpluglog.extpluglist.success('FL Studio', 'Harmless')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229484653, 'chunk', make_flvst2(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'Harmless')
+				plugin_obj.external_info.name = 'Harmless'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'harmless')
 				return True
 
@@ -177,7 +177,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229483375):
 				extpluglog.extpluglist.success('FL Studio', 'Harmor')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229483375, 'chunk', make_flvst2(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'Harmor')
+				plugin_obj.external_info.name = 'Harmor'
 				return True
 
 		# ---------------------------------------- morphine ----------------------------------------
@@ -186,7 +186,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1299149382):
 				extpluglog.extpluglist.success('FL Studio', 'Morphine')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1299149382, 'chunk', make_sslf(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'Morphine')
+				plugin_obj.external_info.name = 'Morphine'
 				return True
 
 		# ---------------------------------------- poizone ----------------------------------------
@@ -195,7 +195,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1398893394):
 				extpluglog.extpluglist.success('FL Studio', 'PoiZone')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1398896471, 'chunk', make_sslf(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'PoiZone')
+				plugin_obj.external_info.name = 'PoiZone'
 				return True
 
 		# ---------------------------------------- sakura ----------------------------------------
@@ -204,7 +204,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1398893394):
 				extpluglog.extpluglist.success('FL Studio', 'Sakura')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1398893394, 'chunk', make_sslf(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'Sakura')
+				plugin_obj.external_info.name = 'Sakura'
 				return True
 
 		# ---------------------------------------- sawer ----------------------------------------
@@ -213,7 +213,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1398888274):
 				extpluglog.extpluglist.success('FL Studio', 'Sawer')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1398888274, 'chunk', make_sslf(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'Sawer')
+				plugin_obj.external_info.name = 'Sawer'
 				return True
 
 		# ---------------------------------------- Sytrus ----------------------------------------
@@ -229,7 +229,7 @@ class plugconv(plugins.base):
 				fldata.headertype = 4
 
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1400468594, 'chunk', fldata.write(), None)
-				plugin_obj.datavals_global.add('name', 'Sytrus')
+				plugin_obj.external_info.name = 'Sytrus'
 
 				param_auto(convproj_obj, pluginid, plugin_obj, 'sytrus')
 				return True
@@ -240,7 +240,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1416591412):
 				extpluglog.extpluglist.success('FL Studio', 'Toxic Biohazard')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1416591412, 'chunk', make_sslf(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'Toxic Biohazard')
+				plugin_obj.external_info.name = 'Toxic Biohazard'
 				return True
 
 		# ---------------------------------------- equo ----------------------------------------
@@ -249,7 +249,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1162958159):
 				extpluglog.extpluglist.success('FL Studio', 'EQUO')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1162958159, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL EQUO')
+				plugin_obj.external_info.name = 'IL EQUO'
 				return True
 
 		# ---------------------------------------- fruity delay 2 ----------------------------------------
@@ -258,7 +258,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1178874454):
 				extpluglog.extpluglist.success('FL Studio', 'Delay')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1178874454, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Delay')
+				plugin_obj.external_info.name = 'IL Delay'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'fruity delay 2')
 				return True
 
@@ -268,7 +268,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1147945582):
 				extpluglog.extpluglist.success('FL Studio', 'Delay Bank')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1147945582, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Delay Bank')
+				plugin_obj.external_info.name = 'IL Delay Bank'
 				return True
 
 		# ---------------------------------------- fruity delay 2 ----------------------------------------
@@ -277,7 +277,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1181509491):
 				extpluglog.extpluglist.success('FL Studio', 'Flangus')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1181509491, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Flangus')
+				plugin_obj.external_info.name = 'IL Flangus'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'flangus')
 				return True
 
@@ -287,7 +287,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229737040):
 				extpluglog.extpluglist.success('FL Studio', 'Love Philter')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229737040, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Love Philter')
+				plugin_obj.external_info.name = 'IL Love Philter'
 				return True
 
 		# ---------------------------------------- multiband compressor ----------------------------------------
@@ -296,7 +296,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179476547):
 				extpluglog.extpluglist.success('FL Studio', 'Multiband Compressor')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179476547, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Multiband Compressor')
+				plugin_obj.external_info.name = 'IL Multiband Compressor'
 				return True
 
 		# ---------------------------------------- gross beat ----------------------------------------
@@ -305,7 +305,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179545410):
 				extpluglog.extpluglist.success('FL Studio', 'Gross Beat')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229406821, 'chunk', make_flvst2(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Gross Beat')
+				plugin_obj.external_info.name = 'IL Gross Beat'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'gross beat')
 				return True
 
@@ -315,7 +315,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1212371505):
 				extpluglog.extpluglist.success('FL Studio', 'Hardcore')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1212371505, 'chunk', make_sslf(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Hardcore')
+				plugin_obj.external_info.name = 'IL Hardcore'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'hardcore')
 				return True
 
@@ -325,7 +325,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179545410):
 				extpluglog.extpluglist.success('FL Studio', 'Maximus')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229807992, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Maximus')
+				plugin_obj.external_info.name = 'IL Maximus'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'maximus')
 				return True
 
@@ -335,7 +335,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179545410):
 				extpluglog.extpluglist.success('FL Studio', 'Notebook')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179545410, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Notebook')
+				plugin_obj.external_info.name = 'IL Notebook'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'notebook')
 				return True
 
@@ -345,7 +345,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179665750):
 				extpluglog.extpluglist.success('FL Studio', 'Parametric EQ')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179665750, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Parametric EQ')
+				plugin_obj.external_info.name = 'IL Parametric EQ'
 				return True
 
 		# ---------------------------------------- parametric eq 2 ----------------------------------------
@@ -354,7 +354,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1346720050):
 				extpluglog.extpluglist.success('FL Studio', 'Parametric EQ 2')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1346720050, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Parametric EQ 2')
+				plugin_obj.external_info.name = 'IL Parametric EQ 2'
 				return True
 
 		# ---------------------------------------- fruity spectroman ----------------------------------------
@@ -363,7 +363,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179873357):
 				extpluglog.extpluglist.success('FL Studio', 'Spectroman')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179873357, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Spectroman')
+				plugin_obj.external_info.name = 'IL Spectroman'
 				return True
 
 		# ---------------------------------------- fruity stereo enhancer ----------------------------------------
@@ -372,7 +372,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179862358):
 				extpluglog.extpluglist.success('FL Studio', 'Stereo Enhancer')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179862358, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Stereo Enhancer')
+				plugin_obj.external_info.name = 'IL Stereo Enhancer'
 				return True
 
 		# ---------------------------------------- fruity vocoder ----------------------------------------
@@ -381,7 +381,7 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1179407983):
 				extpluglog.extpluglist.success('FL Studio', 'Vocoder')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1179407983, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Vocoder')
+				plugin_obj.external_info.name = 'IL Vocoder'
 				return True
 
 		# ---------------------------------------- fruity waveshaper ----------------------------------------
@@ -397,6 +397,6 @@ class plugconv(plugins.base):
 			if plugin_vst2.check_exists('id', 1229748067):
 				extpluglog.extpluglist.success('FL Studio', 'Wave Candy')
 				plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', 1229748067, 'chunk', make_flvst1(plugin_obj), None)
-				plugin_obj.datavals_global.add('name', 'IL Wave Candy')
+				plugin_obj.external_info.name = 'IL Wave Candy'
 				param_auto(convproj_obj, pluginid, plugin_obj, 'wave candy')
 				return True

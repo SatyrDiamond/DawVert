@@ -391,6 +391,9 @@ class cvpj_automation:
 			if autopath == ['main', 'bpm']:
 				self.data[autopath].conv_tres = 8
 
+	def exists(self, autopath):
+		return cvpj_autoloc(autopath) in self.data
+
 	def get(self, autopath, valtype):
 		autopath = cvpj_autoloc(autopath)
 		if autopath in self.data: return True, self.data[autopath]

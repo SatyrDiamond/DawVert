@@ -394,6 +394,7 @@ class input_cvpj_f(plugins.base):
 		add_params(project_obj.masterTrack.state, convproj_obj.track_master.params)
 		track_visual(convproj_obj.track_master.visual, project_obj.masterTrack)
 		do_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master)
+		convproj_obj.track_master.latency_offset = project_obj.masterTrack.latencyOffset/(pfreq/500)
 
 		for x in master_track.automationContainer.automationTracks:
 			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['master', 'vol'], x.blocks, 0, 1)

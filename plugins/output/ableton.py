@@ -287,7 +287,6 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 		elif vstdatatype=='param' and not vstnumparams: errmsg = 'num_params not found'
 		logger_output.warning('VST2 plugin not placed: '+errmsg)
 
-
 def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 
 	vstid = plugin_obj.external_info.id
@@ -473,6 +472,7 @@ def addgrp(convproj_obj, project_obj, groupid):
 		if group_obj.group:
 			als_gtrack.TrackGroupId = addgrp(convproj_obj, project_obj, group_obj.group)
 			als_gtrack.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
+		als_gtrack.TrackDelay.Value = group_obj.latency_offset
 		#print('NEW GROUP', groupid, groupnumid)
 	else:
 		groupnumid = ids_group_cvpj_als[groupid]
@@ -718,6 +718,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'enabled', 1, 'bool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
+		als_track.TrackDelay.Value = track_obj.latency_offset
 
 		if groupnumid: 
 			als_track.TrackGroupId = groupnumid
@@ -1079,6 +1080,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
+		als_track.TrackDelay.Value = track_obj.latency_offset
 
 		if groupnumid: 
 			als_track.TrackGroupId = groupnumid
@@ -1196,6 +1198,7 @@ class output_ableton(plugins.base):
 		if convproj_obj.track_master.visual.name: als_mastertrack.Name.UserName = fixtxt(convproj_obj.track_master.visual.name)
 		do_param(convproj_obj, cvpj_master_params, 'vol', 1, 'float', ['master', 'vol'], als_mastermixer.Volume, als_masterauto)
 		do_param(convproj_obj, cvpj_master_params, 'pan', 0, 'float', ['master', 'pan'], als_mastermixer.Pan, als_masterauto)
+		als_mastertrack.TrackDelay.Value = convproj_obj.track_master.latency_offset
 
 		tempoauto = als_mastertrack.AutomationEnvelopes.Envelopes[1]
 		timesigauto = als_mastertrack.AutomationEnvelopes.Envelopes[0]
@@ -1252,6 +1255,7 @@ class output_ableton(plugins.base):
 			do_effects(convproj_obj, als_track, return_obj.plugslots.slots_audio)
 			do_param(convproj_obj, return_obj.params, 'vol', 1, 'float', ['return', returnid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 			do_param(convproj_obj, return_obj.params, 'pan', 0, 'float', ['return', returnid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
+			als_track.TrackDelay.Value = return_obj.latency_offset
 			als_track.Color = return_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
 			if return_obj.visual.name: als_track.Name.UserName = fixtxt(return_obj.visual.name)
 			track_sendholders = als_track.DeviceChain.Mixer.Sends

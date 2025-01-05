@@ -213,6 +213,11 @@ class input_reaper(plugins.base):
 			track_obj.armed.in_keys = bool(rpp_track.rec['armed'])
 			track_obj.armed.in_audio = bool(rpp_track.rec['armed'])
 			
+			latmode = int(rpp_track.playoffs['mode'])
+			lattime = float(rpp_track.playoffs['time'])
+			if latmode == 2: track_obj.latency_offset = lattime/44100
+			if latmode == 0: track_obj.latency_offset = lattime*1000
+
 			fxids = []
 
 			samplers = []

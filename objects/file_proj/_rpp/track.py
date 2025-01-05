@@ -12,7 +12,7 @@ class rpp_track:
 	def __init__(self):
 		self.volpan = rvd([1,0,-1,-1,1], ['vol','pan','panlaw','left','right'], None, True)
 		self.mutesolo = rvd([0,0,0], ['mute','solo','solo_defeat'], [bool,bool,bool], True)
-		self.playoffs = rvd([0,1], None, None, True)
+		self.playoffs = rvd([0,1], ['time','mode'], [float,int], True)
 		self.isbus = rvd([0,0], None, None, True)
 		self.buscomp = rvd([0,0,0,0,0], None, None, True)
 		self.showinmix = rvd([1.0,0.6667,0.5,1.0,0.5,0.0,0.0,0.0], None, None, True)

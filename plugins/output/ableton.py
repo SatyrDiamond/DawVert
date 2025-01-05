@@ -189,17 +189,17 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 	return sampleref_obj
 
 def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
-	vstid = plugin_obj.datavals_global.get('fourid', 0)
-	vstnumparams = plugin_obj.datavals_global.get('numparams', None)
-	vstdatatype = plugin_obj.datavals_global.get('datatype', 'chunk')
+	vstid = plugin_obj.external_info.fourid
+	vstnumparams = plugin_obj.external_info.numparams
+	vstdatatype = plugin_obj.external_info.datatype
 
-	visname = plugin_obj.datavals_global.get('name', '')
+	visname = plugin_obj.external_info.name
 
 	if ((vstdatatype=='param' and vstnumparams) or vstdatatype=='chunk') and vstid:
 		wobj = convproj_obj.viswindow__get(['plugin', pluginid])
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
 		vstname = os.path.basename(vstpath).split('.')[0]
-		vstversion = plugin_obj.datavals_global.get('version_bytes', 0)
+		vstversion = plugin_obj.external_info.version_bytes
 		is_instrument = plugin_obj.role == 'synth'
 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
@@ -290,7 +290,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 
 def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 
-	vstid = plugin_obj.datavals_global.get('id', 0)
+	vstid = plugin_obj.external_info.id
 
 	if vstid:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
@@ -303,7 +303,7 @@ def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 		pluginfo = paramkeys['PluginDesc']['0/Vst3PluginInfo'] = {}
 		wobj = convproj_obj.viswindow__get(['plugin', pluginid])
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
-		vstname = plugin_obj.datavals_global.get('name', 0)
+		vstname = plugin_obj.external_info.name
 		is_instrument = plugin_obj.role == 'synth'
 
 		Fields = [int(vstid[0:8], 16), int(vstid[8:16], 16), int(vstid[16:24], 16), int(vstid[24:32], 16)]
@@ -856,7 +856,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		if plugin_found and not DEBUG_IGNORE_INST:
 			middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
-			#print(str(plugin_obj.type), plugin_obj.datavals_global.get('name', ''))
+			#print(str(plugin_obj.type), plugin_obj.external_info.name)
 			is_sampler = False
 
 			if plugin_obj.check_wildmatch('native', 'ableton', None):

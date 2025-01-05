@@ -53,8 +53,8 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 			pluginsupported = True
 			muse_track.synth_synthType = 'VST (synths)'
 
-			vstname = plugin_obj.datavals_global.get('name', '')
-			vstclass = plugin_obj.datavals_global.get('name', '')
+			vstname = plugin_obj.external_info.name
+			vstclass = plugin_obj.external_info.name
 			if vstclass == 'Vitalium': vstclass = 'vitalium'
 			muse_track.synth_class = vstclass
 			muse_track.synth_label = vstname

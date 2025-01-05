@@ -177,8 +177,8 @@ def setvstparams(lmms_plug_obj, plugin_obj, pluginid, keysdict):
 	if keysdict != None: keysdict['file'] = vstpath
 
 	middlenotefix = plugin_obj.datavals_global.get('middlenotefix', 0)
-	datatype = plugin_obj.datavals_global.get('datatype', 'chunk')
-	numparams = plugin_obj.datavals_global.get('numparams', 0)
+	datatype = plugin_obj.external_info.datatype
+	numparams = plugin_obj.external_info.numparams
 
 	if datatype == 'chunk':
 		lmms_plug_obj.add_param('chunk', plugin_obj.rawdata_get_b64('chunk'))

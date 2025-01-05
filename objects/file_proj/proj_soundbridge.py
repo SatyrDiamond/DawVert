@@ -746,7 +746,7 @@ class soundbridge_tempo:
 
 	def read(self, xml_proj):
 		trackattrib = xml_proj.attrib
-		if 'tempo' in trackattrib: self.tempo = int(xml_proj.get('tempo'))
+		if 'tempo' in trackattrib: self.tempo = float(xml_proj.get('tempo'))
 		if 'version' in trackattrib: self.version = int(xml_proj.get('version'))
 		for xmlpart in xml_proj:
 			if xmlpart.tag == 'section': self.sections.append(soundbridge_tempo_section(xmlpart))
@@ -872,7 +872,7 @@ class soundbridge_song:
 		if 'revision' in projattrib: self.revision = int(xml_proj.get("revision"))
 		if 'sampleRate' in projattrib: self.sampleRate = int(xml_proj.get("sampleRate"))
 		if 'sampleFormat' in projattrib: self.sampleFormat = int(xml_proj.get("sampleFormat"))
-		if 'tempo' in projattrib: self.tempo = int(xml_proj.get("tempo"))
+		if 'tempo' in projattrib: self.tempo = float(xml_proj.get("tempo"))
 		if 'timesigNumerator' in projattrib: self.timesigNumerator = int(xml_proj.get("timesigNumerator"))
 		if 'timesigDenominator' in projattrib: self.timesigDenominator = int(xml_proj.get("timesigDenominator"))
 

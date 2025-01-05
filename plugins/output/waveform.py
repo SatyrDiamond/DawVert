@@ -51,7 +51,7 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			juceobj = juce_plugin.juce_plugin()
 			juceobj.from_cvpj(convproj_obj, plugin_obj)
-			fourid = plugin_obj.datavals_global.get('fourid', None)
+			fourid = plugin_obj.external_info.fourid
 
 			if fourid: 
 				fx_on, fx_wet = plugin_obj.fxdata_get()

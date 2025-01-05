@@ -8,6 +8,7 @@ import os
 import math
 import numpy as np
 import base64
+import uuid
 from functions import data_values
 from functions import xtramath
 from objects import globalstore
@@ -235,18 +236,43 @@ def make_plugins_fx(convproj_obj, sb_track, fxslots_audio):
 				if auplug:
 					sb_track.audioUnits.append(auplug)
 
+def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
+	from objects.file_proj import proj_soundbridge
+	from functions_plugin_ext import plugin_vst3
+	vid = plugin_obj.external_info.id
+	sb_plugin = None
+
+	if vid: 
+		sb_plugin = proj_soundbridge.soundbridge_audioUnit(None)
+		sb_plugin.uid = encode_chunk(uuid.UUID(vid).bytes_le)
+		sb_plugin.name = plugin_obj.external_info.name
+		sb_plugin.vendor = plugin_obj.external_info.creator
+		if issynth: sb_plugin.metadata['AudioUnitType'] = 3
+
+		rawdata = plugin_obj.rawdata_get('chunk')
+
+		statewriter = bytewriter.bytewriter()
+		statewriter.uint32(len(rawdata))
+		statewriter.raw(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
+		statewriter.raw(rawdata)
+		sb_plugin.state = encode_chunk(statewriter.getvalue())
+	else:
+		logger_output.warning('VST3 plugin not placed: no ID found.')
+
+	return sb_plugin
+
 def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 	from objects.file_proj import proj_soundbridge
 	from functions_plugin_ext import plugin_vst2
-	fourid = plugin_obj.datavals_global.get('fourid', None)
+	fourid = plugin_obj.external_info.fourid
 	sb_plugin = None
 
 	if fourid: 
 		uid = b'\x00\x00\x00\x00SV2T'+struct.pack('>I', fourid)+b'\x00\x00\x00\x00'
 		sb_plugin = proj_soundbridge.soundbridge_audioUnit(None)
 		sb_plugin.uid = encode_chunk(uid)
-		sb_plugin.name = plugin_obj.datavals_global.get('name', None)
-		sb_plugin.vendor = plugin_obj.datavals_global.get('creator', None)
+		sb_plugin.name = plugin_obj.external_info.name
+		sb_plugin.vendor = plugin_obj.external_info.creator
 		if issynth: sb_plugin.metadata['AudioUnitType'] = 3
 		vstchunk = plugin_vst2.export_presetdata(plugin_obj)
 
@@ -392,7 +418,7 @@ class output_soundbridge(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
-		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']
@@ -498,7 +524,8 @@ class output_soundbridge(plugins.base):
 					if plugin_found: 
 						if plugin_obj.check_wildmatch('external', 'vst2', None):
 							sb_track.midiInstrument = make_vst2(convproj_obj, plugin_obj, True, track_obj.plugslots.synth, sb_track)
-
+						if plugin_obj.check_wildmatch('external', 'vst3', None):
+							sb_track.midiInstrument = make_vst3(convproj_obj, plugin_obj, True, track_obj.plugslots.synth, sb_track)
 
 				middlenote = track_obj.datavals.get('middlenote', 0)
 

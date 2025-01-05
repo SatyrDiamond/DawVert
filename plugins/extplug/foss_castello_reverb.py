@@ -30,7 +30,7 @@ class extplugin(plugins.base):
 
 	def check_plug(self, plugin_obj): 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			if plugin_obj.datavals_global.match('fourid', 1279878002): return 'vst2'
+			if plugin_obj.external_info.fourid==1279878002: return 'vst2'
 		return None
 
 	def decode_data(self, plugintype, plugin_obj):

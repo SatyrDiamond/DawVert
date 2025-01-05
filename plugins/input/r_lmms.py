@@ -96,8 +96,6 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	
 	pluginpath = str(lmms_plugin.get_param('plugin', ''))
 
-	plugin_obj.datavals_global.add('path', pluginpath)
-
 	vst2_pathid = pluginid+'_vstpath'
 	convproj_obj.fileref__add(vst2_pathid, pluginpath, None)
 	plugin_obj.filerefs_global['plugin'] = vst2_pathid
@@ -112,7 +110,7 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	vst_data = str(lmms_plugin.get_param('chunk', ''))
 
 	if vst_data:
-		plugin_obj.datavals_global.add('datatype', 'chunk')
+		plugin_obj.external_info.datatype = 'chunk'
 		plugin_obj.rawdata_add_b64('chunk', vst_data)
 
 		for paramname, lmms_param in lmms_plugin.params.items():
@@ -128,8 +126,8 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 			if vst_param.id: autoid_assoc.define(vst_param.id, ['plugin', pluginid, cparamid], 'float', None)
 
 	elif vst_numparams != -1:
-		plugin_obj.datavals_global.add('datatype', 'param')
-		plugin_obj.datavals_global.add('numparams', int(vst_numparams))
+		plugin_obj.external_info.datatype = 'param'
+		plugin_obj.external_info.numparams = int(vst_numparams)
 
 	for param, vst_param in lmms_plugin.vst_params.items():
 		paramnum = 'ext_param_'+str(param)
@@ -140,8 +138,8 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	pluginfo_obj = globalstore.extplug.get('vst2', 'path', pluginpath, 'win', [32, 64])
 
 	if pluginfo_obj.out_exists:
-		plugin_obj.datavals_global.add('name', pluginfo_obj.name)
-		plugin_obj.datavals_global.add('fourid', int(pluginfo_obj.id))
+		plugin_obj.external_info.name = pluginfo_obj.name
+		plugin_obj.external_info.fourid = int(pluginfo_obj.id)
 
 def doparam(lmms_param_obj, i_type, i_addmul, i_loc):
 	global autoid_assoc

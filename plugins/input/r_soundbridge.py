@@ -6,6 +6,7 @@ import base64
 import numpy as np
 import io
 import os
+import uuid
 import struct
 from objects.convproj import fileref
 from functions import xtramath
@@ -89,6 +90,7 @@ def make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid):
 
 def create_plugin(convproj_obj, sb_plugin, issynth):
 	from functions_plugin_ext import plugin_vst2
+	from functions_plugin_ext import plugin_vst3
 	uiddata = decode_chunk(sb_plugin.uid)
 	statedata = decode_chunk(sb_plugin.state)
 	pluginid = None
@@ -101,9 +103,9 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst2', 'win')
 			plugin_obj.role = 'synth' if issynth else 'fx'
-			plugin_obj.datavals_global.add('name', sb_plugin.name)
-			plugin_obj.datavals_global.add('fourid', fourid)
-			plugin_obj.datavals_global.add('creator', sb_plugin.vendor)
+			plugin_obj.external_info.name = sb_plugin.name
+			plugin_obj.external_info.fourid = fourid
+			plugin_obj.external_info.creator = sb_plugin.vendor
 
 			statereader = bytereader.bytereader()
 			statereader.load_raw(statedata)
@@ -125,7 +127,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 						chunkdata = statereader.raw(statereader.uint32_b())
 						plugin_obj.clear_prog_keep(programnum)
 						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', chunkdata, None)
-						plugin_obj.datavals_global.add('is_bank', True)
+						plugin_obj.external_info.is_bank = True
 					if chunk_type == b'FxBk':
 						statereader.skip(16)
 						statereader.skip(128)
@@ -142,6 +144,17 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 			native_name = native_names[hexdata]
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundbridge', native_name)
 			plugin_obj.from_bytes(statedata[4:], 'soundbridge', 'soundbridge', 'plugin', native_name, native_name)
+		else:
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst3', 'win')
+			dev_uuid = uuid.UUID(int=int.from_bytes(uiddata, 'big')).bytes_le
+			pluguuid = dev_uuid.hex().upper()
+
+			statereader = bytereader.bytereader()
+			statereader.load_raw(statedata)
+			size = statereader.uint32_b()
+			statereader.skip(12)
+			chunkdata = statereader.raw(size)
+			plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, pluguuid, chunkdata)
 
 	return pluginid
 
@@ -343,7 +356,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
-		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge']

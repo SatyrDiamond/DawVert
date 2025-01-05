@@ -90,6 +90,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		convproj_obj.track_master.plugslots.slots_mixer = []
 		convproj_obj.automation.move(['master','vol'], ['fxmixer','0','vol'])
 		convproj_obj.automation.move(['master','pan'], ['fxmixer','0','pan'])
+		fxchannel_obj.latency_offset = convproj_obj.track_master.latency_offset
 		for count, iterval in enumerate(convproj_obj.instrument__iter()):
 			fxnum = count+1
 			inst_id, inst_obj = iterval

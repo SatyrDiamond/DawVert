@@ -343,6 +343,11 @@ AUDCLIPVERBOSE = False
 
 AUDWARPVERBOSE = False
 
+def calc_lattime(TrackDelay):
+	latmode = TrackDelay.IsValueSampleBased
+	lattime = TrackDelay.Value
+	return lattime/(44100/1000) if latmode else lattime
+
 class input_ableton(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -428,6 +433,7 @@ class input_ableton(plugins.base):
 		convproj_obj.track_master.params.add('vol', mas_track_vol, 'float')
 		convproj_obj.track_master.params.add('pan', mas_track_pan, 'float')
 		convproj_obj.params.add('bpm', tempo, 'float')
+		convproj_obj.track_master.latency_offset = calc_lattime(project_obj.MasterTrack.TrackDelay)
 		do_devices(project_obj.MasterTrack.DeviceChain.devices, None, convproj_obj.track_master, convproj_obj)
 
 		returnid = 1
@@ -450,6 +456,8 @@ class input_ableton(plugins.base):
 			track_inside_group = als_track.TrackGroupId
 			track_sendholders = track_mixer.Sends
 
+			lattime = calc_lattime(als_track.TrackDelay)
+
 			fxloc = None
 
 			do_automation(convproj_obj, als_track.AutomationEnvelopes)
@@ -467,6 +475,8 @@ class input_ableton(plugins.base):
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
 				track_obj.params.add('enabled', track_on, 'bool')
+
+				track_obj.latency_offset = lattime
 
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 
@@ -490,6 +500,8 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 				
+				track_obj.latency_offset = lattime
+
 				mainseq = als_track.DeviceChain.MainSequencer
 
 				if mainseq.Recorder.IsArmed:
@@ -607,7 +619,6 @@ class input_ableton(plugins.base):
 								print(  str(x)[0:11].ljust(12), end=' ' )
 							print()
 
-
 			elif tracktype == 'return':
 				cvpj_returntrackid = 'return_'+str(returnid)
 				fxloc = ['return', cvpj_returntrackid]
@@ -619,6 +630,7 @@ class input_ableton(plugins.base):
 				track_obj.visual.color.from_colorset_num(colordata, track_color)
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
+				track_obj.latency_offset = lattime
 				returnid += 1
 
 			elif tracktype == 'group':
@@ -634,6 +646,7 @@ class input_ableton(plugins.base):
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
+				track_obj.latency_offset = lattime
 
 			if als_track.DeviceChain.AudioOutputRouting.UpperDisplayString == 'Sends Only':
 				track_obj.sends.to_master_active = False

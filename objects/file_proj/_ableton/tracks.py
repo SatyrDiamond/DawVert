@@ -387,7 +387,7 @@ class ableton_TrackDelay:
 	def __init__(self, xmltag):
 		if xmltag:
 			x_TrackDelay = xmltag.findall('TrackDelay')[0]
-			self.Value = int(get_value(x_TrackDelay, 'Value', 0))
+			self.Value = float(get_value(x_TrackDelay, 'Value', 0))
 			self.IsValueSampleBased = get_bool(x_TrackDelay, 'IsValueSampleBased', 0)
 		else:
 			self.Value = 0

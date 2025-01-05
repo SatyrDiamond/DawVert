@@ -101,7 +101,7 @@ class cvpj_plugslots:
 		for x in self.slots_audio: yield 'audio', x
 
 class cvpj_instrument:
-	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots']
+	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots','latency_offset']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
@@ -110,6 +110,7 @@ class cvpj_instrument:
 		self.is_drum = False
 		self.fxrack_channel = -1
 		self.plugslots = cvpj_plugslots()
+		self.latency_offset = 0
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -153,7 +154,7 @@ class cvpj_instrument:
 		return plugin_obj
 
 class cvpj_return_track:
-	__slots__ = ['visual','visual_ui','params','datavals','sends','plugslots']
+	__slots__ = ['visual','visual_ui','params','datavals','sends','plugslots','latency_offset']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.visual_ui = visual.cvpj_visual_ui()
@@ -161,6 +162,7 @@ class cvpj_return_track:
 		self.datavals = params.cvpj_datavals()
 		self.plugslots = cvpj_plugslots()
 		self.sends = sends.cvpj_sends()
+		self.latency_offset = 0
 
 	def plugin_autoplace(self, plugin_obj, pluginid):
 		self.plugslots.plugin_autoplace(plugin_obj, pluginid)
@@ -180,7 +182,7 @@ class cvpj_armstate:
 		self.in_audio = False
 
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots','latency_offset']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -206,6 +208,7 @@ class cvpj_track:
 		self.is_drum = False
 		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq, time_float)
 		self.armed = cvpj_armstate()
+		self.latency_offset = 0
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -277,6 +280,7 @@ class cvpj_track:
 		c_obj.returns = self.returns
 		c_obj.notelist_index = self.notelist_index
 		c_obj.armed = copy.deepcopy(self.armed)
+		c_obj.latency_offset = self.latency_offset
 		return c_obj
 
 	def make_base_inst(self, inst_obj):
@@ -287,6 +291,7 @@ class cvpj_track:
 		track_obj.midi = copy.deepcopy(inst_obj.midi)
 		track_obj.fxrack_channel = inst_obj.fxrack_channel
 		track_obj.plugslots = copy.deepcopy(inst_obj.plugslots)
+		track_obj.latency_offset = inst_obj.latency_offset
 		return track_obj
 
 	def notelistindex__add(self, i_id):

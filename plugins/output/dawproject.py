@@ -104,7 +104,7 @@ def do_mpe_val(value, mpetype):
 	dppoints_obj.points.append(dppoint_obj)
 	return mpetype, dppoints_obj
 
-def make_send(send_obj, returnid):
+def make_send(send_obj, returnid, convproj_obj, dptrack_obj, lane_obj):
 	dp_send = track.dawproject_send()
 	dp_send.destination = 'channel_return__'+returnid
 	dp_send.type = 'post'
@@ -116,7 +116,14 @@ def make_send(send_obj, returnid):
 	dp_send.volume.name = 'Send'
 	if send_obj.sendautoid: 
 		dp_send.volume.id = 'send__'+send_obj.sendautoid+'__param__amount'
+		from_cvpj_auto(convproj_obj, lane_obj.points, ['send', send_obj.sendautoid, 'amount'], 'float', dp_send.volume.id, None)
 	return dp_send
+
+def make_sends(master_returns, cvpj_sendsdata, dp_track, convproj_obj, lane_obj):
+	for returnid, x in master_returns.items():
+		send_obj = cvpj_sendsdata[returnid]
+		dp_send = make_send(send_obj, returnid, convproj_obj, dp_track, lane_obj)
+		dp_track.channel.sends.append(dp_send)
 
 def do_auto_mpe(autopoints_obj, mpetype, dppoints_obj):
 	if mpetype == 'pitch': 
@@ -475,7 +482,6 @@ def maketrack_master(convproj_obj, track_obj, arrangement):
 		from_cvpj_auto_dppoints_obj(convproj_obj, tempoauto, ['main', 'bpm'], 'float', 'main__bpm', None)
 	return dp_track
 
-
 class output_dawproject(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
@@ -538,6 +544,7 @@ class output_dawproject(plugins.base):
 			grp_lane_obj = make_lane('group__'+groupid)
 			group_obj = convproj_obj.fx__group__get(groupid)
 			dp_group = maketrack_group(convproj_obj, group_obj, groupid, grp_lane_obj)
+			make_sends(master_returns, group_obj.sends.data, dp_group, convproj_obj, grp_lane_obj)
 			groups_data[groupid] = dp_group
 			if insidegroup: 
 				groups_data[insidegroup].tracks.append(dp_group)
@@ -566,18 +573,15 @@ class output_dawproject(plugins.base):
 				if dp_track:
 					dp_tracks.append(dp_track)
 
-				for returnid, x in master_returns.items():
-					if returnid in track_obj.sends.data:
-						send_obj = track_obj.sends.data[returnid]
-						dp_send = make_send(send_obj, returnid)
-						dp_track.channel.sends.append(dp_send)
+				make_sends(master_returns, track_obj.sends.data, dp_track, convproj_obj, lane_obj)
 
 		for returnid, return_obj in master_returns.items():
 			dp_track = maketrack_return(convproj_obj, return_obj, returnid)
 			for ireturnid, x in master_returns.items():
+				lane_obj = make_lane('return__'+trackid)
 				if ireturnid in return_obj.sends.data:
 					send_obj = return_obj.sends.data[ireturnid]
-					dp_send = make_send(send_obj, returnid)
+					dp_send = make_send(send_obj, returnid, convproj_obj, dp_track, lane_obj)
 					dp_track.channel.sends.append(dp_send)
 			project_obj.tracks.append(dp_track)
 
@@ -631,3 +635,5 @@ class output_dawproject(plugins.base):
 
 		if dawvert_intent.output_mode == 'file':
 			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
+
+		open('outdebug.xml', 'wb').write(project_obj.save_to_text())

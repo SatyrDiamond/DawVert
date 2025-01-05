@@ -304,6 +304,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		add_params(sb_track.state, track_obj.params)
 		do_fx(convproj_obj, sb_track, track_obj)
 		global_returnids += 1
+		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
 		for x in sb_track.automationContainer.automationTracks:
 			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['return', returnid, 'vol'], x.blocks, 0, 1)
 			if x.parameterIndex == 3: add_auto(None, convproj_obj, ['return', returnid, 'pan'], x.blocks, -.5, 2)
@@ -315,6 +316,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		do_fx(convproj_obj, sb_track, track_obj)
 		do_markers(track_obj, sb_track.markers)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
+		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
 
 		for x in sb_track.automationContainer.automationTracks:
 			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['group', cvpj_trackid, 'vol'], x.blocks, 0, 1)

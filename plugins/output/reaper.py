@@ -387,6 +387,9 @@ class output_reaper(plugins.base):
 
 			rpp_track_obj.fxchain = rpp_fxchain.rpp_fxchain()
 
+			rpp_track_obj.playoffs['time'] = track_obj.latency_offset/1000
+			rpp_track_obj.playoffs['mode'] = 0 if track_obj.latency_offset else 1
+
 			if middlenote != 0:
 				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_track_obj.fxchain.add_vst()
 				rpp_vst_obj.data_con = b'\x64\x6d\x63\x72\xee\x5e\xed\xfe\x00\x00\x00\x00\x00\x00\x00\x00\xe6\x00\x00\x00\x01\x00\x00\x00\x00\x00\x10\x00'

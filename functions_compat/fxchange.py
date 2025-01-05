@@ -32,6 +32,7 @@ def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, doboth, 
 	fxchannel_obj.plugslots.slots_mixer = data_obj.plugslots.slots_mixer.copy()
 	data_obj.plugslots.slots_audio = []
 	data_obj.plugslots.slots_mixer = []
+	fxchannel_obj.latency_offset = data_obj.latency_offset
 
 	vol = data_obj.params.get('vol', 1).value
 	data_obj.params.remove('vol')

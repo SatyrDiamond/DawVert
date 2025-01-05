@@ -397,21 +397,36 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 				if track_obj.visual.name: track_obj.visual.name = '[Group] '+track_obj.visual.name
 				else: track_obj.visual.name = '[Group]'
 
+				trackr = convproj_obj.fx__route__add(oi)
+				for i, x in group_obj.sends.iter():
+					send_obj = trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj.sendautoid = x.sendautoid
+
 			if t == 'TRACK':
 				track_obj = old_track_data[i]
 				senddat = track_obj.sends.data
+
 				trackr = convproj_obj.fx__route__add(oi)
 				for i, x in track_obj.sends.iter():
-					trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj = trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj.sendautoid = x.sendautoid
+
 				convproj_obj.track_data[oi] = track_obj
 				convproj_obj.track_order.append(oi)
 			num += 1
 
 		for returnid, return_obj in convproj_obj.track_master.returns.items(): 
-			track_obj = convproj_obj.track__add('RETURN_'+returnid, 'fx', 1, 0)
+			oi = 'RETURN_'+returnid
+			track_obj = convproj_obj.track__add(oi, 'fx', 1, 0)
 			track_obj.visual = return_obj.visual.copy()
 			if track_obj.visual.name: track_obj.visual.name = '[Return] '+track_obj.visual.name
 			else: track_obj.visual.name = '[Return]'
+
+			trackr = convproj_obj.fx__route__add(oi)
+			for i, x in return_obj.sends.iter():
+				if 'RETURN_'+i != oi:
+					send_obj = trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj.sendautoid = x.sendautoid
 
 		convproj_obj.fx__group__clear()
 		return True

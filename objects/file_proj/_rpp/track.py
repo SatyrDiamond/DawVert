@@ -37,11 +37,15 @@ class rpp_track:
 		self.items = []
 		self.fxchain = None
 		self.auxrecv = []
+		self.auxvolenv = {}
+		self.auxpanenv = {}
+		self.auxmuteenv = {}
 		self.panenv2 = rpp_env.rpp_env()
 		self.volenv2 = rpp_env.rpp_env()
 		self.muteenv = rpp_env.rpp_env()
 
 	def load(self, rpp_data):
+		lastauxnum = 0
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
 			if name == 'NAME': self.name.set(values[0])
 			if name == 'PEAKCOL': self.peakcol.set(values[0])
@@ -73,6 +77,7 @@ class rpp_track:
 			if name == 'AUXRECV': 
 				auxrecv_obj = self.add_auxrecv()
 				auxrecv_obj.read(values)
+				lastauxnum = auxrecv_obj['tracknum']
 			if name == 'ITEM': 
 				item_obj = rpp_item.rpp_item()
 				item_obj.load(inside_dat)
@@ -81,7 +86,28 @@ class rpp_track:
 				fxchain_obj = rpp_fxchain.rpp_fxchain()
 				fxchain_obj.load(inside_dat)
 				self.fxchain = fxchain_obj
+			if name == 'AUXVOLENV': 
+				auxvolenv = rpp_env.rpp_env()
+				auxvolenv.read(inside_dat, values)
+				self.auxvolenv[lastauxnum] = auxvolenv
+			if name == 'AUXPANENV': 
+				auxpanenv = rpp_env.rpp_env()
+				auxpanenv.read(inside_dat, values)
+				self.auxpanenv[lastauxnum] = auxvolenv
+			if name == 'AUXMUTEENV': 
+				auxmuteenv = rpp_env.rpp_env()
+				auxmuteenv.read(inside_dat, values)
+				self.auxmuteenv[lastauxnum] = auxvolenv
 
+	def add_aux_env(self, atype, num):
+		env_obj = rpp_env.rpp_env()
+		env_obj.used = True
+		env_obj.act['bypass'] = 1
+		if atype == 'vol': self.auxvolenv[num] = env_obj
+		if atype == 'pan': self.auxpanenv[num] = env_obj
+		if atype == 'mute': self.auxmuteenv[num] = env_obj
+		return env_obj
+	
 	def add_auxrecv(self):
 		auxrecv_obj = rvd(
 			[1,0,1,0,0,0,0,0,0,'-1:U',0,-1,''], 
@@ -122,7 +148,12 @@ class rpp_track:
 		self.fx.write('FX',rpp_data)
 		self.trackid.write('TRACKID',rpp_data)
 		self.perf.write('PERF',rpp_data)
-		for r in self.auxrecv: r.write('AUXRECV', rpp_data)
+		for r in self.auxrecv: 
+			r.write('AUXRECV', rpp_data)
+			tracknum = r['tracknum']
+			if tracknum in self.auxvolenv: self.auxvolenv[tracknum].write('AUXVOLENV', rpp_data)
+			if tracknum in self.auxpanenv: self.auxpanenv[tracknum].write('AUXPANENV', rpp_data)
+			if tracknum in self.auxmuteenv: self.auxmuteenv[tracknum].write('AUXMUTEENV', rpp_data)
 		self.midiout.write('MIDIOUT',rpp_data)
 		self.mainsend.write('MAINSEND', rpp_data)
 		self.panenv2.write('PANENV2', rpp_data)

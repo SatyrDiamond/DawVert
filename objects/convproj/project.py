@@ -112,6 +112,7 @@ class cvpj_fxchannel:
 		self.params = params.cvpj_paramset()
 		self.plugslots = tracks.cvpj_plugslots()
 		self.sends = sends.cvpj_sends()
+		self.latency_offset = 0
 
 class cvpj_scene:
 	def __init__(self):

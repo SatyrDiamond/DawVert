@@ -457,6 +457,7 @@ class output_cvpjs(plugins.base):
 		for fx_num, fxchannel_obj in convproj_obj.fx__chan__iter():
 			if fx_num in flp_obj.mixer:
 				fl_fxchan = flp_obj.mixer[fx_num]
+				fl_fxchan.latency = fxchannel_obj.latency_offset
 				if fxchannel_obj.visual.name: fl_fxchan.name = fxchannel_obj.visual.name
 				if fxchannel_obj.visual.color: fl_fxchan.color = decode_color(fxchannel_obj.visual.color)
  	

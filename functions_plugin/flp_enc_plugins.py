@@ -207,12 +207,12 @@ def setparams(convproj_obj, plugin_obj):
 		fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00'
 
 	if plugin_obj.check_wildmatch('external', 'vst2', None):
-		vst_numparams = plugin_obj.datavals_global.get('numparams', 0)
+		vst_numparams = plugin_obj.external_info.numparams
 		vst_current_program = plugin_obj.current_program
 		vst_use_program = plugin_obj.program_used
-		vst_datatype = plugin_obj.datavals_global.get('datatype', 'chunk')
-		vst_fourid = plugin_obj.datavals_global.get('fourid', 0)
-		vst_name = plugin_obj.datavals_global.get('name', None)
+		vst_datatype = plugin_obj.external_info.datatype
+		vst_fourid = plugin_obj.external_info.fourid
+		vst_name = plugin_obj.external_info.name
 
 		ref_found, fileref_obj = plugin_obj.fileref__get_global('plugin', convproj_obj)
 		vst_path = fileref_obj.get_path('win', False) if ref_found else None

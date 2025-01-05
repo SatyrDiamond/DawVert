@@ -109,15 +109,15 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			vst_fx_fourid = plugin_obj.datavals_global.get('fourid', 0)
+			vst_fx_fourid = plugin_obj.external_info.fourid
 			if vst_fx_fourid:
 				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
 				vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-				vst_fx_datatype = plugin_obj.datavals_global.get('datatype', None)
-				vst_fx_numparams = plugin_obj.datavals_global.get('numparams', 0)
+				vst_fx_datatype = plugin_obj.external_info.datatype
+				vst_fx_numparams = max(plugin_obj.external_info.numparams, 0)
 
-				rpp_vst_obj.vst_name = plugin_obj.datavals_global.get('basename', '')
-				if not rpp_vst_obj.vst_name: plugin_obj.datavals_global.get('name', '')
+				rpp_vst_obj.vst_name = plugin_obj.external_info.basename
+				if not rpp_vst_obj.vst_name: rpp_vst_obj.vst_name = plugin_obj.external_info.name
 
 				rpp_vst_obj.vst_lib = os.path.basename(vst_fx_path)
 				rpp_vst_obj.vst_fourid = vst_fx_fourid
@@ -166,12 +166,12 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				logger_output.warning('VST2 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			vst_fx_id = plugin_obj.datavals_global.get('id', 0)
+			vst_fx_id = plugin_obj.external_info.id
 			if vst_fx_id:
 				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
-				vst_fx_name = plugin_obj.datavals_global.get('name', None)
+				vst_fx_name = plugin_obj.external_info.name
 				vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-				vst_fx_version = plugin_obj.datavals_global.get('version', None)
+				vst_fx_version = plugin_obj.external_info.version
 
 				chunkdata = plugin_obj.rawdata_get('chunk')
 				vstparams = struct.pack('II', len(chunkdata), 1)+chunkdata+b'\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -182,6 +182,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 					else: vstheader += b'\x00\x00\x00\x00\x00\x00\x00\x00'
 				vstheader_end = (len(chunkdata)+16).to_bytes(4, 'little')+b'\x01\x00\x00\x00\xff\xff\x10\x00'
 
+				rpp_vst_obj.vst_name = plugin_obj.external_info.name
 				rpp_vst_obj.vst_fourid = 0
 				rpp_vst_obj.vst3_uuid = vst_fx_id
 				rpp_vst_obj.data_con = vstheader+vstheader_end
@@ -198,14 +199,15 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				logger_output.warning('VST3 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'clap', None):
-			clap_fx_id = plugin_obj.datavals_global.get('id', '')
+			clap_fx_id = plugin_obj.external_info.id
 			if clap_fx_id:
 				rpp_plug_obj, rpp_clap_obj, rpp_guid = rpp_fxchain.add_clap()
 				clap_fx_name = plugin_obj.visual.name
-	
+				if not clap_fx_name: clap_fx_name = plugin_obj.external_info.name
+
 				chunkdata = plugin_obj.rawdata_get('chunk')
 				rpp_clap_obj.data_chunk = chunkdata
-				rpp_clap_obj.clap_name = clap_fx_name
+				if clap_fx_name: rpp_clap_obj.clap_name = clap_fx_name
 				rpp_clap_obj.clap_id = clap_fx_id
 	
 				rpp_plug_obj.bypass['bypass'] = not fx_on

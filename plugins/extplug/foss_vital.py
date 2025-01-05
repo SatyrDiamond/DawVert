@@ -393,11 +393,11 @@ class extplugin(plugins.base):
 
 	def check_plug(self, plugin_obj): 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			if plugin_obj.datavals_global.match('fourid', 1449751649): return 'vst2'
+			if plugin_obj.external_info.fourid==1449751649: return 'vst2'
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			if plugin_obj.datavals_global.match('id', '56535456697461766974616C00000000'): return 'vst3'
+			if plugin_obj.external_info.id=='56535456697461766974616C00000000': return 'vst3'
 		if plugin_obj.check_wildmatch('external', 'clap', None):
-			if plugin_obj.datavals_global.match('id', 'audio.vital.synth'): return 'clap'
+			if plugin_obj.external_info.id=='audio.vital.synth': return 'clap'
 		return None
 
 	def decode_data(self, plugintype, plugin_obj):

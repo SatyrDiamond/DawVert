@@ -190,11 +190,11 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 					convproj_obj.fileref__add(vst_Path, vst_Path, 'win')
 					plugin_obj.filerefs['plugin'] = vst_Path
 
-				plugin_obj.datavals_global.add('fourid', vst_UniqueId)
-				plugin_obj.datavals_global.add('numparams', vst_NumberOfParameters)
+				plugin_obj.external_info.fourid = vst_UniqueId
+				plugin_obj.external_info.numparams = vst_NumberOfParameters
 
 				vst_version = int(VstPluginInfo['Version'])
-				plugin_obj.datavals_global.add('version_bytes', vst_version)
+				plugin_obj.external_info.version_bytes = vst_version
 
 				Preset = VstPluginInfo['Preset']
 				Preset = VstPluginInfo['Preset'][list(Preset)[0]]
@@ -210,13 +210,12 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 				if Buffer:
 					if 10 in binflags: 
-						plugin_obj.datavals_global.add('datatype', 'chunk')
+						plugin_obj.external_info.datatype = 'chunk'
 						plugin_obj.clear_prog_keep(prognum)
 						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, vst_UniqueId, 'chunk', Buffer, None)
 						used_params = len([v for x, v in parampaths['ParameterList'].items() if int(v['ParameterId'])!=-1])
-						plugin_obj.datavals_global.add('all_params_used', vst_NumberOfParameters == used_params)
 					else:
-						plugin_obj.datavals_global.add('datatype', 'param')
+						plugin_obj.external_info.datatype = 'param'
 						plugin_obj.clear_prog_keep(0)
 						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,None, vst_UniqueId, 'param', None, vst_NumberOfParameters)
 						dtype_vstprog = np.dtype([('name', '<S28'),('params', np.float32, vst_NumberOfParameters)]) 
@@ -227,7 +226,6 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 							for paramnum, paramval in enumerate(presetdata['params']): 
 								plugin_obj.params.add_named('ext_param_'+str(paramnum), paramval, 'float', dtype_vstnames[paramnum])
 						plugin_obj.set_program(prognum)
-						plugin_obj.datavals_global.add('all_params_used', True)
 
 				for n, p in parampaths['ParameterList'].items():
 					paramnum, paramtype = n.split('/')

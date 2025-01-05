@@ -91,7 +91,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
 			clap_state = zip_data.read(str(device.state))
 			plugin_clap.import_presetdata_raw(convproj_obj, plugin_obj, clap_state, None)
-			if device.deviceName: plugin_obj.datavals_global.add('name', device.deviceName)
+			if device.deviceName: plugin_obj.external_info.name = device.deviceName
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
 				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])

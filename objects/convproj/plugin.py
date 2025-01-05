@@ -48,6 +48,21 @@ class cvpj_audioports:
 		for x in range(max(self.num_inputs, self.num_outputs)):
 			self.ports.append([x])
 
+class cvpj_plugin_external:
+	def __init__(self):
+		self.name = 'None'
+		self.id = None
+		self.fourid = None
+		self.creator = None
+		self.datatype = 'chunk'
+		self.numparams = 0
+		self.basename = None
+		self.version_bytes = 0
+		self.version = None
+		self.is_bank = False
+		self.cpu_arch = 0
+		self.programs = {}
+
 class cvpj_plugin:
 
 	extplug_selector = dv_plugins.create_selector('extplugin')
@@ -66,7 +81,43 @@ class cvpj_plugin:
 		self.midi = midi_inst.cvpj_midi_inst()
 		self.current_program = 0
 		self.program_used = False
+		self.external_info = cvpj_plugin_external()
 		self.set_program(0)
+
+	def external__from_pluginfo_obj(self, convproj_obj, pluginfo_obj, cpu_arch_list):
+		self.external_info.__init__()
+		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(cpu_arch_list)
+		if vst_cpuarch and vst_path:
+			convproj_obj.fileref__add(vst_path, vst_path, None)
+			self.filerefs_global['plugin'] = vst_path
+			self.external_info.cpu_arch = vst_cpuarch
+
+		if pluginfo_obj.name: 
+			self.external_info.name = pluginfo_obj.name
+		if pluginfo_obj.creator: 
+			self.external_info.creator = pluginfo_obj.creator
+		if pluginfo_obj.num_params: 
+			self.external_info.numparams = pluginfo_obj.num_params
+		if pluginfo_obj.basename: 
+			self.external_info.basename = pluginfo_obj.basename
+		self.external_info.version = pluginfo_obj.version
+
+		if self.type.type == 'vst2': 
+			self.external_info.fourid = int(pluginfo_obj.id)
+
+			if pluginfo_obj.version not in [None, '']: 
+				versionsplit = [int(i) for i in pluginfo_obj.version.split('.')]
+				versionbytes = struct.pack('B'*len(versionsplit), *versionsplit)
+				self.external_info.version_bytes = int.from_bytes(versionbytes, "little")
+
+		else: self.external_info.id = pluginfo_obj.id
+		
+		self.role = pluginfo_obj.type
+		self.audioports.setnums_auto(pluginfo_obj.audio_num_inputs, pluginfo_obj.audio_num_outputs)
+
+	def external__set_chunk(self, chunk):
+		self.external_info.datatype = 'chunk'
+		self.rawdata_add('chunk', chunk)
 
 	def set_program(self, prenum):
 		if prenum not in self.programs: 

@@ -95,13 +95,12 @@ class pluginfo:
 		self.audio_num_outputs = p_audio_num_outputs
 		self.midi_num_inputs = p_midi_num_inputs
 		self.midi_num_outputs = p_midi_num_outputs
-		self.num_params = p_num_params
 		if platformtxt == 'win': 
-			self.path_32bit = p_path_win
-			self.path_64bit = p_path_win
+			self.path_32bit = p_path_32bit_win
+			self.path_64bit = p_path_64bit_win
 		if platformtxt == 'lin': 
-			self.path_32bit = p_path_unix
-			self.path_64bit = p_path_unix
+			self.path_32bit = p_path_32bit_unix
+			self.path_64bit = p_path_64bit_unix
 
 def get_def_platform():
 	platform_architecture = platform.architecture()
@@ -272,6 +271,9 @@ class vst2:
 
 		pluginfo_obj = pluginfo()
 		if founddata: pluginfo_obj.from_sql_vst2(founddata, in_platformtxt)
+		if bycat == 'id': pluginfo_obj.fourid = in_val
+		if bycat == 'name': pluginfo_obj.name = in_val
+		if bycat == 'basename': pluginfo_obj.basename = in_val
 		return pluginfo_obj
 	
 	def getall():
@@ -359,6 +361,8 @@ class vst3:
 
 		pluginfo_obj = pluginfo()
 		if founddata: pluginfo_obj.from_sql_vst3(founddata, in_platformtxt)
+		if bycat == 'id': pluginfo_obj.id = in_val
+		if bycat == 'name': pluginfo_obj.name = in_val
 		return pluginfo_obj
 	
 	def count():
@@ -414,6 +418,8 @@ class clap:
 
 		pluginfo_obj = pluginfo()
 		if founddata: pluginfo_obj.from_sql_clap(founddata, in_platformtxt)
+		if bycat == 'id': pluginfo_obj.id = in_val
+		if bycat == 'name': pluginfo_obj.name = in_val
 		return pluginfo_obj
 	
 	def count():

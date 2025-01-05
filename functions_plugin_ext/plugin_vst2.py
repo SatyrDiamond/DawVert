@@ -44,39 +44,22 @@ def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, datatype, da
 	pluginfo_obj = globalstore.extplug.get('vst2', bycat, in_val, platformtxt, cpu_arch_list)
 
 	if pluginfo_obj.out_exists:
-		if plugin_obj.type.type != 'vst2': plugin_obj.replace_keepprog('external', 'vst2', platformtxt)
-		else: plugin_obj.type.subtype = platformtxt
+		if plugin_obj.type.type != 'vst2': 
+			plugin_obj.replace_keepprog('external', 'vst2', platformtxt)
+		else: 
+			plugin_obj.type.subtype = platformtxt
 
-		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(cpu_arch_list)
-		if vst_cpuarch and vst_path:
-			convproj_obj.fileref__add(vst_path, vst_path, None)
-			plugin_obj.filerefs_global['plugin'] = vst_path
-			plugin_obj.datavals_global.add('cpu_arch', vst_cpuarch)
-
-		plugin_obj.datavals_global.add('name', pluginfo_obj.name)
-		plugin_obj.datavals_global.add('basename', pluginfo_obj.basename)
-		plugin_obj.datavals_global.add('fourid', int(pluginfo_obj.id))
-		plugin_obj.datavals_global.add('creator', pluginfo_obj.creator)
-		if pluginfo_obj.num_params: plugin_obj.datavals_global.add('numparams', pluginfo_obj.num_params)
-		plugin_obj.role = pluginfo_obj.type
-		plugin_obj.audioports.setnums_auto(pluginfo_obj.audio_num_inputs, pluginfo_obj.audio_num_outputs)
-
-		if pluginfo_obj.version not in [None, '']: 
-			versionsplit = [int(i) for i in pluginfo_obj.version.split('.')]
-			versionbytes =  struct.pack('B'*len(versionsplit), *versionsplit)
-			plugin_obj.datavals_global.add('version_bytes', int.from_bytes(versionbytes, "little"))
-			plugin_obj.datavals_global.add('version', pluginfo_obj.version)
+		plugin_obj.external__from_pluginfo_obj(convproj_obj, pluginfo_obj, cpu_arch_list)
 
 		if datatype == 'chunk':
-			plugin_obj.datavals_global.add('datatype', 'chunk')
-			plugin_obj.rawdata_add('chunk', data)
+			plugin_obj.external__set_chunk(data)
 		if datatype == 'param':
-			plugin_obj.datavals_global.add('datatype', 'param')
-			plugin_obj.datavals_global.add('numparams', numparams) 
+			plugin_obj.external_info.datatype = 'param'
+			plugin_obj.external_info.numparams = numparams
 		if datatype == 'bank':
-			plugin_obj.datavals_global.add('datatype', 'bank')
+			plugin_obj.external_info.datatype = 'bank'
 	else:
-		pluginname = plugin_obj.datavals_global.get('name', None)
+		pluginname = plugin_obj.external_info.name
 		outtxt = '"'+str(in_val)+'" from '+str(bycat)
 		if pluginname: outtxt = pluginname
 		logger_plugins.warning('vst2: plugin not found in database: '+outtxt)
@@ -100,25 +83,25 @@ def import_presetdata(convproj_obj, plugin_obj, byr_stream, platform):
 	vst_prog = fxp_obj.program
 	if vst_prog.type in [1,4]:
 		fpch = vst_prog.data
-		if fpch.fourid: plugin_obj.datavals_global.add('fourid', fpch.fourid)
-		else: fpch.fourid = plugin_obj.datavals_global.get('fourid', 0)
+		if fpch.fourid: plugin_obj.external_info.fourid = fpch.fourid
+		else: fpch.fourid = plugin_obj.external_info.fourid
 		pluginfo_obj = replace_data(convproj_obj, plugin_obj, 'id', platform, fpch.fourid, 'chunk', fpch.chunk, None)
-		plugin_obj.datavals_global.add('version_bytes', fpch.version)
-		if vst_prog.type == 4: plugin_obj.datavals_global.add('is_bank', True)
+		plugin_obj.external_info.version_bytes = fpch.version
+		if vst_prog.type == 4: plugin_obj.external_info.is_bank = True
 		return pluginfo_obj
 	if vst_prog.type == 2:
 		fxck = vst_prog.data
-		if fxck.fourid: plugin_obj.datavals_global.add('fourid', fxck.fourid)
-		else: fxck.fourid = plugin_obj.datavals_global.get('fourid', 0)
+		if fxck.fourid: plugin_obj.external_info.fourid = fxck.fourid
+		else: fxck.fourid = plugin_obj.external_info.fourid
 		pluginfo_obj = replace_data(convproj_obj, plugin_obj, 'id', platform, fxck.fourid, 'param', None, fxck.num_params)
-		plugin_obj.datavals_global.add('version_bytes', fxck.version)
+		plugin_obj.external_info.version_bytes = fxck.version
 		for c, p in enumerate(fxck.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')
 		return pluginfo_obj
 	if vst_prog.type == 3:
 		fxck = vst_prog.data
 		plugin_obj.current_program = fxck.current_program
 		cvpj_programs = []
-		plugin_obj.datavals_global.add('fourid', fxck.fourid)
+		plugin_obj.external_info.fourid = fxck.fourid
 		for vst_program in fxck.programs:
 			cvpj_program = {}
 			if vst_program[1].type == 2:
@@ -140,15 +123,15 @@ def export_presetdata_file(plugin_obj, preset_filename):
 def export_presetdata(plugin_obj):
 	byw_stream = bytewriter.bytewriter()
 	fxp_obj = preset_vst2.vst2_main()
-	datatype = plugin_obj.datavals_global.get('datatype', 'chunk')
-	fourid = plugin_obj.datavals_global.get('fourid', None)
+	datatype = plugin_obj.external_info.datatype
+	fourid = plugin_obj.external_info.fourid
 	if fourid != None:
 		if datatype == 'chunk':
-			fxp_obj.program.type = 1 if not plugin_obj.datavals_global.get('is_bank', False) else 4
+			fxp_obj.program.type = 1 if not plugin_obj.external_info.is_bank else 4
 			fxp_obj.program.data = preset_vst2.vst2_fxChunkSet(None)
 			fpch = fxp_obj.program.data
 			fpch.fourid = fourid
-			fpch.version = plugin_obj.datavals_global.get('version_bytes', 0)
+			fpch.version = plugin_obj.external_info.version_bytes
 			fpch.num_programs = 1
 			fpch.prgname = ''
 			fpch.chunk = plugin_obj.rawdata_get('chunk')
@@ -160,8 +143,8 @@ def export_presetdata(plugin_obj):
 			fxp_obj.program.data = preset_vst2.vst2_fxProgram(None)
 			fxck = fxp_obj.program.data
 			fxck.fourid = fourid
-			fxck.version = plugin_obj.datavals_global.get('version_bytes', 0)
-			fxck.num_params = plugin_obj.datavals_global.get('numparams', 0)
+			fxck.version = plugin_obj.external_info.version_bytes
+			fxck.num_params = plugin_obj.external_info.numparams
 			fxck.prgname = ''
 			fxck.params = [plugin_obj.params.get('ext_param_'+str(c), 0).value for c in range(fxck.num_params)]
 			fxp_obj.write(byw_stream)
@@ -172,9 +155,9 @@ def export_presetdata(plugin_obj):
 			fxp_obj.program.data = preset_vst2.vst2_fxBank(None)
 			fxbk = fxp_obj.program.data
 			fxbk.fourid = fourid
-			fxbk.version = plugin_obj.datavals_global.get('version_bytes', 0)
+			fxbk.version = plugin_obj.external_info.version_bytes
 			fxbk.current_program = plugin_obj.current_program
-			programs = plugin_obj.datavals_global.get('programs', 0)
+			programs = plugin_obj.external_info.programs
 			for program in programs:
 				fxck = preset_vst2.vst2_fxProgram(None)
 				fxck.fourid = fourid

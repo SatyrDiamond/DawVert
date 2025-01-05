@@ -63,8 +63,9 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 			sb_grouptrack.latencyOffset = calc_lattime(group_obj.latency_offset)
 			do_markers(group_obj.timemarkers, sb_grouptrack.markers)
 			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.plugslots.slots_audio)
+			make_sends(convproj_obj, sb_grouptrack, group_obj.sends)
 			sb_grouptrack.type = 1
-			#sb_grouptrack.state = set_params(group_obj.params)
+			sb_grouptrack.state = set_params(group_obj.params)
 
 			make_auto_contains_master(convproj_obj, sb_grouptrack, group_obj.params, ['group', groupid])
 
@@ -738,6 +739,7 @@ class output_soundbridge(plugins.base):
 			if sb_track:
 				sb_tracks.append(sb_track)
 
+		sb_tracks = project_obj.masterTrack.tracks
 		for returnid, return_obj in master_returns.items():
 			sb_track = proj_soundbridge.soundbridge_track(None)
 			sb_track.state = set_params(track_obj.params)

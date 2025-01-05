@@ -474,6 +474,19 @@ def addgrp(convproj_obj, project_obj, groupid):
 			als_gtrack.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
 		als_gtrack.TrackDelay.Value = group_obj.latency_offset
 		#print('NEW GROUP', groupid, groupnumid)
+
+		track_sendholders = als_gtrack.DeviceChain.Mixer.Sends
+		numsend = 0
+		for returnid, x in master_returns.items():
+			TrackSendHolder_obj = proj_ableton.ableton_TrackSendHolder(None)
+			if returnid in group_obj.sends.data:
+				send_obj = group_obj.sends.data[returnid]
+				do_param(convproj_obj, send_obj.params, 'amount', 0, 'float', ['send', send_obj.sendautoid, 'amount'] if send_obj.sendautoid else None, TrackSendHolder_obj.Send, als_gtrack.AutomationEnvelopes)
+			else:
+				TrackSendHolder_obj.Send.setvalue(0)
+			track_sendholders[numsend] = TrackSendHolder_obj
+			numsend += 1
+
 	else:
 		groupnumid = ids_group_cvpj_als[groupid]
 

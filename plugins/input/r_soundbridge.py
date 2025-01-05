@@ -71,11 +71,12 @@ def parse_notes(notes_data):
 	return outdata
 
 def add_params(stateobj, params_obj):
-	statebin = decode_chunk(stateobj)
-	mute, vol, unk, pan = struct.unpack('>ffff', statebin)
-	params_obj.add('enabled', mute!=1, 'bool')
-	params_obj.add('vol', calc_vol(vol), 'float')
-	params_obj.add('pan', (pan-0.5)*2, 'float')
+	if stateobj:
+		statebin = decode_chunk(stateobj)
+		mute, vol, unk, pan = struct.unpack('>ffff', statebin)
+		params_obj.add('enabled', mute!=1, 'bool')
+		params_obj.add('vol', calc_vol(vol), 'float')
+		params_obj.add('pan', (pan-0.5)*2, 'float')
 
 global_returnids = 0
 
@@ -178,6 +179,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
 		do_fx(convproj_obj, sb_track, track_obj)
+		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 
 		track_obj.armed.on = bool(sb_track.armed)
 		track_obj.armed.in_keys = bool(sb_track.armed)
@@ -233,6 +235,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
 		do_fx(convproj_obj, sb_track, track_obj)
+		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 
 		track_obj.armed.on = bool(sb_track.armed)
 		track_obj.armed.in_audio = bool(sb_track.armed)
@@ -296,6 +299,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 	if sb_track.type == 2:
 		returnid = 'return__'+str(global_returnids)
 		track_obj = convproj_obj.track_master.fx__return__add(returnid)
+		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
 		do_fx(convproj_obj, sb_track, track_obj)
@@ -309,8 +313,8 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
 		do_fx(convproj_obj, sb_track, track_obj)
-
 		do_markers(track_obj, sb_track.markers)
+		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 
 		for x in sb_track.automationContainer.automationTracks:
 			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['group', cvpj_trackid, 'vol'], x.blocks, 0, 1)

@@ -473,11 +473,16 @@ class output_reaper(plugins.base):
 					for target, send_obj in sends_obj.iter():
 						if target in convproj_obj.track_order:
 							trackrecnum = convproj_obj.track_order.index(target)
-							auxrecv_obj = trackdata[trackrecnum].add_auxrecv()
+							rpp_track = trackdata[trackrecnum]
+							auxrecv_obj = rpp_track.add_auxrecv()
 							auxrecv_obj['tracknum'] = tracksendnum
 							auxrecv_obj['vol'] = send_obj.params.get('amount', 1).value
 							auxrecv_obj['pan'] = send_obj.params.get('pan', 0).value
-
+							if send_obj.sendautoid:
+								if_found, autopoints = convproj_obj.automation.get_autopoints(['send', send_obj.sendautoid, 'amount'])
+								if if_found: 
+									vol_env = rpp_track.add_aux_env('vol', tracksendnum)
+									add_auto(vol_env, autopoints)
 		
 		if dawvert_intent.output_mode == 'file':
 			project_obj.save_to_file(dawvert_intent.output_file)

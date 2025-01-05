@@ -35,6 +35,9 @@ native_names['compressor_expander'] = ['1158f6956478e749a123534b7d943e3d', 'ZPla
 native_names['noise_gate'] = ['ee2b5cce1faeb54f9081ad2575736075', 'ZPlane', 'Noise Gate']
 native_names['limiter'] = ['80700b7cbbf6234189e21d862baf0d19', 'ZPlane', 'Limiter']
 
+def calc_lattime(latency_offset):
+	return int(latency_offset*(PROJECT_FREQ/500))
+
 def encode_chunk(inbytes):
 	statedata = base64.b64encode(inbytes).decode("ascii")
 	statedata = statedata.replace('/', '.')
@@ -57,7 +60,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 		group_obj = convproj_obj.fx__group__get(groupid)
 		if group_obj:
 			sb_grouptrack = proj_soundbridge.soundbridge_track(None)
-			sb_grouptrack.latencyOffset = int(group_obj.latency_offset*(PROJECT_FREQ/500))
+			sb_grouptrack.latencyOffset = calc_lattime(group_obj.latency_offset)
 			do_markers(group_obj.timemarkers, sb_grouptrack.markers)
 			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.plugslots.slots_audio)
 			sb_grouptrack.type = 1
@@ -457,6 +460,7 @@ class output_soundbridge(plugins.base):
 
 		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = '#'+master_track.visual.color.get_hex()
 
+		project_obj.masterTrack.latencyOffset = calc_lattime(master_track.latency_offset)
 		project_obj.masterTrack.state = set_params(master_track.params)
 		make_auto_contains_master(convproj_obj, project_obj.masterTrack, master_track.params, ['master'])
 
@@ -513,7 +517,7 @@ class output_soundbridge(plugins.base):
 				sb_track.midiOutput.externalDeviceIndex = -1
 				sb_track.midiOutput.channelIndex = track_obj.midi.out_chan-1
 				sb_track.blocks = []
-				sb_track.latencyOffset = int(track_obj.latency_offset*(PROJECT_FREQ/500))
+				sb_track.latencyOffset = calc_lattime(track_obj.latency_offset)
 
 				sb_track.armed = int(track_obj.armed.in_keys)
 
@@ -624,7 +628,7 @@ class output_soundbridge(plugins.base):
 				sb_track.pitchTempoProcessorMode = 2
 				sb_track.audioInput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.blockContainers = []
-				sb_track.latencyOffset = int(track_obj.latency_offset*(PROJECT_FREQ/500))
+				sb_track.latencyOffset = calc_lattime(track_obj.latency_offset)
 
 				sb_track.armed = int(track_obj.armed.in_audio)
 				
@@ -743,7 +747,7 @@ class output_soundbridge(plugins.base):
 			sb_track.sourceBufferType = 2
 			sb_track.audioOutput = proj_soundbridge.soundbridge_deviceRoute(None)
 			sb_track.blockContainers = []
-			sb_track.latencyOffset = int(track_obj.latency_offset*(PROJECT_FREQ/500))
+			sb_track.latencyOffset = calc_lattime(track_obj.latency_offset)
 			make_auto_trackcontains(convproj_obj, sb_track, return_obj.params, 1, ['return', returnid])
 			make_sends(convproj_obj, sb_track, return_obj.sends)
 			make_plugins_fx(convproj_obj, sb_track, return_obj.plugslots.slots_audio)

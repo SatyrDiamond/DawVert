@@ -259,7 +259,8 @@ class output_tracktion_edit(plugins.base):
 
 			if track_obj.plugslots.synth:
 				wf_inst_plugin = get_plugin(convproj_obj, track_obj.plugslots.synth, track_obj.type in ['instrument', 'hybrid'])
-				wf_track.plugins.append(wf_inst_plugin)
+				if wf_inst_plugin:
+					wf_track.plugins.append(wf_inst_plugin)
 
 			get_plugins(convproj_obj, wf_track.plugins, track_obj.plugslots.slots_audio)
 
@@ -340,6 +341,18 @@ class output_tracktion_edit(plugins.base):
 
 				wf_audioclip.gain = xtramath.to_db(sp_obj.vol)
 				wf_audioclip.pan = sp_obj.pan
+
+				if sp_obj.pitch != 0:
+					afx = proj_tracktion_edit.tracktion_audioclip_fx()
+					afx.fx_type = 'pitchShift'
+					afx.plugin.plugtype = "pitchShifter"
+					afx.plugin.params['semitonesUp'] = sp_obj.pitch
+					wf_audioclip.effects.append(afx)
+
+				if sp_obj.reverse:
+					afx = proj_tracktion_edit.tracktion_audioclip_fx()
+					afx.fx_type = 'reverse'
+					wf_audioclip.effects.append(afx)
 
 				wf_track.audioclips.append(wf_audioclip)
 

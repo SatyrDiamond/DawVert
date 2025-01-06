@@ -295,6 +295,7 @@ class audio_obj:
 			self.pcm_from_list(wavfile_obj.data.copy())
 
 	def to_file_wav(self, file_path):
+		from objects.file import audio_wav
 		wavfile_obj = audio_wav.wav_main()
 		wavfile_obj.read_audioobj(self)
 		if self.loop: wavfile_obj.add_loop(self.loop[0], self.loop[1])

@@ -9,6 +9,7 @@ import wave as audio_wav
 import base64
 import struct
 import copy
+from random import randbytes
 
 from objects.convproj import sample_entry
 from objects.convproj import params
@@ -222,7 +223,7 @@ class cvpj_plugin_state:
 
 	# -------------------------------------------------- sampleregions
 	def sampleregion_add(self, i_min, i_max, i_middle, i_data, **kwargs):
-		samplepartid = kwargs['samplepartid'] if 'samplepartid' in kwargs else 'multi_'+str(i_min)+'_'+str(i_max)
+		samplepartid = kwargs['samplepartid'] if 'samplepartid' in kwargs else 'multi_'+randbytes(4).hex()
 		samplepart_obj = self.samplepart_add(samplepartid)
 		self.sampleregions.add(i_min, i_max, i_middle, samplepartid, i_data)
 		return samplepart_obj

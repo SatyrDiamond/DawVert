@@ -39,7 +39,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 			bxml_data = juce_binaryxml.juce_binaryxml_element()
 			bxml_data.read_bytes(chunkdata)
 
-			bxml_data.output_file('sampler_input.xml')
+			#bxml_data.output_file('sampler_input.xml')
 
 			soundlayers = []
 
@@ -64,8 +64,8 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				for soundlayer, layerparams in soundlayers:
 					endstr = str(layernum)
 					sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
-					sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 60
-					sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 60
+					sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 0
+					sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 127
 					sp_obj = plugin_obj.sampleregion_add(sl_lowNote-60, sl_highNote-60, sl_rootNote-60, None)
 					sp_obj.envs['vol'] = 'vol_'+endstr
 					soundlayer_samplepart(sp_obj, soundlayer, layerparams, False)
@@ -306,7 +306,7 @@ class input_tracktion_edit(plugins.base):
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['plugin_included'] = ['native:tracktion']
+		in_dict['plugin_included'] = ['native:tracktion','universal:sampler:single','universal:sampler:multi']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']

@@ -51,6 +51,40 @@ def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
 		autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
 		wf_plugin.automationcurves.append(autocurve_obj)
 
+def sampler_param(bxml_obj, key, value): 
+	bxml_param = bxml_obj.add_child('SOUNDPARAMETER')
+	bxml_param.set('id', key)
+	bxml_param.set('value', value)
+
+def soundlayer_samplepart(plugin_obj, bxml_main, lowNote, highNote, rootNote, sp_obj, sampleref_assoc, sampleref_obj_assoc): 
+	if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
+		adsr_obj = plugin_obj.env_asdr_get('vol')
+		sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
+		sp_obj.convpoints_samples(sampleref_obj)
+		bxml_layer = bxml_main.add_child('SOUNDLAYER')
+		bxml_layer.set('active', True)
+		bxml_layer.set('name', '1')
+		bxml_layer.set('reverse', bool(sp_obj.reverse))
+		bxml_layer.set('sampleDataName', ':'+sampleref_assoc[sp_obj.sampleref])
+		bxml_layer.set('sampleIn', int(sp_obj.start))
+		bxml_layer.set('sampleLoopIn', int(sp_obj.loop_start))
+		bxml_layer.set('sampleOut', int(sp_obj.end))
+		bxml_layer.set('sampleLoopOut', int(sp_obj.loop_end))
+		bxml_layer.set('rootNote', rootNote)
+		bxml_layer.set('lowNote', lowNote)
+		bxml_layer.set('highNote', highNote)
+		bxml_layer.set('fineTune', 4294967289)
+		bxml_layer.set('fixedPitch', False)
+		bxml_layer.set('pitchShift', False)
+		bxml_layer.set('looped', bool(sp_obj.loop_active))
+		bxml_layer.set('loopMode', 1)
+		sampler_param(bxml_layer, 'attackParam', float(adsr_obj.attack))
+		sampler_param(bxml_layer, 'decayParam', float(adsr_obj.decay))
+		sampler_param(bxml_layer, 'sustainParam', float(adsr_obj.sustain)*100)
+		sampler_param(bxml_layer, 'releaseParam', float(adsr_obj.release))
+		sampler_param(bxml_layer, 'envModeParam', float(sp_obj.trigger=='normal'))
+		sampler_param(bxml_layer, 'pitchParam', float(sp_obj.pitch))
+
 def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_tracktion_edit
 	from objects.inst_params import juce_plugin
@@ -58,10 +92,11 @@ def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, is
 	from functions.juce import juce_memoryblock
 
 	plugin_found, plugin_obj = convproj_obj.plugin__get(cvpj_fxid)
+
 	if plugin_found: 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 
-		if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
+		if plugin_obj.check_wildmatch('universal', 'sampler', None):
 			wf_plugin = proj_tracktion_edit.tracktion_plugin()
 			wf_plugin.plugtype = plugin_obj.type.subtype
 			wf_plugin.presetDirty = 1
@@ -71,6 +106,7 @@ def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, is
 			wf_plugin.params['uid'] = '0'
 			wf_plugin.params['filename'] = 'Micro Sampler'
 			wf_plugin.params['name'] = 'Micro Sampler'
+			dsetfound = True
 
 			bxml_data = juce_binaryxml.juce_binaryxml_element()
 			bxml_data.tag = 'PROGRAM'
@@ -82,32 +118,21 @@ def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, is
 			bxml_main.set('fxOrder2', "delay,reverb,comp,filter,eq,dist,chorus")
 			bxml_main.set('currentPage', 0)
 
-			sp_obj = plugin_obj.samplepart_get('sample')
-			if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
-				sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
-				sp_obj.convpoints_samples(sampleref_obj)
-				bxml_layer = bxml_main.add_child('SOUNDLAYER')
-				bxml_layer.set('active', True)
-				bxml_layer.set('name', '1')
-				bxml_layer.set('reverse', bool(sp_obj.reverse))
-				bxml_layer.set('sampleDataName', ':'+sampleref_assoc[sp_obj.sampleref])
-				bxml_layer.set('sampleIn', int(sp_obj.start))
-				bxml_layer.set('sampleLoopIn', int(sp_obj.loop_start))
-				bxml_layer.set('sampleOut', int(sp_obj.end))
-				bxml_layer.set('sampleLoopOut', int(sp_obj.loop_end))
-				bxml_layer.set('rootNote', 60)
-				bxml_layer.set('fineTune', 4294967289)
-				bxml_layer.set('fixedPitch', False)
-				bxml_layer.set('pitchShift', False)
-				bxml_layer.set('looped', bool(sp_obj.loop_active))
-				bxml_layer.set('loopMode', 1)
+			if plugin_obj.type.subtype == 'single':
+				sp_obj = plugin_obj.samplepart_get('sample')
+				soundlayer_samplepart(plugin_obj, bxml_main, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				outbytes = bxml_data.to_bytes()
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+				return wf_plugin
 
-			bxml_data.output_file('sampler_output.xml')
-
-			outbytes = bxml_data.to_bytes()
-			wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
-
-			return wf_plugin
+			if plugin_obj.type.subtype == 'multi':
+				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+					key_l, key_h, key_r, samplerefid, extradata = sampleregion
+					sp_obj = plugin_obj.samplepart_get(samplerefid)
+					soundlayer_samplepart(plugin_obj, bxml_main, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				outbytes = bxml_data.to_bytes()
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+				return wf_plugin
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			juceobj = juce_plugin.juce_plugin()
@@ -201,12 +226,14 @@ class output_tracktion_edit(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
 		in_dict['time_seconds'] = True
+		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['plugin_included'] = ['native:tracktion']
+		in_dict['plugin_included'] = ['native:tracktion','universal:sampler:single','universal:sampler:multi']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 		
@@ -232,7 +259,7 @@ class output_tracktion_edit(plugins.base):
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			tr_waveid = gen_hexid('3')
 			wave_obj = mainp_obj.objects[tr_waveid] = proj_tracktion_project.tracktion_project_object()
-			wave_obj.name = sampleref_obj.fileref.file.filename
+			wave_obj.name = sampleref_obj.fileref.file.filename if sampleref_obj.fileref.file.filename else ''
 			wave_obj.type = 'wave'
 			wave_obj.path = sampleref_obj.fileref.get_path(None, False)
 			wave_obj.info = "Imported|MediaObjectCategory|5"
@@ -348,7 +375,7 @@ class output_tracktion_edit(plugins.base):
 						wf_note = proj_tracktion_edit.tracktion_note()
 						wf_note.key = t_key+60
 						wf_note.pos = t_pos/4
-						wf_note.dur = t_dur/4
+						wf_note.dur = max(t_dur/4, 0.01)
 						wf_note.vel = int(xtramath.clamp(t_vol*127, 0, 127))
 						wf_midiclip.sequence.notes.append(wf_note)
 

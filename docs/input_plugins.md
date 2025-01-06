@@ -10,6 +10,7 @@
 | R | ```main``` | ```dawproject``` | DawProject | ```.dawproject``` | ✔️ | |
 | M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
 | R | ```main``` | ```soundbridge``` | SoundBridge | ```.soundbridge``` | ✔️ | |
+| R | ```main``` | ```tracktion_edit``` | tracktion Edit | ```.tracktionedit``` | ✔️ | |
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 

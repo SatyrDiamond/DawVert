@@ -14,7 +14,7 @@
 | R | ```main``` | ```soundbridge``` | SoundBridge |
 | R | ```main``` | ```reaper``` | Reaper |
 | R | ```main``` | ```soundation``` | Soundation |
-| R | ```main``` | ```waveform_edit``` | Waveform Edit |
+| R | ```main``` | ```tracktion_edit``` | Waveform Edit |
 
 ## Old
 | DataType | PluginSet | Short Name | Name |

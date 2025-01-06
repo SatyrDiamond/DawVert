@@ -1,12 +1,12 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects import globalstore
-from lxml import etree
 from objects import counter
+from objects import globalstore
+from functions import xtramath
 import plugins
-import json
 import math
+import os
 
 def sampler_get_size(sampler_data):
 	sampler_data.magic_check(b'\x01')
@@ -155,7 +155,7 @@ def do_foldertrack(convproj_obj, wf_track, counter_track):
 	groupid = str(wf_track.id_num)
 	track_obj = convproj_obj.fx__group__add(groupid)
 	track_obj.visual.name = wf_track.name
-	track_obj.visual.color.set_hex(wf_track.colour)
+	if wf_track.colour != '0': track_obj.visual.color.set_hex(wf_track.colour)
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
 	vol = 1
@@ -184,8 +184,10 @@ def do_foldertrack(convproj_obj, wf_track, counter_track):
 
 def do_track(convproj_obj, wf_track, track_obj): 
 	track_obj.visual.name = wf_track.name
-	track_obj.visual.color.set_hex(wf_track.colour)
+	if wf_track.colour != '0': track_obj.visual.color.set_hex(wf_track.colour)
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
+
+	bpm = convproj_obj.params.get('bpm', 120).value
 
 	vol = 1
 	pan = 0
@@ -229,25 +231,69 @@ def do_track(convproj_obj, wf_track, track_obj):
 						autopoint_obj.value = val
 						autopoint_obj.type = 'instant'
 
+	for audioclip in wf_track.audioclips:
+		placement_obj = track_obj.placements.add_audio()
+
+		placement_obj.sample.sampleref = audioclip.source
+		sampleref_exists, sampleref_obj = convproj_obj.sampleref__get(audioclip.source)
+
+		placement_obj.time.position_real = audioclip.start
+		placement_obj.time.duration_real = audioclip.length
+
+		stretch_amt = 1
+		if sampleref_exists:
+			stretch_amt = (sampleref_obj.dur_sec*2)/audioclip.loopinfo.numBeats
+
+		bpmdiv = (bpm/120)
+		if audioclip.loopStartBeats == 0 and audioclip.loopLengthBeats == 0:
+			placement_obj.time.set_offset(audioclip.offset*8*bpmdiv)
+		else:
+			#print(
+			#	audioclip.offset*8*bpmdiv,
+			#	audioclip.loopStartBeats*4, 
+			#	audioclip.loopStartBeats+audioclip.loopLengthBeats*4
+			#	)
+
+			placement_obj.time.set_loop_data(
+				audioclip.offset*8*bpmdiv, 
+				audioclip.loopStartBeats*4, 
+				(audioclip.loopStartBeats+audioclip.loopLengthBeats)*4
+				)
+	
+		sp_obj = placement_obj.sample
+		sp_obj.stretch.set_rate_tempo(bpm, stretch_amt, False)
+		sp_obj.stretch.preserve_pitch = True
+		sp_obj.vol = xtramath.from_db(audioclip.gain)
+		sp_obj.pan = audioclip.pan
+
+		for fx in audioclip.effects:
+			params = fx.plugin.params
+			if fx.fx_type == 'pitchShift':
+				if 'semitonesUp' in params: sp_obj.pitch += float(params['semitonesUp'])
+			if fx.fx_type == 'reverse':
+				sp_obj.reverse = True
+
+			#print(fx.fx_type, fx.plugin.params)
+
 	track_obj.datavals.add('middlenote', middlenote)
 
 def do_tracks(convproj_obj, in_tracks, counter_track, groupid):
-	from objects.file_proj import proj_waveform
+	from objects.file_proj import proj_tracktion_edit
 	for wf_track in in_tracks:
 		tracknum = counter_track.get()
-		if isinstance(wf_track, proj_waveform.waveform_track):
-			track_obj = convproj_obj.track__add(str(tracknum), 'instrument', 1, False)
+		if isinstance(wf_track, proj_tracktion_edit.tracktion_track):
+			track_obj = convproj_obj.track__add(str(tracknum), 'hybrid', 1, False)
 			if groupid: track_obj.group = groupid
 			do_track(convproj_obj, wf_track, track_obj)
-		if isinstance(wf_track, proj_waveform.waveform_foldertrack):
+		if isinstance(wf_track, proj_tracktion_edit.tracktion_foldertrack):
 			do_foldertrack(convproj_obj, wf_track, counter_track)
 
-class input_waveform_edit(plugins.base):
+class input_tracktion_edit(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'waveform_edit'
+		return 'tracktion_edit'
 	
 	def get_name(self):
 		return 'Waveform'
@@ -260,6 +306,7 @@ class input_waveform_edit(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['time_seconds'] = True
+		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion']
@@ -270,7 +317,8 @@ class input_waveform_edit(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_waveform
+		from objects.file_proj import proj_tracktion_edit
+		from objects.file_proj import proj_tracktion_project
 		global cvpj_l
 
 		convproj_obj.fxtype = 'groupreturn'
@@ -279,9 +327,29 @@ class input_waveform_edit(plugins.base):
 
 		globalstore.dataset.load('waveform', './data_main/dataset/waveform.dset')
 
-		project_obj = proj_waveform.waveform_edit()
+		samples = {}
+		project_obj = proj_tracktion_edit.tracktion_edit()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		if dawvert_intent.input_mode == 'file':
+			projectfile = project_obj.projectID.split('/')
+			if projectfile:
+				projectid = projectfile[0]
+				projfolder = os.path.dirname(dawvert_intent.input_file)
+				projfolder = os.path.abspath(projfolder)
+				tprojpaths = onlyfiles = [f for f in os.listdir(projfolder) if (os.path.isfile(os.path.join(projfolder, f)) and f.endswith('.tracktion'))]
+				for tprojpath in tprojpaths:
+					try:
+						tproj = proj_tracktion_project.tracktion_project()
+						tproj.load_from_file(os.path.join(projfolder, tprojpath))
+						samples |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'wave')])
+					except:
+						pass
+
+		for sid, spath in samples.items(): 
+			sampleref_obj = convproj_obj.sampleref__add(sid, spath, None)
+			sampleref_obj.find_relative('projectfile')
 
 		if project_obj.temposequence.tempo:
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))

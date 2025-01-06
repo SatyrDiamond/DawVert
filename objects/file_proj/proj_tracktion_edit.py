@@ -7,7 +7,7 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
-class waveform_transport:
+class tracktion_transport:
 	def __init__(self):
 		self.looping = 0
 		self.endToEnd = 1
@@ -43,7 +43,7 @@ class waveform_transport:
 		if self.loopPoint1 >= 0: tempxml.set('loopPoint1', str(self.loopPoint1))
 		if self.loopPoint2 >= 0: tempxml.set('loopPoint2', str(self.loopPoint2))
 
-class waveform_macroparameters:
+class tracktion_macroparameters:
 	def __init__(self):
 		self.id_num = 0
 		self.used = False
@@ -58,7 +58,7 @@ class waveform_macroparameters:
 			tempxml = ET.SubElement(xmldata, "MACROPARAMETERS")
 			tempxml.set('id', str(self.id_num))
 
-class waveform_seq_pitch:
+class tracktion_seq_pitch:
 	def __init__(self):
 		self.sequence = {}
 
@@ -76,7 +76,7 @@ class waveform_seq_pitch:
 			pxml.set('startBeat', str(pos))
 			pxml.set('pitch', str(pitch))
 
-class waveform_seq_tempo:
+class tracktion_seq_tempo:
 	def __init__(self):
 		self.tempo = {}
 		self.timesig = {}
@@ -104,7 +104,7 @@ class waveform_seq_tempo:
 			pxml.set('denominator', str(denominator))
 			pxml.set('startBeat', str(pos))
 
-class waveform_automationcurve:
+class tracktion_automationcurve:
 	def __init__(self):
 		self.paramid = None
 		self.points = []
@@ -125,7 +125,7 @@ class waveform_automationcurve:
 			pxml.set('v', str(v))
 			if c: pxml.set('c', str(c))
 
-class waveform_plugin:
+class tracktion_plugin:
 	def __init__(self):
 		self.plugtype = ''
 		self.windowLocked = 0
@@ -138,7 +138,7 @@ class waveform_plugin:
 		self.height = 0
 		self.quickParamName = ''
 		self.params = {}
-		self.macroparameters = waveform_macroparameters()
+		self.macroparameters = tracktion_macroparameters()
 		self.automationcurves = []
 
 	def load(self, xmldata):
@@ -157,7 +157,7 @@ class waveform_plugin:
 		for xmlpart in xmldata:
 			if xmlpart.tag == 'MACROPARAMETERS': self.macroparameters.load(xmlpart)
 			if xmlpart.tag == 'AUTOMATIONCURVE': 
-				autocurve_obj = waveform_automationcurve()
+				autocurve_obj = tracktion_automationcurve()
 				autocurve_obj.load(xmlpart)
 				self.automationcurves.append(autocurve_obj)
 
@@ -180,7 +180,7 @@ class waveform_plugin:
 		self.macroparameters.write(tempxml)
 		ET.SubElement(tempxml, "MODIFIERASSIGNMENTS")
 
-class waveform_outputdevices:
+class tracktion_outputdevices:
 	def __init__(self):
 		self.devices = []
 
@@ -194,14 +194,14 @@ class waveform_outputdevices:
 			devxml = ET.SubElement(tempxml, "DEVICE")
 			for n, v in device.items(): devxml.set(n, str(v))
 
-class waveform_foldertrack:
+class tracktion_foldertrack:
 	def __init__(self):
 		self.id_num = 0
 		self.height = 35.41053828354546
 		self.expanded = 0
 		self.tracks = []
 		self.plugins = []
-		self.macroparameters = waveform_macroparameters()
+		self.macroparameters = tracktion_macroparameters()
 		self.name = None
 		self.colour = None
 
@@ -216,11 +216,11 @@ class waveform_foldertrack:
 		for subxml in xmldata:
 			if subxml.tag == 'MACROPARAMETERS': self.macroparameters.load(subxml)
 			if subxml.tag == 'TRACK':
-				track_obj = waveform_track()
+				track_obj = tracktion_track()
 				track_obj.load(subxml)
 				self.tracks.append(track_obj)
 			if subxml.tag == 'PLUGIN':
-				plugin_obj = waveform_plugin()
+				plugin_obj = tracktion_plugin()
 				plugin_obj.load(subxml)
 				self.plugins.append(plugin_obj)
 
@@ -238,7 +238,7 @@ class waveform_foldertrack:
 		if self.colour: tempxml.set('colour', self.colour)
 
 
-class waveform_control:
+class tracktion_control:
 	def __init__(self):
 		self.pos = 0
 		self.ctype = 0
@@ -259,7 +259,7 @@ class waveform_control:
 		tempxml.set('val', str(self.val))
 		tempxml.set('metadata', str(self.metadata))
 
-class waveform_note:
+class tracktion_note:
 	def __init__(self):
 		self.pos = 0
 		self.key = 0
@@ -297,7 +297,7 @@ class waveform_note:
 				a_xml.set('p', str(c_pos))
 				a_xml.set('v', str(c_val))
 
-class waveform_sequence:
+class tracktion_sequence:
 	def __init__(self):
 		self.notes = []
 		self.controls = []
@@ -305,11 +305,11 @@ class waveform_sequence:
 	def load(self, xmldata):
 		for subxml in xmldata:
 			if subxml.tag == 'NOTE':
-				note_obj = waveform_note()
+				note_obj = tracktion_note()
 				note_obj.load(subxml)
 				self.notes.append(note_obj)
 			if subxml.tag == 'CONTROL':
-				control_obj = waveform_control()
+				control_obj = tracktion_control()
 				control_obj.load(subxml)
 				self.controls.append(control_obj)
 
@@ -322,7 +322,7 @@ class waveform_sequence:
 		for control_obj in self.controls:
 			control_obj.write(seq_xml)
 
-class waveform_midiclip:
+class tracktion_midiclip:
 	def __init__(self):
 		self.name = 'New MIDI Clip'
 		self.start = 0
@@ -338,7 +338,7 @@ class waveform_midiclip:
 		self.originalLength = 0
 		self.loopStartBeats = 0.0
 		self.loopLengthBeats = 0.0
-		self.sequence = waveform_sequence()
+		self.sequence = tracktion_sequence()
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
@@ -382,7 +382,7 @@ class waveform_midiclip:
 		ET.SubElement(tempxml, "GROOVE")
 		self.sequence.write(tempxml)
 
-class waveform_loopinfo:
+class tracktion_loopinfo:
 	def __init__(self):
 		self.rootNote = -1
 		self.numBeats = 0.0
@@ -415,10 +415,10 @@ class waveform_loopinfo:
 		tempxml.set('inMarker', str(self.inMarker))
 		tempxml.set('outMarker', str(self.outMarker))
 
-class waveform_audioclip_fx:
+class tracktion_audioclip_fx:
 	def __init__(self):
 		self.fx_type = ''
-		self.plugin = waveform_plugin()
+		self.plugin = tracktion_plugin()
 
 	def load(self, xmldata):
 		fx_type = xmldata.get('type')
@@ -431,7 +431,7 @@ class waveform_audioclip_fx:
 		tempxml.set('type', str(self.fx_type))
 		self.plugin.write(tempxml)
 
-class waveform_audioclip:
+class tracktion_audioclip:
 	def __init__(self):
 		self.name = "qd - sleep"
 		self.start = 0
@@ -474,7 +474,7 @@ class waveform_audioclip:
 		self.warpTime = 0
 		self.effectsVisible = 1
 
-		self.loopinfo = waveform_loopinfo()
+		self.loopinfo = tracktion_loopinfo()
 		self.effects = []
 
 	def load(self, xmldata):
@@ -525,7 +525,7 @@ class waveform_audioclip:
 			if subxml.tag == 'LOOPINFO': self.loopinfo.load(subxml)
 			if subxml.tag == 'EFFECTS': 
 				for fxxml in subxml:
-					afx_obj = waveform_audioclip_fx()
+					afx_obj = tracktion_audioclip_fx()
 					afx_obj.load(fxxml)
 					self.effects.append(afx_obj)
 
@@ -580,7 +580,7 @@ class waveform_audioclip:
 				afx_obj.write(effects)
 
 
-class waveform_stepclip_channel:
+class tracktion_stepclip_channel:
 	def __init__(self):
 		self.channel = 1
 		self.note = 36
@@ -601,7 +601,7 @@ class waveform_stepclip_channel:
 		tempxml.set('velocity', str(self.velocity))
 		tempxml.set('name', str(self.name))
 
-class waveform_stepclip_pattern:
+class tracktion_stepclip_pattern:
 	def __init__(self):
 		self.numNotes = 16
 		self.noteLength = 0.25
@@ -630,7 +630,7 @@ class waveform_stepclip_pattern:
 			if n in self.data: chanxml.set('pattern', self.data[n])
 			else: chanxml.set('pattern', '0')
 
-class waveform_stepclip:
+class tracktion_stepclip:
 	def __init__(self):
 		self.id_num = 0
 		self.name = ''
@@ -671,7 +671,7 @@ class waveform_stepclip:
 			if subxml.tag == 'CHANNELS':
 				for chanxml in subxml:
 					if chanxml.tag == 'CHANNEL':
-						chan_obj = waveform_stepclip_channel()
+						chan_obj = tracktion_stepclip_channel()
 						chan_obj.load(chanxml)
 						self.channels.append(chan_obj)
 
@@ -679,7 +679,7 @@ class waveform_stepclip:
 			if subxml.tag == 'PATTERNS':
 				for chanxml in subxml:
 					if chanxml.tag == 'PATTERN':
-						pat_obj = waveform_stepclip_pattern()
+						pat_obj = tracktion_stepclip_pattern()
 						pat_obj.load(chanxml)
 						self.patterns.append(pat_obj)
 
@@ -708,7 +708,7 @@ class waveform_stepclip:
 			for chan_obj in self.patterns:
 				chan_obj.write(patxml)
 
-class waveform_track:
+class tracktion_track:
 	def __init__(self):
 		self.name = ''
 		self.id_num = 0
@@ -719,8 +719,8 @@ class waveform_track:
 		self.colour = 'ffffaa00'
 		self.height = 35.41053828354546
 		self.plugins = []
-		self.macroparameters = waveform_macroparameters()
-		self.outputdevices = waveform_outputdevices()
+		self.macroparameters = tracktion_macroparameters()
+		self.outputdevices = tracktion_outputdevices()
 		self.midiclips = []
 		self.audioclips = []
 		self.stepclips = []
@@ -739,21 +739,21 @@ class waveform_track:
 		for subxml in xmldata:
 			if subxml.tag == 'MACROPARAMETERS': self.macroparameters.load(subxml)
 			if subxml.tag == 'PLUGIN':
-				plugin_obj = waveform_plugin()
+				plugin_obj = tracktion_plugin()
 				plugin_obj.load(subxml)
 				self.plugins.append(plugin_obj)
 			if subxml.tag == 'OUTPUTDEVICES':
 				self.outputdevices.load(subxml)
 			if subxml.tag == 'MIDICLIP':
-				midiclip_obj = waveform_midiclip()
+				midiclip_obj = tracktion_midiclip()
 				midiclip_obj.load(subxml)
 				self.midiclips.append(midiclip_obj)
 			if subxml.tag == 'AUDIOCLIP':
-				audioclip_obj = waveform_audioclip()
+				audioclip_obj = tracktion_audioclip()
 				audioclip_obj.load(subxml)
 				self.audioclips.append(audioclip_obj)
 			if subxml.tag == 'STEPCLIP':
-				stepclip_obj = waveform_stepclip()
+				stepclip_obj = tracktion_stepclip()
 				stepclip_obj.load(subxml)
 				self.stepclips.append(stepclip_obj)
 
@@ -775,20 +775,20 @@ class waveform_track:
 		for midiclip_obj in self.midiclips: midiclip_obj.write(tempxml)
 		self.outputdevices.write(tempxml)
 
-class waveform_edit:
+class tracktion_edit:
 	def __init__(self):
 		self.appVersion = None
 		self.projectID = None
 		self.creationTime = None
 		self.lastSignificantChange = None
 		self.modifiedBy = None
-		self.transport = waveform_transport()
-		self.macroparameters = waveform_macroparameters()
-		self.pitchsequence = waveform_seq_pitch()
-		self.temposequence = waveform_seq_tempo()
+		self.transport = tracktion_transport()
+		self.macroparameters = tracktion_macroparameters()
+		self.pitchsequence = tracktion_seq_pitch()
+		self.temposequence = tracktion_seq_tempo()
 		self.clicktrack = 0.6
 		self.id3vorbismetadata = {}
-		self.mastervolume = waveform_plugin()
+		self.mastervolume = tracktion_plugin()
 		self.masterplugins = []
 		self.tracks = []
 
@@ -797,7 +797,7 @@ class waveform_edit:
 		xml_data = ET.parse(input_file, parser)
 
 		x_EDIT = xml_data.getroot()
-		if x_EDIT == None: raise ProjectFileParserException('waveform_edit: no XML root found')
+		if x_EDIT == None: raise ProjectFileParserException('tracktion_edit: no XML root found')
 
 		self.appVersion = x_EDIT.get('appVersion')
 		self.projectID = x_EDIT.get('projectID')
@@ -822,15 +822,15 @@ class waveform_edit:
 			elif xmlpart.tag == 'MASTERPLUGINS':
 				for subxml in xmlpart:
 					if subxml.tag == 'PLUGIN':
-						t_plug = waveform_plugin()
+						t_plug = tracktion_plugin()
 						t_plug.load(subxml)
 						self.masterplugins.append(t_plug)
 			elif xmlpart.tag == 'TRACK':
-				track_obj = waveform_track()
+				track_obj = tracktion_track()
 				track_obj.load(xmlpart)
 				self.tracks.append(track_obj)
 			elif xmlpart.tag == 'FOLDERTRACK':
-				track_obj = waveform_foldertrack()
+				track_obj = tracktion_foldertrack()
 				track_obj.load(xmlpart)
 				self.tracks.append(track_obj)
 
@@ -878,7 +878,7 @@ class waveform_edit:
 		outfile.write(output_file, encoding='utf-8', xml_declaration = True)
 
 
-#testin = waveform_edit()
+#testin = tracktion_edit()
 #testin.load_from_file(
 #'G:\\Projects\\dawproj_reverse/fefs Edit 3.tracktionedit'
 #)

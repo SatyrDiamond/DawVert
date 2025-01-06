@@ -3,57 +3,18 @@
 
 from objects import counter
 from objects import globalstore
+from objects.binary_fmt import juce_binaryxml
 from functions import xtramath
 import plugins
 import math
 import os
 
-def sampler_get_size(sampler_data):
-	sampler_data.magic_check(b'\x01')
-	sizedata = sampler_data.uint8()
-	return sizedata
-
-def sampler_decode_chunk(sampler_data):
-	chunk_name = sampler_data.string_t()
-	chunk_size = sampler_get_size(sampler_data)-1
-	chunk_type = sampler_data.uint8()
-	if chunk_type == 1: chunk_data = sampler_data.uint32()
-	elif chunk_type == 2: chunk_data = True
-	elif chunk_type == 3: chunk_data = False
-	elif chunk_type == 4: chunk_data = sampler_data.double()
-	elif chunk_type == 5: chunk_data = sampler_data.string(chunk_size)
-	else: chunk_data = [chunk_type, sampler_data.raw(chunk_size)]
-	return chunk_name, chunk_data
-
-def sampler_decode_dict(sampler_data, indict):
-	set_name = sampler_data.string_t()
-	set_num = sampler_get_size(sampler_data)
-	dictpart = {}
-	for _ in range(set_num):
-		chunk_name, chunk_data = sampler_decode_chunk(sampler_data)
-		dictpart[chunk_name] = chunk_data
-	indict[set_name] = dictpart
-	return set_name, dictpart
-
-def sampler_parse(indata): 
-	from objects.data_bytes import bytereader
-	sampler_data = bytereader.bytereader()
-	sampler_data.load_raw(indata)
-	sampleheader = {}
-	sampler_decode_dict(sampler_data, sampleheader)
-	sampler_get_size(sampler_data)
-	sampler_decode_dict(sampler_data, sampleheader)
-	sampler_get_size(sampler_data)
-	sampledata = []
-	while sampler_data.remaining():
-		sampledata.append(sampler_decode_dict(sampler_data, {}))
-		sampler_data.skip(1)
-	return sampleheader, sampledata
-
-def soundlayer_samplepart(sp_obj, soundlayer): 
+def soundlayer_samplepart(sp_obj, soundlayer, layerparams, issingle): 
 	sp_obj.visual.name = soundlayer['name'] if 'name' in soundlayer else ''
 	sp_obj.point_value_type = 'samples'
-	if 'sampleDataName' in soundlayer: sp_obj.sampleref = soundlayer['sampleDataName']
+	if 'sampleDataName' in soundlayer: 
+		sp_obj.sampleref = soundlayer['sampleDataName']
+		if sp_obj.sampleref[0] == ':': sp_obj.sampleref = sp_obj.sampleref[1:]
 	if 'sampleIn' in soundlayer: sp_obj.start = soundlayer['sampleIn']
 	if 'sampleOut' in soundlayer: sp_obj.end = soundlayer['sampleOut']
 	if 'reverse' in soundlayer: sp_obj.reverse = soundlayer['reverse']
@@ -63,6 +24,10 @@ def soundlayer_samplepart(sp_obj, soundlayer):
 	if 'sampleLoopOut' in soundlayer: sp_obj.loop_end = soundlayer['sampleLoopOut']
 	if 'looped' in soundlayer: sp_obj.loop_active = soundlayer['looped']
 
+	sp_obj.trigger = 'normal' if (layerparams['envModeParam'] if 'envModeParam' in layerparams else 1) else 'oneshot'
+	sp_obj.vol = layerparams['gainParam'] if 'gainParam' in layerparams else 1
+	sp_obj.pan = layerparams['panParam'] if 'panParam' in layerparams else 0
+
 def do_plugin(convproj_obj, wf_plugin, track_obj): 
 	from functions.juce import juce_memoryblock
 
@@ -70,29 +35,61 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
 
 		if vstname in ['Micro Sampler', 'Micro Drum Sampler']:
-			try:
-				chunkdata = juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) if "state" in wf_plugin.params else b''
-				sampleheader, sampledata = sampler_parse(chunkdata)
-				soundlayers = []
-				for wf_smpl_part, wf_smpl_data in sampledata:
-					if wf_smpl_part == 'SOUNDLAYER': soundlayers.append(wf_smpl_data)
-				if len(soundlayers)>1:
-					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
-					track_obj.plugslots.set_synth(pluginid)
-					for soundlayer in soundlayers:
-						sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
-						sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 60
-						sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 60
-						sp_obj = plugin_obj.sampleregion_add(sl_lowNote-60, sl_highNote-60, sl_rootNote-60, None)
-						soundlayer_samplepart(sp_obj, soundlayer)
-				elif len(soundlayers)==1:
-					soundlayer = soundlayers[0]
-					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
-					track_obj.plugslots.set_synth(pluginid)
-					sp_obj = plugin_obj.samplepart_add('sample')
-					soundlayer_samplepart(sp_obj, soundlayer)
-			except:
-				pass
+			chunkdata = juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) if "state" in wf_plugin.params else b''
+			bxml_data = juce_binaryxml.juce_binaryxml_element()
+			bxml_data.read_bytes(chunkdata)
+
+			bxml_data.output_file('sampler_input.xml')
+
+			soundlayers = []
+
+			if bxml_data.children:
+				mainsampdata = bxml_data.children[0]
+				for sampb in mainsampdata.children:
+					if sampb.tag == "SOUNDLAYER":
+						layerparams = {}
+						soundlayer = sampb.get_attrib_native()
+						#print(soundlayer)
+						for inparam in sampb.children:
+							if inparam.tag == "SOUNDPARAMETER":
+								layerparam = inparam.get_attrib_native()
+								if 'id' in layerparam and 'value' in layerparam:
+									layerparams[layerparam['id']] = layerparam['value']
+						soundlayers.append([soundlayer, layerparams])
+
+			if len(soundlayers)>1:
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+				track_obj.plugslots.set_synth(pluginid)
+				layernum = 0
+				for soundlayer, layerparams in soundlayers:
+					endstr = str(layernum)
+					sl_rootNote = soundlayer['rootNote'] if 'rootNote' in soundlayer else 60
+					sl_lowNote = soundlayer['lowNote'] if 'lowNote' in soundlayer else 60
+					sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 60
+					sp_obj = plugin_obj.sampleregion_add(sl_lowNote-60, sl_highNote-60, sl_rootNote-60, None)
+					sp_obj.envs['vol'] = 'vol_'+endstr
+					soundlayer_samplepart(sp_obj, soundlayer, layerparams, False)
+					adsr = [0, 0, 1, 0]
+					if 'attackParam' in layerparams: adsr[0] = layerparams['attackParam']
+					if 'decayParam' in layerparams: adsr[1] = layerparams['decayParam']
+					if 'sustainParam' in layerparams: adsr[2] = layerparams['sustainParam']/100
+					if 'releaseParam' in layerparams: adsr[3] = layerparams['releaseParam']
+					plugin_obj.env_asdr_add('vol_'+endstr, 0, adsr[0], 0, adsr[1], adsr[2], adsr[3], 1)
+					layernum += 1
+
+			elif len(soundlayers)==1:
+				soundlayer, layerparams = soundlayers[0]
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
+				track_obj.plugslots.set_synth(pluginid)
+				sp_obj = plugin_obj.samplepart_add('sample')
+				soundlayer_samplepart(sp_obj, soundlayer, layerparams, True)
+				adsr = [0, 0, 1, 0]
+				if 'attackParam' in layerparams: adsr[0] = layerparams['attackParam']
+				if 'decayParam' in layerparams: adsr[1] = layerparams['decayParam']
+				if 'sustainParam' in layerparams: adsr[2] = layerparams['sustainParam']/100
+				if 'releaseParam' in layerparams: adsr[3] = layerparams['releaseParam']
+				plugin_obj.env_asdr_add('vol', 0, adsr[0], 0, adsr[1], adsr[2], adsr[3], 1)
+
 		else:
 			try:
 				from objects.inst_params import juce_plugin

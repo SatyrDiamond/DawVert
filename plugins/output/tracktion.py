@@ -51,13 +51,64 @@ def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
 		autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
 		wf_plugin.automationcurves.append(autocurve_obj)
 
-def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
+def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_tracktion_edit
 	from objects.inst_params import juce_plugin
+	from objects.binary_fmt import juce_binaryxml
+	from functions.juce import juce_memoryblock
 
 	plugin_found, plugin_obj = convproj_obj.plugin__get(cvpj_fxid)
 	if plugin_found: 
 		fx_on, fx_wet = plugin_obj.fxdata_get()
+
+		if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
+			wf_plugin = proj_tracktion_edit.tracktion_plugin()
+			wf_plugin.plugtype = plugin_obj.type.subtype
+			wf_plugin.presetDirty = 1
+			wf_plugin.enabled = fx_on
+			wf_plugin.params['type'] = 'vst'
+			wf_plugin.params['uniqueId'] = '0'
+			wf_plugin.params['uid'] = '0'
+			wf_plugin.params['filename'] = 'Micro Sampler'
+			wf_plugin.params['name'] = 'Micro Sampler'
+
+			bxml_data = juce_binaryxml.juce_binaryxml_element()
+			bxml_data.tag = 'PROGRAM'
+			bxml_data.set('presetDirty', True)
+
+			bxml_main = bxml_data.add_child('TINYSAMPLER')
+			bxml_main.set('version', 2)
+			bxml_main.set('fxOrder1', "reverb,delay,comp,filter,eq,dist,chorus")
+			bxml_main.set('fxOrder2', "delay,reverb,comp,filter,eq,dist,chorus")
+			bxml_main.set('currentPage', 0)
+
+			sp_obj = plugin_obj.samplepart_get('sample')
+			if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
+				sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
+				sp_obj.convpoints_samples(sampleref_obj)
+				bxml_layer = bxml_main.add_child('SOUNDLAYER')
+				bxml_layer.set('active', True)
+				bxml_layer.set('name', '1')
+				bxml_layer.set('reverse', bool(sp_obj.reverse))
+				bxml_layer.set('sampleDataName', ':'+sampleref_assoc[sp_obj.sampleref])
+				bxml_layer.set('sampleIn', int(sp_obj.start))
+				bxml_layer.set('sampleLoopIn', int(sp_obj.loop_start))
+				bxml_layer.set('sampleOut', int(sp_obj.end))
+				bxml_layer.set('sampleLoopOut', int(sp_obj.loop_end))
+				bxml_layer.set('rootNote', 60)
+				bxml_layer.set('fineTune', 4294967289)
+				bxml_layer.set('fixedPitch', False)
+				bxml_layer.set('pitchShift', False)
+				bxml_layer.set('looped', bool(sp_obj.loop_active))
+				bxml_layer.set('loopMode', 1)
+
+			bxml_data.output_file('sampler_output.xml')
+
+			outbytes = bxml_data.to_bytes()
+			wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+
+			return wf_plugin
+
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			juceobj = juce_plugin.juce_plugin()
 			juceobj.from_cvpj(convproj_obj, plugin_obj)
@@ -111,13 +162,13 @@ def get_plugin(convproj_obj, cvpj_fxid, isinstrument):
 		wf_plugin.presetDirty = 1
 		return wf_plugin
 
-def get_plugins(convproj_obj, wf_plugins, cvpj_fxids):
+def get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, wf_plugins, cvpj_fxids):
 	for cvpj_fxid in cvpj_fxids:
-		wf_plugin = get_plugin(convproj_obj, cvpj_fxid, False)
+		wf_plugin = get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, False)
 		if wf_plugin:
 			wf_plugins.append(wf_plugin)
 
-def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
+def make_group(convproj_obj, sampleref_assoc, sampleref_obj_assoc, groupid, groups_data, counter_id, wf_maintrack):
 	from objects.file_proj import proj_tracktion_edit
 	if groupid not in groups_data:
 		group_obj = convproj_obj.fx__group__get(groupid)
@@ -127,7 +178,7 @@ def make_group(convproj_obj, groupid, groups_data, counter_id, wf_maintrack):
 			wf_maintrack.append(wf_foldertrack)
 			if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
 			if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
-			get_plugins(convproj_obj, wf_foldertrack.plugins, group_obj.plugslots.slots_audio)
+			get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, wf_foldertrack.plugins, group_obj.plugslots.slots_audio)
 			make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
 			make_level_plugin(wf_foldertrack)
 			groups_data[groupid] = wf_foldertrack
@@ -223,7 +274,7 @@ class output_tracktion_edit(plugins.base):
 
 		counter_id = counter.counter(1000, '')
 
-		get_plugins(convproj_obj, project_obj.masterplugins, convproj_obj.track_master.plugslots.slots_audio)
+		get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, project_obj.masterplugins, convproj_obj.track_master.plugslots.slots_audio)
 
 		groups_data = {}
 
@@ -231,9 +282,9 @@ class output_tracktion_edit(plugins.base):
 			wf_tracks = project_obj.tracks
 
 			if insidegroup: 
-				make_group(convproj_obj, groupid, groups_data, counter_id, groups_data[insidegroup].tracks)
+				make_group(convproj_obj, sampleref_assoc, sampleref_obj_assoc, groupid, groups_data, counter_id, groups_data[insidegroup].tracks)
 			else:
-				make_group(convproj_obj, groupid, groups_data, counter_id, wf_tracks)
+				make_group(convproj_obj, sampleref_assoc, sampleref_obj_assoc, groupid, groups_data, counter_id, wf_tracks)
 
 		for trackid, track_obj in convproj_obj.track__iter():
 			wf_tracks = project_obj.tracks
@@ -251,18 +302,18 @@ class output_tracktion_edit(plugins.base):
 			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			if middlenote != 0:
-				wf_plugin = proj_tracktion_edit.tracktion_project()
+				wf_plugin = proj_tracktion_edit.tracktion_plugin()
 				wf_plugin.plugtype = 'midiModifier'
 				wf_plugin.presetDirty = 1
 				wf_plugin.params['semitonesUp'] = -middlenote
 				wf_track.plugins.append(wf_plugin)
 
 			if track_obj.plugslots.synth:
-				wf_inst_plugin = get_plugin(convproj_obj, track_obj.plugslots.synth, track_obj.type in ['instrument', 'hybrid'])
+				wf_inst_plugin = get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, track_obj.plugslots.synth, track_obj.type in ['instrument', 'hybrid'])
 				if wf_inst_plugin:
 					wf_track.plugins.append(wf_inst_plugin)
 
-			get_plugins(convproj_obj, wf_track.plugins, track_obj.plugslots.slots_audio)
+			get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, wf_track.plugins, track_obj.plugslots.slots_audio)
 
 			for notespl_obj in track_obj.placements.pl_notes:
 				wf_midiclip = proj_tracktion_edit.tracktion_midiclip()

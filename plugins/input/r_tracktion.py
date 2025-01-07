@@ -48,8 +48,10 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				for sampb in mainsampdata.children:
 					if sampb.tag == "SOUNDLAYER":
 						layerparams = {}
+
+						#print([(d, k) for d, k in sampb.attrib.items() if d in ['rootNote', 'lowNote', 'highNote']])
+
 						soundlayer = sampb.get_attrib_native()
-						#print(soundlayer)
 						for inparam in sampb.children:
 							if inparam.tag == "SOUNDPARAMETER":
 								layerparam = inparam.get_attrib_native()
@@ -68,6 +70,8 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 					sl_highNote = soundlayer['highNote'] if 'highNote' in soundlayer else 127
 					sp_obj = plugin_obj.sampleregion_add(sl_lowNote-60, sl_highNote-60, sl_rootNote-60, None)
 					sp_obj.envs['vol'] = 'vol_'+endstr
+					if 'name' in soundlayer: sp_obj.visual.name = soundlayer['name']
+					else: sp_obj.visual.name = 'Layer #'+endstr
 					soundlayer_samplepart(sp_obj, soundlayer, layerparams, False)
 					adsr = [0, 0, 1, 0]
 					if 'attackParam' in layerparams: adsr[0] = layerparams['attackParam']

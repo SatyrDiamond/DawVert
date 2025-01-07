@@ -58,21 +58,21 @@ def sampler_param(bxml_obj, key, value):
 
 def soundlayer_samplepart(plugin_obj, bxml_main, lowNote, highNote, rootNote, sp_obj, sampleref_assoc, sampleref_obj_assoc): 
 	if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
-		adsr_obj = plugin_obj.env_asdr_get('vol')
+		adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
 		sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
 		sp_obj.convpoints_samples(sampleref_obj)
 		bxml_layer = bxml_main.add_child('SOUNDLAYER')
 		bxml_layer.set('active', True)
-		bxml_layer.set('name', '1')
+		bxml_layer.set('name', str(sp_obj.visual.name) if sp_obj.visual.name else sp_obj.sampleref)
 		bxml_layer.set('reverse', bool(sp_obj.reverse))
 		bxml_layer.set('sampleDataName', ':'+sampleref_assoc[sp_obj.sampleref])
 		bxml_layer.set('sampleIn', int(sp_obj.start))
 		bxml_layer.set('sampleLoopIn', int(sp_obj.loop_start))
 		bxml_layer.set('sampleOut', int(sp_obj.end))
 		bxml_layer.set('sampleLoopOut', int(sp_obj.loop_end))
-		bxml_layer.set('rootNote', rootNote)
-		bxml_layer.set('lowNote', lowNote)
-		bxml_layer.set('highNote', highNote)
+		bxml_layer.set('rootNote', int(rootNote))
+		bxml_layer.set('lowNote', int(lowNote))
+		bxml_layer.set('highNote', int(highNote))
 		bxml_layer.set('fineTune', 4294967289)
 		bxml_layer.set('fixedPitch', False)
 		bxml_layer.set('pitchShift', False)
@@ -84,6 +84,8 @@ def soundlayer_samplepart(plugin_obj, bxml_main, lowNote, highNote, rootNote, sp
 		sampler_param(bxml_layer, 'releaseParam', float(adsr_obj.release))
 		sampler_param(bxml_layer, 'envModeParam', float(sp_obj.trigger=='normal'))
 		sampler_param(bxml_layer, 'pitchParam', float(sp_obj.pitch))
+
+		#print([(d, k) for d, k in bxml_layer.attrib.items() if d in ['rootNote', 'lowNote', 'highNote']])
 
 def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_tracktion_edit
@@ -266,7 +268,7 @@ class output_tracktion_edit(plugins.base):
 			wave_obj.id2 = '40120000'
 			sampleref_assoc[sampleref_id] = tr_projectid+'/'+tr_waveid
 			sampleref_obj_assoc[sampleref_id] = sampleref_obj
-
+			
 		edit_obj = mainp_obj.objects[tr_editid] = proj_tracktion_project.tracktion_project_object()
 		edit_obj.name = 'Converted Edit'
 		edit_obj.type = 'edit'

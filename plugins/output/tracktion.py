@@ -56,7 +56,7 @@ def sampler_param(bxml_obj, key, value):
 	bxml_param.set('id', key)
 	bxml_param.set('value', value)
 
-def soundlayer_samplepart(plugin_obj, bxml_main, lowNote, highNote, rootNote, sp_obj, sampleref_assoc, sampleref_obj_assoc): 
+def soundlayer_samplepart(plugin_obj, gpitch, bxml_main, lowNote, highNote, rootNote, sp_obj, sampleref_assoc, sampleref_obj_assoc): 
 	if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
 		adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
 		sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
@@ -83,11 +83,11 @@ def soundlayer_samplepart(plugin_obj, bxml_main, lowNote, highNote, rootNote, sp
 		sampler_param(bxml_layer, 'sustainParam', float(adsr_obj.sustain)*100)
 		sampler_param(bxml_layer, 'releaseParam', float(adsr_obj.release))
 		sampler_param(bxml_layer, 'envModeParam', float(sp_obj.trigger=='normal'))
-		sampler_param(bxml_layer, 'pitchParam', float(sp_obj.pitch))
+		sampler_param(bxml_layer, 'pitchParam', float(sp_obj.pitch+gpitch))
 
 		#print([(d, k) for d, k in bxml_layer.attrib.items() if d in ['rootNote', 'lowNote', 'highNote']])
 
-def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
+def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
 	from objects.file_proj import proj_tracktion_edit
 	from objects.inst_params import juce_plugin
 	from objects.binary_fmt import juce_binaryxml
@@ -99,6 +99,8 @@ def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, is
 		fx_on, fx_wet = plugin_obj.fxdata_get()
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', None):
+			gpitch = tparams_obj.get('pitch', 0).value
+
 			wf_plugin = proj_tracktion_edit.tracktion_plugin()
 			wf_plugin.plugtype = plugin_obj.type.subtype
 			wf_plugin.presetDirty = 1
@@ -122,7 +124,27 @@ def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, is
 
 			if plugin_obj.type.subtype == 'single':
 				sp_obj = plugin_obj.samplepart_get('sample')
-				soundlayer_samplepart(plugin_obj, bxml_main, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				soundlayer_samplepart(plugin_obj, gpitch, bxml_main, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				outbytes = bxml_data.to_bytes()
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+				return wf_plugin
+
+			if plugin_obj.type.subtype == 'slicer':
+				sp_obj = plugin_obj.samplepart_get('sample')
+				if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
+					sp_obj.add_slice_endpoints()
+					for n, sample_slice in enumerate(sp_obj.slicer_slices):
+						key = 60+n
+						bxml_layer = bxml_main.add_child('SOUNDLAYER')
+						bxml_layer.set('active', True)
+						bxml_layer.set('name', str(sample_slice.name) if sample_slice.name else 'Slice #'+str(n+1))
+						bxml_layer.set('reverse', bool(sample_slice.reverse))
+						bxml_layer.set('sampleDataName', ':'+sampleref_assoc[sp_obj.sampleref])
+						bxml_layer.set('sampleIn', int(sample_slice.start))
+						bxml_layer.set('sampleOut', int(sample_slice.end))
+						bxml_layer.set('rootNote', key)
+						bxml_layer.set('lowNote', key)
+						bxml_layer.set('highNote', key)
 				outbytes = bxml_data.to_bytes()
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
 				return wf_plugin
@@ -131,7 +153,7 @@ def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, is
 				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					sp_obj = plugin_obj.samplepart_get(samplerefid)
-					soundlayer_samplepart(plugin_obj, bxml_main, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+					soundlayer_samplepart(plugin_obj, gpitch, bxml_main, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
 				outbytes = bxml_data.to_bytes()
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
 				return wf_plugin
@@ -189,9 +211,9 @@ def get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, is
 		wf_plugin.presetDirty = 1
 		return wf_plugin
 
-def get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, wf_plugins, cvpj_fxids):
+def get_plugins(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, wf_plugins, cvpj_fxids):
 	for cvpj_fxid in cvpj_fxids:
-		wf_plugin = get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, False)
+		wf_plugin = get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, False)
 		if wf_plugin:
 			wf_plugins.append(wf_plugin)
 
@@ -205,7 +227,7 @@ def make_group(convproj_obj, sampleref_assoc, sampleref_obj_assoc, groupid, grou
 			wf_maintrack.append(wf_foldertrack)
 			if group_obj.visual.name: wf_foldertrack.name = group_obj.visual.name
 			if group_obj.visual.color: wf_foldertrack.colour ='ff'+group_obj.visual.color.get_hex()
-			get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, wf_foldertrack.plugins, group_obj.plugslots.slots_audio)
+			get_plugins(convproj_obj, group_obj.params, sampleref_assoc, sampleref_obj_assoc, wf_foldertrack.plugins, group_obj.plugslots.slots_audio)
 			make_volpan_plugin(convproj_obj, group_obj, groupid, wf_foldertrack, 'group')
 			make_level_plugin(wf_foldertrack)
 			groups_data[groupid] = wf_foldertrack
@@ -303,7 +325,7 @@ class output_tracktion_edit(plugins.base):
 
 		counter_id = counter.counter(1000, '')
 
-		get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, project_obj.masterplugins, convproj_obj.track_master.plugslots.slots_audio)
+		get_plugins(convproj_obj, convproj_obj.params, sampleref_assoc, sampleref_obj_assoc, project_obj.masterplugins, convproj_obj.track_master.plugslots.slots_audio)
 
 		groups_data = {}
 
@@ -338,11 +360,11 @@ class output_tracktion_edit(plugins.base):
 				wf_track.plugins.append(wf_plugin)
 
 			if track_obj.plugslots.synth:
-				wf_inst_plugin = get_plugin(convproj_obj, sampleref_assoc, sampleref_obj_assoc, track_obj.plugslots.synth, track_obj.type in ['instrument', 'hybrid'])
+				wf_inst_plugin = get_plugin(convproj_obj, track_obj.params, sampleref_assoc, sampleref_obj_assoc, track_obj.plugslots.synth, track_obj.type in ['instrument', 'hybrid'])
 				if wf_inst_plugin:
 					wf_track.plugins.append(wf_inst_plugin)
 
-			get_plugins(convproj_obj, sampleref_assoc, sampleref_obj_assoc, wf_track.plugins, track_obj.plugslots.slots_audio)
+			get_plugins(convproj_obj, track_obj.params, sampleref_assoc, sampleref_obj_assoc, wf_track.plugins, track_obj.plugslots.slots_audio)
 
 			for notespl_obj in track_obj.placements.pl_notes:
 				wf_midiclip = proj_tracktion_edit.tracktion_midiclip()
@@ -374,11 +396,15 @@ class output_tracktion_edit(plugins.base):
 				notespl_obj.notelist.sort()
 				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
 					for t_key in t_keys:
+						notepitch = t_extra['finepitch'] if 'finepitch' in t_extra else 0
 						wf_note = proj_tracktion_edit.tracktion_note()
 						wf_note.key = t_key+60
 						wf_note.pos = t_pos/4
 						wf_note.dur = max(t_dur/4, 0.01)
 						wf_note.vel = int(xtramath.clamp(t_vol*127, 0, 127))
+						if notepitch:
+							nautop = wf_note.auto['PITCHBEND'] = {}
+							nautop[0] = notepitch/100
 						wf_midiclip.sequence.notes.append(wf_note)
 
 				wf_track.midiclips.append(wf_midiclip)

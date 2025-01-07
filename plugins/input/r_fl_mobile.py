@@ -255,9 +255,10 @@ class input_fl_mobile(plugins.base):
 		convproj_obj.metadata.name = project_obj.meta_title
 		convproj_obj.metadata.author = project_obj.meta_artist
 		if project_obj.space_start or project_obj.space_end:
-			convproj_obj.transport.loop_active = True
-			convproj_obj.transport.loop_start = project_obj.space_start
-			convproj_obj.transport.loop_end = project_obj.space_end
+			if project_obj.space_end != project_obj.space_start:
+				convproj_obj.transport.loop_active = True
+				convproj_obj.transport.loop_start = project_obj.space_start
+				convproj_obj.transport.loop_end = project_obj.space_end
 
 		convproj_obj.track_order = [sorttracks[x] for x in sorted(list(sorttracks))]
 

@@ -117,6 +117,14 @@ class cvpj_sample_entry:
 				self.end = self.end * sampleref_obj.dur_samples
 			self.point_value_type = 'samples'
 
+	def add_slice_endpoints(self): 
+		slice_obj = cvpj_sample_slice()
+		for num in range(len(self.slicer_slices)-1):
+			self.slicer_slices[num].end = self.slicer_slices[num+1].start
+		self.slicer_slices[-1].end = self.end
+
+		return slice_obj
+
 	def add_slice(self): 
 		slice_obj = cvpj_sample_slice()
 		self.slicer_slices.append(slice_obj)

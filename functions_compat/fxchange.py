@@ -113,6 +113,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		for trackid, track_obj in convproj_obj.track__iter():
 			fxchannel_obj = track2fxrack(convproj_obj, track_obj, tracknum, '', '', True, ['track',trackid])
 			track_obj.fxrack_channel = tracknum
+			track_obj.placements.add_fxrack_channel(tracknum)
 			tracknum += 1
 
 	elif in_fxtype == 'groupreturn' and out_fxtype == 'rack' and convproj_obj.type in ['r', 'ri', 'rm', 'ms', 'rs']:

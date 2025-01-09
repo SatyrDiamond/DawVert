@@ -9,7 +9,7 @@ import shutil
 from functions import data_values
 from functions import xtramath
 
-class output_midi(plugins.base):
+class output_bandlab(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
 	

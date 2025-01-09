@@ -384,7 +384,7 @@ class input_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate']
+		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.containers.append(['zip', 'project.xml'])

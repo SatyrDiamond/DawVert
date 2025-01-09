@@ -396,7 +396,10 @@ class output_tracktion_edit(plugins.base):
 				notespl_obj.notelist.sort()
 				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
 					for t_key in t_keys:
-						notepitch = t_extra['finepitch'] if 'finepitch' in t_extra else 0
+						notepitch = 0
+						if t_extra:
+							if 'finepitch' in t_extra:
+								notepitch = t_extra['finepitch']
 						wf_note = proj_tracktion_edit.tracktion_note()
 						wf_note.key = t_key+60
 						wf_note.pos = t_pos/4

@@ -78,7 +78,7 @@ class juce_binaryxml_object:
 		if self.type:
 			outs_stream = bytewriter.bytewriter()
 			outs_stream.uint8(self.type)
-			if self.type == 1: outs_stream.uint32(self.data)
+			if self.type == 1: outs_stream.uint32(min(self.data, 2147483647))
 			elif self.type == 4: outs_stream.double(self.data)
 			elif self.type == 5: outs_stream.string_t(self.data)
 			elif self.type == 6: outs_stream.uint64(self.data)

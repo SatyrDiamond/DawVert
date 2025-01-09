@@ -6,12 +6,17 @@ import plugins
 import numpy as np
 
 def do_automation(convproj_obj, trackid, atype, timelineobj):
-	if atype == 'vol':
-		for event in timelineobj:
-			convproj_obj.automation.add_autopoint(['track', trackid, atype], 'float', event.position, event.value/100, 'normal')
-	if atype == 'pan':
-		for event in timelineobj:
-			convproj_obj.automation.add_autopoint(['track', trackid, atype], 'float', event.position, (event.value-50)/50, 'normal')
+	nextinstant = False
+	for event in timelineobj:
+		value = 0
+		if atype == 'vol': value = event.value/100
+		if atype == 'pan': value = (event.value-50)/50
+
+		autopoint_obj = convproj_obj.automation.add_autopoint(['track', trackid, atype], 'float', event.position, value, 'normal' if not nextinstant else 'instant')
+		if nextinstant: nextinstant = False
+		if event.fade == 'Exponential': autopoint_obj.tension = -1
+		if event.fade == 'Logarithmic': autopoint_obj.tension = 1
+		if event.fade == 'Edge': nextinstant = True
 
 class input_zmaestro(plugins.base):
 	def is_dawvert_plugin(self):
@@ -89,6 +94,16 @@ class input_zmaestro(plugins.base):
 				track_obj.params.add('vol', zm_track.volume/100, 'float')
 				track_obj.params.add('pan', (zm_track.pan-50)/50, 'float')
 				track_obj.visual.name = zm_track.name
+
+				for n, fx in enumerate(zm_track.fx):
+					fxid = cvpj_trackid+'_fx_'+str(n)
+					plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'z_maestro', fx.type)
+					plugin_obj.role = 'fx'
+					for key, val in fx.params.items():
+						if val.replace('.', '').isnumeric(): plugin_obj.params.add(key, float(val), 'float')
+						elif val in ['true', 'false']: plugin_obj.params.add(key, val=='true', 'bool')
+						else: plugin_obj.datavals.add(key, val)
+					track_obj.plugin_autoplace(plugin_obj, fxid)
 
 				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline)
 				do_automation(convproj_obj, cvpj_trackid, 'pan', zm_track.pantimeline)

@@ -89,8 +89,16 @@ class dawproject_device:
 				band_obj.read(x_part)
 				self.bands.append(band_obj)
 			else:
-				if 'unit' in x_part.attrib:
+				isbool = False
+				if 'value' in x_part.attrib and 'unit' not in x_part.attrib:
+					isbool = x_part.attrib['value'] in ['true', 'false']
+
+				if not isbool:
 					param_obj = param.dawproject_param_numeric(x_part.tag)
+					param_obj.read(x_part)
+					self.params[x_part.tag] = param_obj
+				else:
+					param_obj = param.dawproject_param_bool(x_part.tag)
 					param_obj.read(x_part)
 					self.params[x_part.tag] = param_obj
 

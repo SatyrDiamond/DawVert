@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from objects import globalstore
 from functions import data_values
+from functions import note_data
 
 import logging
 logger_output = logging.getLogger('output')
@@ -18,6 +19,7 @@ from objects.file_proj._dawproject import clips
 from objects.file_proj._dawproject import points
 from objects.file_proj._dawproject import track
 from objects.file_proj._dawproject import device
+from objects.file_proj._dawproject import param
 
 def do_visual(visual_obj, dp_track):
 	if visual_obj.name: dp_track.name = visual_obj.name
@@ -121,9 +123,10 @@ def make_send(send_obj, returnid, convproj_obj, dptrack_obj, lane_obj):
 
 def make_sends(master_returns, cvpj_sendsdata, dp_track, convproj_obj, lane_obj):
 	for returnid, x in master_returns.items():
-		send_obj = cvpj_sendsdata[returnid]
-		dp_send = make_send(send_obj, returnid, convproj_obj, dp_track, lane_obj)
-		dp_track.channel.sends.append(dp_send)
+		if returnid in cvpj_sendsdata:
+			send_obj = cvpj_sendsdata[returnid]
+			dp_send = make_send(send_obj, returnid, convproj_obj, dp_track, lane_obj)
+			dp_track.channel.sends.append(dp_send)
 
 def do_auto_mpe(autopoints_obj, mpetype, dppoints_obj):
 	if mpetype == 'pitch': 
@@ -344,6 +347,27 @@ def do_extparams(param_obj, pluginid, convproj_obj, lane_obj, dp_device):
 		do_autopoints(autodata, dppoints_obj)
 		lane_obj.points.append(dppoints_obj)
 
+def add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, unit, name, dpname, p_min, p_max):
+	if name in plugin_obj.params.list():
+		dp_param_id = 'plugin__'+pluginid+'__param__'+name
+	
+		param_obj = plugin_obj.params.get(name, 0)
+	
+		if param_obj.type in ["int", "float"]: 
+			dp_param = param.dawproject_param_numeric(dpname)
+			dp_param.max = p_max
+			dp_param.min = p_min
+		if param_obj.type in ["bool"]: 
+			dp_param = param.dawproject_param_bool(dpname)
+		dp_param.used = True
+		dp_param.unit = unit
+		dp_param.value = param_obj.value
+		dp_param.id = dp_param_id
+		dp_param.name = dpname
+		dp_device.params[dpname] = dp_param
+	
+		from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, name], 'float', dp_param_id, None)
+
 def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	from functions_plugin_ext import plugin_vst2
 	from functions_plugin_ext import plugin_vst3
@@ -352,6 +376,88 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 	if plugin_found:
 		dp_device = None
+
+		if plugin_obj.check_match('universal', 'compressor', None):
+			dp_device = device.dawproject_device('Compressor')
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'attack', 'Attack', 0.000204, 0)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, '', 'automakeup', 'AutoMakeup', 0, 1)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'pregain', 'InputGain', -20, 20)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'gain', 'OutputGain', -20, 20)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'percent', 'ratio', 'Ratio', 0, 100)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.038905, 1.412538)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -60, 0)
+
+		if plugin_obj.check_match('universal', 'limiter', None):
+			dp_device = device.dawproject_device('Limiter')
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'pregain', 'InputGain', -36, 36)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.01, 10)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -36, 0)
+
+		if plugin_obj.check_match('universal', 'noise_gate', None):
+			dp_device = device.dawproject_device('NoiseGate')
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'attack', 'Attack', 0.001, 0.1)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'range', 'Range', 120, 0)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.001, 1)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -1000000, 0)
+
+		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
+		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
+		if is_eq_bands or is_eq_8limited:
+			if is_eq_8limited: plugin_obj.eq.from_8limited(pluginid)
+			dp_device = device.dawproject_device('Equalizer')
+			dp_device.deviceID = 'e4815188-ba6f-4d14-bcfc-2dcb8f778ccb'
+			dp_device.deviceName = plugin_obj.external_info.name
+			dp_device.name = 'EQ+'
+			dp_device.deviceRole = 'audioFX'
+
+			for filter_id, filter_obj in plugin_obj.eq:
+				band = device.dawproject_band()
+
+				cvpjbandtype = filter_obj.type.type
+
+				if cvpjbandtype == 'notch': band.type = 'notch'
+				if cvpjbandtype == 'high_shelf': band.type = 'highShelf'
+				if cvpjbandtype == 'low_pass': band.type = 'lowPass'
+				if cvpjbandtype == 'peak': band.type = 'bell'
+				if cvpjbandtype == 'low_shelf': band.type = 'lowShelf'
+				if cvpjbandtype == 'high_pass': band.type = 'highPass'
+
+				band.enabled.value = 'true' if filter_obj.on else 'false'
+				band.enabled.used = True
+				band.enabled.id = 'nfilter__'+filter_id+'__enabled'
+
+				band.freq.value = note_data.freq_to_note(filter_obj.freq)+72
+				band.freq.used = True
+				band.freq.id = 'nfilter__'+pluginid+'__'+filter_id+'__freq'
+				band.freq.unit = 'semitones'
+				band.freq.max = 135.076232
+				band.freq.min = 15.486821
+
+				band.gain.value = filter_obj.gain
+				band.gain.used = True
+				band.gain.id = 'nfilter__'+pluginid+'__'+filter_id+'__gain'
+				band.gain.unit = 'decibel'
+				band.gain.max = 30.000000
+				band.gain.min = -30.000000
+
+				band.q.value = filter_obj.q
+				band.q.used = True
+				band.q.id = 'nfilter__'+pluginid+'__'+filter_id+'__q'
+				band.q.unit = 'linear'
+				band.q.max = 40.003685
+				band.q.min = 0.024998
+
+				freqpath = ['n_filter', pluginid, filter_id, 'freq']
+				convproj_obj.automation.calc(freqpath, 'freq2note', 0, 0, 0, 0)
+				convproj_obj.automation.calc(freqpath, 'add', 72, 0, 0, 0)
+
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'on'], 'bool', band.enabled.id, None)
+				from_cvpj_auto(convproj_obj, lane_obj.points, freqpath, 'float', band.freq.id, None)
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'gain'], 'float', band.gain.id, None)
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'q'], 'float', band.q.id, None)
+
+				dp_device.bands.append(band)
+
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			fourid = plugin_obj.external_info.fourid
 			if fourid:
@@ -508,6 +614,7 @@ class output_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
+		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate']
 	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_dawproject

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.exceptions import ProjectFileParserException
+from functions import note_data
 import plugins
 import zipfile
 import os
@@ -29,7 +30,7 @@ def do_param(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i
 		outval = (float(outval)+i_addmul[0])*i_addmul[1] if i_addmul != None else float(outval)
 		if i_type == 'bool': outval = bool(outval)
 		if i_type == 'int': outval = int(outval)
-		paramset.add(cvpj_paramid, outval, i_type)
+		if paramset is not None: paramset.add(cvpj_paramid, outval, i_type)
 
 def do_visual(track_obj, dp_track):
 	if dp_track.name: track_obj.visual.name = dp_track.name
@@ -67,6 +68,64 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 
 	for device in dp_devices:
 		plugin_obj = None
+
+		#print(device.plugintype, device.params)
+
+		if device.plugintype == 'Equalizer':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'eq', 'bands')
+
+			for band in device.bands:
+				filter_obj, filter_id = plugin_obj.eq_add()
+				filter_obj.on = band.enabled.value=='true'
+				filter_obj.freq = note_data.note_to_freq(band.freq.value-72)
+				filter_obj.gain = band.gain.value
+				filter_obj.q = band.q.value
+
+				if band.type == 'notch': filter_obj.type.set('notch', None)
+				if band.type == 'highShelf': filter_obj.type.set('high_shelf', None)
+				if band.type == 'lowPass': filter_obj.type.set('low_pass', None)
+				if band.type == 'bell': filter_obj.type.set('peak', None)
+				if band.type == 'lowShelf': filter_obj.type.set('low_shelf', None)
+				if band.type == 'highPass': filter_obj.type.set('high_pass', None)
+
+				autoid_assoc.define(str(band.enabled.id), ['n_filter', device.id, filter_id, 'on'], 'bool', None)
+				autoid_assoc.define(str(band.freq.id), ['n_filter', device.id, filter_id, 'freq'], 'float', None)
+				autoid_assoc.define(str(band.gain.id), ['n_filter', device.id, filter_id, 'gain'], 'float', None)
+				autoid_assoc.define(str(band.q.id), ['n_filter', device.id, filter_id, 'q'], 'float', None)
+
+				freqpath = ['n_filter', device.id, filter_id, 'freq']
+				convproj_obj.automation.calc(freqpath, 'add', -72, 0, 0, 0)
+				convproj_obj.automation.calc(freqpath, 'note2freq', 0, 0, 0, 0)
+
+		if device.plugintype == 'Compressor':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'compressor', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
+			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', device.id, 'attack'])
+			if 'AutoMakeup' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['AutoMakeup'], 'automakeup', None, 'bool', ['plugin', device.id, 'automakeup'])
+			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', device.id, 'pregain'])
+			if 'OutputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['OutputGain'], 'gain', None, 'float', ['plugin', device.id, 'gain'])
+			if 'Ratio' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Ratio'], 'ratio', None, 'float', ['plugin', device.id, 'ratio'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', device.id, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', device.id, 'threshold'])
+
+		if device.plugintype == 'Limiter':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'limiter', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
+			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', device.id, 'pregain'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', device.id, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', device.id, 'threshold'])
+
+		if device.plugintype == 'NoiseGate':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'noise_gate', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
+			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', device.id, 'attack'])
+			if 'Range' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Range'], 'range', None, 'float', ['plugin', device.id, 'range'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', device.id, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', device.id, 'threshold'])
 
 		if device.plugintype == 'Vst3Plugin':
 			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'vst3', None)
@@ -325,6 +384,7 @@ class input_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
+		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate']
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.containers.append(['zip', 'project.xml'])
@@ -411,6 +471,8 @@ class input_dawproject(plugins.base):
 				timemarker_obj.position = marker.time
 
 		autoid_assoc.output(convproj_obj)
+
+		convproj_obj.automation.attempt_after()
 
 		dp_obj = project_obj.metadata
 		meta_obj = convproj_obj.metadata

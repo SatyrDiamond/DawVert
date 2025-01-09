@@ -321,13 +321,12 @@ class flp_autopoints:
 		_unk3 = event_bio.uint8() # 768
 		_unk4 = event_bio.uint32() # 768
 		numpoints = event_bio.uint32() # 0
-		self.points = [flp_autopoint(event_bio) for x in range(numpoints)]
+		self.points = [flp_autopoint(event_bio) for x in range(numpoints+1)]
 
 	def __iter__(self):
 		tensions = [x.tension for x in self.points[1:]]
 		for n, x in enumerate(tensions):
 			yield self.points[n], x
-
 
 
 class flp_remotecontrol:

@@ -84,10 +84,16 @@ sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '
 
 def make_auto(autopoints_obj, valtype, add, mul):
 	autoarray = np.zeros(len(autopoints_obj), dtype=sb_auto_dtype)
-	autoarray['unk1'] = 0.99
+	autoarray['unk1'] = 1
 	autoarray['unk2'] = 1
+	autopoints_obj.remove_instant()
+	autopoints_obj.sort()
 	for n, a in enumerate(autopoints_obj):
+		autopos = int(max(a.pos, 0))
+
 		autoarray[n]['pos'] = int(max(a.pos, 0))
+		autoarray[n]['unk1'] = pow(10, -a.tension)
+
 		if valtype == 'vol':
 			autoarray[n]['val'] = calc_vol(a.value)
 		else:
@@ -114,9 +120,9 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 				block.timeBaseMode = 0
 				block.position = time_obj.position
 				block.positionStart = 0
-				block.positionEnd = time_obj.duration
+				block.positionEnd = time_obj.duration+1
 				block.loopOffset = 0
-				block.framesCount = time_obj.duration
+				block.framesCount = time_obj.duration+1
 				block.loopEnabled = 0
 				block.muted = 0
 				block.version = 1

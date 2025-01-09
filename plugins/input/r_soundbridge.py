@@ -341,7 +341,7 @@ def do_markers(convproj_obj, sb_markers):
 			except:
 				pass
 
-class input_cvpj_f(plugins.base):
+class input_soundbridge(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
 	

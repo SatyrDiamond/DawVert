@@ -614,7 +614,7 @@ class output_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate']
+		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']
 	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_dawproject

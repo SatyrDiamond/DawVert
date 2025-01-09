@@ -25,6 +25,9 @@ class input_kristal(plugins.base):
 		in_dict['projtype'] = 'r'
 		in_dict['audio_nested'] = True
 
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'Crys'])
+
 	def do_audiopart(self, convproj_obj, placement_obj, part, minpos):
 		placement_obj.time.set_posdur(part.position-minpos, part.duration)
 		placement_obj.time.set_offset(part.offset)
@@ -32,7 +35,6 @@ class input_kristal(plugins.base):
 		placement_obj.visual.color.set_int(part.color[0:3])
 		placement_obj.fade_in.set_dur(part.fade_in/44100, 'seconds')
 		placement_obj.fade_out.set_dur(part.fade_out/44100, 'seconds')
-		#placement_obj.fade_out.set_dur(part.fade_out/44100, 'seconds')
 
 		sp_obj = placement_obj.sample
 		sp_obj.vol = part.volume

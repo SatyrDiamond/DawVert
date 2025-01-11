@@ -1,14 +1,69 @@
 {
-    "clips": {
-        "colorset": {
-            "main": [[0.37, 0.64, 0.32],
-[0.69, 0.33, 0.64],
-[0.32, 0.32, 0.68],
-[0.33, 0.69, 0.64],
-[0.58, 0.69, 0.33],
-[0.53, 0.33, 0.69],
-[0.69, 0.45, 0.33],
-[0.68, 0.32, 0.36]]
+    "clips":
+    {
+        "colorset":
+        {
+            "main":
+            [
+                [
+                    0.37,
+                    0.64,
+                    0.32
+                ],
+                [
+                    0.69,
+                    0.33,
+                    0.64
+                ],
+                [
+                    0.32,
+                    0.32,
+                    0.68
+                ],
+                [
+                    0.33,
+                    0.69,
+                    0.64
+                ],
+                [
+                    0.58,
+                    0.69,
+                    0.33
+                ],
+                [
+                    0.53,
+                    0.33,
+                    0.69
+                ],
+                [
+                    0.69,
+                    0.45,
+                    0.33
+                ],
+                [
+                    0.68,
+                    0.32,
+                    0.36
+                ]
+            ]
+        }
+    },
+    "plugin": {
+        "objects": {
+            "TCE-1": {
+                "params": {
+                    "RMS": {"def": 1,"max": 1,"min": 0,"name": "RMS","type": "float"},
+                    "Attack": {"def": 0.0001,"max": 1,"min": 0.0001,"name": "Attack","type": "float"},
+                    "Release": {"def": 0.01,"max": 1,"min": 0,"name": "Release","type": "float"},
+                    "Threshold": {"def": -10.5,"max": 9,"min": -30,"name": "Threshold","type": "float"},
+                    "Ratio": {"def": 0.5,"max": 1,"min": 0,"name": "Ratio","type": "float"},
+                    "OutputGain": {"def": 4.25,"max": 24,"min": 0,"name": "OutputGain","type": "float"}
+                },
+                "visual": {
+                    "color": [0.16, 0.51, 0.62],
+                    "name": "TCE-1 Compressor"
+                }
+            }
         }
     }
 }

@@ -1,121 +1,152 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
+import xml.etree.ElementTree as ET
 import struct
 import varint
-import json
 import traceback
 
 class DataDefException(Exception):
     pass
 
-class datadef_global:
-	output = []
-	structnames = []
-	leftoverbytes = b''
-
-def string_fix(inputtxt):
-	return inputtxt.split(b'\x00')[0].decode().translate(dict.fromkeys(range(32)))
+PRINTHEX = False
+DEBUGPRINT = False
 
 class datadef_part:
-	__slots__ = ['vartype','inpart','p_num','p_txt']
-	def __init__(self, textin):
+	__slots__ = ['inparts', 'part_size', 'vartype', 'name', 'size_source', 'size_len', 'struct_name', 'type']
+
+	def __init__(self, xml_data):
+		self.inparts = []
+		self.part_size = None
 		self.vartype = None
-		self.inpart = None
-		self.p_num = 0
-		self.p_txt = ''
+		self.name = None
+		self.size_source = 0
+		self.size_len = 1
+		self.struct_name = None
+		self.type = None
 
-		if textin != None:
-			cut_part = textin[0].split('.')
-			if len(cut_part)>0: self.vartype = cut_part[0]
+		if xml_data is not None:
+			self.type = xml_data.tag
+			attrib = xml_data.attrib
+			if 'type' in attrib: self.vartype = attrib['type']
+			else: raise DataDefException('part has no type')
+			if 'name' in attrib: self.name = attrib['name']
+			if 'struct_name' in attrib: self.struct_name = attrib['struct_name']
+			if 'size' in attrib: self.size_len = int(attrib['size'])
+			if 'size_source' in attrib: 
+				size_source = attrib['size_source']
+				if size_source == 'part': self.size_source = 1
+				if size_source == 'lengthval': self.size_source = 2
 
-			if self.vartype in ['skip_n','string','dstring','list','raw']: 
-				if len(cut_part)>1: self.p_num = int(cut_part[1])
-				else:
-					raise DataDefException(self.vartype+' requires 2')
+			for part in xml_data:
+				if part.tag in ['part', 'length']:
+					self.inparts.append(datadef_part(part))
+				if part.tag == 'size': self.part_size = datadef_part(part)
 
+	def decode_get_size(self, byr_stream, global_vals):
+		if self.size_source == 0: return self.size_len
+		if self.size_source == 1: 
+			if self.part_size:
+				return self.part_size.decode(byr_stream, global_vals)
+			else:
+				raise DataDefException('part size not found: '+str(self.name))
+		if self.size_source == 2: return global_vals.lengths[self.name]
 
-			if self.vartype in ['struct', 'getvar']: self.p_txt = cut_part[1]
+	def decode(self, byr_stream, global_vals):
 
-			if len(textin)>1: self.inpart = datadef_part(textin[1:])
+		outval = None
 
-	def decode(self, byr_stream, d_structs, d_vars, inlength):
-		p_num = self.p_num
+		if DEBUGPRINT: remain = byr_stream.remaining()
 
-		if self.vartype == 'skip': byr_stream.skip(1)
-		elif self.vartype == 'skip_n': byr_stream.skip(p_num)
+		if self.vartype == 'skip': byr_stream.skip(self.size_len)
 
 		elif self.vartype == 'struct': 
-			if self.p_txt in d_structs: 
-				if self.p_txt in datadef_global.structnames: raise DataDefException('recursion detected: '+self.p_txt)
-				return d_structs[self.p_txt].decode(byr_stream, d_structs, d_vars)
-			else: raise DataDefException('struct not found: '+self.p_txt)
+			d_structs = global_vals.structs
+			if self.struct_name in d_structs: 
+				if self.struct_name in global_vals.using_structs: raise DataDefException('recursion detected: '+self.struct_name)
+				outval = d_structs[self.struct_name].decode(byr_stream, global_vals, self.struct_name)
+			else: raise DataDefException('struct not found: '+self.struct_name)
 
-		elif self.vartype == 'getvar':
-			if self.p_txt in d_vars: return d_vars[self.p_txt]
-			else: raise DataDefException('var not found: '+self.p_txt)
+		elif self.vartype == 'byte': outval = byr_stream.uint8()
+		elif self.vartype == 's_byte': outval = byr_stream.int8()
 
-		elif self.vartype == 'byte': return byr_stream.uint8()
-		elif self.vartype == 's_byte': return byr_stream.int8()
+		elif self.vartype == 'short': outval = byr_stream.uint16()
+		elif self.vartype == 'short_b': outval = byr_stream.uint16_b()
+		elif self.vartype == 's_short': outval = byr_stream.int16()
+		elif self.vartype == 's_short_b': outval = byr_stream.int16_b()
 
-		elif self.vartype == 'short': return byr_stream.uint16()
-		elif self.vartype == 'short_b': return byr_stream.uint16_b()
-		elif self.vartype == 's_short': return byr_stream.int16()
-		elif self.vartype == 's_short_b': return byr_stream.int16_b()
+		elif self.vartype == 'int': outval = byr_stream.uint32()
+		elif self.vartype == 'int_b': outval = byr_stream.uint32_b()
+		elif self.vartype == 's_int': outval = byr_stream.int32()
+		elif self.vartype == 's_int_b': outval = byr_stream.int32_b()
 
-		elif self.vartype == 'int': return byr_stream.uint32()
-		elif self.vartype == 'int_b': return byr_stream.uint32_b()
-		elif self.vartype == 's_int': return byr_stream.int32()
-		elif self.vartype == 's_int_b': return byr_stream.int32_b()
+		elif self.vartype == 'float': outval = byr_stream.float()
+		elif self.vartype == 'float_b': outval = byr_stream.float_b()
+		elif self.vartype == 'double': outval = byr_stream.double()
+		elif self.vartype == 'double_b': outval = byr_stream.double_b()
 
-		elif self.vartype == 'float': return byr_stream.float()
-		elif self.vartype == 'float_b': return byr_stream.float_b()
-		elif self.vartype == 'double': return byr_stream.double()
-		elif self.vartype == 'double_b': return byr_stream.double_b()
+		elif self.vartype == 'varint': outval = byr_stream.varint()
 
-		elif self.vartype == 'varint': return byr_stream.varint()
+		elif self.vartype == 'rest': outval = byr_stream.rest()
+		elif self.vartype == 'raw': outval = byr_stream.raw(self.decode_get_size(byr_stream, global_vals))
+		elif self.vartype == 'string': outval = byr_stream.string(self.decode_get_size(byr_stream, global_vals))
+		elif self.vartype == 'dstring': outval = byr_stream.string16(self.decode_get_size(byr_stream, global_vals))
 
-		elif self.vartype == 'rest': return byr_stream.rest()
-		elif self.vartype == 'raw': return byr_stream.raw(p_num)
-		elif self.vartype == 'string': return byr_stream.string(p_num)
-		elif self.vartype == 'dstring': return byr_stream.string16(p_num)
-
-		elif self.vartype == 'raw_part': return byr_stream.raw(self.inpart.decode(byr_stream, d_structs, d_vars, None))
-		elif self.vartype == 'string_part': return byr_stream.string(self.inpart.decode(byr_stream, d_structs, d_vars, None))
-		elif self.vartype == 'dstring_part': return byr_stream.string16(self.inpart.decode(byr_stream, d_structs, d_vars, None))
-
-		elif self.vartype == 'string_t': return byr_stream.string_t()
+		elif self.vartype == 'string_t': outval = byr_stream.string_t()
 
 		elif self.vartype == 'list':
-			if inlength: p_num = inlength
-			if not self.inpart: DataDefException('list requires a part')
-			elif not self.inpart.vartype: DataDefException('list requires a part')
-			elif self.inpart.vartype == 'byte': return byr_stream.l_uint8(p_num)
-			elif self.inpart.vartype == 's_byte': return byr_stream.l_int8(p_num)
-			elif self.inpart.vartype == 'short': return byr_stream.l_uint16(p_num)
-			elif self.inpart.vartype == 'short_b': return byr_stream.l_uint16_b(p_num)
-			elif self.inpart.vartype == 's_short': return byr_stream.l_int16(p_num)
-			elif self.inpart.vartype == 's_short_b': return byr_stream.l_int16_b(p_num)
-			elif self.inpart.vartype == 'int': return byr_stream.l_uint32(p_num)
-			elif self.inpart.vartype == 'int_b': return byr_stream.l_uint32_b(p_num)
-			elif self.inpart.vartype == 's_int': return byr_stream.l_int32(p_num)
-			elif self.inpart.vartype == 's_int_b': return byr_stream.l_int32_b(p_num)
-			elif self.inpart.vartype == 'float': return byr_stream.l_float(p_num)
-			elif self.inpart.vartype == 'float_b': return byr_stream.l_float_b(p_num)
-			elif self.inpart.vartype == 'double': return byr_stream.l_double(p_num)
-			elif self.inpart.vartype == 'double_b': return byr_stream.l_double_b(p_num)
-			else: return [self.inpart.decode(byr_stream, d_structs, d_vars, None) for _ in range(p_num)]
-
-
+			p_num = self.decode_get_size(byr_stream, global_vals)
+			if not self.inparts: DataDefException('list requires a part')
+			if len(self.inparts)==1:
+				firstpart = self.inparts[0]
+				if firstpart.vartype == 'byte': return byr_stream.l_uint8(p_num)
+				elif firstpart.vartype == 's_byte': return byr_stream.l_int8(p_num)
+				elif firstpart.vartype == 'short': return byr_stream.l_uint16(p_num)
+				elif firstpart.vartype == 'short_b': return byr_stream.l_uint16_b(p_num)
+				elif firstpart.vartype == 's_short': return byr_stream.l_int16(p_num)
+				elif firstpart.vartype == 's_short_b': return byr_stream.l_int16_b(p_num)
+				elif firstpart.vartype == 'int': return byr_stream.l_uint32(p_num)
+				elif firstpart.vartype == 'int_b': return byr_stream.l_uint32_b(p_num)
+				elif firstpart.vartype == 's_int': return byr_stream.l_int32(p_num)
+				elif firstpart.vartype == 's_int_b': return byr_stream.l_int32_b(p_num)
+				elif firstpart.vartype == 'float': return byr_stream.l_float(p_num)
+				elif firstpart.vartype == 'float_b': return byr_stream.l_float_b(p_num)
+				elif firstpart.vartype == 'double': return byr_stream.l_double(p_num)
+				elif firstpart.vartype == 'double_b': return byr_stream.l_double_b(p_num)
+				else: outval = [firstpart.decode(byr_stream, global_vals) for _ in range(p_num)]
 
 		else: 
 			raise DataDefException('unknown vartype: '+str(self.vartype))
 
+		if DEBUGPRINT: print(self.vartype, '|', self.name, '|', outval, '|', remain)
 
-	def encode(self, value, byw_stream, d_structs, p_name):
+		return outval
+
+	def encode(self, dictdata, byw_stream, d_structs, is_size):
+		value = dictdata[self.name] if self.name in dictdata else None
+		if is_size and value is not None: value = len(value)
+
+		if self.size_source == 0: 
+			lenv = self.size_len
+		if self.size_source == 1: 
+			lenv = len(value)
+			part_size = self.part_size
+			if part_size:
+				if part_size.vartype == 'byte': byw_stream.uint8(lenv)
+				elif part_size.vartype == 'short': byw_stream.uint16(lenv)
+				elif part_size.vartype == 'short_b': byw_stream.uint16_b(lenv)
+				elif part_size.vartype == 'int': byw_stream.uint32(lenv)
+				elif part_size.vartype == 'int_b': byw_stream.uint32_b(lenv)
+				elif part_size.vartype == 'varint': byw_stream.varint(lenv)
+			else:
+				raise DataDefException('part size not found: '+str(self.name))
+		if self.size_source == 2: 
+			lenv = len(value)
+
+		if DEBUGPRINT: print(self.vartype, '|', self.name, '|', value)
+
 		if self.vartype == 'skip': byw_stream.raw(b'\0', 1)
 		elif self.vartype == 'skip_n': byw_stream.raw(b'\0'*self.p_num)
 
@@ -142,131 +173,111 @@ class datadef_part:
 
 		elif self.vartype == 'varint': byw_stream.varint(int(value) if value != None else 0)
 
-		elif self.vartype == 'raw': byw_stream.raw_l(value, self.p_num)
-		elif self.vartype == 'string': byw_stream.string(value, self.p_num)
-		elif self.vartype == 'dstring': byw_stream.string16(value, self.p_num)
-
 		elif self.vartype == 'string_t': 
 			outstr = value+'\x00'
 			return byw_stream.string(outstr, len(outstr))
 
-		elif self.vartype == 'raw_part':
-			self.inpart.encode(len(value), byw_stream, d_structs, p_name)
-			return byw_stream.raw_l(value, len(value))
-
-		elif self.vartype == 'string_part':
-			self.inpart.encode(len(value), byw_stream, d_structs, p_name)
-			return byw_stream.string(value, len(value))
-
-		elif self.vartype == 'dstring_part':
-			self.inpart.encode(len(value), byw_stream, d_structs, p_name)
-			return byw_stream.string16(value, len(value))
+		elif self.vartype == 'raw': 
+			byw_stream.raw_l(value, lenv)
+		elif self.vartype == 'string': 
+			byw_stream.string(value, lenv)
+		elif self.vartype == 'dstring': 
+			byw_stream.string16(value, lenv)
 
 		elif self.vartype == 'list': 
-			if self.inpart.vartype == 'byte': byw_stream.l_uint8(value, self.p_num)
-			elif self.inpart.vartype == 's_byte': byw_stream.l_int8(value, self.p_num)
-			elif self.inpart.vartype == 'short': byw_stream.l_uint16(value, self.p_num)
-			elif self.inpart.vartype == 'short_b': byw_stream.l_uint16_b(value, self.p_num)
-			elif self.inpart.vartype == 's_short': byw_stream.l_int16(value, self.p_num)
-			elif self.inpart.vartype == 's_short_b': byw_stream.l_int16_b(value, self.p_num)
-			elif self.inpart.vartype == 'int': byw_stream.l_uint32(value, self.p_num)
-			elif self.inpart.vartype == 'int_b': byw_stream.l_uint32_b(value, self.p_num)
-			elif self.inpart.vartype == 's_int': byw_stream.l_int32(value, self.p_num)
-			elif self.inpart.vartype == 's_int_b': byw_stream.l_int32_b(value, self.p_num)
-			elif self.inpart.vartype == 'float': byw_stream.l_float(value, self.p_num)
-			elif self.inpart.vartype == 'float_b': byw_stream.l_float_b(value, self.p_num)
-			elif self.inpart.vartype == 'double': byw_stream.l_double(value, self.p_num)
-			elif self.inpart.vartype == 'double_b': byw_stream.l_double_b(value, self.p_num)
-			else: return [self.inpart.encode(v, byw_stream, d_structs, p_name) for v in value]
+			if self.inpart.vartype == 'byte': byw_stream.l_uint8(value, lenv)
+			elif self.inpart.vartype == 's_byte': byw_stream.l_int8(value, lenv)
+			elif self.inpart.vartype == 'short': byw_stream.l_uint16(value, lenv)
+			elif self.inpart.vartype == 'short_b': byw_stream.l_uint16_b(value, lenv)
+			elif self.inpart.vartype == 's_short': byw_stream.l_int16(value, lenv)
+			elif self.inpart.vartype == 's_short_b': byw_stream.l_int16_b(value, lenv)
+			elif self.inpart.vartype == 'int': byw_stream.l_uint32(value, lenv)
+			elif self.inpart.vartype == 'int_b': byw_stream.l_uint32_b(value, lenv)
+			elif self.inpart.vartype == 's_int': byw_stream.l_int32(value, lenv)
+			elif self.inpart.vartype == 's_int_b': byw_stream.l_int32_b(value, lenv)
+			elif self.inpart.vartype == 'float': byw_stream.l_float(value, lenv)
+			elif self.inpart.vartype == 'float_b': byw_stream.l_float_b(value, lenv)
+			elif self.inpart.vartype == 'double': byw_stream.l_double(value, lenv)
+			elif self.inpart.vartype == 'double_b': byw_stream.l_double_b(value, lenv)
+			else: return [self.inpart.encode(v, byw_stream, d_structs, False) for v in value]
 
 		else: print('unknown vartype:',self.vartype)
 
-
-
-
-
-
 class datadef_struct:
-	def __init__(self, name):
+	__slots__ = ['parts']
+
+	def __init__(self, xml_data):
 		self.parts = []
-		self.name = name
+		if xml_data is not None:
+			for part in xml_data:
+				if part.tag in ['part', 'length']:
+					self.parts.append(datadef_part(part))
 
-	def decode(self, byr_stream, d_structs, d_vars, **kwargs):
-		if d_vars == None: d_vars = {}
+	def decode(self, byr_stream, global_vals, name):
 		output = {}
-		lengths = {}
 
-		datadef_global.structnames.append(self.name)
-		for p_type, p_obj, p_name in self.parts:
-			try:
-				filepos = byr_stream.tell()
-				value = p_obj.decode(byr_stream, d_structs, d_vars, lengths[p_name] if p_name in lengths else None)
-				if p_name and p_type == 'part': output[p_name] = value
-				if p_name and p_type == 'length': lengths[p_name] = value
-				datadef_global.output.append([str(filepos), datadef_global.structnames[-1], p_name, p_obj.vartype, str(value)])
-			except:
- 				pass
+		if DEBUGPRINT: print('-- IN')
+		global_vals.using_structs.append(name)
+		for part in self.parts:
+			filepos = byr_stream.tell()
+			value = part.decode(byr_stream, global_vals)
+			if part.name and part.type == 'part': 
+				output[part.name] = value
+			if part.name and part.type == 'length': 
+				global_vals.lengths[part.name] = value
+			global_vals.output.append([str(filepos), global_vals.using_structs[-1], part.name, part.vartype, str(value)])
 
-		datadef_global.structnames.pop()
+		global_vals.using_structs.pop()
 
 		return output
 
 	def encode(self, in_data, byw_stream, d_structs):
-
+		if DEBUGPRINT: print('-- OUT', in_data)
 		lengths = {}
 
-		for p_type, p_obj, p_name in self.parts:
-			if p_type == 'part': 
-				value = in_data[p_name] if p_name in in_data else None
-				p_obj.encode(value, byw_stream, d_structs, p_name)
-			if p_type == 'length': 
-				value = len(in_data[p_name]) if p_name in in_data else 0
-				p_obj.encode(value, byw_stream, d_structs, p_name)
+		for p_obj in self.parts:
+			if p_obj.type == 'part': 
+				p_obj.encode(in_data, byw_stream, d_structs, False)
+			if p_obj.type == 'length': 
+				p_obj.encode(in_data, byw_stream, d_structs, True)
 
+class datadef_global:
+	__slots__ = ['output', 'using_structs', 'errored', 'errormeg', 'structs']
+	def __init__(self):
+		self.output = []
+		self.using_structs = []
+		self.structs = {}
 
 class datadef:
+	__slots__ = ['structs', 'errored', 'errormeg']
 	def __init__(self, filepath):
 		self.structs = {}
-		self.cases = {}
-		self.metadata = {}
-		self.using_structs = []
 		self.errored = False
 		self.errormeg = ''
 		if filepath: self.load_file(filepath)
 
-# ####################################################################################################
-# ####################################################################################################
-# --- file
-# ####################################################################################################
-# ####################################################################################################
-
 	def parse_file(self, structname, filename):
-		in_data = bytereader.bytereader()
-		in_data.load_file(filename)
-		return self.parse_internal(structname, in_data)
+		byr_stream = bytereader.bytereader()
+		byr_stream.load_file(filename)
+		return self.parse_internal(structname, byr_stream)
 
 	def parse(self, structname, data):
-		in_data = bytereader.bytereader()
-		in_data.load_raw(data)
-		return self.parse_internal(structname, in_data)
+		byr_stream = bytereader.bytereader()
+		byr_stream.load_raw(data)
+		return self.parse_internal(structname, byr_stream)
 
+	def parse_internal(self, structname, byr_stream):
+		global_obj = datadef_global()
+		global_obj.structs = self.structs
 
-	def create(self, structname, in_data):
-		byw_stream = bytewriter.bytewriter()
-		if structname in self.structs:
-			self.structs[structname].encode(in_data, byw_stream, self.structs)
-			return byw_stream.getvalue()
-		else:
-			return b''
-
-	def parse_internal(self, structname, in_data):
-		datadef_global.output = []
-		datadef_global.structnames = []
+		if PRINTHEX:
+			print(byr_stream.rest().hex())
+			byr_stream.seek(0)
 
 		try:
 			self.errored = False
 			if structname in self.structs:
-				return self.structs[structname].decode(in_data, self.structs, None)
+				return self.structs[structname].decode(byr_stream, global_obj, structname)
 			else:
 				return None
 		except DataDefException as e:
@@ -276,47 +287,25 @@ class datadef:
 			print(self.errormegf)
 			return b''
 
-		datadef_global.leftoverbytes = in_data.rest()
-
-
+	def create(self, structname, in_data):
+		byw_stream = bytewriter.bytewriter()
+		if structname in self.structs:
+			self.structs[structname].encode(in_data, byw_stream, self.structs)
+			if PRINTHEX: print(byw_stream.getvalue().hex())
+			return byw_stream.getvalue()
+		else:
+			return b''
 
 	def load_file(self, in_datadef):
 		self.structs = {}
-		self.metadata = {}
-		self.cases = {}
 
 		if in_datadef != None:
-			f = open(in_datadef, "r")
-			ddlines = [x.strip().split('#')[0].split('|') for x in f.readlines()]
-			ddlines = [[p.strip() for p in l] for l in ddlines]
-			current_struct = None
-			for ddline in ddlines:
-				if ddline != ['']:
-					if ddline[0] == 'meta':
-						self.metadata[ddline[1]] = ddline[2]
-					if ddline[0] == 'area_struct':
-						current_struct = ddline[1]
-						self.structs[ddline[1]] = datadef_struct(ddline[1])
-					if ddline[0] in ['part', 'length']:
-						self.structs[current_struct].parts.append([ddline[0], datadef_part(ddline[1].split('/')), ddline[2]])
-			#print('[datadef] Loaded '+in_datadef)
-
-
-	def save_file(self, file_name):
-		linesdata = []
-
-		for key, value in self.metadata.items():
-			linesdata.append('meta|'+key+'|'+value)
-
-		for structname in self.structs:
-			linesdata.append('')
-			linesdata.append('area_struct|'+structname)
-			for structpart in self.structs[structname]:
-				subvals = structpart[1]
-				subvals = [x[0] if x[1] == '' else x[0]+'.'+x[1] for x in subvals]
-				subvals = '/'.join(subvals).replace(' ','')
-				linesdata.append(structpart[0]+'|'+subvals+'|'+structpart[2])
-
-		with open(file_name, "w") as fileout:
-			for line in linesdata:
-				fileout.write(line+'\n')
+			parser = ET.XMLParser(encoding='utf-8')
+			xml_data = ET.parse(in_datadef, parser)
+			xml_proj = xml_data.getroot()
+			for part in xml_proj:
+				if part.tag == 'struct': 
+					name = part.get('name')
+					struct_obj = datadef_struct(part)
+					if name: self.structs[name] = struct_obj
+					

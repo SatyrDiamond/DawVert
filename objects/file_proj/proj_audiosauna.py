@@ -104,9 +104,6 @@ class audiosauna_song:
 		pass
 
 	def load_from_file(self, input_file):
-		song_file = bytereader.bytereader()
-		song_file.load_file(input_file)
-
 		try:
 			zip_data = zipfile.ZipFile(input_file, 'r')
 		except zipfile.BadZipFile as t:

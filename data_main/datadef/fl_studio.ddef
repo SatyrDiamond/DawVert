@@ -1,1095 +1,1099 @@
-
-area_struct|__part__fruity_delay_bank
-part|s_int|pan
-part|s_int|vol
-part|s_int|filter_cutoff
-part|s_int|filter_res
-part|s_int|filter_gain
-part|s_int|feedback_pan
-part|s_int|feedback_vol
-part|s_int|feedback_sep
-part|s_int|feedback_time
-part|s_int|feedback_ofs
-part|s_int|fbfilter_cut
-part|s_int|fbfilter_res
-part|s_int|fbfilter_gain
-part|s_int|out_pan
-part|s_int|out_vol
-part|s_int|out_next
-
-area_struct|__part__fruity_delay_bank_extra
-part|s_int|filter_type
-part|s_int|filter_mode
-part|s_int|fbfilter_type
-part|s_int|fbfilter_mode
-part|byte|filter_post
-part|byte|feedback_mode
-part|byte|
-part|byte|
-part|s_int|grain_div
-part|byte|
-part|s_int|grain_sh
-part|byte|enabled
-part|byte|feedback_leave_first_echo
-part|byte|feedback_tempo
-
-area_struct|fruity_delay_bank
-part|s_int|version
-part|s_int|dry
-part|s_int|wet
-part|s_int|in
-part|s_int|fb
-part|struct.__part__fruity_delay_bank|bank_1_v
-part|struct.__part__fruity_delay_bank|bank_2_v
-part|struct.__part__fruity_delay_bank|bank_3_v
-part|struct.__part__fruity_delay_bank|bank_4_v
-part|struct.__part__fruity_delay_bank|bank_5_v
-part|struct.__part__fruity_delay_bank|bank_6_v
-part|struct.__part__fruity_delay_bank|bank_7_v
-part|struct.__part__fruity_delay_bank|bank_8_v
-part|s_int|2x_oversampling
-part|struct.__part__fruity_delay_bank_extra|bank_1_e
-part|struct.__part__fruity_delay_bank_extra|bank_2_e
-part|struct.__part__fruity_delay_bank_extra|bank_3_e
-part|struct.__part__fruity_delay_bank_extra|bank_4_e
-part|struct.__part__fruity_delay_bank_extra|bank_5_e
-part|struct.__part__fruity_delay_bank_extra|bank_6_e
-part|struct.__part__fruity_delay_bank_extra|bank_7_e
-part|struct.__part__fruity_delay_bank_extra|bank_8_e
-
-area_struct|fl_slayer
-part|int|version
-part|s_int|string_type
-part|s_int|coil_type
-part|s_int|pickup_position
-part|s_int|tone
-part|s_int|slap
-part|s_int|fret
-part|s_int|harmonic
-part|s_int|damp
-part|s_int|harmonic_vel
-part|s_int|damp_vel
-part|s_int|
-part|s_int|
-part|s_int|amp_type
-part|s_int|drive
-part|s_int|presence
-part|s_int|feedback
-part|s_int|eq_low
-part|s_int|eq_mid
-part|s_int|eq_high
-part|s_int|cabinet
-part|s_int|fx_type
-part|s_int|fx_param1
-part|s_int|fx_param2
-part|s_int|
-part|s_int|mode
-part|s_int|timing
-part|s_int|hold
-part|s_int|glissando
-part|s_int|pitch_bend
-
-area_struct|fl_keys
-part|int|version
-part|string_part/byte|instrument
-part|s_int|decay
-part|s_int|release
-part|s_int|hardness
-part|s_int|hardness_from_vel
-part|s_int|muffle
-part|s_int|muffle_from_vel
-part|s_int|vel_sens
-part|s_int|stereo
-part|s_int|fine
-part|s_int|detune
-part|s_int|stretch
-part|s_int|treble
-part|s_int|pan
-part|s_int|lfo
-part|s_int|overdrive
-
-area_struct|boobass
-part|int|version
-part|int|bass
-part|int|mid
-part|int|treble
-
-area_struct|vintage_chorus
-part|int|version
-part|int|mode
-part|int|
-part|int|mod_speed
-part|int|mod_shape_sine
-part|int|mod_phase_lr
-part|int|delay_time1
-part|int|delay_time2
-part|int|wet
-part|int|mono_input
-part|int|invert_wet
-part|int|delay_feedback
-part|int|delay_hp
-part|int|noise_gain
-part|int|noise
-part|int|noise_gate
-part|int|mod_tempo_sync
-part|int|mod_phase_start
-
-area_struct|vintage_phaser
-part|int|version
-part|int|phaser_min
-part|int|phaser_max
-part|int|phaser_feedback
-part|int|phaser_manual
-part|int|phaser_freq
-part|int|phaser_hq
-part|int|mod_speed
-part|int|mod_tempo
-part|int|mod_shape_sine
-part|int|mod_tension
-part|int|mod_phase_start
-part|int|mod_phase_lr
-part|int|delay_on
-part|int|delay_keeppitch
-part|int|delay_mix
-part|int|delay_stereo
-part|int|delay_time
-part|int|delay_tempo
-part|int|delay_feedback
-part|int|delay_lp
-part|int|delay_hp
-part|int|levels_mix
-part|int|levels_mono
-part|int|levels_noise
-part|int|levels_noise_gate
-part|int|color_gain
-part|int|color_freq
-part|int|input_hp
-part|int|feedback_hp
-part|int|rate_freq1
-part|int|rate_freq2
-part|int|lfo_scale
-part|int|lfo_pull
-
-area_struct|fruity_multiband_compressor
-part|int|version
-part|int|gain
-part|int|limiter
-part|int|filter_type
-part|int|hi_state
-part|int|hi_freq
-part|int|hi_gain
-part|int|hi_thres
-part|int|hi_ratio
-part|int|hi_att
-part|int|hi_rel
-part|int|hi_knee
-part|int|mid_state
-part|int|mid_freq_l
-part|int|mid_freq_h
-part|int|mid_gain
-part|int|mid_thres
-part|int|mid_ratio
-part|int|mid_att
-part|int|mid_rel
-part|int|mid_knee
-part|int|low_state
-part|int|low_freq
-part|int|low_gain
-part|int|low_thres
-part|int|low_ratio
-part|int|low_att
-part|int|low_rel
-part|int|low_knee
-part|int|__unknown
-part|int|visual_speed
-
-area_struct|frequency_shifter
-part|int|version
-part|int|mix
-part|int|type
-part|s_int|frequency
-part|int|lr_phase
-part|int|shape_left
-part|int|shape_right
-part|int|feedback
-part|int|stereo
-part|int|freqtype
-part|int|start_phase
-part|int|mixer_track
-
-area_struct|fruit_kick
-part|int|version
-part|s_int|max_freq
-part|s_int|min_freq
-part|int|decay_freq
-part|int|decay_vol
-part|int|osc_click
-part|int|osc_dist
-
-area_struct|fruity_7_band_eq
-part|int|version
-part|s_int|band_1
-part|s_int|band_2
-part|s_int|band_3
-part|s_int|band_4
-part|s_int|band_5
-part|s_int|band_6
-part|s_int|band_7
-
-area_struct|fruity_balance
-part|s_int|pan
-part|int|vol
-
-area_struct|fruity_bass_boost
-part|int|version
-part|int|freq
-part|int|amount
-
-area_struct|fruity_big_clock
-part|byte|version
-part|byte|beats
-part|byte|color
-
-area_struct|fruity_blood_overdrive
-part|s_int|version
-part|s_int|preband
-part|s_int|color
-part|s_int|preamp
-part|s_int|x100
-part|s_int|postfilter
-part|s_int|postgain
-part|s_int|unknown_1
-part|s_int|unknown_2
-
-area_struct|fruity_center
-part|s_int|version
-part|s_int|on
-
-area_struct|fruity_chorus
-part|s_int|version
-part|s_int|delay
-part|s_int|depth
-part|s_int|stereo
-part|s_int|lfo1_freq
-part|s_int|lfo2_freq
-part|s_int|lfo3_freq
-part|s_int|lfo1_wave
-part|s_int|lfo2_wave
-part|s_int|lfo3_wave
-part|s_int|crosstype
-part|s_int|crosscutoff
-part|s_int|wetonly
-
-area_struct|fruity_delay_2
-part|s_int|input_pan
-part|int|input_vol
-part|int|dry
-part|int|fb_vol
-part|int|time
-part|s_int|time_stereo_offset
-part|int|fb_mode
-part|int|fb_cut
-
-area_struct|fruity_delay_3
-part|int|version
-part|int|wet
-part|int|delay_type
-part|int|tempo_sync
-part|int|keep_pitch
-part|int|delay_time
-part|int|offset
-part|int|smoothing
-part|int|stereo
-part|int|mod_rate
-part|int|mod_time
-part|int|mod_cutoff
-part|int|diffusion_level
-part|int|diffusion_spread
-part|int|feedbackdist_type
-part|int|feedback_level
-part|int|unknown_1
-part|int|feedback_cutoff
-part|int|feedback_reso
-part|int|feedbackdist_level
-part|int|feedbackdist_knee
-part|int|feedbackdist_symmetry
-part|int|feedback_sample_rate
-part|int|feedback_bits
-part|int|wet
-part|int|tone
-part|int|dry
-
-area_struct|fruity_delay
-part|int|version
-part|int|input
-part|int|fb
-part|int|cutoff
-part|int|tempo
-part|int|steps
-part|int|mode
-
-area_struct|fruity_dx10
-part|int|version
-part|int|amp_att
-part|int|amp_dec
-part|int|amp_rel
-part|int|mod_course
-part|int|mod_fine
-part|int|mod_init
-part|int|mod_time
-part|int|mod_sus
-part|int|mod_rel
-part|int|mod_velsen
-part|int|vibrato
-part|int|waveform
-part|int|mod_thru
-part|int|lforate
-part|int|mod2_course
-part|int|mod2_fine
-part|int|mod2_init
-part|int|mod2_time
-part|int|mod2_sus
-part|int|mod2_rel
-part|int|mod2_velsen
-part|s_int|octave
-
-area_struct|fruity_fast_dist
-part|int|pre
-part|int|threshold
-part|int|type
-part|int|mix
-part|int|post
-
-area_struct|fruity_fast_lp
-part|int|version
-part|s_int|cutoff
-part|s_int|reso
-
-area_struct|fruity_filter
-part|int|version
-part|s_int|cutoff
-part|s_int|reso
-part|s_int|lowpass
-part|s_int|bandpass
-part|s_int|hipass
-part|s_int|x2
-part|byte|center
-
-area_struct|fruity_flanger
-part|int|version
-part|s_int|delay
-part|s_int|depth
-part|s_int|rate
-part|s_int|phase
-part|s_int|damp
-part|s_int|shape
-part|s_int|feed
-part|s_int|inv_feedback
-part|s_int|inv_wet
-part|s_int|dry
-part|s_int|wet
-part|s_int|cross
-
-area_struct|fruity_flangus
-part|int|ord
-part|int|depth
-part|int|speed
-part|int|delay
-part|int|spread
-part|s_int|cross
-part|s_int|dry
-part|s_int|wet
-
-area_struct|fruity_free_filter
-part|s_int|version
-part|s_int|type
-part|s_int|freq
-part|s_int|q
-part|s_int|gain
-part|byte|center
-
-area_struct|fruity_limiter
-part|int|
-part|int|gain
-part|int|sat
-part|int|limiter_ceil
-part|int|limiter_att
-part|int|limiter_att_curve
-part|int|limiter_rel
-part|int|limiter_rel_curve
-part|int|limiter_sus
-part|int|comp_thres
-part|int|comp_knee
-part|int|comp_ratio
-part|int|comp_att
-part|int|comp_rel
-part|int|comp_att_curve
-part|int|comp_sus
-part|int|noise_gain
-part|int|noise_thres
-part|int|noise_rel
-part|int|s_gain
-part|int|s_sat
-part|int|s_limiter_ceil
-part|int|s_limiter_att
-part|int|s_limiter_att_curve
-part|int|s_limiter_rel
-part|int|s_limiter_rel_curve
-part|int|s_limiter_sus
-part|int|s_comp_thres
-part|int|s_comp_knee
-part|int|s_comp_ratio
-part|int|s_comp_att
-part|int|s_comp_rel
-part|int|s_comp_att_curve
-part|int|s_comp_sus
-part|int|s_noise_gain
-part|int|s_noise_thres
-part|int|s_noise_rel
-part|byte|visual_scroll_speed
-part|byte|unknown_1
-part|byte|unknown_2
-part|byte|unknown_3
-part|byte|mode
-part|byte|unknown_5
-part|byte|unknown_6
-part|byte|unknown_7
-part|byte|visual_input_peak
-part|byte|visual_output_peak
-part|byte|visual_analysis
-part|byte|visual_lvl_markers
-part|byte|unknown_12
-part|byte|unknown_13
-part|byte|unknown_14
-part|byte|unknown_15
-part|byte|sidechain_number
-part|byte|unknown_17
-part|byte|unknown_18
-part|byte|unknown_19
-part|byte|0.2_limiter_safety
-
-area_struct|fruity_mute_2
-part|int|version
-part|s_int|mute
-part|s_int|channel
-
-area_struct|fruity_panomatic
-part|s_int|pan
-part|s_int|vol
-part|s_int|lfo_shape
-part|s_int|lfo_target
-part|s_int|lfo_amount
-part|s_int|lfo_speed
-
-area_struct|fruity_parametric_eq_2
-part|int|version
-part|s_int|1_gain
-part|s_int|2_gain
-part|s_int|3_gain
-part|s_int|4_gain
-part|s_int|5_gain
-part|s_int|6_gain
-part|s_int|7_gain
-part|int|1_freq
-part|int|2_freq
-part|int|3_freq
-part|int|4_freq
-part|int|5_freq
-part|int|6_freq
-part|int|7_freq
-part|int|1_width
-part|int|2_width
-part|int|3_width
-part|int|4_width
-part|int|5_width
-part|int|6_width
-part|int|7_width
-part|int|1_type
-part|int|2_type
-part|int|3_type
-part|int|4_type
-part|int|5_type
-part|int|6_type
-part|int|7_type
-part|s_int|1_order
-part|s_int|2_order
-part|s_int|3_order
-part|s_int|4_order
-part|s_int|5_order
-part|s_int|6_order
-part|s_int|7_order
-part|s_int|main_lvl
-
-area_struct|fruity_parametric_eq
-part|s_int|1_gain
-part|s_int|2_gain
-part|s_int|3_gain
-part|s_int|4_gain
-part|s_int|5_gain
-part|s_int|6_gain
-part|s_int|7_gain
-part|int|1_freq
-part|int|2_freq
-part|int|3_freq
-part|int|4_freq
-part|int|5_freq
-part|int|6_freq
-part|int|7_freq
-part|int|1_width
-part|int|2_width
-part|int|3_width
-part|int|4_width
-part|int|5_width
-part|int|6_width
-part|int|7_width
-part|int|1_type
-part|int|2_type
-part|int|3_type
-part|int|4_type
-part|int|5_type
-part|int|6_type
-part|int|7_type
-part|s_int|main_lvl
-
-area_struct|fruity_phase_inverter
-part|int|version
-part|int|state
-
-area_struct|fruity_phaser
-part|int|version
-part|int|sweep_freq
-part|int|depth_min
-part|int|depth_max
-part|int|freq_range
-part|int|stereo
-part|int|num_stages
-part|int|feedback
-part|int|drywet
-part|int|gain
-
-area_struct|fruity_reeverb_2
-part|int|version
-part|int|lowcut
-part|int|highcut
-part|int|predelay
-part|int|room_size
-part|int|diffusion
-part|int|decay
-part|int|hidamping
-part|int|bass
-part|int|cross
-part|int|stereo
-part|int|dry
-part|int|er
-part|int|wet
-part|int|mod_speed
-part|int|mod
-part|byte|tempo_predelay
-part|byte|mid_side
-
-area_struct|fruity_reeverb
-part|int|version
-part|int|lowcut
-part|int|highcut
-part|int|predelay
-part|int|room_size
-part|int|diffusion
-part|int|color
-part|int|decay
-part|int|hidamping
-part|int|dry
-part|int|reverb
-
-area_struct|fruity_soft_clipper
-part|int|threshold
-part|int|postgain
-
-area_struct|fruity_spectroman
-part|int|version
-part|int|outputmode
-part|int|amp
-part|int|scale
-part|byte|windowing
-part|byte|show_peaks
-part|byte|stereo
-
-area_struct|fruity_stereo_enhancer
-part|s_int|pan
-part|s_int|vol
-part|s_int|stereo
-part|s_int|phase_offs
-part|s_int|prepost
-part|s_int|phaseinvert
-
-area_struct|fruity_stereo_shaper
-part|int|
-part|s_int|r2l
-part|s_int|l2l
-part|s_int|r2r
-part|s_int|l2r
-part|s_int|delay
-part|s_int|dephase
-part|s_int|iodiff
-part|s_int|prepost
-
-area_struct|plucked!
-part|int|decay
-part|int|color
-part|int|norm_decay
-part|int|release
-part|int|wide
-
-area_struct|simsynth
-part|double|osc1_pw
-part|double|osc1_crs
-part|double|osc1_fine
-part|double|osc1_lvl
-part|double|osc1_lfo
-part|double|osc1_env
-part|double|osc1_shape
-part|double|osc2_pw
-part|double|osc2_crs
-part|double|osc2_fine
-part|double|osc2_lvl
-part|double|osc2_lfo
-part|double|osc2_env
-part|double|osc2_shape
-part|double|osc3_pw
-part|double|osc3_crs
-part|double|osc3_fine
-part|double|osc3_lvl
-part|double|osc3_lfo
-part|double|osc3_env
-part|double|osc3_shape
-part|double|lfo_del
-part|double|lfo_rate
-part|double|unk_1
-part|double|lfo_shape
-part|double|unk_2
-part|double|svf_cut
-part|double|svf_emph
-part|double|svf_env
-part|double|svf_lfo
-part|double|svf_kb
-part|double|unk_3
-part|double|svf_high
-part|double|svf_band
-part|double|unk_4
-part|double|amp_att
-part|double|amp_dec
-part|double|amp_sus
-part|double|amp_rel
-part|double|amp_lvl
-part|double|unk_5
-part|double|svf_att
-part|double|svf_dec
-part|double|svf_sus
-part|double|svf_rel
-part|skip_n.64|
-part|skip_n.12|
-part|int|osc1_on
-part|int|osc1_o1
-part|int|osc1_o2
-part|int|osc1_warm
-part|int|osc2_on
-part|int|osc2_o1
-part|int|osc2_o2
-part|int|osc2_warm
-part|int|osc3_on
-part|int|osc3_o1
-part|int|osc3_o2
-part|int|osc3_warm
-part|int|lfo_on
-part|int|lfo_retrigger
-part|int|svf_on
-part|int|unk_6
-part|int|lfo_trackamp
-part|int|unk_7
-part|int|chorus_on
-part|int|unk_8
-
-area_struct|soundgoodizer
-part|int|version
-part|s_int|mode
-part|s_int|amount
-
-area_struct|transient_processor
-part|int|version
-part|s_int|attack
-part|s_int|drive
-part|s_int|release
-part|s_int|gain
-part|s_int|attack_shape
-part|s_int|release_shape
-part|s_int|split_freq
-part|s_int|split_balance
-part|s_int|effect_on
-part|s_int|display_flags
-part|s_int|display_scroll
-
-area_struct|tuner
-part|int|version
-part|s_int|refrence
-part|s_int|reactivity
-part|s_int|bass
-part|s_int|display_mode
-
-area_struct|wasp
-part|int|version
-part|int|1_shape
-part|int|1_crs
-part|int|1_fine
-part|int|2_shape
-part|int|2_crs
-part|int|2_fine
-part|int|3_shape
-part|int|3_amt
-part|int|12_fade
-part|int|pw
-part|int|fm
-part|int|ringmod
-part|int|amp_A
-part|int|amp_D
-part|int|amp_S
-part|int|amp_R
-part|int|fil_A
-part|int|fil_D
-part|int|fil_S
-part|int|fil_R
-part|int|fil_kbtrack
-part|int|fil_qtype
-part|int|fil_cut
-part|int|fil_res
-part|int|fil_env
-part|int|lfo1_shape
-part|int|lfo1_target
-part|int|lfo1_amt
-part|int|lfo1_spd
-part|int|lfo1_sync
-part|int|lfo1_reset
-part|int|lfo2_shape
-part|int|lfo2_target
-part|int|lfo2_amt
-part|int|lfo2_spd
-part|int|lfo2_sync
-part|int|lfo2_reset
-part|int|dist_on
-part|int|dist_drv
-part|int|dist_tone
-part|int|dualvoice
-
-area_struct|wasp_xt
-part|int|version
-part|int|1_shape
-part|int|1_crs
-part|int|1_fine
-part|int|2_shape
-part|int|2_crs
-part|int|2_fine
-part|int|3_shape
-part|int|3_amt
-part|int|12_fade
-part|int|pw
-part|int|fm
-part|int|ringmod
-part|int|amp_A
-part|int|amp_D
-part|int|amp_S
-part|int|amp_R
-part|int|fil_A
-part|int|fil_D
-part|int|fil_S
-part|int|fil_R
-part|int|fil_kbtrack
-part|int|fil_qtype
-part|int|fil_cut
-part|int|fil_res
-part|int|fil_env
-part|int|lfo1_shape
-part|int|lfo1_target
-part|int|lfo1_amt
-part|int|lfo1_spd
-part|int|lfo1_sync
-part|int|lfo1_reset
-part|int|lfo2_shape
-part|int|lfo2_target
-part|int|lfo2_amt
-part|int|lfo2_spd
-part|int|lfo2_sync
-part|int|lfo2_reset
-part|int|dist_on
-part|int|dist_drv
-part|int|dist_tone
-part|int|dualvoice
-part|int|amp
-part|int|analog
-part|int|me_atk
-part|int|me_dec
-part|int|me_amt
-part|int|me_1lvl
-part|int|me_2pitch
-part|int|me_1ami
-part|int|me_pw
-part|int|vol
-part|int|lfo1_delay
-part|int|lfo2_delay
-part|int|me_filter
-part|int|wnoise
-
-area_struct|3x_osc
-part|int|version
-part|s_int|osc1_pan
-part|int|osc1_shape
-part|s_int|osc1_coarse
-part|s_int|osc1_fine
-part|s_int|osc1_ofs
-part|s_int|osc1_detune
-part|int|osc1_mixlevel
-part|s_int|osc2_pan
-part|int|osc2_shape
-part|s_int|osc2_coarse
-part|s_int|osc2_fine
-part|s_int|osc2_ofs
-part|s_int|osc2_detune
-part|int|osc2_mixlevel
-part|s_int|osc3_pan
-part|int|osc3_shape
-part|s_int|osc3_coarse
-part|s_int|osc3_fine
-part|s_int|osc3_ofs
-part|s_int|osc3_detune
-part|int|phase_rand
-part|byte|osc1_invert
-part|byte|osc2_invert
-part|byte|osc3_invert
-part|byte|osc3_am
-
-area_struct|sslf_bassdrum
-part|skip_n.4|header
-part|string.256|name
-part|string.256|filename
-part|skip_n.256|
-part|skip_n.256|
-part|skip_n.256|
-part|float|out_level
-part|float|sampling_ratio
-part|float|duration
-part|float|butt
-part|float|drive
-part|float|attack
-part|float|base
-part|float|peak
-part|float|slide_time
-part|float|var_base
-part|float|var_peak
-part|float|var_slide_time
-part|float|var_phase
-part|float|click_cut
-part|float|click_freq
-part|float|click_amount
-part|float|noise_a
-part|float|noise_d
-part|float|noise_s
-part|float|noise_start
-part|float|noise_pitch
-part|float|noise_mix
-part|float|noise_filter
-
-area_struct|razer_chroma
-part|int|version
-part|int|amplitude
-part|int|mode
-part|int|decay
-part|int|color_mode
-part|int|enabled_keyboard
-part|int|enabled_chroma_link
-part|int|enabled_headset
-part|int|enabled_mouse
-part|int|enabled_mouse_mat
-part|int|enabled_keypad
-
-area_struct|sslf_pitcher
-part|skip_n.4|header
-part|float|correction_speed
-part|float|stereo
-part|float|gender
-part|float|finetune
-part|float|bypass_all
-part|list.12/float|bypass
-part|float|voice1_pan
-part|float|voice2_pan
-part|float|voice3_pan
-part|float|voice4_pan
-part|float|
-part|float|formant
-part|float|hz
-part|float|ref_chan
-part|float|use_midi
-part|float|octaves
-part|float|harmonize
-part|float|selector_key
-part|float|selector_type
-part|float|harmonize_mix
-part|float|harmonize_vel
-part|float|min_freq
-part|list.12/byte|key_on
-part|raw.4|
-
-area_struct|fruity_compressor
-part|int|version
-part|s_int|threshold
-part|int|ratio
-part|int|gain
-part|int|attack
-part|int|release
-part|int|type
-
-area_struct|fruity_formula_controller
-part|int|version
-part|int|in_a
-part|int|in_b
-part|int|in_c
-part|raw_part/byte|formula
-part|dstring_part/byte|comment
-
-area_struct|fruity_granulizer
-part|int|
-part|int|attack
-part|int|hold
-part|int|grain_spacing
-part|int|wave_spacing
-part|int|depth
-part|int|speed
-part|int|rand
-part|int|pan
-part|int|loop
-part|int|hold
-part|int|time_Start
-part|int|trans_hold
-part|int|trans_mode
-part|int|key_to
-
-
-# area_struct|effector
-# part|int|version
-# part|float|effect
-# part|float|bypass
-# part|float|wet
-# part|float|x_param
-# part|float|y_param
-# part|float|mod_rate
-# part|float|tempo
-# part|float|x_mod
-# part|float|y_mod
-# part|float|mod_shape
-# part|float|input_level
-# part|float|output_gain
-
-area_struct|__part__multiband_delay
-part|list.16/float|delay
-part|list.16/float|vol
-part|list.16/float|pan
-
-area_struct|multiband_delay__UNFINISHED
-part|int|version
-part|int|
-part|struct.__part__multiband_delay|bank_1
-part|struct.__part__multiband_delay|bank_2
-part|struct.__part__multiband_delay|bank_3
-part|struct.__part__multiband_delay|bank_4
-part|struct.__part__multiband_delay|bank_5
-part|struct.__part__multiband_delay|bank_6
-part|struct.__part__multiband_delay|bank_7
-part|struct.__part__multiband_delay|bank_8
-
-area_struct|pitch_shifter_NOT_FINISHED
-part|int|version
-part|s_int|pitch
-part|s_int|formant
-part|s_int|channel
-part|s_int|wet
-part|s_int|duration
-part|s_int|density
-part|s_int|jitter
-part|s_int|rand
-part|s_int|delay
-part|s_int|feedback
-part|s_int|delay_mode
-part|s_int|formant_correction
-part|s_int|pitch_mode
-part|s_int|
-part|byte|
-part|byte|
-part|byte|
-part|byte|
-part|byte|
-part|byte|
-part|byte|
-part|byte|
-part|byte|
-part|byte|
-part|byte|display_speed
-part|byte|
-part|byte|
-part|byte|display_on
-part|byte|display_mono
-part|raw.256|
-
-area_struct|spreader
-part|int|version
-part|s_int|spread
-part|s_int|stereo_sep
-part|s_int|low_bypass
-part|s_int|mono
-part|s_int|enabled
-part|s_int|theme
-part|byte|prefx
-part|byte|postfx
-
-area_struct|kepler
-part|int|unk_1
-part|int|unk_2
-part|int|unk_3
-part|string_part/int|name
-part|int|unk_4
-part|int|unk_5
-part|float|arpeggio
-part|float|arpeggio_mode
-part|float|arpeggio_range
-part|float|arpeggio_rate
-part|float|tempo_sync_arp_rate
-part|float|lfo_rate
-part|float|tempo_sync_lfo_rate
-part|float|lfo_delay_time
-part|float|lfo_trigger_mode
-part|float|ufo_trigger
-part|float|dco_lfo
-part|float|dco_pwm
-part|float|dco_source
-part|float|dco_pulse_active
-part|float|dco_saw_active
-part|float|dco_sub_active
-part|float|dco_sub_osc
-part|float|dco_noise
-part|float|hpf_frequency
-part|float|vcf_frequency
-part|float|vce_reso
-part|float|vcf_polarity
-part|float|vcf_env
-part|float|vcf_lfo
-part|float|vcf_kb
-part|float|vca_source
-part|float|env_att
-part|float|env_dec
-part|float|env_sus
-part|float|env_rel
-part|float|mode
-part|float|hold
-part|float|octave
-part|float|volume
-part|byte|quan_first_arp_step
-part|float|vel_to_vol
-part|float|align_sub_osc_phase
-part|byte|chorus_noise_gate
-part|byte|chorus_noise
-part|byte|hq_mode
+<datadef>
+  <struct name="__part__fruity_delay_bank">
+    <part type="s_int" name="pan"/>
+    <part type="s_int" name="vol"/>
+    <part type="s_int" name="filter_cutoff"/>
+    <part type="s_int" name="filter_res"/>
+    <part type="s_int" name="filter_gain"/>
+    <part type="s_int" name="feedback_pan"/>
+    <part type="s_int" name="feedback_vol"/>
+    <part type="s_int" name="feedback_sep"/>
+    <part type="s_int" name="feedback_time"/>
+    <part type="s_int" name="feedback_ofs"/>
+    <part type="s_int" name="fbfilter_cut"/>
+    <part type="s_int" name="fbfilter_res"/>
+    <part type="s_int" name="fbfilter_gain"/>
+    <part type="s_int" name="out_pan"/>
+    <part type="s_int" name="out_vol"/>
+    <part type="s_int" name="out_next"/>
+  </struct>
+  <struct name="__part__fruity_delay_bank_extra">
+    <part type="s_int" name="filter_type"/>
+    <part type="s_int" name="filter_mode"/>
+    <part type="s_int" name="fbfilter_type"/>
+    <part type="s_int" name="fbfilter_mode"/>
+    <part type="byte" name="filter_post"/>
+    <part type="byte" name="feedback_mode"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="s_int" name="grain_div"/>
+    <part type="byte"/>
+    <part type="s_int" name="grain_sh"/>
+    <part type="byte" name="enabled"/>
+    <part type="byte" name="feedback_leave_first_echo"/>
+    <part type="byte" name="feedback_tempo"/>
+  </struct>
+  <struct name="fruity_delay_bank">
+    <part type="s_int" name="version"/>
+    <part type="s_int" name="dry"/>
+    <part type="s_int" name="wet"/>
+    <part type="s_int" name="in"/>
+    <part type="s_int" name="fb"/>
+    <part type="struct" name="bank_1_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="struct" name="bank_2_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="struct" name="bank_3_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="struct" name="bank_4_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="struct" name="bank_5_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="struct" name="bank_6_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="struct" name="bank_7_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="struct" name="bank_8_v" struct_name="__part__fruity_delay_bank"/>
+    <part type="s_int" name="2x_oversampling"/>
+    <part type="struct" name="bank_1_e" struct_name="__part__fruity_delay_bank_extra"/>
+    <part type="struct" name="bank_2_e" struct_name="__part__fruity_delay_bank_extra"/>
+    <part type="struct" name="bank_3_e" struct_name="__part__fruity_delay_bank_extra"/>
+    <part type="struct" name="bank_4_e" struct_name="__part__fruity_delay_bank_extra"/>
+    <part type="struct" name="bank_5_e" struct_name="__part__fruity_delay_bank_extra"/>
+    <part type="struct" name="bank_6_e" struct_name="__part__fruity_delay_bank_extra"/>
+    <part type="struct" name="bank_7_e" struct_name="__part__fruity_delay_bank_extra"/>
+    <part type="struct" name="bank_8_e" struct_name="__part__fruity_delay_bank_extra"/>
+  </struct>
+  <struct name="fl_slayer">
+    <part type="int" name="version"/>
+    <part type="s_int" name="string_type"/>
+    <part type="s_int" name="coil_type"/>
+    <part type="s_int" name="pickup_position"/>
+    <part type="s_int" name="tone"/>
+    <part type="s_int" name="slap"/>
+    <part type="s_int" name="fret"/>
+    <part type="s_int" name="harmonic"/>
+    <part type="s_int" name="damp"/>
+    <part type="s_int" name="harmonic_vel"/>
+    <part type="s_int" name="damp_vel"/>
+    <part type="s_int"/>
+    <part type="s_int"/>
+    <part type="s_int" name="amp_type"/>
+    <part type="s_int" name="drive"/>
+    <part type="s_int" name="presence"/>
+    <part type="s_int" name="feedback"/>
+    <part type="s_int" name="eq_low"/>
+    <part type="s_int" name="eq_mid"/>
+    <part type="s_int" name="eq_high"/>
+    <part type="s_int" name="cabinet"/>
+    <part type="s_int" name="fx_type"/>
+    <part type="s_int" name="fx_param1"/>
+    <part type="s_int" name="fx_param2"/>
+    <part type="s_int"/>
+    <part type="s_int" name="mode"/>
+    <part type="s_int" name="timing"/>
+    <part type="s_int" name="hold"/>
+    <part type="s_int" name="glissando"/>
+    <part type="s_int" name="pitch_bend"/>
+  </struct>
+  <struct name="fl_keys">
+    <part type="int" name="version"/>
+    <part type="string" name="instrument" size_source="part">
+      <size type="byte"/>
+    </part>
+    <part type="s_int" name="decay"/>
+    <part type="s_int" name="release"/>
+    <part type="s_int" name="hardness"/>
+    <part type="s_int" name="hardness_from_vel"/>
+    <part type="s_int" name="muffle"/>
+    <part type="s_int" name="muffle_from_vel"/>
+    <part type="s_int" name="vel_sens"/>
+    <part type="s_int" name="stereo"/>
+    <part type="s_int" name="fine"/>
+    <part type="s_int" name="detune"/>
+    <part type="s_int" name="stretch"/>
+    <part type="s_int" name="treble"/>
+    <part type="s_int" name="pan"/>
+    <part type="s_int" name="lfo"/>
+    <part type="s_int" name="overdrive"/>
+  </struct>
+  <struct name="boobass">
+    <part type="int" name="version"/>
+    <part type="int" name="bass"/>
+    <part type="int" name="mid"/>
+    <part type="int" name="treble"/>
+  </struct>
+  <struct name="vintage_chorus">
+    <part type="int" name="version"/>
+    <part type="int" name="mode"/>
+    <part type="int"/>
+    <part type="int" name="mod_speed"/>
+    <part type="int" name="mod_shape_sine"/>
+    <part type="int" name="mod_phase_lr"/>
+    <part type="int" name="delay_time1"/>
+    <part type="int" name="delay_time2"/>
+    <part type="int" name="wet"/>
+    <part type="int" name="mono_input"/>
+    <part type="int" name="invert_wet"/>
+    <part type="int" name="delay_feedback"/>
+    <part type="int" name="delay_hp"/>
+    <part type="int" name="noise_gain"/>
+    <part type="int" name="noise"/>
+    <part type="int" name="noise_gate"/>
+    <part type="int" name="mod_tempo_sync"/>
+    <part type="int" name="mod_phase_start"/>
+  </struct>
+  <struct name="vintage_phaser">
+    <part type="int" name="version"/>
+    <part type="int" name="phaser_min"/>
+    <part type="int" name="phaser_max"/>
+    <part type="int" name="phaser_feedback"/>
+    <part type="int" name="phaser_manual"/>
+    <part type="int" name="phaser_freq"/>
+    <part type="int" name="phaser_hq"/>
+    <part type="int" name="mod_speed"/>
+    <part type="int" name="mod_tempo"/>
+    <part type="int" name="mod_shape_sine"/>
+    <part type="int" name="mod_tension"/>
+    <part type="int" name="mod_phase_start"/>
+    <part type="int" name="mod_phase_lr"/>
+    <part type="int" name="delay_on"/>
+    <part type="int" name="delay_keeppitch"/>
+    <part type="int" name="delay_mix"/>
+    <part type="int" name="delay_stereo"/>
+    <part type="int" name="delay_time"/>
+    <part type="int" name="delay_tempo"/>
+    <part type="int" name="delay_feedback"/>
+    <part type="int" name="delay_lp"/>
+    <part type="int" name="delay_hp"/>
+    <part type="int" name="levels_mix"/>
+    <part type="int" name="levels_mono"/>
+    <part type="int" name="levels_noise"/>
+    <part type="int" name="levels_noise_gate"/>
+    <part type="int" name="color_gain"/>
+    <part type="int" name="color_freq"/>
+    <part type="int" name="input_hp"/>
+    <part type="int" name="feedback_hp"/>
+    <part type="int" name="rate_freq1"/>
+    <part type="int" name="rate_freq2"/>
+    <part type="int" name="lfo_scale"/>
+    <part type="int" name="lfo_pull"/>
+  </struct>
+  <struct name="fruity_multiband_compressor">
+    <part type="int" name="version"/>
+    <part type="int" name="gain"/>
+    <part type="int" name="limiter"/>
+    <part type="int" name="filter_type"/>
+    <part type="int" name="hi_state"/>
+    <part type="int" name="hi_freq"/>
+    <part type="int" name="hi_gain"/>
+    <part type="int" name="hi_thres"/>
+    <part type="int" name="hi_ratio"/>
+    <part type="int" name="hi_att"/>
+    <part type="int" name="hi_rel"/>
+    <part type="int" name="hi_knee"/>
+    <part type="int" name="mid_state"/>
+    <part type="int" name="mid_freq_l"/>
+    <part type="int" name="mid_freq_h"/>
+    <part type="int" name="mid_gain"/>
+    <part type="int" name="mid_thres"/>
+    <part type="int" name="mid_ratio"/>
+    <part type="int" name="mid_att"/>
+    <part type="int" name="mid_rel"/>
+    <part type="int" name="mid_knee"/>
+    <part type="int" name="low_state"/>
+    <part type="int" name="low_freq"/>
+    <part type="int" name="low_gain"/>
+    <part type="int" name="low_thres"/>
+    <part type="int" name="low_ratio"/>
+    <part type="int" name="low_att"/>
+    <part type="int" name="low_rel"/>
+    <part type="int" name="low_knee"/>
+    <part type="int" name="__unknown"/>
+    <part type="int" name="visual_speed"/>
+  </struct>
+  <struct name="frequency_shifter">
+    <part type="int" name="version"/>
+    <part type="int" name="mix"/>
+    <part type="int" name="type"/>
+    <part type="s_int" name="frequency"/>
+    <part type="int" name="lr_phase"/>
+    <part type="int" name="shape_left"/>
+    <part type="int" name="shape_right"/>
+    <part type="int" name="feedback"/>
+    <part type="int" name="stereo"/>
+    <part type="int" name="freqtype"/>
+    <part type="int" name="start_phase"/>
+    <part type="int" name="mixer_track"/>
+  </struct>
+  <struct name="fruit_kick">
+    <part type="int" name="version"/>
+    <part type="s_int" name="max_freq"/>
+    <part type="s_int" name="min_freq"/>
+    <part type="int" name="decay_freq"/>
+    <part type="int" name="decay_vol"/>
+    <part type="int" name="osc_click"/>
+    <part type="int" name="osc_dist"/>
+  </struct>
+  <struct name="fruity_7_band_eq">
+    <part type="int" name="version"/>
+    <part type="s_int" name="band_1"/>
+    <part type="s_int" name="band_2"/>
+    <part type="s_int" name="band_3"/>
+    <part type="s_int" name="band_4"/>
+    <part type="s_int" name="band_5"/>
+    <part type="s_int" name="band_6"/>
+    <part type="s_int" name="band_7"/>
+  </struct>
+  <struct name="fruity_balance">
+    <part type="s_int" name="pan"/>
+    <part type="int" name="vol"/>
+  </struct>
+  <struct name="fruity_bass_boost">
+    <part type="int" name="version"/>
+    <part type="int" name="freq"/>
+    <part type="int" name="amount"/>
+  </struct>
+  <struct name="fruity_big_clock">
+    <part type="byte" name="version"/>
+    <part type="byte" name="beats"/>
+    <part type="byte" name="color"/>
+  </struct>
+  <struct name="fruity_blood_overdrive">
+    <part type="s_int" name="version"/>
+    <part type="s_int" name="preband"/>
+    <part type="s_int" name="color"/>
+    <part type="s_int" name="preamp"/>
+    <part type="s_int" name="x100"/>
+    <part type="s_int" name="postfilter"/>
+    <part type="s_int" name="postgain"/>
+    <part type="s_int" name="unknown_1"/>
+    <part type="s_int" name="unknown_2"/>
+  </struct>
+  <struct name="fruity_center">
+    <part type="s_int" name="version"/>
+    <part type="s_int" name="on"/>
+  </struct>
+  <struct name="fruity_chorus">
+    <part type="s_int" name="version"/>
+    <part type="s_int" name="delay"/>
+    <part type="s_int" name="depth"/>
+    <part type="s_int" name="stereo"/>
+    <part type="s_int" name="lfo1_freq"/>
+    <part type="s_int" name="lfo2_freq"/>
+    <part type="s_int" name="lfo3_freq"/>
+    <part type="s_int" name="lfo1_wave"/>
+    <part type="s_int" name="lfo2_wave"/>
+    <part type="s_int" name="lfo3_wave"/>
+    <part type="s_int" name="crosstype"/>
+    <part type="s_int" name="crosscutoff"/>
+    <part type="s_int" name="wetonly"/>
+  </struct>
+  <struct name="fruity_delay_2">
+    <part type="s_int" name="input_pan"/>
+    <part type="int" name="input_vol"/>
+    <part type="int" name="dry"/>
+    <part type="int" name="fb_vol"/>
+    <part type="int" name="time"/>
+    <part type="s_int" name="time_stereo_offset"/>
+    <part type="int" name="fb_mode"/>
+    <part type="int" name="fb_cut"/>
+  </struct>
+  <struct name="fruity_delay_3">
+    <part type="int" name="version"/>
+    <part type="int" name="wet"/>
+    <part type="int" name="delay_type"/>
+    <part type="int" name="tempo_sync"/>
+    <part type="int" name="keep_pitch"/>
+    <part type="int" name="delay_time"/>
+    <part type="int" name="offset"/>
+    <part type="int" name="smoothing"/>
+    <part type="int" name="stereo"/>
+    <part type="int" name="mod_rate"/>
+    <part type="int" name="mod_time"/>
+    <part type="int" name="mod_cutoff"/>
+    <part type="int" name="diffusion_level"/>
+    <part type="int" name="diffusion_spread"/>
+    <part type="int" name="feedbackdist_type"/>
+    <part type="int" name="feedback_level"/>
+    <part type="int" name="unknown_1"/>
+    <part type="int" name="feedback_cutoff"/>
+    <part type="int" name="feedback_reso"/>
+    <part type="int" name="feedbackdist_level"/>
+    <part type="int" name="feedbackdist_knee"/>
+    <part type="int" name="feedbackdist_symmetry"/>
+    <part type="int" name="feedback_sample_rate"/>
+    <part type="int" name="feedback_bits"/>
+    <part type="int" name="wet"/>
+    <part type="int" name="tone"/>
+    <part type="int" name="dry"/>
+  </struct>
+  <struct name="fruity_delay">
+    <part type="int" name="version"/>
+    <part type="int" name="input"/>
+    <part type="int" name="fb"/>
+    <part type="int" name="cutoff"/>
+    <part type="int" name="tempo"/>
+    <part type="int" name="steps"/>
+    <part type="int" name="mode"/>
+  </struct>
+  <struct name="fruity_dx10">
+    <part type="int" name="version"/>
+    <part type="int" name="amp_att"/>
+    <part type="int" name="amp_dec"/>
+    <part type="int" name="amp_rel"/>
+    <part type="int" name="mod_course"/>
+    <part type="int" name="mod_fine"/>
+    <part type="int" name="mod_init"/>
+    <part type="int" name="mod_time"/>
+    <part type="int" name="mod_sus"/>
+    <part type="int" name="mod_rel"/>
+    <part type="int" name="mod_velsen"/>
+    <part type="int" name="vibrato"/>
+    <part type="int" name="waveform"/>
+    <part type="int" name="mod_thru"/>
+    <part type="int" name="lforate"/>
+    <part type="int" name="mod2_course"/>
+    <part type="int" name="mod2_fine"/>
+    <part type="int" name="mod2_init"/>
+    <part type="int" name="mod2_time"/>
+    <part type="int" name="mod2_sus"/>
+    <part type="int" name="mod2_rel"/>
+    <part type="int" name="mod2_velsen"/>
+    <part type="s_int" name="octave"/>
+  </struct>
+  <struct name="fruity_fast_dist">
+    <part type="int" name="pre"/>
+    <part type="int" name="threshold"/>
+    <part type="int" name="type"/>
+    <part type="int" name="mix"/>
+    <part type="int" name="post"/>
+  </struct>
+  <struct name="fruity_fast_lp">
+    <part type="int" name="version"/>
+    <part type="s_int" name="cutoff"/>
+    <part type="s_int" name="reso"/>
+  </struct>
+  <struct name="fruity_filter">
+    <part type="int" name="version"/>
+    <part type="s_int" name="cutoff"/>
+    <part type="s_int" name="reso"/>
+    <part type="s_int" name="lowpass"/>
+    <part type="s_int" name="bandpass"/>
+    <part type="s_int" name="hipass"/>
+    <part type="s_int" name="x2"/>
+    <part type="byte" name="center"/>
+  </struct>
+  <struct name="fruity_flanger">
+    <part type="int" name="version"/>
+    <part type="s_int" name="delay"/>
+    <part type="s_int" name="depth"/>
+    <part type="s_int" name="rate"/>
+    <part type="s_int" name="phase"/>
+    <part type="s_int" name="damp"/>
+    <part type="s_int" name="shape"/>
+    <part type="s_int" name="feed"/>
+    <part type="s_int" name="inv_feedback"/>
+    <part type="s_int" name="inv_wet"/>
+    <part type="s_int" name="dry"/>
+    <part type="s_int" name="wet"/>
+    <part type="s_int" name="cross"/>
+  </struct>
+  <struct name="fruity_flangus">
+    <part type="int" name="ord"/>
+    <part type="int" name="depth"/>
+    <part type="int" name="speed"/>
+    <part type="int" name="delay"/>
+    <part type="int" name="spread"/>
+    <part type="s_int" name="cross"/>
+    <part type="s_int" name="dry"/>
+    <part type="s_int" name="wet"/>
+  </struct>
+  <struct name="fruity_free_filter">
+    <part type="s_int" name="version"/>
+    <part type="s_int" name="type"/>
+    <part type="s_int" name="freq"/>
+    <part type="s_int" name="q"/>
+    <part type="s_int" name="gain"/>
+    <part type="byte" name="center"/>
+  </struct>
+  <struct name="fruity_limiter">
+    <part type="int"/>
+    <part type="int" name="gain"/>
+    <part type="int" name="sat"/>
+    <part type="int" name="limiter_ceil"/>
+    <part type="int" name="limiter_att"/>
+    <part type="int" name="limiter_att_curve"/>
+    <part type="int" name="limiter_rel"/>
+    <part type="int" name="limiter_rel_curve"/>
+    <part type="int" name="limiter_sus"/>
+    <part type="int" name="comp_thres"/>
+    <part type="int" name="comp_knee"/>
+    <part type="int" name="comp_ratio"/>
+    <part type="int" name="comp_att"/>
+    <part type="int" name="comp_rel"/>
+    <part type="int" name="comp_att_curve"/>
+    <part type="int" name="comp_sus"/>
+    <part type="int" name="noise_gain"/>
+    <part type="int" name="noise_thres"/>
+    <part type="int" name="noise_rel"/>
+    <part type="int" name="s_gain"/>
+    <part type="int" name="s_sat"/>
+    <part type="int" name="s_limiter_ceil"/>
+    <part type="int" name="s_limiter_att"/>
+    <part type="int" name="s_limiter_att_curve"/>
+    <part type="int" name="s_limiter_rel"/>
+    <part type="int" name="s_limiter_rel_curve"/>
+    <part type="int" name="s_limiter_sus"/>
+    <part type="int" name="s_comp_thres"/>
+    <part type="int" name="s_comp_knee"/>
+    <part type="int" name="s_comp_ratio"/>
+    <part type="int" name="s_comp_att"/>
+    <part type="int" name="s_comp_rel"/>
+    <part type="int" name="s_comp_att_curve"/>
+    <part type="int" name="s_comp_sus"/>
+    <part type="int" name="s_noise_gain"/>
+    <part type="int" name="s_noise_thres"/>
+    <part type="int" name="s_noise_rel"/>
+    <part type="byte" name="visual_scroll_speed"/>
+    <part type="byte" name="unknown_1"/>
+    <part type="byte" name="unknown_2"/>
+    <part type="byte" name="unknown_3"/>
+    <part type="byte" name="mode"/>
+    <part type="byte" name="unknown_5"/>
+    <part type="byte" name="unknown_6"/>
+    <part type="byte" name="unknown_7"/>
+    <part type="byte" name="visual_input_peak"/>
+    <part type="byte" name="visual_output_peak"/>
+    <part type="byte" name="visual_analysis"/>
+    <part type="byte" name="visual_lvl_markers"/>
+    <part type="byte" name="unknown_12"/>
+    <part type="byte" name="unknown_13"/>
+    <part type="byte" name="unknown_14"/>
+    <part type="byte" name="unknown_15"/>
+    <part type="byte" name="sidechain_number"/>
+    <part type="byte" name="unknown_17"/>
+    <part type="byte" name="unknown_18"/>
+    <part type="byte" name="unknown_19"/>
+    <part type="byte" name="0.2_limiter_safety"/>
+  </struct>
+  <struct name="fruity_mute_2">
+    <part type="int" name="version"/>
+    <part type="s_int" name="mute"/>
+    <part type="s_int" name="channel"/>
+  </struct>
+  <struct name="fruity_panomatic">
+    <part type="s_int" name="pan"/>
+    <part type="s_int" name="vol"/>
+    <part type="s_int" name="lfo_shape"/>
+    <part type="s_int" name="lfo_target"/>
+    <part type="s_int" name="lfo_amount"/>
+    <part type="s_int" name="lfo_speed"/>
+  </struct>
+  <struct name="fruity_parametric_eq_2">
+    <part type="int" name="version"/>
+    <part type="s_int" name="1_gain"/>
+    <part type="s_int" name="2_gain"/>
+    <part type="s_int" name="3_gain"/>
+    <part type="s_int" name="4_gain"/>
+    <part type="s_int" name="5_gain"/>
+    <part type="s_int" name="6_gain"/>
+    <part type="s_int" name="7_gain"/>
+    <part type="int" name="1_freq"/>
+    <part type="int" name="2_freq"/>
+    <part type="int" name="3_freq"/>
+    <part type="int" name="4_freq"/>
+    <part type="int" name="5_freq"/>
+    <part type="int" name="6_freq"/>
+    <part type="int" name="7_freq"/>
+    <part type="int" name="1_width"/>
+    <part type="int" name="2_width"/>
+    <part type="int" name="3_width"/>
+    <part type="int" name="4_width"/>
+    <part type="int" name="5_width"/>
+    <part type="int" name="6_width"/>
+    <part type="int" name="7_width"/>
+    <part type="int" name="1_type"/>
+    <part type="int" name="2_type"/>
+    <part type="int" name="3_type"/>
+    <part type="int" name="4_type"/>
+    <part type="int" name="5_type"/>
+    <part type="int" name="6_type"/>
+    <part type="int" name="7_type"/>
+    <part type="s_int" name="1_order"/>
+    <part type="s_int" name="2_order"/>
+    <part type="s_int" name="3_order"/>
+    <part type="s_int" name="4_order"/>
+    <part type="s_int" name="5_order"/>
+    <part type="s_int" name="6_order"/>
+    <part type="s_int" name="7_order"/>
+    <part type="s_int" name="main_lvl"/>
+  </struct>
+  <struct name="fruity_parametric_eq">
+    <part type="s_int" name="1_gain"/>
+    <part type="s_int" name="2_gain"/>
+    <part type="s_int" name="3_gain"/>
+    <part type="s_int" name="4_gain"/>
+    <part type="s_int" name="5_gain"/>
+    <part type="s_int" name="6_gain"/>
+    <part type="s_int" name="7_gain"/>
+    <part type="int" name="1_freq"/>
+    <part type="int" name="2_freq"/>
+    <part type="int" name="3_freq"/>
+    <part type="int" name="4_freq"/>
+    <part type="int" name="5_freq"/>
+    <part type="int" name="6_freq"/>
+    <part type="int" name="7_freq"/>
+    <part type="int" name="1_width"/>
+    <part type="int" name="2_width"/>
+    <part type="int" name="3_width"/>
+    <part type="int" name="4_width"/>
+    <part type="int" name="5_width"/>
+    <part type="int" name="6_width"/>
+    <part type="int" name="7_width"/>
+    <part type="int" name="1_type"/>
+    <part type="int" name="2_type"/>
+    <part type="int" name="3_type"/>
+    <part type="int" name="4_type"/>
+    <part type="int" name="5_type"/>
+    <part type="int" name="6_type"/>
+    <part type="int" name="7_type"/>
+    <part type="s_int" name="main_lvl"/>
+  </struct>
+  <struct name="fruity_phase_inverter">
+    <part type="int" name="version"/>
+    <part type="int" name="state"/>
+  </struct>
+  <struct name="fruity_phaser">
+    <part type="int" name="version"/>
+    <part type="int" name="sweep_freq"/>
+    <part type="int" name="depth_min"/>
+    <part type="int" name="depth_max"/>
+    <part type="int" name="freq_range"/>
+    <part type="int" name="stereo"/>
+    <part type="int" name="num_stages"/>
+    <part type="int" name="feedback"/>
+    <part type="int" name="drywet"/>
+    <part type="int" name="gain"/>
+  </struct>
+  <struct name="fruity_reeverb_2">
+    <part type="int" name="version"/>
+    <part type="int" name="lowcut"/>
+    <part type="int" name="highcut"/>
+    <part type="int" name="predelay"/>
+    <part type="int" name="room_size"/>
+    <part type="int" name="diffusion"/>
+    <part type="int" name="decay"/>
+    <part type="int" name="hidamping"/>
+    <part type="int" name="bass"/>
+    <part type="int" name="cross"/>
+    <part type="int" name="stereo"/>
+    <part type="int" name="dry"/>
+    <part type="int" name="er"/>
+    <part type="int" name="wet"/>
+    <part type="int" name="mod_speed"/>
+    <part type="int" name="mod"/>
+    <part type="byte" name="tempo_predelay"/>
+    <part type="byte" name="mid_side"/>
+  </struct>
+  <struct name="fruity_reeverb">
+    <part type="int" name="version"/>
+    <part type="int" name="lowcut"/>
+    <part type="int" name="highcut"/>
+    <part type="int" name="predelay"/>
+    <part type="int" name="room_size"/>
+    <part type="int" name="diffusion"/>
+    <part type="int" name="color"/>
+    <part type="int" name="decay"/>
+    <part type="int" name="hidamping"/>
+    <part type="int" name="dry"/>
+    <part type="int" name="reverb"/>
+  </struct>
+  <struct name="fruity_soft_clipper">
+    <part type="int" name="threshold"/>
+    <part type="int" name="postgain"/>
+  </struct>
+  <struct name="fruity_spectroman">
+    <part type="int" name="version"/>
+    <part type="int" name="outputmode"/>
+    <part type="int" name="amp"/>
+    <part type="int" name="scale"/>
+    <part type="byte" name="windowing"/>
+    <part type="byte" name="show_peaks"/>
+    <part type="byte" name="stereo"/>
+  </struct>
+  <struct name="fruity_stereo_enhancer">
+    <part type="s_int" name="pan"/>
+    <part type="s_int" name="vol"/>
+    <part type="s_int" name="stereo"/>
+    <part type="s_int" name="phase_offs"/>
+    <part type="s_int" name="prepost"/>
+    <part type="s_int" name="phaseinvert"/>
+  </struct>
+  <struct name="fruity_stereo_shaper">
+    <part type="int"/>
+    <part type="s_int" name="r2l"/>
+    <part type="s_int" name="l2l"/>
+    <part type="s_int" name="r2r"/>
+    <part type="s_int" name="l2r"/>
+    <part type="s_int" name="delay"/>
+    <part type="s_int" name="dephase"/>
+    <part type="s_int" name="iodiff"/>
+    <part type="s_int" name="prepost"/>
+  </struct>
+  <struct name="plucked!">
+    <part type="int" name="decay"/>
+    <part type="int" name="color"/>
+    <part type="int" name="norm_decay"/>
+    <part type="int" name="release"/>
+    <part type="int" name="wide"/>
+  </struct>
+  <struct name="simsynth">
+    <part type="double" name="osc1_pw"/>
+    <part type="double" name="osc1_crs"/>
+    <part type="double" name="osc1_fine"/>
+    <part type="double" name="osc1_lvl"/>
+    <part type="double" name="osc1_lfo"/>
+    <part type="double" name="osc1_env"/>
+    <part type="double" name="osc1_shape"/>
+    <part type="double" name="osc2_pw"/>
+    <part type="double" name="osc2_crs"/>
+    <part type="double" name="osc2_fine"/>
+    <part type="double" name="osc2_lvl"/>
+    <part type="double" name="osc2_lfo"/>
+    <part type="double" name="osc2_env"/>
+    <part type="double" name="osc2_shape"/>
+    <part type="double" name="osc3_pw"/>
+    <part type="double" name="osc3_crs"/>
+    <part type="double" name="osc3_fine"/>
+    <part type="double" name="osc3_lvl"/>
+    <part type="double" name="osc3_lfo"/>
+    <part type="double" name="osc3_env"/>
+    <part type="double" name="osc3_shape"/>
+    <part type="double" name="lfo_del"/>
+    <part type="double" name="lfo_rate"/>
+    <part type="double" name="unk_1"/>
+    <part type="double" name="lfo_shape"/>
+    <part type="double" name="unk_2"/>
+    <part type="double" name="svf_cut"/>
+    <part type="double" name="svf_emph"/>
+    <part type="double" name="svf_env"/>
+    <part type="double" name="svf_lfo"/>
+    <part type="double" name="svf_kb"/>
+    <part type="double" name="unk_3"/>
+    <part type="double" name="svf_high"/>
+    <part type="double" name="svf_band"/>
+    <part type="double" name="unk_4"/>
+    <part type="double" name="amp_att"/>
+    <part type="double" name="amp_dec"/>
+    <part type="double" name="amp_sus"/>
+    <part type="double" name="amp_rel"/>
+    <part type="double" name="amp_lvl"/>
+    <part type="double" name="unk_5"/>
+    <part type="double" name="svf_att"/>
+    <part type="double" name="svf_dec"/>
+    <part type="double" name="svf_sus"/>
+    <part type="double" name="svf_rel"/>
+    <part type="skip" size="64"/>
+    <part type="skip" size="12"/>
+    <part type="int" name="osc1_on"/>
+    <part type="int" name="osc1_o1"/>
+    <part type="int" name="osc1_o2"/>
+    <part type="int" name="osc1_warm"/>
+    <part type="int" name="osc2_on"/>
+    <part type="int" name="osc2_o1"/>
+    <part type="int" name="osc2_o2"/>
+    <part type="int" name="osc2_warm"/>
+    <part type="int" name="osc3_on"/>
+    <part type="int" name="osc3_o1"/>
+    <part type="int" name="osc3_o2"/>
+    <part type="int" name="osc3_warm"/>
+    <part type="int" name="lfo_on"/>
+    <part type="int" name="lfo_retrigger"/>
+    <part type="int" name="svf_on"/>
+    <part type="int" name="unk_6"/>
+    <part type="int" name="lfo_trackamp"/>
+    <part type="int" name="unk_7"/>
+    <part type="int" name="chorus_on"/>
+    <part type="int" name="unk_8"/>
+  </struct>
+  <struct name="soundgoodizer">
+    <part type="int" name="version"/>
+    <part type="s_int" name="mode"/>
+    <part type="s_int" name="amount"/>
+  </struct>
+  <struct name="transient_processor">
+    <part type="int" name="version"/>
+    <part type="s_int" name="attack"/>
+    <part type="s_int" name="drive"/>
+    <part type="s_int" name="release"/>
+    <part type="s_int" name="gain"/>
+    <part type="s_int" name="attack_shape"/>
+    <part type="s_int" name="release_shape"/>
+    <part type="s_int" name="split_freq"/>
+    <part type="s_int" name="split_balance"/>
+    <part type="s_int" name="effect_on"/>
+    <part type="s_int" name="display_flags"/>
+    <part type="s_int" name="display_scroll"/>
+  </struct>
+  <struct name="tuner">
+    <part type="int" name="version"/>
+    <part type="s_int" name="refrence"/>
+    <part type="s_int" name="reactivity"/>
+    <part type="s_int" name="bass"/>
+    <part type="s_int" name="display_mode"/>
+  </struct>
+  <struct name="wasp">
+    <part type="int" name="version"/>
+    <part type="int" name="1_shape"/>
+    <part type="int" name="1_crs"/>
+    <part type="int" name="1_fine"/>
+    <part type="int" name="2_shape"/>
+    <part type="int" name="2_crs"/>
+    <part type="int" name="2_fine"/>
+    <part type="int" name="3_shape"/>
+    <part type="int" name="3_amt"/>
+    <part type="int" name="12_fade"/>
+    <part type="int" name="pw"/>
+    <part type="int" name="fm"/>
+    <part type="int" name="ringmod"/>
+    <part type="int" name="amp_A"/>
+    <part type="int" name="amp_D"/>
+    <part type="int" name="amp_S"/>
+    <part type="int" name="amp_R"/>
+    <part type="int" name="fil_A"/>
+    <part type="int" name="fil_D"/>
+    <part type="int" name="fil_S"/>
+    <part type="int" name="fil_R"/>
+    <part type="int" name="fil_kbtrack"/>
+    <part type="int" name="fil_qtype"/>
+    <part type="int" name="fil_cut"/>
+    <part type="int" name="fil_res"/>
+    <part type="int" name="fil_env"/>
+    <part type="int" name="lfo1_shape"/>
+    <part type="int" name="lfo1_target"/>
+    <part type="int" name="lfo1_amt"/>
+    <part type="int" name="lfo1_spd"/>
+    <part type="int" name="lfo1_sync"/>
+    <part type="int" name="lfo1_reset"/>
+    <part type="int" name="lfo2_shape"/>
+    <part type="int" name="lfo2_target"/>
+    <part type="int" name="lfo2_amt"/>
+    <part type="int" name="lfo2_spd"/>
+    <part type="int" name="lfo2_sync"/>
+    <part type="int" name="lfo2_reset"/>
+    <part type="int" name="dist_on"/>
+    <part type="int" name="dist_drv"/>
+    <part type="int" name="dist_tone"/>
+    <part type="int" name="dualvoice"/>
+  </struct>
+  <struct name="wasp_xt">
+    <part type="int" name="version"/>
+    <part type="int" name="1_shape"/>
+    <part type="int" name="1_crs"/>
+    <part type="int" name="1_fine"/>
+    <part type="int" name="2_shape"/>
+    <part type="int" name="2_crs"/>
+    <part type="int" name="2_fine"/>
+    <part type="int" name="3_shape"/>
+    <part type="int" name="3_amt"/>
+    <part type="int" name="12_fade"/>
+    <part type="int" name="pw"/>
+    <part type="int" name="fm"/>
+    <part type="int" name="ringmod"/>
+    <part type="int" name="amp_A"/>
+    <part type="int" name="amp_D"/>
+    <part type="int" name="amp_S"/>
+    <part type="int" name="amp_R"/>
+    <part type="int" name="fil_A"/>
+    <part type="int" name="fil_D"/>
+    <part type="int" name="fil_S"/>
+    <part type="int" name="fil_R"/>
+    <part type="int" name="fil_kbtrack"/>
+    <part type="int" name="fil_qtype"/>
+    <part type="int" name="fil_cut"/>
+    <part type="int" name="fil_res"/>
+    <part type="int" name="fil_env"/>
+    <part type="int" name="lfo1_shape"/>
+    <part type="int" name="lfo1_target"/>
+    <part type="int" name="lfo1_amt"/>
+    <part type="int" name="lfo1_spd"/>
+    <part type="int" name="lfo1_sync"/>
+    <part type="int" name="lfo1_reset"/>
+    <part type="int" name="lfo2_shape"/>
+    <part type="int" name="lfo2_target"/>
+    <part type="int" name="lfo2_amt"/>
+    <part type="int" name="lfo2_spd"/>
+    <part type="int" name="lfo2_sync"/>
+    <part type="int" name="lfo2_reset"/>
+    <part type="int" name="dist_on"/>
+    <part type="int" name="dist_drv"/>
+    <part type="int" name="dist_tone"/>
+    <part type="int" name="dualvoice"/>
+    <part type="int" name="amp"/>
+    <part type="int" name="analog"/>
+    <part type="int" name="me_atk"/>
+    <part type="int" name="me_dec"/>
+    <part type="int" name="me_amt"/>
+    <part type="int" name="me_1lvl"/>
+    <part type="int" name="me_2pitch"/>
+    <part type="int" name="me_1ami"/>
+    <part type="int" name="me_pw"/>
+    <part type="int" name="vol"/>
+    <part type="int" name="lfo1_delay"/>
+    <part type="int" name="lfo2_delay"/>
+    <part type="int" name="me_filter"/>
+    <part type="int" name="wnoise"/>
+  </struct>
+  <struct name="3x_osc">
+    <part type="int" name="version"/>
+    <part type="s_int" name="osc1_pan"/>
+    <part type="int" name="osc1_shape"/>
+    <part type="s_int" name="osc1_coarse"/>
+    <part type="s_int" name="osc1_fine"/>
+    <part type="s_int" name="osc1_ofs"/>
+    <part type="s_int" name="osc1_detune"/>
+    <part type="int" name="osc1_mixlevel"/>
+    <part type="s_int" name="osc2_pan"/>
+    <part type="int" name="osc2_shape"/>
+    <part type="s_int" name="osc2_coarse"/>
+    <part type="s_int" name="osc2_fine"/>
+    <part type="s_int" name="osc2_ofs"/>
+    <part type="s_int" name="osc2_detune"/>
+    <part type="int" name="osc2_mixlevel"/>
+    <part type="s_int" name="osc3_pan"/>
+    <part type="int" name="osc3_shape"/>
+    <part type="s_int" name="osc3_coarse"/>
+    <part type="s_int" name="osc3_fine"/>
+    <part type="s_int" name="osc3_ofs"/>
+    <part type="s_int" name="osc3_detune"/>
+    <part type="int" name="phase_rand"/>
+    <part type="byte" name="osc1_invert"/>
+    <part type="byte" name="osc2_invert"/>
+    <part type="byte" name="osc3_invert"/>
+    <part type="byte" name="osc3_am"/>
+  </struct>
+  <struct name="sslf_bassdrum">
+    <part type="skip" name="header" size="4"/>
+    <part type="string" name="name" size="256"/>
+    <part type="string" name="filename" size="256"/>
+    <part type="skip" size="256"/>
+    <part type="skip" size="256"/>
+    <part type="skip" size="256"/>
+    <part type="float" name="out_level"/>
+    <part type="float" name="sampling_ratio"/>
+    <part type="float" name="duration"/>
+    <part type="float" name="butt"/>
+    <part type="float" name="drive"/>
+    <part type="float" name="attack"/>
+    <part type="float" name="base"/>
+    <part type="float" name="peak"/>
+    <part type="float" name="slide_time"/>
+    <part type="float" name="var_base"/>
+    <part type="float" name="var_peak"/>
+    <part type="float" name="var_slide_time"/>
+    <part type="float" name="var_phase"/>
+    <part type="float" name="click_cut"/>
+    <part type="float" name="click_freq"/>
+    <part type="float" name="click_amount"/>
+    <part type="float" name="noise_a"/>
+    <part type="float" name="noise_d"/>
+    <part type="float" name="noise_s"/>
+    <part type="float" name="noise_start"/>
+    <part type="float" name="noise_pitch"/>
+    <part type="float" name="noise_mix"/>
+    <part type="float" name="noise_filter"/>
+  </struct>
+  <struct name="razer_chroma">
+    <part type="int" name="version"/>
+    <part type="int" name="amplitude"/>
+    <part type="int" name="mode"/>
+    <part type="int" name="decay"/>
+    <part type="int" name="color_mode"/>
+    <part type="int" name="enabled_keyboard"/>
+    <part type="int" name="enabled_chroma_link"/>
+    <part type="int" name="enabled_headset"/>
+    <part type="int" name="enabled_mouse"/>
+    <part type="int" name="enabled_mouse_mat"/>
+    <part type="int" name="enabled_keypad"/>
+  </struct>
+  <struct name="sslf_pitcher">
+    <part type="skip" name="header" size="4"/>
+    <part type="float" name="correction_speed"/>
+    <part type="float" name="stereo"/>
+    <part type="float" name="gender"/>
+    <part type="float" name="finetune"/>
+    <part type="float" name="bypass_all"/>
+    <part type="list" name="bypass" size="12">
+      <part type="float"/>
+    </part>
+    <part type="float" name="voice1_pan"/>
+    <part type="float" name="voice2_pan"/>
+    <part type="float" name="voice3_pan"/>
+    <part type="float" name="voice4_pan"/>
+    <part type="float"/>
+    <part type="float" name="formant"/>
+    <part type="float" name="hz"/>
+    <part type="float" name="ref_chan"/>
+    <part type="float" name="use_midi"/>
+    <part type="float" name="octaves"/>
+    <part type="float" name="harmonize"/>
+    <part type="float" name="selector_key"/>
+    <part type="float" name="selector_type"/>
+    <part type="float" name="harmonize_mix"/>
+    <part type="float" name="harmonize_vel"/>
+    <part type="float" name="min_freq"/>
+    <part type="list" name="key_on" size="12">
+      <part type="byte"/>
+    </part>
+    <part type="raw" size="4"/>
+  </struct>
+  <struct name="fruity_compressor">
+    <part type="int" name="version"/>
+    <part type="s_int" name="threshold"/>
+    <part type="int" name="ratio"/>
+    <part type="int" name="gain"/>
+    <part type="int" name="attack"/>
+    <part type="int" name="release"/>
+    <part type="int" name="type"/>
+  </struct>
+  <struct name="fruity_formula_controller">
+    <part type="int" name="version"/>
+    <part type="int" name="in_a"/>
+    <part type="int" name="in_b"/>
+    <part type="int" name="in_c"/>
+    <part type="raw" name="formula" size_source="part">
+      <size type="byte"/>
+    </part>
+    <part type="dstring" name="comment" size_source="part">
+      <size type="byte"/>
+    </part>
+  </struct>
+  <struct name="fruity_granulizer">
+    <part type="int"/>
+    <part type="int" name="attack"/>
+    <part type="int" name="hold"/>
+    <part type="int" name="grain_spacing"/>
+    <part type="int" name="wave_spacing"/>
+    <part type="int" name="depth"/>
+    <part type="int" name="speed"/>
+    <part type="int" name="rand"/>
+    <part type="int" name="pan"/>
+    <part type="int" name="loop"/>
+    <part type="int" name="hold"/>
+    <part type="int" name="time_Start"/>
+    <part type="int" name="trans_hold"/>
+    <part type="int" name="trans_mode"/>
+    <part type="int" name="key_to"/>
+  </struct>
+  <struct name="__part__multiband_delay">
+    <part type="list" name="delay" size="16">
+      <part type="float"/>
+    </part>
+    <part type="list" name="vol" size="16">
+      <part type="float"/>
+    </part>
+    <part type="list" name="pan" size="16">
+      <part type="float"/>
+    </part>
+  </struct>
+  <struct name="multiband_delay__UNFINISHED">
+    <part type="int" name="version"/>
+    <part type="int"/>
+    <part type="struct" name="bank_1" struct_name="__part__multiband_delay"/>
+    <part type="struct" name="bank_2" struct_name="__part__multiband_delay"/>
+    <part type="struct" name="bank_3" struct_name="__part__multiband_delay"/>
+    <part type="struct" name="bank_4" struct_name="__part__multiband_delay"/>
+    <part type="struct" name="bank_5" struct_name="__part__multiband_delay"/>
+    <part type="struct" name="bank_6" struct_name="__part__multiband_delay"/>
+    <part type="struct" name="bank_7" struct_name="__part__multiband_delay"/>
+    <part type="struct" name="bank_8" struct_name="__part__multiband_delay"/>
+  </struct>
+  <struct name="pitch_shifter_NOT_FINISHED">
+    <part type="int" name="version"/>
+    <part type="s_int" name="pitch"/>
+    <part type="s_int" name="formant"/>
+    <part type="s_int" name="channel"/>
+    <part type="s_int" name="wet"/>
+    <part type="s_int" name="duration"/>
+    <part type="s_int" name="density"/>
+    <part type="s_int" name="jitter"/>
+    <part type="s_int" name="rand"/>
+    <part type="s_int" name="delay"/>
+    <part type="s_int" name="feedback"/>
+    <part type="s_int" name="delay_mode"/>
+    <part type="s_int" name="formant_correction"/>
+    <part type="s_int" name="pitch_mode"/>
+    <part type="s_int"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte" name="display_speed"/>
+    <part type="byte"/>
+    <part type="byte"/>
+    <part type="byte" name="display_on"/>
+    <part type="byte" name="display_mono"/>
+    <part type="raw" size="256"/>
+  </struct>
+  <struct name="spreader">
+    <part type="int" name="version"/>
+    <part type="s_int" name="spread"/>
+    <part type="s_int" name="stereo_sep"/>
+    <part type="s_int" name="low_bypass"/>
+    <part type="s_int" name="mono"/>
+    <part type="s_int" name="enabled"/>
+    <part type="s_int" name="theme"/>
+    <part type="byte" name="prefx"/>
+    <part type="byte" name="postfx"/>
+  </struct>
+  <struct name="kepler">
+    <part type="int" name="unk_1"/>
+    <part type="int" name="unk_2"/>
+    <part type="int" name="unk_3"/>
+    <part type="string" name="name" size_source="part">
+      <size type="int"/>
+    </part>
+    <part type="int" name="unk_4"/>
+    <part type="int" name="unk_5"/>
+    <part type="float" name="arpeggio"/>
+    <part type="float" name="arpeggio_mode"/>
+    <part type="float" name="arpeggio_range"/>
+    <part type="float" name="arpeggio_rate"/>
+    <part type="float" name="tempo_sync_arp_rate"/>
+    <part type="float" name="lfo_rate"/>
+    <part type="float" name="tempo_sync_lfo_rate"/>
+    <part type="float" name="lfo_delay_time"/>
+    <part type="float" name="lfo_trigger_mode"/>
+    <part type="float" name="ufo_trigger"/>
+    <part type="float" name="dco_lfo"/>
+    <part type="float" name="dco_pwm"/>
+    <part type="float" name="dco_source"/>
+    <part type="float" name="dco_pulse_active"/>
+    <part type="float" name="dco_saw_active"/>
+    <part type="float" name="dco_sub_active"/>
+    <part type="float" name="dco_sub_osc"/>
+    <part type="float" name="dco_noise"/>
+    <part type="float" name="hpf_frequency"/>
+    <part type="float" name="vcf_frequency"/>
+    <part type="float" name="vce_reso"/>
+    <part type="float" name="vcf_polarity"/>
+    <part type="float" name="vcf_env"/>
+    <part type="float" name="vcf_lfo"/>
+    <part type="float" name="vcf_kb"/>
+    <part type="float" name="vca_source"/>
+    <part type="float" name="env_att"/>
+    <part type="float" name="env_dec"/>
+    <part type="float" name="env_sus"/>
+    <part type="float" name="env_rel"/>
+    <part type="float" name="mode"/>
+    <part type="float" name="hold"/>
+    <part type="float" name="octave"/>
+    <part type="float" name="volume"/>
+    <part type="byte" name="quan_first_arp_step"/>
+    <part type="float" name="vel_to_vol"/>
+    <part type="float" name="align_sub_osc_phase"/>
+    <part type="byte" name="chorus_noise_gate"/>
+    <part type="byte" name="chorus_noise"/>
+    <part type="byte" name="hq_mode"/>
+  </struct>
+</datadef>

@@ -1,100 +1,111 @@
-
-area_struct|xxx
-part|float|main_env_a
-part|float|main_env_d
-part|float|main_env_r
-part|float|main_env_s
-part|float|filter_env_a
-part|float|filter_amount
-part|float|filter_env_d
-part|float|filter_env_r
-part|float|filter_env_s
-part|float|filter_type
-part|float|filter_cutoff
-part|float|filter_res
-part|float|filter_track
-part|float|detuner_octave
-part|float|fine
-part|float|osc1_shape
-part|float|osc2_shape
-part|float|osc3_shape
-part|float|osc4_shape
-part|float|osc5_shape
-part|float|osc6_shape
-part|float|tremolo_depth
-part|float|tremolo_speed
-part|float|level
-part|float|pan
-part|float|unison_phase
-part|float|unison_detune
-part|string_t|name
-
-area_struct|oranze
-part|float|delay/delay
-part|float|delay/feed
-part|float|delay/mix
-part|float|delay/updown
-part|float|osc1/env/a
-part|float|osc1/env/d
-part|float|osc1/env/lvl
-part|float|osc1/env/r
-part|float|osc1/env/s
-part|float|osc2/env/a
-part|float|osc2/env/d
-part|float|osc2/env/lvl
-part|float|osc2/env/r
-part|float|osc2/env/s
-part|float|filter1/cutoff
-part|float|filter1/res
-part|float|filter1/tracking
-part|float|filter1/type
-part|float|filter2/cutoff
-part|float|filter2/res
-part|float|filter2/tracking
-part|float|filter2/type
-part|float|osc1/detune/fine
-part|float|osc2/detune/fine
-part|float|osc1/detune/octave
-part|float|osc2/detune/octave
-part|float|osc1/detune/phase
-part|float|osc2/detune/phase
-part|float|detune/f
-part|float|detune/o
-part|float|detune/s
-part|list.256/float|osc1/wave
-part|list.256/float|osc2/wave
-part|float|gate/smooth
-part|list.32/float|gate/sel/1
-part|float|lfo1/depth
-part|float|lfo1/speed
-part|float|lfo1/wave
-part|float|lfo2/depth
-part|float|lfo2/speed
-part|float|lfo2/wave
-part|float|master
-part|float|porta
-part|float|voices
-part|float|pan
-part|float|run_select
-part|float|lfo3/time
-part|list.256/float|lfo3/wave
-part|float|lfo3/shape
-part|float|lfo3/smooth
-part|float|steps/numsteps
-part|float|stereo
-part|float|steps/tempo
-part|float|steps/updown
-part|float|routing/lfo1/from
-part|float|routing/lfo1/to
-part|float|routing/lfo2/from
-part|float|routing/lfo2/to
-part|float|routing/lfo3/from
-part|float|routing/lfo3/to
-part|list.32/float|gate/data
-part|float|gate/numsteps
-part|float|gate/on
-part|float|osc1/shape
-part|float|osc2/shape
-part|float|gate/quarter
-part|float|gate/vsteps
-
+<datadef>
+  <struct name="xxx">
+    <part type="float" name="main_env_a"/>
+    <part type="float" name="main_env_d"/>
+    <part type="float" name="main_env_r"/>
+    <part type="float" name="main_env_s"/>
+    <part type="float" name="filter_env_a"/>
+    <part type="float" name="filter_amount"/>
+    <part type="float" name="filter_env_d"/>
+    <part type="float" name="filter_env_r"/>
+    <part type="float" name="filter_env_s"/>
+    <part type="float" name="filter_type"/>
+    <part type="float" name="filter_cutoff"/>
+    <part type="float" name="filter_res"/>
+    <part type="float" name="filter_track"/>
+    <part type="float" name="detuner_octave"/>
+    <part type="float" name="fine"/>
+    <part type="float" name="osc1_shape"/>
+    <part type="float" name="osc2_shape"/>
+    <part type="float" name="osc3_shape"/>
+    <part type="float" name="osc4_shape"/>
+    <part type="float" name="osc5_shape"/>
+    <part type="float" name="osc6_shape"/>
+    <part type="float" name="tremolo_depth"/>
+    <part type="float" name="tremolo_speed"/>
+    <part type="float" name="level"/>
+    <part type="float" name="pan"/>
+    <part type="float" name="unison_phase"/>
+    <part type="float" name="unison_detune"/>
+    <part type="string_t" name="name"/>
+  </struct>
+  <struct name="oranze">
+    <part type="float" name="delay/delay"/>
+    <part type="float" name="delay/feed"/>
+    <part type="float" name="delay/mix"/>
+    <part type="float" name="delay/updown"/>
+    <part type="float" name="osc1/env/a"/>
+    <part type="float" name="osc1/env/d"/>
+    <part type="float" name="osc1/env/lvl"/>
+    <part type="float" name="osc1/env/r"/>
+    <part type="float" name="osc1/env/s"/>
+    <part type="float" name="osc2/env/a"/>
+    <part type="float" name="osc2/env/d"/>
+    <part type="float" name="osc2/env/lvl"/>
+    <part type="float" name="osc2/env/r"/>
+    <part type="float" name="osc2/env/s"/>
+    <part type="float" name="filter1/cutoff"/>
+    <part type="float" name="filter1/res"/>
+    <part type="float" name="filter1/tracking"/>
+    <part type="float" name="filter1/type"/>
+    <part type="float" name="filter2/cutoff"/>
+    <part type="float" name="filter2/res"/>
+    <part type="float" name="filter2/tracking"/>
+    <part type="float" name="filter2/type"/>
+    <part type="float" name="osc1/detune/fine"/>
+    <part type="float" name="osc2/detune/fine"/>
+    <part type="float" name="osc1/detune/octave"/>
+    <part type="float" name="osc2/detune/octave"/>
+    <part type="float" name="osc1/detune/phase"/>
+    <part type="float" name="osc2/detune/phase"/>
+    <part type="float" name="detune/f"/>
+    <part type="float" name="detune/o"/>
+    <part type="float" name="detune/s"/>
+    <part type="list" name="osc1/wave" size="256">
+      <part type="float"/>
+    </part>
+    <part type="list" name="osc2/wave" size="256">
+      <part type="float"/>
+    </part>
+    <part type="float" name="gate/smooth"/>
+    <part type="list" name="gate/sel/1" size="32">
+      <part type="float"/>
+    </part>
+    <part type="float" name="lfo1/depth"/>
+    <part type="float" name="lfo1/speed"/>
+    <part type="float" name="lfo1/wave"/>
+    <part type="float" name="lfo2/depth"/>
+    <part type="float" name="lfo2/speed"/>
+    <part type="float" name="lfo2/wave"/>
+    <part type="float" name="master"/>
+    <part type="float" name="porta"/>
+    <part type="float" name="voices"/>
+    <part type="float" name="pan"/>
+    <part type="float" name="run_select"/>
+    <part type="float" name="lfo3/time"/>
+    <part type="list" name="lfo3/wave" size="256">
+      <part type="float"/>
+    </part>
+    <part type="float" name="lfo3/shape"/>
+    <part type="float" name="lfo3/smooth"/>
+    <part type="float" name="steps/numsteps"/>
+    <part type="float" name="stereo"/>
+    <part type="float" name="steps/tempo"/>
+    <part type="float" name="steps/updown"/>
+    <part type="float" name="routing/lfo1/from"/>
+    <part type="float" name="routing/lfo1/to"/>
+    <part type="float" name="routing/lfo2/from"/>
+    <part type="float" name="routing/lfo2/to"/>
+    <part type="float" name="routing/lfo3/from"/>
+    <part type="float" name="routing/lfo3/to"/>
+    <part type="list" name="gate/data" size="32">
+      <part type="float"/>
+    </part>
+    <part type="float" name="gate/numsteps"/>
+    <part type="float" name="gate/on"/>
+    <part type="float" name="osc1/shape"/>
+    <part type="float" name="osc2/shape"/>
+    <part type="float" name="gate/quarter"/>
+    <part type="float" name="gate/vsteps"/>
+  </struct>
+</datadef>

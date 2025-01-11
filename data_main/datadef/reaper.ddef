@@ -1,136 +1,144 @@
-
-area_struct|reacomp
-part|float|thresh
-part|float|ratio
-part|float|attack
-part|float|release
-part|float|pre_comp
-part|float|resvd
-part|float|lowpass
-part|float|hipass
-part|float|signin
-part|float|audin
-part|float|dry
-part|float|wet
-part|float|previewf
-part|float|rms_size
-part|float|knee
-part|float|automkup
-part|float|autorel
-part|float|clsattk
-part|float|antials
-
-area_struct|__readelay_tap
-part|float|enabled
-part|float|length
-part|float|length_2
-part|float|feedback
-part|float|lowpass
-part|float|hipass
-part|float|resolution
-part|float|stereo_width
-part|float|volume
-part|float|pan
-part|float|
-
-area_struct|readelay
-part|int|unk1
-part|int|unk2
-length|int|taps
-part|int|unk3
-part|int|unk4
-part|int|unk5
-part|float|unk6
-part|float|wet
-part|float|dry
-part|list.0/struct.__readelay_tap|taps
-
-area_struct|__reaeq_band
-part|int|type
-part|int|on
-part|double|hz
-part|double|gain
-part|double|q
-part|byte|__unk
-
-area_struct|reaeq
-part|int|__unk
-length|int|bands
-part|list.0/struct.__reaeq_band|bands
-
-area_struct|reagate
-part|raw.4|_unk1
-part|raw.4|_unk2
-part|float|thresh
-part|float|attack
-part|float|release
-part|float|pre_open
-part|float|hold
-part|float|lowpass
-part|float|hipass
-part|float|signin
-part|float|audin
-part|float|dry
-part|float|wet
-part|float|noise
-part|float|hystrsis
-part|float|previewf
-part|float|rms_size
-part|float|usemidi
-part|float|midinote
-part|float|midichan
-part|float|invrtwet
-
-area_struct|__reaxcomp_band
-part|double|hz
-part|double|gain
-part|double|thresh
-part|double|ratio
-part|double|knee
-part|int|attack
-part|int|release
-part|int|rms
-part|int|flags
-
-area_struct|reaxcomp
-part|int|__unk
-length|int|bands
-part|list.0/struct.__reaxcomp_band|bands
-
-area_struct|reasamplomatic
-part|string_t|filename
-part|double|volume
-part|double|pan
-part|double|min_vol_gain
-part|double|key_start
-part|double|key_end
-part|double|pitch_start
-part|double|pitch_end
-part|double|midi_chan
-part|double|voices
-part|double|env_attack
-part|double|env_release
-part|double|obey_note_offs
-part|double|loop_on
-part|double|start
-part|double|end
-part|double|pitch_offset
-part|int|mode
-part|double|__unk17
-part|double|__unk18
-part|int|cache_sample_size
-part|double|pitch_bend
-part|s_int|resample_mode
-part|double|vel_max
-part|double|vel_min
-part|double|prob_hitting
-part|double|round_robin
-part|double|filter_played
-part|double|xfade
-part|double|loop_start
-part|double|env_decay
-part|double|env_sustain
-part|double|note_off_release_override
-part|double|note_off_release_override__enabled
-part|double|legacy_voice_reuse
-part|double|porta
+<datadef>
+  <struct name="reacomp">
+    <part type="float" name="thresh"/>
+    <part type="float" name="ratio"/>
+    <part type="float" name="attack"/>
+    <part type="float" name="release"/>
+    <part type="float" name="pre_comp"/>
+    <part type="float" name="resvd"/>
+    <part type="float" name="lowpass"/>
+    <part type="float" name="hipass"/>
+    <part type="float" name="signin"/>
+    <part type="float" name="audin"/>
+    <part type="float" name="dry"/>
+    <part type="float" name="wet"/>
+    <part type="float" name="previewf"/>
+    <part type="float" name="rms_size"/>
+    <part type="float" name="knee"/>
+    <part type="float" name="automkup"/>
+    <part type="float" name="autorel"/>
+    <part type="float" name="clsattk"/>
+    <part type="float" name="antials"/>
+  </struct>
+  <struct name="__readelay_tap">
+    <part type="float" name="enabled"/>
+    <part type="float" name="length"/>
+    <part type="float" name="length_2"/>
+    <part type="float" name="feedback"/>
+    <part type="float" name="lowpass"/>
+    <part type="float" name="hipass"/>
+    <part type="float" name="resolution"/>
+    <part type="float" name="stereo_width"/>
+    <part type="float" name="volume"/>
+    <part type="float" name="pan"/>
+    <part type="float"/>
+  </struct>
+  <struct name="readelay">
+    <part type="int" name="unk1"/>
+    <part type="int" name="unk2"/>
+    <length type="int" name="taps"/>
+    <part type="int" name="unk3"/>
+    <part type="int" name="unk4"/>
+    <part type="int" name="unk5"/>
+    <part type="float" name="unk6"/>
+    <part type="float" name="wet"/>
+    <part type="float" name="dry"/>
+    <part type="list" name="taps" size_source="lengthval">
+      <part type="struct" struct_name="__readelay_tap"/>
+    </part>
+  </struct>
+  <struct name="__reaeq_band">
+    <part type="int" name="type"/>
+    <part type="int" name="on"/>
+    <part type="double" name="hz"/>
+    <part type="double" name="gain"/>
+    <part type="double" name="q"/>
+    <part type="byte" name="__unk"/>
+  </struct>
+  <struct name="reaeq">
+    <part type="int" name="__unk"/>
+    <part type="list" name="bands" size_source="part">
+      <size type="int"/>
+      <part type="struct" struct_name="__reaeq_band"/>
+    </part>
+  </struct>
+  <struct name="reagate">
+    <part type="raw" name="_unk1" size="4"/>
+    <part type="raw" name="_unk2" size="4"/>
+    <part type="float" name="thresh"/>
+    <part type="float" name="attack"/>
+    <part type="float" name="release"/>
+    <part type="float" name="pre_open"/>
+    <part type="float" name="hold"/>
+    <part type="float" name="lowpass"/>
+    <part type="float" name="hipass"/>
+    <part type="float" name="signin"/>
+    <part type="float" name="audin"/>
+    <part type="float" name="dry"/>
+    <part type="float" name="wet"/>
+    <part type="float" name="noise"/>
+    <part type="float" name="hystrsis"/>
+    <part type="float" name="previewf"/>
+    <part type="float" name="rms_size"/>
+    <part type="float" name="usemidi"/>
+    <part type="float" name="midinote"/>
+    <part type="float" name="midichan"/>
+    <part type="float" name="invrtwet"/>
+  </struct>
+  <struct name="__reaxcomp_band">
+    <part type="double" name="hz"/>
+    <part type="double" name="gain"/>
+    <part type="double" name="thresh"/>
+    <part type="double" name="ratio"/>
+    <part type="double" name="knee"/>
+    <part type="int" name="attack"/>
+    <part type="int" name="release"/>
+    <part type="int" name="rms"/>
+    <part type="int" name="flags"/>
+  </struct>
+  <struct name="reaxcomp">
+    <part type="int" name="__unk"/>
+    <part type="list" name="bands" size_source="part">
+      <size type="int"/>
+      <part type="struct" struct_name="__reaxcomp_band"/>
+    </part>
+  </struct>
+  <struct name="reasamplomatic">
+    <part type="string_t" name="filename"/>
+    <part type="double" name="volume"/>
+    <part type="double" name="pan"/>
+    <part type="double" name="min_vol_gain"/>
+    <part type="double" name="key_start"/>
+    <part type="double" name="key_end"/>
+    <part type="double" name="pitch_start"/>
+    <part type="double" name="pitch_end"/>
+    <part type="double" name="midi_chan"/>
+    <part type="double" name="voices"/>
+    <part type="double" name="env_attack"/>
+    <part type="double" name="env_release"/>
+    <part type="double" name="obey_note_offs"/>
+    <part type="double" name="loop_on"/>
+    <part type="double" name="start"/>
+    <part type="double" name="end"/>
+    <part type="double" name="pitch_offset"/>
+    <part type="int" name="mode"/>
+    <part type="double" name="__unk17"/>
+    <part type="double" name="__unk18"/>
+    <part type="int" name="cache_sample_size"/>
+    <part type="double" name="pitch_bend"/>
+    <part type="s_int" name="resample_mode"/>
+    <part type="double" name="vel_max"/>
+    <part type="double" name="vel_min"/>
+    <part type="double" name="prob_hitting"/>
+    <part type="double" name="round_robin"/>
+    <part type="double" name="filter_played"/>
+    <part type="double" name="xfade"/>
+    <part type="double" name="loop_start"/>
+    <part type="double" name="env_decay"/>
+    <part type="double" name="env_sustain"/>
+    <part type="double" name="note_off_release_override"/>
+    <part type="double" name="note_off_release_override__enabled"/>
+    <part type="double" name="legacy_voice_reuse"/>
+    <part type="double" name="porta"/>
+  </struct>
+</datadef>

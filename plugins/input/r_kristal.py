@@ -38,6 +38,9 @@ class input_kristal(plugins.base):
 
 		sp_obj = placement_obj.sample
 		sp_obj.vol = part.volume
+		sp_obj.stretch.set_rate_tempo(120, 1, False)
+		sp_obj.stretch.preserve_pitch = True
+		sp_obj.stretch.algorithm = 'stretch'
 		if part.path:
 			if part.path[0] == 'CPath':
 				filepath = part.path[1].path

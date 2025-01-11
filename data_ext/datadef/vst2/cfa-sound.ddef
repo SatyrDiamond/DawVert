@@ -1,22 +1,24 @@
-
-area_struct|super7
-part|float|env/att
-part|float|env/shape
-part|float|env/dec
-part|float|env/rel
-part|float|env/sus
-part|skip_n.136|
-part|float|osc_detune
-part|float|filter/env/att
-part|float|filter/freq
-part|float|filter/env/dec
-part|float|filter/env/curve
-part|float|env_mod
-part|float|quality
-part|float|filter/reso
-part|float|osc_fine
-part|float|osc_mix
-part|float|level
-part|float|pan
-part|float|osc_range
-part|string.32|preset_name
+<datadef>
+  <struct name="super7">
+    <part type="float" name="env/att"/>
+    <part type="float" name="env/shape"/>
+    <part type="float" name="env/dec"/>
+    <part type="float" name="env/rel"/>
+    <part type="float" name="env/sus"/>
+    <part type="skip" size="136"/>
+    <part type="float" name="osc_detune"/>
+    <part type="float" name="filter/env/att"/>
+    <part type="float" name="filter/freq"/>
+    <part type="float" name="filter/env/dec"/>
+    <part type="float" name="filter/env/curve"/>
+    <part type="float" name="env_mod"/>
+    <part type="float" name="quality"/>
+    <part type="float" name="filter/reso"/>
+    <part type="float" name="osc_fine"/>
+    <part type="float" name="osc_mix"/>
+    <part type="float" name="level"/>
+    <part type="float" name="pan"/>
+    <part type="float" name="osc_range"/>
+    <part type="string" name="preset_name" size="32"/>
+  </struct>
+</datadef>

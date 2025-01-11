@@ -483,6 +483,11 @@ class output_reaper(plugins.base):
 								if if_found: 
 									vol_env = rpp_track.add_aux_env('vol', tracksendnum)
 									add_auto(vol_env, autopoints)
+							if send_obj.sendautoid:
+								if_found, autopoints = convproj_obj.automation.get_autopoints(['send', send_obj.sendautoid, 'pan'])
+								if if_found: 
+									vol_env = rpp_track.add_aux_env('pan', tracksendnum)
+									add_auto(vol_env, autopoints)
 		
 		if dawvert_intent.output_mode == 'file':
 			project_obj.save_to_file(dawvert_intent.output_file)

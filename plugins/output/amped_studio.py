@@ -33,6 +33,7 @@ def createclip(audiopl_obj, audio_id):
 	amped_audclip.offset = 0
 	amped_audclip.stretch = audiopl_obj.sample.stretch.calc_real_size
 	amped_audclip.pitchShift = audiopl_obj.sample.pitch
+	amped_audclip.reversed = audiopl_obj.sample.reverse
 	return amped_audclip
 
 def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, amped_auto):
@@ -157,8 +158,8 @@ class output_amped(plugins.base):
 		amped_obj.tempo = int(convproj_obj.params.get('bpm', 120).value)
 		amped_obj.timesig_num, amped_obj.timesig_den = convproj_obj.timesig
 		amped_obj.loop_active = convproj_obj.transport.loop_active
-		amped_obj.loop_start = convproj_obj.transport.loop_start
-		amped_obj.loop_end = convproj_obj.transport.loop_end
+		amped_obj.loop_start = convproj_obj.transport.loop_start/4
+		amped_obj.loop_end = convproj_obj.transport.loop_end/4
 		amped_obj.playheadPosition = convproj_obj.transport.current_pos
 
 		amped_obj.createdWith = "DawVert"

@@ -1,31 +1,33 @@
-
-area_struct|opdata
-part|byte|tl
-part|byte|ar
-part|byte|d1r
-part|byte|d1l
-part|byte|d2r
-part|byte|rr
-part|byte|ks
-part|byte|ml
-part|byte|dt1
-part|byte|dt2
-part|byte|ams-en
-
-area_struct|patch
-part|byte|alg
-part|byte|fb
-part|byte|ams
-part|byte|pms
-part|byte|nfrq
-part|byte|noise
-part|byte|lfo_frq
-part|byte|lfo_amd
-part|byte|lfo_pmd
-part|byte|_7
-part|byte|opmsk
-part|struct.opdata|op1
-part|struct.opdata|op2
-part|struct.opdata|op3
-part|struct.opdata|op4
-part|string.16|name
+<datadef>
+  <struct name="opdata">
+    <part type="byte" name="tl"/>
+    <part type="byte" name="ar"/>
+    <part type="byte" name="d1r"/>
+    <part type="byte" name="d1l"/>
+    <part type="byte" name="d2r"/>
+    <part type="byte" name="rr"/>
+    <part type="byte" name="ks"/>
+    <part type="byte" name="ml"/>
+    <part type="byte" name="dt1"/>
+    <part type="byte" name="dt2"/>
+    <part type="byte" name="ams-en"/>
+  </struct>
+  <struct name="patch">
+    <part type="byte" name="alg"/>
+    <part type="byte" name="fb"/>
+    <part type="byte" name="ams"/>
+    <part type="byte" name="pms"/>
+    <part type="byte" name="nfrq"/>
+    <part type="byte" name="noise"/>
+    <part type="byte" name="lfo_frq"/>
+    <part type="byte" name="lfo_amd"/>
+    <part type="byte" name="lfo_pmd"/>
+    <part type="byte" name="_7"/>
+    <part type="byte" name="opmsk"/>
+    <part type="struct" name="op1" struct_name="opdata"/>
+    <part type="struct" name="op2" struct_name="opdata"/>
+    <part type="struct" name="op3" struct_name="opdata"/>
+    <part type="struct" name="op4" struct_name="opdata"/>
+    <part type="string" name="name" size="16"/>
+  </struct>
+</datadef>

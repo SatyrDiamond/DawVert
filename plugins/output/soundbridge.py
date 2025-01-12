@@ -571,7 +571,7 @@ class output_soundbridge(plugins.base):
 							notearray[numnote]['pos'] = t_pos
 							notearray[numnote]['dur'] = t_dur
 							notearray[numnote]['key'] = t_key+60
-							notearray[numnote]['vol'] = min(t_vol*127, 127)
+							notearray[numnote]['vol'] = int(min(t_vol*127, 127))
 							numnote += 1
 
 					if notespl_obj.visual.color: 

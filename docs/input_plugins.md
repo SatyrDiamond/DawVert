@@ -51,7 +51,6 @@
 | R-I | ```main``` | ```caustic``` | Caustic 3 | ```.caustic``` | ✔️ | 
 | R | ```main``` | ```nanostudio_v1``` | NanoStudio 1 | ```.prj``` | ✔️ | |
 | R-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
-| R-M | ```main``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | R-M | ```main``` | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ✔️ | 
 
 ## Mario Paint
@@ -67,14 +66,15 @@
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
 | R | ```main``` | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
-| R | ```main``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
-| R-M | ```main``` | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
-| R-M | ```main``` | ```adlib_sop``` | Note FM Tracker | ```.sop``` | ✔️ | 
 | R-M | ```main``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
-| R | ```ancient``` | ```z_maestro``` | Z-Maestro | ```.zmm``` | ✔️ | |
+| R | ```ancient``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
+| R | ```ancient``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R | ```ancient``` | ```kristal``` | KRISTAL Audio Engine | ```.kristal``` | ✔️ | |
 | R | ```ancient``` | ```temper``` | Temper | ```.squ``` | ✔️ | |
-| R | ```ancient``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
+| R | ```ancient``` | ```z_maestro``` | Z-Maestro | ```.zmm``` | ✔️ | |
+| R-M | ```ancient``` | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
+| R-M | ```ancient``` | ```adlib_sop``` | Note FM Tracker | ```.sop``` | ✔️ | 
+| R-M | ```ancient``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | R-S | ```ancient``` | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
 
 ## Experiments

@@ -455,28 +455,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			except:
 				pass
 
-	def __do_auto_detect_old(self):
-		filename = self.ui.InputFilePath.text()
-		if os.path.exists(filename):
-			try:
-				#outplugnames = test_obj.detect_file(filename)
-				detect_plugin_found = dawvert_core.input_autoset_keepset(filename)
-				plugnames = dawvert_core.input_get_plugins()
-				if detect_plugin_found:
-					self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(detect_plugin_found))
-					return True
-				else:
-					outshort = dawvert_core.input_autoset_fileext(filename)
-					if outshort:
-						self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(outshort))
-						return outshort != None
-					elif len(plugnames)==1:
-						dawvert_core.input_set(plugnames[0])
-						return False
-				return False
-			except:
-				pass
-
 	def __can_convert(self):
 		dawvert_intent.input_file = self.ui.InputFilePath.text().replace('/', '\\')
 		dawvert_intent.output_file = self.ui.OutputFilePath.text().replace('/', '\\')

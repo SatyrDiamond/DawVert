@@ -6,6 +6,7 @@
 from functions import plug_conv
 from objects import core as dv_core
 from objects import globalstore
+from objects import format_detect
 from objects.exceptions import ProjectFileParserException
 from pathlib import Path
 from plugins import base as dv_plugins
@@ -279,6 +280,9 @@ configparts_mi2m = {
 	'output_unused_nle': ['bool', 'OutUnused']
 }
 
+filedetector_obj = format_detect.file_detector()
+filedetector_obj.load_def('data_main/autodetect.xml')
+
 DEBUG_VIEW = 0
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -384,10 +388,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		self.__plugcatmod('nonfree', event)
 
 	def dragEnterEvent(self, event):
-		if event.mimeData().hasUrls():
-			event.accept()
-		else:
-			event.ignore()
+		if event.mimeData().hasUrls(): event.accept()
+		else: event.ignore()
 
 	def set_dd_output(self, f):
 		self.ui.InputFilePath.setText(f)
@@ -411,8 +413,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			self.__do_auto_detect()
 			self.__change_output_path()
 			if dawvert_config__main['ui__auto_convert']:
-				if self.__can_convert():
-					self.__do_convert()
+				if self.__can_convert(): self.__do_convert()
 
 	def __change_dd_setting(self, num):
 		dawvert_config__main['ui__drag_drop'] = num
@@ -425,36 +426,40 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 		dawvert_config__main['ui__auto_convert'] = val
 
 	def __choose_input(self):
-		filename, _filter = QFileDialog.getOpenFileName(
-			self,
-			"Open File",
-			"",
-			"",
-		)
+		filename, _filter = QFileDialog.getOpenFileName(self, "Open File", "", "")
 		self.ui.InputFilePath.setText(filename)
 
 	def __choose_output(self):
-		filename, _filter = QFileDialog.getSaveFileName(
-			self,
-			"Save File",
-			"",
-			"",
-		)
+		filename, _filter = QFileDialog.getSaveFileName(self, "Save File", "", "")
 		self.ui.OutputFilePath.setText(filename)
 
 	def __choose_samples(self):
-		filename, _filter = QFileDialog.getSaveFileName(
-			self,
-			"Save File",
-			"",
-			"",
-		)
+		filename, _filter = QFileDialog.getSaveFileName(self, "Save File", "", "")
 		self.ui.OutputSamplePath.setText(filename)
 
 	def __do_auto_detect(self):
 		filename = self.ui.InputFilePath.text()
 		if os.path.exists(filename):
 			try:
+				plugsetlist = list(dv_core.pluginsets_input)
+				outdetected = filedetector_obj.detect_file(filename)
+				if outdetected:
+					plugset, plugname = outdetected
+					self.__change_input_plugset_named(plugset)
+					self.ui.ListWidget_InPlugSet.setCurrentRow(plugsetlist.index(plugset))
+					plugnames = dawvert_core.input_get_plugins()
+					self.ui.ListWidget_InPlugin.setCurrentRow(plugnames.index(plugname))
+					dawvert_core.input_set(plugname)
+					return True
+				return False
+			except:
+				pass
+
+	def __do_auto_detect_old(self):
+		filename = self.ui.InputFilePath.text()
+		if os.path.exists(filename):
+			try:
+				#outplugnames = test_obj.detect_file(filename)
 				detect_plugin_found = dawvert_core.input_autoset_keepset(filename)
 				plugnames = dawvert_core.input_get_plugins()
 				if detect_plugin_found:
@@ -521,6 +526,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 			self.ui.SubStatusText.setText('')
 			return True
 
+
+	def __change_input_plugset_named(self, plugsetname):
+		dawvert_core.input_load_plugins(plugsetname)
+		self.__update_input_plugins()
+		self.__change_input_plugin(0)
 
 	def __change_input_plugset(self, num):
 		plugsetname = dawvert_core.input_get_pluginsets_index(num)

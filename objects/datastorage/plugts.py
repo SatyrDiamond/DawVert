@@ -25,7 +25,9 @@ class pltr_ts:
 class plugts:
 	def __init__(self, filename):
 		self.transforms = {}
+		if filename: self.load_text(filename)
 
+	def load_text(self, filename):
 		if os.path.exists(filename):
 			with open(filename, 'r') as ptsfile:
 				inside_group = None

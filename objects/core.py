@@ -193,6 +193,7 @@ class dawinfo:
 
 pluginsets_input = {
 'main': ['', 'Main'],
+'ancient': ['ancient', 'Ancient'],
 'exper': ['exper', 'Experiments'],
 'nn': ['nn', 'NeuralNet'],
 'vgm': ['vgm', 'VGM'],

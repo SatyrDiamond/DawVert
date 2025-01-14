@@ -6,6 +6,7 @@ from functions_plugin_ext import plugin_vst2
 
 from functions import song_compat
 from functions import plug_conv
+from objects import format_detect
 import pathlib
 
 from functions_song import convert_r2m
@@ -208,6 +209,9 @@ pluginsets_output = {
 'old': ['old', 'Old/Broken']
 }
 
+filedetector_obj = format_detect.file_detector()
+filedetector_obj.load_def('data_main/autodetect.xml')
+
 class core:
 	def __init__(self):
 		platform_architecture = platform.architecture()
@@ -222,19 +226,24 @@ class core:
 
 	def intent_setplugins(self, dawvert_intent):
 		if dawvert_intent.plugin_set:
-			self.input_load_plugins(dawvert_intent.plugset_input if dawvert_intent.plugset_input else 'main')
+
 			self.output_load_plugins(dawvert_intent.plugset_output if dawvert_intent.plugset_output else 'main')
 
 			if dawvert_intent.plugin_input == None:
-				detect_plugin_found = self.input_autoset(dawvert_intent.input_file)
-				if detect_plugin_found == None:
-					detect_plugin_found = self.input_autoset_fileext(dawvert_intent.input_file)
-					if detect_plugin_found == None:
+				if dawvert_intent.input_mode == 'file':
+					outdetected = filedetector_obj.detect_file(dawvert_intent.input_file)
+					if outdetected:
+						plugset, plugname = outdetected
+						self.input_load_plugins(plugset)
+						dawvert_intent.plugin_input = plugname
+						self.input_set(dawvert_intent.plugin_input)
+					else:
 						logger_core.error('Could not identify the input format')
 						return False
 			else:
+				self.input_load_plugins(dawvert_intent.plugset_input if dawvert_intent.plugset_input else 'main')
 				if dawvert_intent.plugin_input in self.input_get_plugins():
-					in_class = self.input_set(dawvert_intent.plugin_input)
+					self.input_set(dawvert_intent.plugin_input)
 				else:
 					logger_core.error('Input format plugin not found')
 					return False
@@ -305,20 +314,6 @@ class core:
 
 	def input_unset(self, pluginname): 
 		return self.currentplug_input.unset()
-
-	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
-
-	def input_autoset_keepset(self, in_file): return self.currentplug_input.set_auto_keepset(in_file)
-
-	def input_autoset_fileext(self, in_file):
-		fileext = pathlib.Path(in_file).suffix
-		shortname = None
-		for shortname, plug_obj, prop_obj in self.currentplug_input.iter():
-			if prop_obj.file_ext_detect:
-				if fileext.lower() in ['.'+x.lower() for x in prop_obj.file_ext]:
-					self.input_set(shortname)
-					return shortname
-		if shortname: self.input_unset(shortname)
 
 	def output_load_plugins(self, pluginset):
 		if pluginset in pluginsets_output: 

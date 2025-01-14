@@ -11,6 +11,7 @@
 | M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
 | R | ```main``` | ```soundbridge``` | SoundBridge | ```.soundbridge``` | ✔️ | |
 | R | ```main``` | ```tracktion_edit``` | tracktion Edit | ```.tracktionedit``` | ✔️ | |
+| R | ```main``` | ```zenbeats``` | ZenBeats | ```.song``` | ✔️ | |
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
@@ -38,19 +39,20 @@
 | --- | --- | --- | :--- | :--- | :--- | :--- |
 | M-I | ```main``` | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
 | R | ```main``` | ```amped``` | Amped Studio | ```.json``` | ✔️ | |
-| R | ```main``` | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
 | R | ```main``` | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
 | R | ```main``` | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
 | R | ```main``` | ```soundation``` | Soundation | ```.sng``` | ❌ | |
 | R | ```main``` | ```wavtool``` | WavTool | ```.zip``` | ❌ | |
+| R | ```ancient``` | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
 
 ## Other
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| R-I | ```main``` | ```caustic``` | Caustic 3 | ```.caustic``` | ❌ | 
+| R-I | ```main``` | ```caustic``` | Caustic 3 | ```.caustic``` | ✔️ | 
+| R | ```main``` | ```nanostudio_v1``` | NanoStudio 1 | ```.prj``` | ✔️ | |
 | R-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | R-M | ```main``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
-| R-M | ```main``` | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ❌ | 
+| R-M | ```main``` | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ✔️ | 
 
 ## Mario Paint
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
@@ -64,14 +66,16 @@
 ## Old
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| R | ```main``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R | ```main``` | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
 | R | ```main``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
-| R | ```main``` | ```temper``` | Temper | ```.squ``` | ❌ | |
-| R-M | ```main``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
-| R-S | ```main``` | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
 | R-M | ```main``` | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
 | R-M | ```main``` | ```adlib_sop``` | Note FM Tracker | ```.sop``` | ✔️ | 
+| R-M | ```main``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
+| R | ```ancient``` | ```z_maestro``` | Z-Maestro | ```.zmm``` | ✔️ | |
+| R | ```ancient``` | ```kristal``` | KRISTAL Audio Engine | ```.kristal``` | ✔️ | |
+| R | ```ancient``` | ```temper``` | Temper | ```.squ``` | ✔️ | |
+| R | ```ancient``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
+| R-S | ```ancient``` | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
 
 ## Experiments
 | DataType | PluginSet | Short Name | Name | Info |

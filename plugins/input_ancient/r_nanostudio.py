@@ -14,7 +14,7 @@ class input_nanostudio_v1(plugins.base):
 		return 'nanostudio_v1'
 	
 	def get_name(self):
-		return 'NanoStudio 1 '
+		return 'NanoStudio 1'
 	
 	def get_priority(self):
 		return 0

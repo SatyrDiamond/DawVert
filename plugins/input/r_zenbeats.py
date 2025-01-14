@@ -5,14 +5,48 @@ import plugins
 import json
 import struct
 import os.path
+import math
 from objects import globalstore
 from objects import colors
+from functions import xtramath
 
 def do_visual(cvpj_visual, zb_visual, color_index, colordata):
 	cvpj_visual.name = zb_visual.name
 	if color_index != -1:
 		colorfloat = colordata.getcolornum(color_index)
 		cvpj_visual.color.set_float(colorfloat)
+
+def do_auto(convproj_obj, autoloc, curve, parammode):
+	valtype = 'float'
+	if parammode == 1: valtype = 'bool'
+	if parammode == 2: valtype = 'bool'
+	for p in curve.points:
+		if parammode == 0: val = p.value
+		if parammode == 1: val = p.value>0.5
+		if parammode == 2: val = p.value<0.5
+		if parammode == 3: val = (p.value-0.5)*2
+		convproj_obj.automation.add_autopoint(autoloc, valtype, p.position, val, 'normal')
+		print(val, p.position)
+
+def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc):
+	for rack in project_obj.bank.racks:
+		if rack.uid==zb_track.output_rack_uid:
+			track_obj.params.add('vol', rack.gain, 'float')
+			track_obj.params.add('solo', bool(rack.solo), 'bool')
+			track_obj.params.add('mute', bool(rack.mute), 'bool')
+
+			for send_track in rack.send_tracks:
+				track_obj.sends.add(send_track.send_track_uid, None, send_track.send_amount)
+
+			for curve in rack.automation_set.curves:
+				if rack.uid==curve.target_object:
+					if curve.target == 'DT_RACK':
+						if curve.function == 'DF_POST_GAIN': do_auto(convproj_obj, autoloc+['vol'], curve, 0)
+						if curve.function == 'DF_PAN': do_auto(convproj_obj, autoloc+['pan'], curve, 3)
+						if curve.function == 'DF_MUTE': do_auto(convproj_obj, autoloc+['enabled'], curve, 2)
+						if curve.function == 'DF_SOLO': do_auto(convproj_obj, autoloc+['solo'], curve, 1)
+
+			break
 
 class input_zenbeats(plugins.base):
 	def is_dawvert_plugin(self):
@@ -39,9 +73,6 @@ class input_zenbeats(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['fxtype'] = 'groupreturn'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'PMD'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_zenbeats
 
@@ -57,23 +88,37 @@ class input_zenbeats(plugins.base):
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
+		convproj_obj.timesig = [project_obj.time_signature_numerator, project_obj.time_signature_denominator]
+
+		convproj_obj.transport.loop_active = bool(project_obj.loop)
+		convproj_obj.transport.loop_start = project_obj.loop_start
+		convproj_obj.transport.loop_end = project_obj.loop_end
+		convproj_obj.transport.current_pos = project_obj.play_start_marker
 
 		added_samples = []
 
 		master_id = None
 		track_groups = []
+
+		assoc_rack = {}
+
 		for zb_track in project_obj.tracks:
+			assoc_rack[zb_track.output_rack_uid] = zb_track.uid
+
 			if zb_track.type == 258: 
 				track_groups.append(zb_track.uid)
 				track_obj = convproj_obj.fx__group__add(zb_track.uid)
+				do_rack(convproj_obj, project_obj, track_obj, zb_track, ['group', zb_track.uid])
 				do_visual(track_obj.visual, zb_track.visual, zb_track.color_index, colordata)
 
 			if zb_track.type == 130: 
 				return_obj = convproj_obj.track_master.fx__return__add(zb_track.uid)
+				do_rack(convproj_obj, project_obj, return_obj, zb_track, ['return', zb_track.uid])
 				do_visual(return_obj.visual, zb_track.visual, zb_track.color_index, colordata)
 
 			if zb_track.type == 18: 
 				master_id = zb_track.uid
+				do_rack(convproj_obj, project_obj, convproj_obj.track_master, zb_track, ['master'])
 				do_visual(convproj_obj.track_master.visual, zb_track.visual, zb_track.color_index, colordata)
 
 		for zb_track in project_obj.tracks:
@@ -81,8 +126,12 @@ class input_zenbeats(plugins.base):
 			if master_id in track_groups or master_id==None:
 				if zb_track.type in [0, 1, 97]:
 					track_obj = convproj_obj.track__add(zb_track.uid, 'instrument', 1, False)
+					do_rack(convproj_obj, project_obj, track_obj, zb_track, ['track', zb_track.uid])
 					do_visual(track_obj.visual, zb_track.visual, zb_track.color_index, colordata)
 					if master_id: track_obj.group = master_id
+
+					track_obj.armed.in_keys = bool(zb_track.arm_record)
+					track_obj.armed.on = track_obj.armed.in_keys
 
 					for zb_pattern in zb_track.patterns:
 						placement_obj = track_obj.placements.add_notes()
@@ -96,8 +145,12 @@ class input_zenbeats(plugins.base):
 	
 				if zb_track.type == 2:
 					track_obj = convproj_obj.track__add(zb_track.uid, 'audio', 1, False)
+					do_rack(convproj_obj, project_obj, track_obj, zb_track, ['track', zb_track.uid])
 					do_visual(track_obj.visual, zb_track.visual, zb_track.color_index, colordata)
 					if master_id: track_obj.group = master_id
+
+					track_obj.armed.in_audio = bool(zb_track.arm_record)
+					track_obj.armed.on = track_obj.armed.in_audio
 
 					for zb_pattern in zb_track.patterns:
 						placement_obj = track_obj.placements.add_audio()
@@ -114,9 +167,16 @@ class input_zenbeats(plugins.base):
 							sp_obj = placement_obj.sample
 							sp_obj.sampleref = zb_pattern.audio_file
 							speedrate = zb_pattern.preserve_pitch if zb_pattern.preserve_pitch is not None else 1
+							if zb_pattern.preserve_pitch: speedrate *= 120/zb_pattern.audio_file_original_bpm
 							sp_obj.stretch.set_rate_tempo(project_obj.bpm, speedrate, False)
-							sp_obj.stretch.preserve_pitch = True
 							sp_obj.stretch.algorithm = 'stretch'
+							sp_obj.stretch.preserve_pitch = True
+							if zb_pattern.audio_pitch is not None: sp_obj.pitch += math.log2(1/zb_pattern.audio_pitch)*-12
+							if zb_pattern.audio_gain is not None: sp_obj.vol = zb_pattern.audio_gain
+							if zb_pattern.audio_pan is not None: sp_obj.pan = zb_pattern.audio_pan
+							if zb_pattern.reverse_audio is not None: sp_obj.reverse = zb_pattern.reverse_audio
+							if zb_pattern.preserve_pitch is not None: sp_obj.stretch.preserve_pitch = bool(zb_pattern.preserve_pitch)
+
 				#else:
 				#	print(zb_track.type, zb_track.visual.name)
 

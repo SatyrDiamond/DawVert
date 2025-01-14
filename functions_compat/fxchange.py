@@ -115,6 +115,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 			track_obj.fxrack_channel = tracknum
 			track_obj.placements.add_fxrack_channel(tracknum)
 			tracknum += 1
+		return True
 
 	elif in_fxtype == 'groupreturn' and out_fxtype == 'rack' and convproj_obj.type in ['r', 'ri', 'rm', 'ms', 'rs']:
 		t2m = trackfx_to_numdata.to_numdata()

@@ -8,6 +8,7 @@ import argparse
 import os
 import logging
 from objects import core
+from objects import format_detect
 from functions import plug_conv
 from objects.exceptions import ProjectFileParserException
 

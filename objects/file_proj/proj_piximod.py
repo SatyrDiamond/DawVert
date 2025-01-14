@@ -30,6 +30,7 @@ class piximod_song:
 		self.lpb = 4
 		self.tpl = 6
 		self.vol = 100
+		self.shuffle = 0
 		self.order = []
 		self.patterns = {}
 		self.sounds = [piximod_sample() for x in range(16)]

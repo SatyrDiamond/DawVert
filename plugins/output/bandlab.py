@@ -35,7 +35,7 @@ class output_bandlab(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_bandlab
 
-		convproj_obj.change_timings(1, False)
+		convproj_obj.change_timings(1, True)
 		
 		project_obj = proj_bandlab.bandlab_project()
 
@@ -60,6 +60,43 @@ class output_bandlab(plugins.base):
 		self.samplerKits = proj_bandlab.bandlab_samplerKits(None)
 
 		creatorId = str(uuid.uuid4())
+		project_obj.creator['id'] = creatorId
+		project_obj.song = {
+			"author": {
+				"conversationId": None,
+				"id": creatorId,
+				"name": "DawVert",
+				"type": "Computer Software",
+				"username": ""
+			},
+			"canEdit": True,
+			"counters": {
+				"collaborators": 0,
+				"comments": 0,
+				"forks": 0,
+				"likes": 0,
+				"plays": 0,
+				"publicRevisions": 0
+			},
+			"id": "026f6166-72ae-ef11-88cd-6045bd345b20",
+			"isFork": False,
+			"isForkable": False,
+			"isPublic": False,
+			"name": "audioc",
+			"original": None,
+			"originalSongId": None,
+			"picture": {
+				"color": None,
+				"isDefault": True,
+				"url": "https://bandlabimages.azureedge.net/v1.0/songs/default/"
+			},
+			"slug": "dawvert_created",
+			"source": {
+				"id": "00000000-0000-0000-0000-000000000000",
+				"type": "Revision"
+			},
+			"stamp": None
+		}
 
 		sampleref_assoc = {}
 		sampleref_ext = {}
@@ -120,7 +157,7 @@ class output_bandlab(plugins.base):
 
 						blx_region.pitchShift = sp_obj.pitch
 						blx_region.gain = sp_obj.vol
-						blx_region.playbackRate = sp_obj.stretch.calc_tempo_speed
+						blx_region.playbackRate = sp_obj.stretch.calc_tempo_speed/tempomul
 
 						blx_region.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
 						blx_region.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
@@ -214,8 +251,8 @@ def make_plugins_fx(convproj_obj, effects, fxslots_audio):
 def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi):
 	blx_region.trackId = blx_track.id
 	blx_region.id = str(uuid.uuid4())
-	blx_region.startPosition = audiopl_obj.time.position/2
-	blx_region.endPosition = blx_region.startPosition+(audiopl_obj.time.duration/2)
+	blx_region.startPosition = (audiopl_obj.time.position/2)*tempomul
+	blx_region.endPosition = ((audiopl_obj.time.position+audiopl_obj.time.duration)/2)*tempomul
 	blx_region.name = audiopl_obj.visual.name
 
 	cut_type = audiopl_obj.time.cut_type
@@ -225,4 +262,4 @@ def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi):
 	cut_start = audiopl_obj.time.cut_start
 
 	if cut_type == 'cut':
-		blx_region.sampleOffset += cut_start/2
+		blx_region.sampleOffset += (cut_start/2)*tempomul

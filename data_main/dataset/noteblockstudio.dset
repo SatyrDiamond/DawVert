@@ -1,201 +1,61 @@
-{
-    "inst": {
-        "objects": {
-            "0": {
-                "midi": {
-                    "active": true
-                },
-                "visual": {
-                    "color": [
-                        0.0,
-                        0.27,
-                        0.55
-                    ],
-                    "name": "Piano (Air)"
-                }
-            },
-            "1": {
-                "midi": {
-                    "active": true,
-                    "patch": 35
-                },
-                "visual": {
-                    "color": [
-                        0.13,
-                        0.43,
-                        0.18
-                    ],
-                    "name": "Double Bass (Wood)"
-                }
-            },
-            "10": {
-                "midi": {
-                    "active": true,
-                    "patch": 11
-                },
-                "visual": {
-                    "color": [
-                        0.0,
-                        0.44,
-                        0.61
-                    ],
-                    "name": "Iron Xylophone (Iron Block)"
-                }
-            },
-            "11": {
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.04,
-                        0.05
-                    ],
-                    "name": "Cow Bell (Soul Sand)"
-                }
-            },
-            "12": {
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.23,
-                        0.06
-                    ],
-                    "name": "Didgeridoo (Pumpkin)"
-                }
-            },
-            "13": {
-                "visual": {
-                    "color": [
-                        0.0,
-                        0.61,
-                        0.0
-                    ],
-                    "name": "Bit (Block of Emerald)"
-                }
-            },
-            "14": {
-                "midi": {
-                    "active": true,
-                    "patch": 105
-                },
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.0,
-                        0.23
-                    ],
-                    "name": "Banjo (Hay)"
-                }
-            },
-            "15": {
-                "visual": {
-                    "color": [
-                        0.24,
-                        0.24,
-                        0.24
-                    ],
-                    "name": "Pling (Glowstone)"
-                }
-            },
-            "2": {
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.3,
-                        0.31
-                    ],
-                    "name": "Bass Drum (Stone)"
-                }
-            },
-            "3": {
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.61,
-                        0.0
-                    ],
-                    "name": "Snare Drum (Sand)"
-                }
-            },
-            "4": {
-                "midi": {
-                    "active": true,
-                    "patch": 13
-                },
-                "visual": {
-                    "color": [
-                        0.49,
-                        0.24,
-                        0.48
-                    ],
-                    "name": "Click (Glass)"
-                }
-            },
-            "5": {
-                "midi": {
-                    "active": true,
-                    "patch": 24
-                },
-                "visual": {
-                    "color": [
-                        0.4,
-                        0.18,
-                        0.12
-                    ],
-                    "name": "Guitar (Wool)"
-                }
-            },
-            "6": {
-                "midi": {
-                    "active": true,
-                    "patch": 73
-                },
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.58,
-                        0.25
-                    ],
-                    "name": "Flute (Clay)"
-                }
-            },
-            "7": {
-                "midi": {
-                    "active": true,
-                    "patch": 112
-                },
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.0,
-                        0.61
-                    ],
-                    "name": "Bell (Block of Gold)"
-                }
-            },
-            "8": {
-                "visual": {
-                    "color": [
-                        0.21,
-                        0.44,
-                        0.49
-                    ],
-                    "name": "Chime (Packed Ice)"
-                }
-            },
-            "9": {
-                "midi": {
-                    "active": true,
-                    "patch": 13
-                },
-                "visual": {
-                    "color": [
-                        0.61,
-                        0.61,
-                        0.61
-                    ],
-                    "name": "Xylophone (Bone Block)"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="inst">
+        <object id="0">
+            <midi />
+            <visual name="Piano (Air)" color="0|68.85|140.25" />
+        </object>
+        <object id="1">
+            <midi patch="35" />
+            <visual name="Double Bass (Wood)" color="33.15|109.65|45.9" />
+        </object>
+        <object id="10">
+            <midi patch="11" />
+            <visual name="Iron Xylophone (Iron Block)" color="0|112.2|155.55" />
+        </object>
+        <object id="11">
+            <visual name="Cow Bell (Soul Sand)" color="155.55|10.2|12.75" />
+        </object>
+        <object id="12">
+            <visual name="Didgeridoo (Pumpkin)" color="155.55|58.65|15.3" />
+        </object>
+        <object id="13">
+            <visual name="Bit (Block of Emerald)" color="0|155.55|0" />
+        </object>
+        <object id="14">
+            <midi patch="105" />
+            <visual name="Banjo (Hay)" color="155.55|0|58.65" />
+        </object>
+        <object id="15">
+            <visual name="Pling (Glowstone)" color="61.2|61.2|61.2" />
+        </object>
+        <object id="2">
+            <visual name="Bass Drum (Stone)" color="155.55|76.5|79.05" />
+        </object>
+        <object id="3">
+            <visual name="Snare Drum (Sand)" color="155.55|155.55|0" />
+        </object>
+        <object id="4">
+            <midi patch="13" />
+            <visual name="Click (Glass)" color="124.95|61.2|122.4" />
+        </object>
+        <object id="5">
+            <midi patch="24" />
+            <visual name="Guitar (Wool)" color="102|45.9|30.6" />
+        </object>
+        <object id="6">
+            <midi patch="73" />
+            <visual name="Flute (Clay)" color="155.55|147.9|63.75" />
+        </object>
+        <object id="7">
+            <midi patch="112" />
+            <visual name="Bell (Block of Gold)" color="155.55|0|155.55" />
+        </object>
+        <object id="8">
+            <visual name="Chime (Packed Ice)" color="53.55|112.2|124.95" />
+        </object>
+        <object id="9">
+            <midi patch="13" />
+            <visual name="Xylophone (Bone Block)" color="155.55|155.55|155.55" />
+        </object>
+    </category>
+</dataset>

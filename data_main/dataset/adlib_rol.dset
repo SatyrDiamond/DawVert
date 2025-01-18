@@ -1,1058 +1,522 @@
-{
-    "inst": {
-        "objects": {
-            "ACCORDN": {
-                "midi": {
-                    "active": true,
-                    "patch": 21
-                },
-                "visual": {
-                    "name": "Accordion"
-                }
-            },
-            "BAGPIPE1": {
-                "midi": {
-                    "active": true,
-                    "patch": 109
-                },
-                "visual": {
-                    "name": "Bagpipe 1"
-                }
-            },
-            "BAGPIPE2": {
-                "midi": {
-                    "active": true,
-                    "patch": 109
-                },
-                "visual": {
-                    "name": "Bagpipe 2"
-                }
-            },
-            "BANJO1": {
-                "midi": {
-                    "active": true,
-                    "patch": 105
-                },
-                "visual": {
-                    "name": "Banjo"
-                }
-            },
-            "BASS1": {
-                "midi": {
-                    "active": true,
-                    "patch": 34
-                },
-                "visual": {
-                    "name": "Bass 1"
-                }
-            },
-            "BASS2": {
-                "midi": {
-                    "active": true,
-                    "patch": 35
-                },
-                "visual": {
-                    "name": "Bass 2"
-                }
-            },
-            "BASSHARP": {
-                "visual": {
-                    "name": "Bass Harp"
-                }
-            },
-            "BASSOON1": {
-                "midi": {
-                    "active": true,
-                    "patch": 70
-                },
-                "visual": {
-                    "name": "Bassoon"
-                }
-            },
-            "BASSTRLG": {
-                "visual": {
-                    "name": "Bass String Long"
-                }
-            },
-            "BDRUM1": {
-                "visual": {
-                    "name": "Bass Drum"
-                }
-            },
-            "BELLONG": {
-                "visual": {
-                    "name": "Bell Long"
-                }
-            },
-            "BELLS": {
-                "visual": {
-                    "name": "Bells"
-                }
-            },
-            "BELSHORT": {
-                "visual": {
-                    "name": "Bell Short"
-                }
-            },
-            "BNCEBASS": {
-                "visual": {
-                    "name": "BnceBass"
-                }
-            },
-            "BRASS1": {
-                "midi": {
-                    "active": true,
-                    "patch": 62
-                },
-                "visual": {
-                    "name": "Brass"
-                }
-            },
-            "CBASSOON": {
-                "visual": {
-                    "name": "C Bassoon"
-                }
-            },
-            "CELESTA": {
-                "midi": {
-                    "active": true,
-                    "patch": 8
-                },
-                "visual": {
-                    "name": "Celesta"
-                }
-            },
-            "CLAR1": {
-                "midi": {
-                    "active": true,
-                    "patch": 71
-                },
-                "visual": {
-                    "name": "Clarinet 1"
-                }
-            },
-            "CLAR2": {
-                "midi": {
-                    "active": true,
-                    "patch": 71
-                },
-                "visual": {
-                    "name": "Clarinet 2"
-                }
-            },
-            "CLARINET": {
-                "midi": {
-                    "active": true,
-                    "patch": 71
-                },
-                "visual": {
-                    "name": "Clarinet"
-                }
-            },
-            "CLAVECIN": {
-                "visual": {
-                    "name": "Clavecin"
-                }
-            },
-            "CROMORNE": {
-                "visual": {
-                    "name": "Cromorne"
-                }
-            },
-            "CYMBAL1": {
-                "visual": {
-                    "name": "Cymbal"
-                }
-            },
-            "ELCLAV1": {
-                "visual": {
-                    "name": "Elec Clav 1"
-                }
-            },
-            "ELCLAV2": {
-                "visual": {
-                    "name": "Elec Clav 2"
-                }
-            },
-            "ELECFL": {
-                "visual": {
-                    "name": "Elec Flute"
-                }
-            },
-            "ELECVIBE": {
-                "visual": {
-                    "name": "Elec Vibe"
-                }
-            },
-            "ELGUIT1": {
-                "midi": {
-                    "active": true,
-                    "patch": 26
-                },
-                "visual": {
-                    "name": "Electric Guitar"
-                }
-            },
-            "ELGUIT2": {
-                "midi": {
-                    "active": true,
-                    "patch": 27
-                },
-                "visual": {
-                    "name": "Electric Guitar 2"
-                }
-            },
-            "ELGUIT3": {
-                "midi": {
-                    "active": true,
-                    "patch": 26
-                },
-                "visual": {
-                    "name": "Electric Guitar 3"
-                }
-            },
-            "ELGUIT4": {
-                "midi": {
-                    "active": true,
-                    "patch": 27
-                },
-                "visual": {
-                    "name": "Electric Guitar 4"
-                }
-            },
-            "ELORGAN1": {
-                "midi": {
-                    "active": true,
-                    "patch": 16
-                },
-                "visual": {
-                    "name": "Electric Organ"
-                }
-            },
-            "ELPIANO1": {
-                "midi": {
-                    "active": true,
-                    "patch": 4
-                },
-                "visual": {
-                    "name": "Electric Piano 1"
-                }
-            },
-            "ELPIANO2": {
-                "midi": {
-                    "active": true,
-                    "patch": 5
-                },
-                "visual": {
-                    "name": "Electric Piano 2"
-                }
-            },
-            "EPIANO1A": {
-                "midi": {
-                    "active": true,
-                    "patch": 4
-                },
-                "visual": {
-                    "name": "Electric Piano 1a"
-                }
-            },
-            "EPIANO1B": {
-                "midi": {
-                    "active": true,
-                    "patch": 5
-                },
-                "visual": {
-                    "name": "Electric Piano 1b"
-                }
-            },
-            "FLUTE": {
-                "midi": {
-                    "active": true,
-                    "patch": 73
-                },
-                "visual": {
-                    "name": "Flute"
-                }
-            },
-            "FLUTE1": {
-                "midi": {
-                    "active": true,
-                    "patch": 73
-                },
-                "visual": {
-                    "name": "Flute 1"
-                }
-            },
-            "FLUTE2": {
-                "midi": {
-                    "active": true,
-                    "patch": 75
-                },
-                "visual": {
-                    "name": "Flute 2"
-                }
-            },
-            "FRHORN1": {
-                "midi": {
-                    "active": true,
-                    "patch": 60
-                },
-                "visual": {
-                    "name": "French Horn 1"
-                }
-            },
-            "FRHORN2": {
-                "midi": {
-                    "active": true,
-                    "patch": 60
-                },
-                "visual": {
-                    "name": "French Horn 2"
-                }
-            },
-            "FSTRP1": {
-                "visual": {
-                    "name": "fstrp1"
-                }
-            },
-            "FSTRP2": {
-                "visual": {
-                    "name": "fstrp2"
-                }
-            },
-            "FUZGUIT1": {
-                "visual": {
-                    "name": "Fuzz Guitar 1"
-                }
-            },
-            "FUZGUIT2": {
-                "visual": {
-                    "name": "Fuzz Guitar 2"
-                }
-            },
-            "GUITAR1": {
-                "midi": {
-                    "active": true,
-                    "patch": 24
-                },
-                "visual": {
-                    "name": "Guitar"
-                }
-            },
-            "HARP1": {
-                "midi": {
-                    "active": true,
-                    "patch": 46
-                },
-                "visual": {
-                    "name": "Harp 1"
-                }
-            },
-            "HARP2": {
-                "midi": {
-                    "active": true,
-                    "patch": 46
-                },
-                "visual": {
-                    "name": "Harp 2"
-                }
-            },
-            "HARP3": {
-                "midi": {
-                    "active": true,
-                    "patch": 46
-                },
-                "visual": {
-                    "name": "Harp 3"
-                }
-            },
-            "HARPE1": {
-                "visual": {
-                    "name": "Harpe"
-                }
-            },
-            "HARPSI1": {
-                "midi": {
-                    "active": true,
-                    "patch": 6
-                },
-                "visual": {
-                    "name": "Harpsichord 1"
-                }
-            },
-            "HARPSI2": {
-                "midi": {
-                    "active": true,
-                    "patch": 6
-                },
-                "visual": {
-                    "name": "Harpsichord 2"
-                }
-            },
-            "HARPSI3": {
-                "midi": {
-                    "active": true,
-                    "patch": 6
-                },
-                "visual": {
-                    "name": "Harpsichord 3"
-                }
-            },
-            "HARPSI4": {
-                "midi": {
-                    "active": true,
-                    "patch": 6
-                },
-                "visual": {
-                    "name": "Harpsichord 4"
-                }
-            },
-            "HARPSI5": {
-                "midi": {
-                    "active": true,
-                    "patch": 6
-                },
-                "visual": {
-                    "name": "Harpsichord 5"
-                }
-            },
-            "HELICPTR": {
-                "visual": {
-                    "name": "Helicopter"
-                }
-            },
-            "HIHAT1": {
-                "visual": {
-                    "name": "Hi-Hat 1"
-                }
-            },
-            "HIHAT2": {
-                "visual": {
-                    "name": "Hi-Hat 2"
-                }
-            },
-            "JAVAICAN": {
-                "visual": {
-                    "name": "Javaican"
-                }
-            },
-            "JAZZGUIT": {
-                "midi": {
-                    "active": true,
-                    "patch": 26
-                },
-                "visual": {
-                    "name": "Jazz Guitar"
-                }
-            },
-            "JEWSHARP": {
-                "visual": {
-                    "name": "Jew's harp"
-                }
-            },
-            "KEYBRD1": {
-                "midi": {
-                    "active": true,
-                    "patch": 3
-                },
-                "visual": {
-                    "name": "Keyboard 1"
-                }
-            },
-            "KEYBRD2": {
-                "midi": {
-                    "active": true,
-                    "patch": 5
-                },
-                "visual": {
-                    "name": "Keyboard 2"
-                }
-            },
-            "KEYBRD3": {
-                "midi": {
-                    "active": true,
-                    "patch": 2
-                },
-                "visual": {
-                    "name": "Keyboard 3"
-                }
-            },
-            "LASER": {
-                "visual": {
-                    "name": "Laser"
-                }
-            },
-            "LOGDRUM1": {
-                "visual": {
-                    "name": "Log Drum"
-                }
-            },
-            "MARIMBA1": {
-                "midi": {
-                    "active": true,
-                    "patch": 12
-                },
-                "visual": {
-                    "name": "Marimba 1"
-                }
-            },
-            "MARIMBA2": {
-                "midi": {
-                    "active": true,
-                    "patch": 12
-                },
-                "visual": {
-                    "name": "Marimba 2"
-                }
-            },
-            "MDRNPHON": {
-                "visual": {
-                    "name": "Mdrnphon"
-                }
-            },
-            "MLTRDRUM": {
-                "visual": {
-                    "name": "Mltrdrum"
-                }
-            },
-            "MOOGSYNT": {
-                "visual": {
-                    "name": "Moog Synth"
-                }
-            },
-            "NOISE1": {
-                "visual": {
-                    "name": "Noise"
-                }
-            },
-            "OBOE1": {
-                "midi": {
-                    "active": true,
-                    "patch": 68
-                },
-                "visual": {
-                    "name": "Oboe"
-                }
-            },
-            "ORGAN1": {
-                "midi": {
-                    "active": true,
-                    "patch": 16
-                },
-                "visual": {
-                    "name": "Organ"
-                }
-            },
-            "ORGAN2": {
-                "midi": {
-                    "active": true,
-                    "patch": 17
-                },
-                "visual": {
-                    "name": "Organ 2"
-                }
-            },
-            "ORGAN3": {
-                "midi": {
-                    "active": true,
-                    "patch": 18
-                },
-                "visual": {
-                    "name": "Organ 3"
-                }
-            },
-            "ORGAN3A": {
-                "midi": {
-                    "active": true,
-                    "patch": 19
-                },
-                "visual": {
-                    "name": "Organ 3a"
-                }
-            },
-            "ORGAN3B": {
-                "midi": {
-                    "active": true,
-                    "patch": 20
-                },
-                "visual": {
-                    "name": "Organ 3b"
-                }
-            },
-            "ORGNPERC": {
-                "midi": {
-                    "active": true,
-                    "patch": 17
-                },
-                "visual": {
-                    "name": "Percussive Organ"
-                }
-            },
-            "PHONE1": {
-                "visual": {
-                    "name": "Phone"
-                }
-            },
-            "PHONE2": {
-                "visual": {
-                    "name": "Phone 2"
-                }
-            },
-            "PIAN1A": {
-                "midi": {
-                    "active": true
-                },
-                "visual": {
-                    "name": "Piano 1a"
-                }
-            },
-            "PIAN1B": {
-                "midi": {
-                    "active": true
-                },
-                "visual": {
-                    "name": "Piano 1b"
-                }
-            },
-            "PIAN1C": {
-                "midi": {
-                    "active": true
-                },
-                "visual": {
-                    "name": "Piano 1c"
-                }
-            },
-            "PIANO": {
-                "midi": {
-                    "active": true
-                },
-                "visual": {
-                    "name": "Piano"
-                }
-            },
-            "PIANO1": {
-                "midi": {
-                    "active": true
-                },
-                "visual": {
-                    "name": "Piano 1"
-                }
-            },
-            "PIANO2": {
-                "midi": {
-                    "active": true,
-                    "patch": 1
-                },
-                "visual": {
-                    "name": "Piano 2"
-                }
-            },
-            "PIANO3": {
-                "midi": {
-                    "active": true,
-                    "patch": 2
-                },
-                "visual": {
-                    "name": "Piano 3"
-                }
-            },
-            "PIANO4": {
-                "midi": {
-                    "active": true,
-                    "patch": 3
-                },
-                "visual": {
-                    "name": "Piano 4"
-                }
-            },
-            "PIANOBEL": {
-                "midi": {
-                    "active": true,
-                    "patch": 98
-                },
-                "visual": {
-                    "name": "Piano Bell"
-                }
-            },
-            "PIANOF": {
-                "visual": {
-                    "name": "Piano F"
-                }
-            },
-            "POPBASS1": {
-                "visual": {
-                    "name": "Pop Bass"
-                }
-            },
-            "RKSNARE1": {
-                "visual": {
-                    "name": "RK Snare"
-                }
-            },
-            "SAX1": {
-                "midi": {
-                    "active": true,
-                    "patch": 64
-                },
-                "visual": {
-                    "name": "Sax"
-                }
-            },
-            "SCRATCH": {
-                "visual": {
-                    "name": "Scratch"
-                }
-            },
-            "SCRATCH4": {
-                "visual": {
-                    "name": "Scratch 4"
-                }
-            },
-            "SDRUM2": {
-                "visual": {
-                    "name": "Snare Drum 2"
-                }
-            },
-            "SHRTVIBE": {
-                "visual": {
-                    "name": "Short Vibe"
-                }
-            },
-            "SITAR1": {
-                "midi": {
-                    "active": true,
-                    "patch": 104
-                },
-                "visual": {
-                    "name": "Sitar 1"
-                }
-            },
-            "SITAR2": {
-                "midi": {
-                    "active": true,
-                    "patch": 104
-                },
-                "visual": {
-                    "name": "Sitar 2"
-                }
-            },
-            "SNAKEFL": {
-                "visual": {
-                    "name": "Snakefl"
-                }
-            },
-            "SNARE1": {
-                "visual": {
-                    "name": "Snare 1"
-                }
-            },
-            "SNRSUST": {
-                "visual": {
-                    "name": "Snare Sustain"
-                }
-            },
-            "SOLOVLN": {
-                "midi": {
-                    "active": true,
-                    "patch": 40
-                },
-                "visual": {
-                    "name": "Solo Violin"
-                }
-            },
-            "STEELGT1": {
-                "midi": {
-                    "active": true,
-                    "patch": 24
-                },
-                "visual": {
-                    "name": "Acoustic Guitar 1"
-                }
-            },
-            "STEELGT2": {
-                "midi": {
-                    "active": true,
-                    "patch": 25
-                },
-                "visual": {
-                    "name": "Acoustic Guitar 2"
-                }
-            },
-            "STRINGS1": {
-                "visual": {
-                    "name": "Strings 1"
-                }
-            },
-            "STRNLONG": {
-                "visual": {
-                    "name": "strnlong"
-                }
-            },
-            "SYN1": {
-                "visual": {
-                    "name": "Synth 1"
-                }
-            },
-            "SYN2": {
-                "visual": {
-                    "name": "Synth 2"
-                }
-            },
-            "SYN3": {
-                "visual": {
-                    "name": "Synth 3"
-                }
-            },
-            "SYN4": {
-                "visual": {
-                    "name": "Synth 4"
-                }
-            },
-            "SYN5": {
-                "visual": {
-                    "name": "Synth 5"
-                }
-            },
-            "SYN6": {
-                "visual": {
-                    "name": "Synth 6"
-                }
-            },
-            "SYN9": {
-                "visual": {
-                    "name": "Synth 9"
-                }
-            },
-            "SYNBAL1": {
-                "visual": {
-                    "name": "Synbal 1"
-                }
-            },
-            "SYNBAL2": {
-                "visual": {
-                    "name": "Synbal 2"
-                }
-            },
-            "SYNBASS1": {
-                "midi": {
-                    "active": true,
-                    "patch": 38
-                },
-                "visual": {
-                    "name": "Synth Bass"
-                }
-            },
-            "SYNBASS2": {
-                "midi": {
-                    "active": true,
-                    "patch": 39
-                },
-                "visual": {
-                    "name": "Synth Bass 2"
-                }
-            },
-            "SYNBASS4": {
-                "midi": {
-                    "active": true,
-                    "patch": 39
-                },
-                "visual": {
-                    "name": "Synth Bass 4"
-                }
-            },
-            "SYNSNR1": {
-                "visual": {
-                    "name": "Synth Snare"
-                }
-            },
-            "SYNSNR2": {
-                "visual": {
-                    "name": "Synth Snare 2"
-                }
-            },
-            "TINCAN1": {
-                "visual": {
-                    "name": "Tin Can"
-                }
-            },
-            "TOM1": {
-                "visual": {
-                    "name": "Tom 1"
-                }
-            },
-            "TOM2": {
-                "visual": {
-                    "name": "Tom 2"
-                }
-            },
-            "TRAINBEL": {
-                "visual": {
-                    "name": "Train Bell"
-                }
-            },
-            "TRIANGLE": {
-                "visual": {
-                    "name": "Triangle"
-                }
-            },
-            "TROMB1": {
-                "midi": {
-                    "active": true,
-                    "patch": 57
-                },
-                "visual": {
-                    "name": "Trombone 1"
-                }
-            },
-            "TROMB2": {
-                "midi": {
-                    "active": true,
-                    "patch": 57
-                },
-                "visual": {
-                    "name": "Trombone 2"
-                }
-            },
-            "TRUMPET1": {
-                "midi": {
-                    "active": true,
-                    "patch": 56
-                },
-                "visual": {
-                    "name": "Trumpet 1"
-                }
-            },
-            "TRUMPET2": {
-                "midi": {
-                    "active": true,
-                    "patch": 56
-                },
-                "visual": {
-                    "name": "Trumpet 2"
-                }
-            },
-            "TRUMPET3": {
-                "midi": {
-                    "active": true,
-                    "patch": 56
-                },
-                "visual": {
-                    "name": "Trumpet 3"
-                }
-            },
-            "TRUMPET4": {
-                "midi": {
-                    "active": true,
-                    "patch": 56
-                },
-                "visual": {
-                    "name": "Trumpet 4"
-                }
-            },
-            "TUBA1": {
-                "midi": {
-                    "active": true,
-                    "patch": 58
-                },
-                "visual": {
-                    "name": "Tuba"
-                }
-            },
-            "VIBRA1": {
-                "midi": {
-                    "active": true,
-                    "patch": 11
-                },
-                "visual": {
-                    "name": "Vibraphone 1"
-                }
-            },
-            "VIBRA2": {
-                "midi": {
-                    "active": true,
-                    "patch": 11
-                },
-                "visual": {
-                    "name": "Vibraphone 2"
-                }
-            },
-            "VIBRA3": {
-                "midi": {
-                    "active": true,
-                    "patch": 11
-                },
-                "visual": {
-                    "name": "Vibraphone 3"
-                }
-            },
-            "VIOLIN1": {
-                "midi": {
-                    "active": true,
-                    "patch": 40
-                },
-                "visual": {
-                    "name": "Violin 1"
-                }
-            },
-            "VIOLIN2": {
-                "midi": {
-                    "active": true,
-                    "patch": 40
-                },
-                "visual": {
-                    "name": "Violin 2"
-                }
-            },
-            "VIOLIN3": {
-                "midi": {
-                    "active": true,
-                    "patch": 40
-                },
-                "visual": {
-                    "name": "Violin 3"
-                }
-            },
-            "VLNPIZZ1": {
-                "midi": {
-                    "active": true,
-                    "patch": 45
-                },
-                "visual": {
-                    "name": "Violin Pizzicato"
-                }
-            },
-            "WAVE": {
-                "visual": {
-                    "name": "Wave"
-                }
-            },
-            "XYLO1": {
-                "midi": {
-                    "active": true,
-                    "patch": 13
-                },
-                "visual": {
-                    "name": "Xylophone 1"
-                }
-            },
-            "XYLO2": {
-                "midi": {
-                    "active": true,
-                    "patch": 13
-                },
-                "visual": {
-                    "name": "Xylophone 2"
-                }
-            },
-            "XYLO3": {
-                "midi": {
-                    "active": true,
-                    "patch": 13
-                },
-                "visual": {
-                    "name": "Xylophone 3"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="inst">
+        <object id="ACCORDN">
+            <midi patch="21" />
+            <visual name="Accordion" />
+        </object>
+        <object id="BAGPIPE1">
+            <midi patch="109" />
+            <visual name="Bagpipe 1" />
+        </object>
+        <object id="BAGPIPE2">
+            <midi patch="109" />
+            <visual name="Bagpipe 2" />
+        </object>
+        <object id="BANJO1">
+            <midi patch="105" />
+            <visual name="Banjo" />
+        </object>
+        <object id="BASS1">
+            <midi patch="34" />
+            <visual name="Bass 1" />
+        </object>
+        <object id="BASS2">
+            <midi patch="35" />
+            <visual name="Bass 2" />
+        </object>
+        <object id="BASSHARP">
+            <visual name="Bass Harp" />
+        </object>
+        <object id="BASSOON1">
+            <midi patch="70" />
+            <visual name="Bassoon" />
+        </object>
+        <object id="BASSTRLG">
+            <visual name="Bass String Long" />
+        </object>
+        <object id="BDRUM1">
+            <visual name="Bass Drum" />
+        </object>
+        <object id="BELLONG">
+            <visual name="Bell Long" />
+        </object>
+        <object id="BELLS">
+            <visual name="Bells" />
+        </object>
+        <object id="BELSHORT">
+            <visual name="Bell Short" />
+        </object>
+        <object id="BNCEBASS">
+            <visual name="BnceBass" />
+        </object>
+        <object id="BRASS1">
+            <midi patch="62" />
+            <visual name="Brass" />
+        </object>
+        <object id="CBASSOON">
+            <visual name="C Bassoon" />
+        </object>
+        <object id="CELESTA">
+            <midi patch="8" />
+            <visual name="Celesta" />
+        </object>
+        <object id="CLAR1">
+            <midi patch="71" />
+            <visual name="Clarinet 1" />
+        </object>
+        <object id="CLAR2">
+            <midi patch="71" />
+            <visual name="Clarinet 2" />
+        </object>
+        <object id="CLARINET">
+            <midi patch="71" />
+            <visual name="Clarinet" />
+        </object>
+        <object id="CLAVECIN">
+            <visual name="Clavecin" />
+        </object>
+        <object id="CROMORNE">
+            <visual name="Cromorne" />
+        </object>
+        <object id="CYMBAL1">
+            <visual name="Cymbal" />
+        </object>
+        <object id="ELCLAV1">
+            <visual name="Elec Clav 1" />
+        </object>
+        <object id="ELCLAV2">
+            <visual name="Elec Clav 2" />
+        </object>
+        <object id="ELECFL">
+            <visual name="Elec Flute" />
+        </object>
+        <object id="ELECVIBE">
+            <visual name="Elec Vibe" />
+        </object>
+        <object id="ELGUIT1">
+            <midi patch="26" />
+            <visual name="Electric Guitar" />
+        </object>
+        <object id="ELGUIT2">
+            <midi patch="27" />
+            <visual name="Electric Guitar 2" />
+        </object>
+        <object id="ELGUIT3">
+            <midi patch="26" />
+            <visual name="Electric Guitar 3" />
+        </object>
+        <object id="ELGUIT4">
+            <midi patch="27" />
+            <visual name="Electric Guitar 4" />
+        </object>
+        <object id="ELORGAN1">
+            <midi patch="16" />
+            <visual name="Electric Organ" />
+        </object>
+        <object id="ELPIANO1">
+            <midi patch="4" />
+            <visual name="Electric Piano 1" />
+        </object>
+        <object id="ELPIANO2">
+            <midi patch="5" />
+            <visual name="Electric Piano 2" />
+        </object>
+        <object id="EPIANO1A">
+            <midi patch="4" />
+            <visual name="Electric Piano 1a" />
+        </object>
+        <object id="EPIANO1B">
+            <midi patch="5" />
+            <visual name="Electric Piano 1b" />
+        </object>
+        <object id="FLUTE">
+            <midi patch="73" />
+            <visual name="Flute" />
+        </object>
+        <object id="FLUTE1">
+            <midi patch="73" />
+            <visual name="Flute 1" />
+        </object>
+        <object id="FLUTE2">
+            <midi patch="75" />
+            <visual name="Flute 2" />
+        </object>
+        <object id="FRHORN1">
+            <midi patch="60" />
+            <visual name="French Horn 1" />
+        </object>
+        <object id="FRHORN2">
+            <midi patch="60" />
+            <visual name="French Horn 2" />
+        </object>
+        <object id="FSTRP1">
+            <visual name="fstrp1" />
+        </object>
+        <object id="FSTRP2">
+            <visual name="fstrp2" />
+        </object>
+        <object id="FUZGUIT1">
+            <visual name="Fuzz Guitar 1" />
+        </object>
+        <object id="FUZGUIT2">
+            <visual name="Fuzz Guitar 2" />
+        </object>
+        <object id="GUITAR1">
+            <midi patch="24" />
+            <visual name="Guitar" />
+        </object>
+        <object id="HARP1">
+            <midi patch="46" />
+            <visual name="Harp 1" />
+        </object>
+        <object id="HARP2">
+            <midi patch="46" />
+            <visual name="Harp 2" />
+        </object>
+        <object id="HARP3">
+            <midi patch="46" />
+            <visual name="Harp 3" />
+        </object>
+        <object id="HARPE1">
+            <visual name="Harpe" />
+        </object>
+        <object id="HARPSI1">
+            <midi patch="6" />
+            <visual name="Harpsichord 1" />
+        </object>
+        <object id="HARPSI2">
+            <midi patch="6" />
+            <visual name="Harpsichord 2" />
+        </object>
+        <object id="HARPSI3">
+            <midi patch="6" />
+            <visual name="Harpsichord 3" />
+        </object>
+        <object id="HARPSI4">
+            <midi patch="6" />
+            <visual name="Harpsichord 4" />
+        </object>
+        <object id="HARPSI5">
+            <midi patch="6" />
+            <visual name="Harpsichord 5" />
+        </object>
+        <object id="HELICPTR">
+            <visual name="Helicopter" />
+        </object>
+        <object id="HIHAT1">
+            <visual name="Hi-Hat 1" />
+        </object>
+        <object id="HIHAT2">
+            <visual name="Hi-Hat 2" />
+        </object>
+        <object id="JAVAICAN">
+            <visual name="Javaican" />
+        </object>
+        <object id="JAZZGUIT">
+            <midi patch="26" />
+            <visual name="Jazz Guitar" />
+        </object>
+        <object id="JEWSHARP">
+            <visual name="Jew's harp" />
+        </object>
+        <object id="KEYBRD1">
+            <midi patch="3" />
+            <visual name="Keyboard 1" />
+        </object>
+        <object id="KEYBRD2">
+            <midi patch="5" />
+            <visual name="Keyboard 2" />
+        </object>
+        <object id="KEYBRD3">
+            <midi patch="2" />
+            <visual name="Keyboard 3" />
+        </object>
+        <object id="LASER">
+            <visual name="Laser" />
+        </object>
+        <object id="LOGDRUM1">
+            <visual name="Log Drum" />
+        </object>
+        <object id="MARIMBA1">
+            <midi patch="12" />
+            <visual name="Marimba 1" />
+        </object>
+        <object id="MARIMBA2">
+            <midi patch="12" />
+            <visual name="Marimba 2" />
+        </object>
+        <object id="MDRNPHON">
+            <visual name="Mdrnphon" />
+        </object>
+        <object id="MLTRDRUM">
+            <visual name="Mltrdrum" />
+        </object>
+        <object id="MOOGSYNT">
+            <visual name="Moog Synth" />
+        </object>
+        <object id="NOISE1">
+            <visual name="Noise" />
+        </object>
+        <object id="OBOE1">
+            <midi patch="68" />
+            <visual name="Oboe" />
+        </object>
+        <object id="ORGAN1">
+            <midi patch="16" />
+            <visual name="Organ" />
+        </object>
+        <object id="ORGAN2">
+            <midi patch="17" />
+            <visual name="Organ 2" />
+        </object>
+        <object id="ORGAN3">
+            <midi patch="18" />
+            <visual name="Organ 3" />
+        </object>
+        <object id="ORGAN3A">
+            <midi patch="19" />
+            <visual name="Organ 3a" />
+        </object>
+        <object id="ORGAN3B">
+            <midi patch="20" />
+            <visual name="Organ 3b" />
+        </object>
+        <object id="ORGNPERC">
+            <midi patch="17" />
+            <visual name="Percussive Organ" />
+        </object>
+        <object id="PHONE1">
+            <visual name="Phone" />
+        </object>
+        <object id="PHONE2">
+            <visual name="Phone 2" />
+        </object>
+        <object id="PIAN1A">
+            <midi />
+            <visual name="Piano 1a" />
+        </object>
+        <object id="PIAN1B">
+            <midi />
+            <visual name="Piano 1b" />
+        </object>
+        <object id="PIAN1C">
+            <midi />
+            <visual name="Piano 1c" />
+        </object>
+        <object id="PIANO">
+            <midi />
+            <visual name="Piano" />
+        </object>
+        <object id="PIANO1">
+            <midi />
+            <visual name="Piano 1" />
+        </object>
+        <object id="PIANO2">
+            <midi patch="1" />
+            <visual name="Piano 2" />
+        </object>
+        <object id="PIANO3">
+            <midi patch="2" />
+            <visual name="Piano 3" />
+        </object>
+        <object id="PIANO4">
+            <midi patch="3" />
+            <visual name="Piano 4" />
+        </object>
+        <object id="PIANOBEL">
+            <midi patch="98" />
+            <visual name="Piano Bell" />
+        </object>
+        <object id="PIANOF">
+            <visual name="Piano F" />
+        </object>
+        <object id="POPBASS1">
+            <visual name="Pop Bass" />
+        </object>
+        <object id="RKSNARE1">
+            <visual name="RK Snare" />
+        </object>
+        <object id="SAX1">
+            <midi patch="64" />
+            <visual name="Sax" />
+        </object>
+        <object id="SCRATCH">
+            <visual name="Scratch" />
+        </object>
+        <object id="SCRATCH4">
+            <visual name="Scratch 4" />
+        </object>
+        <object id="SDRUM2">
+            <visual name="Snare Drum 2" />
+        </object>
+        <object id="SHRTVIBE">
+            <visual name="Short Vibe" />
+        </object>
+        <object id="SITAR1">
+            <midi patch="104" />
+            <visual name="Sitar 1" />
+        </object>
+        <object id="SITAR2">
+            <midi patch="104" />
+            <visual name="Sitar 2" />
+        </object>
+        <object id="SNAKEFL">
+            <visual name="Snakefl" />
+        </object>
+        <object id="SNARE1">
+            <visual name="Snare 1" />
+        </object>
+        <object id="SNRSUST">
+            <visual name="Snare Sustain" />
+        </object>
+        <object id="SOLOVLN">
+            <midi patch="40" />
+            <visual name="Solo Violin" />
+        </object>
+        <object id="STEELGT1">
+            <midi patch="24" />
+            <visual name="Acoustic Guitar 1" />
+        </object>
+        <object id="STEELGT2">
+            <midi patch="25" />
+            <visual name="Acoustic Guitar 2" />
+        </object>
+        <object id="STRINGS1">
+            <visual name="Strings 1" />
+        </object>
+        <object id="STRNLONG">
+            <visual name="strnlong" />
+        </object>
+        <object id="SYN1">
+            <visual name="Synth 1" />
+        </object>
+        <object id="SYN2">
+            <visual name="Synth 2" />
+        </object>
+        <object id="SYN3">
+            <visual name="Synth 3" />
+        </object>
+        <object id="SYN4">
+            <visual name="Synth 4" />
+        </object>
+        <object id="SYN5">
+            <visual name="Synth 5" />
+        </object>
+        <object id="SYN6">
+            <visual name="Synth 6" />
+        </object>
+        <object id="SYN9">
+            <visual name="Synth 9" />
+        </object>
+        <object id="SYNBAL1">
+            <visual name="Synbal 1" />
+        </object>
+        <object id="SYNBAL2">
+            <visual name="Synbal 2" />
+        </object>
+        <object id="SYNBASS1">
+            <midi patch="38" />
+            <visual name="Synth Bass" />
+        </object>
+        <object id="SYNBASS2">
+            <midi patch="39" />
+            <visual name="Synth Bass 2" />
+        </object>
+        <object id="SYNBASS4">
+            <midi patch="39" />
+            <visual name="Synth Bass 4" />
+        </object>
+        <object id="SYNSNR1">
+            <visual name="Synth Snare" />
+        </object>
+        <object id="SYNSNR2">
+            <visual name="Synth Snare 2" />
+        </object>
+        <object id="TINCAN1">
+            <visual name="Tin Can" />
+        </object>
+        <object id="TOM1">
+            <visual name="Tom 1" />
+        </object>
+        <object id="TOM2">
+            <visual name="Tom 2" />
+        </object>
+        <object id="TRAINBEL">
+            <visual name="Train Bell" />
+        </object>
+        <object id="TRIANGLE">
+            <visual name="Triangle" />
+        </object>
+        <object id="TROMB1">
+            <midi patch="57" />
+            <visual name="Trombone 1" />
+        </object>
+        <object id="TROMB2">
+            <midi patch="57" />
+            <visual name="Trombone 2" />
+        </object>
+        <object id="TRUMPET1">
+            <midi patch="56" />
+            <visual name="Trumpet 1" />
+        </object>
+        <object id="TRUMPET2">
+            <midi patch="56" />
+            <visual name="Trumpet 2" />
+        </object>
+        <object id="TRUMPET3">
+            <midi patch="56" />
+            <visual name="Trumpet 3" />
+        </object>
+        <object id="TRUMPET4">
+            <midi patch="56" />
+            <visual name="Trumpet 4" />
+        </object>
+        <object id="TUBA1">
+            <midi patch="58" />
+            <visual name="Tuba" />
+        </object>
+        <object id="VIBRA1">
+            <midi patch="11" />
+            <visual name="Vibraphone 1" />
+        </object>
+        <object id="VIBRA2">
+            <midi patch="11" />
+            <visual name="Vibraphone 2" />
+        </object>
+        <object id="VIBRA3">
+            <midi patch="11" />
+            <visual name="Vibraphone 3" />
+        </object>
+        <object id="VIOLIN1">
+            <midi patch="40" />
+            <visual name="Violin 1" />
+        </object>
+        <object id="VIOLIN2">
+            <midi patch="40" />
+            <visual name="Violin 2" />
+        </object>
+        <object id="VIOLIN3">
+            <midi patch="40" />
+            <visual name="Violin 3" />
+        </object>
+        <object id="VLNPIZZ1">
+            <midi patch="45" />
+            <visual name="Violin Pizzicato" />
+        </object>
+        <object id="WAVE">
+            <visual name="Wave" />
+        </object>
+        <object id="XYLO1">
+            <midi patch="13" />
+            <visual name="Xylophone 1" />
+        </object>
+        <object id="XYLO2">
+            <midi patch="13" />
+            <visual name="Xylophone 2" />
+        </object>
+        <object id="XYLO3">
+            <midi patch="13" />
+            <visual name="Xylophone 3" />
+        </object>
+    </category>
+</dataset>

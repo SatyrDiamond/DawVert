@@ -1,154 +1,46 @@
-{
-    "plugin": {
-        "objects": {
-            "wolfshaper": {
-                "params": {
-                    "pregain": {
-                        "type": "float",
-                        "def": 1.0,
-                        "max": 2.0,
-                        "name": "Pre Gain",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 2
-                            },
-                            "vst2": {
-                                "num": 0
-                            }
-                        },
-                        "extplug_paramid": "pregain"
-                    },
-                    "wet": {
-                        "type": "float",
-                        "def": 1.0,
-                        "name": "Wet",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 3
-                            },
-                            "vst2": {
-                                "num": 1
-                            }
-                        },
-                        "extplug_paramid": "wet"
-                    },
-                    "postgain": {
-                        "type": "float",
-                        "def": 1.0,
-                        "name": "Post Gain",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 4
-                            },
-                            "vst2": {
-                                "num": 2
-                            }
-                        },
-                        "extplug_paramid": "postgain"
-                    },
-                    "removedc": {
-                        "type": "float",
-                        "def": 1.0,
-                        "name": "Remove DC Offset",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 5
-                            },
-                            "vst2": {
-                                "num": 3
-                            }
-                        },
-                        "extplug_paramid": "removedc"
-                    },
-                    "oversample": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 4.0,
-                        "name": "Oversample",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 6
-                            },
-                            "vst2": {
-                                "num": 4
-                            }
-                        },
-                        "extplug_paramid": "oversample"
-                    },
-                    "bipolarmode": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "Bipolar Mode",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 7
-                            },
-                            "vst2": {
-                                "num": 5
-                            }
-                        },
-                        "extplug_paramid": "bipolarmode"
-                    },
-                    "warptype": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 6.0,
-                        "name": "H Warp Type",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 8
-                            },
-                            "vst2": {
-                                "num": 6
-                            }
-                        },
-                        "extplug_paramid": "warptype"
-                    },
-                    "warpamount": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "H Warp Amount",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 9
-                            },
-                            "vst2": {
-                                "num": 7
-                            }
-                        },
-                        "extplug_paramid": "warpamount"
-                    },
-                    "vwarptype": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 6.0,
-                        "name": "V Warp Type",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 10
-                            },
-                            "vst2": {
-                                "num": 8
-                            }
-                        },
-                        "extplug_paramid": "vwarptype"
-                    },
-                    "vwarpamount": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "V Warp Amount",
-                        "extplug_assoc": {
-                            "vst3": {
-                                "num": 11
-                            },
-                            "vst2": {
-                                "num": 9
-                            }
-                        },
-                        "extplug_paramid": "vwarpamount"
-                    }
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="plugin">
+        <object id="wolfshaper">
+            <param id="pregain" name="Pre Gain" type="float" def="1.0" max="2" ext_id="pregain">
+                <extplug_assoc type="vst3" num="2" />
+                <extplug_assoc type="vst2" num="0" />
+            </param>
+            <param id="wet" name="Wet" type="float" def="1.0" ext_id="wet">
+                <extplug_assoc type="vst3" num="3" />
+                <extplug_assoc type="vst2" num="1" />
+            </param>
+            <param id="postgain" name="Post Gain" type="float" def="1.0" ext_id="postgain">
+                <extplug_assoc type="vst3" num="4" />
+                <extplug_assoc type="vst2" num="2" />
+            </param>
+            <param id="removedc" name="Remove DC Offset" type="float" def="1.0" ext_id="removedc">
+                <extplug_assoc type="vst3" num="5" />
+                <extplug_assoc type="vst2" num="3" />
+            </param>
+            <param id="oversample" name="Oversample" type="float" max="4" ext_id="oversample">
+                <extplug_assoc type="vst3" num="6" />
+                <extplug_assoc type="vst2" num="4" />
+            </param>
+            <param id="bipolarmode" name="Bipolar Mode" type="float" ext_id="bipolarmode">
+                <extplug_assoc type="vst3" num="7" />
+                <extplug_assoc type="vst2" num="5" />
+            </param>
+            <param id="warptype" name="H Warp Type" type="float" max="6" ext_id="warptype">
+                <extplug_assoc type="vst3" num="8" />
+                <extplug_assoc type="vst2" num="6" />
+            </param>
+            <param id="warpamount" name="H Warp Amount" type="float" ext_id="warpamount">
+                <extplug_assoc type="vst3" num="9" />
+                <extplug_assoc type="vst2" num="7" />
+            </param>
+            <param id="vwarptype" name="V Warp Type" type="float" max="6" ext_id="vwarptype">
+                <extplug_assoc type="vst3" num="10" />
+                <extplug_assoc type="vst2" num="8" />
+            </param>
+            <param id="vwarpamount" name="V Warp Amount" type="float" ext_id="vwarpamount">
+                <extplug_assoc type="vst3" num="11" />
+                <extplug_assoc type="vst2" num="9" />
+            </param>
+        </object>
+    </category>
+</dataset>

@@ -1,113 +1,52 @@
-{
-    "drums": {
-        "objects": {
-            "0": {
-                "visual": {
-                    "name": "Bass 1"
-                }
-            },
-            "1": {
-                "visual": {
-                    "name": "Bass 2"
-                }
-            },
-            "10": {
-                "visual": {
-                    "name": "Bass 3"
-                }
-            },
-            "11": {
-                "visual": {
-                    "name": "Tom 2"
-                }
-            },
-            "2": {
-                "visual": {
-                    "name": "Snare 1"
-                }
-            },
-            "3": {
-                "visual": {
-                    "name": "Snare 2"
-                }
-            },
-            "4": {
-                "visual": {
-                    "name": "Tom 1"
-                }
-            },
-            "5": {
-                "visual": {
-                    "name": "Hi-Hat Close"
-                }
-            },
-            "6": {
-                "visual": {
-                    "name": "Hi-Hat Open"
-                }
-            },
-            "7": {
-                "visual": {
-                    "name": "Crash"
-                }
-            },
-            "8": {
-                "visual": {
-                    "name": "Perc 1"
-                }
-            },
-            "9": {
-                "visual": {
-                    "name": "Perc 2"
-                }
-            }
-        }
-    },
-    "track": {
-        "colorset": {
-            "orgmaker_2": [
-                [
-                    0.23,
-                    0.3,
-                    0.99
-                ],
-                [
-                    0.62,
-                    0.11,
-                    0.12
-                ],
-                [
-                    0.62,
-                    0.16,
-                    0.87
-                ],
-                [
-                    0.14,
-                    0.45,
-                    0.26
-                ],
-                [
-                    0.13,
-                    0.46,
-                    0.57
-                ],
-                [
-                    0.67,
-                    0.5,
-                    0.11
-                ],
-                [
-                    0.59,
-                    0.64,
-                    0.71
-                ],
-                [
-                    0.58,
-                    0.53,
-                    0.49
-                ]
-            ]
-        },
-        "objects": {}
-    }
-}
+<dataset>
+    <category id="drums">
+        <object id="0">
+            <visual name="Bass 1" />
+        </object>
+        <object id="1">
+            <visual name="Bass 2" />
+        </object>
+        <object id="10">
+            <visual name="Bass 3" />
+        </object>
+        <object id="11">
+            <visual name="Tom 2" />
+        </object>
+        <object id="2">
+            <visual name="Snare 1" />
+        </object>
+        <object id="3">
+            <visual name="Snare 2" />
+        </object>
+        <object id="4">
+            <visual name="Tom 1" />
+        </object>
+        <object id="5">
+            <visual name="Hi-Hat Close" />
+        </object>
+        <object id="6">
+            <visual name="Hi-Hat Open" />
+        </object>
+        <object id="7">
+            <visual name="Crash" />
+        </object>
+        <object id="8">
+            <visual name="Perc 1" />
+        </object>
+        <object id="9">
+            <visual name="Perc 2" />
+        </object>
+    </category>
+    <category id="track">
+        <colorset id="orgmaker_2">
+            <color>58.65|76.5|252.45</color>
+            <color>158.1|28.05|30.6</color>
+            <color>158.1|40.8|221.85</color>
+            <color>35.7|114.75|66.3</color>
+            <color>33.15|117.3|145.35</color>
+            <color>170.85|127.5|28.05</color>
+            <color>150.45|163.2|181.05</color>
+            <color>147.9|135.15|124.95</color>
+        </colorset>
+    </category>
+</dataset>

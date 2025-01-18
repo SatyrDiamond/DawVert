@@ -1,59 +1,48 @@
-{
-    "plugin": {
-        "objects": {
-            "reacomp": {
-                "params": {
-                    "thresh": {"name": "Thresh","type": "float", "num": 0},
-                    "ratio": {"name": "Ratio","type": "float", "num": 1},
-                    "attack": {"name": "Attack","type": "float", "num": 2},
-                    "release": {"name": "Release","type": "float", "num": 3},
-                    "pre_comp": {"name": "Pre-comp","type": "float", "num": 4},
-                    "resvd": {"name": "resvd","type": "float", "num": 5},
-                    "lowpass": {"name": "Lowpass","type": "float", "num": 6},
-                    "hipass": {"name": "Hipass","type": "float", "num": 7},
-                    "signin": {"name": "SignIn","type": "float", "num": 8},
-                    "audin": {"name": "AudIn","type": "float", "num": 9},
-                    "dry": {"name": "Dry","type": "float", "num": 10},
-                    "wet": {"name": "Wet","type": "float", "num": 11},
-                    "previewf": {"name": "PreviewF","type": "float", "num": 12},
-                    "rms_size": {"name": "RMS size","type": "float", "num": 13},
-                    "knee": {"name": "Knee","type": "float", "num": 14},
-                    "automkup": {"name": "AutoMkUp","type": "float", "num": 15},
-                    "autorel": {"name": "AutoRel","type": "float", "num": 16},
-                    "clsattk": {"name": "ClsAttk","type": "float", "num": 17},
-                    "antials": {"name": "AntiAls","type": "float", "num": 18}
-                },
-                "visual": {
-                    "name": "ReaComp"
-                }
-            },
-
-            "reagate": {
-                "params": {
-                    "thresh": {"name": "Thresh","type": "float", "num": 0},
-                    "attack": {"name": "Attack","type": "float", "num": 1},
-                    "release": {"name": "Release","type": "float", "num": 2},
-                    "pre_open": {"name": "Pre-open","type": "float", "num": 3},
-                    "hold": {"name": "Hold","type": "float", "num": 4},
-                    "lowpass": {"name": "Lowpass","type": "float", "num": 5},
-                    "hipass": {"name": "Hipass","type": "float", "num": 6},
-                    "signin": {"name": "SignIn","type": "float", "num": 7},
-                    "audin": {"name": "AudIn","type": "float", "num": 8},
-                    "dry": {"name": "Dry","type": "float", "num": 9},
-                    "wet": {"name": "Wet","type": "float", "num": 10},
-                    "noise": {"name": "Noise","type": "float", "num": 11},
-                    "hystrsis": {"name": "Hystrsis","type": "float", "num": 12},
-                    "previewf": {"name": "PreviewF","type": "float", "num": 13},
-                    "rms_size": {"name": "RMS size","type": "float", "num": 14},
-                    "usemidi": {"name": "Usemidi","type": "float", "num": 15},
-                    "midinote": {"name": "MidiNote","type": "float", "num": 16},
-                    "midichan": {"name": "MidiChan","type": "float", "num": 17},
-                    "invrtwet": {"name": "InvrtWet","type": "float", "num": 18}
-                },
-                "visual": {
-                    "name": "ReaComp"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="plugin">
+        <object id="reacomp">
+            <visual name="ReaComp" />
+            <param id="thresh" name="Thresh" type="float" num="0" />
+            <param id="ratio" name="Ratio" type="float" num="1" />
+            <param id="attack" name="Attack" type="float" num="2" />
+            <param id="release" name="Release" type="float" num="3" />
+            <param id="pre_comp" name="Pre-comp" type="float" num="4" />
+            <param id="resvd" name="resvd" type="float" num="5" />
+            <param id="lowpass" name="Lowpass" type="float" num="6" />
+            <param id="hipass" name="Hipass" type="float" num="7" />
+            <param id="signin" name="SignIn" type="float" num="8" />
+            <param id="audin" name="AudIn" type="float" num="9" />
+            <param id="dry" name="Dry" type="float" num="10" />
+            <param id="wet" name="Wet" type="float" num="11" />
+            <param id="previewf" name="PreviewF" type="float" num="12" />
+            <param id="rms_size" name="RMS size" type="float" num="13" />
+            <param id="knee" name="Knee" type="float" num="14" />
+            <param id="automkup" name="AutoMkUp" type="float" num="15" />
+            <param id="autorel" name="AutoRel" type="float" num="16" />
+            <param id="clsattk" name="ClsAttk" type="float" num="17" />
+            <param id="antials" name="AntiAls" type="float" num="18" />
+        </object>
+        <object id="reagate">
+            <visual name="ReaComp" />
+            <param id="thresh" name="Thresh" type="float" num="0" />
+            <param id="attack" name="Attack" type="float" num="1" />
+            <param id="release" name="Release" type="float" num="2" />
+            <param id="pre_open" name="Pre-open" type="float" num="3" />
+            <param id="hold" name="Hold" type="float" num="4" />
+            <param id="lowpass" name="Lowpass" type="float" num="5" />
+            <param id="hipass" name="Hipass" type="float" num="6" />
+            <param id="signin" name="SignIn" type="float" num="7" />
+            <param id="audin" name="AudIn" type="float" num="8" />
+            <param id="dry" name="Dry" type="float" num="9" />
+            <param id="wet" name="Wet" type="float" num="10" />
+            <param id="noise" name="Noise" type="float" num="11" />
+            <param id="hystrsis" name="Hystrsis" type="float" num="12" />
+            <param id="previewf" name="PreviewF" type="float" num="13" />
+            <param id="rms_size" name="RMS size" type="float" num="14" />
+            <param id="usemidi" name="Usemidi" type="float" num="15" />
+            <param id="midinote" name="MidiNote" type="float" num="16" />
+            <param id="midichan" name="MidiChan" type="float" num="17" />
+            <param id="invrtwet" name="InvrtWet" type="float" num="18" />
+        </object>
+    </category>
+</dataset>

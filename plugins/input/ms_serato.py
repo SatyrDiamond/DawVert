@@ -272,7 +272,7 @@ class input_serato(plugins.base):
 									startoffset = calcpos_stretch(c_start, scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, True)
 									endoffset = calcpos_stretch(c_end, scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, False)
 
-									samplenotes[note.start] = [note.duration, startoffset*960, endoffset*960, color, cuedata]
+									samplenotes[note.start] = [note.duration, startoffset*960, endoffset*960, color, cuedata, note.velocity/100]
 
 								samplenotes = dict(sorted(samplenotes.items()))
 								if extendlast and samplenotes:
@@ -285,7 +285,7 @@ class input_serato(plugins.base):
 									samplenotes[lastpos][0] = scene.length-lastpos
 
 								for nstart, ndata in samplenotes.items():
-									nend, startoffset, endoffset, color, cuedata = ndata
+									nend, startoffset, endoffset, color, cuedata, vol = ndata
 	
 									if endoffset-startoffset:
 
@@ -304,6 +304,8 @@ class input_serato(plugins.base):
 												cuestrip = cuedata['channel_strip']
 												if 'gain' in cuestrip: samplepart_copy.vol = cuestrip['gain']
 												if 'pan' in cuestrip: samplepart_copy.pan = cuestrip['pan']
+
+											samplepart_copy.vol *= vol
 
 											playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, playback_speed)
 											samplepart_copy.stretch.set_rate_tempo(project_obj.bpm, playspeed, False)

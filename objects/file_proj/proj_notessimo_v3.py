@@ -553,7 +553,7 @@ class notev3_file:
 		self.sheets = {}
 		self.songs = {}
 
-		self.zip_data = {}
+		self.zip_data = None
 		
 	def load_from_file(self, input_file):
 		try:

@@ -25,6 +25,7 @@ from objects.convproj import chord
 from objects.convproj import plugstate
 from objects.convproj import midi_inst
 from objects import plugdatamanu
+from objects import extplugmanu
 
 logger_plugins = logging.getLogger('plugins')
 logger_plugconv = logging.getLogger('plugconv')
@@ -50,18 +51,38 @@ class cvpj_audioports:
 
 class cvpj_plugin_external:
 	def __init__(self):
-		self.name = 'None'
+		self.plugtype = None
+		self.name = None
 		self.id = None
 		self.fourid = None
 		self.creator = None
 		self.datatype = 'chunk'
-		self.numparams = 0
+		self.numparams = -1
 		self.basename = None
 		self.version_bytes = 0
 		self.version = None
 		self.is_bank = False
 		self.cpu_arch = 0
-		self.programs = {}
+
+	def from_pluginfo_obj(self, pluginfo_obj, plugtype):
+		self.__init__()
+
+		self.plugtype = pluginfo_obj.plugtype
+		if pluginfo_obj.name: self.name = pluginfo_obj.name
+		if pluginfo_obj.creator: self.creator = pluginfo_obj.creator
+		if pluginfo_obj.num_params: self.numparams = pluginfo_obj.num_params
+		if pluginfo_obj.basename: self.basename = pluginfo_obj.basename
+		self.version = pluginfo_obj.version
+
+		if plugtype == 'vst2': 
+			self.fourid = int(pluginfo_obj.id)
+			if pluginfo_obj.version not in [None, '']: 
+				versionsplit = [int(i) for i in pluginfo_obj.version.split('.')]
+				versionbytes = struct.pack('B'*len(versionsplit), *versionsplit)
+				self.version_bytes = int.from_bytes(versionbytes, "little")
+		else: self.id = pluginfo_obj.id
+		
+
 
 class cvpj_plugin:
 
@@ -442,6 +463,9 @@ class cvpj_plugin:
 
 	def create_manu_obj(self, convproj_obj, pluginid):
 		return plugdatamanu.plug_manu(self, convproj_obj, pluginid)
+
+	def create_ext_manu_obj(self, convproj_obj, pluginid):
+		return extplugmanu.extplug_manu(self, convproj_obj, pluginid)
 
 	def plugts_transform(self, plugts_path, plugts_tr, convproj_obj, pluginid):
 		globalstore.plugts.load(plugts_path, plugts_path)

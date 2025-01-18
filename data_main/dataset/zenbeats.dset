@@ -1,18 +1,13 @@
-{
-    "global":
-    {
-        "colorset":
-        {
-            "main":
-            [
-                [0.57, 0.96, 1.00],
-                [0.39, 0.80, 1.00],
-                [0.40, 0.41, 1.00],
-                [0.53, 0.27, 0.76],
-                [1.00, 0.34, 0.62],
-                [1.00, 0.42, 0.22],
-                [1.00, 0.63, 0.26]
-            ]
-        }
-    }
-}
+<dataset>
+    <category id="global">
+        <colorset id="main">
+            <color>145.35|244.8|255</color>
+            <color>99.45|204|255</color>
+            <color>102|104.55|255</color>
+            <color>135.15|68.85|193.8</color>
+            <color>255|86.7|158.1</color>
+            <color>255|107.1|56.1</color>
+            <color>255|160.65|66.3</color>
+        </colorset>
+    </category>
+</dataset>

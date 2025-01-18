@@ -1,36 +1,13 @@
-{
-    "chip": {
-        "objects": {
-            "noise": {
-                "visual": {
-                    "color": [
-                        0.8,
-                        0.8,
-                        0.8
-                    ],
-                    "name": "Noise"
-                }
-            },
-            "pulse": {
-                "visual": {
-                    "color": [
-                        0.4,
-                        1.0,
-                        0.2
-                    ],
-                    "name": "Pulse"
-                }
-            },
-            "wavetable": {
-                "visual": {
-                    "color": [
-                        1.0,
-                        0.5,
-                        0.2
-                    ],
-                    "name": "Wavetable"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="chip">
+        <object id="noise">
+            <visual name="Noise" color="204|204|204" />
+        </object>
+        <object id="pulse">
+            <visual name="Pulse" color="102|255|51" />
+        </object>
+        <object id="wavetable">
+            <visual name="Wavetable" color="255|127.5|51" />
+        </object>
+    </category>
+</dataset>

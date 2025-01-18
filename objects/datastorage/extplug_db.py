@@ -8,6 +8,7 @@ import platform
 class pluginfo:
 	def __init__(self):
 		self.out_exists = False
+		self.plugtype = None
 		self.name = None
 		self.basename = None
 		self.id = None
@@ -41,6 +42,7 @@ class pluginfo:
 	def from_sql_vst2(self, indata, platformtxt):
 		p_name, p_id, p_type, p_creator, p_version, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_num_params, p_basename, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix = indata
 		self.out_exists = True
+		self.plugtype = 'vst2'
 		self.name = p_name
 		self.id = p_id
 		self.type = p_type
@@ -62,6 +64,7 @@ class pluginfo:
 	def from_sql_vst3(self, indata, platformtxt):
 		p_name, p_id, p_type, p_creator, p_category, p_version, p_sdk_version, p_url, p_email, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_num_params, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix = indata
 		self.out_exists = True
+		self.plugtype = 'vst3'
 		self.name = p_name
 		self.id = p_id
 		self.type = p_type
@@ -86,6 +89,7 @@ class pluginfo:
 	def from_sql_clap(self, indata, platformtxt):
 		p_name, p_id, p_creator, p_category, p_version, p_audio_num_inputs, p_audio_num_outputs, p_midi_num_inputs, p_midi_num_outputs, p_path_32bit_win, p_path_64bit_win, p_path_32bit_unix, p_path_64bit_unix = indata
 		self.out_exists = True
+		self.plugtype = 'clap'
 		self.name = p_name
 		self.id = p_id
 		self.creator = p_creator

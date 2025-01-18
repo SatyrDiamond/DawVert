@@ -326,6 +326,7 @@ class dataset_datadef:
 			self.struct = i_data['struct'] if 'struct' in i_data else None
 
 	def read_xml(self, xml_data):
+		self.path = xml_data.get('path')
 		self.name = xml_data.get('name')
 		self.struct = xml_data.get('struct')
 
@@ -642,9 +643,9 @@ class dataset_category:
 				object_obj = self.objects.create(cat_id)
 				object_obj.read_xml(x_part)
 				extassoc = object_obj.extplug_assoc
-				if extassoc.vst2_id: self.cache_ids_vst2[extassoc.vst2_id] = cat_id
-				if extassoc.vst3_id: self.cache_ids_vst3[extassoc.vst3_id] = cat_id
-				if extassoc.clap_id: self.cache_ids_clap[extassoc.clap_id] = cat_id
+				if extassoc.vst2_id: self.cache_ids_vst2[extassoc.vst2_id] = n
+				if extassoc.vst3_id: self.cache_ids_vst3[extassoc.vst3_id] = n
+				if extassoc.clap_id: self.cache_ids_clap[extassoc.clap_id] = n
 			if x_part.tag == 'colorset':
 				object_obj = self.colorset.create(cat_id)
 				object_obj.read_xml(x_part)
@@ -675,7 +676,7 @@ class dataset:
 		if in_dataset != None:
 			if os.path.exists(in_dataset): self.load_file(in_dataset)
 
-	def load_file_json(self, in_dataset):
+	def load_file(self, in_dataset):
 		self.categorys = {}
 		self.category_list = []
 		f = open(in_dataset, "r")
@@ -689,7 +690,7 @@ class dataset:
 			self.categorys[x] = dataset_category(d)
 			self.category_list.append(x)
 
-	def load_file(self, input_file):
+	def load_file_xml(self, input_file):
 		self.categorys = {}
 		self.category_list = []
 		parser = ET.XMLParser()

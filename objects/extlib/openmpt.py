@@ -32,6 +32,7 @@ class openmpt():
 		libloadstat = globalstore.extlib.load_native('libopenmpt', "libopenmpt")
 		self.libopenmpt = globalstore.extlib.get('libopenmpt')
 		if libloadstat == 1: 
+			self.libopenmpt.openmpt_get_supported_extensions.restype = ctypes.c_char_p
 			self.libopenmpt.openmpt_module_get_order_name.restype = ctypes.c_char_p
 			self.libopenmpt.openmpt_module_get_pattern_name.restype = ctypes.c_char_p
 			self.libopenmpt.openmpt_module_get_sample_name.restype = ctypes.c_char_p
@@ -102,6 +103,9 @@ class openmpt():
 
 	def openmpt_module_get_current_speed(self):
 		return self.libopenmpt.openmpt_module_get_current_speed(self.mod)
+
+	def openmpt_get_supported_extensions(self):
+		return self.libopenmpt.openmpt_get_supported_extensions(self.mod)
 
 	def get_metadata(self):
 		outdata = {}

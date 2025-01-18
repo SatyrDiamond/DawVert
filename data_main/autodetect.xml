@@ -1,0 +1,393 @@
+<autodetect>
+	<plugin pluginset="tracker" name="it">
+		<file fileext=".it"/>
+		<bytes_header data="494d504d"/>
+	</plugin>
+
+	<plugin pluginset="tracker" name="mod">
+		<file fileext=".mod"/>
+	</plugin>
+
+	<plugin pluginset="tracker" name="s3m">
+		<file fileext=".s3m"/>
+		<bytes_header pos="44" data="5343524d"/>
+	</plugin>
+
+	<plugin pluginset="tracker" name="xm">
+		<file fileext=".xm"/>
+		<bytes_header data="457874656e646564204d6f64756c653a20"/>
+	</plugin>
+
+	<plugin pluginset="tracker" name="umx">
+		<file fileext=".umx"/>
+		<bytes_header data="c1832a9e"/>
+	</plugin>
+
+	<plugin pluginset="tracker" name="deflemask">
+		<file fileext=".dmf"/>
+		<compressed type="zlib"/>
+		<bytes_header data="2e44656c656b4465666c654d61736b2e"/>
+	</plugin>
+
+	<plugin pluginset="tracker" name="trackerboy">
+		<file fileext=".tbm"/>
+		<bytes_header data="00545241434b4552424f5900"/>
+	</plugin>
+
+	<plugin pluginset="main" name="ceol">
+		<file fileext=".ceol"/>
+	</plugin>
+
+	<plugin pluginset="main" name="flp">
+		<file fileext=".flp"/>
+		<archived type="zip" file="*.flp" optional="1"/>
+		<bytes_header data="464c6864"/>
+	</plugin>
+
+	<plugin pluginset="main" name="notessimo_v3">
+		<file fileext=".note"/>
+		<archived type="zip" file="sheets.xml"/>
+	</plugin>
+
+	<plugin pluginset="main" name="1bitdragon">
+		<file fileext=".1bd"/>
+	</plugin>
+
+	<plugin pluginset="main" name="lovelycomposer">
+		<file fileext=".jsonl"/>
+	</plugin>
+
+	<plugin pluginset="main" name="notessimo_v2">
+		<file fileext=".note"/>
+		<compressed type="zlib"/>
+	</plugin>
+
+	<plugin pluginset="main" name="serato">
+		<file fileext=".ssp"/>
+	</plugin>
+
+	<plugin pluginset="main" name="ableton">
+		<file fileext=".als"/>
+		<compressed type="gzip" optional="1"/>
+		<xml root_name="Ableton"/>
+	</plugin>
+
+	<plugin pluginset="main" name="amped">
+		<file fileext=".amped"/>
+		<archived type="zip" file="amped-studio-project.json"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="audiosauna">
+		<file fileext=".song"/>
+		<archived type="zip" file="songdata.xml"/>
+	</plugin>
+
+	<plugin pluginset="main" name="bandlab_blx">
+		<file fileext=".blx"/>
+	</plugin>
+
+	<plugin pluginset="main" name="dawproject">
+		<file fileext=".dawproject"/>
+		<archived type="zip" file="project.xml"/>
+	</plugin>
+
+	<plugin pluginset="main" name="fl_mobile">
+		<file fileext=".flm"/>
+		<archived type="zip" file="*.flm" optional="1"/>
+		<bytes_header data="31304c46"/>
+	</plugin>
+
+	<plugin pluginset="main" name="lmms">
+		<file fileext=".mmp"/>
+		<xml root_name="lmms-project"/>
+	</plugin>
+
+	<plugin pluginset="main" name="lmms">
+		<file fileext=".mmpz"/>
+		<compressed type="zlib" offset="4"/>
+		<xml root_name="lmms-project"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="nanostudio_v1">
+		<folder fileext=".prj" files="Package.sng;Package.prj"/>
+	</plugin>
+
+	<plugin pluginset="main" name="onlineseq">
+		<file fileext=".sequence"/>
+	</plugin>
+
+	<plugin pluginset="main" name="orgyana">
+		<file fileext=".org"/>
+		<bytes_header data="4f72672d30"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="piyopiyo">
+		<file fileext=".pmd"/>
+		<bytes_header data="504d44"/>
+	</plugin>
+
+	<plugin pluginset="main" name="reaper">
+		<file fileext=".rpp"/>
+	</plugin>
+
+	<plugin pluginset="main" name="soundation">
+		<file fileext=".sng"/>
+	</plugin>
+
+	<plugin pluginset="main" name="soundation">
+		<file fileext=".sngz"/>
+		<archived type="zip" file="*.sng"/>
+	</plugin>
+
+	<plugin pluginset="main" name="soundbridge">
+		<folder fileext=".soundbridge" files="project.xml"/>
+	</plugin>
+
+	<plugin pluginset="main" name="tracktion_edit">
+		<file fileext=".tracktionedit"/>
+		<xml root_name="EDIT"/>
+	</plugin>
+
+	<plugin pluginset="main" name="zenbeats">
+		<file fileext=".song"/>
+		<xml root_name="song"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="z_maestro">
+		<file fileext=".zmm"/>
+	</plugin>
+
+	<plugin pluginset="main" name="caustic">
+		<file fileext=".caustic"/>
+		<bytes_header data="5241434b"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="adlib_rol">
+		<file fileext=".rol"/>
+		<bytes_header pos="4" data="5c726f6c6c5c64656661756c74000000000000000000000000000000000000000000000000000000"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="adlib_sop">
+		<file fileext=".sop"/>
+		<bytes_header data="736f7065706f73"/>
+	</plugin>
+
+	<plugin pluginset="main" name="mariopaint_msq">
+		<file fileext=".msq"/>
+	</plugin>
+
+	<plugin pluginset="main" name="mariopaint_mss">
+		<file fileext=".mss"/>
+		<xml root_name="MarioSequencerSong"/>
+	</plugin>
+
+	<plugin pluginset="main" name="mnbs">
+		<file fileext=".nbs"/>
+	</plugin>
+
+	<plugin pluginset="main" name="midi">
+		<file fileext=".mid;midi"/>
+		<bytes_header data="4d546864"/>
+	</plugin>
+
+	<plugin pluginset="main" name="ptcop">
+		<file fileext=".ptcop"/>
+		<bytes_header data="5054434f4c4c4147452d303731313139"/>
+		<bytes_header data="505454554e452d2d3230303731313139"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="mmf">
+		<file fileext=".mmf"/>
+		<bytes_header data="4d4d4d44"/>
+	</plugin>
+
+	<plugin pluginset="main" name="pixitracker">
+		<file fileext=".piximod"/>
+		<bytes_header data="504958494d4f4431"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="fruitytracks">
+		<file fileext=".ftr"/>
+		<bytes_header data="46546864"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="kristal">
+		<file fileext=".kristal"/>
+		<bytes_header data="43727973"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="temper">
+		<file fileext=".squ"/>
+		<xml root_name="music-sequence"/>
+	</plugin>
+
+	<plugin pluginset="ancient" name="soundclub2">
+		<file fileext=".sn2"/>
+		<bytes_header data="534e32"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="color_art">
+		<file fileext=".png"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".png"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".png"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".669"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".amf"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".ams"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".c67"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".dbm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".digi"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".dmf"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".dsm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".dtm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".far"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".imf"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".ice"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".j2b"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".m15"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".mdl"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".med"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".mms"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".mt2"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".mtm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".nst"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".okt"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".plm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".psm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".pt36"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".ptm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".sfx"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".sfx2"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".st26"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".stk"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".stm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".stp"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".ult"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".wow"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".gdm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".mo3"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".xpk"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".ppm"/>
+	</plugin>
+
+	<plugin pluginset="exper" name="libopenmpt">
+		<file fileext=".mmcmp"/>
+	</plugin>
+
+</autodetect>

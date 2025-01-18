@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 import platform
 import os
+import traceback
 import logging
 from ctypes import *
 from contextlib import contextmanager
@@ -65,37 +66,55 @@ class extplug:
 		if plugtype == 'ladspa': return ep_class.ladspa.count()
 		if plugtype == 'all': return ep_class.vst2.count()+ep_class.vst3.count()+ep_class.clap.count()
 
-def extlib_check_bits():
-	osbits = 64 if sys.maxsize > 2**32 else 32
-	return osbits
+class os_type_info:
+	def __init__(self, *args):
+		self.os_type = None
+		self.dll_fileext = None
+		self.bits = 64 if sys.maxsize > 2**32 else 32
+		self.from_platformtxt(sys.platform)
 
-def extlib_get_ostype():
-	if sys.platform == 'win32': return 'win'
-	elif sys.platform == 'cygwin': return 'cygwin'
-	elif sys.platform == 'linux': return 'linux'
-	elif sys.platform == 'linux2': return 'linux'
-	elif sys.platform == 'msys': return 'win'
-	elif sys.platform == 'darwin': return 'mac'
-	elif sys.platform == 'freebsd7': return 'freebsd7'
-	elif sys.platform == 'freebsd8': return 'freebsd8'
-	elif sys.platform == 'freebsdN': return 'freebsdn'
-	elif sys.platform == 'openbsd6': return 'openbsd6'
-	else: return 'unix'
+	def from_platformtxt(self, platname):
+		if platname == 'win32': self.os_type = 'win'
+		elif platname == 'cygwin': self.os_type = 'cygwin'
+		elif platname == 'linux': self.os_type = 'linux'
+		elif platname == 'linux2': self.os_type = 'linux'
+		elif platname == 'msys': self.os_type = 'win'
+		elif platname == 'darwin': self.os_type = 'mac'
+		elif platname == 'freebsd7': self.os_type = 'freebsd7'
+		elif platname == 'freebsd8': self.os_type = 'freebsd8'
+		elif platname == 'freebsdN': self.os_type = 'freebsdn'
+		elif platname == 'openbsd6': self.os_type = 'openbsd6'
+		else: self.os_type = 'unix'
 
-def extlib_get_ext():
-	if sys.platform == 'win32': return '.dll'
-	elif sys.platform == 'cygwin': return '.dll'
-	elif sys.platform == 'msys': return '.dll'
-	elif sys.platform == 'darwin': return '.dylib'
-	else: return '.so'
+		if platname == 'win32': self.dll_fileext = '.dll'
+		elif platname == 'cygwin': self.dll_fileext = '.dll'
+		elif platname == 'msys': self.dll_fileext = '.dll'
+		elif platname == 'darwin': self.dll_fileext = '.dylib'
+		else: self.dll_fileext = '.so'
+
+	def from_ostype(self, os_type):
+		self.os_type = os_type
+
+		if os_type == 'win': self.dll_fileext = '.dll'
+		elif os_type == 'cygwin': self.dll_fileext = '.dll'
+		elif os_type == 'darwin': self.dll_fileext = '.dylib'
+		else: self.dll_fileext = '.so'
+
+	def get_ext_ostype(self, platform_txt):
+		if self.os_type == 'win': platform_txt = 'win'
+		else: platform_txt = 'lin'
+		return platform_txt
+
+
+os_info = os_type_info()
 
 class extlib:
 	loaded_parts = {}
 
 	def load_native(nameid, dllname):
-		osbits = str(extlib_check_bits())
-		filepath = os.path.join('.', 'libs', extlib_get_ostype()+'_'+osbits, dllname+extlib_get_ext())
-		extlib.load(nameid, filepath)
+		osbits = str(os_info.bits)
+		filepath = os.path.join('.', 'libs', os_info.os_type+'_'+osbits, dllname+os_info.dll_fileext)
+		return extlib.load(nameid, filepath)
 
 	def load(nameid, filepath):
 		if nameid not in extlib.loaded_parts:
@@ -107,7 +126,9 @@ class extlib:
 				else:
 					logger_globalstore.warning('extlib: file "'+filepath+"\" dosen't exist.")
 					return -1
-			except: return -1
+			except: 
+				#print(traceback.format_exc())
+				return -1
 		else: return 0
 
 	def get(nameid):

@@ -1,481 +1,332 @@
-{
-    "plugin": {
-        "groups": {},
-        "objects": {
-            "1bandEq": {
-                "params": {
-                    "freq": {"def": 83.21308898925781,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq","type": "float"},
-                    "gain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain","type": "float"},
-                    "q": {"def": 0.5,"max": 4.0,"min": 0.10000000149011612,"name": "Q","type": "float"},
-                    "shape": {"def": 2,"max": 5,"name": "Shape","type": "int"},
-                    "slope": {"def": 12,"max": 48,"min": 12,"name": "Slope","type": "int"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "1-Band Equalizer"
-                }
-            },
-            "3bandEq": {
-                "params": {
-                    "freq1": {"def": 43.34996032714844,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq 1","type": "float"},
-                    "freq2": {"def": 90.23263549804688,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq 2","type": "float"},
-                    "freq3": {"def": 119.21308898925781,"max": 135.07623291015625,"min": 15.486820220947266,"name": "Freq 3","type": "float"},
-                    "gain1": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain 1","type": "float"},
-                    "gain2": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain 2","type": "float"},
-                    "gain3": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "Gain 3","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "3-Band Equalizer"
-                }
-            },
-            "4bandEq": {
-                "params": {
-                    "hiFreq": {"def": 17000.0,"max": 20000.0,"min": 20.0,"name": "hiFreq","type": "float"},
-                    "hiGain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "hiGain","type": "float"},
-                    "hiQ": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "hiQ","type": "float"},
-                    "loFreq": {"def": 79.99998474121094,"max": 20000.0,"min": 20.0,"name": "loFreq","type": "float"},
-                    "loGain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "loGain","type": "float"},
-                    "loQ": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "loQ","type": "float"},
-                    "midFreq1": {"def": 3000.0,"max": 20000.0,"min": 20.0,"name": "midFreq1","type": "float"},
-                    "midFreq2": {"def": 5000.0,"max": 20000.0,"min": 20.0,"name": "midFreq2","type": "float"},
-                    "midGain1": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "midGain1","type": "float"},
-                    "midGain2": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "midGain2","type": "float"},
-                    "midQ1": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "midQ1","type": "float"},
-                    "midQ2": {"def": 0.4999999701976776,"max": 4.0,"min": 0.10000000149011612,"name": "midQ2","type": "float"},
-                    "phaseInvert": {"def": 0,"max": null,"min": null,"name": "phaseInvert","type": "bool"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "4-Band Equalizer"
-                }
-            },
-            "8bandEq": {
-                "params": {
-                    "analyzer": {"def": "0","name": "analyzer","type": "int"},
-                    "enable1lm": {"def": 1.0,"name": "enable1lm","type": "float"},
-                    "enable1rs": {"def": 1.0,"name": "enable1rs","type": "float"},
-                    "enable2lm": {"def": 1.0,"name": "enable2lm","type": "float"},
-                    "enable2rs": {"def": 1.0,"name": "enable2rs","type": "float"},
-                    "enable3lm": {"def": 1.0,"name": "enable3lm","type": "float"},
-                    "enable3rs": {"def": 1.0,"name": "enable3rs","type": "float"},
-                    "enable4lm": {"def": 1.0,"name": "enable4lm","type": "float"},
-                    "enable4rs": {"def": 1.0,"name": "enable4rs","type": "float"},
-                    "enable5lm": {"def": 1.0,"name": "enable5lm","type": "float"},
-                    "enable5rs": {"def": 1.0,"name": "enable5rs","type": "float"},
-                    "enable6lm": {"def": 1.0,"name": "enable6lm","type": "float"},
-                    "enable6rs": {"def": 1.0,"name": "enable6rs","type": "float"},
-                    "enable7lm": {"def": 1.0,"name": "enable7lm","type": "float"},
-                    "enable7rs": {"def": 1.0,"name": "enable7rs","type": "float"},
-                    "enable8lm": {"def": 1.0,"name": "enable8lm","type": "float"},
-                    "enable8rs": {"def": 1.0,"name": "enable8rs","type": "float"},
-                    "freq1lm": {"def": 22.5063,"name": "freq1lm","type": "float"},
-                    "freq1rs": {"def": 22.5063,"name": "freq1rs","type": "float"},
-                    "freq2lm": {"def": 22.5063,"name": "freq2lm","type": "float"},
-                    "freq2rs": {"def": 22.5063,"name": "freq2rs","type": "float"},
-                    "freq3lm": {"def": 22.5063,"name": "freq3lm","type": "float"},
-                    "freq3rs": {"def": 22.5063,"name": "freq3rs","type": "float"},
-                    "freq4lm": {"def": 22.5063,"name": "freq4lm","type": "float"},
-                    "freq4rs": {"def": 22.5063,"name": "freq4rs","type": "float"},
-                    "freq5lm": {"def": 22.5063,"name": "freq5lm","type": "float"},
-                    "freq5rs": {"def": 22.5063,"name": "freq5rs","type": "float"},
-                    "freq6lm": {"def": 22.5063,"name": "freq6lm","type": "float"},
-                    "freq6rs": {"def": 22.5063,"name": "freq6rs","type": "float"},
-                    "freq7lm": {"def": 22.5063,"name": "freq7lm","type": "float"},
-                    "freq7rs": {"def": 22.5063,"name": "freq7rs","type": "float"},
-                    "freq8lm": {"def": 22.5063,"name": "freq8lm","type": "float"},
-                    "freq8rs": {"def": 22.5063,"name": "freq8rs","type": "float"},
-                    "gain1lm": {"def": 0.0,"name": "gain1lm","type": "float"},
-                    "gain1rs": {"def": 0.0,"name": "gain1rs","type": "float"},
-                    "gain2lm": {"def": 0.0,"name": "gain2lm","type": "float"},
-                    "gain2rs": {"def": 0.0,"name": "gain2rs","type": "float"},
-                    "gain3lm": {"def": 0.0,"name": "gain3lm","type": "float"},
-                    "gain3rs": {"def": 0.0,"name": "gain3rs","type": "float"},
-                    "gain4lm": {"def": 0.0,"name": "gain4lm","type": "float"},
-                    "gain4rs": {"def": 0.0,"name": "gain4rs","type": "float"},
-                    "gain5lm": {"def": 0.0,"name": "gain5lm","type": "float"},
-                    "gain5rs": {"def": 0.0,"name": "gain5rs","type": "float"},
-                    "gain6lm": {"def": 0.0,"name": "gain6lm","type": "float"},
-                    "gain6rs": {"def": 0.0,"name": "gain6rs","type": "float"},
-                    "gain7lm": {"def": 0.0,"name": "gain7lm","type": "float"},
-                    "gain7rs": {"def": 0.0,"name": "gain7rs","type": "float"},
-                    "gain8lm": {"def": 0.0,"name": "gain8lm","type": "float"},
-                    "gain8rs": {"def": 0.0,"name": "gain8rs","type": "float"},
-                    "mode": {"def": 0,"max": 2,"name": "mode","type": "int"},
-                    "q1lm": {"def": 0.5,"name": "q1lm","type": "float"},
-                    "q1rs": {"def": 0.5,"name": "q1rs","type": "float"},
-                    "q2lm": {"def": 0.5,"name": "q2lm","type": "float"},
-                    "q2rs": {"def": 0.5,"name": "q2rs","type": "float"},
-                    "q3lm": {"def": 0.5,"name": "q3lm","type": "float"},
-                    "q3rs": {"def": 0.5,"name": "q3rs","type": "float"},
-                    "q4lm": {"def": 0.5,"name": "q4lm","type": "float"},
-                    "q4rs": {"def": 0.5,"name": "q4rs","type": "float"},
-                    "q5lm": {"def": 0.5,"name": "q5lm","type": "float"},
-                    "q5rs": {"def": 0.5,"name": "q5rs","type": "float"},
-                    "q6lm": {"def": 0.5,"name": "q6lm","type": "float"},
-                    "q6rs": {"def": 0.5,"name": "q6rs","type": "float"},
-                    "q7lm": {"def": 0.5,"name": "q7lm","type": "float"},
-                    "q7rs": {"def": 0.5,"name": "q7rs","type": "float"},
-                    "q8lm": {"def": 0.5,"name": "q8lm","type": "float"},
-                    "q8rs": {"def": 0.5,"name": "q8rs","type": "float"},
-                    "shape1lm": {"def": 1.0,"name": "shape1lm","type": "float"},
-                    "shape1rs": {"def": 1.0,"name": "shape1rs","type": "float"},
-                    "shape2lm": {"def": 1.0,"name": "shape2lm","type": "float"},
-                    "shape2rs": {"def": 1.0,"name": "shape2rs","type": "float"},
-                    "shape3lm": {"def": 1.0,"name": "shape3lm","type": "float"},
-                    "shape3rs": {"def": 1.0,"name": "shape3rs","type": "float"},
-                    "shape4lm": {"def": 1.0,"name": "shape4lm","type": "float"},
-                    "shape4rs": {"def": 1.0,"name": "shape4rs","type": "float"},
-                    "shape5lm": {"def": 1.0,"name": "shape5lm","type": "float"},
-                    "shape5rs": {"def": 1.0,"name": "shape5rs","type": "float"},
-                    "shape6lm": {"def": 1.0,"name": "shape6lm","type": "float"},
-                    "shape6rs": {"def": 1.0,"name": "shape6rs","type": "float"},
-                    "shape7lm": {"def": 1.0,"name": "shape7lm","type": "float"},
-                    "shape7rs": {"def": 1.0,"name": "shape7rs","type": "float"},
-                    "shape8lm": {"def": 1.0,"name": "shape8lm","type": "float"},
-                    "shape8rs": {"def": 1.0,"name": "shape8rs","type": "float"},
-                    "slope1lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope1rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope2lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope2rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope3lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope3rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope4lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope4rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope5lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope5rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope6lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope6rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope7lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope7rs": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope8lm": {"def": 12,"max": 48,"min": 12,"type": "int"},
-                    "slope8rs": {"def": 12,"max": 48,"min": 12,"type": "int"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "8-Band Equalizer"
-                }
-            },
-            "chorus": {
-                "params": {
-                    "depthMs": {"def": 3.0,"max": 20.0,"min": 0.10000000149011612,"name": "depthMs","type": "float"},
-                    "mixProportion": {"def": 0.5,"name": "mixProportion","type": "float"},
-                    "speedHz": {"def": 1.0,"max": 10.0,"min": 0.10000000149011612,"name": "speedHz","type": "float"},
-                    "width": {"def": 0.5,"name": "width","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Chorus (Old)"
-                }
-            },
-            "chorusEffect": {
-                "params": {
-                    "delay": {"def": 10.0,"max": 30.0,"name": "Delay","type": "float"},
-                    "depth": {"def": 20.0,"max": 20.0,"name": "Depth","type": "float"},
-                    "mix": {"def": 1.0,"name": "Mix","type": "float"},
-                    "mixLock": {"def": 0,"max": null,"min": null,"name": "Mix Lock","type": "bool"},
-                    "mode": {"def": 1,"max": 2,"name": "Mode","type": "int"},
-                    "rateSyncOff": {"def": 0.4000000059604645,"max": 5.0,"min": 0.019999999552965164,"name": "Rate Sec","type": "float"},
-                    "rateSyncOn": {"def": 15,"max": 35,"name": "Rate Beat","type": "int"},
-                    "sync": {"def": false,"max": null,"min": null,"name": "Sync","type": "bool"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Chorus"
-                }
-            },
-            "comp": {
-                "params": {
-                    "attack": {"def": 50.0,"max": 100.0,"min": 1.0,"name": "attack","type": "float"},
-                    "inputDb": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "inputDb","type": "float"},
-                    "knee": {"def": 0.0,"max": 18.0,"name": "knee","type": "float"},
-                    "outputDb": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "outputDb","type": "float"},
-                    "ratio": {"def": 2.0,"max": 100.0,"min": 1.0,"name": "ratio","type": "float"},
-                    "release": {"def": 500.0,"max": 1000.0,"min": 1.0,"name": "release","type": "float"},
-                    "rms": {"def": 0.0,"name": "rms","type": "float"},
-                    "sidechainTrigger": {"def": 0,"max": null,"min": null,"name": "sidechainTrigger","type": "bool"},
-                    "threshold": {"def": -30.0,"max": 0.0,"min": -60.0,"name": "threshold","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Compressor"
-                }
-            },
-            "compressor": {
-                "params": {
-                    "attack": {"def": 100.0,"max": 200.0,"min": 0.30000001192092896,"name": "attack","type": "float"},
-                    "inputDb": {"def": 0.0,"max": 24.0,"min": -24.0,"name": "inputDb","type": "float"},
-                    "outputDb": {"def": 0.0,"max": 24.0,"min": -10.0,"name": "outputDb","type": "float"},
-                    "ratio": {"def": 0.5,"max": 0.9499989748001099,"name": "ratio","type": "float"},
-                    "release": {"def": 100.0,"max": 300.0,"min": 10.0,"name": "release","type": "float"},
-                    "sidechainTrigger": {"def": 0,"max": null,"min": null,"name": "sidechainTrigger","type": "bool"},
-                    "threshold": {"def": 0.5011872053146362,"min": 0.009999999776482582,"name": "threshold","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Compressor (Old)"
-                }
-            },
-            "delay": {
-                "params": {
-                    "feedback": {"def": -6.0,"max": 0.0,"min": -30.0,"name": "feedback","type": "float"},
-                    "length": {"def": 149.0,"max": 1000.0,"name": "length","type": "float"},
-                    "mix": {"def": 0.3,"name": "mix","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Delay (Old)"
-                }
-            },
-            "distortion": {
-                "params": {
-                    "drive": {"def": 0.0,"name": "drive","type": "float"},
-                    "dtype": {"def": 0,"max": 5,"name": "dtype","type": "int"},
-                    "emphasis": {"def": 0.25,"name": "emphasis","type": "float"},
-                    "mix": {"def": 1.0,"name": "mix","type": "float"},
-                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
-                    "postGain": {"def": 1.0,"name": "postGain","type": "float"},
-                    "tone": {"def": 1.0,"name": "tone","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Distortion"
-                }
-            },
-            "djeq": {
-                "params": {
-                    "bass": {"def": 1.0,"name": "bass","type": "float"},
-                    "freq1": {"def": 59.213096618652344,"max": 135.07623291015625,"min": 15.487000465393066,"name": "freq1","type": "float"},
-                    "freq2": {"def": 99.07624816894531,"max": 135.07623291015625,"min": 15.487000465393066,"name": "freq2","type": "float"},
-                    "mid": {"def": 1.0,"name": "mid","type": "float"},
-                    "treble": {"def": 1.0,"name": "treble","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "DJ EQ"
-                }
-            },
-            "djfilter": {
-                "params": {
-                    "freq": {"def": 0.0,"name": "freq","type": "float"},
-                    "mix": {"def": 1.0,"name": "mix","type": "float"},
-                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
-                    "q": {"def": 0.7070000171661377,"max": 4.0,"min": 0.10000000149011612,"name": "q","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "DJ Filter"
-                }
-            },
-            "gate": {
-                "params": {
-                    "attack": {"def": 3.0267577171325684,"max": 100.0,"min": 0.10000000149011612,"name": "attack","type": "float"},
-                    "hold": {"def": 29.296875,"max": 1000.0,"name": "hold","type": "float"},
-                    "release": {"def": 100.0,"max": 1000.0,"min": 1.0,"name": "release","type": "float"},
-                    "threshold": {"def": -40.0,"max": 0.0,"min": -60.0,"name": "threshold","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Gate"
-                }
-            },
-            "limiter": {
-                "params": {
-                    "ceiling": {"def": -0.2999992370605469,"max": 0.0,"min": -60.0,"name": "ceiling","type": "float"},
-                    "gain": {"def": 0.0,"max": 20.0,"min": -20.0,"name": "gain","type": "float"},
-                    "release": {"def": 300.0,"max": 300.0,"min": 1.0,"name": "release","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Limiter"
-                }
-            },
-            "lowpass": {
-                "params": {
-                    "frequency": {"def": 4000.0,"max": 22000.0,"min": 10.0,"name": "Frequency","type": "float"},
-                    "mode": {"def": "lowpass","max": null,"min": null,"name": "Mode","noauto": true,"type": "string"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Low Pass (Old)"
-                }
-            },
-            "naturalReverb": {
-                "params": {
-                    "decay": {"def": 0.2,"name": "decay","type": "float"},
-                    "definition": {"def": 0.8,"name": "definition","type": "float"},
-                    "diffusion": {"def": 0.829296886920929,"name": "diffusion","type": "float"},
-                    "highCut": {"def": 1.0,"name": "highCut","type": "float"},
-                    "highDamp": {"def": 1.0,"name": "highDamp","type": "float"},
-                    "lowCut": {"def": 0.0,"name": "lowCut","type": "float"},
-                    "lowDamp": {"def": 0.0,"name": "lowDamp","type": "float"},
-                    "mix": {"def": 0.5,"name": "mix","type": "float"},
-                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
-                    "pan": {"def": 0.5,"name": "pan","type": "float"},
-                    "preDelay": {"def": 0.0,"name": "preDelay","type": "float"},
-                    "size": {"def": 0.5,"name": "size","type": "float"},
-                    "slope": {"def": 0.25,"name": "slope","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Natural Reverb"
-                }
-            },
-            "nonLinearReverb": {
-                "params": {
-                    "decay": {"def": 0.2,"name": "decay","type": "float"},
-                    "definition": {"def": 0.25,"name": "definition","type": "float"},
-                    "diffusion": {"def": 0.8,"name": "diffusion","type": "float"},
-                    "highCut": {"def": 1.0,"name": "highCut","type": "float"},
-                    "highDamp": {"def": 1.0,"name": "highDamp","type": "float"},
-                    "lowCut": {"def": 0.0,"name": "lowCut","type": "float"},
-                    "lowDamp": {"def": 0.0,"name": "lowDamp","type": "float"},
-                    "mix": {"def": 0.5,"name": "mix","type": "float"},
-                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
-                    "pan": {"def": 0.5,"name": "pan","type": "float"},
-                    "preDelay": {"def": 0.0,"name": "preDelay","type": "float"},
-                    "size": {"def": 0.5,"name": "size","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Non-linear Reverb"
-                }
-            },
-            "phaser": {
-                "params": {
-                    "depth": {"def": 5.0,"max": 7.0,"min": 0.10000000149011612,"name": "depth","type": "float"},
-                    "feedback": {"def": 0.699999988079071,"max": 0.9900000095367432,"name": "feedback","type": "float"},
-                    "rate": {"def": 0.4000000059604645,"max": 16.0,"min": 0.009999999776482582,"name": "rate","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Phaser (Old)"
-                }
-            },
-            "phaser2": {
-                "params": {
-                    "ceiling": {"def": 20000.0,"max": 20000.0,"name": "ceiling","type": "float"},
-                    "feedback": {"def": 50.0,"max": 100.0,"name": "feedback","type": "float"},
-                    "floor": {"def": 20.0,"max": 20000.0,"name": "floor","type": "float"},
-                    "mix": {"def": 1.0,"name": "mix","type": "float"},
-                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
-                    "rateSyncOn": {"def": 8,"max": 35,"name": "rateSyncOn","type": "int"},
-                    "stages": {"def": 6,"max": 12,"name": "stages","type": "int"},
-                    "sync": {"def": 0,"max": null,"min": null,"name": "sync","type": "bool"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Phaser"
-                }
-            },
-            "pitchShifter": {
-                "data": {
-                    "group": ""
-                },
-                "params": {
-                    "elastiqueOptions": {"def": "1/0/0/0/64","max": null,"min": null,"name": "Elastique Options","noauto": true,"type": "string"},
-                    "semitonesUp": {"def": 0.0,"max": 24.0,"min": -24.0,"name": "Pitch","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Pitch Shifter"
-                }
-            },
-            "plateReverb": {
-                "params": {
-                    "decay": {"def": 0.2,"name": "decay","type": "float"},
-                    "definition": {"def": 0.8,"name": "definition","type": "float"},
-                    "diffusion": {"def": 0.8,"name": "diffusion","type": "float"},
-                    "highCut": {"def": 1.0,"name": "highCut","type": "float"},
-                    "highDamp": {"def": 1.0,"name": "highDamp","type": "float"},
-                    "lowCut": {"def": 0.0,"name": "lowCut","type": "float"},
-                    "lowDamp": {"def": 0.0,"name": "lowDamp","type": "float"},
-                    "mix": {"def": 0.5,"name": "mix","type": "float"},
-                    "mixLock": {"def": 1.0,"name": "mixLock","type": "float"},
-                    "pan": {"def": 0.5,"name": "pan","type": "float"},
-                    "preDelay": {"def": 0.0,"name": "preDelay","type": "float"},
-                    "size": {"def": 0.5,"name": "size","type": "float"},
-                    "slope": {"def": 0.25,"name": "slope","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Plate Reverb"
-                }
-            },
-            "reverb": {
-                "params": {
-                    "damp": {"def": 0.5,"name": "damp","type": "float"},
-                    "dry": {"def": 0.5,"name": "dry","type": "float"},
-                    "mode": {"def": 0.0,"name": "mode","type": "float"},
-                    "roomSize": {"def": 0.300000011920929,"name": "roomSize","type": "float"},
-                    "wet": {"def": 0.3333333432674408,"name": "wet","type": "float"},
-                    "width": {"def": 0.970703125,"name": "width","type": "float"}
-                },
-                "visual": {
-                    "name": "Reverb (Old)"
-                }
-            },
-            "stereoDelay": {
-                "data": {
-                    "group": ""
-                },
-                "params": {
-                    "crossL": {"def": 8.0,"max": 99.0,"name": "crossL","type": "float"},
-                    "crossR": {"def": 8.0,"max": 99.0,"name": "crossR","type": "float"},
-                    "delaySyncOffL": {"def": 0.0,"max": 5000.0,"name": "delaySyncOffL","type": "float"},
-                    "delaySyncOffR": {"def": 0.0,"max": 5000.0,"name": "delaySyncOffR","type": "float"},
-                    "delaySyncOnL": {"def": 1,"max": 35,"name": "delaySyncOnL","type": "int"},
-                    "delaySyncOnR": {"def": 1,"max": 35,"name": "delaySyncOnR","type": "int"},
-                    "feedbackL": {"def": 8.0,"max": 99.0,"name": "feedbackL","type": "float"},
-                    "feedbackR": {"def": 8.0,"max": 99.0,"name": "feedbackR","type": "float"},
-                    "highcut": {"def": 5000.0,"max": 20000.0,"min": 20.0,"name": "highcut","type": "float"},
-                    "lowcut": {"def": 300.0,"max": 20000.0,"min": 20.0,"name": "lowcut","type": "float"},
-                    "mix": {"def": 1.0,"name": "mix","type": "float"},
-                    "mixLock": {"def": 0,"max": null,"min": null,"name": "mixLock","type": "bool"},
-                    "panL": {"def": -1.0,"min": -1.0,"name": "panL","type": "float"},
-                    "panR": {"def": 1.0,"min": -1.0,"name": "panR","type": "float"},
-                    "sync": {"def": 0,"name": "sync","type": "int"},
-                    "volL": {"def": 0.0,"max": 6.0,"min": -12.0,"name": "volL","type": "float"},
-                    "volR": {"def": 0.0,"max": 6.0,"min": -12.0,"name": "volR","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Delay"
-                }
-            },
-            "volume": {
-                "params": {
-                    "pan": {"def": 0.0,"min": -1.0,"name": "Pan","type": "float"},
-                    "volume": {"def": 1.0,"name": "Volume","type": "float"}
-                },
-                "visual": {
-                    "color": [0.20000000298023224,0.21176470816135406,0.239215686917305
-                    ],
-                    "name": "Volume"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="plugin">
+        <object id="1bandEq">
+            <visual name="1-Band Equalizer" color="51|54|61" />
+            <param id="freq" name="Freq" type="float" def="83.2131" max="135.076" min="15.4868" />
+            <param id="gain" name="Gain" type="float" max="20" min="-20" />
+            <param id="q" name="Q" type="float" def="0.5" max="4" min="0.1" />
+            <param id="shape" name="Shape" type="int" def="2" max="5" />
+            <param id="slope" name="Slope" type="int" def="12" max="48" min="12" />
+        </object>
+        <object id="3bandEq">
+            <visual name="3-Band Equalizer" color="51|54|61" />
+            <param id="freq1" name="Freq 1" type="float" def="43.35" max="135.076" min="15.4868" />
+            <param id="freq2" name="Freq 2" type="float" def="90.2326" max="135.076" min="15.4868" />
+            <param id="freq3" name="Freq 3" type="float" def="119.213" max="135.076" min="15.4868" />
+            <param id="gain1" name="Gain 1" type="float" max="20" min="-20" />
+            <param id="gain2" name="Gain 2" type="float" max="20" min="-20" />
+            <param id="gain3" name="Gain 3" type="float" max="20" min="-20" />
+        </object>
+        <object id="4bandEq">
+            <visual name="4-Band Equalizer" color="51|54|61" />
+            <param id="hiFreq" name="hiFreq" type="float" def="17000" max="20000" min="20" />
+            <param id="hiGain" name="hiGain" type="float" max="20" min="-20" />
+            <param id="hiQ" name="hiQ" type="float" def="0.5" max="4" min="0.1" />
+            <param id="loFreq" name="loFreq" type="float" def="80" max="20000" min="20" />
+            <param id="loGain" name="loGain" type="float" max="20" min="-20" />
+            <param id="loQ" name="loQ" type="float" def="0.5" max="4" min="0.1" />
+            <param id="midFreq1" name="midFreq1" type="float" def="3000" max="20000" min="20" />
+            <param id="midFreq2" name="midFreq2" type="float" def="5000" max="20000" min="20" />
+            <param id="midGain1" name="midGain1" type="float" max="20" min="-20" />
+            <param id="midGain2" name="midGain2" type="float" max="20" min="-20" />
+            <param id="midQ1" name="midQ1" type="float" def="0.5" max="4" min="0.1" />
+            <param id="midQ2" name="midQ2" type="float" def="0.5" max="4" min="0.1" />
+            <param id="phaseInvert" name="phaseInvert" type="bool" />
+        </object>
+        <object id="8bandEq">
+            <visual name="8-Band Equalizer" color="51|54|61" />
+            <param id="analyzer" name="analyzer" type="int" def="0" />
+            <param id="enable1lm" name="enable1lm" type="float" def="1" />
+            <param id="enable1rs" name="enable1rs" type="float" def="1" />
+            <param id="enable2lm" name="enable2lm" type="float" def="1" />
+            <param id="enable2rs" name="enable2rs" type="float" def="1" />
+            <param id="enable3lm" name="enable3lm" type="float" def="1" />
+            <param id="enable3rs" name="enable3rs" type="float" def="1" />
+            <param id="enable4lm" name="enable4lm" type="float" def="1" />
+            <param id="enable4rs" name="enable4rs" type="float" def="1" />
+            <param id="enable5lm" name="enable5lm" type="float" def="1" />
+            <param id="enable5rs" name="enable5rs" type="float" def="1" />
+            <param id="enable6lm" name="enable6lm" type="float" def="1" />
+            <param id="enable6rs" name="enable6rs" type="float" def="1" />
+            <param id="enable7lm" name="enable7lm" type="float" def="1" />
+            <param id="enable7rs" name="enable7rs" type="float" def="1" />
+            <param id="enable8lm" name="enable8lm" type="float" def="1" />
+            <param id="enable8rs" name="enable8rs" type="float" def="1" />
+            <param id="freq1lm" name="freq1lm" type="float" def="22.5063" />
+            <param id="freq1rs" name="freq1rs" type="float" def="22.5063" />
+            <param id="freq2lm" name="freq2lm" type="float" def="22.5063" />
+            <param id="freq2rs" name="freq2rs" type="float" def="22.5063" />
+            <param id="freq3lm" name="freq3lm" type="float" def="22.5063" />
+            <param id="freq3rs" name="freq3rs" type="float" def="22.5063" />
+            <param id="freq4lm" name="freq4lm" type="float" def="22.5063" />
+            <param id="freq4rs" name="freq4rs" type="float" def="22.5063" />
+            <param id="freq5lm" name="freq5lm" type="float" def="22.5063" />
+            <param id="freq5rs" name="freq5rs" type="float" def="22.5063" />
+            <param id="freq6lm" name="freq6lm" type="float" def="22.5063" />
+            <param id="freq6rs" name="freq6rs" type="float" def="22.5063" />
+            <param id="freq7lm" name="freq7lm" type="float" def="22.5063" />
+            <param id="freq7rs" name="freq7rs" type="float" def="22.5063" />
+            <param id="freq8lm" name="freq8lm" type="float" def="22.5063" />
+            <param id="freq8rs" name="freq8rs" type="float" def="22.5063" />
+            <param id="gain1lm" name="gain1lm" type="float" />
+            <param id="gain1rs" name="gain1rs" type="float" />
+            <param id="gain2lm" name="gain2lm" type="float" />
+            <param id="gain2rs" name="gain2rs" type="float" />
+            <param id="gain3lm" name="gain3lm" type="float" />
+            <param id="gain3rs" name="gain3rs" type="float" />
+            <param id="gain4lm" name="gain4lm" type="float" />
+            <param id="gain4rs" name="gain4rs" type="float" />
+            <param id="gain5lm" name="gain5lm" type="float" />
+            <param id="gain5rs" name="gain5rs" type="float" />
+            <param id="gain6lm" name="gain6lm" type="float" />
+            <param id="gain6rs" name="gain6rs" type="float" />
+            <param id="gain7lm" name="gain7lm" type="float" />
+            <param id="gain7rs" name="gain7rs" type="float" />
+            <param id="gain8lm" name="gain8lm" type="float" />
+            <param id="gain8rs" name="gain8rs" type="float" />
+            <param id="mode" name="mode" type="int" max="2" />
+            <param id="q1lm" name="q1lm" type="float" def="0.5" />
+            <param id="q1rs" name="q1rs" type="float" def="0.5" />
+            <param id="q2lm" name="q2lm" type="float" def="0.5" />
+            <param id="q2rs" name="q2rs" type="float" def="0.5" />
+            <param id="q3lm" name="q3lm" type="float" def="0.5" />
+            <param id="q3rs" name="q3rs" type="float" def="0.5" />
+            <param id="q4lm" name="q4lm" type="float" def="0.5" />
+            <param id="q4rs" name="q4rs" type="float" def="0.5" />
+            <param id="q5lm" name="q5lm" type="float" def="0.5" />
+            <param id="q5rs" name="q5rs" type="float" def="0.5" />
+            <param id="q6lm" name="q6lm" type="float" def="0.5" />
+            <param id="q6rs" name="q6rs" type="float" def="0.5" />
+            <param id="q7lm" name="q7lm" type="float" def="0.5" />
+            <param id="q7rs" name="q7rs" type="float" def="0.5" />
+            <param id="q8lm" name="q8lm" type="float" def="0.5" />
+            <param id="q8rs" name="q8rs" type="float" def="0.5" />
+            <param id="shape1lm" name="shape1lm" type="float" def="1" />
+            <param id="shape1rs" name="shape1rs" type="float" def="1" />
+            <param id="shape2lm" name="shape2lm" type="float" def="1" />
+            <param id="shape2rs" name="shape2rs" type="float" def="1" />
+            <param id="shape3lm" name="shape3lm" type="float" def="1" />
+            <param id="shape3rs" name="shape3rs" type="float" def="1" />
+            <param id="shape4lm" name="shape4lm" type="float" def="1" />
+            <param id="shape4rs" name="shape4rs" type="float" def="1" />
+            <param id="shape5lm" name="shape5lm" type="float" def="1" />
+            <param id="shape5rs" name="shape5rs" type="float" def="1" />
+            <param id="shape6lm" name="shape6lm" type="float" def="1" />
+            <param id="shape6rs" name="shape6rs" type="float" def="1" />
+            <param id="shape7lm" name="shape7lm" type="float" def="1" />
+            <param id="shape7rs" name="shape7rs" type="float" def="1" />
+            <param id="shape8lm" name="shape8lm" type="float" def="1" />
+            <param id="shape8rs" name="shape8rs" type="float" def="1" />
+            <param id="slope1lm" type="int" def="12" max="48" min="12" />
+            <param id="slope1rs" type="int" def="12" max="48" min="12" />
+            <param id="slope2lm" type="int" def="12" max="48" min="12" />
+            <param id="slope2rs" type="int" def="12" max="48" min="12" />
+            <param id="slope3lm" type="int" def="12" max="48" min="12" />
+            <param id="slope3rs" type="int" def="12" max="48" min="12" />
+            <param id="slope4lm" type="int" def="12" max="48" min="12" />
+            <param id="slope4rs" type="int" def="12" max="48" min="12" />
+            <param id="slope5lm" type="int" def="12" max="48" min="12" />
+            <param id="slope5rs" type="int" def="12" max="48" min="12" />
+            <param id="slope6lm" type="int" def="12" max="48" min="12" />
+            <param id="slope6rs" type="int" def="12" max="48" min="12" />
+            <param id="slope7lm" type="int" def="12" max="48" min="12" />
+            <param id="slope7rs" type="int" def="12" max="48" min="12" />
+            <param id="slope8lm" type="int" def="12" max="48" min="12" />
+            <param id="slope8rs" type="int" def="12" max="48" min="12" />
+        </object>
+        <object id="chorus">
+            <visual name="Chorus (Old)" color="51|54|61" />
+            <param id="depthMs" name="depthMs" type="float" def="3" max="20" min="0.1" />
+            <param id="mixProportion" name="mixProportion" type="float" def="0.5" />
+            <param id="speedHz" name="speedHz" type="float" def="1" max="10" min="0.1" />
+            <param id="width" name="width" type="float" def="0.5" />
+        </object>
+        <object id="chorusEffect">
+            <visual name="Chorus" color="51|54|61" />
+            <param id="delay" name="Delay" type="float" def="10" max="30" />
+            <param id="depth" name="Depth" type="float" def="20" max="20" />
+            <param id="mix" name="Mix" type="float" def="1" />
+            <param id="mixLock" name="Mix Lock" type="bool" />
+            <param id="mode" name="Mode" type="int" def="1" max="2" />
+            <param id="rateSyncOff" name="Rate Sec" type="float" def="0.4" max="5" min="0.02" />
+            <param id="rateSyncOn" name="Rate Beat" type="int" def="15" max="35" />
+            <param id="sync" name="Sync" type="bool" />
+        </object>
+        <object id="comp">
+            <visual name="Compressor" color="51|54|61" />
+            <param id="attack" name="attack" type="float" def="50" max="100" min="1" />
+            <param id="inputDb" name="inputDb" type="float" max="20" min="-20" />
+            <param id="knee" name="knee" type="float" max="18" />
+            <param id="outputDb" name="outputDb" type="float" max="20" min="-20" />
+            <param id="ratio" name="ratio" type="float" def="2" max="100" min="1" />
+            <param id="release" name="release" type="float" def="500" max="1000" min="1" />
+            <param id="rms" name="rms" type="float" />
+            <param id="sidechainTrigger" name="sidechainTrigger" type="bool" />
+            <param id="threshold" name="threshold" type="float" def="-30" max="0" min="-60" />
+        </object>
+        <object id="compressor">
+            <visual name="Compressor (Old)" color="51|54|61" />
+            <param id="attack" name="attack" type="float" def="100" max="200" min="0.3" />
+            <param id="inputDb" name="inputDb" type="float" max="24" min="-24" />
+            <param id="outputDb" name="outputDb" type="float" max="24" min="-10" />
+            <param id="ratio" name="ratio" type="float" def="0.5" max="0.949999" />
+            <param id="release" name="release" type="float" def="100" max="300" min="10" />
+            <param id="sidechainTrigger" name="sidechainTrigger" type="bool" />
+            <param id="threshold" name="threshold" type="float" def="0.501187" min="0.01" />
+        </object>
+        <object id="delay">
+            <visual name="Delay (Old)" color="51|54|61" />
+            <param id="feedback" name="feedback" type="float" def="-6" max="0" min="-30" />
+            <param id="length" name="length" type="float" def="149" max="1000" />
+            <param id="mix" name="mix" type="float" def="0.3" />
+        </object>
+        <object id="distortion">
+            <visual name="Distortion" color="51|54|61" />
+            <param id="drive" name="drive" type="float" />
+            <param id="dtype" name="dtype" type="int" max="5" />
+            <param id="emphasis" name="emphasis" type="float" def="0.25" />
+            <param id="mix" name="mix" type="float" def="1" />
+            <param id="mixLock" name="mixLock" type="bool" />
+            <param id="postGain" name="postGain" type="float" def="1" />
+            <param id="tone" name="tone" type="float" def="1" />
+        </object>
+        <object id="djeq">
+            <visual name="DJ EQ" color="51|54|61" />
+            <param id="bass" name="bass" type="float" def="1" />
+            <param id="freq1" name="freq1" type="float" def="59.2131" max="135.076" min="15.487" />
+            <param id="freq2" name="freq2" type="float" def="99.0762" max="135.076" min="15.487" />
+            <param id="mid" name="mid" type="float" def="1" />
+            <param id="treble" name="treble" type="float" def="1" />
+        </object>
+        <object id="djfilter">
+            <visual name="DJ Filter" color="51|54|61" />
+            <param id="freq" name="freq" type="float" />
+            <param id="mix" name="mix" type="float" def="1" />
+            <param id="mixLock" name="mixLock" type="bool" />
+            <param id="q" name="q" type="float" def="0.707" max="4" min="0.1" />
+        </object>
+        <object id="gate">
+            <visual name="Gate" color="51|54|61" />
+            <param id="attack" name="attack" type="float" def="3.02676" max="100" min="0.1" />
+            <param id="hold" name="hold" type="float" def="29.2969" max="1000" />
+            <param id="release" name="release" type="float" def="100" max="1000" min="1" />
+            <param id="threshold" name="threshold" type="float" def="-40" max="0" min="-60" />
+        </object>
+        <object id="limiter">
+            <visual name="Limiter" color="51|54|61" />
+            <param id="ceiling" name="ceiling" type="float" def="-0.299999" max="0" min="-60" />
+            <param id="gain" name="gain" type="float" max="20" min="-20" />
+            <param id="release" name="release" type="float" def="300" max="300" min="1" />
+        </object>
+        <object id="lowpass">
+            <visual name="Low Pass (Old)" color="51|54|61" />
+            <param id="frequency" name="Frequency" type="float" def="4000" max="22000" min="10" />
+            <param id="mode" name="Mode" type="string" def="lowpass" noauto="1" />
+        </object>
+        <object id="naturalReverb">
+            <visual name="Natural Reverb" color="51|54|61" />
+            <param id="decay" name="decay" type="float" def="0.2" />
+            <param id="definition" name="definition" type="float" def="0.8" />
+            <param id="diffusion" name="diffusion" type="float" def="0.829297" />
+            <param id="highCut" name="highCut" type="float" def="1" />
+            <param id="highDamp" name="highDamp" type="float" def="1" />
+            <param id="lowCut" name="lowCut" type="float" />
+            <param id="lowDamp" name="lowDamp" type="float" />
+            <param id="mix" name="mix" type="float" def="0.5" />
+            <param id="mixLock" name="mixLock" type="bool" />
+            <param id="pan" name="pan" type="float" def="0.5" />
+            <param id="preDelay" name="preDelay" type="float" />
+            <param id="size" name="size" type="float" def="0.5" />
+            <param id="slope" name="slope" type="float" def="0.25" />
+        </object>
+        <object id="nonLinearReverb">
+            <visual name="Non-linear Reverb" color="51|54|61" />
+            <param id="decay" name="decay" type="float" def="0.2" />
+            <param id="definition" name="definition" type="float" def="0.25" />
+            <param id="diffusion" name="diffusion" type="float" def="0.8" />
+            <param id="highCut" name="highCut" type="float" def="1" />
+            <param id="highDamp" name="highDamp" type="float" def="1" />
+            <param id="lowCut" name="lowCut" type="float" />
+            <param id="lowDamp" name="lowDamp" type="float" />
+            <param id="mix" name="mix" type="float" def="0.5" />
+            <param id="mixLock" name="mixLock" type="bool" />
+            <param id="pan" name="pan" type="float" def="0.5" />
+            <param id="preDelay" name="preDelay" type="float" />
+            <param id="size" name="size" type="float" def="0.5" />
+        </object>
+        <object id="phaser">
+            <visual name="Phaser (Old)" color="51|54|61" />
+            <param id="depth" name="depth" type="float" def="5" max="7" min="0.1" />
+            <param id="feedback" name="feedback" type="float" def="0.7" max="0.99" />
+            <param id="rate" name="rate" type="float" def="0.4" max="16" min="0.01" />
+        </object>
+        <object id="phaser2">
+            <visual name="Phaser" color="51|54|61" />
+            <param id="ceiling" name="ceiling" type="float" def="20000" max="20000" />
+            <param id="feedback" name="feedback" type="float" def="50" max="100" />
+            <param id="floor" name="floor" type="float" def="20" max="20000" />
+            <param id="mix" name="mix" type="float" def="1" />
+            <param id="mixLock" name="mixLock" type="bool" />
+            <param id="rateSyncOn" name="rateSyncOn" type="int" def="8" max="35" />
+            <param id="stages" name="stages" type="int" def="6" max="12" />
+            <param id="sync" name="sync" type="bool" />
+        </object>
+        <object id="pitchShifter">
+            <data group="" />
+            <visual name="Pitch Shifter" color="51|54|61" />
+            <param id="elastiqueOptions" name="Elastique Options" type="string" def="1/0/0/0/64" noauto="1" />
+            <param id="semitonesUp" name="Pitch" type="float" max="24" min="-24" />
+        </object>
+        <object id="plateReverb">
+            <visual name="Plate Reverb" color="51|54|61" />
+            <param id="decay" name="decay" type="float" def="0.2" />
+            <param id="definition" name="definition" type="float" def="0.8" />
+            <param id="diffusion" name="diffusion" type="float" def="0.8" />
+            <param id="highCut" name="highCut" type="float" def="1" />
+            <param id="highDamp" name="highDamp" type="float" def="1" />
+            <param id="lowCut" name="lowCut" type="float" />
+            <param id="lowDamp" name="lowDamp" type="float" />
+            <param id="mix" name="mix" type="float" def="0.5" />
+            <param id="mixLock" name="mixLock" type="float" def="1" />
+            <param id="pan" name="pan" type="float" def="0.5" />
+            <param id="preDelay" name="preDelay" type="float" />
+            <param id="size" name="size" type="float" def="0.5" />
+            <param id="slope" name="slope" type="float" def="0.25" />
+        </object>
+        <object id="reverb">
+            <visual name="Reverb (Old)" />
+            <param id="damp" name="damp" type="float" def="0.5" />
+            <param id="dry" name="dry" type="float" def="0.5" />
+            <param id="mode" name="mode" type="float" />
+            <param id="roomSize" name="roomSize" type="float" def="0.3" />
+            <param id="wet" name="wet" type="float" def="0.333333" />
+            <param id="width" name="width" type="float" def="0.970703" />
+        </object>
+        <object id="stereoDelay">
+            <data group="" />
+            <visual name="Delay" color="51|54|61" />
+            <param id="crossL" name="crossL" type="float" def="8" max="99" />
+            <param id="crossR" name="crossR" type="float" def="8" max="99" />
+            <param id="delaySyncOffL" name="delaySyncOffL" type="float" max="5000" />
+            <param id="delaySyncOffR" name="delaySyncOffR" type="float" max="5000" />
+            <param id="delaySyncOnL" name="delaySyncOnL" type="int" def="1" max="35" />
+            <param id="delaySyncOnR" name="delaySyncOnR" type="int" def="1" max="35" />
+            <param id="feedbackL" name="feedbackL" type="float" def="8" max="99" />
+            <param id="feedbackR" name="feedbackR" type="float" def="8" max="99" />
+            <param id="highcut" name="highcut" type="float" def="5000" max="20000" min="20" />
+            <param id="lowcut" name="lowcut" type="float" def="300" max="20000" min="20" />
+            <param id="mix" name="mix" type="float" def="1" />
+            <param id="mixLock" name="mixLock" type="bool" />
+            <param id="panL" name="panL" type="float" def="-1" min="-1" />
+            <param id="panR" name="panR" type="float" def="1" min="-1" />
+            <param id="sync" name="sync" type="int" />
+            <param id="volL" name="volL" type="float" max="6" min="-12" />
+            <param id="volR" name="volR" type="float" max="6" min="-12" />
+        </object>
+        <object id="volume">
+            <visual name="Volume" color="51|54|61" />
+            <param id="pan" name="Pan" type="float" min="-1" />
+            <param id="volume" name="Volume" type="float" def="1" />
+        </object>
+    </category>
+</dataset>

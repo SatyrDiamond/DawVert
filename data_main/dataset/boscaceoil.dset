@@ -1,2014 +1,1300 @@
-{
-    "fx": {
-        "objects": {
-            "chorus": {
-                "visual": {
-                    "name": "Chorus"
-                }
-            },
-            "compressor": {
-                "visual": {
-                    "name": "Compressor"
-                }
-            },
-            "delay": {
-                "visual": {
-                    "name": "Delay"
-                }
-            },
-            "distortion": {
-                "visual": {
-                    "name": "Distortion"
-                }
-            },
-            "high_pass": {
-                "visual": {
-                    "name": "High Pass"
-                }
-            },
-            "low_boost": {
-                "visual": {
-                    "name": "Low Boost"
-                }
-            },
-            "reverb": {
-                "visual": {
-                    "name": "Reverb"
-                }
-            }
-        }
-    },
-    "inst": {
-        "objects": {
-            "128": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Square Wave"
-                }
-            },
-            "129": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Saw Wave"
-                }
-            },
-            "130": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Triangle Wave"
-                }
-            },
-            "131": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Sine Wave"
-                }
-            },
-            "132": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Noise"
-                }
-            },
-            "133": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Dual Square"
-                }
-            },
-            "134": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Dual Saw"
-                }
-            },
-            "135": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Triangle LO-FI"
-                }
-            },
-            "136": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Konami Wave"
-                }
-            },
-            "137": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Ramp Wave"
-                }
-            },
-            "138": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Pulse Wave"
-                }
-            },
-            "139": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "MA3 Wave"
-                }
-            },
-            "140": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Noise (Bass)"
-                }
-            },
-            "141": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Noise (Snare)"
-                }
-            },
-            "142": {
-                "group": "CHIPTUNE",
-                "visual": {
-                    "name": "Noise (Hi-Hat)"
-                }
-            },
-            "143": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Analog Bass"
-                }
-            },
-            "144": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Analog Bass #2"
-                }
-            },
-            "145": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Analog Bass #2 (q2)"
-                }
-            },
-            "146": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Chopper Bass 0"
-                }
-            },
-            "147": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Chopper Bass 1"
-                }
-            },
-            "148": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Chopper bass 2 (CUT)"
-                }
-            },
-            "149": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Chopper bass 3"
-                }
-            },
-            "150": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Elec.Chopper Bass"
-                }
-            },
-            "151": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Effect Bass 1"
-                }
-            },
-            "152": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Effect Bass 2 to UP"
-                }
-            },
-            "153": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Effect Bass 1"
-                }
-            },
-            "154": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Mohaaa"
-                }
-            },
-            "155": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Effect FB Bass #5"
-                }
-            },
-            "156": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Magical bass"
-                }
-            },
-            "157": {
-                "group": "BASS",
-                "visual": {
-                    "name": "E.Bass #6"
-                }
-            },
-            "158": {
-                "group": "BASS",
-                "visual": {
-                    "name": "E.Bass #7"
-                }
-            },
-            "159": {
-                "group": "BASS",
-                "visual": {
-                    "name": "E.Bass 70"
-                }
-            },
-            "160": {
-                "group": "BASS",
-                "visual": {
-                    "name": "VAL006 Euro"
-                }
-            },
-            "161": {
-                "group": "BASS",
-                "visual": {
-                    "name": "E.Bass x2"
-                }
-            },
-            "162": {
-                "group": "BASS",
-                "visual": {
-                    "name": "E.Bass x4"
-                }
-            },
-            "163": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Metal pick bass X5"
-                }
-            },
-            "164": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Groove Bass #1"
-                }
-            },
-            "165": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Analog Groove #2"
-                }
-            },
-            "166": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Harmonics #1"
-                }
-            },
-            "167": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Low Bass x1"
-                }
-            },
-            "168": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Low_bass x2"
-                }
-            },
-            "169": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Low Bass Rezzo"
-                }
-            },
-            "170": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Low Bass Picked"
-                }
-            },
-            "171": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Metal Bass"
-                }
-            },
-            "172": {
-                "group": "BASS",
-                "visual": {
-                    "name": "e.n.bass 1"
-                }
-            },
-            "173": {
-                "group": "BASS",
-                "visual": {
-                    "name": "psg bass 1"
-                }
-            },
-            "174": {
-                "group": "BASS",
-                "visual": {
-                    "name": "psg bass 2"
-                }
-            },
-            "175": {
-                "group": "BASS",
-                "visual": {
-                    "name": "rezonance bass"
-                }
-            },
-            "176": {
-                "group": "BASS",
-                "visual": {
-                    "name": "slap bass"
-                }
-            },
-            "177": {
-                "group": "BASS",
-                "visual": {
-                    "name": "slap bass 1"
-                }
-            },
-            "178": {
-                "group": "BASS",
-                "visual": {
-                    "name": "slap bass 2 (1+)"
-                }
-            },
-            "179": {
-                "group": "BASS",
-                "visual": {
-                    "name": "slap bass #3"
-                }
-            },
-            "180": {
-                "group": "BASS",
-                "visual": {
-                    "name": "slap bass pull"
-                }
-            },
-            "181": {
-                "group": "BASS",
-                "visual": {
-                    "name": "slap bass mute"
-                }
-            },
-            "182": {
-                "group": "BASS",
-                "visual": {
-                    "name": "slap bass pick"
-                }
-            },
-            "183": {
-                "group": "BASS",
-                "visual": {
-                    "name": "super bass #2"
-                }
-            },
-            "184": {
-                "group": "BASS",
-                "visual": {
-                    "name": "sp_bass#3 soft"
-                }
-            },
-            "185": {
-                "group": "BASS",
-                "visual": {
-                    "name": "sp_bass#4 soft*2"
-                }
-            },
-            "186": {
-                "group": "BASS",
-                "visual": {
-                    "name": "sp_bass#5 attack"
-                }
-            },
-            "187": {
-                "group": "BASS",
-                "visual": {
-                    "name": "sp.bass#6 rezz"
-                }
-            },
-            "188": {
-                "group": "BASS",
-                "visual": {
-                    "name": "synth bass 1"
-                }
-            },
-            "189": {
-                "group": "BASS",
-                "visual": {
-                    "name": "synth bass 2 myon"
-                }
-            },
-            "190": {
-                "group": "BASS",
-                "visual": {
-                    "name": "synth bass #3 cho!"
-                }
-            },
-            "191": {
-                "group": "BASS",
-                "visual": {
-                    "name": "synth-wind-bass #4"
-                }
-            },
-            "192": {
-                "group": "BASS",
-                "visual": {
-                    "name": "synth bass #5 q2"
-                }
-            },
-            "193": {
-                "group": "BASS",
-                "visual": {
-                    "name": "old wood bass"
-                }
-            },
-            "194": {
-                "group": "BASS",
-                "visual": {
-                    "name": "w.bass bright"
-                }
-            },
-            "195": {
-                "group": "BASS",
-                "visual": {
-                    "name": "w.bass x2 bow"
-                }
-            },
-            "196": {
-                "group": "BASS",
-                "visual": {
-                    "name": "Wood Bass 3"
-                }
-            },
-            "197": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Brass strings"
-                }
-            },
-            "198": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "E.mute Trampet"
-                }
-            },
-            "199": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "HORN 2"
-                }
-            },
-            "200": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Alpine Horn #3"
-                }
-            },
-            "201": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Lead brass"
-                }
-            },
-            "202": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Normal HORN"
-                }
-            },
-            "203": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Synth Oboe"
-                }
-            },
-            "204": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Oboe 2"
-                }
-            },
-            "205": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Attack Brass (q2)"
-                }
-            },
-            "206": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "SAX"
-                }
-            },
-            "207": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Soft brass(lead)"
-                }
-            },
-            "208": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Synth Brass 1 OLD"
-                }
-            },
-            "209": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Synth Brass 2 OLD"
-                }
-            },
-            "210": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Synth Brass 3"
-                }
-            },
-            "211": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Synth Brass #4"
-                }
-            },
-            "212": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Syn.Brass 5(long)"
-                }
-            },
-            "213": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Synth Brass 6"
-                }
-            },
-            "214": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Trumpet"
-                }
-            },
-            "215": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Trumpet 2"
-                }
-            },
-            "216": {
-                "group": "BRASS",
-                "visual": {
-                    "name": "Twin Horn (or OL=25)"
-                }
-            },
-            "217": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Calm Bell"
-                }
-            },
-            "218": {
-                "group": "BELL",
-                "visual": {
-                    "name": "China Bell Double"
-                }
-            },
-            "219": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Church Bell"
-                }
-            },
-            "220": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Church Bell 2"
-                }
-            },
-            "221": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Glocken 1"
-                }
-            },
-            "222": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Harp #1"
-                }
-            },
-            "223": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Harp #2"
-                }
-            },
-            "224": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Kirakira"
-                }
-            },
-            "225": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Marimba"
-                }
-            },
-            "226": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Old Bell"
-                }
-            },
-            "227": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Percus. Bell"
-                }
-            },
-            "228": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Pretty Bell"
-                }
-            },
-            "229": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Synth Bell #0"
-                }
-            },
-            "230": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Synth Bell #1 o5"
-                }
-            },
-            "231": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Synth Bell 2"
-                }
-            },
-            "232": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Viberaphone"
-                }
-            },
-            "233": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Twin Marinba"
-                }
-            },
-            "234": {
-                "group": "BELL",
-                "visual": {
-                    "name": "Bellend"
-                }
-            },
-            "235": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Guitar VeloLow"
-                }
-            },
-            "236": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Guitar VeloHigh"
-                }
-            },
-            "237": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "A.Guitar #3"
-                }
-            },
-            "238": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Cutting E.Guitar"
-                }
-            },
-            "239": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Dis. Synth (old)"
-                }
-            },
-            "240": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Dra-spi-Dis.G."
-                }
-            },
-            "241": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Dis.Guitar 3-"
-                }
-            },
-            "242": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Dis.Guitar 3+"
-                }
-            },
-            "243": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Feed-back Guitar 1"
-                }
-            },
-            "244": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Hard Dis. Guitar 1"
-                }
-            },
-            "245": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Hard Dis.Guitar 3"
-                }
-            },
-            "246": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Dis.Guitar '94 Hard"
-                }
-            },
-            "247": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "New Dis.Guitar 1"
-                }
-            },
-            "248": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "New Dis.Guitar 2"
-                }
-            },
-            "249": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "New Dis.Guitar 3"
-                }
-            },
-            "250": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Overdrive.G. (AL=013)"
-                }
-            },
-            "251": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "METAL"
-                }
-            },
-            "252": {
-                "group": "GUITAR",
-                "visual": {
-                    "name": "Soft Dis.Guitar"
-                }
-            },
-            "253": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Aco code"
-                }
-            },
-            "254": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Analog synthe 1"
-                }
-            },
-            "255": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Bosco-lead"
-                }
-            },
-            "256": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Cosmo Lead"
-                }
-            },
-            "257": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Cosmo Lead 2"
-                }
-            },
-            "258": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Digital lead #1"
-                }
-            },
-            "259": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Double sin wave"
-                }
-            },
-            "260": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "E.Organ 2 bright"
-                }
-            },
-            "261": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "E.Organ 2 (voice)"
-                }
-            },
-            "262": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "E.Organ 4 Click"
-                }
-            },
-            "263": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "E.Organ 5 Click"
-                }
-            },
-            "264": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "E.Organ 6"
-                }
-            },
-            "265": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "E.Organ 7 Church"
-                }
-            },
-            "266": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Metal Lead"
-                }
-            },
-            "267": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Metal Lead 3"
-                }
-            },
-            "268": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "MONO Lead"
-                }
-            },
-            "269": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "PSG like PC88 (long)"
-                }
-            },
-            "270": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "PSG Cut 1"
-                }
-            },
-            "271": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Attack Synth"
-                }
-            },
-            "272": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Sin wave"
-                }
-            },
-            "273": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth, Bell 2"
-                }
-            },
-            "274": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Chorus #2(Voice)+bell"
-                }
-            },
-            "275": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Cut 8-4"
-                }
-            },
-            "276": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth long 8-4"
-                }
-            },
-            "277": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "ACO_Code #2"
-                }
-            },
-            "278": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "ACO_Code #3"
-                }
-            },
-            "279": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth FB long 4"
-                }
-            },
-            "280": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth FB long 5"
-                }
-            },
-            "281": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 0"
-                }
-            },
-            "282": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 1"
-                }
-            },
-            "283": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 2"
-                }
-            },
-            "284": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 3"
-                }
-            },
-            "285": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 4"
-                }
-            },
-            "286": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 5"
-                }
-            },
-            "287": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 6"
-                }
-            },
-            "288": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth Lead 7 (Soft FB)"
-                }
-            },
-            "289": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth PSG"
-                }
-            },
-            "290": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth PSG 2"
-                }
-            },
-            "291": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth PSG 3"
-                }
-            },
-            "292": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth PSG 4"
-                }
-            },
-            "293": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Synth PSG 5"
-                }
-            },
-            "294": {
-                "group": "LEAD",
-                "visual": {
-                    "name": "Sin water synth"
-                }
-            },
-            "295": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Aco Piano2 (Attack)"
-                }
-            },
-            "296": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Backing 1 (Clav.)"
-                }
-            },
-            "297": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Clav. coad"
-                }
-            },
-            "298": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Deep Piano 1"
-                }
-            },
-            "299": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Deep Piano 3"
-                }
-            },
-            "300": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "E.piano #2"
-                }
-            },
-            "301": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "E.piano #3"
-                }
-            },
-            "302": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "E.piano #4(2+)"
-                }
-            },
-            "303": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "E.(Bell)Piano #5"
-                }
-            },
-            "304": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "E.Piano #6"
-                }
-            },
-            "305": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "E.Piano #7"
-                }
-            },
-            "306": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Harpci chord 1"
-                }
-            },
-            "307": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Harpci 2"
-                }
-            },
-            "308": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Piano1"
-                }
-            },
-            "309": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Piano3"
-                }
-            },
-            "310": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Piano4"
-                }
-            },
-            "311": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Digital Piano #5"
-                }
-            },
-            "312": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Piano 6 High-tone"
-                }
-            },
-            "313": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Panning Harpci"
-                }
-            },
-            "314": {
-                "group": "PIANO",
-                "visual": {
-                    "name": "Yam Harpci chord"
-                }
-            },
-            "315": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "S.E.(Detune is needed o2c)"
-                }
-            },
-            "316": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "S.E. 2 o0-1-2"
-                }
-            },
-            "317": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "S.E. 3(Feedin /noise add.)"
-                }
-            },
-            "318": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "Digital 1"
-                }
-            },
-            "319": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "Digital 2"
-                }
-            },
-            "320": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "Digital[BAS] 3 o2-o3"
-                }
-            },
-            "321": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "Digital[GTR] 3 o2-o3"
-                }
-            },
-            "322": {
-                "group": "SPECIAL",
-                "visual": {
-                    "name": "Digital 4 o4a"
-                }
-            },
-            "323": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Accordion1"
-                }
-            },
-            "324": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Accordion2"
-                }
-            },
-            "325": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Accordion3"
-                }
-            },
-            "326": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Chorus #2(Voice)"
-                }
-            },
-            "327": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Chorus #3"
-                }
-            },
-            "328": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Chorus #4"
-                }
-            },
-            "329": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "F.Strings 1"
-                }
-            },
-            "330": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "F.Strings 2"
-                }
-            },
-            "331": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "F.Strings 3"
-                }
-            },
-            "332": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "F.Strings 4 (low)"
-                }
-            },
-            "333": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Pizzicate#1(KOTO2)"
-                }
-            },
-            "334": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "sound truck modoki"
-                }
-            },
-            "335": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Strings"
-                }
-            },
-            "336": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Synth Accordion"
-                }
-            },
-            "337": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Phaser synthe."
-                }
-            },
-            "338": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "FB Synth."
-                }
-            },
-            "339": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Synth Strings MB"
-                }
-            },
-            "340": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Synth Strings #2"
-                }
-            },
-            "341": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Synth.Sweep Pad #1"
-                }
-            },
-            "342": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Twin synth. #1 Calm"
-                }
-            },
-            "343": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Twin synth. #2 FB"
-                }
-            },
-            "344": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Twin synth. #3 FB"
-                }
-            },
-            "345": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Vocoder voice1"
-                }
-            },
-            "346": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Voice o3-o5"
-                }
-            },
-            "347": {
-                "group": "STRINGS",
-                "visual": {
-                    "name": "Voice' o3-o5"
-                }
-            },
-            "348": {
-                "group": "WIND",
-                "visual": {
-                    "name": "Clarinet #1"
-                }
-            },
-            "349": {
-                "group": "WIND",
-                "visual": {
-                    "name": "Clarinet #2 Brighter"
-                }
-            },
-            "350": {
-                "group": "WIND",
-                "visual": {
-                    "name": "E.Flute"
-                }
-            },
-            "351": {
-                "group": "WIND",
-                "visual": {
-                    "name": "E.Flute 2"
-                }
-            },
-            "352": {
-                "group": "WIND",
-                "visual": {
-                    "name": "Flute + Bell"
-                }
-            },
-            "353": {
-                "group": "WIND",
-                "visual": {
-                    "name": "Old flute"
-                }
-            },
-            "354": {
-                "group": "WIND",
-                "visual": {
-                    "name": "Whistle 1"
-                }
-            },
-            "355": {
-                "group": "WIND",
-                "visual": {
-                    "name": "Whistle 2"
-                }
-            },
-            "356": {
-                "group": "WORLD",
-                "visual": {
-                    "name": "Banjo (Harpci)"
-                }
-            },
-            "357": {
-                "group": "WORLD",
-                "visual": {
-                    "name": "KOTO"
-                }
-            },
-            "358": {
-                "group": "WORLD",
-                "visual": {
-                    "name": "Koto 2"
-                }
-            },
-            "359": {
-                "group": "WORLD",
-                "visual": {
-                    "name": "Sitar 1"
-                }
-            },
-            "360": {
-                "group": "WORLD",
-                "visual": {
-                    "name": "Shamisen 2"
-                }
-            },
-            "361": {
-                "group": "WORLD",
-                "visual": {
-                    "name": "Shamisen 1"
-                }
-            },
-            "362": {
-                "group": "WORLD",
-                "visual": {
-                    "name": "Synth Shamisen"
-                }
-            },
-            "363": {
-                "drumset": {
-                    "0": {
-                        "visual": {
-                            "name": "Bass Drum 1"
-                        }
-                    },
-                    "1": {
-                        "visual": {
-                            "name": "Bass Drum 2"
-                        }
-                    },
-                    "2": {
-                        "visual": {
-                            "name": "Bass Drum 3"
-                        }
-                    },
-                    "3": {
-                        "visual": {
-                            "name": "Snare Drum"
-                        }
-                    },
-                    "4": {
-                        "visual": {
-                            "name": "Snare Drum 2"
-                        }
-                    },
-                    "5": {
-                        "visual": {
-                            "name": "Open Hi-Hat"
-                        }
-                    },
-                    "6": {
-                        "visual": {
-                            "name": "Closed Hi-Hat"
-                        }
-                    },
-                    "7": {
-                        "visual": {
-                            "name": "Crash Cymbal"
-                        }
-                    }
-                },
-                "group": "DRUMKIT",
-                "visual": {
-                    "name": "Simple Drumkit"
-                }
-            },
-            "364": {
-                "drumset": {
-                    "-1": {
-                        "visual": {
-                            "name": "ETHNIC Percus.1"
-                        }
-                    },
-                    "-10": {
-                        "visual": {
-                            "name": "RUFINA BD o2c"
-                        }
-                    },
-                    "-11": {
-                        "visual": {
-                            "name": "Bass Drum 3 o1f"
-                        }
-                    },
-                    "-12": {
-                        "visual": {
-                            "name": "Bass Drum 2"
-                        }
-                    },
-                    "-2": {
-                        "visual": {
-                            "name": "ETHNIC Percus.0"
-                        }
-                    },
-                    "-3": {
-                        "visual": {
-                            "name": "Crash Noise Short"
-                        }
-                    },
-                    "-4": {
-                        "visual": {
-                            "name": "Crash Noise"
-                        }
-                    },
-                    "-5": {
-                        "visual": {
-                            "name": "Crash Cymbal (noise)"
-                        }
-                    },
-                    "-6": {
-                        "visual": {
-                            "name": "Cow-Bell 1"
-                        }
-                    },
-                    "-7": {
-                        "visual": {
-                            "name": "Cho cho 3 (o2e)"
-                        }
-                    },
-                    "-8": {
-                        "visual": {
-                            "name": "BD808_2(-vBend)"
-                        }
-                    },
-                    "-9": {
-                        "visual": {
-                            "name": "B.D.(-vBend)"
-                        }
-                    },
-                    "0": {
-                        "visual": {
-                            "name": "Heavy BD."
-                        }
-                    },
-                    "1": {
-                        "visual": {
-                            "name": "Heavy BD2"
-                        }
-                    },
-                    "10": {
-                        "visual": {
-                            "name": "Open-hat2 Metal o4c-"
-                        }
-                    },
-                    "11": {
-                        "visual": {
-                            "name": "Hi-Hat Open #4 o4f"
-                        }
-                    },
-                    "12": {
-                        "visual": {
-                            "name": "Open-hat3 Metal"
-                        }
-                    },
-                    "13": {
-                        "visual": {
-                            "name": "Metal ride o4c or o5c"
-                        }
-                    },
-                    "14": {
-                        "visual": {
-                            "name": "Rim Shot #1 o3c"
-                        }
-                    },
-                    "15": {
-                        "visual": {
-                            "name": "Snare Drum Light"
-                        }
-                    },
-                    "16": {
-                        "visual": {
-                            "name": "Snare Drum Lighter"
-                        }
-                    },
-                    "17": {
-                        "visual": {
-                            "name": "Snare Drum 808 o2-o3"
-                        }
-                    },
-                    "18": {
-                        "visual": {
-                            "name": "Snare4 -808type- o2"
-                        }
-                    },
-                    "19": {
-                        "visual": {
-                            "name": "Snare5 o1-2(Franger)"
-                        }
-                    },
-                    "2": {
-                        "visual": {
-                            "name": "Heavy SD1"
-                        }
-                    },
-                    "20": {
-                        "visual": {
-                            "name": "Tom (old)"
-                        }
-                    },
-                    "21": {
-                        "visual": {
-                            "name": "Synth tom 2 algo 3"
-                        }
-                    },
-                    "22": {
-                        "visual": {
-                            "name": "Synth (Noisy) Tom #3"
-                        }
-                    },
-                    "23": {
-                        "visual": {
-                            "name": "Synth Tom #3"
-                        }
-                    },
-                    "24": {
-                        "visual": {
-                            "name": "Synth -DX7- Tom #4"
-                        }
-                    },
-                    "25": {
-                        "visual": {
-                            "name": "Triangle 1 o5c"
-                        }
-                    },
-                    "3": {
-                        "visual": {
-                            "name": "Hi-Hat close 5_"
-                        }
-                    },
-                    "4": {
-                        "visual": {
-                            "name": "Hi-Hat close 4"
-                        }
-                    },
-                    "5": {
-                        "visual": {
-                            "name": "Hi-Hat close 5"
-                        }
-                    },
-                    "6": {
-                        "visual": {
-                            "name": "Hi-Hat Close 6 -808-"
-                        }
-                    },
-                    "7": {
-                        "visual": {
-                            "name": "Hi-hat #7 Metal o3-6"
-                        }
-                    },
-                    "8": {
-                        "visual": {
-                            "name": "Hi-Hat Close #8 o4"
-                        }
-                    },
-                    "9": {
-                        "visual": {
-                            "name": "Hi-hat Open o4e-g+"
-                        }
-                    }
-                },
-                "group": "DRUMKIT",
-                "visual": {
-                    "name": "SiON Drumkit"
-                }
-            },
-            "365": {
-                "drumset": {
-                    "-1": {
-                        "visual": {
-                            "name": "Ride Cymbal 2"
-                        }
-                    },
-                    "-10": {
-                        "visual": {
-                            "name": "High Tom"
-                        }
-                    },
-                    "-11": {
-                        "visual": {
-                            "name": "Crash Cymbal 1"
-                        }
-                    },
-                    "-12": {
-                        "visual": {
-                            "name": "Hi-Mid Tom"
-                        }
-                    },
-                    "-13": {
-                        "visual": {
-                            "name": "Low-Mid Tom"
-                        }
-                    },
-                    "-14": {
-                        "visual": {
-                            "name": "Open Hi-Hat"
-                        }
-                    },
-                    "-15": {
-                        "visual": {
-                            "name": "Low Tom"
-                        }
-                    },
-                    "-16": {
-                        "visual": {
-                            "name": "Pedal Hi-Hat"
-                        }
-                    },
-                    "-17": {
-                        "visual": {
-                            "name": "High Floor Tom"
-                        }
-                    },
-                    "-18": {
-                        "visual": {
-                            "name": "Closed Hi-Hat"
-                        }
-                    },
-                    "-19": {
-                        "visual": {
-                            "name": "Low Floor Tom"
-                        }
-                    },
-                    "-2": {
-                        "visual": {
-                            "name": "Vibraslap"
-                        }
-                    },
-                    "-20": {
-                        "visual": {
-                            "name": "Electric Snare"
-                        }
-                    },
-                    "-21": {
-                        "visual": {
-                            "name": "Hand Clap"
-                        }
-                    },
-                    "-22": {
-                        "visual": {
-                            "name": "Acoustic Snare"
-                        }
-                    },
-                    "-23": {
-                        "visual": {
-                            "name": "Side Stick"
-                        }
-                    },
-                    "-24": {
-                        "visual": {
-                            "name": "Bass Drum 1"
-                        }
-                    },
-                    "-25": {
-                        "visual": {
-                            "name": "Acoustic Bass Drum"
-                        }
-                    },
-                    "-26": {
-                        "visual": {
-                            "name": "Open Rim Shot"
-                        }
-                    },
-                    "-27": {
-                        "visual": {
-                            "name": "Bass Drum L"
-                        }
-                    },
-                    "-28": {
-                        "visual": {
-                            "name": "Sticks"
-                        }
-                    },
-                    "-29": {
-                        "visual": {
-                            "name": "Snare L"
-                        }
-                    },
-                    "-3": {
-                        "visual": {
-                            "name": "Crash Symbol 2"
-                        }
-                    },
-                    "-30": {
-                        "visual": {
-                            "name": "Castanet"
-                        }
-                    },
-                    "-31": {
-                        "visual": {
-                            "name": "Snare Roll"
-                        }
-                    },
-                    "-32": {
-                        "visual": {
-                            "name": "Brush Tap Swirl"
-                        }
-                    },
-                    "-33": {
-                        "visual": {
-                            "name": "Brush Slap"
-                        }
-                    },
-                    "-34": {
-                        "visual": {
-                            "name": "Brush Swirl"
-                        }
-                    },
-                    "-35": {
-                        "visual": {
-                            "name": "Brush Tap"
-                        }
-                    },
-                    "-36": {
-                        "visual": {
-                            "name": "Seq Click H"
-                        }
-                    },
-                    "-4": {
-                        "visual": {
-                            "name": "Cowbell"
-                        }
-                    },
-                    "-5": {
-                        "visual": {
-                            "name": "Splash Cymbal"
-                        }
-                    },
-                    "-6": {
-                        "visual": {
-                            "name": "Tambourine"
-                        }
-                    },
-                    "-7": {
-                        "visual": {
-                            "name": "Ride Bell"
-                        }
-                    },
-                    "-8": {
-                        "visual": {
-                            "name": "Chinese Cymbal"
-                        }
-                    },
-                    "-9": {
-                        "visual": {
-                            "name": "Ride Cymbal 1"
-                        }
-                    },
-                    "0": {
-                        "visual": {
-                            "name": "Hi Bongo"
-                        }
-                    },
-                    "1": {
-                        "visual": {
-                            "name": "Low Bongo"
-                        }
-                    },
-                    "10": {
-                        "visual": {
-                            "name": "Maracas"
-                        }
-                    },
-                    "11": {
-                        "visual": {
-                            "name": "Short Whistle"
-                        }
-                    },
-                    "12": {
-                        "visual": {
-                            "name": "Long Whistle"
-                        }
-                    },
-                    "13": {
-                        "visual": {
-                            "name": "Short Guiro"
-                        }
-                    },
-                    "14": {
-                        "visual": {
-                            "name": "Long Guiro"
-                        }
-                    },
-                    "15": {
-                        "visual": {
-                            "name": "Claves"
-                        }
-                    },
-                    "16": {
-                        "visual": {
-                            "name": "Hi Wood Block"
-                        }
-                    },
-                    "17": {
-                        "visual": {
-                            "name": "Low Wood Block"
-                        }
-                    },
-                    "18": {
-                        "visual": {
-                            "name": "Mute Cuica"
-                        }
-                    },
-                    "19": {
-                        "visual": {
-                            "name": "Open Cuica"
-                        }
-                    },
-                    "2": {
-                        "visual": {
-                            "name": "Mute Hi Conga"
-                        }
-                    },
-                    "20": {
-                        "visual": {
-                            "name": "Mute Triangle"
-                        }
-                    },
-                    "21": {
-                        "visual": {
-                            "name": "Open Triangle"
-                        }
-                    },
-                    "22": {
-                        "visual": {
-                            "name": "Shaker"
-                        }
-                    },
-                    "23": {
-                        "visual": {
-                            "name": "Jingle Bells"
-                        }
-                    },
-                    "24": {
-                        "visual": {
-                            "name": "Bell Tree"
-                        }
-                    },
-                    "3": {
-                        "visual": {
-                            "name": "Open Hi Conga"
-                        }
-                    },
-                    "4": {
-                        "visual": {
-                            "name": "Low Conga"
-                        }
-                    },
-                    "5": {
-                        "visual": {
-                            "name": "High Timbale"
-                        }
-                    },
-                    "6": {
-                        "visual": {
-                            "name": "Low Timbale"
-                        }
-                    },
-                    "7": {
-                        "visual": {
-                            "name": "High Agogo"
-                        }
-                    },
-                    "8": {
-                        "visual": {
-                            "name": "Low Agogo"
-                        }
-                    },
-                    "9": {
-                        "visual": {
-                            "name": "Cabasa"
-                        }
-                    }
-                },
-                "group": "DRUMKIT",
-                "visual": {
-                    "name": "Midi Drumkit"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="fx">
+        <object id="chorus">
+            <visual name="Chorus" />
+        </object>
+        <object id="compressor">
+            <visual name="Compressor" />
+        </object>
+        <object id="delay">
+            <visual name="Delay" />
+        </object>
+        <object id="distortion">
+            <visual name="Distortion" />
+        </object>
+        <object id="high_pass">
+            <visual name="High Pass" />
+        </object>
+        <object id="low_boost">
+            <visual name="Low Boost" />
+        </object>
+        <object id="reverb">
+            <visual name="Reverb" />
+        </object>
+    </category>
+    <category id="inst">
+        <object id="128">
+            <data group="CHIPTUNE" />
+            <visual name="Square Wave" />
+        </object>
+        <object id="129">
+            <data group="CHIPTUNE" />
+            <visual name="Saw Wave" />
+        </object>
+        <object id="130">
+            <data group="CHIPTUNE" />
+            <visual name="Triangle Wave" />
+        </object>
+        <object id="131">
+            <data group="CHIPTUNE" />
+            <visual name="Sine Wave" />
+        </object>
+        <object id="132">
+            <data group="CHIPTUNE" />
+            <visual name="Noise" />
+        </object>
+        <object id="133">
+            <data group="CHIPTUNE" />
+            <visual name="Dual Square" />
+        </object>
+        <object id="134">
+            <data group="CHIPTUNE" />
+            <visual name="Dual Saw" />
+        </object>
+        <object id="135">
+            <data group="CHIPTUNE" />
+            <visual name="Triangle LO-FI" />
+        </object>
+        <object id="136">
+            <data group="CHIPTUNE" />
+            <visual name="Konami Wave" />
+        </object>
+        <object id="137">
+            <data group="CHIPTUNE" />
+            <visual name="Ramp Wave" />
+        </object>
+        <object id="138">
+            <data group="CHIPTUNE" />
+            <visual name="Pulse Wave" />
+        </object>
+        <object id="139">
+            <data group="CHIPTUNE" />
+            <visual name="MA3 Wave" />
+        </object>
+        <object id="140">
+            <data group="CHIPTUNE" />
+            <visual name="Noise (Bass)" />
+        </object>
+        <object id="141">
+            <data group="CHIPTUNE" />
+            <visual name="Noise (Snare)" />
+        </object>
+        <object id="142">
+            <data group="CHIPTUNE" />
+            <visual name="Noise (Hi-Hat)" />
+        </object>
+        <object id="143">
+            <data group="BASS" />
+            <visual name="Analog Bass" />
+        </object>
+        <object id="144">
+            <data group="BASS" />
+            <visual name="Analog Bass #2" />
+        </object>
+        <object id="145">
+            <data group="BASS" />
+            <visual name="Analog Bass #2 (q2)" />
+        </object>
+        <object id="146">
+            <data group="BASS" />
+            <visual name="Chopper Bass 0" />
+        </object>
+        <object id="147">
+            <data group="BASS" />
+            <visual name="Chopper Bass 1" />
+        </object>
+        <object id="148">
+            <data group="BASS" />
+            <visual name="Chopper bass 2 (CUT)" />
+        </object>
+        <object id="149">
+            <data group="BASS" />
+            <visual name="Chopper bass 3" />
+        </object>
+        <object id="150">
+            <data group="BASS" />
+            <visual name="Elec.Chopper Bass" />
+        </object>
+        <object id="151">
+            <data group="BASS" />
+            <visual name="Effect Bass 1" />
+        </object>
+        <object id="152">
+            <data group="BASS" />
+            <visual name="Effect Bass 2 to UP" />
+        </object>
+        <object id="153">
+            <data group="BASS" />
+            <visual name="Effect Bass 1" />
+        </object>
+        <object id="154">
+            <data group="BASS" />
+            <visual name="Mohaaa" />
+        </object>
+        <object id="155">
+            <data group="BASS" />
+            <visual name="Effect FB Bass #5" />
+        </object>
+        <object id="156">
+            <data group="BASS" />
+            <visual name="Magical bass" />
+        </object>
+        <object id="157">
+            <data group="BASS" />
+            <visual name="E.Bass #6" />
+        </object>
+        <object id="158">
+            <data group="BASS" />
+            <visual name="E.Bass #7" />
+        </object>
+        <object id="159">
+            <data group="BASS" />
+            <visual name="E.Bass 70" />
+        </object>
+        <object id="160">
+            <data group="BASS" />
+            <visual name="VAL006 Euro" />
+        </object>
+        <object id="161">
+            <data group="BASS" />
+            <visual name="E.Bass x2" />
+        </object>
+        <object id="162">
+            <data group="BASS" />
+            <visual name="E.Bass x4" />
+        </object>
+        <object id="163">
+            <data group="BASS" />
+            <visual name="Metal pick bass X5" />
+        </object>
+        <object id="164">
+            <data group="BASS" />
+            <visual name="Groove Bass #1" />
+        </object>
+        <object id="165">
+            <data group="BASS" />
+            <visual name="Analog Groove #2" />
+        </object>
+        <object id="166">
+            <data group="BASS" />
+            <visual name="Harmonics #1" />
+        </object>
+        <object id="167">
+            <data group="BASS" />
+            <visual name="Low Bass x1" />
+        </object>
+        <object id="168">
+            <data group="BASS" />
+            <visual name="Low_bass x2" />
+        </object>
+        <object id="169">
+            <data group="BASS" />
+            <visual name="Low Bass Rezzo" />
+        </object>
+        <object id="170">
+            <data group="BASS" />
+            <visual name="Low Bass Picked" />
+        </object>
+        <object id="171">
+            <data group="BASS" />
+            <visual name="Metal Bass" />
+        </object>
+        <object id="172">
+            <data group="BASS" />
+            <visual name="e.n.bass 1" />
+        </object>
+        <object id="173">
+            <data group="BASS" />
+            <visual name="psg bass 1" />
+        </object>
+        <object id="174">
+            <data group="BASS" />
+            <visual name="psg bass 2" />
+        </object>
+        <object id="175">
+            <data group="BASS" />
+            <visual name="rezonance bass" />
+        </object>
+        <object id="176">
+            <data group="BASS" />
+            <visual name="slap bass" />
+        </object>
+        <object id="177">
+            <data group="BASS" />
+            <visual name="slap bass 1" />
+        </object>
+        <object id="178">
+            <data group="BASS" />
+            <visual name="slap bass 2 (1+)" />
+        </object>
+        <object id="179">
+            <data group="BASS" />
+            <visual name="slap bass #3" />
+        </object>
+        <object id="180">
+            <data group="BASS" />
+            <visual name="slap bass pull" />
+        </object>
+        <object id="181">
+            <data group="BASS" />
+            <visual name="slap bass mute" />
+        </object>
+        <object id="182">
+            <data group="BASS" />
+            <visual name="slap bass pick" />
+        </object>
+        <object id="183">
+            <data group="BASS" />
+            <visual name="super bass #2" />
+        </object>
+        <object id="184">
+            <data group="BASS" />
+            <visual name="sp_bass#3 soft" />
+        </object>
+        <object id="185">
+            <data group="BASS" />
+            <visual name="sp_bass#4 soft*2" />
+        </object>
+        <object id="186">
+            <data group="BASS" />
+            <visual name="sp_bass#5 attack" />
+        </object>
+        <object id="187">
+            <data group="BASS" />
+            <visual name="sp.bass#6 rezz" />
+        </object>
+        <object id="188">
+            <data group="BASS" />
+            <visual name="synth bass 1" />
+        </object>
+        <object id="189">
+            <data group="BASS" />
+            <visual name="synth bass 2 myon" />
+        </object>
+        <object id="190">
+            <data group="BASS" />
+            <visual name="synth bass #3 cho!" />
+        </object>
+        <object id="191">
+            <data group="BASS" />
+            <visual name="synth-wind-bass #4" />
+        </object>
+        <object id="192">
+            <data group="BASS" />
+            <visual name="synth bass #5 q2" />
+        </object>
+        <object id="193">
+            <data group="BASS" />
+            <visual name="old wood bass" />
+        </object>
+        <object id="194">
+            <data group="BASS" />
+            <visual name="w.bass bright" />
+        </object>
+        <object id="195">
+            <data group="BASS" />
+            <visual name="w.bass x2 bow" />
+        </object>
+        <object id="196">
+            <data group="BASS" />
+            <visual name="Wood Bass 3" />
+        </object>
+        <object id="197">
+            <data group="BRASS" />
+            <visual name="Brass strings" />
+        </object>
+        <object id="198">
+            <data group="BRASS" />
+            <visual name="E.mute Trampet" />
+        </object>
+        <object id="199">
+            <data group="BRASS" />
+            <visual name="HORN 2" />
+        </object>
+        <object id="200">
+            <data group="BRASS" />
+            <visual name="Alpine Horn #3" />
+        </object>
+        <object id="201">
+            <data group="BRASS" />
+            <visual name="Lead brass" />
+        </object>
+        <object id="202">
+            <data group="BRASS" />
+            <visual name="Normal HORN" />
+        </object>
+        <object id="203">
+            <data group="BRASS" />
+            <visual name="Synth Oboe" />
+        </object>
+        <object id="204">
+            <data group="BRASS" />
+            <visual name="Oboe 2" />
+        </object>
+        <object id="205">
+            <data group="BRASS" />
+            <visual name="Attack Brass (q2)" />
+        </object>
+        <object id="206">
+            <data group="BRASS" />
+            <visual name="SAX" />
+        </object>
+        <object id="207">
+            <data group="BRASS" />
+            <visual name="Soft brass(lead)" />
+        </object>
+        <object id="208">
+            <data group="BRASS" />
+            <visual name="Synth Brass 1 OLD" />
+        </object>
+        <object id="209">
+            <data group="BRASS" />
+            <visual name="Synth Brass 2 OLD" />
+        </object>
+        <object id="210">
+            <data group="BRASS" />
+            <visual name="Synth Brass 3" />
+        </object>
+        <object id="211">
+            <data group="BRASS" />
+            <visual name="Synth Brass #4" />
+        </object>
+        <object id="212">
+            <data group="BRASS" />
+            <visual name="Syn.Brass 5(long)" />
+        </object>
+        <object id="213">
+            <data group="BRASS" />
+            <visual name="Synth Brass 6" />
+        </object>
+        <object id="214">
+            <data group="BRASS" />
+            <visual name="Trumpet" />
+        </object>
+        <object id="215">
+            <data group="BRASS" />
+            <visual name="Trumpet 2" />
+        </object>
+        <object id="216">
+            <data group="BRASS" />
+            <visual name="Twin Horn (or OL=25)" />
+        </object>
+        <object id="217">
+            <data group="BELL" />
+            <visual name="Calm Bell" />
+        </object>
+        <object id="218">
+            <data group="BELL" />
+            <visual name="China Bell Double" />
+        </object>
+        <object id="219">
+            <data group="BELL" />
+            <visual name="Church Bell" />
+        </object>
+        <object id="220">
+            <data group="BELL" />
+            <visual name="Church Bell 2" />
+        </object>
+        <object id="221">
+            <data group="BELL" />
+            <visual name="Glocken 1" />
+        </object>
+        <object id="222">
+            <data group="BELL" />
+            <visual name="Harp #1" />
+        </object>
+        <object id="223">
+            <data group="BELL" />
+            <visual name="Harp #2" />
+        </object>
+        <object id="224">
+            <data group="BELL" />
+            <visual name="Kirakira" />
+        </object>
+        <object id="225">
+            <data group="BELL" />
+            <visual name="Marimba" />
+        </object>
+        <object id="226">
+            <data group="BELL" />
+            <visual name="Old Bell" />
+        </object>
+        <object id="227">
+            <data group="BELL" />
+            <visual name="Percus. Bell" />
+        </object>
+        <object id="228">
+            <data group="BELL" />
+            <visual name="Pretty Bell" />
+        </object>
+        <object id="229">
+            <data group="BELL" />
+            <visual name="Synth Bell #0" />
+        </object>
+        <object id="230">
+            <data group="BELL" />
+            <visual name="Synth Bell #1 o5" />
+        </object>
+        <object id="231">
+            <data group="BELL" />
+            <visual name="Synth Bell 2" />
+        </object>
+        <object id="232">
+            <data group="BELL" />
+            <visual name="Viberaphone" />
+        </object>
+        <object id="233">
+            <data group="BELL" />
+            <visual name="Twin Marinba" />
+        </object>
+        <object id="234">
+            <data group="BELL" />
+            <visual name="Bellend" />
+        </object>
+        <object id="235">
+            <data group="GUITAR" />
+            <visual name="Guitar VeloLow" />
+        </object>
+        <object id="236">
+            <data group="GUITAR" />
+            <visual name="Guitar VeloHigh" />
+        </object>
+        <object id="237">
+            <data group="GUITAR" />
+            <visual name="A.Guitar #3" />
+        </object>
+        <object id="238">
+            <data group="GUITAR" />
+            <visual name="Cutting E.Guitar" />
+        </object>
+        <object id="239">
+            <data group="GUITAR" />
+            <visual name="Dis. Synth (old)" />
+        </object>
+        <object id="240">
+            <data group="GUITAR" />
+            <visual name="Dra-spi-Dis.G." />
+        </object>
+        <object id="241">
+            <data group="GUITAR" />
+            <visual name="Dis.Guitar 3-" />
+        </object>
+        <object id="242">
+            <data group="GUITAR" />
+            <visual name="Dis.Guitar 3+" />
+        </object>
+        <object id="243">
+            <data group="GUITAR" />
+            <visual name="Feed-back Guitar 1" />
+        </object>
+        <object id="244">
+            <data group="GUITAR" />
+            <visual name="Hard Dis. Guitar 1" />
+        </object>
+        <object id="245">
+            <data group="GUITAR" />
+            <visual name="Hard Dis.Guitar 3" />
+        </object>
+        <object id="246">
+            <data group="GUITAR" />
+            <visual name="Dis.Guitar '94 Hard" />
+        </object>
+        <object id="247">
+            <data group="GUITAR" />
+            <visual name="New Dis.Guitar 1" />
+        </object>
+        <object id="248">
+            <data group="GUITAR" />
+            <visual name="New Dis.Guitar 2" />
+        </object>
+        <object id="249">
+            <data group="GUITAR" />
+            <visual name="New Dis.Guitar 3" />
+        </object>
+        <object id="250">
+            <data group="GUITAR" />
+            <visual name="Overdrive.G. (AL=013)" />
+        </object>
+        <object id="251">
+            <data group="GUITAR" />
+            <visual name="METAL" />
+        </object>
+        <object id="252">
+            <data group="GUITAR" />
+            <visual name="Soft Dis.Guitar" />
+        </object>
+        <object id="253">
+            <data group="LEAD" />
+            <visual name="Aco code" />
+        </object>
+        <object id="254">
+            <data group="LEAD" />
+            <visual name="Analog synthe 1" />
+        </object>
+        <object id="255">
+            <data group="LEAD" />
+            <visual name="Bosco-lead" />
+        </object>
+        <object id="256">
+            <data group="LEAD" />
+            <visual name="Cosmo Lead" />
+        </object>
+        <object id="257">
+            <data group="LEAD" />
+            <visual name="Cosmo Lead 2" />
+        </object>
+        <object id="258">
+            <data group="LEAD" />
+            <visual name="Digital lead #1" />
+        </object>
+        <object id="259">
+            <data group="LEAD" />
+            <visual name="Double sin wave" />
+        </object>
+        <object id="260">
+            <data group="LEAD" />
+            <visual name="E.Organ 2 bright" />
+        </object>
+        <object id="261">
+            <data group="LEAD" />
+            <visual name="E.Organ 2 (voice)" />
+        </object>
+        <object id="262">
+            <data group="LEAD" />
+            <visual name="E.Organ 4 Click" />
+        </object>
+        <object id="263">
+            <data group="LEAD" />
+            <visual name="E.Organ 5 Click" />
+        </object>
+        <object id="264">
+            <data group="LEAD" />
+            <visual name="E.Organ 6" />
+        </object>
+        <object id="265">
+            <data group="LEAD" />
+            <visual name="E.Organ 7 Church" />
+        </object>
+        <object id="266">
+            <data group="LEAD" />
+            <visual name="Metal Lead" />
+        </object>
+        <object id="267">
+            <data group="LEAD" />
+            <visual name="Metal Lead 3" />
+        </object>
+        <object id="268">
+            <data group="LEAD" />
+            <visual name="MONO Lead" />
+        </object>
+        <object id="269">
+            <data group="LEAD" />
+            <visual name="PSG like PC88 (long)" />
+        </object>
+        <object id="270">
+            <data group="LEAD" />
+            <visual name="PSG Cut 1" />
+        </object>
+        <object id="271">
+            <data group="LEAD" />
+            <visual name="Attack Synth" />
+        </object>
+        <object id="272">
+            <data group="LEAD" />
+            <visual name="Sin wave" />
+        </object>
+        <object id="273">
+            <data group="LEAD" />
+            <visual name="Synth, Bell 2" />
+        </object>
+        <object id="274">
+            <data group="LEAD" />
+            <visual name="Chorus #2(Voice)+bell" />
+        </object>
+        <object id="275">
+            <data group="LEAD" />
+            <visual name="Synth Cut 8-4" />
+        </object>
+        <object id="276">
+            <data group="LEAD" />
+            <visual name="Synth long 8-4" />
+        </object>
+        <object id="277">
+            <data group="LEAD" />
+            <visual name="ACO_Code #2" />
+        </object>
+        <object id="278">
+            <data group="LEAD" />
+            <visual name="ACO_Code #3" />
+        </object>
+        <object id="279">
+            <data group="LEAD" />
+            <visual name="Synth FB long 4" />
+        </object>
+        <object id="280">
+            <data group="LEAD" />
+            <visual name="Synth FB long 5" />
+        </object>
+        <object id="281">
+            <data group="LEAD" />
+            <visual name="Synth Lead 0" />
+        </object>
+        <object id="282">
+            <data group="LEAD" />
+            <visual name="Synth Lead 1" />
+        </object>
+        <object id="283">
+            <data group="LEAD" />
+            <visual name="Synth Lead 2" />
+        </object>
+        <object id="284">
+            <data group="LEAD" />
+            <visual name="Synth Lead 3" />
+        </object>
+        <object id="285">
+            <data group="LEAD" />
+            <visual name="Synth Lead 4" />
+        </object>
+        <object id="286">
+            <data group="LEAD" />
+            <visual name="Synth Lead 5" />
+        </object>
+        <object id="287">
+            <data group="LEAD" />
+            <visual name="Synth Lead 6" />
+        </object>
+        <object id="288">
+            <data group="LEAD" />
+            <visual name="Synth Lead 7 (Soft FB)" />
+        </object>
+        <object id="289">
+            <data group="LEAD" />
+            <visual name="Synth PSG" />
+        </object>
+        <object id="290">
+            <data group="LEAD" />
+            <visual name="Synth PSG 2" />
+        </object>
+        <object id="291">
+            <data group="LEAD" />
+            <visual name="Synth PSG 3" />
+        </object>
+        <object id="292">
+            <data group="LEAD" />
+            <visual name="Synth PSG 4" />
+        </object>
+        <object id="293">
+            <data group="LEAD" />
+            <visual name="Synth PSG 5" />
+        </object>
+        <object id="294">
+            <data group="LEAD" />
+            <visual name="Sin water synth" />
+        </object>
+        <object id="295">
+            <data group="PIANO" />
+            <visual name="Aco Piano2 (Attack)" />
+        </object>
+        <object id="296">
+            <data group="PIANO" />
+            <visual name="Backing 1 (Clav.)" />
+        </object>
+        <object id="297">
+            <data group="PIANO" />
+            <visual name="Clav. coad" />
+        </object>
+        <object id="298">
+            <data group="PIANO" />
+            <visual name="Deep Piano 1" />
+        </object>
+        <object id="299">
+            <data group="PIANO" />
+            <visual name="Deep Piano 3" />
+        </object>
+        <object id="300">
+            <data group="PIANO" />
+            <visual name="E.piano #2" />
+        </object>
+        <object id="301">
+            <data group="PIANO" />
+            <visual name="E.piano #3" />
+        </object>
+        <object id="302">
+            <data group="PIANO" />
+            <visual name="E.piano #4(2+)" />
+        </object>
+        <object id="303">
+            <data group="PIANO" />
+            <visual name="E.(Bell)Piano #5" />
+        </object>
+        <object id="304">
+            <data group="PIANO" />
+            <visual name="E.Piano #6" />
+        </object>
+        <object id="305">
+            <data group="PIANO" />
+            <visual name="E.Piano #7" />
+        </object>
+        <object id="306">
+            <data group="PIANO" />
+            <visual name="Harpci chord 1" />
+        </object>
+        <object id="307">
+            <data group="PIANO" />
+            <visual name="Harpci 2" />
+        </object>
+        <object id="308">
+            <data group="PIANO" />
+            <visual name="Piano1" />
+        </object>
+        <object id="309">
+            <data group="PIANO" />
+            <visual name="Piano3" />
+        </object>
+        <object id="310">
+            <data group="PIANO" />
+            <visual name="Piano4" />
+        </object>
+        <object id="311">
+            <data group="PIANO" />
+            <visual name="Digital Piano #5" />
+        </object>
+        <object id="312">
+            <data group="PIANO" />
+            <visual name="Piano 6 High-tone" />
+        </object>
+        <object id="313">
+            <data group="PIANO" />
+            <visual name="Panning Harpci" />
+        </object>
+        <object id="314">
+            <data group="PIANO" />
+            <visual name="Yam Harpci chord" />
+        </object>
+        <object id="315">
+            <data group="SPECIAL" />
+            <visual name="S.E.(Detune is needed o2c)" />
+        </object>
+        <object id="316">
+            <data group="SPECIAL" />
+            <visual name="S.E. 2 o0-1-2" />
+        </object>
+        <object id="317">
+            <data group="SPECIAL" />
+            <visual name="S.E. 3(Feedin /noise add.)" />
+        </object>
+        <object id="318">
+            <data group="SPECIAL" />
+            <visual name="Digital 1" />
+        </object>
+        <object id="319">
+            <data group="SPECIAL" />
+            <visual name="Digital 2" />
+        </object>
+        <object id="320">
+            <data group="SPECIAL" />
+            <visual name="Digital[BAS] 3 o2-o3" />
+        </object>
+        <object id="321">
+            <data group="SPECIAL" />
+            <visual name="Digital[GTR] 3 o2-o3" />
+        </object>
+        <object id="322">
+            <data group="SPECIAL" />
+            <visual name="Digital 4 o4a" />
+        </object>
+        <object id="323">
+            <data group="STRINGS" />
+            <visual name="Accordion1" />
+        </object>
+        <object id="324">
+            <data group="STRINGS" />
+            <visual name="Accordion2" />
+        </object>
+        <object id="325">
+            <data group="STRINGS" />
+            <visual name="Accordion3" />
+        </object>
+        <object id="326">
+            <data group="STRINGS" />
+            <visual name="Chorus #2(Voice)" />
+        </object>
+        <object id="327">
+            <data group="STRINGS" />
+            <visual name="Chorus #3" />
+        </object>
+        <object id="328">
+            <data group="STRINGS" />
+            <visual name="Chorus #4" />
+        </object>
+        <object id="329">
+            <data group="STRINGS" />
+            <visual name="F.Strings 1" />
+        </object>
+        <object id="330">
+            <data group="STRINGS" />
+            <visual name="F.Strings 2" />
+        </object>
+        <object id="331">
+            <data group="STRINGS" />
+            <visual name="F.Strings 3" />
+        </object>
+        <object id="332">
+            <data group="STRINGS" />
+            <visual name="F.Strings 4 (low)" />
+        </object>
+        <object id="333">
+            <data group="STRINGS" />
+            <visual name="Pizzicate#1(KOTO2)" />
+        </object>
+        <object id="334">
+            <data group="STRINGS" />
+            <visual name="sound truck modoki" />
+        </object>
+        <object id="335">
+            <data group="STRINGS" />
+            <visual name="Strings" />
+        </object>
+        <object id="336">
+            <data group="STRINGS" />
+            <visual name="Synth Accordion" />
+        </object>
+        <object id="337">
+            <data group="STRINGS" />
+            <visual name="Phaser synthe." />
+        </object>
+        <object id="338">
+            <data group="STRINGS" />
+            <visual name="FB Synth." />
+        </object>
+        <object id="339">
+            <data group="STRINGS" />
+            <visual name="Synth Strings MB" />
+        </object>
+        <object id="340">
+            <data group="STRINGS" />
+            <visual name="Synth Strings #2" />
+        </object>
+        <object id="341">
+            <data group="STRINGS" />
+            <visual name="Synth.Sweep Pad #1" />
+        </object>
+        <object id="342">
+            <data group="STRINGS" />
+            <visual name="Twin synth. #1 Calm" />
+        </object>
+        <object id="343">
+            <data group="STRINGS" />
+            <visual name="Twin synth. #2 FB" />
+        </object>
+        <object id="344">
+            <data group="STRINGS" />
+            <visual name="Twin synth. #3 FB" />
+        </object>
+        <object id="345">
+            <data group="STRINGS" />
+            <visual name="Vocoder voice1" />
+        </object>
+        <object id="346">
+            <data group="STRINGS" />
+            <visual name="Voice o3-o5" />
+        </object>
+        <object id="347">
+            <data group="STRINGS" />
+            <visual name="Voice' o3-o5" />
+        </object>
+        <object id="348">
+            <data group="WIND" />
+            <visual name="Clarinet #1" />
+        </object>
+        <object id="349">
+            <data group="WIND" />
+            <visual name="Clarinet #2 Brighter" />
+        </object>
+        <object id="350">
+            <data group="WIND" />
+            <visual name="E.Flute" />
+        </object>
+        <object id="351">
+            <data group="WIND" />
+            <visual name="E.Flute 2" />
+        </object>
+        <object id="352">
+            <data group="WIND" />
+            <visual name="Flute + Bell" />
+        </object>
+        <object id="353">
+            <data group="WIND" />
+            <visual name="Old flute" />
+        </object>
+        <object id="354">
+            <data group="WIND" />
+            <visual name="Whistle 1" />
+        </object>
+        <object id="355">
+            <data group="WIND" />
+            <visual name="Whistle 2" />
+        </object>
+        <object id="356">
+            <data group="WORLD" />
+            <visual name="Banjo (Harpci)" />
+        </object>
+        <object id="357">
+            <data group="WORLD" />
+            <visual name="KOTO" />
+        </object>
+        <object id="358">
+            <data group="WORLD" />
+            <visual name="Koto 2" />
+        </object>
+        <object id="359">
+            <data group="WORLD" />
+            <visual name="Sitar 1" />
+        </object>
+        <object id="360">
+            <data group="WORLD" />
+            <visual name="Shamisen 2" />
+        </object>
+        <object id="361">
+            <data group="WORLD" />
+            <visual name="Shamisen 1" />
+        </object>
+        <object id="362">
+            <data group="WORLD" />
+            <visual name="Synth Shamisen" />
+        </object>
+        <object id="363">
+            <data group="DRUMKIT" />
+            <drumset id="0">
+                <visual name="Bass Drum 1" />
+            </drumset>
+            <drumset id="1">
+                <visual name="Bass Drum 2" />
+            </drumset>
+            <drumset id="2">
+                <visual name="Bass Drum 3" />
+            </drumset>
+            <drumset id="3">
+                <visual name="Snare Drum" />
+            </drumset>
+            <drumset id="4">
+                <visual name="Snare Drum 2" />
+            </drumset>
+            <drumset id="5">
+                <visual name="Open Hi-Hat" />
+            </drumset>
+            <drumset id="6">
+                <visual name="Closed Hi-Hat" />
+            </drumset>
+            <drumset id="7">
+                <visual name="Crash Cymbal" />
+            </drumset>
+            <visual name="Simple Drumkit" />
+        </object>
+        <object id="364">
+            <data group="DRUMKIT" />
+            <drumset id="-1">
+                <visual name="ETHNIC Percus.1" />
+            </drumset>
+            <drumset id="-10">
+                <visual name="RUFINA BD o2c" />
+            </drumset>
+            <drumset id="-11">
+                <visual name="Bass Drum 3 o1f" />
+            </drumset>
+            <drumset id="-12">
+                <visual name="Bass Drum 2" />
+            </drumset>
+            <drumset id="-2">
+                <visual name="ETHNIC Percus.0" />
+            </drumset>
+            <drumset id="-3">
+                <visual name="Crash Noise Short" />
+            </drumset>
+            <drumset id="-4">
+                <visual name="Crash Noise" />
+            </drumset>
+            <drumset id="-5">
+                <visual name="Crash Cymbal (noise)" />
+            </drumset>
+            <drumset id="-6">
+                <visual name="Cow-Bell 1" />
+            </drumset>
+            <drumset id="-7">
+                <visual name="Cho cho 3 (o2e)" />
+            </drumset>
+            <drumset id="-8">
+                <visual name="BD808_2(-vBend)" />
+            </drumset>
+            <drumset id="-9">
+                <visual name="B.D.(-vBend)" />
+            </drumset>
+            <drumset id="0">
+                <visual name="Heavy BD." />
+            </drumset>
+            <drumset id="1">
+                <visual name="Heavy BD2" />
+            </drumset>
+            <drumset id="10">
+                <visual name="Open-hat2 Metal o4c-" />
+            </drumset>
+            <drumset id="11">
+                <visual name="Hi-Hat Open #4 o4f" />
+            </drumset>
+            <drumset id="12">
+                <visual name="Open-hat3 Metal" />
+            </drumset>
+            <drumset id="13">
+                <visual name="Metal ride o4c or o5c" />
+            </drumset>
+            <drumset id="14">
+                <visual name="Rim Shot #1 o3c" />
+            </drumset>
+            <drumset id="15">
+                <visual name="Snare Drum Light" />
+            </drumset>
+            <drumset id="16">
+                <visual name="Snare Drum Lighter" />
+            </drumset>
+            <drumset id="17">
+                <visual name="Snare Drum 808 o2-o3" />
+            </drumset>
+            <drumset id="18">
+                <visual name="Snare4 -808type- o2" />
+            </drumset>
+            <drumset id="19">
+                <visual name="Snare5 o1-2(Franger)" />
+            </drumset>
+            <drumset id="2">
+                <visual name="Heavy SD1" />
+            </drumset>
+            <drumset id="20">
+                <visual name="Tom (old)" />
+            </drumset>
+            <drumset id="21">
+                <visual name="Synth tom 2 algo 3" />
+            </drumset>
+            <drumset id="22">
+                <visual name="Synth (Noisy) Tom #3" />
+            </drumset>
+            <drumset id="23">
+                <visual name="Synth Tom #3" />
+            </drumset>
+            <drumset id="24">
+                <visual name="Synth -DX7- Tom #4" />
+            </drumset>
+            <drumset id="25">
+                <visual name="Triangle 1 o5c" />
+            </drumset>
+            <drumset id="3">
+                <visual name="Hi-Hat close 5_" />
+            </drumset>
+            <drumset id="4">
+                <visual name="Hi-Hat close 4" />
+            </drumset>
+            <drumset id="5">
+                <visual name="Hi-Hat close 5" />
+            </drumset>
+            <drumset id="6">
+                <visual name="Hi-Hat Close 6 -808-" />
+            </drumset>
+            <drumset id="7">
+                <visual name="Hi-hat #7 Metal o3-6" />
+            </drumset>
+            <drumset id="8">
+                <visual name="Hi-Hat Close #8 o4" />
+            </drumset>
+            <drumset id="9">
+                <visual name="Hi-hat Open o4e-g+" />
+            </drumset>
+            <visual name="SiON Drumkit" />
+        </object>
+        <object id="365">
+            <data group="DRUMKIT" />
+            <drumset id="-1">
+                <visual name="Ride Cymbal 2" />
+            </drumset>
+            <drumset id="-10">
+                <visual name="High Tom" />
+            </drumset>
+            <drumset id="-11">
+                <visual name="Crash Cymbal 1" />
+            </drumset>
+            <drumset id="-12">
+                <visual name="Hi-Mid Tom" />
+            </drumset>
+            <drumset id="-13">
+                <visual name="Low-Mid Tom" />
+            </drumset>
+            <drumset id="-14">
+                <visual name="Open Hi-Hat" />
+            </drumset>
+            <drumset id="-15">
+                <visual name="Low Tom" />
+            </drumset>
+            <drumset id="-16">
+                <visual name="Pedal Hi-Hat" />
+            </drumset>
+            <drumset id="-17">
+                <visual name="High Floor Tom" />
+            </drumset>
+            <drumset id="-18">
+                <visual name="Closed Hi-Hat" />
+            </drumset>
+            <drumset id="-19">
+                <visual name="Low Floor Tom" />
+            </drumset>
+            <drumset id="-2">
+                <visual name="Vibraslap" />
+            </drumset>
+            <drumset id="-20">
+                <visual name="Electric Snare" />
+            </drumset>
+            <drumset id="-21">
+                <visual name="Hand Clap" />
+            </drumset>
+            <drumset id="-22">
+                <visual name="Acoustic Snare" />
+            </drumset>
+            <drumset id="-23">
+                <visual name="Side Stick" />
+            </drumset>
+            <drumset id="-24">
+                <visual name="Bass Drum 1" />
+            </drumset>
+            <drumset id="-25">
+                <visual name="Acoustic Bass Drum" />
+            </drumset>
+            <drumset id="-26">
+                <visual name="Open Rim Shot" />
+            </drumset>
+            <drumset id="-27">
+                <visual name="Bass Drum L" />
+            </drumset>
+            <drumset id="-28">
+                <visual name="Sticks" />
+            </drumset>
+            <drumset id="-29">
+                <visual name="Snare L" />
+            </drumset>
+            <drumset id="-3">
+                <visual name="Crash Symbol 2" />
+            </drumset>
+            <drumset id="-30">
+                <visual name="Castanet" />
+            </drumset>
+            <drumset id="-31">
+                <visual name="Snare Roll" />
+            </drumset>
+            <drumset id="-32">
+                <visual name="Brush Tap Swirl" />
+            </drumset>
+            <drumset id="-33">
+                <visual name="Brush Slap" />
+            </drumset>
+            <drumset id="-34">
+                <visual name="Brush Swirl" />
+            </drumset>
+            <drumset id="-35">
+                <visual name="Brush Tap" />
+            </drumset>
+            <drumset id="-36">
+                <visual name="Seq Click H" />
+            </drumset>
+            <drumset id="-4">
+                <visual name="Cowbell" />
+            </drumset>
+            <drumset id="-5">
+                <visual name="Splash Cymbal" />
+            </drumset>
+            <drumset id="-6">
+                <visual name="Tambourine" />
+            </drumset>
+            <drumset id="-7">
+                <visual name="Ride Bell" />
+            </drumset>
+            <drumset id="-8">
+                <visual name="Chinese Cymbal" />
+            </drumset>
+            <drumset id="-9">
+                <visual name="Ride Cymbal 1" />
+            </drumset>
+            <drumset id="0">
+                <visual name="Hi Bongo" />
+            </drumset>
+            <drumset id="1">
+                <visual name="Low Bongo" />
+            </drumset>
+            <drumset id="10">
+                <visual name="Maracas" />
+            </drumset>
+            <drumset id="11">
+                <visual name="Short Whistle" />
+            </drumset>
+            <drumset id="12">
+                <visual name="Long Whistle" />
+            </drumset>
+            <drumset id="13">
+                <visual name="Short Guiro" />
+            </drumset>
+            <drumset id="14">
+                <visual name="Long Guiro" />
+            </drumset>
+            <drumset id="15">
+                <visual name="Claves" />
+            </drumset>
+            <drumset id="16">
+                <visual name="Hi Wood Block" />
+            </drumset>
+            <drumset id="17">
+                <visual name="Low Wood Block" />
+            </drumset>
+            <drumset id="18">
+                <visual name="Mute Cuica" />
+            </drumset>
+            <drumset id="19">
+                <visual name="Open Cuica" />
+            </drumset>
+            <drumset id="2">
+                <visual name="Mute Hi Conga" />
+            </drumset>
+            <drumset id="20">
+                <visual name="Mute Triangle" />
+            </drumset>
+            <drumset id="21">
+                <visual name="Open Triangle" />
+            </drumset>
+            <drumset id="22">
+                <visual name="Shaker" />
+            </drumset>
+            <drumset id="23">
+                <visual name="Jingle Bells" />
+            </drumset>
+            <drumset id="24">
+                <visual name="Bell Tree" />
+            </drumset>
+            <drumset id="3">
+                <visual name="Open Hi Conga" />
+            </drumset>
+            <drumset id="4">
+                <visual name="Low Conga" />
+            </drumset>
+            <drumset id="5">
+                <visual name="High Timbale" />
+            </drumset>
+            <drumset id="6">
+                <visual name="Low Timbale" />
+            </drumset>
+            <drumset id="7">
+                <visual name="High Agogo" />
+            </drumset>
+            <drumset id="8">
+                <visual name="Low Agogo" />
+            </drumset>
+            <drumset id="9">
+                <visual name="Cabasa" />
+            </drumset>
+            <visual name="Midi Drumkit" />
+        </object>
+    </category>
+</dataset>

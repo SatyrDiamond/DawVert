@@ -1,206 +1,64 @@
-{
-    "chip": {
-        "objects": {
-            "DPCM": {
-                "visual": {
-                    "color": [
-                        0.48,
-                        0.83,
-                        0.49
-                    ],
-                    "name": "DPCM"
-                }
-            },
-            "EPSMFM": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM FM"
-                }
-            },
-            "EPSMSquare": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM Square"
-                }
-            },
-            "EPSM_Cymbal": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM Cymbal"
-                }
-            },
-            "EPSM_HiHat": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM HiHat"
-                }
-            },
-            "EPSM_Kick": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM Kick"
-                }
-            },
-            "EPSM_Rimshot": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM Rimshot"
-                }
-            },
-            "EPSM_Snare": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM Snare"
-                }
-            },
-            "EPSM_Tom": {
-                "visual": {
-                    "color": [
-                        0.84,
-                        0.84,
-                        0.84
-                    ],
-                    "name": "EPSM Tom"
-                }
-            },
-            "FDS": {
-                "visual": {
-                    "color": [
-                        0.94,
-                        0.94,
-                        0.65
-                    ],
-                    "name": "FDS"
-                }
-            },
-            "MMC5": {
-                "visual": {
-                    "color": [
-                        0.65,
-                        0.34,
-                        0.84
-                    ],
-                    "name": "MMC5"
-                }
-            },
-            "N163": {
-                "visual": {
-                    "color": [
-                        0.97,
-                        0.97,
-                        0.36
-                    ],
-                    "name": "Namco 163"
-                }
-            },
-            "Noise": {
-                "visual": {
-                    "color": [
-                        0.33,
-                        0.74,
-                        0.9
-                    ],
-                    "name": "Noise"
-                }
-            },
-            "S5B": {
-                "visual": {
-                    "color": [
-                        0.58,
-                        0.94,
-                        0.33
-                    ],
-                    "name": "Sunsoft 5B"
-                }
-            },
-            "Square1": {
-                "visual": {
-                    "color": [
-                        0.97,
-                        0.56,
-                        0.36
-                    ],
-                    "name": "Square"
-                }
-            },
-            "Square2": {
-                "visual": {
-                    "color": [
-                        0.97,
-                        0.56,
-                        0.36
-                    ],
-                    "name": "Square"
-                }
-            },
-            "Triangle": {
-                "visual": {
-                    "color": [
-                        0.94,
-                        0.33,
-                        0.58
-                    ],
-                    "name": "Triangle"
-                }
-            },
-            "VRC6Saw": {
-                "visual": {
-                    "color": [
-                        0.46,
-                        0.52,
-                        0.91
-                    ],
-                    "name": "VRC6 Saw"
-                }
-            },
-            "VRC6Square": {
-                "visual": {
-                    "color": [
-                        0.6,
-                        0.44,
-                        0.93
-                    ],
-                    "name": "VRC6 Square"
-                }
-            },
-            "VRC7FM": {
-                "visual": {
-                    "color": [
-                        1.0,
-                        0.46,
-                        0.44
-                    ],
-                    "name": "VRC7 FM"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="chip">
+        <object id="DPCM">
+            <visual name="DPCM" color="122.4|211.65|124.95" />
+        </object>
+        <object id="EPSMFM">
+            <visual name="EPSM FM" color="214.2|214.2|214.2" />
+        </object>
+        <object id="EPSMSquare">
+            <visual name="EPSM Square" color="214.2|214.2|214.2" />
+        </object>
+        <object id="EPSM_Cymbal">
+            <visual name="EPSM Cymbal" color="214.2|214.2|214.2" />
+        </object>
+        <object id="EPSM_HiHat">
+            <visual name="EPSM HiHat" color="214.2|214.2|214.2" />
+        </object>
+        <object id="EPSM_Kick">
+            <visual name="EPSM Kick" color="214.2|214.2|214.2" />
+        </object>
+        <object id="EPSM_Rimshot">
+            <visual name="EPSM Rimshot" color="214.2|214.2|214.2" />
+        </object>
+        <object id="EPSM_Snare">
+            <visual name="EPSM Snare" color="214.2|214.2|214.2" />
+        </object>
+        <object id="EPSM_Tom">
+            <visual name="EPSM Tom" color="214.2|214.2|214.2" />
+        </object>
+        <object id="FDS">
+            <visual name="FDS" color="239.7|239.7|165.75" />
+        </object>
+        <object id="MMC5">
+            <visual name="MMC5" color="165.75|86.7|214.2" />
+        </object>
+        <object id="N163">
+            <visual name="Namco 163" color="247.35|247.35|91.8" />
+        </object>
+        <object id="Noise">
+            <visual name="Noise" color="84.15|188.7|229.5" />
+        </object>
+        <object id="S5B">
+            <visual name="Sunsoft 5B" color="147.9|239.7|84.15" />
+        </object>
+        <object id="Square1">
+            <visual name="Square" color="247.35|142.8|91.8" />
+        </object>
+        <object id="Square2">
+            <visual name="Square" color="247.35|142.8|91.8" />
+        </object>
+        <object id="Triangle">
+            <visual name="Triangle" color="239.7|84.15|147.9" />
+        </object>
+        <object id="VRC6Saw">
+            <visual name="VRC6 Saw" color="117.3|132.6|232.05" />
+        </object>
+        <object id="VRC6Square">
+            <visual name="VRC6 Square" color="153|112.2|237.15" />
+        </object>
+        <object id="VRC7FM">
+            <visual name="VRC7 FM" color="255|117.3|112.2" />
+        </object>
+    </category>
+</dataset>

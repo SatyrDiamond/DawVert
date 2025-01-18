@@ -1,69 +1,25 @@
-{
-    "clips":
-    {
-        "colorset":
-        {
-            "main":
-            [
-                [
-                    0.37,
-                    0.64,
-                    0.32
-                ],
-                [
-                    0.69,
-                    0.33,
-                    0.64
-                ],
-                [
-                    0.32,
-                    0.32,
-                    0.68
-                ],
-                [
-                    0.33,
-                    0.69,
-                    0.64
-                ],
-                [
-                    0.58,
-                    0.69,
-                    0.33
-                ],
-                [
-                    0.53,
-                    0.33,
-                    0.69
-                ],
-                [
-                    0.69,
-                    0.45,
-                    0.33
-                ],
-                [
-                    0.68,
-                    0.32,
-                    0.36
-                ]
-            ]
-        }
-    },
-    "plugin": {
-        "objects": {
-            "TCE-1": {
-                "params": {
-                    "RMS": {"def": 1,"max": 1,"min": 0,"name": "RMS","type": "float"},
-                    "Attack": {"def": 0.0001,"max": 1,"min": 0.0001,"name": "Attack","type": "float"},
-                    "Release": {"def": 0.01,"max": 1,"min": 0,"name": "Release","type": "float"},
-                    "Threshold": {"def": -10.5,"max": 9,"min": -30,"name": "Threshold","type": "float"},
-                    "Ratio": {"def": 0.5,"max": 1,"min": 0,"name": "Ratio","type": "float"},
-                    "OutputGain": {"def": 4.25,"max": 24,"min": 0,"name": "OutputGain","type": "float"}
-                },
-                "visual": {
-                    "color": [0.16, 0.51, 0.62],
-                    "name": "TCE-1 Compressor"
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="clips">
+        <colorset id="main">
+            <color>94.35|163.2|81.6</color>
+            <color>175.95|84.15|163.2</color>
+            <color>81.6|81.6|173.4</color>
+            <color>84.15|175.95|163.2</color>
+            <color>147.9|175.95|84.15</color>
+            <color>135.15|84.15|175.95</color>
+            <color>175.95|114.75|84.15</color>
+            <color>173.4|81.6|91.8</color>
+        </colorset>
+    </category>
+    <category id="plugin">
+        <object id="TCE-1">
+            <visual name="TCE-1 Compressor" color="40.8|130.05|158.1" />
+            <param id="RMS" name="RMS" type="float" def="1" />
+            <param id="Attack" name="Attack" type="float" def="0.0001" min="0.0001" />
+            <param id="Release" name="Release" type="float" def="0.01" />
+            <param id="Threshold" name="Threshold" type="float" def="-10.5" max="9" min="-30" />
+            <param id="Ratio" name="Ratio" type="float" def="0.5" />
+            <param id="OutputGain" name="OutputGain" type="float" def="4.25" max="24" />
+        </object>
+    </category>
+</dataset>

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import ctypes
+from objects import globalstore
 
 openmpt_log_func = ctypes.CFUNCTYPE(
     None, ctypes.c_void_p, ctypes.c_int, ctypes.c_char_p
@@ -38,6 +39,7 @@ class openmpt():
 			self.libopenmpt.openmpt_module_get_metadata.restype = ctypes.c_char_p
 			self.libopenmpt.openmpt_module_get_instrument_name.restype = ctypes.c_char_p
 			self.libopenmpt.openmpt_module_get_channel_name.restype = ctypes.c_char_p
+		return libloadstat
 
 	def openmpt_module_create_from_memory2(self, filedata):
 		if not self.libopenmpt: exit('[error] libopenmpt not found')
@@ -94,6 +96,12 @@ class openmpt():
 
 	def openmpt_module_get_sample_name(self, index):
 		return self.libopenmpt.openmpt_module_get_sample_name(self.mod, index)
+
+	def openmpt_module_get_current_tempo(self):
+		return self.libopenmpt.openmpt_module_get_current_tempo(self.mod)
+
+	def openmpt_module_get_current_speed(self):
+		return self.libopenmpt.openmpt_module_get_current_speed(self.mod)
 
 	def get_metadata(self):
 		outdata = {}

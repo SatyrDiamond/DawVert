@@ -11,7 +11,7 @@ class input_openmpt(plugins.base):
 		return 'input'
 
 	def get_shortname(self):
-		return 'openmpt'
+		return 'libopenmpt'
 
 	def get_name(self):
 		return 'libOpenMPT'
@@ -22,7 +22,7 @@ class input_openmpt(plugins.base):
 	def usable(self): 
 		from objects.extlib import openmpt
 		openmpt_obj = openmpt.openmpt()
-		usable = openmpt_obj.load_lib()
+		usable = openmpt_obj.load_lib()!=-1
 		usable_meg = "Library not found or can't be loaded" if not usable else ''
 		del openmpt_obj
 		return usable, usable_meg

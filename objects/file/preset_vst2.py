@@ -13,26 +13,34 @@ class vst2_fxBank:
 		self.num_programs = 0
 		self.current_program = 0
 		self.programs = []
-		if byr_stream:
-			self.fourid = byr_stream.uint32_b()
-			byr_stream.skip(4)
-			self.num_programs = byr_stream.uint32_b()
-			self.current_program = byr_stream.uint32_b()
-			byr_stream.skip(124)
-			for _ in range(self.num_programs):
-				if not byr_stream.remaining(): break
-				vers = byr_stream.uint32_b()
-				size = byr_stream.uint32_b()
-				program_obj = vst2_program()
-				program_obj.parse(byr_stream, size)
-				self.programs.append([vers, program_obj])
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		self.fourid = byr_stream.uint32_b()
+		byr_stream.skip(4)
+		self.num_programs = byr_stream.uint32_b()
+		self.current_program = byr_stream.uint32_b()
+		byr_stream.skip(124)
+		for _ in range(self.num_programs):
+			vers = byr_stream.uint32_b()
+			size = byr_stream.uint32_b()
+			program_obj = vst2_program()
+			program_obj.parse(byr_stream, size)
+			self.programs.append([vers, program_obj])
 
 	def write(self):
-		data = struct.pack('>IIII', self.fourid, 1, len(self.programs), self.current_program) + b'\x00'*124
+		byw_stream = bytewriter.bytewriter()
+		byw_stream.uint32_b(self.fourid)
+		byw_stream.uint32_b(1)
+		byw_stream.uint32_b(len(self.programs))
+		byw_stream.uint32_b(self.current_program)
+		byw_stream.raw(b'\x00'*124)
 		for vers, program_obj in self.programs:
 			progd = program_obj.write()
-			data += struct.pack('>II', vers, len(progd)) + progd
-		return data
+			byw_stream.uint32_b(vers)
+			byw_stream.uint32_b(len(progd))
+			byw_stream.raw(progd)
+		return byw_stream.getvalue()
 
 class vst2_fxChunkSet:
 	def __init__(self, byr_stream):
@@ -41,18 +49,27 @@ class vst2_fxChunkSet:
 		self.num_programs = 0
 		self.prgname = ''
 		self.chunk = b''
-		if byr_stream:
-			self.fourid = byr_stream.uint32_b()
-			self.version = byr_stream.uint32_b()
-			self.num_programs = byr_stream.uint32_b()
-			try:
-				self.prgname = byr_stream.string(28)
-			except:
-				pass
-			self.chunk = byr_stream.raw(byr_stream.uint32_b())
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		self.fourid = byr_stream.uint32_b()
+		self.version = byr_stream.uint32_b()
+		self.num_programs = byr_stream.uint32_b()
+		try:
+			self.prgname = byr_stream.string(28)
+		except:
+			pass
+		self.chunk = byr_stream.raw(byr_stream.uint32_b())
 
 	def write(self):
-		return struct.pack('>III28sI', self.fourid, self.version, self.num_programs, self.prgname.encode(), len(self.chunk)) + self.chunk
+		byw_stream = bytewriter.bytewriter()
+		byw_stream.uint32_b(self.fourid)
+		byw_stream.uint32_b(self.version)
+		byw_stream.uint32_b(self.num_programs)
+		byr_stream.string(self.prgname, 28)
+		byw_stream.uint32_b(len(self.chunk))
+		byw_stream.raw(self.chunk)
+		return byw_stream.getvalue()
 
 class vst2_fxProgram:
 	def __init__(self, byr_stream):
@@ -61,38 +78,58 @@ class vst2_fxProgram:
 		self.num_params = 0
 		self.prgname = ''
 		self.params = []
-		if byr_stream:
-			self.fourid = byr_stream.uint32_b()
-			self.version = byr_stream.uint32_b()
-			self.num_params = byr_stream.uint32_b()
-			self.prgname = byr_stream.string(28)
-			self.params = byr_stream.l_float_b(self.num_params)
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		self.fourid = byr_stream.uint32_b()
+		self.version = byr_stream.uint32_b()
+		self.num_params = byr_stream.uint32_b()
+		self.prgname = byr_stream.string(28)
+		self.params = byr_stream.l_float_b(self.num_params)
 
 	def write(self):
-		return struct.pack('>III28s', self.fourid, self.version, self.num_params, self.prgname.encode()) + struct.pack('>'+('f'*self.num_params), *self.params)
+		byw_stream = bytewriter.bytewriter()
+		byw_stream.uint32_b(self.fourid)
+		byw_stream.uint32_b(self.version)
+		byw_stream.uint32_b(self.num_params)
+		byw_stream.string(self.prgname, 28)
+		byw_stream.l_float_b(self.params, self.num_params)
+		return byw_stream.getvalue()
 
 class vst2_program:
 	def __init__(self):
 		self.type = 0
 		self.data = None
 
+	def set_fxChunkSet(self, bye_stream):
+		self.type = 1
+		self.data = vst2_fxChunkSet(bye_stream)
+		return self.data
+
+	def set_fxProgram(self, bye_stream):
+		self.type = 2
+		self.data = vst2_fxProgram(bye_stream)
+		return self.data
+
+	def set_fxBank(self, bye_stream):
+		self.type = 3
+		self.data = vst2_fxBank(bye_stream)
+		return self.data
+
+	def set_fxChunkSet_bank(self, bye_stream):
+		self.type = 4
+		self.data = vst2_fxChunkSet(bye_stream)
+		return self.data
+
 	def parse(self, byr_stream, size):
 		with byr_stream.isolate_size(size, True) as bye_stream: 
 			ccnk_type = bye_stream.raw(4)
 			ccnk_size = bye_stream.uint32_b()
 
-			if ccnk_type == b'FPCh':
-				self.type = 1
-				self.data = vst2_fxChunkSet(bye_stream)
-			if ccnk_type == b'FxCk':
-				self.type = 2
-				self.data = vst2_fxProgram(bye_stream)
-			if ccnk_type == b'FxBk':
-				self.type = 3
-				self.data = vst2_fxBank(bye_stream)
-			if ccnk_type == b'FBCh':
-				self.type = 4
-				self.data = vst2_fxChunkSet(bye_stream)
+			if ccnk_type == b'FPCh': self.set_fxChunkSet(bye_stream)
+			if ccnk_type == b'FxCk': self.set_fxProgram(bye_stream)
+			if ccnk_type == b'FxBk': self.set_fxBank(bye_stream)
+			if ccnk_type == b'FBCh': self.set_fxChunkSet(bye_stream)
 
 	def write(self):
 		if self.type == 1: 

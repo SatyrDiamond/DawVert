@@ -6,10 +6,10 @@ import os
 import numpy as np
 import math
 
-from plugins.input.m_tracker_s3m import input_s3m as s3m
-from plugins.input.m_tracker_mod import input_mod as mod
-from plugins.input.m_tracker_it import input_it as it
-from plugins.input.m_tracker_xm import input_xm as xm
+from plugins.input_tracker.m_tracker_s3m import input_s3m as s3m
+from plugins.input_tracker.m_tracker_mod import input_mod as mod
+from plugins.input_tracker.m_tracker_it import input_it as it
+from plugins.input_tracker.m_tracker_xm import input_xm as xm
 
 import logging
 logger_input = logging.getLogger('input')

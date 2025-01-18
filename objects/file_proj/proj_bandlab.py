@@ -436,22 +436,22 @@ class bandlab_project:
 		self.clientId = "DawVert"
 		self.createdOn = ''
 		self.stamp = ''
-		self.mixdown = bandlab_sample(None)
+		self.mixdown = None
 		self.trackGroups = ''
 		self.modifiedOn = ''
 		self.parentId = ''
-		self.place = ''
+		self.place = None
 		self.post = {}
 		self.postId = ''
 
 		self.counters = {}
 		self.id = ''
-		self.isFork = ''
-		self.isLiked = ''
-		self.isPublic = ''
-		self.key = ''
-		self.lyrics = ''
-		self.mastering = ''
+		self.isFork = False
+		self.isLiked = False
+		self.isPublic = False
+		self.key = None
+		self.lyrics = None
+		self.mastering = None
 		self.metronome = {}
 		self.song = {}
 
@@ -479,7 +479,9 @@ class bandlab_project:
 		if 'blxVersion' in indata: self.blxVersion = indata['blxVersion']
 		if 'postId' in indata: self.postId = indata['postId']
 		if 'post' in indata: self.post = indata['post']
-		if 'mixdown' in indata: self.mixdown.read(indata['mixdown'])
+		if 'mixdown' in indata: 
+			self.mixdown = bandlab_sample(None)
+			self.mixdown.read(indata['mixdown'])
 
 		if 'id' in indata: self.id = indata['id']
 		if 'isFork' in indata: self.isFork = indata['isFork']
@@ -531,7 +533,7 @@ class bandlab_project:
 		outdata['mastering'] = self.mastering
 		outdata['metronome'] = self.metronome
 
-		outdata['mixdown'] = self.mixdown.write()
+		outdata['mixdown'] = self.mixdown.write() if self.mixdown else {}
 		outdata['modifiedOn'] = self.modifiedOn
 		outdata['parentId'] = self.parentId
 		outdata['place'] = self.place

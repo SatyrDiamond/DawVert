@@ -55,7 +55,7 @@ class input_cvpj_f(plugins.base):
 
 			track_obj = convproj_obj.track__add(cvpj_instid, 'instrument', 1, False)
 			track_obj.visual.name = 'Inst #'+str(instnum+1)
-			track_obj.visual.color.set_float(colordata.getcolor())
+			track_obj.visual.color.set_int(colordata.getcolor())
 			track_obj.params.add('pitch', (pixi_sound.fine/100)+(0.2 if pixi_sound.channels == 1 else 0.4), 'float')
 			track_obj.params.add('vol', pixi_sound.volume/100, 'float')
 			track_obj.datavals.add('middlenote', pixi_sound.transpose*-1)

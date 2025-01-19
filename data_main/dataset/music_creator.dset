@@ -1,18 +1,18 @@
 <dataset>
     <category id="section">
         <colorset id="main">
-            <color>193.8|114.75|114.75</color>
-            <color>252.45|112.2|112.2</color>
-            <color>193.8|193.8|114.75</color>
-            <color>252.45|252.45|112.2</color>
-            <color>114.75|193.8|114.75</color>
-            <color>112.2|252.45|112.2</color>
-            <color>114.75|193.8|193.8</color>
-            <color>112.2|252.45|252.45</color>
-            <color>114.75|114.75|193.8</color>
-            <color>112.2|112.2|252.45</color>
-            <color>193.8|114.75|193.8</color>
-            <color>252.45|112.2|252.45</color>
+            <color>#C27474</color>
+            <color>#FC6F6F</color>
+            <color>#C2C274</color>
+            <color>#FCFC6F</color>
+            <color>#74C274</color>
+            <color>#6FFC6F</color>
+            <color>#74C2C2</color>
+            <color>#6FFCFC</color>
+            <color>#7474C2</color>
+            <color>#6F6FFC</color>
+            <color>#C274C2</color>
+            <color>#FC6FFC</color>
         </colorset>
     </category>
 </dataset>

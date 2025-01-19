@@ -1,22 +1,22 @@
 <dataset>
     <category id="inst">
         <colorset id="main">
-            <color>255|255|255</color>
-            <color>79.05|79.05|255</color>
-            <color>79.05|255|79.05</color>
-            <color>79.05|255|255</color>
-            <color>255|79.05|79.05</color>
-            <color>255|79.05|255</color>
-            <color>255|255|79.05</color>
-            <color>255|165.75|122.4</color>
-            <color>122.4|165.75|255</color>
-            <color>165.75|255|122.4</color>
-            <color>122.4|255|165.75</color>
-            <color>255|122.4|165.75</color>
-            <color>165.75|122.4|255</color>
-            <color>102|255|178.5</color>
-            <color>178.5|255|102</color>
-            <color>255|89.25|188.7</color>
+            <color>#FFFFFF</color>
+            <color>#4F4FFF</color>
+            <color>#4FFF4F</color>
+            <color>#4FFFFF</color>
+            <color>#FF4F4F</color>
+            <color>#FF4FFF</color>
+            <color>#FFFF4F</color>
+            <color>#FFA77B</color>
+            <color>#7BA7FF</color>
+            <color>#A7FF7B</color>
+            <color>#7BFFA7</color>
+            <color>#FF7BA7</color>
+            <color>#A77BFF</color>
+            <color>#65FFB2</color>
+            <color>#B2FF65</color>
+            <color>#FF5ABD</color>
         </colorset>
     </category>
 </dataset>

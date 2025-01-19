@@ -1,15 +1,15 @@
 <dataset>
     <category id="track">
         <colorset id="main">
-            <color>239.7|127.5|0</color>
-            <color>104.55|119.85|255</color>
-            <color>201.45|183.6|183.6</color>
-            <color>173.4|63.75|255</color>
-            <color>145.35|198.9|0</color>
-            <color>252.45|51|204</color>
-            <color>0|191.25|96.9</color>
-            <color>255|119.85|91.8</color>
-            <color>0|188.7|255</color>
+            <color>#00BDFF</color>
+            <color>#FF775D</color>
+            <color>#00C060</color>
+            <color>#FC32CB</color>
+            <color>#92C600</color>
+            <color>#AE40FF</color>
+            <color>#CAB8B8</color>
+            <color>#6979FF</color>
+            <color>#F08000</color>
         </colorset>
     </category>
 </dataset>

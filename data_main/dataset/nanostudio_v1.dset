@@ -1,14 +1,14 @@
 <dataset>
     <category id="clips">
         <colorset id="main">
-            <color>94.35|163.2|81.6</color>
-            <color>175.95|84.15|163.2</color>
-            <color>81.6|81.6|173.4</color>
-            <color>84.15|175.95|163.2</color>
-            <color>147.9|175.95|84.15</color>
-            <color>135.15|84.15|175.95</color>
-            <color>175.95|114.75|84.15</color>
-            <color>173.4|81.6|91.8</color>
+            <color>#5EA351</color>
+            <color>#B053A2</color>
+            <color>#5252AE</color>
+            <color>#53AFA3</color>
+            <color>#93B053</color>
+            <color>#8753AF</color>
+            <color>#B07253</color>
+            <color>#AE525B</color>
         </colorset>
     </category>
     <category id="plugin">

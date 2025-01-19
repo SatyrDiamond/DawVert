@@ -1,16 +1,16 @@
 <dataset>
     <category id="inst">
         <colorset id="main">
-            <color>56.1|132.6|89.25</color>
-            <color>130.05|224.4|76.5</color>
-            <color>255|242.25|117.3</color>
-            <color>255|191.25|53.55</color>
-            <color>206.55|119.85|86.7</color>
-            <color>224.4|63.75|63.75</color>
-            <color>255|127.5|170.85</color>
-            <color>191.25|63.75|178.5</color>
-            <color>56.1|153|255</color>
-            <color>109.65|237.15|255</color>
+            <color>#39855A</color>
+            <color>#83E04C</color>
+            <color>#FFF275</color>
+            <color>#FFBF36</color>
+            <color>#CF7957</color>
+            <color>#E14141</color>
+            <color>#FF80AA</color>
+            <color>#BF3FB3</color>
+            <color>#3898FF</color>
+            <color>#6EEEFF</color>
         </colorset>
     </category>
 </dataset>

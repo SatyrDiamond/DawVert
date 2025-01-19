@@ -1592,15 +1592,15 @@
     </category>
     <category id="track">
         <colorset id="main">
-            <color>35.7|255|153</color>
-            <color>255|221.85|45.9</color>
-            <color>193.8|104.55|255</color>
-            <color>247.35|130.05|0</color>
-            <color>193.8|193.8|193.8</color>
-            <color>193.8|147.9|96.9</color>
-            <color>119.85|124.95|224.4</color>
-            <color>150.45|186.15|58.65</color>
-            <color>224.4|89.25|135.15</color>
+            <color>#23FE9A</color>
+            <color>#FEDE2D</color>
+            <color>#C56FFE</color>
+            <color>#F8870B</color>
+            <color>#C6C5C6</color>
+            <color>#C49968</color>
+            <color>#7F82E1</color>
+            <color>#9BBC42</color>
+            <color>#E1608D</color>
         </colorset>
     </category>
 </dataset>

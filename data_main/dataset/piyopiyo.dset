@@ -1,10 +1,10 @@
 <dataset>
     <category id="inst">
         <colorset id="main">
-            <color>63.75|96.9|124.95</color>
-            <color>91.8|109.65|117.3</color>
-            <color>130.05|145.35|119.85</color>
-            <color>147.9|163.2|102</color>
+            <color>#41607C</color>
+            <color>#5D6E75</color>
+            <color>#839179</color>
+            <color>#94A267</color>
         </colorset>
     </category>
 </dataset>

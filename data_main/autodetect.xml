@@ -231,14 +231,6 @@
 	</plugin>
 
 	<plugin pluginset="exper" name="libopenmpt">
-		<file fileext=".png"/>
-	</plugin>
-
-	<plugin pluginset="exper" name="libopenmpt">
-		<file fileext=".png"/>
-	</plugin>
-
-	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>
 

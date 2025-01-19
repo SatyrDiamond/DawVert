@@ -60,7 +60,7 @@ class input_piyopiyo(plugins.base):
 			idval = str(tracknum)
 			track_obj = convproj_obj.track__add(idval, 'instrument', 0, False)
 			track_obj.visual.name = 'Inst #'+str(tracknum+1)
-			track_obj.visual.color.set_float(colordata.getcolornum(tracknum))
+			track_obj.visual.color.set_int(colordata.getcolornum(tracknum))
 			track_obj.params.add('vol', pmdtrack_obj.volume/250, 'float')
 
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
@@ -77,7 +77,7 @@ class input_piyopiyo(plugins.base):
 
 		track_obj = convproj_obj.track__add("3", 'instrument', False, False)
 		track_obj.visual.name = 'Drums'
-		track_obj.visual.color.set_float(colordata.getcolornum(3))
+		track_obj.visual.color.set_int(colordata.getcolornum(3))
 		track_obj.params.add('vol', (project_obj.perc_volume/250)/3, 'float')
 		plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 		plugin_obj.role = 'synth'

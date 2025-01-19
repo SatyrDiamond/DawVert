@@ -64,16 +64,16 @@
     </category>
     <category id="track">
         <colorset id="main">
-            <color>17.85|163.2|219.3</color>
-            <color>17.85|214.2|229.5</color>
-            <color>12.75|181.05|142.8</color>
-            <color>12.75|175.95|76.5</color>
-            <color>163.2|239.7|56.1</color>
-            <color>242.25|201.45|96.9</color>
-            <color>242.25|124.95|81.6</color>
-            <color>239.7|63.75|96.9</color>
-            <color>237.15|51|178.5</color>
-            <color>175.95|15.3|201.45</color>
+            <color>#11A2DB</color>
+            <color>#12D7E6</color>
+            <color>#0EB68F</color>
+            <color>#0EB14C</color>
+            <color>#A2EF37</color>
+            <color>#F2CA60</color>
+            <color>#F17C52</color>
+            <color>#EF3F61</color>
+            <color>#EE32B3</color>
+            <color>#B010CA</color>
         </colorset>
     </category>
 </dataset>

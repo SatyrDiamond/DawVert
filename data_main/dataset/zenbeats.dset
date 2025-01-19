@@ -1,13 +1,13 @@
 <dataset>
     <category id="global">
         <colorset id="main">
-            <color>145.35|244.8|255</color>
-            <color>99.45|204|255</color>
-            <color>102|104.55|255</color>
-            <color>135.15|68.85|193.8</color>
-            <color>255|86.7|158.1</color>
-            <color>255|107.1|56.1</color>
-            <color>255|160.65|66.3</color>
+            <color>#91F6FF</color>
+            <color>#64CCFF</color>
+            <color>#6569FF</color>
+            <color>#8745C1</color>
+            <color>#FF569E</color>
+            <color>#FF6A37</color>
+            <color>#FFA043</color>
         </colorset>
     </category>
 </dataset>

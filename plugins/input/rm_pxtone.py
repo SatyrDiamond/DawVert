@@ -101,7 +101,7 @@ class input_pxtone(plugins.base):
 			cvpj_instid = 'ptcop_'+str(voicenum)
 			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			inst_obj.visual.name = voice_obj.name
-			inst_obj.visual.color.set_float([0.14, 0.00, 0.29])
+			inst_obj.visual.color.set_int([0.14, 0.00, 0.29])
 			inst_obj.visual.color.priority = -1
 
 			cvpj_instvol = 1.0
@@ -145,7 +145,7 @@ class input_pxtone(plugins.base):
 			cvpj_trackid = str(unitnum+1)
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 			track_obj.visual.name = unit_obj.name
-			track_obj.visual.color.set_float(colordata.getcolor())
+			track_obj.visual.color.set_int(colordata.getcolor())
 
 			unitstream = pxtone_cmdstream(track_obj.placements.notelist, convproj_obj, cvpj_trackid)
 

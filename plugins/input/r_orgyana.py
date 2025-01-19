@@ -80,7 +80,7 @@ class input_orgyana(plugins.base):
 						wave_obj.set_all_range(list(orgsamp_obj.sample_data[orgtrack_obj.instrument]), -128, 128)
 						track_obj.plugslots.set_synth(pluginid)
 
-				track_obj.visual.color.set_float(colordata.getcolornum(tracknum))
+				track_obj.visual.color.set_int(colordata.getcolornum(tracknum))
 				track_obj.params.add('pitch', (orgtrack_obj.pitch-1000)/1800, 'float')
 
 				posnotes = {}

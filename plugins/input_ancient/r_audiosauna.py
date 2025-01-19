@@ -109,7 +109,7 @@ class input_audiosanua(plugins.base):
 			cvpj_trackid = 'audiosanua'+str(as_channum)
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 			track_obj.visual.name = as_chan.name
-			track_obj.visual.color.set_float(colordata.getcolornum(as_channum))
+			track_obj.visual.color.set_int(colordata.getcolornum(as_channum))
 			track_obj.params.add('vol', as_chan.volume/100, 'float')
 			track_obj.params.add('pan', as_chan.pan/100, 'float')
 			track_obj.params.add('enabled', not as_chan.mute, 'bool')
@@ -123,7 +123,7 @@ class input_audiosanua(plugins.base):
 				placement_obj = track_obj.placements.add_notes()
 				placement_obj.time.set_startend(as_pattern.startTick, as_pattern.endTick)
 				placement_obj.time.set_loop_data(0, 0, as_pattern.patternLength)
-				placement_obj.visual.color.set_float(colordata.getcolornum(as_pattern.patternColor))
+				placement_obj.visual.color.set_int(colordata.getcolornum(as_pattern.patternColor))
 
 				for t_note in pat_notes: 
 					n_pos = max(0,t_note.startTick-as_pattern.startTick)

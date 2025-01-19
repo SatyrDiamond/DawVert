@@ -39,14 +39,14 @@
     </category>
     <category id="track">
         <colorset id="orgmaker_2">
-            <color>58.65|76.5|252.45</color>
-            <color>158.1|28.05|30.6</color>
-            <color>158.1|40.8|221.85</color>
-            <color>35.7|114.75|66.3</color>
-            <color>33.15|117.3|145.35</color>
-            <color>170.85|127.5|28.05</color>
-            <color>150.45|163.2|181.05</color>
-            <color>147.9|135.15|124.95</color>
+            <color>#3A4DFC</color>
+            <color>#9F1D1F</color>
+            <color>#9F29DF</color>
+            <color>#237343</color>
+            <color>#227692</color>
+            <color>#AC801C</color>
+            <color>#96A2B4</color>
+            <color>#95867C</color>
         </colorset>
     </category>
 </dataset>

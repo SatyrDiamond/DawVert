@@ -34,7 +34,12 @@ class dataset_visual:
 	def read_xml(self, x_part):
 		self.name = x_part.get('name')
 		color = x_part.get('color')
-		if color: self.color = make_color_text(color)
+		if color: 
+			if '#' in color:
+				nonumsign = color.lstrip('#')
+				self.color = list(int(nonumsign[i:i+2], 16) for i in (0, 2, 4))
+			else:
+				self.color = get_color_text(color)
 
 	def write(self):
 		outlist = {}
@@ -303,7 +308,13 @@ class dataset_colorset:
 		self.value = []
 		for x_part in xml_data:
 			if x_part.tag == 'color':
-				self.value.append(make_color_text(x_part.text))
+				color = x_part.text
+				if '#' in color:
+					nonumsign = color.lstrip('#')
+					color = list(int(nonumsign[i:i+2], 16) for i in (0, 2, 4))
+				else:
+					color = make_color_text(color)
+				self.value.append(color)
 
 	def write_xml(self, xml_data):
 		for color in self.value:

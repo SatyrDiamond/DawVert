@@ -1,4 +1,77 @@
 <dataset>
+    <category id="track">
+        <colorset id="domino">
+            <color>#FFA5A5</color>
+            <color>#FFBD55</color>
+            <color>#FFFF2D</color>
+            <color>#8DFF55</color>
+            <color>#55FFE2</color>
+            <color>#D7AFFF</color>
+            <color>#FF91FB</color>
+        </colorset>
+        <colorset id="sekaiju">
+            <color>#0000FF</color>
+            <color>#008080</color>
+            <color>#008000</color>
+            <color>#808000</color>
+            <color>#F00000</color>
+            <color>#F00080</color>
+            <color>#800080</color>
+            <color>#8000FF</color>
+        </colorset>
+        <colorset id="synthesia">
+            <color>#729FCF</color>
+            <color>#8AE234</color>
+            <color>#FCAF3E</color>
+            <color>#FCEB57</color>
+            <color>#AD68B4</color>
+            <color>#EE5E5E</color>
+        </colorset>
+        <colorset id="musanim">
+            <color>#E78973</color>
+            <color>#E7B573</color>
+            <color>#E7DF73</color>
+            <color>#C3E773</color>
+            <color>#97E773</color>
+            <color>#73E77B</color>
+            <color>#73E7A5</color>
+            <color>#73E7D1</color>
+            <color>#73D1E7</color>
+            <color>#73A5E7</color>
+            <color>#737BE7</color>
+            <color>#9773E7</color>
+            <color>#C373E7</color>
+            <color>#E773DF</color>
+            <color>#E773B5</color>
+            <color>#E77389</color>
+        </colorset>
+        <colorset id="evil">
+            <color>#9CA4A2</color>
+            <color>#923D3B</color>
+            <color>#604636</color>
+            <color>#555555</color>
+            <color>#AA8A4E</color>
+            <color>#7D293D</color>
+            <color>#CECECE</color>
+            <color>#50255B</color>
+            <color>#893F5C</color>
+            <color>#636363</color>
+            <color>#000000</color>
+            <color>#9F4B28</color>
+            <color>#427169</color>
+            <color>#7F7136</color>
+            <color>#3F6560</color>
+            <color>#807859</color>
+        </colorset>
+        <colorset id="pfa">
+            <color>#3366FF</color>
+            <color>#33FF66</color>
+            <color>#33FFFF</color>
+            <color>#E433FF</color>
+            <color>#FF3381</color>
+            <color>#FF7E33</color>
+        </colorset>
+    </category>
     <category id="gm_drums">
         <object id="0_0_0">
             <drumset id="-1">

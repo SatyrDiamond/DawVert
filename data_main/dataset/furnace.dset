@@ -19,22 +19,22 @@
             <visual name="Square" color="102|255|51" />
         </object>
         <object id="gameboy_wavetable">
-            <visual name="Wavetable" color="255|127.5|51" />
+            <visual name="Wavetable" color="255|128|51" />
         </object>
         <object id="gameboy_noise">
             <visual name="Noise" color="204|204|204" />
         </object>
         <object id="pce">
-            <visual name="Wavetable" color="255|127.5|51" />
+            <visual name="Wavetable" color="255|128|51" />
         </object>
         <object id="pcm">
-            <visual name="PCM" color="255|229.5|51" />
+            <visual name="PCM" color="255|230|51" />
         </object>
         <object id="sample">
-            <visual name="sample" color="255|229.5|51" />
+            <visual name="sample" color="255|230|51" />
         </object>
         <object id="adpcma">
-            <visual name="ADPCM-A" color="255|229.5|51" />
+            <visual name="ADPCM-A" color="255|230|51" />
         </object>
         <object id="c64">
             <visual name="C64" color="204|204|204" />

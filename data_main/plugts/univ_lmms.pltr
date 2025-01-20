@@ -1,33 +1,29 @@
-
-[bitcrush]
->input
-	type|universal:bitcrush
-	param|bits
-	param|freq
-<input
-
->output
-	type|native:lmms:bitcrush
-	param|rate<freq
-	param|levels<bits
-<output
-
-[volpan]
->input
-	type|universal:volpan
-	param|pan
-	param|vol
-<input
-
->proc
-	calc|pan|mul|100
-	calc|vol|mul|100
-<proc
-
->output
-	type|native:lmms:amplifier
-	param|pan<pan
-	param|volume<vol
-	param|right%100
-	param|left%100
-<output
+<plugtransform>
+    <transform name="bitcrush">
+        <input plugtype="universal:bitcrush">
+            <param from="bits" type="float">0</param>
+            <param from="freq" type="float">0</param>
+        </input>
+        <proc />
+        <output plugtype="native:lmms:bitcrush">
+            <param to="rate" from="freq" type="float">0</param>
+            <param to="levels" from="bits" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="volpan">
+        <input plugtype="universal:volpan">
+            <param from="pan" type="float">0</param>
+            <param from="vol" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="pan" type="mul">100</calc>
+            <calc name="vol" type="mul">100</calc>
+        </proc>
+        <output plugtype="native:lmms:amplifier">
+            <param to="pan" type="float">0</param>
+            <param to="volume" from="vol" type="float">0</param>
+            <param to="right" type="float">100.0</param>
+            <param to="left" type="float">100.0</param>
+        </output>
+    </transform>
+</plugtransform>

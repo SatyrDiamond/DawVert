@@ -1,39 +1,32 @@
-
-[vst2_reverb]
->input
-	type|native:amped:Reverb
-	param|fb
-	param|lpf
-	param|mix
-<input
-
->proc
-	calc|lpf|div|20000
-	calc|fb|pow|2
-<proc
-
->output
-	type|user:lucianoiam:castello
-	param|mix<mix
-	param|size<fb
-	param|brightness<lpf
-<output
-
-[vst2_compressormini]
->input
-	type|native:amped:CompressorMini
-	param|squash
-<input
-
->proc
-	calc|squash|div|2
-	out_store|squash|squash
-<proc
-
->output
-	type|user:airwindows:PurestSquish
-	param|squish<squash
-	param|bassblm%0.0
-	param|output%1.0
-	param|dry_wet%1.0
-<output
+<plugtransform>
+    <transform name="vst2_reverb">
+        <input plugtype="native:amped:Reverb">
+            <param from="fb" type="float">0</param>
+            <param from="lpf" type="float">0</param>
+            <param from="mix" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="lpf" type="div">20000</calc>
+            <calc name="fb" type="pow">2</calc>
+        </proc>
+        <output plugtype="user:lucianoiam:castello">
+            <param to="mix" type="float">0</param>
+            <param to="size" from="fb" type="float">0</param>
+            <param to="brightness" from="lpf" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="vst2_compressormini">
+        <input plugtype="native:amped:CompressorMini">
+            <param from="squash" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="squash" type="div">2</calc>
+        </proc>
+        <output plugtype="user:airwindows:PurestSquish">
+            <param to="squish" from="squash" type="float">0</param>
+            <param to="bassblm" type="float">0</param>
+            <param to="output" type="float">1</param>
+            <param to="dry_wet" type="float">1</param>
+        </output>
+    </transform>
+</plugtransform>

@@ -10,11 +10,15 @@ import xml.etree.ElementTree as ET
 
 rapidjson_usable = importlib.util.find_spec('rapidjson')
 
-def get_color_text(color):
+def make_color_text(color):
 	return '|'.join([("%g" % round((x*255), 7)) for x in color])
 
-def make_color_text(color):
-	return [round(float(x)/255, 7) for x in color.split('|')]
+def text_to_color(color):
+	if '#' in color:
+		nonumsign = color.lstrip('#')
+		return list(int(nonumsign[i:i+2], 16) for i in (0, 2, 4))
+	else:
+		return [round(float(x)/255, 7) for x in color.split('|')]			
 
 class dataset_visual:
 	__slots__ = ['name', 'color']
@@ -34,12 +38,7 @@ class dataset_visual:
 	def read_xml(self, x_part):
 		self.name = x_part.get('name')
 		color = x_part.get('color')
-		if color: 
-			if '#' in color:
-				nonumsign = color.lstrip('#')
-				self.color = list(int(nonumsign[i:i+2], 16) for i in (0, 2, 4))
-			else:
-				self.color = get_color_text(color)
+		if color: self.color = text_to_color(color)
 
 	def write(self):
 		outlist = {}
@@ -50,7 +49,7 @@ class dataset_visual:
 	def write_xml(self, xml_data):
 		tempxml = ET.SubElement(xml_data, 'visual')
 		if self.name: tempxml.set('name', self.name)
-		if self.color: tempxml.set('color', get_color_text(self.color))
+		if self.color: tempxml.set('color', make_color_text(self.color))
 
 class dataset_objectset:
 	__slots__ = ['data', 'used', 'in_obj']
@@ -308,18 +307,12 @@ class dataset_colorset:
 		self.value = []
 		for x_part in xml_data:
 			if x_part.tag == 'color':
-				color = x_part.text
-				if '#' in color:
-					nonumsign = color.lstrip('#')
-					color = list(int(nonumsign[i:i+2], 16) for i in (0, 2, 4))
-				else:
-					color = make_color_text(color)
-				self.value.append(color)
+				self.value.append(text_to_color(x_part.text))
 
 	def write_xml(self, xml_data):
 		for color in self.value:
 			tempxml = ET.SubElement(xml_data, 'color')
-			tempxml.text = get_color_text(color)
+			tempxml.text = make_color_text(color)
 
 class dataset_datadef:
 	__slots__ = ['path', 'name', 'struct']

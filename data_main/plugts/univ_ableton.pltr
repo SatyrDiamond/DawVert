@@ -1,218 +1,164 @@
-
-[limiter]
->input
-	type|universal:limiter
-	param|ceiling
-	param|gain
-	param|release
-	param|release_auto
-<input
-
->proc
-	calc|Release|mul|1000
-<proc
-
->output
-	type|native:ableton:Limiter
-	param|Ceiling<ceiling
-	param|Gain<gain
-	param|Release<release
-	param|AutoRelease<release_auto
-<output
-
-[bitcrush]
->input
-	type|universal:bitcrush
-	param|bits
-	param|freq
-	wet|mix
-<input
-
->output
-	type|native:ableton:Redux2
-	param|BitDepth<bits
-	param|SampleRate<freq
-	param|DryWet<mix
-<output
-
-[compressor]
->input
-	type|universal:compressor
-	param|threshold
-	param|ratio
-	param|attack
-	param|release
-	param|postgain
-	param|knee
-	wet|DryWet
-<input
-
->proc
-	calc|threshold|mul|-1
-	calc|threshold|pow_r|0.8913
-	calc|attack|mul|1000
-	calc|release|mul|1000
-	calc|knee|div|6
-<proc
-
->output
-	type|native:ableton:Compressor2
-	param|Threshold<threshold
-	param|Ratio<ratio
-	param|Attack<attack
-	param|Release<release
-	param|Gain<postgain
-	param|Knee<knee
-	param|DryWet
-<output
-
-[expander]
->input
-	type|universal:expander
-	param|threshold
-	param|ratio
-	param|attack
-	param|release
-	param|postgain
-	param|knee
-	wet|DryWet
-<input
-
->proc
-	calc|threshold|mul|-1
-	calc|threshold|pow_r|0.8913
-	calc|attack|mul|1000
-	calc|release|mul|1000
-	calc|knee|div|6
-<proc
-
->output
-	type|native:ableton:Compressor2
-	param|Threshold<threshold
-	param|ExpansionRatio<ratio
-	param|Attack<attack
-	param|Release<release
-	param|Gain<postgain
-	param|Knee<knee
-	param|DryWet
-	param|Model%2
-<output
-
-[gate]
->input
-	type|universal:gate
-	param|attack
-	param|hold
-	param|release
-	param|threshold
-	param|flip
-	param|return
-<input
-
->proc
-	calc|threshold|mul|-1
-	calc|threshold|pow_r|0.8913
-	calc|attack|mul|1000
-	calc|release|mul|1000
-	calc|hold|mul|1000
-	calc|return|mul|1000
-<proc
-
->output
-	type|native:ableton:Gate
-	param|Attack<attack
-	param|Hold<hold
-	param|Release<release
-	param|Threshold<threshold
-	param|FlipMode<flip
-	param|Return<return
-<output
-
-[gate]
->input
-	type|universal:gate
-	param|attack
-	param|hold
-	param|release
-	param|threshold
-	param|flip
-	param|return
-<input
-
->proc
-	calc|threshold|mul|-1
-	calc|threshold|pow_r|0.8913
-	calc|attack|mul|1000
-	calc|release|mul|1000
-	calc|hold|mul|1000
-	calc|return|mul|1000
-<proc
-
->output
-	type|native:ableton:Gate
-	param|Attack<attack
-	param|Hold<hold
-	param|Release<release
-	param|Threshold<threshold
-	param|FlipMode<flip
-	param|Return<return
-<output
-
-[vibrato]
->input
-	type|universal:vibrato
-	param|freq
-	param|depth
-<input
-
->proc
-	calc|depth|div|2
-<proc
-
->output
-	type|native:ableton:Chorus2
-	param|Mode%2
-	param|Width%1
-	param|OutputGain%1
-	param|DryWet%1
-	param|Rate<freq
-	param|Amount<depth
-<output
-
-[tremolo]
->input
-	type|universal:tremolo
-	param|freq
-	param|depth
-<input
-
->output
-	type|native:ableton:AutoPan
-	param|Lfo/IsOn&1
-	param|Lfo/Frequency<freq
-	param|Lfo/LfoAmount<depth
-<output
-
-[volpan]
->input
-	type|universal:volpan
-	param|pan
-	param|vol
-<input
-
->output
-	type|native:ableton:StereoGain
-	param|Balance<pan
-	param|LegacyGain%0.0
-	param|BassMono&0
-	param|BassMonoFrequency%120.0
-	param|ChannelMode%1.0
-	param|DcFilter&0
-	param|Gain<vol
-	param|MidSideBalance%1.0
-	param|Mono&0
-	param|Mute&0
-	param|PhaseInvertL&0
-	param|PhaseInvertR&0
-	param|StereoWidth%1.0
-<output
+<plugtransform>
+    <transform name="limiter">
+        <input plugtype="universal:limiter">
+            <param from="ceiling" type="float">0</param>
+            <param from="gain" type="float">0</param>
+            <param from="release" type="float">0</param>
+            <param from="release_auto" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="Release" type="mul">1000</calc>
+        </proc>
+        <output plugtype="native:ableton:Limiter">
+            <param to="Ceiling" from="ceiling" type="float">0</param>
+            <param to="Gain" from="gain" type="float">0</param>
+            <param to="Release" from="release" type="float">0</param>
+            <param to="AutoRelease" from="release_auto" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="bitcrush">
+        <input plugtype="universal:bitcrush">
+            <param from="bits" type="float">0</param>
+            <param from="freq" type="float">0</param>
+            <wet from="mix" type="float">1</wet>
+        </input>
+        <proc />
+        <output plugtype="native:ableton:Redux2">
+            <param to="BitDepth" from="bits" type="float">0</param>
+            <param to="SampleRate" from="freq" type="float">0</param>
+            <param to="DryWet" from="mix" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="compressor">
+        <input plugtype="universal:compressor">
+            <param from="threshold" type="float">0</param>
+            <param from="ratio" type="float">0</param>
+            <param from="attack" type="float">0</param>
+            <param from="release" type="float">0</param>
+            <param from="postgain" type="float">0</param>
+            <param from="knee" type="float">0</param>
+            <wet from="DryWet" type="float">1</wet>
+        </input>
+        <proc>
+            <calc name="threshold" type="mul">-1</calc>
+            <calc name="threshold" type="pow_r">0.8913</calc>
+            <calc name="attack" type="mul">1000</calc>
+            <calc name="release" type="mul">1000</calc>
+            <calc name="knee" type="div">6</calc>
+        </proc>
+        <output plugtype="native:ableton:Compressor2">
+            <param to="Threshold" from="threshold" type="float">0</param>
+            <param to="Ratio" from="ratio" type="float">0</param>
+            <param to="Attack" from="attack" type="float">0</param>
+            <param to="Release" from="release" type="float">0</param>
+            <param to="Gain" from="postgain" type="float">0</param>
+            <param to="Knee" from="knee" type="float">0</param>
+            <param to="DryWet" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="expander">
+        <input plugtype="universal:expander">
+            <param from="threshold" type="float">0</param>
+            <param from="ratio" type="float">0</param>
+            <param from="attack" type="float">0</param>
+            <param from="release" type="float">0</param>
+            <param from="postgain" type="float">0</param>
+            <param from="knee" type="float">0</param>
+            <wet from="DryWet" type="float">1</wet>
+        </input>
+        <proc>
+            <calc name="threshold" type="mul">-1</calc>
+            <calc name="threshold" type="pow_r">0.8913</calc>
+            <calc name="attack" type="mul">1000</calc>
+            <calc name="release" type="mul">1000</calc>
+            <calc name="knee" type="div">6</calc>
+        </proc>
+        <output plugtype="native:ableton:Compressor2">
+            <param to="Threshold" from="threshold" type="float">0</param>
+            <param to="ExpansionRatio" from="ratio" type="float">0</param>
+            <param to="Attack" from="attack" type="float">0</param>
+            <param to="Release" from="release" type="float">0</param>
+            <param to="Gain" from="postgain" type="float">0</param>
+            <param to="Knee" from="knee" type="float">0</param>
+            <param to="DryWet" type="float">0</param>
+            <param to="Model" type="float">2.0</param>
+        </output>
+    </transform>
+    <transform name="gate">
+        <input plugtype="universal:gate">
+            <param from="attack" type="float">0</param>
+            <param from="hold" type="float">0</param>
+            <param from="release" type="float">0</param>
+            <param from="threshold" type="float">0</param>
+            <param from="flip" type="float">0</param>
+            <param from="return" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="threshold" type="mul">-1</calc>
+            <calc name="threshold" type="pow_r">0.8913</calc>
+            <calc name="attack" type="mul">1000</calc>
+            <calc name="release" type="mul">1000</calc>
+            <calc name="hold" type="mul">1000</calc>
+            <calc name="return" type="mul">1000</calc>
+        </proc>
+        <output plugtype="native:ableton:Gate">
+            <param to="Attack" from="attack" type="float">0</param>
+            <param to="Hold" from="hold" type="float">0</param>
+            <param to="Release" from="release" type="float">0</param>
+            <param to="Threshold" from="threshold" type="float">0</param>
+            <param to="FlipMode" from="flip" type="float">0</param>
+            <param to="Return" from="return" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="vibrato">
+        <input plugtype="universal:vibrato">
+            <param from="freq" type="float">0</param>
+            <param from="depth" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="depth" type="div">2</calc>
+        </proc>
+        <output plugtype="native:ableton:Chorus2">
+            <param to="Mode" type="float">2.0</param>
+            <param to="Width" type="float">1</param>
+            <param to="OutputGain" type="float">1</param>
+            <param to="DryWet" type="float">1</param>
+            <param to="Rate" from="freq" type="float">0</param>
+            <param to="Amount" from="depth" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="tremolo">
+        <input plugtype="universal:tremolo">
+            <param from="freq" type="float">0</param>
+            <param from="depth" type="float">0</param>
+        </input>
+        <proc />
+        <output plugtype="native:ableton:AutoPan">
+            <param to="Lfo/IsOn" type="bool">0</param>
+            <param to="Lfo/Frequency" from="freq" type="float">0</param>
+            <param to="Lfo/LfoAmount" from="depth" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="volpan">
+        <input plugtype="universal:volpan">
+            <param from="pan" type="float">0</param>
+            <param from="vol" type="float">0</param>
+        </input>
+        <proc />
+        <output plugtype="native:ableton:StereoGain">
+            <param to="Balance" from="pan" type="float">0</param>
+            <param to="LegacyGain" type="float">0</param>
+            <param to="BassMono" type="bool">0</param>
+            <param to="BassMonoFrequency" type="float">120.0</param>
+            <param to="ChannelMode" type="float">1</param>
+            <param to="DcFilter" type="bool">0</param>
+            <param to="Gain" from="vol" type="float">0</param>
+            <param to="MidSideBalance" type="float">1</param>
+            <param to="Mono" type="bool">0</param>
+            <param to="Mute" type="bool">0</param>
+            <param to="PhaseInvertL" type="bool">0</param>
+            <param to="PhaseInvertR" type="bool">0</param>
+            <param to="StereoWidth" type="float">1</param>
+        </output>
+    </transform>
+</plugtransform>

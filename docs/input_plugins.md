@@ -81,6 +81,7 @@
 | DataType | PluginSet | Short Name | Name | Info |
 | --- | --- | --- | :--- | :--- |
 | R | ```exper``` | ```color_art``` | Color Art | Image to Clip Colors
+| R | ```exper``` | ```libopenmpt``` | libOpenMPT | 38 Formats
 
 ## AI
 | DataType | PluginSet | Short Name | Name | Info |

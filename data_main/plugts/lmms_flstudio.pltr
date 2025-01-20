@@ -1,50 +1,43 @@
-
-[stereomatrix]
->input
-	type|native:lmms:stereomatrix
-	param|r-l
-	param|l-l
-	param|r-r
-	param|l-r
-<input
-
->proc
-	calc|r-l|mul|12800
-	calc|l-l|mul|12800
-	calc|r-r|mul|12800
-	calc|l-r|mul|12800
-<proc
-
->output
-	type|native:flstudio:fruity stereo shaper
-	param|r2l<r-l
-	param|l2l<l-l
-	param|r2r<r-r
-	param|l2r<l-r
-	param|delay%0.0
-	param|dephase%0.0
-	param|iodiff%0.0
-	param|prepost%0.0
-<output
-
-[spectrumanalyzer]
->input
-	type|native:lmms:spectrumanalyzer
-<input
-
->output
-	type|native:flstudio:fruity spectroman
-	param|amp%128.0
-	param|scale%128.0
-<output
-
-[stereoenhancer]
->input
-	type|native:lmms:stereoenhancer
-	param|width
-<input
-
->output
-	type|native:flstudio:fruity stereo enhancer
-	param|phase_offs<width
-<output
+<plugtransform>
+    <transform name="stereomatrix">
+        <input plugtype="native:lmms:stereomatrix">
+            <param from="r-l" type="float">0</param>
+            <param from="l-l" type="float">0</param>
+            <param from="r-r" type="float">0</param>
+            <param from="l-r" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="r-l" type="mul">12800</calc>
+            <calc name="l-l" type="mul">12800</calc>
+            <calc name="r-r" type="mul">12800</calc>
+            <calc name="l-r" type="mul">12800</calc>
+        </proc>
+        <output plugtype="native:flstudio:fruity stereo shaper">
+            <param to="r2l" from="r-l" type="float">0</param>
+            <param to="l2l" from="l-l" type="float">0</param>
+            <param to="r2r" from="r-r" type="float">0</param>
+            <param to="l2r" from="l-r" type="float">0</param>
+            <param to="delay" type="float">0</param>
+            <param to="dephase" type="float">0</param>
+            <param to="iodiff" type="float">0</param>
+            <param to="prepost" type="float">0</param>
+        </output>
+    </transform>
+    <transform name="spectrumanalyzer">
+        <input plugtype="native:lmms:spectrumanalyzer" />
+        <proc />
+        <output plugtype="native:flstudio:fruity spectroman">
+            <param to="amp" type="float">128.0</param>
+            <param to="scale" type="float">128.0</param>
+        </output>
+    </transform>
+    <transform name="stereoenhancer">
+        <input plugtype="native:lmms:stereoenhancer">
+            <param from="width" type="float">0</param>
+        </input>
+        <proc />
+        <output plugtype="native:flstudio:fruity stereo enhancer">
+            <param to="phase_offs" from="width" type="float">0</param>
+        </output>
+    </transform>
+</plugtransform>

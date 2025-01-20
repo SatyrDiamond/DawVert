@@ -66,7 +66,7 @@ class vst2_fxChunkSet:
 		byw_stream.uint32_b(self.fourid)
 		byw_stream.uint32_b(self.version)
 		byw_stream.uint32_b(self.num_programs)
-		byr_stream.string(self.prgname, 28)
+		byw_stream.string(self.prgname, 28)
 		byw_stream.uint32_b(len(self.chunk))
 		byw_stream.raw(self.chunk)
 		return byw_stream.getvalue()

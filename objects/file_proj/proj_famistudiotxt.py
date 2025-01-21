@@ -64,9 +64,10 @@ class fs_arpeggio:
 		self.Loop = int(cmd_params['Loop']) if 'Loop' in cmd_params else 0
 
 class fs_instrument:
-	__slots__ = ['Name','Expansion','Regs','Patch','DPCMMappings','Arpeggio','Envelopes','N163WavePreset','N163WaveSize','N163WavePos','N163WaveCount','FM']
+	__slots__ = ['Name','Color','Expansion','Regs','Patch','DPCMMappings','Arpeggio','Envelopes','N163WavePreset','N163WaveSize','N163WavePos','N163WaveCount','FM']
 	def __init__(self):
 		self.Name = ''
+		self.Color = ''
 		self.Expansion = ''
 		self.Regs = []
 		self.Patch = 0
@@ -95,9 +96,10 @@ class fs_patternsettings:
 		self.GroovePaddingMode = cmd_params['GroovePaddingMode'] if 'GroovePaddingMode' in cmd_params else 'Middle'
 
 class fs_pattern:
-	__slots__ = ['Name','Notes']
+	__slots__ = ['Name','Notes','Color']
 	def __init__(self, cmd_params):
 		self.Name = cmd_params['Name'] if 'Name' in cmd_params else ''
+		self.Color = cmd_params['Color'] if 'Color' in cmd_params else ''
 		self.Notes = []
 
 class fs_channel:
@@ -126,9 +128,10 @@ class fs_note:
 		self.Arpeggio = cmd_params['Arpeggio'] if 'Arpeggio' in cmd_params else None
 
 class fs_song:
-	__slots__ = ['Name','LoopPoint','PatternLength','PatternSettings','PatternCustomSettings','Channels']
+	__slots__ = ['Name','Color','LoopPoint','PatternLength','PatternSettings','PatternCustomSettings','Channels']
 	def __init__(self, cmd_params):
 		self.Name = cmd_params['Name'] if 'Name' in cmd_params else ''
+		self.Color = cmd_params['Color'] if 'Color' in cmd_params else ''
 		self.LoopPoint = int(cmd_params['LoopPoint']) if 'LoopPoint' in cmd_params else 0
 		self.PatternLength = int(cmd_params['PatternLength']) if 'PatternLength' in cmd_params else 16
 		self.PatternSettings = fs_patternsettings(cmd_params)
@@ -180,6 +183,7 @@ class famistudiotxt_project:
 			elif cmd_name == 'Instrument' and tabs_num == 1:
 				cur_inst = fs_instrument()
 				if 'Name' in cmd_params: cur_inst.Name = cmd_params['Name']
+				if 'Color' in cmd_params: cur_inst.Color = cmd_params['Color']
 				if 'Expansion' in cmd_params: cur_inst.Expansion = cmd_params['Expansion']
 				self.Instruments[cur_inst.Name] = cur_inst
 

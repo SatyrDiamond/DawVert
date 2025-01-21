@@ -115,7 +115,6 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 
 	if WaveType == 'EPSMFM':
 		inst_obj.params.add('vol', 0.6, 'float')
-		instvolume = 0.7
 		opn2_obj = fst_Instrument.FM.to_opn2()
 		plugin_obj, synthid = opn2_obj.to_cvpj_genid(convproj_obj)
 		instpan = 0

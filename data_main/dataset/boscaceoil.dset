@@ -84,883 +84,883 @@
             <visual name="Noise (Hi-Hat)" />
         </object>
         <object id="143">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass1" />
             <visual name="Analog Bass" />
         </object>
         <object id="144">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass2" />
             <visual name="Analog Bass #2" />
         </object>
         <object id="145">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass3" />
             <visual name="Analog Bass #2 (q2)" />
         </object>
         <object id="146">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass4" />
             <visual name="Chopper Bass 0" />
         </object>
         <object id="147">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass5" />
             <visual name="Chopper Bass 1" />
         </object>
         <object id="148">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass6" />
             <visual name="Chopper bass 2 (CUT)" />
         </object>
         <object id="149">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass7" />
             <visual name="Chopper bass 3" />
         </object>
         <object id="150">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass8" />
             <visual name="Elec.Chopper Bass" />
         </object>
         <object id="151">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass9" />
             <visual name="Effect Bass 1" />
         </object>
         <object id="152">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass10" />
             <visual name="Effect Bass 2 to UP" />
         </object>
         <object id="153">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass11" />
             <visual name="Effect Bass 1" />
         </object>
         <object id="154">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass12" />
             <visual name="Mohaaa" />
         </object>
         <object id="155">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass13" />
             <visual name="Effect FB Bass #5" />
         </object>
         <object id="156">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass14" />
             <visual name="Magical bass" />
         </object>
         <object id="157">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass15" />
             <visual name="E.Bass #6" />
         </object>
         <object id="158">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass16" />
             <visual name="E.Bass #7" />
         </object>
         <object id="159">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass17" />
             <visual name="E.Bass 70" />
         </object>
         <object id="160">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass18" />
             <visual name="VAL006 Euro" />
         </object>
         <object id="161">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass19" />
             <visual name="E.Bass x2" />
         </object>
         <object id="162">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass20" />
             <visual name="E.Bass x4" />
         </object>
         <object id="163">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass21" />
             <visual name="Metal pick bass X5" />
         </object>
         <object id="164">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass22" />
             <visual name="Groove Bass #1" />
         </object>
         <object id="165">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass23" />
             <visual name="Analog Groove #2" />
         </object>
         <object id="166">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass24" />
             <visual name="Harmonics #1" />
         </object>
         <object id="167">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass25" />
             <visual name="Low Bass x1" />
         </object>
         <object id="168">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass26" />
             <visual name="Low_bass x2" />
         </object>
         <object id="169">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass27" />
             <visual name="Low Bass Rezzo" />
         </object>
         <object id="170">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass28" />
             <visual name="Low Bass Picked" />
         </object>
         <object id="171">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass29" />
             <visual name="Metal Bass" />
         </object>
         <object id="172">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass30" />
             <visual name="e.n.bass 1" />
         </object>
         <object id="173">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass31" />
             <visual name="psg bass 1" />
         </object>
         <object id="174">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass32" />
             <visual name="psg bass 2" />
         </object>
         <object id="175">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass33" />
             <visual name="rezonance bass" />
         </object>
         <object id="176">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass34" />
             <visual name="slap bass" />
         </object>
         <object id="177">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass35" />
             <visual name="slap bass 1" />
         </object>
         <object id="178">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass36" />
             <visual name="slap bass 2 (1+)" />
         </object>
         <object id="179">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass37" />
             <visual name="slap bass #3" />
         </object>
         <object id="180">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass38" />
             <visual name="slap bass pull" />
         </object>
         <object id="181">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass39" />
             <visual name="slap bass mute" />
         </object>
         <object id="182">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass40" />
             <visual name="slap bass pick" />
         </object>
         <object id="183">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass41" />
             <visual name="super bass #2" />
         </object>
         <object id="184">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass42" />
             <visual name="sp_bass#3 soft" />
         </object>
         <object id="185">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass43" />
             <visual name="sp_bass#4 soft*2" />
         </object>
         <object id="186">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass44" />
             <visual name="sp_bass#5 attack" />
         </object>
         <object id="187">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass45" />
             <visual name="sp.bass#6 rezz" />
         </object>
         <object id="188">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass46" />
             <visual name="synth bass 1" />
         </object>
         <object id="189">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass47" />
             <visual name="synth bass 2 myon" />
         </object>
         <object id="190">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass48" />
             <visual name="synth bass #3 cho!" />
         </object>
         <object id="191">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass49" />
             <visual name="synth-wind-bass #4" />
         </object>
         <object id="192">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass50" />
             <visual name="synth bass #5 q2" />
         </object>
         <object id="193">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass51" />
             <visual name="old wood bass" />
         </object>
         <object id="194">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass52" />
             <visual name="w.bass bright" />
         </object>
         <object id="195">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass53" />
             <visual name="w.bass x2 bow" />
         </object>
         <object id="196">
-            <data group="BASS" />
+            <data group="BASS" valsoundid="bass54" />
             <visual name="Wood Bass 3" />
         </object>
         <object id="197">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass1" />
             <visual name="Brass strings" />
         </object>
         <object id="198">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass2" />
             <visual name="E.mute Trampet" />
         </object>
         <object id="199">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass3" />
             <visual name="HORN 2" />
         </object>
         <object id="200">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass4" />
             <visual name="Alpine Horn #3" />
         </object>
         <object id="201">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass5" />
             <visual name="Lead brass" />
         </object>
         <object id="202">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass6" />
             <visual name="Normal HORN" />
         </object>
         <object id="203">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass7" />
             <visual name="Synth Oboe" />
         </object>
         <object id="204">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass8" />
             <visual name="Oboe 2" />
         </object>
         <object id="205">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass9" />
             <visual name="Attack Brass (q2)" />
         </object>
         <object id="206">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass10" />
             <visual name="SAX" />
         </object>
         <object id="207">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass11" />
             <visual name="Soft brass(lead)" />
         </object>
         <object id="208">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass12" />
             <visual name="Synth Brass 1 OLD" />
         </object>
         <object id="209">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass13" />
             <visual name="Synth Brass 2 OLD" />
         </object>
         <object id="210">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass14" />
             <visual name="Synth Brass 3" />
         </object>
         <object id="211">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass15" />
             <visual name="Synth Brass #4" />
         </object>
         <object id="212">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass16" />
             <visual name="Syn.Brass 5(long)" />
         </object>
         <object id="213">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass17" />
             <visual name="Synth Brass 6" />
         </object>
         <object id="214">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass18" />
             <visual name="Trumpet" />
         </object>
         <object id="215">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass19" />
             <visual name="Trumpet 2" />
         </object>
         <object id="216">
-            <data group="BRASS" />
+            <data group="BRASS" valsoundid="brass20" />
             <visual name="Twin Horn (or OL=25)" />
         </object>
         <object id="217">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell1" />
             <visual name="Calm Bell" />
         </object>
         <object id="218">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell2" />
             <visual name="China Bell Double" />
         </object>
         <object id="219">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell3" />
             <visual name="Church Bell" />
         </object>
         <object id="220">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell4" />
             <visual name="Church Bell 2" />
         </object>
         <object id="221">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell5" />
             <visual name="Glocken 1" />
         </object>
         <object id="222">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell6" />
             <visual name="Harp #1" />
         </object>
         <object id="223">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell7" />
             <visual name="Harp #2" />
         </object>
         <object id="224">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell8" />
             <visual name="Kirakira" />
         </object>
         <object id="225">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell9" />
             <visual name="Marimba" />
         </object>
         <object id="226">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell10" />
             <visual name="Old Bell" />
         </object>
         <object id="227">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell11" />
             <visual name="Percus. Bell" />
         </object>
         <object id="228">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell12" />
             <visual name="Pretty Bell" />
         </object>
         <object id="229">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell13" />
             <visual name="Synth Bell #0" />
         </object>
         <object id="230">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell14" />
             <visual name="Synth Bell #1 o5" />
         </object>
         <object id="231">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell15" />
             <visual name="Synth Bell 2" />
         </object>
         <object id="232">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell16" />
             <visual name="Viberaphone" />
         </object>
         <object id="233">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell17" />
             <visual name="Twin Marinba" />
         </object>
         <object id="234">
-            <data group="BELL" />
+            <data group="BELL" valsoundid="bell18" />
             <visual name="Bellend" />
         </object>
         <object id="235">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar1" />
             <visual name="Guitar VeloLow" />
         </object>
         <object id="236">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar2" />
             <visual name="Guitar VeloHigh" />
         </object>
         <object id="237">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar3" />
             <visual name="A.Guitar #3" />
         </object>
         <object id="238">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar4" />
             <visual name="Cutting E.Guitar" />
         </object>
         <object id="239">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar5" />
             <visual name="Dis. Synth (old)" />
         </object>
         <object id="240">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar6" />
             <visual name="Dra-spi-Dis.G." />
         </object>
         <object id="241">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar7" />
             <visual name="Dis.Guitar 3-" />
         </object>
         <object id="242">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar8" />
             <visual name="Dis.Guitar 3+" />
         </object>
         <object id="243">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar9" />
             <visual name="Feed-back Guitar 1" />
         </object>
         <object id="244">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar10" />
             <visual name="Hard Dis. Guitar 1" />
         </object>
         <object id="245">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar11" />
             <visual name="Hard Dis.Guitar 3" />
         </object>
         <object id="246">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar12" />
             <visual name="Dis.Guitar '94 Hard" />
         </object>
         <object id="247">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar13" />
             <visual name="New Dis.Guitar 1" />
         </object>
         <object id="248">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar14" />
             <visual name="New Dis.Guitar 2" />
         </object>
         <object id="249">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar15" />
             <visual name="New Dis.Guitar 3" />
         </object>
         <object id="250">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar16" />
             <visual name="Overdrive.G. (AL=013)" />
         </object>
         <object id="251">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar17" />
             <visual name="METAL" />
         </object>
         <object id="252">
-            <data group="GUITAR" />
+            <data group="GUITAR" valsoundid="guitar18" />
             <visual name="Soft Dis.Guitar" />
         </object>
         <object id="253">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead1" />
             <visual name="Aco code" />
         </object>
         <object id="254">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead2" />
             <visual name="Analog synthe 1" />
         </object>
         <object id="255">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead3" />
             <visual name="Bosco-lead" />
         </object>
         <object id="256">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead4" />
             <visual name="Cosmo Lead" />
         </object>
         <object id="257">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead5" />
             <visual name="Cosmo Lead 2" />
         </object>
         <object id="258">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead6" />
             <visual name="Digital lead #1" />
         </object>
         <object id="259">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead7" />
             <visual name="Double sin wave" />
         </object>
         <object id="260">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead8" />
             <visual name="E.Organ 2 bright" />
         </object>
         <object id="261">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead9" />
             <visual name="E.Organ 2 (voice)" />
         </object>
         <object id="262">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead10" />
             <visual name="E.Organ 4 Click" />
         </object>
         <object id="263">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead11" />
             <visual name="E.Organ 5 Click" />
         </object>
         <object id="264">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead12" />
             <visual name="E.Organ 6" />
         </object>
         <object id="265">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead13" />
             <visual name="E.Organ 7 Church" />
         </object>
         <object id="266">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead14" />
             <visual name="Metal Lead" />
         </object>
         <object id="267">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead15" />
             <visual name="Metal Lead 3" />
         </object>
         <object id="268">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead16" />
             <visual name="MONO Lead" />
         </object>
         <object id="269">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead17" />
             <visual name="PSG like PC88 (long)" />
         </object>
         <object id="270">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead18" />
             <visual name="PSG Cut 1" />
         </object>
         <object id="271">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead19" />
             <visual name="Attack Synth" />
         </object>
         <object id="272">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead20" />
             <visual name="Sin wave" />
         </object>
         <object id="273">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead21" />
             <visual name="Synth, Bell 2" />
         </object>
         <object id="274">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead22" />
             <visual name="Chorus #2(Voice)+bell" />
         </object>
         <object id="275">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead23" />
             <visual name="Synth Cut 8-4" />
         </object>
         <object id="276">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead24" />
             <visual name="Synth long 8-4" />
         </object>
         <object id="277">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead25" />
             <visual name="ACO_Code #2" />
         </object>
         <object id="278">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead26" />
             <visual name="ACO_Code #3" />
         </object>
         <object id="279">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead27" />
             <visual name="Synth FB long 4" />
         </object>
         <object id="280">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead28" />
             <visual name="Synth FB long 5" />
         </object>
         <object id="281">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead29" />
             <visual name="Synth Lead 0" />
         </object>
         <object id="282">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead30" />
             <visual name="Synth Lead 1" />
         </object>
         <object id="283">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead31" />
             <visual name="Synth Lead 2" />
         </object>
         <object id="284">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead32" />
             <visual name="Synth Lead 3" />
         </object>
         <object id="285">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead33" />
             <visual name="Synth Lead 4" />
         </object>
         <object id="286">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead34" />
             <visual name="Synth Lead 5" />
         </object>
         <object id="287">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead35" />
             <visual name="Synth Lead 6" />
         </object>
         <object id="288">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead36" />
             <visual name="Synth Lead 7 (Soft FB)" />
         </object>
         <object id="289">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead37" />
             <visual name="Synth PSG" />
         </object>
         <object id="290">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead38" />
             <visual name="Synth PSG 2" />
         </object>
         <object id="291">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead39" />
             <visual name="Synth PSG 3" />
         </object>
         <object id="292">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead40" />
             <visual name="Synth PSG 4" />
         </object>
         <object id="293">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead41" />
             <visual name="Synth PSG 5" />
         </object>
         <object id="294">
-            <data group="LEAD" />
+            <data group="LEAD" valsoundid="lead42" />
             <visual name="Sin water synth" />
         </object>
         <object id="295">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano1" />
             <visual name="Aco Piano2 (Attack)" />
         </object>
         <object id="296">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano2" />
             <visual name="Backing 1 (Clav.)" />
         </object>
         <object id="297">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano3" />
             <visual name="Clav. coad" />
         </object>
         <object id="298">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano4" />
             <visual name="Deep Piano 1" />
         </object>
         <object id="299">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano5" />
             <visual name="Deep Piano 3" />
         </object>
         <object id="300">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano6" />
             <visual name="E.piano #2" />
         </object>
         <object id="301">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano7" />
             <visual name="E.piano #3" />
         </object>
         <object id="302">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano8" />
             <visual name="E.piano #4(2+)" />
         </object>
         <object id="303">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano9" />
             <visual name="E.(Bell)Piano #5" />
         </object>
         <object id="304">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano10" />
             <visual name="E.Piano #6" />
         </object>
         <object id="305">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano11" />
             <visual name="E.Piano #7" />
         </object>
         <object id="306">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano12" />
             <visual name="Harpci chord 1" />
         </object>
         <object id="307">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano13" />
             <visual name="Harpci 2" />
         </object>
         <object id="308">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano14" />
             <visual name="Piano1" />
         </object>
         <object id="309">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano15" />
             <visual name="Piano3" />
         </object>
         <object id="310">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano16" />
             <visual name="Piano4" />
         </object>
         <object id="311">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano17" />
             <visual name="Digital Piano #5" />
         </object>
         <object id="312">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano18" />
             <visual name="Piano 6 High-tone" />
         </object>
         <object id="313">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano19" />
             <visual name="Panning Harpci" />
         </object>
         <object id="314">
-            <data group="PIANO" />
+            <data group="PIANO" valsoundid="piano20" />
             <visual name="Yam Harpci chord" />
         </object>
         <object id="315">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="se1" />
             <visual name="S.E.(Detune is needed o2c)" />
         </object>
         <object id="316">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="se2" />
             <visual name="S.E. 2 o0-1-2" />
         </object>
         <object id="317">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="se3" />
             <visual name="S.E. 3(Feedin /noise add.)" />
         </object>
         <object id="318">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="special1" />
             <visual name="Digital 1" />
         </object>
         <object id="319">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="special2" />
             <visual name="Digital 2" />
         </object>
         <object id="320">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="special3" />
             <visual name="Digital[BAS] 3 o2-o3" />
         </object>
         <object id="321">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="special4" />
             <visual name="Digital[GTR] 3 o2-o3" />
         </object>
         <object id="322">
-            <data group="SPECIAL" />
+            <data group="SPECIAL" valsoundid="special5" />
             <visual name="Digital 4 o4a" />
         </object>
         <object id="323">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad1" />
             <visual name="Accordion1" />
         </object>
         <object id="324">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad2" />
             <visual name="Accordion2" />
         </object>
         <object id="325">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad3" />
             <visual name="Accordion3" />
         </object>
         <object id="326">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad4" />
             <visual name="Chorus #2(Voice)" />
         </object>
         <object id="327">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad5" />
             <visual name="Chorus #3" />
         </object>
         <object id="328">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad6" />
             <visual name="Chorus #4" />
         </object>
         <object id="329">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad7" />
             <visual name="F.Strings 1" />
         </object>
         <object id="330">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad8" />
             <visual name="F.Strings 2" />
         </object>
         <object id="331">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad9" />
             <visual name="F.Strings 3" />
         </object>
         <object id="332">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad10" />
             <visual name="F.Strings 4 (low)" />
         </object>
         <object id="333">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad11" />
             <visual name="Pizzicate#1(KOTO2)" />
         </object>
         <object id="334">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad12" />
             <visual name="sound truck modoki" />
         </object>
         <object id="335">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad13" />
             <visual name="Strings" />
         </object>
         <object id="336">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad14" />
             <visual name="Synth Accordion" />
         </object>
         <object id="337">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad15" />
             <visual name="Phaser synthe." />
         </object>
         <object id="338">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad16" />
             <visual name="FB Synth." />
         </object>
         <object id="339">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad17" />
             <visual name="Synth Strings MB" />
         </object>
         <object id="340">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad18" />
             <visual name="Synth Strings #2" />
         </object>
         <object id="341">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad19" />
             <visual name="Synth.Sweep Pad #1" />
         </object>
         <object id="342">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad20" />
             <visual name="Twin synth. #1 Calm" />
         </object>
         <object id="343">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad21" />
             <visual name="Twin synth. #2 FB" />
         </object>
         <object id="344">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad22" />
             <visual name="Twin synth. #3 FB" />
         </object>
         <object id="345">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad23" />
             <visual name="Vocoder voice1" />
         </object>
         <object id="346">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad24" />
             <visual name="Voice o3-o5" />
         </object>
         <object id="347">
-            <data group="STRINGS" />
+            <data group="STRINGS" valsoundid="strpad25" />
             <visual name="Voice' o3-o5" />
         </object>
         <object id="348">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind1" />
             <visual name="Clarinet #1" />
         </object>
         <object id="349">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind2" />
             <visual name="Clarinet #2 Brighter" />
         </object>
         <object id="350">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind3" />
             <visual name="E.Flute" />
         </object>
         <object id="351">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind4" />
             <visual name="E.Flute 2" />
         </object>
         <object id="352">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind5" />
             <visual name="Flute + Bell" />
         </object>
         <object id="353">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind6" />
             <visual name="Old flute" />
         </object>
         <object id="354">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind7" />
             <visual name="Whistle 1" />
         </object>
         <object id="355">
-            <data group="WIND" />
+            <data group="WIND" valsoundid="wind8" />
             <visual name="Whistle 2" />
         </object>
         <object id="356">
-            <data group="WORLD" />
+            <data group="WORLD" valsoundid="world1" />
             <visual name="Banjo (Harpci)" />
         </object>
         <object id="357">
-            <data group="WORLD" />
+            <data group="WORLD" valsoundid="world2" />
             <visual name="KOTO" />
         </object>
         <object id="358">
-            <data group="WORLD" />
+            <data group="WORLD" valsoundid="world3" />
             <visual name="Koto 2" />
         </object>
         <object id="359">
-            <data group="WORLD" />
+            <data group="WORLD" valsoundid="world4" />
             <visual name="Sitar 1" />
         </object>
         <object id="360">
-            <data group="WORLD" />
+            <data group="WORLD" valsoundid="world5" />
             <visual name="Shamisen 2" />
         </object>
         <object id="361">
-            <data group="WORLD" />
+            <data group="WORLD" valsoundid="world6" />
             <visual name="Shamisen 1" />
         </object>
         <object id="362">
-            <data group="WORLD" />
+            <data group="WORLD" valsoundid="world7" />
             <visual name="Synth Shamisen" />
         </object>
         <object id="363">

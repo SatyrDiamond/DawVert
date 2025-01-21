@@ -230,6 +230,11 @@
 		<file fileext=".png"/>
 	</plugin>
 
+	<plugin pluginset="main" name="domino">
+		<file fileext=".dms"/>
+		<bytes_header data="506f7274616c53657175656e636544617461"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

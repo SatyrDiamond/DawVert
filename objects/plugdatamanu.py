@@ -12,6 +12,8 @@ class valuepack:
 		self.automation = autodata
 		self.isbool = isbool
 
+	def __repr__(self): return '<'+str(self.value)+', ['+str(self.automation)+'], '+str(self.isbool)+'>'
+
 	def __int__(self): return int(self.value)
 
 	def __float__(self): return float(self.value)
@@ -43,10 +45,10 @@ class valuepack:
 	def calc_clamp(self, i_min, i_max):
 		self.value = xtramath.clamp(self.value, i_min, i_max)
 
-TOPLTR_DEBUG = False
-
 def get_storename(paramnum, extid):
 	return 'param'+str(paramnum) if paramnum > -1 else extid
+
+TOPLTR_DEBUG = False
 
 class plug_manu:
 	def __init__(self, plugin_obj, convproj_obj, pluginid):
@@ -56,18 +58,21 @@ class plug_manu:
 		self.cur_params = {}
 
 	def from_wet(self, storename, fb):
-		if TOPLTR_DEBUG: print('	< wet|'+storename)
+		auto_obj = self.convproj_obj.automation.pop_f(['slot', self.pluginid, 'wet'])
+		if TOPLTR_DEBUG: print('	< wet   '+str(bool(auto_obj))[0]+'|'+storename)
 		self.cur_params[storename] = valuepack(
 			self.plugin_obj.params_slot.pop('wet',fb).value, 
-			self.convproj_obj.automation.pop_f(['slot', self.pluginid, 'wet']),
+			auto_obj,
 			False)
 		return self.cur_params[storename]
 
 	def from_param(self, storename, paramname, fb):
-		if TOPLTR_DEBUG: print('	< param|'+storename)
+		auto_obj = self.convproj_obj.automation.pop_f(['plugin', self.pluginid, paramname])
+		if TOPLTR_DEBUG: print('	< param '+str(bool(auto_obj))[0]+'|'+storename+'>'+paramname)
 		self.cur_params[storename] = valuepack(
 			self.plugin_obj.params.pop(paramname,fb).value, 
-			self.convproj_obj.automation.pop_f(['plugin', self.pluginid, paramname]), False)
+			auto_obj,
+			False)
 		return self.cur_params[storename]
 
 	def from_dataval(self, storename, paramname, fb):
@@ -80,7 +85,7 @@ class plug_manu:
 		return self.cur_params[storename]
 
 	def to_param(self, storename, paramname, valuename):
-		if TOPLTR_DEBUG: print('	> param|'+paramname+'<'+storename)
+		if TOPLTR_DEBUG: print('	> param  |'+paramname+'<'+storename)
 		if storename in self.cur_params: 
 			valstored = self.cur_params[storename]
 			valauto = valstored.automation
@@ -93,7 +98,7 @@ class plug_manu:
 		return False
 
 	def to_wet(self, storename):
-		if TOPLTR_DEBUG: print('	> wet|'+storename)
+		if TOPLTR_DEBUG: print('	> wet    |'+storename)
 		if storename in self.cur_params: 
 			valstored = self.cur_params[storename]
 			valauto = valstored.automation
@@ -104,12 +109,12 @@ class plug_manu:
 			param_obj.visual.name = 'Wet'
 
 	def to_value(self, value, paramid, valuename, valtype):
-		if TOPLTR_DEBUG: print('	> param|'+paramid+'%'+str(value))
+		if TOPLTR_DEBUG: print('	> param  |'+paramid+'%'+str(value))
 		param_obj = self.plugin_obj.params.add(paramid, value, valtype)
 		if valuename: param_obj.visual.name = valuename
 
 	def calc(self, storename, mathtype, val1, val2, val3, val4):
-		if TOPLTR_DEBUG: print('	calc|'+'|'.join([str(x) for x in [storename, mathtype, val1, val2, val3, val4]]))
+		if TOPLTR_DEBUG: print('	calc     |'+'|'.join([str(x) for x in [storename, mathtype, val1, val2, val3, val4]]))
 		if storename in self.cur_params: 
 			self.cur_params[storename].calc(mathtype, val1, val2, val3, val4)
 
@@ -120,6 +125,7 @@ class plug_manu:
 	# --------------------------- dataset ---------------------------
 
 	def dset_remap_ext_to_cvpj__pre__one(self, d_id, d_cat, d_item, ext_type):
+		if TOPLTR_DEBUG: print('--------------- dset_remap_ext_to_cvpj__pre__one')
 		for paramid, dset_param in globalstore.dataset.get_params(d_id, d_cat, d_item):
 			paramnum, visname = dset_param.get_extplug_info(ext_type)
 			vp = self.from_param(paramid, 'ext_param_'+str(paramnum), dset_param.get_def_one())
@@ -130,6 +136,7 @@ class plug_manu:
 		self.plugin_obj.params.clear()
 
 	def dset_remap_ext_to_cvpj__pre(self, d_id, d_cat, d_item, ext_type):
+		if TOPLTR_DEBUG: print('--------------- dset_remap_ext_to_cvpj__pre')
 		for paramid, dset_param in globalstore.dataset.get_params(d_id, d_cat, d_item):
 			paramnum, visname = dset_param.get_extplug_info(ext_type)
 			vp = self.from_param(paramid, 'ext_param_'+str(paramnum), dset_param.get_def_one())
@@ -140,11 +147,13 @@ class plug_manu:
 		self.plugin_obj.params.clear()
 
 	def dset_remap_ext_to_cvpj__post(self, d_id, d_cat, d_item, ext_type):
+		if TOPLTR_DEBUG: print('--------------- dset_remap_ext_to_cvpj__post')
 		for paramid, dset_param in globalstore.dataset.get_params(d_id, d_cat, d_item):
 			paramnum, visname = dset_param.get_extplug_info(ext_type)
 			self.to_param(paramid, paramid, visname)
 
 	def dset_remap_cvpj_to_ext__pre__one(self, d_id, d_cat, d_item, ext_type):
+		if TOPLTR_DEBUG: print('--------------- dset_remap_cvpj_to_ext__pre__one')
 		for paramid, dset_param in globalstore.dataset.get_params(d_id, d_cat, d_item):
 			paramnum, visname = dset_param.get_extplug_info(ext_type)
 			vp = self.from_param(paramid, paramid, dset_param.defv)
@@ -156,7 +165,7 @@ class plug_manu:
 		self.plugin_obj.params.clear()
 
 	def dset_remap_cvpj_to_ext__pre(self, d_id, d_cat, d_item, ext_type):
-
+		if TOPLTR_DEBUG: print('--------------- dset_remap_cvpj_to_ext__pre')
 		for paramid, dset_param in globalstore.dataset.get_params(d_id, d_cat, d_item):
 			paramnum, visname = dset_param.get_extplug_info(ext_type)
 			vp = self.from_param(paramid, paramid, dset_param.defv)
@@ -168,12 +177,14 @@ class plug_manu:
 		self.plugin_obj.params.clear()
 
 	def dset_remap_cvpj_to_ext__post(self, d_id, d_cat, d_item, ext_type):
+		if TOPLTR_DEBUG: print('--------------- dset_remap_cvpj_to_ext__post')
 		for paramid, dset_param in globalstore.dataset.get_params(d_id, d_cat, d_item):
 			paramnum, visname = dset_param.get_extplug_info(ext_type)
 			if paramnum > -1:
-				self.to_param('param'+str(paramnum), 'ext_param_'+str(paramnum), visname)
+				self.to_param(paramid, 'ext_param_'+str(paramnum), visname)
 
 	def dset_remap_cvpj_to_ext_opt(self, d_id, d_cat, d_item, ext_type):
+		if TOPLTR_DEBUG: print('--------------- dset_remap_cvpj_to_ext_opt')
 		foundparams = self.plugin_obj.params.list()
 		auto_obj = self.convproj_obj.automation
 		for paramid, dset_param in globalstore.dataset.get_params(d_id, d_cat, d_item):
@@ -187,6 +198,7 @@ class plug_manu:
 	# --------------------------- remap ---------------------------
 
 	def remap_ext_to_cvpj__pre__one(self, remapname, ext_type):
+		if TOPLTR_DEBUG: print('--------------- remap_ext_to_cvpj__pre__one')
 		prm = globalstore.paramremap.get(remapname)
 		if prm:
 			for p_cvpj, p_ext in prm.iter_cvpj_ext(ext_type):
@@ -199,6 +211,7 @@ class plug_manu:
 		self.plugin_obj.params.clear()
 
 	def remap_ext_to_cvpj__pre(self, remapname, ext_type):
+		if TOPLTR_DEBUG: print('--------------- remap_ext_to_cvpj__pre')
 		prm = globalstore.paramremap.get(remapname)
 		if prm:
 			for p_cvpj, p_ext in prm.iter_cvpj_ext(ext_type):
@@ -211,6 +224,7 @@ class plug_manu:
 		self.plugin_obj.params.clear()
 
 	def remap_ext_to_cvpj__post(self, remapname, ext_type):
+		if TOPLTR_DEBUG: print('--------------- remap_ext_to_cvpj__post')
 		prm = globalstore.paramremap.get(remapname)
 		if prm:
 			for p_cvpj, p_ext in prm.iter_cvpj_ext(ext_type):
@@ -219,6 +233,7 @@ class plug_manu:
 				self.to_param(storename, p_cvpj['paramid'], p_cvpj['visname'])
 
 	def remap_cvpj_to_ext__pre__one(self, remapname, ext_type):
+		if TOPLTR_DEBUG: print('--------------- remap_cvpj_to_ext__pre__one')
 		prm = globalstore.paramremap.get(remapname)
 		if prm:
 			for p_cvpj, p_ext in prm.iter_cvpj_ext(ext_type):
@@ -231,6 +246,7 @@ class plug_manu:
 				yield vp, p_cvpj['extid'], paramnum
 
 	def remap_cvpj_to_ext__pre(self, remapname, ext_type):
+		if TOPLTR_DEBUG: print('--------------- remap_cvpj_to_ext__pre')
 		prm = globalstore.paramremap.get(remapname)
 		if prm:
 			for p_cvpj, p_ext in prm.iter_cvpj_ext(ext_type):
@@ -245,6 +261,7 @@ class plug_manu:
 			self.plugin_obj.params.clear()
 
 	def remap_cvpj_to_ext__post(self, remapname, ext_type):
+		if TOPLTR_DEBUG: print('--------------- remap_cvpj_to_ext__post')
 		prm = globalstore.paramremap.get(remapname)
 		if prm:
 			for p_cvpj, p_ext in prm.iter_cvpj_ext(ext_type):
@@ -253,6 +270,7 @@ class plug_manu:
 					self.to_param('param'+str(paramnum), 'ext_param_'+str(paramnum), p_ext['visname'])
 
 	def remap_cvpj_to_ext_opt(self, remapname, ext_type):
+		if TOPLTR_DEBUG: print('--------------- remap_cvpj_to_ext_opt')
 		prm = globalstore.paramremap.get(remapname)
 		foundparams = self.plugin_obj.params.list()
 		auto_obj = self.convproj_obj.automation

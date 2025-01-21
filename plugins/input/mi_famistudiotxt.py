@@ -136,6 +136,7 @@ def create_inst(convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_num):
 
 	inst_obj.visual.name = instname
 	inst_obj.visual.from_dset('famistudio', 'chip', WaveType, False)
+	if fst_Instrument.Color: inst_obj.visual.color.set_hex(fst_Instrument.Color)
 
 	if WaveType in ['VRC7FM']: inst_obj.datavals.add('middlenote', 12)
 
@@ -247,7 +248,7 @@ def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
 
 						if notedata.SlideTarget:
 							t_slidenote = notedata.SlideTarget + 24
-							cvpj_notelist.last_add_slide(0, t_duration, t_slidenote, None, {})
+							cvpj_notelist.last_add_slide(0, t_duration, t_slidenote, 1, {})
 							autopoint_obj = cvpj_notelist.last_add_auto('pitch')
 							autopoint_obj = cvpj_notelist.last_add_auto('pitch')
 							autopoint_obj.pos = t_duration
@@ -305,6 +306,14 @@ class input_famistudio(plugins.base):
 		globalstore.dataset.load('famistudio', './data_main/dataset/famistudio.dset')
 		samplefolder = dawvert_intent.path_samples['extracted']
 
+		defualt_pattern_color = None
+		def_ds_obj = globalstore.dataset.get_obj('famistudio', 'defualt', 'pattern')
+		if def_ds_obj: defualt_pattern_color = def_ds_obj.visual.color
+
+		defualt_track_color = None
+		def_ds_obj = globalstore.dataset.get_obj('famistudio', 'defualt', 'track')
+		if def_ds_obj: defualt_track_color = def_ds_obj.visual.color
+
 		project_obj = proj_famistudiotxt.famistudiotxt_project()
 
 		if dawvert_intent.input_mode == 'file':
@@ -361,7 +370,7 @@ class input_famistudio(plugins.base):
 
 			playlist_obj = convproj_obj.playlist__add(channum, 1, True)
 			playlist_obj.visual.name = fst_channel.Type
-			playlist_obj.visual.color.set_float([0.13, 0.15, 0.16])
+			playlist_obj.visual.color.set_int(defualt_track_color)
 
 			modpatbpm = {}
 			for t, i in fst_channel.Instances.items():
@@ -371,8 +380,10 @@ class input_famistudio(plugins.base):
 			for patid, patdata in fst_channel.Patterns.items():
 				cvpj_patid = fst_channel.Type+'-'+patid+'-'+str(fst_currentsong.PatternSettings.bpm)
 				nle_obj = convproj_obj.notelistindex__add(cvpj_patid)
-				nle_obj.visual.name = patid+' ('+fst_channel.Type+')'
-				nle_obj.visual.color.set_float([0.13, 0.15, 0.16])
+				visual_obj = nle_obj.visual
+				visual_obj.name = patid+' ('+fst_channel.Type+')'
+				if patdata.Color: visual_obj.color.set_hex(patdata.Color)
+				else: visual_obj.color.set_int(defualt_pattern_color)
 				parse_notes(nle_obj.notelist, patdata.Notes, fst_channel.Type, NoteLength, project_obj.Arpeggios)
 
 				if patid in modpatbpm:
@@ -382,7 +393,7 @@ class input_famistudio(plugins.base):
 						cvpj_patid = fst_channel.Type+'-'+patid+'-'+str(pattemp)
 						nle_obj = convproj_obj.notelistindex__add(cvpj_patid)
 						nle_obj.visual.name = patid+' ('+fst_channel.Type+')'
-						nle_obj.visual.color.set_float([0.13, 0.15, 0.16])
+						nle_obj.visual.color.set_int(defualt_pattern_color)
 						parse_notes(nle_obj.notelist, patdata.Notes, fst_channel.Type, NoteLength*notemul, project_obj.Arpeggios)
 
 			for pattime, patid in fst_channel.Instances.items():

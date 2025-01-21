@@ -102,7 +102,6 @@ class input_ceol(plugins.base):
 		convproj_obj.set_timings(4, False)
 
 		globalstore.dataset.load('boscaceoil', './data_main/dataset/boscaceoil.dset')
-		globalstore.idvals.load('boscaceoil', './data_main/idvals/boscaceoil_inst.csv')
 
 		# ---------- Master FX ----------
 		convproj_obj.track_master.params.add('vol', 1, 'float')
@@ -135,18 +134,18 @@ class input_ceol(plugins.base):
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
 			else: 
+				strinst = str(ceol_inst_obj.inst)
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.color.set_float(cvpj_instcolor)
-				inst_obj.from_dataset("boscaceoil", 'inst', str(ceol_inst_obj.inst), False)
-
-				idval_inst = globalstore.idvals.get('boscaceoil')
-				opm_obj = fm_opm.opm_inst()
-				if idval_inst: valsoundid = idval_inst.get_idval(str(ceol_inst_obj.inst), 'valsoundid')
-				opm_obj.from_valsound(valsoundid)
-
-				plugin_obj, synthid = opm_obj.to_cvpj_genid(convproj_obj)
-				inst_obj.plugslots.set_synth(synthid)
-
+				inst_obj.from_dataset("boscaceoil", 'inst', strinst, False)
+				inst_ds_obj = globalstore.dataset.get_obj('boscaceoil', 'inst', strinst)
+				if inst_ds_obj:
+					if 'valsoundid' in inst_ds_obj.data: 
+						valsoundid = inst_ds_obj.data['valsoundid']
+						opm_obj = fm_opm.opm_inst()
+						opm_obj.from_valsound(valsoundid)
+						plugin_obj, synthid = opm_obj.to_cvpj_genid(convproj_obj)
+						inst_obj.plugslots.set_synth(synthid)
 
 			inst_objs[ceol_inst_obj.inst] = inst_obj
 			if ceol_inst_obj.inst == 363: t_key_offset.append(60)

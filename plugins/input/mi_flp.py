@@ -173,9 +173,9 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 
 	sre_obj.reverse = bool(fl_channel_obj.fxflags & 2)
 	sre_obj.data['swap_stereo'] = bool(fl_channel_obj.fxflags & 256)
-	sre_obj.data['remove_dc'] = fl_channel_obj.params.remove_dc
-	sre_obj.data['normalize'] = fl_channel_obj.params.normalize
-	sre_obj.data['reversepolarity'] = fl_channel_obj.params.reversepolarity
+	sre_obj.data['remove_dc'] = bool(fl_channel_obj.params.remove_dc)
+	sre_obj.data['normalize'] = bool(fl_channel_obj.params.normalize)
+	sre_obj.data['reversepolarity'] = bool(fl_channel_obj.params.reversepolarity)
 	sre_obj.interpolation = "sinc" if (fl_channel_obj.sampleflags & 1) else "none"
 
 	if sampleref_obj.fileref.file.extension.lower() != 'ds':
@@ -550,8 +550,8 @@ class input_flp(plugins.base):
 					if fl_note.finep != 120: note_extra['finepitch'] = (fl_note.finep-120)*10
 					if fl_note.finep != 64: note_extra['release'] = fl_note.rel/128
 					if fl_note.finep != 64: note_extra['pan'] = (fl_note.pan-64)/64
-					if fl_note.finep != 128: note_extra['cutoff'] = fl_note.mod_x/255
-					if fl_note.finep != 128: note_extra['reso'] = fl_note.mod_y/255
+					if fl_note.finep != 128: note_extra['mod_x'] = fl_note.mod_x/255
+					if fl_note.finep != 128: note_extra['mod_y'] = fl_note.mod_y/255
 					notechan = data_bytes.splitbyte(fl_note.midich)[1]
 					if notechan: note_extra['channel'] = notechan+1
 
@@ -714,20 +714,20 @@ class input_flp(plugins.base):
 				if fl_timemark.type == 8:
 					convproj_obj.timesig_auto.add_point(fl_timemark.pos, [fl_timemark.numerator, fl_timemark.denominator])
 				else:
-					timemarker_obj = convproj_obj.timemarker__add()
-					timemarker_obj.visual.name = fl_timemark.name
-					timemarker_obj.position = fl_timemark.pos
 					if fl_timemark.type == 5: 
-						convproj_obj.transport.start_pos = timemarker_obj.position
-					if fl_timemark.type == 4: 
-						timemarker_obj.type = 'loop'
-						convproj_obj.transport.loop_start = timemarker_obj.position
+						convproj_obj.transport.start_pos = fl_timemark.pos
+					elif fl_timemark.type == 4: 
+						convproj_obj.transport.loop_start = fl_timemark.pos
 						convproj_obj.transport.loop_active = True
-					if fl_timemark.type == 1: timemarker_obj.type = 'markerloop'
-					if fl_timemark.type == 2: timemarker_obj.type = 'markerskip'
-					if fl_timemark.type == 3: timemarker_obj.type = 'pause'
-					if fl_timemark.type == 9: timemarker_obj.type = 'punchin'
-					if fl_timemark.type == 10: timemarker_obj.type = 'punchout'
+					else:
+						timemarker_obj = convproj_obj.timemarker__add()
+						timemarker_obj.visual.name = fl_timemark.name
+						timemarker_obj.position = fl_timemark.pos
+						if fl_timemark.type == 1: timemarker_obj.type = 'markerloop'
+						elif fl_timemark.type == 2: timemarker_obj.type = 'markerskip'
+						elif fl_timemark.type == 3: timemarker_obj.type = 'pause'
+						elif fl_timemark.type == 9: timemarker_obj.type = 'punchin'
+						elif fl_timemark.type == 10: timemarker_obj.type = 'punchout'
 
 		
 		#print(flp_obj.initfxvals.initvals)

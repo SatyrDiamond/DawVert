@@ -1,4 +1,12 @@
 <dataset>
+    <category id="defualt">
+        <object id="pattern">
+            <visual color="#212628" />
+        </object>
+        <object id="track">
+            <visual color="#212628" />
+        </object>
+    </category>
     <category id="chip">
         <object id="DPCM">
             <visual name="DPCM" color="122.4|211.65|124.95" />

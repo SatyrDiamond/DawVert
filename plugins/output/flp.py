@@ -36,6 +36,11 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 	fl_channel_obj.fxflags += int(sre_obj.reverse)<<1
 	fl_channel_obj.fxflags += int(sre_obj.get_data('swap_stereo', False))<<8
 
+	fl_channel_obj.params.remove_dc = int(sre_obj.get_data('remove_dc', False))
+	fl_channel_obj.params.normalize = int(sre_obj.get_data('normalize', False))
+	fl_channel_obj.params.reversepolarity = int(sre_obj.get_data('reversepolarity', False))
+	fl_channel_obj.sampleflags += int(sre_obj.interpolation!='none')
+
 	sre_obj.convpoints_percent(sampleref_obj)
 	if sre_obj.end>sre_obj.start:
 		fl_channel_obj.params.start = sre_obj.start
@@ -59,6 +64,8 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		else: fl_channel_obj.params.stretchingmode = 6
 	elif sre_obj.stretch.algorithm == 'elastique_pro':
 		fl_channel_obj.params.stretchingmode = -2
+		if 'formant' in sre_obj.stretch.params:
+			fl_channel_obj.params.stretchingformant = sre_obj.stretch.params['formant']
 	elif sre_obj.stretch.algorithm == 'stretch':
 		fl_channel_obj.params.stretchingmode = -1
 	else:
@@ -265,8 +272,8 @@ class output_cvpjs(plugins.base):
 							if t_extra:
 								if 'finepitch' in t_extra: fl_note_obj.finep = int((t_extra['finepitch']/10)+120)
 								if 'release' in t_extra: fl_note_obj.rel = int(xtramath.clamp(t_extra['release'],0,1)*128)
-								if 'cutoff' in t_extra: fl_note_obj.mod_x = int(xtramath.clamp(t_extra['cutoff'],0,1)*255)
-								if 'reso' in t_extra: fl_note_obj.mod_y = int(xtramath.clamp(t_extra['reso'],0,1)*255)
+								if 'mod_x' in t_extra: fl_note_obj.mod_x = int(xtramath.clamp(t_extra['mod_x'],0,1)*255)
+								if 'mod_y' in t_extra: fl_note_obj.mod_y = int(xtramath.clamp(t_extra['mod_y'],0,1)*255)
 								if 'pan' in t_extra: fl_note_obj.pan = int((xtramath.clamp(float(t_extra['pan']),-1,1)*64)+64)
 							else:
 								fl_note_obj.finep = 120

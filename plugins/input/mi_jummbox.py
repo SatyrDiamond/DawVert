@@ -180,6 +180,16 @@ def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
 					autopoint_obj.value = point['pitchBend']
 
 def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
+
+	if 'chord type' in bb_fx.used:
+		if bb_fx.chord == 'arpeggio' and bb_fx.arpeggioSpeed:
+			nfx_plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'arpeggiator', None)
+			nfx_plugin_obj.role = 'notefx'
+			nfx_plugin_obj.datavals.add('mode', 'sort')
+			timing_obj = nfx_plugin_obj.timing_add('main')
+			timing_obj.set_steps((1/4)/(bb_fx.arpeggioSpeed/12), convproj_obj)
+			inst_obj.plugslots.slots_notes.append(pluginid)
+
 	if 'echo' in bb_fx.used:
 		from objects.inst_params import fx_delay
 		fx_pluginid = cvpj_instid+'_echo'
@@ -196,7 +206,7 @@ def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 	if 'distortion' in bb_fx.used:
 		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'distortion', None)
 		fxplugin_obj.visual.name = 'Distortion'
-		param_obj = fxplugin_obj.params.add_named('amount', bb_fx.distortion/100, 'float', 'Amount')
+		fxplugin_obj.params.add_named('amount', bb_fx.distortion/100, 'float', 'Amount')
 	
 	if 'bitcrusher' in bb_fx.used:
 		fxplugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'bitcrush', None)
@@ -366,6 +376,17 @@ class input_jummbox(plugins.base):
 				
 							if bb_inst.data['algorithm'] == 'Custom': plugin_obj.datavals.add('customAlgorithm', bb_inst.data['customAlgorithm'])
 
+						if bb_inst.type == 'supersaw':
+							plugin_obj.params.add('pulseWidth', bb_inst.data['pulseWidth'], 'float')
+							plugin_obj.params.add('decimalOffset', bb_inst.data['decimalOffset'], 'float')
+							plugin_obj.params.add('dynamism', bb_inst.data['dynamism'], 'float')
+							plugin_obj.params.add('spread', bb_inst.data['spread'], 'float')
+							plugin_obj.params.add('shape', bb_inst.data['shape'], 'float')
+
+						if bb_inst.type == 'noise':
+							plugin_obj.datavals.add('wave', bb_inst.data['wave'])
+							plugin_obj.datavals.add('unison', bb_inst.data['unison'])
+
 					inst_obj.visual.color.set_float(bb_color)
 				
 					inst_obj.params.add('vol', cvpj_volume, 'float')
@@ -379,7 +400,11 @@ class input_jummbox(plugins.base):
 							lfo_obj.time.set_seconds(0.7*(1/bb_fx.vibratoSpeed))
 							lfo_obj.amount = bb_fx.vibratoDepth
 			
-					get_asdr(plugin_obj, bb_inst, jummbox_obj)
+					noenv = False
+					if 'chord type' in bb_fx.used:
+						if (bb_fx.chord == 'arpeggio' and bb_fx.arpeggioSpeed): noenv = True
+
+					if not noenv: get_asdr(plugin_obj, bb_inst, jummbox_obj)
 					plugin_obj.role = 'synth'
 
 				for patnum, bb_pat in enumerate(bb_chan.patterns):

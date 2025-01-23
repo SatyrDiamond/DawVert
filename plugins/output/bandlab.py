@@ -145,8 +145,6 @@ class output_bandlab(plugins.base):
 				blx_track.volume = track_obj.params.get('vol', 1).value
 				blx_track.pan = track_obj.params.get('pan', 0).value
 
-				make_plugins_fx(convproj_obj, blx_track.effects, track_obj.plugslots.slots_audio)
-
 				if track_obj.type == 'audio':
 					blx_track.effectsData = {"displayName": None, "link": None, "originalPresetId": None}
 					blx_track.autoPitch = proj_bandlab.bandlab_autoPitch(None)
@@ -191,6 +189,8 @@ class output_bandlab(plugins.base):
 						blx_region.file = uuiddata+'.mid'
 						blx_track.regions.append(blx_region)
 
+				make_plugins_fx(convproj_obj, blx_track.autoPitch, blx_track.effects, track_obj.plugslots.slots_audio)
+
 				project_obj.tracks.append(blx_track)
 
 			tracknum += 1
@@ -227,12 +227,24 @@ def do_automation(convproj_obj, autoloc, blx_auto):
 			for autopoint in ap_d.nopl_points:
 				blx_auto.add_point(autopoint.pos, autopoint.value)
 
-def make_plugins_fx(convproj_obj, effects, fxslots_audio):
+def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio):
 	from objects.file_proj import proj_bandlab
 	for pluginid in fxslots_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
-			if plugin_obj.check_wildmatch('native', 'bandlab', None):
+			if plugin_obj.check_wildmatch('native', 'bandlab', 'autoPitch'):
+				fx_on, fx_wet = plugin_obj.fxdata_get()
+				if autoPitch:
+					autoPitch.responseTime = plugin_obj.params.get('responseTime', 0).value
+					autoPitch.algorithm = plugin_obj.datavals.get('algorithm', '')
+					autoPitch.scale = plugin_obj.datavals.get('scale', '')
+					autoPitch.slug = plugin_obj.datavals.get('slug', '')
+					autoPitch.targetNotes = plugin_obj.datavals.get('targetNotes', [])
+					autoPitch.tonic = plugin_obj.datavals.get('tonic', '')
+					autoPitch.bypass = not fx_on
+					autoPitch.mix = fx_wet
+
+			elif plugin_obj.check_wildmatch('native', 'bandlab', None):
 				blx_effect = proj_bandlab.bandlab_effect(None)
 				blx_effect.slug = plugin_obj.type.subtype
 

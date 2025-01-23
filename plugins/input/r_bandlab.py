@@ -66,20 +66,31 @@ class input_bandlab(plugins.base):
 			track_obj.params.add('vol', blx_auxChannel.returnLevel, 'float')
 
 		for blx_sample in project_obj.samples:
+			add_sample(convproj_obj, dawvert_intent, blx_sample.id, sampledurs)
 
-			filename = os.path.dirname(dawvert_intent.input_file)
-			filename = os.path.join(filename, 'Assets', 'Audio', blx_sample.id+'.*')
-
-			for file in glob.glob(filename):
-				sampleref_obj = convproj_obj.sampleref__add(blx_sample.id, file, 'win')
-				sampleref_obj.convert(['wav'], dawvert_intent.path_samples['extracted'])
-				sampledurs[blx_sample.id] = sampleref_obj.dur_sec
-				break
-
-		for blx_track in project_obj.tracks:
-
+		blx_tracks = sorted(project_obj.tracks, key=lambda x: x.order, reverse=True)
+		
+		for blx_track in blx_tracks:
 			if blx_track.type == 'voice':
 				track_obj = convproj_obj.track__add(blx_track.id, 'audio', 1, False)
+			else:
+				track_obj = convproj_obj.track__add(blx_track.id, 'instrument', 1, False)
+
+			if blx_track.autoPitch:
+				autoPitch = blx_track.autoPitch
+				fxid = blx_track.id+'_autopitch'
+				plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'bandlab', 'autoPitch')
+				plugin_obj.role = 'fx'
+				plugin_obj.params.add('responseTime', autoPitch.responseTime, 'float')
+				plugin_obj.datavals.add('algorithm', autoPitch.algorithm)
+				plugin_obj.datavals.add('scale', autoPitch.scale)
+				plugin_obj.datavals.add('slug', autoPitch.slug)
+				plugin_obj.datavals.add('targetNotes', autoPitch.targetNotes)
+				plugin_obj.datavals.add('tonic', autoPitch.tonic)
+				plugin_obj.fxdata_add(not autoPitch.bypass, autoPitch.mix)
+				track_obj.plugin_autoplace(plugin_obj, fxid)
+
+			if blx_track.type == 'voice':
 				do_track_common(convproj_obj, track_obj, blx_track)
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_audio()
@@ -103,20 +114,46 @@ class input_bandlab(plugins.base):
 					placement_obj.fade_out.set_dur(blx_region.fadeOut, 'seconds')
 
 			else:
-				track_obj = convproj_obj.track__add(blx_track.id, 'instrument', 1, False)
 				do_track_common(convproj_obj, track_obj, blx_track)
+				if blx_track.type == 'creators-kit':
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+					track_obj.plugslots.set_synth(pluginid)
+					samplerkit = blx_track.samplerKit
+					if samplerkit:
+						if 'kit' in samplerkit:
+							kitdata = samplerkit['kit']
+							if 'layers' in kitdata:
+								for layer in kitdata['layers']:
+									pitch = layer['pitch'] if 'pitch' in layer else 60
+									minKeyRange = layer['minKeyRange'] if 'minKeyRange' in layer else pitch
+									maxKeyRange = layer['maxKeyRange'] if 'maxKeyRange' in layer else pitch
+
+									sp_obj = plugin_obj.sampleregion_add(minKeyRange-60, maxKeyRange-60, pitch-60, None)
+									sp_obj.vel_min = layer['maxVelRange']/127 if 'maxVelRange' in layer else 1
+									sp_obj.vel_max = layer['minVelRange']/127 if 'minVelRange' in layer else 0
+									sp_obj.vol = layer['volume'] if 'volume' in layer else 0
+
+									if 'sampleId' in layer:
+										add_sample(convproj_obj, dawvert_intent, layer['sampleId'], sampledurs)
+
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.time.position_real = blx_region.startPosition
 					placement_obj.time.duration_real = blx_region.endPosition-blx_region.startPosition
 					if blx_region.name: placement_obj.visual.name = blx_region.name
-
 					filename = os.path.dirname(dawvert_intent.input_file)
 					midipath = os.path.join(filename, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
-			
 					do_loop(placement_obj.time, blx_region, tempomul, 1)
-
 					placement_obj.notelist.midi_from(midipath)
+
+def add_sample(convproj_obj, dawvert_intent, sampleid, sampledurs):
+	filename = os.path.dirname(dawvert_intent.input_file)
+	filename = os.path.join(filename, 'Assets', 'Audio', sampleid+'.*')
+	for file in glob.glob(filename):
+		sampleref_obj = convproj_obj.sampleref__add(sampleid, file, 'win')
+		sampleref_obj.convert(['wav'], dawvert_intent.path_samples['extracted'])
+		sampledurs[sampleid] = sampleref_obj.dur_sec
+		break
 
 def do_loop(time_obj, blx_region, tempomul, speed):
 	loopLength = (blx_region.loopLength/tempomul)*8

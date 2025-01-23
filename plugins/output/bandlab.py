@@ -6,6 +6,7 @@ import json
 import uuid
 import os
 import shutil
+from objects import globalstore
 from functions import data_values
 from functions import xtramath
 
@@ -38,6 +39,8 @@ class output_bandlab(plugins.base):
 		convproj_obj.change_timings(1, True)
 		
 		project_obj = proj_bandlab.bandlab_project()
+
+		globalstore.dataset.load('bandlab', './data_main/dataset/bandlab.dset')
 
 		auxchannel_obj = proj_bandlab.bandlab_auxChannel(None)
 		auxchannel_obj.id = 'aux1'
@@ -233,18 +236,28 @@ def make_plugins_fx(convproj_obj, effects, fxslots_audio):
 				blx_effect = proj_bandlab.bandlab_effect(None)
 				blx_effect.slug = plugin_obj.type.subtype
 
-				paramlist = plugin_obj.datavals.list()
-				if paramlist:
-					for param_id in paramlist:
-						blx_effect.params[param_id] = plugin_obj.datavals.get(param_id, '')
-						blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
-
-				paramlist = plugin_obj.params.list()
-				if paramlist:
-					for param_id in paramlist:
-						blx_effect.params[param_id] = plugin_obj.params.get(param_id, 0).value
-						blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
-						do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id])
+				dseto_obj = globalstore.dataset.get_obj('bandlab', 'fx', blx_effect.slug)
+				if dseto_obj:
+					for param_id, dset_param in dseto_obj.params.iter():
+						if not dset_param.noauto: 
+							blx_effect.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value
+							blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
+							do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id])
+						else:
+							blx_effect.params[param_id] = plugin_obj.datavals.get(param_id, dset_param.defv)
+							blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
+				else:
+					dvallist = plugin_obj.datavals.list()
+					paramlist = plugin_obj.params.list()
+					if dvallist:
+						for param_id in dvallist:
+							blx_effect.params[param_id] = plugin_obj.datavals.get(param_id, '')
+							blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
+					if paramlist:
+						for param_id in paramlist:
+							blx_effect.params[param_id] = plugin_obj.params.get(param_id, 0).value
+							blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
+							do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id])
 
 				effects.append(blx_effect)
 

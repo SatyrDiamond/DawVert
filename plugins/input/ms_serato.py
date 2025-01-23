@@ -5,6 +5,7 @@ import plugins
 import urllib.parse
 import os
 import copy
+import json
 
 contentpath = os.path.join(os.path.expanduser('~'), 'Music\\Serato Studio\\Content\\')
 
@@ -29,6 +30,31 @@ def calcspeed(playback_speed, bpm, original_bpm, modchange):
 	playspeed *= bpm/original_bpm
 	return playspeed
 
+def add_vst_data(vstdata, pluginid, convproj_obj, state, params):
+	from objects.inst_params import juce_plugin
+	
+	if 'plugin_format_name' in vstdata:
+		vsttype = vstdata['plugin_format_name']
+		juceobj = juce_plugin.juce_plugin()
+		if 'descriptive_name' in vstdata: juceobj.name = vstdata['descriptive_name']
+		if 'manufacturer_name' in vstdata: juceobj.manufacturer = vstdata['manufacturer_name']
+		if 'file_or_identifier' in vstdata: juceobj.filename = vstdata['file_or_identifier']
+		if vsttype == 'VST': juceobj.plugtype = 'vst2'
+		if vsttype == 'VST3': juceobj.plugtype = 'vst3'
+		juceobj.memoryblock = state
+		plugin_obj, _ = juceobj.to_cvpj(convproj_obj, pluginid)
+		if 'is_instrument' in vstdata: plugin_obj.role = 'synth' if vstdata['is_instrument'] else 'effect'
+
+		if params:
+			for param in params:
+				paramnum = param['index']
+				paramname = param['name'] if 'name' in param else None
+				paramval = param['value']
+				cvpj_paramid = 'ext_param_'+str(paramnum)
+				plugin_obj.params.add_named(cvpj_paramid, paramval, 'float', paramname)
+
+		return plugin_obj
+
 def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 
 	if not (channel_strip.low_eq == channel_strip.mid_eq == channel_strip.high_eq == 0):
@@ -44,13 +70,21 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 	if channel_strip.post_fader_effects != None:
 		for fxnum, pfe in enumerate(channel_strip.post_fader_effects):
 			if pfe != None:
-				fx_effect = pfe['effect']
 				fxplugid = trackid+'_fx_'+str(fxnum)
-				fxtype = fx_effect[10:] if fx_effect.startswith(':/effects/') else fx_effect
-				fxplugin_obj = convproj_obj.plugin__add(fxplugid, 'native', 'serato-fx', fxtype)
-				fxplugin_obj.role = 'fx'
-				if 'value' in pfe: fxplugin_obj.params.add('amount', pfe['value'], 'float')
-				fxslots_audio.append(fxplugid)
+				fx_effect = pfe['effect']
+				if fx_effect.startswith(':/effects/'):
+					fxtype = fx_effect[10:]
+					fxplugin_obj = convproj_obj.plugin__add(fxplugid, 'native', 'serato-fx', fxtype)
+					fxplugin_obj.role = 'fx'
+					if 'value' in pfe: fxplugin_obj.params.add('amount', pfe['value'], 'float')
+					fxslots_audio.append(fxplugid)
+				else:
+					try:
+						vstdata = json.loads(fx_effect)
+						add_vst_data(vstdata, fxplugid, convproj_obj, pfe['state'] if 'state' in pfe else None, pfe['parameters'] if 'parameters' in pfe else None)
+						fxslots_audio.append(fxplugid)
+					except:
+						pass
 
 
 class input_serato(plugins.base):
@@ -127,6 +161,13 @@ class input_serato(plugins.base):
 							samplepart_obj.pitch = drumsamp.pitch_shift
 							samplepart_obj.stretch.set_rate_speed(project_obj.bpm, drumsamp.playback_speed, False)
 							samplepart_obj.trigger = 'oneshot'
+
+			if scene_deck.type == 'plugin':
+				inst_obj = convproj_obj.instrument__add(cvpj_instid)
+				inst_obj.visual.name = scene_deck.name
+				inst_obj.visual.color.set_float([0.3,0.3,0.3])
+				plugin_obj = add_vst_data(json.loads(scene_deck.plugin_description), cvpj_instid, convproj_obj, scene_deck.state, scene_deck.parameters)
+				inst_obj.plugslots.set_synth(cvpj_instid)
 
 			if scene_deck.type == 'instrument':
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
@@ -216,7 +257,8 @@ class input_serato(plugins.base):
 
 					if scene_deck.type == 'drums':
 						placement_obj = trscene_obj.add_notes()
-						placement_obj.time.set_posdur(0, scene.length)
+						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
+						placement_obj.time.set_posdur(0, scenedur)
 						for note in deck_sequence.notes:
 							valid = False
 							if scene.length != None:
@@ -229,20 +271,22 @@ class input_serato(plugins.base):
 								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_'+str(key), note.start, note.duration, 0, note.velocity/100, None)
 						placement_obj.notelist.sort()
 
-					if scene_deck.type == 'instrument':
+					if scene_deck.type in ['instrument', 'plugin']:
 						placement_obj = trscene_obj.add_notes()
-						placement_obj.time.set_posdur(0, scene.length)
+						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
+						placement_obj.time.set_posdur(0, scenedur)
 						for note in deck_sequence.notes:
-							if note.start < scene.length:
+							if note.start < scenedur:
 								key = note.number-60
 								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_0', note.start, note.duration, key, note.velocity/100, None)
 
 					if scene_deck.type == 'sample':
+						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
 						if useaudioclips == False:
 							placement_obj = trscene_obj.add_notes()
 							placement_obj.time.set_posdur(0, scene.length)
 							for note in deck_sequence.notes:
-								if note.start < scene.length:
+								if note.start < scenedur:
 									key = note.number
 									placement_obj.notelist.add_m('track_'+str(decknum+1)+'_0', note.start, note.duration, key, note.velocity/100, None)
 						else:

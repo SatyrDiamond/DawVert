@@ -74,6 +74,9 @@ class serato_scene_deck:
 		self.bar_mode_enabled = json_data['bar_mode_enabled'] if 'bar_mode_enabled' in json_data else True
 		self.playback_speed = json_data['playback_speed'] if 'playback_speed' in json_data else 1
 		self.key_shift = json_data['key_shift'] if 'key_shift' in json_data else 0
+		self.plugin_description = json_data['plugin_description'] if 'plugin_description' in json_data else None
+		self.state = json_data['state'] if 'state' in json_data else None
+		self.parameters = json_data['parameters'] if 'parameters' in json_data else None
 
 class serato_note:
 	def __init__(self, json_data):

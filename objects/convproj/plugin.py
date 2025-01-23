@@ -64,17 +64,28 @@ class cvpj_plugin_external:
 		self.is_bank = False
 		self.cpu_arch = 0
 
-	def from_pluginfo_obj(self, pluginfo_obj, plugtype):
-		self.__init__()
+	def from_pluginfo_obj(self, pluginfo_obj, inplugtype):
+		if pluginfo_obj.plugtype: plugtype = pluginfo_obj.plugtype
+		else: plugtype = inplugtype
+
+		if plugtype == 'vst2': 
+			if self.fourid != pluginfo_obj.id: self.__init__()
+		elif plugtype == 'vst3': 
+			if self.id != pluginfo_obj.id: self.__init__()
+		elif plugtype == 'clap': 
+			if self.id != pluginfo_obj.id: self.__init__()
+		else:
+			self.__init__()
 
 		self.plugtype = pluginfo_obj.plugtype
+		if not self.plugtype: self.plugtype = plugtype
 		if pluginfo_obj.name: self.name = pluginfo_obj.name
 		if pluginfo_obj.creator: self.creator = pluginfo_obj.creator
 		if pluginfo_obj.num_params: self.numparams = pluginfo_obj.num_params
 		if pluginfo_obj.basename: self.basename = pluginfo_obj.basename
 		self.version = pluginfo_obj.version
 
-		if plugtype == 'vst2': 
+		if self.plugtype == 'vst2': 
 			self.fourid = int(pluginfo_obj.id)
 			if pluginfo_obj.version not in [None, '']: 
 				versionsplit = [int(i) for i in pluginfo_obj.version.split('.')]
@@ -256,6 +267,7 @@ class cvpj_plugin:
 		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.set_program(0)
 		self.program_used = False
+		self.external_info = cvpj_plugin_external()
 		self.data = {}
 
 	def replace_keepprog(self, i_category, i_type, i_subtype):

@@ -24,11 +24,7 @@ def extract_audio(audioname):
 	return audio_filename
 
 def add_devices(convproj_obj, track_obj, trackid, devices_obj):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
 	from objects.inst_params import fx_delay
-	from functions.juce import juce_memoryblock
-	from functions_plugin_ext import data_vc2xml
 	if trackid in devices_obj.tracks:
 		device_track = devices_obj.tracks[trackid]
 
@@ -325,6 +321,8 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 			if devicedata.type == 'Bridge':
+				from objects.inst_params import juce_plugin
+
 				encodedState = base64.b64decode(devicedata.data['encodedState']) if 'encodedState' in devicedata.data else ''
 				sourceId = devicedata.data['sourceId'] if 'sourceId' in devicedata.data else ''
 				sourceName = devicedata.data['sourceName'] if 'sourceName' in devicedata.data else ''
@@ -332,28 +330,27 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 				inputSpec = devicedata.data['inputSpec'] if 'inputSpec' in devicedata.data else {}
 				outputSpec = devicedata.data['outputSpec'] if 'outputSpec' in devicedata.data else {}
 
+				juceobj = juce_plugin.juce_plugin()
+				juceobj.name = sourceName
+				juceobj.manufacturer = sourceManufacturer
+
 				isinst = 'midiInput' in inputSpec
 
 				if len(encodedState)>96:
 					encodedSig = encodedState[0:96]
 					encodedData = encodedState[96:]
-					if encodedData[0:4] == b'CcnK':
-						plugin_obj = convproj_obj.plugin__add(deviceid, 'external', 'vst2', 'win')
-						plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, encodedData, None)
-					if encodedData[0:4] == b'VC2!':
-						pluginstate_x = data_vc2xml.get(encodedData)
-						IComponent = data_xml.find_first(pluginstate_x, 'IComponent')
-						if IComponent != None and sourceName:
-							chunkdata = juce_memoryblock.fromJuceBase64Encoding(IComponent.text)
-							plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', None, sourceName, chunkdata)
+					if encodedData[0:4] == b'CcnK': juceobj.plugtype = 'vst2'
+					if encodedData[0:4] == b'VC2!': juceobj.plugtype = 'vst3'
+					juceobj.rawdata = encodedData
+					plugin_obj, _ = juceobj.to_cvpj(convproj_obj, deviceid)
 
-				if isinst: 
-					instrument_dev = deviceid
-					if plugin_obj: plugin_obj.role = 'synth'
-				else:
-					effects.append(deviceid)
-					if plugin_obj: plugin_obj.role = 'effect'
-
+					if isinst: 
+						instrument_dev = deviceid
+						if plugin_obj: plugin_obj.role = 'synth'
+					else:
+						effects.append(deviceid)
+						if plugin_obj: plugin_obj.role = 'fx'
+	
 			trackdevices.append(deviceid)
 
 		if TrackMIDIReceiver:

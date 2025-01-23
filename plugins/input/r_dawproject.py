@@ -62,18 +62,14 @@ def do_sends(convproj_obj, track_obj, dp_channel):
 		do_param(convproj_obj, send_obj.params, send.volume, 'amount', None, 'float', ['send', send.id, 'amount'])
 
 def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
-	from functions_plugin_ext import plugin_clap
-
 	for device in dp_devices:
 		plugin_obj = None
-
+		pluginid = device.id
 		#print(device.plugintype, device.params)
 
 		if device.plugintype == 'Equalizer':
 			pprms = device.params
-			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'eq', 'bands')
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'eq', 'bands')
 
 			for band in device.bands:
 				filter_obj, filter_id = plugin_obj.eq_add()
@@ -89,80 +85,89 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 				if band.type == 'lowShelf': filter_obj.type.set('low_shelf', None)
 				if band.type == 'highPass': filter_obj.type.set('high_pass', None)
 
-				autoid_assoc.define(str(band.enabled.id), ['n_filter', device.id, filter_id, 'on'], 'bool', None)
-				autoid_assoc.define(str(band.freq.id), ['n_filter', device.id, filter_id, 'freq'], 'float', None)
-				autoid_assoc.define(str(band.gain.id), ['n_filter', device.id, filter_id, 'gain'], 'float', None)
-				autoid_assoc.define(str(band.q.id), ['n_filter', device.id, filter_id, 'q'], 'float', None)
+				autoid_assoc.define(str(band.enabled.id), ['n_filter', pluginid, filter_id, 'on'], 'bool', None)
+				autoid_assoc.define(str(band.freq.id), ['n_filter', pluginid, filter_id, 'freq'], 'float', None)
+				autoid_assoc.define(str(band.gain.id), ['n_filter', pluginid, filter_id, 'gain'], 'float', None)
+				autoid_assoc.define(str(band.q.id), ['n_filter', pluginid, filter_id, 'q'], 'float', None)
 
-				freqpath = ['n_filter', device.id, filter_id, 'freq']
+				freqpath = ['n_filter', pluginid, filter_id, 'freq']
 				convproj_obj.automation.calc(freqpath, 'add', -72, 0, 0, 0)
 				convproj_obj.automation.calc(freqpath, 'note2freq', 0, 0, 0, 0)
 
 		if device.plugintype == 'Compressor':
 			pprms = device.params
-			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'compressor', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', device.id, 'attack'])
-			if 'AutoMakeup' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['AutoMakeup'], 'automakeup', None, 'bool', ['plugin', device.id, 'automakeup'])
-			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', device.id, 'pregain'])
-			if 'OutputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['OutputGain'], 'gain', None, 'float', ['plugin', device.id, 'gain'])
-			if 'Ratio' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Ratio'], 'ratio', None, 'float', ['plugin', device.id, 'ratio'])
-			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', device.id, 'release'])
-			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', device.id, 'threshold'])
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'compressor', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', pluginid, 'attack'])
+			if 'AutoMakeup' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['AutoMakeup'], 'automakeup', None, 'bool', ['plugin', pluginid, 'automakeup'])
+			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', pluginid, 'pregain'])
+			if 'OutputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['OutputGain'], 'gain', None, 'float', ['plugin', pluginid, 'gain'])
+			if 'Ratio' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Ratio'], 'ratio', None, 'float', ['plugin', pluginid, 'ratio'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', pluginid, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', pluginid, 'threshold'])
 
 		if device.plugintype == 'Limiter':
 			pprms = device.params
-			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'limiter', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', device.id, 'pregain'])
-			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', device.id, 'release'])
-			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', device.id, 'threshold'])
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'limiter', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', pluginid, 'pregain'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', pluginid, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', pluginid, 'threshold'])
 
 		if device.plugintype == 'NoiseGate':
 			pprms = device.params
-			plugin_obj = convproj_obj.plugin__add(device.id, 'universal', 'noise_gate', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', device.id, 'attack'])
-			if 'Range' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Range'], 'range', None, 'float', ['plugin', device.id, 'range'])
-			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', device.id, 'release'])
-			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', device.id, 'threshold'])
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'noise_gate', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', pluginid, 'attack'])
+			if 'Range' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Range'], 'range', None, 'float', ['plugin', pluginid, 'range'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', pluginid, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', pluginid, 'threshold'])
 
 		if device.plugintype == 'Vst3Plugin':
-			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'vst3', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			vst3_state = zip_data.read(str(device.state))
-			plugin_vst3.import_presetdata_raw(convproj_obj, plugin_obj, vst3_state, None)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst3', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			try: extmanu_obj.vst3__import_presetdata('raw', zip_data.read(str(device.state)), None)
+			except: pass
+
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
-				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', pluginid, cvpj_paramid])
 
 		if device.plugintype == 'Vst2Plugin':
-			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'vst2', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			vst2_state = zip_data.read(str(device.state))
-			plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, vst2_state, None)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			try: extmanu_obj.vst2__import_presetdata('raw', zip_data.read(str(device.state)), None)
+			except: pass
+
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
-				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', pluginid, cvpj_paramid])
 
 		if device.plugintype == 'ClapPlugin':
-			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'clap', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			clap_state = zip_data.read(str(device.state))
-			plugin_clap.import_presetdata_raw(convproj_obj, plugin_obj, clap_state, None)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'clap', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			try: extmanu_obj.clap__import_presetdata('raw', zip_data.read(str(device.state)), None)
+			except: pass
+
 			if device.deviceName: plugin_obj.external_info.name = device.deviceName
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
-				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', pluginid, cvpj_paramid])
 
 		if plugin_obj and track_obj:
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
 			if device.deviceRole == 'instrument' and not ismaster:
 				plugin_obj.role = 'inst'
-				track_obj.plugslots.set_synth(device.id)
+				track_obj.plugslots.set_synth(pluginid)
 			elif device.deviceRole == 'audioFX':
 				plugin_obj.role = 'effect'
-				track_obj.plugslots.slots_audio.append(device.id)
+				track_obj.plugslots.slots_audio.append(pluginid)
 
 def do_tracks(convproj_obj, dp_tracks, groupid):
 	global samplefolder

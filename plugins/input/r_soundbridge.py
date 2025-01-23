@@ -90,8 +90,6 @@ def make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid):
 				add_auto(None, convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
 
 def create_plugin(convproj_obj, sb_plugin, issynth):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
 	uiddata = decode_chunk(sb_plugin.uid)
 	statedata = decode_chunk(sb_plugin.state)
 	pluginid = None
@@ -107,6 +105,8 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 			plugin_obj.external_info.name = sb_plugin.name
 			plugin_obj.external_info.fourid = fourid
 			plugin_obj.external_info.creator = sb_plugin.vendor
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 
 			statereader = bytereader.bytereader()
 			statereader.load_raw(statedata)
@@ -127,13 +127,12 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 						statereader.skip(128)
 						chunkdata = statereader.raw(statereader.uint32_b())
 						plugin_obj.clear_prog_keep(programnum)
-						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', chunkdata, None)
-						plugin_obj.external_info.is_bank = True
+						extmanu_obj.vst2__replace_data('id', fourid, chunkdata, 'win', True)
 					if chunk_type == b'FxBk':
 						statereader.skip(16)
 						statereader.skip(128)
 						plugin_obj.clear_prog_keep(programnum)
-						plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, statereader.rest(), 'win')
+						extmanu_obj.vst2__import_presetdata('raw', statereader.rest(), 'win')
 
 					for x in sb_plugin.automationContainer.automationTracks:
 						paramid = 'ext_param_'+str(x.parameterIndex-1)

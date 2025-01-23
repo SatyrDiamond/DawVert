@@ -285,6 +285,7 @@ class jummbox_project:
 		self.layeredInstruments = False
 		self.patternInstruments = False
 		self.channels = []
+		self.customSamples = []
 
 		if pd != None:
 			if 'name' in pd: self.name = pd['name']
@@ -294,6 +295,7 @@ class jummbox_project:
 			if 'key' in pd: self.key = pd['key']
 			if 'keyOctave' in pd: self.keyOctave = pd['keyOctave']
 			if 'customScale' in pd: self.customScale = pd['customScale']
+			if 'customSamples' in pd: self.customSamples = pd['customSamples']
 			if 'introBars' in pd: self.introBars = pd['introBars']
 			if 'loopBars' in pd: self.loopBars = pd['loopBars']
 			if 'beatsPerBar' in pd: self.beatsPerBar = pd['beatsPerBar']
@@ -359,4 +361,5 @@ class jummbox_project:
 		jummbox_proj['layeredInstruments'] = self.layeredInstruments
 		jummbox_proj['patternInstruments'] = self.patternInstruments
 		jummbox_proj['channels'] = [x.write(self.format, self.version) for x in self.channels]
+		jummbox_proj['customSamples'] = self.customSamples
 		return jummbox_proj

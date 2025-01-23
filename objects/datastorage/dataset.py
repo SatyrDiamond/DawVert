@@ -51,6 +51,10 @@ class dataset_visual:
 		if self.name: tempxml.set('name', self.name)
 		if self.color: tempxml.set('color', make_color_text(self.color))
 
+	def apply_cvpj_visual(self, visual_obj):
+		if self.name: visual_obj.name = self.name
+		if self.color: visual_obj.color.set_int(self.color)
+
 class dataset_objectset:
 	__slots__ = ['data', 'used', 'in_obj']
 	def __init__(self, in_obj):

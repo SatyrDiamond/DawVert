@@ -135,7 +135,8 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 		if vst_param.visname: param_obj.visual.name = vst_param.visname
 		if vst_param.id: autoid_assoc.define(vst_param.id, ['plugin', pluginid, paramnum], 'float', None)
 
-	pluginfo_obj = globalstore.extplug.get('vst2', 'path', pluginpath, 'win', [32, 64])
+	extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+	extmanu_obj.vst2__replace_data('path', pluginpath, rpp_extplug.data_chunk, None, False)
 
 	if pluginfo_obj.out_exists:
 		plugin_obj.external_info.name = pluginfo_obj.name

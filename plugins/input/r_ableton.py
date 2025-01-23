@@ -95,9 +95,6 @@ def do_automation(convproj_obj, AutomationEnvelopes):
 						convproj_obj.timesig = [(alsevent.Value%99)+1, 2**(alsevent.Value//99)]
 
 def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
-
 	global vector_shapesdata
 
 	middlenote = 0
@@ -209,23 +206,24 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				Buffer = Preset['Buffer'].value
 
 				if Buffer:
+					extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 					if 10 in binflags: 
-						plugin_obj.external_info.datatype = 'chunk'
 						plugin_obj.clear_prog_keep(prognum)
-						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, vst_UniqueId, 'chunk', Buffer, None)
-						used_params = len([v for x, v in parampaths['ParameterList'].items() if int(v['ParameterId'])!=-1])
+						extmanu_obj.vst2__replace_data('id', vst_UniqueId, Buffer, 'win', False)
 					else:
-						plugin_obj.external_info.datatype = 'param'
-						plugin_obj.clear_prog_keep(0)
-						plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,None, vst_UniqueId, 'param', None, vst_NumberOfParameters)
+						extmanu_obj.vst2__setup_params('id', vst_UniqueId, vst_NumberOfParameters, 'win', True)
 						dtype_vstprog = np.dtype([('name', '<S28'),('params', np.float32, vst_NumberOfParameters)]) 
 						programs = np.frombuffer(Buffer, dtype=dtype_vstprog)
+						extmanu_obj.vst2__set_numprogs(len(programs))
 						for num, presetdata in enumerate(programs):
-							plugin_obj.set_program(num)
-							plugin_obj.preset.name = presetdata['name'].decode()
+							extmanu_obj.vst2__set_program(num)
+							extmanu_obj.vst2__set_program_name(presetdata['name'])
 							for paramnum, paramval in enumerate(presetdata['params']): 
-								plugin_obj.params.add_named('ext_param_'+str(paramnum), paramval, 'float', dtype_vstnames[paramnum])
-						plugin_obj.set_program(prognum)
+								extmanu_obj.vst2__set_param(paramnum, paramval)
+						extmanu_obj.vst2__set_program(prognum)
+						extmanu_obj.vst2__params_output()
+				else:
+					extmanu_obj.vst2__replace_data('id', vst_UniqueId, b'', 'win', False)
 
 				for n, p in parampaths['ParameterList'].items():
 					paramnum, paramtype = n.split('/')
@@ -269,7 +267,9 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				ProcessorState = Preset['ProcessorState'].value
 
 				plugin_obj.datavals.add('id', hexuuid)
-				plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, hexuuid, ProcessorState)
+
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+				extmanu_obj.vst3__replace_data('id', hexuuid, ProcessorState, 'win')
 
 				track_obj.plugin_autoplace(plugin_obj, pluginid)
 

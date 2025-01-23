@@ -1,0 +1,820 @@
+<dataset>
+    <category id="plugins">
+        <object id="32">
+            <visual name="FX Reverb" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="DECAY" type="float" def="0.4" />
+            <param id="2" name="HIGH DAMP" type="float" def="0.8" />
+            <param id="3" name="MIX" type="float" def="0.4" />
+            <param id="4" name="PAN" type="float" def="0.5" />
+            <param id="5" name="EARLY REFL." type="float" def="0.25" />
+            <param id="6" name="PREDELAY" type="float" />
+            <param id="7" name="ROOM SIZE" type="float" def="1" />
+            <param id="8" name="DIFFUSION" type="float" def="1" />
+            <param id="9" name="WIDTH" type="float" def="1" />
+            <param id="10" name="LO-CUT" type="float" />
+            <param id="11" name="HI-CUT" type="float" def="1" />
+            <param id="12" name="MOD SPEED" type="float" def="0.499" />
+            <param id="13" name="MOD AMOUNT" type="float" />
+            <param id="14" type="float" def="1" />
+            <param id="15" type="float" def="1" />
+        </object>
+        <object id="35">
+            <visual name="FX Reverb 2" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="HIGH CUT" type="float" def="0.16" />
+            <param id="2" name="LOW CUT" type="float" def="0.0187" />
+            <param id="3" name="SIZE" type="float" def="0.5" />
+            <param id="4" name="DECAY" type="float" def="0.068" />
+            <param id="5" name="DIFFUSION" type="float" def="1" />
+            <param id="6" name="DAMPING" type="float" def="0.16" />
+            <param id="7" name="DRY" type="float" def="0.8" />
+            <param id="8" name="ER" type="float" def="0.8" />
+            <param id="9" name="WET" type="float" def="0.56" />
+            <param id="10" name="SIDE INPUT" type="float" />
+            <param id="11" name="DELAY" type="float" />
+            <param id="12" name="TEMPO" type="float" />
+            <param id="13" name="MOD" type="float" />
+            <param id="14" name="BASS" type="float" def="0.28" />
+            <param id="15" name="SEPARATION" type="float" def="0.5" />
+            <param id="16" name="SPEED" type="float" def="0.33" />
+            <param id="17" name="CROSS" type="float" def="0.2405" />
+            <param id="18" name="PAN" type="float" def="0.5" />
+        </object>
+        <object id="18">
+            <visual name="FX Tape Delay" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Time" type="float" def="0.6" />
+            <param id="2" name="Fdbk" type="float" def="0.6" />
+            <param id="3" name="Async." type="float" def="0.5" />
+            <param id="4" name="Mix" type="float" def="0.4" />
+        </object>
+        <object id="16">
+            <visual name="FX Trance Delay" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Time" type="float" def="0.775" />
+            <param id="2" name="Fdbk" type="float" def="0.4" />
+            <param id="3" name="Mix" type="float" def="1" />
+            <param id="4" name="Filter" type="float" def="0.5" />
+            <param id="5" type="float" />
+            <param id="6" type="float" def="0.5" />
+        </object>
+        <object id="29">
+            <visual name="FX Autoduck" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Ducking" type="float" def="0.501" />
+            <param id="2" name="Attack" type="float" def="0.1" />
+            <param id="3" name="Curve" type="float" def="0.501" />
+            <param id="4" name="Time" type="float" def="1" />
+            <param id="5" name="Shift" type="float" def="0.5" />
+            <param id="6" name="Hold" type="float" />
+            <param id="7" name="Shape" type="float" />
+        </object>
+        <object id="20">
+            <visual name="FX Leveller" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Gain" type="float" def="0.737957" />
+            <param id="2" name="Pan" type="float" def="0.5" />
+        </object>
+        <object id="8">
+            <visual name="FX Compressor" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Thresh" type="float" def="0.499" />
+            <param id="2" name="Ratio" type="float" />
+            <param id="3" name="Attack" type="float" def="0.6" />
+            <param id="4" name="Release" type="float" def="0.6" />
+            <param id="5" name="Level" type="float" def="0.5001" />
+            <param id="6" name="Hold" type="float" />
+            <param id="7" name="Auto gain" type="float" def="1" />
+            <param id="8" name="Input gain" type="float" def="0.5" />
+            <param id="9" type="float" />
+        </object>
+        <object id="28">
+            <visual name="FX Limiter" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="In Gain" type="float" def="0.5" />
+            <param id="2" name="Out Gain" type="float" def="0.5" />
+            <param id="3" name="Release Time" type="float" def="0.2" />
+            <param id="4" name="Threshold" type="float" def="1" />
+        </object>
+        <object id="6">
+            <visual name="FX Distortion" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Drive" type="float" def="0.25" />
+            <param id="2" name="BitCrush" type="float" />
+            <param id="3" name="Gain" type="float" def="1" />
+            <param id="4" name="Stereo" type="float" def="0.5" />
+            <param id="5" name="Kind" type="float" />
+            <param id="6" name="Bias" type="float" def="0.5" />
+        </object>
+        <object id="41">
+            <visual name="Waveshaper" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Shape" type="float" />
+            <param id="2" name="Auto-Gain" type="float" />
+            <param id="3" name="X" type="float" def="0.5" />
+            <param id="4" name="Y" type="float" def="0.5" />
+            <param id="5" name="Drive" type="float" />
+            <param id="6" name="Post Gain" type="float" def="0.5" />
+            <param id="7" name="Stereo Spread" type="float" />
+            <param id="8" name="Mix" type="float" def="1" />
+            <param id="9" name="High Cut" type="float" def="1" />
+            <param id="10" name="Low Cut" type="float" />
+            <param id="11" name="Bass" type="float" def="0.5" />
+            <param id="12" name="Mid Freq" type="float" def="0.5" />
+            <param id="13" name="Mid Gain" type="float" def="0.5" />
+            <param id="14" name="Treble" type="float" def="0.5" />
+            <param id="15" name="LFO Shape" type="float" />
+            <param id="16" name="LFO Sync" type="float" />
+            <param id="17" name="LFO Rate" type="float" def="0.5" />
+            <param id="18" name="LFO Rate Free" type="float" />
+            <param id="19" name="LFO to X" type="float" />
+            <param id="20" name="LFO to Y" type="float" />
+        </object>
+        <object id="27">
+            <visual name="FX Gate" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Threshold" type="float" />
+            <param id="2" name="Asymmetry" type="float" />
+            <param id="3" name="Attack" type="float" def="0.01" />
+            <param id="4" name="A. Curve" type="float" />
+            <param id="5" name="Release" type="float" def="0.25" />
+            <param id="6" name="R. Curve" type="float" def="1" />
+            <param id="7" name="Mix" type="float" def="1" />
+            <param id="8" name="Hold" type="float" def="0.25" />
+        </object>
+        <object id="36">
+            <visual name="FX Multiband Compressor" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" type="float" def="0.5" />
+            <param id="2" type="float" def="0.3" />
+            <param id="3" type="float" def="0.7" />
+            <param id="4" type="float" />
+            <param id="5" type="float" />
+            <param id="6" type="float" def="0.5" />
+            <param id="7" type="float" def="1" />
+            <param id="8" type="float" />
+            <param id="9" type="float" def="0.3" />
+            <param id="10" type="float" def="0.3" />
+            <param id="11" type="float" def="0.5" />
+            <param id="12" type="float" />
+            <param id="13" type="float" def="0.5" />
+            <param id="14" type="float" def="1" />
+            <param id="15" type="float" />
+            <param id="16" type="float" def="0.3" />
+            <param id="17" type="float" def="0.3" />
+            <param id="18" type="float" def="0.5" />
+            <param id="19" type="float" />
+            <param id="20" type="float" def="0.5" />
+            <param id="21" type="float" def="1" />
+            <param id="22" type="float" />
+            <param id="23" type="float" def="0.3" />
+            <param id="24" type="float" def="0.3" />
+            <param id="25" type="float" def="0.5" />
+            <param id="26" type="float" />
+            <param id="27" type="float" def="0.5" />
+            <param id="28" type="float" def="0.5" />
+            <param id="29" type="float" def="0.5" />
+            <param id="30" type="float" />
+        </object>
+        <object id="9">
+            <visual name="FX Filter" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Frequency" type="float" def="0.7" />
+            <param id="2" name="Resonance" type="float" />
+            <param id="3" name="Kind" type="float" />
+            <param id="4" name="Slope" type="float" def="0.5" />
+        </object>
+        <object id="3">
+            <visual name="FX Equalizer" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Gain 1" type="float" def="0.5" />
+            <param id="2" name="Frequency 1" type="float" def="0.2" />
+            <param id="3" name="Bandwidth 1" type="float" def="0.5" />
+            <param id="4" name="Kind 1" type="float" def="0.51" />
+            <param id="5" name="Gain 2" type="float" def="0.5" />
+            <param id="6" name="Frequency 2" type="float" def="0.4" />
+            <param id="7" name="Bandwidth 2" type="float" def="0.5" />
+            <param id="8" name="Kind 2" type="float" def="0.51" />
+            <param id="9" name="Gain 3" type="float" def="0.5" />
+            <param id="10" name="Frequency 3" type="float" def="0.6" />
+            <param id="11" name="Bandwidth 3" type="float" def="0.5" />
+            <param id="12" name="Kind 3" type="float" def="0.51" />
+            <param id="13" name="Gain 4" type="float" def="0.5" />
+            <param id="14" name="Frequency 4" type="float" def="0.8" />
+            <param id="15" name="Bandwidth 4" type="float" def="0.5" />
+            <param id="16" name="Kind 4" type="float" def="0.51" />
+            <param id="17" name="Channel 1" type="float" />
+            <param id="18" name="Channel 2" type="float" />
+            <param id="19" name="Channel 3" type="float" />
+            <param id="20" name="Channel 4" type="float" />
+        </object>
+        <object id="7">
+            <visual name="FX Graphic EQ" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="80 Hz" type="float" def="0.5" />
+            <param id="2" name="160 Hz" type="float" def="0.5" />
+            <param id="3" name="375 Hz" type="float" def="0.5" />
+            <param id="4" name="750 Hz" type="float" def="0.5" />
+            <param id="5" name="1.5 kHz" type="float" def="0.5" />
+            <param id="6" name="3 kHz" type="float" def="0.5" />
+            <param id="7" name="6 kHz" type="float" def="0.5" />
+            <param id="8" name="12 kHz" type="float" def="0.5" />
+        </object>
+        <object id="30">
+            <visual name="FX Tuned EQ" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="65 Hz" type="float" def="0.5" />
+            <param id="2" name="130 Hz" type="float" def="0.5" />
+            <param id="3" name="261 Hz" type="float" def="0.5" />
+            <param id="4" name="523 Hz" type="float" def="0.5" />
+            <param id="5" name="1.0 kHz" type="float" def="0.5" />
+            <param id="6" name="2.1 kHz" type="float" def="0.5" />
+            <param id="7" name="4.2 kHz" type="float" def="0.5" />
+            <param id="8" name="8.4 kHz" type="float" def="0.5" />
+            <param id="9" name="Tuning" type="float" />
+            <param id="10" name="Bandwidth" type="float" def="0.6" />
+        </object>
+        <object id="15">
+            <visual name="FX Stereorizer" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Strength" type="float" def="0.7" />
+            <param id="2" name="Timbre" type="float" def="0.52" />
+            <param id="3" name="Focus" type="float" def="0.75" />
+            <param id="4" name="L/R Delay" type="float" def="0.5" />
+            <param id="5" name="Pan" type="float" def="0.5" />
+            <param id="6" type="float" />
+        </object>
+        <object id="34">
+            <visual name="FX Spacer" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="L/R Delay" type="float" def="0.5" />
+            <param id="2" name="Pan" type="float" def="0.5" />
+            <param id="3" name="Separation" type="float" def="0.5" />
+            <param id="4" name="L/R Inversion" type="float" />
+            <param id="5" name="M/S Delay" type="float" def="0.5" />
+            <param id="6" name="M/S Inversion" type="float" />
+            <param id="7" name="Stereo Mode" type="float" />
+        </object>
+        <object id="44">
+            <visual name="FX Spreader" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Width" type="float" />
+            <param id="2" name="Low Bypass" type="float" />
+        </object>
+        <object id="40">
+            <visual name="FX Comb Filter" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Mode" type="float" />
+            <param id="2" name="Pitch" type="float" def="0.33" />
+            <param id="3" name="Feedback" type="float" def="0.8" />
+            <param id="4" name="Mix" type="float" def="0.75" />
+            <param id="5" name="Offset" type="float" def="0.5" />
+            <param id="6" name="Smoothing" type="float" def="0.25" />
+            <param id="7" name="Snap" type="float" def="1" />
+            <param id="8" name="Polarity" type="float" />
+            <param id="9" name="Asymmetry" type="float" def="0.5" />
+            <param id="10" name="Pitch Oct" type="float" def="0.5" />
+            <param id="11" name="Pitch Note" type="float" def="0.4" />
+        </object>
+        <object id="4">
+            <visual name="MultiFX" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="FX Kind" type="float" />
+            <param id="2" name="Axis X" type="float" def="0.5" />
+            <param id="3" name="Axis Y" type="float" def="0.5" />
+            <param id="4" name="LFO Rate" type="float" def="0.61" />
+            <param id="5" name="LFO Amount" type="float" />
+            <param id="6" name="LFO Shape" type="float" />
+        </object>
+        <object id="11">
+            <visual name="FX Chorus" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Rate" type="float" def="0.4" />
+            <param id="2" name="Depth" type="float" def="0.6" />
+            <param id="3" name="Stereo" type="float" def="1" />
+            <param id="4" name="Mix" type="float" def="0.6" />
+        </object>
+        <object id="13">
+            <visual name="FX Flanger" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="LFO Rate" type="float" def="0.4" />
+            <param id="2" name="Sync" type="float" />
+            <param id="3" name="LFO Speed" type="float" def="0.55" />
+            <param id="4" name="LFO Shape" type="float" />
+            <param id="5" name="LFO Amnt." type="float" def="1" />
+            <param id="6" name="Freq" type="float" def="0.25" />
+            <param id="7" name="FDBK" type="float" def="0.75" />
+            <param id="8" name="Inv. FDBK" type="float" def="1" />
+            <param id="9" name="Str. Phase" type="float" />
+            <param id="10" name="Mix" type="float" def="1" />
+            <param id="11" name="Inv. Mix" type="float" def="1" />
+        </object>
+        <object id="14">
+            <visual name="FX Phaser" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="LFO Rate" type="float" def="0.112222" />
+            <param id="2" name="LFO Amnt." type="float" def="0.25" />
+            <param id="3" name="FDBK" type="float" def="0.1" />
+            <param id="4" name="Freq" type="float" def="0.25" />
+            <param id="5" name="Mix" type="float" def="1" />
+            <param id="6" type="float" def="1" />
+            <param id="7" name="LFO Speed" type="float" />
+            <param id="8" name="LFO Shape" type="float" />
+            <param id="9" name="Stereo" type="float" def="1" />
+        </object>
+        <object id="24">
+            <visual name="FX Tuner" />
+            <param id="0" name="Enable" type="float" def="1" />
+        </object>
+        <object id="26">
+            <visual name="FX Analyzer" />
+            <param id="0" name="Enable" type="float" def="1" />
+        </object>
+        <object id="25">
+            <visual name="FX Pitcher" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" type="float" />
+            <param id="2" type="float" def="0.5" />
+            <param id="3" type="float" def="0.5" />
+            <param id="4" type="float" />
+            <param id="5" type="float" def="0.5" />
+            <param id="6" type="float" />
+            <param id="7" type="float" def="0.5" />
+            <param id="8" type="float" />
+            <param id="9" type="float" def="1" />
+            <param id="10" type="float" />
+            <param id="11" type="float" />
+            <param id="12" type="float" />
+            <param id="13" type="float" />
+            <param id="14" type="float" />
+            <param id="15" type="float" />
+            <param id="16" type="float" />
+            <param id="17" type="float" />
+            <param id="18" type="float" />
+            <param id="19" type="float" />
+            <param id="20" type="float" />
+            <param id="21" type="float" />
+            <param id="22" type="float" />
+        </object>
+        <object id="45">
+            <visual name="FX Pitcher 2" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Note C" type="float" def="1" />
+            <param id="2" name="Note Db" type="float" />
+            <param id="3" name="Note D" type="float" def="1" />
+            <param id="4" name="Note Eb" type="float" def="1" />
+            <param id="5" name="Note E" type="float" />
+            <param id="6" name="Note F" type="float" def="1" />
+            <param id="7" name="Note Gb" type="float" />
+            <param id="8" name="Note G" type="float" def="1" />
+            <param id="9" name="Note Ab" type="float" def="1" />
+            <param id="10" name="Note A" type="float" />
+            <param id="11" name="Note Bb" type="float" def="1" />
+            <param id="12" name="Note B" type="float" />
+            <param id="13" name="Speed" type="float" def="0.5" />
+            <param id="14" type="float" />
+            <param id="15" type="float" />
+            <param id="16" name="Formant Mode" type="float" />
+            <param id="17" name="Formant Ratio" type="float" def="0.5" />
+            <param id="18" name="Ref. Channel" type="float" def="1" />
+            <param id="19" name="Stability" type="float" def="0.5" />
+            <param id="20" name="Humanization" type="float" />
+            <param id="21" type="float" />
+            <param id="22" name="Mix" type="float" def="1" />
+            <param id="23" name="Sensitivity" type="float" def="0.5" />
+            <param id="24" name="Vibrato" type="float" />
+            <param id="25" name="Latency" type="float" />
+            <param id="26" name="Process Sibilants" type="float" />
+        </object>
+        <object id="43">
+            <visual name="FX Wow &amp; Flutter" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Wow Rate" type="float" def="0.184564" />
+            <param id="2" name="Wow Rate" type="float" def="0.2" />
+            <param id="3" name="Wow Amount" type="float" def="0.25" />
+            <param id="4" name="Flutter Rate" type="float" def="0.066818" />
+            <param id="5" name="Flutter Rate" type="float" def="0.1" />
+            <param id="6" name="Flutter Amount" type="float" def="0.25" />
+            <param id="7" name="Sync" type="float" />
+            <param id="8" name="Random Rate" type="float" def="0.08952" />
+            <param id="9" name="Random Rate" type="float" def="0.8" />
+            <param id="10" name="Random Amount" type="float" def="0.25" />
+        </object>
+        <object id="42">
+            <visual name="FX Tape Stop" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Stop Time" type="float" def="0.2" />
+            <param id="2" name="Start Time" type="float" def="0.2" />
+            <param id="3" name="Stop Time" type="float" def="0.333333" />
+            <param id="4" name="Start Time" type="float" def="0.333333" />
+            <param id="5" name="Toggle Play" type="float" def="1" />
+            <param id="6" name="Warp" type="float" def="0.5" />
+            <param id="7" name="Sync" type="float" />
+        </object>
+        <object id="23">
+            <visual name="SuperSaw" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Osc. Pulse Width" type="float" def="1" />
+            <param id="2" name="Osc. Pulse Mode" type="float" />
+            <param id="3" name="Osc. Sub Level" type="float" />
+            <param id="4" name="Osc. Unisono" type="float" />
+            <param id="5" name="Osc. Unisono Detune" type="float" def="0.2" />
+            <param id="6" name="Osc. Unisono Pan" type="float" />
+            <param id="7" name="Osc. Unisono Detune Curve" type="float" def="0.5" />
+            <param id="8" name="Osc. Re-trig Phases" type="float" />
+            <param id="9" name="Osc. Phases Offset" type="float" />
+            <param id="10" name="SuperSync Mode" type="float" />
+            <param id="11" name="Osc. Sync" type="float" />
+            <param id="12" name="Osc. Pulse Width" type="float" def="1" />
+            <param id="13" name="Osc. Sync Attack" type="float" />
+            <param id="14" name="Osc. Sync Decay" type="float" def="1" />
+            <param id="15" name="Osc. Sync Sustain" type="float" def="1" />
+            <param id="16" name="Osc. Sync Release" type="float" def="1" />
+            <param id="17" name="Osc. Sync EG Amount" type="float" def="0.5" />
+            <param id="18" name="Osc. Sync Kbd Dir." type="float" />
+            <param id="19" name="Filter Cutoff" type="float" def="1" />
+            <param id="20" name="Filter Resonance" type="float" />
+            <param id="21" name="Filter KBD" type="float" />
+            <param id="22" name="Filter EG Attack" type="float" />
+            <param id="23" name="Filter EG Decay" type="float" def="1" />
+            <param id="24" name="Filter EG Sustain" type="float" def="1" />
+            <param id="25" name="Filter EG Release" type="float" def="1" />
+            <param id="26" name="Filter EG Amount" type="float" def="0.5" />
+            <param id="27" name="Filter VEL" type="float" />
+            <param id="28" name="Level EG Attack" type="float" />
+            <param id="29" name="Level EG Decay" type="float" def="1" />
+            <param id="30" name="Level EG Sustain" type="float" def="1" />
+            <param id="31" name="Level EG Release" type="float" />
+            <param id="32" name="Level" type="float" def="1" />
+            <param id="33" name="Pan" type="float" def="0.5" />
+            <param id="34" name="Slide Held Mode" type="float" />
+            <param id="35" name="Slide Time" type="float" />
+            <param id="36" name="Transpose" type="float" def="0.5" />
+            <param id="37" name="Pitch Bend Range" type="float" def="0.1" />
+            <param id="38" name="Slide Time Static" type="float" def="1" />
+            <param id="39" name="LFO Shape" type="float" />
+            <param id="40" name="LFO Rate" type="float" />
+            <param id="41" name="LFO Mode" type="float" />
+            <param id="42" name="LFO Beat" type="float" />
+            <param id="43" type="float" />
+            <param id="44" name="LFO Amount" type="float" def="0.5" />
+            <param id="45" name="LFO Dest" type="float" />
+            <param id="46" name="LFO Fade In" type="float" />
+            <param id="47" name="ARP Rate" type="float" def="0.2" />
+            <param id="48" name="ARP Range" type="float" def="0.5" />
+            <param id="49" name="ARP Mode" type="float" />
+            <param id="50" name="Monophonic Mode" type="float" />
+            <param id="51" name="Number Of Voices" type="float" def="0.5" />
+            <param id="52" name="Distortion" type="float" />
+            <param id="53" type="float" def="1" />
+            <param id="54" name="Delay Time" type="float" def="0.775" />
+            <param id="55" name="Delay Feedback" type="float" def="0.4" />
+            <param id="56" name="Delay Mix" type="float" />
+            <param id="57" name="Delay Filter" type="float" def="0.5" />
+            <param id="58" type="float" def="0.5" />
+            <param id="59" type="float" />
+        </object>
+        <object id="39">
+            <visual name="3x Osc" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Osc 1 Shape" type="float" />
+            <param id="2" name="Osc 2 Shape" type="float" />
+            <param id="3" name="Osc 3 Shape" type="float" />
+            <param id="4" name="Osc 1 Invert" type="float" />
+            <param id="5" name="Osc 2 Invert" type="float" />
+            <param id="6" name="Osc 3 Invert" type="float" />
+            <param id="7" name="Osc 1 Phase" type="float" def="0.5" />
+            <param id="8" name="Osc 2 Phase" type="float" def="0.5" />
+            <param id="9" name="Osc 3 Phase" type="float" def="0.5" />
+            <param id="10" name="Osc 1 Detune" type="float" def="0.5" />
+            <param id="11" name="Osc 2 Detune" type="float" def="0.5" />
+            <param id="12" name="Osc 3 Detune" type="float" def="0.5" />
+            <param id="13" name="Osc 1 Coarse Pitch" type="float" def="0.5" />
+            <param id="14" name="Osc 2 Coarse Pitch" type="float" def="0.25" />
+            <param id="15" name="Osc 3 Coarse Pitch" type="float" />
+            <param id="16" name="Osc 1 Fine Pitch" type="float" def="0.5" />
+            <param id="17" name="Osc 2 Fine Pitch" type="float" def="0.5" />
+            <param id="18" name="Osc 3 Fine Pitch" type="float" def="0.5" />
+            <param id="19" name="Osc 1 Pan" type="float" def="0.5" />
+            <param id="20" name="Osc 2 Pan" type="float" def="0.5" />
+            <param id="21" name="Osc 3 Pan" type="float" def="0.5" />
+            <param id="22" name="Osc 2 Mix" type="float" def="0.5" />
+            <param id="23" name="Osc 3 Mix" type="float" def="0.25" />
+            <param id="24" name="Osc 3 = amplitude modulation" type="float" />
+            <param id="25" name="HQ Mode" type="float" />
+            <param id="26" name="Stereo Phase Randomness" type="float" />
+            <param id="27" name="Pan LFO Global Phase" type="float" />
+            <param id="28" name="Volume LFO Global Phase" type="float" />
+            <param id="29" name="ModX LFO Global Phase" type="float" />
+            <param id="30" name="ModY LFO Global Phase" type="float" />
+            <param id="31" name="Pitch LFO Global Phase" type="float" />
+            <param id="32" name="Pan LFO Tempo Sync" type="float" />
+            <param id="33" name="Volume LFO Tempo Sync" type="float" />
+            <param id="34" name="ModX LFO Tempo Sync" type="float" />
+            <param id="35" name="ModY LFO Tempo Sync" type="float" />
+            <param id="36" name="Pitch LFO Tempo Sync" type="float" />
+            <param id="37" name="Pan LFO Shape" type="float" />
+            <param id="38" name="Volume LFO Shape" type="float" />
+            <param id="39" name="ModX LFO Shape" type="float" />
+            <param id="40" name="ModY LFO Shape" type="float" />
+            <param id="41" name="Pitch LFO Shape" type="float" />
+            <param id="42" name="Pan LFO Predelay" type="float" />
+            <param id="43" name="Volume LFO Predelay" type="float" />
+            <param id="44" name="ModX LFO Predelay" type="float" />
+            <param id="45" name="ModY LFO Predelay" type="float" />
+            <param id="46" name="Pitch LFO Predelay" type="float" />
+            <param id="47" name="Pan LFO Attack" type="float" def="0.305" />
+            <param id="48" name="Volume LFO Attack" type="float" def="0.305" />
+            <param id="49" name="ModX LFO Attack" type="float" def="0.305" />
+            <param id="50" name="ModY LFO Attack" type="float" def="0.305" />
+            <param id="51" name="Pitch LFO Attack" type="float" def="0.305" />
+            <param id="52" name="Pan LFO Amount" type="float" def="0.5" />
+            <param id="53" name="Volume LFO Amount" type="float" def="0.5" />
+            <param id="54" name="ModX LFO Amount" type="float" def="0.5" />
+            <param id="55" name="ModY LFO Amount" type="float" def="0.5" />
+            <param id="56" name="Pitch LFO Amount" type="float" def="0.5" />
+            <param id="57" name="Pan LFO Speed" type="float" def="0.5" />
+            <param id="58" name="Volume LFO Speed" type="float" def="0.5" />
+            <param id="59" name="ModX LFO Speed" type="float" def="0.5" />
+            <param id="60" name="ModY LFO Speed" type="float" def="0.5" />
+            <param id="61" name="Pitch LFO Speed" type="float" def="0.5" />
+            <param id="62" name="Volume Envelope Enable" type="float" />
+            <param id="63" name="ModX Envelope Enable" type="float" />
+            <param id="64" name="ModY Envelope Enable" type="float" />
+            <param id="65" name="Pitch Envelope Enable" type="float" />
+            <param id="66" name="Volume Envelope Tempo Sync" type="float" />
+            <param id="67" name="ModX Envelope Tempo Sync" type="float" />
+            <param id="68" name="ModY Envelope Tempo Sync" type="float" />
+            <param id="69" name="Pitch Envelope Tempo Sync" type="float" />
+            <param id="70" name="Volume Envelope Predelay" type="float" />
+            <param id="71" name="ModX Envelope Predelay" type="float" />
+            <param id="72" name="ModY Envelope Predelay" type="float" />
+            <param id="73" name="Pitch Envelope Predelay" type="float" />
+            <param id="74" name="Volume Envelope Attack" type="float" def="0.01" />
+            <param id="75" name="ModX Envelope Attack" type="float" def="0.01" />
+            <param id="76" name="ModY Envelope Attack" type="float" def="0.01" />
+            <param id="77" name="Pitch Envelope Attack" type="float" def="0.01" />
+            <param id="78" name="Volume Envelope Attack Tension" type="float" def="0.5" />
+            <param id="79" name="ModX Envelope Attack Tension" type="float" def="0.5" />
+            <param id="80" name="ModY Envelope Attack Tension" type="float" def="0.5" />
+            <param id="81" name="Pitch Envelope Attack Tension" type="float" def="0.5" />
+            <param id="82" name="Volume Envelope Hold" type="float" />
+            <param id="83" name="ModX Envelope Hold" type="float" />
+            <param id="84" name="ModY Envelope Hold" type="float" />
+            <param id="85" name="Pitch Envelope Hold" type="float" />
+            <param id="86" name="Volume Envelope Decay" type="float" def="0.01" />
+            <param id="87" name="ModX Envelope Decay" type="float" def="0.01" />
+            <param id="88" name="ModY Envelope Decay" type="float" def="0.01" />
+            <param id="89" name="Pitch Envelope Decay" type="float" def="0.01" />
+            <param id="90" name="Volume Envelope Decay Tension" type="float" def="0.5" />
+            <param id="91" name="ModX Envelope Decay Tension" type="float" def="0.5" />
+            <param id="92" name="ModY Envelope Decay Tension" type="float" def="0.5" />
+            <param id="93" name="Pitch Envelope Decay Tension" type="float" def="0.5" />
+            <param id="94" name="Volume Envelope Sustain" type="float" def="1" />
+            <param id="95" name="ModX Envelope Sustain" type="float" def="1" />
+            <param id="96" name="ModY Envelope Sustain" type="float" def="1" />
+            <param id="97" name="Pitch Envelope Sustain" type="float" def="1" />
+            <param id="98" name="Volume Envelope Release" type="float" def="0.01" />
+            <param id="99" name="ModX Envelope Release" type="float" def="0.01" />
+            <param id="100" name="ModY Envelope Release" type="float" def="0.01" />
+            <param id="101" name="Pitch Envelope Release" type="float" def="0.01" />
+            <param id="102" name="Volume Envelope Release Tension" type="float" def="0.105" />
+            <param id="103" name="ModX Envelope Release Tension" type="float" def="0.5" />
+            <param id="104" name="ModY Envelope Release Tension" type="float" def="0.5" />
+            <param id="105" name="Pitch Envelope Release Tension" type="float" def="0.5" />
+            <param id="106" name="Volume Envelope Amount (Unused)" type="float" def="1" />
+            <param id="107" name="ModX Envelope Amount" type="float" def="0.5" />
+            <param id="108" name="ModY Envelope Amount" type="float" def="0.5" />
+            <param id="109" name="Pitch Envelope Amount" type="float" def="0.5" />
+            <param id="110" name="Filter Type" type="float" />
+            <param id="111" name="Filter Cutoff" type="float" def="1" />
+            <param id="112" name="Filter Resonance" type="float" />
+            <param id="113" name="Pan Offset" type="float" def="0.5" />
+            <param id="114" name="Volume Multiplier" type="float" def="0.5" />
+            <param id="115" name="Filter Cutoff Offset" type="float" def="0.5" />
+            <param id="116" name="Filter Resonance Offset" type="float" def="0.5" />
+            <param id="117" name="Maximum Polyphony" type="float" />
+            <param id="118" name="Portamento Time" type="float" def="0.494" />
+            <param id="119" name="Portamento Mode" type="float" />
+            <param id="120" name="Monophonic Mode" type="float" />
+            <param id="121" name="Key Tracking Middle Value" type="float" def="0.5" />
+            <param id="122" name="Key Tracking To Pan" type="float" def="0.5" />
+            <param id="123" name="Key Tracking To Cutoff" type="float" def="0.5" />
+            <param id="124" name="Key Tracking To Resonance" type="float" def="0.5" />
+            <param id="125" name="Velocity Tracking Middle Value" type="float" def="0.833" />
+            <param id="126" name="Velocity Tracking To Pan" type="float" def="0.5" />
+            <param id="127" name="Velocity Tracking To Cutoff" type="float" def="0.5" />
+            <param id="128" name="Velocity Tracking To Resonance" type="float" def="0.5" />
+            <param id="129" name="Gate" type="float" def="1" />
+            <param id="130" name="Delay Echoes" type="float" def="0.333" />
+            <param id="131" name="Delay Feedback" type="float" />
+            <param id="132" name="Delay Time" type="float" def="0.375" />
+            <param id="133" name="Delay Pan" type="float" def="0.5" />
+            <param id="134" name="Delay Pitch" type="float" def="0.5" />
+            <param id="135" name="Delay Cutoff" type="float" def="0.5" />
+            <param id="136" name="Delay Resonance" type="float" def="0.5" />
+            <param id="137" name="Panning will bounce" type="float" />
+            <param id="138" name="Fat (Unison) Mode" type="float" />
+            <param id="139" name="Arpeggio Direction" type="float" />
+            <param id="140" name="Arpeggio Time" type="float" def="0.576" />
+            <param id="141" name="Arpeggio Gate" type="float" def="1" />
+            <param id="142" name="Arpeggio Range" type="float" def="0.167" />
+            <param id="143" name="Arpeggio Repeat" type="float" />
+            <param id="144" name="Arpeggio Slide" type="float" />
+            <param id="145" name="Arpeggio Chord" type="float" def="0.0111111" />
+            <param id="146" name="Osc 1 Free Run" type="float" />
+            <param id="147" name="Osc 2 Free Run" type="float" />
+            <param id="148" name="Osc 3 Free Run" type="float" />
+        </object>
+        <object id="33">
+            <visual name="Slicer" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="PITCH" type="float" def="0.5" />
+            <param id="2" type="float" />
+            <param id="3" name="ATTACK" type="float" />
+            <param id="4" name="DECAY" type="float" def="1" />
+            <param id="5" name="SUST" type="float" />
+            <param id="6" name="MONO" type="float" />
+        </object>
+        <object id="19">
+            <visual name="Transistor Bass" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Waveform" type="float" />
+            <param id="2" name="Cutoff" type="float" def="1" />
+            <param id="3" name="Reso" type="float" def="1" />
+            <param id="4" name="Env Mod" type="float" def="0.1" />
+            <param id="5" name="Decay" type="float" def="1" />
+            <param id="6" name="Accent" type="float" def="0.1" />
+            <param id="7" type="float" />
+            <param id="8" type="float" />
+            <param id="9" type="float" def="0.3" />
+            <param id="10" type="float" def="0.5" />
+            <param id="11" type="float" />
+            <param id="12" type="float" />
+            <param id="13" type="float" />
+        </object>
+        <object id="2">
+            <visual name="GMSynth" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Level" type="float" def="0.727273" />
+            <param id="2" name="Pan" type="float" def="0.5" />
+            <param id="3" name="Level Attack" type="float" />
+            <param id="4" name="Level Decay" type="float" def="1" />
+            <param id="5" name="Level Sustain" type="float" def="1" />
+            <param id="6" name="Level Release" type="float" def="0.2" />
+            <param id="7" type="float" def="0.5" />
+            <param id="8" type="float" def="0.5" />
+            <param id="9" type="float" def="0.5" />
+            <param id="10" type="float" def="0.5" />
+            <param id="11" name="Osc B Pitch" type="float" def="0.5" />
+            <param id="12" name="Osc B Detune" type="float" def="0.5" />
+            <param id="13" name="Osc B Mix" type="float" def="0.5" />
+            <param id="14" name="Osc B Phase" type="float" />
+            <param id="15" name="OSc Mod" type="float" />
+            <param id="16" name="Osc Mod Kind" type="float" />
+            <param id="17" name="Osc Mod Attack" type="float" />
+            <param id="18" name="Osc Mod Decay" type="float" def="1" />
+            <param id="19" name="Osc Mod Contour" type="float" def="0.5" />
+            <param id="20" name="Osc Noise" type="float" />
+            <param id="21" name="Cutoff" type="float" def="1" />
+            <param id="22" name="Resonance" type="float" />
+            <param id="23" name="Filter Kind" type="float" />
+            <param id="24" name="Filter Kbd. Scl." type="float" />
+            <param id="25" name="Filter Attack" type="float" />
+            <param id="26" name="Filter Decay" type="float" def="1" />
+            <param id="27" name="Filter Contour" type="float" def="0.5" />
+            <param id="28" name="Transpose" type="float" def="0.5" />
+            <param id="29" name="Slide Time" type="float" />
+            <param id="30" name="Single Voice" type="float" />
+            <param id="31" name="Auto Portamento" type="float" />
+            <param id="32" name="LFO Rate" type="float" def="1" />
+            <param id="33" name="LFO Shape" type="float" />
+            <param id="34" name="LFO Ampl." type="float" def="0.5" />
+            <param id="35" name="LFO Dest" type="float" />
+            <param id="36" name="EG Attack" type="float" />
+            <param id="37" name="EG Decay" type="float" def="1" />
+            <param id="38" name="EG Sustain" type="float" def="1" />
+            <param id="39" name="EG Release" type="float" def="1" />
+            <param id="40" name="EG Contour" type="float" def="0.5" />
+            <param id="41" name="EG Dest" type="float" />
+            <param id="42" name="Choir Num Voices" type="float" />
+            <param id="43" name="Choir Scale" type="float" />
+            <param id="44" name="Choir Detune" type="float" />
+            <param id="45" name="Choir Stereo" type="float" />
+            <param id="46" name="FX 1 Kind" type="float" def="0.111111" />
+            <param id="47" name="FX 1 Enable" type="float" />
+            <param id="48" name="FX 1 Sync" type="float" />
+            <param id="49" name="FX 1 LFO Shape" type="float" />
+            <param id="50" name="FX 1 LFO Amount" type="float" def="0.5" />
+            <param id="51" name="FX 1 Param X" type="float" def="0.5" />
+            <param id="52" name="FX 1 Param Y" type="float" def="0.5" />
+            <param id="53" name="FX 2 Kind" type="float" def="0.555556" />
+            <param id="54" name="FX 2 Enable" type="float" />
+            <param id="55" name="FX 2 Sync" type="float" />
+            <param id="56" name="FX 2 LFO Shape" type="float" />
+            <param id="57" name="FX 2 LFO Amount" type="float" def="0.5" />
+            <param id="58" name="FX 2 Param X" type="float" def="0.5" />
+            <param id="59" name="FX 2 Param Y" type="float" def="0.5" />
+            <param id="60" name="FX 3 Kind" type="float" def="0.333333" />
+            <param id="61" name="FX 3 Enable" type="float" />
+            <param id="62" name="FX 3 Sync" type="float" />
+            <param id="63" name="FX 3 LFO Shape" type="float" />
+            <param id="64" name="FX 3 LFO Amount" type="float" def="0.5" />
+            <param id="65" name="FX 3 Param X" type="float" def="0.5" />
+            <param id="66" name="FX 3 Param Y" type="float" def="0.5" />
+            <param id="67" type="float" />
+            <param id="68" type="float" />
+            <param id="69" type="float" />
+            <param id="70" type="float" />
+            <param id="71" type="float" />
+            <param id="72" type="float" />
+            <param id="73" type="float" />
+            <param id="74" type="float" />
+        </object>
+        <object id="0">
+            <visual name="MiniSynth" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Voices Mode" type="float" />
+            <param id="2" name="Transpose" type="float" def="0.5" />
+            <param id="3" name="Slide Time" type="float" />
+            <param id="4" name="MW Dest" type="float" />
+            <param id="5" name="MW Amount" type="float" />
+            <param id="6" name="OSC Kind" type="float" />
+            <param id="7" name="OSC Mod" type="float" />
+            <param id="8" name="OSC Noise" type="float" />
+            <param id="9" name="FLT Freq" type="float" def="1" />
+            <param id="10" name="FLT Peak" type="float" />
+            <param id="11" name="FLT Kbd" type="float" />
+            <param id="12" name="FLT Vel" type="float" />
+            <param id="13" name="EGF Atk" type="float" />
+            <param id="14" name="EGF Dec" type="float" def="1" />
+            <param id="15" name="EGF Sus" type="float" def="1" />
+            <param id="16" name="EGF Rel" type="float" def="1" />
+            <param id="17" name="EGF Amnt" type="float" def="0.5" />
+            <param id="18" name="LFO Shape" type="float" />
+            <param id="19" name="LFO Dest" type="float" />
+            <param id="20" name="LFO Rate" type="float" def="0.25" />
+            <param id="21" name="LFO Amnt" type="float" def="0.5" />
+            <param id="22" name="AMP Atk" type="float" />
+            <param id="23" name="AMP Dec" type="float" def="1" />
+            <param id="24" name="AMP Sus" type="float" def="1" />
+            <param id="25" name="AMP Rel" type="float" def="0.07" />
+            <param id="26" name="DIST" type="float" />
+            <param id="27" name="Overdrive" type="float" />
+            <param id="28" name="Decimator" type="float" />
+            <param id="29" name="DELAY" type="float" />
+            <param id="30" name="DELAY Time" type="float" def="0.7" />
+            <param id="31" name="DELAY Fdbk" type="float" def="0.5" />
+            <param id="32" name="DELAY Filter" type="float" def="1" />
+            <param id="33" name="DELAY Mix" type="float" def="0.5" />
+            <param id="34" name="CHORUS" type="float" />
+            <param id="35" name="CHORUS ModRate" type="float" def="0.25" />
+            <param id="36" name="CHORUS ModDepth" type="float" def="0.5" />
+            <param id="37" name="CHORUS Mix" type="float" def="0.5" />
+            <param id="38" name="PHASER" type="float" />
+            <param id="39" name="PHASER ModSpeed" type="float" def="0.112222" />
+            <param id="40" name="PHASER ModWidth" type="float" def="0.4" />
+            <param id="41" name="PHASER Fdbk" type="float" def="0.1" />
+            <param id="42" name="PHASER Mix" type="float" def="1" />
+            <param id="43" name="PHASER Freq" type="float" def="0.5" />
+        </object>
+        <object id="1">
+            <visual name="DW Sampler" />
+            <param id="0" name="Enable" type="float" def="1" />
+            <param id="1" name="Attack" type="float" />
+            <param id="2" name="Release" type="float" def="0.1" />
+            <param id="3" name="Pitch" type="float" def="0.5" />
+            <param id="4" name="Fine Tune" type="float" def="0.5" />
+            <param id="5" name="Decay" type="float" def="1" />
+            <param id="6" name="Sustain" type="float" def="1" />
+            <param id="7" name="Slide" type="float" />
+            <param id="8" name="Reverse" type="float" />
+            <param id="9" name="Loop" type="float" def="1" />
+            <param id="10" name="Legato" type="float" />
+            <param id="11" name="Mono" type="float" />
+            <param id="12" name="Cutoff" type="float" def="1" />
+            <param id="13" name="Resonance" type="float" />
+            <param id="14" name="Kbd. Track" type="float" />
+            <param id="15" name="Vel. Track" type="float" />
+            <param id="16" name="Filter type" type="float" />
+            <param id="17" name="Filter Attack" type="float" />
+            <param id="18" name="Filter Decay" type="float" def="1" />
+            <param id="19" name="Filter Sustain" type="float" def="1" />
+            <param id="20" name="Filter Release" type="float" def="1" />
+            <param id="21" name="Filter Env. Amount" type="float" def="0.5" />
+            <param id="22" name="Pitch Attack" type="float" />
+            <param id="23" name="Pitch Decay" type="float" def="1" />
+            <param id="24" name="Pitch Sustain" type="float" def="1" />
+            <param id="25" name="Pitch Release" type="float" def="1" />
+            <param id="26" name="Pitch Env. Amount" type="float" def="0.5" />
+            <param id="27" name="LFO Shape" type="float" />
+            <param id="28" name="LFO Rate" type="float" />
+            <param id="29" name="LFO Mode" type="float" />
+            <param id="30" name="LFO Sync Rate" type="float" />
+            <param id="31" name="LFO Amount" type="float" def="0.5" />
+            <param id="32" name="LFO Destination" type="float" />
+            <param id="33" name="LFO Attack" type="float" />
+        </object>
+    </category>
+</dataset>

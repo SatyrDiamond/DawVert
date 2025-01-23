@@ -196,6 +196,38 @@ class input_fl_mobile(plugins.base):
 								placement_obj.time.set_posdur(pos, flm_clip.duration)
 								placement_obj.time.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
 
+								if flm_clip.evn2:
+
+									env_vol = []
+									env_pan = []
+									env_pitch = []
+
+									for event in flm_clip.evn2.events:
+										if event[2] == 1: env_vol.append(event) #print(, event[5]/65534)
+										if event[2] == 2: env_pan.append(event) 
+										if event[2] == 3: env_pitch.append(event) 
+
+									if env_vol:
+										autopoints_obj = placement_obj.add_autopoints('gain', 128, False)
+										for flmpoint in env_vol:
+											autopoint_obj = autopoints_obj.add_point()
+											autopoint_obj.pos = flmpoint[0]
+											autopoint_obj.value = flmpoint[5]/65534
+
+									if env_pan:
+										autopoints_obj = placement_obj.add_autopoints('pan', 128, False)
+										for flmpoint in env_pan:
+											autopoint_obj = autopoints_obj.add_point()
+											autopoint_obj.pos = flmpoint[0]
+											autopoint_obj.value = ((flmpoint[5]/65534)*2)-1
+
+									if env_pitch:
+										autopoints_obj = placement_obj.add_autopoints('speed', 128, False)
+										for flmpoint in env_pitch:
+											autopoint_obj = autopoints_obj.add_point()
+											autopoint_obj.pos = flmpoint[0]
+											autopoint_obj.value = ((flmpoint[5]/65534)*48)-24
+
 								if flm_clip.sample:
 									flm_sample = flm_clip.sample
 									sample_path = get_path(flm_sample.sample_path)
@@ -217,7 +249,6 @@ class input_fl_mobile(plugins.base):
 
 									sp_obj.reverse = bool(flm_sample.main_unk_4)
 									if flm_sample.prms:
-										sp_obj.reverse = bool(flm_sample.main_unk_4)
 										sp_obj.vol = flm_sample.prms[0]
 										sp_obj.pan = (flm_sample.prms[1]-0.5)*2
 										

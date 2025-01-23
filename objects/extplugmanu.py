@@ -74,7 +74,7 @@ class extplug_manu:
 	def vst2__set_param_name(self, num, val):
 		self.state_vst2_params.set_param_name(num, val)
 
-	def vst2__output(self):
+	def vst2__params_output(self):
 		self.state_vst2_params.output(self.plugin_obj)
 
 # --------------------------------------------------- MAIN ---------------------------------------------------
@@ -136,6 +136,8 @@ class extplug_manu:
 	def vst3__replace_data(self, bycat, in_val, data, platformtxt):
 		if self.db__setinfo('vst3', bycat, in_val, platformtxt):
 			self.external__set_chunk(data)
+			return True
+		return False
 
 	def vst3__import_presetdata(self, datatype, indata, platformtxt):
 		from objects.file import preset_vst3
@@ -222,12 +224,17 @@ class extplug_manu:
 		if self.db__setinfo('vst2', bycat, in_val, platformtxt):
 			self.external__set_chunk(data)
 			external_info.is_bank = isbank
+			return True
+		return False
 
 	def vst2__setup_params(self, bycat, in_val, nump, platformtxt, isbank):
 		external_info = self.plugin_obj.external_info
 		if self.db__setinfo('vst2', bycat, in_val, platformtxt):
 			external_info.datatype = 'param' if not isbank else 'bank'
 			external_info.numparams = nump
+			return True
+		self.state_vst2_params.set_numprogs(1, nump)
+		return False
 
 	def vst2__import_presetdata(self, datatype, indata, platformtxt):
 		from objects.file import preset_vst2
@@ -263,6 +270,7 @@ class extplug_manu:
 			plugin_obj.preset.name = fxck.prgname
 			external_info.version_bytes = fxck.version
 			for c, p in enumerate(fxck.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')
+			self.vst2__params_output()
 
 		if vst_prog.type == 3:
 			fxck = vst_prog.data
@@ -277,6 +285,7 @@ class extplug_manu:
 						plugin_obj.preset.name = pprog.prgname
 						for c, p in enumerate(pprog.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')
 				plugin_obj.set_program(fxck.current_program)
+			self.vst2__params_output()
 
 	def vst2__export_presetdata(self, filename):
 		from objects.file import preset_vst2

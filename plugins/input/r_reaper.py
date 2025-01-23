@@ -136,9 +136,6 @@ class input_reaper(plugins.base):
 		
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import proj_reaper
-		from functions_plugin_ext import plugin_vst2
-		from functions_plugin_ext import plugin_vst3
-		from functions_plugin_ext import plugin_clap
 
 		if dawvert_intent.input_mode == 'file':
 			bytestream = open(dawvert_intent.input_file, 'r')
@@ -218,7 +215,7 @@ class input_reaper(plugins.base):
 			if latmode == 2: track_obj.latency_offset = lattime/44100
 			if latmode == 0: track_obj.latency_offset = lattime*1000
 
-			fxids = []
+			pluginids = []
 
 			samplers = []
 
@@ -226,8 +223,8 @@ class input_reaper(plugins.base):
 				rpp_plugins = rpp_track.fxchain.plugins
 				for n, rpp_plugin in enumerate(rpp_plugins):
 					rpp_extplug = rpp_plugin.plugin
-					fxid = os.urandom(15).hex()
-					fxids.append(fxid)
+					pluginid = os.urandom(15).hex()
+					pluginids.append(pluginid)
 
 					if rpp_plugin.type == 'VST':
 						if rpp_extplug.vst3_uuid == None:
@@ -242,7 +239,7 @@ class input_reaper(plugins.base):
 										samplers.append([filenames, dfdict])
 
 							else:
-								plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'vst2', None)
+								plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', None)
 								plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 
 								pluginfo_obj = globalstore.extplug.get('vst2', 'id', fourid, None, [64, 32])
@@ -263,26 +260,27 @@ class input_reaper(plugins.base):
 									vstdataconreader.skip(1) # 16
 
 									plugin_obj.clear_prog_keep(programnum)
+									extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 									if uses_chunk:
-										plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'chunk', rpp_extplug.data_chunk, None)
+										extmanu_obj.vst2__replace_data('id', fourid, rpp_extplug.data_chunk, None, False)
 									else:
 										numparams = (len(rpp_extplug.data_chunk)//4)-2
 										vstparams = struct.unpack('f'*numparams, rpp_extplug.data_chunk[8:])
-										plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', None, fourid, 'param', None, numparams)
-										for n, v in enumerate(vstparams):
-											param_obj = plugin_obj.params.add('ext_param_'+str(n), v, 'float')
+										extmanu_obj.vst2__setup_params('id', fourid, numparams, None, False)
+										for n, v in enumerate(vstparams): extmanu_obj.vst2__set_param(n, v)
+										extmanu_obj.vst2__params_output()
 								except:
 									pass
 
 								for parmenv in rpp_plugin.parmenv:
 									if parmenv.is_param:
-										do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+										do_auto(convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
-								if fourid == 1919118692: track_obj.plugslots.slots_notes.append(fxid)
-								else: track_obj.plugin_autoplace(plugin_obj, fxid)
+								if fourid == 1919118692: track_obj.plugslots.slots_notes.append(pluginid)
+								else: track_obj.plugin_autoplace(plugin_obj, pluginid)
 
 						else:
-							plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'vst3', None)
+							plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst3', None)
 							plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 							if len(rpp_extplug.data_chunk)>8:
 								try:
@@ -292,32 +290,37 @@ class input_reaper(plugins.base):
 									unk = preset_data.int32()
 									chunk = preset_data.raw(chunk_size)
 
-									pluginfo_obj = plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.vst3_uuid, chunk)
-									track_obj.plugin_autoplace(plugin_obj, fxid)
+									extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+									extmanu_obj.vst3__replace_data('id', rpp_extplug.vst3_uuid, chunk, None)
+
+									track_obj.plugin_autoplace(plugin_obj, pluginid)
 								except:
 									pass
 
 							for parmenv in rpp_plugin.parmenv:
 								if parmenv.is_param:
-									do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+									do_auto(convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'CLAP':
-						plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'clap', None)
-						plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, rpp_extplug.clap_id, rpp_extplug.data_chunk)
+						plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'clap', None)
+	
+						extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+						extmanu_obj.clap__replace_data('id', rpp_extplug.clap_id, rpp_extplug.data_chunk, None)
+									
 						plugin_obj.visual.name = rpp_extplug.clap_name
-						track_obj.plugin_autoplace(plugin_obj, fxid)
+						track_obj.plugin_autoplace(plugin_obj, pluginid)
 
 						for parmenv in rpp_plugin.parmenv:
 							if parmenv.is_param:
-								do_auto(convproj_obj, parmenv, ['plugin', fxid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+								do_auto(convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'JS':
-						plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'jesusonic', rpp_extplug.js_id)
+						plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'jesusonic', rpp_extplug.js_id)
 						plugin_obj.role = 'fx'
 						plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 						for n, v in enumerate(rpp_extplug.data):
 							if v != '-': plugin_obj.datavals.add(str(n), v)
-						track_obj.plugin_autoplace(plugin_obj, fxid)
+						track_obj.plugin_autoplace(plugin_obj, pluginid)
 
 			if samplers:
 				outsamplers = []

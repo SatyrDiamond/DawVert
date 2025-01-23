@@ -1,0 +1,413 @@
+<dataset>
+    <category id="fx">
+        <object id="guitarAmp">
+            <visual name="Guitar Amp" />
+            <param id="irType" type="string" def="orangeClassicShort" noauto="1" />
+            <param id="bass" type="float" def="4.5" max="10" />
+            <param id="drive" type="float" def="5" max="10" />
+            <param id="master" type="float" def="5" max="10" />
+            <param id="mid" type="float" def="6" max="10" />
+            <param id="presence" type="float" def="5.5" max="10" />
+            <param id="treble" type="float" def="5.5" max="10" />
+        </object>
+        <object id="cabinet">
+            <visual name="Guitar Cab" />
+            <param id="irType" type="string" def="2x12Celestion" noauto="1" />
+        </object>
+        <object id="genericAmp">
+            <visual name="Multi Amp Pro" />
+            <param id="staticModel" type="string" def="fenderTwin" noauto="1" />
+            <param id="bass" type="float" def="4.5" max="10" />
+            <param id="drive" type="float" def="4" max="10" />
+            <param id="mid" type="float" def="6" max="10" />
+            <param id="presence" type="float" def="4" max="10" />
+            <param id="treble" type="float" def="4.8" max="10" />
+            <param id="volume" type="float" def="5" max="10" />
+        </object>
+        <object id="guitarCab">
+            <visual name="Multi Cab Pro" />
+            <param id="cabModel" type="string" def="2x12Jenson" noauto="1" />
+            <param id="micModel" type="string" def="shureSM57" noauto="1" />
+            <param id="micPosition" type="string" def="onAxis" noauto="1" />
+        </object>
+        <object id="fuzzFace">
+            <visual name="Buzz Face" color="#8C2727"/>
+            <param id="drive" type="float" def="7" max="10" />
+            <param id="level" type="float" def="6.5" max="10" />
+        </object>
+        <object id="bossCE5">
+            <visual name="Chorus Ensemble" color="#8FBFCB"/>
+            <param id="depth" type="float" def="4" max="10" />
+            <param id="high" type="float" def="5" max="10" />
+            <param id="low" type="float" def="5" max="10" />
+            <param id="speed" type="float" def="1.009" max="3.7" min="0.25" />
+            <param id="wet" type="float" def="5" max="10" />
+        </object>
+        <object id="bossBD2">
+            <visual name="Delta Driver" color="#1D346F"/>
+            <param id="drive" type="float" def="5.2" max="10" />
+            <param id="level" type="float" def="6" max="10" />
+            <param id="mid" type="float" def="4.5" max="10" />
+        </object>
+        <object id="mxrDistortion">
+            <visual name="Distortion++" color="#E1A54B"/>
+            <param id="drive" type="float" def="4.5" max="10" />
+            <param id="level" type="float" def="5.5" max="10" />
+        </object>
+        <object id="bossGE7">
+            <visual name="Graphic EQ" color="#AEA69B"/>
+            <param id="gainAt100Hz" type="float" max="15" min="-15" />
+            <param id="gainAt1600Hz" type="float" max="15" min="-15" />
+            <param id="gainAt200Hz" type="float" max="15" min="-15" />
+            <param id="gainAt3200Hz" type="float" max="15" min="-15" />
+            <param id="gainAt400Hz" type="float" max="15" min="-15" />
+            <param id="gainAt6400Hz" type="float" max="15" min="-15" />
+            <param id="gainAt800Hz" type="float" max="15" min="-15" />
+            <param id="level" type="float" max="15" min="-15" />
+        </object>
+        <object id="rossCompr">
+            <visual name="GTR Squeeze" color="#4D515E"/>
+            <param id="level" type="float" def="-12" max="0" min="-24" />
+            <param id="sustain" type="float" def="24" max="24" />
+        </object>
+        <object id="bossMT2">
+            <visual name="House of Metal" color="#1A1918"/>
+            <param id="bass" type="float" def="3.8" max="10" />
+            <param id="drive" type="float" def="4.5" max="10" />
+            <param id="level" type="float" def="7" max="10" />
+            <param id="treble" type="float" def="5.5" max="10" />
+        </object>
+        <object id="ehSmallStone">
+            <visual name="Little Rock" color="#7E3226"/>
+            <param id="resonance" type="string" def="high" noauto="1" />
+            <param id="speed" type="float" def="3.962" max="20" min="0.2" />
+        </object>
+        <object id="proCoRat">
+            <visual name="Mouse Pro" color="#12181C"/>
+            <param id="drive" type="float" def="6" max="10" />
+            <param id="level" type="float" def="6" max="10" />
+            <param id="mid" type="float" def="4.5" max="10" />
+        </object>
+        <object id="mxrPhase90">
+            <visual name="Phase 72" color="#B75B10"/>
+            <param id="speed" type="float" def="7.922" max="20" min="0.2" />
+        </object>
+        <object id="bigMuffPi">
+            <visual name="Puff Pie" color="#BAC4CF"/>
+            <param id="drive" type="float" def="4.5" max="10" />
+            <param id="level" type="float" def="6.5" max="10" />
+            <param id="mid" type="float" def="3.7" max="10" />
+        </object>
+        <object id="tubeScreamer2">
+            <visual name="Valve Screamer" color="#065A3D"/>
+            <param id="drive" type="float" def="7" max="10" />
+            <param id="level" type="float" def="7" max="10" />
+            <param id="mid" type="float" def="6" max="10" />
+        </object>
+        <object id="bossVB2">
+            <visual name="VibeToo" color="#020039"/>
+            <param id="amount" type="float" def="30" max="100" />
+            <param id="speed" type="float" def="3.17" max="20" min="0.2" />
+        </object>
+        <object id="ddelayPlus2">
+            <visual name="D-Delay +"/>
+            <param id="delayTimeBeats" type="string" def="quarterNote" noauto="1" />
+            <param id="delayUnitSelection" type="string" def="delayTimeBeats" noauto="1" />
+            <param id="delayTimeMsec" type="float" def="0.45" max="2.6" min="0.01" />
+            <param id="dry" type="float" def="1" />
+            <param id="feedback" type="float" def="0.1" max="0.5" />
+            <param id="hpf" type="float" def="50" max="1200" min="50" />
+            <param id="level" type="float" max="12" min="-12" />
+            <param id="lpf" type="float" def="16000" max="16000" min="1200" />
+            <param id="spread" type="float" def="0.5" />
+            <param id="wet" type="float" def="0.5" />
+        </object>
+        <object id="beatSyncDelay2">
+            <visual name="Filter Echo +"/>
+            <param id="delayUnitSelection" type="string" def="syncDelay" noauto="1" />
+            <param id="syncDelay" type="string" def="quarterNote" noauto="1" />
+            <param id="cutoff" type="float" def="12000" max="16000" min="300" />
+            <param id="delayTime" type="float" def="0.2" />
+            <param id="dryWetMix" type="float" def="0.4" />
+            <param id="feedback" type="float" def="0.204" max="0.85" />
+        </object>
+        <object id="pingpongDelay">
+            <visual name="Ping Pong Delay"/>
+            <param id="delayOffsetBeats" type="string" def="quarterNote" noauto="1" />
+            <param id="delayOffsetUnitSelection" type="string" def="delayOffsetBeats" noauto="1" />
+            <param id="delayTimeBeats" type="string" def="quarterNote" noauto="1" />
+            <param id="delayUnitSelection" type="string" def="delayTimeBeats" noauto="1" />
+            <param id="cutoff" type="float" def="9000" max="16000" min="300" />
+            <param id="delayOffsetSec" type="float" def="0.35" />
+            <param id="delayTimeSec" type="float" def="0.7" />
+            <param id="dryWetMix" type="float" def="0.7" />
+            <param id="feedback" type="float" def="0.34" max="0.85" />
+            <param id="spread" type="float" def="1" />
+        </object>
+        <object id="bitBandit">
+            <visual name="Bit Bandit"/>
+            <param id="emulation" type="string" def="true" noauto="1" />
+            <param id="clipperMix" type="float" def="0.65" />
+            <param id="crush" type="float" def="12" max="16" min="2" />
+            <param id="effectMix" type="float" def="0.5" />
+            <param id="fidelity" type="float" def="-20" max="20" min="-20" />
+            <param id="inputGain" type="float" max="20" min="-20" />
+            <param id="outputGain" type="float" def="-6" max="20" min="-20" />
+        </object>
+        <object id="lofi">
+            <visual name="Bitcrusher"/>
+            <param id="bitDepth" type="float" def="16" max="16" min="1" />
+            <param id="downsample" type="float" def="13.4123" max="200" min="1" />
+            <param id="dryWetMix" type="float" def="0.7" />
+        </object>
+        <object id="overdrive">
+            <visual name="BL Driver"/>
+            <param id="amount" type="float" def="3.5" max="10" />
+            <param id="outputGain" type="float" def="4.5" max="10" />
+            <param id="tone" type="float" def="1800" max="16000" min="250" />
+        </object>
+        <object id="exciter">
+            <visual name="Exciter"/>
+            <param id="harmonics" type="float" def="50" max="100" />
+            <param id="mix" type="float" max="0" min="-30" />
+            <param id="threshold" type="float" def="-5" max="0" min="-30" />
+            <param id="tune" type="float" def="3500" max="7000" min="1000" />
+        </object>
+        <object id="tapeSimulator">
+            <visual name="Tape Simulator"/>
+            <param id="bias" type="float" def="80" max="100" />
+            <param id="drive" type="float" def="8.1" max="18" />
+            <param id="level" type="float" def="-1" max="15" min="-15" />
+            <param id="speed" type="float" def="12.97" max="30" min="3.8" />
+            <param id="wow" type="float" def="30" max="100" />
+        </object>
+        <object id="enhancer">
+            <visual name="Vocal Enhancer"/>
+            <param id="mode" type="string" def="warm" noauto="1" />
+            <param id="dryWetMix" type="float" def="0.5" />
+        </object>
+        <object id="compr1176">
+            <visual name="BL 1176"/>
+            <param id="ratio" type="string" def="12" noauto="1" />
+            <param id="attack" type="float" def="1.2" max="10" />
+            <param id="gain" type="float" def="10" max="20" />
+            <param id="makeup" type="float" max="15" min="-15" />
+            <param id="release" type="float" def="5" max="10" />
+        </object>
+        <object id="compander">
+            <visual name="Compander"/>
+            <param id="mode" type="string" def="dynamic" noauto="1" />
+            <param id="comprThreshold" type="float" def="-18" max="40" min="-30" />
+            <param id="expThreshold" type="float" def="-40" max="-30" min="-90" />
+            <param id="makeupGain" type="float" def="3" max="20" min="-20" />
+        </object>
+        <object id="deEsser">
+            <visual name="DeEsser"/>
+            <param id="frequency" type="float" def="9000" max="16000" min="1000" />
+            <param id="threshold" type="float" def="-19" max="0" min="-40" />
+        </object>
+        <object id="compressor">
+            <visual name="DIGI Comp"/>
+            <param id="attack" type="float" def="0.018" min="0.001" />
+            <param id="knee" type="float" def="6" max="20" />
+            <param id="ratio" type="float" def="12.1" max="20" min="1" />
+            <param id="release" type="float" def="0.222" min="0.001" />
+            <param id="threshold" type="float" def="-17.5" max="0" min="-60" />
+        </object>
+        <object id="backCompr">
+            <visual name="FBK Compressor"/>
+            <param id="attack" type="float" def="0.05" max="0.2" min="0.001" />
+            <param id="makeupGain" type="float" max="15" min="-15" />
+            <param id="ratio" type="float" def="6" max="20" min="1" />
+            <param id="release" type="float" def="0.4" max="4" min="0.04" />
+            <param id="threshold" type="float" def="15" max="40" min="-10" />
+        </object>
+        <object id="expGate">
+            <visual name="Noise Gate"/>
+            <param id="attack" type="float" def="0.005" max="0.15" min="0.001" />
+            <param id="release" type="float" def="0.2" max="0.8" min="0.1" />
+            <param id="threshold" type="float" def="-30" max="-18" min="-72" />
+        </object>
+        <object id="pumper2">
+            <visual name="Pumper"/>
+            <param id="period" type="string" def="quarterNote" noauto="1" />
+            <param id="amount" type="float" def="0.5" />
+            <param id="phase" type="float" def="18" max="180" min="-180" />
+        </object>
+        <object id="la2aCompr">
+            <visual name="TecLab BA-2A"/>
+            <param id="mode" type="string" def="compress" noauto="1" />
+            <param id="makeupGain" type="float" def="3" max="15" min="-15" />
+            <param id="threshold" type="float" def="25" max="40" min="-10" />
+        </object>
+        <object id="masteringLimiter">
+            <visual name="Vintage Limiter"/>
+            <param id="attack" type="float" def="0.001" max="0.001" min="0.0005" />
+            <param id="enhance" type="float" max="8" min="-8" />
+            <param id="gain" type="float" max="18" min="-18" />
+            <param id="masterLevel" type="float" max="15" min="-15" />
+            <param id="release" type="float" def="0.5003" min="0.05" />
+            <param id="softKnee" type="float" def="-5" max="0" min="-15" />
+        </object>
+        <object id="gater2">
+            <visual name="Gater"/>
+            <param id="period" type="string" def="quarterNote" noauto="1" />
+            <param id="depth" type="float" def="1" min="1" />
+        </object>
+        <object id="autoFilter">
+            <visual name="Auto Filter"/>
+            <param id="filterType" type="string" def="lpf" noauto="1" />
+            <param id="lfoRateUnitSelection" type="string" def="syncLfoRate" noauto="1" />
+            <param id="syncLfoRate" type="string" def="eighthNote" noauto="1" />
+            <param id="drive" type="float" def="0.8" max="10" min="0.1" />
+            <param id="frequency" type="float" def="2000" max="10000" min="20" />
+            <param id="lfoDepth" type="float" def="0.5" />
+            <param id="lfoRate" type="float" def="3" max="10" min="0.1" />
+            <param id="resonance" type="float" def="1" max="20" min="0.1" />
+            <param id="sensitivity" type="float" def="1" max="5" />
+        </object>
+        <object id="autoPan">
+            <visual name="Auto Pan"/>
+            <param id="rateBeats" type="string" def="quarterNote" noauto="1" />
+            <param id="rateUnitSelection" type="string" def="rateBeats" noauto="1" />
+            <param id="rateHz" type="float" def="0.5" max="11" min="0.1" />
+            <param id="spread" type="float" def="0.7" />
+        </object>
+        <object id="autoWah">
+            <visual name="Auto Wah"/>
+            <param id="mode" type="string" def="lpf" noauto="1" />
+            <param id="polarity" type="string" def="negative" noauto="1" />
+            <param id="depth" type="float" def="35" max="100" />
+            <param id="filter" type="float" def="50" max="100" />
+            <param id="outLevel" type="float" max="12" min="-40" />
+            <param id="release" type="float" def="0.8" max="1.5" min="0.06" />
+            <param id="sensitivity" type="float" def="35" max="100" />
+            <param id="speed" type="float" def="9.936" max="22.2" min="0.3" />
+        </object>
+        <object id="dimensionD">
+            <visual name="Dimension B"/>
+            <param id="preset" type="string" def="01" noauto="1" />
+        </object>
+        <object id="octaver">
+            <visual name="Dual Octaver"/>
+            <param id="dry" type="float" def="10" max="10" />
+            <param id="oct1" type="float" def="5" max="10" />
+            <param id="oct2" type="float" def="5" max="10" />
+            <param id="tone" type="float" def="5" max="10" />
+        </object>
+        <object id="phaser">
+            <visual name="Phase 45"/>
+            <param id="rate" type="float" def="0.395093" max="8" min="0.01" />
+        </object>
+        <object id="chorus">
+            <visual name="ST Chorus"/>
+            <param id="depth" type="float" def="1" />
+            <param id="rate" type="float" def="0.464398" max="6" min="0.01" />
+        </object>
+        <object id="tremolo">
+            <visual name="ST Tremolo"/>
+            <param id="depth" type="float" def="0.7" />
+            <param id="rate" type="float" def="4.00399" max="11" min="0.1" />
+            <param id="spread" type="float" def="36" max="180" />
+        </object>
+        <object id="vocalDoubler">
+            <visual name="Vocal Doubler"/>
+            <param id="depth" type="float" def="0.25" />
+            <param id="spread" type="float" def="1" />
+        </object>
+        <object id="multiShifter">
+            <visual name="Multi Shifter"/>
+            <param id="inputType" type="string" def="vocal" noauto="1" />
+            <param id="dry" type="float" def="0.7" />
+            <param id="fifthDown" type="float" def="0.6" />
+            <param id="fifthUp" type="float" />
+            <param id="fourthDown" type="float" />
+            <param id="fourthUp" type="float" def="0.3" />
+            <param id="octaveDown" type="float" def="0.3" />
+            <param id="octaveUp" type="float" />
+        </object>
+        <object id="pitchShifter">
+            <visual name="Pitch Shifter"/>
+            <param id="inputType" type="string" def="vocal" noauto="1" />
+            <param id="mix" type="float" def="1" />
+            <param id="shift" type="float" def="-5" max="12" min="-12" />
+        </object>
+        <object id="reverbHybrid">
+            <visual name="Space Maker"/>
+            <param id="irType" type="string" def="basic" noauto="1" />
+            <param id="dampening" type="float" def="7500" max="16000" min="250" />
+            <param id="dryWetMix" type="float" def="0.1" />
+            <param id="roomSize" type="float" def="8" max="10" />
+            <param id="spread" type="float" def="3" max="10" />
+        </object>
+        <object id="springReverb2">
+            <visual name="Spring Reverb"/>
+            <param id="mode" type="string" def="medium" noauto="1" />
+            <param id="intensity" type="float" def="20" max="100" />
+        </object>
+        <object id="simpleStudioReverb">
+            <visual name="Studio Reverb"/>
+            <param id="color" type="float" def="9" max="10" />
+            <param id="mix" type="float" def="5" max="10" />
+            <param id="size" type="float" def="2.5" max="10" />
+        </object>
+        <object id="univerb">
+            <visual name="Univerb"/>
+            <param id="irType" type="string" def="womensInstitute" noauto="1" />
+            <param id="dryWetMix" type="float" def="0.35" />
+        </object>
+        <object id="threeBandEq">
+            <visual name="EQ3-M"/>
+            <param id="highGain" type="float" max="30" min="-30" />
+            <param id="lowGain" type="float" max="30" min="-30" />
+            <param id="midFreq" type="float" def="5000" max="8000" min="100" />
+            <param id="midGain" type="float" max="30" min="-30" />
+        </object>
+        <object id="threeBandEq2">
+            <visual name="EZ EQ"/>
+            <param id="hpfFreq" type="float" def="80" max="10000" min="20" />
+            <param id="lpfFreq" type="float" def="7000" max="10000" min="20" />
+            <param id="peakFreq" type="float" def="5000" max="10000" min="20" />
+            <param id="peakGain" type="float" def="1" max="48" min="-96" />
+            <param id="peakQ" type="float" def="3" max="10" min="0.5" />
+        </object>
+        <object id="filter">
+            <visual name="Multi Filter"/>
+            <param id="filterType" type="string" def="lowpass" noauto="1" />
+            <param id="frequency" type="float" def="8000" max="12000" min="30" />
+            <param id="gain" type="float" max="20" min="-20" />
+            <param id="q" type="float" def="2" max="10" />
+        </object>
+        <object id="antiSqueal">
+            <visual name="Feedback Killer"/>
+            <param id="amount" type="float" def="0.5" />
+        </object>
+        <object id="gain">
+            <visual name="Gain"/>
+            <param id="gain" type="float" max="6" min="-36" />
+        </object>
+        <object id="reverser">
+            <visual name="Reverser"/>
+            <param id="intervalTimeBeats" type="string" def="eighthNote" noauto="1" />
+            <param id="intervalUnitSelection" type="string" def="intervalTimeBeats" noauto="1" />
+            <param id="dryWetMix" type="float" def="0.61" />
+            <param id="intervalTimeSec" type="float" def="0.449953" max="2.5" min="0.05" />
+        </object>
+        <object id="stereoSpreader">
+            <visual name="Stereowise"/>
+            <param id="lowerIntensity" type="float" def="1" />
+            <param id="upperFrequency" type="float" def="1025.72" max="20000" min="20" />
+            <param id="upperIntensity" type="float" def="1" />
+        </object>
+        <object id="ddelay">
+            <visual name="D-Delay"/>
+            <param id="dry" type="float" def="100" max="100" />
+            <param id="hpf" type="float" def="1200" max="1200" min="50" />
+            <param id="level" type="float" max="12" min="-12" />
+            <param id="lpf" type="float" def="6500" max="16000" min="1200" />
+            <param id="regen" type="float" def="25" max="100" />
+            <param id="time" type="float" def="1" max="2.6" min="0.01" />
+            <param id="wet" type="float" def="20" max="100" />
+        </object>
+    </category>
+</dataset>

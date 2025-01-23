@@ -4,13 +4,14 @@
 from functions import note_data
 from functions import value_midi
 from objects.convproj import fileref
+from objects import globalstore
 import xml.etree.ElementTree as ET
 import plugins
 import json
 import os
 import glob
 
-class input_cvpj_f(plugins.base):
+class input_bandlab(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
 	
@@ -45,6 +46,8 @@ class input_cvpj_f(plugins.base):
 
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		globalstore.dataset.load('bandlab', './data_main/dataset/bandlab.dset')
 
 		bpm = 120
 		if 'bpm' in project_obj.metronome:
@@ -153,12 +156,26 @@ def do_track_common(convproj_obj, track_obj, blx_track):
 		plugin_obj.role = 'fx'
 		plugin_obj.fxdata_add(not blx_effect.bypass, 1)
 
-		for n, v in blx_effect.params.items():
-			if not isinstance(v, str):
-				plugin_obj.params.add(n, v, 'float')
-				if n in blx_effect.automation:
-					do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n])
-			else:
-				plugin_obj.datavals.add(n, v)
+		plugparams = blx_effect.params
+
+		dseto_obj = globalstore.dataset.get_obj('bandlab', 'fx', blx_effect.slug)
+		if dseto_obj:
+			dseto_obj.visual.apply_cvpj_visual(plugin_obj.visual)
+			for param_id, dset_param in dseto_obj.params.iter():
+				paramv = plugparams[param_id] if param_id in plugparams else dset_param.defv
+				if not dset_param.noauto:
+					plugin_obj.params.add(param_id, paramv, 'float')
+					if n in blx_effect.automation: do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n])
+				else:
+					plugin_obj.datavals.add(param_id, paramv)
+
+		else:
+			for n, v in plugparams.items():
+				if not isinstance(v, str):
+					plugparams.add(n, v, 'float')
+					if n in blx_effect.automation:
+						do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n])
+				else:
+					plugin_obj.datavals.add(n, v)
 
 		track_obj.plugin_autoplace(plugin_obj, fxid)

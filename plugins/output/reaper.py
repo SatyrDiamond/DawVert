@@ -108,10 +108,10 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
 				_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
-				adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
-
 				do_sample_part(sampler_params, sampleref_obj, sp_obj)
-				do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
+				if sampleref_obj:
+					adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
+					do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
 				make_sampler(rpp_fxchain, sampler_params)
 
 

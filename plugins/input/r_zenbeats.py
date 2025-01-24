@@ -9,6 +9,7 @@ import math
 from objects import globalstore
 from objects import colors
 from functions import xtramath
+from functions.juce import juce_memoryblock
 
 def do_visual(cvpj_visual, zb_visual, color_index, colordata):
 	cvpj_visual.name = zb_visual.name
@@ -47,6 +48,38 @@ def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc):
 						if curve.function == 'DF_SOLO': do_auto(convproj_obj, autoloc+['solo'], curve, 1)
 
 			break
+
+		if rack.signal_chain:
+			strprocs = rack.signal_chain.stream_processors
+			for strproc in strprocs:
+				if strproc.plugin:
+					pluginid = strproc.uid
+					#print(strproc.stream_processor_type, strproc.plugin.name)
+					plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'native', strproc.plugin.name)
+					if strproc.stream_processor_type == 4:
+						plugin_obj.role = 'synth'
+						track_obj.plugslots.set_synth(pluginid)
+					if strproc.stream_processor_type == 3:
+						plugin_obj.role = 'effect'
+						track_obj.plugslots.slots_audio.append(pluginid)
+
+					if strproc.plugin.name == 'ZC1':
+						if strproc.plugin_xml_data is not None:
+							plugin_xml_data = strproc.plugin_xml_data
+							attrib = plugin_xml_data.attrib
+							if 'voice_count' in attrib: 
+								plugin_obj.poly.max = int(attrib['voice_count'])
+							if 'mod_wheel_value' in attrib: 
+								plugin_obj.datavals.add('mod_wheel_value', float(attrib['mod_wheel_value']))
+							for x_part in plugin_xml_data:
+								if x_part.tag == 'zn':
+									for x_inpart in x_part:
+										if x_inpart.tag == 'state':
+											extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+											try: 
+												statedata = juce_memoryblock.fromJuceBase64Encoding(x_inpart.text)
+												extmanu_obj.vst2__import_presetdata('raw', statedata, None)
+											except: pass
 
 class input_zenbeats(plugins.base):
 	def is_dawvert_plugin(self):

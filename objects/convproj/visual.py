@@ -254,7 +254,7 @@ class cvpj_color:
 
 	def from_colorset_num(self, colorset_obj, num):
 		if colorset_obj:
-			self.set_int(colorset_obj.getcolornum(num))
+			self.set_float(colorset_obj.getcolornum(num))
 
 	def closest_color_index(self, colorset_obj, fallbacknum):
 		if colorset_obj:

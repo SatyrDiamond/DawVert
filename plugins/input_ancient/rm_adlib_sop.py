@@ -16,7 +16,7 @@ class input_sop(plugins.base):
 		return 'adlib_sop'
 	
 	def get_name(self):
-		return 'Note Sequencer'
+		return 'Sopepos Note Sequencer'
 	
 	def get_priority(self):
 		return 0

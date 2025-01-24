@@ -35,6 +35,8 @@ def do_sample_part(sampler_params, sampleref_obj, sp_obj):
 		dur = sampleref_obj.dur_samples
 		hz = sampleref_obj.hz
 
+		sp_obj.convpoints_samples(sampleref_obj)
+
 		sampler_params['loop_on'] = int(sp_obj.loop_active)
 
 		if hz:
@@ -88,6 +90,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			make_sampler(rpp_fxchain, sampler_params)
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'multi'):
+			adsr_obj = plugin_obj.env_asdr_get('vol')
 			for sampleregion in plugin_obj.sampleregions:
 				key_l, key_h, key_r, samplerefid, extradata = sampleregion
 
@@ -104,7 +107,11 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				sampler_params['pitch_start'] = (pitch/80)/2 + 0.5
 				sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
 				_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+
+				adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
+
 				do_sample_part(sampler_params, sampleref_obj, sp_obj)
+				do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
 				make_sampler(rpp_fxchain, sampler_params)
 
 

@@ -1,4 +1,10 @@
 <datadef>
+
+  <struct name="stretch_param">
+    <part type="short" name="stretch_mode"/>
+    <part type="short" name="stretch_algo"/>
+  </struct>
+
   <struct name="reacomp">
     <part type="float" name="thresh"/>
     <part type="float" name="ratio"/>
@@ -20,6 +26,7 @@
     <part type="float" name="clsattk"/>
     <part type="float" name="antials"/>
   </struct>
+
   <struct name="__readelay_tap">
     <part type="float" name="enabled"/>
     <part type="float" name="length"/>
@@ -33,6 +40,7 @@
     <part type="float" name="pan"/>
     <part type="float"/>
   </struct>
+
   <struct name="readelay">
     <part type="int" name="unk1"/>
     <part type="int" name="unk2"/>
@@ -47,6 +55,7 @@
       <part type="struct" struct_name="__readelay_tap"/>
     </part>
   </struct>
+
   <struct name="__reaeq_band">
     <part type="int" name="type"/>
     <part type="int" name="on"/>
@@ -55,6 +64,7 @@
     <part type="double" name="q"/>
     <part type="byte" name="__unk"/>
   </struct>
+
   <struct name="reaeq">
     <part type="int" name="__unk"/>
     <part type="list" name="bands" size_source="part">
@@ -62,6 +72,7 @@
       <part type="struct" struct_name="__reaeq_band"/>
     </part>
   </struct>
+
   <struct name="reagate">
     <part type="raw" name="_unk1" size="4"/>
     <part type="raw" name="_unk2" size="4"/>
@@ -85,6 +96,7 @@
     <part type="float" name="midichan"/>
     <part type="float" name="invrtwet"/>
   </struct>
+
   <struct name="__reaxcomp_band">
     <part type="double" name="hz"/>
     <part type="double" name="gain"/>
@@ -96,6 +108,7 @@
     <part type="int" name="rms"/>
     <part type="int" name="flags"/>
   </struct>
+
   <struct name="reaxcomp">
     <part type="int" name="__unk"/>
     <part type="list" name="bands" size_source="part">
@@ -103,6 +116,7 @@
       <part type="struct" struct_name="__reaxcomp_band"/>
     </part>
   </struct>
+
   <struct name="reasamplomatic">
     <part type="string_t" name="filename"/>
     <part type="double" name="volume"/>
@@ -141,4 +155,261 @@
     <part type="double" name="legacy_voice_reuse"/>
     <part type="double" name="porta"/>
   </struct>
+
+  <struct name="reavoice">
+    <part type="int" name="stretch_stereo"/>
+    <part type="struct" name="stretch" struct_name="stretch_param"/>
+    <part type="int" name="__unk"/>
+    <part type="float" name="wet"/>
+    <part type="float" name="dry"/>
+    <part type="float" name="gain"/>
+    <part type="float" name="max_voices"/>
+    <part type="float" name="attack"/>
+    <part type="float" name="sustain"/>
+    <part type="float" name="release"/>
+    <part type="float" name="midi_channel"/>
+    <part type="float" name="center_note"/>
+  </struct>
+
+  <struct name="reavocode">
+    <part type="int" name="version"/>
+    <part type="float" name="wet"/>
+    <part type="float" name="dry"/>
+    <part type="float" name="bands"/>
+    <part type="float" name="invert"/>
+    <part type="float" name="stereo"/>
+    <part type="float" name="mod_dry"/>
+  </struct>
+
+  <struct name="reaverbate">
+    <part type="raw" name="_unk1" size="4"/>
+    <part type="raw" name="_unk2" size="4"/>
+    <part type="float" name="wet"/>
+    <part type="float" name="dry"/>
+    <part type="float" name="room_size"/>
+    <part type="float" name="damp"/>
+    <part type="float" name="stereo"/>
+    <part type="float" name="delay"/>
+    <part type="float" name="low_pass"/>
+    <part type="float" name="high_pass"/>
+  </struct>
+
+  <struct name="__reaverb_CHANTOOL">
+    <part type="int" name="source"/>
+    <part type="int" name="count"/>
+    <part type="int" name="action"/>
+    <part type="int" name="dest"/>
+    <part type="int" name="total"/>
+  </struct>
+
+  <struct name="__reaverb_ECHOGEN">
+    <part type="float" name="start"/>
+    <part type="float" name="len"/>
+    <part type="float" name="spacing"/>
+    <part type="float" name="startvol"/>
+    <part type="float" name="endvol"/>
+    <part type="float" name="error"/>
+    <part type="float" name="errdst"/>
+  </struct>
+
+  <struct name="__reaverb_FILELDR">
+    <part type="int" name="params"/>
+    <part type="string_t" name="filename"/>
+  </struct>
+
+  <struct name="__reaverb_FILT">
+    <part type="float" name="low"/>
+    <part type="float" name="high"/>
+  </struct>
+
+  <struct name="__reaverb_NORM">
+    <part type="float" name="peak"/>
+  </struct>
+
+  <struct name="__reaverb_NORM">
+    <part type="float" name="peak"/>
+  </struct>
+
+  <struct name="__reaverb_VERBGEN">
+    <part type="float" name="startpos"/>
+    <part type="float" name="len"/>
+    <part type="float" name="vol"/>
+    <part type="float" name="roomsize"/>
+    <part type="float" name="damp"/>
+    <part type="float" name="width"/>
+  </struct>
+
+  <struct name="__reaverb_REVERSE">
+    <part type="float" name="wet"/>
+    <part type="float" name="dry"/>
+    <part type="float" name="chan"/>
+  </struct>
+
+  <struct name="__reaverb_BASICEDIT">
+    <part type="float" name="gain"/>
+    <part type="float" name="startpos"/>
+    <part type="float" name="maxlen"/>
+    <part type="float" name="stretch"/>
+    <part type="float" name="presilence"/>
+    <part type="float" name="width"/>
+    <part type="float" name="pan"/>
+  </struct>
+
+  <struct name="reaverb_part">
+    <part type="string_t" name="type"/>
+    <part type="int" name="size"/>
+    <match type="string" match_value="CHANTOOL" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_CHANTOOL"/>
+    </match>
+    <match type="string" match_value="ECHOGEN" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_ECHOGEN"/>
+    </match>
+    <match type="string" match_value="FILELDR" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_FILELDR"/>
+    </match>
+    <match type="string" match_value="FILT" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_FILT"/>
+    </match>
+    <match type="string" match_value="NORM" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_NORM"/>
+    </match>
+    <match type="string" match_value="VERBGEN" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_VERBGEN"/>
+    </match>
+    <match type="string" match_value="REVERSE" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_REVERSE"/>
+    </match>
+    <match type="string" match_value="BASICEDIT" name="type">
+      <part type="struct" name="data" struct_name="__reaverb_BASICEDIT"/>
+    </match>
+  </struct>
+
+  <struct name="reaverb">
+    <part type="float" name="wet"/>
+    <part type="float" name="dry"/>
+    <part type="float" name="pre_reverb"/>
+    <part type="float" name="max_fft"/>
+    <part type="float" name="width"/>
+    <part type="float" name="pan"/>
+    <part type="float" name="zl"/>
+    <part type="float" name="ll"/>
+    <part type="float" name="8"/>
+    <part type="float" name="9"/>
+    <part type="list" name="parts" size="-1">
+      <part type="struct" struct_name="reaverb_part" />
+    </part>
+  </struct>
+
+  <struct name="UNFINISHED__reatune">
+    <part type="int" name="1"/>
+    <part type="int" name="2"/>
+    <part type="int" name="3"/>
+    <part type="int" name="4"/>
+    <part type="int" name="5"/>
+    <part type="int" name="6"/>
+    <part type="int" name="7"/>
+    <part type="int" name="8"/>
+    <part type="int" name="9"/>
+    <part type="int" name="10"/>
+    <part type="list" name="points" size_source="part">
+      <size type="int"/>
+      <part type="list" name="data" size="4">
+        <part type="float"/>
+      </part>
+    </part>
+    <part type="int" name="11"/>
+    <part type="float" name="12"/>
+    <part type="float" name="13"/>
+    <part type="int" name="14"/>
+    <part type="float" name="15"/>
+    <part type="int" name="16"/>
+    <part type="int" name="17"/>
+    <part type="int" name="18"/>
+    <part type="int" name="19"/>
+    <part type="int" name="20"/>
+    <part type="int" name="21"/>
+    <part type="int" name="22"/>
+    <part type="int" name="23"/>
+    <part type="int" name="24"/>
+    <part type="int" name="25"/>
+    <part type="rest" name="rest"/>
+  </struct>
+
+  <struct name="UNFINISHED____reasurroundpan_input">
+    <part type="float" name="1"/>
+    <part type="float" name="2"/>
+    <part type="int" name="3"/>
+    <part type="int" name="4"/>
+    <part type="float" name="5"/>
+    <part type="float" name="6"/>
+    <part type="float" name="7"/>
+    <part type="float" name="8"/>
+    <part type="short" name="9"/>
+    <part type="short" name="10"/>
+    <part type="float" name="11"/>
+    <part type="float" name="12"/>
+    <part type="float" name="13"/>
+    <part type="float" name="14"/>
+    <part type="float" name="15"/>
+    <part type="int" name="16"/>
+    <part type="string" name="name" size_source="part">
+      <size type="int"/>
+    </part>
+    <part type="int" name="17"/>
+    <part type="int" name="18"/>
+  </struct>
+
+  <struct name="UNFINISHED__reasurroundpan">
+    <part type="int" name="h1"/>
+    <part type="int" name="h2"/>
+    <part type="int" name="h3"/>
+    <part type="int" name="h4"/>
+    <part type="int" name="h5"/>
+    <part type="int" name="h6"/>
+    <part type="int" name="h7"/>
+    <part type="int" name="h8"/>
+    <part type="int" name="h9"/>
+    <part type="float" name="h10"/>
+    <part type="int" name="h11"/>
+    <part type="float" name="h12"/>
+    <part type="int" name="num_inputs"/>
+    <part type="int" name="num_speakers"/>
+  </struct>
+
+  <struct name="reastream">
+    <part type="int" name="mode"/>
+    <part type="int" name="channel"/>
+    <part type="int" name="enabled"/>
+    <part type="string_t" name="id"/>
+    <part type="string_t" name="ip"/>
+  </struct>
+
+  <struct name="__reapitch_shifter">
+    <part type="float" name="1"/>
+    <part type="float" name="enabled"/>
+    <part type="float" name="shift_range"/>
+    <part type="float" name="shift_cents"/>
+    <part type="float" name="shift_semitone"/>
+    <part type="float" name="shift_octaves"/>
+    <part type="float" name="formant_range"/>
+    <part type="float" name="formant_cents"/>
+    <part type="float" name="formant_semitone"/>
+    <part type="float" name="vol"/>
+    <part type="float" name="pan"/>
+  </struct>
+
+  <struct name="reapitch">
+    <part type="int" name="flags"/>
+    <part type="struct" name="stretch" struct_name="stretch_param"/>
+    <length type="int" name="shifters"/>
+    <part type="int" name="4"/>
+    <part type="int" name="5"/>
+    <part type="int" name="6"/>
+    <part type="float" name="wet"/>
+    <part type="float" name="dry"/>
+    <part type="list" name="shifters" size_source="lengthval">
+      <part type="struct" struct_name="__reapitch_shifter"/>
+    </part>
+  </struct>
+
 </datadef>

@@ -19,10 +19,16 @@ nativeids = {
 	1919248244: 'reagate',
 	1919708532: 'realimit',
 	1919250531: 'reapitch',
-	1919252066: 'reaverb',
-	1920361016: 'reaverbate',
 	1919252579: 'reaxcomp',
-	1920167789: 'reasamplomatic'
+	1920167789: 'reasamplomatic',
+	1919252068: 'reavocode',
+	1920361016: 'reaverbate',
+	1919252066: 'reaverb',
+	1920169074: 'reastream',
+	1919250281: 'reainsert',
+	#1920168498: 'reasurroundpan',
+	#1919251566: 'reatune',
+	1919252067: 'reavoice'
 }
 
 def reaper_color_to_cvpj_color(i_color, isreversed): 

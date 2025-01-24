@@ -125,7 +125,7 @@ class input_reaper(plugins.base):
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
-		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_ext_arch'] = [32, 64]
@@ -202,7 +202,8 @@ class input_reaper(plugins.base):
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'hybrid', 1, False)
 			track_obj.visual.name = rpp_track.name.get()
 
-			track_obj.visual.color.set_int(reaper_color_to_cvpj_color(rpp_track.peakcol.get(), True))
+			trackcolor = rpp_track.peakcol.get()
+			track_obj.visual.color.set_int(reaper_color_to_cvpj_color(trackcolor, True))
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
 
@@ -441,8 +442,26 @@ class input_reaper(plugins.base):
 
 					startoffset = (cvpj_offset_bpm/cvpj_audio_rate) + (startpos/cvpj_audio_rate)*8
 
-					placement_obj.sample.stretch.set_rate_tempo(bpm, (1/cvpj_audio_rate)*tempomul, True)
-					placement_obj.sample.stretch.preserve_pitch = cvpj_audio_preserve_pitch
+					stretch_obj = placement_obj.sample.stretch
+
+					if rpp_trackitem.stretchmarks:
+						#print('I', cvpj_audio_rate)
+						rate = cvpj_audio_rate/tempomul
+						stretch_obj.is_warped = True
+						for data in rpp_trackitem.stretchmarks:
+							for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
+							warp_point_obj = stretch_obj.add_warp_point()
+							warp_point_obj.beat = (data[0]*2)
+							warp_point_obj.beat += (startoffset*rate)/4
+							warp_point_obj.second = data[1]
+						#	print('|', end='')
+						#print()
+						stretch_obj.change_warp_speed(1/rate)
+						stretch_obj.calc_warp_points()
+					else: 
+						stretch_obj.set_rate_tempo(bpm, (1/cvpj_audio_rate)*tempomul, True)
+
+					stretch_obj.preserve_pitch = cvpj_audio_preserve_pitch
 					if not cvpj_loop:
 						placement_obj.time.set_offset(startoffset)
 					else:

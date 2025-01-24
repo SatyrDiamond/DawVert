@@ -241,6 +241,9 @@ def do_track(convproj_obj, wf_track, track_obj):
 		placement_obj.time.position_real = audioclip.start
 		placement_obj.time.duration_real = audioclip.length
 
+		placement_obj.fade_in.set_dur(audioclip.fadeIn, 'seconds')
+		placement_obj.fade_out.set_dur(audioclip.fadeOut, 'seconds')
+
 		stretch_amt = 1
 		if sampleref_exists:
 			stretch_amt = (sampleref_obj.dur_sec*2)/audioclip.loopinfo.numBeats

@@ -421,6 +421,9 @@ class output_tracktion_edit(plugins.base):
 				wf_audioclip.start = audiopl_obj.time.position_real
 				wf_audioclip.length = audiopl_obj.time.duration_real
 
+				wf_audioclip.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
+				wf_audioclip.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
+
 				boffset = (offset/8)*tempomul
 				toffset = (offset/4)*tempomul
 

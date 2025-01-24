@@ -309,7 +309,7 @@ class output_reaper(plugins.base):
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_ext_arch'] = [32, 64]
@@ -374,7 +374,8 @@ class output_reaper(plugins.base):
 
 			rpp_track_obj.trackid.set(track_uuid)
 			if track_obj.visual.name: rpp_track_obj.name.set(track_obj.visual.name)
-			if track_obj.visual.color: rpp_track_obj.peakcol.set(cvpj_color_to_reaper_color(track_obj.visual.color))
+			if track_obj.visual.color: 
+				rpp_track_obj.peakcol.set(cvpj_color_to_reaper_color(track_obj.visual.color))
 			rpp_track_obj.volpan['vol'] = track_obj.params.get('vol', 1.0).value
 			rpp_track_obj.volpan['pan'] = track_obj.params.get('pan', 0).value
 
@@ -421,11 +422,8 @@ class output_reaper(plugins.base):
 			for audiopl_obj in track_obj.placements.pl_audio:
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 
-				audiorate = audiopl_obj.sample.stretch.calc_real_speed
 				clip_startat = 0
 				if audiopl_obj.time.cut_type == 'cut': clip_startat = audiopl_obj.time.cut_start/8
-				clip_startat *= audiopl_obj.sample.stretch.calc_tempo_speed
-				rpp_item_obj.soffs.set(clip_startat)
 
 				rpp_item_obj.position.set(audiopl_obj.time.position_real)
 				rpp_item_obj.length.set(audiopl_obj.time.duration_real)
@@ -438,8 +436,36 @@ class output_reaper(plugins.base):
 				do_fade(audiopl_obj.fade_in, rpp_item_obj.fadein, reaper_tempo)
 				do_fade(audiopl_obj.fade_out, rpp_item_obj.fadeout, reaper_tempo)
 
-				rpp_item_obj.playrate['rate'] = audiorate
-				rpp_item_obj.playrate['preserve_pitch'] = int(audiopl_obj.sample.stretch.preserve_pitch)
+				sp_obj = audiopl_obj.sample
+				stretch_obj = sp_obj.stretch
+
+				if not stretch_obj.is_warped:
+					audiorate = stretch_obj.calc_real_speed
+					rpp_item_obj.playrate['rate'] = audiorate
+				else:
+					warprate = stretch_obj.get_warp_speed()
+					audiorate = warprate*tempomul
+					rpp_item_obj.playrate['rate'] = round(audiorate, 14) 
+					rpp_item_obj.stretchmarks = []
+					offmod = clip_startat
+					offmod *= warprate
+					offmod = round(offmod, 7)
+
+					stretch_obj.change_warp_speed(warprate)
+					for num, warp_point_obj in enumerate(stretch_obj.iter_warp_points()):
+						m_beat = (warp_point_obj.beat/4)*2
+						m_second = warp_point_obj.second
+						m_beat -= offmod
+						rpp_item_obj.stretchmarks.append([m_beat, m_second])
+
+					#	for n, x in enumerate([m_beat, m_second]):
+					#		print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
+					#	print('|', end='')
+					#print()
+
+				rpp_item_obj.soffs.set(clip_startat)
+
+				rpp_item_obj.playrate['preserve_pitch'] = int(stretch_obj.preserve_pitch)
 				rpp_item_obj.playrate['pitch'] = audiopl_obj.sample.pitch
 
 				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)

@@ -333,6 +333,7 @@ class output_soundation(plugins.base):
 					soundation_region.length = int(notespl_obj.time.duration)
 					soundation_region.loopcount = 1
 					soundation_region.contentPosition = 0
+					soundation_region.muted = audiopl_obj.muted
 
 					if notespl_obj.time.cut_type in ['loop']:
 						soundation_region.length = notespl_obj.time.cut_loopend
@@ -369,6 +370,7 @@ class output_soundation(plugins.base):
 					soundation_region.length = int(audiopl_obj.time.duration)
 					soundation_region.loopcount = 1
 					soundation_region.contentPosition = 0
+					soundation_region.muted = audiopl_obj.muted
 
 					if audiopl_obj.time.cut_type in ['loop', 'loop_off']:
 						soundation_region.length = audiopl_obj.time.cut_loopend

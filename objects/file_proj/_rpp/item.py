@@ -1,5 +1,6 @@
 from objects.file_proj._rpp import func as reaper_func
 from objects.file_proj._rpp import source as rpp_source
+import itertools
 
 rvd = reaper_func.rpp_value
 rvs = reaper_func.rpp_value.single_var
@@ -27,6 +28,7 @@ class rpp_item:
 		self.guid = rvs("", str, True)
 		self.source = None
 		self.beat = rvs(1, int, True)
+		self.stretchmarks = None
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -49,6 +51,9 @@ class rpp_item:
 			if name == 'BEAT': self.beat.set(values[0])
 			if name == 'GUID': self.guid.set(values[0])
 			if name == 'COLOR': self.color.set(values[0])
+			if name == 'SM': 
+				stretchmarks = [list(y) for x, y in itertools.groupby(values, lambda z: z == '+') if not x]
+				self.stretchmarks = [[float(z) for z in x] for x in stretchmarks]
 			if name == 'SOURCE': 
 				source_obj = rpp_source.rpp_source()
 				source_obj.type = values[0]
@@ -75,6 +80,15 @@ class rpp_item:
 		self.playrate.write('PLAYRATE', rpp_data)
 		self.chanmode.write('CHANMODE',rpp_data)
 		self.guid.write('GUID',rpp_data)
+		
+		if self.stretchmarks != None:
+			out = []
+			nummarks = len(self.stretchmarks)-1
+			for n, sm in enumerate(self.stretchmarks):
+				out += [str(x) for x in sm]
+				if nummarks!=n: out += ['+']
+
+			rpp_data.children.append(['SM']+out)
 		if self.source != None:
 			rpp_sourcedata = robj('SOURCE',[self.source.type])
 			self.source.write(rpp_sourcedata)

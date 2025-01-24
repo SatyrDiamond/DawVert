@@ -22,6 +22,11 @@ def get_paramval(soundation_device, i_name):
 	sndparam_obj = soundation_device.params.get(i_name)
 	return sndparam_obj.value
 
+def get_paramval_opt(soundation_device, i_name):
+	if i_name in soundation_device.params.data:
+		sndparam_obj = soundation_device.params.get(i_name)
+		return sndparam_obj.value
+
 def get_asdr(plugin_obj, soundation_device):
 	asdr_a = get_paramval(soundation_device, 'attack')
 	asdr_s = get_paramval(soundation_device, 'sustain')
@@ -63,6 +68,14 @@ class input_soundation(plugins.base):
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.containers.append(['zip', '*.sng'])
+
+	def internal_extract_audio(self, url, zip_data, samplefolder):
+		if zip_data and url:
+			if url in zip_data.namelist():
+				try:
+					zip_data.extract(url, path=samplefolder, pwd=None)
+				except PermissionError:
+					pass
 
 	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects import colors
@@ -160,6 +173,7 @@ class input_soundation(plugins.base):
 					clip_loopcount = round(soundation_region.loopcount, 3)
 					placement_obj.time.set_posdur(soundation_region.position, clip_length*clip_loopcount)
 					placement_obj.time.set_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length)
+					placement_obj.muted = soundation_region.muted
 
 					if sound_chan_type == 'instrument':
 						for sndstat_note in soundation_region.notes: 
@@ -171,15 +185,9 @@ class input_soundation(plugins.base):
 
 						if 'url' in soundation_region.file:
 							orgname = soundation_region.file['url']
-							filename = orgname
-
-							if zip_data and filename:
-								if filename in zip_data.namelist():
-									zip_data.extract(filename, path=samplefolder, pwd=None)
-									filename = samplefolder+filename
-
+							self.internal_extract_audio(orgname, zip_data, samplefolder)
+							filename = samplefolder+orgname
 							convproj_obj.sampleref__add(orgname, filename, 'None')
-
 							sp_obj.sampleref = orgname
 
 						sp_obj.reverse = soundation_region.reversed
@@ -241,6 +249,61 @@ class input_soundation(plugins.base):
 						if v_interpolation_mode == 0: sp_obj.interpolation = "none"
 						if v_interpolation_mode == 1: sp_obj.interpolation = "linear"
 						if v_interpolation_mode > 1: sp_obj.interpolation = "sinc"
+
+					elif instpluginname == 'com.soundation.beat_maker':
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+						plugin_obj.role = 'synth'
+						track_obj.plugslots.set_synth(pluginid)
+						kit_name = get_paramval(soundation_inst, 'kit_name')
+						sampdata = [[None, 0.5, 0.5, 0.5, None, None, None, x-24] for x in range(16)]
+
+						instdata = soundation_inst.data
+						if 'samples' in instdata:
+							for n, v in enumerate(instdata['samples']): sampdata[n][0] = v
+
+						if 'envelopes' in instdata:
+							for n, v in enumerate(instdata['envelopes']): sampdata[n][4] = v
+
+						if 'playback_modes' in instdata:
+							for n, v in enumerate(instdata['playback_modes']): sampdata[n][5] = v
+
+						if 'cuts' in instdata:
+							for n, v in enumerate(instdata['cuts']): sampdata[n][6] = v
+
+						for n in range(16):
+							paramlist = list(soundation_inst.params.data)
+							strnum = str(n)
+							samp_gain = get_paramval_opt(soundation_inst, 'gain_'+strnum)
+							samp_pan = get_paramval_opt(soundation_inst, 'pan_'+strnum)
+							samp_pitch = get_paramval_opt(soundation_inst, 'pitch_'+strnum)
+							if samp_gain is not None: sampdata[n][1] = samp_gain
+							if samp_pan is not None: sampdata[n][2] = samp_pan
+							if samp_pitch is not None: sampdata[n][3] = samp_pitch
+
+						for sampfile, gain, pan, pitch, env, pbmode, cuts, num in sampdata:
+							if sampfile:
+								endstr = str(num+24)
+								sp_obj = plugin_obj.sampleregion_add(num, num, num, None)
+								sp_obj.gain = gain*2
+								sp_obj.pan = (pan-0.5)*2
+								sp_obj.pitch = (pitch-0.5)*24
+								sp_obj.trigger = 'oneshot'
+								sampleref_obj = None
+								if 'url' in sampfile: 
+									orgname = sampfile['url']
+									filename = samplefolder+orgname
+									self.internal_extract_audio(orgname, zip_data, samplefolder)
+									sampleref_obj = convproj_obj.sampleref__add(orgname, filename, None)
+									sp_obj.sampleref = orgname
+								if 'name' in sampfile: sp_obj.visual.name = sampfile['name']
+								if env is not None:
+									if sampleref_obj:
+										dur_sec = sampleref_obj.dur_sec
+										attack = env['p2'] if 'p2' in env else 0
+										release = 1-env['p3'] if 'p3' in env else 0
+										sustain = env['sustain'] if 'sustain' in env else 1
+										plugin_obj.env_asdr_add('vol_'+endstr, 0, attack*dur_sec, 0, 0, sustain, release*dur_sec, 1)
+										sp_obj.envs['vol'] = 'vol_'+endstr
 
 					elif instpluginname == 'com.soundation.drummachine':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)

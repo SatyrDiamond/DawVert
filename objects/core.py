@@ -195,7 +195,9 @@ class dawinfo:
 pluginsets_input = {
 'main': ['', 'Main'],
 'tracker': ['tracker', 'Tracker'],
+'uncommon': ['uncommon', 'Uncommon'],
 'ancient': ['ancient', 'Ancient'],
+'midi': ['midi', 'MIDI'],
 'exper': ['exper', 'Experiments'],
 'nn': ['nn', 'NeuralNet'],
 'vgm': ['vgm', 'VGM'],

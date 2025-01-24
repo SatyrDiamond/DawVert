@@ -34,7 +34,7 @@
 		<bytes_header data="00545241434b4552424f5900"/>
 	</plugin>
 
-	<plugin pluginset="main" name="ceol">
+	<plugin pluginset="uncommon" name="ceol">
 		<file fileext=".ceol"/>
 	</plugin>
 
@@ -44,20 +44,20 @@
 		<bytes_header data="464c6864"/>
 	</plugin>
 
-	<plugin pluginset="main" name="notessimo_v3">
+	<plugin pluginset="uncommon" name="notessimo_v3">
 		<file fileext=".note"/>
 		<archived type="zip" file="sheets.xml"/>
 	</plugin>
 
-	<plugin pluginset="main" name="1bitdragon">
+	<plugin pluginset="uncommon" name="1bitdragon">
 		<file fileext=".1bd"/>
 	</plugin>
 
-	<plugin pluginset="main" name="lovelycomposer">
+	<plugin pluginset="uncommon" name="lovelycomposer">
 		<file fileext=".jsonl"/>
 	</plugin>
 
-	<plugin pluginset="main" name="notessimo_v2">
+	<plugin pluginset="uncommon" name="notessimo_v2">
 		<file fileext=".note"/>
 		<compressed type="zlib"/>
 	</plugin>
@@ -116,7 +116,7 @@
 		<file fileext=".sequence"/>
 	</plugin>
 
-	<plugin pluginset="main" name="orgyana">
+	<plugin pluginset="uncommon" name="orgyana">
 		<file fileext=".org"/>
 		<bytes_header data="4f72672d30"/>
 	</plugin>
@@ -172,16 +172,16 @@
 		<bytes_header data="736f7065706f73"/>
 	</plugin>
 
-	<plugin pluginset="main" name="mariopaint_msq">
+	<plugin pluginset="uncommon" name="mariopaint_msq">
 		<file fileext=".msq"/>
 	</plugin>
 
-	<plugin pluginset="main" name="mariopaint_mss">
+	<plugin pluginset="uncommon" name="mariopaint_mss">
 		<file fileext=".mss"/>
 		<xml root_name="MarioSequencerSong"/>
 	</plugin>
 
-	<plugin pluginset="main" name="mnbs">
+	<plugin pluginset="uncommon" name="mnbs">
 		<file fileext=".nbs"/>
 	</plugin>
 
@@ -190,7 +190,7 @@
 		<bytes_header data="4d546864"/>
 	</plugin>
 
-	<plugin pluginset="main" name="ptcop">
+	<plugin pluginset="uncommon" name="ptcop">
 		<file fileext=".ptcop"/>
 		<bytes_header data="5054434f4c4c4147452d303731313139"/>
 		<bytes_header data="505454554e452d2d3230303731313139"/>
@@ -201,7 +201,7 @@
 		<bytes_header data="4d4d4d44"/>
 	</plugin>
 
-	<plugin pluginset="main" name="pixitracker">
+	<plugin pluginset="uncommon" name="pixitracker">
 		<file fileext=".piximod"/>
 		<bytes_header data="504958494d4f4431"/>
 	</plugin>

@@ -415,21 +415,64 @@ class tracktion_loopinfo:
 		tempxml.set('inMarker', str(self.inMarker))
 		tempxml.set('outMarker', str(self.outMarker))
 
+class tracktion_warpmarker:
+	def __init__(self):
+		self.sourceTime = 0
+		self.warpTime = 0
+
+	def load(self, xmldata):
+		for n, v in xmldata.attrib.items():
+			if n == 'sourceTime': self.sourceTime = float(v)
+			if n == 'warpTime': self.warpTime = float(v)
+
+	def write(self, xmldata):
+		tempxml = ET.SubElement(xmldata, "WARPMARKER")
+		tempxml.set('sourceTime', str(self.sourceTime))
+		tempxml.set('warpTime', str(self.warpTime))
+
+class tracktion_warptime:
+	def __init__(self):
+		self.warpEndMarkerTime = 0
+		self.warpmarkers = []
+
+	def load(self, xmldata):
+		for n, v in xmldata.attrib.items():
+			if n == 'warpEndMarkerTime': self.warpEndMarkerTime = float(v)
+		for xpart in xmldata:
+			if xpart.tag == 'WARPMARKERS':
+				for xwarp in xpart:
+					warpmarker = tracktion_warpmarker()
+					warpmarker.load(xwarp)
+					self.warpmarkers.append(warpmarker)
+
+	def write(self, xmldata):
+		tempxml = ET.SubElement(xmldata, "WARPTIME")
+		tempxml.set('warpEndMarkerTime', str(self.warpEndMarkerTime))
+		if self.warpmarkers:
+			warpmarkers = ET.SubElement(tempxml, "WARPMARKERS")
+			for warpmarker in self.warpmarkers:
+				warpmarker.write(warpmarkers)
+
 class tracktion_audioclip_fx:
 	def __init__(self):
 		self.fx_type = ''
 		self.plugin = tracktion_plugin()
+		self.warptime = None
 
 	def load(self, xmldata):
 		fx_type = xmldata.get('type')
 		if fx_type: self.fx_type = fx_type
 		for subxml in xmldata:
 			if subxml.tag == 'PLUGIN': self.plugin.load(subxml)
+			if subxml.tag == 'WARPTIME': 
+				self.warptime = tracktion_warptime()
+				self.warptime.load(subxml)
 
 	def write(self, xmldata):
 		tempxml = ET.SubElement(xmldata, "EFFECT")
 		tempxml.set('type', str(self.fx_type))
-		self.plugin.write(tempxml)
+		if self.plugin.plugtype: self.plugin.write(tempxml)
+		if self.warptime: self.warptime.write(tempxml)
 
 class tracktion_audioclip:
 	def __init__(self):

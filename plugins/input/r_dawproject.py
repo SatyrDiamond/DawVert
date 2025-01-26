@@ -312,11 +312,12 @@ def do_audioclip(convproj_obj, npa_obj, inclip):
 
 			stretch_obj.preserve_pitch = stretch_algo != 'repitch'
 			stretch_obj.is_warped = True
+			warp_obj = stretch_obj.warp
 			for x in inclip.warps.points:
-				warp_point_obj = stretch_obj.add_warp_point()
+				warp_point_obj = warp_obj.add_warp_point()
 				warp_point_obj.beat = x.time
 				warp_point_obj.second = x.contentTime
-			stretch_obj.calc_warp_points()
+			warp_obj.calc_warp_points()
 
 def do_audioauto(npa_obj, mpepoints):
 	target_obj = mpepoints.target

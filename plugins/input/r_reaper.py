@@ -457,14 +457,14 @@ class input_reaper(plugins.base):
 						warp_obj = stretch_obj.warp
 						for data in rpp_trackitem.stretchmarks:
 							for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
-							warp_point_obj = warp_obj.add_warp_point()
+							warp_point_obj = warp_obj.points__add()
 							warp_point_obj.beat = (data[0]*2)
 							warp_point_obj.beat += (startoffset*rate)/4
 							warp_point_obj.second = data[1]
 						#	print('|', end='')
 						#print()
-						warp_obj.change_warp_speed(1/rate)
-						warp_obj.calc_warp_points()
+						warp_obj.manp__speed(1/rate)
+						warp_obj.calcpoints__speed()
 					else: 
 						stretch_obj.set_rate_tempo(bpm, (1/cvpj_audio_rate)*tempomul, True)
 

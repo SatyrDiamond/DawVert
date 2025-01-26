@@ -581,13 +581,13 @@ class input_ableton(plugins.base):
 							if AUDWARPVERBOSE: print('i')
 							warp_obj = stretch_obj.warp
 							for _, WarpMarker in clipobj.WarpMarkers.items():
-								warp_point_obj = warp_obj.add_warp_point()
+								warp_point_obj = warp_obj.points__add()
 								warp_point_obj.beat = WarpMarker.BeatTime
 								warp_point_obj.second = WarpMarker.SecTime
 								if AUDWARPVERBOSE: print(str(WarpMarker.BeatTime).ljust(18), WarpMarker.SecTime)
 
-							warp_obj.calc_warp_points()
-							warp_obj.rem_last_warp_point()
+							warp_obj.calcpoints__speed()
+							warp_obj.points__del_last()
 
 						else:
 							pitchcalc = 2**(placement_obj.sample.pitch/12)

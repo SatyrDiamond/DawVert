@@ -276,11 +276,11 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 					warp_obj = stretch_obj.warp
 					for stretchMark in blockevent.stretchMarks:
-						warp_point_obj = warp_obj.add_warp_point()
+						warp_point_obj = warp_obj.points__add()
 						warp_point_obj.beat = stretchMark.newPosition/pfreq
 						warp_point_obj.second = stretchMark.initPosition/(sampleref_obj.hz if sampleref_obj else pfreq)
 
-					warp_obj.calc_warp_points()
+					warp_obj.calcpoints__speed()
 					#stretch_obj.debugtxt_warp()
 
 					for autoblock in blockevent.automationBlocks:

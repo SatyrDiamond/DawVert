@@ -24,26 +24,26 @@ class cvpj_warp_point:
 class cvpj_stretch_warp:
 	points: list = field(default_factory=list)
 
-	def add_warp_point(self):
+	def points__add(self):
 		warp_point_obj = cvpj_warp_point()
 		self.points.append(warp_point_obj)
 		return warp_point_obj
 
-	def rem_last_warp_point(self):
+	def points__del_last(self):
 		self.points = self.points[0:-1]
 
-	def iter_warp_points(self):
+	def points__iter(self):
 		for x in self.points: yield x
 
 	def debugtxt_warp(self):
 		print('------------- warps')
-		for x in self.iter_warp_points():
+		for x in self.points__iter():
 			print('warp', end=' ')
 			for d in [x.beat, x.second*x.speed*2, x.second, x.speed]:
 				print(str(d).ljust(20), end=' ')
 			print('')
 
-	def calc_warp_points(self):
+	def calcpoints__speed(self):
 		if self.points:
 			numpoints = len(self.points)-1
 			for n, warp_point_obj in enumerate(self.points):
@@ -61,7 +61,7 @@ class cvpj_stretch_warp:
 				if not self.points[-1].speed:
 					self.points[-1].speed = self.points[-2].speed
 
-	def calc_warp_speed(self):
+	def calc__speed(self):
 		if self.points:
 			speedpoints = [x.speed for x in self.points]
 			if None not in speedpoints:
@@ -71,32 +71,32 @@ class cvpj_stretch_warp:
 		else:
 			return 1
 
-	def change_warp_speed(self, speed):
+	def manp__speed(self, speed):
 		for warp_point_obj in self.points:
 			warp_point_obj.beat *= speed
 
-		self.calc_warp_points()
+		self.calcpoints__speed()
 
-	def fix_single_warp(self, convproj_obj, sp_obj):
+	def fix__single(self, convproj_obj, sp_obj):
 		if len(self.points) == 1:
 			firstpoint = self.points[0]
 			ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 			if ref_found:
-				warp_point_obj = self.add_warp_point()
+				warp_point_obj = self.points__add()
 				warp_point_obj.beat = sampleref_obj.dur_sec*firstpoint.speed*2
 				warp_point_obj.second = sampleref_obj.dur_sec
 				warp_point_obj.speed = firstpoint.speed
 
-	def fix_warps(self, convproj_obj, sp_obj):
+	def fix__many(self, convproj_obj, sp_obj):
 		offset = 0
 		if self.points:
 			if len(self.points)>1:
 				firstpoint = self.points[0]
 
 				if firstpoint.beat==0 and firstpoint.second>0:
-					dursec = self.get_dur_sec()
-					durbeat = self.get_dur_beat()
-					speed = self.get_warp_speed()
+					dursec = self.get__dur_sec()
+					durbeat = self.get__dur_beat()
+					speed = self.get__speed()
 					firstpoint.beat = (firstpoint.second/dursec)*durbeat
 					warp_point_obj = cvpj_warp_point()
 					warp_point_obj.speed = firstpoint.speed
@@ -104,9 +104,9 @@ class cvpj_stretch_warp:
 					offset += firstpoint.beat
 
 				if firstpoint.beat<0:
-					durbeat = self.get_dur_beat()
-					dursec = self.get_dur_sec()
-					speed = self.get_warp_speed()
+					durbeat = self.get__dur_beat()
+					dursec = self.get__dur_sec()
+					speed = self.get__speed()
 					shiftpart = firstpoint.beat+durbeat
 
 					splitb = (dursec/speed)/durbeat
@@ -123,20 +123,20 @@ class cvpj_stretch_warp:
 
 		return offset
 
-	def get_first_sec(self):
+	def get__first_sec(self):
 		if self.points:
 			return self.points[0].second
 		else:
 			return 0
 
-	def get_first_beat(self):
+	def get__first_beat(self):
 		if self.points:
 			firstpoint = self.points[0]
 			return firstpoint.second*firstpoint.speed*2
 		else:
 			return 0
 
-	def get_dur_beat(self):
+	def get__dur_beat(self):
 		if self.points:
 			lastpoint = self.points[-1]
 			firstpoint = self.points[0]
@@ -144,7 +144,7 @@ class cvpj_stretch_warp:
 		else:
 			return 0
 
-	def get_dur_sec(self):
+	def get__dur_sec(self):
 		if self.points:
 			lastpoint = self.points[-1]
 			firstpoint = self.points[0]
@@ -152,7 +152,7 @@ class cvpj_stretch_warp:
 		else:
 			return 0
 
-	def get_warp_speed(self):
+	def get__speed(self):
 		if self.points:
 			return 1/self.points[-1].speed
 		else:
@@ -240,12 +240,12 @@ class cvpj_stretch:
 				if self.uses_tempo:
 					pos_real = sampleref_obj.dur_sec*self.calc_tempo_size
 	
-					warp_point_obj = warp_obj.add_warp_point()
+					warp_point_obj = warp_obj.points__add()
 					warp_point_obj.beat = 0
 					warp_point_obj.second = 0
 					warp_point_obj.speed = self.calc_tempo_size
 	
-					warp_point_obj = warp_obj.add_warp_point()
+					warp_point_obj = warp_obj.points__add()
 					warp_point_obj.beat = pos_real*2
 					warp_point_obj.second = sampleref_obj.dur_sec
 					warp_point_obj.speed = self.calc_tempo_size
@@ -254,15 +254,15 @@ class cvpj_stretch:
 	
 					pitch = pow(2, -pitch/12)
 
-					warp_point_obj = warp_obj.add_warp_point()
+					warp_point_obj = warp_obj.points__add()
 					warp_point_obj.beat = 0
 					warp_point_obj.second = 0
 	
-					warp_point_obj = warp_obj.add_warp_point()
+					warp_point_obj = warp_obj.points__add()
 					warp_point_obj.beat = pos_real*2*self.calc_bpm_size*pitch
 					warp_point_obj.second = sampleref_obj.dur_sec
 
-				warp_obj.calc_warp_points()
+				warp_obj.calcpoints__speed()
 
 			finalspeed = 1
 			if self.is_warped and target == 'rate':

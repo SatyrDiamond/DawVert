@@ -502,10 +502,10 @@ class input_wavtool(plugins.base):
 							stretch_obj.is_warped = True
 							warp_obj = stretch_obj.warp
 							for anchor in wt_warp_anchors: 
-								warp_point_obj = warp_obj.add_warp_point()
+								warp_point_obj = warp_obj.points__add()
 								warp_point_obj.beat = (float(anchor))
 								warp_point_obj.second = (wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
-							warp_obj.calc_warp_points()
+							warp_obj.calcpoints__speed()
 
 					else: 
 						stretch_obj.set_rate_speed(wavtool_obj.bpm, pow(2, wavtool_clip.transpose/12), False)

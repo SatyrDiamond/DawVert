@@ -418,10 +418,12 @@ class output_wavtool(plugins.base):
 						audioBufferId = addsample(zip_wt, audiofilename, False)
 						wavtool_clip.audioBufferId = audioBufferId
 
-						if not audiopl_obj.sample.stretch.is_warped:
-							warprate = audiopl_obj.sample.stretch.calc_tempo_speed
-							if not audiopl_obj.sample.stretch.preserve_pitch:
-								wavtool_clip.transpose = (math.log2(audiopl_obj.sample.stretch.calc_real_speed)*12)
+						stretch_obj = audiopl_obj.sample.stretch
+
+						if not stretch_obj.is_warped:
+							warprate = stretch_obj.calc_tempo_speed
+							if not stretch_obj.preserve_pitch:
+								wavtool_clip.transpose = (math.log2(stretch_obj.calc_real_speed)*12)
 							else:
 								dur_sec = sampleref_obj.dur_sec
 								warpdata = {}
@@ -442,7 +444,8 @@ class output_wavtool(plugins.base):
 							warpdata['anchors'] = {}
 							warpdata['enabled'] = True
 
-							for warp_point_obj in audiopl_obj.sample.stretch.iter_warp_points():
+							warp_obj = stretch_obj.warp
+							for warp_point_obj in stretch_obj.iter_warp_points():
 								wt_warp_pos = (warp_point_obj.beat)
 								wt_warp_pos_real = (warp_point_obj.second)*2
 								warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}

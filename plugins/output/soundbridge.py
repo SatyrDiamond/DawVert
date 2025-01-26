@@ -692,9 +692,9 @@ class output_soundbridge(plugins.base):
 
 							stretch_obj = audiopl_obj.sample.stretch
 
-							stretch_obj.fix_single_warp(convproj_obj, sp_obj)
-
-							warp_offset = stretch_obj.fix_warps(convproj_obj, sp_obj)
+							warp_obj = stretch_obj.warp
+							warp_obj.fix_single_warp(convproj_obj, sp_obj)
+							warp_offset = warp_obj.fix_warps(convproj_obj, sp_obj)
 
 							#stretch_obj.debugtxt_warp()
 
@@ -706,9 +706,7 @@ class output_soundbridge(plugins.base):
 							event.loopOffset = int(event.loopOffset)
 							event.positionEnd = int(event.positionEnd)
 
-							warp_points = [x for x in stretch_obj.iter_warp_points()]
-
-							for warp_point_obj in warp_points:
+							for warp_point_obj in warp_obj.iter_warp_points():
 								stretchMark = proj_soundbridge.soundbridge_stretchMark(None)
 								stretchMark.newPosition = warp_point_obj.beat
 								stretchMark.initPosition = warp_point_obj.second

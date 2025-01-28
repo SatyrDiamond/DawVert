@@ -266,7 +266,7 @@ def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
 					cvpj_notelist.add_m('DPCM'+'-'+notedata.Instrument, t_position, t_duration, t_key, 1, {})
 				else: 
 					cvpj_notelist.add_m('DPCM', t_position, t_duration, t_key, 1, {})
-
+	cvpj_notelist.only_one()
 
 class input_famistudio(plugins.base):
 	def is_dawvert_plugin(self):

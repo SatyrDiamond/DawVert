@@ -469,7 +469,7 @@ class input_wavtool(plugins.base):
 					sp_obj = placement_obj.sample
 
 					audio_filename = extract_audio(wavtool_clip.audioBufferId)
-					convproj_obj.sampleref__add(wavtool_clip.audioBufferId, audio_filename, None)
+					sampleref_obj = convproj_obj.sampleref__add(wavtool_clip.audioBufferId, audio_filename, None)
 					sp_obj.sampleref = wavtool_clip.audioBufferId
 
 					loopon = True
@@ -501,6 +501,7 @@ class input_wavtool(plugins.base):
 						else:
 							stretch_obj.is_warped = True
 							warp_obj = stretch_obj.warp
+							warp_obj.seconds = sampleref_obj.dur_sec
 							for anchor in wt_warp_anchors: 
 								warp_point_obj = warp_obj.points__add()
 								warp_point_obj.beat = (float(anchor))

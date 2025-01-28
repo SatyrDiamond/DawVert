@@ -21,7 +21,7 @@ def sampleref__get(convproj_obj, alssampleref_obj):
 	sampleref_obj.hz = alssampleref_obj.DefaultSampleRate
 	sampleref_obj.timebase = sampleref_obj.hz
 	sampleref_obj.dur_sec = sampleref_obj.dur_samples / sampleref_obj.hz
-	return filename
+	return sampleref_obj, filename
 
 def doparam(alsparam, varname, vartype, i_fallback, i_loc, i_addmul): 
 	global autoid_assoc
@@ -61,7 +61,7 @@ def findlists(parampaths):
 	return parsedout
 
 def do_samplepart(convproj_obj, sp_obj, SamplePart):
-	samplerefid = sampleref__get(convproj_obj, SamplePart.SampleRef)
+	sampleref_obj, samplerefid = sampleref__get(convproj_obj, SamplePart.SampleRef)
 	sp_obj.sampleref = samplerefid
 	sp_obj.point_value_type = "samples"
 	sp_obj.start = float(SamplePart.SampleStart)
@@ -517,7 +517,7 @@ class input_ableton(plugins.base):
 						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
 						placement_obj.muted = clipobj.Disabled
 						placement_obj.sample.vol = clipobj.SampleVolume
-						placement_obj.sample.sampleref = sampleref__get(convproj_obj, clipobj.SampleRef)
+						sampleref_obj, placement_obj.sample.sampleref = sampleref__get(convproj_obj, clipobj.SampleRef)
 
 						for _, e in clipobj.Envelopes.items():
 							mpetype = None
@@ -579,15 +579,15 @@ class input_ableton(plugins.base):
 								stretch_obj.params['envelope'] = clipobj.ComplexProEnvelope
 
 							if AUDWARPVERBOSE: print('i')
-							warp_obj = stretch_obj.warp
-							for _, WarpMarker in clipobj.WarpMarkers.items():
-								warp_point_obj = warp_obj.points__add()
-								warp_point_obj.beat = WarpMarker.BeatTime
-								warp_point_obj.second = WarpMarker.SecTime
-								if AUDWARPVERBOSE: print(str(WarpMarker.BeatTime).ljust(18), WarpMarker.SecTime)
 
-							warp_obj.calcpoints__speed()
-							warp_obj.points__del_last()
+							with stretch_obj.setup_warp() as warp_obj:
+								warp_obj.seconds = sampleref_obj.dur_sec
+								for _, WarpMarker in clipobj.WarpMarkers.items():
+									warp_point_obj = warp_obj.points__add()
+									warp_point_obj.beat = WarpMarker.BeatTime
+									warp_point_obj.second = WarpMarker.SecTime
+									if AUDWARPVERBOSE: print(str(WarpMarker.BeatTime).ljust(18), WarpMarker.SecTime)
+							stretch_obj.warp.points__del_last()
 
 						else:
 							pitchcalc = 2**(placement_obj.sample.pitch/12)

@@ -159,8 +159,9 @@ class cvpj_placement_audio:
 		stretch_obj = self.sample.stretch
 		pos_offset, cut_offset, finalspeed = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
 
-		if self.time.cut_type == 'cut':
+		if self.time.cut_type in ['cut', 'none']:
 			self.time.cut_start += cut_offset
+			self.time.cut_type = 'cut'
 		if self.time.cut_type == 'loop':
 			self.time.cut_loopend += cut_offset
 			self.time.cut_loopstart += cut_offset

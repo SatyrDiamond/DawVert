@@ -451,7 +451,7 @@ class output_reaper(plugins.base):
 					rpp_item_obj.playrate['rate'] = audiorate
 				else:
 					warp_obj = stretch_obj.warp
-					warprate = warp_obj.get_warp_speed()
+					warprate = warp_obj.speed
 					audiorate = warprate*tempomul
 					rpp_item_obj.playrate['rate'] = round(audiorate, 14) 
 					rpp_item_obj.stretchmarks = []
@@ -459,17 +459,12 @@ class output_reaper(plugins.base):
 					offmod *= warprate
 					offmod = round(offmod, 7)
 
-					warp_obj.change_warp_speed(warprate)
-					for num, warp_point_obj in enumerate(warp_obj.iter_warp_points()):
+					warp_obj.manp__speed_mul(warprate)
+					for num, warp_point_obj in enumerate(warp_obj.points__iter()):
 						m_beat = (warp_point_obj.beat/4)*2
 						m_second = warp_point_obj.second
 						m_beat -= offmod
 						rpp_item_obj.stretchmarks.append([m_beat, m_second])
-
-					#	for n, x in enumerate([m_beat, m_second]):
-					#		print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
-					#	print('|', end='')
-					#print()
 
 				rpp_item_obj.soffs.set(clip_startat)
 

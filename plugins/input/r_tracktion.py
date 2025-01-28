@@ -265,10 +265,12 @@ def do_track(convproj_obj, wf_track, track_obj):
 				)
 	
 		sp_obj = placement_obj.sample
-		sp_obj.stretch.set_rate_tempo(bpm, stretch_amt, False)
-		sp_obj.stretch.preserve_pitch = True
 		sp_obj.vol = xtramath.from_db(audioclip.gain)
 		sp_obj.pan = audioclip.pan
+
+		stretch_obj = sp_obj.stretch
+		stretch_obj.set_rate_tempo(bpm, stretch_amt, False)
+		stretch_obj.preserve_pitch = True
 
 		for fx in audioclip.effects:
 			params = fx.plugin.params
@@ -276,8 +278,19 @@ def do_track(convproj_obj, wf_track, track_obj):
 				if 'semitonesUp' in params: sp_obj.pitch += float(params['semitonesUp'])
 			if fx.fx_type == 'reverse':
 				sp_obj.reverse = True
+			if fx.fx_type == 'warpTime':
+				if fx.warptime:
+					bpmmul = (1/bpmdiv)
+					warptime = fx.warptime
+					stretch_obj.is_warped = True
+					warp_obj = sp_obj.stretch.warp
+					warp_obj.seconds = warptime.warpEndMarkerTime
 
-			#print(fx.fx_type, fx.plugin.params)
+					for warpmarker in warptime.warpmarkers:
+						warp_point_obj = warp_obj.points__add()
+						warp_point_obj.beat = (warpmarker.warpTime/stretch_amt)*2
+						warp_point_obj.second = warpmarker.sourceTime
+					warp_obj.calcpoints__speed()
 
 	track_obj.datavals.add('middlenote', middlenote)
 
@@ -311,7 +324,7 @@ class input_tracktion_edit(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
-		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion','universal:sampler:single','universal:sampler:multi']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']

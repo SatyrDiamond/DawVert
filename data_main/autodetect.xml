@@ -230,7 +230,7 @@
 		<file fileext=".png"/>
 	</plugin>
 
-	<plugin pluginset="main" name="domino">
+	<plugin pluginset="midi" name="domino">
 		<file fileext=".dms"/>
 		<bytes_header data="506f7274616c53657175656e636544617461"/>
 	</plugin>

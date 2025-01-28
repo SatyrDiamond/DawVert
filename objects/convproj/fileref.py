@@ -423,7 +423,7 @@ class cvpj_sampleref:
 		self.fileref = cvpj_fileref()
 		self.found = False
 		self.dur_samples = 0
-		self.dur_sec = 0
+		self.dur_sec = -1
 		self.timebase = 44100
 		self.hz = 44100
 		self.channels = 1

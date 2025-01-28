@@ -119,6 +119,15 @@ class notelist_cursor:
 		self.pos = oldpos
 		self.enable_go_last = True
 
+	def reverse_iter(self):
+		oldpos = self.pos
+		self.enable_go_last = False
+		for pos in range(len(self.base_nl)-1, -1, -1):
+			self.pos = pos
+			yield self.base_nl[pos]
+		self.pos = oldpos
+		self.enable_go_last = True
+
 	def goto_last(self):
 		ones = np.where(self.base_nl['used']==1)
 		self.pos = ones[0][-1] if len(ones[0]) else -1
@@ -882,6 +891,17 @@ class cvpj_notelist:
 
 		midiobj.tracks.append(miditrack)
 		midiobj.save(output_file)
+
+	def only_one(self):
+		cursor_obj = self.create_cursor()
+		lastnote = None
+		for note in cursor_obj.reverse_iter():
+			if note['used']:
+				if lastnote is not None:
+					total = note['pos']+note['dur']
+					calc = lastnote['pos']-total
+					note['dur'] += min(calc, 0)
+				lastnote = note
 
 	#def multikey_comb(self):
 	#	prev_note = None

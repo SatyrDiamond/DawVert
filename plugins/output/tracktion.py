@@ -240,7 +240,7 @@ class output_tracktion_edit(plugins.base):
 		return 'Waveform Edit'
 	
 	def get_shortname(self):
-		return 'tracktion_edit'
+		return 'waveform'
 	
 	def gettype(self):
 		return 'r'

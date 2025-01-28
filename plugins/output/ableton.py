@@ -586,6 +586,11 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 
 		do_audio_mpe(audiopl_obj, als_track, als_audioclip)
 
+		warp_obj = stretch_obj.warp
+		warp_obj.points__add__based_beat(0)
+		warp_obj.fixpl__offset(audiopl_obj.time, 1)
+		warp_obj.fix__sort()
+
 		ats = timestate(audiopl_obj)
 		ats.position = audiopl_obj.time.position
 		ats.duration = audiopl_obj.time.duration
@@ -598,6 +603,8 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			second_dur = sampleref_obj.dur_sec if sampleref_obj.dur_sec else 1
 		else:
 			second_dur = 8
+
+		warp_obj = stretch_obj.warp
 
 		if audiopl_obj.time.cut_type == 'cut':
 			ats.startrel = audiopl_obj.time.cut_start
@@ -615,8 +622,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			ats.loop_end = audiopl_obj.time.duration
 			if stretch_obj.is_warped:
 				s = second_dur*2
-				speed = stretch_obj.calc_warp_speed()
-				s *= speed
+				s *= warp_obj.speed
 				als_audioclip.Loop.HiddenLoopStart = ats.loop_end - s
 			else: als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
@@ -625,8 +631,8 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			als_audioclip.IsWarped = True
 
 			if AUDWARPVERBOSE: print('o')
-			warp_obj = stretch_obj.warp
-			for num, warp_point_obj in enumerate(warp_obj.iter_warp_points()):
+
+			for num, warp_point_obj in enumerate(warp_obj.points__iter()):
 				warpmarker_obj = proj_ableton.ableton_WarpMarker(None)
 				warpmarker_obj.BeatTime = warp_point_obj.beat
 				warpmarker_obj.SecTime = warp_point_obj.second

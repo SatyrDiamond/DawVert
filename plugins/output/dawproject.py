@@ -178,10 +178,12 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 			dp_warps.contentTimeUnit = 'seconds'
 			dp_warps.timeUnit = 'beats'
 			dp_warps.audio = dp_audio
-			for warppoint in stretch_obj.warppoints:
+
+			warp_obj = stretch_obj.warp
+			for warppoint in warp_obj.points__iter():
 				dp_warppoint = clips.dawproject_warppoint()
-				dp_warppoint.time = warppoint.beat
-				dp_warppoint.contentTime = warppoint.second
+				dp_warppoint.time = round(warppoint.beat, 9)
+				dp_warppoint.contentTime = round(warppoint.second, 9)
 				dp_warps.points.append(dp_warppoint)
 				maxlen = warppoint.beat
 
@@ -195,6 +197,12 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 	dp_clip_obj = clips.dawproject_clip()
 	dp_clip_obj.contentTimeUnit = 'beats'
 	do_visual_clip(cvpj_audioclip.visual, dp_clip_obj)
+
+	stretch_obj = cvpj_audioclip.sample.stretch
+	warp_obj = stretch_obj.warp
+	warp_obj.fix__fill()
+	#warp_obj.fixpl__offset(cvpj_audioclip.time, 1)
+	warp_obj.fix__sort()
 
 	dp_audio, dp_warps, zip_filepath, real_filepath, maxlen = make_dp_audio(convproj_obj, cvpj_audioclip.sample)
 	if dp_warps: dp_clip_obj.warps = dp_warps

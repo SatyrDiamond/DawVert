@@ -275,6 +275,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 					ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
 					warp_obj = stretch_obj.warp
+					warp_obj.seconds = sampleref_obj.dur_sec
 					for stretchMark in blockevent.stretchMarks:
 						warp_point_obj = warp_obj.points__add()
 						warp_point_obj.beat = stretchMark.newPosition/pfreq
@@ -378,6 +379,8 @@ class input_soundbridge(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			project_obj.load_from_file(dawvert_intent.input_file+'\\project.xml')
 
+		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
+		
 		pfreq = int(project_obj.sampleRate)/2
 		convproj_obj.set_timings(pfreq, False)
 
@@ -412,7 +415,6 @@ class input_soundbridge(plugins.base):
 
 		convproj_obj.timesig[0] = sb_timeSignature.timeSigNumerator
 		convproj_obj.timesig[1] = sb_timeSignature.timeSigDenominator
-		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
 
 		for x in sb_tempo.sections:
 			autopl_obj = convproj_obj.automation.add_pl_points(['main', 'bpm'], 'float')

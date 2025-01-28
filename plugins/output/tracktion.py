@@ -251,7 +251,7 @@ class output_tracktion_edit(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
-		in_dict['audio_stretch'] = ['rate']
+		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion','universal:sampler:single','universal:sampler:multi']
 		in_dict['plugin_ext'] = ['vst2']
@@ -416,13 +416,68 @@ class output_tracktion_edit(plugins.base):
 				wf_audioclip = proj_tracktion_edit.tracktion_audioclip()
 				wf_audioclip.id_num = counter_id.get()
 
-				offset, loopstart, loopend = audiopl_obj.time.get_loop_data()
-
 				wf_audioclip.start = audiopl_obj.time.position_real
 				wf_audioclip.length = audiopl_obj.time.duration_real
 
 				wf_audioclip.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
 				wf_audioclip.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
+
+				if audiopl_obj.visual.name: wf_audioclip.name = audiopl_obj.visual.name
+				if audiopl_obj.visual.color: wf_audioclip.colour = 'ff'+audiopl_obj.visual.color.get_hex()
+				wf_audioclip.mute = int(audiopl_obj.muted)
+
+				sp_obj = audiopl_obj.sample
+				stretch_obj = audiopl_obj.sample.stretch
+				if sp_obj.sampleref in sampleref_assoc:
+					wf_audioclip.source = sampleref_assoc[sp_obj.sampleref]
+					sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
+
+
+					if stretch_obj.is_warped:
+						warp_obj = stretch_obj.warp
+
+						stretch_amt = warp_obj.speed
+
+						numBeats = stretch_amt*warp_obj.seconds*2
+						wf_audioclip.loopinfo.numBeats = numBeats
+
+						loffset = warp_obj.get__offset()
+						warpmove = max(0, loffset)
+
+						audiopl_obj.time.cut_start += warpmove*4
+						if audiopl_obj.time.cut_type == 'none':
+							audiopl_obj.time.cut_type = 'cut'
+
+						warp_obj.manp__shift_beats(warpmove)
+
+						warp_obj.fix__fill()
+						warp_obj.points__add__based_beat(0)
+						warp_obj.points__add__based_second(0)
+
+						warp_obj.fix__sort()
+
+						warp_obj.fix__round()
+						warp_obj.fix__remove_dupe_sec()
+
+						afx = proj_tracktion_edit.tracktion_audioclip_fx() 
+						afx.fx_type = 'warpTime'
+						warptime = afx.warptime = proj_tracktion_edit.tracktion_warptime()
+						warptime.warpEndMarkerTime = warp_obj.seconds
+
+						for num, warp_point_obj in enumerate(warp_obj.points__iter()):
+							if warp_point_obj.beat>=0 and warp_point_obj.second>=0:
+								warpmarker = proj_tracktion_edit.tracktion_warpmarker()
+								warpmarker.warpTime = (warp_point_obj.beat/stretch_amt)/2
+								warpmarker.sourceTime = warp_point_obj.second
+								warptime.warpmarkers.append(warpmarker)
+
+						wf_audioclip.effects.append(afx)
+					else:
+						dur_sec = sampleref_obj.dur_sec*2
+						numBeats = stretch_obj.calc_tempo_size*dur_sec
+						wf_audioclip.loopinfo.numBeats = numBeats
+
+				offset, loopstart, loopend = audiopl_obj.time.get_loop_data()
 
 				boffset = (offset/8)*tempomul
 				toffset = (offset/4)*tempomul
@@ -437,19 +492,6 @@ class output_tracktion_edit(plugins.base):
 					wf_audioclip.offset = boffset
 					wf_audioclip.loopStartBeats = (loopstart/4)
 					wf_audioclip.loopLengthBeats = (loopend/4)
-
-				if audiopl_obj.visual.name: wf_audioclip.name = audiopl_obj.visual.name
-				if audiopl_obj.visual.color: wf_audioclip.colour = 'ff'+audiopl_obj.visual.color.get_hex()
-				wf_audioclip.mute = int(audiopl_obj.muted)
-
-				sp_obj = audiopl_obj.sample
-				if sp_obj.sampleref in sampleref_assoc:
-					wf_audioclip.source = sampleref_assoc[sp_obj.sampleref]
-					sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
-
-					dur_sec = sampleref_obj.dur_sec*2
-					numBeats = audiopl_obj.sample.stretch.calc_tempo_size*dur_sec
-					wf_audioclip.loopinfo.numBeats = numBeats
 
 				wf_audioclip.gain = xtramath.to_db(sp_obj.vol)
 				wf_audioclip.pan = sp_obj.pan

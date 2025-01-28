@@ -313,6 +313,7 @@ def do_audioclip(convproj_obj, npa_obj, inclip):
 			stretch_obj.preserve_pitch = stretch_algo != 'repitch'
 			stretch_obj.is_warped = True
 			warp_obj = stretch_obj.warp
+			warp_obj.seconds = sampleref_obj.dur_sec
 			for x in inclip.warps.points:
 				warp_point_obj = warp_obj.points__add()
 				warp_point_obj.beat = x.time

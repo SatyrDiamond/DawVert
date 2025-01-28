@@ -445,7 +445,7 @@ class output_wavtool(plugins.base):
 							warpdata['enabled'] = True
 
 							warp_obj = stretch_obj.warp
-							for warp_point_obj in stretch_obj.points__iter():
+							for warp_point_obj in warp_obj.points__iter():
 								wt_warp_pos = (warp_point_obj.beat)
 								wt_warp_pos_real = (warp_point_obj.second)*2
 								warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}

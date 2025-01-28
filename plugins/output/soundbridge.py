@@ -667,6 +667,14 @@ class output_soundbridge(plugins.base):
 
 					if ref_found:
 						if sampleref_obj.found:
+							stretch_obj = audiopl_obj.sample.stretch
+							warp_obj = stretch_obj.warp
+
+							warp_obj.fix__fill()
+							warp_obj.fixpl__offset(audiopl_obj.time, PROJECT_FREQ)
+							warp_obj.points__add__based_beat(0)
+							warp_obj.fix__sort()
+
 							event = proj_soundbridge.soundbridge_event(None)
 							event.position = 0
 							event.positionStart = 0
@@ -690,33 +698,46 @@ class output_soundbridge(plugins.base):
 
 							event.stretchMarks = []
 
-							stretch_obj = audiopl_obj.sample.stretch
-
-							warp_obj = stretch_obj.warp
-							warp_obj.fix_single_warp(convproj_obj, sp_obj)
-							warp_offset = warp_obj.fix_warps(convproj_obj, sp_obj)
-
-							#stretch_obj.debugtxt_warp()
-
-							event.positionStart += warp_offset*PROJECT_FREQ
-							event.loopOffset += warp_offset*PROJECT_FREQ
-							event.positionEnd += warp_offset*PROJECT_FREQ
 
 							event.positionStart = int(event.positionStart)
 							event.loopOffset = int(event.loopOffset)
 							event.positionEnd = int(event.positionEnd)
 
-							for warp_point_obj in warp_obj.iter_warp_points():
+							warppoints = {}
+
+							halfrate = project_obj.sampleRate/2
+
+							for warp_point_obj in warp_obj.points__iter():
+								beat = round(warp_point_obj.beat, 7)
+								second = round(warp_point_obj.second, 7)
+								if beat>=0:
+									initPosition = second
+									newPosition = beat
+
+									initPosition *= halfrate
+									newPosition *= halfrate
+	
+									initPosition = int(initPosition)
+									newPosition = int(newPosition)
+
+									warppoints[initPosition] = newPosition
+
+							if len(warppoints)>2:
+								if 0 not in warppoints:
+									firstpos = list(warppoints)[0]
+									warppoints = dict([[x-firstpos, y-firstpos] for x, y in warppoints.items()])
+									#secondpoint = warppoints[pointlist[1]]
+									#warppoints[0] = warppoints
+
+							for initPosition, newPosition in warppoints.items():
+
+								#print([initPosition, newPosition], end=' ')
+
 								stretchMark = proj_soundbridge.soundbridge_stretchMark(None)
-								stretchMark.newPosition = warp_point_obj.beat
-								stretchMark.initPosition = warp_point_obj.second
-
-								stretchMark.newPosition *= project_obj.sampleRate/2
-								stretchMark.initPosition *= sampleref_obj.hz
-
-								stretchMark.newPosition = int(stretchMark.newPosition)
-								stretchMark.initPosition = int(stretchMark.initPosition)
+								stretchMark.initPosition = initPosition*2
+								stretchMark.newPosition = newPosition
 								event.stretchMarks.append(stretchMark)
+							#print()
 
 							for n, x in audiopl_obj.auto.items():
 								if n == 'gain':

@@ -9,6 +9,7 @@
     <part type="float" name="feedback"/>
     <part type="float" name="delay"/>
   </struct>
+
   <struct name="compressor">
     <part type="skip" size="4"/>
     <part type="float" name="gain"/>
@@ -18,6 +19,7 @@
     <part type="float" name="ratio"/>
     <part type="float" name="predelay"/>
   </struct>
+
   <struct name="distortion">
     <part type="skip" size="4"/>
     <part type="float" name="gain"/>
@@ -26,6 +28,7 @@
     <part type="float" name="posteqcenterfrequency"/>
     <part type="float" name="posteqbandwidth"/>
   </struct>
+
   <struct name="echo">
     <part type="skip" size="4"/>
     <part type="float" name="wetdry"/>
@@ -34,6 +37,7 @@
     <part type="float" name="rightdelay"/>
     <part type="float" name="pandelay"/>
   </struct>
+
   <struct name="flanger">
     <part type="skip" size="4"/>
     <part type="float" name="wetdrymix"/>
@@ -44,11 +48,13 @@
     <part type="float" name="feedback"/>
     <part type="float" name="delay"/>
   </struct>
+
   <struct name="gargle">
     <part type="skip" size="4"/>
     <part type="float" name="rate"/>
     <part type="float" name="waveshape"/>
   </struct>
+
   <struct name="i3dl2reverb">
     <part type="skip" size="4"/>
     <part type="float" name="room"/>
@@ -65,12 +71,14 @@
     <part type="float" name="hfreference"/>
     <part type="float" name="quality"/>
   </struct>
+
   <struct name="parameq">
     <part type="skip" size="4"/>
     <part type="float" name="center"/>
     <part type="float" name="bandwidth"/>
     <part type="float" name="eqgain"/>
   </struct>
+
   <struct name="wavesreverb">
     <part type="skip" size="4"/>
     <part type="float" name="ingain"/>

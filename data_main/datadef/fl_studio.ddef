@@ -17,6 +17,7 @@
     <part type="s_int" name="out_vol"/>
     <part type="s_int" name="out_next"/>
   </struct>
+
   <struct name="__part__fruity_delay_bank_extra">
     <part type="s_int" name="filter_type"/>
     <part type="s_int" name="filter_mode"/>
@@ -33,6 +34,7 @@
     <part type="byte" name="feedback_leave_first_echo"/>
     <part type="byte" name="feedback_tempo"/>
   </struct>
+
   <struct name="fruity_delay_bank">
     <part type="s_int" name="version"/>
     <part type="s_int" name="dry"/>
@@ -57,6 +59,7 @@
     <part type="struct" name="bank_7_e" struct_name="__part__fruity_delay_bank_extra"/>
     <part type="struct" name="bank_8_e" struct_name="__part__fruity_delay_bank_extra"/>
   </struct>
+
   <struct name="fl_slayer">
     <part type="int" name="version"/>
     <part type="s_int" name="string_type"/>
@@ -89,6 +92,7 @@
     <part type="s_int" name="glissando"/>
     <part type="s_int" name="pitch_bend"/>
   </struct>
+
   <struct name="fl_keys">
     <part type="int" name="version"/>
     <part type="string" name="instrument" size_source="part">
@@ -110,12 +114,14 @@
     <part type="s_int" name="lfo"/>
     <part type="s_int" name="overdrive"/>
   </struct>
+
   <struct name="boobass">
     <part type="int" name="version"/>
     <part type="int" name="bass"/>
     <part type="int" name="mid"/>
     <part type="int" name="treble"/>
   </struct>
+
   <struct name="vintage_chorus">
     <part type="int" name="version"/>
     <part type="int" name="mode"/>
@@ -136,6 +142,7 @@
     <part type="int" name="mod_tempo_sync"/>
     <part type="int" name="mod_phase_start"/>
   </struct>
+
   <struct name="vintage_phaser">
     <part type="int" name="version"/>
     <part type="int" name="phaser_min"/>
@@ -172,6 +179,7 @@
     <part type="int" name="lfo_scale"/>
     <part type="int" name="lfo_pull"/>
   </struct>
+
   <struct name="fruity_multiband_compressor">
     <part type="int" name="version"/>
     <part type="int" name="gain"/>
@@ -205,6 +213,7 @@
     <part type="int" name="__unknown"/>
     <part type="int" name="visual_speed"/>
   </struct>
+
   <struct name="frequency_shifter">
     <part type="int" name="version"/>
     <part type="int" name="mix"/>
@@ -219,6 +228,7 @@
     <part type="int" name="start_phase"/>
     <part type="int" name="mixer_track"/>
   </struct>
+
   <struct name="fruit_kick">
     <part type="int" name="version"/>
     <part type="s_int" name="max_freq"/>
@@ -228,6 +238,7 @@
     <part type="int" name="osc_click"/>
     <part type="int" name="osc_dist"/>
   </struct>
+
   <struct name="fruity_7_band_eq">
     <part type="int" name="version"/>
     <part type="s_int" name="band_1"/>
@@ -238,20 +249,24 @@
     <part type="s_int" name="band_6"/>
     <part type="s_int" name="band_7"/>
   </struct>
+
   <struct name="fruity_balance">
     <part type="s_int" name="pan"/>
     <part type="int" name="vol"/>
   </struct>
+
   <struct name="fruity_bass_boost">
     <part type="int" name="version"/>
     <part type="int" name="freq"/>
     <part type="int" name="amount"/>
   </struct>
+
   <struct name="fruity_big_clock">
     <part type="byte" name="version"/>
     <part type="byte" name="beats"/>
     <part type="byte" name="color"/>
   </struct>
+
   <struct name="fruity_blood_overdrive">
     <part type="s_int" name="version"/>
     <part type="s_int" name="preband"/>
@@ -263,10 +278,12 @@
     <part type="s_int" name="unknown_1"/>
     <part type="s_int" name="unknown_2"/>
   </struct>
+
   <struct name="fruity_center">
     <part type="s_int" name="version"/>
     <part type="s_int" name="on"/>
   </struct>
+
   <struct name="fruity_chorus">
     <part type="s_int" name="version"/>
     <part type="s_int" name="delay"/>
@@ -282,6 +299,7 @@
     <part type="s_int" name="crosscutoff"/>
     <part type="s_int" name="wetonly"/>
   </struct>
+
   <struct name="fruity_delay_2">
     <part type="s_int" name="input_pan"/>
     <part type="int" name="input_vol"/>
@@ -292,6 +310,7 @@
     <part type="int" name="fb_mode"/>
     <part type="int" name="fb_cut"/>
   </struct>
+
   <struct name="fruity_delay_3">
     <part type="int" name="version"/>
     <part type="int" name="wet"/>
@@ -321,6 +340,7 @@
     <part type="int" name="tone"/>
     <part type="int" name="dry"/>
   </struct>
+
   <struct name="fruity_delay">
     <part type="int" name="version"/>
     <part type="int" name="input"/>
@@ -330,6 +350,7 @@
     <part type="int" name="steps"/>
     <part type="int" name="mode"/>
   </struct>
+
   <struct name="fruity_dx10">
     <part type="int" name="version"/>
     <part type="int" name="amp_att"/>
@@ -355,6 +376,7 @@
     <part type="int" name="mod2_velsen"/>
     <part type="s_int" name="octave"/>
   </struct>
+
   <struct name="fruity_fast_dist">
     <part type="int" name="pre"/>
     <part type="int" name="threshold"/>
@@ -362,11 +384,13 @@
     <part type="int" name="mix"/>
     <part type="int" name="post"/>
   </struct>
+
   <struct name="fruity_fast_lp">
     <part type="int" name="version"/>
     <part type="s_int" name="cutoff"/>
     <part type="s_int" name="reso"/>
   </struct>
+
   <struct name="fruity_filter">
     <part type="int" name="version"/>
     <part type="s_int" name="cutoff"/>
@@ -377,6 +401,7 @@
     <part type="s_int" name="x2"/>
     <part type="byte" name="center"/>
   </struct>
+
   <struct name="fruity_flanger">
     <part type="int" name="version"/>
     <part type="s_int" name="delay"/>
@@ -392,6 +417,7 @@
     <part type="s_int" name="wet"/>
     <part type="s_int" name="cross"/>
   </struct>
+
   <struct name="fruity_flangus">
     <part type="int" name="ord"/>
     <part type="int" name="depth"/>
@@ -402,6 +428,7 @@
     <part type="s_int" name="dry"/>
     <part type="s_int" name="wet"/>
   </struct>
+
   <struct name="fruity_free_filter">
     <part type="s_int" name="version"/>
     <part type="s_int" name="type"/>
@@ -410,6 +437,7 @@
     <part type="s_int" name="gain"/>
     <part type="byte" name="center"/>
   </struct>
+
   <struct name="fruity_limiter">
     <part type="int"/>
     <part type="int" name="gain"/>
@@ -470,11 +498,13 @@
     <part type="byte" name="unknown_19"/>
     <part type="byte" name="0.2_limiter_safety"/>
   </struct>
+
   <struct name="fruity_mute_2">
     <part type="int" name="version"/>
     <part type="s_int" name="mute"/>
     <part type="s_int" name="channel"/>
   </struct>
+
   <struct name="fruity_panomatic">
     <part type="s_int" name="pan"/>
     <part type="s_int" name="vol"/>
@@ -483,6 +513,7 @@
     <part type="s_int" name="lfo_amount"/>
     <part type="s_int" name="lfo_speed"/>
   </struct>
+
   <struct name="fruity_parametric_eq_2">
     <part type="int" name="version"/>
     <part type="s_int" name="1_gain"/>
@@ -522,6 +553,7 @@
     <part type="s_int" name="7_order"/>
     <part type="s_int" name="main_lvl"/>
   </struct>
+
   <struct name="fruity_parametric_eq">
     <part type="s_int" name="1_gain"/>
     <part type="s_int" name="2_gain"/>
@@ -553,10 +585,12 @@
     <part type="int" name="7_type"/>
     <part type="s_int" name="main_lvl"/>
   </struct>
+
   <struct name="fruity_phase_inverter">
     <part type="int" name="version"/>
     <part type="int" name="state"/>
   </struct>
+
   <struct name="fruity_phaser">
     <part type="int" name="version"/>
     <part type="int" name="sweep_freq"/>
@@ -569,6 +603,7 @@
     <part type="int" name="drywet"/>
     <part type="int" name="gain"/>
   </struct>
+
   <struct name="fruity_reeverb_2">
     <part type="int" name="version"/>
     <part type="int" name="lowcut"/>
@@ -589,6 +624,7 @@
     <part type="byte" name="tempo_predelay"/>
     <part type="byte" name="mid_side"/>
   </struct>
+
   <struct name="fruity_reeverb">
     <part type="int" name="version"/>
     <part type="int" name="lowcut"/>
@@ -602,10 +638,12 @@
     <part type="int" name="dry"/>
     <part type="int" name="reverb"/>
   </struct>
+
   <struct name="fruity_soft_clipper">
     <part type="int" name="threshold"/>
     <part type="int" name="postgain"/>
   </struct>
+
   <struct name="fruity_spectroman">
     <part type="int" name="version"/>
     <part type="int" name="outputmode"/>
@@ -615,6 +653,7 @@
     <part type="byte" name="show_peaks"/>
     <part type="byte" name="stereo"/>
   </struct>
+
   <struct name="fruity_stereo_enhancer">
     <part type="s_int" name="pan"/>
     <part type="s_int" name="vol"/>
@@ -623,6 +662,7 @@
     <part type="s_int" name="prepost"/>
     <part type="s_int" name="phaseinvert"/>
   </struct>
+
   <struct name="fruity_stereo_shaper">
     <part type="int"/>
     <part type="s_int" name="r2l"/>
@@ -634,6 +674,7 @@
     <part type="s_int" name="iodiff"/>
     <part type="s_int" name="prepost"/>
   </struct>
+
   <struct name="plucked!">
     <part type="int" name="decay"/>
     <part type="int" name="color"/>
@@ -641,6 +682,7 @@
     <part type="int" name="release"/>
     <part type="int" name="wide"/>
   </struct>
+
   <struct name="simsynth">
     <part type="double" name="osc1_pw"/>
     <part type="double" name="osc1_crs"/>
@@ -710,11 +752,13 @@
     <part type="int" name="chorus_on"/>
     <part type="int" name="unk_8"/>
   </struct>
+
   <struct name="soundgoodizer">
     <part type="int" name="version"/>
     <part type="s_int" name="mode"/>
     <part type="s_int" name="amount"/>
   </struct>
+
   <struct name="transient_processor">
     <part type="int" name="version"/>
     <part type="s_int" name="attack"/>
@@ -729,6 +773,7 @@
     <part type="s_int" name="display_flags"/>
     <part type="s_int" name="display_scroll"/>
   </struct>
+
   <struct name="tuner">
     <part type="int" name="version"/>
     <part type="s_int" name="refrence"/>
@@ -736,6 +781,7 @@
     <part type="s_int" name="bass"/>
     <part type="s_int" name="display_mode"/>
   </struct>
+
   <struct name="wasp">
     <part type="int" name="version"/>
     <part type="int" name="1_shape"/>
@@ -780,6 +826,7 @@
     <part type="int" name="dist_tone"/>
     <part type="int" name="dualvoice"/>
   </struct>
+
   <struct name="wasp_xt">
     <part type="int" name="version"/>
     <part type="int" name="1_shape"/>
@@ -838,6 +885,7 @@
     <part type="int" name="me_filter"/>
     <part type="int" name="wnoise"/>
   </struct>
+
   <struct name="3x_osc">
     <part type="int" name="version"/>
     <part type="s_int" name="osc1_pan"/>
@@ -866,6 +914,7 @@
     <part type="byte" name="osc3_invert"/>
     <part type="byte" name="osc3_am"/>
   </struct>
+
   <struct name="sslf_bassdrum">
     <part type="skip" name="header" size="4"/>
     <part type="string" name="name" size="256"/>
@@ -897,6 +946,7 @@
     <part type="float" name="noise_mix"/>
     <part type="float" name="noise_filter"/>
   </struct>
+
   <struct name="razer_chroma">
     <part type="int" name="version"/>
     <part type="int" name="amplitude"/>
@@ -910,6 +960,7 @@
     <part type="int" name="enabled_mouse_mat"/>
     <part type="int" name="enabled_keypad"/>
   </struct>
+
   <struct name="sslf_pitcher">
     <part type="skip" name="header" size="4"/>
     <part type="float" name="correction_speed"/>
@@ -941,6 +992,7 @@
     </part>
     <part type="raw" size="4"/>
   </struct>
+
   <struct name="fruity_compressor">
     <part type="int" name="version"/>
     <part type="s_int" name="threshold"/>
@@ -950,6 +1002,7 @@
     <part type="int" name="release"/>
     <part type="int" name="type"/>
   </struct>
+
   <struct name="fruity_formula_controller">
     <part type="int" name="version"/>
     <part type="int" name="in_a"/>
@@ -962,6 +1015,7 @@
       <size type="byte"/>
     </part>
   </struct>
+
   <struct name="fruity_granulizer">
     <part type="int"/>
     <part type="int" name="attack"/>
@@ -979,6 +1033,7 @@
     <part type="int" name="trans_mode"/>
     <part type="int" name="key_to"/>
   </struct>
+
   <struct name="__part__multiband_delay">
     <part type="list" name="delay" size="16">
       <part type="float"/>
@@ -990,6 +1045,7 @@
       <part type="float"/>
     </part>
   </struct>
+
   <struct name="multiband_delay__UNFINISHED">
     <part type="int" name="version"/>
     <part type="int"/>
@@ -1002,6 +1058,7 @@
     <part type="struct" name="bank_7" struct_name="__part__multiband_delay"/>
     <part type="struct" name="bank_8" struct_name="__part__multiband_delay"/>
   </struct>
+
   <struct name="pitch_shifter_NOT_FINISHED">
     <part type="int" name="version"/>
     <part type="s_int" name="pitch"/>
@@ -1035,6 +1092,7 @@
     <part type="byte" name="display_mono"/>
     <part type="raw" size="256"/>
   </struct>
+
   <struct name="spreader">
     <part type="int" name="version"/>
     <part type="s_int" name="spread"/>
@@ -1046,6 +1104,7 @@
     <part type="byte" name="prefx"/>
     <part type="byte" name="postfx"/>
   </struct>
+
   <struct name="kepler">
     <part type="int" name="unk_1"/>
     <part type="int" name="unk_2"/>

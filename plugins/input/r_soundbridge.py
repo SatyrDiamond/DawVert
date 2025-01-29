@@ -282,8 +282,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 						warp_point_obj.second = stretchMark.initPosition/(sampleref_obj.hz if sampleref_obj else pfreq)
 
 					warp_obj.calcpoints__speed()
-					#stretch_obj.debugtxt_warp()
-
+					
 					for autoblock in blockevent.automationBlocks:
 						autopoints_obj = placement_obj.add_autopoints('gain', pfreq, True)
 						for a in parse_auto(autoblock.blockData):

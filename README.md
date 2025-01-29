@@ -9,8 +9,14 @@
 </p>
 
 <p align="center">
-  <a title="Discord Server" href="https://discord.gg/SWkR6Z9pQC">
-    <img alt="Discord Server" src="https://img.shields.io/discord/1094015153529430129?label=Discord&logo=Discord&logoColor=fff&style=for-the-badge">
+  <a href="https://discord.gg/SWkR6Z9pQC">
+    <img alt="discord-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-singular_vector.svg">
+  </a>
+  <a href="http://rvlt.gg/TM9YGMQ9">
+    <img alt="revolt-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/revolt-singular_vector.svg">
+  </a>
+  <a href="https://ko-fi.com/satyrdiamond">
+    <img alt="kofi-singular" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/donate/kofi-singular_vector.svg">
   </a>
 </p>
 

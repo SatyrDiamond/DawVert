@@ -24,7 +24,7 @@ filesearcher = fileref.filesearcher
 
 scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
-from objects_ui.ui_pyqt import Ui_MainWindow
+from objects.ui.ui_pyqt import Ui_MainWindow
 
 logging.disable(logging.INFO)
 

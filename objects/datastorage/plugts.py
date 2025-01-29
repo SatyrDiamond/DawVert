@@ -83,7 +83,8 @@ class pltr_ts:
 					if x_inpart.tag == 'calc':
 						name = x_inpart.get('name')
 						calctype = x_inpart.get('type')
-						self.proc.append(['calc', name, calctype]+[(float(x) if '.' in x else int(x)) for x in x_inpart.text.split(';')])
+						calcvals = [(float(x) if '.' in x else int(x)) for x in x_inpart.text.split(';')] if x_inpart.text else [0]
+						self.proc.append(['calc', name, calctype]+calcvals)
 						
 			if x_part.tag == 'output':
 				self.out_type.set_str(x_part.get('plugtype'))

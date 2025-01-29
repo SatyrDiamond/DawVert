@@ -28,7 +28,7 @@ def autopoints_get(autoloc, add, mul):
 	return sngauto
 
 def add_fx(convproj_obj, soundation_channel, fxchain_audio):
-	from objects.file_proj import proj_soundation
+	from objects.file_proj import soundation as proj_soundation
 	for pluginid in fxchain_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
@@ -98,7 +98,7 @@ class output_soundation(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, i_convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_soundation
+		from objects.file_proj import soundation as proj_soundation
 
 		global convproj_obj
 		global audio_id

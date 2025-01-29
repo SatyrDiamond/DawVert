@@ -115,7 +115,7 @@ class output_cvpjs(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from bs4 import BeautifulSoup
 		from functions_plugin import flp_enc_plugins
-		from objects.file_proj import proj_flp
+		from objects.file_proj import flp as proj_flp
 		from objects.file_proj._flp import channel
 		from objects.file_proj._flp import arrangement
 		from objects.file_proj._flp import fx

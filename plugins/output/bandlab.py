@@ -34,7 +34,7 @@ class output_bandlab(plugins.base):
 		in_dict['plugin_included'] = ['native:bandlab']
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_bandlab
+		from objects.file_proj import bandlab as proj_bandlab
 
 		convproj_obj.change_timings(1, True)
 		
@@ -228,7 +228,7 @@ def do_automation(convproj_obj, autoloc, blx_auto):
 				blx_auto.add_point(autopoint.pos, autopoint.value)
 
 def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio):
-	from objects.file_proj import proj_bandlab
+	from objects.file_proj import bandlab as proj_bandlab
 	for pluginid in fxslots_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 

@@ -295,7 +295,7 @@ def do_track(convproj_obj, wf_track, track_obj):
 	track_obj.datavals.add('middlenote', middlenote)
 
 def do_tracks(convproj_obj, in_tracks, counter_track, groupid):
-	from objects.file_proj import proj_tracktion_edit
+	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	for wf_track in in_tracks:
 		tracknum = counter_track.get()
 		if isinstance(wf_track, proj_tracktion_edit.tracktion_track):
@@ -334,8 +334,8 @@ class input_tracktion_edit(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_tracktion_edit
-		from objects.file_proj import proj_tracktion_project
+		from objects.file_proj import tracktion_edit as proj_tracktion_edit
+		from objects.file_proj import tracktion_project as proj_tracktion_project
 		global cvpj_l
 
 		convproj_obj.fxtype = 'groupreturn'

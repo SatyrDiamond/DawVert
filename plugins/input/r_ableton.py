@@ -382,7 +382,7 @@ class input_ableton(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
-		from objects.file_proj import proj_ableton
+		from objects.file_proj import ableton as proj_ableton
 		from objects import auto_id
 
 		global autoid_assoc

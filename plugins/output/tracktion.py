@@ -22,7 +22,7 @@ def gen_hexid(num):
 	return outv
 
 def make_volpan_plugin(convproj_obj, track_obj, iddat, wf_track, startn):
-	from objects.file_proj import proj_tracktion_edit
+	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	wf_plugin = proj_tracktion_edit.tracktion_plugin()
 	wf_plugin.plugtype = 'volume'
 	wf_plugin.enabled = 1
@@ -35,14 +35,14 @@ def make_volpan_plugin(convproj_obj, track_obj, iddat, wf_track, startn):
 	return wf_plugin
 
 def make_level_plugin(wf_track):
-	from objects.file_proj import proj_tracktion_edit
+	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	wf_plugin = proj_tracktion_edit.tracktion_plugin()
 	wf_plugin.plugtype = 'level'
 	wf_plugin.enabled = 1
 	wf_track.plugins.append(wf_plugin)
 
 def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
-	from objects.file_proj import proj_tracktion_edit
+	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	if_found, autopoints = convproj_obj.automation.get_autopoints(autoloc)
 	if if_found:
 		autopoints.remove_instant()
@@ -88,7 +88,7 @@ def soundlayer_samplepart(plugin_obj, gpitch, bxml_main, lowNote, highNote, root
 		#print([(d, k) for d, k in bxml_layer.attrib.items() if d in ['rootNote', 'lowNote', 'highNote']])
 
 def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
-	from objects.file_proj import proj_tracktion_edit
+	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	from objects.inst_params import juce_plugin
 	from objects.binary_fmt import juce_binaryxml
 	from functions.juce import juce_memoryblock
@@ -218,7 +218,7 @@ def get_plugins(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc,
 			wf_plugins.append(wf_plugin)
 
 def make_group(convproj_obj, sampleref_assoc, sampleref_obj_assoc, groupid, groups_data, counter_id, wf_maintrack):
-	from objects.file_proj import proj_tracktion_edit
+	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	if groupid not in groups_data:
 		group_obj = convproj_obj.fx__group__get(groupid)
 		if group_obj:
@@ -262,8 +262,8 @@ class output_tracktion_edit(plugins.base):
 		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_tracktion_edit
-		from objects.file_proj import proj_tracktion_project
+		from objects.file_proj import tracktion_edit as proj_tracktion_edit
+		from objects.file_proj import tracktion_project as proj_tracktion_project
 		global dataset
 
 		convproj_obj.change_timings(4, True)

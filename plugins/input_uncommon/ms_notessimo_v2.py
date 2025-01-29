@@ -31,7 +31,7 @@ class input_notessimo_v2(plugins.base):
 		in_dict['projtype'] = 'ms'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_notessimo_v2
+		from objects.file_proj import notessimo_v2 as proj_notessimo_v2
 
 		global used_insts
 		used_insts = []

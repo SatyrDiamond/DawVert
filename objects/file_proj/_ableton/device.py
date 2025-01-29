@@ -3,7 +3,7 @@
 
 from objects.file_proj._ableton.func import *
 from objects.file_proj._ableton.tracks import *
-from objects.file_proj import proj_ableton
+from objects.file_proj import ableton as proj_ableton
 
 class ableton_Device:
 	def __init__(self, xmltag):

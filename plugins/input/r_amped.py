@@ -344,7 +344,7 @@ class input_amped(plugins.base):
 		detectdef_obj.containers.append(['zip', 'amped-studio-project.json'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_amped
+		from objects.file_proj import amped as proj_amped
 
 		global samplefolder
 

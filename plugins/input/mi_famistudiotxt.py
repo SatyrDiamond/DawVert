@@ -292,7 +292,7 @@ class input_famistudio(plugins.base):
 		in_dict['projtype'] = 'mi'
 		
 	def parse(self, i_convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_famistudiotxt
+		from objects.file_proj import famistudiotxt as proj_famistudiotxt
 		
 		global samplefolder
 		global convproj_obj

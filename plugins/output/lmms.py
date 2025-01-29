@@ -117,7 +117,7 @@ def parse_auto(lmms_points, autopoints_obj):
 		curpoint += 1
 
 def make_auto_track(autoidnum, autodata, visualname, automode):
-	from objects.file_proj import proj_lmms
+	from objects.file_proj import lmms as proj_lmms
 
 	global song_obj
 	lmms_track = proj_lmms.lmms_track()
@@ -214,7 +214,7 @@ def setvstparams(lmms_plug_obj, plugin_obj, pluginid, keysdict):
 	return middlenotefix
 
 def encode_effectslot(effect_obj, plugin_obj, pluginid):
-	from objects.file_proj import proj_lmms
+	from objects.file_proj import lmms as proj_lmms
 
 	paramauto(effect_obj.on, plugin_obj.params_slot, 'enabled', True, None, ['slot', pluginid], 'Slot', 'On')
 	paramauto(effect_obj.wet, plugin_obj.params_slot, 'wet', 1, None, ['slot', pluginid], 'Slot', 'Wet')
@@ -271,7 +271,7 @@ def encode_effectslot(effect_obj, plugin_obj, pluginid):
 				lmms_plug_obj.ladspa_params[lmms_paramid] = ladspa_param_obj
 
 def encode_fxchain(lmms_fxchain, track_obj, trackname, autoloc):
-	from objects.file_proj import proj_lmms
+	from objects.file_proj import lmms as proj_lmms
 
 	#paramauto(lmms_fxchain.enabled, track_obj.params, 'fx_enabled', False, None, autoloc, trackname, 'FX Enabled')
 	for pluginid in track_obj.plugslots.slots_audio:
@@ -351,7 +351,7 @@ class output_lmms(plugins.base):
 		in_dict['projtype'] = 'r'
 		
 	def parse(self, i_cvpj_obj, dawvert_intent):
-		from objects.file_proj import proj_lmms
+		from objects.file_proj import lmms as proj_lmms
 
 		global lmms_bpm
 		global cvpj_obj

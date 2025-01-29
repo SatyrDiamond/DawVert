@@ -107,7 +107,7 @@ class input_zenbeats(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_zenbeats
+		from objects.file_proj import zenbeats as proj_zenbeats
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'

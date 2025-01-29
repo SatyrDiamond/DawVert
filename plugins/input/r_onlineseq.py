@@ -28,7 +28,7 @@ class input_onlinesequencer(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_onlineseq
+		from objects.file_proj import onlineseq as proj_onlineseq
 		from objects.inst_params import fx_delay
 
 		global onlseq_notelist

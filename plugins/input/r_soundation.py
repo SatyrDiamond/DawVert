@@ -79,7 +79,7 @@ class input_soundation(plugins.base):
 
 	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects import colors
-		from objects.file_proj import proj_soundation
+		from objects.file_proj import soundation as proj_soundation
 
 		global dataset
 		global convproj_obj

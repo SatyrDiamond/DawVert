@@ -59,7 +59,7 @@ class input_1bitdragon(plugins.base):
 		in_dict['projtype'] = 'ms'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_1bitdragon
+		from objects.file_proj import onebitdragon as proj_1bitdragon
 
 		convproj_obj.set_timings(4, True)
 		convproj_obj.type = 'ms'

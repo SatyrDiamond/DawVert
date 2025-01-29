@@ -41,7 +41,7 @@ class input_fl_mobile(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		global samplefolder
 
-		from objects.file_proj import proj_fl_mobile
+		from objects.file_proj import fl_mobile as proj_fl_mobile
 		from objects.file import adlib_bnk
 
 		convproj_obj.type = 'r'

@@ -107,7 +107,7 @@ class input_serato(plugins.base):
 		in_dict['projtype'] = 'ms'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_serato
+		from objects.file_proj import serato as proj_serato
 		from objects.convproj import sample_entry
 
 		convproj_obj.type = 'ms'

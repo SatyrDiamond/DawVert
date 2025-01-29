@@ -8,7 +8,7 @@ from objects import globalstore
 from functions import data_values
 
 def create_auto(project_obj, convproj_obj, os_target, os_param, autoloc, mul):
-	from objects.file_proj import proj_onlineseq
+	from objects.file_proj import onlineseq as proj_onlineseq
 	auto_found, auto_points = convproj_obj.automation.get_autopoints(autoloc)
 
 	if auto_found:
@@ -42,7 +42,7 @@ class output_onlineseq(plugins.base):
 		in_dict['projtype'] = 'r'
 	
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_onlineseq
+		from objects.file_proj import onlineseq as proj_onlineseq
 
 		convproj_obj.change_timings(4, True)
 

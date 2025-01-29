@@ -36,7 +36,7 @@ class input_bandlab(plugins.base):
 		in_dict['plugin_included'] = ['native:bandlab']
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_bandlab
+		from objects.file_proj import bandlab as proj_bandlab
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'

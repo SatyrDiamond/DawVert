@@ -249,7 +249,7 @@ class input_jummbox(plugins.base):
 		in_dict['projtype'] = 'mi'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_jummbox
+		from objects.file_proj import jummbox as proj_jummbox
 
 		convproj_obj.type = 'mi'
 		convproj_obj.set_timings(8, True)

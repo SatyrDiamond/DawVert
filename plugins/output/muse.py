@@ -75,7 +75,7 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 	synthidnum += 1
 
 def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
-	from objects.file_proj import proj_muse
+	from objects.file_proj import muse as proj_muse
 	global tracknum
 	global synthidnum
 	logger_output.info('MusE:  Midi Track '+str(tracknum)+(': '+trackname if trackname else ''))
@@ -112,7 +112,7 @@ WAVE_FREQUENCY = 48000
 wavetime = WAVE_FREQUENCY/768
 
 def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bpm):
-	from objects.file_proj import proj_muse
+	from objects.file_proj import muse as proj_muse
 	global tracknum
 	global synthidnum
 	logger_output.info('MusE:  Wave Track '+str(tracknum)+(': '+track_obj.visual.name if track_obj.visual.name else ''))
@@ -196,7 +196,7 @@ class output_cvpj(plugins.base):
 		in_dict['projtype'] = 'r'
 	
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_muse
+		from objects.file_proj import muse as proj_muse
 		global tracknum
 		global synthidnum
 		tracknum = 1

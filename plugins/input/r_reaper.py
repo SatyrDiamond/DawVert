@@ -141,7 +141,7 @@ class input_reaper(plugins.base):
 		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_reaper
+		from objects.file_proj import reaper as proj_reaper
 
 		if dawvert_intent.input_mode == 'file':
 			bytestream = open(dawvert_intent.input_file, 'r')

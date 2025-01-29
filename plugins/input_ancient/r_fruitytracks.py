@@ -60,7 +60,7 @@ class input_fruitytracks(plugins.base):
 		detectdef_obj.headers.append([0, b'FThd'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_fruitytracks
+		from objects.file_proj import fruitytracks as proj_fruitytracks
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)

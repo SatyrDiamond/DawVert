@@ -60,7 +60,7 @@ class input_trackerboy(plugins.base):
 		detectdef_obj.headers.append([0, b'\x00TRACKERBOY\x00'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_trackerboy
+		from objects.file_proj import trackerboy as proj_trackerboy
 		from objects.tracker import pat_multi
 		project_obj = proj_trackerboy.trackerboy_project()
 		if dawvert_intent.input_mode == 'file':

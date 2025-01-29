@@ -56,7 +56,7 @@ class input_xm(plugins.base):
 		detectdef_obj.headers.append([0, b'Extended Module: '])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_xm
+		from objects.file_proj import tracker_xm as proj_xm
 		from objects.tracker import pat_single
 		global samplefolder
 		

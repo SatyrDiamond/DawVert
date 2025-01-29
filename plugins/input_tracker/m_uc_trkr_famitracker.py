@@ -27,7 +27,7 @@ class input_famitracker_txt(plugins.base):
 		in_dict['projtype'] = 'm'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_famitracker
+		from objects.file_proj import famitracker as proj_famitracker
 		from objects.tracker import pat_multi
 		from objects import audio_data
 		project_obj = proj_famitracker.famitracker_project()

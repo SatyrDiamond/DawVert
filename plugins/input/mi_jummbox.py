@@ -134,11 +134,12 @@ def get_harmonics(harmonics_obj, i_harmonics):
 	harmonics_obj.add(n+2, i_harmonics[-1]/100, {})
 
 def get_asdr(plugin_obj, bb_inst, jummbox_obj):
+	bb_data = bb_inst.data
 	a_attack = bb_inst.fadeInSeconds
 	a_decay = 3
 	a_sustain = 1
 	a_release = abs(bb_inst.fadeOutTicks)/(jummbox_obj.ticksPerBeat*32)
-	if bb_inst.type == 'Picked String' and 'stringSustain' in bb_inst.data: a_sustain = bb_inst.data['stringSustain']/100
+	if bb_inst.type == 'Picked String' and 'stringSustain' in bb_data: a_sustain = bb_data['stringSustain']/100
 	plugin_obj.env_asdr_add('vol', 0, a_attack, 0, a_decay, a_sustain, a_release, 1)
 
 def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
@@ -312,7 +313,9 @@ class input_jummbox(plugins.base):
 						inst_obj.plugslots.set_synth(cvpj_instid)
 						plugin_obj = convproj_obj.plugin__add(cvpj_instid, 'native', 'jummbox', bb_inst.type)
 
-						if 'unison' in bb_inst.data: plugin_obj.datavals.add('unison', bb_inst.data['unison'])
+						bb_data = bb_inst.data
+
+						if 'unison' in bb_data: plugin_obj.datavals.add('unison', bb_data['unison'])
 
 						if bb_chan.type == 'pitch': inst_obj.visual.from_dset('beepbox', 'inst', bb_inst.type, False)
 						if bb_chan.type == 'drum': 
@@ -320,72 +323,86 @@ class input_jummbox(plugins.base):
 							inst_obj.is_drum = True
 
 						if bb_inst.type == 'chip':
-							bb_inst_wave = bb_inst.data['wave']
-							inst_obj.visual.name = data_values.text__insidename_type(inst_obj.visual.name, bb_inst_wave, bb_inst.type)
-							rawchipwaves_obj.apply_wave(plugin_obj, bb_inst_wave, 'chipwave')
+							if 'wave' in bb_data: 
+								bb_inst_wave = bb_data['wave']
+								inst_obj.visual.name = data_values.text__insidename_type(inst_obj.visual.name, bb_inst_wave, bb_inst.type)
+								rawchipwaves_obj.apply_wave(plugin_obj, bb_inst_wave, 'chipwave')
 				
 						if bb_inst.type == 'PWM':
-							pulseWidth = bb_inst.data['pulseWidth']
-							inst_obj.visual.name = str(pulseWidth)+'% pulse ('+inst_obj.visual.name+')'
-							param_obj = plugin_obj.params.add("pulse_width", pulseWidth/100, 'float')
-							param_obj.visual.name = "Pulse Width"
+							if 'pulseWidth' in bb_data: 
+								pulseWidth = bb_data['pulseWidth']
+								inst_obj.visual.name = str(pulseWidth)+'% pulse ('+inst_obj.visual.name+')'
+								param_obj = plugin_obj.params.add("pulse_width", pulseWidth/100, 'float')
+								param_obj.visual.name = "Pulse Width"
 				
 						if bb_inst.type == 'harmonics':
-							harmonics_obj = plugin_obj.harmonics_add('harmonics')
-							get_harmonics(harmonics_obj, bb_inst.data['harmonics'])
+							if 'harmonics' in bb_data: 
+								harmonics_obj = plugin_obj.harmonics_add('harmonics')
+								get_harmonics(harmonics_obj, bb_data['harmonics'])
 				
 						if bb_inst.type == 'Picked String':
-							harmonics_obj = plugin_obj.harmonics_add('harmonics')
-							get_harmonics(harmonics_obj, bb_inst.data['harmonics'])
+							if 'harmonics' in bb_data: 
+								harmonics_obj = plugin_obj.harmonics_add('harmonics')
+								get_harmonics(harmonics_obj, bb_data['harmonics'])
 
 						if bb_inst.type == 'spectrum':
-							plugin_obj.datavals.add('spectrum', bb_inst.data['spectrum'])
+							if 'spectrum' in bb_data: 
+								plugin_obj.datavals.add('spectrum', bb_data['spectrum'])
 				
 						if bb_inst.type == 'FM':
-							plugin_obj.datavals.add('algorithm', bb_inst.data['algorithm'])
-							plugin_obj.datavals.add('feedback_type', bb_inst.data['feedbackType'])
-							param_obj = plugin_obj.params.add("feedback_amplitude", bb_inst.data['feedbackAmplitude'], 'int')
-							param_obj.visual.name = "Feedback Amplitude"
+							if 'algorithm' in bb_data: plugin_obj.datavals.add('algorithm', bb_data['algorithm'])
+							if 'feedbackType' in bb_data: plugin_obj.datavals.add('feedback_type', bb_data['feedbackType'])
+							if 'feedbackAmplitude' in bb_data: 
+								param_obj = plugin_obj.params.add("feedback_amplitude", bb_data['feedbackAmplitude'], 'int')
+								param_obj.visual.name = "Feedback Amplitude"
 				
-							for opnum in range(4):
-								opdata = bb_inst.data['operators'][opnum]
-								opnumtext = 'op'+str(opnum+1)+'/'
-								plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
-								plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
-								plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
-								plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
+							if 'operators' in bb_data: 
+								for opnum in range(4):
+									opdata = bb_data['operators'][opnum]
+									opnumtext = 'op'+str(opnum+1)+'/'
+									plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
+									plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
+									plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
+									plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
 				
 						if bb_inst.type == 'custom chip':
-							customChipWave = bb_inst.data['customChipWave']
-							customChipWave = [customChipWave[str(i)] for i in range(64)]
-							wave_obj = plugin_obj.wave_add('chipwave')
-							wave_obj.set_all_range(customChipWave, -24, 24)
+							if 'customChipWave' in bb_data: 
+								customChipWave = bb_data['customChipWave']
+								customChipWave = [customChipWave[str(i)] for i in range(64)]
+								wave_obj = plugin_obj.wave_add('chipwave')
+								wave_obj.set_all_range(customChipWave, -24, 24)
 				
 						if bb_inst.type == 'FM6op': #goldbox
-							plugin_obj.datavals.add('algorithm', bb_inst.data['algorithm'])
-							plugin_obj.datavals.add('feedback_type', bb_inst.data['feedbackType'])
-							param_obj = plugin_obj.params.add_named("feedback_amplitude", bb_inst.data['feedbackAmplitude'], 'int', "Feedback Amplitude")
+							if 'algorithm' in bb_data: 
+								plugin_obj.datavals.add('algorithm', bb_data['algorithm'])
+							if 'feedbackType' in bb_data: 
+								plugin_obj.datavals.add('feedback_type', bb_data['feedbackType'])
+							if 'feedbackAmplitude' in bb_data: 
+								param_obj = plugin_obj.params.add_named("feedback_amplitude", bb_data['feedbackAmplitude'], 'int', "Feedback Amplitude")
 				
-							for opnum in range(4):
-								opdata = bb_inst.data['operators'][opnum]
-								opnumtext = 'op'+str(opnum+1)+'_'
-								plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
-								plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
-								plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
-								plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
+							if 'operators' in bb_data: 
+								for opnum in range(4):
+									opdata = bb_data['operators'][opnum]
+									opnumtext = 'op'+str(opnum+1)+'_'
+									plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
+									plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
+									plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
+									plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
 				
-							if bb_inst.data['algorithm'] == 'Custom': plugin_obj.datavals.add('customAlgorithm', bb_inst.data['customAlgorithm'])
+							if 'algorithm' in bb_data: 
+								if bb_data['algorithm'] == 'Custom':
+									plugin_obj.datavals.add('customAlgorithm', bb_data['customAlgorithm'])
 
 						if bb_inst.type == 'supersaw':
-							plugin_obj.params.add('pulseWidth', bb_inst.data['pulseWidth'], 'float')
-							plugin_obj.params.add('decimalOffset', bb_inst.data['decimalOffset'], 'float')
-							plugin_obj.params.add('dynamism', bb_inst.data['dynamism'], 'float')
-							plugin_obj.params.add('spread', bb_inst.data['spread'], 'float')
-							plugin_obj.params.add('shape', bb_inst.data['shape'], 'float')
+							if 'pulseWidth' in bb_data: plugin_obj.params.add('pulseWidth', bb_data['pulseWidth'], 'float')
+							if 'decimalOffset' in bb_data: plugin_obj.params.add('decimalOffset', bb_data['decimalOffset'], 'float')
+							if 'dynamism' in bb_data: plugin_obj.params.add('dynamism', bb_data['dynamism'], 'float')
+							if 'spread' in bb_data: plugin_obj.params.add('spread', bb_data['spread'], 'float')
+							if 'shape' in bb_data: plugin_obj.params.add('shape', bb_data['shape'], 'float')
 
 						if bb_inst.type == 'noise':
-							plugin_obj.datavals.add('wave', bb_inst.data['wave'])
-							plugin_obj.datavals.add('unison', bb_inst.data['unison'])
+							if 'wave' in bb_data: plugin_obj.datavals.add('wave', bb_data['wave'])
+							if 'unison' in bb_data: plugin_obj.datavals.add('unison', bb_data['unison'])
 
 					inst_obj.visual.color.set_float(bb_color)
 				

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-from objects.file_proj import proj_mod
+from objects.file_proj import tracker_mod as proj_mod
 import numpy as np
 from objects.exceptions import ProjectFileParserException
 

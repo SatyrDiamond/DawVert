@@ -687,7 +687,7 @@ class input_lmms(plugins.base):
 		detectdef_obj.containers.append(['zlib', 4])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_lmms
+		from objects.file_proj import lmms as proj_lmms
 
 		global dataset
 		global autoid_assoc

@@ -96,7 +96,7 @@ class input_it(plugins.base):
 		detectdef_obj.headers.append([0, b'IMPM'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_it
+		from objects.file_proj import tracker_it as proj_it
 		from objects.tracker import pat_single
 		global samplefolder
 

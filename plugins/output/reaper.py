@@ -325,7 +325,7 @@ class output_reaper(plugins.base):
 		in_dict['projtype'] = 'r'
 	
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_reaper
+		from objects.file_proj import reaper as proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain
 		from objects.file_proj._rpp import source as rpp_source
 

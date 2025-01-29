@@ -8,7 +8,7 @@ from functions import xtramath
 from objects import colors
 from functions import data_values
 from objects.data_bytes import bytewriter
-from objects.file_proj import proj_ableton
+from objects.file_proj import ableton as proj_ableton
 from objects.file_proj._ableton.param import ableton_parampart
 from objects.file_proj._ableton.samplepart import ableton_MultiSamplePart
 from objects.file_proj._ableton.automation import ableton_AutomationEnvelope

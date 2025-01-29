@@ -397,7 +397,7 @@ class input_dawproject(plugins.base):
 		detectdef_obj.containers.append(['zip', 'project.xml'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_dawproject
+		from objects.file_proj import dawproject as proj_dawproject
 		from objects import auto_id
 
 		convproj_obj.type = 'r'

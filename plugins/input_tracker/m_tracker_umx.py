@@ -48,7 +48,7 @@ class input_mod(plugins.base):
 		detectdef_obj.headers.append([0, b'\xc1\x83\x2a\x9e'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_umx
+		from objects.file_proj import umx as proj_umx
 		project_obj = proj_umx.umx_file()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()

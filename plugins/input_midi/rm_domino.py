@@ -31,7 +31,7 @@ class input_domino(plugins.base):
 		detectdef_obj.headers.append(['MarioSequencerSong'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_domino
+		from objects.file_proj import domino as proj_domino
 		from objects.songinput import midi_in
 
 		convproj_obj.fxtype = 'rack'

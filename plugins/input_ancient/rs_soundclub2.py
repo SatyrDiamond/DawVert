@@ -50,7 +50,7 @@ class input_soundclub2(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
-		from objects.file_proj import proj_soundclub2
+		from objects.file_proj import soundclub2 as proj_soundclub2
 		
 		convproj_obj.type = 'rs'
 		convproj_obj.set_timings(4, False)

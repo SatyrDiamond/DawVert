@@ -34,7 +34,7 @@ def addsample(zip_wt, filepath, alredyexists):
 		   
 
 def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoints, color, istrack):
-	from objects.file_proj import proj_wavtool
+	from objects.file_proj import wavtool as proj_wavtool
 	endtext = (autoid+'-'+trackid) if istrack == True else autoname
 	wt_autoid_AutoTrack = 'DawVert-AutoTrack-'+endtext
 	wt_autoid_AutoRec = 'DawVert-AutoRec-'+endtext
@@ -121,7 +121,7 @@ class output_wavtool(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from functions_plugin_ext import plugin_vst2
-		from objects.file_proj import proj_wavtool
+		from objects.file_proj import wavtool as proj_wavtool
 
 		global audio_id
 		global wavtool_obj

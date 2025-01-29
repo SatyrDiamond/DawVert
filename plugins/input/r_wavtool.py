@@ -407,7 +407,7 @@ class input_wavtool(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_wavtool
+		from objects.file_proj import wavtool as proj_wavtool
 
 		global zip_data
 		global samplefolder

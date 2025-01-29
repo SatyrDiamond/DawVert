@@ -6,7 +6,7 @@ from objects.file_proj._ableton.func import *
 from objects.file_proj._ableton.automation import *
 from objects.file_proj._ableton.visual import *
 from objects.file_proj._ableton.device import *
-from objects.file_proj import proj_ableton
+from objects.file_proj import ableton as proj_ableton
 
 import xml.etree.ElementTree as ET
 

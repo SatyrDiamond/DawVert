@@ -29,7 +29,7 @@ class input_gt_mnbs(plugins.base):
 		in_dict['projtype'] = 'rm'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_nbs
+		from objects.file_proj import nbs as proj_nbs
 		from objects.convproj import fileref
 
 		convproj_obj.type = 'rm'

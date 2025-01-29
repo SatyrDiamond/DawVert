@@ -39,7 +39,7 @@ class input_zmaestro(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_z_maestro
+		from objects.file_proj import z_maestro as proj_z_maestro
 		from objects import audio_data
 
 		samplefolder = dawvert_intent.path_samples['extracted']

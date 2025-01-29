@@ -23,7 +23,7 @@ def convauto(autopoints, param_obj):
 	return ampedauto
 
 def createclip(audiopl_obj, audio_id):
-	from objects.file_proj import proj_amped
+	from objects.file_proj import amped as proj_amped
 	amped_audclip = proj_amped.amped_clip(None)
 	amped_audclip.contentGuid.is_custom = True
 	amped_audclip.contentGuid.id = audio_id[audiopl_obj.sample.sampleref] if audiopl_obj.sample.sampleref in audio_id else ''
@@ -137,7 +137,7 @@ class output_amped(plugins.base):
 		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_amped
+		from objects.file_proj import amped as proj_amped
 
 		global counter_id
 		global counter_devid

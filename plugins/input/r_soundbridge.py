@@ -369,7 +369,7 @@ class input_soundbridge(plugins.base):
 		in_dict['audio_nested'] = True
 		
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_soundbridge
+		from objects.file_proj import soundbridge as proj_soundbridge
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'

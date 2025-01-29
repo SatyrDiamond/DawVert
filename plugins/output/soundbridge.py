@@ -55,7 +55,7 @@ def set_params(params_obj):
 	return encode_chunk(struct.pack('>ffff', *(mute, vol, vol, pan)))
 
 def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	if groupid not in groups_data:
 		group_obj = convproj_obj.fx__group__get(groupid)
 		if group_obj:
@@ -105,7 +105,7 @@ def make_auto(autopoints_obj, valtype, add, mul):
 	return encode_chunk(outbytes)
 
 def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	aid_found, aid_data = convproj_obj.automation.get(autoloc, 'float')
 
 	if aid_found:
@@ -142,7 +142,7 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 				blocks.append(block)
 
 def make_auto_contains_master(convproj_obj, sb_track, params_obj, startauto):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
 	vol = calc_vol(params_obj.get('vol', 1).value)
@@ -165,7 +165,7 @@ def make_auto_contains_master(convproj_obj, sb_track, params_obj, startauto):
 	automationTracks.append(automationTrack)
 
 def make_auto_trackcontains(convproj_obj, sb_track, params_obj, n, startauto):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	automationTracks = sb_track.automationContainer.automationTracks
 
 	vol = calc_vol(params_obj.get('vol', 1).value)
@@ -203,7 +203,7 @@ def make_auto_trackcontains(convproj_obj, sb_track, params_obj, n, startauto):
 	automationTracks.append(automationTrack)
 
 def make_sends(convproj_obj, sb_track, sends_obj):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	cur_returns = {}
 	automationTracks = sb_track.sendsAutomationContainer.automationTracks
 
@@ -228,7 +228,7 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 	sb_track.sendsAutomationContainer.state = encode_chunk(struct.pack('>'+('f'*len(values)), *values))
 
 def make_plugins_fx(convproj_obj, sb_track, fxslots_audio):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	for pluginid in fxslots_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
@@ -250,7 +250,7 @@ def make_plugins_fx(convproj_obj, sb_track, fxslots_audio):
 					sb_track.audioUnits.append(auplug)
 
 def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	from functions_plugin_ext import plugin_vst3
 	vid = plugin_obj.external_info.id
 	sb_plugin = None
@@ -275,7 +275,7 @@ def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 	return sb_plugin
 
 def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	from functions_plugin_ext import plugin_vst2
 	fourid = plugin_obj.external_info.fourid
 	sb_plugin = None
@@ -388,7 +388,7 @@ def time_add(event, time_obj, otherblock):
 		event.positionStart = max(event.positionStart, 0)
 
 def add_tempo_section(sb_tempo_obj, position, length, startTempo, endTempo):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	temposection = proj_soundbridge.soundbridge_tempo_section(None)
 	temposection.position = position
 	temposection.length = length
@@ -397,7 +397,7 @@ def add_tempo_section(sb_tempo_obj, position, length, startTempo, endTempo):
 	sb_tempo_obj.sections.append(temposection)
 
 def do_markers(timemarkers_obj, sb_markers):
-	from objects.file_proj import proj_soundbridge
+	from objects.file_proj import soundbridge as proj_soundbridge
 	for num, timemarker_obj in enumerate(timemarkers_obj):
 		sb_marker = proj_soundbridge.soundbridge_marker(None)
 		sb_marker.label = timemarker_obj.visual.name if timemarker_obj.visual.name else ''
@@ -436,7 +436,7 @@ class output_soundbridge(plugins.base):
 		in_dict['projtype'] = 'r'
 	
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_soundbridge
+		from objects.file_proj import soundbridge as proj_soundbridge
 		from functions_plugin_ext import plugin_vst2
 		global sb_returns
 

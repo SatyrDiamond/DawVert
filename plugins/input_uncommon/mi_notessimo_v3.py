@@ -220,7 +220,7 @@ class input_notessimo_v3(plugins.base):
 		detectdef_obj.containers.append(['zip', 'sheets.xml'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_notessimo_v3
+		from objects.file_proj import notessimo_v3 as proj_notessimo_v3
 
 		global sheetrealsize
 		global samplefolder

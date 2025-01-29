@@ -22,7 +22,7 @@ class input_petaporon(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_flipperzero
+		from objects.file_proj import flipperzero as proj_flipperzero
 		from functions import note_data
 
 		convproj_obj.type = 'r'

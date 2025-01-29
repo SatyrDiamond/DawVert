@@ -50,7 +50,7 @@ class input_audiosanua(plugins.base):
 		detectdef_obj.containers.append(['zip', 'songdata.xml'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_audiosauna
+		from objects.file_proj import audiosauna as proj_audiosauna
 
 		global cvpj_l
 

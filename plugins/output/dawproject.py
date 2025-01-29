@@ -625,7 +625,7 @@ class output_dawproject(plugins.base):
 		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']
 	
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import proj_dawproject
+		from objects.file_proj import dawproject as proj_dawproject
 
 		global arrangement_obj
 		global dawproject_zip

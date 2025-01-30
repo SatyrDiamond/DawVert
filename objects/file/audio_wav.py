@@ -188,6 +188,7 @@ class wav_main:
 		if bool(size & 1): fid.seek(1,1)	
 		if normalized:
 			if self.bits == 8 or self.bits == 16: normfactor = 2 ** (self.bits-1)
+			if self.bits == 24: normfactor = 2 ** (32-1)
 			self.data = numpy.float32(self.data) * 1.0 / normfactor
 
 	def read_audioobj(self, audio_obj):

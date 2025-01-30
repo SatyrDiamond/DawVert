@@ -273,7 +273,8 @@ def encode_effectslot(effect_obj, plugin_obj, pluginid):
 def encode_fxchain(lmms_fxchain, track_obj, trackname, autoloc):
 	from objects.file_proj import lmms as proj_lmms
 
-	#paramauto(lmms_fxchain.enabled, track_obj.params, 'fx_enabled', False, None, autoloc, trackname, 'FX Enabled')
+	lmms_fxchain.enabled.value = int(track_obj.plugslots.slots_audio_enabled)
+
 	for pluginid in track_obj.plugslots.slots_audio:
 		plugin_found, plugin_obj = cvpj_obj.plugin__get(pluginid)
 		if plugin_found: 

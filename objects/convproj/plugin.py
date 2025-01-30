@@ -103,6 +103,7 @@ class cvpj_plugin:
 		self.type = triplestr()
 		self.visual = visual.cvpj_visual()
 		self.params_slot = params.cvpj_paramset()
+		self.datavals_slot = params.cvpj_datavals()
 		self.filerefs_global = {}
 		self.datavals_global = params.cvpj_datavals()
 		self.datavals_cvpj = params.cvpj_datavals()

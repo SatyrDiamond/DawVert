@@ -96,6 +96,9 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	
 	pluginpath = str(lmms_plugin.get_param('plugin', ''))
 
+	extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+	extmanu_obj.vst2__replace_data('path', pluginpath, None, None, False)
+
 	vst2_pathid = pluginid+'_vstpath'
 	convproj_obj.fileref__add(vst2_pathid, pluginpath, None)
 	plugin_obj.filerefs_global['plugin'] = vst2_pathid
@@ -134,13 +137,6 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 		param_obj = plugin_obj.params.add(paramnum, vst_param.value, 'float')
 		if vst_param.visname: param_obj.visual.name = vst_param.visname
 		if vst_param.id: autoid_assoc.define(vst_param.id, ['plugin', pluginid, paramnum], 'float', None)
-
-	extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
-	extmanu_obj.vst2__replace_data('path', pluginpath, rpp_extplug.data_chunk, None, False)
-
-	if pluginfo_obj.out_exists:
-		plugin_obj.external_info.name = pluginfo_obj.name
-		plugin_obj.external_info.fourid = int(pluginfo_obj.id)
 
 def doparam(lmms_param_obj, i_type, i_addmul, i_loc):
 	global autoid_assoc
@@ -498,7 +494,9 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.midi.out_inst.key = int(midiport_obj.fixedoutputnote)
 			track_obj.midi.basevelocity = int(midiport_obj.basevelocity)
 
-			track_obj.plugslots.slots_audio += decodefxchain(convproj_obj, insttr_obj.fxchain)
+			fxchain_obj = insttr_obj.fxchain
+			track_obj.plugslots.slots_audio_enabled = bool(fxchain_obj.enabled.value)
+			track_obj.plugslots.slots_audio += decodefxchain(convproj_obj, fxchain_obj)
 
 			if insttr_obj.fxch != -1: track_obj.fxrack_channel = int(insttr_obj.fxch)
 
@@ -723,10 +721,11 @@ class input_lmms(plugins.base):
 		convproj_obj.params.add('vol', cvpj_vol, 'float')
 		convproj_obj.params.add('pitch', cvpj_pitch, 'float')
 
-		if len(song_obj.projectnotes.text): 
-			convproj_obj.metadata.comment_text = song_obj.projectnotes.text
-			convproj_obj.metadata.comment_datatype = 'html'
-			add_window_data(song_obj.projectnotes.window, convproj_obj, 'main', 'project_notes')
+		if song_obj.projectnotes.text:
+			if len(song_obj.projectnotes.text): 
+				convproj_obj.metadata.comment_text = song_obj.projectnotes.text
+				convproj_obj.metadata.comment_datatype = 'html'
+				add_window_data(song_obj.projectnotes.window, convproj_obj, 'main', 'project_notes')
 
 		lmms_decode_tracks(convproj_obj, song_obj.trackcontainer.tracks, False, 'LMMS_Track')
 

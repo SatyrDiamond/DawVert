@@ -757,6 +757,8 @@ class input_flp(plugins.base):
 			fxchannel_obj.params.add('enabled', bool(mixer_obj.enabled), 'bool')
 			fxchannel_obj.params.add('solo', bool(mixer_obj.solo), 'bool')
 
+			fxchannel_obj.plugslots.slots_audio_enabled = int(mixer_obj.fx_enabled)
+
 			fxchannel_obj.sends.to_master_active = False
 
 			for route in mixer_obj.routing:

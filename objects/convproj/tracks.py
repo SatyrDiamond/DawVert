@@ -72,11 +72,12 @@ class cvpj_midiport:
 		self.basevelocity = 63
 
 class cvpj_plugslots:
-	__slots__ = ['slots_notes','slots_audio','slots_mixer','slots_synths','synth']
+	__slots__ = ['slots_notes','slots_audio','slots_mixer','slots_synths','synth','slots_audio_enabled']
 	def __init__(self):
 		self.slots_synths = []
 		self.slots_notes = []
 		self.slots_audio = []
+		self.slots_audio_enabled = True
 		self.slots_mixer = []
 		self.synth = ''
 

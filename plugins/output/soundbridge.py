@@ -755,9 +755,12 @@ class output_soundbridge(plugins.base):
 									autoblock.version = 1
 									autoblock.blockData = make_auto(x, None, 0, 1)
 									event.automationBlocks.append(autoblock)
-
 							block.events.append(event)
-					blockContainer.blocks.append(block)
+						else:
+							logger_output.warning('clip is not placed - file missing: '+str(sampleref_obj.fileref.get_path('win', False)))
+						blockContainer.blocks.append(block)
+					else:
+						clipsnotplaced += 1
 
 				sb_track.blockContainers.append(blockContainer)
 

@@ -95,7 +95,7 @@ class input_fl_mobile(plugins.base):
 
 			if tracktype == 'fx':
 				trackid = 'flm_fx_'+str(flm_rack.fx_id)
-				sorttracks[flm_channel.unk5] = trackid
+				sorttracks[flm_channel.order] = trackid
 				track_obj = convproj_obj.track__add(trackid, 'fx', 1, False)
 				add_visual(track_obj.visual, flm_channel)
 				add_params(track_obj.params, flm_rack)
@@ -111,7 +111,7 @@ class input_fl_mobile(plugins.base):
 	
 			if tracktype == 'instrument':
 				trackid = 'flm_inst_'+str(n)
-				sorttracks[flm_channel.unk5] = trackid
+				sorttracks[flm_channel.order] = trackid
 				track_obj = convproj_obj.track__add(trackid, 'instrument', 1, False)
 				add_visual(track_obj.visual, flm_channel)
 				add_params(track_obj.params, flm_rack)
@@ -129,7 +129,7 @@ class input_fl_mobile(plugins.base):
 
 			if tracktype == 'audio':
 				trackid = 'flm_inst_'+str(n)
-				sorttracks[flm_channel.unk5] = trackid
+				sorttracks[flm_channel.order] = trackid
 				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
 				add_visual(track_obj.visual, flm_channel)
 				add_params(track_obj.params, flm_rack)

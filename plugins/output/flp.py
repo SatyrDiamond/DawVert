@@ -482,6 +482,7 @@ class output_cvpjs(plugins.base):
 				flp_obj.initfxvals.initvals[fxptxt+'vol'] = int(12800*vol)
 				flp_obj.initfxvals.initvals[fxptxt+'pan'] = int(6400*fxchannel_obj.params.get('pan', 0).value)
 				fl_fxchan.enabled = int(fxchannel_obj.params.get('enabled', True).value)
+				fl_fxchan.solo = int(fxchannel_obj.params.get('solo', False).value)
 
 				if fx_num != 0:
 					if fxchannel_obj.sends.to_master_active:

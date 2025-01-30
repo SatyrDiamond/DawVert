@@ -8,6 +8,258 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
+# --------------------------------------------------------- Machine ---------------------------------------------------------
+
+class caustic_machine_SSYN:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.unknown4 = song_data.uint32()
+		self.customwaveform1 = song_data.l_int16(660)
+		self.customwaveform2 = song_data.l_int16(660)
+		self.poly = song_data.uint32()
+		self.osc1_mode = song_data.uint32()
+		self.osc2_mode = song_data.uint32()
+		self.patterns.parse(song_data)
+
+class caustic_machine_BLNE:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.keyboard_octave = song_data.uint32()
+		self.patterns.parse(song_data)
+		self.legacy_glide = song_data.float()
+		self.customwaveform1 = song_data.l_int16(660)
+
+class caustic_machine_PADS:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.controls.parse(song_data)
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.keyboard_octave = song_data.uint32()
+		self.unknown1 = song_data.uint32()
+		self.visual = song_data.uint32()
+		self.harm1 = song_data.l_float(24)
+		self.harm1vol = song_data.float()
+		self.harm2 = song_data.l_float(24)
+		self.harm2vol = song_data.float()
+		self.patterns.parse(song_data)
+
+class caustic_machine_ORGN:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.controls.parse(song_data)
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.keyboard_octave = song_data.uint32()
+		self.unknown1 = song_data.uint32()
+
+class caustic_machine_FMSN:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.algorithm = song_data.uint32()
+		self.poly = song_data.uint32()
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.keyboard_octave = song_data.uint32()
+		self.patterns.parse(song_data)
+
+class caustic_machine_KSSN:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.keyboard_octave = song_data.uint32()
+		self.patterns.parse(song_data)
+
+class caustic_machine_SAWS:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.keyboard_octave = song_data.uint32()
+		self.poly = song_data.uint32()
+		self.patterns.parse(song_data)
+
+class caustic_machine_8SYN:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.bitcode1 = song_data.string(128)
+		self.bitcode2 = song_data.string(128)
+		self.unknown4 = song_data.uint32()
+		self.unknown5 = song_data.uint32()
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		self.keyboard_octave = song_data.uint32()
+		self.patterns.parse(song_data)
+
+class caustic_machine_BBOX_sample:
+	def __init__(self, song_data):
+		self.name = song_data.string(32)
+		self.len = song_data.uint32()
+		self.hz = song_data.uint32()
+		self.chan = song_data.uint32()
+		logger_projparse.info('caustic3: BBOX | len:'+str(self.len)+', hz:'+str(self.hz)+', ch:'+str(self.chan))
+		self.data = song_data.read((self.len*2)*self.chan)
+		self.mute = 0
+		self.solo = 0
+		self.mutegroup = 0
+		
+class caustic_machine_BBOX:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.patterns.parse(song_data)
+		song_data.skip(4)
+		self.presetpath = song_data.string(256)
+		song_data.skip(4)
+		self.samples = [caustic_machine_BBOX_sample(song_data) for _ in range(8)]
+		for _ in range(8):
+			self.mute = song_data.uint8()
+			self.solo = song_data.uint8()
+			self.mutegroup = song_data.uint8()
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+
+class caustic_machine_VCDR_sample:
+	def __init__(self, song_data):
+		self.name = song_data.string(256)
+		song_data.skip(4)
+		self.len = song_data.uint32()
+		self.hz = song_data.uint32()
+		self.data = song_data.read(self.len*2)
+		logger_projparse.info('caustic3: VCDR | len:'+str(self.len)+', hz:'+str(self.hz))
+		
+class caustic_machine_VCDR:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.currentnumber = song_data.uint32()
+		song_data.read(28)
+		song_data.read(8)
+		self.samples = [caustic_machine_VCDR_sample(song_data) for _ in range(6)]
+
+		self.keyboard_octave = song_data.uint32()
+		self.patterns.parse(song_data)
+
+class caustic_machine_MDLR:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+		self.slots = [caustic_modularslot() for x in range(16)]
+		self.main = caustic_modularslot()
+		self.connections = []
+		
+		for m in self.slots: m.slot_type = song_data.uint32()
+
+		for m in self.slots: 
+			if m.slot_type != 0:
+				song_data.magic_check(b'MCOM')
+				m.params = song_data.l_float(song_data.uint32()//4)
+
+		song_data.magic_check(b'MCOM')
+		self.main.params = song_data.l_float(song_data.uint32()//4)
+		self.controls.parse(song_data)
+		song_data.read(5)
+		self.unknown1 = song_data.uint32()
+		for linknum in range(song_data.uint32()): 
+			self.connections.append( song_data.l_uint32(9) )
+
+		self.patterns.parse(song_data)
+
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+
+class caustic_machine_PCMS_sample:
+	def __init__(self, song_data):
+		self.volume = song_data.float()
+		song_data.skip(4)
+		self.pan = song_data.float()
+		self.key_root = song_data.uint32()
+		self.key_lo = song_data.uint32()
+		self.key_hi = song_data.uint32()
+		self.mode = song_data.uint32()
+		self.start = song_data.uint32()
+		self.end = song_data.uint32()-1
+		self.path = song_data.string(256)
+		song_data.skip(4)
+		self.samp_size = song_data.uint32()
+		self.samp_hz = song_data.uint32()
+		song_data.skip(4)
+		self.samp_chan = song_data.uint32()
+		self.samp_data = song_data.read((self.samp_size*2)*self.samp_chan)
+
+class caustic_machine_PCMS:
+	def __init__(self, song_data):
+		self.controls = caustic_controls()
+		self.patterns = caustic_patterns()
+
+		self.unknown1 = song_data.uint16()
+		self.unknown2 = song_data.uint8()
+		self.unknown3 = song_data.uint8()
+		self.controls.parse(song_data)
+		self.presetname = song_data.string(32)
+		self.presetpath = song_data.c_string__int32(False)
+		song_data.skip(4)
+		self.samples = [caustic_machine_PCMS_sample(song_data) for _ in range(song_data.uint32())]
+		song_data.read(9)
+		self.patterns.parse(song_data)
+
+# --------------------------------------------------------- MAIN ---------------------------------------------------------
+
 class caustic_controls:
 	def __init__(self):
 		self.data = {}
@@ -28,241 +280,30 @@ class caustic_modularslot:
 		self.slot_type = 0
 		self.params = []
 
-class caustic_modular:
-	def __init__(self):
-		self.slots = [caustic_modularslot() for x in range(16)]
-		self.main = caustic_modularslot()
-		self.connections = []
-
 class caustic_machine:
+	machobjs = {
+	'SSYN': caustic_machine_SSYN,
+	'BLNE': caustic_machine_BLNE,
+	'PADS': caustic_machine_PADS,
+	'ORGN': caustic_machine_ORGN,
+	'FMSN': caustic_machine_FMSN,
+	'KSSN': caustic_machine_KSSN,
+	'SAWS': caustic_machine_SAWS,
+	'8SYN': caustic_machine_8SYN,
+	'BBOX': caustic_machine_BBOX,
+	'VCDR': caustic_machine_VCDR,
+	'MDLR': caustic_machine_MDLR,
+	'PCMS': caustic_machine_PCMS
+	}
+
 	def __init__(self):
 		self.mach_id = 'NULL'
 		self.name = ''
 		self.data = None
 
-		self.unknown1 = None
-		self.unknown2 = None
-		self.unknown3 = None
-		self.unknown4 = None
-		self.unknown5 = None
-
-		self.poly = 8
-		self.presetname = ''
-		self.presetpath = ''
-
-		self.customwaveform1 = []
-		self.customwaveform2 = []
-
-		self.controls = caustic_controls()
-
-		self.controls_noauto = {}
-		self.visual = {}
-
-		self.samples = []
-
-		self.patterns = caustic_patterns()
-
-		self.extra = None
-
 	def parse(self, song_data):
-		# -------------------------------- SubSynth --------------------------------
-		if self.mach_id == 'SSYN':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.unknown4 = song_data.uint32()
-			self.customwaveform1 = song_data.l_int16(660)
-			self.customwaveform2 = song_data.l_int16(660)
-			self.controls_noauto['poly'] = song_data.uint32()
-			self.controls_noauto['osc1_mode'] = song_data.uint32()
-			self.controls_noauto['osc2_mode'] = song_data.uint32()
-			self.patterns.parse(song_data)
-		# -------------------------------- BassLine --------------------------------
-		elif self.mach_id == 'BLNE':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.patterns.parse(song_data)
-			self.controls_noauto['legacy_glide'] = song_data.float()
-			self.customwaveform1 = song_data.l_int16(660)
-		# -------------------------------- PadSynth --------------------------------
-		elif self.mach_id == 'PADS':
-			self.controls.parse(song_data)
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.unknown1 = song_data.uint32()
-			self.visual['visual'] = song_data.uint32()
-			self.controls_noauto['harm1'] = song_data.l_float(24)
-			self.controls_noauto['harm1vol'] = song_data.float()
-			self.controls_noauto['harm2'] = song_data.l_float(24)
-			self.controls_noauto['harm2vol'] = song_data.float()
-			self.patterns.parse(song_data)
-		# -------------------------------- Organ --------------------------------
-		elif self.mach_id == 'ORGN':
-			self.controls.parse(song_data)
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.unknown1 = song_data.uint32()
-		# -------------------------------- FMSynth --------------------------------
-		elif self.mach_id == 'FMSN':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.controls_noauto['algo'] = song_data.uint32()
-			self.poly = song_data.uint32()
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.patterns.parse(song_data)
-		# -------------------------------- KSSynth --------------------------------
-		elif self.mach_id == 'KSSN':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.patterns.parse(song_data)
-		# -------------------------------- SawSynth --------------------------------
-		elif self.mach_id == 'SAWS':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.poly = song_data.uint32()
-			self.patterns.parse(song_data)
-		# -------------------------------- 8BitSynth --------------------------------
-		elif self.mach_id == '8SYN':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.controls_noauto['bitcode1'] = song_data.string(128)
-			self.controls_noauto['bitcode2'] = song_data.string(128)
-			self.unknown4 = song_data.uint32()
-			self.unknown5 = song_data.uint32()
-			self.presetname = song_data.string(32)
-			self.presetpath = song_data.c_string__int32(False)
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.patterns.parse(song_data)
-		# -------------------------------- BeatBox --------------------------------
-		elif self.mach_id == 'BBOX':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.patterns.parse(song_data)
-			song_data.skip(4)
-			self.presetpath = song_data.string(256)
-			song_data.skip(4)
-			for _ in range(8):
-				sampledata = {}
-				sample_name = song_data.string(32)
-				sample_len = song_data.uint32()
-				sample_hz = song_data.uint32()
-				sample_chan = song_data.uint32()
-				sample_data = song_data.read((sample_len*2)*sample_chan)
-				logger_projparse.info('caustic3: BBOX | len:'+str(sample_len)+', hz:'+str(sample_hz)+', ch:'+str(sample_chan))
-				sampleinfo = {}
-				sampleinfo['name'] = sample_name
-				sampleinfo['hz'] = sample_hz
-				sampleinfo['len'] = sample_len
-				sampleinfo['chan'] = sample_chan
-				self.samples.append([sampleinfo, sample_data])
-		# -------------------------------- Vocoder --------------------------------
-		elif self.mach_id == 'VCDR':
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.controls_noauto['currentnumber'] = song_data.uint32()
-			song_data.read(28)
-			song_data.read(8)
-
-			for _ in range(6):
-				sample_name = song_data.string(256)
-				song_data.skip(4)
-				sample_len = song_data.uint32()
-				sample_hz = song_data.uint32()
-				sample_data = song_data.read(sample_len*2)
-				logger_projparse.info('caustic3: VCDR | len:'+str(sample_len)+', hz:'+str(sample_hz))
-				sampleinfo = {}
-				sampleinfo['name'] = sample_name
-				sampleinfo['len'] = sample_len
-				sampleinfo['hz'] = sample_hz
-				sampleinfo['data'] = sample_data
-				self.samples.append([sampleinfo, sample_data])
-
-			self.visual['keyboard_octave'] = song_data.uint32()
-			self.patterns.parse(song_data)
-		# -------------------------------- Modular --------------------------------
-		elif self.mach_id == 'MDLR': 
-			modular_obj = caustic_modular()
-			for m in modular_obj.slots:  m.slot_type = song_data.uint32()
-
-			for m in modular_obj.slots: 
-				if m.slot_type != 0:
-					song_data.magic_check(b'MCOM')
-					m.params = song_data.l_float(song_data.uint32()//4)
-
-			song_data.magic_check(b'MCOM')
-			modular_obj.main.params = song_data.l_float(song_data.uint32()//4)
-			self.controls.parse(song_data)
-			song_data.read(5)
-			self.unknown1 = song_data.uint32()
-			for linknum in range(song_data.uint32()): modular_obj.connections.append( song_data.l_uint32(9) )
-			self.extra = modular_obj
-			self.patterns.parse(song_data)
-
-		# -------------------------------- PCMSynth --------------------------------
-		elif self.mach_id == 'PCMS': 
-			self.unknown1 = song_data.uint16()
-			self.unknown2 = song_data.uint8()
-			self.unknown3 = song_data.uint8()
-			self.controls.parse(song_data)
-			self.presetname = song_data.string(32)
-			presetpath_size = song_data.uint32()
-			self.presetpath = song_data.string(presetpath_size)
-			song_data.skip(4)
-			numsamples = song_data.uint32()
-			#print(numsamples)
-			for _ in range(numsamples):
-				region = {}
-				region['volume'] = song_data.float()
-				song_data.skip(4)
-				region['pan'] = song_data.float()
-				region['key_root'] = song_data.uint32()
-				region['key_lo'] = song_data.uint32()
-				region['key_hi'] = song_data.uint32()
-				region['mode'] = song_data.uint32()
-				region['start'] = song_data.uint32()
-				region['end'] = song_data.uint32()-1
-				region['path'] = song_data.string(256)
-				song_data.skip(4)
-				sample_len = song_data.uint32()
-				region['samp_hz'] = song_data.uint32()
-				song_data.skip(4)
-				sample_chan = song_data.uint32()
-				region['samp_len'] = sample_len
-				region['samp_ch'] = sample_chan
-				samp_data = song_data.read((sample_len*2)*sample_chan)
-				self.samples.append([region, samp_data])
-			song_data.read(9)
-			self.patterns.parse(song_data)
+		if self.mach_id in caustic_machine.machobjs:
+			self.data = caustic_machine.machobjs[self.mach_id](song_data)
 
 class caustic_mixer:
 	def __init__(self):

@@ -59,17 +59,24 @@ def add_caustic_fx(convproj_obj, track_obj, caustic_fx, start_plugid):
 
 			track_obj.plugslots.slots_audio.append(fx_pluginid)
 
+def add_controls(plugin_obj, mach_id, controls):
+	fldso = globalstore.dataset.get_obj('caustic', 'plugin_inst', mach_id)
+	if fldso:
+		for param_id, dset_param in fldso.params.iter():
+			outval = controls.data[int(param_id)] if int(param_id) in controls.data else None
+			plugin_obj.dset_param__add(param_id, outval, dset_param)
+
 def loopmode_cvpj(wavdata, sp_obj): 
-	lm = wavdata['mode']
-	sp_obj.end = wavdata['end']
-	if lm in [0,1,2,3]: sp_obj.start = wavdata['start']
+	lm = wavdata.mode
+	sp_obj.end = wavdata.end
+	if lm in [0,1,2,3]: sp_obj.start = wavdata.start
 	if lm in [4,5]: sp_obj.start = 0
 	sp_obj.trigger = 'normal' if lm == 0 else 'oneshot'
 
 	if lm in [2,3,4,5]: 
 		sp_obj.loop_active = True
-		sp_obj.loop_start = wavdata['start']
-		sp_obj.loop_end = wavdata['end']
+		sp_obj.loop_start = wavdata.start
+		sp_obj.loop_end = wavdata.end
 	if lm in [0,1]: sp_obj.loop_active = False
 	if lm in [2,4]: sp_obj.loop_mode = "normal"
 	if lm in [3,5]: sp_obj.loop_mode = "pingpong"
@@ -164,64 +171,67 @@ class input_cvpj_r(plugins.base):
 			track_obj.plugslots.set_synth(pluginid)
 			cvpj_tracks.append(track_obj)
 
-			# -------------------------------- PCMSynth --------------------------------
+			machdata = machine.data
+
 			if machine.mach_id == 'PCMS':
 				middlenote = 0
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
 				track_obj.params.add('usemasterpitch', True, 'bool')
-				if len(machine.samples) == 1:
-					singlewav = machine.samples[0]
-					if singlewav[0]['key_lo'] == 24 and singlewav[0]['key_hi'] == 108: isMultiSampler = False
+				if len(machdata.samples) == 1:
+					singlewav = machdata.samples[0]
+					if singlewav.key_lo == 24 and singlewav.key_hi == 108: isMultiSampler = False
 					else: isMultiSampler = True
 				else: isMultiSampler = True
 
 				if not isMultiSampler:
-					region_data, wave_data = machine.samples[0]
+					region = machdata.samples[0]
 
 					sampleref = machid + '_PCMSynth_0'
 					wave_path = samplefolder+sampleref+'.wav'
 
-					if region_data['samp_ch'] != 0: 
+					if region.samp_chan != 0: 
 						audio_obj = audio_data.audio_obj()
-						audio_obj.channels = region_data['samp_ch']
-						audio_obj.rate = region_data['samp_hz']
+						audio_obj.channels = region.samp_chan
+						audio_obj.rate = region.samp_hz
 						audio_obj.set_codec('int16')
-						audio_obj.pcm_from_bytes(wave_data)
-						if region_data['mode'] not in [0, 1]: audio_obj.loop = [region_data['start'], region_data['end']]
+						audio_obj.pcm_from_bytes(region.samp_data)
+						if region.mode not in [0, 1]: audio_obj.loop = [region.start, region.end]
 						audio_obj.to_file_wav(wave_path)
 
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, wave_path, None)
-					loopmode_cvpj(region_data, sp_obj)
+					loopmode_cvpj(region, sp_obj)
 					sp_obj.point_value_type = "samples"
 
-					middlenote += region_data['key_root']-60
+					middlenote += region.key_root-60
 				else:
 					plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
-					for samplecount, data in enumerate(machine.samples):
-						region_data, wave_data = data
+					for samplecount, data in enumerate(machdata.samples):
+						region = machdata.samples[0]
 						loopdata = None
 						sampleref = machid + '_PCMSynth_'+str(samplecount)
 						wave_path = samplefolder+sampleref+'.wav'
 
 						audio_obj = audio_data.audio_obj()
-						audio_obj.channels = region_data['samp_ch']
-						audio_obj.rate = region_data['samp_hz']
+						audio_obj.channels = region.samp_chan
+						audio_obj.rate = region.samp_hz
 						audio_obj.set_codec('int16')
-						audio_obj.pcm_from_bytes(wave_data)
-						if region_data['mode'] not in [0, 1]: audio_obj.loop = [region_data['start'], region_data['end']]
+						audio_obj.pcm_from_bytes(region.samp_data)
+						if region.mode not in [0, 1]: audio_obj.loop = [region.start, region.end]
 						audio_obj.to_file_wav(wave_path)
 
 						sampleref_obj = convproj_obj.sampleref__add(wave_path, wave_path, None)
-						sp_obj = plugin_obj.sampleregion_add(region_data['key_lo']-60, region_data['key_hi']-60, region_data['key_root']-60, None)
-						sp_obj.vol = region_data['volume']
-						sp_obj.pan = (region_data['pan']-0.5)*2
-						loopmode_cvpj(region_data, sp_obj)
+						sp_obj = plugin_obj.sampleregion_add(region.key_lo-60, region.key_hi-60, region.key_root-60, None)
+						sp_obj.vol = region.volume
+						sp_obj.pan = (region.pan-0.5)*2
+						loopmode_cvpj(region, sp_obj)
 						sp_obj.length = sp_obj.end
 						sp_obj.sampleref = wave_path
 						sp_obj.point_value_type = 'samples'
 
-				if machine.samples:
-					pcms_c = machine.controls.data
+				if machdata.samples:
+					pcms_c = machdata.controls.data
 
 					middlenote += int(pcms_c[1]*12)
 					middlenote += int(pcms_c[2])
@@ -230,72 +240,136 @@ class input_cvpj_r(plugins.base):
 					track_obj.datavals.add('middlenote', -middlenote)
 					plugin_obj.env_asdr_add('vol', 0, pcms_c[5], 0, pcms_c[6], pcms_c[7], pcms_c[8], 1)
 
-			# -------------------------------- BeatBox --------------------------------
-			elif machine.mach_id == 'BBOX':
+			if machine.mach_id == 'BBOX':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				track_obj.params.add('usemasterpitch', False, 'bool')
 				track_obj.is_drum = True
+
 				samplecount = 0
-				for samplecount, bbox_sample in enumerate(machine.samples):
-					region_data, wave_data = bbox_sample
+				for samplecount, bbox_sample in enumerate(machdata.samples):
+					region = bbox_sample
 					sampleref = machid + '_BeatBox_'+str(samplecount)
 					wave_path = samplefolder+sampleref+'.wav'
-					if region_data['chan'] != 0 and region_data['hz'] != 0: 
+					if region.chan != 0 and region.hz != 0: 
 						audio_obj = audio_data.audio_obj()
-						audio_obj.channels = region_data['chan']
-						audio_obj.rate = region_data['hz']
+						audio_obj.channels = region.chan
+						audio_obj.rate = region.hz
 						audio_obj.set_codec('int16')
-						audio_obj.pcm_from_bytes(wave_data)
+						audio_obj.pcm_from_bytes(region.data)
 						audio_obj.to_file_wav(wave_path)
 
 					midkey = samplecount-12
 
 					sampleref_obj = convproj_obj.sampleref__add(wave_path, wave_path, None)
 					sp_obj = plugin_obj.sampleregion_add(midkey, midkey, midkey, None)
-					sp_obj.visual.name = region_data['name']
+					sp_obj.visual.name = region.name
 					sp_obj.start = 0
-					sp_obj.end = region_data['len']
+					sp_obj.end = region.len
 					sp_obj.trigger = 'oneshot'
 					sp_obj.sampleref = wave_path
 					sp_obj.point_value_type = "samples"
+					sp_obj.vol = int(not bool(region.mute))
 
-			elif machine.mach_id == 'NULL':
-				pass
-			else:
-				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', machine.mach_id)
+				if 'Select Kit' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+			if machine.mach_id == 'SSYN':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'SSYN')
 				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'SSYN', machdata.controls)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
 
-				fldso = globalstore.dataset.get_obj('caustic', 'plugin_inst', machine.mach_id)
-				if fldso:
-					for param_id, dset_param in fldso.params.iter():
-						outval = machine.controls.data[int(param_id)] if int(param_id) in machine.controls.data else None
-						plugin_obj.dset_param__add(param_id, outval, dset_param)
-
-				if machine.mach_id == 'VCDR':
-					for samplenum, sd in enumerate(machine.samples):
-						sampleinfo, sample_data = sd
-						if sample_data:
-							sampleref = machid + '_Vocoder_'+str(samplenum)
-							wave_path = samplefolder+sampleref+'.wav'
-							audio_obj = audio_data.audio_obj()
-
-							audio_obj.channels = 1
-							audio_obj.rate = sampleinfo['hz']
-							audio_obj.set_codec('int16')
-							audio_obj.pcm_from_bytes(sample_data)
-							audio_obj.to_file_wav(wave_path)
-
-							plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, wave_path, None)
-							sp_obj.point_value_type = "samples"
-
-				if machine.customwaveform1: 
+				if machdata.customwaveform1: 
 					wave_obj = plugin_obj.wave_add('customwaveform1')
-					wave_obj.set_all_range(machine.customwaveform1, -157, 157)
-					
-				if machine.customwaveform2: 
+					wave_obj.set_all_range(machdata.customwaveform1, -157, 157)
+
+				if machdata.customwaveform2: 
 					wave_obj = plugin_obj.wave_add('customwaveform2')
-					wave_obj.set_all_range(machine.customwaveform2, -157, 157)
+					wave_obj.set_all_range(machdata.customwaveform2, -157, 157)
+
+			if machine.mach_id == 'BLNE':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'BLNE')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'BLNE', machdata.controls)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+				if machdata.customwaveform1: 
+					wave_obj = plugin_obj.wave_add('customwaveform1')
+					wave_obj.set_all_range(machdata.customwaveform1, -157, 157)
+
+			if machine.mach_id == 'PADS':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'PADS')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'PADS', machdata.controls)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+				harmonics_obj = plugin_obj.harmonics_add('harm1')
+				for n, i in enumerate(machdata.harm1): harmonics_obj.add(n+1, (i+96)/96, {})
+				harmonics_obj = plugin_obj.harmonics_add('harm2')
+				for n, i in enumerate(machdata.harm2): harmonics_obj.add(n+1, (i+96)/96, {})
+				plugin_obj.datavals.add('harm1_vol', machdata.harm1vol)
+				plugin_obj.datavals.add('harm2_vol', machdata.harm2vol)
+
+			if machine.mach_id == 'ORGN':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'ORGN')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'ORGN', machdata.controls)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+			if machine.mach_id == 'FMSN':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'FMSN')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'FMSN', machdata.controls)
+				plugin_obj.datavals.add('algorithm', machdata.algorithm)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+			if machine.mach_id == 'KSSN':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'KSSN')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'KSSN', machdata.controls)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+			if machine.mach_id == 'SAWS':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'SAWS')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'SAWS', machdata.controls)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+			if machine.mach_id == '8SYN':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', '8SYN')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, '8SYN', machdata.controls)
+				plugin_obj.datavals.add('bitcode1', machdata.bitcode1)
+				plugin_obj.datavals.add('bitcode2', machdata.bitcode2)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
+
+			if machine.mach_id == 'VCDR':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'VCDR')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'VCDR', machdata.controls)
+				plugin_obj.datavals.add('current_number', machdata.currentnumber)
+
+				for samplenum, sd in enumerate(machdata.samples):
+					sampleinfo = sd
+					if sampleinfo.data:
+						sampleref = machid + '_Vocoder_'+str(samplenum)
+						wave_path = samplefolder+sampleref+'.wav'
+						audio_obj = audio_data.audio_obj()
+
+						audio_obj.channels = 1
+						audio_obj.rate = sampleinfo.hz
+						audio_obj.set_codec('int16')
+						audio_obj.pcm_from_bytes(sampleinfo.data)
+						audio_obj.to_file_wav(wave_path)
+
+						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, wave_path, None)
+						sp_obj.point_value_type = "samples"
+
+			if machine.mach_id == 'MDLR':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'caustic', 'MDLR')
+				plugin_obj.role = 'synth'
+				add_controls(plugin_obj, 'MDLR', machdata.controls)
+				if 'Select preset' not in machdata.presetname: track_obj.visual.name = machdata.presetname
 
 			track_obj.params.add('vol', mixer_tracks[machnum].vol, 'float')
 			track_obj.params.add('pan', mixer_tracks[machnum].pan, 'float')
@@ -303,7 +377,7 @@ class input_cvpj_r(plugins.base):
 			track_obj.params.add('solo', mixer_tracks[machnum].solo, 'bool')
 
 			if machine.mach_id != 'NULL':
-				for num, pattern in enumerate(machine.patterns.data):
+				for num, pattern in enumerate(machdata.patterns.data):
 					patid = patids[num]
 					nle_obj = track_obj.notelistindex__add(patid)
 					nle_obj.visual.name = patid
@@ -335,8 +409,10 @@ class input_cvpj_r(plugins.base):
 		for x in project_obj.seqn.parts:
 			x['key'] = x['key']%100 + (x['key']//100)*16
 
-			patmeasures = project_obj.machines[x['mach']].patterns.data[x['key']].measures*16
-			autodata = project_obj.machines[x['mach']].patterns.auto[x['key']]
+			machdata = project_obj.machines[x['mach']].data
+
+			patmeasures = machdata.patterns.data[x['key']].measures*16
+			autodata = machdata.patterns.auto[x['key']]
 			if patmeasures == 0: patmeasures = 16
 			patid = patids[x['key']]
 

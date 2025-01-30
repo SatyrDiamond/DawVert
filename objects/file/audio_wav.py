@@ -178,15 +178,16 @@ class wav_main:
 		self.data = numpy.frombuffer(bye_stream.raw(size), dtype=dtype, count=size//bytes)
 		
 		if self.bits == 24:
-			a = numpy.empty((len(self.data) // 3, 4), dtype='u1')
-			a[:, :3] = self.data.reshape((-1, 3))
-			a[:, 3:] = (a[:, 3 - 1:3] >> 7) * 255
-			self.data = a.view('<i4').reshape(a.shape[:-1])
+			dsize = len(self.data)//3
+			indata = self.data.reshape((-1, 3))
+			self.data = numpy.empty((dsize, 4), dtype='u1')
+			self.data[:,1:4] = indata[:,0:3]
+			self.data.dtype = numpy.dtype('<i4')
 		
 		if self.channels > 1: self.data = self.data.reshape(-1,self.channels)
 		if bool(size & 1): fid.seek(1,1)	
 		if normalized:
-			if self.bits == 8 or self.bits == 16 or self.bits == 24: normfactor = 2 ** (self.bits-1)
+			if self.bits == 8 or self.bits == 16: normfactor = 2 ** (self.bits-1)
 			self.data = numpy.float32(self.data) * 1.0 / normfactor
 
 	def read_audioobj(self, audio_obj):

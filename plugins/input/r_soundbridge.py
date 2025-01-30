@@ -159,6 +159,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 	return pluginid
 
 def do_fx(convproj_obj, sb_track, track_obj):
+	track_obj.plugslots.slots_audio_enabled = not bool(sb_track.audioUnitsBypass)
 	for x in sb_track.audioUnits:
 		pluginid = create_plugin(convproj_obj, x, False)
 		if pluginid:

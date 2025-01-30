@@ -62,7 +62,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 			sb_grouptrack = proj_soundbridge.soundbridge_track(None)
 			sb_grouptrack.latencyOffset = calc_lattime(group_obj.latency_offset)
 			do_markers(group_obj.timemarkers, sb_grouptrack.markers)
-			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.plugslots.slots_audio)
+			make_plugins_fx(convproj_obj, sb_grouptrack, group_obj.plugslots)
 			make_sends(convproj_obj, sb_grouptrack, group_obj.sends)
 			sb_grouptrack.type = 1
 			sb_grouptrack.state = set_params(group_obj.params)
@@ -227,9 +227,10 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 
 	sb_track.sendsAutomationContainer.state = encode_chunk(struct.pack('>'+('f'*len(values)), *values))
 
-def make_plugins_fx(convproj_obj, sb_track, fxslots_audio):
+def make_plugins_fx(convproj_obj, sb_track, plugslots):
 	from objects.file_proj import soundbridge as proj_soundbridge
-	for pluginid in fxslots_audio:
+	sb_track.audioUnitsBypass = int(not plugslots.slots_audio_enabled)
+	for pluginid in plugslots.slots_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
 			if plugin_obj.check_wildmatch('native', 'soundbridge', None):
@@ -463,7 +464,7 @@ class output_soundbridge(plugins.base):
 
 		master_track = convproj_obj.track_master
 
-		make_plugins_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master.plugslots.slots_audio)
+		make_plugins_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master.plugslots)
 
 		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = '#'+master_track.visual.color.get_hex()
 
@@ -530,7 +531,7 @@ class output_soundbridge(plugins.base):
 
 				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
-				make_plugins_fx(convproj_obj, sb_track, track_obj.plugslots.slots_audio)
+				make_plugins_fx(convproj_obj, sb_track, track_obj.plugslots)
 
 				if track_obj.plugslots.synth:
 					plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
@@ -641,7 +642,7 @@ class output_soundbridge(plugins.base):
 				
 				make_auto_trackcontains(convproj_obj, sb_track, track_obj.params, 0, ['track', trackid])
 				make_sends(convproj_obj, sb_track, track_obj.sends)
-				make_plugins_fx(convproj_obj, sb_track, track_obj.plugslots.slots_audio)
+				make_plugins_fx(convproj_obj, sb_track, track_obj.plugslots)
 
 				blockContainer = proj_soundbridge.soundbridge_blockContainer(None)
 
@@ -780,7 +781,7 @@ class output_soundbridge(plugins.base):
 			sb_track.latencyOffset = calc_lattime(track_obj.latency_offset)
 			make_auto_trackcontains(convproj_obj, sb_track, return_obj.params, 1, ['return', returnid])
 			make_sends(convproj_obj, sb_track, return_obj.sends)
-			make_plugins_fx(convproj_obj, sb_track, return_obj.plugslots.slots_audio)
+			make_plugins_fx(convproj_obj, sb_track, return_obj.plugslots)
 			sb_tracks.append(sb_track)
 
 		aid_found, aid_data = convproj_obj.automation.get(['main', 'bpm'], 'float')

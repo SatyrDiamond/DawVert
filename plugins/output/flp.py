@@ -467,7 +467,8 @@ class output_cvpjs(plugins.base):
 				fl_fxchan.latency = fxchannel_obj.latency_offset
 				if fxchannel_obj.visual.name: fl_fxchan.name = fxchannel_obj.visual.name
 				if fxchannel_obj.visual.color: fl_fxchan.color = decode_color(fxchannel_obj.visual.color)
- 	
+				fl_fxchan.fx_enabled = bool(fxchannel_obj.plugslots.slots_audio_enabled)
+
 				if 'docked' in fxchannel_obj.visual_ui.other:
 					dockedpos = fxchannel_obj.visual_ui.other['docked']
 					if dockedpos == 1: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, True

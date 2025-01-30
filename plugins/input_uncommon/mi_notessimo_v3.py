@@ -62,7 +62,7 @@ def do_layers(project_obj, layer_data):
 
 		calcd = calcdur*(sheet_tempo/120)
 
-		outdata.append([curpos, realdur, layerspot.id, sheet_tempo])
+		outdata.append([curpos, realdur, layerspot.id, sheet_tempo, sheetdata.valueSignature, sheetdata.nSignature])
 		prevend = pl_end
 		curpos += realdur
 
@@ -272,12 +272,13 @@ class input_notessimo_v3(plugins.base):
 				playlist_obj = convproj_obj.playlist__add(layer_id, 1, True)
 				durposdata = do_layers(project_obj, layer_data)
 
-				for pos, dur, sid, tempo in durposdata:
+				for pos, dur, sid, tempo, denum, numer in durposdata:
 					if firstlayer:
 						autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
 						autopl_obj.time.set_posdur(pos*2, dur*2)
 						autopoint_obj = autopl_obj.data.add_point()
 						autopoint_obj.value = tempo
+						convproj_obj.timesig_auto.add_point(pos*2, [numer, denum])
 
 					cvpj_placement = playlist_obj.placements.add_notes_indexed()
 					cvpj_placement.fromindex = sid

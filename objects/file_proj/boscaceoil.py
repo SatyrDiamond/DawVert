@@ -59,6 +59,11 @@ class ceol_song:
 		self.instruments = []
 		self.patterns = []
 		self.spots = []
+		self.length = 0
+		self.loopstart = 0
+		self.loopend = 0
+		self.spots = 0
+
 
 	def load_from_file(self, input_file):
 		ceol_file = open(input_file, 'r')

@@ -355,8 +355,8 @@ class flm_channel:
 
 		self.name = ''
 		self.tracknum = 0
-		self.unk5 = 0
-		self.color_2 = 0
+		self.order = 0
+		self.color = 0
 
 		self.unk3 = 0
 		self.unk4 = 0

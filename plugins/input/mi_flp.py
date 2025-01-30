@@ -754,6 +754,8 @@ class input_flp(plugins.base):
 
 			fxchannel_obj.params.add('vol', fx_vol**2, 'float')
 			fxchannel_obj.params.add('pan', fx_pan, 'float')
+			fxchannel_obj.params.add('enabled', bool(mixer_obj.enabled), 'bool')
+			fxchannel_obj.params.add('solo', bool(mixer_obj.solo), 'bool')
 
 			fxchannel_obj.sends.to_master_active = False
 

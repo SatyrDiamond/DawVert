@@ -45,6 +45,7 @@ class dms_track:
 		self.gate = 480
 		self.gate_adjust = 100
 		self.tick_adjust_measure = 0
+		self.enabled = 1
 
 		for trk_chunk_obj in chunk_obj.iter(0):
 			chunkid = trk_chunk_obj.id
@@ -56,10 +57,11 @@ class dms_track:
 			elif chunkid == 1007: self.gate = song_data.int32()
 			elif chunkid == 1009: self.rhythm_name = song_data.string(trk_chunk_obj.size)
 			elif chunkid == 1012: self.tick_adjust = song_data.uint32()
-			elif chunkid == 1019: self.tick_adjust_measure = song_data.uint32()
+			elif chunkid == 1015: self.enabled = song_data.int32()
 			elif chunkid == 1016: self.gate_adjust = song_data.int32()
 			elif chunkid == 1017: self.transpose = song_data.int32()
 			elif chunkid == 1018: self.color = song_data.uint8()
+			elif chunkid == 1019: self.tick_adjust_measure = song_data.uint32()
 			elif chunkid == 1021: self.range_low = song_data.uint8()
 			elif chunkid == 1022: self.range_high = song_data.uint8()
 
@@ -163,9 +165,9 @@ class dms_track:
 					if subchunk_obj.id == 2003: programchange[1] = song_data.uint8()
 					if subchunk_obj.id == 2004: programchange[2] = song_data.raw(subchunk_obj.size)
 					if subchunk_obj.id == 2005: programchange[3] = song_data.uint8()
-					if subchunk_obj.id == 2001: programchange[4] = song_data.uint8()
-					if subchunk_obj.id == 2002: programchange[5] = song_data.uint8()
-					if subchunk_obj.id == 2006: programchange[6] = song_data.uint16()
+					if subchunk_obj.id == 2001: programchange[4] = song_data.int8()
+					if subchunk_obj.id == 2002: programchange[5] = song_data.int8()
+					if subchunk_obj.id == 2006: programchange[6] = song_data.int16()
 				self.programchanges.append(programchange)
 
 			elif chunkid == 2019:
@@ -184,7 +186,7 @@ class dms_track:
 			#		subchunk_obj.id = int.from_bytes(subchunk_obj.id, 'little')
 			#		printchunk(2, subchunk_obj.id, subchunk_obj, song_data, True)
 			#else:
-			#	printchunk(1, chunkid, trk_chunk_obj, song_data, True)
+			#	printchunk(1, trk_chunk_obj, song_data, True)
 
 class dms_project:
 	def __init__(self):

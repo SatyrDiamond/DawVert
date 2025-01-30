@@ -246,3 +246,7 @@ class input_ceol(plugins.base):
 		convproj_obj.add_timesig_lengthbeat(project_obj.pattern_length, project_obj.bar_length)
 		convproj_obj.params.add('bpm', project_obj.bpm, 'float')
 		convproj_obj.do_actions.append('do_addloop')
+		
+		convproj_obj.transport.loop_active = True
+		convproj_obj.transport.loop_start = project_obj.pattern_length*project_obj.loopstart
+		convproj_obj.transport.loop_end = project_obj.pattern_length*project_obj.loopend

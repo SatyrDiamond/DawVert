@@ -287,6 +287,7 @@ class audio_obj:
 
 			if wavfile_obj.format != 3:
 				if wavfile_obj.bits == 32: self.set_codec('int32')
+				if wavfile_obj.bits == 24: self.set_codec('int32')
 				if wavfile_obj.bits == 16: self.set_codec('int16')
 				if wavfile_obj.bits == 8: self.set_codec('uint8')
 			else:

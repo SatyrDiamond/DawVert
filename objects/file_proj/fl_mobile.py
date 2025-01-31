@@ -374,7 +374,7 @@ class flm_channel:
 					if VERBOSE_CHANNEL: chunkview(byr_stream, chunk_obj, 0.5, 1, False)
 					self.name = byr_stream.string(1024)
 					self.tracknum = byr_stream.double()
-					self.unk5 = byr_stream.float()
+					self.order = byr_stream.float()
 					self.color = byr_stream.float()
 					self.unk3 = byr_stream.double()
 					self.unk4 = byr_stream.double()

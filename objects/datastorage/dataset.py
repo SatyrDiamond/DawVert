@@ -657,6 +657,8 @@ class dataset_category:
 			if x_part.tag == 'colorset':
 				object_obj = self.colorset.create(cat_id)
 				object_obj.read_xml(x_part)
+			if x_part.tag == 'external_path':
+				self.ext_dataset_ids[x_part.get('id')] = x_part.text
 
 	def write(self):
 		outdata = {}
@@ -705,8 +707,21 @@ class dataset:
 		xml_data = ET.parse(input_file, parser).getroot()
 		for x_part in xml_data:
 			cat_id = x_part.get('id')
+			if x_part.tag == 'import': 
+				self.merge_file(x_part.text)
 			if x_part.tag == 'category':
-				cat_obj = self.categorys[cat_id] = dataset_category(None)
+				if cat_id not in self.categorys: self.categorys[cat_id] = dataset_category(None)
+				cat_obj = self.categorys[cat_id]
+				cat_obj.read_xml(x_part)
+
+	def merge_file(self, input_file):
+		parser = ET.XMLParser()
+		xml_data = ET.parse(input_file, parser).getroot()
+		for x_part in xml_data:
+			cat_id = x_part.get('id')
+			if x_part.tag == 'category':
+				if cat_id not in self.categorys: self.categorys[cat_id] = dataset_category(None)
+				cat_obj = self.categorys[cat_id]
 				cat_obj.read_xml(x_part)
 
 	def write(self, filename):

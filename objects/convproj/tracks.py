@@ -30,8 +30,8 @@ class lanefit:
 		isplaced = False
 		while not isplaced:
 			if len(self.mergeddata_notes) < nummlane: 
-				self.mergeddata_notes.append(placements_notes.cvpj_placements_notes())
-				self.mergeddata_audio.append(placements_audio.cvpj_placements_audio())
+				self.mergeddata_notes.append(placements_notes.cvpj_placements_notes(pl_data.time_ppq, pl_data.time_float))
+				self.mergeddata_audio.append(placements_audio.cvpj_placements_audio(pl_data.time_ppq, pl_data.time_float))
 
 			if not is_audio:
 				overlapped = self.mergeddata_notes[-1].check_overlap(pl_data.time.position, pl_data.time.duration)

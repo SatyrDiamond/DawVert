@@ -56,6 +56,8 @@ def add_auto(valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 			autopoint_obj.pos = point['pos']
 			if valtype == 'vol':
 				autopoint_obj.value = calc_vol(point['val'])
+			elif valtype == 'invert':
+				autopoint_obj.value = int(point['val']<0.5)
 			else:
 				autopoint_obj.value = (point['val']+add)*mul
 			autopoint_obj.type = 'normal'
@@ -135,9 +137,15 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 						extmanu_obj.vst2__import_presetdata('raw', statereader.rest(), 'win')
 
 					for x in sb_plugin.automationContainer.automationTracks:
-						paramid = 'ext_param_'+str(x.parameterIndex-1)
+						paramid = 'ext_param_'+str(x.parameterIndex)
 						plugin_obj.params.add(paramid, x.defaultValue, 'float')
-						add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+						outparam = x.parameterIndex-1
+						if outparam>0:
+							paramid = 'ext_param_'+str(outparam)
+							add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+						else:
+							add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
+
 
 		elif hexdata in native_names:
 			plugin_enabled = struct.unpack('>f', statedata[0:4])[0]

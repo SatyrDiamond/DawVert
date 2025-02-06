@@ -16,8 +16,10 @@ from objects.convproj import timemarker
 from objects import notelist_splitter
 
 class cvpj_placements_notes:
-	__slots__ = ['data']
-	def __init__(self):
+	__slots__ = ['data','time_ppq','time_float']
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
 		self.data = []
 
 	def __iter__(self):
@@ -28,6 +30,18 @@ class cvpj_placements_notes:
 
 	def __bool__(self):
 		return bool(self.data)
+
+	def change_timings(self, time_ppq, time_float, is_indexed):
+		for pl in self.data:
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			if not is_indexed: 
+				pl.notelist.change_timings(time_ppq, time_float)
+				pl.timesig_auto.change_timings(time_ppq, time_float)
+				pl.timemarkers.change_timings(time_ppq, time_float)
+				for mpename, autodata in pl.auto.items():
+					autodata.change_timings(time_ppq, time_float)
+		self.time_ppq = time_ppq
+		self.time_float = time_float
 
 	def merge_crop(self, npl_obj, pos, dur, visualfill):
 		for n in npl_obj.data:

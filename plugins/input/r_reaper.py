@@ -404,7 +404,8 @@ class input_reaper(plugins.base):
 						for note in rpp_source.notes: midi_notes_out.do_note(note)
 					if rpp_source.type == 'SECTION':
 						samplemode = int(rpp_source.mode.get())
-						startpos = float(rpp_source.startpos.get())
+						startpos = rpp_source.startpos.get()
+						startpos = float(startpos) if startpos else 0
 						if rpp_source.source != None:
 							insource = rpp_source.source
 							if insource != None:

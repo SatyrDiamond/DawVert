@@ -624,7 +624,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			if samptr_obj.fxch != -1: track_obj.fxrack_channel = int(samptr_obj.fxch)
 
 			for lmms_sampletco in lmms_track.sampletcos:
-				placement_obj = track_obj.placements.add_audio() if not isbb else placements_audio.cvpj_placement_audio()
+				placement_obj = track_obj.placements.add_audio() if not isbb else placements_audio.cvpj_placement_audio(48, False)
 				placement_obj.time.set_posdur(lmms_sampletco.pos, lmms_sampletco.len)
 				placement_obj.time.set_offset(lmms_sampletco.off*-1 if lmms_sampletco.off != -1 else 0)
 				placement_obj.muted = bool(lmms_sampletco.muted)

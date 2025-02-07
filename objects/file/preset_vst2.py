@@ -42,6 +42,31 @@ class vst2_fxBank:
 			byw_stream.raw(progd)
 		return byw_stream.getvalue()
 
+class vst2_fxChunkSet_bank:
+	def __init__(self, byr_stream):
+		self.fourid = 0
+		self.version = 0
+		self.num_programs = 0
+		self.chunk = b''
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		self.fourid = byr_stream.uint32_b()
+		self.version = byr_stream.uint32_b()
+		self.num_programs = byr_stream.uint32_b()
+		byr_stream.skip(128)
+		self.chunk = byr_stream.raw(byr_stream.uint32_b())
+
+	def write(self):
+		byw_stream = bytewriter.bytewriter()
+		byw_stream.uint32_b(self.fourid)
+		byw_stream.uint32_b(self.version)
+		byw_stream.uint32_b(self.num_programs)
+		byw_stream.raw(b'\x00'*128)
+		byw_stream.uint32_b(len(self.chunk))
+		byw_stream.raw(self.chunk)
+		return byw_stream.getvalue()
+
 class vst2_fxChunkSet:
 	def __init__(self, byr_stream):
 		self.fourid = 0
@@ -118,20 +143,26 @@ class vst2_program:
 
 	def set_fxChunkSet_bank(self, bye_stream):
 		self.type = 4
-		self.data = vst2_fxChunkSet(bye_stream)
+		self.data = vst2_fxChunkSet_bank(bye_stream)
 		return self.data
 
 	def parse(self, byr_stream, size):
-		with byr_stream.isolate_size(size, True) as bye_stream: 
+		with byr_stream.isolate_size(size, False) as bye_stream: 
 			ccnk_type = bye_stream.raw(4)
 			ccnk_size = bye_stream.uint32_b()
 
-			if ccnk_type == b'FPCh': self.set_fxChunkSet(bye_stream)
-			if ccnk_type == b'FxCk': self.set_fxProgram(bye_stream)
-			if ccnk_type == b'FxBk': self.set_fxBank(bye_stream)
-			if ccnk_type == b'FBCh': self.set_fxChunkSet(bye_stream)
+			if ccnk_type == b'FPCh': 
+				self.set_fxChunkSet(bye_stream)
+			if ccnk_type == b'FxCk': 
+				self.set_fxProgram(bye_stream)
+			if ccnk_type == b'FxBk': 
+				self.set_fxBank(bye_stream)
+			if ccnk_type == b'FBCh': 
+				self.set_fxChunkSet_bank(bye_stream)
 
 	def write(self):
+		ccnk_type = b'    '
+		ccnk_data = b''
 		if self.type == 1: 
 			ccnk_type = b'FPCh'
 			ccnk_data = self.data.write()

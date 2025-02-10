@@ -15,7 +15,7 @@ def do_visual(cvpj_visual, zb_visual, color_index, colordata):
 	cvpj_visual.name = zb_visual.name
 	if color_index != -1:
 		colorfloat = colordata.getcolornum(color_index)
-		cvpj_visual.color.set_float(colorfloat)
+		cvpj_visual.color.set_int(colorfloat)
 
 def do_auto(convproj_obj, autoloc, curve, parammode):
 	valtype = 'float'

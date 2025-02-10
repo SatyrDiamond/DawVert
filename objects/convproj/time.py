@@ -2,7 +2,63 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from fractions import Fraction
+from functions import xtramath
 import math
+
+class cvpj_time_size:
+	def __init__(self, time_ppq, time_float):
+		self.ticks = None
+		self.seconds = None
+		self.bpm = 0
+
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+
+	def __float__(self):
+		if self.ticks==None: self.tick_from_second()
+		return self.ticks if self.ticks else 0.0
+
+	def __imul__(self, i):
+		if self.ticks==None: self.tick_from_second()
+		if self.ticks!=None: self.ticks *= i
+		self.second_from_tick()
+		return self
+
+	def __isub__(self, i):
+		if self.ticks==None: self.tick_from_second()
+		if self.ticks!=None: self.ticks -= i
+		self.second_from_tick()
+		return self
+
+	def __iadd__(self, i):
+		if self.ticks==None: self.tick_from_second()
+		if self.ticks!=None: self.ticks += i
+		self.second_from_tick()
+		return self
+
+	def second_from_tick(self):
+		if self.ticks is not None and self.bpm:
+			self.seconds = (self.ticks/(ppq/4))*(tempo/120)*2
+
+	def tick_from_second(self):
+		if self.seconds is not None and self.bpm:
+			self.ticks = (self.seconds*(ppq/4))/(tempo/120)/2
+
+	def set_tick(self, beats):
+		self.ticks = beats
+		if self.bpm: self.second_from_tick()
+
+	def set_seconds(self, seconds):
+		self.seconds = seconds
+		if self.bpm: self.tick_from_second()
+
+	def set_bpm(self, bpm):
+		self.bpm = bpm
+		if self.bpm: self.second_from_tick()
+
+	def change_timing(self, new_ppq, is_float):
+		if self.ticks is not None:
+			self.ticks = xtramath.change_timing(self.time_ppq, new_ppq, is_float, self.ticks)
 
 outletters = ['','d','t']
 

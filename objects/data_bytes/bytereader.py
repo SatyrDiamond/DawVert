@@ -261,6 +261,10 @@ class bytereader:
 
 	def raw(self, size): return self.buf.read(size)
 
+	def debug_peek(self): 
+		self.buf.seek(self.buf.tell()-64)
+		print(self.buf.read(128)) 
+
 	def rest(self): return self.buf.read(self.end-self.buf.tell())
 
 	def string(self, size, **kwargs): return self.buf.read(size).split(b'\x00')[0].decode(**kwargs)

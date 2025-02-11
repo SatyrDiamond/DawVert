@@ -75,9 +75,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 			for band in device.bands:
 				filter_obj, filter_id = plugin_obj.eq_add()
 				filter_obj.on = band.enabled.value=='true'
-				filter_obj.freq = note_data.note_to_freq(band.freq.value-72)
 				filter_obj.gain = band.gain.value
-				filter_obj.q = band.q.value
 
 				if band.type == 'notch': filter_obj.type.set('notch', None)
 				if band.type == 'highShelf': filter_obj.type.set('high_shelf', None)
@@ -89,11 +87,19 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 				autoid_assoc.define(str(band.enabled.id), ['n_filter', pluginid, filter_id, 'on'], 'bool', None)
 				autoid_assoc.define(str(band.freq.id), ['n_filter', pluginid, filter_id, 'freq'], 'float', None)
 				autoid_assoc.define(str(band.gain.id), ['n_filter', pluginid, filter_id, 'gain'], 'float', None)
-				autoid_assoc.define(str(band.q.id), ['n_filter', pluginid, filter_id, 'q'], 'float', None)
 
-				freqpath = ['n_filter', pluginid, filter_id, 'freq']
-				convproj_obj.automation.calc(freqpath, 'add', -72, 0, 0, 0)
-				convproj_obj.automation.calc(freqpath, 'note2freq', 0, 0, 0, 0)
+				if band.q.value != 0:
+					filter_obj.q = band.q.value
+					autoid_assoc.define(str(band.q.id), ['n_filter', pluginid, filter_id, 'q'], 'float', None)
+
+				if band.freq.unit == 'semitone':
+					filter_obj.freq = note_data.note_to_freq(band.freq.value-72)
+					freqpath = ['n_filter', pluginid, filter_id, 'freq']
+					convproj_obj.automation.calc(freqpath, 'add', -72, 0, 0, 0)
+					convproj_obj.automation.calc(freqpath, 'note2freq', 0, 0, 0, 0)
+				if band.freq.unit == 'hertz':
+					filter_obj.freq = band.freq.value
+					freqpath = ['n_filter', pluginid, filter_id, 'freq']
 
 		if device.plugintype == 'Compressor':
 			pprms = device.params

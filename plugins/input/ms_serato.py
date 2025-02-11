@@ -111,6 +111,7 @@ class input_serato(plugins.base):
 		from objects.convproj import sample_entry
 
 		convproj_obj.type = 'ms'
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.set_timings(960, True)
 
 		useaudioclips = True
@@ -131,20 +132,34 @@ class input_serato(plugins.base):
 			scene_strip = scene_deck.channel_strip
 
 			if scene_deck.type == 'drums':
+				base_trk_id = 'track_'+str(num+1)
+				group_obj = convproj_obj.fx__group__add(base_trk_id)
+				group_obj.visual.name = scene_deck.name
+				group_obj.params.add('vol', scene_strip.gain*scene_strip.volume, 'float')
+				group_obj.params.add('pan', scene_strip.pan, 'float')
+				do_chan_strip(convproj_obj, base_trk_id, scene_strip, group_obj.plugslots.slots_audio)
 				for dnum, drumdata in enumerate(scene_deck.drums):
-					cvpj_instid_p = 'track_'+str(num+1)+'_'+str(dnum)
+					cvpj_instid_p = base_trk_id+'_'+str(dnum)
 					if drumdata.used:
 						drumsamp = drumdata.sample
 
 						samplefile = drumsamp.file
 
+						channel_strip = drumdata.channel_strip
+
 						if samplefile:
+							inst_obj = convproj_obj.instrument__add(cvpj_instid_p)
+							inst_obj.group = base_trk_id
+							inst_obj.is_drum = True
+							inst_obj.plugslots.set_synth(cvpj_instid_p)
+							if channel_strip.gain: inst_obj.params.add('vol', channel_strip.gain*channel_strip.volume, 'float')
+							inst_obj.params.add('pan', channel_strip.pan, 'float')
+							do_chan_strip(convproj_obj, cvpj_instid_p, channel_strip, inst_obj.plugslots.slots_audio)
+
 							samplepath = parse_filepath(drumsamp.file)
 
 							plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(cvpj_instid_p, samplepath, 'win')
-							inst_obj = convproj_obj.instrument__add(cvpj_instid_p)
-							inst_obj.is_drum = True
-							inst_obj.plugslots.set_synth(cvpj_instid_p)
+
 							inst_obj.visual.name = urllib.parse.unquote(samplefile).split('/')[-1]
 
 							if drumsamp.color:

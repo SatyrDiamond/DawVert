@@ -22,6 +22,8 @@ def process_r(convproj_obj, out_dawinfo):
 	convproj_obj.track_data = {}
 	convproj_obj.trackroute = {}
 
+	routechanges = {}
+
 	for trackid in org_track_order:
 		if trackid in org_track_data:
 			track_obj = org_track_data[trackid]
@@ -46,6 +48,8 @@ def process_r(convproj_obj, out_dawinfo):
 					track_obj.plugslots.slots_notes = []
 					track_obj.plugslots.slots_audio = []
 
+				routechanges[trackid] = []
+
 				for laneid, lane_obj in track_obj.lanes.items():
 					cvpj_trackid = trackid+'_lane_'+laneid
 					if not insidegroup:
@@ -58,7 +62,9 @@ def process_r(convproj_obj, out_dawinfo):
 					convproj_obj.track_data[cvpj_trackid] = sep_track_obj
 					if insidegroup: sep_track_obj.group = trackid
 
-					if trackroute_sendobj != None: convproj_obj.trackroute[cvpj_trackid] = trackroute_sendobj
+					if trackroute_sendobj != None: 
+						routechanges[trackid].append(cvpj_trackid)
+						convproj_obj.trackroute[cvpj_trackid] = trackroute_sendobj
 
 				colors = [x.visual.color for _, x in track_obj.lanes.items() if x.visual.color]
 				allcolor = colors[0] if (all(x == colors[0] for x in colors) and colors) else None
@@ -66,6 +72,17 @@ def process_r(convproj_obj, out_dawinfo):
 				if allcolor:
 					track_obj.visual.color.merge(allcolor)
 					if insidegroup: group_obj.visual.color = copy.deepcopy(allcolor)
+
+	for mainid, sends_obj in convproj_obj.trackroute.items():
+		newroute = {}
+		for targ, send_obj in sends_obj.data.items():
+			if targ in routechanges:
+				for x in routechanges[targ]:
+					newroute[x] = copy.deepcopy(send_obj) 
+			else:
+				newroute[targ] = send_obj
+		sends_obj.data = newroute
+
 	return True
 
 def process(convproj_obj, in__track_lanes, out_dawinfo, out_type, dawvert_intent):

@@ -127,6 +127,7 @@ class serato_song:
 		self.bpm = 120.0
 		self.key_root_note = 'C'
 		self.key_type = 'major'
+		self.transpose = 0
 		self.play_focus_area = 'arrangement'
 		self.audio_deck_color_collection = []
 		self.scene_decks = []
@@ -138,6 +139,7 @@ class serato_song:
 
 		if 'version' in serato_json: self.version = serato_json['version']
 		if 'metadata' in serato_json: self.metadata = serato_json['metadata']
+		if 'transpose' in serato_json: self.transpose = serato_json['transpose']
 		if 'bpm' in serato_json: self.bpm = serato_json['bpm']
 		if 'key_root_note' in serato_json: self.key_root_note = serato_json['key_root_note']
 		if 'key_type' in serato_json: self.key_type = serato_json['key_type']

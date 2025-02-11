@@ -38,4 +38,4 @@ def convert(convproj_obj, out_dawinfo):
 					for laneid, scene_pl in track_obj.scenes[scenepl.id].items():
 						track_obj.lanes[laneid].placements.merge_crop_nestedaudio(scene_pl, scenepl.position, scenepl.duration, convproj_obj.scenes[scenepl.id].visual)
 						
-	convproj_obj.type = 'r'
+	convproj_obj.type = 'rm'

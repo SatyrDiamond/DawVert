@@ -46,7 +46,7 @@ class input_fl_mobile(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'route'
-		convproj_obj.set_timings(1, False)
+		convproj_obj.set_timings(1, True)
 
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 20\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')
@@ -274,7 +274,9 @@ class input_fl_mobile(plugins.base):
 							if flm_clip.evn2: 
 								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 								duration = do_auto(flm_clip.evn2.events, autopl_obj.data, startpos, v_add, v_mul, v_bool)
-								autopl_obj.time.set_posdur(startpos, duration)
+								maxdur = max(duration, flm_clip.duration)
+								autopl_obj.time.set_posdur(startpos, maxdur)
+								autopl_obj.time.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
 
 		convproj_obj.metadata.name = project_obj.meta_title
 		convproj_obj.metadata.author = project_obj.meta_artist

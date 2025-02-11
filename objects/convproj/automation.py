@@ -210,6 +210,7 @@ class cvpj_s_automation:
 
 	def convert____pl_points__nopl_points(self):
 		if self.u_pl_points:
+			self.pl_points.remove_loops([])
 			for x in self.pl_points:
 				x.remove_cut()
 				for c, p in enumerate(x.data.points):

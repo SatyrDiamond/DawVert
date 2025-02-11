@@ -71,6 +71,9 @@ class cvpj_placements_autopoints:
 			else:
 				x.data.edit_trimmove(0, x.time.duration)
 
+	def remove_loops(self, out__placement_loop):
+		self.data = placements.internal_removeloops(self.data, out__placement_loop)
+
 class cvpj_placement_autopoints:
 	__slots__ = ['time','muted','visual','data']
 

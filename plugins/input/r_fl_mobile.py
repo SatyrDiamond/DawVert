@@ -184,10 +184,12 @@ class input_fl_mobile(plugins.base):
 						lane_obj = track_obj.add_lane(str(lanenum))
 						if tracktype == 'audio':
 							for flm_clip in lanedata.clips:
+
 								pos = flm_clip.position/128
 								placement_obj = lane_obj.placements.add_audio()
-								placement_obj.time.set_posdur(pos, flm_clip.duration)
-								placement_obj.time.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
+								time_obj = placement_obj.time
+								time_obj.set_posdur(pos, flm_clip.duration)
+								time_obj.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
 
 								if flm_clip.evn2:
 
@@ -228,17 +230,29 @@ class input_fl_mobile(plugins.base):
 									sampleref_obj = do_sample(convproj_obj, sample_path, project_obj.zipfile, dawvert_intent.input_file)
 
 									if sampleref_obj:
-										if not placement_obj.time.duration:
-											placement_obj.time.duration = ((sampleref_obj.dur_sec*2)*tempomul)
+										if not time_obj.duration:
+											if flm_sample.stretch_on: 
+												outdur = (sampleref_obj.dur_sec*2)
+												outdur /= flm_sample.stretch_size
+												outdur /= tempomul
+											else:
+												outdur = (sampleref_obj.dur_sec*2)
+												outdur *= tempomul
+												
+											time_obj.duration = outdur
 
 									placement_obj.visual.name = flm_clip.sample.sample_name
 
 									sp_obj = placement_obj.sample
 									sp_obj.sampleref = sample_path
 
-									sp_obj.stretch.set_rate_speed(project_obj.tempo, flm_sample.stretch_size, True)
-									sp_obj.stretch.preserve_pitch = True
-									sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
+									if flm_sample.stretch_on: 
+										sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
+										sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
+										sp_obj.stretch.preserve_pitch = True
+									else:
+										sp_obj.stretch.set_rate_speed(project_obj.tempo, flm_sample.pitch, True)
+										sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
 
 									sp_obj.reverse = bool(flm_sample.main_unk_4)
 									if flm_sample.prms:

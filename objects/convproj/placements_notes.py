@@ -100,7 +100,7 @@ class cvpj_placements_notes:
 	def remove_cut(self):
 		for x in self.data: 
 			if x.time.cut_type == 'cut':
-				x.notelist.edit_trimmove(x.time.cut_start, x.time.duration)
+				x.notelist.edit_trimmove(x.time.cut_start, round(x.time.cut_start+x.time.duration, 8))
 				x.time.cut_start = 0
 				x.time.cut_type = None
 
@@ -152,7 +152,7 @@ class cvpj_placements_notes:
 class cvpj_placement_notes:
 	__slots__ = ['time','muted','visual','notelist','time_ppq','time_float','auto','timesig_auto','timemarkers']
 	def __init__(self, time_ppq, time_float):
-		self.time = placements.cvpj_placement_timing()
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.notelist = notelist.cvpj_notelist(time_ppq, time_float)

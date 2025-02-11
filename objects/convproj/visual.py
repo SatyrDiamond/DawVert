@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from dataclasses import dataclass
+from functions import xtramath
 from objects import globalstore
 import numpy as np
 import copy

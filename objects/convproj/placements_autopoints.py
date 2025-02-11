@@ -75,7 +75,7 @@ class cvpj_placement_autopoints:
 	__slots__ = ['time','muted','visual','data']
 
 	def __init__(self, time_ppq, time_float, val_type):
-		self.time = placements.cvpj_placement_timing()
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.data = autopoints.cvpj_autopoints(time_ppq, time_float, val_type)
 		self.muted = False
 		self.visual = visual.cvpj_visual()

@@ -703,9 +703,10 @@ class input_ableton(plugins.base):
 							cut_start = (clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4
 							loop_start = clipobj.Loop.LoopStart*4
 							loop_end = clipobj.Loop.LoopEnd*4
+
 							placement_obj.time.set_loop_data(cut_start, loop_start, loop_end)
 						else:
-							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
+							placement_obj.time.set_offset(clipobj.Loop.LoopStart*4)
 
 						t_notes_auto = {}
 						for nid, nes in clipobj.Notes.PerNoteEventStore.items():

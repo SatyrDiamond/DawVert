@@ -60,7 +60,14 @@ def internal_removeloops(pldata, out__placement_loop):
 
 			else:
 				outeq = oldpl_obj.time.duration
-				dur = outeq+oldpl_obj.time.cut_start if oldpl_obj.time.cut_type == 'loop_eq' else outeq
+				if oldpl_obj.time.cut_type == 'loop_eq': 
+					dur = outeq+oldpl_obj.time.cut_start
+				elif oldpl_obj.time.cut_type == 'loop_adv_off': 
+					durr = oldpl_obj.time.cut_start-(loop_loopend-loop_loopstart)
+					dur = outeq+oldpl_obj.time.cut_start-durr
+				else: 
+					dur = outeq
+
 				for cutpoint in xtramath.cutloop(oldpl_obj.time.position, dur, loop_start, loop_loopstart, loop_loopend):
 					cutplpl_obj = copy.deepcopy(oldpl_obj)
 					cutplpl_obj.time.position = cutpoint[0]
@@ -119,8 +126,8 @@ class cvpj_placement_fade:
 #	loop_adv_off	        Start                   LoopStart                       LoopEnd
 
 class cvpj_placement_timing:
-	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend']
-	def __init__(self):
+	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend','time_ppq','time_float']
+	def __init__(self, time_ppq, time_float):
 		self.position = 0
 		self.duration = 0
 		self.position_real = None
@@ -129,6 +136,8 @@ class cvpj_placement_timing:
 		self.cut_start = 0
 		self.cut_loopstart = 0
 		self.cut_loopend = -1
+		self.time_ppq = time_ppq
+		self.time_float = time_float
 		#self.cut_start = time.cvpj_time_size()
 		#self.cut_loopstart = time.cvpj_time_size()
 		#self.cut_loopend = time.cvpj_time_size()
@@ -163,6 +172,8 @@ class cvpj_placement_timing:
 		self.cut_start = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_start)
 		self.cut_loopstart = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_loopstart)
 		self.cut_loopend = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_loopend)
+		self.time_ppq = new_ppq
+		self.time_float = is_float
 
 	def set_loop_data(self, start, loopstart, loopend):
 		if start and start==loopstart: self.cut_type = 'loop_eq'

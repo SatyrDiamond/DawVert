@@ -154,6 +154,33 @@ class famistudiotxt_project:
 		self.Instruments = {}
 		self.DPCMMappings = dpcm_mappings()
 
+		self.VolumeDb = 0.0
+		self.VRC6VolumeDb = 0.0
+		self.VRC7VolumeDb = 0.0
+		self.FDSVolumeDb = 0.0
+		self.MMC5VolumeDb = 0.0
+		self.N163VolumeDb = 0.0
+		self.S5BVolumeDb = 0.0
+		self.EPSMVolumeDb = 0.0
+
+		self.EPSMTrebleDb = 0
+		self.EPSMTrebleRolloffHz = -1
+		self.FDSTrebleDb = 0
+		self.FDSTrebleRolloffHz = -1
+		self.MMC5TrebleDb = 0
+		self.MMC5TrebleRolloffHz = -1
+		self.N163TrebleDb = 0
+		self.N163TrebleRolloffHz = -1
+		self.S5BTrebleDb = 0
+		self.S5BTrebleRolloffHz = -1
+		self.TrebleDb = 0
+		self.TrebleRolloffHz = -1
+		self.VRC6TrebleDb = 0
+		self.VRC6TrebleRolloffHz = -1
+		self.VRC7TrebleDb = 0
+		self.VRC7TrebleRolloffHz = -1
+
+
 	def load_from_file(self, input_file):
 		try:
 			f_fst = open(input_file, 'r')
@@ -177,6 +204,31 @@ class famistudiotxt_project:
 				if 'Copyright' in cmd_params: self.Copyright = cmd_params['Copyright']
 				if 'Expansions' in cmd_params: self.Expansions = cmd_params['Expansions'].split(',')
 				if 'NumN163Channels' in cmd_params: self.NumN163Channels = int(cmd_params['NumN163Channels'])
+				if 'VolumeDb' in cmd_params: self.VolumeDb = float(cmd_params['VolumeDb'])
+				if 'VRC6VolumeDb' in cmd_params: self.VRC6VolumeDb = float(cmd_params['VRC6VolumeDb'])
+				if 'VRC7VolumeDb' in cmd_params: self.VRC7VolumeDb = float(cmd_params['VRC7VolumeDb'])
+				if 'FDSVolumeDb' in cmd_params: self.FDSVolumeDb = float(cmd_params['FDSVolumeDb'])
+				if 'MMC5VolumeDb' in cmd_params: self.MMC5VolumeDb = float(cmd_params['MMC5VolumeDb'])
+				if 'N163VolumeDb' in cmd_params: self.N163VolumeDb = float(cmd_params['N163VolumeDb'])
+				if 'S5BVolumeDb' in cmd_params: self.S5BVolumeDb = float(cmd_params['S5BVolumeDb'])
+				if 'EPSMVolumeDb' in cmd_params: self.EPSMVolumeDb = float(cmd_params['EPSMVolumeDb'])
+
+				if 'EPSMTrebleDb' in cmd_params: self.EPSMTrebleDb = float(cmd_params['EPSMTrebleDb'])
+				if 'EPSMTrebleRolloffHz' in cmd_params: self.EPSMTrebleRolloffHz = float(cmd_params['EPSMTrebleRolloffHz'])
+				if 'FDSTrebleDb' in cmd_params: self.FDSTrebleDb = float(cmd_params['FDSTrebleDb'])
+				if 'FDSTrebleRolloffHz' in cmd_params: self.FDSTrebleRolloffHz = float(cmd_params['FDSTrebleRolloffHz'])
+				if 'MMC5TrebleDb' in cmd_params: self.MMC5TrebleDb = float(cmd_params['MMC5TrebleDb'])
+				if 'MMC5TrebleRolloffHz' in cmd_params: self.MMC5TrebleRolloffHz = float(cmd_params['MMC5TrebleRolloffHz'])
+				if 'N163TrebleDb' in cmd_params: self.N163TrebleDb = float(cmd_params['N163TrebleDb'])
+				if 'N163TrebleRolloffHz' in cmd_params: self.N163TrebleRolloffHz = float(cmd_params['N163TrebleRolloffHz'])
+				if 'S5BTrebleDb' in cmd_params: self.S5BTrebleDb = float(cmd_params['S5BTrebleDb'])
+				if 'S5BTrebleRolloffHz' in cmd_params: self.S5BTrebleRolloffHz = float(cmd_params['S5BTrebleRolloffHz'])
+				if 'TrebleDb' in cmd_params: self.TrebleDb = float(cmd_params['TrebleDb'])
+				if 'TrebleRolloffHz' in cmd_params: self.TrebleRolloffHz = float(cmd_params['TrebleRolloffHz'])
+				if 'VRC6TrebleDb' in cmd_params: self.VRC6TrebleDb = float(cmd_params['VRC6TrebleDb'])
+				if 'VRC6TrebleRolloffHz' in cmd_params: self.VRC6TrebleRolloffHz = float(cmd_params['VRC6TrebleRolloffHz'])
+				if 'VRC7TrebleDb' in cmd_params: self.VRC7TrebleDb = float(cmd_params['VRC7TrebleDb'])
+				if 'VRC7TrebleRolloffHz' in cmd_params: self.VRC7TrebleRolloffHz = float(cmd_params['VRC7TrebleRolloffHz'])
 
 			elif cmd_name == 'DPCMSample' and tabs_num == 1: self.DPCMSamples[cmd_params['Name']] = dpcm_sample(cmd_params['Data'])
 

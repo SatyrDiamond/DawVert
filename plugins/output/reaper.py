@@ -430,7 +430,7 @@ class output_reaper(plugins.base):
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 
 				clip_startat = 0
-				if audiopl_obj.time.cut_type == 'cut': clip_startat = audiopl_obj.time.cut_start/8
+				if audiopl_obj.time.cut_type == 'cut': clip_startat = (audiopl_obj.time.cut_start/8)/tempomul
 
 				rpp_item_obj.position.set(audiopl_obj.time.position_real)
 				rpp_item_obj.length.set(audiopl_obj.time.duration_real)
@@ -449,6 +449,7 @@ class output_reaper(plugins.base):
 				if not stretch_obj.is_warped:
 					audiorate = stretch_obj.calc_real_speed
 					rpp_item_obj.playrate['rate'] = audiorate
+					clip_startat *= audiorate
 				else:
 					warp_obj = stretch_obj.warp
 					warprate = warp_obj.speed

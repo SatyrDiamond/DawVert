@@ -21,6 +21,10 @@ def convert(convproj_obj):
 
 	old_track_order = convproj_obj.track_order.copy()
 
+	for _, track_obj in convproj_obj.groups.items():
+		for x in track_obj.plugslots.slots_audio:
+			if x not in used_plugins: used_plugins.append(x)
+
 	nonmultitrack = []
 	splitted_trks = {}
 	for trackid, track_obj in convproj_obj.track__iter():

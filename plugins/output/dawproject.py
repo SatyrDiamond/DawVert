@@ -434,12 +434,12 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				band.enabled.used = True
 				band.enabled.id = 'nfilter__'+filter_id+'__enabled'
 
-				band.freq.value = note_data.freq_to_note(filter_obj.freq)+72
+				band.freq.value = filter_obj.freq
 				band.freq.used = True
 				band.freq.id = 'nfilter__'+pluginid+'__'+filter_id+'__freq'
-				band.freq.unit = 'semitones'
-				band.freq.max = 135.076232
-				band.freq.min = 15.486821
+				band.freq.unit = 'hertz'
+				band.freq.max = 20
+				band.freq.min = 20000
 
 				band.gain.value = filter_obj.gain
 				band.gain.used = True
@@ -455,12 +455,8 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				band.q.max = 40.003685
 				band.q.min = 0.024998
 
-				freqpath = ['n_filter', pluginid, filter_id, 'freq']
-				convproj_obj.automation.calc(freqpath, 'freq2note', 0, 0, 0, 0)
-				convproj_obj.automation.calc(freqpath, 'add', 72, 0, 0, 0)
-
 				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'on'], 'bool', band.enabled.id, None)
-				from_cvpj_auto(convproj_obj, lane_obj.points, freqpath, 'float', band.freq.id, None)
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'freq'], 'float', band.freq.id, None)
 				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'gain'], 'float', band.gain.id, None)
 				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'q'], 'float', band.q.id, None)
 

@@ -378,7 +378,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 
 		return True
 
-	elif in_fxtype == 'groupreturn' and out_fxtype == 'route' and convproj_obj.type in ['r', 'ri', 'rm', 'ms', 'rs']:
+	elif in_fxtype == 'groupreturn' and out_fxtype == 'route' and convproj_obj.type in ['r', 'ri', 'rs']:
 
 		convproj_obj.fx__route__clear()
 		strgrptrk = convproj_obj.group__iter_stream_inside()
@@ -403,6 +403,11 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 				group_obj = convproj_obj.fx__group__get(i)
 				track_obj = convproj_obj.track__add(oi, 'fx', 1, 0)
 				track_obj.visual = group_obj.visual.copy()
+				track_obj.params = group_obj.params
+				track_obj.datavals = group_obj.datavals
+				track_obj.plugslots.slots_audio = group_obj.plugslots.slots_audio.copy()
+				convproj_obj.automation.move(['group',i,'vol'], ['track',oi,'vol'])
+				convproj_obj.automation.move(['group',i,'pan'], ['track',oi,'pan'])
 				if track_obj.visual.name: track_obj.visual.name = '[Group] '+track_obj.visual.name
 				else: track_obj.visual.name = '[Group]'
 
@@ -422,6 +427,9 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 
 				convproj_obj.track_data[oi] = track_obj
 				convproj_obj.track_order.append(oi)
+
+				convproj_obj.automation.move(['group',i,'vol'], ['track',oi,'vol'])
+				convproj_obj.automation.move(['group',i,'pan'], ['track',oi,'pan'])
 			num += 1
 
 		for returnid, return_obj in convproj_obj.track_master.returns.items(): 

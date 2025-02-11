@@ -102,7 +102,7 @@ class cvpj_plugslots:
 		for x in self.slots_audio: yield 'audio', x
 
 class cvpj_instrument:
-	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots','latency_offset']
+	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots','group','latency_offset']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
@@ -112,6 +112,7 @@ class cvpj_instrument:
 		self.fxrack_channel = -1
 		self.plugslots = cvpj_plugslots()
 		self.latency_offset = 0
+		self.group = None
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)

@@ -90,56 +90,49 @@ class input_fl_mobile(plugins.base):
 				trackid = 'master'
 				add_visual(convproj_obj.track_master.visual, flm_channel)
 				add_params(convproj_obj.track_master.params, flm_rack)
-
 				do_devices(devices_order, convproj_obj, flm_rack.devices, convproj_obj.track_master.plugslots, dawvert_intent.input_file, project_obj.zipfile, trackid)
 
 			if tracktype == 'fx':
-				trackid = 'flm_fx_'+str(flm_rack.fx_id)
+				trackid = 'flm_track_'+str(flm_rack.fx_id)
 				sorttracks[flm_channel.order] = trackid
 				track_obj = convproj_obj.track__add(trackid, 'fx', 1, False)
 				add_visual(track_obj.visual, flm_channel)
 				add_params(track_obj.params, flm_rack)
-
 				do_devices(devices_order, convproj_obj, flm_rack.devices, track_obj.plugslots, dawvert_intent.input_file, project_obj.zipfile, trackid)
 
-				sends_obj = convproj_obj.fx__route__add(trackid)
-				sends_obj.to_master_active = flm_rack.target == -1
-				if flm_rack.target != -1:
-					send_target = 'flm_fx_'+str(flm_rack.target)
-					sends_obj.to_master_active = False
-					send_obj = sends_obj.add(send_target, None, 1)
-	
 			if tracktype == 'instrument':
-				trackid = 'flm_inst_'+str(n)
+				trackid = 'flm_track_'+str(n)
 				sorttracks[flm_channel.order] = trackid
 				track_obj = convproj_obj.track__add(trackid, 'instrument', 1, False)
 				add_visual(track_obj.visual, flm_channel)
 				add_params(track_obj.params, flm_rack)
 				pluginid, plugin_obj = do_device(convproj_obj, flm_rack.devices_sampler, dawvert_intent.input_file, project_obj.zipfile, trackid, 2)
 				track_obj.plugslots.plugin_autoplace(plugin_obj, pluginid)
-
 				do_devices(devices_order, convproj_obj, flm_rack.devices, track_obj.plugslots, dawvert_intent.input_file, project_obj.zipfile, trackid)
 
-				sends_obj = convproj_obj.fx__route__add(trackid)
-				sends_obj.to_master_active = flm_rack.target == -1
-				if flm_rack.target != -1:
-					send_target = 'flm_fx_'+str(flm_rack.target)
-					sends_obj.to_master_active = False
-					send_obj = sends_obj.add(send_target, None, 1)
-
 			if tracktype == 'audio':
-				trackid = 'flm_inst_'+str(n)
+				trackid = 'flm_track_'+str(n)
 				sorttracks[flm_channel.order] = trackid
 				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
 				add_visual(track_obj.visual, flm_channel)
 				add_params(track_obj.params, flm_rack)
-
 				do_devices(devices_order, convproj_obj, flm_rack.devices, track_obj.plugslots, dawvert_intent.input_file, project_obj.zipfile, trackid)
 
-				sends_obj = convproj_obj.fx__route__add(trackid)
+			if flm_channel.sends:
+				sends_obj = convproj_obj.fx__route__add('flm_track_'+str(n))
+				sends_obj.to_master_active = False
+				for send in flm_channel.sends:
+					targ = send.target-1
+					if targ != -1:
+						send_obj = sends_obj.add('flm_track_'+str(targ), None, send.param2)
+					else:
+						sends_obj.to_master_active = True
+						sends_obj.to_master.params.add('amount', send.param2, 'float')
+			else:
+				sends_obj = convproj_obj.fx__route__add('flm_track_'+str(n))
 				sends_obj.to_master_active = flm_rack.target == -1
 				if flm_rack.target != -1:
-					send_target = 'flm_fx_'+str(flm_rack.target)
+					send_target = 'flm_track_'+str(flm_rack.target)
 					sends_obj.to_master_active = False
 					send_obj = sends_obj.add(send_target, None, 1)
 

@@ -124,7 +124,7 @@ class input_fl_mobile(plugins.base):
 				for send in flm_channel.sends:
 					targ = send.target-1
 					if targ != -1:
-						send_obj = sends_obj.add('flm_track_'+str(targ), None, send.param2)
+						send_obj = sends_obj.add('flm_track_'+str(targ), str(n)+'_'+str(send.target), send.param2)
 					else:
 						sends_obj.to_master_active = True
 						sends_obj.to_master.params.add('amount', send.param2, 'float')
@@ -265,6 +265,8 @@ class input_fl_mobile(plugins.base):
 							if lanedata.auto_param == 2: 
 								autoloc += ['mute']
 								v_bool = True
+							if lanedata.auto_param >= 8192: 
+								autoloc = ['send', str(flm_rack.fx_id)+'_'+str(lanedata.auto_param-8192), 'amount']
 
 						else:
 							autoloc = ['plugin', trackid+'_'+str(lanedata.auto_device), 'param_'+str(lanedata.auto_param)]

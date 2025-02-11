@@ -36,6 +36,7 @@ class serato_channel_strip:
 			self.pan = json_data['pan'] if 'pan' in json_data else 0
 			self.gain = json_data['gain'] if 'gain' in json_data else 1
 			self.filter = json_data['filter'] if 'filter' in json_data else 0
+			self.mute = int(json_data['mute'] if 'mute' in json_data else -1)
 		else:
 			self.post_fader_effects = None
 			self.volume = 0
@@ -45,6 +46,7 @@ class serato_channel_strip:
 			self.pan = 0
 			self.gain = 0
 			self.filter = 0
+			self.mute = -1
 
 class serato_scene_deck:
 	def __init__(self, json_data):

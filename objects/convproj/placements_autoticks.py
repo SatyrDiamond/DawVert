@@ -57,7 +57,7 @@ class cvpj_placement_autoticks:
 	__slots__ = ['time','muted','visual','data']
 
 	def __init__(self, time_ppq, time_float, val_type):
-		self.time = placements.cvpj_placement_timing()
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.data = autoticks.cvpj_autoticks(time_ppq, time_float, val_type)
 		self.muted = False
 		self.visual = visual.cvpj_visual()

@@ -418,6 +418,7 @@ class input_reaper(plugins.base):
 
 				if cvpj_placement_type == 'notes': 
 					placement_obj = track_obj.placements.add_notes()
+
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_float(cvpj_color)
 					placement_obj.time.position_real = cvpj_position
@@ -425,6 +426,8 @@ class input_reaper(plugins.base):
 
 					placement_obj.time.cut_type = 'loop'
 					placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
+
+					placement_obj.visual.color.set_int
 
 					midi_notes_out.do_output(placement_obj.notelist, midi_ppq)
 

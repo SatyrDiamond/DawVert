@@ -516,7 +516,8 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 				placement_obj = track_obj.placements.add_notes() if not isbb else placements_notes.cvpj_placement_notes(track_obj.time_ppq, track_obj.time_float)
 				placement_obj.time.position = lmms_pattern.pos
 				placement_obj.visual.name = lmms_pattern.name
-				if lmms_pattern.color: placement_obj.visual.color.set_float(lmms_pattern.color)
+				if lmms_pattern.color: 
+					placement_obj.visual.color.set_hex(lmms_pattern.color)
 				placement_obj.muted = bool(int(lmms_pattern.muted))
 				for lmms_note in lmms_pattern.notes:
 					placement_obj.notelist.add_r(lmms_note.pos, max(lmms_note.len, 0), lmms_note.key-60, lmms_note.vol/100, {'pan': lmms_note.pan/100})

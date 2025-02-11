@@ -436,7 +436,7 @@ class input_amped(plugins.base):
 
 				if amped_region.midi_notes: 
 					placement_obj = track_obj.placements.add_notes()
-					placement_obj.time.set_posdur(amped_region.position, amped_region.length+amped_region.offset)
+					placement_obj.time.set_posdur(amped_region.position, amped_region.length)
 					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)

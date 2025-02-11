@@ -86,7 +86,7 @@ class cvpj_placement_index:
 	def __init__(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
-		self.time = placements.cvpj_placement_timing()
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.fromindex = ''
 		self.muted = False
 		self.fade_in = placements.cvpj_placement_fade()

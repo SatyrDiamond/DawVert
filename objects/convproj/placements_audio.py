@@ -160,7 +160,7 @@ class cvpj_placement_audio:
 	def __init__(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
-		self.time = placements.cvpj_placement_timing()
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.muted = False
 		self.sample = sample_entry.cvpj_sample_entry()
 		self.visual = self.sample.visual
@@ -235,7 +235,7 @@ class cvpj_placement_nested_audio:
 	def __init__(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
-		self.time = placements.cvpj_placement_timing()
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.visual = visual.cvpj_visual()
 		self.events = []
 		self.muted = False

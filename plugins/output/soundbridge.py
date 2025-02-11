@@ -83,12 +83,18 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '>f')])
 
 def make_auto(autopoints_obj, valtype, add, mul):
-	autoarray = np.zeros(len(autopoints_obj), dtype=sb_auto_dtype)
+	autopoints_obj.sort()
+	fixauto = []
+	for a in autopoints_obj:
+		if not fixauto: 
+			fixauto.append(a)
+		else:
+			if fixauto[-1].pos != a.pos: fixauto.append(a)
+
+	autoarray = np.zeros(len(fixauto), dtype=sb_auto_dtype)
 	autoarray['unk1'] = 1
 	autoarray['unk2'] = 1
-	autopoints_obj.remove_instant()
-	autopoints_obj.sort()
-	for n, a in enumerate(autopoints_obj):
+	for n, a in enumerate(fixauto):
 		autopos = int(max(a.pos, 0))
 
 		autoarray[n]['pos'] = int(max(a.pos, 0))
@@ -100,7 +106,7 @@ def make_auto(autopoints_obj, valtype, add, mul):
 			autoarray[n]['val'] = (a.value/mul)-add
 
 	outbytes = b'\x00\x00\x00\x14'+autoarray.tobytes()
-	padsize = 4*len(autopoints_obj)
+	padsize = 4*len(fixauto)
 	outbytes += b'\x00'*padsize
 	return encode_chunk(outbytes)
 
@@ -110,6 +116,7 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 
 	if aid_found:
 		if aid_data.pl_points:
+			aid_data.pl_points.remove_loops([])
 			for autopl_obj in aid_data.pl_points:
 				autopl_obj.data.remove_instant()
 

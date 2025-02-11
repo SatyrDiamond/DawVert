@@ -124,6 +124,8 @@ def make_auto_track(autoidnum, autodata, visualname, automode):
 	lmms_track.type = 5
 	lmms_track.name = visualname
 
+	autodata.remove_loops([])
+
 	for autopl_obj in autodata:
 		autopl_obj.remove_cut()
 		lmms_autopat = proj_lmms.lmms_automationpattern()

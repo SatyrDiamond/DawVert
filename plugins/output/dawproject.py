@@ -540,7 +540,7 @@ def do_devices(convproj_obj, dp_channel, lane_obj, inst_pluginid, fxslots_audio)
 
 def maketrack_notes(convproj_obj, track_obj, trackid, lane_obj):
 	dp_track, dp_channel = make_track('notes', 'regular', 'track__'+trackid, 'channel__'+trackid)
-	dp_channel.destination = 'masterchannel'
+	dp_channel.destination = 'masterchannel' if not track_obj.group else 'channel_group__'+track_obj.group
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
@@ -549,7 +549,7 @@ def maketrack_notes(convproj_obj, track_obj, trackid, lane_obj):
 
 def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
 	dp_track, dp_channel = make_track('audio', 'regular', 'track__'+trackid, 'channel__'+trackid)
-	dp_channel.destination = 'masterchannel'
+	dp_channel.destination = 'masterchannel' if not track_obj.group else 'channel_group__'+track_obj.group
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
@@ -558,7 +558,7 @@ def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
 
 def maketrack_hybrid(convproj_obj, track_obj, trackid, lane_obj):
 	dp_track, dp_channel = make_track('audio notes', 'regular', 'track__'+trackid, 'channel__'+trackid)
-	dp_channel.destination = 'masterchannel'
+	dp_channel.destination = 'masterchannel' if not track_obj.group else 'channel_group__'+track_obj.group
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)

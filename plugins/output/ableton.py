@@ -54,10 +54,19 @@ def do_sampleref(convproj_obj, als_sampleref, cvpj_sampleref):
 		als_sampleref.DefaultSampleRate = cvpj_sampleref.hz
 
 def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvpj_autoloc, als_param, als_auto):
-	outval = cvpj_params.get(cvpj_name, cvpj_fallback).value
-	if cvpj_type == 'bool': outval = bool(outval)
-	if cvpj_type == 'float': outval = float(outval)
-	if cvpj_type == 'int': outval = int(outval)
+	outval = 0
+	if cvpj_type == 'float':
+		outval = cvpj_params.get(cvpj_name, cvpj_fallback).value
+		outval = float(outval)
+	if cvpj_type == 'int':
+		outval = cvpj_params.get(cvpj_name, cvpj_fallback).value
+		outval = int(outval)
+	if cvpj_type == 'bool':
+		outval = cvpj_params.get(cvpj_name, cvpj_fallback).value
+		outval = bool(outval)
+	if cvpj_type == 'invbool':
+		outval = cvpj_params.get(cvpj_name, not cvpj_fallback).value
+		outval = bool(outval)
 
 	als_param.setvalue(outval)
 
@@ -90,6 +99,16 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 						alsevent = proj_ableton.ableton_BoolEvent(None)
 						alsevent.Time = autopoint.pos
 						alsevent.Value = autopoint.value
+						AutomationEnvelope_obj.Automation.Events.append([num+1, 'BoolEvent', alsevent])
+				if cvpj_type == 'invbool':
+					alsevent = proj_ableton.ableton_BoolEvent(None)
+					alsevent.Time = -63072000
+					alsevent.Value = not firstval
+					AutomationEnvelope_obj.Automation.Events.append([0, 'BoolEvent', alsevent])
+					for num, autopoint in enumerate(autopoints):
+						alsevent = proj_ableton.ableton_BoolEvent(None)
+						alsevent.Time = autopoint.pos
+						alsevent.Value = not autopoint.value
 						AutomationEnvelope_obj.Automation.Events.append([num+1, 'BoolEvent', alsevent])
 
 def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, dur_sec, pitch):
@@ -468,6 +487,7 @@ def addgrp(convproj_obj, project_obj, groupid):
 		if group_obj.visual.name: als_gtrack.Name.UserName = fixtxt(group_obj.visual.name)
 		do_param(convproj_obj, group_obj.params, 'vol', 1, 'float', ['group', groupid, 'vol'], als_gtrack.DeviceChain.Mixer.Volume, als_gtrack.AutomationEnvelopes)
 		do_param(convproj_obj, group_obj.params, 'pan', 0, 'float', ['group', groupid, 'pan'], als_gtrack.DeviceChain.Mixer.Pan, als_gtrack.AutomationEnvelopes)
+		do_param(convproj_obj, group_obj.params, 'enabled', 0, 'invbool', ['group', groupid, 'enabled'], als_gtrack.DeviceChain.Mixer.Speaker, als_gtrack.AutomationEnvelopes)
 		ids_group_cvpj_als[groupid] = groupnumid
 		if group_obj.group:
 			als_gtrack.TrackGroupId = addgrp(convproj_obj, project_obj, group_obj.group)
@@ -737,7 +757,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
-		do_param(convproj_obj, track_obj.params, 'enabled', 1, 'bool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
+		do_param(convproj_obj, track_obj.params, 'enabled', 0, 'invbool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
 		als_track.TrackDelay.Value = track_obj.latency_offset
 
 		if groupnumid: 
@@ -1100,6 +1120,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
+		do_param(convproj_obj, track_obj.params, 'enabled', 0, 'invbool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
 		als_track.TrackDelay.Value = track_obj.latency_offset
 
 		if groupnumid: 

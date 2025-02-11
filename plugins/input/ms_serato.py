@@ -154,7 +154,7 @@ class input_serato(plugins.base):
 							inst_obj.plugslots.set_synth(cvpj_instid_p)
 							if channel_strip.gain: inst_obj.params.add('vol', channel_strip.gain*channel_strip.volume, 'float')
 							inst_obj.params.add('pan', channel_strip.pan, 'float')
-							inst_obj.params.add('enabled', not channel_strip.mute, 'bool')
+							inst_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
 							do_chan_strip(convproj_obj, cvpj_instid_p, channel_strip, inst_obj.plugslots.slots_audio)
 
 							samplepath = parse_filepath(drumsamp.file)
@@ -210,7 +210,7 @@ class input_serato(plugins.base):
 				inst_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
 				inst_obj.params.add('pan', scene_strip.pan, 'float')
 				inst_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
-				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
+				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, inst_obj.plugslots.slots_audio)
 
 			if scene_deck.type == 'sample':
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'audio' if scene_deck.type == 'sample' else 'instruments', 1, False)

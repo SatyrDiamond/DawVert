@@ -312,7 +312,7 @@ class input_serato(plugins.base):
 						for note in deck_sequence.notes:
 							if note.start < scenedur:
 								key = note.number-60
-								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_0', note.start, note.duration, key, note.velocity/100, None)
+								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_0', note.start, note.duration, key+project_obj.transpose, note.velocity/100, None)
 
 					if scene_deck.type == 'sample':
 						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
@@ -385,7 +385,8 @@ class input_serato(plugins.base):
 
 											if 'channel_strip' in cuedata:
 												cuestrip = cuedata['channel_strip']
-												if 'gain' in cuestrip: samplepart_copy.vol = cuestrip['gain']
+												if 'gain' in cuestrip: samplepart_copy.vol += cuestrip['gain']
+												if 'volume' in cuestrip: samplepart_copy.vol += cuestrip['volume']
 												if 'pan' in cuestrip: samplepart_copy.pan = cuestrip['pan']
 
 											samplepart_copy.vol *= vol
@@ -393,6 +394,7 @@ class input_serato(plugins.base):
 											playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, playback_speed)
 											samplepart_copy.stretch.set_rate_tempo(project_obj.bpm, playspeed, False)
 
+											samplepart_copy.pitch += project_obj.transpose
 											if 'pitch_shift' in cuedata: samplepart_copy.pitch += cuedata['pitch_shift']
 											if 'reverse' in cuedata: samplepart_copy.reverse = cuedata['reverse']
 
@@ -408,6 +410,10 @@ class input_serato(plugins.base):
 					scenepl_obj.duration = clip.length
 					scenepl_obj.id = 'scene_'+str(clip.scene_slot_number+1)
 				break
+			if arrangement.type == 'master':
+				master_obj = convproj_obj.track_master
+				if arrangement.name: master_obj.visual.name = arrangement.name
+				do_chan_strip(convproj_obj, 'master', arrangement.channel_strip, master_obj.plugslots.slots_audio)
 
 		if 'name' in project_obj.metadata: convproj_obj.metadata.name = project_obj.metadata['name']
 		if 'artist' in project_obj.metadata: convproj_obj.metadata.author = project_obj.metadata['artist']

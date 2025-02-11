@@ -342,7 +342,7 @@ class cvpj_placements:
 
 	def unindex_notes(self, notelist_index):
 		for indexpl_obj in self.pl_notes_indexed:
-			new_notespl_obj = placements_notes.cvpj_placement_notes(1, 1)
+			new_notespl_obj = placements_notes.cvpj_placement_notes(self.time_ppq, self.time_float)
 			new_notespl_obj.time = indexpl_obj.time.copy()
 			new_notespl_obj.muted = indexpl_obj.muted
 

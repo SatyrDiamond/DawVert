@@ -60,7 +60,7 @@ class input_soundation(plugins.base):
 		in_dict['file_ext'] = ['sng', 'sngz']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['fxtype'] = 'route'
@@ -171,8 +171,9 @@ class input_soundation(plugins.base):
 					clip_length = round(soundation_region.length/timing, 3)*timing
 					clip_contentPosition = soundation_region.contentPosition
 					clip_loopcount = round(soundation_region.loopcount, 3)
+
 					placement_obj.time.set_posdur(soundation_region.position, clip_length*clip_loopcount)
-					placement_obj.time.set_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length)
+					placement_obj.time.set_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length-clip_contentPosition)
 					placement_obj.muted = soundation_region.muted
 
 					if sound_chan_type == 'instrument':

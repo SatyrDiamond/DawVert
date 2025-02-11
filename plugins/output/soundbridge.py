@@ -118,11 +118,11 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 				block = proj_soundbridge.soundbridge_block(None)
 				block.name = ""
 				block.timeBaseMode = 0
-				block.position = time_obj.position
+				block.position = int(time_obj.position)
 				block.positionStart = 0
-				block.positionEnd = time_obj.duration+1
+				block.positionEnd = int(time_obj.duration+1)
 				block.loopOffset = 0
-				block.framesCount = time_obj.duration+1
+				block.framesCount = int(time_obj.duration+1)
 				block.loopEnabled = 0
 				block.muted = 0
 				block.version = 1
@@ -365,28 +365,28 @@ def time_add(event, time_obj, otherblock):
 	if time_obj.cut_type == 'cut':
 		event.positionStart = time_obj.cut_start
 		event.loopOffset = 0
-		event.positionEnd = event.framesCount-time_obj.cut_start
-		event.loopOffset = max(event.loopOffset, 0)
-		event.positionStart = max(event.positionStart, 0)
-		event.positionEnd = time_obj.duration+event.positionStart
+		event.positionEnd = int(event.framesCount-time_obj.cut_start)
+		event.loopOffset = int(max(event.loopOffset, 0))
+		event.positionStart = int(max(event.positionStart, 0))
+		event.positionEnd = int(time_obj.duration+event.positionStart)
 		if otherblock:
-			otherblock.framesCount = time_obj.duration+event.positionStart
+			otherblock.framesCount = int(time_obj.duration+event.positionStart)
 		
 	elif time_obj.cut_type in ['loop', 'loop_eq']:
-		event.positionStart = loop_1
-		event.loopOffset = loop_2
-		event.positionEnd = loop_3
+		event.positionStart = int(loop_1)
+		event.loopOffset = int(loop_2)
+		event.positionEnd = int(loop_3)
 		event.loopEnabled = 1
-		event.loopOffset = max(event.loopOffset, 0)
-		event.positionStart = max(event.positionStart, 0)
+		event.loopOffset = int(max(event.loopOffset, 0))
+		event.positionStart = int(max(event.positionStart, 0))
 
 	elif time_obj.cut_type == 'loop_off':
-		event.loopOffset = loop_1
-		event.positionStart = loop_2
-		event.positionEnd = loop_3
+		event.loopOffset = int(loop_1)
+		event.positionStart = int(loop_2)
+		event.positionEnd = int(loop_3)
 		event.loopEnabled = 1
-		event.loopOffset = max(event.loopOffset, 0)
-		event.positionStart = max(event.positionStart, 0)
+		event.loopOffset = int(max(event.loopOffset, 0))
+		event.positionStart = int(max(event.positionStart, 0))
 
 def add_tempo_section(sb_tempo_obj, position, length, startTempo, endTempo):
 	from objects.file_proj import soundbridge as proj_soundbridge
@@ -679,9 +679,9 @@ class output_soundbridge(plugins.base):
 							event = proj_soundbridge.soundbridge_event(None)
 							event.position = 0
 							event.positionStart = 0
-							event.positionEnd = audiopl_obj.time.duration
+							event.positionEnd = int(audiopl_obj.time.duration)
 							event.loopOffset = 0
-							event.framesCount = audiopl_obj.time.duration
+							event.framesCount = int(audiopl_obj.time.duration)
 							event.loopEnabled = 0
 							event.tempo = 120
 							event.inverse = 0
@@ -812,8 +812,8 @@ class output_soundbridge(plugins.base):
 
 		if convproj_obj.transport.loop_active:
 			project_obj.metadata['TransportLoop'] = 'true'
-			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.transport.loop_start
-			project_obj.metadata['TransportPlayPositionR'] = convproj_obj.transport.loop_end
+			project_obj.metadata['TransportPlayPositionL'] = int(convproj_obj.transport.loop_start)
+			project_obj.metadata['TransportPlayPositionR'] = int(convproj_obj.transport.loop_end)
 		else:
 			project_obj.metadata['TransportLoop'] = 'false'
 			project_obj.metadata['TransportPlayPositionL'] = convproj_obj.transport.start_pos

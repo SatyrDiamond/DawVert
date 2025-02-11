@@ -198,9 +198,12 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 		for block in sb_track.blocks:
 			placement_obj = track_obj.placements.add_notes()
-			placement_obj.time.set_posdur(block.position, block.positionEnd-block.positionStart)
-			if block.loopEnabled: placement_obj.time.set_loop_data(block.loopOffset, block.loopOffset, block.framesCount)
-			else: placement_obj.time.set_offset(block.positionStart)
+			if block.loopEnabled: 
+				placement_obj.time.set_posdur(block.position, block.framesCount)
+				placement_obj.time.set_loop_data(block.loopOffset, block.positionStart, block.positionEnd)
+			else: 
+				placement_obj.time.set_posdur(block.position, block.positionEnd-block.positionStart)
+				placement_obj.time.set_offset(block.positionStart)
 			blockdata = decode_chunk(block.blockData)
 			trackcolor = block.metadata['BlockColor'] if 'BlockColor' in block.metadata else None
 			placement_obj.visual.color.set_hex(trackcolor)
@@ -370,7 +373,7 @@ class input_soundbridge(plugins.base):
 		in_dict['file_ext'] = ['soundbridge']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win']
@@ -441,5 +444,5 @@ class input_soundbridge(plugins.base):
 
 		projmeta = project_obj.metadata
 		if 'TransportLoop' in projmeta: convproj_obj.transport.loop_active = projmeta['TransportLoop'] == 'true'
-		if 'TransportPlayPositionL' in projmeta: convproj_obj.transport.loop_start = int(projmeta['TransportPlayPositionL'])
-		if 'TransportPlayPositionR' in projmeta: convproj_obj.transport.loop_end = int(projmeta['TransportPlayPositionR'])
+		if 'TransportPlayPositionL' in projmeta: convproj_obj.transport.loop_start = int(float(projmeta['TransportPlayPositionL']))
+		if 'TransportPlayPositionR' in projmeta: convproj_obj.transport.loop_end = int(float(projmeta['TransportPlayPositionR']))

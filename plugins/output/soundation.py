@@ -94,7 +94,7 @@ class output_soundation(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation','universal:midi']
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['placement_loop'] = ['loop']
+		in_dict['placement_loop'] = ['loop', 'loop_eq']
 		in_dict['projtype'] = 'r'
 
 	def parse(self, i_convproj_obj, dawvert_intent):
@@ -333,13 +333,18 @@ class output_soundation(plugins.base):
 					soundation_region.length = int(notespl_obj.time.duration)
 					soundation_region.loopcount = 1
 					soundation_region.contentPosition = 0
-					soundation_region.muted = audiopl_obj.muted
+					soundation_region.muted = notespl_obj.muted
 
-					if notespl_obj.time.cut_type in ['loop']:
+					if notespl_obj.time.cut_type == 'loop':
 						soundation_region.length = notespl_obj.time.cut_loopend
 						soundation_region.loopcount = notespl_obj.time.duration/notespl_obj.time.cut_loopend
 
-					if notespl_obj.time.cut_type in ['cut']: 
+					if notespl_obj.time.cut_type == 'loop_eq':
+						soundation_region.contentPosition = -(notespl_obj.time.cut_start)
+						soundation_region.length = notespl_obj.time.cut_loopend-notespl_obj.time.cut_start
+						soundation_region.loopcount = notespl_obj.time.duration/soundation_region.length
+
+					if notespl_obj.time.cut_type == 'cut': 
 						soundation_region.contentPosition = -(notespl_obj.time.cut_start)
 
 					soundation_region.type = 2

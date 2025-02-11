@@ -59,7 +59,8 @@ def do_masterparams(convproj_obj, dp_channel, paramset):
 def do_sends(convproj_obj, track_obj, dp_channel):
 	for send in dp_channel.sends:
 		send_obj = track_obj.sends.add(send.destination, send.id, 1)
-		do_param(convproj_obj, send_obj.params, send.volume, 'amount', None, 'float', ['send', send.id, 'amount'])
+		if send.id:
+			do_param(convproj_obj, send_obj.params, send.volume, 'amount', None, 'float', ['send', send.id, 'amount'])
 
 def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 	for device in dp_devices:

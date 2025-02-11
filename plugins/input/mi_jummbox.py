@@ -245,14 +245,13 @@ class input_jummbox(plugins.base):
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['native:jummbox','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
+		in_dict['plugin_included'] = ['native:jummbox','universal:midi','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
 		in_dict['projtype'] = 'mi'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import jummbox as proj_jummbox
 
 		convproj_obj.type = 'mi'
-		convproj_obj.set_timings(8, True)
 
 		globalstore.dataset.load('beepbox', './data_main/dataset/beepbox.dset')
 
@@ -273,6 +272,9 @@ class input_jummbox(plugins.base):
 			raise ProjectFileParserException('jummbox: JSON parsing error: '+str(t))
 
 		jummbox_obj = proj_jummbox.jummbox_project(jummbox_json)
+
+		convproj_obj.set_timings(8*(jummbox_obj.beatsPerBar/8), True)
+
 		convproj_obj.params.add('bpm', jummbox_obj.beatsPerMinute, 'float')
 		convproj_obj.track_master.params.add('vol', jummbox_obj.masterGain, 'float')
 		if jummbox_obj.name: convproj_obj.metadata.name = jummbox_obj.name
@@ -299,14 +301,18 @@ class input_jummbox(plugins.base):
 					cvpj_volume = (bb_inst.volume/50)+0.5
 					preset = str(bb_inst.preset) if bb_inst.preset else None
 
-					main_dso = globalstore.dataset.get_obj('beepbox', 'preset', bb_inst.preset)
-					ds_bb = main_dso.midi if main_dso else None
-
 					midifound = False
-					if ds_bb:
-						if ds_bb.used != False:
-							midifound = True
-							inst_obj, plugin_obj = convproj_obj.instrument__add_from_dset(cvpj_instid, preset, 'beepbox', preset, None, bb_color)
+					if preset:
+						main_dso = globalstore.dataset.get_obj('beepbox', 'preset', preset)
+						ds_bb = main_dso.midi if main_dso else None
+						if ds_bb:
+							if ds_bb.used != False:
+								midifound = True
+								inst_obj = convproj_obj.instrument__add(cvpj_instid)
+								inst_obj.plugslots.set_synth(cvpj_instid)
+								inst_obj.visual.name = main_dso.visual.name
+								plugin_obj = convproj_obj.plugin__addspec__midi(cvpj_instid, 0, 0, ds_bb.patch, False, 'gm')
+								inst_obj.plugslots.set_synth(cvpj_instid)
 
 					if not midifound:
 						inst_obj = convproj_obj.instrument__add(cvpj_instid)

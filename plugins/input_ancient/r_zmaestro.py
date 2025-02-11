@@ -37,6 +37,7 @@ class input_zmaestro(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['placement_loop'] = ['loop']
 		in_dict['projtype'] = 'r'
+		in_dict['plugin_included'] = ['native:z_maestro','universal:midi']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import z_maestro as proj_z_maestro

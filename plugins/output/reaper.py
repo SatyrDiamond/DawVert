@@ -385,6 +385,13 @@ class output_reaper(plugins.base):
 				rpp_track_obj.peakcol.set(cvpj_color_to_reaper_color(track_obj.visual.color))
 			rpp_track_obj.volpan['vol'] = track_obj.params.get('vol', 1.0).value
 			rpp_track_obj.volpan['pan'] = track_obj.params.get('pan', 0).value
+			pan_mode = track_obj.datavals.get('pan_mode', '')
+			if pan_mode == 'mono': rpp_track_obj.panmode.set(3)
+			if pan_mode == 'stereo': rpp_track_obj.panmode.set(5)
+			if pan_mode == 'split': 
+				rpp_track_obj.panmode.set(6)
+				rpp_track_obj.volpan['left'] = track_obj.params.get('splitpan_left', -1).value
+				rpp_track_obj.volpan['right'] = track_obj.params.get('splitpan_right', 1).value
 
 			rpp_track_obj.rec['armed'] = int(track_obj.armed.on)
 

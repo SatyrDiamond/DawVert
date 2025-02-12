@@ -121,36 +121,38 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			SampleParts = parampaths['Player/MultiSampleMap/SampleParts']
 
 			plugin_obj = None
-			numzones = len(SampleParts.value)
 
-			if numzones == 1:
-				SamplePart = SampleParts.value[next(iter(SampleParts.value))]
-				middlenote = int(SamplePart.RootKey)-60
-				track_obj.datavals.add('middlenote', middlenote-60)
-				plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, None, None)
-				do_samplepart(convproj_obj, sp_obj, SamplePart)
-				sp_obj.reverse = int(parampaths['Player/Reverse'])
-				sp_obj.vol = float(SamplePart.Volume)
-				sp_obj.pan = float(SamplePart.Panorama)
-
-			elif numzones>1:
-				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
-				plugin_obj.role = 'synth'
-				for num, SamplePart in SampleParts.value.items():
-					key_r = [int(SamplePart.KeyRange.Min), int(SamplePart.KeyRange.Max)]
-					key_cf = [int(SamplePart.KeyRange.CrossfadeMin), int(SamplePart.KeyRange.CrossfadeMax)]
-					vel_r = [int(SamplePart.VelocityRange.Min), int(SamplePart.VelocityRange.Max)]
-					vel_cf = [int(SamplePart.VelocityRange.CrossfadeMin), SamplePart.VelocityRange.CrossfadeMax]
-					middlenote = int(SamplePart.RootKey)
-					sp_obj = plugin_obj.sampleregion_add(key_r[0]-60, key_r[1]-60, middlenote-60, None)
+			if SampleParts:
+				numzones = len(SampleParts.value)
+	
+				if numzones == 1:
+					SamplePart = SampleParts.value[next(iter(SampleParts.value))]
+					middlenote = int(SamplePart.RootKey)-60
+					track_obj.datavals.add('middlenote', middlenote-60)
+					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, None, None)
 					do_samplepart(convproj_obj, sp_obj, SamplePart)
-					sp_obj.reverse = float(parampaths['Player/Reverse'])
-					sp_obj.data['key_fade'] = [key_cf[0]-key_r[0], key_r[1]-key_cf[1]]
-					sp_obj.data['r_vel_fade'] = [x/127 for x in vel_cf]
-					sp_obj.vel_min = vel_r[0]/127
-					sp_obj.vel_max = vel_r[1]/127
+					sp_obj.reverse = int(parampaths['Player/Reverse'])
 					sp_obj.vol = float(SamplePart.Volume)
 					sp_obj.pan = float(SamplePart.Panorama)
+	
+				elif numzones>1:
+					plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
+					plugin_obj.role = 'synth'
+					for num, SamplePart in SampleParts.value.items():
+						key_r = [int(SamplePart.KeyRange.Min), int(SamplePart.KeyRange.Max)]
+						key_cf = [int(SamplePart.KeyRange.CrossfadeMin), int(SamplePart.KeyRange.CrossfadeMax)]
+						vel_r = [int(SamplePart.VelocityRange.Min), int(SamplePart.VelocityRange.Max)]
+						vel_cf = [int(SamplePart.VelocityRange.CrossfadeMin), SamplePart.VelocityRange.CrossfadeMax]
+						middlenote = int(SamplePart.RootKey)
+						sp_obj = plugin_obj.sampleregion_add(key_r[0]-60, key_r[1]-60, middlenote-60, None)
+						do_samplepart(convproj_obj, sp_obj, SamplePart)
+						sp_obj.reverse = float(parampaths['Player/Reverse'])
+						sp_obj.data['key_fade'] = [key_cf[0]-key_r[0], key_r[1]-key_cf[1]]
+						sp_obj.data['r_vel_fade'] = [x/127 for x in vel_cf]
+						sp_obj.vel_min = vel_r[0]/127
+						sp_obj.vel_max = vel_r[1]/127
+						sp_obj.vol = float(SamplePart.Volume)
+						sp_obj.pan = float(SamplePart.Panorama)
 
 			if plugin_obj:
 				envstarttxt = 'VolumeAndPan/Envelope/'
@@ -476,6 +478,13 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				track_obj.params.add('enabled', track_on, 'bool')
 
+				if int(track_mixer.PanMode) == 1:
+					track_obj.datavals.add('pan_mode', 'split')
+					splitstereopanl = doparam(track_mixer.SplitStereoPanL, 'Pan L', 'float', 0, fxloc+['splitpan_left'], None)
+					splitstereopanr = doparam(track_mixer.SplitStereoPanR, 'Pan R', 'float', 0, fxloc+['splitpan_right'], None)
+					track_obj.params.add('splitpan_left', splitstereopanl, 'float')
+					track_obj.params.add('splitpan_right', splitstereopanr, 'float')
+
 				track_obj.latency_offset = lattime
 
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
@@ -490,6 +499,7 @@ class input_ableton(plugins.base):
 				fxloc = ['track', track_id]
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
+				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
 				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
 
 				track_obj = convproj_obj.track__add(track_id, 'audio', 1, False)
@@ -500,6 +510,13 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 				
+				if int(track_mixer.PanMode) == 1:
+					track_obj.datavals.add('pan_mode', 'split')
+					splitstereopanl = doparam(track_mixer.SplitStereoPanL, 'Pan L', 'float', 0, fxloc+['splitpan_left'], None)
+					splitstereopanr = doparam(track_mixer.SplitStereoPanR, 'Pan R', 'float', 0, fxloc+['splitpan_right'], None)
+					track_obj.params.add('splitpan_left', splitstereopanl, 'float')
+					track_obj.params.add('splitpan_right', splitstereopanr, 'float')
+
 				track_obj.latency_offset = lattime
 
 				mainseq = als_track.DeviceChain.MainSequencer

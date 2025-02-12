@@ -80,6 +80,7 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
 			autopl_obj.time.position_real = rpp_autodata.pooledenvinst['position']
 			autopl_obj.time.duration_real = rpp_autodata.pooledenvinst['length']
+			autopl_obj.visual.name = reappo.name.get()
 			for point in reappo.points:
 				val = point[1] if not invert else 1-point[1]
 				if isbool: val = bool(val)
@@ -445,21 +446,19 @@ class input_reaper(plugins.base):
 					placement_obj = track_obj.placements.add_notes()
 
 					if cvpj_name: placement_obj.visual.name = cvpj_name
-					if cvpj_color: placement_obj.visual.color.set_float(cvpj_color)
+					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
 					placement_obj.time.position_real = cvpj_position
 					placement_obj.time.duration_real = cvpj_duration
 
 					placement_obj.time.cut_type = 'loop'
 					placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
 
-					placement_obj.visual.color.set_int
-
 					midi_notes_out.do_output(placement_obj.notelist, midi_ppq)
 
 				if cvpj_placement_type == 'audio': 
 					placement_obj = track_obj.placements.add_audio()
 					if cvpj_name: placement_obj.visual.name = cvpj_name
-					if cvpj_color: placement_obj.visual.color.set_float(cvpj_color)
+					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
 					placement_obj.time.position_real = cvpj_position
 					placement_obj.time.duration_real = cvpj_duration
 					placement_obj.sample.pan = cvpj_pan
@@ -486,15 +485,15 @@ class input_reaper(plugins.base):
 						warp_obj = stretch_obj.warp
 						warp_obj.seconds = sampleref_obj.dur_sec
 						for data in rpp_trackitem.stretchmarks:
-							for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
+							#for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
 							warp_point_obj = warp_obj.points__add()
 							warp_point_obj.beat = (data[0]*2)
 							warp_point_obj.beat += (startoffset*rate)/4
 							warp_point_obj.second = data[1]
 						#	print('|', end='')
 						#print()
-						warp_obj.manp__speed_mul(1/rate)
 						warp_obj.calcpoints__speed()
+						warp_obj.manp__speed_mul(1/rate)
 					else: 
 						stretch_obj.set_rate_tempo(bpm, (1/cvpj_audio_rate)*tempomul, True)
 

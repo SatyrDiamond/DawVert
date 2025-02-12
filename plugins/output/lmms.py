@@ -132,7 +132,8 @@ def make_auto_track(autoidnum, autodata, visualname, automode):
 		lmms_autopat.pos = autopl_obj.time.position
 		lmms_autopat.len = autopl_obj.time.duration
 		lmms_autopat.prog = automode
-		lmms_autopat.name = visualname
+		lmms_autopat.name = autopl_obj.visual.name if autopl_obj.visual.name else visualname
+		if autopl_obj.visual.color: lmms_autopat.color = '#' + autopl_obj.visual.color.get_hex()
 		parse_auto(lmms_autopat.auto_points, autopl_obj.data)
 		lmms_autopat.auto_target.append(autoidnum)
 		lmms_track.automationpatterns.append(lmms_autopat)

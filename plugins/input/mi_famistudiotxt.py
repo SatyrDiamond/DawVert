@@ -205,7 +205,8 @@ def get_instshape(InstShape):
 	elif InstShape == 'EPSMRythm6': return 'EPSM_Rimshot'
 	else: return 'DPCM'
 
-def make_auto(convproj_obj, fs_notes, NoteLength, timemul, patpos, patdur, channum):
+def make_auto(convproj_obj, fs_pattern, NoteLength, timemul, patpos, patdur, channum):
+	fs_notes = fs_pattern.Notes
 	vol_auto = []
 	for notedata in fs_notes:
 		if notedata.Volume:
@@ -216,6 +217,7 @@ def make_auto(convproj_obj, fs_notes, NoteLength, timemul, patpos, patdur, chann
 	if vol_auto:
 		autopl_obj = convproj_obj.automation.add_pl_points(['fxmixer', str(channum), 'vol'], 'float')
 		autopl_obj.time.set_posdur(patpos, patdur)
+		if fs_pattern.Color: autopl_obj.visual.color.set_hex(fs_pattern.Color)
 
 		prev_slidetarg = None
 		for c_pos, c_val, slitarget in vol_auto:
@@ -452,7 +454,7 @@ class input_famistudio(plugins.base):
 				cvpj_placement.time.set_posdur(PointsPos[pattime], PatternLengthList[pattime])
 
 				if patid in fst_channel.Patterns:
-					make_auto(convproj_obj, fst_channel.Patterns[patid].Notes, NoteLength, BPMNoteMul[pattime], cvpj_placement.time.position, cvpj_placement.time.duration, fxchan)
+					make_auto(convproj_obj, fst_channel.Patterns[patid], NoteLength, BPMNoteMul[pattime], cvpj_placement.time.position, cvpj_placement.time.duration, fxchan)
 
 		convproj_obj.add_timesig_lengthbeat(fst_currentsong.PatternLength, fst_currentsong.PatternSettings.BeatLength)
 		convproj_obj.timemarker__from_patlenlist(PatternLengthList, fst_currentsong.LoopPoint)

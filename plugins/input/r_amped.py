@@ -406,6 +406,7 @@ class input_amped(plugins.base):
 			track_obj.params.add('pan', amped_track.pan, 'float')
 			track_obj.params.add('enabled', bool(not amped_track.mute), 'bool')
 			track_obj.params.add('solo', bool(amped_track.solo), 'bool')
+			track_obj.datavals.add('pan_mode', 'stereo')
 
 			if amped_track.armed:
 				amped_armed = amped_track.armed

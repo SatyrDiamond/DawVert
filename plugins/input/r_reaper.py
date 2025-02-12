@@ -230,6 +230,14 @@ class input_reaper(plugins.base):
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
 
+			panmode = rpp_track.panmode.get()
+			if panmode == 3: track_obj.datavals.add('pan_mode', 'mono')
+			if panmode == 5: track_obj.datavals.add('pan_mode', 'stereo')
+			if panmode == 6: 
+				track_obj.datavals.add('pan_mode', 'split')
+				track_obj.params.add('splitpan_left', rpp_track.volpan['left'], 'float')
+				track_obj.params.add('splitpan_right', rpp_track.volpan['right'], 'float')
+
 			track_obj.armed.on = bool(rpp_track.rec['armed'])
 			track_obj.armed.in_keys = bool(rpp_track.rec['armed'])
 			track_obj.armed.in_audio = bool(rpp_track.rec['armed'])

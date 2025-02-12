@@ -100,7 +100,9 @@ def make_auto(autopoints_obj, valtype, add, mul):
 		autoarray[n]['pos'] = int(max(a.pos, 0))
 		autoarray[n]['unk1'] = pow(10, -a.tension)
 
-		if valtype == 'vol':
+		if valtype == 'invert':
+			autoarray[n]['val'] = 1-a.value
+		elif valtype == 'vol':
 			autoarray[n]['val'] = calc_vol(a.value)
 		else:
 			autoarray[n]['val'] = (a.value/mul)-add
@@ -149,6 +151,9 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 				block.blockData = make_auto(autopl_obj.data, valtype,add, mul)
 
 				blocks.append(block)
+			return True
+		else: return False
+	else: return False
 
 def make_auto_contains_master(convproj_obj, sb_track, params_obj, startauto):
 	from objects.file_proj import soundbridge as proj_soundbridge
@@ -246,16 +251,42 @@ def make_plugins_fx(convproj_obj, sb_track, plugslots):
 				if plugin_obj.type.subtype in native_names:
 					fx_on, fx_wet = plugin_obj.fxdata_get()
 					uuid, vendor, name = native_names[plugin_obj.type.subtype]
-					auplug = proj_soundbridge.soundbridge_audioUnit(None)
-					auplug.uid = encode_chunk(bytearray.fromhex(uuid))
-					auplug.vendor = vendor
-					auplug.name = name
-					outbytes = plugin_obj.to_bytes('soundbridge', 'soundbridge', 'plugin', plugin_obj.type.subtype, plugin_obj.type.subtype)
-					auplug.state = encode_chunk(struct.pack('>f', int(not fx_on)) + outbytes)
-					sb_track.audioUnits.append(auplug)
+					sb_plugin = proj_soundbridge.soundbridge_audioUnit(None)
+					sb_plugin.uid = encode_chunk(bytearray.fromhex(uuid))
+					sb_plugin.vendor = vendor
+					sb_plugin.name = name
+
+					automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
+					automationTrack.parameterIndex = 0
+					automationTrack.mode = 3
+					automationTrack.enabled = 1
+					automationTrack.defaultValue = 0
+					make_auto_track('invert', convproj_obj, ['slot', pluginid, 'enabled'], automationTrack.blocks, 0, 1, sb_track.metadata)
+					sb_plugin.automationContainer.automationTracks.append(automationTrack)
+
+					fldso = globalstore.dataset.get_obj('soundbridge', 'plugin', plugin_obj.type.subtype)
+					if fldso:
+						outbytes = plugin_obj.to_bytes('soundbridge', 'soundbridge', 'plugin', plugin_obj.type.subtype, plugin_obj.type.subtype)
+						sb_plugin.state = encode_chunk(struct.pack('>f', int(not fx_on)) + outbytes)
+
+						for n, x in fldso.params.iter():
+							if x.num>0:
+								automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
+								automationTrack.parameterIndex = x.num
+								automationTrack.mode = 3
+								automationTrack.enabled = 1
+								automationTrack.defaultValue = 0
+								if make_auto_track('invert', convproj_obj, ['plugin', pluginid, n], automationTrack.blocks, 0, 1, sb_track.metadata):
+									sb_plugin.automationContainer.automationTracks.append(automationTrack)
+
+					sb_track.audioUnits.append(sb_plugin)
 
 			if plugin_obj.check_wildmatch('external', 'vst2', None):
 				auplug = make_vst2(convproj_obj, plugin_obj, False, pluginid, sb_track)
+				if auplug:
+					sb_track.audioUnits.append(auplug)
+			if plugin_obj.check_wildmatch('external', 'vst3', None):
+				auplug = make_vst3(convproj_obj, plugin_obj, False, pluginid, sb_track)
 				if auplug:
 					sb_track.audioUnits.append(auplug)
 
@@ -279,6 +310,24 @@ def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 		statewriter.raw(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 		statewriter.raw(rawdata)
 		sb_plugin.state = encode_chunk(statewriter.getvalue())
+
+		automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
+		automationTrack.parameterIndex = 0
+		automationTrack.mode = 3
+		automationTrack.enabled = 1
+		automationTrack.defaultValue = 0
+		make_auto_track('invert', convproj_obj, ['slot', pluginid, 'enabled'], automationTrack.blocks, 0, 1, sb_track.metadata)
+		sb_plugin.automationContainer.automationTracks.append(automationTrack)
+
+		for autoloc, autodata, paramnum in convproj_obj.automation.iter_pl_points_external(pluginid):
+			paramid = 'ext_param_'+str(paramnum)
+			automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
+			automationTrack.parameterIndex = paramnum+1
+			automationTrack.mode = 3
+			automationTrack.enabled = 1
+			automationTrack.defaultValue = plugin_obj.params.get(paramid, 0)
+			make_auto_track(None, convproj_obj, autoloc.get_list(), automationTrack.blocks, 0, 1, sb_track.metadata)
+			sb_plugin.automationContainer.automationTracks.append(automationTrack)
 	else:
 		logger_output.warning('VST3 plugin not placed: no ID found.')
 
@@ -349,6 +398,14 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 		state = statewriter.getvalue()
 
 		sb_plugin.state = encode_chunk(state)
+
+		automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
+		automationTrack.parameterIndex = 0
+		automationTrack.mode = 3
+		automationTrack.enabled = 1
+		automationTrack.defaultValue = 0
+		make_auto_track('invert', convproj_obj, ['slot', pluginid, 'enabled'], automationTrack.blocks, 0, 1, sb_track.metadata)
+		sb_plugin.automationContainer.automationTracks.append(automationTrack)
 
 		for autoloc, autodata, paramnum in convproj_obj.automation.iter_pl_points_external(pluginid):
 			paramid = 'ext_param_'+str(paramnum)

@@ -651,6 +651,7 @@ class input_flp(plugins.base):
 
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
 								autopl_obj.time = placement_obj.time.copy()
+
 								for pos, val in autodata: 
 									autopl_obj.data.add_point(pos, (val+aadd)/adiv)
 									if DEBUGAUTOTICKS: t.append(val)
@@ -672,6 +673,12 @@ class input_flp(plugins.base):
 							if autoloc: 
 								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 								autopl_obj.time.set_posdur(item.position, item.length)
+								if item.itemindex in flp_obj.channels:
+									fl_channel_obj = flp_obj.channels[item.itemindex]
+									autopl_obj.visual.name = fl_channel_obj.name if fl_channel_obj.name else ''
+									if (fl_channel_obj.color not in commoncolors):
+										autopl_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
+
 								if item.startoffset not in [4294967295, 3212836864]: 
 									if item.startoffset > 0:
 										posdata = item.startoffset

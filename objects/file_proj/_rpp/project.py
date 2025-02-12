@@ -83,6 +83,7 @@ class rpp_project:
 		self.tempoenvex = rpp_env.rpp_env()
 		self.tracks = []
 		self.markers = []
+		self.pooledenvs = []
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -174,6 +175,10 @@ class rpp_project:
 					[int, float, str, int, int, int, str, str, int], True)
 				marker.read(values)
 				self.markers.append(marker.values)
+			if name == 'POOLEDENV': 
+				pooledenv_obj = rpp_env.rpp_pooledenv()
+				pooledenv_obj.load(inside_dat)
+				self.pooledenvs.append(pooledenv_obj)
 
 	def add_track(self):
 		track_obj = rpp_track.rpp_track()

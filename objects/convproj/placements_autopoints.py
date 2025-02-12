@@ -74,6 +74,11 @@ class cvpj_placements_autopoints:
 	def remove_loops(self, out__placement_loop):
 		self.data = placements.internal_removeloops(self.data, out__placement_loop)
 
+	def change_seconds(self, is_seconds, bpm, ppq):
+		for pl in self.data: 
+			pl.time.change_seconds(is_seconds, bpm, ppq)
+			pl.data.change_seconds(is_seconds, bpm, ppq)
+
 class cvpj_placement_autopoints:
 	__slots__ = ['time','muted','visual','data']
 
@@ -89,3 +94,5 @@ class cvpj_placement_autopoints:
 		if self.time.cut_type == 'none':
 			self.data.edit_trimmove(0, self.time.duration)
 
+	def change_seconds(self, is_seconds, bpm):
+		self.time.change_seconds(is_seconds, bpm, ppq)

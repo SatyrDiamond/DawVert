@@ -35,6 +35,7 @@ class input_onlinesequencer(plugins.base):
 		global onlseq_customnames
 
 		convproj_obj.type = 'r'
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.set_timings(4, True)
 
 		globalstore.dataset.load('onlineseq', './data_main/dataset/onlineseq.dset')
@@ -51,11 +52,12 @@ class input_onlinesequencer(plugins.base):
 			synthdata[instid] = instparam.synth
 		for target, params in project_obj.seperate_markers().items(): 
 			if target != -1:
-				if ((3 in params) or (4 in params) or (5 in params)) and 'eq' not in used_fx[target]: used_fx[instid].append('eq')
-				if (6 in params) and 'delay' not in used_fx[target]: used_fx[instid].append('delay')
-				if ((7 in params) or (12 in params)) and 'reverb' not in used_fx[target]: used_fx[instid].append('reverb')
-				if ((13 in params) or (14 in params)) and 'distort' not in used_fx[target]: used_fx[instid].append('distort')
-				if ((18 in params) or (19 in params) or (20 in params)) and 'bitcrush' not in used_fx[target]: used_fx[instid].append('bitcrush')
+				if target in used_fx:
+					if ((3 in params) or (4 in params) or (5 in params)) and 'eq' not in used_fx[target]: used_fx[instid].append('eq')
+					if (6 in params) and 'delay' not in used_fx[target]: used_fx[instid].append('delay')
+					if ((7 in params) or (12 in params)) and 'reverb' not in used_fx[target]: used_fx[instid].append('reverb')
+					if ((13 in params) or (14 in params)) and 'distort' not in used_fx[target]: used_fx[instid].append('distort')
+					if ((18 in params) or (19 in params) or (20 in params)) and 'bitcrush' not in used_fx[target]: used_fx[instid].append('bitcrush')
 
 			for paramid, markers in params.items(): 
 				autoloc = None
@@ -87,12 +89,19 @@ class input_onlinesequencer(plugins.base):
 				if autoloc:
 					for marker in markers: convproj_obj.automation.add_autopoint(autoloc, 'float', marker.pos, marker.value/div, 'normal' if marker.type else 'instant')
 
+		multig = {}
+
 		sep_notes = project_obj.seperate_notes(False)
 		for instid, notes in sep_notes.items():
 			s_used_fx = used_fx[instid] if instid in used_fx else []
+
 			trackid = 'os_'+str(instid)
 			trueinstid = instid%10000
+
+			if trueinstid not in multig: multig[trueinstid] = []
 			track_obj = convproj_obj.track__add(trackid, 'instrument', 0, False)
+			multig[trueinstid].append(track_obj)
+
 			midifound = track_obj.from_dataset('onlineseq', 'inst', str(trueinstid), True)
 			if midifound: 
 				track_obj.to_midi(convproj_obj, trackid, True)
@@ -191,6 +200,12 @@ class input_onlinesequencer(plugins.base):
 
 			for key, pos, dur, inst, vol in notes: 
 				track_obj.placements.notelist.add_r(pos, dur, key-60, vol, {})
+
+		for k, v in multig.items():
+			if len(v)>1:
+				group_obj = convproj_obj.fx__group__add(str(k))
+				group_obj.visual.from_dset('onlineseq', 'inst', str(k), True)
+				for x in v: x.group = str(k)
 
 		convproj_obj.timesig = [project_obj.numerator, 4]
 		convproj_obj.do_actions.append('do_addloop')

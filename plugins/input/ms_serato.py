@@ -137,6 +137,7 @@ class input_serato(plugins.base):
 				group_obj.params.add('vol', scene_strip.gain*scene_strip.volume, 'float')
 				group_obj.params.add('pan', scene_strip.pan, 'float')
 				group_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
+				group_obj.datavals.add('pan_mode', 'stereo')
 				do_chan_strip(convproj_obj, base_trk_id, scene_strip, group_obj.plugslots.slots_audio)
 				for dnum, drumdata in enumerate(scene_deck.drums):
 					cvpj_instid_p = base_trk_id+'_'+str(dnum)
@@ -190,6 +191,7 @@ class input_serato(plugins.base):
 
 				track_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
 				track_obj.params.add('pan', scene_strip.pan, 'float')
+				track_obj.datavals.add('pan_mode', 'stereo')
 				track_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
 				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
 
@@ -209,6 +211,7 @@ class input_serato(plugins.base):
 
 				inst_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
 				inst_obj.params.add('pan', scene_strip.pan, 'float')
+				inst_obj.datavals.add('pan_mode', 'stereo')
 				inst_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
 				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, inst_obj.plugslots.slots_audio)
 
@@ -270,6 +273,7 @@ class input_serato(plugins.base):
 
 				track_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
 				track_obj.params.add('pan', scene_strip.pan, 'float')
+				track_obj.datavals.add('pan_mode', 'stereo')
 				track_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
 				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
 

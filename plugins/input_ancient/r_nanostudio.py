@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 import plugins
 from objects import globalstore
 from objects import colors
+import math
 
 class input_nanostudio_v1(plugins.base):
 	def is_dawvert_plugin(self):
@@ -67,15 +68,28 @@ class input_nanostudio_v1(plugins.base):
 					infx = channel.insertfx
 					for n, fx in enumerate([infx.node_slot1, infx.node_slot2, infx.node_slot3, infx.node_slot4]):
 						if fx.type:
+							patch_data = fx.patch
 							fxid = cvpj_trackid+'_fx_'+str(n)
-							plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'nanostudio_v1', fx.type)
-							plugin_obj.role = 'fx'
-							if 'Enable' in fx.patch: 
-								plugin_obj.fxdata_add(fx.patch['Enable']=='1', None)
-								del fx.patch['Enable']
-							for key, val in fx.patch.items():
-								if val.replace('.', '').isnumeric(): plugin_obj.params.add(key, float(val), 'float')
-								else: plugin_obj.datavals.add(key, val)
+							if fx.type == 'TCE-1':
+								plugin_obj = convproj_obj.plugin__add(fxid, 'universal', 'compressor', None)
+								plugin_obj.role = 'fx'
+								if 'Enable' in patch_data: plugin_obj.fxdata_add(patch_data['Enable']=='1', None)
+								if 'Attack' in patch_data: plugin_obj.params.add('attack', float(patch_data['Attack'])/10, 'float')
+								if 'Release' in patch_data: plugin_obj.params.add('release', float(patch_data['Release']), 'float')
+								if 'Threshold' in patch_data: plugin_obj.params.add('threshold', float(patch_data['Threshold']), 'float')
+								if 'OutputGain' in patch_data: plugin_obj.params.add('gain', float(patch_data['OutputGain']), 'float')
+								if 'Ratio' in patch_data: 
+									ratio = float(patch_data['Ratio'])
+									plugin_obj.params.add('ratio', 1/(1-ratio), 'float')
+							else:
+								plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'nanostudio_v1', fx.type)
+								plugin_obj.role = 'fx'
+								if 'Enable' in patch_data: 
+									plugin_obj.fxdata_add(patch_data['Enable']=='1', None)
+									del patch_data['Enable']
+								for key, val in patch_data.items():
+									if val.replace('.', '').isnumeric(): plugin_obj.params.add(key, float(val), 'float')
+									else: plugin_obj.datavals.add(key, val)
 							track_obj.plugin_autoplace(plugin_obj, fxid)
 
 		repeatnum = {}

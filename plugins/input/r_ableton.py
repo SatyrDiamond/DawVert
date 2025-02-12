@@ -478,7 +478,7 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				track_obj.params.add('enabled', track_on, 'bool')
 
-				if int(track_mixer.PanMode) == 1:
+				if track_mixer.PanMode == 1:
 					track_obj.datavals.add('pan_mode', 'split')
 					splitstereopanl = doparam(track_mixer.SplitStereoPanL, 'Pan L', 'float', 0, fxloc+['splitpan_left'], None)
 					splitstereopanr = doparam(track_mixer.SplitStereoPanR, 'Pan R', 'float', 0, fxloc+['splitpan_right'], None)
@@ -643,12 +643,21 @@ class input_ableton(plugins.base):
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
 				track_pan = doparam(track_mixer.Pan, 'Pan', 'float', 0, fxloc+['pan'], None)
 				track_on = doparam(track_mixer.On, 'On', 'bool', 0, fxloc+['enabled'], None)
+
 				track_obj = convproj_obj.track_master.fx__return__add(cvpj_returntrackid)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, track_color)
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
 				track_obj.latency_offset = lattime
+
+				if track_mixer.PanMode == 1:
+					track_obj.datavals.add('pan_mode', 'split')
+					splitstereopanl = doparam(track_mixer.SplitStereoPanL, 'Pan L', 'float', 0, fxloc+['splitpan_left'], None)
+					splitstereopanr = doparam(track_mixer.SplitStereoPanR, 'Pan R', 'float', 0, fxloc+['splitpan_right'], None)
+					track_obj.params.add('splitpan_left', splitstereopanl, 'float')
+					track_obj.params.add('splitpan_right', splitstereopanr, 'float')
+
 				returnid += 1
 
 			elif tracktype == 'group':
@@ -665,6 +674,13 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 				track_obj.latency_offset = lattime
+
+				if track_mixer.PanMode == 1:
+					track_obj.datavals.add('pan_mode', 'split')
+					splitstereopanl = doparam(track_mixer.SplitStereoPanL, 'Pan L', 'float', 0, fxloc+['splitpan_left'], None)
+					splitstereopanr = doparam(track_mixer.SplitStereoPanR, 'Pan R', 'float', 0, fxloc+['splitpan_right'], None)
+					track_obj.params.add('splitpan_left', splitstereopanl, 'float')
+					track_obj.params.add('splitpan_right', splitstereopanr, 'float')
 
 			if als_track.DeviceChain.AudioOutputRouting.UpperDisplayString == 'Sends Only':
 				track_obj.sends.to_master_active = False

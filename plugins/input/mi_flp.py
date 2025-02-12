@@ -651,6 +651,12 @@ class input_flp(plugins.base):
 
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
 								autopl_obj.time = placement_obj.time.copy()
+								if pattern in flp_obj.patterns:
+									pat_obj = flp_obj.patterns[pattern]
+									if pat_obj.color:
+										color = pat_obj.color.to_bytes(4, "little")
+										if color != b'HQV\x00': autopl_obj.visual.color.set_int([color[0],color[1],color[2]])
+									if pat_obj.name: autopl_obj.visual.name = pat_obj.name
 
 								for pos, val in autodata: 
 									autopl_obj.data.add_point(pos, (val+aadd)/adiv)

@@ -123,7 +123,7 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 				time_obj = autopl_obj.time
 
 				block = proj_soundbridge.soundbridge_block(None)
-				block.name = ""
+				block.name = autopl_obj.visual.name if autopl_obj.visual.name else ""
 				block.timeBaseMode = 0
 				block.position = int(time_obj.position)
 				block.positionStart = 0
@@ -141,7 +141,9 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 					block.loopOffset = max(block.loopOffset, 0)
 					block.positionStart = max(block.positionStart, 0)
 
-				if 'TrackColor' in trackmeta:
+				if autopl_obj.visual.color:
+					block.metadata["BlockColor"] = '#'+autopl_obj.visual.color.get_hex()
+				elif 'TrackColor' in trackmeta:
 					block.metadata["BlockColor"] = trackmeta["TrackColor"]
 
 				block.blockData = make_auto(autopl_obj.data, valtype,add, mul)

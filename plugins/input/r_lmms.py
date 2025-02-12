@@ -612,7 +612,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.params.add('solo', cvpj_solo, 'bool')
 			track_obj.visual.name = lmms_track.name
 			if isbb: track_obj.visual.name += ' [BB]'
-			if lmms_track.color: track_obj.visual.color.set_hex(track_color)
+			if lmms_track.color: track_obj.visual.color.set_hex(lmms_track.color)
 
 			samptr_obj = lmms_track.sampletrack
 			cvpj_pan = doparam(samptr_obj.pan, 'float', [0, 0.01], ['track', cvpj_trackid, 'pan'])
@@ -642,6 +642,8 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 					for id_num in lmms_automationpattern.auto_target:
 						autopl_obj = convproj_obj.automation.add_pl_points(['id',str(id_num)], 'float')
 						autopl_obj.time.set_posdur(lmms_automationpattern.pos, lmms_automationpattern.len)
+						if lmms_automationpattern.name: autopl_obj.visual.name = lmms_automationpattern.name
+						if lmms_automationpattern.color: autopl_obj.visual.color.set_hex(lmms_automationpattern.color)
 						for p_pos, p_val in lmms_automationpattern.auto_points.items():
 							autopoint_obj = autopl_obj.data.add_point()
 							autopoint_obj.pos = p_pos

@@ -51,6 +51,8 @@ def add_auto(valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 		autopl_obj.time.position = block.position
 		autopl_obj.time.duration = block.framesCount
+		autopl_obj.visual.name = block.name
+		if 'BlockColor' in block.metadata: autopl_obj.visual.color.set_hex(block.metadata['BlockColor'])
 		for point in parse_auto(block.blockData):
 			autopoint_obj = autopl_obj.data.add_point()
 			autopoint_obj.pos = point['pos']
@@ -146,23 +148,46 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 						else:
 							add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
 
-
 		elif hexdata in native_names:
 			plugin_enabled = struct.unpack('>f', statedata[0:4])[0]
 			native_name = native_names[hexdata]
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundbridge', native_name)
-			plugin_obj.from_bytes(statedata[4:], 'soundbridge', 'soundbridge', 'plugin', native_name, native_name)
+
+			fldso = globalstore.dataset.get_obj('soundbridge', 'plugin', native_name)
+			if fldso:
+				plugin_obj.from_bytes(statedata[4:], 'soundbridge', 'soundbridge', 'plugin', native_name, native_name)
+				autonum = dict([[x.num, n] for n, x in fldso.params.iter()])
+				for x in sb_plugin.automationContainer.automationTracks:
+					parameterIndex = x.parameterIndex
+					if parameterIndex in autonum:
+						paramid = autonum[parameterIndex]
+						plugin_obj.params.add(paramid, x.defaultValue, 'float')
+						if parameterIndex>0: add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+						else: add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
+
 		else:
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst3', 'win')
 			dev_uuid = uuid.UUID(int=int.from_bytes(uiddata, 'big')).bytes_le
 			pluguuid = dev_uuid.hex().upper()
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 
 			statereader = bytereader.bytereader()
 			statereader.load_raw(statedata)
 			size = statereader.uint32_b()
 			statereader.skip(12)
 			chunkdata = statereader.raw(size)
-			plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, pluguuid, chunkdata)
+			extmanu_obj.vst3__replace_data('id', pluguuid, chunkdata, 'win')
+
+			for x in sb_plugin.automationContainer.automationTracks:
+				paramid = 'ext_param_'+str(x.parameterIndex)
+				plugin_obj.params.add(paramid, x.defaultValue, 'float')
+				outparam = x.parameterIndex-1
+				if outparam>0:
+					paramid = 'ext_param_'+str(outparam)
+					add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+				else:
+					add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
 
 	return pluginid
 

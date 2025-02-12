@@ -488,6 +488,13 @@ def addgrp(convproj_obj, project_obj, groupid):
 		do_param(convproj_obj, group_obj.params, 'vol', 1, 'float', ['group', groupid, 'vol'], als_gtrack.DeviceChain.Mixer.Volume, als_gtrack.AutomationEnvelopes)
 		do_param(convproj_obj, group_obj.params, 'pan', 0, 'float', ['group', groupid, 'pan'], als_gtrack.DeviceChain.Mixer.Pan, als_gtrack.AutomationEnvelopes)
 		do_param(convproj_obj, group_obj.params, 'enabled', 0, 'invbool', ['group', groupid, 'enabled'], als_gtrack.DeviceChain.Mixer.Speaker, als_gtrack.AutomationEnvelopes)
+	
+		pan_mode = group_obj.datavals.get('pan_mode', '')
+		if pan_mode == 'split': 
+			als_track.DeviceChain.Mixer.PanMode = 1
+			do_param(convproj_obj, group_obj.params, 'splitpan_left', -1, 'float', ['group', groupid, 'splitpan_left'], als_track.DeviceChain.Mixer.SplitStereoPanL, als_track.AutomationEnvelopes)
+			do_param(convproj_obj, group_obj.params, 'splitpan_right', 1, 'float', ['group', groupid, 'splitpan_right'], als_track.DeviceChain.Mixer.SplitStereoPanR, als_track.AutomationEnvelopes)
+
 		ids_group_cvpj_als[groupid] = groupnumid
 		if group_obj.group:
 			als_gtrack.TrackGroupId = addgrp(convproj_obj, project_obj, group_obj.group)
@@ -759,6 +766,12 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'enabled', 0, 'invbool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
 		als_track.TrackDelay.Value = track_obj.latency_offset
+
+		pan_mode = track_obj.datavals.get('pan_mode', '')
+		if pan_mode == 'split': 
+			als_track.DeviceChain.Mixer.PanMode = 1
+			do_param(convproj_obj, track_obj.params, 'splitpan_left', -1, 'float', ['track', trackid, 'splitpan_left'], als_track.DeviceChain.Mixer.SplitStereoPanL, als_track.AutomationEnvelopes)
+			do_param(convproj_obj, track_obj.params, 'splitpan_right', 1, 'float', ['track', trackid, 'splitpan_right'], als_track.DeviceChain.Mixer.SplitStereoPanR, als_track.AutomationEnvelopes)
 
 		if groupnumid: 
 			als_track.TrackGroupId = groupnumid
@@ -1123,6 +1136,12 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		do_param(convproj_obj, track_obj.params, 'enabled', 0, 'invbool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
 		als_track.TrackDelay.Value = track_obj.latency_offset
 
+		pan_mode = track_obj.datavals.get('pan_mode', '')
+		if pan_mode == 'split': 
+			als_track.DeviceChain.Mixer.PanMode = 1
+			do_param(convproj_obj, track_obj.params, 'splitpan_left', -1, 'float', ['track', trackid, 'splitpan_left'], als_track.DeviceChain.Mixer.SplitStereoPanL, als_track.AutomationEnvelopes)
+			do_param(convproj_obj, track_obj.params, 'splitpan_right', 1, 'float', ['track', trackid, 'splitpan_right'], als_track.DeviceChain.Mixer.SplitStereoPanR, als_track.AutomationEnvelopes)
+
 		if groupnumid: 
 			als_track.TrackGroupId = groupnumid
 			als_track.DeviceChain.AudioOutputRouting.set('AudioOut/GroupTrack', 'Group', '')
@@ -1296,6 +1315,13 @@ class output_ableton(plugins.base):
 			do_effects(convproj_obj, als_track, return_obj.plugslots.slots_audio)
 			do_param(convproj_obj, return_obj.params, 'vol', 1, 'float', ['return', returnid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 			do_param(convproj_obj, return_obj.params, 'pan', 0, 'float', ['return', returnid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
+
+			pan_mode = return_obj.datavals.get('pan_mode', '')
+			if pan_mode == 'split': 
+				als_track.DeviceChain.Mixer.PanMode = 1
+				do_param(convproj_obj, return_obj.params, 'splitpan_left', -1, 'float', ['return', returnid, 'splitpan_left'], als_track.DeviceChain.Mixer.SplitStereoPanL, als_track.AutomationEnvelopes)
+				do_param(convproj_obj, return_obj.params, 'splitpan_right', 1, 'float', ['return', returnid, 'splitpan_right'], als_track.DeviceChain.Mixer.SplitStereoPanR, als_track.AutomationEnvelopes)
+
 			als_track.TrackDelay.Value = return_obj.latency_offset
 			als_track.Color = return_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
 			if return_obj.visual.name: als_track.Name.UserName = fixtxt(return_obj.visual.name)

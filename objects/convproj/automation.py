@@ -146,6 +146,7 @@ class cvpj_s_automation:
 		self.time_float = time_float
 
 	def change_seconds(self, is_seconds, bpm, ppq):
+		if self.u_pl_points: self.pl_points.change_seconds(is_seconds, bpm, ppq)
 		if self.u_nopl_points: self.nopl_points.change_seconds(is_seconds, bpm, ppq)
 		
 	# | Ticks       | Points      |

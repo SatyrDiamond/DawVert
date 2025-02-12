@@ -71,9 +71,23 @@ class midi_notes():
 		cvpj_notelist.sort()
 		#print(cvpj_notelist.data[:])
 
-def do_auto(convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert): 
+def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert): 
 	isbool = paramtype=='bool'
-	if rpp_autodata.used:
+	if rpp_autodata.pooledenvinst:
+		idnum = rpp_autodata.pooledenvinst['id']
+		if idnum in pooledenvs:
+			reappo = pooledenvs[idnum]
+			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
+			autopl_obj.time.position_real = rpp_autodata.pooledenvinst['position']
+			autopl_obj.time.duration_real = rpp_autodata.pooledenvinst['length']
+			for point in reappo.points:
+				val = point[1] if not invert else 1-point[1]
+				if isbool: val = bool(val)
+				autopoint_obj = autopl_obj.data.add_point()
+				autopoint_obj.pos_real = point[0]/2
+				autopoint_obj.value = val
+
+	elif rpp_autodata.used:
 		for point in rpp_autodata.points:
 			val = point[1] if not invert else 1-point[1]
 			if isbool: val = bool(val)
@@ -136,6 +150,7 @@ class input_reaper(plugins.base):
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
+		in_dict['auto_types'] = ['nopl_points', 'pl_points']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
 		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
@@ -176,6 +191,8 @@ class input_reaper(plugins.base):
 		loop_active = bool(rpp_project.loop.get())
 		loop_start = rpp_project.selection['start']
 		loop_size = rpp_project.selection['end']
+
+		pooledenvs = dict([[x.id.get(), x] for x in rpp_project.pooledenvs])
 
 		convproj_obj.transport.is_seconds = True
 		convproj_obj.timemarkers.is_seconds = True
@@ -281,7 +298,7 @@ class input_reaper(plugins.base):
 
 								for parmenv in rpp_plugin.parmenv:
 									if parmenv.is_param:
-										do_auto(convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+										do_auto(pooledenvs, convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 								if fourid == 1919118692: track_obj.plugslots.slots_notes.append(pluginid)
 								else: track_obj.plugin_autoplace(plugin_obj, pluginid)
@@ -306,7 +323,7 @@ class input_reaper(plugins.base):
 
 							for parmenv in rpp_plugin.parmenv:
 								if parmenv.is_param:
-									do_auto(convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+									do_auto(pooledenvs, convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'CLAP':
 						plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'clap', None)
@@ -319,7 +336,7 @@ class input_reaper(plugins.base):
 
 						for parmenv in rpp_plugin.parmenv:
 							if parmenv.is_param:
-								do_auto(convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+								do_auto(pooledenvs, convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
 
 					if rpp_plugin.type == 'JS':
 						plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'jesusonic', rpp_extplug.js_id)
@@ -480,9 +497,9 @@ class input_reaper(plugins.base):
 						maxdur = ((sampleref_obj.dur_sec*8)/cvpj_audio_rate)*tempomul if sampleref_obj.dur_sec else cvpj_duration
 						placement_obj.time.set_loop_data(startoffset, 0, maxdur)
 
-			do_auto(convproj_obj, rpp_track.volenv2, ['track', cvpj_trackid, 'vol'], False, 'float', False)
-			do_auto(convproj_obj, rpp_track.panenv2, ['track', cvpj_trackid, 'pan'], False, 'float', False)
-			do_auto(convproj_obj, rpp_track.muteenv, ['track', cvpj_trackid, 'enabled'], True, 'bool', False)
+			do_auto(pooledenvs, convproj_obj, rpp_track.volenv2, ['track', cvpj_trackid, 'vol'], False, 'float', False)
+			do_auto(pooledenvs, convproj_obj, rpp_track.panenv2, ['track', cvpj_trackid, 'pan'], False, 'float', False)
+			do_auto(pooledenvs, convproj_obj, rpp_track.muteenv, ['track', cvpj_trackid, 'enabled'], True, 'bool', False)
 
 			track_obj.placements.sort()
 			convproj_obj.fx__route__add(cvpj_trackid)

@@ -803,7 +803,7 @@ class lmms_track:
 				pattern_obj = lmms_pattern()
 				pattern_obj.read(xmlpart)
 				self.patterns.append(pattern_obj)
-			if xmlpart.tag == 'automationpattern':
+			if xmlpart.tag in ['automationpattern', 'automationclip']:
 				automationpattern_obj = lmms_automationpattern()
 				automationpattern_obj.read(xmlpart)
 				self.automationpatterns.append(automationpattern_obj)

@@ -104,6 +104,7 @@ class input_fruitytracks(plugins.base):
 				sampleref_obj.find_relative('projectfile')
 				sampleref_obj.find_relative('fruitytracks')
 				placement_obj.sample.sampleref = ftr_clip.file
+				placement_obj.muted = bool(ftr_clip.muted)
 
 				plpos = (ftr_clip.pos/bpmticks)/bpmdiv
 				if ftr_clip.stretch == 0:

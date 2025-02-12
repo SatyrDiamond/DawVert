@@ -142,7 +142,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 						paramid = 'ext_param_'+str(x.parameterIndex)
 						plugin_obj.params.add(paramid, x.defaultValue, 'float')
 						outparam = x.parameterIndex-1
-						if outparam>0:
+						if outparam>=0:
 							paramid = 'ext_param_'+str(outparam)
 							add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
 						else:
@@ -157,13 +157,17 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 			if fldso:
 				plugin_obj.from_bytes(statedata[4:], 'soundbridge', 'soundbridge', 'plugin', native_name, native_name)
 				autonum = dict([[x.num, n] for n, x in fldso.params.iter()])
-				for x in sb_plugin.automationContainer.automationTracks:
-					parameterIndex = x.parameterIndex
-					if parameterIndex in autonum:
-						paramid = autonum[parameterIndex]
-						plugin_obj.params.add(paramid, x.defaultValue, 'float')
-						if parameterIndex>0: add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
-						else: add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
+
+			for x in sb_plugin.automationContainer.automationTracks:
+				parameterIndex = x.parameterIndex
+				if parameterIndex>0:
+					if fldso:
+						if parameterIndex in autonum:
+							paramid = autonum[parameterIndex]
+							plugin_obj.params.add(paramid, x.defaultValue, 'float')
+							add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+				else:
+					add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
 
 		else:
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst3', 'win')
@@ -183,7 +187,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 				paramid = 'ext_param_'+str(x.parameterIndex)
 				plugin_obj.params.add(paramid, x.defaultValue, 'float')
 				outparam = x.parameterIndex-1
-				if outparam>0:
+				if outparam>=0:
 					paramid = 'ext_param_'+str(outparam)
 					add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
 				else:

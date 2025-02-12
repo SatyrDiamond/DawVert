@@ -719,12 +719,21 @@ class output_dawproject(plugins.base):
 			dp_timesig = project_obj.arrangement.timesignatureautomation = points.dawproject_points_timesig()
 			dp_timesig.id = 'main__timesig'
 
+			firstpoint = True
 			for pos, value in convproj_obj.timesig_auto:
+				if firstpoint:
+					if pos != 0:
+						point_obj = points.dawproject_timesigpoint()
+						point_obj.time = 0
+						point_obj.numerator = convproj_obj.timesig[0]
+						point_obj.denominator = convproj_obj.timesig[1]
+						dp_timesig.points.append(point_obj)
 				point_obj = points.dawproject_timesigpoint()
 				point_obj.time = pos
 				point_obj.numerator = value[0]
 				point_obj.denominator = value[1]
 				dp_timesig.points.append(point_obj)
+				firstpoint = False
 
 		dp_obj = project_obj.metadata
 		meta_obj = convproj_obj.metadata

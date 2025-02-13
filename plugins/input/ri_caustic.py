@@ -208,7 +208,7 @@ class input_cvpj_r(plugins.base):
 					plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
 					for samplecount, data in enumerate(machdata.samples):
-						region = machdata.samples[0]
+						region = data
 						loopdata = None
 						sampleref = machid + '_PCMSynth_'+str(samplecount)
 						wave_path = samplefolder+sampleref+'.wav'

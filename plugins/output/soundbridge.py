@@ -276,7 +276,7 @@ def make_plugins_fx(convproj_obj, sb_track, plugslots):
 								automationTrack.mode = 3
 								automationTrack.enabled = 1
 								automationTrack.defaultValue = 0
-								if make_auto_track('invert', convproj_obj, ['plugin', pluginid, n], automationTrack.blocks, 0, 1, sb_track.metadata):
+								if make_auto_track(None, convproj_obj, ['plugin', pluginid, n], automationTrack.blocks, 0, 1, sb_track.metadata):
 									sb_plugin.automationContainer.automationTracks.append(automationTrack)
 
 					sb_track.audioUnits.append(sb_plugin)

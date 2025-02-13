@@ -456,10 +456,19 @@ class input_soundbridge(plugins.base):
 		convproj_obj.timesig[0] = sb_timeSignature.timeSigNumerator
 		convproj_obj.timesig[1] = sb_timeSignature.timeSigDenominator
 
+		for x in sb_timeSignature.sections:
+			convproj_obj.timesig_auto.add_point(x.position, [x.timeSigNumerator, x.timeSigDenominator])
+
 		for x in sb_tempo.sections:
 			autopl_obj = convproj_obj.automation.add_pl_points(['main', 'bpm'], 'float')
 			autopl_obj.time.position = x.position
 			autopl_obj.time.duration = x.length
+
+			metacolorkey = 'Color_%s_%s' % (x.startTempo*1000, x.endTempo*1000)
+			if metacolorkey in sb_tempo.metadata:
+				colorval = sb_tempo.metadata[metacolorkey]
+				colorval = colorval[3:]
+				if len(colorval)==6: autopl_obj.visual.color.set_hex('#'+colorval)
 
 			autopoint_obj = autopl_obj.data.add_point()
 			autopoint_obj.pos = 0

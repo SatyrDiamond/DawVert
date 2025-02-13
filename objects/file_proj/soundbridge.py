@@ -761,6 +761,7 @@ class soundbridge_tempo:
 
 class soundbridge_timeSignature_section:
 	def __init__(self, xml_proj):
+		self.position = 0
 		self.positionBars = 0
 		self.lengthBars = 4
 		self.timeSigNumerator = 4
@@ -769,6 +770,7 @@ class soundbridge_timeSignature_section:
 
 	def read(self, xml_proj):
 		trackattrib = xml_proj.attrib
+		self.position = int(xml_proj.get('position'))
 		self.positionBars = int(xml_proj.get('positionBars'))
 		self.lengthBars = int(xml_proj.get('lengthBars'))
 		self.timeSigNumerator = int(xml_proj.get('timeSigNumerator'))
@@ -776,6 +778,7 @@ class soundbridge_timeSignature_section:
 
 	def write(self, xml_proj):
 		tempxml = ET.SubElement(xml_proj, "section")
+		tempxml.set('position', str(self.position))
 		tempxml.set('positionBars', str(self.positionBars))
 		tempxml.set('lengthBars', str(self.lengthBars))
 		tempxml.set('timeSigNumerator', str(self.timeSigNumerator))

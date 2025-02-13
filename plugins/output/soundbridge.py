@@ -292,7 +292,6 @@ def make_plugins_fx(convproj_obj, sb_track, plugslots):
 
 def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 	from objects.file_proj import soundbridge as proj_soundbridge
-	from functions_plugin_ext import plugin_vst3
 	vid = plugin_obj.external_info.id
 	sb_plugin = None
 
@@ -335,7 +334,6 @@ def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 
 def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 	from objects.file_proj import soundbridge as proj_soundbridge
-	from functions_plugin_ext import plugin_vst2
 	fourid = plugin_obj.external_info.fourid
 	sb_plugin = None
 
@@ -346,7 +344,9 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 		sb_plugin.name = plugin_obj.external_info.name
 		sb_plugin.vendor = plugin_obj.external_info.creator
 		if issynth: sb_plugin.metadata['AudioUnitType'] = 3
-		vstchunk = plugin_vst2.export_presetdata(plugin_obj)
+
+		extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+		vstchunk = extmanu_obj.vst2__export_presetdata(None)
 
 		if len(vstchunk)>12:
 			vsttype = vstchunk[8:12]
@@ -504,7 +504,6 @@ class output_soundbridge(plugins.base):
 	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import soundbridge as proj_soundbridge
-		from functions_plugin_ext import plugin_vst2
 		global sb_returns
 
 		convproj_obj.change_timings(PROJECT_FREQ, False)

@@ -143,15 +143,17 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					wrapper_vstpad = pluginstate[13:17]
 					wrapper_vstprogram = int.from_bytes(pluginstate[17:21], "little")
 					wrapper_vstdata = pluginstate[21:]
-	
+
 					if wrapper_vststate[0:4] == b'\xf7\xff\xff\xff' and wrapper_vststate[5:9] == b'\xfe\xff\xff\xff':
 	
+						extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+					
 						if wrapper_vststate[4] in [13, 12]:
 							plugin_obj.clear_prog_keep(wrapper_vstprogram)
 							plugin_obj.rawdata_add('chunk', wrapper_vstdata)
 	
-							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'chunk', wrapper_vstdata, None)
-							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'name' ,'win', wrapperdata['name'], 'chunk', wrapper_vstdata, None)
+							extmanu_obj.vst2__replace_data('id', wrapperdata['fourid'], wrapper_vstdata, None, False)
+							if 'name' in wrapperdata: plugin_obj.external_info.name = wrapperdata['name']
 	
 							numparams = plugin_obj.external_info.numparams = -1
 	
@@ -171,20 +173,19 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 							plugin_obj.clear_prog_keep(0)
 							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'param', None, numparamseach)
 	
-							for num in range(vst_num_names):
-								plugin_obj.set_program(num)
-								plugin_obj.preset.name = vst_names[num]
-								for paramnum in range(numparamseach): 
-									plugin_obj.params.add('ext_param_'+str(paramnum), bankparams[num][paramnum], 'float')
+							extmanu_obj.vst2__setup_params('id', wrapperdata['fourid'], numparamseach, None, False)
+							extmanu_obj.vst2__set_numprogs(vst_num_names)
 
-							plugin_obj.set_program(wrapper_vstprogram)
+							for num in range(vst_num_names):
+								extmanu_obj.vst2__set_program(num)
+								extmanu_obj.vst2__set_program_name(vst_names[num])
+								for paramnum in range(numparamseach): extmanu_obj.vst2__set_param(paramnum, bankparams[num][paramnum])
+							extmanu_obj.vst2__set_program(wrapper_vstprogram)
+							extmanu_obj.vst2__params_output()
 
 			if wrapper_vsttype in [8,7] and 'state' in wrapperdata:
 				plugin_obj.type_set('external', 'vst3', 'win')
 				pluginstate = wrapperdata['state']
-
-				if wrapper_vsttype == 7: plugin_obj.role == 'fx'
-				if wrapper_vsttype == 8: plugin_obj.role == 'synth'
 
 				if '16id' in wrapperdata:
 					dev_uuid = uuid.UUID(int=int.from_bytes(wrapperdata['16id'], 'big')).bytes_le
@@ -196,7 +197,11 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					wrapper_vstsize = chunkdata.uint32()
 					wrapper_vstdata = chunkdata.raw(wrapper_vstsize)
 
-					plugin_vst3.replace_data(convproj_obj, plugin_obj, 'id', None, pluguuid, wrapper_vstdata)
+					extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+					extmanu_obj.vst3__replace_data('id', pluguuid, wrapper_vstdata, None)
+
+					if wrapper_vsttype == 7: plugin_obj.role == 'fx'
+					if wrapper_vsttype == 8: plugin_obj.role == 'synth'
 
 			if wrapper_vsttype in [12,11] and 'state' in wrapperdata:
 				plugin_obj.type_set('external', 'clap', 'win')
@@ -208,10 +213,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				wrapper_vstdata = pluginstate[4:]
 
 				if 'clapid' in wrapperdata: 
-					plugin_clap.replace_data(convproj_obj, plugin_obj, 'id', None, wrapperdata['clapid'], wrapper_vstdata)
+					extmanu_obj.clap__replace_data('id', wrapperdata['clapid'], wrapper_vstdata, None)
 					if 'name' in wrapperdata: plugin_obj.external_info.name = wrapperdata['name']
 				elif 'name' in wrapperdata: 
-					plugin_clap.replace_data(convproj_obj, plugin_obj, 'name', None, wrapperdata['name'], wrapper_vstdata)
+					extmanu_obj.clap__replace_data('name', wrapperdata['name'], wrapper_vstdata, None)
 
 	# ------------------------------------------------------------------------------------------- Inst
 

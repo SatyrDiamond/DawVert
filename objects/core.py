@@ -2,24 +2,11 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from plugins import base as dv_plugins
-from functions_plugin_ext import plugin_vst2
 
-from functions import song_compat
 from functions import plug_conv
 from objects import format_detect
+from objects import globalstore
 import pathlib
-
-from functions_song import convert_r2m
-from functions_song import convert_ri2mi
-from functions_song import convert_ri2r
-from functions_song import convert_rm2r
-from functions_song import convert_m2r
-from functions_song import convert_m2mi
-from functions_song import convert_mi2m
-from functions_song import convert_rm2m
-
-from functions_song import convert_ms2rm
-from functions_song import convert_rs2r
 
 from objects.convproj import project as convproj
 from objects.convproj import fileref
@@ -50,6 +37,7 @@ logger_audiofile = logging.getLogger('audiofile')
 logger_projparse = logging.getLogger('projparse')
 logger_plugins = logging.getLogger('plugins')
 logger_filesearch = logging.getLogger('filesearch')
+logger_extplug = logging.getLogger('extplug')
 
 logger_core.addHandler(consoleHandler)
 logger_compat.addHandler(consoleHandler)
@@ -64,6 +52,7 @@ logger_plugconv_ext.addHandler(consoleHandler)
 logger_audiofile.addHandler(consoleHandler)
 logger_projparse.addHandler(consoleHandler)
 logger_plugins.addHandler(consoleHandler)
+logger_extplug.addHandler(consoleHandler)
 logger_filesearch.addHandler(consoleHandler)
 
 logger_core.setLevel(logging.INFO)
@@ -79,6 +68,7 @@ logger_plugconv_ext.setLevel(logging.INFO)
 logger_audiofile.setLevel(logging.INFO)
 logger_projparse.setLevel(logging.INFO)
 logger_plugins.setLevel(logging.INFO)
+logger_extplug.setLevel(logging.INFO)
 
 log_pathsearchonly = False
 
@@ -97,6 +87,7 @@ if log_pathsearchonly:
 	logger_audiofile.setLevel(logging.ERROR)
 	logger_projparse.setLevel(logging.ERROR)
 	logger_plugins.setLevel(logging.ERROR)
+	logger_extplug.setLevel(logging.ERROR)
 
 class dawvert_intent:
 	def __init__(self):

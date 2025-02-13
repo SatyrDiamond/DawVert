@@ -367,7 +367,8 @@ class input_famistudio(plugins.base):
 			TrebleRolloffHz = -1
 
 			if WaveType != 'DPCM':
-				fxchannel_obj.visual.from_dset('famistudio', 'chip', WaveType, True)
+				if not fxchannel_obj.visual.from_dset('famistudio', 'chip', WaveType, True):
+					fxchannel_obj.visual.name = WaveType
 
 				outvol = 0
 				if WaveType in ['Square1','Square2','Triangle','Noise']:
@@ -408,7 +409,8 @@ class input_famistudio(plugins.base):
 			else: 
 				create_dpcm_inst(project_obj.DPCMMappings, project_obj.DPCMSamples, fxchan, None)
 				for inst in used_insts: create_dpcm_inst(project_obj.Instruments[inst].DPCMMappings, project_obj.DPCMSamples, channum, project_obj.Instruments[inst])
-				fxchannel_obj.visual.from_dset('famistudio', 'chip', 'DPCM', True)
+				if not fxchannel_obj.visual.from_dset('famistudio', 'chip', 'DPCM', True):
+					fxchannel_obj.visual.name = 'DPCM'
 
 			if TrebleRolloffHz != -1:
 				fx_id = str(channum)+'_filter'

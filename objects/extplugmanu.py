@@ -6,10 +6,9 @@ from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 import numpy as np
 import logging
-logger_plugins = logging.getLogger('plugins')
+logger_plugins = logging.getLogger('extplug')
 
 extplugdb = globalstore.extplug
-os_ext_info = globalstore.os_type_info()
 
 class extplug_vst2_params:
 	def __init__(self):
@@ -52,7 +51,6 @@ class extplug_manu:
 		self.pluginid = pluginid
 		self.extplugtype = None
 		self.cur_params = {}
-		self.cpu_arch_list = [32, 64] if os_ext_info.bits==64 else [32]
 		self.state_vst2_params = extplug_vst2_params()
 		if plugin_obj.type.category == 'external': self.extplugtype = plugin_obj.type.type
 
@@ -84,7 +82,7 @@ class extplug_manu:
 		external_info = plugin_obj.external_info
 		external_info.from_pluginfo_obj(pluginfo_obj, plugin_obj.type.type)
 
-		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(self.cpu_arch_list)
+		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(globalstore.os_info_target.bits)
 		if vst_cpuarch and vst_path:
 			self.convproj_obj.fileref__add(vst_path, vst_path, None)
 			plugin_obj.filerefs_global['plugin'] = vst_path
@@ -112,7 +110,7 @@ class extplug_manu:
 		platformtxt = os_ext_info.get_ext_ostype(platformtxt)
 
 		extplugdb.load()
-		pluginfo_obj = extplugdb.get(plugtype, bycat, in_val, platformtxt, self.cpu_arch_list)
+		pluginfo_obj = extplugdb.get(plugtype, bycat, in_val, platformtxt, globalstore.os_info_target.bits)
 
 		if pluginfo_obj.out_exists:
 			self.set_type(plugtype, platformtxt)

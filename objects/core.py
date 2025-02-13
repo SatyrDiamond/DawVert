@@ -378,7 +378,7 @@ class core:
 		out_type = self.currentplug_output.selected_plugin.plug_obj.gettype()
 		in_dawinfo = self.currentplug_input.selected_plugin.prop_obj
 		out_dawinfo = self.currentplug_output.selected_plugin.prop_obj
-		plugin_vst2.cpu_arch_list = out_dawinfo.plugin_ext_arch
+		globalstore.os_info_target.bits = out_dawinfo.plugin_ext_arch
 
 		logger_core.info('' + convproj.typelist[in_type] + ' > ' + convproj.typelist[out_type])
 
@@ -392,6 +392,8 @@ class core:
 					isconverted = sampleref_obj.convert(out_dawinfo.audio_filetypes, dawvert_intent.path_samples['extracted'])
 
 	def convert_plugins(self, dawvert_intent): 
+		if out_dawinfo.plugin_ext_arch:
+			globalstore.os_info_target.bits = out_dawinfo.plugin_ext_arch
 		plug_conv.convproj(self.convproj_obj, in_dawinfo, out_dawinfo, self.currentplug_output.selected_shortname, dawvert_intent)
 
 	def parse_output(self, dawvert_intent): 

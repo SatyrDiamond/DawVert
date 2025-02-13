@@ -255,7 +255,7 @@ class cvpj_color:
 
 	def from_colorset_num(self, colorset_obj, num):
 		if colorset_obj:
-			self.set_float(colorset_obj.getcolornum(num))
+			self.set_int(colorset_obj.getcolornum(num))
 
 	def closest_color_index(self, colorset_obj, fallbacknum):
 		if colorset_obj:
@@ -323,6 +323,9 @@ class cvpj_visual:
 		if d: 
 			if overwrite or (not self.name): self.name = d.visual.name
 			if overwrite or (not self.color): self.color.set_float(d.visual.color)
+			return True
+		else:
+			return False
 
 	def from_dset_midi(self, m_bank_hi, m_bank, m_inst, m_drum, m_dev, overwrite):
 		midi_dev = m_dev if m_dev else 'gm'

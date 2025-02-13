@@ -105,8 +105,8 @@ class os_type_info:
 		else: platform_txt = 'lin'
 		return platform_txt
 
-
-os_info = os_type_info()
+os_info_native = os_type_info()
+os_info_target = os_type_info()
 
 class extlib:
 	loaded_parts = {}

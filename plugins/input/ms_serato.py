@@ -415,9 +415,13 @@ class input_serato(plugins.base):
 					scenepl_obj.id = 'scene_'+str(clip.scene_slot_number+1)
 				break
 			if arrangement.type == 'master':
+				master_strip = arrangement.channel_strip
 				master_obj = convproj_obj.track_master
 				if arrangement.name: master_obj.visual.name = arrangement.name
-				do_chan_strip(convproj_obj, 'master', arrangement.channel_strip, master_obj.plugslots.slots_audio)
+				master_obj.params.add('vol', 0.7*master_strip.gain*master_strip.volume, 'float')
+				master_obj.params.add('pan', master_strip.pan, 'float')
+				master_obj.datavals.add('pan_mode', 'stereo')
+				do_chan_strip(convproj_obj, 'master', master_strip, master_obj.plugslots.slots_audio)
 
 		if 'name' in project_obj.metadata: convproj_obj.metadata.name = project_obj.metadata['name']
 		if 'artist' in project_obj.metadata: convproj_obj.metadata.author = project_obj.metadata['artist']

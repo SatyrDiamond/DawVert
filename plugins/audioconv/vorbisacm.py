@@ -49,12 +49,14 @@ class input_soundfile(plugins.base):
 			if fmt_format == 26447:
 				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream: audiodata = bye_stream.raw(data_end-data_pos)
 				samples, samplerate = soundfile.read(io.BytesIO(audiodata))
-				sampleref_obj.fileref.set_folder(None, outpath, 0)
-				sampleref_obj.fileformat = to_type
-				sampleref_obj.fileref.file.extension = to_type
-				output_file = sampleref_obj.fileref.get_path(None, False)
-				f = open(output_file, 'wb')
+				outfileref = sampleref_obj.fileref.copy()
+				outfileref.set_folder(None, outpath, False)
+				outfileref.file.extension = to_type
+				outpath = outfileref.get_path(None, False)
+				f = open(outpath, 'wb')
 				soundfile.write(f, samples, samplerate)
+				sampleref_obj.fileref = outfileref
+				sampleref_obj.fileformat = to_type
 				return True
 			return False
 		return False

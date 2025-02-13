@@ -72,9 +72,15 @@ class midi_notes():
 		#print(cvpj_notelist.data[:])
 
 def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert): 
+	bpm = convproj_obj.params.get('bpm', 120).value
+	tempomul = bpm/120
+
 	isbool = paramtype=='bool'
 	if rpp_autodata.pooledenvinst:
 		idnum = rpp_autodata.pooledenvinst['id']
+
+		#print(rpp_autodata.pooledenvinst.values)
+
 		if idnum in pooledenvs:
 			reappo = pooledenvs[idnum]
 			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
@@ -85,7 +91,7 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 				val = point[1] if not invert else 1-point[1]
 				if isbool: val = bool(val)
 				autopoint_obj = autopl_obj.data.add_point()
-				autopoint_obj.pos_real = point[0]/2
+				autopoint_obj.pos_real = (point[0]/2)/tempomul
 				autopoint_obj.value = val
 
 	elif rpp_autodata.used:
@@ -238,6 +244,12 @@ class input_reaper(plugins.base):
 				track_obj.datavals.add('pan_mode', 'split')
 				track_obj.params.add('splitpan_left', rpp_track.volpan['left'], 'float')
 				track_obj.params.add('splitpan_right', rpp_track.volpan['right'], 'float')
+
+			do_auto(pooledenvs, convproj_obj, rpp_track.volenv2, ['track', cvpj_trackid, 'vol'], False, 'float', False)
+			do_auto(pooledenvs, convproj_obj, rpp_track.panenv2, ['track', cvpj_trackid, 'pan'], False, 'float', False)
+			do_auto(pooledenvs, convproj_obj, rpp_track.muteenv, ['track', cvpj_trackid, 'enabled'], True, 'bool', True)
+			do_auto(pooledenvs, convproj_obj, rpp_track.dualpanenvl2, ['track', cvpj_trackid, 'splitpan_left'], False, 'float', False)
+			do_auto(pooledenvs, convproj_obj, rpp_track.dualpanenv2, ['track', cvpj_trackid, 'splitpan_right'], False, 'float', False)
 
 			track_obj.armed.on = bool(rpp_track.rec['armed'])
 			track_obj.armed.in_keys = bool(rpp_track.rec['armed'])
@@ -503,10 +515,6 @@ class input_reaper(plugins.base):
 					else:
 						maxdur = ((sampleref_obj.dur_sec*8)/cvpj_audio_rate)*tempomul if sampleref_obj.dur_sec else cvpj_duration
 						placement_obj.time.set_loop_data(startoffset, 0, maxdur)
-
-			do_auto(pooledenvs, convproj_obj, rpp_track.volenv2, ['track', cvpj_trackid, 'vol'], False, 'float', False)
-			do_auto(pooledenvs, convproj_obj, rpp_track.panenv2, ['track', cvpj_trackid, 'pan'], False, 'float', False)
-			do_auto(pooledenvs, convproj_obj, rpp_track.muteenv, ['track', cvpj_trackid, 'enabled'], True, 'bool', False)
 
 			track_obj.placements.sort()
 			convproj_obj.fx__route__add(cvpj_trackid)

@@ -185,6 +185,11 @@ class rpp_project:
 		self.tracks.append(track_obj)
 		return track_obj
 
+	def add_pooledenv(self):
+		pooledenv_obj = rpp_env.rpp_pooledenv()
+		self.pooledenvs.append(pooledenv_obj)
+		return pooledenv_obj
+
 	def write(self, rpp_data):
 		self.title.write('TITLE',rpp_data)
 		self.author.write('AUTHOR',rpp_data)
@@ -255,6 +260,9 @@ class rpp_project:
 		self.master_sel.write('MASTER_SEL',rpp_data)
 		if self.masterfxlist != None:
 			self.masterfxlist.write('MASTERFXLIST', rpp_data)
+		if self.pooledenvs:
+			for x in self.pooledenvs:
+				x.write('POOLEDENV', rpp_data)
 
 		self.masterplayspeedenv.write('MASTERPLAYSPEEDENV', rpp_data)
 		self.tempoenvex.write('TEMPOENVEX', rpp_data)

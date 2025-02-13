@@ -52,6 +52,7 @@ class extplug_manu:
 		self.extplugtype = None
 		self.cur_params = {}
 		self.state_vst2_params = extplug_vst2_params()
+		self.cpu_arch_list = [32, 64] if globalstore.os_info_target.bits==64 else [32]
 		if plugin_obj.type.category == 'external': self.extplugtype = plugin_obj.type.type
 
 # --------------------------------------------------- VSTPROGS ---------------------------------------------------
@@ -82,7 +83,7 @@ class extplug_manu:
 		external_info = plugin_obj.external_info
 		external_info.from_pluginfo_obj(pluginfo_obj, plugin_obj.type.type)
 
-		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(globalstore.os_info_target.bits)
+		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(self.cpu_arch_list)
 		if vst_cpuarch and vst_path:
 			self.convproj_obj.fileref__add(vst_path, vst_path, None)
 			plugin_obj.filerefs_global['plugin'] = vst_path
@@ -107,10 +108,10 @@ class extplug_manu:
 	def db__setinfo(self, plugtype, bycat, in_val, platformtxt):
 		plugin_obj = self.plugin_obj
 		external_info = plugin_obj.external_info
-		platformtxt = os_ext_info.get_ext_ostype(platformtxt)
+		platformtxt = globalstore.os_info_target.get_ext_ostype(platformtxt)
 
 		extplugdb.load()
-		pluginfo_obj = extplugdb.get(plugtype, bycat, in_val, platformtxt, globalstore.os_info_target.bits)
+		pluginfo_obj = extplugdb.get(plugtype, bycat, in_val, platformtxt, self.cpu_arch_list)
 
 		if pluginfo_obj.out_exists:
 			self.set_type(plugtype, platformtxt)

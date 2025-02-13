@@ -74,7 +74,8 @@ plugin_id_counter = idcounter.counter(1000, 'plugin_')
 def routetrackord(trackord, groupdata, outl, insidegroup):
 	for t, i in trackord:
 		outl.append([t, i, insidegroup])
-		if t == 'GROUP': routetrackord(groupdata[i], groupdata, outl, i)
+		if i in groupdata:
+			if t == 'GROUP': routetrackord(groupdata[i], groupdata, outl, i)
 
 class groupassoc():
 	def __init__(self):

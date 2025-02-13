@@ -70,13 +70,7 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 		rpp_env.used = True
 		rpp_env.eguid.set('{'+str(uuid.uuid4()).upper()+'}')
 
-		if autodata.u_nopl_points:
-			for x in autodata.nopl_points:
-				out = float(x.value)
-				if inverted: out = 1-out
-				rpp_env.points.append([x.pos_real*2, out])
-
-		elif autodata.u_pl_points:
+		if autodata.u_pl_points:
 			if autodata.pl_points:
 				rpp_env.used = True
 				rpp_env.act['bypass'] = 1
@@ -101,6 +95,12 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					init_pooledenvinst['length'] = p.time.duration_real
 	
 					#print(init_pooledenvinst.values)
+
+		elif autodata.u_nopl_points:
+			for x in autodata.nopl_points:
+				out = float(x.value)
+				if inverted: out = 1-out
+				rpp_env.points.append([x.pos_real*2, out])
 
 def add_auto(rpp_env, autopoints_obj):
 	for x in autopoints_obj:

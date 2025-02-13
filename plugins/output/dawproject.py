@@ -377,10 +377,6 @@ def add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid,
 		from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, name], 'float', dp_param_id, None)
 
 def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
-	from functions_plugin_ext import plugin_clap
-
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 	if plugin_found:
 		dp_device = None
@@ -470,7 +466,9 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				dp_device.deviceName = plugin_obj.external_info.name
 				dp_device.name = plugin_obj.external_info.name
 
-				fxpdata = plugin_vst2.export_presetdata(plugin_obj)
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+				fxpdata = extmanu_obj.vst2__export_presetdata(None)
+
 				statepath = 'plugins/'+str(uuid.uuid4())+'.fxp'
 				dawproject_zip.writestr(statepath, fxpdata)
 				dp_device.state.set(statepath)
@@ -489,7 +487,9 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				dp_device.deviceName = plugin_obj.external_info.name
 				dp_device.name = plugin_obj.external_info.name
 
-				fxpdata = plugin_vst3.export_presetdata(plugin_obj)
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+				fxpdata = extmanu_obj.vst3__export_presetdata(None)
+
 				statepath = 'plugins/'+str(uuid.uuid4())+'.vstpreset'
 				dawproject_zip.writestr(statepath, fxpdata)
 				dp_device.state.set(statepath)
@@ -506,7 +506,9 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				dp_device.deviceName = plugin_obj.external_info.name
 				dp_device.name = plugin_obj.external_info.name
 
-				fxpdata = plugin_clap.export_presetdata(plugin_obj)
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+				fxpdata = extmanu_obj.clap__export_presetdata(None)
+
 				if fxpdata:
 					statepath = 'plugins/'+str(uuid.uuid4())+'.clap-preset'
 					dawproject_zip.writestr(statepath, fxpdata)

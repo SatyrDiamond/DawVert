@@ -205,8 +205,6 @@ def do_fx(convproj_obj, sb_track, track_obj):
 def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 	global global_returnids
 
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
 	metadata = sb_track.metadata
 	trackcolor = metadata['TrackColor'] if 'TrackColor' in metadata else None
 	cvpj_trackid = ('main' if not groupname else groupname)+'__'+str(num)

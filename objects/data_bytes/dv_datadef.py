@@ -184,7 +184,7 @@ class datadef_part:
 		elif self.vartype == 'skip_n': byw_stream.raw(b'\0'*self.p_num)
 
 		elif self.vartype == 'struct': 
-			return d_structs[self.p_txt].encode(value if value != None else {}, byw_stream, d_structs)
+			return d_structs[self.struct_name].encode(value if value != None else {}, byw_stream, d_structs)
 
 		elif self.vartype == 'byte': byw_stream.uint8(int(value) if value != None else 0)
 		elif self.vartype == 's_byte': byw_stream.int8(int(value) if value != None else 0)

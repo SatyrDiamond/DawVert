@@ -41,9 +41,14 @@ class rpp_track:
 		self.auxvolenv = {}
 		self.auxpanenv = {}
 		self.auxmuteenv = {}
+
 		self.panenv2 = rpp_env.rpp_env()
 		self.volenv2 = rpp_env.rpp_env()
 		self.muteenv = rpp_env.rpp_env()
+		self.panenv = rpp_env.rpp_env()
+		self.widthenv2 = rpp_env.rpp_env()
+		self.dualpanenvl2 = rpp_env.rpp_env()
+		self.dualpanenv2 = rpp_env.rpp_env()
 
 	def load(self, rpp_data):
 		lastauxnum = 0
@@ -76,6 +81,10 @@ class rpp_track:
 			if name == 'PANENV2': self.panenv2.read(inside_dat, values)
 			if name == 'VOLENV2': self.volenv2.read(inside_dat, values)
 			if name == 'MUTEENV': self.muteenv.read(inside_dat, values)
+			if name == 'PANENV': self.panenv.read(inside_dat, values)
+			if name == 'WIDTHENV2': self.widthenv2.read(inside_dat, values)
+			if name == 'DUALPANENVL2': self.dualpanenvl2.read(inside_dat, values)
+			if name == 'DUALPANENV2': self.dualpanenv2.read(inside_dat, values)
 			if name == 'AUXRECV': 
 				auxrecv_obj = self.add_auxrecv()
 				auxrecv_obj.read(values)
@@ -162,6 +171,11 @@ class rpp_track:
 		self.panenv2.write('PANENV2', rpp_data)
 		self.volenv2.write('VOLENV2', rpp_data)
 		self.muteenv.write('MUTEENV', rpp_data)
+		self.panenv.write('PANENV', rpp_data)
+		self.widthenv2.write('WIDTHENV2', rpp_data)
+		self.dualpanenvl2.write('DUALPANENVL2', rpp_data)
+		self.dualpanenv2.write('DUALPANENV2', rpp_data)
+
 		if self.fxchain != None:
 			rpp_fxchaindata = robj('FXCHAIN',[])
 			self.fxchain.write(rpp_fxchaindata)

@@ -63,11 +63,50 @@ def do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj):
 			sampler_params['env_sustain'] = adsr_obj.sustain
 			sampler_params['env_release'] = adsr_obj.release/2
 
+def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted,):
+	if_found, autodata = convproj_obj.automation.get(autopath, valtype)
+
+	if if_found:
+		rpp_env.used = True
+		rpp_env.eguid.set('{'+str(uuid.uuid4()).upper()+'}')
+
+		if autodata.u_nopl_points:
+			for x in autodata.nopl_points:
+				out = float(x.value)
+				if inverted: out = 1-out
+				rpp_env.points.append([x.pos_real*2, out])
+
+		elif autodata.u_pl_points:
+			if autodata.pl_points:
+				rpp_env.used = True
+				rpp_env.act['bypass'] = 1
+				rpp_env.arm.set(1)
+				
+				for n, p in enumerate(autodata.pl_points):
+					poolid = len(rpp_project.pooledenvs)+1
+					pooledenv = rpp_project.add_pooledenv()
+					pooledenv.id.set(poolid)
+					if p.visual.name: pooledenv.name.set(p.visual.name)
+					pooledenv.srclen.set(p.time.duration_real*2)
+					for pn, x in enumerate(p.data):
+						out = float(x.value)
+						if inverted: out = 1-out
+						if n==0 and pn==0: rpp_env.points.append([0, out])
+						pooledenv.points.append([(x.pos_real*2), out])
+	
+					init_pooledenvinst = rpp_env.init_pooledenvinst()
+					init_pooledenvinst['id'] = poolid
+					init_pooledenvinst['unk1'] = poolid
+					init_pooledenvinst['position'] = p.time.position_real
+					init_pooledenvinst['length'] = p.time.duration_real
+	
+					#print(init_pooledenvinst.values)
+
 def add_auto(rpp_env, autopoints_obj):
 	for x in autopoints_obj:
 		rpp_env.points.append([x.pos_real, x.value])
 
-def add_plugin(rpp_fxchain, pluginid, convproj_obj):
+def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 
 	if plugin_found:
@@ -165,10 +204,10 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				rpp_plug_obj.wet['wet'] = fx_wet
 				if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_all_external(pluginid):
 					parmenv_obj = rpp_plug_obj.add_env()
 					parmenv_obj.param_id = paramnum
-					add_auto(parmenv_obj, autodata)
+					add_auto_all(rpp_project, convproj_obj, parmenv_obj, list(autoloc), 'float', False)
 			else:
 				logger_output.warning('VST2 plugin not placed: no ID found.')
 
@@ -198,10 +237,10 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				rpp_plug_obj.wet['wet'] = fx_wet
 				if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_all_external(pluginid):
 					parmenv_obj = rpp_plug_obj.add_env()
 					parmenv_obj.param_id = paramnum
-					add_auto(parmenv_obj, autodata)
+					add_auto_all(rpp_project, convproj_obj, parmenv_obj, list(autoloc), 'float', False)
 			else:
 				logger_output.warning('VST3 plugin not placed: no ID found.')
 
@@ -221,10 +260,10 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				rpp_plug_obj.wet['wet'] = fx_wet
 				if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_all_external(pluginid):
 					parmenv_obj = rpp_plug_obj.add_env()
 					parmenv_obj.param_id = paramnum
-					add_auto(parmenv_obj, autodata)
+					add_auto_all(rpp_project, convproj_obj, parmenv_obj, list(autoloc), 'float', False)
 			else:
 				logger_output.warning('CLAP plugin not placed: no ID found.')
 
@@ -315,7 +354,7 @@ class output_reaper(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
-		in_dict['auto_types'] = ['nopl_points']
+		in_dict['auto_types'] = ['nopl_points', 'pl_points']
 		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
@@ -392,6 +431,12 @@ class output_reaper(plugins.base):
 				rpp_track_obj.panmode.set(6)
 				rpp_track_obj.volpan['left'] = track_obj.params.get('splitpan_left', -1).value
 				rpp_track_obj.volpan['right'] = track_obj.params.get('splitpan_right', 1).value
+
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.volenv2, ['track', trackid, 'vol'], "float", False)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.panenv2, ['track', trackid, 'pan'], "float", False)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.muteenv, ['track', trackid, 'enabled'], "bool", True)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.dualpanenvl2, ['track', trackid, 'splitpan_left'], "float", False)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.dualpanenv2, ['track', trackid, 'splitpan_right'], "float", False)
 
 			rpp_track_obj.rec['armed'] = int(track_obj.armed.on)
 
@@ -492,10 +537,10 @@ class output_reaper(plugins.base):
 						file_source(rpp_insource_obj, fileref_obj, filename)
 
 			for fxid in track_obj.plugslots.slots_synths:
-				add_plugin(rpp_track_obj.fxchain, fxid, convproj_obj)
+				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj)
 
 			for fxid in track_obj.plugslots.slots_audio:
-				add_plugin(rpp_track_obj.fxchain, fxid, convproj_obj)
+				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj)
 
 			trackdata.append(rpp_track_obj)
 
@@ -516,15 +561,10 @@ class output_reaper(plugins.base):
 							auxrecv_obj['vol'] = send_obj.params.get('amount', 1).value
 							auxrecv_obj['pan'] = send_obj.params.get('pan', 0).value
 							if send_obj.sendautoid:
-								if_found, autopoints = convproj_obj.automation.get_autopoints(['send', send_obj.sendautoid, 'amount'])
-								if if_found: 
-									vol_env = rpp_track.add_aux_env('vol', tracksendnum)
-									add_auto(vol_env, autopoints)
-							if send_obj.sendautoid:
-								if_found, autopoints = convproj_obj.automation.get_autopoints(['send', send_obj.sendautoid, 'pan'])
-								if if_found: 
-									vol_env = rpp_track.add_aux_env('pan', tracksendnum)
-									add_auto(vol_env, autopoints)
+								aux_env = rpp_track.add_aux_env('vol', tracksendnum)
+								add_auto_all(rpp_project, convproj_obj, aux_env, ['send', send_obj.sendautoid, 'amount'], 'float', False)
+								aux_env = rpp_track.add_aux_env('pan', tracksendnum)
+								add_auto_all(rpp_project, convproj_obj, aux_env, ['send', send_obj.sendautoid, 'pan'], 'float', False)
 		
 		if dawvert_intent.output_mode == 'file':
 			project_obj.save_to_file(dawvert_intent.output_file)

@@ -536,6 +536,20 @@ class cvpj_automation:
 			else: return False, None
 		else: return False, None
 
+	def get_pl_autopoints(self, autopath):
+		autopath = cvpj_autoloc(autopath)
+		if autopath in self.data:
+			autodata = self.data[autopath]
+			if autodata.u_pl_points: return True, autodata.pl_points
+			else: return False, None
+		else: return False, None
+
+	def iter_all_external(self, pluginid):
+		for autoloc, autodata in self.data.items():
+			paramname = autoloc[-1]
+			if paramname.startswith('ext_param_'):
+				paramnum = int(paramname[10:])
+				yield autoloc, autodata, paramnum
 
 	def iter_nopl_points_external(self, pluginid):
 		for autoloc, autodata in self.iter_nopl_points(filter=['plugin', pluginid]):

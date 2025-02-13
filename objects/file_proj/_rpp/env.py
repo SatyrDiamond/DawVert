@@ -22,6 +22,15 @@ class rpp_pooledenv:
 			if name == 'SRCLEN': self.srclen.read(values)
 			if name == 'PPT': self.points.append([float(x) for x in values])
 
+	def write(self, name, rpp_data):
+		rpp_tempdata = robj(name,[])
+		self.id.write('ID',rpp_tempdata)
+		self.name.write('NAME',rpp_tempdata)
+		self.srclen.write('SRCLEN',rpp_tempdata)
+		for p in self.points:
+			rpp_tempdata.children.append(['PPT']+[ts(float, x) for x in p])
+		rpp_data.children.append(rpp_tempdata)
+
 class rpp_env:
 	def __init__(self):
 		self.used = False
@@ -42,6 +51,13 @@ class rpp_env:
 		self.param_mid = 0.5
 		self.visname = ''
 
+	def init_pooledenvinst(self):
+		self.pooledenvinst = rvd(
+			[1,0,0,0.0,1.0,False,0.5,1.0,True,False,False,3,0,0,0.012,0], 
+			['id','position','length','offset','rate','timeBased','baseline','amplitude','loop','extra1','extra2','unk1','unk2','unk3','unk4','unk5','unk6'], 
+			[int,float,float,float,float,bool,float,float,bool,bool,bool,int,int,int,float,int,int], True)
+		return self.pooledenvinst
+
 	def read(self, rpp_data, in_values):
 		trackid = ''
 		self.used = True
@@ -54,7 +70,7 @@ class rpp_env:
 			if name == 'DEFSHAPE': self.defshape.read(values)
 			if name == 'PT': self.points.append([float(x) for x in values])
 			if name == 'POOLEDENVINST': 
-				self.pooledenvinst = rvd([1,0,0,0,1,0,0.5,1,1,0,0,3,0,0,0.012,0], ['id','position','length','offset','rate','timeBased','baseline','amplitude','loop','extra1','extra2','unk1','unk2','unk3','unk4','unk5','unk6'], [int,float,float,float,float,bool,float,float,bool,bool,bool,int,int,int,float,int,int], True)
+				self.init_pooledenvinst()
 				self.pooledenvinst.read(values)
 
 		if in_values:

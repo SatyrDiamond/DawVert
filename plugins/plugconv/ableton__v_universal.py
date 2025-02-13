@@ -159,7 +159,7 @@ class plugconv(plugins.base):
 				plugin_obj.params.add(abe_starttxt+'Freq', filter_obj.freq, 'float')
 				plugin_obj.params.add(abe_starttxt+'Gain', filter_obj.gain, 'float')
 				plugin_obj.params.add(abe_starttxt+'IsOn', bool(filter_obj.on), 'bool')
-				plugin_obj.params.add(abe_starttxt+'Mode', als_shape, 'float')
+				plugin_obj.params.add(abe_starttxt+'Mode', als_shape, 'int')
 				plugin_obj.params.add(abe_starttxt+'Q', filter_obj.q, 'float')
 
 				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'on'], ['plugin', pluginid, abe_starttxt+'IsOn'])

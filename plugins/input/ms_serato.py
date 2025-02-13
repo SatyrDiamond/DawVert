@@ -70,7 +70,7 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 	if channel_strip.post_fader_effects != None:
 		for fxnum, pfe in enumerate(channel_strip.post_fader_effects):
 			if pfe != None:
-				fxplugid = trackid+'_fx_'+str(fxnum)
+				fxplugid = trackid+'_post_fader_effect_'+str(fxnum)
 				fx_effect = pfe['effect']
 				if fx_effect.startswith(':/effects/'):
 					fxtype = fx_effect[10:]

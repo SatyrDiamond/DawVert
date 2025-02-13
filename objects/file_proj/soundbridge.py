@@ -724,10 +724,10 @@ class soundbridge_tempo_section:
 
 	def read(self, xml_proj):
 		trackattrib = xml_proj.attrib
-		self.position = int(xml_proj.get('position'))
-		self.length = int(xml_proj.get('length'))
-		self.startTempo = int(xml_proj.get('startTempo'))
-		self.endTempo = int(xml_proj.get('endTempo'))
+		self.position = int(float(xml_proj.get('position')))
+		self.length = int(float(xml_proj.get('length')))
+		self.startTempo = int(float(xml_proj.get('startTempo')))
+		self.endTempo = int(float(xml_proj.get('endTempo')))
 
 	def write(self, xml_proj):
 		tempxml = ET.SubElement(xml_proj, "section")

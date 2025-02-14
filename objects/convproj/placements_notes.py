@@ -150,7 +150,7 @@ class cvpj_placements_notes:
 		self.data = new_data_notes
 
 class cvpj_placement_notes:
-	__slots__ = ['time','muted','visual','notelist','time_ppq','time_float','auto','timesig_auto','timemarkers','group']
+	__slots__ = ['time','muted','visual','notelist','time_ppq','time_float','auto','timesig_auto','timemarkers','group','locked']
 	def __init__(self, time_ppq, time_float):
 		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.time_ppq = time_ppq
@@ -162,6 +162,7 @@ class cvpj_placement_notes:
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
 		self.group = None
+		self.locked = False
 
 	def make_base(self):
 		plb_obj = cvpj_placement_notes(self.time_ppq, self.time_float)
@@ -173,6 +174,7 @@ class cvpj_placement_notes:
 		plb_obj.timesig_auto = self.timesig_auto.copy()
 		plb_obj.timemarkers = self.timemarkers.copy()
 		plb_obj.group = self.group
+		plb_obj.locked = self.locked
 		return plb_obj
 
 	def inst_split(self, splitted_pl):

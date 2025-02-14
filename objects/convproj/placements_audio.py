@@ -156,7 +156,7 @@ class cvpj_placements_audio:
 
 
 class cvpj_placement_audio:
-	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto','time_ppq','time_float','group']
+	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto','time_ppq','time_float','group','locked']
 
 	def __init__(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
@@ -169,6 +169,7 @@ class cvpj_placement_audio:
 		self.fade_out = placements.cvpj_placement_fade()
 		self.auto = {}
 		self.group = None
+		self.locked = False
 
 	def changestretch(self, convproj_obj, target, tempo):
 		stretch_obj = self.sample.stretch

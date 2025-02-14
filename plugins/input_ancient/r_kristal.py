@@ -86,6 +86,7 @@ class input_kristal(plugins.base):
 											placement_obj.visual.color.set_int(part.color[0:3])
 											placement_obj = placement_obj.add()
 											placement_obj.muted = 0 in part.flags
+											placement_obj.locked = 1 in part.flags
 											self.do_audiopart(convproj_obj, placement_obj, part, part.position)
 										if cid == 'CFolderPart': 
 											placement_obj = track_obj.placements.add_nested_audio()
@@ -94,6 +95,7 @@ class input_kristal(plugins.base):
 											placement_obj.visual.name = part.name
 											placement_obj.visual.color.set_int(part.color[0:3])
 											placement_obj.muted = 0 in part.flags
+											placement_obj.locked = 1 in part.flags
 											for icid, inpart in part.parts:
 												if icid == 'CAudioPart': 
 													npa_obj = placement_obj.add()

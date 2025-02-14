@@ -322,7 +322,7 @@ class cvpj_visual:
 		d = globalstore.dataset.get_obj(d_id, d_cat, d_item)
 		if d: 
 			if overwrite or (not self.name): self.name = d.visual.name
-			if overwrite or (not self.color): self.color.set_float(d.visual.color)
+			if overwrite or (not self.color): self.color.set_int(d.visual.color)
 			return True
 		else:
 			return False

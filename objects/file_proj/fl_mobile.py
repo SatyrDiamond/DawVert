@@ -277,6 +277,10 @@ class flm_channel_clip:
 		self.loop_end = 4
 		self.cut_start = 0
 
+		self.id = 0
+		self.unk_1 = 0
+		self.mute = 0
+
 		header = byr_stream.raw(4)
 		if header in [b'20LC', b'10LC']:
 			for chunk_obj in parse_chunks(byr_stream, size):
@@ -300,6 +304,9 @@ class flm_channel_clip:
 					self.duration = byr_stream.double()
 					self.loop_end = byr_stream.double()
 					self.cut_start = byr_stream.double()
+					self.id = byr_stream.uint32()
+					self.unk_1 = byr_stream.double()
+					self.mute = byr_stream.uint8()
 				elif chunk_obj.id == b'CLHD':
 					if VERBOSE_CHANNEL: chunkview(byr_stream, chunk_obj, 1, 3, False)
 					self.duration = byr_stream.double()

@@ -338,6 +338,7 @@ class tracktion_midiclip:
 		self.originalLength = 0
 		self.loopStartBeats = 0.0
 		self.loopLengthBeats = 0.0
+		self.groupID = -1
 		self.sequence = tracktion_sequence()
 
 	def load(self, xmldata):
@@ -357,7 +358,8 @@ class tracktion_midiclip:
 			elif n == 'originalLength': self.originalLength = float(v)
 			elif n == 'loopStartBeats': self.loopStartBeats = float(v)
 			elif n == 'loopLengthBeats': self.loopLengthBeats = float(v)
-			else: print('[waveform] midiclip: unimplemented attrib: '+n)
+			elif n == 'groupID': self.groupID = int(v)
+			else: logger_projparse.warning('waveform_edit: midiclip: unimplemented attrib: '+n)
 
 		for subxml in xmldata:
 			if subxml.tag == 'SEQUENCE': self.sequence.load(subxml)
@@ -378,6 +380,7 @@ class tracktion_midiclip:
 		tempxml.set('originalLength', str(self.originalLength))
 		tempxml.set('loopStartBeats', str(self.loopStartBeats))
 		tempxml.set('loopLengthBeats', str(self.loopLengthBeats))
+		if self.groupID != -1: tempxml.set('groupID', str(self.groupID))
 		ET.SubElement(tempxml, "QUANTISATION")
 		ET.SubElement(tempxml, "GROOVE")
 		self.sequence.write(tempxml)
@@ -515,6 +518,7 @@ class tracktion_audioclip:
 		self.isReversed = 0
 		self.autoDetectBeats = 0
 		self.warpTime = 0
+		self.groupID = -1
 		self.effectsVisible = 1
 
 		self.loopinfo = tracktion_loopinfo()
@@ -562,7 +566,8 @@ class tracktion_audioclip:
 			elif n == 'autoDetectBeats': self.autoDetectBeats = int(v)
 			elif n == 'warpTime': self.warpTime = int(v)
 			elif n == 'effectsVisible': self.effectsVisible = int(v)
-			else: print('[waveform] audioclip: unimplemented attrib: '+n)
+			elif n == 'groupID': self.groupID = int(v)
+			else: logger_projparse.warning('waveform_edit: audioclip: unimplemented attrib: '+n)
 
 		for subxml in xmldata:
 			if subxml.tag == 'LOOPINFO': self.loopinfo.load(subxml)
@@ -614,6 +619,7 @@ class tracktion_audioclip:
 		if self.autoDetectBeats != 0: tempxml.set('autoDetectBeats', str(self.autoDetectBeats))
 		if self.warpTime != 0: tempxml.set('warpTime', str(self.warpTime))
 		if self.effectsVisible != 1: tempxml.set('effectsVisible', str(self.effectsVisible))
+		if self.groupID != -1: tempxml.set('groupID', str(self.groupID))
 
 		self.loopinfo.write(tempxml)
 

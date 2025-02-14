@@ -350,8 +350,7 @@ def do_device(convproj_obj, device_obj, projfilepath, zipfile, pluginid, numberi
 
 	if device_obj.type == 1397567537:
 		if device_obj.drumsamples:
-			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
-			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 60, 1)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'drums')
 			plugin_obj.role = 'synth'
 
 			for n, flm_sample in enumerate(device_obj.drumsamples):

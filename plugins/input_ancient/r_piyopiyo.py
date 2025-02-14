@@ -79,9 +79,8 @@ class input_piyopiyo(plugins.base):
 		track_obj.visual.name = 'Drums'
 		track_obj.visual.color.set_int(colordata.getcolornum(3))
 		track_obj.params.add('vol', (project_obj.perc_volume/250)/3, 'float')
-		plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+		plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
 		plugin_obj.role = 'synth'
-		plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 		track_obj.is_drum = True
 		track_obj.plugslots.set_synth(pluginid)
 

@@ -158,6 +158,17 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
 				return wf_plugin
 
+			if plugin_obj.type.subtype == 'drums':
+				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+					key_l, key_h, key_r, samplerefid, extradata = sampleregion
+					sp_obj = plugin_obj.samplepart_get(samplerefid)
+					soundlayer_samplepart(plugin_obj, gpitch, bxml_main, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				outbytes = bxml_data.to_bytes()
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+				wf_plugin.params['filename'] = 'Micro Drum Sampler'
+				wf_plugin.params['name'] = 'Micro Drum Sampler'
+				return wf_plugin
+
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			juceobj = juce_plugin.juce_plugin()
 			juceobj.from_cvpj(convproj_obj, plugin_obj)
@@ -253,7 +264,7 @@ class output_tracktion_edit(plugins.base):
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['plugin_included'] = ['native:tracktion','universal:sampler:single','universal:sampler:multi']
+		in_dict['plugin_included'] = ['native:tracktion','universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','universal:sampler:drums']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']

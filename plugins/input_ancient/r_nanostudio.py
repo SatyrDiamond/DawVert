@@ -58,8 +58,7 @@ class input_nanostudio_v1(plugins.base):
 				track_obj.visual.name = ns_inst.name
 
 				if ns_inst.type == 'TRG':
-					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'universal', 'sampler', 'multi')
-					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 60, 1)
+					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'universal', 'sampler', 'drums')
 					for key, val in ns_inst.am.items():
 						if key.startswith('Pad') and len(key)>3:
 							padnum = key[3:]

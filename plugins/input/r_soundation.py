@@ -252,7 +252,7 @@ class input_soundation(plugins.base):
 						if v_interpolation_mode > 1: sp_obj.interpolation = "sinc"
 
 					elif instpluginname == 'com.soundation.beat_maker':
-						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
 						plugin_obj.role = 'synth'
 						track_obj.plugslots.set_synth(pluginid)
 						kit_name = get_paramval(soundation_inst, 'kit_name')

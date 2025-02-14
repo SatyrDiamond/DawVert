@@ -614,7 +614,7 @@ class output_soundbridge(plugins.base):
 				for notespl_obj in track_obj.placements.pl_notes:
 					notespl_obj.notelist.mod_transpose(-middlenote)
 					notespl_obj.notelist.mod_limit(-60, 67)
-					numnotes = len(notespl_obj.notelist)
+					numnotes = notespl_obj.notelist.count()
 					notearray = np.zeros(numnotes, dtype=sb_notes_dtype)
 
 					block = proj_soundbridge.soundbridge_block(None)

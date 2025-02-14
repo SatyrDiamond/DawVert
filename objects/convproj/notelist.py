@@ -389,7 +389,14 @@ class notelist_data:
 		return self.nl.__setitem__(a, b)
 
 	def count(self):
-		return np.count_nonzero(self.nl['used'])
+		w_used = np.where(self.nl['used'] == 1)
+		is_multikeys = self.nl[w_used]['is_multikey']
+		assoc_multikeys = self.nl[w_used]['assoc_multikey']
+		count = len(assoc_multikeys[np.where(assoc_multikeys == 0)])
+		count_multi = assoc_multikeys[np.where(is_multikeys != 0)]
+		for n in count_multi: 
+			count += len(self.v_assoc_multikey[n])
+		return count
 
 	def alloc_auto(self, pos):
 		newsize = self.num_notes+pos
@@ -442,6 +449,9 @@ class notelist_data:
 				copy_nl['assoc_inst'][n] = remap_inst[x]
 		self.nl = np.concatenate([self.nl, copy_nl])
 		self.after_proc()
+
+	def appendtxt_inst(self, start, end):
+		self.v_assoc_inst = [start+x+end for x in self.v_assoc_inst]
 
 	def appendtxt_inst(self, start, end):
 		self.v_assoc_inst = [start+x+end for x in self.v_assoc_inst]

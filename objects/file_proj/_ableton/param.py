@@ -106,7 +106,8 @@ class ableton_parampart:
 		return int(self.getval())
 		
 	def __bool__(self):
-		return bool(float(self.getval()))
+		val = self.getval()
+		return bool(float(val)) if val is not None else False
 
 	@classmethod
 	def as_bool(cls, name, valuetxt):

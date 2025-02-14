@@ -106,6 +106,8 @@ class output_bandlab(plugins.base):
 
 		notelist_assoc = {}
 
+		used_samples = []
+
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			uuiddata = str( data_values.bytes__to_uuid( sampleref_id.encode() ) )
 			sampleref_assoc[sampleref_id] = uuiddata
@@ -163,7 +165,9 @@ class output_bandlab(plugins.base):
 						blx_region.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
 						blx_region.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
 
-						blx_region.sampleId = sampleref_assoc[sp_obj.sampleref]
+						if sp_obj.sampleref not in used_samples: 
+							used_samples.append(sp_obj.sampleref)
+
 						blx_region.file = sampleref_assoc[sp_obj.sampleref]+'.'+sampleref_ext[sp_obj.sampleref]
 						blx_track.regions.append(blx_region)
 
@@ -208,13 +212,14 @@ class output_bandlab(plugins.base):
 				notelist_obj.midi_to(os.path.join(folder, namet, 'Assets', 'MIDI', notelist_id+'.mid'), bpm)
 
 			for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
-				outfile = sampleref_assoc[sampleref_id]+'.'+sampleref_ext[sampleref_id]
-				a_in = sampleref_obj.fileref.get_path(None, False)
-				a_out = os.path.join(folder, namet, 'Assets', 'Audio', outfile)
-				try:
-					sampleref_obj.copy_resample(None, a_out)
-				except:
-					pass
+				if sampleref_id in used_samples:
+					outfile = sampleref_assoc[sampleref_id]+'.'+sampleref_ext[sampleref_id]
+					a_in = sampleref_obj.fileref.get_path(None, False)
+					a_out = os.path.join(folder, namet, 'Assets', 'Audio', outfile)
+					try:
+						sampleref_obj.copy_resample(None, a_out)
+					except:
+						pass
 
 			os.makedirs(foldpath, exist_ok=True)
 			outpath = os.path.join(folder, namet, filename)

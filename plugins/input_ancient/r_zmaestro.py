@@ -74,6 +74,7 @@ class input_zmaestro(plugins.base):
 				track_obj.midi.out_inst.patch = zm_track.instrumentcode
 				track_obj.midi.out_inst.bank = zm_track.instrumentbank
 				track_obj.to_midi(convproj_obj, cvpj_trackid, True)
+				if tracktype == 'MIDIDrumTrack': track_obj.is_drum = True
 
 				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline)
 				do_automation(convproj_obj, cvpj_trackid, 'pan', zm_track.pantimeline)

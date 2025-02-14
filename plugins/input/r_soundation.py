@@ -255,6 +255,7 @@ class input_soundation(plugins.base):
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
 						plugin_obj.role = 'synth'
 						track_obj.plugslots.set_synth(pluginid)
+						track_obj.is_drum = True
 						kit_name = get_paramval(soundation_inst, 'kit_name')
 						sampdata = [[None, 0.5, 0.5, 0.5, None, None, None, x-24] for x in range(16)]
 

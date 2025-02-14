@@ -267,6 +267,16 @@ class cvpj_color:
 				return index_of_smallest[0][0]
 		return fallbacknum
 
+	def closest_color_index_int(self, colorset_obj, fallbacknum):
+		if colorset_obj:
+			if colorset_obj.colorset and self.used:
+				colors = np.array(colorset_obj.colorset)
+				color = np.array([self.r_i, self.g_i, self.b_i])
+				distances = np.sqrt(np.sum((colors-color)**2,axis=1))
+				index_of_smallest = np.where(distances==np.amin(distances))
+				return index_of_smallest[0][0]
+		return fallbacknum
+
 	def copy_to_self(self, other_color):
 		self.r_i = other_color.r_i
 		self.g_i = other_color.g_i

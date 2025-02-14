@@ -241,7 +241,7 @@ class input_cvpj_r(plugins.base):
 					plugin_obj.env_asdr_add('vol', 0, pcms_c[5], 0, pcms_c[6], pcms_c[7], pcms_c[8], 1)
 
 			if machine.mach_id == 'BBOX':
-				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'drums')
 				plugin_obj.role = 'synth'
 				track_obj.params.add('usemasterpitch', False, 'bool')
 				track_obj.is_drum = True

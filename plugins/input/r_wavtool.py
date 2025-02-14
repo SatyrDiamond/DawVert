@@ -118,12 +118,10 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					plugin_obj.env_asdr_add('vol', 0, attack, 0, decay, sustain, release, 1)
 
 				elif devicedata.sourceId == 'c2fc1730-9cc9-4643-bb54-9435a920c927':
-					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'sampler', 'multi')
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'sampler', 'drums')
 					inst_fallback = deviceid
 					plugin_obj.role = 'synth'
 					instrument_dev = deviceid
-
-					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 
 					for samplenum in range(1,13):
 						endstr = str(samplenum)

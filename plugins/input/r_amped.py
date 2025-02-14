@@ -160,7 +160,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				plugin_obj.role = 'synth'
 
 		elif devicetype == ['Drumpler', 'Drumpler']:
-			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'drums')
 			plugin_obj.role = 'synth'
 			track_obj.plugslots.set_synth(pluginid)
 			track_obj.is_drum = True

@@ -284,7 +284,7 @@ class input_soundation(plugins.base):
 						for sampfile, gain, pan, pitch, env, pbmode, cuts, num in sampdata:
 							if sampfile:
 								endstr = str(num+24)
-								sp_obj = plugin_obj.sampleregion_add(num, num, num, None)
+								sp_obj = plugin_obj.sampledrum_add(num, None)
 								sp_obj.gain = gain*2
 								sp_obj.pan = (pan-0.5)*2
 								sp_obj.pitch = (pitch-0.5)*24

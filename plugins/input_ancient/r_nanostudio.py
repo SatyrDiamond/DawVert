@@ -75,7 +75,7 @@ class input_nanostudio_v1(plugins.base):
 											sampleref_obj.find_relative('projectfile')
 											sampleref_obj.find_relative('nanostudio_v1')
 
-											sp_obj = plugin_obj.sampleregion_add(notenum, notenum, notenum, None)
+											sp_obj = plugin_obj.sampledrum_add(notenum, None)
 											sp_obj.visual.name = sampname.split('.')[0]
 											sp_obj.sampleref = sampname
 											sp_obj.trigger = 'oneshot'

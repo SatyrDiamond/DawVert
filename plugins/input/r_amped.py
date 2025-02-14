@@ -177,7 +177,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			if 'pad' in drumplerdata:
 				for num, data in drumplerdata['pad'].items():
 					keynum = int(num)-1
-					sp_obj = plugin_obj.sampleregion_add(keynum, keynum, keynum, None)
+					sp_obj = plugin_obj.sampledrum_add(keynum, None)
 					sp_obj.start = data['start']
 					sp_obj.end = data['end']
 					sp_obj.pitch = data['pitch']

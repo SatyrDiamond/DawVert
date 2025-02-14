@@ -97,34 +97,34 @@ class input_piyopiyo(plugins.base):
 		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_SYMBAL1', os.path.join(extpath_path,'SYMBAL1.wav'), None)
 		sampleref_obj.find_relative('external_data')
 
-		sp_obj = plugin_obj.sampleregion_add(-12, -12, -12, None)
+		sp_obj = plugin_obj.sampledrum_add(-12, None)
 		sp_obj.sampleref = 'PIYOPIYO_BASS1'
-		sp_obj = plugin_obj.sampleregion_add(-11, -11, -11, None)
+		sp_obj = plugin_obj.sampledrum_add(-11, None)
 		sp_obj.sampleref = 'PIYOPIYO_BASS1'
 
-		sp_obj = plugin_obj.sampleregion_add(-10, -10, -10, None)
+		sp_obj = plugin_obj.sampledrum_add(-10, None)
 		sp_obj.sampleref = 'PIYOPIYO_BASS2'
-		sp_obj = plugin_obj.sampleregion_add(-9, -9, -9, None)
+		sp_obj = plugin_obj.sampledrum_add(-9, None)
 		sp_obj.sampleref = 'PIYOPIYO_BASS2'
 
-		sp_obj = plugin_obj.sampleregion_add(-8, -8, -8, None)
+		sp_obj = plugin_obj.sampledrum_add(-8, None)
 		sp_obj.sampleref = 'PIYOPIYO_SNARE1'
-		sp_obj = plugin_obj.sampleregion_add(-7, -7, -7, None)
+		sp_obj = plugin_obj.sampledrum_add(-7, None)
 		sp_obj.sampleref = 'PIYOPIYO_SNARE1'
 
-		sp_obj = plugin_obj.sampleregion_add(-4, -4, -4, None)
+		sp_obj = plugin_obj.sampledrum_add(-4, None)
 		sp_obj.sampleref = 'PIYOPIYO_HAT1'
-		sp_obj = plugin_obj.sampleregion_add(-3, -3, -3, None)
+		sp_obj = plugin_obj.sampledrum_add(-3, None)
 		sp_obj.sampleref = 'PIYOPIYO_HAT1'
 
-		sp_obj = plugin_obj.sampleregion_add(-2, -2, -2, None)
+		sp_obj = plugin_obj.sampledrum_add(-2, None)
 		sp_obj.sampleref = 'PIYOPIYO_HAT2'
-		sp_obj = plugin_obj.sampleregion_add(-1, -1, -1, None)
+		sp_obj = plugin_obj.sampledrum_add(-1, None)
 		sp_obj.sampleref = 'PIYOPIYO_HAT2'
 
-		sp_obj = plugin_obj.sampleregion_add(0, 0, 0, None)
+		sp_obj = plugin_obj.sampledrum_add(0, None)
 		sp_obj.sampleref = 'PIYOPIYO_SYMBAL1'
-		sp_obj = plugin_obj.sampleregion_add(1, 1, 1, None)
+		sp_obj = plugin_obj.sampledrum_add(1, None)
 		sp_obj.sampleref = 'PIYOPIYO_SYMBAL1'
 
 		parse_notes(convproj_obj, '3', project_obj.notes_data[3], track_obj, 0)

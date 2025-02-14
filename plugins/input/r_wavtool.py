@@ -139,14 +139,14 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 							samp_key = samplenum-1
 
-							sp_obj = plugin_obj.sampleregion_add(samp_key, samp_key, samp_key, None)
+							sp_obj = plugin_obj.sampledrum_add(samp_key, None)
 							sp_obj.sampleref = bufferid
 							sp_obj.envs['vol'] = 'vol_'+endstr
 							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0
 							sp_obj.vol = inputdata["gain"+endstr] if "gain"+endstr in inputdata else 1
 							sp_obj.pitch = inputdata["pitch"+endstr] if "pitch"+endstr in inputdata else 0
 
-							sp_obj = plugin_obj.sampleregion_add(samp_key-12, samp_key-12, samp_key-12, None)
+							sp_obj = plugin_obj.sampledrum_add(samp_key-12, None)
 							sp_obj.sampleref = bufferid
 							sp_obj.envs['vol'] = 'vol_'+endstr
 							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0

@@ -342,6 +342,9 @@ class cvpj_plugin:
 	# -------------------------------------------------- sampleregions
 	def sampleregion_add(self, i_min, i_max, i_middle, i_data, **kwargs):
 		return self.state.sampleregion_add(i_min, i_max, i_middle, i_data, **kwargs)
+		
+	def sampledrum_add(self, i_key, i_data, **kwargs):
+		return self.state.sampledrum_add(i_key, i_data, **kwargs)
 
 	# -------------------------------------------------- regions
 	def region_add(self, i_name, i_min, i_max, i_value):

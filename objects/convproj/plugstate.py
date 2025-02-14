@@ -223,9 +223,15 @@ class cvpj_plugin_state:
 
 	# -------------------------------------------------- sampleregions
 	def sampleregion_add(self, i_min, i_max, i_middle, i_data, **kwargs):
-		samplepartid = kwargs['samplepartid'] if 'samplepartid' in kwargs else 'multi_'+randbytes(4).hex()
+		samplepartid = kwargs['samplepartid'] if 'samplepartid' in kwargs else 'multi_'+randbytes(8).hex()
 		samplepart_obj = self.samplepart_add(samplepartid)
 		self.sampleregions.add(i_min, i_max, i_middle, samplepartid, i_data)
+		return samplepart_obj
+
+	def sampledrum_add(self, i_key, i_data, **kwargs):
+		samplepartid = kwargs['samplepartid'] if 'samplepartid' in kwargs else 'drum_'+randbytes(8).hex()
+		samplepart_obj = self.samplepart_add(samplepartid)
+		self.sampleregions.add(i_key, i_key, i_key, samplepartid, i_data)
 		return samplepart_obj
 
 	# -------------------------------------------------- regions

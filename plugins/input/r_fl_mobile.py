@@ -357,7 +357,7 @@ def do_device(convproj_obj, device_obj, projfilepath, zipfile, pluginid, numberi
 				keynum = n
 				sample_path = get_path(flm_sample.sample_path)
 				sampleref_obj = do_sample(convproj_obj, sample_path, zipfile, projfilepath)
-				sp_obj = plugin_obj.sampleregion_add(keynum, keynum, keynum, None)
+				sp_obj = plugin_obj.sampledrum_add(keynum, None)
 				sp_obj.sampleref = sample_path
 				sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
 				sp_obj.reverse = bool(flm_sample.main_unk_4)

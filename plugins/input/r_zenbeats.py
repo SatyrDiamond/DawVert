@@ -172,6 +172,9 @@ class input_zenbeats(plugins.base):
 						placement_obj.time.set_startend(zb_pattern.start_beat, zb_pattern.end_beat)
 						placement_obj.time.set_loop_data(zb_pattern.loop_play_start, zb_pattern.loop_start_beat, zb_pattern.loop_end_beat)
 
+						placement_obj.muted = not zb_pattern.active
+						placement_obj.locked = zb_pattern.locked
+
 						for zb_note in zb_pattern.notes:
 							note_dur = max(zb_note.end-zb_note.start, 0)
 							placement_obj.notelist.add_r(zb_note.start, note_dur, zb_note.semitone-60, zb_note.velocity/127, None)
@@ -190,6 +193,9 @@ class input_zenbeats(plugins.base):
 						do_visual(placement_obj.visual, zb_pattern.visual, zb_pattern.color_index, colordata)
 						placement_obj.time.set_startend(zb_pattern.start_beat, zb_pattern.end_beat)
 						placement_obj.time.set_loop_data(zb_pattern.loop_play_start, zb_pattern.loop_start_beat, zb_pattern.loop_end_beat)
+
+						placement_obj.muted = not zb_pattern.active
+						placement_obj.locked = zb_pattern.locked
 
 						if zb_pattern.audio_file:
 							if zb_pattern.audio_file not in added_samples:

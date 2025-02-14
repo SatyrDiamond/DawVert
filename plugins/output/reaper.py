@@ -506,6 +506,8 @@ class output_reaper(plugins.base):
 
 				convert_midi(rpp_source_obj,notespl_obj.notelist,reaper_tempo,'4','4',notespl_obj)
 
+				if notespl_obj.locked: rpp_item_obj.lock.set(int(notespl_obj.locked))
+
 				if notespl_obj.group:
 					groupidtr = notespl_obj.group
 					if groupidtr not in groupassoc:
@@ -570,6 +572,8 @@ class output_reaper(plugins.base):
 						rpp_source_obj.mode.set(3)
 						rpp_insource_obj = rpp_source_obj.source = rpp_source.rpp_source()
 						file_source(rpp_insource_obj, fileref_obj, filename)
+
+				if audiopl_obj.locked: rpp_item_obj.lock.set(int(audiopl_obj.locked))
 
 				if audiopl_obj.group:
 					groupidtr = audiopl_obj.group

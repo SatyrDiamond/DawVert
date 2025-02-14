@@ -337,6 +337,9 @@ class output_tracktion_edit(plugins.base):
 			else:
 				make_group(convproj_obj, sampleref_assoc, sampleref_obj_assoc, groupid, groups_data, counter_id, wf_tracks)
 
+		groupassoc = {}
+		groupcounter = 20000
+
 		for trackid, track_obj in convproj_obj.track__iter():
 			wf_tracks = project_obj.tracks
 
@@ -393,6 +396,13 @@ class output_tracktion_edit(plugins.base):
 				if notespl_obj.visual.color: wf_midiclip.colour = 'ff'+notespl_obj.visual.color.get_hex()
 				wf_midiclip.mute = int(notespl_obj.muted)
 
+				if notespl_obj.group:
+					groupidtr = trackid+'_'+notespl_obj.group
+					if groupidtr not in groupassoc:
+						groupassoc[groupidtr] = groupcounter
+						groupcounter += 1
+					wf_midiclip.groupID = groupassoc[groupidtr]
+
 				notespl_obj.notelist.sort()
 				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
 					for t_key in t_keys:
@@ -426,12 +436,18 @@ class output_tracktion_edit(plugins.base):
 				if audiopl_obj.visual.color: wf_audioclip.colour = 'ff'+audiopl_obj.visual.color.get_hex()
 				wf_audioclip.mute = int(audiopl_obj.muted)
 
+				if audiopl_obj.group:
+					groupidtr = trackid+'_'+audiopl_obj.group
+					if groupidtr not in groupassoc:
+						groupassoc[groupidtr] = groupcounter
+						groupcounter += 1
+					wf_audioclip.groupID = groupassoc[groupidtr]
+
 				sp_obj = audiopl_obj.sample
 				stretch_obj = audiopl_obj.sample.stretch
 				if sp_obj.sampleref in sampleref_assoc:
 					wf_audioclip.source = sampleref_assoc[sp_obj.sampleref]
 					sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
-
 
 					if stretch_obj.is_warped:
 						warp_obj = stretch_obj.warp

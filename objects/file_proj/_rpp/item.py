@@ -29,6 +29,7 @@ class rpp_item:
 		self.source = None
 		self.beat = rvs(1, int, True)
 		self.stretchmarks = None
+		self.group = rvs(0, int, False)
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -51,6 +52,7 @@ class rpp_item:
 			if name == 'BEAT': self.beat.set(values[0])
 			if name == 'GUID': self.guid.set(values[0])
 			if name == 'COLOR': self.color.set(values[0])
+			if name == 'GROUP': self.group.set(values[0])
 			if name == 'SM': 
 				stretchmarks = [list(y) for x, y in itertools.groupby(values, lambda z: z == '+') if not x]
 				self.stretchmarks = [[float(z) for z in x] for x in stretchmarks]
@@ -71,6 +73,7 @@ class rpp_item:
 		self.mute.write('MUTE', rpp_data)
 		if self.beat != None: self.beat.write('BEAT',rpp_data)
 		self.sel.write('SEL',rpp_data)
+		self.group.write('GROUP', rpp_data)
 		self.iguid.write('IGUID',rpp_data)
 		self.iid.write('IID',rpp_data)
 		self.name.write('NAME',rpp_data)

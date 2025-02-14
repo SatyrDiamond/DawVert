@@ -467,6 +467,10 @@ class input_reaper(plugins.base):
 
 					midi_notes_out.do_output(placement_obj.notelist, midi_ppq)
 
+					if rpp_trackitem.group.used:
+						groupnum = rpp_trackitem.group.get()
+						placement_obj.group = str(groupnum)
+
 				if cvpj_placement_type == 'audio': 
 					placement_obj = track_obj.placements.add_audio()
 					if cvpj_name: placement_obj.visual.name = cvpj_name
@@ -515,6 +519,10 @@ class input_reaper(plugins.base):
 					else:
 						maxdur = ((sampleref_obj.dur_sec*8)/cvpj_audio_rate)*tempomul if sampleref_obj.dur_sec else cvpj_duration
 						placement_obj.time.set_loop_data(startoffset, 0, maxdur)
+
+					if rpp_trackitem.group.used:
+						groupnum = rpp_trackitem.group.get()
+						placement_obj.group = str(groupnum)
 
 			track_obj.placements.sort()
 			convproj_obj.fx__route__add(cvpj_trackid)

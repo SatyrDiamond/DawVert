@@ -221,6 +221,8 @@ def do_track(convproj_obj, wf_track, track_obj):
 		else:
 			placement_obj.time.set_loop_data(midiclip.offset*4, midiclip.loopStartBeats*4, (midiclip.loopStartBeats+midiclip.loopLengthBeats)*4)
 	
+		placement_obj.group = str(midiclip.groupID) if midiclip.groupID!=-1 else None
+
 		for note in midiclip.sequence.notes:
 			placement_obj.notelist.add_r(note.pos*4, note.dur*4, note.key-60, note.vel/100, {})
 			for a_type, a_data in note.auto.items():
@@ -243,6 +245,8 @@ def do_track(convproj_obj, wf_track, track_obj):
 
 		placement_obj.fade_in.set_dur(audioclip.fadeIn, 'seconds')
 		placement_obj.fade_out.set_dur(audioclip.fadeOut, 'seconds')
+
+		placement_obj.group = str(audioclip.groupID) if audioclip.groupID!=-1 else None
 
 		stretch_amt = 1
 		if sampleref_exists:

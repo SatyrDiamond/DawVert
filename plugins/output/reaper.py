@@ -388,6 +388,9 @@ class output_reaper(plugins.base):
 		rpp_project.tempo['num'] = convproj_obj.timesig[0]
 		rpp_project.tempo['denom'] = convproj_obj.timesig[1]
 
+		groupassoc = {}
+		groupcounter = 2
+
 		if convproj_obj.metadata.name:
 			rpp_project.title.set(convproj_obj.metadata.name)
 		if convproj_obj.metadata.author:
@@ -478,6 +481,13 @@ class output_reaper(plugins.base):
 
 				convert_midi(rpp_source_obj,notespl_obj.notelist,reaper_tempo,'4','4',notespl_obj)
 
+				if notespl_obj.group:
+					groupidtr = notespl_obj.group
+					if groupidtr not in groupassoc:
+						groupassoc[groupidtr] = groupcounter
+						groupcounter += 1
+					rpp_item_obj.group.set(groupcounter)
+
 			for audiopl_obj in track_obj.placements.pl_audio:
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 
@@ -535,6 +545,13 @@ class output_reaper(plugins.base):
 						rpp_source_obj.mode.set(3)
 						rpp_insource_obj = rpp_source_obj.source = rpp_source.rpp_source()
 						file_source(rpp_insource_obj, fileref_obj, filename)
+
+				if audiopl_obj.group:
+					groupidtr = audiopl_obj.group
+					if groupidtr not in groupassoc:
+						groupassoc[groupidtr] = groupcounter
+						groupcounter += 1
+					rpp_item_obj.group.set(groupcounter)
 
 			for fxid in track_obj.plugslots.slots_synths:
 				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj)

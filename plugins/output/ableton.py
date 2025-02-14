@@ -486,6 +486,7 @@ def addgrp(convproj_obj, project_obj, groupid):
 		do_effects(convproj_obj, als_gtrack, group_obj.plugslots.slots_audio)
 		als_gtrack.Color = group_obj.visual.color.closest_color_index_int(colordata, NOCOLORNUM)
 		if group_obj.visual.name: als_gtrack.Name.UserName = fixtxt(group_obj.visual.name)
+		if group_obj.visual.comment: als_gtrack.Name.Annotation = fixtxt(group_obj.visual.comment)
 		do_param(convproj_obj, group_obj.params, 'vol', 1, 'float', ['group', groupid, 'vol'], als_gtrack.DeviceChain.Mixer.Volume, als_gtrack.AutomationEnvelopes)
 		do_param(convproj_obj, group_obj.params, 'pan', 0, 'float', ['group', groupid, 'pan'], als_gtrack.DeviceChain.Mixer.Pan, als_gtrack.AutomationEnvelopes)
 		do_param(convproj_obj, group_obj.params, 'enabled', 0, 'invbool', ['group', groupid, 'enabled'], als_gtrack.DeviceChain.Mixer.Speaker, als_gtrack.AutomationEnvelopes)
@@ -589,6 +590,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 
 		als_audioclip.Color = audiopl_obj.visual.color.closest_color_index_int(colordata, track_color)
 		if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
+		if audiopl_obj.visual.comment: als_audioclip.Annotation = fixtxt(audiopl_obj.visual.comment)
 
 		als_audioclip.Fades.IsDefaultFadeIn = False
 		als_audioclip.Fades.IsDefaultFadeOut = False
@@ -763,6 +765,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		#do_note_effects(convproj_obj, als_track, track_obj.plugslots.slots_notes)
 		als_track.Color = track_color
 		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
+		if track_obj.visual.comment: als_track.Name.Annotation = fixtxt(track_obj.visual.comment)
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'enabled', 0, 'invbool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
@@ -805,6 +808,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				als_midiclip = als_track.add_midiclip(clipid)
 				als_midiclip.Color = notespl_obj.visual.color.closest_color_index_int(colordata, track_color)
 				if notespl_obj.visual.name: als_midiclip.Name = fixtxt(notespl_obj.visual.name)
+				if notespl_obj.visual.comment: als_midiclip.Annotation = fixtxt(notespl_obj.visual.comment)
 				als_midiclip.Time = notespl_obj.time.position
 				als_midiclip.Disabled = notespl_obj.muted
 				als_midiclip.CurrentStart = notespl_obj.time.position
@@ -1180,6 +1184,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		als_track = project_obj.add_audio_track(tracknumid)
 		als_track.Color = track_color
 		if track_obj.visual.name: als_track.Name.UserName = fixtxt(track_obj.visual.name)
+		if track_obj.visual.comment: als_track.Name.Annotation = fixtxt(track_obj.visual.comment)
 		do_param(convproj_obj, track_obj.params, 'vol', 1, 'float', ['track', trackid, 'vol'], als_track.DeviceChain.Mixer.Volume, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'pan', 0, 'float', ['track', trackid, 'pan'], als_track.DeviceChain.Mixer.Pan, als_track.AutomationEnvelopes)
 		do_param(convproj_obj, track_obj.params, 'enabled', 0, 'invbool', ['track', trackid, 'enabled'], als_track.DeviceChain.Mixer.Speaker, als_track.AutomationEnvelopes)
@@ -1305,6 +1310,7 @@ class output_ableton(plugins.base):
 		cvpj_master_params = convproj_obj.track_master.params
 		als_mastertrack.Color = convproj_obj.track_master.visual.color.closest_color_index_int(colordata, NOCOLORNUM)
 		if convproj_obj.track_master.visual.name: als_mastertrack.Name.UserName = fixtxt(convproj_obj.track_master.visual.name)
+		if convproj_obj.track_master.visual.comment: als_mastertrack.Name.Annotation = fixtxt(convproj_obj.track_master.visual.comment)
 		do_param(convproj_obj, cvpj_master_params, 'vol', 1, 'float', ['master', 'vol'], als_mastermixer.Volume, als_masterauto)
 		do_param(convproj_obj, cvpj_master_params, 'pan', 0, 'float', ['master', 'pan'], als_mastermixer.Pan, als_masterauto)
 		als_mastertrack.TrackDelay.Value = convproj_obj.track_master.latency_offset
@@ -1375,6 +1381,7 @@ class output_ableton(plugins.base):
 			als_track.TrackDelay.Value = return_obj.latency_offset
 			als_track.Color = return_obj.visual.color.closest_color_index_int(colordata, NOCOLORNUM)
 			if return_obj.visual.name: als_track.Name.UserName = fixtxt(return_obj.visual.name)
+			if return_obj.visual.comment: als_track.Name.Annotation = fixtxt(return_obj.visual.comment)
 			track_sendholders = als_track.DeviceChain.Mixer.Sends
 			numsend = 0
 			for returnid, x in master_returns.items():
@@ -1390,6 +1397,7 @@ class output_ableton(plugins.base):
 		for num, timemarker_obj in enumerate(convproj_obj.timemarkers):
 			locator_obj = proj_ableton.ableton_Locator(None)
 			locator_obj.Name = timemarker_obj.visual.name
+			if timemarker_obj.visual.comment: locator_obj.Annotation = timemarker_obj.visual.comment
 			locator_obj.Time = timemarker_obj.position
 			project_obj.Locators[num] = locator_obj
 

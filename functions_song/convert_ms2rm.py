@@ -9,7 +9,6 @@ logger_project = logging.getLogger('project')
 def convert(convproj_obj, out_dawinfo):
 	logger_project.info('ProjType Convert: MultipleScened > RegularMultiple')
 
-	
 	if 'markers_from_scene' in convproj_obj.do_actions:
 		prevsceneid = None
 		for scenepl in convproj_obj.scene_placements:
@@ -29,13 +28,19 @@ def convert(convproj_obj, out_dawinfo):
 
 		for x in lanes: track_obj.add_lane(x)
 
-		for scenepl in convproj_obj.scene_placements:
+		groupnum = 1
+
+		for plnum, scenepl in enumerate(convproj_obj.scene_placements):
 			if scenepl.id in track_obj.scenes:
 				if not out_dawinfo.audio_nested:
 					for laneid, scene_pl in track_obj.scenes[scenepl.id].items():
-						track_obj.lanes[laneid].placements.merge_crop(scene_pl, scenepl.position, scenepl.duration, convproj_obj.scenes[scenepl.id].visual)
+						lanepl = track_obj.lanes[laneid].placements
+						groupid = 'ms2rm_'+str(groupnum)+'_'+str(plnum)+'_'+trackid+'_'+laneid+'_'+scenepl.id
+						lanepl.merge_crop(scene_pl, scenepl.position, scenepl.duration, convproj_obj.scenes[scenepl.id].visual, groupid)
+						groupnum += 1
 				else:
 					for laneid, scene_pl in track_obj.scenes[scenepl.id].items():
 						track_obj.lanes[laneid].placements.merge_crop_nestedaudio(scene_pl, scenepl.position, scenepl.duration, convproj_obj.scenes[scenepl.id].visual)
-						
+	
+	#exit()
 	convproj_obj.type = 'rm'

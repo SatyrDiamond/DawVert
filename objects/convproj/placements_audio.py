@@ -27,7 +27,7 @@ class cvpj_placements_audio:
 	def __bool__(self):
 		return bool(self.data)
 
-	def merge_crop(self, apl_obj, pos, dur, visualfill):
+	def merge_crop(self, apl_obj, pos, dur, visualfill, groupid):
 		for n in apl_obj.data:
 			if n.time.position < dur:
 				copy_apl_obj = copy.deepcopy(n)
@@ -39,6 +39,7 @@ class cvpj_placements_audio:
 					copy_apl_obj.visual.name = visualfill.name
 				if visualfill.color and not copy_apl_obj.visual.color:
 					copy_apl_obj.visual.color = visualfill.color
+				copy_apl_obj.group = groupid
 				self.data.append(copy_apl_obj)
 
 	def add(self):

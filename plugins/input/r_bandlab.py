@@ -116,7 +116,7 @@ class input_bandlab(plugins.base):
 			else:
 				do_track_common(convproj_obj, track_obj, blx_track)
 				if blx_track.type == 'creators-kit':
-					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					track_obj.plugslots.set_synth(pluginid)
 					samplerkit = blx_track.samplerKit
 					if samplerkit:

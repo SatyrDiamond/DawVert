@@ -420,6 +420,7 @@ class input_ableton(plugins.base):
 			timemarker_obj = convproj_obj.timemarker__add()
 			timemarker_obj.visual.name = loc.Name
 			timemarker_obj.position = loc.Time
+			if loc.Annotation: timemarker_obj.visual.comment = loc.Annotation
 
 		transport_obj = project_obj.Transport
 
@@ -431,6 +432,8 @@ class input_ableton(plugins.base):
 		do_automation(convproj_obj, project_obj.MasterTrack.AutomationEnvelopes)
 
 		convproj_obj.track_master.visual.name = project_obj.MasterTrack.Name.EffectiveName
+		if project_obj.MasterTrack.Name.Annotation: 
+			convproj_obj.track_master.visual.comment = project_obj.MasterTrack.Name.Annotation
 		convproj_obj.track_master.visual.color.from_colorset_num(colordata, int(project_obj.MasterTrack.Color))
 		convproj_obj.track_master.params.add('vol', mas_track_vol, 'float')
 		convproj_obj.track_master.params.add('pan', mas_track_pan, 'float')
@@ -455,6 +458,7 @@ class input_ableton(plugins.base):
 			track_id = str(als_track.Id)
 			track_name = als_track.Name.EffectiveName
 			track_color = int(als_track.Color)
+			track_infotxt = als_track.Name.Annotation
 			track_inside_group = als_track.TrackGroupId
 			track_sendholders = track_mixer.Sends
 
@@ -473,6 +477,7 @@ class input_ableton(plugins.base):
 				track_obj = convproj_obj.track__add(track_id, 'instrument', 1, False)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
+				track_obj.visual.comment = track_infotxt
 
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
@@ -505,6 +510,7 @@ class input_ableton(plugins.base):
 				track_obj = convproj_obj.track__add(track_id, 'audio', 1, False)
 				track_obj.visual.name = track_name
 				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
+				track_obj.visual.comment = track_infotxt
 
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
@@ -531,6 +537,7 @@ class input_ableton(plugins.base):
 						placement_obj = track_obj.placements.add_audio()
 						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
+						placement_obj.visual.comment = clipobj.Annotation
 						placement_obj.visual.color.from_colorset_num(colordata, int(clipobj.Color))
 						placement_obj.muted = clipobj.Disabled
 						placement_obj.sample.vol = clipobj.SampleVolume
@@ -646,6 +653,7 @@ class input_ableton(plugins.base):
 
 				track_obj = convproj_obj.track_master.fx__return__add(cvpj_returntrackid)
 				track_obj.visual.name = track_name
+				track_obj.visual.comment = track_infotxt
 				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
@@ -669,6 +677,7 @@ class input_ableton(plugins.base):
 
 				track_obj = convproj_obj.fx__group__add(cvpj_grouptrackid)
 				track_obj.visual.name = track_name
+				track_obj.visual.comment = track_infotxt
 				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
@@ -710,6 +719,7 @@ class input_ableton(plugins.base):
 						placement_obj = track_obj.placements.add_notes()
 						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
+						placement_obj.visual.comment = clipobj.Annotation
 						placement_obj.visual.color.from_colorset_num(colordata, int(clipobj.Color))
 						placement_obj.muted = clipobj.Disabled
 

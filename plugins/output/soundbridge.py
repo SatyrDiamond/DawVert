@@ -871,7 +871,9 @@ class output_soundbridge(plugins.base):
 						s_block_val = aid_data.nopl_points[n-1].value
 						e_block_pos = autopoint_obj.pos
 						e_block_val = autopoint_obj.value if not autopoint_obj.type == 'instant' else s_block_val
-						add_tempo_section(sb_tempo_obj, s_block_pos, e_block_pos-s_block_pos, s_block_val, e_block_val)
+						tempolen = e_block_pos-s_block_pos
+						if tempolen:
+							add_tempo_section(sb_tempo_obj, s_block_pos, tempolen, s_block_val, e_block_val)
 						if autopoint_obj.type == 'instant' and n == numpoints-1:
 							add_tempo_section(sb_tempo_obj, e_block_pos, e_block_pos+PROJECT_FREQ, autopoint_obj.value, autopoint_obj.value)
 

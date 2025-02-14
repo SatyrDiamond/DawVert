@@ -733,8 +733,8 @@ class soundbridge_tempo_section:
 		tempxml = ET.SubElement(xml_proj, "section")
 		tempxml.set('position', str(self.position))
 		tempxml.set('length', str(self.length))
-		tempxml.set('startTempo', str(self.startTempo))
-		tempxml.set('endTempo', str(self.endTempo))
+		tempxml.set('startTempo', str(int(self.startTempo)))
+		tempxml.set('endTempo', str(int(self.endTempo)))
 
 class soundbridge_tempo:
 	def __init__(self, xml_proj):

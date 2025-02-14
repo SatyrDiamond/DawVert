@@ -486,7 +486,7 @@ class output_reaper(plugins.base):
 					if groupidtr not in groupassoc:
 						groupassoc[groupidtr] = groupcounter
 						groupcounter += 1
-					rpp_item_obj.group.set(groupcounter)
+					rpp_item_obj.group.set(groupassoc[groupidtr])
 
 			for audiopl_obj in track_obj.placements.pl_audio:
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
@@ -551,7 +551,7 @@ class output_reaper(plugins.base):
 					if groupidtr not in groupassoc:
 						groupassoc[groupidtr] = groupcounter
 						groupcounter += 1
-					rpp_item_obj.group.set(groupcounter)
+					rpp_item_obj.group.set(groupassoc[groupidtr])
 
 			for fxid in track_obj.plugslots.slots_synths:
 				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj)

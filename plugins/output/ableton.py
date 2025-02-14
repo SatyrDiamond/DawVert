@@ -77,6 +77,7 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 			if autopoints.check():
 				als_param.AutomationTarget.set_unused()
 				AutomationEnvelope_obj = als_auto.add(als_param.AutomationTarget.id)
+				autopoints.sort()
 				autopoints.remove_instant()
 				firstpoint = autopoints.points[0]
 				firstval = firstpoint.value
@@ -1266,6 +1267,7 @@ class output_ableton(plugins.base):
 		ta_found, ta_points = convproj_obj.automation.get_autopoints(['main', 'bpm'])
 		if ta_found:
 			if ta_points.check():
+				ta_points.sort()
 				ta_points.remove_instant()
 				firstpoint = ta_points.points[0]
 				firstval = firstpoint.value

@@ -136,6 +136,9 @@ class input_pxtone(plugins.base):
 					samplepart_obj.loop_active = True
 				inst_obj.plugslots.set_synth(pluginid)
 
+			if voice_obj.type == 'ptnoise':
+				inst_obj.is_drum = True
+
 			inst_obj.params.add('vol', cvpj_instvol, 'float')
 			inst_obj.datavals.add('middlenote', voice_obj.basic_key_field-60)
 

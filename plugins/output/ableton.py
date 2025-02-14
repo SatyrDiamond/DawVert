@@ -484,7 +484,7 @@ def addgrp(convproj_obj, project_obj, groupid):
 		groupnumid = counter_track.get()
 		als_gtrack = project_obj.add_group_track(groupnumid)
 		do_effects(convproj_obj, als_gtrack, group_obj.plugslots.slots_audio)
-		als_gtrack.Color = group_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
+		als_gtrack.Color = group_obj.visual.color.closest_color_index_int(colordata, NOCOLORNUM)
 		if group_obj.visual.name: als_gtrack.Name.UserName = fixtxt(group_obj.visual.name)
 		do_param(convproj_obj, group_obj.params, 'vol', 1, 'float', ['group', groupid, 'vol'], als_gtrack.DeviceChain.Mixer.Volume, als_gtrack.AutomationEnvelopes)
 		do_param(convproj_obj, group_obj.params, 'pan', 0, 'float', ['group', groupid, 'pan'], als_gtrack.DeviceChain.Mixer.Pan, als_gtrack.AutomationEnvelopes)
@@ -587,7 +587,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		als_audioclip = als_track.add_audioclip(clipid)
 		als_audioclip.Disabled = audiopl_obj.muted
 
-		als_audioclip.Color = audiopl_obj.visual.color.closest_color_index(colordata, track_color)
+		als_audioclip.Color = audiopl_obj.visual.color.closest_color_index_int(colordata, track_color)
 		if audiopl_obj.visual.name: als_audioclip.Name = fixtxt(audiopl_obj.visual.name)
 
 		als_audioclip.Fades.IsDefaultFadeIn = False
@@ -750,7 +750,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 
 def add_track(convproj_obj, project_obj, trackid, track_obj):
 	track_obj.placements.pl_notes.sort()
-	track_color = track_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
+	track_color = track_obj.visual.color.closest_color_index_int(colordata, NOCOLORNUM)
 
 	groupnumid = None
 	if track_obj.group:
@@ -803,7 +803,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 			track_obj.placements.pl_notes.remove_overlaps()
 			for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
 				als_midiclip = als_track.add_midiclip(clipid)
-				als_midiclip.Color = notespl_obj.visual.color.closest_color_index(colordata, track_color)
+				als_midiclip.Color = notespl_obj.visual.color.closest_color_index_int(colordata, track_color)
 				if notespl_obj.visual.name: als_midiclip.Name = fixtxt(notespl_obj.visual.name)
 				als_midiclip.Time = notespl_obj.time.position
 				als_midiclip.Disabled = notespl_obj.muted
@@ -975,6 +975,54 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				paramkeys['VolumeAndPan/Envelope/AttackSlope'] = ableton_parampart.as_param('AttackSlope', 'float', -adsr_obj.attack_tension)
 				paramkeys['VolumeAndPan/Envelope/DecaySlope'] = ableton_parampart.as_param('DecaySlope', 'float', -adsr_obj.decay_tension)
 				paramkeys['VolumeAndPan/Envelope/ReleaseSlope'] = ableton_parampart.as_param('ReleaseSlope', 'float', -adsr_obj.release_tension)
+
+				paramkeys['VolumeAndPan/VolumeVelScale'] = ableton_parampart.as_param('VolumeVelScale', 'float', 1)
+			
+				paramkeys['Globals/NumVoices'] = ableton_parampart.as_value('NumVoices', 14)
+
+			if plugin_obj.check_match('universal', 'sampler', 'drums'):
+				is_sampler = True
+				if middlenote != 0:
+					als_device_pitch = als_track.DeviceChain.add_device('MidiPitcher')
+					pitchparamkeys['Pitch'] = ableton_parampart.as_param('Pitch', 'int', -middlenote)
+
+				paramkeys = {}
+				als_device = als_track.DeviceChain.add_device('MultiSampler')
+				spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
+
+				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+					key_l, key_h, key_r, samplerefid, extradata = sampleregion
+					als_samplepart = spd.value[spn] = ableton_MultiSamplePart(None)
+					als_samplepart.Selection = True
+					samplepart_obj = plugin_obj.samplepart_get(samplerefid)
+					sampleref_obj = do_samplepart(convproj_obj, als_samplepart, samplepart_obj, False, False)
+
+					als_samplepart.KeyRange.Min = key_l+60
+					als_samplepart.KeyRange.Max = key_h+60
+					als_samplepart.KeyRange.CrossfadeMin = key_l+60
+					als_samplepart.KeyRange.CrossfadeMax = key_h+60
+					als_samplepart.RootKey = key_r+60
+					als_samplepart.VelocityRange.Min = int(samplepart_obj.vel_min*127)
+					als_samplepart.VelocityRange.Max = int(samplepart_obj.vel_max*127)
+					als_samplepart.VelocityRange.CrossfadeMin = als_samplepart.VelocityRange.Min
+					als_samplepart.VelocityRange.CrossfadeMax = als_samplepart.VelocityRange.Max
+
+					pitchd = samplepart_obj.pitch
+					TransposeKey = round(pitchd)
+					TransposeFine = (pitchd-round(pitchd))*100
+
+					als_samplepart.RootKey -= TransposeKey
+					als_samplepart.Detune = TransposeFine
+
+				adsr_obj = plugin_obj.env_asdr_get('vol')
+				paramkeys['VolumeAndPan/Envelope/AttackTime'] = ableton_parampart.as_param('AttackTime', 'float', 0)
+				paramkeys['VolumeAndPan/Envelope/DecayTime'] = ableton_parampart.as_param('DecayTime', 'float', 0)
+				paramkeys['VolumeAndPan/Envelope/SustainLevel'] = ableton_parampart.as_param('SustainLevel', 'float', 1)
+				paramkeys['VolumeAndPan/Envelope/ReleaseTime'] = ableton_parampart.as_param('ReleaseTime', 'float', 60000)
+
+				paramkeys['VolumeAndPan/Envelope/AttackSlope'] = ableton_parampart.as_param('AttackSlope', 'float', 0)
+				paramkeys['VolumeAndPan/Envelope/DecaySlope'] = ableton_parampart.as_param('DecaySlope', 'float', 0)
+				paramkeys['VolumeAndPan/Envelope/ReleaseSlope'] = ableton_parampart.as_param('ReleaseSlope', 'float', 0)
 
 				paramkeys['VolumeAndPan/VolumeVelScale'] = ableton_parampart.as_param('VolumeVelScale', 'float', 1)
 			
@@ -1202,7 +1250,7 @@ class output_ableton(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_stretch'] = ['warp']
-		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','native:ableton']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi','universal:sampler:slicer','universal:sampler:drums','native:ableton']
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
@@ -1255,7 +1303,7 @@ class output_ableton(plugins.base):
 		als_mastermixer = als_mastertrack.DeviceChain.Mixer
 		als_masterauto = als_mastertrack.AutomationEnvelopes
 		cvpj_master_params = convproj_obj.track_master.params
-		als_mastertrack.Color = convproj_obj.track_master.visual.color.closest_color_index(colordata, NOCOLORNUM)
+		als_mastertrack.Color = convproj_obj.track_master.visual.color.closest_color_index_int(colordata, NOCOLORNUM)
 		if convproj_obj.track_master.visual.name: als_mastertrack.Name.UserName = fixtxt(convproj_obj.track_master.visual.name)
 		do_param(convproj_obj, cvpj_master_params, 'vol', 1, 'float', ['master', 'vol'], als_mastermixer.Volume, als_masterauto)
 		do_param(convproj_obj, cvpj_master_params, 'pan', 0, 'float', ['master', 'pan'], als_mastermixer.Pan, als_masterauto)
@@ -1325,7 +1373,7 @@ class output_ableton(plugins.base):
 				do_param(convproj_obj, return_obj.params, 'splitpan_right', 1, 'float', ['return', returnid, 'splitpan_right'], als_track.DeviceChain.Mixer.SplitStereoPanR, als_track.AutomationEnvelopes)
 
 			als_track.TrackDelay.Value = return_obj.latency_offset
-			als_track.Color = return_obj.visual.color.closest_color_index(colordata, NOCOLORNUM)
+			als_track.Color = return_obj.visual.color.closest_color_index_int(colordata, NOCOLORNUM)
 			if return_obj.visual.name: als_track.Name.UserName = fixtxt(return_obj.visual.name)
 			track_sendholders = als_track.DeviceChain.Mixer.Sends
 			numsend = 0

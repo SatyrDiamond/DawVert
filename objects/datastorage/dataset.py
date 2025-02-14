@@ -18,7 +18,7 @@ def text_to_color(color):
 		nonumsign = color.lstrip('#')
 		return list(int(nonumsign[i:i+2], 16) for i in (0, 2, 4))
 	else:
-		return [round(float(x)/255, 7) for x in color.split('|')]			
+		return [round(float(x), 7) for x in color.split('|')]			
 
 class dataset_visual:
 	__slots__ = ['name', 'color']

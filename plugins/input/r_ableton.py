@@ -472,7 +472,7 @@ class input_ableton(plugins.base):
 
 				track_obj = convproj_obj.track__add(track_id, 'instrument', 1, False)
 				track_obj.visual.name = track_name
-				track_obj.visual.color.from_colorset_num(colordata, track_color)
+				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
 
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
@@ -504,7 +504,7 @@ class input_ableton(plugins.base):
 
 				track_obj = convproj_obj.track__add(track_id, 'audio', 1, False)
 				track_obj.visual.name = track_name
-				track_obj.visual.color.from_colorset_num(colordata, track_color)
+				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
 
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
@@ -531,7 +531,7 @@ class input_ableton(plugins.base):
 						placement_obj = track_obj.placements.add_audio()
 						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
-						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
+						placement_obj.visual.color.from_colorset_num(colordata, int(clipobj.Color))
 						placement_obj.muted = clipobj.Disabled
 						placement_obj.sample.vol = clipobj.SampleVolume
 						sampleref_obj, placement_obj.sample.sampleref = sampleref__get(convproj_obj, clipobj.SampleRef)
@@ -646,7 +646,7 @@ class input_ableton(plugins.base):
 
 				track_obj = convproj_obj.track_master.fx__return__add(cvpj_returntrackid)
 				track_obj.visual.name = track_name
-				track_obj.visual.color.from_colorset_num(colordata, track_color)
+				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
 				track_obj.latency_offset = lattime
@@ -669,7 +669,7 @@ class input_ableton(plugins.base):
 
 				track_obj = convproj_obj.fx__group__add(cvpj_grouptrackid)
 				track_obj.visual.name = track_name
-				track_obj.visual.color.from_colorset_num(colordata, track_color)
+				track_obj.visual.color.from_colorset_num(colordata, int(track_color))
 				track_obj.params.add('vol', track_vol, 'float')
 				track_obj.params.add('pan', track_pan, 'float')
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
@@ -710,7 +710,7 @@ class input_ableton(plugins.base):
 						placement_obj = track_obj.placements.add_notes()
 						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
-						placement_obj.visual.color.from_colorset_num(colordata, clipobj.Color)
+						placement_obj.visual.color.from_colorset_num(colordata, int(clipobj.Color))
 						placement_obj.muted = clipobj.Disabled
 
 						for _, t in clipobj.TimeSignatures.items():

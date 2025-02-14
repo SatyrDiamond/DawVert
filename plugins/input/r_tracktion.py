@@ -350,19 +350,20 @@ class input_tracktion_edit(plugins.base):
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		if dawvert_intent.input_mode == 'file':
-			projectfile = project_obj.projectID.split('/')
-			if projectfile:
-				projectid = projectfile[0]
-				projfolder = os.path.dirname(dawvert_intent.input_file)
-				projfolder = os.path.abspath(projfolder)
-				tprojpaths = onlyfiles = [f for f in os.listdir(projfolder) if (os.path.isfile(os.path.join(projfolder, f)) and f.endswith('.tracktion'))]
-				for tprojpath in tprojpaths:
-					try:
-						tproj = proj_tracktion_project.tracktion_project()
-						tproj.load_from_file(os.path.join(projfolder, tprojpath))
-						samples |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'wave')])
-					except:
-						pass
+			if project_obj.projectID:
+				projectfile = project_obj.projectID.split('/')
+				if projectfile:
+					projectid = projectfile[0]
+					projfolder = os.path.dirname(dawvert_intent.input_file)
+					projfolder = os.path.abspath(projfolder)
+					tprojpaths = onlyfiles = [f for f in os.listdir(projfolder) if (os.path.isfile(os.path.join(projfolder, f)) and f.endswith('.tracktion'))]
+					for tprojpath in tprojpaths:
+						try:
+							tproj = proj_tracktion_project.tracktion_project()
+							tproj.load_from_file(os.path.join(projfolder, tprojpath))
+							samples |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'wave')])
+						except:
+							pass
 
 		for sid, spath in samples.items(): 
 			sampleref_obj = convproj_obj.sampleref__add(sid, spath, None)

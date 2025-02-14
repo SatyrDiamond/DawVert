@@ -240,11 +240,11 @@ class cvpj_placements:
 	def autosplit(self):
 		self.pl_notes.autosplit(self.time_ppq)
 
-	def merge_crop(self, pl_obj, pos, dur, visualfill):
+	def merge_crop(self, pl_obj, pos, dur, visualfill, groupid):
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
 			self.pl_notes.merge_crop(pl_obj.pl_notes, pos, dur, visualfill)
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
-			self.pl_audio.merge_crop(pl_obj.pl_audio, pos, dur, visualfill)
+			self.pl_audio.merge_crop(pl_obj.pl_audio, pos, dur, visualfill, groupid)
 
 	def merge_crop_nestedaudio(self, pl_obj, pos, dur, visualfill):
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):

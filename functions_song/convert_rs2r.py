@@ -27,10 +27,13 @@ def convert(convproj_obj):
 
 		for x in lanes: track_obj.add_lane(x)
 
-		for scenepl in convproj_obj.scene_placements:
+		groupnum = 1
+		for plnum, scenepl in enumerate(convproj_obj.scene_placements):
 			if scenepl.id in track_obj.scenes:
 				for laneid, scene_pl in track_obj.scenes[scenepl.id].items():
-					track_obj.lanes[laneid].placements.merge_crop(scene_pl, scenepl.position, scenepl.duration, convproj_obj.scenes[scenepl.id].visual)
+					groupid = 'ms2rm_'+str(groupnum)+'_'+str(plnum)+'_'+trackid+'_'+laneid+'_'+scenepl.id
+					track_obj.lanes[laneid].placements.merge_crop(scene_pl, scenepl.position, scenepl.duration, convproj_obj.scenes[scenepl.id].visual, groupid)
+					groupnum += 1
 
 	convproj_obj.type = 'r'
 	#exit()

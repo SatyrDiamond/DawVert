@@ -172,7 +172,7 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 			audio_obj.to_file_wav(filename)
 			correct_key = key+24
 			sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
-			sp_obj = plugin_obj.sampleregion_add(correct_key, correct_key, correct_key, None)
+			sp_obj = plugin_obj.sampledrum_add(correct_key, None)
 			sp_obj.visual.name = dpcm_sample
 			sp_obj.sampleref = filename
 

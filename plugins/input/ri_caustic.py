@@ -262,7 +262,7 @@ class input_cvpj_r(plugins.base):
 					midkey = samplecount-12
 
 					sampleref_obj = convproj_obj.sampleref__add(wave_path, wave_path, None)
-					sp_obj = plugin_obj.sampleregion_add(midkey, midkey, midkey, None)
+					sp_obj = plugin_obj.sampledrum_add(midkey, None)
 					sp_obj.visual.name = region.name
 					sp_obj.start = 0
 					sp_obj.end = region.len

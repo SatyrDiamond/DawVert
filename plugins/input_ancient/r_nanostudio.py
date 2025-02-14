@@ -6,6 +6,7 @@ import plugins
 from objects import globalstore
 from objects import colors
 import math
+import os
 
 class input_nanostudio_v1(plugins.base):
 	def is_dawvert_plugin(self):
@@ -56,9 +57,35 @@ class input_nanostudio_v1(plugins.base):
 				track_data[instnum] = track_obj
 				track_obj.visual.name = ns_inst.name
 
-				plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'native', 'nanostudio_v1', ns_inst.type)
+				if ns_inst.type == 'TRG':
+					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'universal', 'sampler', 'multi')
+					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 60, 1)
+					for key, val in ns_inst.am.items():
+						if key.startswith('Pad') and len(key)>3:
+							padnum = key[3:]
+							if padnum.isnumeric():
+								padnum = int(padnum)
+								if 'Nam' in val:
+									sampname = val['Nam']
+									if sampname:
+										notenum = padnum-12
+										if dawvert_intent.input_mode == 'file':
+											audiopath = os.path.join(dawvert_intent.input_file, sampname)
+
+											sampleref_obj = convproj_obj.sampleref__add(sampname, audiopath, None)
+											sampleref_obj.find_relative('projectfile')
+											sampleref_obj.find_relative('nanostudio_v1')
+
+											sp_obj = plugin_obj.sampleregion_add(notenum, notenum, notenum, None)
+											sp_obj.visual.name = sampname.split('.')[0]
+											sp_obj.sampleref = sampname
+											sp_obj.trigger = 'oneshot'
+				else:
+					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'native', 'nanostudio_v1', ns_inst.type)
+
 				plugin_obj.role = 'synth'
 				track_obj.plugin_autoplace(plugin_obj, cvpj_trackid)
+
 
 				if ns_inst.mixerchannels:
 					channel = ns_inst.mixerchannels[list(ns_inst.mixerchannels)[0]]

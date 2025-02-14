@@ -60,7 +60,10 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 						soundlayers.append([soundlayer, layerparams])
 
 			if len(soundlayers)>1:
-				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+				if vstname == 'Micro Sampler':
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+				if vstname == 'Micro Drum Sampler':
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
 				track_obj.plugslots.set_synth(pluginid)
 				layernum = 0
 				for soundlayer, layerparams in soundlayers:

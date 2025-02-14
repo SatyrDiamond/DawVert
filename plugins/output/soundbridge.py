@@ -542,7 +542,7 @@ class output_soundbridge(plugins.base):
 		sb_returns = [x for x in master_track.returns]
 
 		audio_ids = {}
-		used_filenames = {}
+		
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			if sampleref_obj.fileref.exists('win'):
 				obj_filename = sampleref_obj.fileref.get_path('win', False)
@@ -557,7 +557,6 @@ class output_soundbridge(plugins.base):
 				audio_ids[sampleref_id] = sampleref_obj.fileref.file
 
 				audioSource = proj_soundbridge.soundbridge_audioSource(None)
-
 				audioSource.fileName = str(obj_outfilename.file)
 				audioSource.sourceFileName = filename.replace('\\', '/')
 				project_obj.pool.audioSources.append(audioSource)

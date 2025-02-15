@@ -26,6 +26,13 @@ class note_note:
 		self.dur = 0
 		self.vars = {}
 
+	def get_key_nooffs(self):
+		n_key = (self.note-42)*-1
+		out_oct = int(n_key/7)
+		out_key = n_key - out_oct*7
+		out_note = note_data.keynum_to_note(out_key, out_oct-5)
+		return out_note, out_key, out_oct
+
 	def get_note(self):
 		n_key = (self.note-42)*-1
 		out_oct = int(n_key/7)
@@ -408,6 +415,7 @@ class notev3_sheet:
 				elif i == 'width': self.width = v
 				elif i == 'tempo': self.tempo = v
 				elif i == 'color': self.color = v
+				elif i == 'signature': self.signature = v
 
 			return True
 		else: return False

@@ -359,6 +359,17 @@ def do_fade(fade_data, fadevals, bpm):
 	fadevals['fade_type'] = 2
 	fadevals['curve'] = 0
 
+def do_auto_clip(placement_obj, rpp_env, mpetype, paramtype, invert, instant): 
+	if mpetype in placement_obj.auto:
+		autopoints_obj = placement_obj.auto[mpetype]
+		autopoints_obj.remove_instant()
+		rpp_env.used = True
+		rpp_env.act['bypass'] = 1
+		for x in autopoints_obj:
+			out = float(x.value)
+			if invert: out = 1-out
+			rpp_env.points.append([x.pos_real, out])
+
 class output_reaper(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
@@ -528,6 +539,11 @@ class output_reaper(plugins.base):
 				if audiopl_obj.visual.name: rpp_item_obj.name.set(audiopl_obj.visual.name)
 				rpp_item_obj.volpan['vol'] = audiopl_obj.sample.vol
 				rpp_item_obj.volpan['pan'] = audiopl_obj.sample.pan
+
+				do_auto_clip(audiopl_obj, rpp_item_obj.volenv, 'gain', 'float', False, False)
+				do_auto_clip(audiopl_obj, rpp_item_obj.panenv, 'pan', 'float', False, False)
+				do_auto_clip(audiopl_obj, rpp_item_obj.muteenv, 'mute', 'bool', False, True)
+				do_auto_clip(audiopl_obj, rpp_item_obj.pitchenv, 'pitch', 'float', False, False)
 
 				do_fade(audiopl_obj.fade_in, rpp_item_obj.fadein, reaper_tempo)
 				do_fade(audiopl_obj.fade_out, rpp_item_obj.fadeout, reaper_tempo)

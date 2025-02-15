@@ -413,7 +413,7 @@ class input_jummbox(plugins.base):
 							if 'wave' in bb_data: plugin_obj.datavals.add('wave', bb_data['wave'])
 							if 'unison' in bb_data: plugin_obj.datavals.add('unison', bb_data['unison'])
 
-					inst_obj.visual.color.set_float(bb_color)
+					inst_obj.visual.color.set_int(bb_color)
 				
 					inst_obj.params.add('vol', cvpj_volume, 'float')
 
@@ -439,7 +439,7 @@ class input_jummbox(plugins.base):
 					if bb_pat.notes:
 						nle_obj = convproj_obj.notelistindex__add(cvpj_patid)
 						nle_obj.visual.name = nid_name
-						nle_obj.visual.color.set_float(bb_color)
+						nle_obj.visual.color.set_int(bb_color)
 						for note in bb_pat.notes:
 							points = note.points
 							pitches = [(x-48 + jummbox_key) for x in note.pitches]
@@ -479,7 +479,7 @@ class input_jummbox(plugins.base):
 					bb_partdur = durpos[seqpos]
 					if patnum != 0:
 						playlist_obj = convproj_obj.playlist__add(channum, True, True)
-						playlist_obj.visual.color.set_float(bb_color)
+						playlist_obj.visual.color.set_int(bb_color)
 						cvpj_placement = playlist_obj.placements.add_notes_indexed()
 						cvpj_placement.fromindex = text_patternid(channum, patnum-1)
 						cvpj_placement.time.set_posdur(placement_pos, bb_partdur)

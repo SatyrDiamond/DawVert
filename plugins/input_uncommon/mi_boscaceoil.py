@@ -172,7 +172,7 @@ class input_ceol(plugins.base):
 
 			nle_obj = convproj_obj.notelistindex__add(cvpj_pat_id)
 			for ceol_note_obj in ceol_pat_obj.notes: nle_obj.notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, {})
-			nle_obj.visual.name = str(patnum)
+			nle_obj.visual.name = str(patnum+1)
 			nle_obj.visual.color.set_float(data_values.list__optionalindex(ceol_pat_obj.palette, [0.55, 0.55, 0.55], CEOL_COLORS))
 
 		for num in range(8):

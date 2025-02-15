@@ -489,6 +489,8 @@ class input_reaper(plugins.base):
 					placement_obj.time.cut_type = 'loop'
 					placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
 
+					placement_obj.muted = bool(cvpj_muted)
+
 					midi_notes_out.do_output(placement_obj.notelist, midi_ppq)
 
 					do_auto_clip_notes(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
@@ -511,6 +513,8 @@ class input_reaper(plugins.base):
 					placement_obj.sample.pan = cvpj_pan
 					placement_obj.sample.pitch = cvpj_audio_pitch
 					placement_obj.sample.vol = cvpj_vol
+
+					placement_obj.muted = bool(cvpj_muted)
 
 					do_auto_clip(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
 					do_auto_clip(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)

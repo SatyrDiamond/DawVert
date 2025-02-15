@@ -300,6 +300,7 @@ class output_amped(plugins.base):
 
 				amped_region = amped_track.add_region(notespl_obj.time.position, notespl_obj.time.duration, amped_offset, counter_id.get())
 				amped_region.name = notespl_obj.visual.name if notespl_obj.visual.name else ''
+				amped_region.mute = int(notespl_obj.muted)
 
 				notespl_obj.notelist.sort()
 				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
@@ -320,10 +321,12 @@ class output_amped(plugins.base):
 				amped_audclip = createclip(audiopl_obj, audio_id)
 				amped_audclip.fadeIn = audiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
 				amped_region.clips = [amped_audclip]
+				amped_region.mute = int(audiopl_obj.muted)
 
 			for nestedaudiopl_obj in track_obj.placements.pl_audio_nested:
 				if len(nestedaudiopl_obj.events):
 					amped_region = amped_track.add_region(nestedaudiopl_obj.time.position, nestedaudiopl_obj.time.duration, 0, counter_id.get())
+					amped_region.mute = int(nestedaudiopl_obj.muted)
 					for insideaudiopl_obj in nestedaudiopl_obj.events: 
 						amped_audclip = createclip(insideaudiopl_obj, audio_id)
 						amped_audclip.position = insideaudiopl_obj.time.position/4

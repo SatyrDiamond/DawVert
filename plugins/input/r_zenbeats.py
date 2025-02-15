@@ -27,7 +27,6 @@ def do_auto(convproj_obj, autoloc, curve, parammode):
 		if parammode == 2: val = p.value<0.5
 		if parammode == 3: val = (p.value-0.5)*2
 		convproj_obj.automation.add_autopoint(autoloc, valtype, p.position, val, 'normal')
-		print(val, p.position)
 
 def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc):
 	for rack in project_obj.bank.racks:

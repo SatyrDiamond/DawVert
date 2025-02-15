@@ -133,7 +133,7 @@ class input_nanostudio_v1(plugins.base):
 						if clip['event_assoc']<100: 
 							placement_obj.visual.name = 'Pattern #'+str(clip['event_assoc'])
 							colorfloat = colordata.getcolornum(clip['event_assoc']-1)
-							placement_obj.visual.color.set_float(colorfloat)
+							placement_obj.visual.color.set_int(colorfloat)
 						else:
 							placement_obj.visual.color.set_float([0.25, 0.59, 0.73])
 

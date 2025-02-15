@@ -76,6 +76,8 @@ class cvpj_placements_audio:
 	def change_seconds(self, is_seconds, bpm, ppq):
 		for pl in self.data: 
 			pl.time.change_seconds(is_seconds, bpm, ppq)
+			for _, a in pl.auto.items(): a.change_seconds(is_seconds, bpm, ppq)
+
 		
 	def remove_loops(self, out__placement_loop):
 		new_data = []

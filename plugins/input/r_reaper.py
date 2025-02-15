@@ -133,6 +133,18 @@ def do_fade(fade_data, fadevals, tempomul):
 	if fadevals['fade_type'] == 2: fade_data.slope = -0.5
 	if fadevals['fade_type'] == 4: fade_data.slope = -1
 
+def do_auto_clip(placement_obj, clip_env, mpetype, paramtype, invert, instant): 
+	isbool = paramtype=='bool'
+	if clip_env.used:
+		autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
+		for point in clip_env.points:
+			val = point[1] if not invert else 1-point[1]
+			if isbool: val = bool(val)
+			autopoint_obj = autopoints_obj.add_point()
+			autopoint_obj.pos_real = point[0]
+			autopoint_obj.value = val
+			autopoint_obj.type = 'normal' if not instant else 'instant'
+
 class input_reaper(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -482,6 +494,11 @@ class input_reaper(plugins.base):
 					placement_obj.sample.pan = cvpj_pan
 					placement_obj.sample.pitch = cvpj_audio_pitch
 					placement_obj.sample.vol = cvpj_vol
+
+					do_auto_clip(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
+					do_auto_clip(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)
+					do_auto_clip(placement_obj, rpp_trackitem.muteenv, 'mute', 'bool', False, True)
+					do_auto_clip(placement_obj, rpp_trackitem.pitchenv, 'pitch', 'float', False, False)
 
 					do_fade(placement_obj.fade_in, rpp_trackitem.fadein, tempomul)
 					do_fade(placement_obj.fade_out, rpp_trackitem.fadeout, tempomul)

@@ -143,7 +143,6 @@ def do_auto_clip_notes(placement_obj, clip_env, mpetype, paramtype, invert, inst
 			autopoint_obj = autopoints_obj.add_point()
 			autopoint_obj.pos_real = point[0]
 			autopoint_obj.value = val
-			print(val)
 			autopoint_obj.type = 'normal' if not instant else 'instant'
 
 def do_auto_clip(placement_obj, clip_env, mpetype, paramtype, invert, instant): 

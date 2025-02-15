@@ -44,6 +44,11 @@ def parse_auto(blockdata):
 	dataread = blockdata.read()
 	numnotes = len(dataread)//sb_auto_dtype.itemsize
 	autodata = np.frombuffer(dataread[0:numnotes*sb_auto_dtype.itemsize], dtype=sb_auto_dtype)
+
+	#print('I')
+	#for x in autodata:
+	#	print(x)
+
 	return autodata[np.where(autodata['unk1']!=0)]
 
 def add_auto(valtype, convproj_obj, autoloc, sb_blocks, add, mul):
@@ -327,7 +332,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 						for a in parse_auto(autoblock.blockData):
 							autopoint_obj = autopoints_obj.add_point()
 							autopoint_obj.pos = a['pos']-autoblock.positionStart
-							autopoint_obj.value = a['val']
+							autopoint_obj.value = a['val']/2
 
 	if sb_track.type in [3,4]:
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)

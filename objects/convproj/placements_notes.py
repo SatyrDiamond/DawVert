@@ -96,6 +96,7 @@ class cvpj_placements_notes:
 	def change_seconds(self, is_seconds, bpm, ppq):
 		for pl in self.data: 
 			pl.time.change_seconds(is_seconds, bpm, ppq)
+			for _, a in pl.auto.items(): a.change_seconds(is_seconds, bpm, ppq)
 		
 	def remove_cut(self):
 		for x in self.data: 

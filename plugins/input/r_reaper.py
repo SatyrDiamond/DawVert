@@ -479,6 +479,11 @@ class input_reaper(plugins.base):
 
 					midi_notes_out.do_output(placement_obj.notelist, midi_ppq)
 
+					do_auto_clip(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
+					do_auto_clip(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)
+					do_auto_clip(placement_obj, rpp_trackitem.muteenv, 'mute', 'bool', False, True)
+					do_auto_clip(placement_obj, rpp_trackitem.pitchenv, 'pitch', 'float', False, False)
+
 					if rpp_trackitem.lock.used: placement_obj.locked = bool(rpp_trackitem.lock.get())
 
 					if rpp_trackitem.group.used:

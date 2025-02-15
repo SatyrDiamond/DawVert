@@ -515,6 +515,11 @@ class output_reaper(plugins.base):
 				rpp_source_obj.hasdata.used = True
 				rpp_source_obj.hasdata['hasdata'] = 1
 
+				do_auto_clip(notespl_obj, rpp_item_obj.volenv, 'gain', 'float', False, False)
+				do_auto_clip(notespl_obj, rpp_item_obj.panenv, 'pan', 'float', False, False)
+				do_auto_clip(notespl_obj, rpp_item_obj.muteenv, 'mute', 'bool', False, True)
+				do_auto_clip(notespl_obj, rpp_item_obj.pitchenv, 'pitch', 'float', False, False)
+
 				convert_midi(rpp_source_obj,notespl_obj.notelist,reaper_tempo,'4','4',notespl_obj)
 
 				if notespl_obj.locked: rpp_item_obj.lock.set(int(notespl_obj.locked))

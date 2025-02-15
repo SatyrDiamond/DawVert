@@ -441,6 +441,7 @@ class input_amped(plugins.base):
 					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
+					placement_obj.muted = bool(amped_region.mute)
 					for amped_note in amped_region.midi_notes:
 						if amped_note['position'] >= 0:
 							placement_obj.notelist.add_r(amped_note['position'], amped_note['length'], amped_note['key']-60, amped_note['velocity']/127, {})
@@ -451,6 +452,7 @@ class input_amped(plugins.base):
 					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
+					placement_obj.muted = bool(amped_region.mute)
 
 					for amped_clip in amped_region.clips:
 						npa_obj = placement_obj.add()

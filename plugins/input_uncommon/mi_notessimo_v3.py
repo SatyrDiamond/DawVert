@@ -261,8 +261,15 @@ class input_notessimo_v3(plugins.base):
 			nle_obj.visual.name = sheet_data.name
 			incolor(sheet_data.color, nle_obj.visual)
 
+			sheetnoteofs = notess_noteoffset[sheet_data.signature]
+
 			for nnn in sheet_data.get_allnotes():
-				nle_obj.notelist.add_m(nnn.inst, nnn.pos*2, nnn.dur*4, nnn.get_note(), 1, None)
+				out_note, out_key, out_oct = nnn.get_key_nooffs()
+				inum = 0
+				if nnn.sharp: inum = 1
+				if nnn.flat: inum = 2
+				noteoffs = sheetnoteofs[inum][1][out_key]
+				nle_obj.notelist.add_m(nnn.inst, nnn.pos*2, nnn.dur*4, out_note+noteoffs, 1, None)
 				if nnn.inst not in used_insts: used_insts.append(nnn.inst)
 			nle_obj.notelist.sort()
 

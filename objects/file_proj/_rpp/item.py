@@ -1,5 +1,6 @@
 from objects.file_proj._rpp import func as reaper_func
 from objects.file_proj._rpp import source as rpp_source
+from objects.file_proj._rpp import env as rpp_env
 import itertools
 
 rvd = reaper_func.rpp_value
@@ -31,6 +32,10 @@ class rpp_item:
 		self.stretchmarks = None
 		self.group = rvs(0, int, False)
 		self.lock = rvs(0, int, False)
+		self.volenv = rpp_env.rpp_env()
+		self.panenv = rpp_env.rpp_env()
+		self.muteenv = rpp_env.rpp_env()
+		self.pitchenv = rpp_env.rpp_env()
 
 	def load(self, rpp_data):
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -55,6 +60,10 @@ class rpp_item:
 			if name == 'COLOR': self.color.set(values[0])
 			if name == 'GROUP': self.group.set(values[0])
 			if name == 'LOCK': self.lock.set(values[0])
+			if name == 'VOLENV': self.volenv.read(inside_dat, values)
+			if name == 'PANENV': self.panenv.read(inside_dat, values)
+			if name == 'MUTEENV': self.muteenv.read(inside_dat, values)
+			if name == 'PITCHENV': self.pitchenv.read(inside_dat, values)
 			if name == 'SM': 
 				stretchmarks = [list(y) for x, y in itertools.groupby(values, lambda z: z == '+') if not x]
 				self.stretchmarks = [[float(z) for z in x] for x in stretchmarks]
@@ -86,7 +95,11 @@ class rpp_item:
 		self.playrate.write('PLAYRATE', rpp_data)
 		self.chanmode.write('CHANMODE',rpp_data)
 		self.guid.write('GUID',rpp_data)
-		
+		self.volenv.write('VOLENV', rpp_data)
+		self.panenv.write('PANENV', rpp_data)
+		self.muteenv.write('MUTEENV', rpp_data)
+		self.pitchenv.write('PITCHENV', rpp_data)
+
 		if self.stretchmarks != None:
 			out = []
 			nummarks = len(self.stretchmarks)-1

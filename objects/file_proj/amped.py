@@ -89,6 +89,7 @@ class amped_region:
 		self.loop = 0
 		self.name = ""
 		self.color = None
+		self.mute = 0
 
 		self.clips = []
 
@@ -102,6 +103,7 @@ class amped_region:
 			if 'offset' in pd: self.offset = pd['offset']
 			if 'loop' in pd: self.loop = pd['loop']
 			if 'name' in pd: self.name = pd['name']
+			if 'mute' in pd: self.mute = pd['mute']
 			self.color = pd['color'] if 'color' in pd else color
 			if 'midi' in pd: 
 				mididata = pd['midi']
@@ -116,6 +118,7 @@ class amped_region:
 		amped_region['position'] = self.position
 		amped_region['length'] = self.length
 		amped_region['offset'] = self.offset
+		amped_region['mute'] = self.mute
 		amped_region['loop'] = self.loop
 		amped_region['clips'] = [x.write() for x in self.clips]
 		amped_region['midi'] = {'notes': self.midi_notes, 'events': self.midi_events, 'chords': self.midi_chords}

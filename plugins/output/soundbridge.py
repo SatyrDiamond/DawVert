@@ -92,13 +92,13 @@ def make_auto(autopoints_obj, valtype, add, mul):
 			if fixauto[-1].pos != a.pos: fixauto.append(a)
 
 	autoarray = np.zeros(len(fixauto), dtype=sb_auto_dtype)
-	autoarray['unk1'] = 1
+	autoarray['unk1'] = 0.99
 	autoarray['unk2'] = 1
 	for n, a in enumerate(fixauto):
 		autopos = int(max(a.pos, 0))
 
 		autoarray[n]['pos'] = int(max(a.pos, 0))
-		autoarray[n]['unk1'] = pow(10, -a.tension)
+		if a.tension: autoarray[n]['unk1'] = pow(10, -a.tension)
 
 		if valtype == 'invert':
 			autoarray[n]['val'] = 1-a.value
@@ -106,6 +106,10 @@ def make_auto(autopoints_obj, valtype, add, mul):
 			autoarray[n]['val'] = calc_vol(a.value)
 		else:
 			autoarray[n]['val'] = (a.value/mul)-add
+
+	#print('O')
+	#for x in autoarray:
+	#	print(x)
 
 	outbytes = b'\x00\x00\x00\x14'+autoarray.tobytes()
 	padsize = 4*len(fixauto)
@@ -818,7 +822,7 @@ class output_soundbridge(plugins.base):
 									autoblock.loopEnabled = event.loopEnabled
 									autoblock.muted = 0
 									autoblock.version = 1
-									autoblock.blockData = make_auto(x, None, 0, 1)
+									autoblock.blockData = make_auto(x, None, 0, 2)
 									event.automationBlocks.append(autoblock)
 							block.events.append(event)
 						else:

@@ -566,8 +566,10 @@ class output_reaper(plugins.base):
 					audiorate = warprate*tempomul
 					rpp_item_obj.playrate['rate'] = round(audiorate, 14) 
 					rpp_item_obj.stretchmarks = []
+
 					offmod = clip_startat
 					offmod *= warprate
+					offmod *= tempomul
 					offmod = round(offmod, 7)
 
 					warp_obj.manp__speed_mul(warprate)

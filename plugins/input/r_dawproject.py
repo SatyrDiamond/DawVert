@@ -297,8 +297,8 @@ def do_audio(convproj_obj, npa_obj, audio_obj):
 
 def do_audioclip(convproj_obj, npa_obj, inclip):
 	if inclip.fadeTimeUnit == 'beats':
-		if inclip.fadeInTime: npa_obj.fade_in.set_dur(inclip.FadeInLength, 'beats')
-		if inclip.fadeOutTime: npa_obj.fade_out.set_dur(inclip.FadeInLength, 'beats')
+		if inclip.fadeInTime: npa_obj.fade_in.set_dur(inclip.fadeInTime, 'beats')
+		if inclip.fadeOutTime: npa_obj.fade_out.set_dur(inclip.fadeOutTime, 'beats')
 
 	if inclip.audio: 
 		sampleref_obj = do_audio(convproj_obj, npa_obj, inclip.audio)

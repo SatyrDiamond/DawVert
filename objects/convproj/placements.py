@@ -482,7 +482,8 @@ class cvpj_placements:
 
 					cutplpl_obj = copy.deepcopy(e)
 					cutplpl_obj.time.position = (out_start+basepos)-main_s
-					cutplpl_obj.time.duration = out_end-out_start
+					offset_d = (main_e-main_s)-scs
+					cutplpl_obj.time.duration = min(out_end-out_start, offset_d)
 					cutplpl_obj.time.cut_type = 'cut'
 					cutplpl_obj.time.cut_start += scs
 					cutplpl_obj.muted = cutplpl_obj.muted or nestedpl_obj.muted

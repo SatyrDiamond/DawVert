@@ -132,6 +132,8 @@ class input_serato(plugins.base):
 
 			scene_strip = scene_deck.channel_strip
 
+			cvpj_instid = cvpj_trackid+'_0'
+
 			if scene_deck.type == 'drums':
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 1, False)
 				track_obj.visual.name = scene_deck.name
@@ -303,8 +305,8 @@ class input_serato(plugins.base):
 				if deck_sequence.automation_curves:
 					for sauto in deck_sequence.automation_curves:
 						if sauto.type == 'parameter':
-							if True:
-							#try:
+							#if True:
+							try:
 								autoloc = ['track' if not usechannel else 'group', cvpj_trackid, None]
 
 								param_id = sauto.parameter
@@ -380,8 +382,8 @@ class input_serato(plugins.base):
 									autopoint.type = 'normal'
 								pl_points.time.set_posdur(0, max(960*4, pl_points.data.get_dur()))
 
-							#except:
-							#	pass
+							except:
+								pass
 
 				if deck_sequence.notes:
 					trscene_obj = convproj_obj.track__add_scene(cvpj_trackid, sceneid, 'main')

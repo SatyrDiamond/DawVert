@@ -41,7 +41,7 @@ class rpp_env:
 		self.laneheight = rvd([0,0], None, None, True)
 		self.arm = rvs(0, float, False)
 		self.defshape = rvd([0,-1,-1], None, None, True)
-		self.pooledenvinst = None
+		self.pooledenvinst = []
 
 		self.is_param = False
 		self.param_id = 0
@@ -52,11 +52,12 @@ class rpp_env:
 		self.visname = ''
 
 	def init_pooledenvinst(self):
-		self.pooledenvinst = rvd(
+		pooledenvinst = rvd(
 			[1,0,0,0.0,1.0,False,0.5,1.0,True,False,False,3,0,0,0.012,0], 
 			['id','position','length','offset','rate','timeBased','baseline','amplitude','loop','extra1','extra2','unk1','unk2','unk3','unk4','unk5','unk6'], 
 			[int,float,float,float,float,bool,float,float,bool,bool,bool,int,int,int,float,int,int], True)
-		return self.pooledenvinst
+		self.pooledenvinst.append(pooledenvinst)
+		return pooledenvinst
 
 	def read(self, rpp_data, in_values):
 		trackid = ''
@@ -70,8 +71,8 @@ class rpp_env:
 			if name == 'DEFSHAPE': self.defshape.read(values)
 			if name == 'PT': self.points.append([float(x) for x in values])
 			if name == 'POOLEDENVINST': 
-				self.init_pooledenvinst()
-				self.pooledenvinst.read(values)
+				pooledenvinst = self.init_pooledenvinst()
+				pooledenvinst.read(values)
 
 		if in_values:
 			self.is_param = True
@@ -95,7 +96,7 @@ class rpp_env:
 			self.laneheight.write('LANEHEIGHT',rpp_tempdata)
 			self.arm.write('ARM',rpp_tempdata)
 			self.defshape.write('DEFSHAPE',rpp_tempdata)
-			if self.pooledenvinst: self.pooledenvinst.write('POOLEDENVINST',rpp_tempdata)
+			for x in self.pooledenvinst: x.write('POOLEDENVINST',rpp_tempdata)
 			for p in self.points:
 				rpp_tempdata.children.append(['PT']+[ts(float, x) for x in p])
 			rpp_data.children.append(rpp_tempdata)

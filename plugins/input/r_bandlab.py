@@ -141,17 +141,16 @@ class input_bandlab(plugins.base):
 					placement_obj.time.position_real = blx_region.startPosition
 					placement_obj.time.duration_real = blx_region.endPosition-blx_region.startPosition
 					if blx_region.name: placement_obj.visual.name = blx_region.name
-					filename = os.path.dirname(dawvert_intent.input_file)
-					midipath = os.path.join(filename, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
+					midipath = os.path.join(dawvert_intent.input_file, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
 					do_loop(placement_obj.time, blx_region, tempomul, 1)
 					placement_obj.notelist.midi_from(midipath)
 
 def add_sample(convproj_obj, dawvert_intent, sampleid, sampledurs):
-	filename = os.path.dirname(dawvert_intent.input_file)
-	filename = os.path.join(filename, 'Assets', 'Audio', sampleid+'.*')
+	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', sampleid+'.*')
 	for file in glob.glob(filename):
-		sampleref_obj = convproj_obj.sampleref__add(sampleid, file, 'win')
-		sampleref_obj.convert(['wav'], dawvert_intent.path_samples['extracted'])
+		print(sampleid, file)
+		sampleref_obj = convproj_obj.sampleref__add(sampleid, file, None)
+		#sampleref_obj.convert(['wav'], dawvert_intent.path_samples['converted'])
 		sampledurs[sampleid] = sampleref_obj.dur_sec
 		break
 

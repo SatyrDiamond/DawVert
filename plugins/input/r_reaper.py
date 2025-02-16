@@ -76,16 +76,13 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 	tempomul = bpm/120
 
 	isbool = paramtype=='bool'
-	if rpp_autodata.pooledenvinst:
-		idnum = rpp_autodata.pooledenvinst['id']
-
-		#print(rpp_autodata.pooledenvinst.values)
-
+	for x in rpp_autodata.pooledenvinst:
+		idnum = x['id']
 		if idnum in pooledenvs:
 			reappo = pooledenvs[idnum]
 			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
-			autopl_obj.time.position_real = rpp_autodata.pooledenvinst['position']
-			autopl_obj.time.duration_real = rpp_autodata.pooledenvinst['length']
+			autopl_obj.time.position_real = x['position']
+			autopl_obj.time.duration_real = x['length']
 			autopl_obj.visual.name = reappo.name.get()
 			for point in reappo.points:
 				val = point[1] if not invert else 1-point[1]
@@ -94,7 +91,7 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 				autopoint_obj.pos_real = (point[0]/2)/tempomul
 				autopoint_obj.value = val
 
-	elif rpp_autodata.used:
+	if rpp_autodata.used:
 		for point in rpp_autodata.points:
 			val = point[1] if not invert else 1-point[1]
 			if isbool: val = bool(val)

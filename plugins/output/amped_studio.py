@@ -171,6 +171,8 @@ class output_amped(plugins.base):
 		amped_filenames = {}
 		audioidnum = 0
 
+		convproj_obj.sampleref__remove_nonaudiopl()
+
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			audio_id[sampleref_id] = audioidnum
 			filepath = sampleref_obj.fileref.get_path(None, False)

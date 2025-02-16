@@ -60,8 +60,8 @@ if not args.o:
 dawvert_intent = core.dawvert_intent()
 dawvert_intent.config_load('./__config/config.ini')
 dawvert_intent.plugin_set = True
-dawvert_intent.input_file = args.i
-dawvert_intent.output_file = args.o
+dawvert_intent.set_file_input(args.i)
+dawvert_intent.set_file_output(args.o)
 dawvert_intent.plugin_input = args.it
 dawvert_intent.plugin_output = args.ot
 dawvert_intent.plugset_input = args.ips

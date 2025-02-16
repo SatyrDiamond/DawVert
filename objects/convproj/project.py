@@ -116,8 +116,16 @@ class cvpj_fxchannel:
 		self.latency_offset = 0
 
 class cvpj_scene:
-	def __init__(self):
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
 		self.visual = visual.cvpj_visual()
+		self.automation = automation.cvpj_automation(time_ppq, time_float)
+
+	def change_timings(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+		self.automation.change_timings(time_ppq, time_float)
 
 class cvpj_scenepl:
 	def __init__(self):
@@ -235,6 +243,7 @@ class cvpj_project:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.automation.change_timings(time_ppq, time_float)
+		for _, scene in self.scenes.items(): scene.change_timings(time_ppq, time_float)
 
 	def get_dur(self):
 		duration_final = 0
@@ -352,7 +361,7 @@ class cvpj_project:
 # --------------------------------------------------------- SCENE ---------------------------------------------------------
 
 	def scene__add(self, i_sceneid):
-		scene_obj = cvpj_scene()
+		scene_obj = cvpj_scene(self.time_ppq, self.time_float)
 		#cpr_int('[project] Scene - '+str(i_sceneid), 'magenta')
 		logger_project.info('Scene - '+str(i_sceneid))
 		self.scenes[i_sceneid] = scene_obj

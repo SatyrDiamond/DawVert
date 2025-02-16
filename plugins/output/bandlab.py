@@ -142,12 +142,13 @@ class output_bandlab(plugins.base):
 					blx_track.color = '#'+track_obj.visual.color.get_hex().upper()
 					blx_track.colorName = 'Custom'
 
-				blx_track.isMuted = not track_obj.params.get('enabled', False).value
+				blx_track.isMuted = not track_obj.params.get('enabled', True).value
 				blx_track.isSolo = track_obj.params.get('solo', False).value
 				blx_track.volume = track_obj.params.get('vol', 1).value
 				blx_track.pan = track_obj.params.get('pan', 0).value
 
 				if track_obj.type == 'audio':
+					blx_track.type = 'voice'
 					blx_track.effectsData = {"displayName": None, "link": None, "originalPresetId": None}
 					blx_track.autoPitch = proj_bandlab.bandlab_autoPitch(None)
 					track_obj.placements.pl_audio.sort()
@@ -169,6 +170,7 @@ class output_bandlab(plugins.base):
 							used_samples.append(sp_obj.sampleref)
 
 						blx_region.file = sampleref_assoc[sp_obj.sampleref]+'.'+sampleref_ext[sp_obj.sampleref]
+						blx_region.sampleId = sampleref_assoc[sp_obj.sampleref]
 						blx_track.regions.append(blx_region)
 
 				if track_obj.type == 'instrument':

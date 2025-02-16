@@ -515,6 +515,22 @@ class cvpj_project:
 				fileref.filesearcher.scan_local_files(dirpath)
 				sampleref_obj.search_local(dirpath)
 
+	def sampleref__remove_nonaudiopl(self):
+		sflist = list(self.samplerefs)
+		for trackid, track_obj in self.track__iter():
+			for audiopl_obj in track_obj.placements.pl_audio:
+				if audiopl_obj.sample.sampleref in sflist: sflist.remove(audiopl_obj.sample.sampleref)
+
+			for nestedpl_obj in track_obj.placements.pl_audio_nested:
+				for audiopl_obj in nestedpl_obj.events:
+					if audiopl_obj.sample.sampleref in sflist: sflist.remove(audiopl_obj.sample.sampleref)
+
+			for laneid, lane_obj in track_obj.lanes.items():
+				for audiopl_obj in lane_obj.placements.pl_audio:
+					if audiopl_obj.sample.sampleref in sflist: sflist.remove(audiopl_obj.sample.sampleref)
+					
+		for s in sflist: del self.samplerefs[s]
+
 # --------------------------------------------------------- FX ---------------------------------------------------------
 
 	def fx__chan__add(self, fxnum):

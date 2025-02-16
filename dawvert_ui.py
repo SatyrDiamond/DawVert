@@ -456,8 +456,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 				pass
 
 	def __can_convert(self):
-		dawvert_intent.input_file = self.ui.InputFilePath.text().replace('/', '\\')
-		dawvert_intent.output_file = self.ui.OutputFilePath.text().replace('/', '\\')
+		dawvert_intent.set_file_input(self.ui.InputFilePath.text().replace('/', '\\'))
+		dawvert_intent.set_file_output(self.ui.OutputFilePath.text().replace('/', '\\'))
 		inplug = dawvert_core.input_get_current()
 		outplug = dawvert_core.output_get_current()
 		not_same = dawvert_intent.input_file!=dawvert_intent.output_file

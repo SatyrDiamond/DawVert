@@ -547,6 +547,8 @@ class output_soundbridge(plugins.base):
 
 		audio_ids = {}
 		
+		#convproj_obj.sampleref__remove_nonaudiopl()
+
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			if sampleref_obj.fileref.exists('win'):
 				obj_filename = sampleref_obj.fileref.get_path('win', False)
@@ -894,4 +896,8 @@ class output_soundbridge(plugins.base):
 		if dawvert_intent.output_mode == 'file':
 			outfile = os.path.join(dawvert_intent.output_file, '')
 			os.makedirs(dawvert_intent.output_file, exist_ok=True)
+			f = open(os.path.join(dawvert_intent.output_file, 'output.sb'), 'wb')
+			f.write(b'\0' + '\0&Soundbridge Project'.encode('UTF-16LE') + b'\0')
+			f = open(os.path.join(dawvert_intent.output_file, 'desktop.ini'), 'wb')
+			f.write(b'[.ShellClassInfo]\nIconResource=C:\\Program Files\\SoundBridge\\SoundBridge\\DAW.ico,0')
 			project_obj.write_to_file(os.path.join(dawvert_intent.output_file, 'project.xml'))

@@ -88,9 +88,23 @@ class serato_note:
 		self.number = json_data['number']
 		self.velocity = json_data['velocity'] if 'velocity' in json_data else 100
 
+class serato_auto_keyframe:
+	def __init__(self, json_data):
+		self.time = json_data['time'] if 'time' in json_data else 0
+		self.value = json_data['value'] if 'value' in json_data else 0
+		self.interpolation = json_data['interpolation'] if 'interpolation' in json_data else 'linear'
+		self.curvature = json_data['curvature'] if 'curvature' in json_data else 0
+
+class serato_automation_curve:
+	def __init__(self, json_data):
+		self.type = json_data['type'] if 'type' in json_data else None
+		self.parameter = json_data['parameter'] if 'parameter' in json_data else None
+		self.keyframes = [serato_auto_keyframe(x) for x in json_data['keyframes']] if 'keyframes' in json_data else []
+
 class serato_deck_sequence:
 	def __init__(self, json_data):
 		self.notes = [serato_note(x) for x in json_data['notes']] if 'notes' in json_data else []
+		self.automation_curves = [serato_automation_curve(x) for x in json_data['automation_curves']] if 'automation_curves' in json_data else []
 
 class serato_scene:
 	def __init__(self, json_data):

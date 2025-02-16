@@ -5,6 +5,7 @@ from functions import xtramath
 from objects.convproj import placements
 from objects.convproj import autopoints
 from objects.convproj import visual
+import copy
 
 class cvpj_placements_autopoints:
 	__slots__ = ['data','type','time_ppq','time_float','val_type']
@@ -22,6 +23,16 @@ class cvpj_placements_autopoints:
 
 	def __bool__(self):
 		return bool(self.data)
+
+	def merge_crop(self, apl_obj, pos, dur):
+		for n in apl_obj.data:
+			if n.time.position < dur:
+				copy_apl_obj = copy.deepcopy(n)
+				plend = copy_apl_obj.time.get_end()
+				numval = copy_apl_obj.time.duration+min(0, dur-plend)
+				copy_apl_obj.time.position += pos
+				copy_apl_obj.time.duration = numval
+				self.data.append(copy_apl_obj)
 
 	def sort(self):
 		ta_bsort = {}

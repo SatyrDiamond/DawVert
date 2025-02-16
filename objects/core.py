@@ -92,15 +92,20 @@ if log_pathsearchonly:
 class dawvert_intent:
 	def __init__(self):
 		self.input_file = ''
+		self.input_folder = ''
 		self.input_data = b''
 		self.input_mode = 'file'
 		self.input_visname = ''
 		self.input_params = {}
 		
 		self.output_file = ''
+		self.output_folder = ''
 		self.output_mode = 'file'
 		self.output_params = {}
+		self.output_visname = ''
 		self.output_samples = ''
+
+		self.curdir = None
 
 		self.plugin_set = True
 		self.plugin_input = None
@@ -124,6 +129,23 @@ class dawvert_intent:
 		self.custom_config = {}
 
 		self.set_defualt_path()
+
+	def set_file_input(self, fileloc):
+		if self.curdir: self.curdir = os.getcwd()
+		self.input_mode = 'file'
+		self.input_file = os.path.abspath(fileloc)
+		self.input_folder = os.path.dirname(self.input_file)
+		self.input_visname = os.path.basename(fileloc)
+		self.input_visname = os.path.splitext(self.input_visname)[0]
+
+
+	def set_file_output(self, fileloc):
+		if self.curdir: self.curdir = os.getcwd()
+		self.output_mode = 'file'
+		self.output_file = os.path.abspath(fileloc)
+		self.output_folder = os.path.dirname(self.output_file)
+		self.output_visname = os.path.basename(fileloc)
+		self.output_visname = os.path.splitext(self.output_visname)[0]
 
 	def set_defualt_path(self):
 		self.path_samples['extracted'] = os.getcwd() + '/__samples_extracted/'

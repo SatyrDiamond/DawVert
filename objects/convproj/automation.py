@@ -32,12 +32,16 @@ class cvpj_s_automation:
 		self.time_float = time_float
 		self.valtype = valtype
 
+	def make_base(self):
+		outv = cvpj_s_automation(self.time_ppq, self.time_float, self.valtype)
+		return outv
+
 	def __repr__(self):
 		outtxt = ''
-		if self.u_pl_points: outtxt += 'pl_points '
-		if self.u_pl_ticks: outtxt += 'pl_ticks '
-		if self.u_nopl_points: outtxt += 'nopl_points '
-		if self.u_nopl_ticks: outtxt += 'nopl_ticks '
+		if self.u_pl_points: outtxt += 'pl_points:'+str(len(self.pl_points))+' '
+		if self.u_pl_ticks: outtxt += 'pl_ticks:'+str(len(self.pl_ticks))+' '
+		if self.u_nopl_points: outtxt += 'nopl_points:'+str(len(self.nopl_points))+' '
+		if self.u_nopl_ticks: outtxt += 'nopl_ticks:'+str(len(self.nopl_ticks))+' '
 
 		return 'AutoSet '+ outtxt
 
@@ -338,6 +342,17 @@ class cvpj_automation:
 		autoloc = cvpj_autoloc(p)
 		self.autoloc[autoloc] = v
 
+	def merge(self, sceneauto, pos, dur):
+		for a, v in sceneauto.data.items():
+			if a not in self.data: self.data[copy.deepcopy(a)] = v.make_base()
+			mainauto = self.data[a]
+			otherauto = v
+			if otherauto.u_pl_points:
+				if not mainauto.u_pl_points: 
+					mainauto.make_pl_points()
+					mainauto.u_pl_points = True
+				mainauto.pl_points.merge_crop(otherauto.pl_points, pos, dur)
+
 	def attempt_after(self):
 		for autopath, mathtype, val1, val2, val3, val4 in self.calcnotfound:
 			if autopath in self.data: 
@@ -394,6 +409,7 @@ class cvpj_automation:
 			self.data[autopath].id = self.auto_num.get()
 			if autopath == ['main', 'bpm']:
 				self.data[autopath].conv_tres = 8
+		return self.data[autopath]
 
 	def exists(self, autopath):
 		return cvpj_autoloc(autopath) in self.data

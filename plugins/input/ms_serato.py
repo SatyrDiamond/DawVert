@@ -55,7 +55,7 @@ def add_vst_data(vstdata, pluginid, convproj_obj, state, params):
 
 		return plugin_obj
 
-def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
+def do_chan_strip(eq_defined, convproj_obj, trackid, channel_strip, fxslots_audio):
 
 	if not (channel_strip.low_eq == channel_strip.mid_eq == channel_strip.high_eq == 0):
 		fxplugid = trackid+'_fx_eq'
@@ -66,6 +66,7 @@ def do_chan_strip(convproj_obj, trackid, channel_strip, fxslots_audio):
 		fxplugin_obj.params.add('lowmid_freq', 500, 'float')
 		fxplugin_obj.params.add('midhigh_freq', 5000, 'float')
 		fxslots_audio.append(fxplugid)
+		if trackid not in eq_defined: eq_defined.append(trackid)
 
 	if channel_strip.post_fader_effects != None:
 		for fxnum, pfe in enumerate(channel_strip.post_fader_effects):
@@ -105,6 +106,7 @@ class input_serato(plugins.base):
 		in_dict['file_ext'] = ['ssp']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['projtype'] = 'ms'
+		in_dict['auto_types'] = ['pl_points']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import serato as proj_serato
@@ -122,9 +124,11 @@ class input_serato(plugins.base):
 
 		sample_data = {}
 
+		eq_track = {}
+		eq_defined = []
+
 		for num, scene_deck in enumerate(project_obj.scene_decks):
 			cvpj_trackid = 'track_'+str(num+1)
-			cvpj_instid = 'track_'+str(num+1)+'_0'
 
 			scene_strip = scene_deck.channel_strip
 
@@ -138,7 +142,8 @@ class input_serato(plugins.base):
 				group_obj.params.add('pan', scene_strip.pan, 'float')
 				group_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
 				group_obj.datavals.add('pan_mode', 'stereo')
-				do_chan_strip(convproj_obj, base_trk_id, scene_strip, group_obj.plugslots.slots_audio)
+				do_chan_strip(eq_defined, convproj_obj, base_trk_id, scene_strip, group_obj.plugslots.slots_audio)
+				eq_track[cvpj_trackid] = track_obj.plugslots.slots_audio
 				for dnum, drumdata in enumerate(scene_deck.drums):
 					cvpj_instid_p = base_trk_id+'_'+str(dnum)
 					if drumdata.used:
@@ -153,10 +158,11 @@ class input_serato(plugins.base):
 							inst_obj.group = base_trk_id
 							inst_obj.is_drum = True
 							inst_obj.plugslots.set_synth(cvpj_instid_p)
+							eq_track[cvpj_instid_p] = inst_obj.plugslots.slots_audio
 							if channel_strip.gain: inst_obj.params.add('vol', channel_strip.gain*channel_strip.volume, 'float')
 							inst_obj.params.add('pan', channel_strip.pan, 'float')
 							inst_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
-							do_chan_strip(convproj_obj, cvpj_instid_p, channel_strip, inst_obj.plugslots.slots_audio)
+							do_chan_strip(eq_defined, convproj_obj, cvpj_instid_p, channel_strip, inst_obj.plugslots.slots_audio)
 
 							samplepath = parse_filepath(drumsamp.file)
 
@@ -188,12 +194,13 @@ class input_serato(plugins.base):
 				inst_obj.visual.color.set_float([0.3,0.3,0.3])
 				plugin_obj = add_vst_data(json.loads(scene_deck.plugin_description), cvpj_instid, convproj_obj, scene_deck.state, scene_deck.parameters)
 				inst_obj.plugslots.set_synth(cvpj_instid)
+				eq_track[cvpj_trackid] = group_obj.plugslots.slots_audio
 
 				track_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
 				track_obj.params.add('pan', scene_strip.pan, 'float')
 				track_obj.datavals.add('pan_mode', 'stereo')
 				track_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
-				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
+				do_chan_strip(eq_defined, convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
 
 			if scene_deck.type == 'instrument':
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 1, False)
@@ -208,12 +215,13 @@ class input_serato(plugins.base):
 				plugin_obj.filerefs['instrument'] = scene_deck.instrument_file
 				adsr_obj = plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, scene_deck.release, 1)
 				adsr_obj.release_tension = -1
+				eq_track[cvpj_trackid] = group_obj.plugslots.slots_audio
 
 				inst_obj.params.add('vol', 0.7*scene_strip.gain*scene_strip.volume, 'float')
 				inst_obj.params.add('pan', scene_strip.pan, 'float')
 				inst_obj.datavals.add('pan_mode', 'stereo')
 				inst_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
-				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, inst_obj.plugslots.slots_audio)
+				do_chan_strip(eq_defined, convproj_obj, cvpj_trackid, scene_strip, inst_obj.plugslots.slots_audio)
 
 			if scene_deck.type == 'sample':
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'audio' if scene_deck.type == 'sample' else 'instruments', 1, False)
@@ -275,7 +283,7 @@ class input_serato(plugins.base):
 				track_obj.params.add('pan', scene_strip.pan, 'float')
 				track_obj.datavals.add('pan_mode', 'stereo')
 				track_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
-				do_chan_strip(convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
+				do_chan_strip(eq_defined, convproj_obj, cvpj_trackid, scene_strip, track_obj.plugslots.slots_audio)
 
 
 		for num, scene in enumerate(project_obj.scenes):
@@ -289,6 +297,91 @@ class input_serato(plugins.base):
 
 				scene_deck = project_obj.scene_decks[decknum]
 				usechannel = 1 if scene_deck.type == 'drums' else 0
+
+				has_eq = []
+
+				if deck_sequence.automation_curves:
+					for sauto in deck_sequence.automation_curves:
+						if sauto.type == 'parameter':
+							if True:
+							#try:
+								autoloc = ['track' if not usechannel else 'group', cvpj_trackid, None]
+
+								param_id = sauto.parameter
+								param_drum = -1
+								param_is_fx = None
+								param_fxparam = None
+								toadd_eq = False
+
+								trackid = cvpj_trackid
+								valtype = 'float'
+								if param_id.startswith('drum_'): 
+									param_drum, param_id = param_id[5:].split('_', 1)
+									param_drum = int(param_drum)
+								if param_id.startswith('post_fader_effect_'): param_is_fx, param_id = param_id[18:].split('_', 1)
+								if param_id.startswith('plugin_'): param_id = param_id[7:].split('_', 1)[0]
+
+								if param_drum != -1: 
+									autoloc[1] += '_'+str(param_drum)
+									autoloc[0] = 'track'
+									trackid += '_'+str(param_drum)
+
+								if param_id == 'high_eq': 
+									autoloc[0] = 'plugin'
+									autoloc[1] += '_fx_eq'
+									autoloc[2] = 'low_gain'
+									has_eq.append(param_drum)
+									toadd_eq = True
+
+								if param_id == 'mid_eq': 
+									autoloc[0] = 'plugin'
+									autoloc[1] += '_fx_eq'
+									autoloc[2] = 'mid_gain'
+									toadd_eq = True
+									has_eq.append(param_drum)
+
+								if param_id == 'low_eq': 
+									autoloc[0] = 'plugin'
+									autoloc[1] += '_fx_eq'
+									autoloc[2] = 'high_gain'
+									toadd_eq = True
+									has_eq.append(param_drum)
+
+								if param_id == 'pan': autoloc[2] = 'pan'
+
+								if param_is_fx: 
+									autoloc[1] += '_post_fader_effect_'+param_is_fx
+									if param_id == 'value':
+										autoloc[0] = 'plugin'
+										autoloc[2] = 'amount'
+									elif param_id == 'on':
+										valtype = 'bool'
+										autoloc[0] = 'slot'
+										autoloc[2] = 'wet'
+									else:
+										autoloc[0] = 'plugin'
+										autoloc[2] = 'ext_param_'+param_id
+
+								if toadd_eq and trackid not in eq_defined:
+									plugslotsaudio = eq_track[trackid]
+									fxplugid = trackid+'_fx_eq'
+									fxplugin_obj = convproj_obj.plugin__add(fxplugid, 'universal', 'eq', '3band')
+									fxplugin_obj.params.add('lowmid_freq', 500, 'float')
+									fxplugin_obj.params.add('midhigh_freq', 5000, 'float')
+									plugslotsaudio.append(fxplugid)
+									eq_defined.append(trackid)
+
+								autoseries = scene_obj.automation.create(autoloc, valtype, False)
+								pl_points = autoseries.add_pl_points()
+								for kf in sauto.keyframes:
+									autopoint = pl_points.data.add_point()
+									autopoint.pos = kf.time
+									autopoint.value = kf.value
+									autopoint.type = 'normal'
+								pl_points.time.set_posdur(0, max(960*4, pl_points.data.get_dur()))
+
+							#except:
+							#	pass
 
 				if deck_sequence.notes:
 					trscene_obj = convproj_obj.track__add_scene(cvpj_trackid, sceneid, 'main')
@@ -421,7 +514,7 @@ class input_serato(plugins.base):
 				master_obj.params.add('vol', 0.7*master_strip.gain*master_strip.volume, 'float')
 				master_obj.params.add('pan', master_strip.pan, 'float')
 				master_obj.datavals.add('pan_mode', 'stereo')
-				do_chan_strip(convproj_obj, 'master', master_strip, master_obj.plugslots.slots_audio)
+				do_chan_strip(eq_defined, convproj_obj, 'master', master_strip, master_obj.plugslots.slots_audio)
 
 		if 'name' in project_obj.metadata: convproj_obj.metadata.name = project_obj.metadata['name']
 		if 'artist' in project_obj.metadata: convproj_obj.metadata.author = project_obj.metadata['artist']

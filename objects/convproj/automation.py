@@ -563,9 +563,11 @@ class cvpj_automation:
 	def iter_all_external(self, pluginid):
 		for autoloc, autodata in self.data.items():
 			paramname = autoloc[-1]
-			if paramname.startswith('ext_param_'):
-				paramnum = int(paramname[10:])
-				yield autoloc, autodata, paramnum
+			if autoloc[0] in ['slot', 'plugin']:
+				if autoloc[1] == pluginid:
+					if paramname.startswith('ext_param_'):
+						paramnum = int(paramname[10:])
+						yield autoloc, autodata, paramnum
 
 	def iter_nopl_points_external(self, pluginid):
 		for autoloc, autodata in self.iter_nopl_points(filter=['plugin', pluginid]):

@@ -115,6 +115,15 @@ class input_zmaestro(plugins.base):
 							plugin_obj.filter.on = True
 							plugin_obj.filter.type.set('high_pass', None)
 							plugin_obj.filter.freq = int(fxparams['Frequency'])/2
+					elif fxtype == 'Compressor':
+						plugin_obj = convproj_obj.plugin__add(fxid, 'universal', 'compressor', None)
+						if 'Attack' in fxparams: plugin_obj.params.add('attack', float(fxparams['Attack'])/1000, 'float')
+						plugin_obj.params.add('pregain', 0, 'float')
+						if 'Soft_Knee' in fxparams: plugin_obj.params.add('knee', float(fxparams['Soft_Knee']), 'float')
+						if 'Output_Gain' in fxparams: plugin_obj.params.add('postgain', float(fxparams['Output_Gain']), 'float')
+						if 'Ratio' in fxparams: plugin_obj.params.add('ratio', float(fxparams['Ratio']), 'float')
+						if 'Release' in fxparams: plugin_obj.params.add('release', float(fxparams['Release'])/1000, 'float')
+						if 'Threshold' in fxparams: plugin_obj.params.add('threshold', float(fxparams['Threshold']), 'float')
 					else:
 						plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'z_maestro', fx.type)
 						plugin_obj.role = 'fx'

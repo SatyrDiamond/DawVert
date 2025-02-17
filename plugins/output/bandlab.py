@@ -224,7 +224,7 @@ class output_bandlab(plugins.base):
 						pass
 
 			os.makedirs(foldpath, exist_ok=True)
-			outpath = os.path.join(folder, namet, filename)
+			outpath = os.path.join(folder, namet, os.path.basename(dawvert_intent.output_file))
 			project_obj.save_to_file(outpath)
 
 def do_automation(convproj_obj, autoloc, blx_auto):

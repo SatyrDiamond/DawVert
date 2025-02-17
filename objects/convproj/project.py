@@ -37,6 +37,7 @@ from functions_song import convert_m2r
 from functions_song import convert_m2mi
 from functions_song import convert_mi2m
 from functions_song import convert_rm2m
+from functions_song import convert_ts2m
 
 from functions_song import convert_ms2rm
 from functions_song import convert_rs2r
@@ -49,6 +50,7 @@ typelist['rs'] = 'RegularScened'
 typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['ms'] = 'MultipleScened'
+typelist['ts'] = 'TrackerSingle'
 
 logger_project = logging.getLogger('project')
 logger_filesearch = logging.getLogger('filesearch')
@@ -202,10 +204,17 @@ class cvpj_project:
 		self.sample_folders = []
 		self.scenes = {}
 		self.scene_placements = []
+		self.tracker_single = None
 
 		self._m2r_visual_playlist_first = False
 
 # --------------------------------------------------------- MAIN ---------------------------------------------------------
+
+	def main__create_tracker_single(self):
+		from objects.convproj.tracker import pat_single
+		self.type = 'ts'
+		self.tracker_single = pat_single.convproj_tracker_patsong()
+		return self.tracker_single
 
 	def main__sort_tracks(self):
 		sortpos = {}
@@ -277,8 +286,14 @@ class cvpj_project:
 		if self.type == 'ri' and out_type == 'mi': convert_ri2mi.convert(self)
 		elif self.type == 'ri' and out_type == 'r': convert_ri2r.convert(self)
 
-		elif self.type == 'm' and out_type == 'mi': convert_m2mi.convert(self)
-		elif self.type == 'm' and out_type == 'r': convert_m2r.convert(self)
+		elif self.type == 'ts' and out_type == 'm':
+			convert_ts2m.convert(self)
+		elif self.type in ['m', 'ts'] and out_type == 'mi':
+			if self.type == 'ts': convert_ts2m.convert(self)
+			convert_m2mi.convert(self)
+		elif self.type in ['m', 'ts'] and out_type == 'r': 
+			if self.type == 'ts': convert_ts2m.convert(self)
+			convert_m2r.convert(self)
 
 		elif self.type == 'r' and out_type == 'm': convert_r2m.convert(self)
 		elif self.type == 'r' and out_type == 'mi': 
@@ -322,7 +337,7 @@ class cvpj_project:
 			pass
 		
 		else:
-			logger_project.error(typelist[in_type]+' to '+typelist[out_type]+' is not supported.')
+			logger_project.error(typelist[self.type]+' to '+typelist[out_type]+' is not supported.')
 			exit()
 
 		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)

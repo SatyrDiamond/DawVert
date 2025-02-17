@@ -6,9 +6,6 @@ import io
 import os.path
 import plugins
 
-TEXTSTART = 'it_inst_'
-MAINCOLOR = [0.71, 0.58, 0.47]
-
 def env_to_cvpj(it_env, plugin_obj, t_type, i_div): 
 	autopoints_obj = plugin_obj.env_points_add(t_type, 48, False, 'float')
 	autopoints_obj.sustain_on = bool(2 in it_env.flags)
@@ -90,14 +87,13 @@ class input_it(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
-		in_dict['projtype'] = 'm'
+		in_dict['projtype'] = 'ts'
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'IMPM'])
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import tracker_it as proj_it
-		from objects.tracker import pat_single
 		global samplefolder
 
 		project_obj = proj_it.it_song()
@@ -114,29 +110,32 @@ class input_it(plugins.base):
 		
 		it_useinst = 2 in project_obj.flags
 
-		table_orders = list(project_obj.l_order.copy())
-		while -2 in table_orders: table_orders.remove(-2)
-		while -1 in table_orders: table_orders.remove(-1)
-		
-		breakcounts = [0]
-		for x in project_obj.l_order:
-			if x not in [-1, -2]: breakcounts.append(0)
-			else: breakcounts[-1] += 1
-		timepoints = [n for n, x in enumerate(breakcounts) if x]
-
 		if dawvert_intent.input_mode == 'file':
 			if xmodits_exists == True and dawvert_intent.input_file:
 				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
 				try: xmodits.dump(dawvert_intent.input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
 				except: pass
 
-		patterndata_obj = pat_single.single_patsong(64, TEXTSTART, MAINCOLOR)
-		patterndata_obj.orders = table_orders
-		patterndata_obj.timepoints = timepoints
+		tracker_obj = convproj_obj.main__create_tracker_single()
+		tracker_obj.set_num_chans(64)
+		tracker_obj.maincolor = [0.71, 0.58, 0.47]
+		tracker_obj.tempo = project_obj.tempo
+		tracker_obj.speed = project_obj.speed
+
+		table_orders = list(project_obj.l_order.copy())
+		while -2 in table_orders: table_orders.remove(-2)
+		while -1 in table_orders: table_orders.remove(-1)
+		tracker_obj.orders = table_orders
+
+		breakcounts = [0]
+		for x in project_obj.l_order:
+			if x not in [-1, -2]: breakcounts.append(0)
+			else: breakcounts[-1] += 1
+		tracker_obj.timepoints = [n for n, x in enumerate(breakcounts) if x]
 
 		for patnum, itpat_obj in enumerate(project_obj.patterns):
 			if itpat_obj.used:
-				pattern_obj = patterndata_obj.pattern_add(patnum, itpat_obj.rows)
+				pattern_obj = tracker_obj.pattern_add(patnum, itpat_obj.rows)
 				for rownum, rowdatas in enumerate(itpat_obj.data):
 					for cell_channel, cell_note, cell_instrument, cell_volpan, cell_commandtype, cell_commandval in rowdatas:
 						out_note = None
@@ -163,7 +162,7 @@ class input_it(plugins.base):
 
 		if project_obj.ompt_cnam:
 			for n, t in enumerate(project_obj.ompt_cnam):
-				if t: patterndata_obj.channels[n].name = t
+				if t: tracker_obj.channels[n].name = t
 
 		if project_obj.ompt_pnam:
 			for n, t in enumerate(project_obj.ompt_pnam):
@@ -175,26 +174,18 @@ class input_it(plugins.base):
 
 		if project_obj.ompt_chfx:
 			for n, t in enumerate(project_obj.ompt_chfx):
-				if t: patterndata_obj.channels[n].fx_plugins.append('FX'+str(t))
+				if t: tracker_obj.channels[n].fx_plugins.append('FX'+str(t))
 
-		patterndata_obj.to_cvpj(convproj_obj, TEXTSTART, project_obj.tempo, project_obj.speed, False, MAINCOLOR)
-
-		for n in range(64):
+		for n, d in enumerate(tracker_obj.channels):
 			ch_pan = ((project_obj.l_chnpan[n]&127)/32)-1
-			ch_mute = bool(project_obj.l_chnpan[n]&128)
-			ch_vol = project_obj.l_chnvol[n]/64
-			if n in convproj_obj.playlist:
-				s_pl = convproj_obj.playlist[n]
-				if ch_pan != 2.125: s_pl.params.add('pan', ch_pan, 'float')
-				s_pl.params.add('vol', ch_vol, 'float')
-				s_pl.params.add('on', not ch_mute, 'bool')
+			if ch_pan != 2.125: d.pan = ch_pan
+			d.enabled = not bool(project_obj.l_chnpan[n]&128)
+			d.vol = project_obj.l_chnvol[n]/64
 
 		track_volume = 0.3
 
 		if it_useinst:
 			for instrumentcount, it_inst in enumerate(project_obj.instruments):
-				it_instname = TEXTSTART + str(instrumentcount+1)
-				
 				cvpj_instname = get_name(it_inst.name, it_inst.dosfilename)
 
 				n_s_t = it_inst.notesampletable
@@ -211,9 +202,8 @@ class input_it(plugins.base):
 				bn_s_t_ifsame = data_values.list__ifallsame(bn_s_t[12:108])
 				if bn_s_t_ifsame: bn_s_t_f = bn_s_t[12]
 
-				inst_obj = convproj_obj.instrument__add(it_instname)
+				inst_obj = tracker_obj.add_inst(convproj_obj, instrumentcount, None)
 				inst_obj.visual.name = cvpj_instname
-				inst_obj.visual.color.set_float(MAINCOLOR)
 
 				if bn_s_t_ifsame:
 					if (not ''.join(list(map(lambda x: x.strip(), cvpj_instname.split())))):
@@ -307,13 +297,11 @@ class input_it(plugins.base):
 
 		if it_useinst == 0:
 			for samplecount, it_samp in enumerate(project_obj.samples):
-				it_instname = TEXTSTART + str(samplecount+1)
 				cvpj_instname = get_name(it_samp.name, it_samp.dosfilename)
 				track_volume = 0.3*calc_samp_vol(it_samp)
 
-				inst_obj = convproj_obj.instrument__add(it_instname)
+				inst_obj = tracker_obj.add_inst(convproj_obj, samplecount, None)
 				inst_obj.visual.name = cvpj_instname
-				inst_obj.visual.color.set_float(MAINCOLOR)
 				plugin_obj, synthid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, samplecount+1)
 				inst_obj.plugslots.set_synth(synthid)
 				inst_obj.params.add('vol', track_volume, 'float')
@@ -321,9 +309,6 @@ class input_it(plugins.base):
 		convproj_obj.track_master.params.add('vol', project_obj.globalvol/128, 'float')
 
 		# ------------- Song Message -------------
-		convproj_obj.do_actions.append('do_addloop')
-		convproj_obj.do_actions.append('do_lanefit')
-		convproj_obj.params.add('bpm', project_obj.tempo/(project_obj.speed/6), 'float')
 
 		convproj_obj.metadata.name = project_obj.title
 		convproj_obj.metadata.comment_text = project_obj.songmessage

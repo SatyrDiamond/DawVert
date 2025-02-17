@@ -8,8 +8,6 @@ import numpy as np
 import math
 
 FINETUNE = [8363, 8413, 8463, 8529, 8581, 8651, 8723, 8757, 7895, 7941, 7985, 8046, 8107, 8169, 8232, 8280]
-TEXTSTART = 'MOD_Inst_'
-MAINCOLOR = [0.47, 0.47, 0.47]
 
 IGNORE_ERRORS = False
 
@@ -31,11 +29,10 @@ class input_mod(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
-		in_dict['projtype'] = 'm'
+		in_dict['projtype'] = 'ts'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import tracker_mod as proj_mod
-		from objects.tracker import pat_single
 		from objects import audio_data
 		
 		project_obj = proj_mod.mod_song()
@@ -46,19 +43,23 @@ class input_mod(plugins.base):
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 
-		cvpj_bpm = 125
-		current_speed = 6
+		convproj_obj.metadata.name = project_obj.title
+
+		tracker_obj = convproj_obj.main__create_tracker_single()
+		tracker_obj.set_num_chans(project_obj.num_chans)
+		tracker_obj.maincolor = [0.47, 0.47, 0.47]
+		tracker_obj.tempo = 125
+		tracker_obj.speed = 6
+		tracker_obj.orders = project_obj.l_order
+		tracker_obj.use_starttempo = True
 
 		for num, sample_obj in enumerate(project_obj.samples):
 			strnum = str(num+1)
 
-			cvpj_instid = TEXTSTART + strnum
-
 			pluginid = 'sampler_'+strnum
 
-			inst_obj = convproj_obj.instrument__add(cvpj_instid)
+			inst_obj = tracker_obj.add_inst(convproj_obj, num, None)
 			inst_obj.visual.name = sample_obj.name if not IGNORE_ERRORS else re.sub(r'[\x00-\x1f\x7f-\x9f]', '', sample_obj.name)
-			inst_obj.visual.color.set_float(MAINCOLOR)
 			inst_obj.params.add('vol', 0.3, 'float')
 			
 			if sample_obj.length != 0 and sample_obj.length != 1:
@@ -85,11 +86,8 @@ class input_mod(plugins.base):
 				sp_obj.loop_active = loopstart != 0 and loopend != 2
 				sp_obj.loop_start = loopstart
 
-		patterndata_obj = pat_single.single_patsong(project_obj.num_chans, TEXTSTART, MAINCOLOR)
-		patterndata_obj.orders = project_obj.l_order
-
 		for num_pat, pat_data in enumerate(project_obj.patterns):
-			pattern_obj = patterndata_obj.pattern_add(num_pat, 64)
+			pattern_obj = tracker_obj.pattern_add(num_pat, 64)
 			for num_row, row_data in enumerate(pat_data.data):
 				for num_ch, row_ch in enumerate(row_data):
 					if np.any(row_ch):
@@ -117,12 +115,3 @@ class input_mod(plugins.base):
 
 						if cell_fx_type == 13: pattern_obj.cell_g_param(num_ch, num_row, 'break_to_row', cell_fx_param)
 						if cell_fx_type == 15: pattern_obj.cell_g_param(num_ch, num_row, 'speed' if cell_fx_param < 32 else 'tempo', cell_fx_param)
-
-		patterndata_obj.to_cvpj(convproj_obj, TEXTSTART, cvpj_bpm, current_speed, True, MAINCOLOR)
-
-		convproj_obj.metadata.name = project_obj.title
-		
-		convproj_obj.do_actions.append('do_addloop')
-		convproj_obj.do_actions.append('do_lanefit')
-
-		convproj_obj.params.add('bpm', cvpj_bpm, 'float')

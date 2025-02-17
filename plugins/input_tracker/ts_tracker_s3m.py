@@ -7,7 +7,6 @@ import os.path
 from functions import data_bytes
 
 TEXTSTART = 's3m_inst_'
-MAINCOLOR = [0.65, 0.57, 0.33]
 
 class input_s3m(plugins.base):
 	def is_dawvert_plugin(self): 
@@ -27,14 +26,13 @@ class input_s3m(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
-		in_dict['projtype'] = 'm'
+		in_dict['projtype'] = 'ts'
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([44, b'SCRM'])
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import tracker_s3m as proj_s3m
-		from objects.tracker import pat_single
 		
 		project_obj = proj_s3m.s3m_song()
 		if dawvert_intent.input_mode == 'file':
@@ -44,14 +42,20 @@ class input_s3m(plugins.base):
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 		
-		current_tempo = project_obj.tempo
-		current_speed = project_obj.speed
-
-		tempo_slide = 0
-
 		t_orderlist = project_obj.l_order.copy()[0:-1]
 		while 255 in t_orderlist: t_orderlist.remove(255)
 		
+		tracker_obj = convproj_obj.main__create_tracker_single()
+		tracker_obj.set_num_chans(32)
+		tracker_obj.maincolor = [0.65, 0.57, 0.33]
+		tracker_obj.tempo = project_obj.tempo
+		tracker_obj.speed = project_obj.speed
+		tracker_obj.orders = t_orderlist
+
+		current_tempo = project_obj.tempo
+
+		tempo_slide = 0
+
 		# ------------- Instruments -------------
 		for s3m_numinst, s3m_inst in enumerate(project_obj.instruments):
 			cvpj_instid = TEXTSTART + str(s3m_numinst+1)
@@ -61,9 +65,9 @@ class input_s3m(plugins.base):
 			else: cvpj_inst_name = ' '
 
 			wave_path = samplefolder+str(s3m_numinst).zfill(2)+'.wav'
-			inst_obj = convproj_obj.instrument__add(cvpj_instid)
+			inst_obj = tracker_obj.add_inst(convproj_obj, s3m_numinst, None)
 			inst_obj.visual.name = cvpj_inst_name
-			inst_obj.visual.color.set_float([0.32, 0.27, 0.16] if not s3m_inst.type else [0.65, 0.57, 0.33])
+			if not s3m_inst.type: inst_obj.visual.color.set_float([0.32, 0.27, 0.16])
 			inst_obj.params.add('vol', 0.3, 'float')
 
 			if s3m_inst.type == 1:
@@ -78,11 +82,8 @@ class input_s3m(plugins.base):
 
 				inst_obj.plugslots.set_synth(pluginid)
 
-		patterndata_obj = pat_single.single_patsong(32, TEXTSTART, MAINCOLOR)
-		patterndata_obj.orders = t_orderlist
-
 		for patnum, s3mpat_obj in enumerate(project_obj.patterns):
-			pattern_obj = patterndata_obj.pattern_add(patnum, 64)
+			pattern_obj = tracker_obj.pattern_add(patnum, 64)
 			for rownum, rowdatas in enumerate(s3mpat_obj.data):
 				for c_channel, c_note, c_inst, c_vol, c_command, c_info in rowdatas:
 
@@ -119,8 +120,6 @@ class input_s3m(plugins.base):
 						if c_command == 26: 
 							pattern_obj.cell_param(c_channel, rownum, 'pan', ((c_info/128)-0.5)*2)
 						  
-		patterndata_obj.to_cvpj(convproj_obj, TEXTSTART, project_obj.tempo, project_obj.speed, False, MAINCOLOR)
-
 		convproj_obj.metadata.name = project_obj.name
 		convproj_obj.metadata.comment_text = '\r'.join([i.name for i in project_obj.instruments])
 		

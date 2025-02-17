@@ -6,10 +6,10 @@ import os
 import numpy as np
 import math
 
-from plugins.input_tracker.m_tracker_s3m import input_s3m as s3m
-from plugins.input_tracker.m_tracker_mod import input_mod as mod
-from plugins.input_tracker.m_tracker_it import input_it as it
-from plugins.input_tracker.m_tracker_xm import input_xm as xm
+from plugins.input_tracker.ts_tracker_s3m import input_s3m as s3m
+from plugins.input_tracker.ts_tracker_mod import input_mod as mod
+from plugins.input_tracker.ts_tracker_it import input_it as it
+from plugins.input_tracker.ts_tracker_xm import input_xm as xm
 
 import logging
 logger_input = logging.getLogger('input')
@@ -42,7 +42,7 @@ class input_mod(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
-		in_dict['projtype'] = 'm'
+		in_dict['projtype'] = 'ts'
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'\xc1\x83\x2a\x9e'])

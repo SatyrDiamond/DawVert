@@ -10,9 +10,6 @@ try: import xmodits
 except: xmodits_exists = False
 else: xmodits_exists = True
 
-TEXTSTART = 'XM_Inst_'
-MAINCOLOR = [0.16, 0.33, 0.53]
-
 def env_to_cvpj(xm_env, plugin_obj, ispan, fadeout):
 	envtype = 'pan' if ispan else 'vol'
 	autopoints_obj = plugin_obj.env_points_add(envtype, 48, False, 'float')
@@ -50,14 +47,13 @@ class input_xm(plugins.base):
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
-		in_dict['projtype'] = 'm'
+		in_dict['projtype'] = 'ts'
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'Extended Module: '])
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import tracker_xm as proj_xm
-		from objects.tracker import pat_single
 		global samplefolder
 		
 		project_obj = proj_xm.xm_song()
@@ -68,12 +64,20 @@ class input_xm(plugins.base):
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 		
-		patterndata_obj = pat_single.single_patsong(project_obj.num_channels, TEXTSTART, MAINCOLOR)
-		patterndata_obj.orders = project_obj.l_order
+		tracker_obj = convproj_obj.main__create_tracker_single()
+		tracker_obj.set_num_chans(project_obj.num_channels)
+		tracker_obj.orders = project_obj.l_order
+		tracker_obj.maincolor = [0.16, 0.33, 0.53]
+		tracker_obj.tempo = project_obj.bpm
+		tracker_obj.speed = project_obj.speed
+		tracker_obj.use_starttempo = True
+
+		convproj_obj.metadata.name = project_obj.title
+		convproj_obj.metadata.comment_text = '\r'.join([i.name for i in project_obj.instruments])
 
 		for patnum, xmpat_obj in enumerate(project_obj.patterns):
 			if xmpat_obj.used:
-				pattern_obj = patterndata_obj.pattern_add(patnum, xmpat_obj.rows)
+				pattern_obj = tracker_obj.pattern_add(patnum, xmpat_obj.rows)
 				for rownum, rowdatas in enumerate(xmpat_obj.data):
 					for channel, cell_note, cell_inst, cell_vol, cell_effect, cell_param in rowdatas:
 						output_note = cell_note
@@ -96,12 +100,12 @@ class input_xm(plugins.base):
 
 		if project_obj.ompt_cnam:
 			for n, t in enumerate(project_obj.ompt_cnam):
-				if t: patterndata_obj.channels[n].name = t
+				if t: tracker_obj.channels[n].name = t
 
 		if len(project_obj.ompt_ccol):
 			for n, t in enumerate(project_obj.ompt_ccol):
 				r,g,b,u = t
-				if not u: patterndata_obj.channels[n].color = [r/255,g/255,b/255]
+				if not u: tracker_obj.channels[n].color = [r/255,g/255,b/255]
 
 		if project_obj.ompt_pnam:
 			for n, t in enumerate(project_obj.ompt_pnam):
@@ -109,7 +113,7 @@ class input_xm(plugins.base):
 
 		if project_obj.ompt_chfx:
 			for n, t in enumerate(project_obj.ompt_chfx):
-				if t: patterndata_obj.channels[n].fx_plugins.append('FX'+str(t))
+				if t: tracker_obj.channels[n].fx_plugins.append('FX'+str(t))
 
 		if project_obj.plugins:
 			for fxnum, plugdata in project_obj.plugins.items():
@@ -124,11 +128,8 @@ class input_xm(plugins.base):
 		xm_cursamplenum = 1
 
 		for instnum, xm_inst in enumerate(project_obj.instruments):
-			cvpj_instid = TEXTSTART + str(instnum+1)
-
-			inst_obj = convproj_obj.instrument__add(cvpj_instid)
+			inst_obj = tracker_obj.add_inst(convproj_obj, instnum, None)
 			inst_obj.visual.name = xm_inst.name
-			inst_obj.visual.color.set_float(MAINCOLOR)
 			inst_obj.params.add('vol', 0.3, 'float')
 
 			sampleregions = data_values.list__to_reigons(xm_inst.notesampletable, 48)
@@ -178,10 +179,3 @@ class input_xm(plugins.base):
 				plugin_obj.env_asdr_from_points('vol')
 
 			xm_cursamplenum += xm_inst.num_samples
-
-		patterndata_obj.to_cvpj(convproj_obj, TEXTSTART, project_obj.bpm, project_obj.speed, True, MAINCOLOR)
-
-		convproj_obj.metadata.name = project_obj.title
-		convproj_obj.metadata.comment_text = '\r'.join([i.name for i in project_obj.instruments])
-		convproj_obj.do_actions.append('do_addloop')
-		convproj_obj.do_actions.append('do_lanefit')

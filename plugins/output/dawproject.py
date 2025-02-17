@@ -410,6 +410,56 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.001, 1)
 			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -1000000, 0)
 
+		if plugin_obj.check_match('universal', 'filter', None):
+			dp_device = device.dawproject_device('Equalizer')
+			dp_device.deviceID = 'e4815188-ba6f-4d14-bcfc-2dcb8f778ccb'
+			dp_device.deviceName = plugin_obj.external_info.name
+			dp_device.name = 'EQ+'
+			dp_device.deviceRole = 'audioFX'
+
+			band = device.dawproject_band()
+			filter_obj = plugin_obj.filter
+			cvpjbandtype = filter_obj.type.type
+
+			if cvpjbandtype == 'notch': band.type = 'notch'
+			if cvpjbandtype == 'high_shelf': band.type = 'highShelf'
+			if cvpjbandtype == 'low_pass': band.type = 'lowPass'
+			if cvpjbandtype == 'peak': band.type = 'bell'
+			if cvpjbandtype == 'low_shelf': band.type = 'lowShelf'
+			if cvpjbandtype == 'high_pass': band.type = 'highPass'
+
+			band.enabled.value = 'true' if filter_obj.on else 'false'
+			band.enabled.used = True
+			band.enabled.id = 'nfilter__'+pluginid+'__enabled'
+
+			band.freq.value = filter_obj.freq
+			band.freq.used = True
+			band.freq.id = 'nfilter__'+pluginid+'__freq'
+			band.freq.unit = 'hertz'
+			band.freq.max = 20
+			band.freq.min = 20000
+
+			band.gain.value = filter_obj.gain
+			band.gain.used = True
+			band.gain.id = 'nfilter__'+pluginid+'__gain'
+			band.gain.unit = 'decibel'
+			band.gain.max = 30.000000
+			band.gain.min = -30.000000
+
+			band.q.value = filter_obj.q
+			band.q.used = True
+			band.q.id = 'nfilter__'+pluginid+'__q'
+			band.q.unit = 'linear'
+			band.q.max = 40.003685
+			band.q.min = 0.024998
+
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'on'], 'bool', band.enabled.id, None)
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'freq'], 'float', band.freq.id, None)
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'gain'], 'float', band.gain.id, None)
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'q'], 'float', band.q.id, None)
+
+			dp_device.bands.append(band)
+
 		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
 		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
 		if is_eq_bands or is_eq_8limited:

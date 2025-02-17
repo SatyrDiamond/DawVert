@@ -4,6 +4,7 @@
 import xml.etree.ElementTree as ET
 import plugins
 import numpy as np
+from functions import xtramath
 
 def do_automation(convproj_obj, trackid, atype, timelineobj):
 	nextinstant = False
@@ -43,6 +44,7 @@ class input_zmaestro(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import z_maestro as proj_z_maestro
 		from objects import audio_data
+		from objects.inst_params import fx_delay
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 
@@ -115,6 +117,18 @@ class input_zmaestro(plugins.base):
 							plugin_obj.filter.on = True
 							plugin_obj.filter.type.set('high_pass', None)
 							plugin_obj.filter.freq = int(fxparams['Frequency'])/2
+					elif fxtype == 'Echo':
+						delay_obj = fx_delay.fx_delay()
+						delay_obj.feedback_first = True
+						if 'Decay' in fxparams: delay_obj.feedback[0] = xtramath.from_db(float(fxparams['Decay']))
+						timing_obj = delay_obj.timing_add(0)
+						if 'Delay' in fxparams: timing_obj.set_seconds(float(fxparams['Delay']))
+						plugin_obj, pluginid = delay_obj.to_cvpj(convproj_obj, fxid)
+					elif fxtype == 'StereoWiden':	
+						plugin_obj = convproj_obj.plugin__add(fxid, 'universal', 'width', None)
+						if 'Amount' in fxparams: plugin_obj.params.add('width', float(fxparams['Amount'])-1, 'float')
+					elif fxtype == 'Invert':	
+						plugin_obj = convproj_obj.plugin__add(fxid, 'universal', 'invert', None)
 					elif fxtype == 'Compressor':
 						plugin_obj = convproj_obj.plugin__add(fxid, 'universal', 'compressor', None)
 						if 'Attack' in fxparams: plugin_obj.params.add('attack', float(fxparams['Attack'])/1000, 'float')
@@ -126,7 +140,6 @@ class input_zmaestro(plugins.base):
 						if 'Threshold' in fxparams: plugin_obj.params.add('threshold', float(fxparams['Threshold']), 'float')
 					else:
 						plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'z_maestro', fx.type)
-						plugin_obj.role = 'fx'
 						for key, val in fx.params.items():
 							if val.replace('.', '').isnumeric(): plugin_obj.params.add(key, float(val), 'float')
 							elif val in ['true', 'false']: plugin_obj.params.add(key, val=='true', 'bool')

@@ -297,9 +297,9 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 					placement_obj.visual.color.set_hex(clipmetadata['BlockColor'])
 				placement_obj.time.set_posdur(block.position, block.framesCount)
 				for blockevent in block.events:
-					placement_obj = placement_obj.add()
-					placement_obj.time.set_posdur(blockevent.position, blockevent.framesCount)
 					placement_obj.time.set_offset(blockevent.positionStart)
+					placement_obj = placement_obj.add()
+					placement_obj.time.set_posdur(blockevent.position, blockevent.framesCount+blockevent.positionStart)
 
 					if 'BlockColor' in clipmetadata: placement_obj.visual.color.set_hex(clipmetadata['BlockColor'])
 
@@ -313,17 +313,21 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 					stretch_obj.preserve_pitch = True
 					stretch_obj.is_warped = True
 
+					warp_obj = stretch_obj.warp
+
 					placement_obj.fade_in.set_dur(blockevent.fadeInLength/pfreq, 'beats')
 					placement_obj.fade_out.set_dur(blockevent.fadeOutLength/pfreq, 'beats')
 
 					ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
-					warp_obj = stretch_obj.warp
+					maxbeat = 0
+
 					warp_obj.seconds = sampleref_obj.dur_sec
 					for stretchMark in blockevent.stretchMarks:
 						warp_point_obj = warp_obj.points__add()
 						warp_point_obj.beat = stretchMark.newPosition/pfreq
 						warp_point_obj.second = stretchMark.initPosition/(sampleref_obj.hz if sampleref_obj else pfreq)
+						maxbeat = stretchMark.newPosition
 
 					warp_obj.calcpoints__speed()
 					

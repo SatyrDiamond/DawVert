@@ -33,6 +33,7 @@ class input_zmaestro(plugins.base):
 	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['zmm']
+		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['placement_loop'] = ['loop']

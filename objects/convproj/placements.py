@@ -468,7 +468,7 @@ class cvpj_placements:
 					out_end = min(main_e, event_e)
 
 					scs = out_start-event_s
-
+					
 					if False:
 						print('E ', end='| ')
 						for x in [main_s+event_o, main_e]: print(str(round(x, 4)).ljust(7), end=' ')
@@ -482,8 +482,11 @@ class cvpj_placements:
 
 					cutplpl_obj = copy.deepcopy(e)
 					cutplpl_obj.time.position = (out_start+basepos)-main_s
-					offset_d = (main_e-main_s)-scs
-					cutplpl_obj.time.duration = min(out_end-out_start, offset_d)
+
+					sco = out_start-event_o
+					offset_d = (main_e-main_s)-sco
+
+					cutplpl_obj.time.duration = max(out_end-out_start, offset_d)
 					cutplpl_obj.time.cut_type = 'cut'
 					cutplpl_obj.time.cut_start += scs
 					cutplpl_obj.muted = cutplpl_obj.muted or nestedpl_obj.muted

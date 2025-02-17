@@ -44,7 +44,6 @@
             <calc name="threshold" type="pow_r">0.8913</calc>
             <calc name="attack" type="mul">1000</calc>
             <calc name="release" type="mul">1000</calc>
-            <calc name="knee" type="div">6</calc>
         </proc>
         <output plugtype="native:ableton:Compressor2">
             <param to="Threshold" from="threshold" type="float">0</param>

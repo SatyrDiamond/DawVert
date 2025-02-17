@@ -203,9 +203,6 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 	warp_obj = stretch_obj.warp
 	warp_obj.fix__onlyone()
 	warp_obj.calcpoints__speed()
-	#warp_obj.debugtxt_warp()
-
-
 	#warp_obj.fixpl__offset(cvpj_audioclip.time, 1)
 
 

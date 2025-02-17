@@ -751,8 +751,8 @@ class output_soundbridge(plugins.base):
 							warp_obj.fix__alwaysplus()
 							warp_obj.fix__remove_dupe_sec()
 							warp_obj.fix__sort()
-							
-							warp_obj.debugtxt_warp()
+
+							#warp_obj.debugtxt_warp()
 
 							event = proj_soundbridge.soundbridge_event(None)
 							event.position = 0

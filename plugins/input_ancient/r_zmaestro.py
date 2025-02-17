@@ -77,13 +77,14 @@ class input_zmaestro(plugins.base):
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 				track_obj.params.add('vol', zm_track.volume/100, 'float')
 				track_obj.params.add('pan', (zm_track.pan-50)/50, 'float')
-				track_obj.visual.from_dset('z_maestro', 'track', tracktype, True)
-				track_obj.visual.name = zm_track.name
 				if not zm_track.soundfont:
 					track_obj.midi.out_inst.patch = zm_track.instrumentcode
 					track_obj.midi.out_inst.bank = zm_track.instrumentbank
 					track_obj.to_midi(convproj_obj, cvpj_trackid, True)
+					track_obj.visual.name = zm_track.name
 				else:
+					track_obj.visual.from_dset('z_maestro', 'track', tracktype, True)
+					track_obj.visual.name = zm_track.name
 					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'universal', 'soundfont2', None)
 					track_obj.plugslots.set_synth(cvpj_trackid)
 					sf2_path = os.path.join(dawvert_intent.input_folder, zm_track.soundfont)

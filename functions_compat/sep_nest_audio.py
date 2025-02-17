@@ -10,7 +10,6 @@ def process(convproj_obj, in__placement_audio_nested, out__placement_audio_neste
 			return True
 		elif convproj_obj.type == 'r':
 			for trackid, track_obj in convproj_obj.track__iter():
-				track_obj.placements.pl_audio_nested.remove_loops([])
 				track_obj.placements.remove_nested()
 				for trackid, lane_obj in track_obj.lanes.items(): lane_obj.placements.remove_nested()
 			return True

@@ -6,6 +6,7 @@ import plugins
 import numpy as np
 from functions import xtramath
 from objects import globalstore
+import os
 
 def do_automation(convproj_obj, trackid, atype, timelineobj):
 	nextinstant = False
@@ -40,7 +41,7 @@ class input_zmaestro(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['placement_loop'] = ['loop']
 		in_dict['projtype'] = 'r'
-		in_dict['plugin_included'] = ['native:z_maestro','universal:midi']
+		in_dict['plugin_included'] = ['native:z_maestro','universal:midi','universal:soundfont2']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import z_maestro as proj_z_maestro
@@ -85,6 +86,10 @@ class input_zmaestro(plugins.base):
 				else:
 					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'universal', 'soundfont2', None)
 					track_obj.plugslots.set_synth(cvpj_trackid)
+					sf2_path = os.path.join(dawvert_intent.input_folder, zm_track.soundfont)
+					convproj_obj.fileref__add(sf2_path, sf2_path, None)
+					plugin_obj.filerefs['file'] = sf2_path
+					plugin_obj.midi.from_sf2(zm_track.instrumentbank, zm_track.instrumentcode)
 
 				if tracktype == 'MIDIDrumTrack': track_obj.is_drum = True
 

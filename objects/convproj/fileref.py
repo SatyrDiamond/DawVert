@@ -308,6 +308,12 @@ class cvpj_fileref:
 					self.folder.win_drive = splitpath[3][6:].upper()
 					splitpath = splitpath[4:]
 
+			if len(splitpath)>3:
+				if splitpath[0] == 'mnt':
+					self.folder.os_type = 'win'
+					self.folder.win_drive = splitpath[1].upper()
+					splitpath = splitpath[2:]
+
 		return splitpath
 
 	def internal_setpath_win(self, in_path, alwaysfile):

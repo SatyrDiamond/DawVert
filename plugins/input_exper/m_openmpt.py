@@ -3,9 +3,6 @@
 
 import plugins
 
-TEXTSTART = 'ompt_Inst_'
-MAINCOLOR = [0.6, 0.6, 0.6]
-
 class input_openmpt(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -29,10 +26,9 @@ class input_openmpt(plugins.base):
 
 	def get_prop(self, in_dict): 
 		in_dict['track_lanes'] = True
-		in_dict['projtype'] = 'm'
+		in_dict['projtype'] = 'ts'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.tracker import pat_single
 		from objects.extlib import openmpt
 		
 		if dawvert_intent.input_mode == 'file':
@@ -45,33 +41,36 @@ class input_openmpt(plugins.base):
 		openmpt_obj.load_lib()
 		openmpt_obj.openmpt_module_create_from_memory2(moduledata)
 
+		metadata = openmpt_obj.get_metadata()
+		if 'title' in metadata: convproj_obj.metadata.name = metadata['title']
+		if 'artist' in metadata: convproj_obj.metadata.author = metadata['artist']
+		if 'message' in metadata: convproj_obj.metadata.comment_text = metadata['message']
+
 		num_channels = openmpt_obj.openmpt_module_get_num_channels()
 		num_instruments = openmpt_obj.openmpt_module_get_num_instruments()
 		num_samples = openmpt_obj.openmpt_module_get_num_samples()
 		num_patterns = openmpt_obj.openmpt_module_get_num_patterns()
 		uses_instruments = bool(num_instruments)
 
+		tracker_obj = convproj_obj.main__create_tracker_single()
+		tracker_obj.set_num_chans(num_channels)
+		tracker_obj.maincolor = [0.6, 0.6, 0.6]
+		tracker_obj.tempo = openmpt_obj.openmpt_module_get_current_tempo()
+		tracker_obj.speed = openmpt_obj.openmpt_module_get_current_speed()
+		tracker_obj.orders = openmpt_obj.get_orderlist()
+
 		if num_instruments:
 			for num in range(num_instruments):
-				strnum = str(num+1)
-				cvpj_instid = TEXTSTART + strnum
-				inst_obj = convproj_obj.instrument__add(cvpj_instid)
+				inst_obj = tracker_obj.add_inst(convproj_obj, num, None)
 				inst_obj.visual.name = openmpt_obj.openmpt_module_get_instrument_name(num).decode()
-				inst_obj.visual.color.set_float(MAINCOLOR)
 		else:
 			for num in range(num_samples):
-				strnum = str(num+1)
-				cvpj_instid = TEXTSTART + strnum
-				inst_obj = convproj_obj.instrument__add(cvpj_instid)
+				inst_obj = tracker_obj.add_inst(convproj_obj, num, None)
 				inst_obj.visual.name = openmpt_obj.openmpt_module_get_sample_name(num).decode()
-				inst_obj.visual.color.set_float(MAINCOLOR)
 			
-		patterndata_obj = pat_single.single_patsong(num_channels, TEXTSTART, MAINCOLOR)
-		patterndata_obj.orders = openmpt_obj.get_orderlist()
-
 		for num_pat in range(num_patterns):
 			num_rows = openmpt_obj.openmpt_module_get_pattern_num_rows(num_pat)
-			pattern_obj = patterndata_obj.pattern_add(num_pat, num_rows)
+			pattern_obj = tracker_obj.pattern_add(num_pat, num_rows)
 			pattern_obj.name = openmpt_obj.openmpt_module_get_pattern_name(num_pat)
 
 			for num_ch in range(num_channels):
@@ -85,18 +84,3 @@ class input_openmpt(plugins.base):
 					if fx == 2: pattern_obj.cell_param(num_ch, num_row, 'std_slide_up', param)
 					if fx == 17: pattern_obj.cell_g_param(num_ch, num_row, 'tempo', param)
 					if fx == 14: pattern_obj.cell_g_param(num_ch, num_row, 'break_to_row', param)
-
-		t_tempo = openmpt_obj.openmpt_module_get_current_tempo()
-		t_speed = openmpt_obj.openmpt_module_get_current_speed()
-
-		patterndata_obj.to_cvpj(convproj_obj, TEXTSTART, t_tempo, t_speed, True, MAINCOLOR)
-
-		metadata = openmpt_obj.get_metadata()
-		if 'title' in metadata: convproj_obj.metadata.name = metadata['title']
-		if 'artist' in metadata: convproj_obj.metadata.author = metadata['artist']
-		if 'message' in metadata: convproj_obj.metadata.comment_text = metadata['message']
-
-		convproj_obj.do_actions.append('do_addloop')
-		convproj_obj.do_actions.append('do_lanefit')
-
-		convproj_obj.params.add('bpm', t_tempo, 'float')

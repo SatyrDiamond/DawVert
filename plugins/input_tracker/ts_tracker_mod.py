@@ -94,12 +94,12 @@ class input_mod(plugins.base):
 						output_note = None
 						output_inst = None
 						cell_p1, cell_p2 = row_ch
-						mod_inst_low = cell_p2 >> 12
-						mod_inst_high = cell_p1 >> 12
-						noteperiod = (cell_p1 & 0x0FFF) 
+						mod_inst_low = int(cell_p2) >> 12
+						mod_inst_high = int(cell_p1) >> 12
+						noteperiod = (int(cell_p1) & 0x0FFF) 
 						if noteperiod != 0: output_note = (round(12 * math.log2((447902/(noteperiod*2)) / 440)) + 69)-72
-						cell_fx_type = (cell_p2 & 0xF00) >> 8
-						cell_fx_param = (cell_p2 & 0xFF) 
+						cell_fx_type = (int(cell_p2) & 0xF00) >> 8
+						cell_fx_param = (int(cell_p2) & 0xFF) 
 						cell_inst_num = mod_inst_high << 4 | mod_inst_low
 						if cell_inst_num != 0: output_inst = cell_inst_num
 

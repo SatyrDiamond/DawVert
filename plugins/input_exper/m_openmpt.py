@@ -58,6 +58,7 @@ class input_openmpt(plugins.base):
 		tracker_obj.tempo = openmpt_obj.openmpt_module_get_current_tempo()
 		tracker_obj.speed = openmpt_obj.openmpt_module_get_current_speed()
 		tracker_obj.orders = openmpt_obj.get_orderlist()
+		tracker_obj.use_starttempo = True
 
 		if num_instruments:
 			for num in range(num_instruments):
@@ -76,7 +77,7 @@ class input_openmpt(plugins.base):
 			for num_ch in range(num_channels):
 				for num_row in range(num_rows):
 					note, inst, volfx, fx, vol, param = openmpt_obj.get_patnote(num_pat, num_row, num_ch)
-					pattern_obj.cell_note(num_ch, num_row, note-1 if note else None, inst if inst else None)
+					pattern_obj.cell_note(num_ch, num_row, note-61 if note else None, inst if inst else None)
 					if volfx: pattern_obj.cell_param(num_ch, num_row, 'vol', vol/64)
 					if fx == 16: pattern_obj.cell_g_param(num_ch, num_row, 'speed', param)
 					if fx == 4: pattern_obj.cell_g_param(num_ch, num_row, 'std_slide_to_note', param)

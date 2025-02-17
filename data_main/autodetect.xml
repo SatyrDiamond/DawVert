@@ -77,7 +77,7 @@
 		<archived type="zip" file="amped-studio-project.json"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="audiosauna">
+	<plugin pluginset="2010s" name="audiosauna">
 		<file fileext=".song"/>
 		<archived type="zip" file="songdata.xml"/>
 	</plugin>
@@ -108,7 +108,7 @@
 		<xml root_name="lmms-project"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="nanostudio_v1">
+	<plugin pluginset="2010s" name="nanostudio_v1">
 		<folder fileext=".prj" files="Package.sng;Package.prj"/>
 	</plugin>
 
@@ -121,7 +121,7 @@
 		<bytes_header data="4f72672d30"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="piyopiyo">
+	<plugin pluginset="y2k" name="piyopiyo">
 		<file fileext=".pmd"/>
 		<bytes_header data="504d44"/>
 	</plugin>
@@ -153,11 +153,11 @@
 		<xml root_name="song"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="z_maestro">
+	<plugin pluginset="2010s" name="z_maestro">
 		<file fileext=".zmm"/>
 	</plugin>
 
-	<plugin pluginset="main" name="caustic">
+	<plugin pluginset="2010s" name="caustic">
 		<file fileext=".caustic"/>
 		<bytes_header data="5241434b"/>
 	</plugin>
@@ -196,7 +196,7 @@
 		<bytes_header data="505454554e452d2d3230303731313139"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="mmf">
+	<plugin pluginset="y2k" name="mmf">
 		<file fileext=".mmf"/>
 		<bytes_header data="4d4d4d44"/>
 	</plugin>
@@ -206,12 +206,12 @@
 		<bytes_header data="504958494d4f4431"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="fruitytracks">
+	<plugin pluginset="y2k" name="fruitytracks">
 		<file fileext=".ftr"/>
 		<bytes_header data="46546864"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="kristal">
+	<plugin pluginset="y2k" name="kristal">
 		<file fileext=".kristal"/>
 		<bytes_header data="43727973"/>
 	</plugin>

@@ -112,8 +112,8 @@ class extlib:
 	loaded_parts = {}
 
 	def load_native(nameid, dllname):
-		osbits = str(os_info.bits)
-		filepath = os.path.join('.', 'libs', os_info.os_type+'_'+osbits, dllname+os_info.dll_fileext)
+		osbits = str(os_info_native.bits)
+		filepath = os.path.join('.', 'libs', os_info_native.os_type+'_'+osbits, dllname+os_info_native.dll_fileext)
 		return extlib.load(nameid, filepath)
 
 	def load(nameid, filepath):

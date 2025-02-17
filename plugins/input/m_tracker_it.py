@@ -183,7 +183,7 @@ class input_it(plugins.base):
 
 		for n in range(64):
 			ch_pan = ((project_obj.l_chnpan[n]&127)/32)-1
-			ch_mute = bool(project_obj.l_chnpan[n]&128)
+			ch_mute = bool(int(project_obj.l_chnpan[n])&128)
 			ch_vol = project_obj.l_chnvol[n]/64
 			if n in convproj_obj.playlist:
 				s_pl = convproj_obj.playlist[n]
@@ -204,7 +204,7 @@ class input_it(plugins.base):
 
 				basenoteadd = 60
 				for n_s_te in n_s_t:
-					bn_s_t.append([n_s_te[0]+basenoteadd, n_s_te[1]])
+					bn_s_t.append([int(n_s_te[0])+basenoteadd, n_s_te[1]])
 					basenoteadd -= 1
 
 				bn_s_t_ifsame = data_values.list__ifallsame(bn_s_t)

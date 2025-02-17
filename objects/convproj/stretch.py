@@ -60,8 +60,8 @@ class cvpj_stretch_warp:
 		print('------------- warps')
 		for x in self.points__iter():
 			print('warp', end=' ')
-			for d in [x.beat, x.second*x.speed*2, x.second, x.speed]:
-				print(str(d).ljust(20), end=' ')
+			for d in [x.beat, x.second*x.speed*2 if x.speed else '!!!', x.second, x.speed]:
+				print(str(d).ljust(25), end=' ')
 			print('')
 
 	def calcpoints__speed(self):
@@ -221,11 +221,16 @@ class cvpj_stretch_warp:
 					warp_point_obj.beat = beats[-1]+((totalsec*self.speed)*2)
 					self.points.append(warp_point_obj)
 
+	def fix__onlyone(self):
+		if len(self.points) == 1:
+			self.points__add__based_beat(0)
+			self.points__add__based_second(self.seconds)
+
 	def fix__fill(self):
 		if self.points:
 			self.points__add__based_second(0)
 			self.points__add__based_beat(0)
-			self.points__add__based_second(self.seconds)
+			#self.points__add__based_second(self.seconds)
 
 	def fix__round(self):
 		for point in self.points:

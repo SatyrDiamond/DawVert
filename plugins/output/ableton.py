@@ -617,7 +617,12 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		do_audio_mpe(audiopl_obj, als_track, als_audioclip)
 
 		warp_obj = stretch_obj.warp
+
+		warp_obj.calcpoints__speed()
+
 		warp_obj.points__add__based_beat(0)
+		warp_obj.calcpoints__speed()
+
 		warp_obj.fixpl__offset(audiopl_obj.time, 1)
 		warp_obj.fix__sort()
 

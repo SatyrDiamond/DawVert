@@ -83,12 +83,12 @@ def do_params(convproj_obj, lane_obj, paramset_obj, dp_channel, starttxt, autolo
 	from_cvpj_auto(convproj_obj, lane_obj.points, autoloc+['vol'], 'float', dp_channel.volume.id, None)
 
 def make_time(clip_obj, cvpjtime_obj):
-	clip_obj.time = cvpjtime_obj.position
-	clip_obj.duration = cvpjtime_obj.duration
-	clip_obj.playStart = cvpjtime_obj.cut_start
+	clip_obj.time = round(cvpjtime_obj.position, 7)
+	clip_obj.duration = round(cvpjtime_obj.duration, 7)
+	clip_obj.playStart = round(cvpjtime_obj.cut_start, 7)
 	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off','loop_eq']:
-		clip_obj.loopStart = cvpjtime_obj.cut_loopstart
-		clip_obj.loopEnd = cvpjtime_obj.cut_loopend
+		clip_obj.loopStart = round(cvpjtime_obj.cut_loopstart, 7)
+		clip_obj.loopEnd = round(cvpjtime_obj.cut_loopend, 7)
 
 def do_mpe_val(value, mpetype):
 	dppoints_obj = points.dawproject_points()
@@ -199,10 +199,17 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 	do_visual_clip(cvpj_audioclip.visual, dp_clip_obj)
 
 	stretch_obj = cvpj_audioclip.sample.stretch
+
 	warp_obj = stretch_obj.warp
-	warp_obj.fix__fill()
+	warp_obj.fix__onlyone()
+	warp_obj.calcpoints__speed()
+	#warp_obj.debugtxt_warp()
+
+
 	#warp_obj.fixpl__offset(cvpj_audioclip.time, 1)
-	warp_obj.fix__sort()
+
+
+
 
 	dp_audio, dp_warps, zip_filepath, real_filepath, maxlen = make_dp_audio(convproj_obj, cvpj_audioclip.sample)
 	if dp_warps: dp_clip_obj.warps = dp_warps
@@ -211,8 +218,10 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 	if dotime: make_time(dp_clip_obj, cvpj_audioclip.time)
 	else: 
 		dp_clip_obj.time = 0
-		dp_clip_obj.duration = maxlen
+		dp_clip_obj.duration = round(maxlen, 7)
 		dp_clip_obj.playStart = 0
+
+	#print(dp_clip_obj.time, dp_clip_obj.duration, dp_clip_obj.playStart, dp_clip_obj.loopStart, dp_clip_obj.loopEnd)
 
 	if os.path.exists(real_filepath) and zip_filepath not in dawproject_zip.namelist(): 
 		dawproject_zip.write(real_filepath, zip_filepath)

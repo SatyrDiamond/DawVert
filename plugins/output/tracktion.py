@@ -475,16 +475,16 @@ class output_tracktion_edit(plugins.base):
 						if audiopl_obj.time.cut_type == 'none':
 							audiopl_obj.time.cut_type = 'cut'
 
+						warp_obj.points__add__based_beat(0)
+						warp_obj.fix__last()
+						warp_obj.fix__fill()
+						warp_obj.fix__round()
+
 						warp_obj.manp__shift_beats(warpmove)
 
-						warp_obj.fix__fill()
-						warp_obj.points__add__based_beat(0)
-						warp_obj.points__add__based_second(0)
-
-						warp_obj.fix__sort()
-
-						warp_obj.fix__round()
+						warp_obj.fix__alwaysplus()
 						warp_obj.fix__remove_dupe_sec()
+						warp_obj.fix__sort()
 
 						afx = proj_tracktion_edit.tracktion_audioclip_fx() 
 						afx.fx_type = 'warpTime'

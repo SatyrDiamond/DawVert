@@ -45,7 +45,6 @@
             <calc name="Threshold" type="mul">-1</calc>
             <calc name="Attack" type="div">1000</calc>
             <calc name="Release" type="div">1000</calc>
-            <calc name="Knee" type="mul">6</calc>
         </proc>
         <output plugtype="universal:compressor">
             <param to="threshold" from="Threshold" type="float">0</param>

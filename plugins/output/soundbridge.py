@@ -547,7 +547,7 @@ class output_soundbridge(plugins.base):
 
 		audio_ids = {}
 		
-		#convproj_obj.sampleref__remove_nonaudiopl()
+		convproj_obj.sampleref__remove_nonaudiopl()
 
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			if sampleref_obj.fileref.exists('win'):

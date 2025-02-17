@@ -221,6 +221,13 @@ class cvpj_stretch_warp:
 					warp_point_obj.beat = beats[-1]+((totalsec*self.speed)*2)
 					self.points.append(warp_point_obj)
 
+	def fix__alwaysplus(self):
+		self.points = [x for x in self.points if round(x.beat, 7)>=0 and round(x.second, 7)>=0]
+
+	def fix__last(self):
+		seconds = [x.second>=self.seconds for x in self.points]
+		if True not in seconds: self.points__add__based_second(self.seconds)
+
 	def fix__onlyone(self):
 		if len(self.points) == 1:
 			self.points__add__based_beat(0)
@@ -239,7 +246,10 @@ class cvpj_stretch_warp:
 
 	def fix__remove_dupe_sec(self):
 		warppoints = {}
-		for point in self.points: warppoints[point.second] = point
+		for point in self.points: 
+			if point.second not in warppoints: warppoints[point.second] = point
+			elif point.speed is not None: 
+				warppoints[point.second].speed = point.speed
 		self.points = list(warppoints.values())
 
 	def fixpl__offset(self, pltime_obj, ppq):
@@ -271,23 +281,23 @@ class cvpj_stretch_warp:
 		#		pltime_obj.position += -(total)*ppq
 		#		pltime_obj.duration += (total)*ppq
 
-	def fix__fill_last(self):
-		if self.points:
-			offset = self.get__offset()
-			if True not in [x.second>=self.seconds for x in self.points]:
-				off_sec = (offset/2)/self.speed
-				warp_point_obj = self.points__add()
-				warp_point_obj.beat = ((self.seconds*2)*self.speed)-offset
-				warp_point_obj.second = self.seconds
-				warp_point_obj.speed = self.speed
+	#def fix__fill_last(self):
+	#	if self.points:
+	#		offset = self.get__offset()
+	#		if True not in [x.second>=self.seconds for x in self.points]:
+	#			off_sec = (offset/2)/self.speed
+	#			warp_point_obj = self.points__add()
+	#			warp_point_obj.beat = ((self.seconds*2)*self.speed)-offset
+	#			warp_point_obj.second = self.seconds
+	#			warp_point_obj.speed = self.speed
 
-	def fix__fill_first(self):
-		if self.points:
-			offset = self.get__offset()
-			if -offset not in [x.beat for x in self.points]:
-				warp_point_obj = self.points__add()
-				warp_point_obj.beat = -offset
-				warp_point_obj.speed = self.speed
+	#def fix__fill_first(self):
+	#	if self.points:
+	#		offset = self.get__offset()
+	#		if -offset not in [x.beat for x in self.points]:
+	#			warp_point_obj = self.points__add()
+	#			warp_point_obj.beat = -offset
+	#			warp_point_obj.speed = self.speed
 
 	def fix__sort(self):
 		self.points = sorted(self.points, key=lambda x: x.beat)

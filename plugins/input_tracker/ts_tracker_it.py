@@ -177,9 +177,9 @@ class input_it(plugins.base):
 				if t: tracker_obj.channels[n].fx_plugins.append('FX'+str(t))
 
 		for n, d in enumerate(tracker_obj.channels):
-			ch_pan = ((project_obj.l_chnpan[n]&127)/32)-1
+			ch_pan = ((int(project_obj.l_chnpan[n])&127)/32)-1
 			if ch_pan != 2.125: d.pan = ch_pan
-			d.enabled = not bool(project_obj.l_chnpan[n]&128)
+			d.enabled = not bool(int(project_obj.l_chnpan[n])&128)
 			d.vol = project_obj.l_chnvol[n]/64
 
 		track_volume = 0.3

@@ -466,4 +466,5 @@ class input_amped(plugins.base):
 						sample_obj.stretch.set_rate_speed(amped_obj.tempo, amped_clip.stretch, True)
 						sample_obj.stretch.algorithm = 'stretch'
 						sample_obj.stretch.preserve_pitch = True
+						sample_obj.stretch.uses_tempo = True
 						sample_obj.reverse = amped_clip.reversed

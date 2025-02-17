@@ -88,8 +88,9 @@ class input_zmaestro(plugins.base):
 					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'universal', 'soundfont2', None)
 					track_obj.plugslots.set_synth(cvpj_trackid)
 					sf2_path = os.path.join(dawvert_intent.input_folder, zm_track.soundfont)
-					convproj_obj.fileref__add(sf2_path, sf2_path, None)
+					fileref_obj = convproj_obj.fileref__add(sf2_path, sf2_path, None)
 					plugin_obj.filerefs['file'] = sf2_path
+					fileref_obj.search_local(dawvert_intent.input_folder)
 					plugin_obj.midi.from_sf2(zm_track.instrumentbank, zm_track.instrumentcode)
 
 				if tracktype == 'MIDIDrumTrack': track_obj.is_drum = True

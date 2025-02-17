@@ -572,6 +572,7 @@ class output_reaper(plugins.base):
 					offmod *= tempomul
 					offmod = round(offmod, 7)
 
+					warp_obj.fix__onlyone()
 					warp_obj.manp__speed_mul(warprate)
 					for num, warp_point_obj in enumerate(warp_obj.points__iter()):
 						m_beat = (warp_point_obj.beat/4)*2

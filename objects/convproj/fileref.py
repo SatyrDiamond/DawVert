@@ -309,7 +309,7 @@ class cvpj_fileref:
 					splitpath = splitpath[4:]
 
 			if len(splitpath)>3:
-				if splitpath[0] == 'mnt':
+				if splitpath[0] == 'mnt' and len(splitpath[1])==1:
 					self.folder.os_type = 'win'
 					self.folder.win_drive = splitpath[1].upper()
 					splitpath = splitpath[2:]

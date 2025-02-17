@@ -100,12 +100,29 @@ class input_zmaestro(plugins.base):
 
 				for n, fx in enumerate(zm_track.fx):
 					fxid = cvpj_trackid+'_fx_'+str(n)
-					plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'z_maestro', fx.type)
+					fxtype = fx.type
+					fxparams = fx.params
+
+					if fxtype == 'LowPassFilter':
+						plugin_obj = convproj_obj.plugin__add(fxid, 'universal', 'filter', None)
+						if 'Frequency' in fxparams:
+							plugin_obj.filter.on = True
+							plugin_obj.filter.type.set('low_pass', None)
+							plugin_obj.filter.freq = int(fxparams['Frequency'])/2
+					elif fxtype == 'HighPassFilter':
+						plugin_obj = convproj_obj.plugin__add(fxid, 'universal', 'filter', None)
+						if 'Frequency' in fxparams:
+							plugin_obj.filter.on = True
+							plugin_obj.filter.type.set('high_pass', None)
+							plugin_obj.filter.freq = int(fxparams['Frequency'])/2
+					else:
+						plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'z_maestro', fx.type)
+						plugin_obj.role = 'fx'
+						for key, val in fx.params.items():
+							if val.replace('.', '').isnumeric(): plugin_obj.params.add(key, float(val), 'float')
+							elif val in ['true', 'false']: plugin_obj.params.add(key, val=='true', 'bool')
+							else: plugin_obj.datavals.add(key, val)
 					plugin_obj.role = 'fx'
-					for key, val in fx.params.items():
-						if val.replace('.', '').isnumeric(): plugin_obj.params.add(key, float(val), 'float')
-						elif val in ['true', 'false']: plugin_obj.params.add(key, val=='true', 'bool')
-						else: plugin_obj.datavals.add(key, val)
 					track_obj.plugin_autoplace(plugin_obj, fxid)
 
 				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline)

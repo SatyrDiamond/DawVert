@@ -250,9 +250,12 @@ class core:
 					outdetected = filedetector_obj.detect_file(dawvert_intent.input_file)
 					if outdetected:
 						plugset, plugname = outdetected
-						self.input_load_plugins(plugset)
 						dawvert_intent.plugin_input = plugname
-						self.input_set(dawvert_intent.plugin_input)
+						self.input_load_plugins(plugset)
+						det = self.input_set(dawvert_intent.plugin_input)
+						if not det:
+							logger_core.error('plugin, "'+str(dawvert_intent.plugin_input)+'" is defined in autodetect.xml, but the plugin is not loaded.')
+							return False
 					else:
 						logger_core.error('Could not identify the input format')
 						return False

@@ -405,7 +405,8 @@ class base:
 				dvplug_obj.propproc()
 				base.loaded_plugins[plugintype][dvplug_obj.shortname] = dvplug_obj
 
-		except Exception: 
+		except: 
+			traceback.print_exc()
 			pass
 
 	def create_selector(plug_type):
@@ -431,7 +432,8 @@ class base:
 				try: 
 					load_module(os.path.join(dirpath, filename))
 					plugincount += 1
-				except Exception: traceback.print_exc()
+				except: 
+					traceback.print_exc()
 		if plug_type in base.loaded_plugins: 
 			base.loaded_plugins[plug_type] = dict(sorted(base.loaded_plugins[plug_type].items()))
 		logger_plugins.info('Loaded '+str(plugincount)+' '+plug_type+' Plugins.')

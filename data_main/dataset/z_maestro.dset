@@ -1,0 +1,13 @@
+<dataset>
+    <category id="track">
+        <object id="MIDITrack">
+            <visual color="#51BE51" />
+        </object>
+        <object id="MIDIDrumTrack">
+            <visual color="#C04343" />
+        </object>
+        <object id="AudioTrack">
+            <visual color="#7AADCD" />
+        </object>
+    </category>
+</dataset>

@@ -5,6 +5,7 @@ import xml.etree.ElementTree as ET
 import plugins
 import numpy as np
 from functions import xtramath
+from objects import globalstore
 
 def do_automation(convproj_obj, trackid, atype, timelineobj):
 	nextinstant = False
@@ -48,6 +49,8 @@ class input_zmaestro(plugins.base):
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 
+		globalstore.dataset.load('z_maestro', './data_main/dataset/z_maestro.dset')
+
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(0.25, True)
 
@@ -73,10 +76,16 @@ class input_zmaestro(plugins.base):
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 				track_obj.params.add('vol', zm_track.volume/100, 'float')
 				track_obj.params.add('pan', (zm_track.pan-50)/50, 'float')
+				track_obj.visual.from_dset('z_maestro', 'track', tracktype, True)
 				track_obj.visual.name = zm_track.name
-				track_obj.midi.out_inst.patch = zm_track.instrumentcode
-				track_obj.midi.out_inst.bank = zm_track.instrumentbank
-				track_obj.to_midi(convproj_obj, cvpj_trackid, True)
+				if not zm_track.soundfont:
+					track_obj.midi.out_inst.patch = zm_track.instrumentcode
+					track_obj.midi.out_inst.bank = zm_track.instrumentbank
+					track_obj.to_midi(convproj_obj, cvpj_trackid, True)
+				else:
+					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'universal', 'soundfont2', None)
+					track_obj.plugslots.set_synth(cvpj_trackid)
+
 				if tracktype == 'MIDIDrumTrack': track_obj.is_drum = True
 
 				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline)
@@ -98,6 +107,7 @@ class input_zmaestro(plugins.base):
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
 				track_obj.params.add('vol', zm_track.volume/100, 'float')
 				track_obj.params.add('pan', (zm_track.pan-50)/50, 'float')
+				track_obj.visual.from_dset('z_maestro', 'track', 'AudioTrack', True)
 				track_obj.visual.name = zm_track.name
 
 				for n, fx in enumerate(zm_track.fx):
@@ -162,9 +172,9 @@ class input_zmaestro(plugins.base):
 					sp_obj = placement_obj.sample
 					if not part.oneshot:
 						sp_obj.stretch.set_rate_tempo(project_obj.tempo, (part.recordedtempo/part.currenttempo)*tempodiv, True)
+						sp_obj.stretch.preserve_pitch = True
 					else:
-						sp_obj.stretch.set_rate_tempo(project_obj.tempo, (part.recordedtempo/part.currenttempo), True)
-					sp_obj.stretch.preserve_pitch = True
+						sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
 					sp_obj.stretch.algorithm = 'stretch'
 
 					audio_obj = audio_data.audio_obj()

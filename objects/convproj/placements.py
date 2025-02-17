@@ -447,6 +447,7 @@ class cvpj_placements:
 					e.sample.fxrack_channel = fxnum
 
 	def remove_nested(self):
+		self.pl_audio_nested.remove_loops([])
 		for nestedpl_obj in self.pl_audio_nested:
 			main_s = nestedpl_obj.time.cut_start
 			main_e = nestedpl_obj.time.duration+main_s

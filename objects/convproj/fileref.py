@@ -243,6 +243,22 @@ class cvpj_fileref:
 	def copy(self):
 		return copy.deepcopy(self)
 
+	def search_local(self, dirpath):
+		filesearcher.scan_local_files(dirpath)
+		files = filesearcher.searchcache
+		filename = str(self.file)
+
+		if filename in files: 
+			logger_filesearch.debug('    >>| file found: searchmissing >'+self.get_path(None, False))
+			fileref = files[filename]
+			self.file = fileref.file
+			self.folder = fileref.folder
+			self.is_file = fileref.is_file
+			return True
+		else:
+			logger_filesearch.debug('    ..| file not found: searchmissing > '+str(self.get_path(None, False)))
+			return False
+
 	def search(self, searchseries):
 		iffound = False
 
@@ -469,16 +485,8 @@ class cvpj_sampleref:
 			pass
 
 	def search_local(self, dirpath):
-		filesearcher.scan_local_files(dirpath)
-		files = filesearcher.searchcache
-		filename = str(self.fileref.file)
-
-		if filename in files: 
-			logger_filesearch.debug('    >>| file found: searchmissing >'+self.fileref.get_path(None, False))
-			self.fileref = files[filename]
+		if self.fileref.search_local(dirpath):
 			self.get_info()
-		else:
-			logger_filesearch.debug('    ..| file not found: searchmissing > '+str(self.fileref.get_path(None, False)))
 
 	def get_info(self):
 		wav_realpath = self.fileref.get_path(os_path, False)

@@ -210,6 +210,8 @@ pluginsets_input = {
 'tracker': ['tracker', 'Tracker'],
 'uncommon': ['uncommon', 'Uncommon'],
 'ancient': ['ancient', 'Ancient'],
+'2010s': ['2010s', "2010's"],
+'y2k': ['y2k', 'Y2K'],
 'midi': ['midi', 'MIDI'],
 'exper': ['exper', 'Experiments'],
 'nn': ['nn', 'NeuralNet'],

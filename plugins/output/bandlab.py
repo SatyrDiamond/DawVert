@@ -202,8 +202,8 @@ class output_bandlab(plugins.base):
 			tracknum += 1
 
 		if dawvert_intent.output_mode == 'file':
-			folder, filename = os.path.split(dawvert_intent.output_file)
-			namet = os.path.splitext(filename)[0]
+			folder = dawvert_intent.output_folder
+			namet = dawvert_intent.output_visname
 			foldpath = os.path.join(folder, namet)
 			
 			os.makedirs(os.path.join(folder, namet, 'Assets'), exist_ok=True)

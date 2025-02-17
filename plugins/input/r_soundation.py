@@ -201,6 +201,7 @@ class input_soundation(plugins.base):
 						if soundation_region.autoStretchBpm:
 							sampspeed = soundation_region.autoStretchBpm/soundation_obj.bpm
 							sp_obj.stretch.set_rate_speed(soundation_obj.bpm, sampspeed, True)
+							sp_obj.stretch.uses_tempo = True
 
 				if sound_chan_type == 'instrument':
 					soundation_inst = soundation_channel.instrument

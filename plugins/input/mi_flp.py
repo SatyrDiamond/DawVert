@@ -260,7 +260,7 @@ class input_flp(plugins.base):
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2','universal:invert','universal:swap_lr']
 		in_dict['fxchain_mixer'] = True
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_ext_arch'] = [32, 64]
@@ -838,6 +838,16 @@ class input_flp(plugins.base):
 					filter_obj.type.set(['low_shelf','peak','high_shelf'][n], None)
 					filter_obj.gain = eq_level
 				fxchannel_obj.plugslots.slots_mixer.append(eq_fxid)
+
+			if mixer_obj.reversepolarity:
+				rp_fxid = 'FLPlug_ME_RP_'+str(mixer_id)
+				plugin_obj = convproj_obj.plugin__add(rp_fxid, 'universal', 'invert', None)
+				fxchannel_obj.plugslots.slots_mixer.append(rp_fxid)
+
+			if mixer_obj.swap_lr:
+				rp_fxid = 'FLPlug_ME_LR_'+str(mixer_id)
+				plugin_obj = convproj_obj.plugin__add(rp_fxid, 'universal', 'swap_lr', None)
+				fxchannel_obj.plugslots.slots_mixer.append(rp_fxid)
 
 		#if len(flp_obj.arrangements) == 0 and len(FL_Patterns) == 1 and len(FL_Channels) == 0:
 		#	fst_chan_notelist = [[] for x in range(16)]

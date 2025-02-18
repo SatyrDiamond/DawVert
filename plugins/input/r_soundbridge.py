@@ -200,12 +200,17 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 
 	return pluginid
 
-def do_fx(convproj_obj, sb_track, track_obj):
+def do_fx(cvpj_trackid, convproj_obj, sb_track, track_obj):
 	track_obj.plugslots.slots_audio_enabled = not bool(sb_track.audioUnitsBypass)
 	for x in sb_track.audioUnits:
 		pluginid = create_plugin(convproj_obj, x, False)
 		if pluginid:
 			track_obj.plugslots.slots_audio.append(pluginid)
+
+	if bool(sb_track.inverse):
+		inverse_fxid = cvpj_trackid+'_inverse'
+		plugin_obj = convproj_obj.plugin__add(inverse_fxid, 'universal', 'invert', None)
+		track_obj.plugslots.slots_mixer.append(inverse_fxid)
 
 def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 	global global_returnids
@@ -218,7 +223,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
-		do_fx(convproj_obj, sb_track, track_obj)
+		do_fx(cvpj_trackid, convproj_obj, sb_track, track_obj)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 
 		track_obj.armed.on = bool(sb_track.armed)
@@ -277,7 +282,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
-		do_fx(convproj_obj, sb_track, track_obj)
+		do_fx(cvpj_trackid, convproj_obj, sb_track, track_obj)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 
 		track_obj.armed.on = bool(sb_track.armed)
@@ -348,9 +353,10 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		returnid = 'return__'+str(global_returnids)
 		track_obj = convproj_obj.track_master.fx__return__add(returnid)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
+
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
-		do_fx(convproj_obj, sb_track, track_obj)
+		do_fx(returnid, convproj_obj, sb_track, track_obj)
 		global_returnids += 1
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
 		for x in sb_track.automationContainer.automationTracks:
@@ -361,7 +367,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		track_obj = convproj_obj.fx__group__add(cvpj_trackid)
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
-		do_fx(convproj_obj, sb_track, track_obj)
+		do_fx(cvpj_trackid, convproj_obj, sb_track, track_obj)
 		do_markers(track_obj, sb_track.markers)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
@@ -413,7 +419,7 @@ class input_soundbridge(plugins.base):
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win']
-		in_dict['plugin_included'] = ['native:soundbridge']
+		in_dict['plugin_included'] = ['native:soundbridge','universal:invert']
 		in_dict['audio_nested'] = True
 		
 	def parse(self, convproj_obj, dawvert_intent):
@@ -445,7 +451,7 @@ class input_soundbridge(plugins.base):
 
 		add_params(project_obj.masterTrack.state, convproj_obj.track_master.params)
 		track_visual(convproj_obj.track_master.visual, project_obj.masterTrack)
-		do_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master)
+		do_fx('master', convproj_obj, project_obj.masterTrack, convproj_obj.track_master)
 		convproj_obj.track_master.latency_offset = project_obj.masterTrack.latencyOffset/(pfreq/500)
 
 		for x in master_track.automationContainer.automationTracks:

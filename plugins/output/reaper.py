@@ -471,6 +471,13 @@ class output_reaper(plugins.base):
 				rpp_track_obj.volpan['left'] = track_obj.params.get('splitpan_left', -1).value
 				rpp_track_obj.volpan['right'] = track_obj.params.get('splitpan_right', 1).value
 
+			for pluginid in track_obj.plugslots.slots_mixer:
+				plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+				if plugin_found:
+					if plugin_obj.check_match('universal', 'invert', None):
+						inverse_on, _ = plugin_obj.fxdata_get()
+						rpp_track_obj.iphase.set(int(inverse_on))
+
 			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.volenv2, ['track', trackid, 'vol'], "float", False)
 			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.panenv2, ['track', trackid, 'pan'], "float", False)
 			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.muteenv, ['track', trackid, 'enabled'], "bool", True)

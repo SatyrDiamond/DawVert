@@ -258,6 +258,12 @@ class input_reaper(plugins.base):
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
 
+			iphase = rpp_track.iphase.get()
+			if bool(iphase):
+				inverse_fxid = cvpj_trackid+'_inverse'
+				plugin_obj = convproj_obj.plugin__add(inverse_fxid, 'universal', 'invert', None)
+				track_obj.plugslots.slots_mixer.append(inverse_fxid)
+
 			panmode = rpp_track.panmode.get()
 			if panmode == 3: track_obj.datavals.add('pan_mode', 'mono')
 			if panmode == 5: track_obj.datavals.add('pan_mode', 'stereo')

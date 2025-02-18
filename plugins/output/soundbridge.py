@@ -248,6 +248,14 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 def make_plugins_fx(convproj_obj, sb_track, plugslots):
 	from objects.file_proj import soundbridge as proj_soundbridge
 	sb_track.audioUnitsBypass = int(not plugslots.slots_audio_enabled)
+
+	for pluginid in plugslots.slots_mixer:
+		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+		if plugin_found:
+			if plugin_obj.check_match('universal', 'invert', None):
+				inverse_on, _ = plugin_obj.fxdata_get()
+				sb_track.inverse = int(inverse_on)
+
 	for pluginid in plugslots.slots_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
@@ -503,7 +511,7 @@ class output_soundbridge(plugins.base):
 		in_dict['plugin_ext'] = ['vst2', 'vst3']
 		in_dict['plugin_ext_arch'] = [64]
 		in_dict['plugin_ext_platforms'] = ['win']
-		in_dict['plugin_included'] = ['native:soundbridge']
+		in_dict['plugin_included'] = ['native:soundbridge','universal:invert']
 		in_dict['projtype'] = 'r'
 	
 	def parse(self, convproj_obj, dawvert_intent):

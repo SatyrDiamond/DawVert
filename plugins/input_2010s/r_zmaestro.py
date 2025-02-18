@@ -44,7 +44,7 @@ class input_zmaestro(plugins.base):
 		in_dict['plugin_included'] = ['native:z_maestro','universal:midi','universal:soundfont2']
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import z_maestro as proj_z_maestro
+		from objects.file_proj_past import z_maestro as proj_z_maestro
 		from objects import audio_data
 		from objects.inst_params import fx_delay
 

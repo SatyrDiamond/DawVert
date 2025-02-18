@@ -44,7 +44,7 @@ class input_mmf(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.songinput import midi_in
-		from objects.file_proj import mmf as proj_mmf
+		from objects.file_proj_past import mmf as proj_mmf
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'

@@ -124,7 +124,7 @@ class input_cvpj_r(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
-		from objects.file_proj import caustic as proj_caustic
+		from objects.file_proj_past import caustic as proj_caustic
 		
 		global dataset
 

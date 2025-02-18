@@ -30,7 +30,7 @@ class input_cvpj_f(plugins.base):
 		detectdef_obj.headers.append(['music-sequence'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import temper as proj_temper
+		from objects.file_proj_past import temper as proj_temper
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(6716, False)

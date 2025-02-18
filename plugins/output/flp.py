@@ -106,7 +106,7 @@ class output_cvpjs(plugins.base):
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2','universal:invert','universal:swap_lr']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win']
@@ -504,6 +504,14 @@ class output_cvpjs(plugins.base):
 
 
 				if fx_num == 0: fxchannel_obj.outchannum = 1
+
+				for pluginid in fxchannel_obj.plugslots.slots_mixer:
+					plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+					if plugin_found:
+						if plugin_obj.check_match('universal', 'invert', None):
+							fl_fxchan.reversepolarity, _ = plugin_obj.fxdata_get()
+						if plugin_obj.check_match('universal', 'swap_lr', None):
+							fl_fxchan.swap_lr, _ = plugin_obj.fxdata_get()
 
 				slotnum = 0
 				for pluginid in fxchannel_obj.plugslots.slots_audio:

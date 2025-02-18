@@ -48,7 +48,7 @@ class input_kristal(plugins.base):
 				sp_obj.sampleref = filepath
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import kristal as proj_kristal
+		from objects.file_proj_past import kristal as proj_kristal
 		from objects import audio_data
 
 		convproj_obj.type = 'r'

@@ -30,7 +30,7 @@ class input_nanostudio_v1(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import nanostudio as proj_nanostudio
+		from objects.file_proj_past import nanostudio as proj_nanostudio
 		from objects import audio_data
 
 		samplefolder = dawvert_intent.path_samples['extracted']

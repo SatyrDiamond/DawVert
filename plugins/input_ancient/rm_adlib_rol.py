@@ -29,7 +29,7 @@ class input_adlib_rol(plugins.base):
 		detectdef_obj.headers.append([4, b'\\roll\\default\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import adlib_rol as proj_adlib_rol
+		from objects.file_proj_adlib import rol as proj_adlib_rol
 		from objects.file import adlib_bnk
 
 		convproj_obj.type = 'rm'

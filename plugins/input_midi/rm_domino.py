@@ -26,10 +26,6 @@ class input_domino(plugins.base):
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.type = 'xml'
-		detectdef_obj.headers.append(['MarioSequencerSong'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import domino as proj_domino
 		from objects.songinput import midi_in

@@ -39,7 +39,7 @@ class input_piyopiyo(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
-		from objects.file_proj import piyopiyo as proj_piyopiyo
+		from objects.file_proj_past import piyopiyo as proj_piyopiyo
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)

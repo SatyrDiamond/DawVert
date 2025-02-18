@@ -32,7 +32,7 @@ class input_sop(plugins.base):
 		detectdef_obj.headers.append([0, b'sopepos'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import adlib_sop as proj_adlib_sop
+		from objects.file_proj_adlib import sop as proj_adlib_sop
 
 		convproj_obj.type = 'rm'
 		

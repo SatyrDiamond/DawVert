@@ -149,9 +149,8 @@ class input_bandlab(plugins.base):
 def add_sample(convproj_obj, dawvert_intent, sampleid, sampledurs):
 	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', sampleid+'.*')
 	for file in glob.glob(filename):
-		print(sampleid, file)
 		sampleref_obj = convproj_obj.sampleref__add(sampleid, file, None)
-		#sampleref_obj.convert(['wav'], dawvert_intent.path_samples['converted'])
+		sampleref_obj.convert(['wav'], dawvert_intent.path_samples['converted'])
 		sampledurs[sampleid] = sampleref_obj.dur_sec
 		break
 

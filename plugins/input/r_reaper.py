@@ -90,12 +90,18 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 				autopoint_obj = autopl_obj.data.add_point()
 				autopoint_obj.pos_real = (point[0]/2)/tempomul
 				autopoint_obj.value = val
+				if len(point)>3:
+					if point[2]:
+						autopoint_obj.tension = -point[3]
 
 	if rpp_autodata.used:
 		for point in rpp_autodata.points:
 			val = point[1] if not invert else 1-point[1]
 			if isbool: val = bool(val)
-			convproj_obj.automation.add_autopoint_real(autoloc, paramtype, point[0], val, 'normal' if not instant else 'instant')
+			autopoint_obj = convproj_obj.automation.add_autopoint_real(autoloc, paramtype, point[0], val, 'normal' if not instant else 'instant')
+			if len(point)>6:
+				if point[2]:
+					autopoint_obj.tension = -point[6]
 
 def do_samplepart_loop(samplerj, sp_obj, sampleref_obj):
 	dur = sampleref_obj.dur_samples

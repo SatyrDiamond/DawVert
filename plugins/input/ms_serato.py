@@ -379,6 +379,7 @@ class input_serato(plugins.base):
 									autopoint = pl_points.data.add_point()
 									autopoint.pos = kf.time
 									autopoint.value = kf.value
+									autopoint.tension = kf.curvature*-2
 									autopoint.type = 'normal'
 								pl_points.time.set_posdur(0, max(960*4, pl_points.data.get_dur()))
 

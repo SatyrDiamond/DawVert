@@ -67,6 +67,7 @@ def add_auto(valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 				autopoint_obj.value = int(point['val']<0.5)
 			else:
 				autopoint_obj.value = (point['val']+add)*mul
+			autopoint_obj.tension = math.log10(point['unk1'])
 			autopoint_obj.type = 'normal'
 
 sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('unk2', 'B')])

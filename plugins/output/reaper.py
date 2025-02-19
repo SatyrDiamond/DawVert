@@ -86,7 +86,7 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 						out = float(x.value)
 						if inverted: out = 1-out
 						if n==0 and pn==0: rpp_env.points.append([0, out])
-						pooledenv.points.append([(x.pos_real*2), out])
+						pooledenv.points.append([(x.pos_real*2), out, 5 if x.tension else 0, -x.tension])
 	
 					init_pooledenvinst = rpp_env.init_pooledenvinst()
 					init_pooledenvinst['id'] = poolid
@@ -100,7 +100,11 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 			for x in autodata.nopl_points:
 				out = float(x.value)
 				if inverted: out = 1-out
-				rpp_env.points.append([x.pos_real*2, out])
+
+				if x.tension == 0:
+					rpp_env.points.append([x.pos_real, out, 0])
+				else:
+					rpp_env.points.append([x.pos_real, out, 5, 1, 0, 0, -x.tension])
 
 def add_auto(rpp_env, autopoints_obj):
 	for x in autopoints_obj:

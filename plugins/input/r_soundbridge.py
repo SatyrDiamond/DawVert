@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import base64
 import numpy as np
 import io
 import os
@@ -13,6 +12,7 @@ from functions import xtramath
 import math
 from objects import globalstore
 from objects.data_bytes import bytereader
+from functions_spec import soundbridge as soundbridge_func
 
 sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '>f')])
 
@@ -30,16 +30,12 @@ native_names['1158f6956478e749a123534b7d943e3d'] = 'compressor_expander'
 native_names['ee2b5cce1faeb54f9081ad2575736075'] = 'noise_gate'
 native_names['80700b7cbbf6234189e21d862baf0d19'] = 'limiter'
 
-def decode_chunk(statedata):
-	statedata = statedata.replace('.', '/')
-	return base64.b64decode(statedata)
-
 def calc_vol(vol):
 	vol = (vol/0.824999988079071)**4
 	return vol
 	
 def parse_auto(blockdata):
-	blockdata = io.BytesIO(decode_chunk(blockdata))
+	blockdata = io.BytesIO(soundbridge_func.decode_chunk(blockdata))
 	unk_x = blockdata.read(4)
 	dataread = blockdata.read()
 	numnotes = len(dataread)//sb_auto_dtype.itemsize
@@ -82,7 +78,7 @@ def parse_notes(notes_data):
 
 def add_params(stateobj, params_obj):
 	if stateobj:
-		statebin = decode_chunk(stateobj)
+		statebin = soundbridge_func.decode_chunk(stateobj)
 		mute, vol, unk, pan = struct.unpack('>ffff', statebin)
 		params_obj.add('enabled', mute!=1, 'bool')
 		params_obj.add('vol', calc_vol(vol), 'float')
@@ -100,8 +96,8 @@ def make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid):
 				add_auto(None, convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
 
 def create_plugin(convproj_obj, sb_plugin, issynth):
-	uiddata = decode_chunk(sb_plugin.uid)
-	statedata = decode_chunk(sb_plugin.state)
+	uiddata = soundbridge_func.decode_chunk(sb_plugin.uid)
+	statedata = soundbridge_func.decode_chunk(sb_plugin.state)
 	pluginid = None
 
 	if len(uiddata) == 16 and statedata:
@@ -242,7 +238,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 			else: 
 				placement_obj.time.set_posdur(block.position, block.positionEnd-block.positionStart)
 				placement_obj.time.set_offset(block.positionStart)
-			blockdata = decode_chunk(block.blockData)
+			blockdata = soundbridge_func.decode_chunk(block.blockData)
 			trackcolor = block.metadata['BlockColor'] if 'BlockColor' in block.metadata else None
 			placement_obj.visual.color.set_hex(trackcolor)
 			placement_obj.visual.name = block.name

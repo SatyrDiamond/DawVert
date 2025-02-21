@@ -7,12 +7,12 @@ import struct
 import os
 import math
 import numpy as np
-import base64
 import uuid
 from functions import data_values
 from functions import xtramath
 from objects import globalstore
 from objects.data_bytes import bytewriter
+from functions_spec import soundbridge as soundbridge_func
 import logging
 
 PROJECT_FREQ = 22050
@@ -38,11 +38,6 @@ native_names['limiter'] = ['80700b7cbbf6234189e21d862baf0d19', 'ZPlane', 'Limite
 def calc_lattime(latency_offset):
 	return int(latency_offset*(PROJECT_FREQ/500))
 
-def encode_chunk(inbytes):
-	statedata = base64.b64encode(inbytes).decode("ascii")
-	statedata = statedata.replace('/', '.')
-	return statedata
-
 def calc_vol(vol):
 	vol = vol**(1/4)
 	vol = (vol*0.824999988079071)
@@ -52,7 +47,7 @@ def set_params(params_obj):
 	mute = 0.5 if params_obj.get('enabled', True).value else 1
 	vol = calc_vol(params_obj.get('vol', 1).value)
 	pan = params_obj.get('pan', 0).value/2 + 0.5
-	return encode_chunk(struct.pack('>ffff', *(mute, vol, vol, pan)))
+	return soundbridge_func.encode_chunk(struct.pack('>ffff', *(mute, vol, vol, pan)))
 
 def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 	from objects.file_proj import soundbridge as proj_soundbridge
@@ -114,7 +109,7 @@ def make_auto(autopoints_obj, valtype, add, mul):
 	outbytes = b'\x00\x00\x00\x14'+autoarray.tobytes()
 	padsize = 4*len(fixauto)
 	outbytes += b'\x00'*padsize
-	return encode_chunk(outbytes)
+	return soundbridge_func.encode_chunk(outbytes)
 
 def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta):
 	from objects.file_proj import soundbridge as proj_soundbridge
@@ -243,7 +238,7 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 		if x.sendautoid: make_auto_track(None, convproj_obj, ['send', x.sendautoid, 'amount'], automationTrack.blocks, 0, 1, sb_track.metadata)
 		values[sb_returns.index(i)] = automationTrack.defaultValue
 
-	sb_track.sendsAutomationContainer.state = encode_chunk(struct.pack('>'+('f'*len(values)), *values))
+	sb_track.sendsAutomationContainer.state = soundbridge_func.encode_chunk(struct.pack('>'+('f'*len(values)), *values))
 
 def make_plugins_fx(convproj_obj, sb_track, plugslots):
 	from objects.file_proj import soundbridge as proj_soundbridge
@@ -264,7 +259,7 @@ def make_plugins_fx(convproj_obj, sb_track, plugslots):
 					fx_on, fx_wet = plugin_obj.fxdata_get()
 					uuid, vendor, name = native_names[plugin_obj.type.subtype]
 					sb_plugin = proj_soundbridge.soundbridge_audioUnit(None)
-					sb_plugin.uid = encode_chunk(bytearray.fromhex(uuid))
+					sb_plugin.uid = soundbridge_func.encode_chunk(bytearray.fromhex(uuid))
 					sb_plugin.vendor = vendor
 					sb_plugin.name = name
 
@@ -279,7 +274,7 @@ def make_plugins_fx(convproj_obj, sb_track, plugslots):
 					fldso = globalstore.dataset.get_obj('soundbridge', 'plugin', plugin_obj.type.subtype)
 					if fldso:
 						outbytes = plugin_obj.to_bytes('soundbridge', 'soundbridge', 'plugin', plugin_obj.type.subtype, plugin_obj.type.subtype)
-						sb_plugin.state = encode_chunk(struct.pack('>f', int(not fx_on)) + outbytes)
+						sb_plugin.state = soundbridge_func.encode_chunk(struct.pack('>f', int(not fx_on)) + outbytes)
 
 						for n, x in fldso.params.iter():
 							if x.num>0:
@@ -309,7 +304,7 @@ def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 
 	if vid: 
 		sb_plugin = proj_soundbridge.soundbridge_audioUnit(None)
-		sb_plugin.uid = encode_chunk(uuid.UUID(vid).bytes_le)
+		sb_plugin.uid = soundbridge_func.encode_chunk(uuid.UUID(vid).bytes_le)
 		sb_plugin.name = plugin_obj.external_info.name
 		sb_plugin.vendor = plugin_obj.external_info.creator
 		if issynth: sb_plugin.metadata['AudioUnitType'] = 3
@@ -320,7 +315,7 @@ def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 		statewriter.uint32(len(rawdata))
 		statewriter.raw(b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00')
 		statewriter.raw(rawdata)
-		sb_plugin.state = encode_chunk(statewriter.getvalue())
+		sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
 
 		automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
 		automationTrack.parameterIndex = 0
@@ -352,7 +347,7 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 	if fourid: 
 		uid = b'\x00\x00\x00\x00SV2T'+struct.pack('>I', fourid)+b'\x00\x00\x00\x00'
 		sb_plugin = proj_soundbridge.soundbridge_audioUnit(None)
-		sb_plugin.uid = encode_chunk(uid)
+		sb_plugin.uid = soundbridge_func.encode_chunk(uid)
 		sb_plugin.name = plugin_obj.external_info.name
 		sb_plugin.vendor = plugin_obj.external_info.creator
 		if issynth: sb_plugin.metadata['AudioUnitType'] = 3
@@ -409,7 +404,7 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 
 		state = statewriter.getvalue()
 
-		sb_plugin.state = encode_chunk(state)
+		sb_plugin.state = soundbridge_func.encode_chunk(state)
 
 		automationTrack = proj_soundbridge.soundbridge_automationTrack(None)
 		automationTrack.parameterIndex = 0
@@ -662,7 +657,7 @@ class output_soundbridge(plugins.base):
 					padsize = 4*numnotes
 					outbytes += b'\x00'*padsize
 
-					block.blockData = encode_chunk(outbytes)
+					block.blockData = soundbridge_func.encode_chunk(outbytes)
 					block.automationBlocks = []
 
 					for n, x in notespl_obj.auto.items():

@@ -3,14 +3,14 @@
 
 import winreg
 
-import plugins
-import os
-from os.path import exists
-import xml.etree.ElementTree as ET
+from functions_spec import soundbridge as soundbridge_func
 from objects import globalstore
-import base64
+from os.path import exists
+import os
+import plugins
 import struct
 import uuid
+import xml.etree.ElementTree as ET
 
 w_regkey_soundbridge64 = 'SOFTWARE\\SoundBridge\\SoundBridge\\PluginCache.x64'
 
@@ -45,12 +45,6 @@ def reg_checkexist(winregpath):
 		return True
 	except: return False
 
-def decode_chunk(statedata):
-	if statedata:
-		statedata = statedata.replace('.', '/')
-		return base64.b64decode(statedata)
-	return b''
-
 def parse_entry(PluginData):
 	outdata = {}
 	outtxt = PluginData.decode(encoding='utf-16')
@@ -58,7 +52,7 @@ def parse_entry(PluginData):
 		xroot = ET.fromstring(outtxt[8:-2])
 		for x in xroot:
 			if x.tag == 'factory':
-				uid = decode_chunk(x.get('uid'))
+				uid = soundbridge_func.decode_chunk(x.get('uid'))
 				fid = x.get('id')
 				if uid: outdata['uid'] = uid
 				if fid: outdata['id'] = fid

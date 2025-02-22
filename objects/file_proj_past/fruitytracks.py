@@ -9,6 +9,7 @@ import logging
 logger_projparse = logging.getLogger('projparse')
 
 verbose = False
+
 def verboseprint(event_id, event_data):
 	cmdname = '__UNKNOWN'
 
@@ -44,7 +45,10 @@ def verboseprint(event_id, event_data):
 	if event_id == 192: cmdname = 'TRACK_NAME'
 	if event_id == 200: cmdname = 'PLUGIN'
 
-	print(cmdname.ljust(15)+'|'+str(event_id).ljust(4)+'|'+str(event_data))
+	if event_id>196:
+		print(cmdname.ljust(15)+'|'+str(event_id).ljust(4)+'|'+str(event_data.hex()))
+	else:
+		print(cmdname.ljust(15)+'|'+str(event_id).ljust(4)+'|'+str(event_data))
 
 class ftr_clip:
 	def __init__(self):
@@ -63,20 +67,21 @@ class ftr_clip:
 		self.reso_end = 0
 		self.muted = 0
 		self.cutoff_end = 0
-		self.vol_env = []
+		self.vol_env = None
 
 class ftr_track:
 	def __init__(self):
 		self.clips = []
 		self.vol = 100
 		self.pan = 64
+		self.muted = 0
 		self.name = ''
 		self.plugins = {}
 
 class ftr_plugin:
 	def __init__(self):
 		self.slotnum = 0
-		self.version = 1
+		self.enabled = 1
 		self.name = ''
 		self.params = []
 
@@ -84,7 +89,8 @@ class ftr_plugin:
 		plugindata = bytereader.bytereader()
 		plugindata.load_raw(pluginbytes)
 		self.slotnum = plugindata.uint8()
-		self.version = plugindata.uint16()
+		self.enabled = plugindata.uint8()
+		plugindata.skip(1)
 		self.name = plugindata.c_string__int32(False)
 		paramsize = plugindata.uint32()
 		numparams = plugindata.uint32()
@@ -135,6 +141,7 @@ class ftr_song:
 						cur_track = ftr_track()
 						cur_track.vol = vol
 						cur_track.pan = pan
+						cur_track.muted = event_data
 						self.tracks.append(cur_track)
 
 					elif event_id == 200: 
@@ -168,6 +175,8 @@ class ftr_song:
 					elif event_id == 134: self.zoom_h = event_data
 					elif event_id == 135: self.zoom_v = event_data
 
+					elif event_id == 201: cur_clip.vol_env = event_data
+
 					elif event_id == 4: clip_vol_start = event_data
 					elif event_id == 13: clip_vol_end = event_data
 					elif event_id == 8: clip_pan_start = event_data
@@ -190,6 +199,19 @@ class ftr_song:
 					elif event_id == 199: self.video = event_data.decode().rstrip('\x00')
 
 					if verbose: verboseprint(event_id, event_data)
+
+		for track in self.tracks:
+			for clip in track.clips:
+				if clip.vol_env is not None:
+					points = []
+					envdata = bytereader.bytereader()
+					envdata.load_raw(clip.vol_env)
+					numpoints = envdata.uint32()
+					for _ in range(numpoints):
+						pos = envdata.uint32()
+						val = envdata.float()
+						points.append([pos, val])
+					clip.vol_env = points
 
 		if not tlvdatafound: raise ProjectFileParserException('fruitytracks: TLV data not found')
 		return tlvdatafound

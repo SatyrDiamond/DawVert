@@ -36,6 +36,8 @@ def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, 
 	autopoint_obj.value = defval
 	autopoint_obj.type = 'instant'
 
+	return autopl_obj
+
 class input_fruitytracks(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -139,9 +141,11 @@ class input_fruitytracks(plugins.base):
 				if (ftr_clip.vol_start == ftr_clip.vol_end) and not envpoints:
 					placement_obj.sample.vol = ftr_clip.vol_start/128
 				else:
-					make_auto(convproj_obj, ['track', trackid, 'vol'], plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128, envpoints, ftr_track.vol/128, True)
+					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'vol'], plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128, envpoints, ftr_track.vol/128, True)
+					autopl_obj.visual.name = ftr_clip.name
 
 				if (ftr_clip.pan_start == ftr_clip.pan_end):
 					placement_obj.sample.pan = (ftr_clip.pan_start-64)/64
 				else:
-					make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64, None, (ftr_track.pan-64)/64, False)
+					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64, None, (ftr_track.pan-64)/64, False)
+					autopl_obj.visual.name = ftr_clip.name

@@ -7,32 +7,34 @@ import os
 
 from objects.convproj import fileref
 
-def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval):
+def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, defval, iseff):
 	autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 	autopl_obj.time.set_posdur(plpos, pldur)
 
-	autopoint_obj = autopl_obj.data.add_point()
+	autopoints_obj = autopl_obj.data
+
+	autopoint_obj = autopoints_obj.add_point()
 	autopoint_obj.pos = 1
-	autopoint_obj.value = startval
+	autopoint_obj.value = startval if not iseff else startval*defval
 	autopoint_obj.type = 'normal'
 
-	autopoint_obj = autopl_obj.data.add_point()
+	if envpoints:
+		for pos, val in envpoints:
+			if pos<pldur:
+				autopoint_obj = autopoints_obj.add_point()
+				autopoint_obj.pos = pos
+				autopoint_obj.value = val if not iseff else val*defval
+				autopoint_obj.type = 'normal'
+
+	autopoint_obj = autopoints_obj.add_point()
 	autopoint_obj.pos = pldur-0.0001
-	autopoint_obj.value = endval
-	autopoint_obj.type = 'normal'
-
-def make_auto_clip(placement_obj, mpetype, plpos, pldur, startval, endval):
-	autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
-
-	autopoint_obj = autopoints_obj.add_point()
-	autopoint_obj.pos = 0
-	autopoint_obj.value = startval
+	autopoint_obj.value = endval if not iseff else endval*defval
 	autopoint_obj.type = 'normal'
 
 	autopoint_obj = autopoints_obj.add_point()
-	autopoint_obj.pos = (pldur)
-	autopoint_obj.value = endval
-	autopoint_obj.type = 'normal'
+	autopoint_obj.pos = pldur
+	autopoint_obj.value = defval
+	autopoint_obj.type = 'instant'
 
 class input_fruitytracks(plugins.base):
 	def is_dawvert_plugin(self):
@@ -95,6 +97,20 @@ class input_fruitytracks(plugins.base):
 			track_obj.visual.name = ftr_track.name if ftr_track.name else 'Track '+str(tracknum)
 			track_obj.params.add('pan', (ftr_track.pan-64)/64, 'float')
 			track_obj.params.add('vol', ftr_track.vol/128, 'float')
+			track_obj.params.add('enabled', not bool(ftr_track.muted), 'bool')
+
+			for pid in sorted(ftr_track.plugins):
+				flplug = ftr_track.plugins[pid]
+
+				fxid = trackid+'_'+str(pid)
+				splitfile = flplug.name.split('.')
+				plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'fruitytracks', splitfile[0])
+				plugin_obj.visual.name = splitfile[0]
+				plugin_obj.datavals.add('file', flplug.name)
+				for n, v in enumerate(flplug.params): plugin_obj.params.add(str(n), v, 'float')
+				plugin_obj.role = 'fx'
+				plugin_obj.fxdata_add(bool(flplug.enabled), None)
+				track_obj.plugslots.slots_audio.append(fxid)
 
 			for ftr_clip in ftr_track.clips:
 				placement_obj = track_obj.placements.add_audio()
@@ -118,5 +134,14 @@ class input_fruitytracks(plugins.base):
 					placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
 				placement_obj.time.set_posdur(plpos, pldur)
 
-				make_auto_clip(placement_obj, 'gain', plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128)
-				make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64)
+				envpoints = [[(p/bpmticks),v] for p,v in ftr_clip.vol_env] if ftr_clip.vol_env else None
+
+				if (ftr_clip.vol_start == ftr_clip.vol_end) and not envpoints:
+					placement_obj.sample.vol = ftr_clip.vol_start/128
+				else:
+					make_auto(convproj_obj, ['track', trackid, 'vol'], plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128, envpoints, ftr_track.vol/128, True)
+
+				if (ftr_clip.pan_start == ftr_clip.pan_end):
+					placement_obj.sample.pan = (ftr_clip.pan_start-64)/64
+				else:
+					make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64, None, (ftr_track.pan-64)/64, False)

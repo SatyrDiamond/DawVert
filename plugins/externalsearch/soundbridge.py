@@ -48,19 +48,23 @@ def reg_checkexist(winregpath):
 def parse_entry(PluginData):
 	outdata = {}
 	outtxt = PluginData.decode(encoding='utf-16')
+	uidvalid = False
 	if outtxt.startswith('@String('):
 		xroot = ET.fromstring(outtxt[8:-2])
 		for x in xroot:
 			if x.tag == 'factory':
-				uid = soundbridge_func.decode_chunk(x.get('uid'))
-				fid = x.get('id')
-				if uid: outdata['uid'] = uid
-				if fid: outdata['id'] = fid
-				outdata['shellId'] = x.get('shellId')
-				outdata['name'] = x.get('name')
-				outdata['vendor'] = x.get('vendor')
-				outdata['category'] = x.get('category')
-	return outdata
+				uiddata = x.get('uid')
+				if uiddata:
+					uidvalid = True
+					uid = soundbridge_func.decode_chunk(uiddata)
+					fid = x.get('id')
+					if uid: outdata['uid'] = uid
+					if fid: outdata['id'] = fid
+					outdata['shellId'] = x.get('shellId')
+					outdata['name'] = x.get('name')
+					outdata['vendor'] = x.get('vendor')
+					outdata['category'] = x.get('category')
+	return uidvalid, outdata
 
 class plugsearch(plugins.base):
 	def get_shortname(self):
@@ -93,28 +97,29 @@ class plugsearch(plugins.base):
 
 				if PluginData:
 					if True:
-						outdata = parse_entry(PluginData)
-						shellid = outdata['shellid'] if 'shellid' in outdata else 0
-
-						if PluginType == 'VST' and shellid == 0:
-							with globalstore.extplug.add('vst2', globalstore.os_platform) as pluginfo_obj:
-								if 'category' in outdata: pluginfo_obj.type = 'synth' if outdata['category'] == 'Instrument' else 'fx'
-								if 'id' in outdata: pluginfo_obj.id = int(outdata['id'])
-								if 'vendor' in outdata: pluginfo_obj.creator = outdata['vendor']
-								if 'name' in outdata: pluginfo_obj.name = outdata['name']
-								pluginfo_obj.path_64bit = vst_path
-							vst2count += 1
-
-						if PluginType == 'VST3':
-							vuuid = outdata['uid']
-							dev_uuid = uuid.UUID(int=int.from_bytes(vuuid[::-1], 'little')).bytes_le
-							with globalstore.extplug.add('vst3', globalstore.os_platform) as pluginfo_obj:
-								if 'category' in outdata: pluginfo_obj.type = outdata['category']
-								if 'id' in outdata: pluginfo_obj.id = dev_uuid.hex().upper
-								if 'vendor' in outdata: pluginfo_obj.creator = outdata['vendor']
-								if 'name' in outdata: pluginfo_obj.name = outdata['name']
-								pluginfo_obj.path_64bit = vst_path
-							vst3count += 1
+						uidvalid, outdata = parse_entry(PluginData)
+						if uidvalid:
+							shellid = outdata['shellid'] if 'shellid' in outdata else 0
+	
+							if PluginType == 'VST' and shellid == 0:
+								with globalstore.extplug.add('vst2', globalstore.os_platform) as pluginfo_obj:
+									if 'category' in outdata: pluginfo_obj.type = 'synth' if outdata['category'] == 'Instrument' else 'fx'
+									if 'id' in outdata: pluginfo_obj.id = int(outdata['id'])
+									if 'vendor' in outdata: pluginfo_obj.creator = outdata['vendor']
+									if 'name' in outdata: pluginfo_obj.name = outdata['name']
+									pluginfo_obj.path_64bit = vst_path
+								vst2count += 1
+	
+							if PluginType == 'VST3':
+								vuuid = outdata['uid']
+								dev_uuid = uuid.UUID(int=int.from_bytes(vuuid[::-1], 'little')).bytes_le
+								with globalstore.extplug.add('vst3', globalstore.os_platform) as pluginfo_obj:
+									if 'category' in outdata: pluginfo_obj.type = outdata['category']
+									if 'id' in outdata: pluginfo_obj.id = dev_uuid.hex().upper
+									if 'vendor' in outdata: pluginfo_obj.creator = outdata['vendor']
+									if 'name' in outdata: pluginfo_obj.name = outdata['name']
+									pluginfo_obj.path_64bit = vst_path
+								vst3count += 1
 
 
 

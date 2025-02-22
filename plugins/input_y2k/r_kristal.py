@@ -28,17 +28,19 @@ class input_kristal(plugins.base):
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'Crys'])
 
-	def do_audiopart(self, convproj_obj, placement_obj, part, minpos):
+	def do_audiopart(self, convproj_obj, placement_obj, part, minpos, bpm):
+		tempomul = 120/bpm
+
 		placement_obj.time.set_posdur(part.position-minpos, part.duration)
 		placement_obj.time.set_offset(part.offset)
 		placement_obj.visual.name = part.name
 		placement_obj.visual.color.set_int(part.color[0:3])
-		placement_obj.fade_in.set_dur(part.fade_in/44100, 'seconds')
-		placement_obj.fade_out.set_dur(part.fade_out/44100, 'seconds')
+		placement_obj.fade_in.set_dur((part.fade_in/44100)*tempomul, 'seconds')
+		placement_obj.fade_out.set_dur((part.fade_out/44100)*tempomul, 'seconds')
 
 		sp_obj = placement_obj.sample
 		sp_obj.vol = part.volume
-		sp_obj.stretch.set_rate_tempo(120, 1, False)
+		sp_obj.stretch.set_rate_tempo(120, 120/bpm, False)
 		sp_obj.stretch.preserve_pitch = True
 		sp_obj.stretch.algorithm = 'stretch'
 		if part.path:
@@ -52,7 +54,6 @@ class input_kristal(plugins.base):
 		from objects import audio_data
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(44100/2, True)
 
 		project_obj = proj_kristal.kristal_song()
 		if dawvert_intent.input_mode == 'file':
@@ -60,6 +61,18 @@ class input_kristal(plugins.base):
 
 		tracknum = 0
 		tracknums = {}
+
+		bpmmul = 1
+		bpm = 120
+
+		if project_obj.globalinserts:
+			for icid, inpart in project_obj.globalinserts:
+				if icid == 'CMetronome':
+					convproj_obj.params.add('bpm', inpart.bpm, 'float')
+					bpm = inpart.bpm
+					bpmmul = 120/inpart.bpm
+
+		convproj_obj.set_timings((44100/2)*bpmmul, True)
 
 		if project_obj.audio_input:
 			inum, indata = project_obj.audio_input
@@ -87,7 +100,7 @@ class input_kristal(plugins.base):
 											placement_obj = placement_obj.add()
 											placement_obj.muted = 0 in part.flags
 											placement_obj.locked = 1 in part.flags
-											self.do_audiopart(convproj_obj, placement_obj, part, part.position)
+											self.do_audiopart(convproj_obj, placement_obj, part, part.position, bpm)
 										if cid == 'CFolderPart': 
 											placement_obj = track_obj.placements.add_nested_audio()
 											placement_obj.time.set_posdur(part.position, part.duration)
@@ -99,9 +112,16 @@ class input_kristal(plugins.base):
 											for icid, inpart in part.parts:
 												if icid == 'CAudioPart': 
 													npa_obj = placement_obj.add()
-													self.do_audiopart(convproj_obj, npa_obj, inpart, part.position)
+													self.do_audiopart(convproj_obj, npa_obj, inpart, part.position, bpm)
 
 									tracknum += 1
+
+		if project_obj.infodata:
+			for n, t in enumerate(project_obj.infodata.data):
+				if n == 0: convproj_obj.metadata.name = t
+				if n == 1: convproj_obj.metadata.author = t
+				if n == 2: convproj_obj.metadata.comment_text = t+'\n\n'
+				if n == 3: convproj_obj.metadata.comment_text += t
 
 		channum = 0
 		if project_obj.globalinserts:
@@ -114,3 +134,5 @@ class input_kristal(plugins.base):
 						track_obj.params.add('vol', inpart.vol, 'float')
 						track_obj.params.add('pan', (inpart.pan-0.5)*2, 'float')
 					channum += 1
+				if icid == 'CMetronome':
+					convproj_obj.params.add('bpm', inpart.bpm, 'float')

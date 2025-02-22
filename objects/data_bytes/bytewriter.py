@@ -275,6 +275,24 @@ class bytewriter:
 	def string_t(self, value, **kwargs): 
 		self.raw(value.encode(**kwargs)+b"\0")
 
+	def c_raw__int8(self, value): 
+		self.int8(len(value))
+		self.raw(value)
+
+	def c_raw__int16(self, value, endian): 
+		if endian: self.int16(len(value))
+		else: self.int16_b(len(value))
+		self.raw(value)
+
+	def c_raw__int32(self, value, endian): 
+		if endian: self.int32(len(value))
+		else: self.int32_b(len(value))
+		self.raw(value)
+
+	def c_raw__varint(self, value): 
+		self.varint(len(value))
+		self.raw(value)
+
 	@contextmanager
 	def chunk(self, namebytes):
 		self.raw(namebytes)

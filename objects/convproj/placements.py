@@ -487,7 +487,7 @@ class cvpj_placements:
 					sco = out_start-event_o
 					offset_d = (main_e-main_s)-sco
 
-					cutplpl_obj.time.duration = max(out_end-out_start, offset_d)
+					cutplpl_obj.time.duration = min(max(out_end-out_start, offset_d), event_et)
 					cutplpl_obj.time.cut_type = 'cut'
 					cutplpl_obj.time.cut_start += scs
 					cutplpl_obj.muted = cutplpl_obj.muted or nestedpl_obj.muted

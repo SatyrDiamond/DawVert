@@ -586,3 +586,5 @@ class input_reaper(plugins.base):
 				sends_obj = convproj_obj.trackroute[from_track]
 				send_obj = sends_obj.add(to_track, None, rpp_auxrecv_obj['vol'])
 				send_obj.params.add('pan', rpp_auxrecv_obj['pan'], 'float')
+
+		convproj_obj.automation.set_persist_all(False)

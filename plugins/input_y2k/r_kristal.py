@@ -8,7 +8,7 @@ from objects import colors
 from objects.data_bytes import bytewriter
 from objects.data_bytes import bytereader
 
-def do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, track_obj):
+def do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, plugslots):
 	try:
 		if chunkdata:
 			if len(chunkdata)>12:
@@ -42,7 +42,7 @@ def do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, track_obj):
 				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, fxid)
 				extmanu_obj.vst2__import_presetdata('raw', outstate.getvalue(), None)
 				plugin_obj.role = 'fx'
-				track_obj.plugin_autoplace(plugin_obj, fxid)
+				plugslots.slots_audio.append(fxid)
 	except:
 		pass
 
@@ -186,6 +186,12 @@ class input_kristal(plugins.base):
 					for fx_num, fx_slot in enumerate(fx_slots):
 						fxid = 'track_'+str(tracknum)+'_fx_'+str(fx_num)
 						chunkdata = fx_slot.bindata
-						do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, track_obj)
+						do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, track_obj.plugslots)
 					fxid = 'track_'+str(tracknum)+'_fx_eq'
-					do_plugchunk(fx_eq, fxid, chunkdata, convproj_obj, track_obj)
+					do_plugchunk(fx_eq, fxid, chunkdata, convproj_obj, track_obj.plugslots)
+
+		if project_obj.master:
+			for fx_num, fx_slot in enumerate(project_obj.master[1]):
+				fxid = 'master_fx_'+str(fx_num)
+				chunkdata = fx_slot.bindata
+				do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, convproj_obj.track_master.plugslots)

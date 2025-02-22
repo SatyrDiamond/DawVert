@@ -14,7 +14,7 @@ import logging
 logger_automation = logging.getLogger('automation')
 
 class cvpj_s_automation:
-	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres']
+	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres','persist']
 	def __init__(self, time_ppq, time_float, valtype):
 		self.pl_points = None
 		self.pl_ticks = None
@@ -31,6 +31,8 @@ class cvpj_s_automation:
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.valtype = valtype
+
+		self.persist = True
 
 	def make_base(self):
 		outv = cvpj_s_automation(self.time_ppq, self.time_float, self.valtype)
@@ -341,6 +343,10 @@ class cvpj_automation:
 	def __setitem__(self, p, v):
 		autoloc = cvpj_autoloc(p)
 		self.autoloc[autoloc] = v
+
+	def set_persist_all(self, on):
+		for _, v in self.data.items():
+			v.persist = on
 
 	def merge(self, sceneauto, pos, dur):
 		for a, v in sceneauto.data.items():

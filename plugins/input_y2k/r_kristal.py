@@ -5,6 +5,47 @@ import xml.etree.ElementTree as ET
 import plugins
 from objects import globalstore
 from objects import colors
+from objects.data_bytes import bytewriter
+from objects.data_bytes import bytereader
+
+def do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, track_obj):
+	try:
+		if chunkdata:
+			if len(chunkdata)>12:
+				datasize = len(fx_slot.bindata)-8
+				instate = bytereader.bytereader(fx_slot.bindata)
+				outstate = bytewriter.bytewriter()
+				unknown = instate.uint32()
+				outstate.uint32_b(instate.uint32())
+				outstate.uint32_b(instate.uint32())
+				maintype = instate.uint32()
+				if maintype == 1182286443: #kBxF
+					outstate.uint32_b(maintype)
+					for _ in range(4): outstate.uint32_b(instate.uint32())
+					outstate.raw(instate.raw(128))
+					while instate.remaining():
+						outstate.uint32_b(instate.uint32())
+						outstate.uint32_b(instate.uint32())
+						cctype = instate.uint32()
+						if cctype == 1182286699: # kCxF
+							outstate.uint32_b(cctype)
+							outstate.uint32_b(instate.uint32())
+							outstate.uint32_b(instate.uint32())
+							outstate.uint32_b(instate.uint32())
+							numparams = instate.uint32()
+							outstate.uint32_b(numparams)
+							outstate.raw(instate.raw(28))
+							for _ in range(numparams): outstate.float_b(instate.float())
+						else:
+							break
+				plugin_obj = convproj_obj.plugin__add(fxid, 'external', 'vst2', None)
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, fxid)
+				extmanu_obj.vst2__import_presetdata('raw', outstate.getvalue(), None)
+				plugin_obj.role = 'fx'
+				track_obj.plugin_autoplace(plugin_obj, fxid)
+	except:
+		pass
+
 
 class input_kristal(plugins.base):
 	def is_dawvert_plugin(self):
@@ -136,3 +177,15 @@ class input_kristal(plugins.base):
 					channum += 1
 				if icid == 'CMetronome':
 					convproj_obj.params.add('bpm', inpart.bpm, 'float')
+
+		if project_obj.mixer:
+			for num, data in enumerate(project_obj.mixer[1]):
+				if num in tracknums:
+					track_obj = tracknums[num]
+					fx_eq, fx_slots = data
+					for fx_num, fx_slot in enumerate(fx_slots):
+						fxid = 'track_'+str(tracknum)+'_fx_'+str(fx_num)
+						chunkdata = fx_slot.bindata
+						do_plugchunk(fx_slot, fxid, chunkdata, convproj_obj, track_obj)
+					fxid = 'track_'+str(tracknum)+'_fx_eq'
+					do_plugchunk(fx_eq, fxid, chunkdata, convproj_obj, track_obj)

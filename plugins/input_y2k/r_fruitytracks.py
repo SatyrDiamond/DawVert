@@ -7,6 +7,9 @@ import os
 
 from objects.convproj import fileref
 
+def calc_tick_val(bpmdiv, inpos):
+	return (inpos/5512)/bpmdiv
+
 def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, defval, iseff, bpmdiv):
 	autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 	autopl_obj.time.set_posdur(plpos, pldur)
@@ -20,7 +23,7 @@ def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, 
 
 	if envpoints:
 		for pos, val in envpoints:
-			pos = pos/bpmdiv
+			pos = calc_tick_val(bpmdiv, pos)
 			if pos<pldur:
 				autopoint_obj = autopoints_obj.add_point()
 				autopoint_obj.pos = pos
@@ -86,8 +89,8 @@ class input_fruitytracks(plugins.base):
 
 		if project_obj.loopend:
 			convproj_obj.transport.loop_active = True
-			convproj_obj.transport.loop_start = (project_obj.loopstart/bpmticks)/bpmdiv
-			convproj_obj.transport.loop_end = ((project_obj.loopstart+project_obj.loopend)/bpmticks)/bpmdiv
+			convproj_obj.transport.loop_start = calc_tick_val(bpmdiv, project_obj.loopstart)
+			convproj_obj.transport.loop_end = calc_tick_val(bpmdiv, project_obj.loopstart+project_obj.loopend)
 
 		for tracknum, ftr_track in enumerate(project_obj.tracks):
 			trackid = str(tracknum)
@@ -120,24 +123,25 @@ class input_fruitytracks(plugins.base):
 				placement_obj.sample.sampleref = ftr_clip.file
 				placement_obj.muted = bool(ftr_clip.muted)
 
-				plpos = (ftr_clip.pos/bpmticks)/bpmdiv
+
+				plpos = calc_tick_val(bpmdiv, ftr_clip.pos)
 				if ftr_clip.stretch == 0:
 					pldur = (ftr_clip.dur/bpmticks)
 					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks))
 				else:
 					audduration = sampleref_obj.dur_sec*8
-					pldur = (ftr_clip.dur/bpmticks)/bpmdiv
-					repeatlen = (ftr_clip.repeatlen/bpmticks)/bpmdiv
+					pldur = calc_tick_val(bpmdiv, ftr_clip.dur)
+					repeatlen = calc_tick_val(bpmdiv, ftr_clip.repeatlen)
 					placement_obj.time.set_loop_data(
-						0 if not ftr_clip.dontstart else (((ftr_clip.pos%ftr_clip.repeatlen)/bpmticks)/bpmdiv), 
+						0 if not ftr_clip.dontstart else calc_tick_val(bpmdiv, ftr_clip.pos%ftr_clip.repeatlen), 
 						0, 
-						(ftr_clip.repeatlen/bpmticks)/bpmdiv
+						calc_tick_val(bpmdiv, ftr_clip.repeatlen)
 						)
 					placement_obj.sample.stretch.algorithm = 'resample'
 					placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
 				placement_obj.time.set_posdur(plpos, pldur)
 
-				envpoints = [[(p/bpmticks),v] for p,v in ftr_clip.vol_env] if ftr_clip.vol_env else None
+				envpoints = ftr_clip.vol_env
 
 				if (ftr_clip.vol_start == ftr_clip.vol_end) and not envpoints:
 					placement_obj.sample.vol = ftr_clip.vol_start/128

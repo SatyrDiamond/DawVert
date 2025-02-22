@@ -7,7 +7,7 @@ import os
 
 from objects.convproj import fileref
 
-def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, defval, iseff):
+def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, defval, iseff, bpmdiv):
 	autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 	autopl_obj.time.set_posdur(plpos, pldur)
 
@@ -20,6 +20,7 @@ def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, 
 
 	if envpoints:
 		for pos, val in envpoints:
+			pos = pos/bpmdiv
 			if pos<pldur:
 				autopoint_obj = autopoints_obj.add_point()
 				autopoint_obj.pos = pos
@@ -30,11 +31,6 @@ def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, 
 	autopoint_obj.pos = pldur-0.0001
 	autopoint_obj.value = endval if not iseff else endval*defval
 	autopoint_obj.type = 'normal'
-
-	autopoint_obj = autopoints_obj.add_point()
-	autopoint_obj.pos = pldur
-	autopoint_obj.value = defval
-	autopoint_obj.type = 'instant'
 
 	return autopl_obj
 
@@ -131,7 +127,12 @@ class input_fruitytracks(plugins.base):
 				else:
 					audduration = sampleref_obj.dur_sec*8
 					pldur = (ftr_clip.dur/bpmticks)/bpmdiv
-					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks)/bpmdiv)
+					repeatlen = (ftr_clip.repeatlen/bpmticks)/bpmdiv
+					placement_obj.time.set_loop_data(
+						0 if not ftr_clip.dontstart else (((ftr_clip.pos%ftr_clip.repeatlen)/bpmticks)/bpmdiv), 
+						0, 
+						(ftr_clip.repeatlen/bpmticks)/bpmdiv
+						)
 					placement_obj.sample.stretch.algorithm = 'resample'
 					placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
 				placement_obj.time.set_posdur(plpos, pldur)
@@ -141,11 +142,13 @@ class input_fruitytracks(plugins.base):
 				if (ftr_clip.vol_start == ftr_clip.vol_end) and not envpoints:
 					placement_obj.sample.vol = ftr_clip.vol_start/128
 				else:
-					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'vol'], plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128, envpoints, ftr_track.vol/128, True)
+					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'vol'], plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128, envpoints, ftr_track.vol/128, True, bpmdiv)
 					autopl_obj.visual.name = ftr_clip.name
 
 				if (ftr_clip.pan_start == ftr_clip.pan_end):
 					placement_obj.sample.pan = (ftr_clip.pan_start-64)/64
 				else:
-					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64, None, (ftr_track.pan-64)/64, False)
+					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64, None, (ftr_track.pan-64)/64, False, bpmdiv)
 					autopl_obj.visual.name = ftr_clip.name
+
+		convproj_obj.automation.set_persist_all(False)

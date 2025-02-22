@@ -494,3 +494,5 @@ class input_soundbridge(plugins.base):
 		if 'TransportLoop' in projmeta: convproj_obj.transport.loop_active = projmeta['TransportLoop'] == 'true'
 		if 'TransportPlayPositionL' in projmeta: convproj_obj.transport.loop_start = int(float(projmeta['TransportPlayPositionL']))
 		if 'TransportPlayPositionR' in projmeta: convproj_obj.transport.loop_end = int(float(projmeta['TransportPlayPositionR']))
+
+		convproj_obj.automation.set_persist_all(False)

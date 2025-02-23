@@ -174,7 +174,7 @@ class s3m_song:
 		self.reserved2 = song_file.raw(8)
 		self.num_special = song_file.uint16()
 		self.channel_settings = song_file.l_uint8(32)
-		self.l_order = song_file.l_int8(self.num_orders)
+		self.l_order = song_file.l_uint8(self.num_orders)
 		logger_projparse.info("s3m: Order List: " + str(self.l_order))
 		self.ptrs_insts = [song_file.uint16()*16 for _ in range(self.num_instruments)]
 		self.ptrs_patterns = [song_file.uint16()*16 for _ in range(self.num_patterns)]

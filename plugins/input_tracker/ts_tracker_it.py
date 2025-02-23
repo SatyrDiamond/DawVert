@@ -5,6 +5,7 @@ from functions import data_values
 import io
 import os.path
 import plugins
+import tempfile
 
 def env_to_cvpj(it_env, plugin_obj, t_type, i_div): 
 	autopoints_obj = plugin_obj.env_points_add(t_type, 48, False, 'float')
@@ -110,11 +111,20 @@ class input_it(plugins.base):
 		
 		it_useinst = 2 in project_obj.flags
 
-		if dawvert_intent.input_mode == 'file':
-			if xmodits_exists == True and dawvert_intent.input_file:
-				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
-				try: xmodits.dump(dawvert_intent.input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
-				except: pass
+		if xmodits_exists == True:
+			if dawvert_intent.input_mode == 'file':
+				if dawvert_intent.input_file:
+					if not os.path.exists(samplefolder): os.makedirs(samplefolder)
+					try: xmodits.dump(dawvert_intent.input_file, samplefolder, index_only=True, index_raw=True, index_padding=0)
+					except: pass
+
+			if dawvert_intent.input_mode == 'bytes':
+				if dawvert_intent.input_data:
+					with tempfile.NamedTemporaryFile(suffix='.it') as tf:
+						tf.write(dawvert_intent.input_data)
+						if not os.path.exists(samplefolder): os.makedirs(samplefolder)
+						try: xmodits.dump(tf.file.name, samplefolder, index_only=True, index_raw=True, index_padding=0)
+						except: pass
 
 		tracker_obj = convproj_obj.main__create_tracker_single()
 		tracker_obj.set_num_chans(64)

@@ -6,6 +6,8 @@ import os
 import numpy as np
 import math
 
+from objects import format_detect
+
 from plugins.input_tracker.ts_tracker_s3m import input_s3m as s3m
 from plugins.input_tracker.ts_tracker_mod import input_mod as mod
 from plugins.input_tracker.ts_tracker_it import input_it as it
@@ -17,6 +19,7 @@ logger_input = logging.getLogger('input')
 FORMATS = ["it", "xm", "s3m", "mod"]
 
 TRACKER_FORMATS = {
+	"mod": mod(),
 	"s3m": s3m(),
 	"it": it(),
 	"xm": xm()
@@ -49,6 +52,10 @@ class input_mod(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import umx as proj_umx
+
+		filedetector_obj = format_detect.file_detector()
+		filedetector_obj.load_def('data_main/autodetect.xml')
+
 		project_obj = proj_umx.umx_file()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
@@ -59,15 +66,16 @@ class input_mod(plugins.base):
 			exit()
 		elif project_obj.nametable:
 			firstname = project_obj.nametable[0]
-			for (extension, tracker) in TRACKER_FORMATS.items():
-				if tracker.detect_bytes(project_obj.outdata):
-					isdetected = extension
-					logger_input.info(f"Detected inner UMX format: { tracker.get_name() }")
-					tracker.parse_bytes(convproj_obj, project_obj.outdata, dv_config, input_file)
-			if not isdetected:
-				if firstname in FORMATS:
-					modo = mod()
-					modo.parse_bytes(convproj_obj, project_obj.outdata, dv_config, input_file)
-				else:
-					logger_input.error(firstname+" is not supported")
-					exit()
+
+			#outdetected = filedetector_obj.detect_file(dawvert_intent.input_file)
+			dawvert_intent_copy = dawvert_intent.copy()
+			dawvert_intent_copy.input_mode = 'bytes'
+			dawvert_intent_copy.input_data = project_obj.outdata
+
+			if firstname in TRACKER_FORMATS:
+				tracker = TRACKER_FORMATS[firstname]
+				logger_input.info(f"Detected inner UMX format: { tracker.get_name() }")
+				tracker.parse(convproj_obj, dawvert_intent_copy)
+			else:
+				logger_input.error(firstname+" is not supported")
+				exit()

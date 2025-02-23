@@ -15,6 +15,7 @@ import os
 import configparser
 import platform
 import logging
+import copy
 
 logFormatter = logging.Formatter(fmt='%(levelname)8s | %(name)12s | %(message)s')
 consoleHandler = logging.StreamHandler()
@@ -130,6 +131,9 @@ class dawvert_intent:
 
 		self.set_defualt_path()
 
+	def copy(self):
+		return copy.deepcopy(self)
+
 	def set_file_input(self, fileloc):
 		if self.curdir: self.curdir = os.getcwd()
 		self.input_mode = 'file'
@@ -137,7 +141,6 @@ class dawvert_intent:
 		self.input_folder = os.path.dirname(self.input_file)
 		self.input_visname = os.path.basename(fileloc)
 		self.input_visname = os.path.splitext(self.input_visname)[0]
-
 
 	def set_file_output(self, fileloc):
 		if self.curdir: self.curdir = os.getcwd()

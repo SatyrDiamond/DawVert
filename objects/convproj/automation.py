@@ -5,6 +5,7 @@ import copy
 
 from objects import counter
 from functions import note_data
+from functions import xtramath
 from objects.convproj import autoticks
 from objects.convproj import autopoints
 from objects.convproj import placements_autopoints
@@ -14,7 +15,7 @@ import logging
 logger_automation = logging.getLogger('automation')
 
 class cvpj_s_automation:
-	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres','persist']
+	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres','persist','defualt_val']
 	def __init__(self, time_ppq, time_float, valtype):
 		self.pl_points = None
 		self.pl_ticks = None
@@ -33,6 +34,7 @@ class cvpj_s_automation:
 		self.valtype = valtype
 
 		self.persist = True
+		self.defualt_val = 0
 
 	def make_base(self):
 		outv = cvpj_s_automation(self.time_ppq, self.time_float, self.valtype)
@@ -102,6 +104,7 @@ class cvpj_s_automation:
 		if self.u_nopl_ticks: self.nopl_ticks.calc(mathtype, val1, val2, val3, val4)
 		if self.u_pl_points: self.pl_points.calc(mathtype, val1, val2, val3, val4)
 		if self.u_pl_ticks: self.pl_ticks.calc(mathtype, val1, val2, val3, val4)
+		self.defualt_val = xtramath.do_math(self.defualt_val, mathtype, val1, val2, val3, val4)
 
 	def add_autotick(self, p_pos, p_val):
 		self.make_nopl_ticks()
@@ -218,11 +221,23 @@ class cvpj_s_automation:
 	def convert____pl_points__nopl_points(self):
 		if self.u_pl_points:
 			self.pl_points.remove_loops([])
+
+			if not self.persist: self.add_autopoint(0, self.defualt_val, 'instant')
+
+			endpos = -1
+			difval = 0
 			for x in self.pl_points:
 				x.remove_cut()
+				if endpos != -1: 
+					difval = x.time.position-endpos
+					if difval>0 and not self.persist: 
+						self.add_autopoint(endpos, self.defualt_val, 'instant')
+
+				endpos = x.time.position+x.time.duration
 				for c, p in enumerate(x.data.points):
 					self.add_autopoint(p.pos+x.time.position, p.value, p.type if c != 0 else 'instant')
-				
+
+			if not self.persist: self.add_autopoint(x.time.position+x.time.duration, self.defualt_val, 'instant')
 
 		self.pl_points = None
 		self.u_pl_points = False
@@ -424,6 +439,10 @@ class cvpj_automation:
 		autopath = cvpj_autoloc(autopath)
 		if autopath in self.data: return True, self.data[autopath]
 		else: return False, cvpj_s_automation(self.time_ppq, self.time_float, valtype)
+
+	def get_opt(self, autopath):
+		autopath = cvpj_autoloc(autopath)
+		if autopath in self.data: return self.data[autopath]
 
 	def pop_f(self, autopath):
 		autopath = ';'.join(autopath)

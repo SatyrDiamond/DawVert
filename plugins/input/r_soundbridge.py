@@ -47,7 +47,8 @@ def parse_auto(blockdata):
 
 	return autodata[np.where(autodata['unk1']!=0)]
 
-def add_auto(valtype, convproj_obj, autoloc, sb_blocks, add, mul):
+def add_auto(defaultValue, valtype, convproj_obj, autoloc, sb_blocks, add, mul):
+
 	for block in sb_blocks:
 		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 		autopl_obj.time.position = block.position
@@ -65,6 +66,15 @@ def add_auto(valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 				autopoint_obj.value = (point['val']+add)*mul
 			autopoint_obj.tension = math.log10(point['unk1'])
 			autopoint_obj.type = 'normal'
+
+	auto_obj = convproj_obj.automation.get_opt(autoloc)
+	if auto_obj is not None: 
+		if valtype == 'vol':
+			auto_obj.defualt_val = calc_vol(defaultValue)
+		elif valtype == 'invert':
+			auto_obj.defualt_val = int(defaultValue<0.5)
+		else:
+			auto_obj.defualt_val = (defaultValue+add)*mul
 
 sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('unk2', 'B')])
 
@@ -93,7 +103,7 @@ def make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid):
 			if splitret[0]=='' and splitret[1].isnumeric() and splitret[2]=='R':
 				sendautoid = cvpj_trackid+'__'+'return__'+str(splitret[1])
 				track_obj.sends.add('return__'+str(splitret[1]), sendautoid, x.defaultValue)
-				add_auto(None, convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
+				add_auto(x.defaultValue, None, convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
 
 def create_plugin(convproj_obj, sb_plugin, issynth):
 	uiddata = soundbridge_func.decode_chunk(sb_plugin.uid)
@@ -146,9 +156,9 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 						outparam = x.parameterIndex-1
 						if outparam>=0:
 							paramid = 'ext_param_'+str(outparam)
-							add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+							add_auto(x.defaultValue, None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
 						else:
-							add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
+							add_auto(x.defaultValue, 'invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
 
 		elif hexdata in native_names:
 			plugin_enabled = struct.unpack('>f', statedata[0:4])[0]
@@ -167,9 +177,9 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 						if parameterIndex in autonum:
 							paramid = autonum[parameterIndex]
 							plugin_obj.params.add(paramid, x.defaultValue, 'float')
-							add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+							add_auto(x.defaultValue, None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
 				else:
-					add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
+					add_auto(x.defaultValue, 'invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
 
 		else:
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst3', 'win')
@@ -191,9 +201,9 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 				outparam = x.parameterIndex-1
 				if outparam>=0:
 					paramid = 'ext_param_'+str(outparam)
-					add_auto(None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
+					add_auto(x.defaultValue, None, convproj_obj, ['plugin', pluginid, paramid], x.blocks, 0, 1)
 				else:
-					add_auto('invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
+					add_auto(x.defaultValue, 'invert', convproj_obj, ['slot', pluginid, 'enabled'], x.blocks, 0, 1)
 
 	return pluginid
 
@@ -343,8 +353,8 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 	if sb_track.type in [3,4]:
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
 		for x in sb_track.automationContainer.automationTracks:
-			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['track', cvpj_trackid, 'vol'], x.blocks, 0, 1)
-			if x.parameterIndex == 3: add_auto(None, convproj_obj, ['track', cvpj_trackid, 'pan'], x.blocks, -.5, 2)
+			if x.parameterIndex == 2: add_auto(x.defaultValue, 'vol', convproj_obj, ['track', cvpj_trackid, 'vol'], x.blocks, 0, 1)
+			if x.parameterIndex == 3: add_auto(x.defaultValue, None, convproj_obj, ['track', cvpj_trackid, 'pan'], x.blocks, -.5, 2)
 
 	if sb_track.type == 2:
 		returnid = 'return__'+str(global_returnids)
@@ -357,8 +367,8 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		global_returnids += 1
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
 		for x in sb_track.automationContainer.automationTracks:
-			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['return', returnid, 'vol'], x.blocks, 0, 1)
-			if x.parameterIndex == 3: add_auto(None, convproj_obj, ['return', returnid, 'pan'], x.blocks, -.5, 2)
+			if x.parameterIndex == 2: add_auto(x.defaultValue, 'vol', convproj_obj, ['return', returnid, 'vol'], x.blocks, 0, 1)
+			if x.parameterIndex == 3: add_auto(x.defaultValue, None, convproj_obj, ['return', returnid, 'pan'], x.blocks, -.5, 2)
 
 	if sb_track.type == 1:
 		track_obj = convproj_obj.fx__group__add(cvpj_trackid)
@@ -370,8 +380,8 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
 
 		for x in sb_track.automationContainer.automationTracks:
-			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['group', cvpj_trackid, 'vol'], x.blocks, 0, 1)
-			if x.parameterIndex == 3: add_auto(None, convproj_obj, ['group', cvpj_trackid, 'pan'], x.blocks, -.5, 2)
+			if x.parameterIndex == 2: add_auto(x.defaultValue, 'vol', convproj_obj, ['group', cvpj_trackid, 'vol'], x.blocks, 0, 1)
+			if x.parameterIndex == 3: add_auto(x.defaultValue, None, convproj_obj, ['group', cvpj_trackid, 'pan'], x.blocks, -.5, 2)
 
 		for gnum, gb_track in enumerate(sb_track.tracks):
 			make_track(convproj_obj, gb_track, cvpj_trackid, gnum, pfreq)
@@ -452,8 +462,8 @@ class input_soundbridge(plugins.base):
 		convproj_obj.track_master.latency_offset = project_obj.masterTrack.latencyOffset/(pfreq/500)
 
 		for x in master_track.automationContainer.automationTracks:
-			if x.parameterIndex == 2: add_auto('vol', convproj_obj, ['master', 'vol'], x.blocks, 0, 1)
-			if x.parameterIndex == 3: add_auto(None, convproj_obj, ['master', 'pan'], x.blocks, -.5, 2)
+			if x.parameterIndex == 2: add_auto(x.defaultValue, 'vol', convproj_obj, ['master', 'vol'], x.blocks, 0, 1)
+			if x.parameterIndex == 3: add_auto(x.defaultValue, None, convproj_obj, ['master', 'pan'], x.blocks, -.5, 2)
 
 		for num, sb_track in enumerate(master_track.tracks):
 			make_track(convproj_obj, sb_track, None, num, pfreq)

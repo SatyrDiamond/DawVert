@@ -63,8 +63,7 @@ class nbs_song:
 			version = 0
 			self.newformat = 0
 			self.song_length = startbyte
-
-		self.layers_count = song_file.uint16()
+			self.layers_count = song_file.uint16()
 
 		self.custom = []
 
@@ -108,8 +107,9 @@ class nbs_song:
 					layer_done = 0
 					while layer_done == 0:
 						note_obj = nbs_parsekey(song_file, self.newformat, note_tick)
-						if note_layer < len(self.layers):
-							self.layers[note_layer].notes.append(note_obj)
+						outlayer = note_layer-1
+						if outlayer < len(self.layers):
+							self.layers[outlayer].notes.append(note_obj)
 						jump_layer = song_file.uint16()
 						if jump_layer == 0: layer_done = 1
 						note_layer += jump_layer

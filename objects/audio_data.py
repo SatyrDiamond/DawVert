@@ -70,14 +70,20 @@ class audio_obj:
 
 	def pcm_from_stream(self, in_arr, in_size): 
 		self.data = numpy.fromfile(in_arr, dtype=self.codec.get_dtype(), count=in_size*(self.codec.pcm_bits//8))
-		numpy.reshape(self.data, (-1, self.channels))
+		self.pcm_from_postproc()
 
 	def pcm_from_bytes(self, in_arr): 
 		self.data = numpy.frombuffer(in_arr, dtype=self.codec.get_dtype())
-		numpy.reshape(self.data, (-1, self.channels))
+		self.pcm_from_postproc()
 
 	def pcm_from_list(self, in_arr): 
 		self.data = numpy.asarray(in_arr, dtype=self.codec.get_dtype())
+		self.pcm_from_postproc()
+
+	def pcm_from_postproc(self): 
+		self.data = self.data.flatten()
+		removeend = len(self.data)%(self.channels)
+		if removeend: self.data = self.data[0:-removeend]
 		numpy.reshape(self.data, (-1, self.channels))
 
 # -------------------------------- signed --------------------------------

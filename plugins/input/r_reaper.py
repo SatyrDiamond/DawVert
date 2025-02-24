@@ -264,6 +264,7 @@ class input_reaper(plugins.base):
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
 			track_obj.params.add('enabled', not bool(rpp_track.mutesolo['mute']), 'bool')
+			track_obj.params.add('solo', bool(rpp_track.mutesolo['solo']), 'bool')
 
 			iphase = rpp_track.iphase.get()
 			if bool(iphase):

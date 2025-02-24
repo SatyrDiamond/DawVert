@@ -468,6 +468,7 @@ class output_reaper(plugins.base):
 			rpp_track_obj.volpan['vol'] = track_obj.params.get('vol', 1.0).value
 			rpp_track_obj.volpan['pan'] = track_obj.params.get('pan', 0).value
 			rpp_track_obj.mutesolo['mute'] = int(not track_obj.params.get('enabled', 1).value)
+			rpp_track_obj.mutesolo['solo'] = int(track_obj.params.get('solo', 0).value)*2
 
 			pan_mode = track_obj.datavals.get('pan_mode', '')
 			if pan_mode == 'mono': rpp_track_obj.panmode.set(3)

@@ -263,6 +263,7 @@ class input_reaper(plugins.base):
 			track_obj.visual.color.set_int(reaper_color_to_cvpj_color(trackcolor, True))
 			track_obj.params.add('vol', rpp_track.volpan['vol'], 'float')
 			track_obj.params.add('pan', rpp_track.volpan['pan'], 'float')
+			track_obj.params.add('enabled', not bool(rpp_track.mutesolo['mute']), 'bool')
 
 			iphase = rpp_track.iphase.get()
 			if bool(iphase):

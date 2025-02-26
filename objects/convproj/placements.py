@@ -369,7 +369,9 @@ class cvpj_placements:
 				apl_obj.fade_out = indexpl_obj.fade_out
 				
 				apl_obj.visual = sle_obj.visual
-				apl_obj.sample = sle_obj
+				apl_obj.sample = copy.deepcopy(sle_obj)
+
+				apl_obj.sample.vol *= indexpl_obj.vol
 				self.pl_audio.data.append(apl_obj)
 
 		self.pl_audio_indexed = placements_index.cvpj_placements_index(self.time_ppq, self.time_float)

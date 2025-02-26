@@ -715,6 +715,9 @@ class input_flp(plugins.base):
 
 						placement_obj.muted = bool(item.flags & 0b0001000000000000)
 						placement_obj.fromindex = 'FLSample' + str(item.itemindex)
+
+						placement_obj.vol = item.vol
+
 						stretch_obj = samplestretch[item.itemindex] if item.itemindex in samplestretch else None
 	
 						out_rate = stretch_obj.calc_tempo_speed if stretch_obj else 1

@@ -81,7 +81,7 @@ class cvpj_placements_index:
 		self.data = placements.internal_addloops(self.data, self.eq_connect, loopcompat)
 
 class cvpj_placement_index:
-	__slots__ = ['time','muted','visual','fromindex','fade_in','fade_out','time_ppq','time_float']
+	__slots__ = ['time','muted','visual','fromindex','fade_in','fade_out','time_ppq','time_float','vol']
 
 	def __init__(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
@@ -91,3 +91,4 @@ class cvpj_placement_index:
 		self.muted = False
 		self.fade_in = placements.cvpj_placement_fade()
 		self.fade_out = placements.cvpj_placement_fade()
+		self.vol = 1

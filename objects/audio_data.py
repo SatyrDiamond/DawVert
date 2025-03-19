@@ -224,7 +224,11 @@ class audio_obj:
 				numsamples = int(orgnumsamples*(samplerate/self.rate))
 				codec_obj = self.codec
 				codectxt = codec_obj.codectxt_to()
+
+				self.data = numpy.reshape(self.data, (orgnumsamples//self.channels, self.channels))
 				self.data = signal.resample_poly(self.data, numsamples, orgnumsamples)
+				self.data = self.data.flatten()
+
 				self.rate = samplerate
 				self.pcm_changecodec(codectxt)
 

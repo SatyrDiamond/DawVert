@@ -235,6 +235,16 @@
 		<bytes_header data="506f7274616c53657175656e636544617461"/>
 	</plugin>
 
+	<plugin pluginset="y2k" name="sf_acid">
+		<file fileext=".acd"/>
+		<bytes_header data="43727973"/>
+	</plugin>
+
+	<plugin pluginset="y2k" name="sf_acid">
+		<file fileext=".sdml"/>
+		<bytes_header data="43727973"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

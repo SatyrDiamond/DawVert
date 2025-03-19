@@ -183,10 +183,10 @@ class sony_acid_file:
 		self.ports = []
 
 	def load_from_file(self, input_file):
-		sf2file = riff_chunks.riff_chunk()
-		byr_stream = sf2file.load_from_file(input_file, False)
+		acidchunks = riff_chunks.riff_chunk()
+		byr_stream = acidchunks.load_from_file(input_file, False)
 
-		for x in sf2file.iter_wseek(byr_stream):
+		for x in acidchunks.iter_wseek(byr_stream):
 			if x.name == b'tlst':
 				for i in x.iter_wseek(byr_stream):
 					if i.name == b'trak': 

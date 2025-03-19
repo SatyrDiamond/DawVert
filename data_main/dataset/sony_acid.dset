@@ -7,5 +7,12 @@
             <color>#31C800</color>
             <color>#C80000</color>
         </colorset>
+        <colorset id="sdml">
+            <color>#5B5BFF</color>
+            <color>#FF5B5B</color>
+            <color>#FF902A</color>
+            <color>#00C62A</color>
+            <color>#5BFF5B</color>
+        </colorset>
     </category>
 </dataset>

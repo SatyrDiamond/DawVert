@@ -12,7 +12,7 @@ class input_piyopiyo(plugins.base):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'sony_acid'
+		return 'sf_acid'
 	
 	def get_name(self):
 		return 'ACID'

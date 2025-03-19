@@ -1,0 +1,11 @@
+<dataset>
+    <category id="track">
+        <colorset id="acid_1">
+            <color>#B6C800</color>
+            <color>#C800C8</color>
+            <color>#00C8C8</color>
+            <color>#31C800</color>
+            <color>#C80000</color>
+        </colorset>
+    </category>
+</dataset>

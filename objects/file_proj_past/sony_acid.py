@@ -82,7 +82,7 @@ class sdml_track:
 		self.pitch = 0
 		self.mutesolo = 0
 		self.audio_device = 0
-		self.root_note = 0
+		self.root_note = 60
 		self.regions = []
 		self.vol = 1
 		self.pan = 0
@@ -153,7 +153,22 @@ class sdml_track:
 								self.pan = bye_stream.float()
 						except:
 							pass
-			#else:
+
+class sdml_port:
+	def __init__(self):
+		self.type = 0
+		self.points = []
+		self.vol_left = 1
+		self.vol_right = 1
+		self.num = 0
+
+	def read(self, byr_stream):
+		size = byr_stream.uint32()
+		byr_stream.skip(4)
+		self.vol_left = byr_stream.float()
+		self.vol_right = byr_stream.float()
+		self.num = byr_stream.uint32()
+		self.name = byr_stream.string16(byr_stream.uint32())
 
 class sony_acid_file:
 	def __init__(self):
@@ -165,6 +180,7 @@ class sony_acid_file:
 		self.comments = ''
 		self.copyright = ''
 		self.tempo = 120
+		self.ports = []
 
 	def load_from_file(self, input_file):
 		sf2file = riff_chunks.riff_chunk()
@@ -193,5 +209,12 @@ class sony_acid_file:
 					size = bye_stream.uint32()
 					unk1 = bye_stream.uint32()
 					self.tempo = (500000/bye_stream.uint32())*120
+			elif x.name == b'prts':
+				for i in x.iter_wseek(byr_stream):
+					if i.name == b'port':
+						with byr_stream.isolate_size(i.size, False) as bye_stream:
+							port_obj = sdml_port()
+							port_obj.read(bye_stream)
+							self.ports.append(port_obj)
 
 		return True

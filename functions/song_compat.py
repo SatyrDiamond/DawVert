@@ -19,6 +19,8 @@ from functions_compat import removelanes
 from functions_compat import time_seconds
 from functions_compat import timesigblocks
 from functions_compat import nopl_track
+from functions_compat import track_pl_add
+from functions_compat import track_pl_del
 from functions_compat import unhybrid
 from functions_compat import sep_nest_audio
 
@@ -56,8 +58,9 @@ class song_compat:
 			self.process_part('sep_nest_audio', sep_nest_audio,	   convproj_obj, cvpj_type, in_dawinfo.audio_nested, out_dawinfo.audio_nested, out_type, dawvert_intent)
 			self.process_part('changestretch', changestretch,		 convproj_obj, cvpj_type, in_dawinfo.audio_stretch, out_dawinfo.audio_stretch, out_type, dawvert_intent)
 			self.process_part('removecut', removecut,				 convproj_obj, cvpj_type, in_dawinfo.placement_cut, out_dawinfo.placement_cut, out_type, dawvert_intent)
+			self.process_part('track_pl_add', track_pl_add,			   convproj_obj, cvpj_type, in_dawinfo.track_nopl, out_dawinfo.track_nopl, out_type, dawvert_intent)
 			self.process_part('loops_add', loops_add,				 convproj_obj, cvpj_type, in_dawinfo.placement_loop, out_dawinfo.placement_loop, out_type, dawvert_intent)
-			self.process_part('nopl_track', nopl_track,			   convproj_obj, cvpj_type, in_dawinfo.track_nopl, out_dawinfo.track_nopl, out_type, dawvert_intent)
+			self.process_part('track_pl_del', track_pl_del,			   convproj_obj, cvpj_type, in_dawinfo.track_nopl, out_dawinfo.track_nopl, out_type, dawvert_intent)
 
 		if cvpj_type in ['r']:
 			self.process_part('time_seconds', time_seconds,			   convproj_obj, cvpj_type, in_dawinfo.time_seconds, out_dawinfo.time_seconds, out_type, dawvert_intent)

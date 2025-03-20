@@ -318,6 +318,8 @@ class output_cvpjs(plugins.base):
 				flp_timemarker_obj.denominator = value[1]
 				fl_pattern_obj.timemarkers.append(flp_timemarker_obj)
 
+			fl_pattern_obj.timemarkers.sort(key=lambda x: x.pos)
+
 			flp_obj.patterns[pat_num] = fl_pattern_obj
 
 		if len(flp_obj.patterns) > 999:
@@ -405,32 +407,38 @@ class output_cvpjs(plugins.base):
 			flp_timemarker_obj.type = 4
 			arrangement_obj.timemarkers.append(flp_timemarker_obj)
 
-		if convproj_obj.transport.start_pos:
+		start_pos = convproj_obj.transport.start_pos
+
+		if start_pos:
 			flp_timemarker_obj = arrangement.flp_timemarker()
-			flp_timemarker_obj.pos = convproj_obj.transport.start_pos
+			flp_timemarker_obj.pos = start_pos
 			flp_timemarker_obj.type = 5
 			arrangement_obj.timemarkers.append(flp_timemarker_obj)
 
 		for pos, value in convproj_obj.timesig_auto:
-			flp_timemarker_obj = arrangement.flp_timemarker()
-			flp_timemarker_obj.pos = pos
-			flp_timemarker_obj.type = 8
-			flp_timemarker_obj.name = str(value[0])+'/'+str(value[1])
-			flp_timemarker_obj.numerator = value[0]
-			flp_timemarker_obj.denominator = value[1]
-			arrangement_obj.timemarkers.append(flp_timemarker_obj)
+			if start_pos<=pos:
+				flp_timemarker_obj = arrangement.flp_timemarker()
+				flp_timemarker_obj.pos = pos
+				flp_timemarker_obj.type = 8
+				flp_timemarker_obj.name = str(value[0])+'/'+str(value[1])
+				flp_timemarker_obj.numerator = value[0]
+				flp_timemarker_obj.denominator = value[1]
+				arrangement_obj.timemarkers.append(flp_timemarker_obj)
 
 		for timemarker_obj in convproj_obj.timemarkers:
-			flp_timemarker_obj = arrangement.flp_timemarker()
-			flp_timemarker_obj.pos = timemarker_obj.position
-			flp_timemarker_obj.type = 0
-			flp_timemarker_obj.name = timemarker_obj.visual.name if timemarker_obj.visual.name else ""
-			if timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
-			elif timemarker_obj.type == 'markerskip': flp_timemarker_obj.type = 2
-			elif timemarker_obj.type == 'pause': flp_timemarker_obj.type = 3
-			elif timemarker_obj.type == 'punchin': flp_timemarker_obj.type = 9
-			elif timemarker_obj.type == 'punchout': flp_timemarker_obj.type = 10
-			arrangement_obj.timemarkers.append(flp_timemarker_obj)
+			if start_pos<=timemarker_obj.position:
+				flp_timemarker_obj = arrangement.flp_timemarker()
+				flp_timemarker_obj.pos = timemarker_obj.position
+				flp_timemarker_obj.type = 0
+				flp_timemarker_obj.name = timemarker_obj.visual.name if timemarker_obj.visual.name else ""
+				if timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
+				elif timemarker_obj.type == 'markerskip': flp_timemarker_obj.type = 2
+				elif timemarker_obj.type == 'pause': flp_timemarker_obj.type = 3
+				elif timemarker_obj.type == 'punchin': flp_timemarker_obj.type = 9
+				elif timemarker_obj.type == 'punchout': flp_timemarker_obj.type = 10
+				arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
+		arrangement_obj.timemarkers.sort(key=lambda x: x.pos)
 
 		flp_obj.arrangements[0] = arrangement_obj
 

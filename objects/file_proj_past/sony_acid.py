@@ -57,6 +57,7 @@ class sdml_region:
 					if x.name == b' env':
 						env_obj = sdml_env()
 						env_obj.read(x, byr_stream)
+						self.envs.append(env_obj)
 
 warp_dtype = np.dtype([
 	('1', '<I'),
@@ -66,6 +67,15 @@ warp_dtype = np.dtype([
 	('7', '<f'),
 	('8', '<I')
 	])
+
+class sdml_track_send:
+	def __init__(self):
+		self.id = 0
+		self.vol = 0
+
+	def read(self, byr_stream):
+		self.id = byr_stream.uint32()
+		self.vol = byr_stream.float()
 
 class sdml_track:
 	def __init__(self):
@@ -86,6 +96,7 @@ class sdml_track:
 		self.regions = []
 		self.vol = 1
 		self.pan = 0
+		self.sends = []
 
 	def read(self, riffchunk, byr_stream):
 		for x in riffchunk.iter_wseek(byr_stream):
@@ -147,10 +158,19 @@ class sdml_track:
 						try:
 							with byr_stream.isolate_size(i.size, False) as bye_stream:
 								bye_stream.magic_check(b'gain')
-								bye_stream.skip(4)
-								bye_stream.skip(4)
+								bye_stream.skip(8)
 								self.vol = bye_stream.float()
 								self.pan = bye_stream.float()
+						except:
+							pass
+					if i.name == b'send':
+						try:
+							with byr_stream.isolate_size(i.size, False) as bye_stream:
+								bye_stream.magic_check(b'send')
+								bye_stream.skip(8)
+								send_obj = sdml_track_send()
+								send_obj.read(bye_stream)
+								self.sends.append(send_obj)
 						except:
 							pass
 
@@ -216,5 +236,4 @@ class sony_acid_file:
 							port_obj = sdml_port()
 							port_obj.read(bye_stream)
 							self.ports.append(port_obj)
-
 		return True

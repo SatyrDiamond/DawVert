@@ -236,13 +236,13 @@
 	</plugin>
 
 	<plugin pluginset="y2k" name="sf_acid">
+		<bytes_header pos="8" data="41434944"/>
 		<file fileext=".acd"/>
-		<bytes_header data="43727973"/>
 	</plugin>
 
 	<plugin pluginset="y2k" name="sf_acid">
+		<bytes_header pos="8" data="41434944"/>
 		<file fileext=".sdml"/>
-		<bytes_header data="43727973"/>
 	</plugin>
 
 	<plugin pluginset="exper" name="libopenmpt">

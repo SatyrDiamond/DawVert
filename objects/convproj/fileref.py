@@ -248,16 +248,32 @@ class cvpj_fileref:
 		files = filesearcher.searchcache
 		filename = str(self.file)
 
-		if filename in files: 
-			logger_filesearch.debug('    >>| file found: searchmissing >'+self.get_path(None, False))
-			fileref = files[filename]
-			self.file = fileref.file
-			self.folder = fileref.folder
-			self.is_file = fileref.is_file
-			return True
-		else:
-			logger_filesearch.debug('    ..| file not found: searchmissing > '+str(self.get_path(None, False)))
-			return False
+		if not self.exists(None):
+			orgloc = self.folder.folderloc.copy()
+			tempcopy = self.copy()
+			tempcopy.set_folder(None, dirpath, False)
+			newloc = tempcopy.folder.folderloc.copy()
+			lenl = len(orgloc)
+			found = False
+			for f in range(lenl):
+				tempcopy.folder.folderloc = newloc+orgloc[lenl-f-1:lenl]
+				if tempcopy.exists(None): 
+					found = True
+					logger_filesearch.debug('    >>| path file found: searchmissing >'+self.get_path(None, False))
+					self.set_folder_obj(tempcopy)
+					break
+
+		if not self.exists(None):
+			if filename in files: 
+				logger_filesearch.debug('    >>| file found: searchmissing >'+self.get_path(None, False))
+				fileref = files[filename]
+				self.file = fileref.file
+				self.folder = fileref.folder
+				self.is_file = fileref.is_file
+				return True
+			else:
+				logger_filesearch.debug('    ..| file not found: searchmissing > '+str(self.get_path(None, False)))
+				return False
 
 	def search(self, searchseries):
 		iffound = False

@@ -3,7 +3,7 @@
 
 def process(convproj_obj, in_compat, out_compat, out_type, dawvert_intent):
 
-	if convproj_obj.type not in ['ms', 'rs']:
+	if convproj_obj.type not in ['ms', 'rs', 'cm']:
 		convproj_obj.automation.convert(
 			'pl_points' in out_compat, 
 			'nopl_points' in out_compat, 

@@ -60,10 +60,8 @@ class input_piyopiyo(plugins.base):
 				returnid = 'return__'+str(send.id)
 				track_obj.sends.add(returnid, 'send_%i_%i' % (tracknum, send.id), send.vol)
 
-			sample_tempo = track.stretch__tempo
-			sample_beats = track.num_beats
-
 			sample_path = None
+			sampleref_obj = None
 
 			if project_obj.audios:
 				if len(project_obj.audios)>=tracknum:
@@ -88,20 +86,37 @@ class input_piyopiyo(plugins.base):
 			notec = ((noteo+6)//12)*12
 			notec = noteo-notec
 
-			stretch_size = sample_tempo/project_obj.tempo
+			sample_tempo = track.stretch__tempo
+			sample_beats = track.num_beats
 
+			stretch_type = track.stretch__type
+
+			prevpl = None
 			for region in track.regions:
 				placement_obj = track_obj.placements.add_audio()
 
+				samplemul = sample_tempo/120
+
 				time_obj = placement_obj.time
-				time_obj.set_startend(region.start, region.end)
-				time_obj.set_loop_data(0, 0, sample_beats*768)
 
 				sp_obj = placement_obj.sample
 				sp_obj.sampleref = sample_path
 
-				sp_obj.stretch.set_rate_tempo(project_obj.tempo, sample_tempo/120, True)
-				sp_obj.stretch.preserve_pitch = True
+				offsamp = 0
+				if sampleref_obj is not None:
+					if sampleref_obj.found:
+						offsamp = region.offset/sampleref_obj.hz
+
+				if stretch_type in [1, 3]:
+					offset = (offsamp*samplemul)*2
+					time_obj.set_startend(region.start, region.end)
+					time_obj.set_loop_data(offset*768, 0, sample_beats*768)
+					sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
+					sp_obj.stretch.preserve_pitch = True
+				else:
+					time_obj.set_startend(region.start, region.end)
+					time_obj.set_offset(offsamp*768)
+					sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
 
 				sp_obj.pitch = trackpitch + region.pitch + notec
 
@@ -109,8 +124,7 @@ class input_piyopiyo(plugins.base):
 					autoloc = None
 					if env.type == 0: autoloc = ['track', cvpj_trackid, 'vol']
 					if env.type == 1: autoloc = ['track', cvpj_trackid, 'pan']
-					if env.type == 2: autoloc = ['send', 'send_%i_%i' % (tracknum, 0), 'amount']
-					if env.type == 3: autoloc = ['send', 'send_%i_%i' % (tracknum, 1), 'amount']
+					if env.type > 1: autoloc = ['send', 'send_%i_%i' % (tracknum, env.type-2), 'amount']
 					if autoloc:
 						autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 						autopl_obj.time.set_startend(region.start, region.end)
@@ -123,5 +137,11 @@ class input_piyopiyo(plugins.base):
 								autopoint_obj.tension = -1
 							autopoint_obj.type = 'normal'
 							autopoint_obj.value = point[1]
+
+				prevpl = placement_obj
+
+			track_obj.placements.pl_audio.sort()
+			if stretch_type not in [1, 3]:
+				track_obj.placements.pl_audio.remove_overlaps()
 
 		convproj_obj.automation.set_persist_all(False)

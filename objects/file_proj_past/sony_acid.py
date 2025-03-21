@@ -89,6 +89,7 @@ class sdml_track:
 		self.stretch__trans_detect = 0
 		self.stretch__force_divisions = 0
 		self.stretch__tempo = 100
+		self.stretch__type = 1
 		self.pitch = 0
 		self.mutesolo = 0
 		self.audio_device = 0
@@ -114,7 +115,8 @@ class sdml_track:
 
 			elif x.name == b'trkh':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
-					unk1 = bye_stream.l_uint32(2)
+					unk1 = bye_stream.uint32()
+					self.stretch__type = bye_stream.uint32()
 					self.color = bye_stream.uint32()
 					unk3 = bye_stream.uint32()
 					self.num_samples = bye_stream.uint32()

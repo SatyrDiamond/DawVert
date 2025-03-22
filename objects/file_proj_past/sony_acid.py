@@ -98,6 +98,7 @@ class sdml_track:
 		self.vol = 1
 		self.pan = 0
 		self.sends = []
+		self.transposef = 0
 
 	def read(self, riffchunk, byr_stream):
 		for x in riffchunk.iter_wseek(byr_stream):
@@ -133,7 +134,7 @@ class sdml_track:
 
 			elif x.name == b'acid':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
-					self.unk1 = bye_stream.uint8()
+					self.transposef = bye_stream.uint8()
 					self.unk2 = bye_stream.uint8()
 					self.unk3 = bye_stream.uint8()
 					self.unk4 = bye_stream.uint8()
@@ -192,6 +193,15 @@ class sdml_port:
 		self.num = byr_stream.uint32()
 		self.name = byr_stream.string16(byr_stream.uint32())
 
+
+tempmap_dtype = np.dtype([
+	('unk1', 'int32'),
+	('unk2', 'int32'),
+	('pos', 'int32'),
+	('tempo', 'int32'),
+	('base_note', 'int32'),
+	])
+
 class sony_acid_file:
 	def __init__(self):
 		self.tracks = []
@@ -204,6 +214,8 @@ class sony_acid_file:
 		self.tempo = 120
 		self.ports = []
 		self.root_note = 60
+		self.ppq = 768
+		self.tempmap = np.zeros(0, dtype=tempmap_dtype)
 
 	def load_from_file(self, input_file):
 		acidchunks = riff_chunks.riff_chunk()
@@ -230,9 +242,11 @@ class sony_acid_file:
 			elif x.name == b'tmap':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
 					size = bye_stream.uint32()
-					unk1 = bye_stream.uint32()
+					self.ppq = bye_stream.uint32()
 					self.tempo = (500000/bye_stream.uint32())*120
 					self.root_note = bye_stream.uint32()
+					numtp = bye_stream.uint32()
+					self.tempmap = np.frombuffer(byr_stream.raw(tempmap_dtype.itemsize*numtp), dtype=tempmap_dtype)
 			elif x.name == b'prts':
 				for i in x.iter_wseek(byr_stream):
 					if i.name == b'port':

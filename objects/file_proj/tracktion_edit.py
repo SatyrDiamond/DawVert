@@ -521,6 +521,13 @@ class tracktion_audioclip:
 		self.groupID = -1
 		self.effectsVisible = 1
 
+		self.video = None
+		self.srcVideo = None
+		self.videoEnabled = None
+		self.srcVideoX = None
+		self.srcVideoY = None
+		self.videoX = None
+
 		self.loopinfo = tracktion_loopinfo()
 		self.effects = []
 
@@ -567,6 +574,14 @@ class tracktion_audioclip:
 			elif n == 'warpTime': self.warpTime = int(v)
 			elif n == 'effectsVisible': self.effectsVisible = int(v)
 			elif n == 'groupID': self.groupID = int(v)
+
+			elif n == 'video': self.video = v
+			elif n == 'srcVideo': self.srcVideo = v
+			elif n == 'videoEnabled': self.videoEnabled = int(v)
+			elif n == 'srcVideoX': self.srcVideoX = int(v)
+			elif n == 'srcVideoY': self.srcVideoY = int(v)
+			elif n == 'videoX': self.videoX = int(v)
+
 			else: logger_projparse.warning('waveform_edit: audioclip: unimplemented attrib: '+n)
 
 		for subxml in xmldata:

@@ -203,6 +203,7 @@ class sony_acid_file:
 		self.copyright = ''
 		self.tempo = 120
 		self.ports = []
+		self.root_note = 60
 
 	def load_from_file(self, input_file):
 		acidchunks = riff_chunks.riff_chunk()
@@ -231,6 +232,7 @@ class sony_acid_file:
 					size = bye_stream.uint32()
 					unk1 = bye_stream.uint32()
 					self.tempo = (500000/bye_stream.uint32())*120
+					self.root_note = bye_stream.uint32()
 			elif x.name == b'prts':
 				for i in x.iter_wseek(byr_stream):
 					if i.name == b'port':

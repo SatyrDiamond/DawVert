@@ -156,6 +156,21 @@ class cvpj_placements_audio:
 		for x in self.data:
 			x.changestretch(convproj_obj, target, tempo)
 
+	def remove_overlaps(self):
+		old_data_audio = copy.deepcopy(self.data)
+		new_data_audio = []
+
+		prev = None
+		for pl in old_data_audio:
+			endpos = pl.time.duration+pl.time.position
+			if prev:
+				poevendpos = prev.time.duration+prev.time.position
+				prev.time.duration = min(prev.time.duration, pl.time.position-prev.time.position)
+			prev = pl
+			new_data_audio.append(pl)
+
+		self.data = new_data_audio
+
 
 class cvpj_placement_audio:
 	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto','time_ppq','time_float','group','locked']

@@ -558,8 +558,8 @@ class output_lmms(plugins.base):
 					midiport_obj.outputprogram = track_obj.midi.out_inst.patch
 					midiport_obj.writable = int(track_obj.midi.out_enabled)
 					midiport_obj.fixedinputvelocity = track_obj.midi.in_fixedvelocity
-					midiport_obj.inputchannel = track_obj.midi.in_chan+1
-					midiport_obj.outputchannel = track_obj.midi.out_chan+1
+					midiport_obj.inputchannel = track_obj.midi.in_chanport.chan+1
+					midiport_obj.outputchannel = track_obj.midi.out_chanport.chan+1
 					midiport_obj.fixedoutputnote = track_obj.midi.out_inst.key
 					encode_fxchain(insttrack_obj.fxchain, track_obj, trackname, autoloc)
 

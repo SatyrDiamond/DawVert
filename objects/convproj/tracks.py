@@ -58,15 +58,21 @@ class cvpj_nle:
 cvpj_visual = visual.cvpj_visual
 cvpj_stretch = stretch.cvpj_stretch
 
+class cvpj_chanport:
+	def __init__(self):
+		self.chan = False
+		self.port = -1
+		self.port_name = ''
+
 class cvpj_midiport:
 	def __init__(self):
 		self.in_enabled = False
-		self.in_chan = -1
+		self.in_chanport = cvpj_chanport()
 		self.in_fixedvelocity = -1
 
 		self.out_enabled = False
+		self.out_chanport = cvpj_chanport()
 		self.out_fixedvelocity = -1
-		self.out_chan = -1
 		self.out_inst = midi_inst.cvpj_midi_inst()
 
 		self.basevelocity = 63

@@ -275,7 +275,7 @@ class input_it(plugins.base):
 
 				if it_inst.midi_chan != None: 
 					inst_obj.midi.out_enabled = 1
-					inst_obj.midi.out_chan = it_inst.midi_chan+1
+					inst_obj.midi.out_chanport.chan = it_inst.midi_chan+1
 				if it_inst.midi_inst != None: inst_obj.midi.out_patch = it_inst.midi_inst+1
 				if it_inst.midi_bank != None: inst_obj.midi.out_bank = it_inst.midi_bank+1
 

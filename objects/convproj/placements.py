@@ -6,11 +6,15 @@ from functions import xtramath
 import copy
 
 from objects.convproj import notelist
+from objects.convproj import midievents
 from objects.convproj import tracks
 
+from objects.convproj import placements_midi
 from objects.convproj import placements_notes
 from objects.convproj import placements_audio
 from objects.convproj import placements_index
+from objects.convproj import placements_video
+from objects.convproj import placements_custom
 from objects.convproj import time
 
 def internal_addloops(pldata, eq_connect, loopcompat):
@@ -213,7 +217,7 @@ class cvpj_placement_timing:
 			self.duration = xtramath.sec2step(self.duration_real, bpm)
 		
 class cvpj_placements:
-	__slots__ = ['pl_notes','pl_audio','pl_notes_indexed','pl_audio_indexed','pl_audio_nested','notelist','time_ppq','time_float','uses_placements','is_indexed']
+	__slots__ = ['pl_midi','pl_notes','pl_audio','pl_notes_indexed','pl_audio_indexed','pl_audio_nested','pl_video','pl_custom','notelist','midievents','time_ppq','time_float','uses_placements','is_indexed']
 	def __init__(self, time_ppq, time_float, uses_placements, is_indexed):
 		self.uses_placements = uses_placements
 		self.is_indexed = is_indexed
@@ -221,6 +225,9 @@ class cvpj_placements:
 		self.time_float = time_float
 
 		self.notelist = notelist.cvpj_notelist(time_ppq, time_float)
+		self.midievents = midievents.midievents()
+
+		self.pl_midi = placements_midi.cvpj_placements_midi(self.time_ppq, self.time_float)
 
 		self.pl_notes = placements_notes.cvpj_placements_notes(self.time_ppq, self.time_float)
 		self.pl_audio = placements_audio.cvpj_placements_audio(self.time_ppq, self.time_float)
@@ -230,12 +237,17 @@ class cvpj_placements:
 
 		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio(self.time_ppq, self.time_float)
 
+		self.pl_video = placements_video.cvpj_placements_video(self.time_ppq, self.time_float)
+		self.pl_custom = placements_custom.cvpj_placements_custom(self.time_ppq, self.time_float)
+
 	def sort(self):
 		self.pl_notes.sort()
 		self.pl_audio.sort()
 		self.pl_notes_indexed.sort()
 		self.pl_audio_indexed.sort()
 		self.pl_audio_nested.sort()
+		self.pl_video.sort()
+		self.pl_custom.sort()
 
 	def autosplit(self):
 		self.pl_notes.autosplit(self.time_ppq)
@@ -265,6 +277,8 @@ class cvpj_placements:
 	def change_seconds(self, is_seconds, bpm, ppq):
 		self.pl_notes.change_seconds(is_seconds, bpm, ppq)
 		self.pl_audio.change_seconds(is_seconds, bpm, ppq)
+		self.pl_custom.change_seconds(is_seconds, bpm, ppq)
+		self.pl_video.change_seconds(is_seconds, bpm, ppq)
 
 	def remove_cut(self):
 		self.pl_notes.remove_cut()
@@ -275,6 +289,8 @@ class cvpj_placements:
 		self.pl_audio_nested.remove_loops(out__placement_loop)
 		self.pl_notes_indexed.remove_loops(out__placement_loop)
 		self.pl_audio_indexed.remove_loops(out__placement_loop)
+		self.pl_video.remove_loops(out__placement_loop)
+		self.pl_custom.remove_loops(out__placement_loop)
 
 	def add_loops(self, loopcompat):
 		self.pl_notes.add_loops(loopcompat)
@@ -291,6 +307,10 @@ class cvpj_placements:
 	def add_notes_indexed(self): return self.pl_notes_indexed.add()
 
 	def add_audio_indexed(self): return self.pl_audio_indexed.add()
+
+	def add_video(self): return self.pl_video.add()
+
+	def add_custom(self): return self.pl_custom.add()
 
 	def all_stretch_set_pitch_nonsync(self):
 		if not self.is_indexed: 
@@ -312,9 +332,12 @@ class cvpj_placements:
 		self.pl_notes.change_timings(time_ppq, time_float, self.is_indexed)
 		self.pl_notes.change_timings(time_ppq, time_float, self.is_indexed)
 		self.pl_audio.change_timings(time_ppq, time_float)
+		self.pl_midi.change_timings(time_ppq, time_float)
 		self.pl_notes_indexed.change_timings(time_ppq, time_float)
 		self.pl_audio_indexed.change_timings(time_ppq, time_float)
 		self.pl_audio_nested.change_timings(time_ppq, time_float)
+		self.pl_video.change_timings(time_ppq, time_float)
+		self.pl_custom.change_timings(time_ppq, time_float)
 
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -449,6 +472,7 @@ class cvpj_placements:
 					e.sample.fxrack_channel = fxnum
 
 	def remove_nested(self):
+
 		self.pl_audio_nested.remove_loops([])
 		for nestedpl_obj in self.pl_audio_nested:
 			main_s = nestedpl_obj.time.cut_start

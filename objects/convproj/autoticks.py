@@ -196,3 +196,7 @@ class cvpj_autoticks:
 				points_out.append([lastpoint[0], lastpoint[1], True])
 
 		return points_out
+
+	def get_befval(self, pos):
+		points = [v for p, v in self.points.items() if p<=pos]
+		if points: return points[0]

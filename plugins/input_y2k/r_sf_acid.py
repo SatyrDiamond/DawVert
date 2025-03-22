@@ -22,8 +22,11 @@ class input_piyopiyo(plugins.base):
 	
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'r'
+		in_dict['audio_filetypes'] = ['wav']
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['audio_stretch'] = ['rate']
+		in_dict['auto_types'] = ['pl_points']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
@@ -43,10 +46,7 @@ class input_piyopiyo(plugins.base):
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 
-		for x in range(2):
-			returnid = 'return__'+str(x)
-			track_obj = convproj_obj.track_master.fx__return__add(returnid)
-			track_obj.visual.name = 'FX '+str(x+1)
+		used_sends = []
 
 		for tracknum, track in enumerate(project_obj.tracks):
 			cvpj_trackid = 'track_'+str(tracknum)
@@ -59,6 +59,7 @@ class input_piyopiyo(plugins.base):
 			for send in track.sends:
 				returnid = 'return__'+str(send.id)
 				track_obj.sends.add(returnid, 'send_%i_%i' % (tracknum, send.id), send.vol)
+				if send.id not in used_sends: used_sends.append(send.id)
 
 			sample_path = None
 			sampleref_obj = None
@@ -82,9 +83,9 @@ class input_piyopiyo(plugins.base):
 			trackpitch = track.pitch
 			root_note = track.root_note
 
-			noteo = 60-root_note
-			notec = ((noteo+6)//12)*12
-			notec = noteo-notec
+			#noteo = 60-root_note
+			#notec = ((noteo+6)//12)*12
+			#notec = noteo-notec
 
 			sample_tempo = track.stretch__tempo
 			sample_beats = track.num_beats
@@ -113,18 +114,24 @@ class input_piyopiyo(plugins.base):
 					time_obj.set_loop_data(offset*768, 0, sample_beats*768)
 					sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
 					sp_obj.stretch.preserve_pitch = True
+					if project_obj.root_note != 127:
+						notetrack = project_obj.root_note-48
+						notetrack -= root_note-48
+						notetrack -= ((notetrack+6)//12)*12
+						sp_obj.pitch = notetrack+region.pitch
 				else:
 					time_obj.set_startend(region.start, region.end)
 					time_obj.set_offset(offsamp*768)
-					sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
-
-				sp_obj.pitch = trackpitch + region.pitch + notec
+					sampmul = pow(2, region.pitch/-12)
+					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)
 
 				for env in region.envs:
 					autoloc = None
 					if env.type == 0: autoloc = ['track', cvpj_trackid, 'vol']
 					if env.type == 1: autoloc = ['track', cvpj_trackid, 'pan']
-					if env.type > 1: autoloc = ['send', 'send_%i_%i' % (tracknum, env.type-2), 'amount']
+					if env.type > 1: 
+						autoloc = ['send', 'send_%i_%i' % (tracknum, env.type-2), 'amount']
+						if env.type-2 not in used_sends: used_sends.append(env.type-2)
 					if autoloc:
 						autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 						autopl_obj.time.set_startend(region.start, region.end)
@@ -137,11 +144,20 @@ class input_piyopiyo(plugins.base):
 								autopoint_obj.tension = -1
 							autopoint_obj.type = 'normal'
 							autopoint_obj.value = point[1]
+						auto_obj = convproj_obj.automation.get_opt(autoloc)
+						if auto_obj is not None: 
+							if env.type == 0: auto_obj.defualt_val = track.vol
+							if env.type == 1: auto_obj.defualt_val = track.pan
 
 				prevpl = placement_obj
 
 			track_obj.placements.pl_audio.sort()
 			if stretch_type not in [1, 3]:
 				track_obj.placements.pl_audio.remove_overlaps()
+
+		for x in used_sends:
+			returnid = 'return__'+str(x)
+			track_obj = convproj_obj.track_master.fx__return__add(returnid)
+			track_obj.visual.name = 'FX '+str(x+1)
 
 		convproj_obj.automation.set_persist_all(False)

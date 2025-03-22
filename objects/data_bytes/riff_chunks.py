@@ -18,6 +18,11 @@ class riff_chunk:
 	def __getitem__(self, num):
 		return self.in_data[num]
 
+	def iter_wseek(self, byr_stream):
+		for x in self.in_data:
+			byr_stream.seek(x.start)
+			yield x
+
 	def add_part(self, name):
 		self.is_list = True
 		temp_chunk = riff_chunk()
@@ -25,8 +30,13 @@ class riff_chunk:
 		self.in_data.append(temp_chunk)
 		return temp_chunk
 
+	def dump_list(self, byr_stream):
+		byr_stream.seek_real(self.start-4)
+		return b'RIFF'+byr_stream.raw(self.end-self.start)
+
 	def read_list(self, byr_stream, headersize, storedata):
 		self.is_list = True
+		self.start = byr_stream.tell_real()
 		self.name = byr_stream.raw(4)
 		while byr_stream.tell_real()<byr_stream.end:
 			temp_chunk = riff_chunk()
@@ -44,6 +54,7 @@ class riff_chunk:
 				else: byr_stream.skip(chunk_size)
 			if bool(chunk_size & 1): byr_stream.skip(1)
 			self.in_data.append(temp_chunk)
+		self.end = byr_stream.tell_real()
 
 	def load_from_byr(self, byr_stream, storedata):
 		byr_stream.magic_check(b'RIFF')

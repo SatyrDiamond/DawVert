@@ -2,13 +2,13 @@
 def decode(sysex_obj, bstream):
 	devicename = 'universal'
 
-	if sysex_obj.vendor.id == 126: 
+	if sysex_obj.vendor == '#7e': 
 		if sysex_obj.device == 127:
 			sysex_obj.known = True
 			sysex_obj.category = 'system'
 			sysex_obj.param = 'gm_reset'
 
-	if sysex_obj.vendor.id == 127: 
+	if sysex_obj.vendor == '#7f': 
 		if sysex_obj.model_id == 3:
 			sysex_obj.known = True
 			sysex_obj.category = 'notation'

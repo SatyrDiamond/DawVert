@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects import globalstore
+
 def midiid_to_num(i_bank, i_patch, i_isdrum, i_iskey): 
 	return i_bank*256 + i_patch + int(i_isdrum)<<8 + int(i_iskey)<<16
 
@@ -10,6 +12,47 @@ def midiid_from_num(value):
 	v_patch = (value%128)
 	v_bank = (value>>8)
 	return v_bank, v_patch, v_isdrum, v_iskey
+
+def get_visual_inst(m_bank_hi, m_bank, m_inst, m_drum, m_dev):
+	out_color = None
+	out_name = None
+
+	midi_dev = m_dev if m_dev else 'gm'
+	globalstore.dataset.load('midi', './data_main/dataset/midi.dset')
+	if midi_dev == 'xg':
+		startcat = 'xg_inst'
+		if m_drum: m_bank = 127
+
+		d = globalstore.dataset.get_obj('midi', startcat, str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst))
+		if d:
+			if d.visual.color: out_color = d.visual.color
+			if d.visual.color: out_name = d.visual.name
+
+		d = globalstore.dataset.get_obj('midi', startcat, '0_'+str(m_bank)+'_'+str(m_inst))
+		if d:
+			if d.visual.color and not out_color: out_color = d.visual.color
+			if d.visual.color and not out_name: out_name = d.visual.name
+
+		d = globalstore.dataset.get_obj('midi', startcat, '0_0_'+str(m_inst))
+		if d:
+			if d.visual.color and not out_color: out_color = d.visual.color
+			if d.visual.color and not out_name: out_name = d.visual.name
+
+	else:
+		startcat = midi_dev+'_inst' if not m_drum else midi_dev+'_drums'
+		d = globalstore.dataset.get_obj('midi', startcat, str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst))
+
+		if d:
+			if d.visual.color: out_color = d.visual.color
+			if d.visual.color: out_name = d.visual.name
+
+		d = globalstore.dataset.get_obj('midi', startcat, '0_0_'+str(m_inst))
+		if d:
+			if d.visual.color and not out_color: out_color = d.visual.color
+			if d.visual.color and not out_name: out_name = d.visual.name
+
+	return out_name, out_color
+
 
 class midi_autoinfo:
 	def __init__(self):

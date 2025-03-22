@@ -36,18 +36,17 @@ class input_mmf(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['fxtype'] = 'rack'
-		in_dict['projtype'] = 'rm'
+		in_dict['projtype'] = 'cm'
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'MMMD'])
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
-		from objects.songinput import midi_in
 		from objects.file_proj_past import mmf as proj_mmf
 
 		convproj_obj.fxtype = 'rack'
-		convproj_obj.type = 'rm'
+		convproj_obj.type = 'cm'
 
 		project_obj = proj_mmf.smaf_song()
 
@@ -100,24 +99,34 @@ class input_mmf(plugins.base):
 			#song_obj.postprocess()
 			#song_obj.to_cvpj(convproj_obj)
 
-		for track in project_obj.tracks3:
-			if track != None:
+		for n, track in enumerate(project_obj.tracks3):
+			if track is not None:
 				timebase = get_timebase(track.timebase_dur)
 				realtime = int(timebase*(math.pi*10000))
-				song_obj = midi_in.midi_song(16, realtime, 120, [4,4])
-				song_obj.fx_offset = 1
 
-				track_obj = song_obj.create_track(len(track.sequence))
+				midippq = 96
+
+				convproj_obj.set_timings(midippq*realtime, False)
+
+				track_obj = convproj_obj.track__add(str(n), 'midi', 1, False)
+
 				curpos = 0
-				for event in track.sequence:
-					curpos += event[0]
-					if event[1] == 8: track_obj.note_dur(curpos, event[2], event[3], 127, event[4])
-					elif event[1] == 9: track_obj.note_dur(curpos, event[2], event[3], event[4], event[5])
-					elif event[1] == 11: track_obj.control_change(curpos, event[2], event[3], event[4])
-					elif event[1] == 12: track_obj.program_change(curpos, event[2], event[3])
-					elif event[1] == 14: track_obj.pitchwheel(curpos, event[2], event[3])
-
-				song_obj.postprocess()
+				if track.sequence is not None:
+					events_obj = track_obj.placements.midievents
+	
+					for event in track.sequence:
+						curpos += event[0]*midippq
+	
+						if event[1] == 8:
+							events_obj.add_note_dur(curpos, event[2], event[3], 127, event[4]*midippq)
+						elif event[1] == 9:
+							events_obj.add_note_dur(curpos, event[2], event[3], event[4], event[5]*midippq)
+						elif event[1] == 11:
+							events_obj.add_control(curpos, event[2], event[3], event[4])
+						elif event[1] == 12:
+							events_obj.add_program(curpos, event[2], event[3])
+						elif event[1] == 14:
+							events_obj.add_pitch(curpos, event[2], event[3])
 
 				for soundnum, hzsnd in track.audio.items():
 					hz, sounddata = hzsnd
@@ -131,50 +140,47 @@ class input_mmf(plugins.base):
 
 					sampleref_obj = convproj_obj.sampleref__add(wav_path, wav_path, None)
 
-				for x in song_obj.instruments.midi_instruments.data:
-					if x['bank'] == 124: 
-						x['is_custom'] = 1
-						x['custom_name'] = 'MA-3 Voice #'+str(x['inst'])
-						x['custom_color_used'] = 1
-						x['custom_color'] = [30,30,30]
-					if x['bank'] == 125: 
-						x['is_custom'] = 1
-						x['custom_name'] = 'MA-3 Drum/Stream #'+str(x['inst'])
-						x['custom_color_used'] = 1
-						x['custom_color'] = [30,30,30]
+				#for x in song_obj.instruments.midi_instruments.data:
+				#	if x['bank'] == 124: 
+				#		x['is_custom'] = 1
+				#		x['custom_name'] = 'MA-3 Voice #'+str(x['inst'])
+				#		x['custom_color_used'] = 1
+				#		x['custom_color'] = [30,30,30]
+				#	if x['bank'] == 125: 
+				#		x['is_custom'] = 1
+				#		x['custom_name'] = 'MA-3 Drum/Stream #'+str(x['inst'])
+				#		x['custom_color_used'] = 1
+				#		x['custom_color'] = [30,30,30]
 				
-				song_obj.to_cvpj(convproj_obj)
+				#audiotracks = {}
+#
+				#audiofx = convproj_obj.fxrack[1]
+				#audiofx.visual.name = 'MA-3 Audio'
+				#audiofx.visual.color.set_float([0.2,0.2,0.2])
 
-				audiotracks = {}
+				#maxnum = 0
+				#for soundnum, sounddata in track.audio.items():
+				#	strnum = str(soundnum).zfill(2)
+				#	audtrack_obj = convproj_obj.track__add('audio'+strnum, 'audio', 1, False)
+				#	audtrack_obj.fxrack_channel = 1
+				#	audtrack_obj.visual.name = 'Sound #'+str(soundnum)
+				#	audtrack_obj.params.add('vol', 0.3, 'float')
+				#	audiotracks[soundnum] = audtrack_obj
+				#	if soundnum>maxnum: maxnum = soundnum
 
-				audiofx = convproj_obj.fxrack[1]
-				audiofx.visual.name = 'MA-3 Audio'
-				audiofx.visual.color.set_float([0.2,0.2,0.2])
+				#filternstream = track_obj.notes.data.data['key']<16
+				#findex = np.where(filternstream)
+#
+				#for audionote in track_obj.notes.data.data[findex]:
+				#	wav_path = samplefolder + 'snd_' + str(audionote['key']+1).zfill(2) + '.wav'
+				#	soundnum = audionote['key']+1
+				#	if soundnum in audiotracks:
+				#		audtrack_obj = audiotracks[soundnum]
+				#		placement_obj = audtrack_obj.placements.add_audio()
+				#		placement_obj.time.set_startend(audionote['start'], audionote['end'])
+				#		placement_obj.sample.sampleref = wav_path
+				#		placement_obj.sample.vol = audionote['vol']/127
+#
+				#break
 
-				maxnum = 0
-				for soundnum, sounddata in track.audio.items():
-					strnum = str(soundnum).zfill(2)
-					audtrack_obj = convproj_obj.track__add('audio'+strnum, 'audio', 1, False)
-					audtrack_obj.fxrack_channel = 1
-					audtrack_obj.visual.name = 'Sound #'+str(soundnum)
-					audtrack_obj.params.add('vol', 0.3, 'float')
-					audiotracks[soundnum] = audtrack_obj
-					if soundnum>maxnum: maxnum = soundnum
-
-				filternstream = track_obj.notes.data.data['key']<16
-				findex = np.where(filternstream)
-
-				for audionote in track_obj.notes.data.data[findex]:
-					wav_path = samplefolder + 'snd_' + str(audionote['key']+1).zfill(2) + '.wav'
-					soundnum = audionote['key']+1
-					if soundnum in audiotracks:
-						audtrack_obj = audiotracks[soundnum]
-						placement_obj = audtrack_obj.placements.add_audio()
-						placement_obj.time.set_startend(audionote['start'], audionote['end'])
-						placement_obj.sample.sampleref = wav_path
-						placement_obj.sample.vol = audionote['vol']/127
-
-				break
-
-		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.params.add('bpm', 120, 'float')

@@ -239,66 +239,76 @@ def do_track(convproj_obj, wf_track, track_obj):
 						autopoint_obj.type = 'instant'
 
 	for audioclip in wf_track.audioclips:
-		placement_obj = track_obj.placements.add_audio()
 
-		placement_obj.sample.sampleref = audioclip.source
-		sampleref_exists, sampleref_obj = convproj_obj.sampleref__get(audioclip.source)
-
-		placement_obj.time.position_real = audioclip.start
-		placement_obj.time.duration_real = audioclip.length
-
-		placement_obj.fade_in.set_dur(audioclip.fadeIn, 'seconds')
-		placement_obj.fade_out.set_dur(audioclip.fadeOut, 'seconds')
-
-		placement_obj.group = str(audioclip.groupID) if audioclip.groupID!=-1 else None
-
-		stretch_amt = 1
-		if sampleref_exists:
-			stretch_amt = (sampleref_obj.dur_sec*2)/audioclip.loopinfo.numBeats
-
-		bpmdiv = (bpm/120)
-		if audioclip.loopStartBeats == 0 and audioclip.loopLengthBeats == 0:
-			placement_obj.time.set_offset(audioclip.offset*8*bpmdiv)
-		else:
-			#print(
-			#	audioclip.offset*8*bpmdiv,
-			#	audioclip.loopStartBeats*4, 
-			#	audioclip.loopStartBeats+audioclip.loopLengthBeats*4
-			#	)
-
-			placement_obj.time.set_loop_data(
-				audioclip.offset*8*bpmdiv, 
-				audioclip.loopStartBeats*4, 
-				(audioclip.loopStartBeats+audioclip.loopLengthBeats)*4
-				)
+		if not audioclip.srcVideo:
+			placement_obj = track_obj.placements.add_audio()
 	
-		sp_obj = placement_obj.sample
-		sp_obj.vol = xtramath.from_db(audioclip.gain)
-		sp_obj.pan = audioclip.pan
+			placement_obj.sample.sampleref = audioclip.source
+			sampleref_exists, sampleref_obj = convproj_obj.sampleref__get(audioclip.source)
+	
+			placement_obj.time.position_real = audioclip.start
+			placement_obj.time.duration_real = audioclip.length
+	
+			placement_obj.fade_in.set_dur(audioclip.fadeIn, 'seconds')
+			placement_obj.fade_out.set_dur(audioclip.fadeOut, 'seconds')
+	
+			placement_obj.group = str(audioclip.groupID) if audioclip.groupID!=-1 else None
+	
+			stretch_amt = 1
+			if sampleref_exists:
+				stretch_amt = (sampleref_obj.dur_sec*2)/audioclip.loopinfo.numBeats
+	
+			bpmdiv = (bpm/120)
+			if audioclip.loopStartBeats == 0 and audioclip.loopLengthBeats == 0:
+				placement_obj.time.set_offset(audioclip.offset*8*bpmdiv)
+			else:
+				#print(
+				#	audioclip.offset*8*bpmdiv,
+				#	audioclip.loopStartBeats*4, 
+				#	audioclip.loopStartBeats+audioclip.loopLengthBeats*4
+				#	)
+	
+				placement_obj.time.set_loop_data(
+					audioclip.offset*8*bpmdiv, 
+					audioclip.loopStartBeats*4, 
+					(audioclip.loopStartBeats+audioclip.loopLengthBeats)*4
+					)
+		
+			sp_obj = placement_obj.sample
+			sp_obj.vol = xtramath.from_db(audioclip.gain)
+			sp_obj.pan = audioclip.pan
+	
+			stretch_obj = sp_obj.stretch
+			stretch_obj.set_rate_tempo(bpm, stretch_amt, False)
+			stretch_obj.preserve_pitch = True
+	
+			for fx in audioclip.effects:
+				params = fx.plugin.params
+				if fx.fx_type == 'pitchShift':
+					if 'semitonesUp' in params: sp_obj.pitch += float(params['semitonesUp'])
+				if fx.fx_type == 'reverse':
+					sp_obj.reverse = True
+				if fx.fx_type == 'warpTime':
+					if fx.warptime:
+						bpmmul = (1/bpmdiv)
+						warptime = fx.warptime
+						stretch_obj.is_warped = True
+						warp_obj = sp_obj.stretch.warp
+						warp_obj.seconds = warptime.warpEndMarkerTime
+	
+						for warpmarker in warptime.warpmarkers:
+							warp_point_obj = warp_obj.points__add()
+							warp_point_obj.beat = (warpmarker.warpTime/stretch_amt)*2
+							warp_point_obj.second = warpmarker.sourceTime
+						warp_obj.calcpoints__speed()
+		else:
+			placement_obj = track_obj.placements.add_video()
+	
+			placement_obj.time.position_real = audioclip.start
+			placement_obj.time.duration_real = audioclip.length
 
-		stretch_obj = sp_obj.stretch
-		stretch_obj.set_rate_tempo(bpm, stretch_amt, False)
-		stretch_obj.preserve_pitch = True
-
-		for fx in audioclip.effects:
-			params = fx.plugin.params
-			if fx.fx_type == 'pitchShift':
-				if 'semitonesUp' in params: sp_obj.pitch += float(params['semitonesUp'])
-			if fx.fx_type == 'reverse':
-				sp_obj.reverse = True
-			if fx.fx_type == 'warpTime':
-				if fx.warptime:
-					bpmmul = (1/bpmdiv)
-					warptime = fx.warptime
-					stretch_obj.is_warped = True
-					warp_obj = sp_obj.stretch.warp
-					warp_obj.seconds = warptime.warpEndMarkerTime
-
-					for warpmarker in warptime.warpmarkers:
-						warp_point_obj = warp_obj.points__add()
-						warp_point_obj.beat = (warpmarker.warpTime/stretch_amt)*2
-						warp_point_obj.second = warpmarker.sourceTime
-					warp_obj.calcpoints__speed()
+			placement_obj.video_fileref = audioclip.srcVideo
+	
 
 	track_obj.datavals.add('middlenote', middlenote)
 
@@ -353,6 +363,7 @@ class input_tracktion_edit(plugins.base):
 		globalstore.dataset.load('waveform', './data_main/dataset/waveform.dset')
 
 		samples = {}
+		videos = {}
 		project_obj = proj_tracktion_edit.tracktion_edit()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
@@ -370,12 +381,19 @@ class input_tracktion_edit(plugins.base):
 							tproj = proj_tracktion_project.tracktion_project()
 							tproj.load_from_file(os.path.join(projfolder, tprojpath))
 							samples |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'wave')])
+							videos |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'video')])
 						except:
 							pass
 
 		for sid, spath in samples.items(): 
 			sampleref_obj = convproj_obj.sampleref__add(sid, spath, None)
 			sampleref_obj.find_relative('projectfile')
+
+		for sid, spath in videos.items(): 
+			fileref_obj = convproj_obj.fileref__add(sid, spath, None)
+			if dawvert_intent.input_mode == 'file':
+				if not fileref_obj.exists(None):
+					fileref_obj.search_local(os.path.dirname(dawvert_intent.input_file))
 
 		if project_obj.temposequence.tempo:
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))

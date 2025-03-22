@@ -485,10 +485,10 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			midiport_obj = insttr_obj.midiport
 			track_obj.midi.in_enabled = bool(int(midiport_obj.readable))
-			track_obj.midi.in_chan = int(midiport_obj.inputchannel)-1
+			track_obj.midi.in_chanport.chan = int(midiport_obj.inputchannel)-1
 			track_obj.midi.in_fixedvelocity = int(midiport_obj.fixedinputvelocity)
 			track_obj.midi.out_enabled = int(midiport_obj.writable)
-			track_obj.midi.out_chan = int(midiport_obj.outputchannel)
+			track_obj.midi.out_chanport.chan = int(midiport_obj.outputchannel)
 			track_obj.midi.out_inst.patch = int(midiport_obj.outputprogram)
 			track_obj.midi.out_fixedvelocity = int(midiport_obj.fixedoutputvelocity)
 			track_obj.midi.out_inst.key = int(midiport_obj.fixedoutputnote)

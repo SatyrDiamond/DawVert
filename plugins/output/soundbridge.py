@@ -233,11 +233,13 @@ def make_sends(convproj_obj, sb_track, sends_obj):
 		values.append(0)
 
 	for i, x in sends_obj.iter():
-		automationTrack = cur_returns[i]
-		automationTrack.defaultValue = x.params.get('amount', 0).value
-		if x.sendautoid: make_auto_track(None, convproj_obj, ['send', x.sendautoid, 'amount'], automationTrack.blocks, 0, 1, sb_track.metadata)
-		values[sb_returns.index(i)] = automationTrack.defaultValue
-
+		if i in cur_returns:
+			automationTrack = cur_returns[i]
+			automationTrack.defaultValue = x.params.get('amount', 0).value
+			if x.sendautoid: make_auto_track(None, convproj_obj, ['send', x.sendautoid, 'amount'], automationTrack.blocks, 0, 1, sb_track.metadata)
+			values[sb_returns.index(i)] = automationTrack.defaultValue
+		else:
+			logger_output.warning('return id %s is missing! This might cause the DAW to crash.' % i)
 	sb_track.sendsAutomationContainer.state = soundbridge_func.encode_chunk(struct.pack('>'+('f'*len(values)), *values))
 
 def make_plugins_fx(convproj_obj, sb_track, plugslots):
@@ -549,6 +551,7 @@ class output_soundbridge(plugins.base):
 		sb_returns = [x for x in master_track.returns]
 
 		audio_ids = {}
+		video_ids = {}
 		
 		convproj_obj.sampleref__remove_nonaudiopl()
 
@@ -561,7 +564,10 @@ class output_soundbridge(plugins.base):
 				if dawvert_intent.output_mode == 'file':
 					filename = str(obj_filename)
 					outfilename = os.path.join(dawvert_intent.output_file, str(obj_outfilename.file))
-					sampleref_obj.copy_resample(None, outfilename)
+					if sampleref_obj.found:
+						sampleref_obj.copy_resample(None, outfilename)
+					else:
+						sampleref_obj.set_path(None, outfilename)
 
 				audio_ids[sampleref_id] = sampleref_obj.fileref.file
 
@@ -569,6 +575,22 @@ class output_soundbridge(plugins.base):
 				audioSource.fileName = str(obj_outfilename.file)
 				audioSource.sourceFileName = filename.replace('\\', '/')
 				project_obj.pool.audioSources.append(audioSource)
+
+		for fileref_id, fileref_obj in convproj_obj.fileref__iter():
+			if fileref_obj.file.extension in ['mp4','mpeg','avi','mpg','mkv']:
+				obj_filename = fileref_obj.get_path('win', False)
+				obj_outfilename = fileref_obj.copy()
+
+				if dawvert_intent.output_mode == 'file':
+					filename = str(obj_filename)
+					outfilename = os.path.join(dawvert_intent.output_file, str(obj_outfilename.file))
+
+				video_ids[fileref_id] = fileref_obj.file
+				if fileref_obj.exists(None):
+					videoSource = proj_soundbridge.soundbridge_videoSource(None)
+					videoSource.fileName = str(obj_outfilename.file)
+					videoSource.sourceFileName = filename.replace('\\', '/')
+					project_obj.pool.videoSources.append(videoSource)
 
 		groups_data = {}
 		for groupid, insidegroup in convproj_obj.group__iter_inside():
@@ -579,8 +601,13 @@ class output_soundbridge(plugins.base):
 			else: 
 				make_group(convproj_obj, groupid, groups_data, sb_tracks)
 
+		videotrack_obj = None
+
 		for trackid, track_obj in convproj_obj.track__iter():
 			sb_tracks = project_obj.masterTrack.tracks
+
+			if track_obj.type == 'video':
+				if not videotrack_obj: videotrack_obj = track_obj
 
 			if track_obj.group: sb_tracks = groups_data[track_obj.group].tracks
 
@@ -593,10 +620,10 @@ class output_soundbridge(plugins.base):
 				if track_obj.visual.color: sb_track.metadata["TrackColor"] = '#'+track_obj.visual.color.get_hex()
 				sb_track.midiInput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.midiInput.externalDeviceIndex = 0
-				sb_track.midiInput.channelIndex = track_obj.midi.in_chan-1
+				sb_track.midiInput.channelIndex = track_obj.midi.in_chanport.chan-1
 				sb_track.midiOutput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.midiOutput.externalDeviceIndex = -1
-				sb_track.midiOutput.channelIndex = track_obj.midi.out_chan-1
+				sb_track.midiOutput.channelIndex = track_obj.midi.out_chanport.chan-1
 				sb_track.blocks = []
 				sb_track.latencyOffset = calc_lattime(track_obj.latency_offset)
 
@@ -861,6 +888,47 @@ class output_soundbridge(plugins.base):
 			make_sends(convproj_obj, sb_track, return_obj.sends)
 			make_plugins_fx(convproj_obj, sb_track, return_obj.plugslots)
 			sb_tracks.append(sb_track)
+
+		sb_videotrack = project_obj.videoTrack
+
+		if videotrack_obj:
+			if videotrack_obj.visual.color: 
+				sb_videotrack.metadata["Color"] = '#'+videotrack_obj.visual.color.get_hex()
+
+			for videopl_obj in videotrack_obj.placements.pl_video:
+				time_obj = videopl_obj.time
+
+				block = proj_soundbridge.soundbridge_block(None)
+				block.name = videopl_obj.visual.name if videopl_obj.visual.name else ""
+				if videopl_obj.visual.color:
+					block.metadata["BlockColor"] = '#'+videopl_obj.visual.color.get_hex()
+				block.timeBaseMode = 1
+				block.position = int(time_obj.position)
+				block.positionStart = 0
+				block.positionEnd = int(time_obj.duration+1)
+				block.loopOffset = 0
+				block.framesCount = int(time_obj.duration+1)
+				block.loopEnabled = 0
+				block.muted = int(videopl_obj.muted)
+				block.filename = video_ids[videopl_obj.video_fileref]
+
+				#if videopl_obj.time.cut_type == 'cut':
+				#	block.positionStart = time_obj.cut_start
+				#	block.loopOffset = time_obj.cut_start
+				#	block.positionEnd += time_obj.cut_start
+				#	block.loopOffset = max(block.loopOffset, 0)
+				#	block.positionStart = max(block.positionStart, 0)
+
+				block.stretchMarks = []
+				stretchMark = proj_soundbridge.soundbridge_stretchMark(None)
+				block.stretchMarks.append(stretchMark)
+
+				stretchMark = proj_soundbridge.soundbridge_stretchMark(None)
+				stretchMark.initPosition = int(block.framesCount*(120/tempo))
+				stretchMark.newPosition = block.framesCount
+				block.stretchMarks.append(stretchMark)
+
+				sb_videotrack.blocks.append(block)
 
 		aid_found, aid_data = convproj_obj.automation.get(['main', 'bpm'], 'float')
 		if aid_found:

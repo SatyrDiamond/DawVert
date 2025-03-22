@@ -339,12 +339,20 @@ class cvpj_visual:
 
 	def from_dset_midi(self, m_bank_hi, m_bank, m_inst, m_drum, m_dev, overwrite):
 		midi_dev = m_dev if m_dev else 'gm'
-		startcat = midi_dev+'_inst' if not m_drum else midi_dev+'_drums'
-		dset_inst = str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst)
-		dset_fb = '0_0_'+str(m_inst)
 		globalstore.dataset.load('midi', './data_main/dataset/midi.dset')
-		self.from_dset('midi', startcat, dset_inst, overwrite)
-		self.from_dset('midi', startcat, dset_fb, overwrite)
+		if midi_dev == 'xg':
+			startcat = 'xg_inst'
+			if m_drum: m_bank = 127
+			dset_inst = str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst)
+			self.from_dset('midi', startcat, dset_inst, overwrite)
+			dset_inst_fallb = '0_'+str(m_bank)+'_'+str(m_inst)
+			self.from_dset('midi', startcat, dset_inst_fallb, overwrite)
+		else:
+			startcat = midi_dev+'_inst' if not m_drum else midi_dev+'_drums'
+			dset_inst = str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst)
+			dset_fb = '0_0_'+str(m_inst)
+			self.from_dset('midi', startcat, dset_inst, overwrite)
+			self.from_dset('midi', startcat, dset_fb, overwrite)
 
 	def copy(self):
 		return copy.deepcopy(self)

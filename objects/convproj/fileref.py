@@ -261,7 +261,7 @@ class cvpj_fileref:
 					found = True
 					logger_filesearch.debug('    >>| path file found: searchmissing >'+self.get_path(None, False))
 					self.set_folder_obj(tempcopy)
-					break
+					return True
 
 		if not self.exists(None):
 			if filename in files: 

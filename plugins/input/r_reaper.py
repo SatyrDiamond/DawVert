@@ -475,6 +475,9 @@ class input_reaper(plugins.base):
 					if rpp_source.type in ['MIDI']:
 						midi_ppq = rpp_source.hasdata['ppq']
 						for note in rpp_source.notes: midi_notes_out.do_note(note)
+					if rpp_source.type == 'VIDEO':
+						cvpj_placement_type = 'video'
+						cvpj_audio_file = rpp_source.file.get()
 					if rpp_source.type == 'SECTION':
 						samplemode = int(rpp_source.mode.get())
 						startpos = rpp_source.startpos.get()
@@ -576,6 +579,25 @@ class input_reaper(plugins.base):
 					if rpp_trackitem.group.used:
 						groupnum = rpp_trackitem.group.get()
 						placement_obj.group = str(groupnum)
+
+				if cvpj_placement_type == 'video': 
+					placement_obj = track_obj.placements.add_video()
+
+					if cvpj_name: placement_obj.visual.name = cvpj_name
+					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
+					placement_obj.time.position_real = cvpj_position
+					placement_obj.time.duration_real = cvpj_duration
+
+					startoffset = (cvpj_offset_bpm) + (startpos)*8
+
+					placement_obj.time.set_offset(startoffset)
+
+					placement_obj.vol = cvpj_vol
+					placement_obj.muted = bool(cvpj_muted)
+
+					convproj_obj.fileref__add(cvpj_audio_file, cvpj_audio_file, None)
+
+					placement_obj.video_fileref = cvpj_audio_file
 
 			track_obj.placements.sort()
 			convproj_obj.fx__route__add(cvpj_trackid)

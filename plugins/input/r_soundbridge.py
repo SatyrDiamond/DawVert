@@ -280,10 +280,10 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 			track_obj.plugslots.set_synth( create_plugin(convproj_obj, midiinst, True) )
 
 		if sb_track.midiInput:
-			track_obj.midi.in_chan = sb_track.midiInput.channelIndex+1
+			track_obj.midi.in_chanport.chan = sb_track.midiInput.channelIndex+1
 
 		if sb_track.midiOutput:
-			track_obj.midi.out_chan = sb_track.midiOutput.channelIndex+1
+			track_obj.midi.out_chanport.chan = sb_track.midiOutput.channelIndex+1
 
 	if sb_track.type == 3:
 		track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
@@ -452,10 +452,34 @@ class input_soundbridge(plugins.base):
 			ofilename = filename
 			if dawvert_intent.input_file.endswith('.soundbridge'): 
 				ofilename = os.path.join(dawvert_intent.input_file, filename)
-			sampleref_obj = convproj_obj.sampleref__add(filename, ofilename, None)
+			convproj_obj.sampleref__add(filename, ofilename, None)
+
+		for videosource in project_obj.pool.videoSources:
+			filename = videosource.fileName
+			ofilename = filename
+			if dawvert_intent.input_file.endswith('.soundbridge'): 
+				ofilename = os.path.join(dawvert_intent.input_file, filename)
+			convproj_obj.fileref__add(filename, ofilename, None)
 
 		master_track = project_obj.masterTrack
 
+		video_track = project_obj.videoTrack
+		if video_track.blocks:
+			track_obj = convproj_obj.track__add('videotrack', 'video', 1, False)
+			track_obj.visual.name = video_track.name
+			track_obj.visual.color.set_hex(video_track.metadata['Color'] if 'Color' in video_track.metadata else None)
+			track_obj.params.add('vol', 0, 'float')
+			for block in video_track.blocks:
+				placement_obj = track_obj.placements.add_video()
+				placement_obj.visual.name = block.name
+				placement_obj.muted = bool(block.muted)
+				clipmetadata = block.metadata
+				if 'BlockColor' in clipmetadata: 
+					placement_obj.visual.color.set_hex(clipmetadata['BlockColor'])
+				placement_obj.time.set_posdur(block.position, block.framesCount)
+				placement_obj.video_fileref = block.filename
+
+		master_track = project_obj.masterTrack
 		add_params(project_obj.masterTrack.state, convproj_obj.track_master.params)
 		track_visual(convproj_obj.track_master.visual, project_obj.masterTrack)
 		do_fx('master', convproj_obj, project_obj.masterTrack, convproj_obj.track_master)

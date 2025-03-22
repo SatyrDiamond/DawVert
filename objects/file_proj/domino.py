@@ -14,6 +14,166 @@ def printchunk(num, trk_chunk_obj, song_data, view):
 
 	print('    '*(num) + ('--> ' if (num>0) else '') + str(trk_chunk_obj.id), trk_chunk_obj.size if view else '', outview)
 
+class dms_note:
+	def __init__(self):
+		self.pos = 0
+		self.dur = 0
+		self.key = 0
+		self.vel = 0
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.key = song_data.uint8()
+			if subchunk_obj.id == 2002: self.vel = song_data.uint8()
+			if subchunk_obj.id == 2003: self.dur = song_data.uint32()
+
+class dms_ctrl:
+	def __init__(self):
+		self.pos = 0
+		self.cc = 0
+		self.data1 = 0
+		self.data2 = 0
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.cc = song_data.uint16()
+			if subchunk_obj.id == 2002: self.data1 = song_data.raw(subchunk_obj.size)
+			if subchunk_obj.id == 2003: self.data2 = song_data.raw(subchunk_obj.size)
+
+class dms_text:
+	def __init__(self):
+		self.pos = 0
+		self.text = ''
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.text = song_data.string(subchunk_obj.size)
+
+class dms_sysex:
+	def __init__(self):
+		self.pos = 0
+		self.text = ''
+		self.sysex = b''
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.text = song_data.string(subchunk_obj.size)
+			if subchunk_obj.id == 2002: self.sysex = song_data.raw(subchunk_obj.size)
+
+class dms_expression:
+	def __init__(self):
+		self.pos = 0
+		self.var = ''
+		self.value = ''
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.var = song_data.string(subchunk_obj.size)
+			if subchunk_obj.id == 2002: self.value = song_data.string(subchunk_obj.size)
+
+class dms_measurelink:
+	def __init__(self):
+		self.pos = 0
+		self.measure_dest = 1
+		self.key_transpose = 0
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.measure_dest = song_data.uint32()
+			if subchunk_obj.id == 2002: self.key_transpose = song_data.int32()
+
+class dms_timesig:
+	def __init__(self):
+		self.pos = 0
+		self.num = 4
+		self.nenom = 4
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.num = song_data.uint8()
+			if subchunk_obj.id == 2002: self.nenom = song_data.uint8()
+
+class dms_keysig:
+	def __init__(self):
+		self.pos = 0
+		self.key = 0
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.key = song_data.uint8()
+
+class dms_keyscale:
+	def __init__(self):
+		self.pos = 0
+		self.key = 0
+		self.chord = 0
+		self.custom = None
+		self.name = None
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.key = song_data.uint8()
+			if subchunk_obj.id == 2002: self.chord = song_data.uint8()
+			if subchunk_obj.id == 2003: self.custom = list(song_data.l_uint8(12))
+			if subchunk_obj.id == 2004: self.name = song_data.string(subchunk_obj.size)
+
+class dms_program_change:
+	def __init__(self):
+		self.pos = 0
+		self.patch = 0
+		self.unk1 = 0
+		self.unk2 = 0
+		self.unk3 = 0
+		self.unk4 = 0
+		self.unk5 = 0
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.unk1 = song_data.int8()
+			if subchunk_obj.id == 2002: self.unk2 = song_data.int8()
+			if subchunk_obj.id == 2003: self.patch = song_data.uint8()
+			if subchunk_obj.id == 2004: self.unk3 = song_data.raw(subchunk_obj.size)
+			if subchunk_obj.id == 2005: self.unk4 = song_data.uint8()
+			if subchunk_obj.id == 2006: self.unk5 = song_data.int16()
+
+class dms_chord:
+	def __init__(self):
+		self.pos = 0
+		self.key = 0
+		self.chord = 0
+		self.custom = None
+		self.name = None
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: self.key = song_data.uint8()
+			if subchunk_obj.id == 2002: self.chord = song_data.uint32()
+			if subchunk_obj.id == 2003: self.custom = song_data.raw(subchunk_obj.size)
+			if subchunk_obj.id == 2004: self.name = song_data.string(subchunk_obj.size)
+
+class dms_tempo:
+	def __init__(self):
+		self.pos = 0
+		self.val = 120
+
+	def read(self, trk_chunk_obj, song_data):
+		for subchunk_obj in trk_chunk_obj.iter(0):
+			if subchunk_obj.id == 1001: self.pos = song_data.uint32()
+			if subchunk_obj.id == 2001: 
+				for inchunk_obj in subchunk_obj.iter(0):
+					self.val = song_data.float()
+
 class dms_track:
 	def __init__(self, chunk_obj, song_data):
 		self.notes = []
@@ -30,6 +190,7 @@ class dms_track:
 		self.keysigs = []
 		self.keyscales = []
 		self.chords = []
+		self.tempos = []
 
 		self.name = ''
 		self.channel = 0
@@ -49,6 +210,7 @@ class dms_track:
 
 		for trk_chunk_obj in chunk_obj.iter(0):
 			chunkid = trk_chunk_obj.id
+
 			if chunkid == 1000: self.out_port = song_data.uint16()
 			elif chunkid == 1001: self.channel = song_data.uint8()
 			elif chunkid == 1002: self.name = song_data.string(trk_chunk_obj.size)
@@ -66,119 +228,79 @@ class dms_track:
 			elif chunkid == 1022: self.range_high = song_data.uint8()
 
 			elif chunkid == 2001:
-				note = [0,0,0,0]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: note[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: note[1] = song_data.uint8()
-					if subchunk_obj.id == 2002: note[2] = song_data.uint8()
-					if subchunk_obj.id == 2003: note[3] = song_data.uint32()
-				self.notes.append(note)
+				note_obj = dms_note()
+				note_obj.read(trk_chunk_obj, song_data)
+				self.notes.append(note_obj)
 
 			elif chunkid == 2003:
-				control = [0,0,0,0]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: control[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: control[1] = song_data.uint16()
-					if subchunk_obj.id == 2002: control[2] = song_data.raw(subchunk_obj.size)
-					if subchunk_obj.id == 2003: control[3] = song_data.raw(subchunk_obj.size)
-				self.ctrls.append(control)
+				ctrl_obj = dms_ctrl()
+				ctrl_obj.read(trk_chunk_obj, song_data)
+				self.ctrls.append(ctrl_obj)
 
 			elif chunkid == 2004:
-				sysex = [0,b'',0]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: sysex[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: sysex[1] = song_data.string(subchunk_obj.size)
-					if subchunk_obj.id == 2002: sysex[2] = song_data.raw(subchunk_obj.size)
-				self.sysex.append(sysex)
+				sysex_obj = dms_sysex()
+				sysex_obj.read(trk_chunk_obj, song_data)
+				self.sysex.append(sysex_obj)
 
 			elif chunkid == 2005:
-				text = [0,None]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: text[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: text[1] = song_data.string(subchunk_obj.size)
-				self.texts.append(text)
+				text_obj = dms_text()
+				text_obj.read(trk_chunk_obj, song_data)
+				self.texts.append(text_obj)
 
 			elif chunkid == 2011:
-				lyric = [0,None]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: lyric[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: lyric[1] = song_data.string(subchunk_obj.size)
-				self.lyrics.append(lyric)
+				text_obj = dms_text()
+				text_obj.read(trk_chunk_obj, song_data)
+				self.lyrics.append(text_obj)
 
 			elif chunkid == 2017:
-				marker = [0,None]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: marker[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: marker[1] = song_data.string(subchunk_obj.size)
-				self.markers.append(marker)
+				text_obj = dms_text()
+				text_obj.read(trk_chunk_obj, song_data)
+				self.markers.append(text_obj)
 
 			elif chunkid == 2012:
-				cuepoint = [0,None]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: cuepoint[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: cuepoint[1] = song_data.string(subchunk_obj.size)
-				self.cuepoints.append(cuepoint)
+				text_obj = dms_text()
+				text_obj.read(trk_chunk_obj, song_data)
+				self.cuepoints.append(text_obj)
 
 			elif chunkid == 2007:
-				expression = [0,None,None]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: expression[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: expression[1] = song_data.string(subchunk_obj.size)
-					if subchunk_obj.id == 2002: expression[2] = song_data.string(subchunk_obj.size)
-				self.expressions.append(expression)
+				expression_obj = dms_expression()
+				expression_obj.read(trk_chunk_obj, song_data)
+				self.expressions.append(expression_obj)
 
 			elif chunkid == 2014:
-				measurelink = [0,0,0]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: measurelink[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: measurelink[1] = song_data.uint32()
-					if subchunk_obj.id == 2002: measurelink[2] = song_data.uint32()
-				self.measurelinks.append(measurelink)
+				measurelink_obj = dms_measurelink()
+				measurelink_obj.read(trk_chunk_obj, song_data)
+				self.measurelinks.append(measurelink_obj)
 
 			elif chunkid == 2015:
-				timesig = [0,0,0]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: timesig[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: timesig[1] = song_data.uint8()
-					if subchunk_obj.id == 2002: timesig[2] = song_data.uint8()
-				self.timesigs.append(timesig)
+				timesig_obj = dms_timesig()
+				timesig_obj.read(trk_chunk_obj, song_data)
+				self.timesigs.append(timesig_obj)
 
 			elif chunkid == 2016:
-				keysig = [0,None,None]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: keysig[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: keysig[1] = song_data.uint8()
-				self.keysigs.append(keysig)
+				keysig_obj = dms_keysig()
+				keysig_obj.read(trk_chunk_obj, song_data)
+				self.keysigs.append(keysig_obj)
 
 			elif chunkid == 2018:
-				keyscale = [0,None,None]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: keyscale[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: keyscale[1] = song_data.uint8()
-					if subchunk_obj.id == 2001: keyscale[2] = song_data.uint32()
-				self.keyscales.append(keyscale)
+				keyscale_obj = dms_keyscale()
+				keyscale_obj.read(trk_chunk_obj, song_data)
+				self.keyscales.append(keyscale_obj)
 
 			elif chunkid == 2002:
-				programchange = [0,0,0,0,0,0,0]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: programchange[0] = song_data.uint32()
-					if subchunk_obj.id == 2003: programchange[1] = song_data.uint8()
-					if subchunk_obj.id == 2004: programchange[2] = song_data.raw(subchunk_obj.size)
-					if subchunk_obj.id == 2005: programchange[3] = song_data.uint8()
-					if subchunk_obj.id == 2001: programchange[4] = song_data.int8()
-					if subchunk_obj.id == 2002: programchange[5] = song_data.int8()
-					if subchunk_obj.id == 2006: programchange[6] = song_data.int16()
-				self.programchanges.append(programchange)
+				program_obj = dms_program_change()
+				program_obj.read(trk_chunk_obj, song_data)
+				self.programchanges.append(program_obj)
 
 			elif chunkid == 2019:
-				chord = [0,0,0,0,0]
-				for subchunk_obj in trk_chunk_obj.iter(0):
-					if subchunk_obj.id == 1001: chord[0] = song_data.uint32()
-					if subchunk_obj.id == 2001: chord[1] = song_data.uint8()
-					if subchunk_obj.id == 2002: chord[2] = song_data.uint32()
-					if subchunk_obj.id == 2003: chord[3] = song_data.raw(subchunk_obj.size)
-					if subchunk_obj.id == 2004: chord[4] = song_data.string(subchunk_obj.size)
-				self.chords.append(chord)
+				chord_obj = dms_chord()
+				chord_obj.read(trk_chunk_obj, song_data)
+				self.chords.append(chord_obj)
+
+			elif chunkid == 2008:
+				tempo_obj = dms_tempo()
+				tempo_obj.read(trk_chunk_obj, song_data)
+				self.tempos.append(tempo_obj)
 
 			#elif chunkid in [2017, 2009, 1010, 2008]:
 			#	printchunk(1, chunkid, trk_chunk_obj, song_data, False)
@@ -207,8 +329,6 @@ class dms_project:
 		main_iff_obj.set_sizes_num(2, 4, False)
 
 		for chunk_obj in main_iff_obj.iter(0, song_data.end):
-			
-
 			if chunk_obj.id == 1003: self.tracks.append(dms_track(chunk_obj, song_data))
 			elif chunk_obj.id == 1000: self.name = song_data.string(chunk_obj.size)
 			elif chunk_obj.id == 1001: self.copyright = song_data.string(chunk_obj.size)

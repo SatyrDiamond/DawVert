@@ -182,11 +182,12 @@ class rpp_fxchain:
 			if name == 'LASTSEL': self.lastsel.set(values[0])
 			if name == 'DOCKED': self.docked.set(values[0])
 			if name == 'BYPASS': bypassval = [x for x in values]
-			if name == 'FXID': self.plugins[-1].fxid.set(values[0])
-			if name == 'PRESETNAME': self.plugins[-1].presetname.set(values[0])
-			if name == 'FLOATPOS': self.plugins[-1].floatpos.read(values)
-			if name == 'WAK': self.plugins[-1].wak.read(values)
-			if name == 'WET': self.plugins[-1].wet.read(values)
+			if self.plugins:
+				if name == 'FXID': self.plugins[-1].fxid.set(values[0])
+				if name == 'PRESETNAME': self.plugins[-1].presetname.set(values[0])
+				if name == 'FLOATPOS': self.plugins[-1].floatpos.read(values)
+				if name == 'WAK': self.plugins[-1].wak.read(values)
+				if name == 'WET': self.plugins[-1].wet.read(values)
 
 			if is_dir:
 				if name in 'VST': 

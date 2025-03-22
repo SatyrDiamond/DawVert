@@ -620,6 +620,30 @@ class output_reaper(plugins.base):
 						groupcounter += 1
 					rpp_item_obj.group.set(groupassoc[groupidtr])
 
+			for videopl_obj in track_obj.placements.pl_video:
+				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
+
+				clip_startat = 0
+				if videopl_obj.time.cut_type == 'cut': clip_startat = (videopl_obj.time.cut_start/8)/tempomul
+
+				rpp_item_obj.position.set(videopl_obj.time.position_real)
+				rpp_item_obj.length.set(videopl_obj.time.duration_real)
+				rpp_item_obj.mute['mute'] = int(videopl_obj.muted)
+				if videopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(videopl_obj.visual.color))
+				if videopl_obj.visual.name: rpp_item_obj.name.set(videopl_obj.visual.name)
+				rpp_item_obj.volpan['vol'] = videopl_obj.vol
+
+				clip_startat = 0
+				if videopl_obj.time.cut_type == 'cut': clip_startat = (videopl_obj.time.cut_start/8)/tempomul
+				rpp_item_obj.soffs.set(clip_startat)
+
+				ref_found, fileref_obj = convproj_obj.fileref__get(videopl_obj.video_fileref)
+				if ref_found:
+					filename = fileref_obj.get_path(None, False)
+					rpp_source_obj = rpp_item_obj.source = rpp_source.rpp_source()
+					rpp_source_obj.type = 'VIDEO'
+					rpp_source_obj.file.set(filename)
+	
 			for fxid in track_obj.plugslots.slots_synths:
 				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj)
 

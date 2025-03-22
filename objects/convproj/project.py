@@ -41,6 +41,8 @@ from functions_song import convert_ts2m
 
 from functions_song import convert_ms2rm
 from functions_song import convert_rs2r
+from functions_song import convert_cm2rm
+from functions_song import convert_cs2cm
 
 typelist = {}
 typelist['r'] = 'Regular'
@@ -51,6 +53,8 @@ typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['ms'] = 'MultipleScened'
 typelist['ts'] = 'TrackerSingle'
+typelist['cm'] = 'ClassicalMultiple'
+typelist['cs'] = 'ClassicalSingle'
 
 logger_project = logging.getLogger('project')
 logger_filesearch = logging.getLogger('filesearch')
@@ -170,6 +174,11 @@ class cvpj_transport:
 			self.current_pos = xtramath.sec2step(self.current_pos, bpm)
 			self.is_seconds = False
 		
+class cvpj_project_midi:
+	def __init__(self):
+		self.num_channels = 16
+		self.num_ports = 1
+
 class cvpj_project:
 	def __init__(self):
 		self.type = None
@@ -205,6 +214,7 @@ class cvpj_project:
 		self.scenes = {}
 		self.scene_placements = []
 		self.tracker_single = None
+		self.midi = cvpj_project_midi()
 
 		self._m2r_visual_playlist_first = False
 
@@ -333,6 +343,43 @@ class cvpj_project:
 			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2r.convert(self)
 
+		elif self.type == 'cm' and out_type == 'r':
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2r.convert(self)
+
+		elif self.type == 'cm' and out_type == 'm':
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+
+		elif self.type == 'cm' and out_type == 'mi': 
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_m2mi.convert(self)
+
+		elif self.type == 'cs' and out_type == 'r':
+			convert_cs2cm.convert(self)
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2r.convert(self)
+
+		elif self.type == 'cs' and out_type == 'm':
+			convert_cs2cm.convert(self)
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+
+		elif self.type == 'cs' and out_type == 'mi': 
+			convert_cs2cm.convert(self)
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_m2mi.convert(self)
+
 		elif self.type == out_type: 
 			pass
 		
@@ -413,6 +460,10 @@ class cvpj_project:
 
 # --------------------------------------------------------- TRACKS ---------------------------------------------------------
 
+	def track__clear(self):
+		self.track_data = {}
+		self.track_order = []
+
 	def track__get(self, trackid):
 		return self.track_data[trackid] if trackid in self.track_data else None
 
@@ -429,6 +480,9 @@ class cvpj_project:
 		self.track_data[track_id] = tracks.cvpj_track(tracktype, self.time_ppq, self.time_float, uses_placements, is_indexed)
 		self.track_order.append(track_id)
 		return self.track_data[track_id]
+
+	def track__count(self):
+		return len(self.track_order)
 
 	def track__addspec__midi(self, track_id, plug_id, m_bank, m_inst, m_drum, uses_pl, indexed):
 		plugin_obj = self.plugin__addspec__midi(plug_id, 0, m_bank, m_inst, m_drum, 'gm')
@@ -503,6 +557,10 @@ class cvpj_project:
 	def fileref__get(self, fileid):
 		if fileid in self.filerefs: return True, self.filerefs[fileid]
 		else: return False, None
+
+	def fileref__iter(self):
+		for fileid_id, fileid_obj in self.filerefs.items():
+			yield fileid_id, fileid_obj
 
 # --------------------------------------------------------- SAMPLEREF ---------------------------------------------------------
 

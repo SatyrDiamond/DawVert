@@ -132,8 +132,8 @@ class output_bandlab(plugins.base):
 				auxsend_obj.id = 'aux1'
 				blx_track.auxSends.append(auxsend_obj)
 
-				do_automation(convproj_obj, ['track', trackid, 'pan'], blx_track.automation.pan)
-				do_automation(convproj_obj, ['track', trackid, 'vol'], blx_track.automation.volume)
+				do_automation(convproj_obj, ['track', trackid, 'pan'], blx_track.automation.pan, tempomul)
+				do_automation(convproj_obj, ['track', trackid, 'vol'], blx_track.automation.volume, tempomul)
 
 				blx_track.order = tracknum
 
@@ -195,7 +195,7 @@ class output_bandlab(plugins.base):
 						blx_region.file = uuiddata+'.mid'
 						blx_track.regions.append(blx_region)
 
-				make_plugins_fx(convproj_obj, blx_track.autoPitch, blx_track.effects, track_obj.plugslots.slots_audio)
+				make_plugins_fx(convproj_obj, blx_track.autoPitch, blx_track.effects, track_obj.plugslots.slots_audio, tempomul)
 
 				project_obj.tracks.append(blx_track)
 
@@ -227,14 +227,15 @@ class output_bandlab(plugins.base):
 			outpath = os.path.join(folder, namet, os.path.basename(dawvert_intent.output_file))
 			project_obj.save_to_file(outpath)
 
-def do_automation(convproj_obj, autoloc, blx_auto):
+def do_automation(convproj_obj, autoloc, blx_auto, tempomul):
 	ap_f, ap_d = convproj_obj.automation.get(autoloc, 'float')
 	if ap_f: 
 		if ap_d.u_nopl_points:
+			ap_d.nopl_points.remove_instant()
 			for autopoint in ap_d.nopl_points:
-				blx_auto.add_point(autopoint.pos, autopoint.value)
+				blx_auto.add_point((autopoint.pos/2)*tempomul, autopoint.value)
 
-def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio):
+def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio, tempomul):
 	from objects.file_proj import bandlab as proj_bandlab
 	for pluginid in fxslots_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
@@ -261,7 +262,7 @@ def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio):
 						if not dset_param.noauto: 
 							blx_effect.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value
 							blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
-							do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id])
+							do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id], tempomul)
 						else:
 							blx_effect.params[param_id] = plugin_obj.datavals.get(param_id, dset_param.defv)
 							blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
@@ -276,7 +277,7 @@ def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio):
 						for param_id in paramlist:
 							blx_effect.params[param_id] = plugin_obj.params.get(param_id, 0).value
 							blx_effect.automation[param_id] = proj_bandlab.bandlab_automation()
-							do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id])
+							do_automation(convproj_obj, ['plugin', pluginid, param_id], blx_effect.automation[param_id], tempomul)
 
 				effects.append(blx_effect)
 

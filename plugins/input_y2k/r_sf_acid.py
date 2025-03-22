@@ -5,9 +5,58 @@ import plugins
 import json
 import struct
 import os.path
+import bisect
 from objects import globalstore
+from functions import xtramath
 
-class input_piyopiyo(plugins.base):
+class rootnote_stor():
+	def __init__(self):
+		self.data = []
+	
+	def add_pos(self, p):
+		if self.data:
+			for n, x in enumerate(self.data):
+				if x[1]==-1:
+					self.data[n][0] = p
+					self.data.insert(n, [0,p,60])
+					break
+				elif x[1]>p:
+					self.data.insert(n, [0,p,60])
+					break
+		else:
+			self.data = [[p,-1,60]]
+
+		for n, x in enumerate(self.data):
+			if (len(self.data)-1)>n>0:
+				self.data[n][0] = self.data[n-1][1]
+
+	def add_notes(self, notedata):
+		notepos = list(notedata)
+		for x in notepos:
+			b = bisect.bisect_left(notepos, x)
+			if b<len(self.data): self.data[b][2] = notedata[x]
+
+	def iterd(self, ostart, oend):
+		for start, end, root_note in self.data:
+			if end != -1:
+				cond = ((end>ostart) and (start<oend))
+				if cond: yield max(start, ostart), min(end, oend), root_note
+			else:
+				cond = (start<oend)
+				if cond: yield max(start, ostart), oend, root_note
+
+def calc_root(proj_root, track_root):
+	roottrack = (proj_root-60)
+	roottrack = roottrack%12
+
+	notetrack = track_root-60
+	notetrack = notetrack%12
+
+	outt = roottrack-notetrack
+	outt -= ((outt+6)//12)*12
+	return outt
+
+class input_acid_old(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
 	
@@ -26,7 +75,7 @@ class input_piyopiyo(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['audio_stretch'] = ['rate']
-		in_dict['auto_types'] = ['pl_points']
+		in_dict['auto_types'] = ['pl_points','nopl_ticks']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
@@ -34,19 +83,46 @@ class input_piyopiyo(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
-		convproj_obj.set_timings(768, False)
 
 		project_obj = sony_acid.sony_acid_file()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
+		ppq = project_obj.ppq
+		convproj_obj.set_timings(ppq, False)
+
 		globalstore.dataset.load('sony_acid', './data_main/dataset/sony_acid.dset')
 		colordata = colors.colorset.from_dataset('sony_acid', 'track', 'acid_1')
 		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
-
+ 
 		samplefolder = dawvert_intent.path_samples['extracted']
 
+		songroot = project_obj.root_note
+
 		used_sends = []
+
+		auto_basenotes = {}
+
+		rootnote_auto = rootnote_stor()
+
+		auto_basenotes[0] = project_obj.root_note
+
+		if len(project_obj.tempmap):
+			convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', 0, project_obj.tempo)
+
+			for x in project_obj.tempmap:
+				if x['tempo']:
+					tempov = (500000/x['tempo'])*120
+					convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', int(x['pos']), tempov)
+				if x['base_note']:
+					pos = int(x['pos'])
+					if pos:
+						auto_basenotes[pos] = int(x['base_note'])
+					else:
+						auto_basenotes[0] = int(x['base_note'])
+
+		for pos in list(auto_basenotes): rootnote_auto.add_pos(pos)
+		rootnote_auto.add_notes(auto_basenotes)
 
 		for tracknum, track in enumerate(project_obj.tracks):
 			cvpj_trackid = 'track_'+str(tracknum)
@@ -81,27 +157,16 @@ class input_piyopiyo(plugins.base):
 				sampleref_obj.search_local(os.path.dirname(dawvert_intent.input_file))
 
 			trackpitch = track.pitch
-			root_note = track.root_note
-
-			#noteo = 60-root_note
-			#notec = ((noteo+6)//12)*12
-			#notec = noteo-notec
+			track_root_note = track.root_note
 
 			sample_tempo = track.stretch__tempo
 			sample_beats = track.num_beats
 
 			stretch_type = track.stretch__type
 
-			prevpl = None
+			samplemul = sample_tempo/120
+
 			for region in track.regions:
-				placement_obj = track_obj.placements.add_audio()
-
-				samplemul = sample_tempo/120
-
-				time_obj = placement_obj.time
-
-				sp_obj = placement_obj.sample
-				sp_obj.sampleref = sample_path
 
 				offsamp = 0
 				if sampleref_obj is not None:
@@ -109,19 +174,45 @@ class input_piyopiyo(plugins.base):
 						offsamp = region.offset/sampleref_obj.hz
 
 				if stretch_type in [1, 3]:
+
 					offset = (offsamp*samplemul)*2
-					time_obj.set_startend(region.start, region.end)
-					time_obj.set_loop_data(offset*768, 0, sample_beats*768)
-					sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
-					sp_obj.stretch.preserve_pitch = True
-					if project_obj.root_note != 127:
-						notetrack = project_obj.root_note-48
-						notetrack -= root_note-48
-						notetrack -= ((notetrack+6)//12)*12
-						sp_obj.pitch = notetrack+region.pitch
+
+					if auto_basenotes and track.transposef:
+						ppq_beats = sample_beats*ppq
+
+						for start, end, cur_root in rootnote_auto.iterd(region.start, region.end):
+							placement_obj = track_obj.placements.add_audio()
+							time_obj = placement_obj.time
+							time_obj.set_startend(start, end)
+							time_obj.set_loop_data((offset*ppq)+((start-region.start)%ppq_beats), 0, ppq_beats)
+							sp_obj = placement_obj.sample
+							sp_obj.sampleref = sample_path
+							sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
+							sp_obj.stretch.preserve_pitch = True
+							if cur_root != 127 and track.transposef:
+								notetrack = calc_root(cur_root, track_root_note)
+								sp_obj.pitch = notetrack+region.pitch
+
+					else:
+						placement_obj = track_obj.placements.add_audio()
+						time_obj = placement_obj.time
+						time_obj.set_startend(region.start, region.end)
+						time_obj.set_loop_data(offset*ppq, 0, sample_beats*ppq)
+						sp_obj = placement_obj.sample
+						sp_obj.sampleref = sample_path
+						sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
+						sp_obj.stretch.preserve_pitch = True
+						if songroot != 127 and track.transposef:
+							notetrack = calc_root(project_obj.root_note, track_root_note)
+							sp_obj.pitch = notetrack+region.pitch
 				else:
+					placement_obj = track_obj.placements.add_audio()
+					time_obj = placement_obj.time
+					sp_obj = placement_obj.sample
+					sp_obj.sampleref = sample_path
+
 					time_obj.set_startend(region.start, region.end)
-					time_obj.set_offset(offsamp*768)
+					time_obj.set_offset(offsamp*ppq)
 					sampmul = pow(2, region.pitch/-12)
 					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)
 
@@ -149,8 +240,6 @@ class input_piyopiyo(plugins.base):
 							if env.type == 0: auto_obj.defualt_val = track.vol
 							if env.type == 1: auto_obj.defualt_val = track.pan
 
-				prevpl = placement_obj
-
 			track_obj.placements.pl_audio.sort()
 			if stretch_type not in [1, 3]:
 				track_obj.placements.pl_audio.remove_overlaps()
@@ -161,3 +250,9 @@ class input_piyopiyo(plugins.base):
 			track_obj.visual.name = 'FX '+str(x+1)
 
 		convproj_obj.automation.set_persist_all(False)
+
+		convproj_obj.metadata.name = project_obj.name
+		convproj_obj.metadata.author = project_obj.artist
+		convproj_obj.metadata.original_author = project_obj.createdBy
+		convproj_obj.metadata.comment_text = project_obj.comments
+		convproj_obj.metadata.copyright = project_obj.copyright

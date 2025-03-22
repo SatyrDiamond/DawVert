@@ -192,6 +192,8 @@ class input_acid_old(plugins.base):
 							if cur_root != 127 and track.transposef:
 								notetrack = calc_root(cur_root, track_root_note)
 								sp_obj.pitch = notetrack+region.pitch
+							else:
+								sp_obj.pitch = region.pitch
 
 					else:
 						placement_obj = track_obj.placements.add_audio()
@@ -205,6 +207,8 @@ class input_acid_old(plugins.base):
 						if songroot != 127 and track.transposef:
 							notetrack = calc_root(project_obj.root_note, track_root_note)
 							sp_obj.pitch = notetrack+region.pitch
+						else:
+							sp_obj.pitch = region.pitch
 				else:
 					placement_obj = track_obj.placements.add_audio()
 					time_obj = placement_obj.time

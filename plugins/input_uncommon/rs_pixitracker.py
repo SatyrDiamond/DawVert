@@ -32,7 +32,7 @@ class input_cvpj_f(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects import colors
-		from objects.file_proj import piximod as proj_piximod
+		from objects.file_proj_uncommon import piximod as proj_piximod
 
 		convproj_obj.type = 'rs'
 		convproj_obj.set_timings(4, True) 

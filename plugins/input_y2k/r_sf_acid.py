@@ -117,8 +117,15 @@ class input_acid_old(plugins.base):
 						auto_basenotes[pos] = int(x['base_note'])
 						timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[pos]-60)
 						timemarker_obj.position = pos
+						timemarker_obj.visual.color.set_int([0,0,255] if not x['tempo'] else [0,192,0])
 					else:
 						auto_basenotes[0] = int(x['base_note'])
+
+		for marker in project_obj.markers:
+			timemarker_obj = convproj_obj.timemarker__add()
+			timemarker_obj.position = marker.pos
+			timemarker_obj.visual.name = marker.text if marker.text else '[%i]' % marker.id
+			timemarker_obj.visual.color.set_int([255,0,0])
 
 		timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[0]-60)
 
@@ -132,6 +139,8 @@ class input_acid_old(plugins.base):
 			track_obj.visual.color.set_int(colordata.getcolornum(track.color))
 			track_obj.params.add('vol', track.vol, 'float')
 			track_obj.params.add('pan', track.pan, 'float')
+			if track.mutesolo == 2: 
+				track_obj.params.add('enabled', False, 'float')
 
 			for send in track.sends:
 				returnid = 'return__'+str(send.id)
@@ -174,6 +183,8 @@ class input_acid_old(plugins.base):
 					if sampleref_obj.found:
 						offsamp = region.offset/sampleref_obj.hz
 
+				pls = []
+
 				if stretch_type in [1, 3]:
 
 					offset = (offsamp*samplemul)*2
@@ -196,6 +207,7 @@ class input_acid_old(plugins.base):
 							else:
 								sp_obj.usemasterpitch = False
 								sp_obj.pitch = region.pitch
+							pls.append(placement_obj)
 
 					else:
 						placement_obj = track_obj.placements.add_audio()
@@ -212,6 +224,7 @@ class input_acid_old(plugins.base):
 						else:
 							sp_obj.usemasterpitch = False
 							sp_obj.pitch = region.pitch
+						pls.append(placement_obj)
 				else:
 					placement_obj = track_obj.placements.add_audio()
 					time_obj = placement_obj.time
@@ -223,30 +236,33 @@ class input_acid_old(plugins.base):
 					sampmul = pow(2, region.pitch/-12)
 					sp_obj.usemasterpitch = False
 					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)
+					pls.append(placement_obj)
 
 				for env in region.envs:
-					autoloc = None
-					if env.type == 0: autoloc = ['track', cvpj_trackid, 'vol']
-					if env.type == 1: autoloc = ['track', cvpj_trackid, 'pan']
-					if env.type > 1: 
-						autoloc = ['send', 'send_%i_%i' % (tracknum, env.type-2), 'amount']
-						if env.type-2 not in used_sends: used_sends.append(env.type-2)
-					if autoloc:
-						autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-						autopl_obj.time.set_startend(region.start, region.end)
-						for point in env.points:
-							autopoint_obj = autopl_obj.data.add_point()
-							autopoint_obj.pos = point[0]
-							if point[0] == 2:
-								autopoint_obj.tension = 1
-							if point[0] == -2:
-								autopoint_obj.tension = -1
-							autopoint_obj.type = 'normal'
-							autopoint_obj.value = point[1]
-						auto_obj = convproj_obj.automation.get_opt(autoloc)
-						if auto_obj is not None: 
-							if env.type == 0: auto_obj.defualt_val = track.vol
-							if env.type == 1: auto_obj.defualt_val = track.pan
+					if len(env.points)==1 and env.type == 0:
+						for p in pls: placement_obj.sample.vol = env.points[0][1]
+
+					else:
+						autoloc = None
+						if env.type == 0: autoloc = ['track', cvpj_trackid, 'vol']
+						if env.type == 1: autoloc = ['track', cvpj_trackid, 'pan']
+						if env.type > 1: 
+							autoloc = ['send', 'send_%i_%i' % (tracknum, env.type-2), 'amount']
+							if env.type-2 not in used_sends: used_sends.append(env.type-2)
+						if autoloc:
+							autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+							autopl_obj.time.set_startend(region.start, region.end)
+							for point in env.points:
+								autopoint_obj = autopl_obj.data.add_point()
+								autopoint_obj.pos = point[0]
+								if point[0] == 2: autopoint_obj.tension = 1
+								if point[0] == -2: autopoint_obj.tension = -1
+								autopoint_obj.type = 'normal'
+								autopoint_obj.value = point[1]
+							auto_obj = convproj_obj.automation.get_opt(autoloc)
+							if auto_obj is not None: 
+								if env.type == 0: auto_obj.defualt_val = track.vol
+								if env.type == 1: auto_obj.defualt_val = track.pan
 
 			track_obj.placements.pl_audio.sort()
 			if stretch_type not in [1, 3]:

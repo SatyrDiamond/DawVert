@@ -233,6 +233,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 		elif t_stretchingtime == 0:
 			sre_obj.stretch.set_rate_speed(flp_obj.tempo, 1/t_stretchingmultiplier, False)
 
+
 	return sre_obj, sampleref_obj
 
 
@@ -514,6 +515,8 @@ class input_flp(plugins.base):
 				sre_obj = convproj_obj.sampleindex__add('FLSample' + str(instrument))
 				samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dawvert_intent)
 
+				sre_obj.usemasterpitch = bool(fl_channel_obj.params.main_pitch)
+				
 				if sampleref_obj.found:
 					samplestretch[instrument] = sre_obj.stretch
 

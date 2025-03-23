@@ -8,18 +8,33 @@ from functions import xtramath
 from objects import globalstore
 import os
 
-def do_automation(convproj_obj, trackid, atype, timelineobj):
-	nextinstant = False
-	for event in timelineobj:
-		value = 0
-		if atype == 'vol': value = event.value/100
-		if atype == 'pan': value = (event.value-50)/50
+def do_automation(convproj_obj, trackid, atype, timelineobj, usetimeline):
+	if usetimeline:
+		nextinstant = False
+		autoloc = ['track', trackid, atype] if trackid else ['master', atype]
+		for event in timelineobj:
+			value = 0
+			if atype == 'vol': value = event.value/100
+			if atype == 'pan': value = (event.value-50)/50
+			autopoint_obj = convproj_obj.automation.add_autopoint(autoloc, 'float', event.position, value, 'normal' if not nextinstant else 'instant')
+			if nextinstant: nextinstant = False
+			if event.fade == 'Exponential': autopoint_obj.tension = -1
+			if event.fade == 'Logarithmic': autopoint_obj.tension = 1
+			if event.fade == 'Edge': nextinstant = True
 
-		autopoint_obj = convproj_obj.automation.add_autopoint(['track', trackid, atype], 'float', event.position, value, 'normal' if not nextinstant else 'instant')
-		if nextinstant: nextinstant = False
-		if event.fade == 'Exponential': autopoint_obj.tension = -1
-		if event.fade == 'Logarithmic': autopoint_obj.tension = 1
-		if event.fade == 'Edge': nextinstant = True
+keynums = {}
+keynums['B'] = 11
+keynums['ASharp'] = 10
+keynums['A'] = 9
+keynums['GSharp'] = 8
+keynums['G'] = 7
+keynums['FSharp'] = 6
+keynums['F'] = 5
+keynums['E'] = 4
+keynums['DSharp'] = 3
+keynums['D'] = 2
+keynums['CSharp'] = 1
+keynums['C'] = 0
 
 class input_zmaestro(plugins.base):
 	def is_dawvert_plugin(self):
@@ -69,6 +84,12 @@ class input_zmaestro(plugins.base):
 		convproj_obj.transport.loop_end = project_obj.loopstart+project_obj.looplength
 		convproj_obj.transport.loop_active = project_obj.loopenabled
 
+		if project_obj.key in keynums:
+			timemarker_obj = convproj_obj.timemarker__add_key(keynums[project_obj.key])
+
+		do_automation(convproj_obj, '', 'vol', project_obj.volumetimeline, project_obj.usevolumetimeline)
+		do_automation(convproj_obj, '', 'pan', project_obj.pantimeline, project_obj.usepantimeline)
+
 		for tracknum, md in enumerate(project_obj.tracks):
 			tracktype, zm_track = md
 			cvpj_trackid = 'track_'+str(tracknum)
@@ -95,8 +116,8 @@ class input_zmaestro(plugins.base):
 
 				if tracktype == 'MIDIDrumTrack': track_obj.is_drum = True
 
-				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline)
-				do_automation(convproj_obj, cvpj_trackid, 'pan', zm_track.pantimeline)
+				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline, zm_track.usevolumetimeline)
+				do_automation(convproj_obj, cvpj_trackid, 'pan', zm_track.pantimeline, zm_track.usepantimeline)
 
 				for part in zm_track.parts:
 					placement_obj = track_obj.placements.add_notes()
@@ -164,8 +185,8 @@ class input_zmaestro(plugins.base):
 					plugin_obj.role = 'fx'
 					track_obj.plugin_autoplace(plugin_obj, fxid)
 
-				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline)
-				do_automation(convproj_obj, cvpj_trackid, 'pan', zm_track.pantimeline)
+				do_automation(convproj_obj, cvpj_trackid, 'vol', zm_track.volumetimeline, zm_track.usevolumetimeline)
+				do_automation(convproj_obj, cvpj_trackid, 'pan', zm_track.pantimeline, zm_track.usepantimeline)
 
 				for num, part in enumerate(zm_track.parts):
 					placement_obj = track_obj.placements.add_audio()

@@ -65,6 +65,8 @@ class cvpj_sample_entry:
 	slicer_active: bool = False
 	slicer_slices: list = field(default_factory=list)
 
+	usemasterpitch: bool = True
+	
 	#def __eq__(self, other):
 	#	from dataclasses import asdict
 	#	dictdata_a = asdict(self.stretch)

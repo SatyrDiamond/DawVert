@@ -94,7 +94,7 @@ class input_it(plugins.base):
 		detectdef_obj.headers.append([0, b'IMPM'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import tracker_it as proj_it
+		from objects.file_proj_tracker import tracker_it as proj_it
 		global samplefolder
 
 		project_obj = proj_it.it_song()

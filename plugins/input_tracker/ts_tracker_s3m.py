@@ -32,7 +32,7 @@ class input_s3m(plugins.base):
 		detectdef_obj.headers.append([44, b'SCRM'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import tracker_s3m as proj_s3m
+		from objects.file_proj_tracker import tracker_s3m as proj_s3m
 		
 		project_obj = proj_s3m.s3m_song()
 		if dawvert_intent.input_mode == 'file':

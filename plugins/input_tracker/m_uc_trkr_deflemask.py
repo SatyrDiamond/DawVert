@@ -28,7 +28,7 @@ class input_deflemask(plugins.base):
 		detectdef_obj.containers.append(['zlib'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import deflemask as proj_deflemask
+		from objects.file_proj_tracker import deflemask as proj_deflemask
 		from objects.tracker import pat_multi
 		from objects import audio_data
 		project_obj = proj_deflemask.deflemask_project()

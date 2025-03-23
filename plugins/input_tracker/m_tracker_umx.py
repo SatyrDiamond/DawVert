@@ -51,7 +51,7 @@ class input_mod(plugins.base):
 		detectdef_obj.headers.append([0, b'\xc1\x83\x2a\x9e'])
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import umx as proj_umx
+		from objects.file_proj_tracker import umx as proj_umx
 
 		filedetector_obj = format_detect.file_detector()
 		filedetector_obj.load_def('data_main/autodetect.xml')

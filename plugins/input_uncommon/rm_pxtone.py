@@ -78,7 +78,7 @@ class input_pxtone(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects import audio_data
-		from objects.file_proj import pxtone as proj_pxtone
+		from objects.file_proj_uncommon import pxtone as proj_pxtone
 		
 		convproj_obj.type = 'rm'
 

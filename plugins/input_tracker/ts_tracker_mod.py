@@ -32,7 +32,7 @@ class input_mod(plugins.base):
 		in_dict['projtype'] = 'ts'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import tracker_mod as proj_mod
+		from objects.file_proj_tracker import tracker_mod as proj_mod
 		from objects import audio_data
 		
 		project_obj = proj_mod.mod_song()

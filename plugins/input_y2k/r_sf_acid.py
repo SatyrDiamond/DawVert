@@ -2,12 +2,9 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import json
-import struct
 import os.path
 import bisect
 from objects import globalstore
-from functions import xtramath
 
 class rootnote_stor():
 	def __init__(self):
@@ -118,8 +115,12 @@ class input_acid_old(plugins.base):
 					pos = int(x['pos'])
 					if pos:
 						auto_basenotes[pos] = int(x['base_note'])
+						timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[pos]-60)
+						timemarker_obj.position = pos
 					else:
 						auto_basenotes[0] = int(x['base_note'])
+
+		timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[0]-60)
 
 		for pos in list(auto_basenotes): rootnote_auto.add_pos(pos)
 		rootnote_auto.add_notes(auto_basenotes)
@@ -193,6 +194,7 @@ class input_acid_old(plugins.base):
 								notetrack = calc_root(cur_root, track_root_note)
 								sp_obj.pitch = notetrack+region.pitch
 							else:
+								sp_obj.usemasterpitch = False
 								sp_obj.pitch = region.pitch
 
 					else:
@@ -208,6 +210,7 @@ class input_acid_old(plugins.base):
 							notetrack = calc_root(project_obj.root_note, track_root_note)
 							sp_obj.pitch = notetrack+region.pitch
 						else:
+							sp_obj.usemasterpitch = False
 							sp_obj.pitch = region.pitch
 				else:
 					placement_obj = track_obj.placements.add_audio()
@@ -218,6 +221,7 @@ class input_acid_old(plugins.base):
 					time_obj.set_startend(region.start, region.end)
 					time_obj.set_offset(offsamp*ppq)
 					sampmul = pow(2, region.pitch/-12)
+					sp_obj.usemasterpitch = False
 					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)
 
 				for env in region.envs:

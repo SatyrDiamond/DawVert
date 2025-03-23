@@ -245,6 +245,11 @@
 		<file fileext=".sdml"/>
 	</plugin>
 
+	<plugin pluginset="main" name="qtractor">
+		<xml root_name="session"/>
+		<file fileext=".qtr"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

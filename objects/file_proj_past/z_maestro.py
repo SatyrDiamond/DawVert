@@ -279,6 +279,10 @@ class zmaestro_song:
 		self.looplength = 0
 		self.loopenabled = False
 		self.version = 0
+		self.usevolumetimeline = False
+		self.usepantimeline = False
+		self.volumetimeline = []
+		self.pantimeline = []
 
 	def load_from_file(self, input_file):
 		headerfound = False
@@ -327,6 +331,8 @@ class zmaestro_song:
 		if 'LoopLength' in attrib: self.looplength = float(attrib['LoopLength'])
 		if 'LoopEnabled' in attrib: self.loopenabled = getbool(attrib['LoopEnabled'])
 		if 'Version' in attrib: self.version = int(attrib['Version'])
+		if 'UseVolumeTimeline' in attrib: self.usevolumetimeline = getbool(attrib['UseVolumeTimeline'])
+		if 'UsePanTimeline' in attrib: self.usepantimeline = getbool(attrib['UsePanTimeline'])
 
 		for x_part in x_root:
 			if x_part.tag == 'Tracks':
@@ -343,3 +349,5 @@ class zmaestro_song:
 						track_obj = zmaestro_AudioTrack()
 						track_obj.read(x_inpart)
 						self.tracks.append(['AudioTrack', track_obj])
+			if x_part.tag == 'VolumeTimeline': self.volumetimeline = read_timeline(x_part)
+			if x_part.tag == 'PanTimeline': self.pantimeline = read_timeline(x_part)

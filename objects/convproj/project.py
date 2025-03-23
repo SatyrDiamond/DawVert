@@ -439,6 +439,9 @@ class cvpj_project:
 	def timemarker__add(self):
 		return self.timemarkers.add()
 
+	def timemarker__add_key(self, key):
+		return self.timemarkers.add_key(key)
+
 	def timemarker__from_patlenlist(self, PatternLengthList, pos_loop):
 		prevtimesig = self.timesig
 		currentpos = 0

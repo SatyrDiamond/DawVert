@@ -236,6 +236,7 @@ class output_cvpjs(plugins.base):
 		for samp_id, sre_obj in convproj_obj.sampleindex__iter():
 			fl_channel_obj = channel.flp_channel()
 			fl_channel_obj.type = 4
+			fl_channel_obj.params.main_pitch = int(sre_obj.usemasterpitch)
 
 			samplestretch[samp_id] = from_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj)
 

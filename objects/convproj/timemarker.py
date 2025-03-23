@@ -6,12 +6,14 @@ from functions import xtramath
 from objects.convproj import visual
 
 class cvpj_timemarker:
-	__slots__ = ['type','visual','position','duration']
+	__slots__ = ['type','visual','position','duration','data','special']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.type = ''
 		self.position = 0
 		self.duration = 0
+		self.data = None
+		self.special = False
 
 class cvpj_timemarkers:
 	__slots__ = ['data', 'time_ppq', 'time_float', 'is_seconds']
@@ -54,3 +56,12 @@ class cvpj_timemarkers:
 				x.position = xtramath.sec2step(x.position, bpm)
 				self.is_seconds = False
 		
+	def add_key(self, key):
+		timemarker_obj = cvpj_timemarker()
+		timemarker_obj.type = 'key_single'
+		timemarker_obj.visual.name = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'][key%12]
+		timemarker_obj.data = key
+		timemarker_obj.special = True
+		self.data.append(timemarker_obj)
+		return timemarker_obj
+

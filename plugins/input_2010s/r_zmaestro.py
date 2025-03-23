@@ -90,6 +90,8 @@ class input_zmaestro(plugins.base):
 		do_automation(convproj_obj, '', 'vol', project_obj.volumetimeline, project_obj.usevolumetimeline)
 		do_automation(convproj_obj, '', 'pan', project_obj.pantimeline, project_obj.usepantimeline)
 
+		is_any_headphones = any([x[1].headphones for x in project_obj.tracks])
+
 		for tracknum, md in enumerate(project_obj.tracks):
 			tracktype, zm_track = md
 			cvpj_trackid = 'track_'+str(tracknum)
@@ -98,6 +100,7 @@ class input_zmaestro(plugins.base):
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 				track_obj.params.add('vol', zm_track.volume/100, 'float')
 				track_obj.params.add('pan', (zm_track.pan-50)/50, 'float')
+				track_obj.params.add('enabled', True if not is_any_headphones else (zm_track.headphones), 'bool')
 				if not zm_track.soundfont:
 					track_obj.midi.out_inst.patch = zm_track.instrumentcode
 					track_obj.midi.out_inst.bank = zm_track.instrumentbank
@@ -135,6 +138,7 @@ class input_zmaestro(plugins.base):
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
 				track_obj.params.add('vol', zm_track.volume/100, 'float')
 				track_obj.params.add('pan', (zm_track.pan-50)/50, 'float')
+				track_obj.params.add('enabled', True if not is_any_headphones else (zm_track.headphones), 'bool')
 				track_obj.visual.from_dset('z_maestro', 'track', 'AudioTrack', True)
 				track_obj.visual.name = zm_track.name
 

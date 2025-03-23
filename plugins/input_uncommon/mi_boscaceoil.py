@@ -89,7 +89,7 @@ class input_ceol(plugins.base):
 		in_dict['projtype'] = 'mi'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj import boscaceoil as proj_boscaceoil
+		from objects.file_proj_uncommon import boscaceoil as proj_boscaceoil
 		from objects.inst_params import fm_opm
 		global ceol_data
 		

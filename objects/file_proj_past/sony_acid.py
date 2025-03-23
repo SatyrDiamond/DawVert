@@ -193,6 +193,18 @@ class sdml_port:
 		self.num = byr_stream.uint32()
 		self.name = byr_stream.string16(byr_stream.uint32())
 
+class sdml_marker:
+	def __init__(self):
+		self.pos = 0
+		self.id = 0
+		self.text = ''
+
+	def read(self, byr_stream):
+		size = byr_stream.uint32()
+		self.pos = byr_stream.uint64()
+		byr_stream.skip(8)
+		self.id = byr_stream.uint32()
+		self.text = byr_stream.string16(byr_stream.uint32())
 
 tempmap_dtype = np.dtype([
 	('unk1', 'int32'),
@@ -206,6 +218,7 @@ class sony_acid_file:
 	def __init__(self):
 		self.tracks = []
 		self.audios = []
+		self.markers = []
 		self.name = ''
 		self.artist = ''
 		self.createdBy = ''
@@ -241,7 +254,7 @@ class sony_acid_file:
 					if i.name == b'ICOP': self.copyright = byr_stream.string(i.size)
 			elif x.name == b'tmap':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
-					size = bye_stream.uint32()
+					_size = bye_stream.uint32()
 					self.ppq = bye_stream.uint32()
 					self.tempo = (500000/bye_stream.uint32())*120
 					self.root_note = bye_stream.uint32()
@@ -254,4 +267,11 @@ class sony_acid_file:
 							port_obj = sdml_port()
 							port_obj.read(bye_stream)
 							self.ports.append(port_obj)
+			elif x.name == b'mkls':
+				for i in x.iter_wseek(byr_stream):
+					if i.name == b'mark':
+						with byr_stream.isolate_size(i.size, False) as bye_stream:
+							marker_obj = sdml_marker()
+							marker_obj.read(bye_stream)
+							self.markers.append(marker_obj)
 		return True

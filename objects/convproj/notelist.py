@@ -835,10 +835,9 @@ class cvpj_notelist:
 		return nl[np.nonzero(nl['used'])].tobytes()
 
 	def midi_from(self, input_file):
-		from objects.songinput import midi_in
 		from objects_midi.parser import MidiFile
-		from objects.songinput._midi_multi import notes
 		from objects_midi import events as MidiEvents
+		from objects.midi_modernize import notes
 
 		if os.path.exists(input_file):
 			midifile = MidiFile.fromFile(input_file)
@@ -847,20 +846,23 @@ class cvpj_notelist:
 			if midifile.tracks:
 				events = midifile.tracks[0].events
 				numevents = len(events)
-				notes_obj = notes.midi_notes_multi(numevents)
+				notes_obj = notes.notes_data(1, 16)
 
-				curpos = 0
-				for msg in midifile.tracks[0].events:
-					curpos += msg.deltaTime
-					if type(msg) == MidiEvents.NoteOnEvent:
-						if msg.velocity != 0: notes_obj.note_on(curpos, msg.channel, msg.note, msg.velocity)
-						else: notes_obj.note_off(curpos, msg.channel, msg.note)
-					elif type(msg) == MidiEvents.NoteOffEvent:
-						notes_obj.note_off(curpos, msg.channel, msg.note)
+				for track in midifile.tracks:
+					curpos = 0
+					for msg in track.events:
+						curpos += msg.deltaTime
+						if type(msg) == MidiEvents.NoteOnEvent:
+							if msg.velocity != 0: 
+								notes_obj.add_note_on(0, curpos, msg.channel, 0, msg.note, msg.velocity)
+							else: 
+								notes_obj.add_note_off(msg.channel, 0, msg.note, curpos)
+						elif type(msg) == MidiEvents.NoteOffEvent:
+							notes_obj.add_note_off(msg.channel, 0, msg.note, curpos)
 
-				self.clear_size(numevents)
+				self.clear_size(len(notes_obj.all_notes))
 
-				for n in notes_obj.data.data:
+				for n in notes_obj.all_notes:
 					if n['complete']:
 						self.add_r(int(n['start']), int(n['end']-n['start']), int(n['key'])-60, float(n['vol'])/127, None)
 

@@ -244,6 +244,13 @@ class cvpj_fileref:
 		return copy.deepcopy(self)
 
 	def search_local(self, dirpath):
+		if self.folder.partial:
+			if self.exists(None):
+				orgpath = self.get_path(None, False)
+				self.internal_setpath_any(os.path.abspath(orgpath), False)
+				logger_filesearch.debug('    >>| abs file found: searchmissing >'+self.get_path(None, False))
+				return True
+
 		filesearcher.scan_local_files(dirpath)
 		files = filesearcher.searchcache
 		filename = str(self.file)

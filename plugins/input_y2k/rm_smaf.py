@@ -14,7 +14,6 @@ def get_timebase(i_val):
 	if i_val == 18: return 0.040
 	if i_val == 19: return 0.050
 	
-
 class input_mmf(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -106,13 +105,9 @@ class input_mmf(plugins.base):
 				timebase = get_timebase(track.timebase_dur)
 				realtime = int(timebase*(math.pi*10000))
 
-				midippq = 96
-
+				midippq = 960
 				convproj_obj.set_timings(midippq*realtime, False)
-
 				track_obj = convproj_obj.track__add(str(n), 'midi', 1, False)
-
-				audio_parts = []
 
 				curpos = 0
 				if track.sequence is not None:

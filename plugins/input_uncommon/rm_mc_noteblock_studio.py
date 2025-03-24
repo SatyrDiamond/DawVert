@@ -77,7 +77,9 @@ class input_gt_mnbs(plugins.base):
 			inst_obj.visual.color.set_hsv(custominstid*0.2, 1, 0.5)
 			inst_obj.datavals.add('middlenote', -(custom_obj.key-51))
 			plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(instid, custom_obj.file, None)
-			if sampleref_obj: sampleref_obj.find_relative('mnbs_sounds')
+			if sampleref_obj: 
+				sampleref_obj.search_local(dawvert_intent.input_folder)
+				sampleref_obj.find_relative('mnbs_sounds')
 			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			inst_obj.plugslots.set_synth(instid)
 

@@ -36,7 +36,7 @@ class input_mariopaint_mss(plugins.base):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'mariopaint_mss'
+		return 'adv_mario_seq'
 	
 	def get_name(self):
 		return 'Advanced Mario Sequencer'

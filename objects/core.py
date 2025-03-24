@@ -217,10 +217,11 @@ pluginsets_input = {
 'y2k': ['y2k', 'Y2K'],
 'midi': ['midi', 'MIDI'],
 'exper': ['exper', 'Experiments'],
-'nn': ['nn', 'NeuralNet'],
+'mariopaint': ['mariopaint', 'Mario Paint'],
 'vgm': ['vgm', 'VGM'],
 'gameres': ['gameres', 'Game Mod'],
 'gamespec': ['gamespec', 'Game Specific'],
+'nn': ['nn', 'NeuralNet'],
 'old': ['old', 'Old/Broken']
 }
 

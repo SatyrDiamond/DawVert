@@ -44,7 +44,7 @@
 		<bytes_header data="464c6864"/>
 	</plugin>
 
-	<plugin pluginset="uncommon" name="notessimo_v3">
+	<plugin pluginset="mariopaint" name="notessimo_v3">
 		<file fileext=".note"/>
 		<archived type="zip" file="sheets.xml"/>
 	</plugin>
@@ -57,7 +57,7 @@
 		<file fileext=".jsonl"/>
 	</plugin>
 
-	<plugin pluginset="uncommon" name="notessimo_v2">
+	<plugin pluginset="mariopaint" name="notessimo_v2">
 		<file fileext=".note"/>
 		<compressed type="zlib"/>
 	</plugin>
@@ -172,11 +172,11 @@
 		<bytes_header data="736f7065706f73"/>
 	</plugin>
 
-	<plugin pluginset="uncommon" name="mariopaint_msq">
+	<plugin pluginset="mariopaint" name="mariosequencer">
 		<file fileext=".msq"/>
 	</plugin>
 
-	<plugin pluginset="uncommon" name="mariopaint_mss">
+	<plugin pluginset="mariopaint" name="adv_mario_seq">
 		<file fileext=".mss"/>
 		<xml root_name="MarioSequencerSong"/>
 	</plugin>

@@ -98,7 +98,7 @@ class sdml_track:
 		self.vol = 1
 		self.pan = 0
 		self.sends = []
-		self.transposef = 0
+		self.flags = []
 
 	def read(self, riffchunk, byr_stream):
 		for x in riffchunk.iter_wseek(byr_stream):
@@ -134,7 +134,7 @@ class sdml_track:
 
 			elif x.name == b'acid':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
-					self.transposef = bye_stream.uint8()
+					self.flags = bye_stream.flags8()
 					self.unk2 = bye_stream.uint8()
 					self.unk3 = bye_stream.uint8()
 					self.unk4 = bye_stream.uint8()

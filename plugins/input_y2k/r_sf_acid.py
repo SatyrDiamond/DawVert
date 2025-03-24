@@ -189,7 +189,7 @@ class input_acid_old(plugins.base):
 
 					offset = (offsamp*samplemul)*2
 
-					if auto_basenotes and track.transposef:
+					if auto_basenotes and track.flags:
 						ppq_beats = sample_beats*ppq
 
 						for start, end, cur_root in rootnote_auto.iterd(region.start, region.end):
@@ -201,7 +201,7 @@ class input_acid_old(plugins.base):
 							sp_obj.sampleref = sample_path
 							sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
 							sp_obj.stretch.preserve_pitch = True
-							if cur_root != 127 and track.transposef:
+							if cur_root != 127 and 1 in track.flags:
 								notetrack = calc_root(cur_root, track_root_note)
 								sp_obj.pitch = notetrack+region.pitch
 							else:
@@ -218,7 +218,7 @@ class input_acid_old(plugins.base):
 						sp_obj.sampleref = sample_path
 						sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
 						sp_obj.stretch.preserve_pitch = True
-						if songroot != 127 and track.transposef:
+						if songroot != 127 and 1 in track.flags:
 							notetrack = calc_root(project_obj.root_note, track_root_note)
 							sp_obj.pitch = notetrack+region.pitch
 						else:
@@ -241,6 +241,8 @@ class input_acid_old(plugins.base):
 				for env in region.envs:
 					if len(env.points)==1 and env.type == 0:
 						for p in pls: placement_obj.sample.vol = env.points[0][1]
+					if len(env.points)==1 and env.type == 1:
+						for p in pls: placement_obj.sample.pan = env.points[0][1]
 
 					else:
 						autoloc = None

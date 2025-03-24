@@ -15,7 +15,7 @@ def getval(i_val):
 	elif i_val == -2: i_val = 93
 	return i_val
 
-midi_inst = {
+midi_inst_nums = {
 	'paint': [5,0,3,4,9,14,11,13,1,12]
 }
 
@@ -36,7 +36,7 @@ class input_petaporon(plugins.base):
 		in_dict['file_ext'] = ['json']
 		in_dict['file_ext_detect'] = False
 		in_dict['track_nopl'] = True
-		in_dict['plugin_included'] = ['universal:synth-osc']
+		in_dict['plugin_included'] = ['universal:synth-osc','universal:midi']
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -80,28 +80,35 @@ class input_petaporon(plugins.base):
 			track_obj = convproj_obj.track__add(instid, 'instrument', 0, False)
 			track_obj.visual.name = 'Inst #'+str(instnum+1)
 			track_obj.visual.color.set_int(colordata.getcolornum(instnum))
-			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
-			plugin_obj.role = 'synth'
-			track_obj.plugslots.set_synth(pluginid)
 
-			osc_data = plugin_obj.osc_add()
+			if peta_instset == 'paint':
+				track_obj.midi.out_inst.patch = midi_inst_nums['paint'][instnum]
+				track_obj.midi.out_inst.device = 'mariopaint'
+				track_obj.to_midi(convproj_obj, instid, True)
+
+			if peta_instset == 'chiptune':
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+				plugin_obj.role = 'synth'
+				track_obj.plugslots.set_synth(pluginid)
+	
+				osc_data = plugin_obj.osc_add()
 			
-			if instnum in [0,1,2,3,4,7]: osc_data.prop.shape = 'square'
-			if instnum in [5,6]: osc_data.prop.shape = 'triangle'
-			if instnum in [8]: osc_data.prop.shape = 'noise'
-			if instnum in [0,1]: osc_data.prop.pulse_width = 1/8
-			if instnum in [2,7]: osc_data.prop.pulse_width = 1/4
-			if instnum in [3,4,5,6]: osc_data.prop.pulse_width = 1/2
-
-			if instnum == 0: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.1, 0, 0, 1)
-			if instnum == 1: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.1, 0.7, 0, 1)
-			if instnum == 2: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.25, 0, 0, 1)
-			if instnum == 3: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
-			if instnum == 4: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
-			if instnum == 5: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
-			if instnum == 6: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
-			if instnum == 7: plugin_obj.env_asdr_add('vol', 0, 0.3, 0, 0.3, 0.2, 0.3, 1)
-			if instnum == 8: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.4, 0, 0, 1)
+				if instnum in [0,1,2,3,4,7]: osc_data.prop.shape = 'square'
+				if instnum in [5,6]: osc_data.prop.shape = 'triangle'
+				if instnum in [8]: osc_data.prop.shape = 'noise'
+				if instnum in [0,1]: osc_data.prop.pulse_width = 1/8
+				if instnum in [2,7]: osc_data.prop.pulse_width = 1/4
+				if instnum in [3,4,5,6]: osc_data.prop.pulse_width = 1/2
+	
+				if instnum == 0: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.1, 0, 0, 1)
+				if instnum == 1: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.1, 0.7, 0, 1)
+				if instnum == 2: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.25, 0, 0, 1)
+				if instnum == 3: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
+				if instnum == 4: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
+				if instnum == 5: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
+				if instnum == 6: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.2, 0, 0, 1)
+				if instnum == 7: plugin_obj.env_asdr_add('vol', 0, 0.3, 0, 0.3, 0.2, 0.3, 1)
+				if instnum == 8: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.4, 0, 0, 1)
 
 			for n in peta_notelists[instnum]: track_obj.placements.notelist.add_r(n[0], n[1], n[2], 1, {})
 

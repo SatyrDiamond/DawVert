@@ -164,7 +164,7 @@ class input_acid_old(plugins.base):
 			else:
 				sample_path = track.path
 				sampleref_obj = convproj_obj.sampleref__add(sample_path, sample_path, 'win')
-				sampleref_obj.search_local(os.path.dirname(dawvert_intent.input_file))
+				sampleref_obj.search_local(dawvert_intent.input_folder)
 
 			trackpitch = track.pitch
 			track_root_note = track.root_note

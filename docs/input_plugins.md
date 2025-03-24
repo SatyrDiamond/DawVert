@@ -16,23 +16,23 @@
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| M | ```main``` | ```mod``` | ProTracker | ```.mod``` | ❌ | |
-| M | ```main``` | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | |
-| M | ```main``` | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | |
-| M | ```main``` | ```it``` | Impulse Tracker | ```.it``` | ✔️ | |
-| M | ```main``` | ```umx``` | Unreal Music Package | ```.umx``` | ✔️ | Only if it contains ``mod``, ``xm``, ``s3m``, or ``it``|
+| M | ```tracker``` | ```mod``` | ProTracker | ```.mod``` | ❌ | |
+| M | ```tracker``` | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | |
+| M | ```tracker``` | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | |
+| M | ```tracker``` | ```it``` | Impulse Tracker | ```.it``` | ✔️ | |
+| M | ```tracker``` | ```umx``` | Unreal Music Package | ```.umx``` | ✔️ | Only if it contains ``mod``, ``xm``, ``s3m``, or ``it``|
 
 ## Chiptune/Retro
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| M-I | ```main``` | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | |
-| M-I | ```main``` | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ | DMF Legacy only|
+| M-I | ```uncommon``` | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | |
+| M-I | ```tracker``` | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ | DMF Legacy only|
 | M-I | ```main``` | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | Some Arps is converted to Chords |
-| M-I | ```main``` | ```famitracker_txt``` | Famitracker Text | ```.txt``` | ❌ | |
-| M-I | ```main``` | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | |
-| M-S | ```main``` | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
-| M-S | ```main``` | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ | |
-| R-S | ```main``` | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | |
+| M-I | ```tracker``` | ```famitracker_txt``` | Famitracker Text | ```.txt``` | ❌ | |
+| M-I | ```tracker``` | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | |
+| M-S | ```uncommon``` | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
+| M-S | ```uncommon``` | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ | |
+| R-S | ```uncommon``` | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | |
 
 ## Web
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
@@ -40,42 +40,44 @@
 | M-I | ```main``` | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
 | R | ```main``` | ```amped``` | Amped Studio | ```.json``` | ✔️ | |
 | R | ```main``` | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
-| R | ```main``` | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
+| R | ```uncommon``` | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
 | R | ```main``` | ```soundation``` | Soundation | ```.sng``` | ❌ | |
 | R | ```main``` | ```wavtool``` | WavTool | ```.zip``` | ❌ | |
-| R | ```ancient``` | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
+| R | ```2010s``` | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
 
 ## Other
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| R-I | ```main``` | ```caustic``` | Caustic 3 | ```.caustic``` | ✔️ | 
-| R | ```main``` | ```nanostudio_v1``` | NanoStudio 1 | ```.prj``` | ✔️ | |
+| R-I | ```2010s``` | ```caustic``` | Caustic 3 | ```.caustic``` | ✔️ | 
+| R | ```2010s``` | ```nanostudio_v1``` | NanoStudio 1 | ```.prj``` | ✔️ | |
 | R-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
-| R-M | ```main``` | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ✔️ | 
+| R-M | ```uncommon``` | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ✔️ | 
 
 ## Mario Paint
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| M-S | ```main``` | ```notessimo_v2``` | Notessimo V2 | ```.note``` | ❌ | |
-| M-S | ```main``` | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ❌ | |
-| R-M | ```main``` | ```mariopaint_msq``` | MarioSequencer | ```.msq``` | ❌ | |
-| R-M | ```main``` | ```mariopaint_mss``` | Advanced Mario Sequencer | ```.mss``` | ✔️ | |
-| R-M | ```main``` | ```mariopaint_smp``` | Super Mario Paint | ```.txt``` | ❌ | |
+| M-S | ```mariopaint``` | ```notessimo_v2``` | Notessimo V2 | ```.note``` | ❌ | |
+| M-S | ```mariopaint``` | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ❌ | |
+| R-M | ```mariopaint``` | ```mariosequencer``` | MarioSequencer | ```.msq``` | ❌ | |
+| R-M | ```mariopaint``` | ```adv_mario_seq``` | Advanced Mario Sequencer | ```.mss``` | ✔️ | |
+| R-M | ```mariopaint``` | ```super_mario_paint``` | Super Mario Paint | ```.txt``` | ❌ | |
 
 ## Old
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| R | ```main``` | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
-| R-M | ```main``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
-| R | ```ancient``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
-| R | ```ancient``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
-| R | ```ancient``` | ```kristal``` | KRISTAL Audio Engine | ```.kristal``` | ✔️ | |
+| R | ```uncommon``` | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
+| R-M | ```uncommon``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
+| R | ```y2k``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
+| R | ```y2k``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
+| R | ```y2k``` | ```kristal``` | KRISTAL Audio Engine | ```.kristal``` | ✔️ | |
 | R | ```ancient``` | ```temper``` | Temper | ```.squ``` | ✔️ | |
-| R | ```ancient``` | ```z_maestro``` | Z-Maestro | ```.zmm``` | ✔️ | |
+| R | ```2010s``` | ```z_maestro``` | Z-Maestro | ```.zmm``` | ✔️ | |
 | R-M | ```ancient``` | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
 | R-M | ```ancient``` | ```adlib_sop``` | Note FM Tracker | ```.sop``` | ✔️ | 
-| R-M | ```ancient``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
+| R-M | ```y2k``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | R-S | ```ancient``` | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
+| R-S | ```midi``` | ```domino``` | Domino | ```.dms``` | ✔️ | |
+| R-S | ```y2k``` | ```sf_acid``` | Sonic Foundry ACID | ```.acd``` | ✔️ | |
 
 ## Experiments
 | DataType | PluginSet | Short Name | Name | Info |

@@ -89,6 +89,7 @@ class midievents:
 						non['proc_complete'] = 1
 						non['uhival'] = d['pos']-non['pos']
 						non['type'] = EVENTID__NOTE_DUR
+			self.has_duration = True
 
 	def add_note_off(self, curpos, channel, key, vol):
 		self.cursor.add()
@@ -264,3 +265,9 @@ class midievents:
 
 	def count_part(self, k, v):
 		return self.data.count_part(k, v)
+
+	def get_used_notes(self):
+		self.add_note_durs()
+		used_data = self.data.get_used()
+		used_data = used_data[used_data['proc_complete']==1]
+		return used_data[['pos','uhival','chan','value','value2']]

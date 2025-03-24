@@ -174,6 +174,16 @@ class cvpj_transport:
 			self.current_pos = xtramath.sec2step(self.current_pos, bpm)
 			self.is_seconds = False
 		
+class cvpj_project_midi_custom_instrument:
+	def __init__(self):
+		self.track = None
+		self.chan = None
+		self.bank_hi = None
+		self.bank = None
+		self.patch = None
+		self.visual = visual.cvpj_visual()
+		self.pluginid = None
+
 class cvpj_project_midi:
 	def __init__(self):
 		self.num_channels = 16
@@ -215,6 +225,7 @@ class cvpj_project:
 		self.scene_placements = []
 		self.tracker_single = None
 		self.midi = cvpj_project_midi()
+		self.midi_cust_inst = []
 
 		self._m2r_visual_playlist_first = False
 
@@ -389,6 +400,11 @@ class cvpj_project:
 
 		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
+	def main__add_midi_custom_inst(self):
+		cust_inst = cvpj_project_midi_custom_instrument()
+		self.midi_cust_inst.append(cust_inst)
+		return cust_inst
+
 # --------------------------------------------------------- GROUPS ---------------------------------------------------------
 
 	def group__iter_inside(self):
@@ -466,6 +482,10 @@ class cvpj_project:
 	def track__clear(self):
 		self.track_data = {}
 		self.track_order = []
+
+	def track__del(self, trackid):
+		if trackid in self.track_data: del self.track_data[trackid]
+		if trackid in self.track_order: self.track_order.remove(trackid)
 
 	def track__get(self, trackid):
 		return self.track_data[trackid] if trackid in self.track_data else None

@@ -53,6 +53,8 @@ class input_mmf(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
+		convproj_obj.params.add('bpm', 120, 'float')
+
 		samplefolder = dawvert_intent.path_samples['extracted']
 
 		firstma2 = False
@@ -110,10 +112,13 @@ class input_mmf(plugins.base):
 
 				track_obj = convproj_obj.track__add(str(n), 'midi', 1, False)
 
+				audio_parts = []
+
 				curpos = 0
 				if track.sequence is not None:
 					events_obj = track_obj.placements.midievents
-	
+					events_obj.has_duration = True
+
 					for event in track.sequence:
 						curpos += event[0]*midippq
 	
@@ -128,59 +133,54 @@ class input_mmf(plugins.base):
 						elif event[1] == 14:
 							events_obj.add_pitch(curpos, event[2], event[3])
 
+					used_notes = events_obj.get_used_notes()
+					used_drums = used_notes[used_notes['chan']==9]
+					used_drums = used_drums[used_drums['value']<16]
+					
+					used_drumnums = np.unique(used_drums['value'])
+					for used_drumnum in used_drumnums:
+						drumnotes = used_drums[used_drums['value']==used_drumnum]
+
+						drumtrackid = '%i_drum_%i' % (n, used_drumnum)
+						track_obj = convproj_obj.track__add(drumtrackid, 'audio', 1, False)
+						track_obj.visual.name = 'Track #%i MA-3 Stream #%i' % (n+1, used_drumnum)
+						track_obj.visual.color.set_int([30,30,30])
+	
+						sampleid = 'snd_%i_%i' % (n, used_drumnum+1)
+	
+						for start, end, _, _, vol in drumnotes:
+							placement_obj = track_obj.placements.add_audio()
+							placement_obj.time.set_posdur(int(start), int(end))
+							placement_obj.sample.sampleref = sampleid
+							placement_obj.sample.vol = int(vol)/127
+							placement_obj.visual.name = 'Stream #%i' % (used_drumnum)
+							sp_obj = placement_obj.sample
+							sp_obj.stretch.set_rate_tempo(120, 1, False)
+							sp_obj.stretch.preserve_pitch = True
+							sp_obj.interpolation = "none"
+
 				for soundnum, hzsnd in track.audio.items():
 					hz, sounddata = hzsnd
-					strnum = str(soundnum).zfill(2)
 
-					wav_path = samplefolder + 'snd_' + strnum + '.wav'
+					wav_path = samplefolder + 'snd_%i_%i.wav' % (n, soundnum)
+					sampleid = 'snd_%i_%i' % (n, soundnum)
 					audio_obj = audio_data.audio_obj()
 					audio_obj.decode_from_codec('yamaha_aica', sounddata)
 					audio_obj.rate = hz
 					audio_obj.to_file_wav(wav_path)
 
-					sampleref_obj = convproj_obj.sampleref__add(wav_path, wav_path, None)
+					sampleref_obj = convproj_obj.sampleref__add(sampleid, wav_path, None)
 
-				#for x in song_obj.instruments.midi_instruments.data:
-				#	if x['bank'] == 124: 
-				#		x['is_custom'] = 1
-				#		x['custom_name'] = 'MA-3 Voice #'+str(x['inst'])
-				#		x['custom_color_used'] = 1
-				#		x['custom_color'] = [30,30,30]
-				#	if x['bank'] == 125: 
-				#		x['is_custom'] = 1
-				#		x['custom_name'] = 'MA-3 Drum/Stream #'+str(x['inst'])
-				#		x['custom_color_used'] = 1
-				#		x['custom_color'] = [30,30,30]
-				
-				#audiotracks = {}
-#
-				#audiofx = convproj_obj.fxrack[1]
-				#audiofx.visual.name = 'MA-3 Audio'
-				#audiofx.visual.color.set_float([0.2,0.2,0.2])
+		custinst_obj = convproj_obj.main__add_midi_custom_inst()
+		custinst_obj.bank = 124
+		custinst_obj.visual.name = 'MA-3 Voice $patch$'
+		custinst_obj.visual.color.set_int([0,170,255])
+		custinst_obj.pluginid = 'voice_$patch$'
 
-				#maxnum = 0
-				#for soundnum, sounddata in track.audio.items():
-				#	strnum = str(soundnum).zfill(2)
-				#	audtrack_obj = convproj_obj.track__add('audio'+strnum, 'audio', 1, False)
-				#	audtrack_obj.fxrack_channel = 1
-				#	audtrack_obj.visual.name = 'Sound #'+str(soundnum)
-				#	audtrack_obj.params.add('vol', 0.3, 'float')
-				#	audiotracks[soundnum] = audtrack_obj
-				#	if soundnum>maxnum: maxnum = soundnum
-
-				#filternstream = track_obj.notes.data.data['key']<16
-				#findex = np.where(filternstream)
-#
-				#for audionote in track_obj.notes.data.data[findex]:
-				#	wav_path = samplefolder + 'snd_' + str(audionote['key']+1).zfill(2) + '.wav'
-				#	soundnum = audionote['key']+1
-				#	if soundnum in audiotracks:
-				#		audtrack_obj = audiotracks[soundnum]
-				#		placement_obj = audtrack_obj.placements.add_audio()
-				#		placement_obj.time.set_startend(audionote['start'], audionote['end'])
-				#		placement_obj.sample.sampleref = wav_path
-				#		placement_obj.sample.vol = audionote['vol']/127
-#
-				#break
+		custinst_obj = convproj_obj.main__add_midi_custom_inst()
+		custinst_obj.bank = 125
+		custinst_obj.visual.name = 'MA-3 Drum/Stream $patch$'
+		custinst_obj.visual.color.set_int([0,255,170])
+		custinst_obj.pluginid = 'drum_$patch$'
 
 		convproj_obj.params.add('bpm', 120, 'float')

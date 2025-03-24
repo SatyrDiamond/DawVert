@@ -40,7 +40,7 @@ class input_mariopaint_msq(plugins.base):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'mariopaint_msq'
+		return 'mariosequencer'
 	
 	def get_name(self):
 		return 'MarioSequencer'

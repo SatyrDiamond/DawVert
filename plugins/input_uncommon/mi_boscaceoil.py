@@ -85,6 +85,7 @@ class input_ceol(plugins.base):
 		in_dict['file_ext'] = ['ceol']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = []
+		in_dict['auto_types'] = ['pl_points']
 		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','chip:fm:opm','universal:filter','universal:midi']
 		in_dict['projtype'] = 'mi'
 
@@ -230,15 +231,11 @@ class input_ceol(plugins.base):
 
 						ceol_inst_obj = project_obj.instruments[instnum]
 
-						f_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'freq'], 'float')
-						f_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
-						autopoint_obj = f_autopl_obj.data.add_point()
-						autopoint_obj.value = xtramath.midi_filter(ceol_inst_obj.cutoff)
+						f_autopl_obj = convproj_obj.automation.get_opt(['filter', autofilterfxid, 'freq'])
+						f_autopl_obj.defualt_val = xtramath.midi_filter(ceol_inst_obj.cutoff)
 
-						q_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'q'], 'float')
-						q_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
-						autopoint_obj = q_autopl_obj.data.add_point()
-						autopoint_obj.value = ceol_inst_obj.resonance+1
+						q_autopl_obj = convproj_obj.automation.get_opt(['filter', autofilterfxid, 'q'])
+						q_autopl_obj.defualt_val = ceol_inst_obj.resonance+1
 
 			prev_pl = after_filter
 
@@ -250,3 +247,5 @@ class input_ceol(plugins.base):
 		convproj_obj.transport.loop_active = True
 		convproj_obj.transport.loop_start = project_obj.pattern_length*project_obj.loopstart
 		convproj_obj.transport.loop_end = project_obj.pattern_length*project_obj.loopend
+
+		convproj_obj.automation.set_persist_all(False)

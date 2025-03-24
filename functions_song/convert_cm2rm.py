@@ -87,85 +87,88 @@ def convert(convproj_obj):
 		for data in midievents_obj.seq_spec:
 			seqspec_data.add(n, data)
 
+	othertracks = []
 	trackdata = []
 	for n, d in enumerate(convproj_obj.track__iter()):
 		trackid, track_obj = d
-		logger_project.debug('cm2rm: Track '+trackid)
-		midievents_obj = track_obj.placements.midievents
-		midievents_obj.add_note_durs()
 
-		trackdata.append(track_obj)
-
-		if track_obj.visual.name:
-			visstore_data.vis_track_set_name(n, track_obj.visual.name)
-		if track_obj.visual.color:
-			visstore_data.vis_track_set_color_force(n, track_obj.visual.color.get_int())
-
-		for seqspec_obj in seqspec_data.get(n):
-			if seqspec_obj.sequencer == 'signal_midi' and seqspec_obj.param == 'color':
-				visstore_data.vis_track_set_color_force(n, seqspec_obj.value)
-			if seqspec_obj.sequencer == 'anvil_studio' and seqspec_obj.param == 'color':
-				visstore_data.vis_track_set_color_force(n, seqspec_obj.value)
-			if seqspec_obj.sequencer == 'studio_one' and seqspec_obj.param == 'color':
-				visstore_data.vis_track_set_color_force(n, seqspec_obj.value)
-
-		portnum = midievents_obj.port
-
-		usedchans = midievents_obj.get_channums()
-		if len(usedchans)==1:
-			visstore_data.set_track_chan(n, portnum, usedchans[0])
-
-		for x in midievents_obj:
-			if x['type'] == midievents.EVENTID__NOTE_DUR:
-				notes_data.add_note_dur(n, x['pos'], x['chan'], portnum, x['value'], x['value2'], x['uhival'])
-
-			if x['type'] == midievents.EVENTID__NOTE_ON:
-				notes_data.add_note_on(n, x['pos'], x['chan'], portnum, x['value'], x['value2'])
-
-			if x['type'] == midievents.EVENTID__NOTE_OFF:
-				notes_data.add_note_off(x['chan'], portnum, x['value'], x['pos'])
-
-			if x['type'] == midievents.EVENTID__CONTROL:
-				chanport = gfunc.calc_channum(x['chan'], portnum, num_channels)
-				if x['value'] == 0:
-					instchange_data.add_bank(x['pos'], chanport, x['uhival'])
-				elif x['value'] == 32:
-					instchange_data.add_hibank(x['pos'], chanport, x['uhival'])
-				else:
-					ctrl_data.add_point(x['pos'], chanport, x['value'], x['uhival'])
-
-			if x['type'] == midievents.EVENTID__PITCH:
-				pitch_data.add(x['pos'], gfunc.calc_channum(x['chan'], portnum, num_channels), x['shival'])
-
-			if x['type'] == midievents.EVENTID__PROGRAM:
-				instchange_data.add_program(x['pos'], gfunc.calc_channum(x['chan'], portnum, num_channels), x['value'])
-
-			if x['type'] == midievents.EVENTID__SYSEX:
-				sysex_data.add(x['pos'], midievents_obj.sysex[x['uhival']])
-
-			if x['type'] == midievents.EVENTID__TEMPO:
-				tempo_data.add(x['pos'], struct.unpack('f', struct.pack('I', x['uhival']))[0])
-
-			if x['type'] == midievents.EVENTID__TIMESIG:
-				timesig_data.add(x['pos'], x['value'], x['value2'])
-
-			if x['type'] == midievents.EVENTID__TEXT:
-				marker_data = midievents_obj.texts[x['uhival']]
-				if marker_data == 'loopStart':
-					convproj_obj.transport.loop_active = True
-					convproj_obj.transport.loop_start = x['pos']
-
-				if marker_data == 'loopEnd':
-					convproj_obj.transport.loop_end = x['pos']
-
-				if marker_data == 'Start':
-					convproj_obj.transport.start_pos = x['pos']
-
-			if x['type'] == midievents.EVENTID__MARKER:
-				marker_data = midievents_obj.markers[x['uhival']]
-				timemarker_obj = convproj_obj.timemarker__add()
-				timemarker_obj.position = x['pos']
-				if marker_data: timemarker_obj.visual.name = marker_data
+		if track_obj.type == 'midi':
+			logger_project.debug('cm2rm: Track '+trackid)
+			midievents_obj = track_obj.placements.midievents
+			midievents_obj.add_note_durs()
+	
+			trackdata.append([trackid, track_obj])
+	
+			if track_obj.visual.name:
+				visstore_data.vis_track_set_name(n, track_obj.visual.name)
+			if track_obj.visual.color:
+				visstore_data.vis_track_set_color_force(n, track_obj.visual.color.get_int())
+	
+			for seqspec_obj in seqspec_data.get(n):
+				if seqspec_obj.sequencer == 'signal_midi' and seqspec_obj.param == 'color':
+					visstore_data.vis_track_set_color_force(n, seqspec_obj.value)
+				if seqspec_obj.sequencer == 'anvil_studio' and seqspec_obj.param == 'color':
+					visstore_data.vis_track_set_color_force(n, seqspec_obj.value)
+				if seqspec_obj.sequencer == 'studio_one' and seqspec_obj.param == 'color':
+					visstore_data.vis_track_set_color_force(n, seqspec_obj.value)
+	
+			portnum = midievents_obj.port
+	
+			usedchans = midievents_obj.get_channums()
+			if len(usedchans)==1:
+				visstore_data.set_track_chan(n, portnum, usedchans[0])
+	
+			for x in midievents_obj:
+				if x['type'] == midievents.EVENTID__NOTE_DUR:
+					notes_data.add_note_dur(n, x['pos'], x['chan'], portnum, x['value'], x['value2'], x['uhival'])
+	
+				if x['type'] == midievents.EVENTID__NOTE_ON:
+					notes_data.add_note_on(n, x['pos'], x['chan'], portnum, x['value'], x['value2'])
+	
+				if x['type'] == midievents.EVENTID__NOTE_OFF:
+					notes_data.add_note_off(x['chan'], portnum, x['value'], x['pos'])
+	
+				if x['type'] == midievents.EVENTID__CONTROL:
+					chanport = gfunc.calc_channum(x['chan'], portnum, num_channels)
+					if x['value'] == 0:
+						instchange_data.add_bank(x['pos'], chanport, x['uhival'])
+					elif x['value'] == 32:
+						instchange_data.add_hibank(x['pos'], chanport, x['uhival'])
+					else:
+						ctrl_data.add_point(x['pos'], chanport, x['value'], x['uhival'])
+	
+				if x['type'] == midievents.EVENTID__PITCH:
+					pitch_data.add(x['pos'], gfunc.calc_channum(x['chan'], portnum, num_channels), x['shival'])
+	
+				if x['type'] == midievents.EVENTID__PROGRAM:
+					instchange_data.add_program(x['pos'], gfunc.calc_channum(x['chan'], portnum, num_channels), x['value'])
+	
+				if x['type'] == midievents.EVENTID__SYSEX:
+					sysex_data.add(x['pos'], midievents_obj.sysex[x['uhival']])
+	
+				if x['type'] == midievents.EVENTID__TEMPO:
+					tempo_data.add(x['pos'], struct.unpack('f', struct.pack('I', x['uhival']))[0])
+	
+				if x['type'] == midievents.EVENTID__TIMESIG:
+					timesig_data.add(x['pos'], x['value'], x['value2'])
+	
+				if x['type'] == midievents.EVENTID__TEXT:
+					marker_data = midievents_obj.texts[x['uhival']]
+					if marker_data == 'loopStart':
+						convproj_obj.transport.loop_active = True
+						convproj_obj.transport.loop_start = x['pos']
+	
+					if marker_data == 'loopEnd':
+						convproj_obj.transport.loop_end = x['pos']
+	
+					if marker_data == 'Start':
+						convproj_obj.transport.start_pos = x['pos']
+	
+				if x['type'] == midievents.EVENTID__MARKER:
+					marker_data = midievents_obj.markers[x['uhival']]
+					timemarker_obj = convproj_obj.timemarker__add()
+					timemarker_obj.position = x['pos']
+					if marker_data: timemarker_obj.visual.name = marker_data
 
 	logger_project.debug('cm2rm: SysEX')
 
@@ -272,13 +275,18 @@ def convert(convproj_obj):
 
 	used_inst = notes_data.get_used_inst()
 	visstore_data.set_used_inst(used_inst)
+	visstore_data.set_cust_inst(convproj_obj.midi_cust_inst)
+
+	if len(trackdata)==1:
+		visstore_data.proc__inst_to_fx()
+
 	if len(trackdata)>1:
 		visstore_data.proc__track_to_fx__track()
 		visstore_data.proc__track_to_fx__inst()
 		visstore_data.proc__track_to_inst()
-	visstore_data.proc__inst_to_fx()
-	visstore_data.proc__fx_to_track()
-	visstore_data.proc__inst_to_track()
+		visstore_data.proc__inst_to_fx()
+		visstore_data.proc__fx_to_track()
+		visstore_data.proc__inst_to_track()
 
 	logger_project.debug('cm2rm: Instruments')
 	for n, inst in enumerate(used_inst):
@@ -299,13 +307,15 @@ def convert(convproj_obj):
 	# -----------------------------------------------------------------------------------------
 	# -----------------------------------------------------------------------------------------
 
+	miditracks = [x for x in trackdata if x[1].type == 'midi']
+
 	if trackdata:
 		logger_project.debug('cm2rm: Out Tracks')
 
-		firsttrack_obj = trackdata[0]
+		firsttrack_id, firsttrack_obj = trackdata[0]
 
-		if len(trackdata)==1 and firsttrack_obj.type == 'midi':
-			convproj_obj.track__clear()
+		if len(miditracks)==1:
+			convproj_obj.track__del(firsttrack_id)
 			chanportlist = np.unique(used_inst['chanport'])
 			for chanport in chanportlist:
 				track_obj = convproj_obj.track__add('cm2rm_'+str(chanport), 'instruments', firsttrack_obj.uses_placements, firsttrack_obj.is_indexed)

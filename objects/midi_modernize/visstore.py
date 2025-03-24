@@ -14,7 +14,6 @@ class midivis_data:
 		self.uses_color = False
 		self.is_drum = False
 		self.used = False
-		self.name_level = 0
 
 	def __repr__(self):
 		return ('[INST' if not self.is_drum else '[DRUM')+"> Name: %s, Color: %s]" % (str(self.name), str(self.color))
@@ -108,6 +107,47 @@ class visstore_data:
 
 	def vis_fxchan_set_color(self, p, c, v):
 		self.vis_fxchan[p][c].set_color(v)
+
+	def set_cust_inst(self, midi_cust_inst):
+		for cus_inst in midi_cust_inst:
+			flagsd = np.zeros(len(self.vis_inst), np.bool_)
+			flagsd[:] = True
+
+			if cus_inst.track is not None:
+				#print('track', cus_inst.track)
+				flagsd = np.logical_and(flagsd, self.used_inst['track']==cus_inst.track)
+
+			if cus_inst.chan is not None:
+				#print('chan', cus_inst.chan)
+				flagsd = np.logical_and(flagsd, self.used_inst['chan']==cus_inst.chan)
+
+			if cus_inst.bank_hi is not None:
+				#print('bank_hi', cus_inst.bank_hi)
+				flagsd = np.logical_and(flagsd, self.used_inst['bank_hi']==cus_inst.bank_hi)
+
+			if cus_inst.bank is not None:
+				#print('bank', cus_inst.bank)
+				flagsd = np.logical_and(flagsd, self.used_inst['bank']==cus_inst.bank)
+
+			if cus_inst.patch is not None:
+				#print('patch', cus_inst.patch)
+				flagsd = np.logical_and(flagsd, self.used_inst['patch']==cus_inst.patch)
+
+			for w in np.where(flagsd)[0]:
+				insto = self.vis_inst[w]
+				if cus_inst.visual.color:
+					insto.color_used = True
+					insto.color = cus_inst.visual.color.get_int()
+				if cus_inst.visual.name:
+					minst = self.used_inst[w]
+					insto.name_used = True
+					cname = cus_inst.visual.name
+					cname = cname.replace('$track$', str(minst['track']+1))
+					cname = cname.replace('$chan$', str(minst['chan']+1))
+					cname = cname.replace('$bank_hi$', str(minst['bank_hi']))
+					cname = cname.replace('$bank$', str(minst['bank']))
+					cname = cname.replace('$patch$', str(minst['patch']))
+					insto.name = cname
 
 	def set_used_inst(self, used_inst):
 		self.used_inst = used_inst

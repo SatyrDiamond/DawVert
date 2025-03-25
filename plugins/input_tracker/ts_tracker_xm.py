@@ -48,6 +48,7 @@ class input_xm(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'ts'
+		in_dict['auto_types'] = ['pl_points']
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'Extended Module: '])

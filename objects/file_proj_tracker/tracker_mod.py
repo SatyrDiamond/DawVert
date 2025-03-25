@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-from objects.file_proj import tracker_mod as proj_mod
 import numpy as np
 from objects.exceptions import ProjectFileParserException
 
@@ -45,6 +44,8 @@ class mod_song:
 		return self.load(song_file, IGNORE_ERRORS)
 
 	def load(self, song_file, IGNORE_ERRORS):
+		from objects.file_proj_tracker import tracker_mod as proj_mod
+
 		self.title = song_file.string(20, encoding="ascii", errors="ignore")
 		logger_projparse.info('mod: Song Name: ' + str(self.title))
 		for _ in range(31):

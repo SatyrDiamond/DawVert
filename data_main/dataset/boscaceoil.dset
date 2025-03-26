@@ -1297,4 +1297,10 @@
             <visual name="Midi Drumkit" />
         </object>
     </category>
+    <category id="track">
+        <colorset id="main">
+            <color>#6D858D</color>
+            <color>#50656A</color>
+        </colorset>
+    </category>
 </dataset>

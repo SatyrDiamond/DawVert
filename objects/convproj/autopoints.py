@@ -5,6 +5,7 @@ from functions import xtramath
 from objects.convproj import time
 import bisect
 import math
+from objects import debug
 
 class cvpj_s_autopoint:
 	__slots__ = ['pos','pos_real','value','type','tension','extra']
@@ -68,6 +69,14 @@ class cvpj_autopoints:
 	def __iter__(self):
 		for x in self.points:
 			yield x
+
+	def debugview(self):
+		dur = self.get_dur()
+		vmin = min([x.value for x in self.points])
+		vmax = max([x.value for x in self.points])
+		p = [[x.pos/dur, xtramath.between_to_one(vmin, vmax, x.value)] for x in self.points]
+		print('NUM POINTS: ',len(self.points))
+		debug.blockpoint_gfx(p, '', self.sustain_point if self.sustain_on else -1)
 
 	def merge(self, other):
 		other = copy.deepcopy(other)

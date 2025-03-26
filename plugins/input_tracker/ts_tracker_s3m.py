@@ -43,8 +43,7 @@ class input_s3m(plugins.base):
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 		
-		t_orderlist = project_obj.l_order.copy()[0:-1]
-		while 255 in t_orderlist: t_orderlist.remove(255)
+		t_orderlist = [x for x in project_obj.l_order.copy()[0:-1] if x != 255]
 		
 		tracker_obj = convproj_obj.main__create_tracker_single()
 		tracker_obj.set_num_chans(32)

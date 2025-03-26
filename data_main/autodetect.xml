@@ -245,6 +245,11 @@
 		<file fileext=".sdml"/>
 	</plugin>
 
+	<plugin pluginset="uncommon" name="hydrogen">
+		<xml root_name="song"/>
+		<file fileext=".h2song"/>
+	</plugin>
+
 	<plugin pluginset="main" name="qtractor">
 		<xml root_name="session"/>
 		<file fileext=".qtr"/>

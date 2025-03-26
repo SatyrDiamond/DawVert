@@ -1,0 +1,30 @@
+<dataset>
+    <category id="pattern">
+        <colorset id="main">
+            <color>#496485</color>
+            <color>#4672AA</color>
+            <color>#6CA2B9</color>
+            <color>#8FB5C2</color>
+            <color>#BBCBD1</color>
+            <color>#D9C081</color>
+            <color>#E29F62</color>
+            <color>#CF6242</color>
+            <color>#B53F3C</color>
+            <color>#931F23</color>
+            <color>#B53F3C</color>
+            <color>#CF6242</color>
+            <color>#E09D60</color>
+            <color>#D9C081</color>
+            <color>#BBCBD1</color>
+            <color>#8FB5C2</color>
+            <color>#6CA2B9</color>
+            <color>#4672AA</color>
+        </colorset>
+    </category>
+    <category id="track">
+        <colorset id="main">
+            <color>#6B707F</color>
+            <color>#50545F</color>
+        </colorset>
+    </category>
+</dataset>

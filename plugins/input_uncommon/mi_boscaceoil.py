@@ -92,6 +92,7 @@ class input_ceol(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_uncommon import boscaceoil as proj_boscaceoil
 		from objects.inst_params import fm_opm
+		from objects import colors
 		global ceol_data
 		
 		project_obj = proj_boscaceoil.ceol_song()
@@ -103,6 +104,7 @@ class input_ceol(plugins.base):
 		convproj_obj.set_timings(4, False)
 
 		globalstore.dataset.load('boscaceoil', './data_main/dataset/boscaceoil.dset')
+		color_track = colors.colorset.from_dataset('boscaceoil', 'track', 'main')
 
 		# ---------- Master FX ----------
 		convproj_obj.track_master.params.add('vol', 1, 'float')
@@ -178,7 +180,7 @@ class input_ceol(plugins.base):
 
 		for num in range(8):
 			playlist_obj = convproj_obj.playlist__add(num, 1, True)
-			playlist_obj.visual.color.set_float([0.43, 0.52, 0.55] if (num % 2) == 0 else [0.31, 0.40, 0.42])
+			if color_track: playlist_obj.visual.color.set_int(color_track.getcolornum(num))
 
 		# ---------- Placement ----------
 

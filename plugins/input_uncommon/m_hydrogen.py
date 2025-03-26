@@ -60,7 +60,7 @@ class input_hydrogen(plugins.base):
 			nle_obj = convproj_obj.notelistindex__add(pattern.name)
 			nle_obj.visual.name = pattern.name
 			nle_obj.visual.comment = pattern.info
-			if color_pattern: nle_obj.visual.color.set_int(color_pattern.getcolornum(n))
+			nle_obj.visual.color.set_int(color_pattern.getcolornum(n))
 			nle_obj.timesig_auto.add_point(0, [4, pattern.denominator])
 			for note in pattern.noteList:
 				extra = {}
@@ -71,7 +71,7 @@ class input_hydrogen(plugins.base):
 		for n, pattern in enumerate(project_obj.patternList):
 			playlist_obj = convproj_obj.playlist__add(n, 1, True)
 			playlist_obj.visual.name = pattern.name
-			if color_track: playlist_obj.visual.color.set_int(color_track.getcolornum(n))
+			playlist_obj.visual.color.set_int(color_track.getcolornum(n))
 			for p, x in enumerate([pattern.name in x for x in project_obj.patternSequence]):
 				if x:
 					cvpj_placement = playlist_obj.placements.add_notes_indexed()

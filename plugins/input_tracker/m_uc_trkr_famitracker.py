@@ -99,14 +99,16 @@ class input_famitracker_txt(plugins.base):
 
 					for fx_type, fx_val in ft_fx:
 						if fx_type == 0: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
-						if fx_type == 1: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
-						if fx_type == 2: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
-						if fx_type == 3: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
-						if fx_type == 4: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
-						if fx_type == 7: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
+						elif fx_type == 1: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
+						elif fx_type == 2: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
+						elif fx_type == 3: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
+						elif fx_type == 4: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
+						elif fx_type == 7: pat_obj.cell_fx_mod(row_num, fx_type, fx_val)
+						elif fx_type == 'D': pat_obj.cell_g_param(row_num, 'skip_pattern', fx_val)
 
 		for chnum, orders in cur_song.orders.items():
-			patterndata_obj.orders[chnum] = orders
+			if chnum<len(patterndata_obj.orders):
+				patterndata_obj.orders[chnum] = orders
 
 		used_insts = patterndata_obj.to_cvpj(convproj_obj, cur_song.tempo, cur_song.speed)
 
@@ -171,7 +173,7 @@ class input_famitracker_txt(plugins.base):
 								macro_duty = project_obj.macros[ft_inst.macro_duty]
 								plugin_obj.env_blocks_add('duty', macro_duty.data, 0.05, 15, macro_duty.loop, macro_duty.release)
 
-					if ft_inst.chip == 'VRC6':
+					elif ft_inst.chip == 'VRC6':
 
 						if insttype == 'vrc6_square':
 							plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
@@ -187,7 +189,7 @@ class input_famitracker_txt(plugins.base):
 							osc_data = plugin_obj.osc_add()
 							osc_data.prop.shape = 'saw'
 
-					if ft_inst.chip == 'FDS' and insttype == 'fds':
+					elif ft_inst.chip == 'FDS' and insttype == 'fds':
 						plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
 						plugin_obj.role = 'synth'
 						inst_obj.plugslots.set_synth(synthid)

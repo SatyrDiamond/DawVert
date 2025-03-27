@@ -106,6 +106,7 @@ def make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid):
 				add_auto(x.defaultValue, None, convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
 
 def create_plugin(convproj_obj, sb_plugin, issynth):
+	from objects.file_proj._soundbridge import sampler
 	uiddata = soundbridge_func.decode_chunk(sb_plugin.uid)
 	statedata = soundbridge_func.decode_chunk(sb_plugin.state)
 	pluginid = None
@@ -113,7 +114,66 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 	if len(uiddata) == 16 and statedata:
 		hexdata = uiddata.hex()
 
-		if uiddata[0:8] == b'\x00\x00\x00\x00SV2T':
+		if uiddata == b'\xb7\xe4~\xd75\xc2\xa8H\x97JL\xe1\x82.\xc2^':
+			statereader = bytereader.bytereader()
+			statereader.load_raw(statedata)
+			#with open('s_in.bin', 'wb') as f: f.write(statedata)
+
+			sampler_data = sampler.soundbridge_sampler_main()
+			sampler_data.read(statereader)
+
+			#from objects.data_bytes import bytewriter
+			#statw = bytewriter.bytewriter()
+			#sampler_data.write(statw)
+			#with open('s_out.bin', 'wb') as f: f.write(statw.getvalue())
+
+			if len(sampler_data.samples)==1:
+				sb_sample = sampler_data.samples[0]
+				sample_params = sampler_data.params[sampler_data.samples[0].params_num]
+				if not sb_sample.slicemode:
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
+					plugin_obj.role = 'synth'
+					samplepart_obj = plugin_obj.samplepart_add('sample')
+					samplepart_obj.from_sampleref(convproj_obj, sb_sample.filename)
+					samplepart_obj.point_value_type = "samples"
+					samplepart_obj.start = sb_sample.start
+					samplepart_obj.end = sb_sample.end
+					samplepart_obj.visual.name = sb_sample.name
+					if 'SampleColor' in sb_sample.metadata:
+						samplepart_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
+						plugin_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
+				else:
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'slicer')
+					plugin_obj.role = 'synth'
+					samplepart_obj = plugin_obj.samplepart_add('sample')
+					samplepart_obj.from_sampleref(convproj_obj, sb_sample.filename)
+					if 'SampleColor' in sb_sample.metadata:
+						plugin_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
+					for sslice in sb_sample.slices:
+						slice_param = sampler_data.params[sslice[0]]
+						slice_obj = samplepart_obj.add_slice()
+						slice_obj.start = sslice[1]
+						slice_obj.is_custom_key = True
+						slice_obj.custom_key = slice_param.key_root-60
+
+			elif len(sampler_data.samples)>1 and sampler_data.sampler_mode==1:
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+				for sb_sample in sampler_data.samples:
+					sample_params = sampler_data.params[sb_sample.params_num]
+					sp_obj = plugin_obj.sampleregion_add(sample_params.key_min-60, sample_params.key_max-60, sample_params.key_root-60, None)
+					sp_obj.vel_min = sample_params.vel_min/127
+					sp_obj.vel_max = sample_params.vel_max/127
+					sp_obj.vol = sample_params.gain
+					sp_obj.pan = sample_params.pan
+					sp_obj.sampleref = sb_sample.filename
+					sp_obj.point_value_type = "samples"
+					sp_obj.start = sb_sample.start
+					sp_obj.end = sb_sample.end
+					sp_obj.visual.name = sb_sample.name
+					if 'SampleColor' in sb_sample.metadata:
+						sp_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
+
+		elif uiddata[0:8] == b'\x00\x00\x00\x00SV2T':
 			fourid = struct.unpack('>I', uiddata[8:12])[0]
 
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst2', 'win')

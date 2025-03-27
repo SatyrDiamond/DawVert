@@ -341,6 +341,15 @@ def make_vst3(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 
 	return sb_plugin
 
+def make_sampler(convproj_obj, plugin_obj):
+	from objects.file_proj import soundbridge as proj_soundbridge
+	fourid = plugin_obj.external_info.fourid
+	sb_plugin = proj_soundbridge.soundbridge_audioUnit(None)
+	sb_plugin.uid = soundbridge_func.encode_chunk(b'\xb7\xe4~\xd75\xc2\xa8H\x97JL\xe1\x82.\xc2^')
+	sb_plugin.name = 'Sampler'
+	sb_plugin.vendor = ''
+	return sb_plugin
+
 def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 	from objects.file_proj import soundbridge as proj_soundbridge
 	fourid = plugin_obj.external_info.fourid
@@ -513,6 +522,7 @@ class output_soundbridge(plugins.base):
 	
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import soundbridge as proj_soundbridge
+		from objects.file_proj._soundbridge import sampler
 		global sb_returns
 
 		convproj_obj.change_timings(PROJECT_FREQ, False)
@@ -553,7 +563,7 @@ class output_soundbridge(plugins.base):
 		audio_ids = {}
 		video_ids = {}
 		
-		convproj_obj.sampleref__remove_nonaudiopl()
+		#convproj_obj.sampleref__remove_nonaudiopl()
 
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			if sampleref_obj.fileref.exists('win'):
@@ -633,6 +643,10 @@ class output_soundbridge(plugins.base):
 				make_sends(convproj_obj, sb_track, track_obj.sends)
 				make_plugins_fx(convproj_obj, sb_track, track_obj.plugslots)
 
+				middlenote = track_obj.datavals.get('middlenote', 0)
+
+				is_sampler = False
+
 				if track_obj.plugslots.synth:
 					plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 					if plugin_found: 
@@ -640,14 +654,37 @@ class output_soundbridge(plugins.base):
 							sb_track.midiInstrument = make_vst2(convproj_obj, plugin_obj, True, track_obj.plugslots.synth, sb_track)
 						if plugin_obj.check_wildmatch('external', 'vst3', None):
 							sb_track.midiInstrument = make_vst3(convproj_obj, plugin_obj, True, track_obj.plugslots.synth, sb_track)
+						if plugin_obj.check_match('universal', 'sampler', 'single'):
+							is_sampler = True
+							sp_obj = plugin_obj.samplepart_get('sample')
+							if sp_obj.sampleref in audio_ids:
+								sb_id = audio_ids[sp_obj.sampleref]
+								isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+	
+								sp_obj.convpoints_samples(sampleref_obj)
 
-				middlenote = track_obj.datavals.get('middlenote', 0)
+								if isfound:
+									sb_plugin = sb_track.midiInstrument = make_sampler(convproj_obj, plugin_obj)
+									statewriter = bytewriter.bytewriter()
+									sampler_data = sampler.soundbridge_sampler_main()
+									sampler_d = sampler_data.add_single()
+									if sampler_d:
+										sampler_entry, sampler_params = sampler_d
+										sampler_entry.filename = str(sb_id)
+										sampler_entry.name = str(sb_id.filename)
+										sampler_entry.start = int(sp_obj.start)
+										sampler_entry.end = int(sp_obj.end)
+										sampler_params.key_root = (middlenote)+60
+									sampler_data.write(statewriter)
+									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
+
+									#with open('s_out.bin', 'wb') as f: f.write(statewriter.getvalue())
 
 				plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 				if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 				for notespl_obj in track_obj.placements.pl_notes:
-					notespl_obj.notelist.mod_transpose(-middlenote)
+					if not is_sampler: notespl_obj.notelist.mod_transpose(-middlenote)
 					notespl_obj.notelist.mod_limit(-60, 67)
 					numnotes = notespl_obj.notelist.count()
 					notearray = np.zeros(numnotes, dtype=sb_notes_dtype)

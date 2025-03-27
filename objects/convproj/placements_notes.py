@@ -89,8 +89,9 @@ class cvpj_placements_notes:
 	def get_start(self):
 		start_final = 100000000000000000
 		for pl in self.data:
-			pl_start = pl.position
-			if pl_start < start_final: start_final = pl_start
+			if pl.notelist.count():
+				pl_start = pl.time.position
+				if pl_start < start_final: start_final = pl_start
 		return start_final
 
 	def change_seconds(self, is_seconds, bpm, ppq):

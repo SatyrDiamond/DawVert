@@ -272,7 +272,9 @@ class cvpj_placements:
 		return max(self.pl_notes.get_dur(),self.pl_audio.get_dur(),self.pl_notes_indexed.get_dur(),self.pl_audio_indexed.get_dur(),self.notelist.get_dur())
 
 	def get_start(self):
-		return min(self.pl_notes.get_start(),self.pl_audio.get_start(),self.notelist.get_start_end()[0])
+		outcount = min(self.pl_notes.get_start(),self.pl_audio.get_start())
+		if self.notelist.count(): outcount = min(self.notelist.get_start_end()[0], outcount)
+		return outcount
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		self.pl_notes.change_seconds(is_seconds, bpm, ppq)

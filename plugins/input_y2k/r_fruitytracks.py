@@ -123,7 +123,6 @@ class input_fruitytracks(plugins.base):
 				placement_obj.sample.sampleref = ftr_clip.file
 				placement_obj.muted = bool(ftr_clip.muted)
 
-
 				plpos = calc_tick_val(bpmdiv, ftr_clip.pos)
 				if ftr_clip.stretch == 0:
 					pldur = (ftr_clip.dur/bpmticks)

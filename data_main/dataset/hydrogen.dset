@@ -26,5 +26,8 @@
             <color>#6B707F</color>
             <color>#50545F</color>
         </colorset>
+        <object id="playback">
+            <visual name="Playback Track" color="#456488" />
+        </object>
     </category>
 </dataset>

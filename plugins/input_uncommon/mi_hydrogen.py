@@ -49,18 +49,37 @@ class input_hydrogen(plugins.base):
 		convproj_obj.metadata.author = project_obj.author
 		convproj_obj.metadata.comment_text = project_obj.notes
 
-		convproj_obj.params.add('bpm', project_obj.bpm , 'float')
-		convproj_obj.track_master.params.add('vol', project_obj.volume, 'float')
-
-		for tag in project_obj.timeLineTag:
-			timemarker_obj = convproj_obj.timemarker__add()
-			timemarker_obj.position = tag.bar*48*4
-			timemarker_obj.visual.name = tag.tag
+		bpm = project_obj.bpm
 
 		if project_obj.BPMTimeLine:
 			convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', 0, project_obj.bpm, 'instant')
 			for bpmtl in project_obj.BPMTimeLine:
 				convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', bpmtl.bar*48*4, bpmtl.bpm, 'instant')
+				if bpmtl.bar == 0: bpm = bpmtl.bpm
+
+		convproj_obj.params.add('bpm', bpm , 'float')
+		convproj_obj.track_master.params.add('vol', project_obj.volume, 'float')
+
+		plnum = 0
+
+		if project_obj.playbackTrackFilename:
+			playlist_obj = convproj_obj.playlist__add(plnum, 1, True)
+			playlist_obj.visual.from_dset('hydrogen', 'track', 'playback', False)
+			sampleref_obj = convproj_obj.sampleref__add('playbackTrack', project_obj.playbackTrackFilename, None)
+			sre_obj = convproj_obj.sampleindex__add('playbackTrack')
+			sre_obj.from_sampleref_obj(sampleref_obj)
+			sre_obj.sampleref = 'playbackTrack'
+			sre_obj.stretch.set_rate_speed(bpm, 1, True)
+			sre_obj.visual.from_dset('hydrogen', 'track', 'playback', False)
+			cvpj_placement = playlist_obj.placements.add_audio_indexed()
+			cvpj_placement.fromindex = 'playbackTrack'
+			cvpj_placement.time.set_posdur(0, sampleref_obj.dur_sec*48*2*(bpm/120))
+			plnum += 1
+
+		for tag in project_obj.timeLineTag:
+			timemarker_obj = convproj_obj.timemarker__add()
+			timemarker_obj.position = tag.bar*48*4
+			timemarker_obj.visual.name = tag.tag
 
 		for autopath in project_obj.automationPaths:
 			if autopath.adjust == 'velocity':
@@ -111,7 +130,7 @@ class input_hydrogen(plugins.base):
 				nle_obj.notelist.add_m(str(note.instrument), note.position, 12, 0, note.velocity, extra if extra else None)
 
 		for n, pattern in enumerate(project_obj.patternList):
-			playlist_obj = convproj_obj.playlist__add(n, 1, True)
+			playlist_obj = convproj_obj.playlist__add(plnum, 1, True)
 			playlist_obj.visual.name = pattern.name
 			playlist_obj.visual.color.set_int(color_track.getcolornum(n))
 			for p, x in enumerate([pattern.name in x for x in project_obj.patternSequence]):
@@ -119,6 +138,7 @@ class input_hydrogen(plugins.base):
 					cvpj_placement = playlist_obj.placements.add_notes_indexed()
 					cvpj_placement.fromindex = pattern.name
 					cvpj_placement.time.set_posdur(p*48*4, pattern.size)
+			plnum += 1
 
 		convproj_obj.do_actions.append('do_sorttracks')
 		convproj_obj.do_actions.append('do_addloop')

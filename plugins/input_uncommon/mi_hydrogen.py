@@ -3,6 +3,7 @@
 
 import plugins
 from objects import globalstore
+from functions import xtramath
 
 class input_hydrogen(plugins.base):
 	def is_dawvert_plugin(self):
@@ -21,6 +22,7 @@ class input_hydrogen(plugins.base):
 		in_dict['file_ext'] = ['h2song']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'mi'
+		in_dict['auto_types'] = ['nopl_points']
 		in_dict['fxtype'] = 'none'
 		in_dict['track_lanes'] = True
 
@@ -48,12 +50,30 @@ class input_hydrogen(plugins.base):
 		convproj_obj.metadata.comment_text = project_obj.notes
 
 		convproj_obj.params.add('bpm', project_obj.bpm , 'float')
+		convproj_obj.track_master.params.add('vol', project_obj.volume, 'float')
+
+		for tag in project_obj.timeLineTag:
+			timemarker_obj = convproj_obj.timemarker__add()
+			timemarker_obj.position = tag.bar*48*4
+			timemarker_obj.visual.name = tag.tag
+
+		if project_obj.BPMTimeLine:
+			convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', 0, project_obj.bpm, 'instant')
+			for bpmtl in project_obj.BPMTimeLine:
+				convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', bpmtl.bar*48*4, bpmtl.bpm, 'instant')
+
+		for autopath in project_obj.automationPaths:
+			if autopath.adjust == 'velocity':
+				for p, v in autopath.points.items():
+					convproj_obj.automation.add_autopoint(['master', 'vol'], 'float', p*48*4, v, 'normal')
 
 		for instrument in project_obj.instrumentList:
 			inst_obj = convproj_obj.instrument__add(str(instrument.id))
 			inst_obj.visual.name = instrument.name
 			drumkit = instrument.drumkit
-			inst_obj.params.add('vol', instrument.volume*instrument.gain, 'float')
+			opan, ovol = xtramath.sep_pan_to_vol(instrument.pan_L, instrument.pan_R)
+			inst_obj.params.add('pan', opan, 'float')
+			inst_obj.params.add('vol', instrument.volume*instrument.gain*ovol, 'float')
 			inst_obj.params.add('enabled', not bool(instrument.isMuted), 'float')
 			inst_obj.params.add('solo', bool(instrument.isSoloed), 'float')
 			inst_obj.is_drum = True

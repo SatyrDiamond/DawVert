@@ -219,13 +219,27 @@ class hydrogen_virtualpattern:
 
 class hydrogen_path:
 	def __init__(self, xmldata):
+		self.adjust = None
 		self.points = {}
+		if xmldata: self.read(xmldata)
+
+	def read(self, xmldata):
+		self.adjust = xmldata.get('adjust')
+		for x_part in xmldata:
+			name = x_part.tag
+			if name == 'point': self.points[float(x_part.get('x'))] = float(x_part.get('y'))
+
+class hydrogen_newBPM:
+	def __init__(self, xmldata):
+		self.bar = 0
+		self.bpm = 120
 		if xmldata: self.read(xmldata)
 
 	def read(self, xmldata):
 		for x_part in xmldata:
 			name = x_part.tag
-			if name == 'point': self.points[float(x_part.get('x'))] = float(x_part.get('y'))
+			if name == 'BAR': self.bar = int(x_part.text)
+			if name == 'BPM': self.bpm = float(x_part.text)
 
 class hydrogen_newTAG:
 	def __init__(self, xmldata):
@@ -272,6 +286,8 @@ class hydrogen_song:
 		self.virtualPatternList = []
 		self.patternSequence = []
 		self.timeLineTag = []
+		self.automationPaths = []
+		self.BPMTimeLine = []
 
 	def load_from_file(self, input_file):
 		x_root = ET.parse(input_file).getroot()
@@ -329,8 +345,12 @@ class hydrogen_song:
 				for x_inpart in x_part:
 					if x_inpart.tag == 'newTAG': 
 						self.timeLineTag.append(hydrogen_newTAG(x_inpart))
+			if name == 'BPMTimeLine': 
+				for x_inpart in x_part:
+					if x_inpart.tag == 'newBPM': 
+						self.BPMTimeLine.append(hydrogen_newBPM(x_inpart))
 			if name == 'automationPaths': 
 				for x_inpart in x_part:
 					if x_inpart.tag == 'path': 
-						self.virtualPatternList.append(hydrogen_path(x_inpart))
+						self.automationPaths.append(hydrogen_path(x_inpart))
 		return True

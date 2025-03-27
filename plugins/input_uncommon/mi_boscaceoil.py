@@ -7,7 +7,6 @@ from objects import globalstore
 import plugins
 
 FX_NAMES = ['delay','chorus','reverb','distortion','low_boost','compressor','high_pass']
-CEOL_COLORS = [[0.23, 0.15, 0.93],[0.61, 0.04, 0.94],[0.82, 0.16, 0.23],[0.82, 0.60, 0.16],[0.21, 0.84, 0.14],[0.07, 0.56, 0.91]]
 
 def add_master_fx(convproj_obj, fx_type, fx_value):
 	if fx_type == 0: #delay
@@ -105,10 +104,11 @@ class input_ceol(plugins.base):
 
 		globalstore.dataset.load('boscaceoil', './data_main/dataset/boscaceoil.dset')
 		color_track = colors.colorset.from_dataset('boscaceoil', 'track', 'main')
+		color_main = colors.colorset.from_dataset('boscaceoil', 'main', 'main')
 
 		# ---------- Master FX ----------
 		convproj_obj.track_master.params.add('vol', 1, 'float')
-		convproj_obj.track_master.visual.color.set_float([0.31373, 0.39608, 0.41569])
+		convproj_obj.track_master.visual.from_dset('boscaceoil', 'main', 'masterfx', False)
 
 		add_master_fx(convproj_obj, project_obj.effect_type, project_obj.effect_value)
 
@@ -121,25 +121,25 @@ class input_ceol(plugins.base):
 		for instnum, ceol_inst_obj in enumerate(project_obj.instruments):
 			cvpj_instid = 'ceol_'+str(instnum).zfill(2)
 
-			cvpj_instcolor = data_values.list__optionalindex(ceol_inst_obj.palette, [0.55, 0.55, 0.55], CEOL_COLORS)
+			cvpj_instcolor = color_main.getcolornum(ceol_inst_obj.palette)
 
 			if ceol_inst_obj.inst <= 127:
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
-				inst_obj.visual.color.set_float(cvpj_instcolor)
+				inst_obj.visual.color.set_int(cvpj_instcolor)
 				inst_obj.midi.out_inst.patch = ceol_inst_obj.inst
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
 			elif ceol_inst_obj.inst == 365: 
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.name = 'MIDI Drums'
-				inst_obj.visual.color.set_float(cvpj_instcolor)
+				inst_obj.visual.color.set_int(cvpj_instcolor)
 				inst_obj.midi.out_inst.drum = True
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
 			else: 
 				strinst = str(ceol_inst_obj.inst)
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
-				inst_obj.visual.color.set_float(cvpj_instcolor)
+				inst_obj.visual.color.set_int(cvpj_instcolor)
 				inst_obj.from_dataset("boscaceoil", 'inst', strinst, False)
 				inst_ds_obj = globalstore.dataset.get_obj('boscaceoil', 'inst', strinst)
 				if inst_ds_obj:
@@ -173,14 +173,17 @@ class input_ceol(plugins.base):
 				for n, x in enumerate(ceol_pat_obj.recordfilter[:,0]):
 					notevols[n] = x/256
 
+			cvpj_patcolor = color_main.getcolornum(ceol_pat_obj.palette)
+
 			nle_obj = convproj_obj.notelistindex__add(cvpj_pat_id)
 			for ceol_note_obj in ceol_pat_obj.notes: nle_obj.notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, {})
 			nle_obj.visual.name = str(patnum+1)
-			nle_obj.visual.color.set_float(data_values.list__optionalindex(ceol_pat_obj.palette, [0.55, 0.55, 0.55], CEOL_COLORS))
+			nle_obj.visual.color.set_int(cvpj_patcolor)
 
 		for num in range(8):
 			playlist_obj = convproj_obj.playlist__add(num, 1, True)
-			if color_track: playlist_obj.visual.color.set_int(color_track.getcolornum(num))
+			if color_track: 
+				playlist_obj.visual.color.set_int(color_track.getcolornum(num))
 
 		# ---------- Placement ----------
 

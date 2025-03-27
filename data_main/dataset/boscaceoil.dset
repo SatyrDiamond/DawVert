@@ -22,6 +22,20 @@
             <visual name="Reverb" />
         </object>
     </category>
+    <category id="main">
+        <colorset id="main">
+            <color>#1965EA</color>
+            <color>#7000E7</color>
+            <color>#CF1845</color>
+            <color>#CF7718</color>
+            <color>#42D512</color>
+            <color>#00A9E7</color>
+            <color>#68767F</color>
+        </colorset>
+        <object id="masterfx">
+            <visual color="#50656A" />
+        </object>
+    </category>
     <category id="inst">
         <object id="128">
             <data group="CHIPTUNE" />

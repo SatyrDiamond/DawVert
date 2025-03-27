@@ -20,7 +20,9 @@ class rpp_pooledenv:
 			if name == 'ID': self.id.read(values)
 			if name == 'NAME': self.name.read(values)
 			if name == 'SRCLEN': self.srclen.read(values)
-			if name == 'PPT': self.points.append([float(x) for x in values])
+			if name == 'PPT': 
+ 				try: self.points.append([float(x) for x in values])
+ 				except: pass
 
 	def write(self, name, rpp_data):
 		rpp_tempdata = robj(name,[])
@@ -69,7 +71,9 @@ class rpp_env:
 			if name == 'VIS': self.vis.read(values)
 			if name == 'LANEHEIGHT': self.laneheight.read(values)
 			if name == 'DEFSHAPE': self.defshape.read(values)
-			if name == 'PT': self.points.append([float(x) for x in values])
+			if name == 'PT': 
+ 				try: self.points.append([float(x) for x in values])
+ 				except: pass
 			if name == 'POOLEDENVINST': 
 				pooledenvinst = self.init_pooledenvinst()
 				pooledenvinst.read(values)

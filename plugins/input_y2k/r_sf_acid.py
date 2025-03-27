@@ -139,6 +139,8 @@ class input_acid_old(plugins.base):
 			track_obj.visual.color.set_int(colordata.getcolornum(track.color))
 			track_obj.params.add('vol', track.vol, 'float')
 			track_obj.params.add('pan', track.pan, 'float')
+			track_obj.is_drum = 1 not in track.flags
+
 			if track.mutesolo == 2: 
 				track_obj.params.add('enabled', False, 'float')
 

@@ -246,7 +246,7 @@ class cvpj_project:
 		self.track_order = []
 		for n in sorted(sortpos):
 			for i in sortpos[n]: self.track_order += i
- 
+
 	def set_timings(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
 		self.time_float = time_float

@@ -53,7 +53,7 @@ class cvpj_placements_audio:
 	def get_start(self):
 		start_final = 100000000000000000
 		for pl in self.data:
-			pl_start = pl.position
+			pl_start = pl.time.position
 			if pl_start < start_final: start_final = pl_start
 		return start_final
 

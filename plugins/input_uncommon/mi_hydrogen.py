@@ -22,10 +22,12 @@ class input_hydrogen(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'mi'
 		in_dict['fxtype'] = 'none'
+		in_dict['track_lanes'] = True
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_uncommon import hydrogen as proj_hydrogen
 		from objects import colors
+		from objects.convproj import fileref
 
 		convproj_obj.type = 'mi'
 		convproj_obj.fxtype = 'none'
@@ -34,6 +36,8 @@ class input_hydrogen(plugins.base):
 		project_obj = proj_hydrogen.hydrogen_song()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		fileref.filesearcher.add_searchpath_full_append('hydrogen_drumkits', "C:\\Program Files\\Hydrogen\\data\\drumkits\\", 'win')
 
 		globalstore.dataset.load('hydrogen', './data_main/dataset/hydrogen.dset')
 		color_pattern = colors.colorset.from_dataset('hydrogen', 'pattern', 'main')
@@ -48,10 +52,27 @@ class input_hydrogen(plugins.base):
 		for instrument in project_obj.instrumentList:
 			inst_obj = convproj_obj.instrument__add(str(instrument.id))
 			inst_obj.visual.name = instrument.name
+			drumkit = instrument.drumkit
 			inst_obj.params.add('vol', instrument.volume*instrument.gain, 'float')
 			inst_obj.params.add('enabled', not bool(instrument.isMuted), 'float')
 			inst_obj.params.add('solo', bool(instrument.isSoloed), 'float')
 			inst_obj.is_drum = True
+
+			plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+			plugin_obj.role = 'synth'
+			inst_obj.plugslots.set_synth(synthid)
+
+			for layer in instrument.instrumentComponent.layers:
+				filename = layer.filename
+				sampleid = drumkit+'__'+filename
+				sampleref_obj = convproj_obj.sampleref__add(sampleid, '.\\GMRockKit\\'+filename, 'win')
+				sampleref_obj.find_relative('hydrogen_drumkits')
+				sp_obj = plugin_obj.sampleregion_add(-50, 50, 0, None)
+				sp_obj.sampleref = sampleid
+				sp_obj.vel_min = layer.min
+				sp_obj.vel_max = layer.max
+				sp_obj.vol = layer.gain
+				sp_obj.trigger = 'oneshot'
 			#inst_obj.sends.add('return__0', None, instrument.FX1Level)
 			#inst_obj.sends.add('return__1', None, instrument.FX2Level)
 			#inst_obj.sends.add('return__2', None, instrument.FX3Level)
@@ -79,6 +100,8 @@ class input_hydrogen(plugins.base):
 					cvpj_placement.fromindex = pattern.name
 					cvpj_placement.time.set_posdur(p*48*4, pattern.size)
 
+		convproj_obj.do_actions.append('do_sorttracks')
+		convproj_obj.do_actions.append('do_addloop')
 
 		#for sendnum in range(4):
 		#	returnid = 'return__'+str(sendnum)

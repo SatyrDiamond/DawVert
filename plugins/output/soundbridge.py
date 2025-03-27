@@ -661,6 +661,8 @@ class output_soundbridge(plugins.base):
 								sb_id = audio_ids[sp_obj.sampleref]
 								isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 	
+								hzchange = 44100/sampleref_obj.hz if sampleref_obj.hz else 1
+
 								sp_obj.convpoints_samples(sampleref_obj)
 
 								if isfound:
@@ -672,8 +674,8 @@ class output_soundbridge(plugins.base):
 										sampler_entry, sampler_params = sampler_d
 										sampler_entry.filename = str(sb_id)
 										sampler_entry.name = str(sb_id.filename)
-										sampler_entry.start = int(sp_obj.start)
-										sampler_entry.end = int(sp_obj.end)
+										sampler_entry.start = int(sp_obj.start*hzchange)
+										sampler_entry.end = int(sp_obj.end*hzchange)
 										sampler_params.key_root = (middlenote)+60
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())

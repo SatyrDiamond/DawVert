@@ -661,7 +661,7 @@ class output_soundbridge(plugins.base):
 								sb_id = audio_ids[sp_obj.sampleref]
 								isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 	
-								hzchange = 44100/sampleref_obj.hz if sampleref_obj.hz else 1
+								hzchange = (PROJECT_FREQ*2)/sampleref_obj.hz if sampleref_obj.hz else 1
 
 								sp_obj.convpoints_samples(sampleref_obj)
 
@@ -680,7 +680,40 @@ class output_soundbridge(plugins.base):
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
 
-									#with open('s_out.bin', 'wb') as f: f.write(statewriter.getvalue())
+						if plugin_obj.check_match('universal', 'sampler', 'slicer'):
+							is_sampler = True
+							sp_obj = plugin_obj.samplepart_get('sample')
+							if sp_obj.sampleref in audio_ids:
+								sb_id = audio_ids[sp_obj.sampleref]
+								isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+								hzchange = (PROJECT_FREQ*2)/sampleref_obj.hz if sampleref_obj.hz else 1
+								sp_obj.convpoints_samples(sampleref_obj)
+
+								if isfound:
+									sb_plugin = sb_track.midiInstrument = make_sampler(convproj_obj, plugin_obj)
+									statewriter = bytewriter.bytewriter()
+									sampler_data = sampler.soundbridge_sampler_main()
+									
+									data = sampler_data.add_slices(len(sp_obj.slicer_slices))
+									if data:
+										sampler_entry, slicedata = data
+										sampler_entry.filename = str(sb_id)
+										sampler_entry.name = str(sb_id.filename)
+										sampler_entry.start = int(sp_obj.start*hzchange)
+										sampler_entry.end = int(sp_obj.end*hzchange)
+										for num, sld in enumerate(slicedata):
+											slice_obj = sp_obj.slicer_slices[num]
+											if not slice_obj.is_custom_key:
+												sld[1].key_root = 60+num
+												sld[1].key_min = 60+num
+												sld[1].key_max = 60+num
+											else:
+												sld[1].key_root = slice_obj.custom_key
+												sld[1].key_min = slice_obj.custom_key
+												sld[1].key_max = slice_obj.custom_key
+											sampler_entry.slices[num][1] = int(slice_obj.start*hzchange)
+									sampler_data.write(statewriter)
+									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
 
 				plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 				if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)

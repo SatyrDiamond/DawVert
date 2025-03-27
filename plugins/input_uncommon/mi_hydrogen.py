@@ -5,6 +5,8 @@ import plugins
 from objects import globalstore
 from functions import xtramath
 
+PL_MODE = 0
+
 class input_hydrogen(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -129,16 +131,27 @@ class input_hydrogen(plugins.base):
 				if note.probability: extra['probability'] = note.probability
 				nle_obj.notelist.add_m(str(note.instrument), note.position, 12, 0, note.velocity, extra if extra else None)
 
-		for n, pattern in enumerate(project_obj.patternList):
+		maxdup = min([len(x) for x in project_obj.patternSequence]) if project_obj.patternSequence else 0
+
+		if maxdup > 1 or PL_MODE:
+			for n, pattern in enumerate(project_obj.patternList):
+				playlist_obj = convproj_obj.playlist__add(plnum, 1, True)
+				playlist_obj.visual.name = pattern.name
+				playlist_obj.visual.color.set_int(color_track.getcolornum(n))
+				for p, x in enumerate([pattern.name in x for x in project_obj.patternSequence]):
+					if x:
+						cvpj_placement = playlist_obj.placements.add_notes_indexed()
+						cvpj_placement.fromindex = pattern.name
+						cvpj_placement.time.set_posdur(p*48*4, pattern.size)
+				plnum += 1
+		else:
 			playlist_obj = convproj_obj.playlist__add(plnum, 1, True)
-			playlist_obj.visual.name = pattern.name
+			playlist_obj.visual.name = 'Main'
 			playlist_obj.visual.color.set_int(color_track.getcolornum(n))
-			for p, x in enumerate([pattern.name in x for x in project_obj.patternSequence]):
-				if x:
-					cvpj_placement = playlist_obj.placements.add_notes_indexed()
-					cvpj_placement.fromindex = pattern.name
-					cvpj_placement.time.set_posdur(p*48*4, pattern.size)
-			plnum += 1
+			for p, x in enumerate(project_obj.patternSequence):
+				cvpj_placement = playlist_obj.placements.add_notes_indexed()
+				cvpj_placement.fromindex = x[0]
+				cvpj_placement.time.set_posdur(p*48*4, pattern.size)
 
 		convproj_obj.do_actions.append('do_sorttracks')
 		convproj_obj.do_actions.append('do_addloop')

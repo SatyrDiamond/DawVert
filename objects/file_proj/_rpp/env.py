@@ -37,7 +37,9 @@ class rpp_env:
 			if name == 'VIS': self.vis.read(values)
 			if name == 'LANEHEIGHT': self.laneheight.read(values)
 			if name == 'DEFSHAPE': self.defshape.read(values)
-			if name == 'PT': self.points.append([float(x) for x in values])
+			if name == 'PT': 
+				try: self.points.append([float(x) for x in values])
+				except: pass
 
 		if in_values:
 			self.is_param = True

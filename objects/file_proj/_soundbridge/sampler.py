@@ -118,11 +118,11 @@ class soundbridge_sampler_entry:
 		self.env_pitch_on = byr_stream.uint8()
 		self.slicemode = byr_stream.uint8()
 		if not self.slicemode:
-			self.unk = byr_stream.uint64_b() # 64
+			self.params_num_end = byr_stream.uint64_b() # 64
 			self.order = byr_stream.uint64_b()
 		else:
 			self.params_num_end = byr_stream.uint64_b()
-			self.unk = byr_stream.uint64_b() # 0
+			self.order = byr_stream.uint64_b() # 0
 		self.filename = byr_stream.string(byr_stream.uint64_b())
 		self.name = byr_stream.string(byr_stream.uint64_b())
 		self.metadata = dict([[readstring(byr_stream), readstring(byr_stream)] for x in range(byr_stream.uint64_b())])

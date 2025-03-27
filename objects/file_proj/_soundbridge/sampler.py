@@ -40,6 +40,24 @@ class soundbridge_sampler_main:
 		else:
 			return None
 
+	def add_slices(self, slices):
+		slicedata = []
+		for _ in range(slices):
+			paramnum = self.alloc_param()
+			if paramnum != -1:
+				slicedata.append([paramnum, self.params[paramnum]])
+
+		if slicedata:
+			sampler_entry = soundbridge_sampler_entry()
+			sampler_entry.params_num = paramnum
+			sampler_entry.slicemode = 1
+			sampler_entry.params_num_end = slicedata[-1][0]
+			sampler_entry.numslices = len(slicedata)
+			sampler_entry.slices = [[x[0], 0, 0, 4] for x in slicedata]
+			self.samples.append(sampler_entry)
+
+			return sampler_entry, slicedata
+
 	def read(self, byr_stream):
 		byr_stream.uint64_b() # 1
 		self.sampler_mode = byr_stream.uint64_b()

@@ -676,6 +676,7 @@ class output_soundbridge(plugins.base):
 										sampler_entry.name = str(sb_id.filename)
 										sampler_entry.start = int(sp_obj.start*hzchange)
 										sampler_entry.end = int(sp_obj.end*hzchange)
+										sampler_params.vol_vel = 1
 										sampler_params.key_root = (middlenote)+60
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
@@ -703,14 +704,16 @@ class output_soundbridge(plugins.base):
 										sampler_entry.end = int(sp_obj.end*hzchange)
 										for num, sld in enumerate(slicedata):
 											slice_obj = sp_obj.slicer_slices[num]
+											sample_params = sld[1]
+											sample_params.vol_vel = 1
 											if not slice_obj.is_custom_key:
-												sld[1].key_root = 60+num
-												sld[1].key_min = 60+num
-												sld[1].key_max = 60+num
+												sample_params.key_root = 60+num
+												sample_params.key_min = 60+num
+												sample_params.key_max = 60+num
 											else:
-												sld[1].key_root = slice_obj.custom_key
-												sld[1].key_min = slice_obj.custom_key
-												sld[1].key_max = slice_obj.custom_key
+												sample_params.key_root = slice_obj.custom_key
+												sample_params.key_min = slice_obj.custom_key
+												sample_params.key_max = slice_obj.custom_key
 											sampler_entry.slices[num][1] = int(slice_obj.start*hzchange)
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())

@@ -671,15 +671,63 @@ class output_soundbridge(plugins.base):
 									sampler_data = sampler.soundbridge_sampler_main()
 									sampler_d = sampler_data.add_single()
 									if sampler_d:
-										sampler_entry, sampler_params = sampler_d
+										sampler_entry, sample_params = sampler_d
 										sampler_entry.filename = str(sb_id)
 										sampler_entry.name = str(sb_id.filename)
 										sampler_entry.start = int(sp_obj.start*hzchange)
 										sampler_entry.end = int(sp_obj.end*hzchange)
-										sampler_params.vol_vel = 1
-										sampler_params.key_root = (middlenote)+60
+										sampler_entry.env_amp_on = 1
+										sample_params.vol_vel = 1
+										sample_params.key_root = (middlenote)+60
+										sample_params.env_a = 0
+										sample_params.env_d = 0
+										sample_params.env_s = 1
+										sample_params.env_r = 0
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
+
+						if plugin_obj.check_match('universal', 'sampler', 'multi'):
+							sb_plugin = sb_track.midiInstrument = make_sampler(convproj_obj, plugin_obj)
+							statewriter = bytewriter.bytewriter()
+							sampler_data = sampler.soundbridge_sampler_main()
+
+							is_sampler = True
+							ordernum = 0
+							for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+								key_l, key_h, key_r, samplerefid, extradata = sampleregion
+								sp_obj = plugin_obj.samplepart_get(samplerefid)
+
+								if sp_obj.sampleref in audio_ids:
+									sb_id = audio_ids[sp_obj.sampleref]
+									isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+									hzchange = (PROJECT_FREQ*2)/sampleref_obj.hz if sampleref_obj.hz else 1
+									sp_obj.convpoints_samples(sampleref_obj)
+ 
+									if isfound:
+										sampler_d = sampler_data.add_single()
+										if sampler_d:
+											sampler_entry, sample_params = sampler_d
+											sampler_entry.filename = str(sb_id)
+											sampler_entry.name = str(sb_id.filename)
+											sampler_entry.start = int(sp_obj.start*hzchange)
+											sampler_entry.end = int(sp_obj.end*hzchange)
+											sampler_entry.env_amp_on = int(sp_obj.trigger != 'oneshot')
+											sampler_entry.order = ordernum
+											sample_params.vol_vel = 1
+											sample_params.key_root = (middlenote)+60
+											sample_params.env_a = 0
+											sample_params.env_d = 0
+											sample_params.env_s = 1
+											sample_params.env_r = 0
+											sample_params.key_root = 60+key_r
+											sample_params.key_min = 60+key_l
+											sample_params.key_max = 60+key_h
+											sample_params.vel_min = int(sp_obj.vel_min*127)
+											sample_params.vel_max = int(sp_obj.vel_max*127)
+										ordernum += 1
+
+							sampler_data.write(statewriter)
+							sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
 
 						if plugin_obj.check_match('universal', 'sampler', 'slicer'):
 							is_sampler = True
@@ -702,10 +750,15 @@ class output_soundbridge(plugins.base):
 										sampler_entry.name = str(sb_id.filename)
 										sampler_entry.start = int(sp_obj.start*hzchange)
 										sampler_entry.end = int(sp_obj.end*hzchange)
+										sampler_entry.env_amp_on = 1
 										for num, sld in enumerate(slicedata):
 											slice_obj = sp_obj.slicer_slices[num]
 											sample_params = sld[1]
 											sample_params.vol_vel = 1
+											sample_params.env_a = 0
+											sample_params.env_d = 0
+											sample_params.env_s = 1
+											sample_params.env_r = 0
 											if not slice_obj.is_custom_key:
 												sample_params.key_root = 60+num
 												sample_params.key_min = 60+num

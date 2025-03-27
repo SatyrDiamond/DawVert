@@ -51,6 +51,7 @@ class input_hydrogen(plugins.base):
 			inst_obj.params.add('vol', instrument.volume*instrument.gain, 'float')
 			inst_obj.params.add('enabled', not bool(instrument.isMuted), 'float')
 			inst_obj.params.add('solo', bool(instrument.isSoloed), 'float')
+			inst_obj.is_drum = True
 			#inst_obj.sends.add('return__0', None, instrument.FX1Level)
 			#inst_obj.sends.add('return__1', None, instrument.FX2Level)
 			#inst_obj.sends.add('return__2', None, instrument.FX3Level)

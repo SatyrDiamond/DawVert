@@ -110,11 +110,13 @@ def add_auto(rpp_env, autopoints_obj):
 	for x in autopoints_obj:
 		rpp_env.points.append([x.pos_real, x.value])
 
-def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj):
+def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 
 	if plugin_found:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
+
+		pitch = track_obj.params.get('pitch',0).value
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
 			sp_obj = plugin_obj.samplepart_get('sample')
@@ -125,6 +127,7 @@ def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj):
 			sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
 			sampler_params['pitch_start'] = (-60/80)/2 + 0.5
 			sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
+			sampler_params['pitch_offset'] = (pitch/80)/2 + 0.5
 
 			adsr_obj = plugin_obj.env_asdr_get('vol')
 			do_sample_part(sampler_params, sampleref_obj, sp_obj)
@@ -645,10 +648,10 @@ class output_reaper(plugins.base):
 					rpp_source_obj.file.set(filename)
 	
 			for fxid in track_obj.plugslots.slots_synths:
-				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj)
+				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj, track_obj)
 
 			for fxid in track_obj.plugslots.slots_audio:
-				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj)
+				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj, track_obj)
 
 			trackdata.append(rpp_track_obj)
 

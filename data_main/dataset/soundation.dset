@@ -58,7 +58,7 @@
             <param id="resonance" name="resonance" type="float" />
         </object>
         <object id="com.soundation.fm_synth">
-            <visual name="FM Synth" color="67|179|203" />
+            <visual name="FM Synth" color="#43b3cb" />
             <param id="p0" name="p0" type="float" />
             <param id="p1" name="p1" type="float" />
             <param id="p10" name="p10" type="float" />
@@ -278,7 +278,7 @@
             <param id="width" name="width" type="float" def="1" />
         </object>
         <object id="com.soundation.spc">
-            <visual name="SPC" color="214|207|205" />
+            <visual name="SPC" color="#d6cfcd" />
             <param id="bite" name="bite" type="float" />
             <param id="gain_0" name="gain_0" type="float" />
             <param id="gain_1" name="gain_1" type="float" />
@@ -337,7 +337,7 @@
             <param id="spread" name="spread" type="float" />
         </object>
         <object id="com.soundation.the_wub_machine">
-            <visual name="The Wub Machine" color="70|72|71" />
+            <visual name="The Wub Machine" color="#464847" />
             <param id="filter_cutoff" name="filter_cutoff" type="float" />
             <param id="filter_drive" name="filter_drive" type="float" />
             <param id="filter_resonance" name="filter_resonance" type="float" />
@@ -381,7 +381,7 @@
             <param id="speed" name="speed" type="float" def="0.3" />
         </object>
         <object id="com.soundation.va_synth">
-            <visual name="VA Synth" color="68|64|59" />
+            <visual name="VA Synth" color="#44403b" />
             <param id="aatt" name="aatt" type="float" />
             <param id="adec" name="adec" type="float" />
             <param id="arel" name="arel" type="float" />

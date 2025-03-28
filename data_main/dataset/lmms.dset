@@ -1,7 +1,7 @@
 <dataset>
     <category id="plugin">
         <object id="OPL2">
-            <visual name="OPL2" color="7.65|84.15|135.15" />
+            <visual name="OPL2" color="#075487" />
         </object>
         <object id="amplifier">
             <visual name="Amplifier" />
@@ -22,7 +22,7 @@
             <param id="arpskip" name="Skip rate" type="int" max="100" />
         </object>
         <object id="audiofileprocessor">
-            <visual name="AudioFileProcessor" color="71.4|71.4|71.4" />
+            <visual name="AudioFileProcessor" color="#474747" />
         </object>
         <object id="bassbooster">
             <visual name="BassBooster" />
@@ -44,7 +44,7 @@
         </object>
         <object id="bitinvader">
             <data group="" />
-            <visual name="BitInvader" color="219.3|219.3|219.3" />
+            <visual name="BitInvader" color="#dbdbdb" />
             <param id="interpolation" name="Interpolation" type="bool" def="1" />
             <param id="normalize" name="Normalize" type="bool" def="1" />
             <param id="sampleLength" name="sampleLength" type="int" def="128" max="200" min="4" />
@@ -156,14 +156,14 @@
             <param id="WhiteNoise" name="Noise" type="float" max="0.05" />
         </object>
         <object id="gigplayer">
-            <visual name="GIG Player" color="140.25|0|0" />
+            <visual name="GIG Player" color="#8c0000" />
             <param id="bank" name="bank" type="int" max="999" />
             <param id="gain" name="gain" type="float" def="1" max="5" />
             <param id="patch" name="patch" type="int" max="127" />
             <param id="src" name="src" type="string" def="" noauto="1" />
         </object>
         <object id="kicker">
-            <visual name="Kicker" color="130.05|147.9|147.9" />
+            <visual name="Kicker" color="#829393" />
             <param id="click" name="Click" type="float" def="0.4" />
             <param id="decay" name="m_decayModel" type="float" def="440" max="5000" min="5" />
             <param id="dist" name="Start distortion" type="float" def="0.8" max="100" />
@@ -179,7 +179,7 @@
             <param id="version" name="version" type="float" max="100" />
         </object>
         <object id="lb302">
-            <visual name="LB302" color="206.55|165.75|183.6" />
+            <visual name="LB302" color="#cea5b7" />
             <param id="db24" name="db24Toggle" type="bool" />
             <param id="dead" name="deadToggle" type="bool" />
             <param id="dist" name="Distortion" type="float" />
@@ -192,7 +192,7 @@
             <param id="vcf_res" name="VCF Resonance" type="float" def="0.75" max="1.25" />
         </object>
         <object id="malletsstk">
-            <visual name="Mallets" color="140.25|33.15|17.85" />
+            <visual name="Mallets" color="#8c2111" />
             <param id="adsr" name="ADSR" type="float" def="64" max="128" />
             <param id="crossfade" name="Crossfade" type="float" def="64" max="128" />
             <param id="hardness" name="Hardness" type="float" def="64" max="128" />
@@ -212,7 +212,7 @@
             <param id="vib_gain" name="Vibrato gain" type="float" max="128" />
         </object>
         <object id="monstro">
-            <visual name="Monstro" color="165.75|173.4|178.5" />
+            <visual name="Monstro" color="#a5adb2" />
             <param id="e1att" name="m_env1Att" type="float" max="2000" />
             <param id="e1dec" name="m_env1Dec" type="float" max="4000" />
             <param id="e1hol" name="m_env1Hold" type="float" max="4000" />
@@ -319,7 +319,7 @@
             <param id="swapinputs" name="m_swapInputs" type="bool" />
         </object>
         <object id="nes">
-            <visual name="Nescaline" color="229.5|33.15|22.95" />
+            <visual name="Nescaline" color="#e52116" />
             <param id="crs1" name="Channel 1 coarse detune " type="int" max="24" min="-24" />
             <param id="crs2" name="Channel 2 Coarse detune " type="int" max="24" min="-24" />
             <param id="crs3" name="Channel 3 coarse detune " type="int" max="24" min="-24" />
@@ -357,7 +357,7 @@
             <param id="vol4" name="Channel 4 volume " type="int" def="15.0" max="15" />
         </object>
         <object id="organic">
-            <visual name="Organic" color="61.2|193.8|33.15" />
+            <visual name="Organic" color="#3dc121" />
             <param id="foldback" name="foldback" type="float" def="1" />
             <param id="newdetune0" name="newdetune0" type="int" max="1200" min="-1200" />
             <param id="newdetune1" name="newdetune1" type="int" max="1200" min="-1200" />
@@ -403,7 +403,7 @@
             <param id="wavetype7" name="wavetype7" type="int" max="5" />
         </object>
         <object id="papu">
-            <visual name="Freeboy" color="153|204|35.7" />
+            <visual name="Freeboy" color="#99cc23" />
             <param id="Bass" name="Bass " type="float" def="461" max="600" min="-1" />
             <param id="Treble" name="Treble " type="float" def="-20" max="200" min="-100" />
             <param id="ch1so1" name="Channel 1 to SO1 (Right)" type="bool" def="1" />
@@ -435,7 +435,7 @@
             <param id="st" name="Sweep time " type="float" def="4" max="7" />
         </object>
         <object id="patman">
-            <visual name="PatMan" color="247.35|255|84.15" />
+            <visual name="PatMan" color="#f7ff54" />
         </object>
         <object id="peakcontrollereffect">
             <visual name="Peak Controller" />
@@ -457,10 +457,10 @@
             <param id="size" name="Size " type="float" def="0.89" />
         </object>
         <object id="sf2player">
-            <visual name="Sf2 Player" color="153|155.55|158.1" />
+            <visual name="Sf2 Player" color="#999b9e" />
         </object>
         <object id="sfxr">
-            <visual name="sfxr" color="255|178.5|0" />
+            <visual name="sfxr" color="#ffb200" />
             <param id="att" name="att" type="float" max="-1" />
             <param id="changeAmt" name="changeAmt" type="float" max="-1" />
             <param id="changeSpeed" name="changeSpeed" type="float" max="-1" />
@@ -487,7 +487,7 @@
             <param id="waveForm" name="waveForm" type="float" max="-1" />
         </object>
         <object id="sid">
-            <visual name="SID" color="186.15|175.95|160.65" />
+            <visual name="SID" color="#baafa0" />
             <param id="attack0" name="attack0" type="int" def="8" max="15" />
             <param id="attack1" name="attack1" type="int" def="8" max="15" />
             <param id="attack2" name="attack2" type="int" def="8" max="15" />
@@ -543,7 +543,7 @@
             <param id="r-r" name="Right to Right" type="float" min="-1" />
         </object>
         <object id="tripleoscillator">
-            <visual name="TripleOscillator" color="255|86.7|33.15" />
+            <visual name="TripleOscillator" color="#ff5621" />
             <param id="coarse0" name="Osc 1 coarse detuning" type="int" max="24" min="-24" />
             <param id="coarse1" name="Osc 2 coarse detuning" type="int" def="-12" max="24" min="-24" />
             <param id="coarse2" name="Osc 3 coarse detuning" type="int" def="-24" max="24" min="-24" />
@@ -573,10 +573,10 @@
             <param id="wavetype2" name="Osc 3 wave shape" type="int" max="7" />
         </object>
         <object id="vestige">
-            <visual name="VeSTige" color="15.3|153|53.55" />
+            <visual name="VeSTige" color="#0f9935" />
         </object>
         <object id="vibedstrings">
-            <visual name="Vibed" color="99.45|119.85|135.15" />
+            <visual name="Vibed" color="#637787" />
             <param id="active0" name="String 1 Enabled" type="bool" def="1" />
             <param id="active1" name="String 2 Enabled" type="bool" />
             <param id="active2" name="String 3 Enabled" type="bool" />
@@ -688,7 +688,7 @@
             <param id="volume8" name="String 9 volume" type="int" def="100" max="200" />
         </object>
         <object id="watsyn">
-            <visual name="Watsyn" color="206.55|221.85|221.85" />
+            <visual name="Watsyn" color="#cedddd" />
             <param id="a1_ltune" name="Left detune A1" type="float" max="600" min="-600" />
             <param id="a1_mult" name="Freq. multiplier A1" type="float" def="8" max="24" min="1" />
             <param id="a1_pan" name="Panning A1" type="float" max="100" min="-100" />
@@ -730,7 +730,7 @@
             <param id="waveShape" name="Shape" type="string" def="" noauto="1" />
         </object>
         <object id="zynaddsubfx">
-            <visual name="ZynAddSubFX" color="191.25|191.25|191.25" />
+            <visual name="ZynAddSubFX" color="#bfbfbf" />
             <param id="bandwidth" name="Bandwidth" type="int" def="64" max="127" />
             <param id="filterfreq" name="Filter frequency" type="int" def="64" max="127" />
             <param id="filterq" name="Filter resonance" type="int" def="64" max="127" />

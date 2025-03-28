@@ -1,43 +1,43 @@
 <dataset>
     <category id="chip">
         <object id="opn2">
-            <visual name="FM" color="51|204|255" />
+            <visual name="FM" color="#33ccff" />
         </object>
         <object id="square">
-            <visual name="Square" color="102|255|51" />
+            <visual name="Square" color="#66ff33" />
         </object>
         <object id="psg">
-            <visual name="PSG" color="102|255|51" />
+            <visual name="PSG" color="#66ff33" />
         </object>
         <object id="noise">
-            <visual name="Noise" color="204|204|204" />
+            <visual name="Noise" color="#cccccc" />
         </object>
         <object id="opn2-op">
-            <visual name="FM OP" color="51|102|255" />
+            <visual name="FM OP" color="#3366ff" />
         </object>
         <object id="gameboy_pulse">
-            <visual name="Square" color="102|255|51" />
+            <visual name="Square" color="#66ff33" />
         </object>
         <object id="gameboy_wavetable">
-            <visual name="Wavetable" color="255|128|51" />
+            <visual name="Wavetable" color="#ff8033" />
         </object>
         <object id="gameboy_noise">
-            <visual name="Noise" color="204|204|204" />
+            <visual name="Noise" color="#cccccc" />
         </object>
         <object id="pce">
-            <visual name="Wavetable" color="255|128|51" />
+            <visual name="Wavetable" color="#ff8033" />
         </object>
         <object id="pcm">
-            <visual name="PCM" color="255|230|51" />
+            <visual name="PCM" color="#ffe633" />
         </object>
         <object id="sample">
-            <visual name="sample" color="255|230|51" />
+            <visual name="sample" color="#ffe633" />
         </object>
         <object id="adpcma">
-            <visual name="ADPCM-A" color="255|230|51" />
+            <visual name="ADPCM-A" color="#ffe633" />
         </object>
         <object id="c64">
-            <visual name="C64" color="204|204|204" />
+            <visual name="C64" color="#cccccc" />
         </object>
     </category>
 </dataset>

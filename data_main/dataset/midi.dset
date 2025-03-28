@@ -241,1074 +241,1074 @@
   </category>
   <category id="gm_inst">
     <group id="bass">
-      <visual name="Basses" color="38.25|38.25|38.25" />
+      <visual name="Basses" color="#262626" />
     </group>
     <group id="brass">
-      <visual name="Brass" color="239.7|221.85|119.85" />
+      <visual name="Brass" color="#efdd77" />
     </group>
     <group id="chromaticperc">
-      <visual name="Chromatic Percussion" color="209.1|81.6|45.9" />
+      <visual name="Chromatic Percussion" color="#d1512d" />
     </group>
     <group id="ensemble">
-      <visual name="Ensembles" color="104.55|15.3|5.1" />
+      <visual name="Ensembles" color="#680f05" />
     </group>
     <group id="ethnic">
-      <visual name="Ethnic" color="114.75|45.9|38.25" />
+      <visual name="Ethnic" color="#722d26" />
     </group>
     <group id="guitar">
-      <visual name="Guitars" color="214.2|89.25|0" />
+      <visual name="Guitars" color="#d65900" />
     </group>
     <group id="organ">
-      <visual name="Organs" color="193.8|112.2|38.25" />
+      <visual name="Organs" color="#c17026" />
     </group>
     <group id="perc">
-      <visual name="Percussive" color="142.8|145.35|145.35" />
+      <visual name="Percussive" color="#8e9191" />
     </group>
     <group id="piano">
-      <visual name="Pianos" color="25.5|28.05|28.05" />
+      <visual name="Pianos" color="#191c1c" />
     </group>
     <group id="pipe">
-      <visual name="Pipes" color="68.85|68.85|68.85" />
+      <visual name="Pipes" color="#444444" />
     </group>
     <group id="reed">
-      <visual name="Reeds" color="214.2|175.95|104.55" />
+      <visual name="Reeds" color="#d6af68" />
     </group>
     <group id="sfx">
-      <visual name="Sound FXs" color="204|204|204" />
+      <visual name="Sound FXs" color="#cccccc" />
     </group>
     <group id="strings">
-      <visual name="Strings" color="104.55|15.3|5.1" />
+      <visual name="Strings" color="#680f05" />
     </group>
     <group id="synthfx">
-      <visual name="Synth FXs" color="178.5|178.5|178.5" />
+      <visual name="Synth FXs" color="#b2b2b2" />
     </group>
     <group id="synthlead">
-      <visual name="Synth Leads" color="178.5|178.5|178.5" />
+      <visual name="Synth Leads" color="#b2b2b2" />
     </group>
     <group id="synthpad">
-      <visual name="Synth Pads" color="178.5|178.5|178.5" />
+      <visual name="Synth Pads" color="#b2b2b2" />
     </group>
     <object id="0_0_0">
       <data group="piano" />
-      <visual name="Acoustic Grand Piano" color="25.5|28.05|28.05" />
+      <visual name="Acoustic Grand Piano" color="#191c1c" />
     </object>
     <object id="0_0_1">
       <data group="piano" />
-      <visual name="Bright Acoustic Piano" color="25.5|28.05|28.05" />
+      <visual name="Bright Acoustic Piano" color="#191c1c" />
     </object>
     <object id="0_0_10">
       <data group="chromaticperc" />
-      <visual name="Music Box" color="153|147.9|140.25" />
+      <visual name="Music Box" color="#99938c" />
     </object>
     <object id="0_0_100">
       <data group="synthfx" />
-      <visual name="Brightness" color="178.5|178.5|178.5" />
+      <visual name="Brightness" color="#b2b2b2" />
     </object>
     <object id="0_0_101">
       <data group="synthfx" />
-      <visual name="Goblin" color="178.5|178.5|178.5" />
+      <visual name="Goblin" color="#b2b2b2" />
     </object>
     <object id="0_0_102">
       <data group="synthfx" />
-      <visual name="Echo Drops" color="178.5|178.5|178.5" />
+      <visual name="Echo Drops" color="#b2b2b2" />
     </object>
     <object id="0_0_103">
       <data group="synthfx" />
-      <visual name="Star Theme" color="178.5|178.5|178.5" />
+      <visual name="Star Theme" color="#b2b2b2" />
     </object>
     <object id="0_0_104">
       <data group="Ethnic" />
-      <visual name="Sitar" color="102|51|30.6" />
+      <visual name="Sitar" color="#66331e" />
     </object>
     <object id="0_0_105">
       <data group="Ethnic" />
-      <visual name="Banjo" color="127.5|81.6|51" />
+      <visual name="Banjo" color="#7f5133" />
     </object>
     <object id="0_0_106">
       <data group="Ethnic" />
-      <visual name="Shamisen" color="114.75|45.9|38.25" />
+      <visual name="Shamisen" color="#722d26" />
     </object>
     <object id="0_0_107">
       <data group="Ethnic" />
-      <visual name="Koto" color="114.75|40.8|28.05" />
+      <visual name="Koto" color="#72281c" />
     </object>
     <object id="0_0_108">
       <data group="Ethnic" />
-      <visual name="Kalimba" color="175.95|68.85|40.8" />
+      <visual name="Kalimba" color="#af4428" />
     </object>
     <object id="0_0_109">
       <data group="Ethnic" />
-      <visual name="Bag pipe" color="181.05|38.25|38.25" />
+      <visual name="Bag pipe" color="#b52626" />
     </object>
     <object id="0_0_11">
       <data group="chromaticperc" />
-      <visual name="Vibraphone" color="193.8|198.9|209.1" />
+      <visual name="Vibraphone" color="#c1c6d1" />
     </object>
     <object id="0_0_110">
       <data group="Ethnic" />
-      <visual name="Fiddle" color="193.8|76.5|2.55" />
+      <visual name="Fiddle" color="#c14c02" />
     </object>
     <object id="0_0_111">
       <data group="Ethnic" />
-      <visual name="Shanai" color="168.3|40.8|30.6" />
+      <visual name="Shanai" color="#a8281e" />
     </object>
     <object id="0_0_112">
       <data group="perc" />
-      <visual name="Tinkle Bell" color="170.85|114.75|38.25" />
+      <visual name="Tinkle Bell" color="#aa7226" />
     </object>
     <object id="0_0_113">
       <data group="perc" />
-      <visual name="Agogo" color="25.5|25.5|12.75" />
+      <visual name="Agogo" color="#19190c" />
     </object>
     <object id="0_0_114">
       <data group="perc" />
-      <visual name="Steel Drums" color="142.8|145.35|145.35" />
+      <visual name="Steel Drums" color="#8e9191" />
     </object>
     <object id="0_0_115">
       <data group="perc" />
-      <visual name="Woodblock" color="224.4|173.4|112.2" />
+      <visual name="Woodblock" color="#e0ad70" />
     </object>
     <object id="0_0_116">
       <data group="perc" />
-      <visual name="Taiko Drum" color="91.8|17.85|0" />
+      <visual name="Taiko Drum" color="#5b1100" />
     </object>
     <object id="0_0_117">
       <data group="perc" />
-      <visual name="Melodic Tom" color="214.2|196.35|181.05" />
+      <visual name="Melodic Tom" color="#d6c4b5" />
     </object>
     <object id="0_0_118">
       <data group="perc" />
-      <visual name="Synth Drum" color="196.35|10.2|7.65" />
+      <visual name="Synth Drum" color="#c40a07" />
     </object>
     <object id="0_0_119">
       <data group="perc" />
-      <visual name="Reverse Cymbal" color="181.05|155.55|91.8" />
+      <visual name="Reverse Cymbal" color="#b59b5b" />
     </object>
     <object id="0_0_12">
       <data group="chromaticperc" />
-      <visual name="Marimba" color="209.1|81.6|45.9" />
+      <visual name="Marimba" color="#d1512d" />
     </object>
     <object id="0_0_120">
       <data group="perc" />
-      <visual name="Guitar Fret Noise" color="229.5|158.1|89.25" />
+      <visual name="Guitar Fret Noise" color="#e59e59" />
     </object>
     <object id="0_0_121">
       <data group="sfx" />
-      <visual name="Breath Noise" color="239.7|193.8|178.5" />
+      <visual name="Breath Noise" color="#efc1b2" />
     </object>
     <object id="0_0_122">
       <data group="sfx" />
-      <visual name="Seashore" color="58.65|140.25|135.15" />
+      <visual name="Seashore" color="#3a8c87" />
     </object>
     <object id="0_0_123">
       <data group="sfx" />
-      <visual name="Bird Tweet" color="226.95|206.55|45.9" />
+      <visual name="Bird Tweet" color="#e2ce2d" />
     </object>
     <object id="0_0_124">
       <data group="sfx" />
-      <visual name="Telephone Ring" color="53.55|48.45|38.25" />
+      <visual name="Telephone Ring" color="#353026" />
     </object>
     <object id="0_0_125">
       <data group="sfx" />
-      <visual name="Helicopter" color="45.9|66.3|170.85" />
+      <visual name="Helicopter" color="#2d42aa" />
     </object>
     <object id="0_0_126">
       <data group="sfx" />
-      <visual name="Applause" color="239.7|193.8|178.5" />
+      <visual name="Applause" color="#efc1b2" />
     </object>
     <object id="0_0_127">
       <data group="sfx" />
-      <visual name="Gunshot" color="81.6|76.5|68.85" />
+      <visual name="Gunshot" color="#514c44" />
     </object>
     <object id="0_0_13">
       <data group="chromaticperc" />
-      <visual name="Xylophone" color="107.1|48.45|33.15" />
+      <visual name="Xylophone" color="#6b3021" />
     </object>
     <object id="0_0_14">
       <data group="chromaticperc" />
-      <visual name="Tubular Bells" color="135.15|147.9|163.2" />
+      <visual name="Tubular Bells" color="#8793a3" />
     </object>
     <object id="0_0_15">
       <data group="chromaticperc" />
-      <visual name="Dulcimer" color="175.95|86.7|20.4" />
+      <visual name="Dulcimer" color="#af5614" />
     </object>
     <object id="0_0_16">
       <data group="organ" />
-      <visual name="Drawbar Organ" color="193.8|112.2|38.25" />
+      <visual name="Drawbar Organ" color="#c17026" />
     </object>
     <object id="0_0_17">
       <data group="organ" />
-      <visual name="Percussive Organ" color="193.8|112.2|38.25" />
+      <visual name="Percussive Organ" color="#c17026" />
     </object>
     <object id="0_0_18">
       <data group="organ" />
-      <visual name="Rock Organ" color="193.8|112.2|38.25" />
+      <visual name="Rock Organ" color="#c17026" />
     </object>
     <object id="0_0_19">
       <data group="organ" />
-      <visual name="Church Organ" color="140.25|61.2|20.4" />
+      <visual name="Church Organ" color="#8c3d14" />
     </object>
     <object id="0_0_2">
       <data group="piano" />
-      <visual name="Electric Grand Piano" color="25.5|28.05|28.05" />
+      <visual name="Electric Grand Piano" color="#191c1c" />
     </object>
     <object id="0_0_20">
       <data group="organ" />
-      <visual name="Reed Organ" color="112.2|38.25|10.2" />
+      <visual name="Reed Organ" color="#70260a" />
     </object>
     <object id="0_0_21">
       <data group="organ" />
-      <visual name="Accordion" color="68.85|63.75|58.65" />
+      <visual name="Accordion" color="#443f3a" />
     </object>
     <object id="0_0_22">
       <data group="organ" />
-      <visual name="Harmonica" color="178.5|178.5|168.3" />
+      <visual name="Harmonica" color="#b2b2a8" />
     </object>
     <object id="0_0_23">
       <data group="organ" />
-      <visual name="Tango Accordion" color="68.85|63.75|58.65" />
+      <visual name="Tango Accordion" color="#443f3a" />
     </object>
     <object id="0_0_24">
       <data group="guitar" />
-      <visual name="Acoustic Guitar (nylon)" color="214.2|89.25|0" />
+      <visual name="Acoustic Guitar (nylon)" color="#d65900" />
     </object>
     <object id="0_0_25">
       <data group="guitar" />
-      <visual name="Acoustic Guitar (steel)" color="229.5|158.1|89.25" />
+      <visual name="Acoustic Guitar (steel)" color="#e59e59" />
     </object>
     <object id="0_0_26">
       <data group="guitar" />
-      <visual name="Electric Guitar (jazz)" color="0|28.05|84.15" />
+      <visual name="Electric Guitar (jazz)" color="#001c54" />
     </object>
     <object id="0_0_27">
       <data group="guitar" />
-      <visual name="Electric Guitar (clean)" color="0|28.05|84.15" />
+      <visual name="Electric Guitar (clean)" color="#001c54" />
     </object>
     <object id="0_0_28">
       <data group="guitar" />
-      <visual name="Electric Guitar (muted)" color="0|28.05|84.15" />
+      <visual name="Electric Guitar (muted)" color="#001c54" />
     </object>
     <object id="0_0_29">
       <data group="guitar" />
-      <visual name="Overdriven Guitar" color="229.5|158.1|89.25" />
+      <visual name="Overdriven Guitar" color="#e59e59" />
     </object>
     <object id="0_0_3">
       <data group="piano" />
-      <visual name="Honky-tonk Piano" color="153|48.45|17.85" />
+      <visual name="Honky-tonk Piano" color="#993011" />
     </object>
     <object id="0_0_30">
       <data group="guitar" />
-      <visual name="Distortion Guitar" color="229.5|158.1|89.25" />
+      <visual name="Distortion Guitar" color="#e59e59" />
     </object>
     <object id="0_0_31">
       <data group="guitar" />
-      <visual name="Guitar harmonics" color="229.5|158.1|89.25" />
+      <visual name="Guitar harmonics" color="#e59e59" />
     </object>
     <object id="0_0_32">
       <data group="bass" />
-      <visual name="Acoustic Bass" color="38.25|38.25|38.25" />
+      <visual name="Acoustic Bass" color="#262626" />
     </object>
     <object id="0_0_33">
       <data group="bass" />
-      <visual name="Electric Bass (finger)" color="22.95|22.95|22.95" />
+      <visual name="Electric Bass (finger)" color="#161616" />
     </object>
     <object id="0_0_34">
       <data group="bass" />
-      <visual name="Electric Bass (pick)" color="22.95|22.95|22.95" />
+      <visual name="Electric Bass (pick)" color="#161616" />
     </object>
     <object id="0_0_35">
       <data group="bass" />
-      <visual name="Fretless Bass" color="226.95|181.05|135.15" />
+      <visual name="Fretless Bass" color="#e2b587" />
     </object>
     <object id="0_0_36">
       <data group="bass" />
-      <visual name="Slap Bass 1" color="226.95|181.05|135.15" />
+      <visual name="Slap Bass 1" color="#e2b587" />
     </object>
     <object id="0_0_37">
       <data group="bass" />
-      <visual name="Slap Bass 2" color="226.95|181.05|135.15" />
+      <visual name="Slap Bass 2" color="#e2b587" />
     </object>
     <object id="0_0_38">
       <data group="bass" />
-      <visual name="Synth Bass 1" color="43.35|40.8|48.45" />
+      <visual name="Synth Bass 1" color="#2b2830" />
     </object>
     <object id="0_0_39">
       <data group="bass" />
-      <visual name="Synth Bass 2" color="43.35|40.8|48.45" />
+      <visual name="Synth Bass 2" color="#2b2830" />
     </object>
     <object id="0_0_4">
       <data group="piano" />
-      <visual name="Electric Piano 1" color="73.95|71.4|71.4" />
+      <visual name="Electric Piano 1" color="#494747" />
     </object>
     <object id="0_0_40">
       <data group="strings" />
-      <visual name="Violin" color="147.9|81.6|35.7" />
+      <visual name="Violin" color="#935123" />
     </object>
     <object id="0_0_41">
       <data group="strings" />
-      <visual name="Viola" color="191.25|73.95|0" />
+      <visual name="Viola" color="#bf4900" />
     </object>
     <object id="0_0_42">
       <data group="strings" />
-      <visual name="Cello" color="175.95|61.2|2.55" />
+      <visual name="Cello" color="#af3d02" />
     </object>
     <object id="0_0_43">
       <data group="strings" />
-      <visual name="Contrabass" color="160.65|51|20.4" />
+      <visual name="Contrabass" color="#a03314" />
     </object>
     <object id="0_0_44">
       <data group="strings" />
-      <visual name="Tremolo Strings" color="104.55|15.3|5.1" />
+      <visual name="Tremolo Strings" color="#680f05" />
     </object>
     <object id="0_0_45">
       <data group="strings" />
-      <visual name="Pizzicato Strings" color="104.55|15.3|5.1" />
+      <visual name="Pizzicato Strings" color="#680f05" />
     </object>
     <object id="0_0_46">
       <data group="strings" />
-      <visual name="Orchestral Harp" color="147.9|51|30.6" />
+      <visual name="Orchestral Harp" color="#93331e" />
     </object>
     <object id="0_0_47">
       <data group="strings" />
-      <visual name="Timpani" color="206.55|198.9|181.05" />
+      <visual name="Timpani" color="#cec6b5" />
     </object>
     <object id="0_0_48">
       <data group="ensemble" />
-      <visual name="String Ensemble 1" color="104.55|15.3|5.1" />
+      <visual name="String Ensemble 1" color="#680f05" />
     </object>
     <object id="0_0_49">
       <data group="ensemble" />
-      <visual name="String Ensemble 2" color="104.55|15.3|5.1" />
+      <visual name="String Ensemble 2" color="#680f05" />
     </object>
     <object id="0_0_5">
       <data group="piano" />
-      <visual name="Electric Piano 2" color="73.95|71.4|71.4" />
+      <visual name="Electric Piano 2" color="#494747" />
     </object>
     <object id="0_0_50">
       <data group="ensemble" />
-      <visual name="SynthStrings 1" color="107.1|58.65|28.05" />
+      <visual name="SynthStrings 1" color="#6b3a1c" />
     </object>
     <object id="0_0_51">
       <data group="ensemble" />
-      <visual name="SynthStrings 2" color="107.1|58.65|28.05" />
+      <visual name="SynthStrings 2" color="#6b3a1c" />
     </object>
     <object id="0_0_52">
       <data group="ensemble" />
-      <visual name="Choir Aahs" color="239.7|193.8|178.5" />
+      <visual name="Choir Aahs" color="#efc1b2" />
     </object>
     <object id="0_0_53">
       <data group="ensemble" />
-      <visual name="Voice Oohs" color="239.7|193.8|178.5" />
+      <visual name="Voice Oohs" color="#efc1b2" />
     </object>
     <object id="0_0_54">
       <data group="ensemble" />
-      <visual name="Synth Voice" color="58.65|58.65|61.2" />
+      <visual name="Synth Voice" color="#3a3a3d" />
     </object>
     <object id="0_0_55">
       <data group="ensemble" />
-      <visual name="Orchestra Hit" color="153|45.9|17.85" />
+      <visual name="Orchestra Hit" color="#992d11" />
     </object>
     <object id="0_0_56">
       <data group="brass" />
-      <visual name="Trumpet" color="191.25|150.45|68.85" />
+      <visual name="Trumpet" color="#bf9644" />
     </object>
     <object id="0_0_57">
       <data group="brass" />
-      <visual name="Trombone" color="239.7|221.85|119.85" />
+      <visual name="Trombone" color="#efdd77" />
     </object>
     <object id="0_0_58">
       <data group="brass" />
-      <visual name="Tuba" color="216.75|173.4|89.25" />
+      <visual name="Tuba" color="#d8ad59" />
     </object>
     <object id="0_0_59">
       <data group="brass" />
-      <visual name="Muted Trumpet" color="191.25|150.45|68.85" />
+      <visual name="Muted Trumpet" color="#bf9644" />
     </object>
     <object id="0_0_6">
       <data group="piano" />
-      <visual name="Harpsichord" color="145.35|79.05|43.35" />
+      <visual name="Harpsichord" color="#914f2b" />
     </object>
     <object id="0_0_60">
       <data group="brass" />
-      <visual name="French Horn" color="216.75|165.75|73.95" />
+      <visual name="French Horn" color="#d8a549" />
     </object>
     <object id="0_0_61">
       <data group="brass" />
-      <visual name="Brass Section" color="96.9|56.1|15.3" />
+      <visual name="Brass Section" color="#60380f" />
     </object>
     <object id="0_0_62">
       <data group="brass" />
-      <visual name="SynthBrass 1" color="107.1|58.65|28.05" />
+      <visual name="SynthBrass 1" color="#6b3a1c" />
     </object>
     <object id="0_0_63">
       <data group="brass" />
-      <visual name="SynthBrass 2" color="107.1|58.65|28.05" />
+      <visual name="SynthBrass 2" color="#6b3a1c" />
     </object>
     <object id="0_0_64">
       <data group="reed" />
-      <visual name="Soprano Sax" color="214.2|175.95|104.55" />
+      <visual name="Soprano Sax" color="#d6af68" />
     </object>
     <object id="0_0_65">
       <data group="reed" />
-      <visual name="Alto Sax" color="181.05|140.25|56.1" />
+      <visual name="Alto Sax" color="#b58c38" />
     </object>
     <object id="0_0_66">
       <data group="reed" />
-      <visual name="Tenor Sax" color="188.7|140.25|51" />
+      <visual name="Tenor Sax" color="#bc8c33" />
     </object>
     <object id="0_0_67">
       <data group="reed" />
-      <visual name="Baritone Sax" color="224.4|173.4|91.8" />
+      <visual name="Baritone Sax" color="#e0ad5b" />
     </object>
     <object id="0_0_68">
       <data group="reed" />
-      <visual name="Oboe" color="48.45|48.45|51" />
+      <visual name="Oboe" color="#303033" />
     </object>
     <object id="0_0_69">
       <data group="reed" />
-      <visual name="English Horn" color="25.5|22.95|28.05" />
+      <visual name="English Horn" color="#19161c" />
     </object>
     <object id="0_0_7">
       <data group="piano" />
-      <visual name="Clavi" color="150.45|112.2|89.25" />
+      <visual name="Clavi" color="#967059" />
     </object>
     <object id="0_0_70">
       <data group="pipe" />
-      <visual name="Bassoon" color="193.8|38.25|10.2" />
+      <visual name="Bassoon" color="#c1260a" />
     </object>
     <object id="0_0_71">
       <data group="pipe" />
-      <visual name="Clarinet" color="68.85|68.85|68.85" />
+      <visual name="Clarinet" color="#444444" />
     </object>
     <object id="0_0_72">
       <data group="pipe" />
-      <visual name="Piccolo" color="17.85|17.85|25.5" />
+      <visual name="Piccolo" color="#111119" />
     </object>
     <object id="0_0_73">
       <data group="pipe" />
-      <visual name="Flute" color="186.15|183.6|183.6" />
+      <visual name="Flute" color="#bab7b7" />
     </object>
     <object id="0_0_74">
       <data group="pipe" />
-      <visual name="Recorder" color="221.85|181.05|153" />
+      <visual name="Recorder" color="#ddb599" />
     </object>
     <object id="0_0_75">
       <data group="pipe" />
-      <visual name="Pan Flute" color="173.4|137.7|76.5" />
+      <visual name="Pan Flute" color="#ad894c" />
     </object>
     <object id="0_0_76">
       <data group="pipe" />
-      <visual name="Blown Bottle" color="114.75|104.55|2.55" />
+      <visual name="Blown Bottle" color="#726802" />
     </object>
     <object id="0_0_77">
       <data group="pipe" />
-      <visual name="Shakuhachi" color="155.55|127.5|89.25" />
+      <visual name="Shakuhachi" color="#9b7f59" />
     </object>
     <object id="0_0_78">
       <data group="pipe" />
-      <visual name="Whistle" color="214.2|63.75|17.85" />
+      <visual name="Whistle" color="#d63f11" />
     </object>
     <object id="0_0_79">
       <data group="pipe" />
-      <visual name="Ocarina" color="25.5|81.6|188.7" />
+      <visual name="Ocarina" color="#1951bc" />
     </object>
     <object id="0_0_8">
       <data group="chromaticperc" />
-      <visual name="Celesta" color="214.2|173.4|122.4" />
+      <visual name="Celesta" color="#d6ad7a" />
     </object>
     <object id="0_0_80">
       <data group="synthlead" />
-      <visual name="Square Lead" color="178.5|178.5|178.5" />
+      <visual name="Square Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_81">
       <data group="synthlead" />
-      <visual name="Sawtooth Lead" color="178.5|178.5|178.5" />
+      <visual name="Sawtooth Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_82">
       <data group="synthlead" />
-      <visual name="Calliope Lead" color="178.5|178.5|178.5" />
+      <visual name="Calliope Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_83">
       <data group="synthlead" />
-      <visual name="Chiff Lead" color="178.5|178.5|178.5" />
+      <visual name="Chiff Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_84">
       <data group="synthlead" />
-      <visual name="Charang Lead" color="178.5|178.5|178.5" />
+      <visual name="Charang Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_85">
       <data group="synthlead" />
-      <visual name="Voice Lead" color="178.5|178.5|178.5" />
+      <visual name="Voice Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_86">
       <data group="synthlead" />
-      <visual name="Fifths Lead" color="178.5|178.5|178.5" />
+      <visual name="Fifths Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_87">
       <data group="synthlead" />
-      <visual name="Bass + Lead" color="178.5|178.5|178.5" />
+      <visual name="Bass + Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_88">
       <data group="synthpad" />
-      <visual name="New Age Pad" color="178.5|178.5|178.5" />
+      <visual name="New Age Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_89">
       <data group="synthpad" />
-      <visual name="Warm Pad" color="178.5|178.5|178.5" />
+      <visual name="Warm Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_9">
       <data group="chromaticperc" />
-      <visual name="Glockenspiel" color="214.2|216.75|221.85" />
+      <visual name="Glockenspiel" color="#d6d8dd" />
     </object>
     <object id="0_0_90">
       <data group="synthpad" />
-      <visual name="Polysynth Pad" color="178.5|178.5|178.5" />
+      <visual name="Polysynth Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_91">
       <data group="synthpad" />
-      <visual name="Choir Pad" color="178.5|178.5|178.5" />
+      <visual name="Choir Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_92">
       <data group="synthpad" />
-      <visual name="Bowed Pad" color="178.5|178.5|178.5" />
+      <visual name="Bowed Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_93">
       <data group="synthpad" />
-      <visual name="Metallic Pad" color="178.5|178.5|178.5" />
+      <visual name="Metallic Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_94">
       <data group="synthpad" />
-      <visual name="Halo Pad" color="178.5|178.5|178.5" />
+      <visual name="Halo Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_95">
       <data group="synthpad" />
-      <visual name="Sweep Pad" color="178.5|178.5|178.5" />
+      <visual name="Sweep Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_96">
       <data group="synthfx" />
-      <visual name="Ice Rain" color="178.5|178.5|178.5" />
+      <visual name="Ice Rain" color="#b2b2b2" />
     </object>
     <object id="0_0_97">
       <data group="synthfx" />
-      <visual name="Soundtrack" color="178.5|178.5|178.5" />
+      <visual name="Soundtrack" color="#b2b2b2" />
     </object>
     <object id="0_0_98">
       <data group="synthfx" />
-      <visual name="Crystal" color="178.5|178.5|178.5" />
+      <visual name="Crystal" color="#b2b2b2" />
     </object>
     <object id="0_0_99">
       <data group="synthfx" />
-      <visual name="Atmosphere" color="178.5|178.5|178.5" />
+      <visual name="Atmosphere" color="#b2b2b2" />
     </object>
   </category>
   <category id="gs_inst">
     <object id="0_0_0">
       <data group="piano" />
-      <visual name="Piano1" color="25.5|28.05|28.05" />
+      <visual name="Piano1" color="#191c1c" />
     </object>
     <object id="0_0_1">
       <data group="piano" />
-      <visual name="Piano2" color="25.5|28.05|28.05" />
+      <visual name="Piano2" color="#191c1c" />
     </object>
     <object id="0_0_10">
       <data group="chromaticperc" />
-      <visual name="MusicBox" color="153|147.9|140.25" />
+      <visual name="MusicBox" color="#99938c" />
     </object>
     <object id="0_0_100">
       <data group="synthfx" />
-      <visual name="Goblins" color="178.5|178.5|178.5" />
+      <visual name="Goblins" color="#b2b2b2" />
     </object>
     <object id="0_0_101">
       <data group="synthfx" />
-      <visual name="EchoDrops" color="178.5|178.5|178.5" />
+      <visual name="EchoDrops" color="#b2b2b2" />
     </object>
     <object id="0_0_103">
       <data group="synthfx" />
-      <visual name="StarTheme" color="178.5|178.5|178.5" />
+      <visual name="StarTheme" color="#b2b2b2" />
     </object>
     <object id="0_0_104">
       <data group="Ethnic" />
-      <visual name="Sitar" color="102|51|30.6" />
+      <visual name="Sitar" color="#66331e" />
     </object>
     <object id="0_0_105">
       <data group="Ethnic" />
-      <visual name="Banjo" color="127.5|81.6|51" />
+      <visual name="Banjo" color="#7f5133" />
     </object>
     <object id="0_0_106">
       <data group="Ethnic" />
-      <visual name="Shamisen" color="114.75|45.9|38.25" />
+      <visual name="Shamisen" color="#722d26" />
     </object>
     <object id="0_0_107">
       <data group="Ethnic" />
-      <visual name="Koto" color="114.75|40.8|28.05" />
+      <visual name="Koto" color="#72281c" />
     </object>
     <object id="0_0_108">
       <data group="Ethnic" />
-      <visual name="Kalimba" color="175.95|68.85|40.8" />
+      <visual name="Kalimba" color="#af4428" />
     </object>
     <object id="0_0_109">
       <data group="Ethnic" />
-      <visual name="Bagpipe" color="181.05|38.25|38.25" />
+      <visual name="Bagpipe" color="#b52626" />
     </object>
     <object id="0_0_11">
       <data group="chromaticperc" />
-      <visual name="Vibraphone" color="193.8|198.9|209.1" />
+      <visual name="Vibraphone" color="#c1c6d1" />
     </object>
     <object id="0_0_110">
       <data group="Ethnic" />
-      <visual name="Fiddle" color="193.8|76.5|2.55" />
+      <visual name="Fiddle" color="#c14c02" />
     </object>
     <object id="0_0_111">
       <data group="Ethnic" />
-      <visual name="Shanai" color="168.3|40.8|30.6" />
+      <visual name="Shanai" color="#a8281e" />
     </object>
     <object id="0_0_112">
       <data group="perc" />
-      <visual name="TinkleBell" color="170.85|114.75|38.25" />
+      <visual name="TinkleBell" color="#aa7226" />
     </object>
     <object id="0_0_113">
       <data group="perc" />
-      <visual name="Agogo" color="25.5|25.5|12.75" />
+      <visual name="Agogo" color="#19190c" />
     </object>
     <object id="0_0_114">
       <data group="perc" />
-      <visual name="SteelDrums" color="142.8|145.35|145.35" />
+      <visual name="SteelDrums" color="#8e9191" />
     </object>
     <object id="0_0_115">
       <data group="perc" />
-      <visual name="Woodblock" color="224.4|173.4|112.2" />
+      <visual name="Woodblock" color="#e0ad70" />
     </object>
     <object id="0_0_116">
       <data group="perc" />
-      <visual name="TaikoDrum" color="91.8|17.85|0" />
+      <visual name="TaikoDrum" color="#5b1100" />
     </object>
     <object id="0_0_117">
       <data group="perc" />
-      <visual name="MelodicTom1" color="214.2|196.35|181.05" />
+      <visual name="MelodicTom1" color="#d6c4b5" />
     </object>
     <object id="0_0_118">
       <data group="perc" />
-      <visual name="SynthDrum" color="196.35|10.2|7.65" />
+      <visual name="SynthDrum" color="#c40a07" />
     </object>
     <object id="0_0_119">
       <data group="perc" />
-      <visual name="ReverseCymbal" color="181.05|155.55|91.8" />
+      <visual name="ReverseCymbal" color="#b59b5b" />
     </object>
     <object id="0_0_12">
       <data group="chromaticperc" />
-      <visual name="Marimba" color="209.1|81.6|45.9" />
+      <visual name="Marimba" color="#d1512d" />
     </object>
     <object id="0_0_120">
       <data group="perc" />
-      <visual name="GuitarFretNoise" color="229.5|158.1|89.25" />
+      <visual name="GuitarFretNoise" color="#e59e59" />
     </object>
     <object id="0_0_121">
       <data group="sfx" />
-      <visual name="BreathNoise" color="239.7|193.8|178.5" />
+      <visual name="BreathNoise" color="#efc1b2" />
     </object>
     <object id="0_0_122">
       <data group="sfx" />
-      <visual name="Seashore" color="58.65|140.25|135.15" />
+      <visual name="Seashore" color="#3a8c87" />
     </object>
     <object id="0_0_123">
       <data group="sfx" />
-      <visual name="BirdTweet" color="226.95|206.55|45.9" />
+      <visual name="BirdTweet" color="#e2ce2d" />
     </object>
     <object id="0_0_124">
       <data group="sfx" />
-      <visual name="TelephoneRing" color="53.55|48.45|38.25" />
+      <visual name="TelephoneRing" color="#353026" />
     </object>
     <object id="0_0_125">
       <data group="sfx" />
-      <visual name="Helicopter" color="45.9|66.3|170.85" />
+      <visual name="Helicopter" color="#2d42aa" />
     </object>
     <object id="0_0_126">
       <data group="sfx" />
-      <visual name="Applause" color="239.7|193.8|178.5" />
+      <visual name="Applause" color="#efc1b2" />
     </object>
     <object id="0_0_127">
       <data group="sfx" />
-      <visual name="Gunshot" color="81.6|76.5|68.85" />
+      <visual name="Gunshot" color="#514c44" />
     </object>
     <object id="0_0_13">
       <data group="chromaticperc" />
-      <visual name="Xylophone" color="107.1|48.45|33.15" />
+      <visual name="Xylophone" color="#6b3021" />
     </object>
     <object id="0_0_14">
       <data group="chromaticperc" />
-      <visual name="TubularBells" color="135.15|147.9|163.2" />
+      <visual name="TubularBells" color="#8793a3" />
     </object>
     <object id="0_0_15">
       <data group="chromaticperc" />
-      <visual name="Santur" color="175.95|86.7|20.4" />
+      <visual name="Santur" color="#af5614" />
     </object>
     <object id="0_0_16">
       <data group="organ" />
-      <visual name="Organ1" color="193.8|112.2|38.25" />
+      <visual name="Organ1" color="#c17026" />
     </object>
     <object id="0_0_17">
       <data group="organ" />
-      <visual name="Organ2" color="193.8|112.2|38.25" />
+      <visual name="Organ2" color="#c17026" />
     </object>
     <object id="0_0_18">
       <data group="organ" />
-      <visual name="Organ3" color="193.8|112.2|38.25" />
+      <visual name="Organ3" color="#c17026" />
     </object>
     <object id="0_0_19">
       <data group="organ" />
-      <visual name="ChurchOrgan1" color="140.25|61.2|20.4" />
+      <visual name="ChurchOrgan1" color="#8c3d14" />
     </object>
     <object id="0_0_2">
       <data group="piano" />
-      <visual name="Piano3" color="25.5|28.05|28.05" />
+      <visual name="Piano3" color="#191c1c" />
     </object>
     <object id="0_0_20">
       <data group="organ" />
-      <visual name="ReedOrgan" color="112.2|38.25|10.2" />
+      <visual name="ReedOrgan" color="#70260a" />
     </object>
     <object id="0_0_21">
       <data group="organ" />
-      <visual name="Accordion French" color="68.85|63.75|58.65" />
+      <visual name="Accordion French" color="#443f3a" />
     </object>
     <object id="0_0_22">
       <data group="organ" />
-      <visual name="Harmonica" color="178.5|178.5|168.3" />
+      <visual name="Harmonica" color="#b2b2a8" />
     </object>
     <object id="0_0_23">
       <data group="organ" />
-      <visual name="Bandoneon" color="68.85|63.75|58.65" />
+      <visual name="Bandoneon" color="#443f3a" />
     </object>
     <object id="0_0_24">
       <data group="guitar" />
-      <visual name="NylonGuitar" color="214.2|89.25|0" />
+      <visual name="NylonGuitar" color="#d65900" />
     </object>
     <object id="0_0_25">
       <data group="guitar" />
-      <visual name="SteelGuitar" color="229.5|158.1|89.25" />
+      <visual name="SteelGuitar" color="#e59e59" />
     </object>
     <object id="0_0_26">
       <data group="guitar" />
-      <visual name="JazzGuitar" color="0|28.05|84.15" />
+      <visual name="JazzGuitar" color="#001c54" />
     </object>
     <object id="0_0_27">
       <data group="guitar" />
-      <visual name="CleanGuitar" color="0|28.05|84.15" />
+      <visual name="CleanGuitar" color="#001c54" />
     </object>
     <object id="0_0_28">
       <data group="guitar" />
-      <visual name="MutedGuitar" color="0|28.05|84.15" />
+      <visual name="MutedGuitar" color="#001c54" />
     </object>
     <object id="0_0_29">
       <data group="guitar" />
-      <visual name="Overdriven" color="229.5|158.1|89.25" />
+      <visual name="Overdriven" color="#e59e59" />
     </object>
     <object id="0_0_3">
       <data group="piano" />
-      <visual name="Honkytonk" color="153|48.45|17.85" />
+      <visual name="Honkytonk" color="#993011" />
     </object>
     <object id="0_0_30">
       <data group="guitar" />
-      <visual name="Distortion" color="229.5|158.1|89.25" />
+      <visual name="Distortion" color="#e59e59" />
     </object>
     <object id="0_0_31">
       <data group="guitar" />
-      <visual name="GuitarHarmonics" color="229.5|158.1|89.25" />
+      <visual name="GuitarHarmonics" color="#e59e59" />
     </object>
     <object id="0_0_32">
       <data group="bass" />
-      <visual name="AcousticBass" color="38.25|38.25|38.25" />
+      <visual name="AcousticBass" color="#262626" />
     </object>
     <object id="0_0_33">
       <data group="bass" />
-      <visual name="FingerBass" color="22.95|22.95|22.95" />
+      <visual name="FingerBass" color="#161616" />
     </object>
     <object id="0_0_34">
       <data group="bass" />
-      <visual name="PickBass" color="22.95|22.95|22.95" />
+      <visual name="PickBass" color="#161616" />
     </object>
     <object id="0_0_35">
       <data group="bass" />
-      <visual name="FretlessBass" color="226.95|181.05|135.15" />
+      <visual name="FretlessBass" color="#e2b587" />
     </object>
     <object id="0_0_36">
       <data group="bass" />
-      <visual name="SlapBass1" color="226.95|181.05|135.15" />
+      <visual name="SlapBass1" color="#e2b587" />
     </object>
     <object id="0_0_37">
       <data group="bass" />
-      <visual name="SlapBass2" color="226.95|181.05|135.15" />
+      <visual name="SlapBass2" color="#e2b587" />
     </object>
     <object id="0_0_38">
       <data group="bass" />
-      <visual name="SynthBass1" color="43.35|40.8|48.45" />
+      <visual name="SynthBass1" color="#2b2830" />
     </object>
     <object id="0_0_39">
       <data group="bass" />
-      <visual name="SynthBass2" color="43.35|40.8|48.45" />
+      <visual name="SynthBass2" color="#2b2830" />
     </object>
     <object id="0_0_4">
       <data group="piano" />
-      <visual name="ElectricPiano1" color="73.95|71.4|71.4" />
+      <visual name="ElectricPiano1" color="#494747" />
     </object>
     <object id="0_0_40">
       <data group="strings" />
-      <visual name="Violin" color="147.9|81.6|35.7" />
+      <visual name="Violin" color="#935123" />
     </object>
     <object id="0_0_41">
       <data group="strings" />
-      <visual name="Viola" color="191.25|73.95|0" />
+      <visual name="Viola" color="#bf4900" />
     </object>
     <object id="0_0_42">
       <data group="strings" />
-      <visual name="Cello" color="175.95|61.2|2.55" />
+      <visual name="Cello" color="#af3d02" />
     </object>
     <object id="0_0_43">
       <data group="strings" />
-      <visual name="Contrabass" color="160.65|51|20.4" />
+      <visual name="Contrabass" color="#a03314" />
     </object>
     <object id="0_0_44">
       <data group="strings" />
-      <visual name="TremoloStrings" color="104.55|15.3|5.1" />
+      <visual name="TremoloStrings" color="#680f05" />
     </object>
     <object id="0_0_45">
       <data group="strings" />
-      <visual name="PizzicatoStrings" color="104.55|15.3|5.1" />
+      <visual name="PizzicatoStrings" color="#680f05" />
     </object>
     <object id="0_0_46">
       <data group="strings" />
-      <visual name="Harp" color="147.9|51|30.6" />
+      <visual name="Harp" color="#93331e" />
     </object>
     <object id="0_0_47">
       <data group="strings" />
-      <visual name="Timpani" color="206.55|198.9|181.05" />
+      <visual name="Timpani" color="#cec6b5" />
     </object>
     <object id="0_0_48">
       <data group="ensemble" />
-      <visual name="Strings" color="104.55|15.3|5.1" />
+      <visual name="Strings" color="#680f05" />
     </object>
     <object id="0_0_49">
       <data group="ensemble" />
-      <visual name="SlowStrings" color="104.55|15.3|5.1" />
+      <visual name="SlowStrings" color="#680f05" />
     </object>
     <object id="0_0_5">
       <data group="piano" />
-      <visual name="ElectricPiano2" color="73.95|71.4|71.4" />
+      <visual name="ElectricPiano2" color="#494747" />
     </object>
     <object id="0_0_50">
       <data group="ensemble" />
-      <visual name="SynthStrings1" color="107.1|58.65|28.05" />
+      <visual name="SynthStrings1" color="#6b3a1c" />
     </object>
     <object id="0_0_51">
       <data group="ensemble" />
-      <visual name="SynthStrings2" color="107.1|58.65|28.05" />
+      <visual name="SynthStrings2" color="#6b3a1c" />
     </object>
     <object id="0_0_52">
       <data group="ensemble" />
-      <visual name="ChoirAahs" color="239.7|193.8|178.5" />
+      <visual name="ChoirAahs" color="#efc1b2" />
     </object>
     <object id="0_0_53">
       <data group="ensemble" />
-      <visual name="VoiceOohs" color="239.7|193.8|178.5" />
+      <visual name="VoiceOohs" color="#efc1b2" />
     </object>
     <object id="0_0_54">
       <data group="ensemble" />
-      <visual name="SynthVox" color="58.65|58.65|61.2" />
+      <visual name="SynthVox" color="#3a3a3d" />
     </object>
     <object id="0_0_55">
       <data group="ensemble" />
-      <visual name="OrchestraHit" color="153|45.9|17.85" />
+      <visual name="OrchestraHit" color="#992d11" />
     </object>
     <object id="0_0_56">
       <data group="brass" />
-      <visual name="Trumpet" color="191.25|150.45|68.85" />
+      <visual name="Trumpet" color="#bf9644" />
     </object>
     <object id="0_0_57">
       <data group="brass" />
-      <visual name="Trombone" color="239.7|221.85|119.85" />
+      <visual name="Trombone" color="#efdd77" />
     </object>
     <object id="0_0_58">
       <data group="brass" />
-      <visual name="Tuba" color="216.75|173.4|89.25" />
+      <visual name="Tuba" color="#d8ad59" />
     </object>
     <object id="0_0_59">
       <data group="brass" />
-      <visual name="MutedTrumpet" color="191.25|150.45|68.85" />
+      <visual name="MutedTrumpet" color="#bf9644" />
     </object>
     <object id="0_0_6">
       <data group="piano" />
-      <visual name="Harpsichord" color="145.35|79.05|43.35" />
+      <visual name="Harpsichord" color="#914f2b" />
     </object>
     <object id="0_0_60">
       <data group="brass" />
-      <visual name="FrenchHorn" color="216.75|165.75|73.95" />
+      <visual name="FrenchHorn" color="#d8a549" />
     </object>
     <object id="0_0_61">
       <data group="brass" />
-      <visual name="BrassSection" color="96.9|56.1|15.3" />
+      <visual name="BrassSection" color="#60380f" />
     </object>
     <object id="0_0_62">
       <data group="brass" />
-      <visual name="SynthBrass1" color="107.1|58.65|28.05" />
+      <visual name="SynthBrass1" color="#6b3a1c" />
     </object>
     <object id="0_0_63">
       <data group="brass" />
-      <visual name="SynthBrass2" color="107.1|58.65|28.05" />
+      <visual name="SynthBrass2" color="#6b3a1c" />
     </object>
     <object id="0_0_64">
       <data group="reed" />
-      <visual name="Soprano Sax" color="214.2|175.95|104.55" />
+      <visual name="Soprano Sax" color="#d6af68" />
     </object>
     <object id="0_0_65">
       <data group="reed" />
-      <visual name="Alto Sax" color="181.05|140.25|56.1" />
+      <visual name="Alto Sax" color="#b58c38" />
     </object>
     <object id="0_0_66">
       <data group="reed" />
-      <visual name="Tenor Sax" color="188.7|140.25|51" />
+      <visual name="Tenor Sax" color="#bc8c33" />
     </object>
     <object id="0_0_67">
       <data group="reed" />
-      <visual name="Baritone Sax" color="224.4|173.4|91.8" />
+      <visual name="Baritone Sax" color="#e0ad5b" />
     </object>
     <object id="0_0_68">
       <data group="reed" />
-      <visual name="Oboe" color="48.45|48.45|51" />
+      <visual name="Oboe" color="#303033" />
     </object>
     <object id="0_0_69">
       <data group="reed" />
-      <visual name="English Horn" color="25.5|22.95|28.05" />
+      <visual name="English Horn" color="#19161c" />
     </object>
     <object id="0_0_7">
       <data group="piano" />
-      <visual name="Clavi" color="150.45|112.2|89.25" />
+      <visual name="Clavi" color="#967059" />
     </object>
     <object id="0_0_70">
       <data group="pipe" />
-      <visual name="Bassoon" color="193.8|38.25|10.2" />
+      <visual name="Bassoon" color="#c1260a" />
     </object>
     <object id="0_0_71">
       <data group="pipe" />
-      <visual name="Clarinet" color="68.85|68.85|68.85" />
+      <visual name="Clarinet" color="#444444" />
     </object>
     <object id="0_0_72">
       <data group="pipe" />
-      <visual name="Piccolo" color="17.85|17.85|25.5" />
+      <visual name="Piccolo" color="#111119" />
     </object>
     <object id="0_0_73">
       <data group="pipe" />
-      <visual name="Flute" color="186.15|183.6|183.6" />
+      <visual name="Flute" color="#bab7b7" />
     </object>
     <object id="0_0_74">
       <data group="pipe" />
-      <visual name="Recorder" color="221.85|181.05|153" />
+      <visual name="Recorder" color="#ddb599" />
     </object>
     <object id="0_0_75">
       <data group="pipe" />
-      <visual name="Pan Flute" color="173.4|137.7|76.5" />
+      <visual name="Pan Flute" color="#ad894c" />
     </object>
     <object id="0_0_76">
       <data group="pipe" />
-      <visual name="Blown Bottle" color="114.75|104.55|2.55" />
+      <visual name="Blown Bottle" color="#726802" />
     </object>
     <object id="0_0_77">
       <data group="pipe" />
-      <visual name="Shakuhachi" color="155.55|127.5|89.25" />
+      <visual name="Shakuhachi" color="#9b7f59" />
     </object>
     <object id="0_0_78">
       <data group="pipe" />
-      <visual name="Whistle" color="214.2|63.75|17.85" />
+      <visual name="Whistle" color="#d63f11" />
     </object>
     <object id="0_0_79">
       <data group="pipe" />
-      <visual name="Ocarina" color="25.5|81.6|188.7" />
+      <visual name="Ocarina" color="#1951bc" />
     </object>
     <object id="0_0_8">
       <data group="chromaticperc" />
-      <visual name="Celesta" color="214.2|173.4|122.4" />
+      <visual name="Celesta" color="#d6ad7a" />
     </object>
     <object id="0_0_80">
       <data group="synthlead" />
-      <visual name="SquareWave" color="178.5|178.5|178.5" />
+      <visual name="SquareWave" color="#b2b2b2" />
     </object>
     <object id="0_0_81">
       <data group="synthlead" />
-      <visual name="SawWave" color="178.5|178.5|178.5" />
+      <visual name="SawWave" color="#b2b2b2" />
     </object>
     <object id="0_0_82">
       <data group="synthlead" />
-      <visual name="SynthCalliope" color="178.5|178.5|178.5" />
+      <visual name="SynthCalliope" color="#b2b2b2" />
     </object>
     <object id="0_0_83">
       <data group="synthlead" />
-      <visual name="ChifferLead" color="178.5|178.5|178.5" />
+      <visual name="ChifferLead" color="#b2b2b2" />
     </object>
     <object id="0_0_84">
       <data group="synthlead" />
-      <visual name="CharangLead" color="178.5|178.5|178.5" />
+      <visual name="CharangLead" color="#b2b2b2" />
     </object>
     <object id="0_0_85">
       <data group="synthlead" />
-      <visual name="SoloVox" color="178.5|178.5|178.5" />
+      <visual name="SoloVox" color="#b2b2b2" />
     </object>
     <object id="0_0_86">
       <data group="synthlead" />
-      <visual name="5thSawWave" color="178.5|178.5|178.5" />
+      <visual name="5thSawWave" color="#b2b2b2" />
     </object>
     <object id="0_0_87">
       <data group="synthlead" />
-      <visual name="Bass&amp;Lead" color="178.5|178.5|178.5" />
+      <visual name="Bass&amp;Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_88">
       <data group="synthpad" />
-      <visual name="Fantasia" color="178.5|178.5|178.5" />
+      <visual name="Fantasia" color="#b2b2b2" />
     </object>
     <object id="0_0_89">
       <data group="synthpad" />
-      <visual name="WarmPad" color="178.5|178.5|178.5" />
+      <visual name="WarmPad" color="#b2b2b2" />
     </object>
     <object id="0_0_9">
       <data group="chromaticperc" />
-      <visual name="Glockenspiel" color="214.2|216.75|221.85" />
+      <visual name="Glockenspiel" color="#d6d8dd" />
     </object>
     <object id="0_0_90">
       <data group="synthpad" />
-      <visual name="PolySynthPad" color="178.5|178.5|178.5" />
+      <visual name="PolySynthPad" color="#b2b2b2" />
     </object>
     <object id="0_0_91">
       <data group="synthpad" />
-      <visual name="SpaceVoice" color="178.5|178.5|178.5" />
+      <visual name="SpaceVoice" color="#b2b2b2" />
     </object>
     <object id="0_0_92">
       <data group="synthpad" />
-      <visual name="BowedGlass" color="178.5|178.5|178.5" />
+      <visual name="BowedGlass" color="#b2b2b2" />
     </object>
     <object id="0_0_93">
       <data group="synthpad" />
-      <visual name="MetalPad" color="178.5|178.5|178.5" />
+      <visual name="MetalPad" color="#b2b2b2" />
     </object>
     <object id="0_0_94">
       <data group="synthpad" />
-      <visual name="HaloPad" color="178.5|178.5|178.5" />
+      <visual name="HaloPad" color="#b2b2b2" />
     </object>
     <object id="0_0_95">
       <data group="synthpad" />
-      <visual name="SweepPad" color="178.5|178.5|178.5" />
+      <visual name="SweepPad" color="#b2b2b2" />
     </object>
     <object id="0_0_96">
       <data group="synthfx" />
-      <visual name="IceRain" color="178.5|178.5|178.5" />
+      <visual name="IceRain" color="#b2b2b2" />
     </object>
     <object id="0_0_97">
       <data group="synthfx" />
-      <visual name="SoundTrack" color="178.5|178.5|178.5" />
+      <visual name="SoundTrack" color="#b2b2b2" />
     </object>
     <object id="0_0_98">
       <data group="synthfx" />
-      <visual name="Crystal" color="178.5|178.5|178.5" />
+      <visual name="Crystal" color="#b2b2b2" />
     </object>
     <object id="0_0_99">
       <data group="synthfx" />
-      <visual name="Atmosphere" color="178.5|178.5|178.5" />
+      <visual name="Atmosphere" color="#b2b2b2" />
     </object>
     <object id="0_16_0">
       <visual name="Piano1 Dark" />
@@ -1637,515 +1637,515 @@
   <category id="xg_inst">
     <object id="0_0_0">
       <data group="piano" />
-      <visual name="GrandPiano" color="25.5|28.05|28.05" />
+      <visual name="GrandPiano" color="#191c1c" />
     </object>
     <object id="0_0_1">
       <data group="piano" />
-      <visual name="BrightPiano" color="25.5|28.05|28.05" />
+      <visual name="BrightPiano" color="#191c1c" />
     </object>
     <object id="0_0_10">
       <data group="chromaticperc" />
-      <visual name="MusicBox" color="153|147.9|140.25" />
+      <visual name="MusicBox" color="#99938c" />
     </object>
     <object id="0_0_100">
       <data group="synthfx" />
-      <visual name="Brightness" color="178.5|178.5|178.5" />
+      <visual name="Brightness" color="#b2b2b2" />
     </object>
     <object id="0_0_101">
       <data group="synthfx" />
-      <visual name="Goblins" color="178.5|178.5|178.5" />
+      <visual name="Goblins" color="#b2b2b2" />
     </object>
     <object id="0_0_102">
       <data group="synthfx" />
-      <visual name="Echoes" color="178.5|178.5|178.5" />
+      <visual name="Echoes" color="#b2b2b2" />
     </object>
     <object id="0_0_103">
       <data group="synthfx" />
-      <visual name="ScienceFiction(Sci_Fi)" color="178.5|178.5|178.5" />
+      <visual name="ScienceFiction(Sci_Fi)" color="#b2b2b2" />
     </object>
     <object id="0_0_104">
       <data group="Ethnic" />
-      <visual name="Sitar" color="102|51|30.6" />
+      <visual name="Sitar" color="#66331e" />
     </object>
     <object id="0_0_105">
       <data group="Ethnic" />
-      <visual name="Banjo" color="127.5|81.6|51" />
+      <visual name="Banjo" color="#7f5133" />
     </object>
     <object id="0_0_106">
       <data group="Ethnic" />
-      <visual name="Shamisen" color="114.75|45.9|38.25" />
+      <visual name="Shamisen" color="#722d26" />
     </object>
     <object id="0_0_107">
       <data group="Ethnic" />
-      <visual name="Koto" color="114.75|40.8|28.05" />
+      <visual name="Koto" color="#72281c" />
     </object>
     <object id="0_0_108">
       <data group="Ethnic" />
-      <visual name="Kalimba" color="175.95|68.85|40.8" />
+      <visual name="Kalimba" color="#af4428" />
     </object>
     <object id="0_0_109">
       <data group="Ethnic" />
-      <visual name="Bagpipe" color="181.05|38.25|38.25" />
+      <visual name="Bagpipe" color="#b52626" />
     </object>
     <object id="0_0_11">
       <data group="chromaticperc" />
-      <visual name="Vibraphone" color="193.8|198.9|209.1" />
+      <visual name="Vibraphone" color="#c1c6d1" />
     </object>
     <object id="0_0_110">
       <data group="Ethnic" />
-      <visual name="Fiddle" color="193.8|76.5|2.55" />
+      <visual name="Fiddle" color="#c14c02" />
     </object>
     <object id="0_0_111">
       <data group="Ethnic" />
-      <visual name="Shanai" color="168.3|40.8|30.6" />
+      <visual name="Shanai" color="#a8281e" />
     </object>
     <object id="0_0_112">
       <data group="perc" />
-      <visual name="TinkleBell" color="170.85|114.75|38.25" />
+      <visual name="TinkleBell" color="#aa7226" />
     </object>
     <object id="0_0_113">
       <data group="perc" />
-      <visual name="Agogo" color="25.5|25.5|12.75" />
+      <visual name="Agogo" color="#19190c" />
     </object>
     <object id="0_0_114">
       <data group="perc" />
-      <visual name="SteelDrums" color="142.8|145.35|145.35" />
+      <visual name="SteelDrums" color="#8e9191" />
     </object>
     <object id="0_0_115">
       <data group="perc" />
-      <visual name="Woodblock" color="224.4|173.4|112.2" />
+      <visual name="Woodblock" color="#e0ad70" />
     </object>
     <object id="0_0_116">
       <data group="perc" />
-      <visual name="Taiko Drum" color="91.8|17.85|0" />
+      <visual name="Taiko Drum" color="#5b1100" />
     </object>
     <object id="0_0_117">
       <data group="perc" />
-      <visual name="MelodicTom" color="214.2|196.35|181.05" />
+      <visual name="MelodicTom" color="#d6c4b5" />
     </object>
     <object id="0_0_118">
       <data group="perc" />
-      <visual name="SynthDrum" color="196.35|10.2|7.65" />
+      <visual name="SynthDrum" color="#c40a07" />
     </object>
     <object id="0_0_119">
       <data group="perc" />
-      <visual name="ReverseCymbal" color="181.05|155.55|91.8" />
+      <visual name="ReverseCymbal" color="#b59b5b" />
     </object>
     <object id="0_0_12">
       <data group="chromaticperc" />
-      <visual name="Marimba" color="209.1|81.6|45.9" />
+      <visual name="Marimba" color="#d1512d" />
     </object>
     <object id="0_0_120">
       <data group="perc" />
-      <visual name="Guitar Fret Noise" color="229.5|158.1|89.25" />
+      <visual name="Guitar Fret Noise" color="#e59e59" />
     </object>
     <object id="0_0_121">
       <data group="sfx" />
-      <visual name="Breath Noise" color="239.7|193.8|178.5" />
+      <visual name="Breath Noise" color="#efc1b2" />
     </object>
     <object id="0_0_122">
       <data group="sfx" />
-      <visual name="Seashore" color="58.65|140.25|135.15" />
+      <visual name="Seashore" color="#3a8c87" />
     </object>
     <object id="0_0_123">
       <data group="sfx" />
-      <visual name="Bird Tweet" color="226.95|206.55|45.9" />
+      <visual name="Bird Tweet" color="#e2ce2d" />
     </object>
     <object id="0_0_124">
       <data group="sfx" />
-      <visual name="Telephone Ring" color="53.55|48.45|38.25" />
+      <visual name="Telephone Ring" color="#353026" />
     </object>
     <object id="0_0_125">
       <data group="sfx" />
-      <visual name="Helicopter" color="45.9|66.3|170.85" />
+      <visual name="Helicopter" color="#2d42aa" />
     </object>
     <object id="0_0_126">
       <data group="sfx" />
-      <visual name="Applause" color="239.7|193.8|178.5" />
+      <visual name="Applause" color="#efc1b2" />
     </object>
     <object id="0_0_127">
       <data group="sfx" />
-      <visual name="Gunshot" color="81.6|76.5|68.85" />
+      <visual name="Gunshot" color="#514c44" />
     </object>
     <object id="0_0_13">
       <data group="chromaticperc" />
-      <visual name="Xylophone" color="107.1|48.45|33.15" />
+      <visual name="Xylophone" color="#6b3021" />
     </object>
     <object id="0_0_14">
       <data group="chromaticperc" />
-      <visual name="TubularBells" color="135.15|147.9|163.2" />
+      <visual name="TubularBells" color="#8793a3" />
     </object>
     <object id="0_0_15">
       <data group="chromaticperc" />
-      <visual name="Dulcimer" color="175.95|86.7|20.4" />
+      <visual name="Dulcimer" color="#af5614" />
     </object>
     <object id="0_0_16">
       <data group="organ" />
-      <visual name="DrawbarOrgan" color="193.8|112.2|38.25" />
+      <visual name="DrawbarOrgan" color="#c17026" />
     </object>
     <object id="0_0_17">
       <data group="organ" />
-      <visual name="PercussiveOrgan" color="193.8|112.2|38.25" />
+      <visual name="PercussiveOrgan" color="#c17026" />
     </object>
     <object id="0_0_18">
       <data group="organ" />
-      <visual name="Rock Organ" color="193.8|112.2|38.25" />
+      <visual name="Rock Organ" color="#c17026" />
     </object>
     <object id="0_0_19">
       <data group="organ" />
-      <visual name="ChurchOrgan" color="140.25|61.2|20.4" />
+      <visual name="ChurchOrgan" color="#8c3d14" />
     </object>
     <object id="0_0_2">
       <data group="piano" />
-      <visual name="El.GrandPiano" color="25.5|28.05|28.05" />
+      <visual name="El.GrandPiano" color="#191c1c" />
     </object>
     <object id="0_0_20">
       <data group="organ" />
-      <visual name="ReedOrgan" color="112.2|38.25|10.2" />
+      <visual name="ReedOrgan" color="#70260a" />
     </object>
     <object id="0_0_21">
       <data group="organ" />
-      <visual name="Accordion" color="68.85|63.75|58.65" />
+      <visual name="Accordion" color="#443f3a" />
     </object>
     <object id="0_0_22">
       <data group="organ" />
-      <visual name="Harmonica" color="178.5|178.5|168.3" />
+      <visual name="Harmonica" color="#b2b2a8" />
     </object>
     <object id="0_0_23">
       <data group="organ" />
-      <visual name="TangoAccordion" color="68.85|63.75|58.65" />
+      <visual name="TangoAccordion" color="#443f3a" />
     </object>
     <object id="0_0_24">
       <data group="guitar" />
-      <visual name="NylonGuitar" color="214.2|89.25|0" />
+      <visual name="NylonGuitar" color="#d65900" />
     </object>
     <object id="0_0_25">
       <data group="guitar" />
-      <visual name="SteelGuitar" color="229.5|158.1|89.25" />
+      <visual name="SteelGuitar" color="#e59e59" />
     </object>
     <object id="0_0_26">
       <data group="guitar" />
-      <visual name="JazzGuitar" color="0|28.05|84.15" />
+      <visual name="JazzGuitar" color="#001c54" />
     </object>
     <object id="0_0_27">
       <data group="guitar" />
-      <visual name="CleanGuitar" color="0|28.05|84.15" />
+      <visual name="CleanGuitar" color="#001c54" />
     </object>
     <object id="0_0_28">
       <data group="guitar" />
-      <visual name="MutedGuitar" color="0|28.05|84.15" />
+      <visual name="MutedGuitar" color="#001c54" />
     </object>
     <object id="0_0_29">
       <data group="guitar" />
-      <visual name="Overdriven" color="229.5|158.1|89.25" />
+      <visual name="Overdriven" color="#e59e59" />
     </object>
     <object id="0_0_3">
       <data group="piano" />
-      <visual name="Honkytonk" color="153|48.45|17.85" />
+      <visual name="Honkytonk" color="#993011" />
     </object>
     <object id="0_0_30">
       <data group="guitar" />
-      <visual name="DistortionGuitar" color="229.5|158.1|89.25" />
+      <visual name="DistortionGuitar" color="#e59e59" />
     </object>
     <object id="0_0_31">
       <data group="guitar" />
-      <visual name="GuitarHarmonics" color="229.5|158.1|89.25" />
+      <visual name="GuitarHarmonics" color="#e59e59" />
     </object>
     <object id="0_0_32">
       <data group="bass" />
-      <visual name="AcousticBass" color="38.25|38.25|38.25" />
+      <visual name="AcousticBass" color="#262626" />
     </object>
     <object id="0_0_33">
       <data group="bass" />
-      <visual name="FingerBass" color="22.95|22.95|22.95" />
+      <visual name="FingerBass" color="#161616" />
     </object>
     <object id="0_0_34">
       <data group="bass" />
-      <visual name="PickBass" color="22.95|22.95|22.95" />
+      <visual name="PickBass" color="#161616" />
     </object>
     <object id="0_0_35">
       <data group="bass" />
-      <visual name="FretlessBass" color="226.95|181.05|135.15" />
+      <visual name="FretlessBass" color="#e2b587" />
     </object>
     <object id="0_0_36">
       <data group="bass" />
-      <visual name="SlapBass1" color="226.95|181.05|135.15" />
+      <visual name="SlapBass1" color="#e2b587" />
     </object>
     <object id="0_0_37">
       <data group="bass" />
-      <visual name="SlapBass2" color="226.95|181.05|135.15" />
+      <visual name="SlapBass2" color="#e2b587" />
     </object>
     <object id="0_0_38">
       <data group="bass" />
-      <visual name="SynthBass1" color="43.35|40.8|48.45" />
+      <visual name="SynthBass1" color="#2b2830" />
     </object>
     <object id="0_0_39">
       <data group="bass" />
-      <visual name="SynthBass2" color="43.35|40.8|48.45" />
+      <visual name="SynthBass2" color="#2b2830" />
     </object>
     <object id="0_0_4">
       <data group="piano" />
-      <visual name="ElectricPiano1" color="73.95|71.4|71.4" />
+      <visual name="ElectricPiano1" color="#494747" />
     </object>
     <object id="0_0_40">
       <data group="strings" />
-      <visual name="Violin" color="147.9|81.6|35.7" />
+      <visual name="Violin" color="#935123" />
     </object>
     <object id="0_0_41">
       <data group="strings" />
-      <visual name="Viola" color="191.25|73.95|0" />
+      <visual name="Viola" color="#bf4900" />
     </object>
     <object id="0_0_42">
       <data group="strings" />
-      <visual name="Cello" color="175.95|61.2|2.55" />
+      <visual name="Cello" color="#af3d02" />
     </object>
     <object id="0_0_43">
       <data group="strings" />
-      <visual name="Contrabass" color="160.65|51|20.4" />
+      <visual name="Contrabass" color="#a03314" />
     </object>
     <object id="0_0_44">
       <data group="strings" />
-      <visual name="TremoloStrings" color="104.55|15.3|5.1" />
+      <visual name="TremoloStrings" color="#680f05" />
     </object>
     <object id="0_0_45">
       <data group="strings" />
-      <visual name="PizzicatoStrings" color="104.55|15.3|5.1" />
+      <visual name="PizzicatoStrings" color="#680f05" />
     </object>
     <object id="0_0_46">
       <data group="strings" />
-      <visual name="OrchestralHarp" color="147.9|51|30.6" />
+      <visual name="OrchestralHarp" color="#93331e" />
     </object>
     <object id="0_0_47">
       <data group="strings" />
-      <visual name="Timpani" color="206.55|198.9|181.05" />
+      <visual name="Timpani" color="#cec6b5" />
     </object>
     <object id="0_0_48">
       <data group="ensemble" />
-      <visual name="Strings1" color="104.55|15.3|5.1" />
+      <visual name="Strings1" color="#680f05" />
     </object>
     <object id="0_0_49">
       <data group="ensemble" />
-      <visual name="Strings2" color="104.55|15.3|5.1" />
+      <visual name="Strings2" color="#680f05" />
     </object>
     <object id="0_0_5">
       <data group="piano" />
-      <visual name="ElectricPiano2" color="73.95|71.4|71.4" />
+      <visual name="ElectricPiano2" color="#494747" />
     </object>
     <object id="0_0_50">
       <data group="ensemble" />
-      <visual name="SynthStrings1" color="107.1|58.65|28.05" />
+      <visual name="SynthStrings1" color="#6b3a1c" />
     </object>
     <object id="0_0_51">
       <data group="ensemble" />
-      <visual name="SynthStrings2" color="107.1|58.65|28.05" />
+      <visual name="SynthStrings2" color="#6b3a1c" />
     </object>
     <object id="0_0_52">
       <data group="ensemble" />
-      <visual name="ChoirAahs" color="239.7|193.8|178.5" />
+      <visual name="ChoirAahs" color="#efc1b2" />
     </object>
     <object id="0_0_53">
       <data group="ensemble" />
-      <visual name="VoiceOohs" color="239.7|193.8|178.5" />
+      <visual name="VoiceOohs" color="#efc1b2" />
     </object>
     <object id="0_0_54">
       <data group="ensemble" />
-      <visual name="SynthVoice" color="58.65|58.65|61.2" />
+      <visual name="SynthVoice" color="#3a3a3d" />
     </object>
     <object id="0_0_55">
       <data group="ensemble" />
-      <visual name="OrchestraHit" color="153|45.9|17.85" />
+      <visual name="OrchestraHit" color="#992d11" />
     </object>
     <object id="0_0_56">
       <data group="brass" />
-      <visual name="Trumpet" color="191.25|150.45|68.85" />
+      <visual name="Trumpet" color="#bf9644" />
     </object>
     <object id="0_0_57">
       <data group="brass" />
-      <visual name="Trombone" color="239.7|221.85|119.85" />
+      <visual name="Trombone" color="#efdd77" />
     </object>
     <object id="0_0_58">
       <data group="brass" />
-      <visual name="Tuba" color="216.75|173.4|89.25" />
+      <visual name="Tuba" color="#d8ad59" />
     </object>
     <object id="0_0_59">
       <data group="brass" />
-      <visual name="MutedTrumpet" color="191.25|150.45|68.85" />
+      <visual name="MutedTrumpet" color="#bf9644" />
     </object>
     <object id="0_0_6">
       <data group="piano" />
-      <visual name="Harpsichord" color="145.35|79.05|43.35" />
+      <visual name="Harpsichord" color="#914f2b" />
     </object>
     <object id="0_0_60">
       <data group="brass" />
-      <visual name="FrenchHorn" color="216.75|165.75|73.95" />
+      <visual name="FrenchHorn" color="#d8a549" />
     </object>
     <object id="0_0_61">
       <data group="brass" />
-      <visual name="BrassSection" color="96.9|56.1|15.3" />
+      <visual name="BrassSection" color="#60380f" />
     </object>
     <object id="0_0_62">
       <data group="brass" />
-      <visual name="SynthBrass1" color="107.1|58.65|28.05" />
+      <visual name="SynthBrass1" color="#6b3a1c" />
     </object>
     <object id="0_0_63">
       <data group="brass" />
-      <visual name="SynthBrass2" color="107.1|58.65|28.05" />
+      <visual name="SynthBrass2" color="#6b3a1c" />
     </object>
     <object id="0_0_64">
       <data group="reed" />
-      <visual name="SopranoSax" color="214.2|175.95|104.55" />
+      <visual name="SopranoSax" color="#d6af68" />
     </object>
     <object id="0_0_65">
       <data group="reed" />
-      <visual name="Alto Sax" color="181.05|140.25|56.1" />
+      <visual name="Alto Sax" color="#b58c38" />
     </object>
     <object id="0_0_66">
       <data group="reed" />
-      <visual name="TenorSax" color="188.7|140.25|51" />
+      <visual name="TenorSax" color="#bc8c33" />
     </object>
     <object id="0_0_67">
       <data group="reed" />
-      <visual name="BaritoneSax" color="224.4|173.4|91.8" />
+      <visual name="BaritoneSax" color="#e0ad5b" />
     </object>
     <object id="0_0_68">
       <data group="reed" />
-      <visual name="Oboe" color="48.45|48.45|51" />
+      <visual name="Oboe" color="#303033" />
     </object>
     <object id="0_0_69">
       <data group="reed" />
-      <visual name="EnglishHorn" color="25.5|22.95|28.05" />
+      <visual name="EnglishHorn" color="#19161c" />
     </object>
     <object id="0_0_7">
       <data group="piano" />
-      <visual name="Clavinet" color="150.45|112.2|89.25" />
+      <visual name="Clavinet" color="#967059" />
     </object>
     <object id="0_0_70">
       <data group="pipe" />
-      <visual name="Bassoon" color="193.8|38.25|10.2" />
+      <visual name="Bassoon" color="#c1260a" />
     </object>
     <object id="0_0_71">
       <data group="pipe" />
-      <visual name="Clarinet" color="68.85|68.85|68.85" />
+      <visual name="Clarinet" color="#444444" />
     </object>
     <object id="0_0_72">
       <data group="pipe" />
-      <visual name="Piccolo" color="17.85|17.85|25.5" />
+      <visual name="Piccolo" color="#111119" />
     </object>
     <object id="0_0_73">
       <data group="pipe" />
-      <visual name="Flute" color="186.15|183.6|183.6" />
+      <visual name="Flute" color="#bab7b7" />
     </object>
     <object id="0_0_74">
       <data group="pipe" />
-      <visual name="Recorder" color="221.85|181.05|153" />
+      <visual name="Recorder" color="#ddb599" />
     </object>
     <object id="0_0_75">
       <data group="pipe" />
-      <visual name="Pan Flute" color="173.4|137.7|76.5" />
+      <visual name="Pan Flute" color="#ad894c" />
     </object>
     <object id="0_0_76">
       <data group="pipe" />
-      <visual name="Blown Bottle" color="114.75|104.55|2.55" />
+      <visual name="Blown Bottle" color="#726802" />
     </object>
     <object id="0_0_77">
       <data group="pipe" />
-      <visual name="Shakuhachi" color="155.55|127.5|89.25" />
+      <visual name="Shakuhachi" color="#9b7f59" />
     </object>
     <object id="0_0_78">
       <data group="pipe" />
-      <visual name="Whistle" color="214.2|63.75|17.85" />
+      <visual name="Whistle" color="#d63f11" />
     </object>
     <object id="0_0_79">
       <data group="pipe" />
-      <visual name="Ocarina" color="25.5|81.6|188.7" />
+      <visual name="Ocarina" color="#1951bc" />
     </object>
     <object id="0_0_8">
       <data group="chromaticperc" />
-      <visual name="Celesta" color="214.2|173.4|122.4" />
+      <visual name="Celesta" color="#d6ad7a" />
     </object>
     <object id="0_0_80">
       <data group="synthlead" />
-      <visual name="SquareLead" color="178.5|178.5|178.5" />
+      <visual name="SquareLead" color="#b2b2b2" />
     </object>
     <object id="0_0_81">
       <data group="synthlead" />
-      <visual name="SawtoothLead" color="178.5|178.5|178.5" />
+      <visual name="SawtoothLead" color="#b2b2b2" />
     </object>
     <object id="0_0_82">
       <data group="synthlead" />
-      <visual name="CalliopeLead" color="178.5|178.5|178.5" />
+      <visual name="CalliopeLead" color="#b2b2b2" />
     </object>
     <object id="0_0_83">
       <data group="synthlead" />
-      <visual name="ChiffLead" color="178.5|178.5|178.5" />
+      <visual name="ChiffLead" color="#b2b2b2" />
     </object>
     <object id="0_0_84">
       <data group="synthlead" />
-      <visual name="CharangLead" color="178.5|178.5|178.5" />
+      <visual name="CharangLead" color="#b2b2b2" />
     </object>
     <object id="0_0_85">
       <data group="synthlead" />
-      <visual name="VoiceLead" color="178.5|178.5|178.5" />
+      <visual name="VoiceLead" color="#b2b2b2" />
     </object>
     <object id="0_0_86">
       <data group="synthlead" />
-      <visual name="FifthsLead" color="178.5|178.5|178.5" />
+      <visual name="FifthsLead" color="#b2b2b2" />
     </object>
     <object id="0_0_87">
       <data group="synthlead" />
-      <visual name="Bass&amp;Lead" color="178.5|178.5|178.5" />
+      <visual name="Bass&amp;Lead" color="#b2b2b2" />
     </object>
     <object id="0_0_88">
       <data group="synthpad" />
-      <visual name="NewAgePad" color="178.5|178.5|178.5" />
+      <visual name="NewAgePad" color="#b2b2b2" />
     </object>
     <object id="0_0_89">
       <data group="synthpad" />
-      <visual name="Warm Pad" color="178.5|178.5|178.5" />
+      <visual name="Warm Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_9">
       <data group="chromaticperc" />
-      <visual name="Glockenspiel" color="214.2|216.75|221.85" />
+      <visual name="Glockenspiel" color="#d6d8dd" />
     </object>
     <object id="0_0_90">
       <data group="synthpad" />
-      <visual name="PolySynthPad" color="178.5|178.5|178.5" />
+      <visual name="PolySynthPad" color="#b2b2b2" />
     </object>
     <object id="0_0_91">
       <data group="synthpad" />
-      <visual name="ChoirPad" color="178.5|178.5|178.5" />
+      <visual name="ChoirPad" color="#b2b2b2" />
     </object>
     <object id="0_0_92">
       <data group="synthpad" />
-      <visual name="BowedPad" color="178.5|178.5|178.5" />
+      <visual name="BowedPad" color="#b2b2b2" />
     </object>
     <object id="0_0_93">
       <data group="synthpad" />
-      <visual name="MetallicPad" color="178.5|178.5|178.5" />
+      <visual name="MetallicPad" color="#b2b2b2" />
     </object>
     <object id="0_0_94">
       <data group="synthpad" />
-      <visual name="Halo Pad" color="178.5|178.5|178.5" />
+      <visual name="Halo Pad" color="#b2b2b2" />
     </object>
     <object id="0_0_95">
       <data group="synthpad" />
-      <visual name="SweepPad" color="178.5|178.5|178.5" />
+      <visual name="SweepPad" color="#b2b2b2" />
     </object>
     <object id="0_0_96">
       <data group="synthfx" />
-      <visual name="Ice Rain" color="178.5|178.5|178.5" />
+      <visual name="Ice Rain" color="#b2b2b2" />
     </object>
     <object id="0_0_97">
       <data group="synthfx" />
-      <visual name="SoundTrack" color="178.5|178.5|178.5" />
+      <visual name="SoundTrack" color="#b2b2b2" />
     </object>
     <object id="0_0_98">
       <data group="synthfx" />
-      <visual name="Crystal" color="178.5|178.5|178.5" />
+      <visual name="Crystal" color="#b2b2b2" />
     </object>
     <object id="0_0_99">
       <data group="synthfx" />
-      <visual name="Atmosphere" color="178.5|178.5|178.5" />
+      <visual name="Atmosphere" color="#b2b2b2" />
     </object>
     <object id="1_0_0">
       <visual name="Grand Piano KSP" />

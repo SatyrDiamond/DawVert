@@ -59,1631 +59,1631 @@
         </group>
         <object id="13ea64d959b7961">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Mushroom" color="250|216|94" />
+            <visual name="Mushroom" color="#fad85e" />
         </object>
         <object id="13ea650023451cd">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Boat" color="156|163|124" />
+            <visual name="Boat" color="#9ca37c" />
         </object>
         <object id="13ea650ef8016c4">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Star" color="136|21|9" />
+            <visual name="Star" color="#881509" />
         </object>
         <object id="13ea651e6a184c1">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Mario" color="163|58|104" />
+            <visual name="Mario" color="#a33a68" />
         </object>
         <object id="13ea6523abf98ba">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Gameboy" color="159|65|214" />
+            <visual name="Gameboy" color="#9f41d6" />
         </object>
         <object id="13ea65307b87498">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Flower" color="1|72|235" />
+            <visual name="Flower" color="#0148eb" />
         </object>
         <object id="13ea653c50f32ba">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Bird" color="110|231|49" />
+            <visual name="Bird" color="#6ee731" />
         </object>
         <object id="13ea65473be42c2">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Plane" color="119|180|89" />
+            <visual name="Plane" color="#77b459" />
         </object>
         <object id="13ea65508d02e61">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Heart" color="194|40|85" />
+            <visual name="Heart" color="#c22855" />
         </object>
         <object id="13ea655d3c565ca">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Car" color="5|0|141" />
+            <visual name="Car" color="#05008d" />
         </object>
         <object id="13ea656c21c51ff">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Cat" color="112|145|80" />
+            <visual name="Cat" color="#709150" />
         </object>
         <object id="13ea65735f4e536">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Dog" color="170|254|12" />
+            <visual name="Dog" color="#aafe0c" />
         </object>
         <object id="13ea657d6f33b00">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Human" color="76|239|179" />
+            <visual name="Human" color="#4cefb3" />
         </object>
         <object id="13ea65897ae708e">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Pig" color="52|21|102" />
+            <visual name="Pig" color="#341566" />
         </object>
         <object id="13ea65944fccc3b">
             <data group="13ea64d7cc9f13e" />
-            <visual name="Yoshi" color="219|7|179" />
+            <visual name="Yoshi" color="#db07b3" />
         </object>
         <object id="13fe58b5620ff50">
             <data group="13fa5152eed0672" />
-            <visual name="Test" color="203|182|158" />
+            <visual name="Test" color="#cbb69e" />
         </object>
         <object id="13ffdf25b5b5fac">
             <data group="13fefaef0ef730a" />
             <midi patch="69" />
-            <visual name="English Horn" color="31|124|252" />
+            <visual name="English Horn" color="#1f7cfc" />
         </object>
         <object id="140036d2f84ca37">
             <data group="13fefadfeada756" />
             <midi />
-            <visual name="Stereo Grand Mellow" color="117|56|85" />
+            <visual name="Stereo Grand Mellow" color="#753855" />
         </object>
         <object id="1400beb4ebdff0d">
             <data group="13fa5152eed0672" />
-            <visual name="+1 Saw Decline" color="246|217|167" />
+            <visual name="+1 Saw Decline" color="#f6d9a7" />
         </object>
         <object id="1400bf3a537253f">
             <data group="13fefadfeada756" />
             <midi />
-            <visual name="Stereo Grand Bright" color="117|56|85" />
+            <visual name="Stereo Grand Bright" color="#753855" />
         </object>
         <object id="1400c30196b3a17">
             <data group="13fefadfeada756" />
             <midi patch="4" />
-            <visual name="CP-80 EP" color="189|123|201" />
+            <visual name="CP-80 EP" color="#bd7bc9" />
         </object>
         <object id="1404497beed1043">
             <data group="13fa5152eed0672" />
-            <visual name="5th Saw Wave" color="160|195|86" />
+            <visual name="5th Saw Wave" color="#a0c356" />
         </object>
         <object id="140449e30f9a5fc">
             <data group="13fa5152eed0672" />
-            <visual name="+2 Triangle" color="63|190|170" />
+            <visual name="+2 Triangle" color="#3fbeaa" />
         </object>
         <object id="14044b8f1bd29e5">
             <data group="13fa5152eed0672" />
-            <visual name="+5 Sine" color="118|194|174" />
+            <visual name="+5 Sine" color="#76c2ae" />
         </object>
         <object id="14044bfc5544e9a">
             <data group="13fa5152eed0672" />
-            <visual name="Pulse Width 75%" color="226|245|105" />
+            <visual name="Pulse Width 75%" color="#e2f569" />
         </object>
         <object id="14044c30070941d">
             <data group="13fa5152eed0672" />
-            <visual name="Pulse Width 88%" color="226|245|105" />
+            <visual name="Pulse Width 88%" color="#e2f569" />
         </object>
         <object id="14044ca3104a352">
             <data group="13fa5152eed0672" />
-            <visual name="Saw Decline" color="246|217|167" />
+            <visual name="Saw Decline" color="#f6d9a7" />
         </object>
         <object id="14044cfa4fa3c0f">
             <data group="13fa5152eed0672" />
-            <visual name="Saw Incline" color="246|217|167" />
+            <visual name="Saw Incline" color="#f6d9a7" />
         </object>
         <object id="14044d4755823ae">
             <data group="13fa5152eed0672" />
-            <visual name="Sine" color="246|217|167" />
+            <visual name="Sine" color="#f6d9a7" />
         </object>
         <object id="14044d9be420281">
             <data group="13fa5152eed0672" />
-            <visual name="Square" color="246|217|167" />
+            <visual name="Square" color="#f6d9a7" />
         </object>
         <object id="140452c1623e517">
             <data group="13fefadfeada756" />
             <midi />
-            <visual name="Stereo Grand Mellow (Filtered)" color="117|56|85" />
+            <visual name="Stereo Grand Mellow (Filtered)" color="#753855" />
         </object>
         <object id="14045897efd790a">
             <data group="13fefae9c8106d7" />
-            <visual name="12-String Guitar #1" color="7|25|206" />
+            <visual name="12-String Guitar #1" color="#0719ce" />
         </object>
         <object id="140458e6577689d">
             <data group="13fefae9c8106d7" />
-            <visual name="12-String Guitar #2" color="7|25|206" />
+            <visual name="12-String Guitar #2" color="#0719ce" />
         </object>
         <object id="1404592f2cad77e">
             <data group="13fefae9c8106d7" />
             <midi patch="25" />
-            <visual name="Steel Guitar" color="42|88|242" />
+            <visual name="Steel Guitar" color="#2a58f2" />
         </object>
         <object id="14045afb227c5f8">
             <data group="13fefae8e3bf2c5" />
             <midi patch="21" />
-            <visual name="Accordian #1" color="6|124|87" />
+            <visual name="Accordian #1" color="#067c57" />
         </object>
         <object id="14045ca94365e6a">
             <data group="13fefae8e3bf2c5" />
             <midi patch="21" />
-            <visual name="Accordian #2" color="20|239|61" />
+            <visual name="Accordian #2" color="#14ef3d" />
         </object>
         <object id="14045d927104a8b">
             <data group="13fefae8e3bf2c5" />
             <midi patch="21" />
-            <visual name="Accordian #2 (delay #1)" color="20|239|61" />
+            <visual name="Accordian #2 (delay #1)" color="#14ef3d" />
         </object>
         <object id="14045d941c0d36e">
             <data group="13fefae8e3bf2c5" />
             <midi patch="21" />
-            <visual name="Accordian #2 (delay #2)" color="20|239|61" />
+            <visual name="Accordian #2 (delay #2)" color="#14ef3d" />
         </object>
         <object id="14045f14af02ebc">
             <data group="13fefaead755592" />
             <midi patch="32" />
-            <visual name="Acoustic Bass" color="173|66|200" />
+            <visual name="Acoustic Bass" color="#ad42c8" />
         </object>
         <object id="14045f96db0ca05">
             <data group="13fefaf81a1a3cf" />
             <midi patch="113" />
-            <visual name="Agogo" color="45|156|176" />
+            <visual name="Agogo" color="#2d9cb0" />
         </object>
         <object id="1404653b696a0f8">
             <data group="13fefaef0ef730a" />
             <midi patch="65" />
-            <visual name="Alto Saxophone" color="121|175|140" />
+            <visual name="Alto Saxophone" color="#79af8c" />
         </object>
         <object id="14046670b26482a">
             <data group="13fefaf92a6b73f" />
             <midi patch="126" />
-            <visual name="Applause" color="164|113|73" />
+            <visual name="Applause" color="#a47149" />
         </object>
         <object id="140466b1f4b501b">
             <data group="13fefae9c8106d7" />
             <midi patch="24" />
-            <visual name="Nylon Guitar" color="13|143|207" />
+            <visual name="Nylon Guitar" color="#0d8fcf" />
         </object>
         <object id="140467b9b21cf20">
             <data group="13fefaf92a6b73f" />
             <midi patch="99" />
-            <visual name="Atmosphere" color="13|143|207" />
+            <visual name="Atmosphere" color="#0d8fcf" />
         </object>
         <object id="14046cb2d4937a7">
             <data group="13fefaf5f19a562" />
             <midi patch="109" />
-            <visual name="Bagpipe" color="120|156|70" />
+            <visual name="Bagpipe" color="#789c46" />
         </object>
         <object id="14046d14a14b212">
             <data group="13fefaf5f19a562" />
-            <visual name="Chanter Ax1" color="120|156|70" />
+            <visual name="Chanter Ax1" color="#789c46" />
         </object>
         <object id="14046dbc2c825bb">
             <data group="13fefae8e3bf2c5" />
-            <visual name="Bandoneon #1" color="6|124|87" />
+            <visual name="Bandoneon #1" color="#067c57" />
         </object>
         <object id="14046e2768d3c30">
             <data group="13fefae8e3bf2c5" />
-            <visual name="Bandoneon #2" color="6|124|87" />
+            <visual name="Bandoneon #2" color="#067c57" />
         </object>
         <object id="14046ebd96aa50c">
             <data group="13fefaf5f19a562" />
             <midi patch="105" />
-            <visual name="Banjo" color="19|194|19" />
+            <visual name="Banjo" color="#13c213" />
         </object>
         <object id="14046f1c0077548">
             <data group="13fefaef0ef730a" />
             <midi patch="67" />
-            <visual name="Baritone Saxophone" color="43|214|76" />
+            <visual name="Baritone Saxophone" color="#2bd64c" />
         </object>
         <object id="1404701eedadf1f">
             <data group="13fa5152eed0672" />
-            <visual name="Bass &amp; Lead" color="226|245|105" />
+            <visual name="Bass &amp; Lead" color="#e2f569" />
         </object>
         <object id="140470f6fd0cf37">
             <data group="13fefaef0ef730a" />
             <midi patch="70" />
-            <visual name="Bassoon" color="217|153|144" />
+            <visual name="Bassoon" color="#d99990" />
         </object>
         <object id="1404725ed4d3a14">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Filter Snap" color="251|201|97" />
+            <visual name="Filter Snap" color="#fbc961" />
         </object>
         <object id="1404729d952ecef">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Slap" color="243|21|210" />
+            <visual name="Slap" color="#f315d2" />
         </object>
         <object id="140472afe708028">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Stick" color="125|40|208" />
+            <visual name="Stick" color="#7d28d0" />
         </object>
         <object id="140472c2ce418a9">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Square Click" color="80|134|38" />
+            <visual name="Square Click" color="#508626" />
         </object>
         <object id="140472f8ed97181">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Click" color="171|200|3" />
+            <visual name="TR-808 Click" color="#abc803" />
         </object>
         <object id="14047321e887774">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Carillon" color="85|13|133" />
+            <visual name="Carillon" color="#550d85" />
         </object>
         <object id="14047366756fbf7">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Tambourine" color="107|37|162" />
+            <visual name="Tambourine" color="#6b25a2" />
         </object>
         <object id="140473ebda03301">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Vibra Slap" color="220|46|45" />
+            <visual name="Vibra Slap" color="#dc2e2d" />
         </object>
         <object id="14047408b4ecdd0">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Bongo Rim" color="153|106|171" />
+            <visual name="Bongo Rim" color="#996aab" />
         </object>
         <object id="14047430fb92650">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Bongo Tone" color="182|31|178" />
+            <visual name="Bongo Tone" color="#b61fb2" />
         </object>
         <object id="14047451667bfed">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Conga High Muted" color="146|76|197" />
+            <visual name="Conga High Muted" color="#924cc5" />
         </object>
         <object id="14047477ab7c283">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Conga High Open" color="146|76|197" />
+            <visual name="Conga High Open" color="#924cc5" />
         </object>
         <object id="140474882f57a57">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Tumba Low" color="236|44|237" />
+            <visual name="Tumba Low" color="#ec2ced" />
         </object>
         <object id="140474abaa4e90d">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Timbale Rim" color="183|220|202" />
+            <visual name="Timbale Rim" color="#b7dcca" />
         </object>
         <object id="140474c2f8c9a98">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Timbale Low" color="64|208|238" />
+            <visual name="Timbale Low" color="#40d0ee" />
         </object>
         <object id="140474d6b6b3717">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Cabasa" color="237|232|92" />
+            <visual name="Cabasa" color="#ede85c" />
         </object>
         <object id="140474f20c5165b">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Maracas" color="70|178|174" />
+            <visual name="Maracas" color="#46b2ae" />
         </object>
         <object id="1404752648580a1">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Whistle Short" color="70|178|174" />
+            <visual name="Whistle Short" color="#46b2ae" />
         </object>
         <object id="1404754ec788e6b">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Whistle Long" color="70|178|174" />
+            <visual name="Whistle Long" color="#46b2ae" />
         </object>
         <object id="1404755b7f39ab5">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Guiro Short" color="61|252|124" />
+            <visual name="Guiro Short" color="#3dfc7c" />
         </object>
         <object id="140475716ef6d9b">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Guiro Long" color="61|252|124" />
+            <visual name="Guiro Long" color="#3dfc7c" />
         </object>
         <object id="1404757b17e25b7">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Claves" color="156|97|27" />
+            <visual name="Claves" color="#9c611b" />
         </object>
         <object id="140475936a51de8">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Cuita mute" color="156|97|27" />
+            <visual name="Cuita mute" color="#9c611b" />
         </object>
         <object id="140475a3d2eb58f">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Cuita open" color="156|97|27" />
+            <visual name="Cuita open" color="#9c611b" />
         </object>
         <object id="140475c3f1aaf47">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Triangle (Perc) #1" color="46|194|246" />
+            <visual name="Triangle (Perc) #1" color="#2ec2f6" />
         </object>
         <object id="1404766dd880958">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Triangle (Perc) #2" color="46|194|246" />
+            <visual name="Triangle (Perc) #2" color="#2ec2f6" />
         </object>
         <object id="1404768ca2f0a44">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Shaker" color="237|232|92" />
+            <visual name="Shaker" color="#ede85c" />
         </object>
         <object id="140476976de45b9">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Jingle Bell" color="237|232|92" />
+            <visual name="Jingle Bell" color="#ede85c" />
         </object>
         <object id="140476b48edd5a3">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Castanets" color="157|178|105" />
+            <visual name="Castanets" color="#9db269" />
         </object>
         <object id="140476cb6c09dce">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Surdo Mute" color="104|239|132" />
+            <visual name="Surdo Mute" color="#68ef84" />
         </object>
         <object id="140476db2330170">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Surdo Open" color="104|239|132" />
+            <visual name="Surdo Open" color="#68ef84" />
         </object>
         <object id="1404771f900474a">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Chinese Cymbal" color="166|61|15" />
+            <visual name="Chinese Cymbal" color="#a63d0f" />
         </object>
         <object id="140477b90aeb438">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Cowbell" color="72|45|152" />
+            <visual name="Cowbell" color="#482d98" />
         </object>
         <object id="1404781b662de9b">
             <data group="13fefae17715623" />
             <midi patch="14" />
-            <visual name="Tubular Bells" color="164|93|157" />
+            <visual name="Tubular Bells" color="#a45d9d" />
         </object>
         <object id="1404787fe10f490">
             <data group="13fefae17715623" />
-            <visual name="Bell Tower" color="99|80|70" />
+            <visual name="Bell Tower" color="#635046" />
         </object>
         <object id="14047952e9e339f">
             <data group="13fefaf92a6b73f" />
             <midi patch="123" />
-            <visual name="Bird 2" color="245|126|172" />
+            <visual name="Bird 2" color="#f57eac" />
         </object>
         <object id="140479c871557df">
             <data group="13fefaf92a6b73f" />
             <midi patch="123" />
-            <visual name="Bird" color="195|193|169" />
+            <visual name="Bird" color="#c3c1a9" />
         </object>
         <object id="14047a1889f68e0">
             <data group="13fefaf08896f96" />
             <midi patch="76" />
-            <visual name="Bottle Blow #1" color="146|95|190" />
+            <visual name="Bottle Blow #1" color="#925fbe" />
         </object>
         <object id="14047a2af882b75">
             <data group="13fefaf08896f96" />
             <midi patch="76" />
-            <visual name="Bottle Blow #2" color="146|95|190" />
+            <visual name="Bottle Blow #2" color="#925fbe" />
         </object>
         <object id="14047b2caff04c2">
             <data group="13fefaf08896f96" />
             <midi patch="76" />
-            <visual name="Bottle Blow #3" color="146|95|190" />
+            <visual name="Bottle Blow #3" color="#925fbe" />
         </object>
         <object id="14047b61d1c03a6">
             <data group="13fefaf2d917d71" />
-            <visual name="Bowed Glass" color="49|210|215" />
+            <visual name="Bowed Glass" color="#31d2d7" />
         </object>
         <object id="14047bc60977b8a">
             <data group="13fefaee40bacaf" />
             <midi patch="61" />
-            <visual name="Brass Section" color="18|14|14" />
+            <visual name="Brass Section" color="#120e0e" />
         </object>
         <object id="1404bb3687c8d65">
             <data group="13fefaf92a6b73f" />
             <midi patch="121" />
-            <visual name="Breath Noise" color="142|212|148" />
+            <visual name="Breath Noise" color="#8ed494" />
         </object>
         <object id="1404bb6bd60a6f9">
             <data group="13fefaf2d917d71" />
-            <visual name="Bright Saw Stack" color="231|40|8" />
+            <visual name="Bright Saw Stack" color="#e72808" />
         </object>
         <object id="14064c5dcabe37f">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Brush Snare" color="23|252|129" />
+            <visual name="Brush Snare" color="#17fc81" />
         </object>
         <object id="14064c770578b20">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Brush Swirl" color="159|114|71" />
+            <visual name="Brush Swirl" color="#9f7247" />
         </object>
         <object id="14064c833ff073f">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Jazz Snare Soft #1" color="235|6|100" />
+            <visual name="Jazz Snare Soft #1" color="#eb0664" />
         </object>
         <object id="14064ca40214935">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Snare #2" color="61|233|143" />
+            <visual name="Standard Snare #2" color="#3de98f" />
         </object>
         <object id="14064d2136bcca4">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Tom #1" color="64|133|116" />
+            <visual name="Standard Tom #1" color="#408574" />
         </object>
         <object id="14064d4b3f0e8bb">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Tom #2" color="65|65|135" />
+            <visual name="Standard Tom #2" color="#414187" />
         </object>
         <object id="14064d5cb18ca42">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Tom #3" color="71|231|6" />
+            <visual name="Standard Tom #3" color="#47e706" />
         </object>
         <object id="14064d6446224de">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Tom #4" color="81|118|129" />
+            <visual name="Standard Tom #4" color="#517681" />
         </object>
         <object id="14064d6bb59017e">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Tom #5" color="179|220|133" />
+            <visual name="Standard Tom #5" color="#b3dc85" />
         </object>
         <object id="14064d7a437d494">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Brushed Tom" color="149|253|23" />
+            <visual name="Brushed Tom" color="#95fd17" />
         </object>
         <object id="14064da19e0df22">
             <data group="13fefaf92a6b73f" />
-            <visual name="Bubbles" color="62|96|19" />
+            <visual name="Bubbles" color="#3e6013" />
         </object>
         <object id="14064dc46d67591">
             <data group="13fefaf92a6b73f" />
-            <visual name="Siren" color="207|81|249" />
+            <visual name="Siren" color="#cf51f9" />
         </object>
         <object id="14064dcfedd285f">
             <data group="13fefaf92a6b73f" />
-            <visual name="Siren (filtered)" color="207|81|249" />
+            <visual name="Siren (filtered)" color="#cf51f9" />
         </object>
         <object id="14064dde6d57eae">
             <data group="13fefaf92a6b73f" />
-            <visual name="White Noise" color="221|61|141" />
+            <visual name="White Noise" color="#dd3d8d" />
         </object>
         <object id="14064e4020b2612">
             <data group="13fefaf92a6b73f" />
-            <visual name="Car Crash" color="106|49|222" />
+            <visual name="Car Crash" color="#6a31de" />
         </object>
         <object id="14064e41c83a913">
             <data group="13fefaf92a6b73f" />
-            <visual name="Car Engine" color="237|129|87" />
+            <visual name="Car Engine" color="#ed8157" />
         </object>
         <object id="14064e42ee92ed5">
             <data group="13fefaf92a6b73f" />
-            <visual name="Car Pass (Right)" color="100|79|186" />
+            <visual name="Car Pass (Right)" color="#644fba" />
         </object>
         <object id="14064e43a8209b7">
             <data group="13fefaf92a6b73f" />
-            <visual name="Car Stop" color="52|20|180" />
+            <visual name="Car Stop" color="#3414b4" />
         </object>
         <object id="14064e91ce91884">
             <data group="13fefaf81a1a3cf" />
-            <visual name="Carillon" color="99|144|47" />
+            <visual name="Carillon" color="#63902f" />
         </object>
         <object id="14064ec1aaa1160">
             <data group="13fefaf92a6b73f" />
-            <visual name="Car Pass (Left)" color="100|79|186" />
+            <visual name="Car Pass (Left)" color="#644fba" />
         </object>
         <object id="14064f4e8251dd4">
             <data group="13fefae17715623" />
-            <visual name="Celeste" color="43|185|179" />
+            <visual name="Celeste" color="#2bb9b3" />
         </object>
         <object id="140650acdd139a6">
             <data group="13fefaebab36b90" />
             <midi patch="42" />
-            <visual name="Cello" color="219|178|129" />
+            <visual name="Cello" color="#dbb281" />
         </object>
         <object id="14065177d26e844">
             <data group="13fefaf08896f96" />
             <midi patch="84" />
-            <visual name="Chiffer Lead" color="60|7|29" />
+            <visual name="Chiffer Lead" color="#3c071d" />
         </object>
         <object id="14065194f5994b1">
             <data group="13fefaf92a6b73f" />
-            <visual name="Chimes" color="134|47|60" />
+            <visual name="Chimes" color="#862f3c" />
         </object>
         <object id="140651e2461f340">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Triangle" color="98|161|232" />
+            <visual name="Triangle" color="#62a1e8" />
         </object>
         <object id="140652018132e71">
             <data group="13fefaf81a1a3cf" />
-            <visual name="Cold Glass Wave" color="71|74|237" />
+            <visual name="Cold Glass Wave" color="#474aed" />
         </object>
         <object id="1406528e3112e8f">
             <data group="13fefae17715623" />
-            <visual name="Church Bells" color="164|93|157" />
+            <visual name="Church Bells" color="#a45d9d" />
         </object>
         <object id="140652c17f86011">
             <data group="13fefaef0ef730a" />
             <midi patch="71" />
-            <visual name="Clarinet" color="95|51|112" />
+            <visual name="Clarinet" color="#5f3370" />
         </object>
         <object id="140653382cf3774">
             <data group="13fefadfeada756" />
             <midi patch="7" />
-            <visual name="Clavinet" color="187|191|80" />
+            <visual name="Clavinet" color="#bbbf50" />
         </object>
         <object id="140653bf1f90cb3">
             <data group="13fefae9c8106d7" />
             <midi patch="27" />
-            <visual name="Clean Guitar" color="198|47|190" />
+            <visual name="Clean Guitar" color="#c62fbe" />
         </object>
         <object id="140654735d4e2cf">
             <data group="13fefaebab36b90" />
-            <visual name="Cello Attack" color="92|228|233" />
+            <visual name="Cello Attack" color="#5ce4e9" />
         </object>
         <object id="1406551fed4af57">
             <data group="13fefaf81a1a3cf" />
             <midi patch="116" />
-            <visual name="Taiko Drum" color="207|115|59" />
+            <visual name="Taiko Drum" color="#cf733b" />
         </object>
         <object id="1406553ae78ef8b">
             <data group="13fefaebab36b90" />
             <midi patch="47" />
-            <visual name="Timpani Hard" color="233|95|151" />
+            <visual name="Timpani Hard" color="#e95f97" />
         </object>
         <object id="140655463b030c1">
             <data group="13fefaebab36b90" />
             <midi patch="47" />
-            <visual name="Timpani Soft" color="147|147|192" />
+            <visual name="Timpani Soft" color="#9393c0" />
         </object>
         <object id="1406556c68407a8">
             <data group="13fefaed4414987" />
-            <visual name="Concert Choir" color="158|170|15" />
+            <visual name="Concert Choir" color="#9eaa0f" />
         </object>
         <object id="1406575784e2958">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Crash Cymbal" color="74|242|53" />
+            <visual name="Crash Cymbal" color="#4af235" />
         </object>
         <object id="1406575fd0e7e97">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Ride Cymbal" color="207|144|113" />
+            <visual name="Ride Cymbal" color="#cf9071" />
         </object>
         <object id="140657cc86bf0d5">
             <data group="13fefaf4541a20a" />
             <midi patch="98" />
-            <visual name="Crystal #1" color="189|4|172" />
+            <visual name="Crystal #1" color="#bd04ac" />
         </object>
         <object id="140657ef4225cc5">
             <data group="13fefaf4541a20a" />
             <midi patch="98" />
-            <visual name="Crystal #2" color="144|214|231" />
+            <visual name="Crystal #2" color="#90d6e7" />
         </object>
         <object id="1406581ca2d28bd">
             <data group="13fefaf92a6b73f" />
-            <visual name="Cut Noise" color="23|47|0" />
+            <visual name="Cut Noise" color="#172f00" />
         </object>
         <object id="1406586a04a54e4">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-909 Kick" color="184|28|223" />
+            <visual name="TR-909 Kick" color="#b81cdf" />
         </object>
         <object id="1406589f8958551">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Dance Snare" color="204|77|196" />
+            <visual name="Dance Snare" color="#cc4dc4" />
         </object>
         <object id="140658b42091c7e">
             <data group="13fefae9c8106d7" />
             <midi patch="30" />
-            <visual name="Distortion Guitar #1" color="2|20|28" />
+            <visual name="Distortion Guitar #1" color="#02141c" />
         </object>
         <object id="140659995a5f681">
             <data group="13fefae9c8106d7" />
             <midi patch="30" />
-            <visual name="Distortion Guitar #2" color="48|134|185" />
+            <visual name="Distortion Guitar #2" color="#3086b9" />
         </object>
         <object id="140659eb4543138">
             <data group="13fefaf2d917d71" />
-            <visual name="Doctor Solo #1" color="246|217|167" />
+            <visual name="Doctor Solo #1" color="#f6d9a7" />
         </object>
         <object id="14065a1268be387">
             <data group="13fefaf2d917d71" />
-            <visual name="Doctor Solo #2" color="226|244|253" />
+            <visual name="Doctor Solo #2" color="#e2f4fd" />
         </object>
         <object id="14065a3cb524d93">
             <data group="13fefaf92a6b73f" />
-            <visual name="Dog" color="87|95|233" />
+            <visual name="Dog" color="#575fe9" />
         </object>
         <object id="14065a4cc385b0b">
             <data group="13fefaf92a6b73f" />
-            <visual name="Door" color="177|187|52" />
+            <visual name="Door" color="#b1bb34" />
         </object>
         <object id="14065a5cca83eec">
             <data group="13fefaf92a6b73f" />
-            <visual name="Door Creaking" color="84|41|156" />
+            <visual name="Door Creaking" color="#54299c" />
         </object>
         <object id="14065a70c3807c1">
             <data group="13fefaead755592" />
-            <visual name="Double Bass" color="51|145|104" />
+            <visual name="Double Bass" color="#339168" />
         </object>
         <object id="140687de4239fe8">
             <data group="13fefae17715623" />
             <midi patch="15" />
-            <visual name="Dulcimer" color="223|254|212" />
+            <visual name="Dulcimer" color="#dffed4" />
         </object>
         <object id="14068820564f03d">
             <data group="13fefadfeada756" />
-            <visual name="DX7 Wave" color="204|246|173" />
+            <visual name="DX7 Wave" color="#ccf6ad" />
         </object>
         <object id="14068834e8ee73d">
             <data group="13fefadfeada756" />
-            <visual name="DX7 Strike" color="46|13|227" />
+            <visual name="DX7 Strike" color="#2e0de3" />
         </object>
         <object id="14068893c9e9424">
             <data group="13fefaf4541a20a" />
             <midi patch="102" />
-            <visual name="Echo Drop" color="17|131|29" />
+            <visual name="Echo Drop" color="#11831d" />
         </object>
         <object id="140688be1490100">
             <data group="13fefaf4541a20a" />
             <midi patch="102" />
-            <visual name="Echo Pan" color="246|217|167" />
+            <visual name="Echo Pan" color="#f6d9a7" />
         </object>
         <object id="140688d1474a381">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Electronic Kick" color="160|165|177" />
+            <visual name="Electronic Kick" color="#a0a5b1" />
         </object>
         <object id="140688d71d8bf27">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Electric Snare" color="44|128|227" />
+            <visual name="Electric Snare" color="#2c80e3" />
         </object>
         <object id="140688f774474f7">
             <data group="13fefaf92a6b73f" />
-            <visual name="Explosion" color="27|117|221" />
+            <visual name="Explosion" color="#1b75dd" />
         </object>
         <object id="1406895142928a8">
             <data group="13fefaebab36b90" />
             <midi patch="51" />
-            <visual name="Synth Strings #5" color="177|243|78" />
+            <visual name="Synth Strings #5" color="#b1f34e" />
         </object>
         <object id="14068979d59afc8">
             <data group="13fefaebab36b90" />
             <midi patch="51" />
-            <visual name="Synth Strings #6" color="177|243|78" />
+            <visual name="Synth Strings #6" color="#b1f34e" />
         </object>
         <object id="1406899a022d3ca">
             <data group="13fefadfeada756" />
             <midi patch="5" />
-            <visual name="Electric Piano 2MS" color="123|144|173" />
+            <visual name="Electric Piano 2MS" color="#7b90ad" />
         </object>
         <object id="140689e298522bd">
             <data group="13fa5152eed0672" />
-            <visual name="Fantasia #1" color="49|210|215" />
+            <visual name="Fantasia #1" color="#31d2d7" />
         </object>
         <object id="14068a3f13b2bef">
             <data group="13fefaead755592" />
             <midi patch="33" />
-            <visual name="Finger Bass" color="253|166|238" />
+            <visual name="Finger Bass" color="#fda6ee" />
         </object>
         <object id="14068a8f3640d27">
             <data group="13fefae9c8106d7" />
-            <visual name="Guitar Click" color="94|2|81" />
+            <visual name="Guitar Click" color="#5e0251" />
         </object>
         <object id="14068a9bbc0b4f2">
             <data group="13fefaf08896f96" />
             <midi patch="73" />
-            <visual name="Flute" color="216|63|235" />
+            <visual name="Flute" color="#d83feb" />
         </object>
         <object id="14068b065cdd7a9">
             <data group="13fefaf92a6b73f" />
-            <visual name="Foot Step" color="212|29|144" />
+            <visual name="Foot Step" color="#d41d90" />
         </object>
         <object id="14068b65a1bae9d">
             <data group="13fefaee40bacaf" />
             <midi patch="60" />
-            <visual name="French Horn" color="131|36|54" />
+            <visual name="French Horn" color="#832436" />
         </object>
         <object id="14068b9cb2b533b">
             <data group="13fefaf92a6b73f" />
             <midi patch="120" />
-            <visual name="Fret Noise" color="254|253|171" />
+            <visual name="Fret Noise" color="#fefdab" />
         </object>
         <object id="14068bb0a098e8b">
             <data group="13fefaead755592" />
             <midi patch="35" />
-            <visual name="Fretless Bass" color="198|154|179" />
+            <visual name="Fretless Bass" color="#c69ab3" />
         </object>
         <object id="14068c28f4c513c">
             <data group="13fefae17715623" />
             <midi patch="9" />
-            <visual name="Glockenspiel" color="159|225|180" />
+            <visual name="Glockenspiel" color="#9fe1b4" />
         </object>
         <object id="14068c619e89c66">
             <data group="13fefaed4414987" />
             <midi patch="53" />
-            <visual name="Synth Voice Oohs" color="212|125|204" />
+            <visual name="Synth Voice Oohs" color="#d47dcc" />
         </object>
         <object id="14068cffd17c670">
             <data group="13fefaf4541a20a" />
             <midi patch="101" />
-            <visual name="Goblin" color="217|202|205" />
+            <visual name="Goblin" color="#d9cacd" />
         </object>
         <object id="14068d7d6ab68e4">
             <data group="13fefae9c8106d7" />
-            <visual name="Guitar Cut Up" color="139|2|54" />
+            <visual name="Guitar Cut Up" color="#8b0236" />
         </object>
         <object id="14068d7fecaf4bc">
             <data group="13fefae9c8106d7" />
-            <visual name="Guitar Cut Down" color="11|243|77" />
+            <visual name="Guitar Cut Down" color="#0bf34d" />
         </object>
         <object id="14068d81555d464">
             <data group="13fefae9c8106d7" />
-            <visual name="Guitar Slap" color="15|213|66" />
+            <visual name="Guitar Slap" color="#0fd542" />
         </object>
         <object id="14068dd9b1753a2">
             <data group="13fefae9c8106d7" />
-            <visual name="Guitar Feedback" color="2|89|134" />
+            <visual name="Guitar Feedback" color="#025986" />
         </object>
         <object id="14068e36a4d449a">
             <data group="13fefae9c8106d7" />
             <midi patch="31" />
-            <visual name="Guitar Harmonics" color="128|211|96" />
+            <visual name="Guitar Harmonics" color="#80d360" />
         </object>
         <object id="14068e6d8a6b702">
             <data group="13fefaf92a6b73f" />
             <midi patch="127" />
-            <visual name="Gun Shot" color="167|32|226" />
+            <visual name="Gun Shot" color="#a720e2" />
         </object>
         <object id="14069976f0e6273">
             <data group="13fefaed4414987" />
             <midi patch="52" />
-            <visual name="Synth Voice Aahs" color="136|5|202" />
+            <visual name="Synth Voice Aahs" color="#8805ca" />
         </object>
         <object id="140699cf00fe380">
             <data group="13fefae8e3bf2c5" />
             <midi patch="17" />
-            <visual name="Hammond Organ" color="226|239|171" />
+            <visual name="Hammond Organ" color="#e2efab" />
         </object>
         <object id="14069a447ec841f">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Hand Clap" color="196|165|92" />
+            <visual name="Hand Clap" color="#c4a55c" />
         </object>
         <object id="14069a735526821">
             <data group="13fefae8e3bf2c5" />
             <midi patch="22" />
-            <visual name="Harmonica" color="77|161|2" />
+            <visual name="Harmonica" color="#4da102" />
         </object>
         <object id="1406a75cd901b2e">
             <data group="13fefadfeada756" />
             <midi patch="6" />
-            <visual name="Harpsichord #1" color="196|49|26" />
+            <visual name="Harpsichord #1" color="#c4311a" />
         </object>
         <object id="1406a77fd62ecba">
             <data group="13fefadfeada756" />
             <midi patch="6" />
-            <visual name="Harpsichord #2" color="149|175|103" />
+            <visual name="Harpsichord #2" color="#95af67" />
         </object>
         <object id="1406a8163b331d8">
             <data group="13fefae9c8106d7" />
-            <visual name="Hawaiian Guitar" color="240|36|60" />
+            <visual name="Hawaiian Guitar" color="#f0243c" />
         </object>
         <object id="1406a82908f9d75">
             <data group="13fefaf92a6b73f" />
-            <visual name="Heart Beat" color="47|45|4" />
+            <visual name="Heart Beat" color="#2f2d04" />
         </object>
         <object id="1406a831e2707b6">
             <data group="13fefaf92a6b73f" />
             <midi patch="125" />
-            <visual name="Helicopter" color="214|45|193" />
+            <visual name="Helicopter" color="#d62dc1" />
         </object>
         <object id="1406a85b703925c">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Hi-Hat Closed Hard" color="83|116|151" />
+            <visual name="Hi-Hat Closed Hard" color="#537497" />
         </object>
         <object id="1406a864d73a6d8">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Hi-Hat Closed Soft" color="62|4|165" />
+            <visual name="Hi-Hat Closed Soft" color="#3e04a5" />
         </object>
         <object id="1406a879e6a595f">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Hi-Hat Pedal" color="41|251|249" />
+            <visual name="Hi-Hat Pedal" color="#29fbf9" />
         </object>
         <object id="1406a87fb4578e0">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Hi-Hat Open" color="101|211|196" />
+            <visual name="Hi-Hat Open" color="#65d3c4" />
         </object>
         <object id="1406a8837023d81">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Hi-Hat Open Attack" color="121|24|196" />
+            <visual name="Hi-Hat Open Attack" color="#7918c4" />
         </object>
         <object id="1406a901e6f59e4">
             <data group="13fefadfeada756" />
             <midi patch="3" />
-            <visual name="Honky-Tonk" color="8|80|132" />
+            <visual name="Honky-Tonk" color="#085084" />
         </object>
         <object id="1406a9658143245">
             <data group="13fefaee40bacaf" />
             <midi patch="69" />
-            <visual name="Horns Thin #1" color="165|94|57" />
+            <visual name="Horns Thin #1" color="#a55e39" />
         </object>
         <object id="1406d9f04b29a5c">
             <data group="13fefaee40bacaf" />
             <midi patch="69" />
-            <visual name="Horns Thin #2" color="142|227|131" />
+            <visual name="Horns Thin #2" color="#8ee383" />
         </object>
         <object id="1406da5149c40bd">
             <data group="13fefaf92a6b73f" />
-            <visual name="Horse Gallop" color="151|218|110" />
+            <visual name="Horse Gallop" color="#97da6e" />
         </object>
         <object id="1406da6549467c5">
             <data group="13fefaf92a6b73f" />
-            <visual name="Howling Wind" color="36|242|90" />
+            <visual name="Howling Wind" color="#24f25a" />
         </object>
         <object id="1406daada091dc6">
             <data group="13fefaf4541a20a" />
             <midi patch="96" />
-            <visual name="Ice Rain #1" color="251|89|219" />
+            <visual name="Ice Rain #1" color="#fb59db" />
         </object>
         <object id="1406dada76bd505">
             <data group="13fefaf4541a20a" />
             <midi patch="96" />
-            <visual name="Ice Rain #2" color="220|148|136" />
+            <visual name="Ice Rain #2" color="#dc9488" />
         </object>
         <object id="1406db8da1f0948">
             <data group="13fefae8e3bf2c5" />
             <midi patch="21" />
-            <visual name="Italian Accordian" color="20|239|61" />
+            <visual name="Italian Accordian" color="#14ef3d" />
         </object>
         <object id="1406dc51010cf0a">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Jazz Bass Drum" color="147|162|181" />
+            <visual name="Jazz Bass Drum" color="#93a2b5" />
         </object>
         <object id="1406dc5f5ac3477">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Kick #1" color="35|218|154" />
+            <visual name="Standard Kick #1" color="#23da9a" />
         </object>
         <object id="1406dc6754caf80">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Kick #2" color="12|111|41" />
+            <visual name="Standard Kick #2" color="#0c6f29" />
         </object>
         <object id="1406dc6a80e41d6">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Kick #3" color="184|137|154" />
+            <visual name="Standard Kick #3" color="#b8899a" />
         </object>
         <object id="1406dc86ece6682">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Snare #1" color="68|255|237" />
+            <visual name="Standard Snare #1" color="#44ffed" />
         </object>
         <object id="1406dc95dfb8068">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Snare #3" color="83|62|119" />
+            <visual name="Standard Snare #3" color="#533e77" />
         </object>
         <object id="1406dc991b30322">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Standard Snare #4" color="129|107|213" />
+            <visual name="Standard Snare #4" color="#816bd5" />
         </object>
         <object id="1406dce02e99049">
             <data group="13fefae9c8106d7" />
             <midi patch="26" />
-            <visual name="Jazz Guitar" color="161|195|128" />
+            <visual name="Jazz Guitar" color="#a1c380" />
         </object>
         <object id="1406dd7f61e4601">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Jazz Rim Shot" color="115|99|29" />
+            <visual name="Jazz Rim Shot" color="#73631d" />
         </object>
         <object id="1406dd8738bc052">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Rim Shot" color="127|179|16" />
+            <visual name="Rim Shot" color="#7fb310" />
         </object>
         <object id="1406dd8e27d0165">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Jazz Snare Soft #2" color="142|251|85" />
+            <visual name="Jazz Snare Soft #2" color="#8efb55" />
         </object>
         <object id="1406dd9089c3235">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Jazz Snare Hard" color="94|48|237" />
+            <visual name="Jazz Snare Hard" color="#5e30ed" />
         </object>
         <object id="1406ddb720369bb">
             <data group="13fefaf92a6b73f" />
-            <visual name="Jet" color="213|43|3" />
+            <visual name="Jet" color="#d52b03" />
         </object>
         <object id="1406ddeda32b3ef">
             <data group="13fefaf5f19a562" />
             <midi patch="108" />
-            <visual name="Kalimba" color="205|126|31" />
+            <visual name="Kalimba" color="#cd7e1f" />
         </object>
         <object id="1406de1fe608880">
             <data group="13fefaf5f19a562" />
             <midi patch="107" />
-            <visual name="Koto" color="90|208|37" />
+            <visual name="Koto" color="#5ad025" />
         </object>
         <object id="1406de371a08b5c">
             <data group="1406de351b982bc" />
-            <visual name="Kefka's Laugh" color="85|9|200" />
+            <visual name="Kefka's Laugh" color="#5509c8" />
         </object>
         <object id="1406de5a966105b">
             <data group="13fefaf92a6b73f" />
-            <visual name="Machine Gun" color="60|251|164" />
+            <visual name="Machine Gun" color="#3cfba4" />
         </object>
         <object id="1406de96624694c">
             <data group="13fefaf5f19a562" />
-            <visual name="Mandolin #1" color="130|74|145" />
+            <visual name="Mandolin #1" color="#824a91" />
         </object>
         <object id="1406deb48cbbfc0">
             <data group="13fefaf5f19a562" />
-            <visual name="Mandolin #2" color="144|87|71" />
+            <visual name="Mandolin #2" color="#905747" />
         </object>
         <object id="1406df04571a36f">
             <data group="13fefaf5f19a562" />
-            <visual name="Ukulele" color="180|48|205" />
+            <visual name="Ukulele" color="#b430cd" />
         </object>
         <object id="1406df406bf8fb6">
             <data group="13fefae17715623" />
             <midi patch="12" />
-            <visual name="Marimba" color="122|171|28" />
+            <visual name="Marimba" color="#7aab1c" />
         </object>
         <object id="1406df560738e90">
             <data group="13fefb03f42cb8f" />
             <midi patch="117" />
-            <visual name="Melodic Tom #1" color="137|68|218" />
+            <visual name="Melodic Tom #1" color="#8944da" />
         </object>
         <object id="1406e0bc5bf4c37">
             <data group="13fefb03f42cb8f" />
             <midi patch="117" />
-            <visual name="Melodic Tom #2" color="251|1|106" />
+            <visual name="Melodic Tom #2" color="#fb016a" />
         </object>
         <object id="1407008866fc39b">
             <data group="13fefaf2d917d71" />
             <midi patch="93" />
-            <visual name="Metal Pad" color="42|88|242" />
+            <visual name="Metal Pad" color="#2a58f2" />
         </object>
         <object id="1407009e987ee50">
             <data group="13fefae17715623" />
             <midi patch="10" />
-            <visual name="Music Box" color="80|91|182" />
+            <visual name="Music Box" color="#505bb6" />
         </object>
         <object id="140700a37abe00b">
             <data group="13fefae17715623" />
             <midi patch="10" />
-            <visual name="Music Box Delay" color="85|111|141" />
+            <visual name="Music Box Delay" color="#556f8d" />
         </object>
         <object id="140701c32ea2030">
             <data group="13fefae9c8106d7" />
             <midi patch="28" />
-            <visual name="Muted Guitar" color="148|118|253" />
+            <visual name="Muted Guitar" color="#9476fd" />
         </object>
         <object id="1407022182d90fc">
             <data group="13fefaee40bacaf" />
             <midi patch="59" />
-            <visual name="Muted Trumpet #1" color="239|210|209" />
+            <visual name="Muted Trumpet #1" color="#efd2d1" />
         </object>
         <object id="1407024da20a3e6">
             <data group="13fefaee40bacaf" />
             <midi patch="59" />
-            <visual name="Muted Trumpet #2" color="239|210|209" />
+            <visual name="Muted Trumpet #2" color="#efd2d1" />
         </object>
         <object id="140702630f4e7c9">
             <data group="13fefaf2d917d71" />
-            <visual name="Mystery Pad" color="63|217|208" />
+            <visual name="Mystery Pad" color="#3fd9d0" />
         </object>
         <object id="14070b40f506414">
             <data group="13fefaef0ef730a" />
             <midi patch="68" />
-            <visual name="Oboe" color="144|24|179" />
+            <visual name="Oboe" color="#9018b3" />
         </object>
         <object id="14070cb6099c31f">
             <data group="13fefaf08896f96" />
             <midi patch="79" />
-            <visual name="Ocarina" color="139|219|121" />
+            <visual name="Ocarina" color="#8bdb79" />
         </object>
         <object id="14073b1eb2d4ea0">
             <data group="13fefaed4414987" />
             <midi patch="55" />
-            <visual name="Orchestra Hit #1" color="216|36|196" />
+            <visual name="Orchestra Hit #1" color="#d824c4" />
         </object>
         <object id="140748a778cc42b">
             <data group="13fefaed4414987" />
             <midi patch="55" />
-            <visual name="Orchestra Hit #2" color="219|103|106" />
+            <visual name="Orchestra Hit #2" color="#db676a" />
         </object>
         <object id="1407493fd38d5fa">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Orchestral Cymbal" color="43|79|128" />
+            <visual name="Orchestral Cymbal" color="#2b4f80" />
         </object>
         <object id="1407494e878b137">
             <data group="13fefaebab36b90" />
             <midi patch="46" />
-            <visual name="Orchestral Harp" color="242|169|41" />
+            <visual name="Orchestral Harp" color="#f2a929" />
         </object>
         <object id="14074a14498a6c7">
             <data group="13fefae8e3bf2c5" />
             <midi patch="16" />
-            <visual name="Organ Fast Cycle" color="159|139|180" />
+            <visual name="Organ Fast Cycle" color="#9f8bb4" />
         </object>
         <object id="14074b1ce673c93">
             <data group="13fefae8e3bf2c5" />
             <midi patch="16" />
-            <visual name="Organ Percussion" color="80|165|81" />
+            <visual name="Organ Percussion" color="#50a551" />
         </object>
         <object id="14074b6717b79fa">
             <data group="13fefae8e3bf2c5" />
             <midi patch="16" />
-            <visual name="Organ Slow Cycle" color="11|119|94" />
+            <visual name="Organ Slow Cycle" color="#0b775e" />
         </object>
         <object id="14074bd04756eef">
             <data group="13fefae9c8106d7" />
             <midi patch="29" />
-            <visual name="Overdrive Guitar" color="194|189|97" />
+            <visual name="Overdrive Guitar" color="#c2bd61" />
         </object>
         <object id="14074c81588f82b">
             <data group="13fefaf08896f96" />
             <midi patch="75" />
-            <visual name="Pan Flute #1" color="194|2|33" />
+            <visual name="Pan Flute #1" color="#c20221" />
         </object>
         <object id="14074c98a7a8ed2">
             <data group="13fefaf08896f96" />
             <midi patch="75" />
-            <visual name="Pan Flute #2" color="76|48|148" />
+            <visual name="Pan Flute #2" color="#4c3094" />
         </object>
         <object id="14074cba5e7baa1">
             <data group="13fefaf15baf963" />
-            <visual name="Percussive Saw Wave" color="7|114|10" />
+            <visual name="Percussive Saw Wave" color="#07720a" />
         </object>
         <object id="14074ccf1ade98c">
             <data group="13fefaf08896f96" />
             <midi patch="72" />
-            <visual name="Piccolo" color="130|117|90" />
+            <visual name="Piccolo" color="#82755a" />
         </object>
         <object id="14074d0cee06bab">
             <data group="13fefaead755592" />
-            <visual name="Pick Bass" color="28|186|38" />
+            <visual name="Pick Bass" color="#1cba26" />
         </object>
         <object id="14074d99f037452">
             <data group="13fefae8e3bf2c5" />
             <midi patch="16" />
-            <visual name="Pipe Organ" color="203|138|250" />
+            <visual name="Pipe Organ" color="#cb8afa" />
         </object>
         <object id="1407502013a21e8">
             <data group="13fefaebab36b90" />
             <midi patch="45" />
-            <visual name="Pizzicato Strings" color="133|61|96" />
+            <visual name="Pizzicato Strings" color="#853d60" />
         </object>
         <object id="140750c8bfcc0d9">
             <data group="13fefaf15baf963" />
             <midi patch="90" />
-            <visual name="Polysynth #1" color="202|174|217" />
+            <visual name="Polysynth #1" color="#caaed9" />
         </object>
         <object id="140750ea2512cb8">
             <data group="13fefaf15baf963" />
             <midi patch="90" />
-            <visual name="Polysynth #2" color="32|27|100" />
+            <visual name="Polysynth #2" color="#201b64" />
         </object>
         <object id="140751063e57e84">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Power Kick #1" color="253|212|108" />
+            <visual name="Power Kick #1" color="#fdd46c" />
         </object>
         <object id="14075111fe6daf6">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Power Kick #2" color="173|150|34" />
+            <visual name="Power Kick #2" color="#ad9622" />
         </object>
         <object id="1407511bfc77568">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Power Snare #1" color="77|137|73" />
+            <visual name="Power Snare #1" color="#4d8949" />
         </object>
         <object id="1407511f75c6477">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Power Snare #2" color="206|16|163" />
+            <visual name="Power Snare #2" color="#ce10a3" />
         </object>
         <object id="140751278c29dfe">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Room Snare" color="185|208|24" />
+            <visual name="Room Snare" color="#b9d018" />
         </object>
         <object id="140751590accf3d">
             <data group="13fefaf92a6b73f" />
-            <visual name="Bone Crunch" color="222|63|4" />
+            <visual name="Bone Crunch" color="#de3f04" />
         </object>
         <object id="140751625b83156">
             <data group="13fefaf92a6b73f" />
-            <visual name="Punch" color="190|185|151" />
+            <visual name="Punch" color="#beb997" />
         </object>
         <object id="14075184c7cf367">
             <data group="13fefaf92a6b73f" />
-            <visual name="Rain" color="110|81|240" />
+            <visual name="Rain" color="#6e51f0" />
         </object>
         <object id="140751aca875aa1">
             <data group="13fefaf92a6b73f" />
-            <visual name="Scratch Push" color="196|203|254" />
+            <visual name="Scratch Push" color="#c4cbfe" />
         </object>
         <object id="140751b8be034e4">
             <data group="13fefaf92a6b73f" />
-            <visual name="Scratch Pull" color="193|181|155" />
+            <visual name="Scratch Pull" color="#c1b59b" />
         </object>
         <object id="140751c14932c25">
             <data group="13fefaf08896f96" />
             <midi patch="74" />
-            <visual name="Recorder" color="58|172|218" />
+            <visual name="Recorder" color="#3aacda" />
         </object>
         <object id="1407522d19b4f4c">
             <data group="13fefae8e3bf2c5" />
             <midi patch="20" />
-            <visual name="Reed Organ #1" color="6|124|87" />
+            <visual name="Reed Organ #1" color="#067c57" />
         </object>
         <object id="1407528a0b13b9c">
             <data group="13fefae8e3bf2c5" />
             <midi patch="20" />
-            <visual name="Reed Organ #2" color="6|124|87" />
+            <visual name="Reed Organ #2" color="#067c57" />
         </object>
         <object id="140752ac3e7d872">
             <data group="13fefb03f42cb8f" />
             <midi patch="119" />
-            <visual name="Reverse Cymbal" color="23|249|132" />
+            <visual name="Reverse Cymbal" color="#17f984" />
         </object>
         <object id="140752cbdc3f98b">
             <data group="13fefadfeada756" />
             <midi patch="2" />
-            <visual name="Rhodes F" color="173|161|194" />
+            <visual name="Rhodes F" color="#ada1c2" />
         </object>
         <object id="14075990202330a">
             <data group="13fefadfeada756" />
             <midi patch="2" />
-            <visual name="Rhodes M" color="40|170|162" />
+            <visual name="Rhodes M" color="#28aaa2" />
         </object>
         <object id="140759c82cbc4ff">
             <data group="13fefadfeada756" />
             <midi patch="2" />
-            <visual name="Rhodes P" color="31|148|127" />
+            <visual name="Rhodes P" color="#1f947f" />
         </object>
         <object id="14075a5f5670bc3">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Ride Bell" color="194|190|150" />
+            <visual name="Ride Bell" color="#c2be96" />
         </object>
         <object id="14075a9eeb029ae">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Room Kick" color="15|87|245" />
+            <visual name="Room Kick" color="#0f57f5" />
         </object>
         <object id="14075add9c19160">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Room Tom #1" color="125|101|156" />
+            <visual name="Room Tom #1" color="#7d659c" />
         </object>
         <object id="14075aebc2fbda4">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Room Tom #2" color="219|15|118" />
+            <visual name="Room Tom #2" color="#db0f76" />
         </object>
         <object id="14075afa8e9c398">
             <data group="13fefaf15baf963" />
             <midi patch="81" />
-            <visual name="Saw Lead #2" color="246|217|167" />
+            <visual name="Saw Lead #2" color="#f6d9a7" />
         </object>
         <object id="14075afa906817d">
             <data group="13fefaf15baf963" />
             <midi patch="81" />
-            <visual name="Saw Lead #1" color="246|217|167" />
+            <visual name="Saw Lead #1" color="#f6d9a7" />
         </object>
         <object id="14075b173cb84ef">
             <data group="13fefaf92a6b73f" />
-            <visual name="Scream" color="11|31|74" />
+            <visual name="Scream" color="#0b1f4a" />
         </object>
         <object id="14075b28246e69c">
             <data group="13fefaf92a6b73f" />
             <midi patch="122" />
-            <visual name="Seashore" color="166|37|211" />
+            <visual name="Seashore" color="#a625d3" />
         </object>
         <object id="14075dfc835feff">
             <data group="13fefaf08896f96" />
             <midi patch="77" />
-            <visual name="Shakuhachi" color="23|56|238" />
+            <visual name="Shakuhachi" color="#1738ee" />
         </object>
         <object id="14075e09d71d75e">
             <data group="13fefaf5f19a562" />
             <midi patch="106" />
-            <visual name="Shamisen" color="173|65|84" />
+            <visual name="Shamisen" color="#ad4154" />
         </object>
         <object id="14075e9d260300d">
             <data group="13fefaf5f19a562" />
-            <visual name="Shenai" color="172|243|136" />
+            <visual name="Shenai" color="#acf388" />
         </object>
         <object id="14075ee5871cb87">
             <data group="13fefaf15baf963" />
-            <visual name="Sine Wave" color="246|217|167" />
+            <visual name="Sine Wave" color="#f6d9a7" />
         </object>
         <object id="14075f37aabbbc4">
             <data group="13fefaf5f19a562" />
             <midi patch="104" />
-            <visual name="Sitar" color="109|46|222" />
+            <visual name="Sitar" color="#6d2ede" />
         </object>
         <object id="14075f77fafc211">
             <data group="13fefaead755592" />
             <midi patch="36" />
-            <visual name="Slap Bass #1" color="4|4|214" />
+            <visual name="Slap Bass #1" color="#0404d6" />
         </object>
         <object id="14076010968126b">
             <data group="13fefaead755592" />
             <midi patch="37" />
-            <visual name="Slap Bass #2 F" color="90|175|25" />
+            <visual name="Slap Bass #2 F" color="#5aaf19" />
         </object>
         <object id="1407601f18ed68d">
             <data group="13fefaead755592" />
             <midi patch="37" />
-            <visual name="Slap Bass #2 P" color="234|247|60" />
+            <visual name="Slap Bass #2 P" color="#eaf73c" />
         </object>
         <object id="14076083f53a42d">
             <data group="13fefaebab36b90" />
             <midi patch="51" />
-            <visual name="Synth Strings #5 (Solar Wind)" color="177|243|78" />
+            <visual name="Synth Strings #5 (Solar Wind)" color="#b1f34e" />
         </object>
         <object id="1407608f6b8105d">
             <data group="13fefaed4414987" />
             <midi patch="53" />
-            <visual name="Ohh Voice" color="139|157|49" />
+            <visual name="Ohh Voice" color="#8b9d31" />
         </object>
         <object id="1407614e764112a">
             <data group="13fefaed4414987" />
-            <visual name="Solo Vox #1" color="24|93|131" />
+            <visual name="Solo Vox #1" color="#185d83" />
         </object>
         <object id="1407619a40b5b1a">
             <data group="13fefaed4414987" />
-            <visual name="Solo Vox #2" color="106|91|243" />
+            <visual name="Solo Vox #2" color="#6a5bf3" />
         </object>
         <object id="140761ce3995ec8">
             <data group="13fefaef0ef730a" />
             <midi patch="64" />
-            <visual name="Soprano Saxophone" color="68|79|245" />
+            <visual name="Soprano Saxophone" color="#444ff5" />
         </object>
         <object id="1407622335a5a4d">
             <data group="13fefaf4541a20a" />
             <midi patch="97" />
-            <visual name="Soundtrack" color="41|43|20" />
+            <visual name="Soundtrack" color="#292b14" />
         </object>
         <object id="140762430bc146b">
             <data group="13fefaf92a6b73f" />
-            <visual name="Space Voice" color="156|186|174" />
+            <visual name="Space Voice" color="#9cbaae" />
         </object>
         <object id="1407624d5082fc9">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Splash Cymbal" color="210|57|31" />
+            <visual name="Splash Cymbal" color="#d2391f" />
         </object>
         <object id="140762652d55f0d">
             <data group="13fefaf15baf963" />
             <midi patch="80" />
-            <visual name="Square Lead" color="246|217|167" />
+            <visual name="Square Lead" color="#f6d9a7" />
         </object>
         <object id="140762dfead2575">
             <data group="13fefaf92a6b73f" />
-            <visual name="Starship" color="226|213|79" />
+            <visual name="Starship" color="#e2d54f" />
         </object>
         <object id="1407630b3b4a21c">
             <data group="13fefaf81a1a3cf" />
             <midi patch="114" />
-            <visual name="Steel Drums" color="47|154|54" />
+            <visual name="Steel Drums" color="#2f9a36" />
         </object>
         <object id="1407635e2a68293">
             <data group="13fefaf92a6b73f" />
-            <visual name="Stream" color="6|86|165" />
+            <visual name="Stream" color="#0656a5" />
         </object>
         <object id="1407826a9c2b495">
             <data group="13fefaebab36b90" />
             <midi patch="48" />
-            <visual name="Strings" color="123|230|187" />
+            <visual name="Strings" color="#7be6bb" />
         </object>
         <object id="14078380ce719a3">
             <data group="13fefaead755592" />
             <midi patch="38" />
-            <visual name="Synth Bass #1" color="246|217|167" />
+            <visual name="Synth Bass #1" color="#f6d9a7" />
         </object>
         <object id="140783b37a7f438">
             <data group="13fefaead755592" />
             <midi patch="39" />
-            <visual name="Synth Bass #2" color="33|195|88" />
+            <visual name="Synth Bass #2" color="#21c358" />
         </object>
         <object id="140783e6bc1d5eb">
             <data group="13fefaead755592" />
             <midi patch="39" />
-            <visual name="Synth Bass #3" color="246|217|167" />
+            <visual name="Synth Bass #3" color="#f6d9a7" />
         </object>
         <object id="140783f9cf92a47">
             <data group="13fefaee40bacaf" />
             <midi patch="62" />
-            <visual name="Synth Brass #1" color="246|217|167" />
+            <visual name="Synth Brass #1" color="#f6d9a7" />
         </object>
         <object id="140784198da95f4">
             <data group="13fefaee40bacaf" />
             <midi patch="63" />
-            <visual name="Synth Brass #2" color="237|235|34" />
+            <visual name="Synth Brass #2" color="#edeb22" />
         </object>
         <object id="14078428aa74288">
             <data group="13fefaee40bacaf" />
             <midi patch="63" />
-            <visual name="Synth Brass #3" color="154|28|180" />
+            <visual name="Synth Brass #3" color="#9a1cb4" />
         </object>
         <object id="140784392560143">
             <data group="13fefaead755592" />
-            <visual name="Synth Bass Loop" color="206|219|193" />
+            <visual name="Synth Bass Loop" color="#cedbc1" />
         </object>
         <object id="14078483342c5e3">
             <data group="13fefaee40bacaf" />
             <midi patch="63" />
-            <visual name="Synth Brass #3 (2)" color="154|28|180" />
+            <visual name="Synth Brass #3 (2)" color="#9a1cb4" />
         </object>
         <object id="140784ad3c8c492">
             <data group="13fefaf15baf963" />
             <midi patch="82" />
-            <visual name="Synth Calliope" color="63|190|170" />
+            <visual name="Synth Calliope" color="#3fbeaa" />
         </object>
         <object id="140784f19689d8c">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Electric Tom" color="106|167|29" />
+            <visual name="Electric Tom" color="#6aa71d" />
         </object>
         <object id="140785099afedb9">
             <data group="13fefae17715623" />
             <midi patch="9" />
-            <visual name="Glockenspiel Loop" color="89|47|146" />
+            <visual name="Glockenspiel Loop" color="#592f92" />
         </object>
         <object id="1407851abd2169c">
             <data group="13fa5152eed0672" />
-            <visual name="Vibes" color="112|5|43" />
+            <visual name="Vibes" color="#70052b" />
         </object>
         <object id="1407853876ec2eb">
             <data group="13fefaf81a1a3cf" />
-            <visual name="Cold Glass Wave (2)" color="71|74|237" />
+            <visual name="Cold Glass Wave (2)" color="#474aed" />
         </object>
         <object id="140785631c506cd">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="Synth Hand Clap" color="54|141|144" />
+            <visual name="Synth Hand Clap" color="#368d90" />
         </object>
         <object id="1407858066da0df">
             <data group="13fefaf2d917d71" />
-            <visual name="Synth Mallet" color="160|186|224" />
+            <visual name="Synth Mallet" color="#a0bae0" />
         </object>
         <object id="14078596b663e49">
             <data group="13fefaebab36b90" />
             <midi patch="50" />
-            <visual name="Synth Strings #1" color="209|240|75" />
+            <visual name="Synth Strings #1" color="#d1f04b" />
         </object>
         <object id="140785c6fcd59a7">
             <data group="13fefaebab36b90" />
             <midi patch="50" />
-            <visual name="Synth Strings #2" color="224|121|71" />
+            <visual name="Synth Strings #2" color="#e07947" />
         </object>
         <object id="1407a7ed6247291">
             <data group="13fefaead755592" />
-            <visual name="Techno Bass" color="151|159|105" />
+            <visual name="Techno Bass" color="#979f69" />
         </object>
         <object id="1407a8666632637">
             <data group="13fefaf92a6b73f" />
             <midi patch="124" />
-            <visual name="Telephone #1" color="230|61|143" />
+            <visual name="Telephone #1" color="#e63d8f" />
         </object>
         <object id="1407a8877a22a6d">
             <data group="13fefaf92a6b73f" />
             <midi patch="124" />
-            <visual name="Telephone #2" color="34|224|127" />
+            <visual name="Telephone #2" color="#22e07f" />
         </object>
         <object id="1407a8f82255862">
             <data group="13fefaef0ef730a" />
             <midi patch="66" />
-            <visual name="Tenor Saxophone" color="199|204|214" />
+            <visual name="Tenor Saxophone" color="#c7ccd6" />
         </object>
         <object id="1407a94e80515f5">
             <data group="13fefaf92a6b73f" />
-            <visual name="Thunder" color="131|54|144" />
+            <visual name="Thunder" color="#833690" />
         </object>
         <object id="1407aa34a62d1ab">
             <data group="13fefae17715623" />
             <midi patch="112" />
-            <visual name="Tinker Bell" color="110|157|133" />
+            <visual name="Tinker Bell" color="#6e9d85" />
         </object>
         <object id="1407aa502fd64f5">
             <data group="13fefaf92a6b73f" />
-            <visual name="TR-909 Scratch Pull" color="22|78|28" />
+            <visual name="TR-909 Scratch Pull" color="#164e1c" />
         </object>
         <object id="1407aa5289e6302">
             <data group="13fefaf92a6b73f" />
-            <visual name="TR-909 Scratch Push" color="130|212|182" />
+            <visual name="TR-909 Scratch Push" color="#82d4b6" />
         </object>
         <object id="1407aa83afb9d1b">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Cowbell" color="134|32|47" />
+            <visual name="TR-808 Cowbell" color="#86202f" />
         </object>
         <object id="1407aa8d98ce40a">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Kick" color="62|173|79" />
+            <visual name="TR-808 Kick" color="#3ead4f" />
         </object>
         <object id="1407aac89bd12fe">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Snare" color="160|45|137" />
+            <visual name="TR-808 Snare" color="#a02d89" />
         </object>
         <object id="1407aad65c4e875">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Clap" color="177|70|99" />
+            <visual name="TR-808 Clap" color="#b14663" />
         </object>
         <object id="1407aadc14cd8f1">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Hat #1" color="195|161|93" />
+            <visual name="TR-808 Hat #1" color="#c3a15d" />
         </object>
         <object id="1407aae08211017">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Hat #2" color="144|5|247" />
+            <visual name="TR-808 Hat #2" color="#9005f7" />
         </object>
         <object id="1407aae4752a4c0">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Hat #3" color="208|147|216" />
+            <visual name="TR-808 Hat #3" color="#d093d8" />
         </object>
         <object id="1407aaeeec3bb1c">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-808 Cymbal" color="54|75|187" />
+            <visual name="TR-808 Cymbal" color="#364bbb" />
         </object>
         <object id="1407aaffc688035">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-909 Snare #1" color="183|140|148" />
+            <visual name="TR-909 Snare #1" color="#b78c94" />
         </object>
         <object id="1407ab06cf82339">
             <data group="13fefb03f42cb8f" />
             <midi is_drum="1" />
-            <visual name="TR-909 Snare #2" color="223|166|51" />
+            <visual name="TR-909 Snare #2" color="#dfa633" />
         </object>
         <object id="1407ab1e0273a79">
             <data group="13fefaf92a6b73f" />
-            <visual name="Train" color="255|229|38" />
+            <visual name="Train" color="#ffe526" />
         </object>
         <object id="1407ab972aee98a">
             <data group="13fefaee40bacaf" />
             <midi patch="57" />
-            <visual name="Trombone #1" color="217|2|28" />
+            <visual name="Trombone #1" color="#d9021c" />
         </object>
         <object id="1407abcb92403c2">
             <data group="13fefaee40bacaf" />
             <midi patch="57" />
-            <visual name="Trombone #2" color="217|2|28" />
+            <visual name="Trombone #2" color="#d9021c" />
         </object>
         <object id="1407abd91520a50">
             <data group="13fefaee40bacaf" />
             <midi patch="56" />
-            <visual name="Trumpet #1" color="0|164|232" />
+            <visual name="Trumpet #1" color="#00a4e8" />
         </object>
         <object id="1407ac32e77184c">
             <data group="13fefaee40bacaf" />
             <midi patch="56" />
-            <visual name="Trumpet #2" color="234|131|161" />
+            <visual name="Trumpet #2" color="#ea83a1" />
         </object>
         <object id="1407ac53a5675ee">
             <data group="13fefaee40bacaf" />
             <midi patch="58" />
-            <visual name="Tuba" color="221|98|177" />
+            <visual name="Tuba" color="#dd62b1" />
         </object>
         <object id="1407aca1ef444f6">
             <data group="13fefae17715623" />
             <midi patch="11" />
-            <visual name="Vibraphone" color="65|137|95" />
+            <visual name="Vibraphone" color="#41895f" />
         </object>
         <object id="1407acda32ff82b">
             <data group="13fefaebab36b90" />
             <midi patch="41" />
-            <visual name="Viola" color="106|105|27" />
+            <visual name="Viola" color="#6a691b" />
         </object>
         <object id="1407ae2b127d4bc">
             <data group="13fefaebab36b90" />
             <midi patch="40" />
-            <visual name="Violin" color="87|253|3" />
+            <visual name="Violin" color="#57fd03" />
         </object>
         <object id="1407aec1587079b">
             <data group="13fefaebab36b90" />
             <midi patch="40" />
-            <visual name="Violin Strike" color="173|243|176" />
+            <visual name="Violin Strike" color="#adf3b0" />
         </object>
         <object id="1407af17cd2a41b">
             <data group="13fefaed4414987" />
             <midi patch="53" />
-            <visual name="Voice Oohs" color="14|74|108" />
+            <visual name="Voice Oohs" color="#0e4a6c" />
         </object>
         <object id="1407af695b01c0b">
             <data group="13fefaf2d917d71" />
             <midi patch="89" />
-            <visual name="Warm Pad" color="123|230|187" />
+            <visual name="Warm Pad" color="#7be6bb" />
         </object>
         <object id="1407af99f9fddba">
             <data group="13fefaf08896f96" />
             <midi patch="79" />
-            <visual name="Ocarina Fx" color="186|57|155" />
+            <visual name="Ocarina Fx" color="#ba399b" />
         </object>
         <object id="1407afbafc59c9d">
             <data group="13fefaf92a6b73f" />
-            <visual name="Whistlin'" color="221|61|141" />
+            <visual name="Whistlin'" color="#dd3d8d" />
         </object>
         <object id="1407aff0440b7f2">
             <data group="13fefaf08896f96" />
             <midi patch="78" />
-            <visual name="Whistle" color="217|11|131" />
+            <visual name="Whistle" color="#d90b83" />
         </object>
         <object id="1407b03423faa7c">
             <data group="13fefaf92a6b73f" />
-            <visual name="Windchimes" color="199|185|82" />
+            <visual name="Windchimes" color="#c7b952" />
         </object>
         <object id="1407b042f041a44">
             <data group="13fefb03f42cb8f" />
             <midi patch="115" />
-            <visual name="Wood Block #1" color="56|130|95" />
+            <visual name="Wood Block #1" color="#38825f" />
         </object>
         <object id="1407b04fe8ae01e">
             <data group="13fefb03f42cb8f" />
             <midi patch="115" />
-            <visual name="Wood Block #2" color="182|189|92" />
+            <visual name="Wood Block #2" color="#b6bd5c" />
         </object>
         <object id="1407b0ce297c005">
             <data group="13fefae17715623" />
             <midi patch="13" />
-            <visual name="Xylophone" color="199|76|200" />
+            <visual name="Xylophone" color="#c74cc8" />
         </object>
         <object id="1425966ba957afa">
             <data group="1406de351b982bc" />
-            <visual name="Zigzagoon" color="184|50|55" />
+            <visual name="Zigzagoon" color="#b83237" />
         </object>
         <object id="1425975a3268daa">
             <data group="13fefaf92a6b73f" />
-            <visual name="Squidward" color="97|168|118" />
+            <visual name="Squidward" color="#61a876" />
         </object>
     </category>
 </dataset>

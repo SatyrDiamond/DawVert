@@ -13,7 +13,7 @@
     </category>
     <category id="plugin">
         <object id="TCE-1">
-            <visual name="TCE-1 Compressor" color="40.8|130.05|158.1" />
+            <visual name="TCE-1 Compressor" color="#28829e" />
             <param id="RMS" name="RMS" type="float" def="1" />
             <param id="Attack" name="Attack" type="float" def="0.0001" min="0.0001" />
             <param id="Release" name="Release" type="float" def="0.01" />

@@ -390,3 +390,15 @@ class cvpj_window_data:
 		self.maximized = -1
 		self.minimized = -1
 		self.detatched = -1
+
+class cvpj_visual_keynote:
+	def __init__(self):
+		self.data = {}
+
+	def __bool__(self):
+		return bool(self.other) and self.height!=1
+
+	def add_key(self, k):
+		visual_obj = cvpj_visual()
+		self.data[k] = visual_obj
+		return visual_obj

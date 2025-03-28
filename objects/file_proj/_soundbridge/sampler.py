@@ -35,6 +35,7 @@ class soundbridge_sampler_main:
 		if paramnum != -1:
 			sampler_entry = soundbridge_sampler_entry()
 			sampler_entry.params_num = paramnum
+			sampler_entry.params_num_end = 64
 			self.samples.append(sampler_entry)
 			return sampler_entry, self.params[paramnum]
 		else:
@@ -49,7 +50,7 @@ class soundbridge_sampler_main:
 
 		if slicedata:
 			sampler_entry = soundbridge_sampler_entry()
-			sampler_entry.params_num = paramnum
+			sampler_entry.params_num = slicedata[0][0]
 			sampler_entry.slicemode = 1
 			sampler_entry.params_num_end = slicedata[-1][0]
 			sampler_entry.numslices = len(slicedata)

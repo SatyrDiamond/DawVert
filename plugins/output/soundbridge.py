@@ -650,6 +650,8 @@ class output_soundbridge(plugins.base):
 				if track_obj.plugslots.synth:
 					plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 					if plugin_found: 
+						pitch = track_obj.params.get('pitch',0).value
+
 						if plugin_obj.check_wildmatch('external', 'vst2', None):
 							sb_track.midiInstrument = make_vst2(convproj_obj, plugin_obj, True, track_obj.plugslots.synth, sb_track)
 						if plugin_obj.check_wildmatch('external', 'vst3', None):
@@ -676,13 +678,15 @@ class output_soundbridge(plugins.base):
 										sampler_entry.name = str(sb_id.filename)
 										sampler_entry.start = int(sp_obj.start*hzchange)
 										sampler_entry.end = int(sp_obj.end*hzchange)
-										sampler_entry.env_amp_on = 1
+										sampler_entry.env_amp_on = int(sp_obj.trigger != 'oneshot')
 										sample_params.vol_vel = 1
 										sample_params.key_root = (middlenote)+60
 										sample_params.env_a = 0
 										sample_params.env_d = 0
 										sample_params.env_s = 1
 										sample_params.env_r = 0
+										sample_params.pitch_semi = pitch.__floor__()*0.5
+										sample_params.pitch_cent = (pitch%1)*100
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
 
@@ -724,6 +728,8 @@ class output_soundbridge(plugins.base):
 											sample_params.key_max = 60+key_h
 											sample_params.vel_min = int(sp_obj.vel_min*127)
 											sample_params.vel_max = int(sp_obj.vel_max*127)
+											sample_params.pitch_semi = sp_obj.pitch.__floor__()*0.5
+											sample_params.pitch_cent = (sp_obj.pitch%1)*100
 										ordernum += 1
 
 							sampler_data.write(statewriter)

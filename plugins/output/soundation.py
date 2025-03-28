@@ -186,12 +186,12 @@ class output_soundation(plugins.base):
 						middlenote = track_obj.datavals.get('middlenote', 0)
 						pitch = track_obj.params.get('pitch', 0).value
 
-						negpitch = -1 if pitch<0 else 1
+						#negpitch = -1 if pitch<0 else 1
 						transpose = round(pitch)
 						detune = pitch-transpose
 
 						transpose = xtramath.between_to_one(-48, 48, transpose)
-						detune = xtramath.between_to_one(-1, 1, detune*negpitch)
+						detune = xtramath.between_to_one(-1, 1, detune)
 
 						set_asdr(soundation_instrument, plugin_obj)
 						soundation_instrument.params.add('playback_mode', 2, [])

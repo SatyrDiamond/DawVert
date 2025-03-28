@@ -567,28 +567,28 @@
     </category>
     <category id="plugin_wam">
         <object id="AUGUR">
-            <visual name="Augur" color="70|130|180" />
+            <visual name="Augur" color="#4682b4" />
         </object>
         <object id="DEXED">
-            <visual name="Dexed" color="83|77|68" />
+            <visual name="Dexed" color="#534d44" />
         </object>
         <object id="Europa">
-            <visual name="Europa" color="174|24|7" />
+            <visual name="Europa" color="#ae1807" />
         </object>
         <object id="OBXD">
-            <visual name="OBXD" color="132|170|214" />
+            <visual name="OBXD" color="#84aad6" />
         </object>
         <object id="WASABI_SC.CleanMachine">
-            <visual name="Clean Machine" color="227|188|139" />
+            <visual name="Clean Machine" color="#e3bc8b" />
         </object>
         <object id="WASABI_SC.DistoMachine">
-            <visual name="Distortion Machine" color="189|190|192" />
+            <visual name="Distortion Machine" color="#bdbec0" />
         </object>
         <object id="WASABI_SC.MetalMachine">
-            <visual name="Metal Machine" color="120|120|121" />
+            <visual name="Metal Machine" color="#787879" />
         </object>
         <object id="WASABI_SC.Utility">
-            <visual name="Amp Sim Utility" color="120|120|121" />
+            <visual name="Amp Sim Utility" color="#787879" />
         </object>
     </category>
 </dataset>

@@ -1,13 +1,13 @@
 <dataset>
     <category id="chip">
         <object id="noise">
-            <visual name="Noise" color="204|204|204" />
+            <visual name="Noise" color="#cccccc" />
         </object>
         <object id="pulse">
-            <visual name="Pulse" color="102|255|51" />
+            <visual name="Pulse" color="#66ff33" />
         </object>
         <object id="wavetable">
-            <visual name="Wavetable" color="255|127.5|51" />
+            <visual name="Wavetable" color="#ff7f33" />
         </object>
     </category>
 </dataset>

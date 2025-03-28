@@ -3,58 +3,58 @@
         <object id="0">
             <data group="Piano" />
             <midi />
-            <visual name="Elec. Piano (Classic)" color="3|169|244" />
+            <visual name="Elec. Piano (Classic)" color="#03a9f4" />
         </object>
         <object id="1">
             <data group="Guitar" />
             <midi patch="24" />
-            <visual name="Acoustic Guitar" color="255|152|0" />
+            <visual name="Acoustic Guitar" color="#ff9800" />
         </object>
         <object id="10">
             <data group="Orchestra" />
             <midi patch="57" />
-            <visual name="Trombone" color="255|234|0" />
+            <visual name="Trombone" color="#ffea00" />
         </object>
         <object id="11">
             <data group="Orchestra" />
             <midi patch="40" />
-            <visual name="Violin" color="141|110|99" />
+            <visual name="Violin" color="#8d6e63" />
         </object>
         <object id="12">
             <data group="Orchestra" />
             <midi patch="42" />
-            <visual name="Cello" color="78|52|46" />
+            <visual name="Cello" color="#4e342e" />
         </object>
         <object id="13">
             <data group="Electronic" />
-            <visual name="8-Bit Sine" color="255|99|99" />
+            <visual name="8-Bit Sine" color="#ff6363" />
         </object>
         <object id="14">
             <data group="Electronic" />
-            <visual name="8-Bit Square" color="117|255|99" />
+            <visual name="8-Bit Square" color="#75ff63" />
         </object>
         <object id="15">
             <data group="Electronic" />
-            <visual name="8-Bit Sawtooth" color="99|224|255" />
+            <visual name="8-Bit Sawtooth" color="#63e0ff" />
         </object>
         <object id="16">
             <data group="Electronic" />
-            <visual name="8-Bit Triangle" color="253|99|255" />
+            <visual name="8-Bit Triangle" color="#fd63ff" />
         </object>
         <object id="17">
             <data group="Piano" />
             <midi patch="6" />
-            <visual name="Harpsichord" color="255|87|34" />
+            <visual name="Harpsichord" color="#ff5722" />
         </object>
         <object id="18">
             <data group="Orchestra" />
             <midi patch="45" />
-            <visual name="Concert Harp" color="27|94|32" />
+            <visual name="Concert Harp" color="#1b5e20" />
         </object>
         <object id="19">
             <data group="Percussion (MIDI)" />
             <midi patch="13" />
-            <visual name="Xylophone" color="244|67|54" />
+            <visual name="Xylophone" color="#f44336" />
         </object>
         <object id="2">
             <data group="Percussion (MIDI)" />
@@ -242,67 +242,67 @@
             <drumset id="9">
                 <visual name="Cabasa" />
             </drumset>
-            <visual name="Drum Kit" color="183|28|28" />
+            <visual name="Drum Kit" color="#b71c1c" />
         </object>
         <object id="20">
             <data group="Orchestra" />
             <midi patch="45" />
-            <visual name="Pizzicato" color="255|224|178" />
+            <visual name="Pizzicato" color="#ffe0b2" />
         </object>
         <object id="21">
             <data group="Percussion (MIDI)" />
             <midi patch="114" />
-            <visual name="Steel Drums" color="117|117|117" />
+            <visual name="Steel Drums" color="#757575" />
         </object>
         <object id="22">
             <data group="Guitar" />
             <midi patch="104" />
-            <visual name="Sitar" color="224|173|0" />
+            <visual name="Sitar" color="#e0ad00" />
         </object>
         <object id="23">
             <data group="Orchestra" />
             <midi patch="73" />
-            <visual name="Flute" color="233|249|189" />
+            <visual name="Flute" color="#e9f9bd" />
         </object>
         <object id="24">
             <data group="Testing" />
             <midi patch="64" />
-            <visual name="Saxophone" color="168|200|83" />
+            <visual name="Saxophone" color="#a8c853" />
         </object>
         <object id="25">
             <data group="Piano" />
             <midi patch="3" />
-            <visual name="Ragtime Piano" color="13|71|161" />
+            <visual name="Ragtime Piano" color="#0d47a1" />
         </object>
         <object id="26">
             <data group="Piano" />
             <midi patch="10" />
-            <visual name="Music Box" color="29|157|157" />
+            <visual name="Music Box" color="#1d9d9d" />
         </object>
         <object id="27">
             <data group="Testing" />
             <midi patch="38" />
-            <visual name="Synth Bass" color="30|197|122" />
+            <visual name="Synth Bass" color="#1ec57a" />
         </object>
         <object id="28">
             <data group="Testing" />
             <midi patch="19" />
-            <visual name="Church Organ" color="21|33|79" />
+            <visual name="Church Organ" color="#15214f" />
         </object>
         <object id="29">
             <data group="Guitar" />
             <midi patch="36" />
-            <visual name="Slap Bass" color="5|16|47" />
+            <visual name="Slap Bass" color="#05102f" />
         </object>
         <object id="3">
             <data group="electronic" />
             <midi patch="80" />
-            <visual name="Smooth Synth (Classic)" color="233|30|99" />
+            <visual name="Smooth Synth (Classic)" color="#e91e63" />
         </object>
         <object id="30">
             <data group="Testing" />
             <midi patch="50" />
-            <visual name="Pop Synth" color="108|243|183" />
+            <visual name="Pop Synth" color="#6cf3b7" />
         </object>
         <object id="31">
             <data group="Percussion (MIDI)" />
@@ -490,27 +490,27 @@
             <drumset id="9">
                 <visual name="Cabasa" />
             </drumset>
-            <visual name="Electric Drum Kit" color="255|112|112" />
+            <visual name="Electric Drum Kit" color="#ff7070" />
         </object>
         <object id="32">
             <data group="Guitar" />
             <midi patch="26" />
-            <visual name="Jazz Guitar" color="161|166|53" />
+            <visual name="Jazz Guitar" color="#a1a635" />
         </object>
         <object id="33">
             <data group="Guitar" />
             <midi patch="107" />
-            <visual name="Koto" color="234|121|0" />
+            <visual name="Koto" color="#ea7900" />
         </object>
         <object id="34">
             <data group="Percussion (MIDI)" />
             <midi patch="11" />
-            <visual name="Vibraphone" color="85|202|202" />
+            <visual name="Vibraphone" color="#55caca" />
         </object>
         <object id="35">
             <data group="Guitar" />
             <midi patch="28" />
-            <visual name="Muted E-Guitar" color="0|128|64" />
+            <visual name="Muted E-Guitar" color="#008040" />
         </object>
         <object id="36">
             <data group="Percussion (Classic)" />
@@ -569,17 +569,17 @@
             <drumset id="-33">
                 <visual name="Kick Drum 3" />
             </drumset>
-            <visual name="808 Drum Kit" color="127|15|72" />
+            <visual name="808 Drum Kit" color="#7f0f48" />
         </object>
         <object id="37">
             <data group="Testing" />
             <midi />
-            <visual name="808 Bass" color="0|0|0" />
+            <visual name="808 Bass" color="#000000" />
         </object>
         <object id="38">
             <data group="Guitar" />
             <midi patch="30" />
-            <visual name="Distortion Guitar" color="0|69|31" />
+            <visual name="Distortion Guitar" color="#00451f" />
         </object>
         <object id="39">
             <data group="Percussion (Classic)" />
@@ -602,12 +602,12 @@
             <drumset id="-29">
                 <visual name="Kick Drum" />
             </drumset>
-            <visual name="8-Bit Drum Kit" color="159|15|34" />
+            <visual name="8-Bit Drum Kit" color="#9f0f22" />
         </object>
         <object id="4">
             <data group="Guitar" />
             <midi patch="29" />
-            <visual name="Electric Guitar" color="76|175|80" />
+            <visual name="Electric Guitar" color="#4caf50" />
         </object>
         <object id="40">
             <data group="Percussion (Classic)" />
@@ -695,12 +695,12 @@
             <drumset id="-9">
                 <visual name="Splash Cymbal" />
             </drumset>
-            <visual name="2013 Drum Kit" color="130|5|21" />
+            <visual name="2013 Drum Kit" color="#820515" />
         </object>
         <object id="41">
             <data group="Piano" />
             <midi />
-            <visual name="Grand Piano" color="21|101|192" />
+            <visual name="Grand Piano" color="#1565c0" />
         </object>
         <object id="42">
             <data group="Percussion (Classic)" />
@@ -765,116 +765,116 @@
             <drumset id="-33">
                 <visual name="Kick Drum 3" />
             </drumset>
-            <visual name="909 Drum Kit" color="152|0|254" />
+            <visual name="909 Drum Kit" color="#9800fe" />
         </object>
         <object id="43">
             <data group="Piano" />
             <midi />
-            <visual name="Electric Piano" color="3|169|244" />
+            <visual name="Electric Piano" color="#03a9f4" />
         </object>
         <object id="44">
             <data group="Guitar" />
             <midi patch="42" />
-            <visual name="Dist. Guitar (Sustain)" color="0|69|31" />
+            <visual name="Dist. Guitar (Sustain)" color="#00451f" />
         </object>
         <object id="45">
             <data group="Orchestra" />
             <midi patch="42" />
-            <visual name="Cello (Sustain)" color="78|52|46" />
+            <visual name="Cello (Sustain)" color="#4e342e" />
         </object>
         <object id="46">
             <data group="Orchestra" />
             <midi patch="40" />
-            <visual name="Violin (Sustain)" color="141|110|99" />
+            <visual name="Violin (Sustain)" color="#8d6e63" />
         </object>
         <object id="47">
             <data group="Orchestra" />
             <midi patch="43" />
-            <visual name="Strings (Sustain)" color="142|118|255" />
+            <visual name="Strings (Sustain)" color="#8e76ff" />
         </object>
         <object id="48">
             <data group="Guitar" />
             <midi patch="32" />
-            <visual name="Bass" color="33|33|33" />
+            <visual name="Bass" color="#212121" />
         </object>
         <object id="49">
             <data group="Guitar" />
             <midi patch="27" />
-            <visual name="Clean Guitar" color="224|211|24" />
+            <visual name="Clean Guitar" color="#e0d318" />
         </object>
         <object id="5">
             <data group="Guitar" />
             <midi patch="32" />
-            <visual name="Bass Guitar (Classic)" color="33|33|33" />
+            <visual name="Bass Guitar (Classic)" color="#212121" />
         </object>
         <object id="50">
             <data group="Orchestra" />
             <midi patch="60" />
-            <visual name="French Horn (Sustain)" color="130|119|23" />
+            <visual name="French Horn (Sustain)" color="#827717" />
         </object>
         <object id="51">
             <data group="Orchestra" />
             <midi patch="57" />
-            <visual name="Trombone (Sustain)" color="255|234|0" />
+            <visual name="Trombone (Sustain)" color="#ffea00" />
         </object>
         <object id="52">
             <data group="Electronic" />
             <midi patch="80" />
-            <visual name="Smooth Synth" color="233|30|99" />
+            <visual name="Smooth Synth" color="#e91e63" />
         </object>
         <object id="53">
             <data group="Percussion (Classic)" />
             <midi is_drum="1" />
-            <visual name="2023 Drum Kit" color="113|0|166" />
+            <visual name="2023 Drum Kit" color="#7100a6" />
         </object>
         <object id="54">
             <data group="Guitar" />
             <midi patch="32" />
-            <visual name="Bass Guitar" color="33|33|33" />
+            <visual name="Bass Guitar" color="#212121" />
         </object>
         <object id="6">
             <data group="Electronic" />
             <midi patch="87" />
-            <visual name="Synth Pluck" color="63|81|181" />
+            <visual name="Synth Pluck" color="#3f51b5" />
         </object>
         <object id="7">
             <data group="Electronic" />
             <midi patch="99" />
-            <visual name="Scifi" color="205|220|57" />
+            <visual name="Scifi" color="#cddc39" />
         </object>
         <object id="8">
             <data group="Piano" />
             <midi />
-            <visual name="Grand Piano (Classic)" color="21|101|192" />
+            <visual name="Grand Piano (Classic)" color="#1565c0" />
         </object>
         <object id="9">
             <data group="Orchestra" />
             <midi patch="60" />
-            <visual name="French Horn" color="130|119|23" />
+            <visual name="French Horn" color="#827717" />
         </object>
         <object id="55">
             <data group="Electronic" />
-            <visual name="Synthesizer" color="255|255|255" />
+            <visual name="Synthesizer" color="#ffffff" />
         </object>
         <object id="56">
             <data group="Electronic" />
-            <visual name="Synth Bass" color="30|197|122" />
+            <visual name="Synth Bass" color="#1ec57a" />
         </object>
         <object id="57">
             <data group="Electronic" />
-            <visual name="Pop Synth" color="108|243|183" />
+            <visual name="Pop Synth" color="#6cf3b7" />
         </object>
         <object id="58">
             <data group="Guitar" />
-            <visual name="Acoustic Guitar" color="255|152|0" />
+            <visual name="Acoustic Guitar" color="#ff9800" />
         </object>
         <object id="59">
             <data group="Orchestra" />
-            <visual name="Lucent Choir" color="255|199|235" />
+            <visual name="Lucent Choir" color="#ffc7eb" />
         </object>
         <object id="60">
             <data group="Percussion (Classic)" />
-            <visual name="EDM Kit (E)" color="71|35|63" />
+            <visual name="EDM Kit (E)" color="#47233f" />
         </object>
     </category>
 </dataset>

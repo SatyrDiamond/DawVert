@@ -1,7 +1,7 @@
 <dataset>
     <category id="plugin">
         <object id="1">
-            <visual name="Analog Synth" color="57|57|57" />
+            <visual name="Analog Synth" color="#393939" />
             <param id="aOp1" name="Osc 1 Attack" type="float" max="5" />
             <param id="aOp2" name="Osc 2 Attack" type="float" max="5" />
             <param id="attack" name="Attack" type="float" max="5" />
@@ -27,7 +27,7 @@
             <param id="waveform" name="Waveform" type="int" max="2" />
         </object>
         <object id="0">
-            <visual name="FM-Synth" color="0|127|184" />
+            <visual name="FM-Synth" color="#007fb8" />
             <param id="aOp1" name="Op1 Attack" type="float" max="5" />
             <param id="aOp2" name="Op2 Attack" type="float" max="5" />
             <param id="aOp3" name="Op3 Attack" type="float" max="5" />

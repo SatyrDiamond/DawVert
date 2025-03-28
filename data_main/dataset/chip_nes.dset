@@ -1,40 +1,40 @@
 <dataset>
     <category id="chip">
         <object id="dpcm">
-            <visual name="DPCM" color="122.4|211.65|124.95" />
+            <visual name="DPCM" color="#7ad37c" />
         </object>
         <object id="fds">
-            <visual name="FDS" color="239.7|239.7|165.75" />
+            <visual name="FDS" color="#efefa5" />
         </object>
         <object id="mmc5">
-            <visual name="MMC5" color="165.75|86.7|214.2" />
+            <visual name="MMC5" color="#a556d6" />
         </object>
         <object id="n163">
-            <visual name="Namco 163" color="247.35|247.35|91.8" />
+            <visual name="Namco 163" color="#f7f75b" />
         </object>
         <object id="noise">
-            <visual name="Noise" color="84.15|188.7|229.5" />
+            <visual name="Noise" color="#54bce5" />
         </object>
         <object id="s5b">
-            <visual name="Sunsoft 5B" color="147.9|239.7|84.15" />
+            <visual name="Sunsoft 5B" color="#93ef54" />
         </object>
         <object id="square1">
-            <visual name="Square" color="247.35|142.8|91.8" />
+            <visual name="Square" color="#f78e5b" />
         </object>
         <object id="square2">
-            <visual name="Square" color="247.35|142.8|91.8" />
+            <visual name="Square" color="#f78e5b" />
         </object>
         <object id="triangle">
-            <visual name="Triangle" color="239.7|84.15|147.9" />
+            <visual name="Triangle" color="#ef5493" />
         </object>
         <object id="vrc6_saw">
-            <visual name="VRC6 Saw" color="117.3|132.6|232.05" />
+            <visual name="VRC6 Saw" color="#7584e8" />
         </object>
         <object id="vrc6_square">
-            <visual name="VRC6 Square" color="153|112.2|237.15" />
+            <visual name="VRC6 Square" color="#9970ed" />
         </object>
         <object id="vrc7_fm">
-            <visual name="VRC7 FM" color="255|117.3|112.2" />
+            <visual name="VRC7 FM" color="#ff7570" />
         </object>
     </category>
 </dataset>

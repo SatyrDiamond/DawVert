@@ -108,7 +108,7 @@ class cvpj_plugslots:
 		for x in self.slots_audio: yield 'audio', x
 
 class cvpj_instrument:
-	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots','group','latency_offset']
+	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots','group','latency_offset','visual_keynotes']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
@@ -119,6 +119,7 @@ class cvpj_instrument:
 		self.plugslots = cvpj_plugslots()
 		self.latency_offset = 0
 		self.group = None
+		self.visual_keynotes = visual.cvpj_visual_keynote()
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -190,7 +191,7 @@ class cvpj_armstate:
 		self.in_audio = False
 
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots','latency_offset']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots','latency_offset','visual_keynotes']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -217,6 +218,7 @@ class cvpj_track:
 		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq, time_float)
 		self.armed = cvpj_armstate()
 		self.latency_offset = 0
+		self.visual_keynotes = visual.cvpj_visual_keynote()
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -289,6 +291,7 @@ class cvpj_track:
 		c_obj.notelist_index = self.notelist_index
 		c_obj.armed = copy.deepcopy(self.armed)
 		c_obj.latency_offset = self.latency_offset
+		c_obj.visual_keynotes = copy.deepcopy(self.visual_keynotes)
 		return c_obj
 
 	def make_base_inst(self, inst_obj):
@@ -300,6 +303,7 @@ class cvpj_track:
 		track_obj.fxrack_channel = inst_obj.fxrack_channel
 		track_obj.plugslots = copy.deepcopy(inst_obj.plugslots)
 		track_obj.latency_offset = inst_obj.latency_offset
+		track_obj.visual_keynotes = copy.deepcopy(inst_obj.visual_keynotes)
 		return track_obj
 
 	def notelistindex__add(self, i_id):

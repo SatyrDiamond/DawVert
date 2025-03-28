@@ -55,8 +55,8 @@ class qtractor_clip_audioclip:
 		self.filename = ''
 		self.time_stretch = 1
 		self.pitch_shift = 1
-		self.wsola_time_stretch = 0
-		self.wsola_quick_seek = 1
+		self.wsola_time_stretch = 1
+		self.wsola_quick_seek = 0
 		if xmldata is not None: self.read(xmldata)
 
 	def read(self, xml_proj):
@@ -282,8 +282,8 @@ class qtractor_track_view:
 	def write(self, in_xml):
 		tempxml = ET.SubElement(in_xml, 'view')
 		set_value(tempxml, 'height', str(self.height))
-		set_value(tempxml, 'background-color', str(self.background_color))
-		set_value(tempxml, 'foreground-color', str(self.foreground_color))
+		if self.background_color: set_value(tempxml, 'background-color', str(self.background_color))
+		if self.foreground_color: set_value(tempxml, 'foreground-color', str(self.foreground_color))
 
 class qtractor_track:
 	def __init__(self, xmldata):

@@ -25,6 +25,7 @@ class input_midi(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
+		in_dict['audio_filetypes'] = ['wav']
 		in_dict['file_ext'] = ['qtr']
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['fxtype'] = 'groupreturn'

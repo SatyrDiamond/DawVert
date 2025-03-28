@@ -694,6 +694,7 @@ class output_soundbridge(plugins.base):
 							sb_plugin = sb_track.midiInstrument = make_sampler(convproj_obj, plugin_obj)
 							statewriter = bytewriter.bytewriter()
 							sampler_data = sampler.soundbridge_sampler_main()
+							sampler_data.sampler_mode = 1
 
 							is_sampler = True
 							ordernum = 0
@@ -770,9 +771,9 @@ class output_soundbridge(plugins.base):
 												sample_params.key_min = 60+num
 												sample_params.key_max = 60+num
 											else:
-												sample_params.key_root = slice_obj.custom_key
-												sample_params.key_min = slice_obj.custom_key
-												sample_params.key_max = slice_obj.custom_key
+												sample_params.key_root = 60+slice_obj.custom_key
+												sample_params.key_min = 60+slice_obj.custom_key
+												sample_params.key_max = 60+slice_obj.custom_key
 											sampler_entry.slices[num][1] = int(slice_obj.start*hzchange)
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())

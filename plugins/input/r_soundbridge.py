@@ -105,7 +105,7 @@ def make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid):
 				track_obj.sends.add('return__'+str(splitret[1]), sendautoid, x.defaultValue)
 				add_auto(x.defaultValue, None, convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
 
-def create_plugin(convproj_obj, sb_plugin, issynth):
+def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 	from objects.file_proj._soundbridge import sampler
 	uiddata = soundbridge_func.decode_chunk(sb_plugin.uid)
 	statedata = soundbridge_func.decode_chunk(sb_plugin.state)
@@ -139,6 +139,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 					samplepart_obj.start = sb_sample.start
 					samplepart_obj.end = sb_sample.end
 					samplepart_obj.visual.name = sb_sample.name
+					track_obj.datavals.add('middlenote', (sample_params.key_root-60))
 					if 'SampleColor' in sb_sample.metadata:
 						samplepart_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
 						plugin_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
@@ -270,7 +271,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth):
 def do_fx(cvpj_trackid, convproj_obj, sb_track, track_obj):
 	track_obj.plugslots.slots_audio_enabled = not bool(sb_track.audioUnitsBypass)
 	for x in sb_track.audioUnits:
-		pluginid = create_plugin(convproj_obj, x, False)
+		pluginid = create_plugin(convproj_obj, x, False, track_obj)
 		if pluginid:
 			track_obj.plugslots.slots_audio.append(pluginid)
 
@@ -337,7 +338,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 		if sb_track.midiInstrument:
 			midiinst = sb_track.midiInstrument
-			track_obj.plugslots.set_synth( create_plugin(convproj_obj, midiinst, True) )
+			track_obj.plugslots.set_synth( create_plugin(convproj_obj, midiinst, True, track_obj) )
 
 		if sb_track.midiInput:
 			track_obj.midi.in_chanport.chan = sb_track.midiInput.channelIndex+1

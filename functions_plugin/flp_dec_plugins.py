@@ -212,6 +212,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 				wrapper_vstdata = pluginstate[4:]
 
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 				if 'clapid' in wrapperdata: 
 					extmanu_obj.clap__replace_data('id', wrapperdata['clapid'], wrapper_vstdata, None)
 					if 'name' in wrapperdata: plugin_obj.external_info.name = wrapperdata['name']

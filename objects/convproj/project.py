@@ -184,6 +184,15 @@ class cvpj_project_midi_custom_instrument:
 		self.visual = visual.cvpj_visual()
 		self.pluginid = None
 
+	def get_match_dict(self):
+		out = {}
+		if self.track is not None: out['track'] = self.track
+		if self.chan is not None: out['chan'] = self.chan
+		if self.bank_hi is not None: out['bank_hi'] = self.bank_hi
+		if self.bank is not None: out['bank'] = self.bank
+		if self.patch is not None: out['patch'] = self.patch
+		return out
+
 class cvpj_project_midi:
 	def __init__(self):
 		self.num_channels = 16

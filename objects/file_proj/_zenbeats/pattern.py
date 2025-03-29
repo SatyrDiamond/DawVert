@@ -57,6 +57,9 @@ class zenbeats_note:
 		self.probability = 1.0
 		self.velocity_jitter = None
 		self.filter_high_cut = None
+		self.reverse = 0
+		self.pan_linear = 0.5
+
 		if xml_data is not None: self.read(xml_data)
 
 	def read(self, xml_data):
@@ -72,6 +75,8 @@ class zenbeats_note:
 		if 'probability' in attrib: self.probability = float(attrib['probability'])
 		if 'velocity_jitter' in attrib: self.velocity_jitter = float(attrib['velocity_jitter'])
 		if 'filter_high_cut' in attrib: self.filter_high_cut = float(attrib['filter_high_cut'])
+		if 'reverse' in attrib: self.reverse = float(attrib['reverse'])
+		if 'pan_linear' in attrib: self.pan_linear = float(attrib['pan_linear'])
 
 	def write(self, xml_data):
 		tempxml = ET.SubElement(xml_data, "note")

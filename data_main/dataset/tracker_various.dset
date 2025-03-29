@@ -1,0 +1,22 @@
+<dataset>
+    <category id="it">
+        <object id="main">
+            <visual color="#B59775" />
+        </object>
+    </category>
+    <category id="s3m">
+        <object id="main">
+            <visual color="#A69255" />
+        </object>
+    </category>
+    <category id="mod">
+        <object id="main">
+            <visual color="#888888" />
+        </object>
+    </category>
+    <category id="xm">
+        <object id="main">
+            <visual color="#285586" />
+        </object>
+    </category>
+</dataset>

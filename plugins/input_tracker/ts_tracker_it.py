@@ -97,6 +97,8 @@ class input_it(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import tracker_it as proj_it
 		global samplefolder
+		from objects import globalstore
+		globalstore.dataset.load('tracker_various', './data_main/dataset/tracker_various.dset')
 
 		project_obj = proj_it.it_song()
 		if dawvert_intent.input_mode == 'file':
@@ -129,7 +131,7 @@ class input_it(plugins.base):
 
 		tracker_obj = convproj_obj.main__create_tracker_single()
 		tracker_obj.set_num_chans(64)
-		tracker_obj.maincolor = [0.71, 0.58, 0.47]
+		tracker_obj.mainvisual.from_dset('tracker_various', 'it', 'main', True)
 		tracker_obj.tempo = project_obj.tempo
 		tracker_obj.speed = project_obj.speed
 

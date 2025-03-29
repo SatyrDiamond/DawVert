@@ -3,6 +3,7 @@
 
 from objects.convproj.tracker import notestream
 from objects.convproj.tracker import pat_data
+from objects.convproj import visual
 
 class single_pattern:
 	def __init__(self, num_channels, num_rows):
@@ -41,7 +42,7 @@ class convproj_tracker_patsong:
 		self.channels = [pat_data.tracker_channel() for _ in range(self.num_chans)]
 		self.patdata = {}
 		self.assoc_instid = {}
-		self.maincolor = None
+		self.mainvisual = visual.cvpj_visual()
 		self.orders = []
 		self.timepoints = []
 		self.tempo = 120
@@ -51,7 +52,7 @@ class convproj_tracker_patsong:
 	def add_inst(self, convproj_obj, instnum, instid):
 		instid = instid if instid else 'inst_'+str(instnum)
 		inst_obj = convproj_obj.instrument__add(instid)
-		inst_obj.visual.color.set_float(self.maincolor)
+		inst_obj.visual.color = self.mainvisual.color.copy()
 		self.assoc_instid[instnum+1] = instid
 		return inst_obj
 

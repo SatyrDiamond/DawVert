@@ -9,6 +9,7 @@ import math
 from objects import globalstore
 from objects import colors
 from functions import xtramath
+from functions import data_xml
 from functions.juce import juce_memoryblock
 
 def do_visual(cvpj_visual, zb_visual, color_index, colordata):
@@ -28,8 +29,185 @@ def do_auto(convproj_obj, autoloc, curve, parammode):
 		if parammode == 3: val = (p.value-0.5)*2
 		convproj_obj.automation.add_autopoint(autoloc, valtype, p.position, val, 'normal')
 
+filter_types = {
+	'1': 'low_pass',
+	'2': 'high_pass',
+	'3': 'band_pass',
+	'4': 'notch'
+}
+
+def set_filter_type(filter_obj, num):
+	if num in filter_types: filter_obj.type.set(filter_types[num], None)
+
+def param_find(plugin_obj, cvpjname, xmldata, xmlname, add, mul):
+	paramdata = data_xml.find_first(xmldata, 'Gain')
+	if paramdata is not None:
+		paramval = float(paramdata.get('value'))
+		if paramval is not None:
+			param_obj = plugin_obj.params.add(cvpjname, (paramval+add)*mul, 'float')
+
+def get_value(xmldata, xmlname, fallbackv):
+	paramdata = data_xml.find_first(xmldata, xmlname)
+	if paramdata is not None:
+		paramval = float(paramdata.get('value'))
+		return paramval if paramval is not None else fallbackv
+	else: return fallbackv
+
+def do_plugin(convproj_obj, strproc, track_obj):
+	pluginid = strproc.uid
+	plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', strproc.plugin.name)
+	if strproc.stream_processor_type == 4:
+		plugin_obj.role = 'synth'
+		track_obj.plugslots.set_synth(pluginid)
+	if strproc.stream_processor_type == 3:
+		plugin_obj.role = 'effect'
+		track_obj.plugslots.slots_audio.append(pluginid)
+
+	plugin_xml_data = strproc.plugin_xml_data
+
+	if plugin_xml_data is not None:
+		if strproc.plugin.name == 'ZC1':
+			attrib = plugin_xml_data.attrib
+			if 'voice_count' in attrib: 
+				plugin_obj.poly.max = int(attrib['voice_count'])
+			if 'mod_wheel_value' in attrib: 
+				plugin_obj.datavals.add('mod_wheel_value', float(attrib['mod_wheel_value']))
+			for x_part in plugin_xml_data:
+				if x_part.tag == 'zn':
+					for x_inpart in x_part:
+						if x_inpart.tag == 'state':
+							extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+							try: 
+								statedata = juce_memoryblock.fromJuceBase64Encoding(x_inpart.text)
+								extmanu_obj.vst2__import_presetdata('raw', statedata, None)
+							except: pass
+
+		# Native
+
+		# Universal
+
+		if strproc.plugin.format == 'StageLight':
+
+			if strproc.plugin.name == 'Zenbeats EQ':
+				plugin_obj.type_set('universal', 'eq', 'bands')
+				xmlparams = data_xml.find_first(plugin_xml_data, 'RolandEQ')
+				if xmlparams is not None:
+					attribvals = xmlparams.attrib
+
+					filter_obj, filterid = plugin_obj.eq_add()
+					filter_obj.type.set('peak', None)
+					if 'LoEnable' in attribvals: filter_obj.on = bool(float(attribvals['LoEnable']))
+					if 'LoFreq' in attribvals: filter_obj.freq = float(attribvals['LoFreq'])
+					if 'LoGain' in attribvals: filter_obj.gain = float(attribvals['LoGain'])
+					if 'LoQ' in attribvals: filter_obj.q = float(attribvals['LoQ'])
+
+					filter_obj, filterid = plugin_obj.eq_add()
+					filter_obj.type.set('peak', None)
+					if 'LoMidEnable' in attribvals: filter_obj.on = bool(float(attribvals['LoMidEnable']))
+					if 'LoMidFreq' in attribvals: filter_obj.freq = float(attribvals['LoMidFreq'])
+					if 'LoMidGain' in attribvals: filter_obj.gain = float(attribvals['LoMidGain'])
+					if 'LoMidQ' in attribvals: filter_obj.q = float(attribvals['LoMidQ'])
+
+					filter_obj, filterid = plugin_obj.eq_add()
+					filter_obj.type.set('peak', None)
+					if 'MidEnable' in attribvals: filter_obj.on = bool(float(attribvals['MidEnable']))
+					if 'MidFreq' in attribvals: filter_obj.freq = float(attribvals['MidFreq'])
+					if 'MidGain' in attribvals: filter_obj.gain = float(attribvals['MidGain'])
+					if 'MidQ' in attribvals: filter_obj.q = float(attribvals['MidQ'])
+
+					filter_obj, filterid = plugin_obj.eq_add()
+					filter_obj.type.set('peak', None)
+					if 'HiMidEnable' in attribvals: filter_obj.on = bool(float(attribvals['HiMidEnable']))
+					if 'HiMidFreq' in attribvals: filter_obj.freq = float(attribvals['HiMidFreq'])
+					if 'HiMidGain' in attribvals: filter_obj.gain = float(attribvals['HiMidGain'])
+					if 'HiMidQ' in attribvals: filter_obj.q = float(attribvals['HiMidQ'])
+
+					filter_obj, filterid = plugin_obj.eq_add()
+					filter_obj.type.set('peak', None)
+					if 'HiEnable' in attribvals: filter_obj.on = bool(float(attribvals['HiEnable']))
+					if 'HiFreq' in attribvals: filter_obj.freq = float(attribvals['HiFreq'])
+					if 'HiGain' in attribvals: filter_obj.gain = float(attribvals['HiGain'])
+					if 'HiQ' in attribvals: filter_obj.q = float(attribvals['HiQ'])
+
+			if strproc.plugin.name == 'Zenbeats Limiter':
+				plugin_obj.type_set('universal', 'limiter', None)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'ZBLimiter')
+				if xmlparams is not None:
+					attribvals = xmlparams.attrib
+
+					if 'Release' in attribvals:
+						plugin_obj.params.add('release', float(attribvals['Release'])/100, 'float')
+					if 'Threshold' in attribvals:
+						plugin_obj.params.add('threshold', float(attribvals['Threshold']), 'float')
+					if 'Ceiling' in attribvals:
+						plugin_obj.params.add('ceiling', float(attribvals['Ceiling']), 'float')
+	
+			if strproc.plugin.name == 'Equalizer':
+				plugin_obj.type_set('universal', 'eq', '8limited')
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Equalizer')
+				if xmlparams is not None:
+					for fnum in range(4):
+						filterparams = data_xml.find_first(xmlparams, 'filter%i'%(fnum))
+						if filterparams:
+							dynamicfilter = data_xml.find_first(filterparams, 'DynamicFilter')
+							if dynamicfilter:
+								if fnum == 0: 
+									filter_obj = plugin_obj.named_filter_add('low_shelf')
+									filter_obj.type.set('low_shelf', None)
+								if fnum == 1: 
+									filter_obj = plugin_obj.named_filter_add('peak_1')
+									filter_obj.type.set('peak', None)
+								if fnum == 2: 
+									filter_obj = plugin_obj.named_filter_add('peak_2')
+									filter_obj.type.set('peak', None)
+								if fnum == 3: 
+									filter_obj = plugin_obj.named_filter_add('high_shelf')
+									filter_obj.type.set('high_shelf', None)
+								filter_obj.on = True
+								filter_obj.freq = get_value(dynamicfilter, 'Freq%i'%(fnum+1), 10000)
+								filter_obj.gain = get_value(dynamicfilter, 'Gain', 0)
+
+			if strproc.plugin.name == 'Limiter':
+				plugin_obj.type_set('universal', 'limiter', None)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Limiter')
+				if xmlparams is not None:
+					param_find(plugin_obj, 'pregain', xmlparams, 'Gain', 0, 1)
+					param_find(plugin_obj, 'release', xmlparams, 'Release', 0, 0.001)
+					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
+
+			if strproc.plugin.name == 'Compressor':
+				plugin_obj.type_set('universal', 'compressor', None)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Compressor')
+				if xmlparams is not None:
+					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
+					param_find(plugin_obj, 'ratio', xmlparams, 'Ratio', 0, 1)
+					param_find(plugin_obj, 'attack', xmlparams, 'Attack', 0, 0.001)
+					param_find(plugin_obj, 'release', xmlparams, 'Release', 0, 0.001)
+					param_find(plugin_obj, 'lookahead', xmlparams, 'Lookahead', 0, 0.001)
+					param_find(plugin_obj, 'gain', xmlparams, 'Gain', 0, 1)
+					param_find(plugin_obj, 'knee', xmlparams, 'Knee', 0, 1)
+
+			if strproc.plugin.name == 'Limiter':
+				plugin_obj.type_set('universal', 'limiter', None)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Limiter')
+				if xmlparams is not None:
+					param_find(plugin_obj, 'pregain', xmlparams, 'Gain', 0, 1)
+					param_find(plugin_obj, 'release', xmlparams, 'Release', 0, 0.001)
+					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
+	
+			if strproc.plugin.name == 'Filter':
+				plugin_obj.type_set('universal', 'filter', None)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Filter')
+				if xmlparams is not None:
+					plugin_obj.filter.on = True
+					set_filter_type(plugin_obj.filter, xmlparams.get('filterType'))
+					plugin_obj.filter.freq = get_value(xmlparams, 'Freq', 18007)
+					plugin_obj.filter.q = get_value(xmlparams, 'Res', 1)
+
 def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc):
+
 	for rack in project_obj.bank.racks:
+
 		if rack.uid==zb_track.output_rack_uid:
 			track_obj.params.add('vol', rack.gain, 'float')
 			track_obj.params.add('solo', bool(rack.solo), 'bool')
@@ -46,39 +224,15 @@ def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc):
 						if curve.function == 'DF_MUTE': do_auto(convproj_obj, autoloc+['enabled'], curve, 2)
 						if curve.function == 'DF_SOLO': do_auto(convproj_obj, autoloc+['solo'], curve, 1)
 
+			if rack.signal_chain:
+				strprocs = rack.signal_chain.stream_processors
+	
+				for strproc in strprocs:
+					if strproc.plugin:
+						do_plugin(convproj_obj, strproc, track_obj)
+	
 			break
 
-		if rack.signal_chain:
-			strprocs = rack.signal_chain.stream_processors
-			for strproc in strprocs:
-				if strproc.plugin:
-					pluginid = strproc.uid
-					#print(strproc.stream_processor_type, strproc.plugin.name)
-					plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'native', strproc.plugin.name)
-					if strproc.stream_processor_type == 4:
-						plugin_obj.role = 'synth'
-						track_obj.plugslots.set_synth(pluginid)
-					if strproc.stream_processor_type == 3:
-						plugin_obj.role = 'effect'
-						track_obj.plugslots.slots_audio.append(pluginid)
-
-					if strproc.plugin.name == 'ZC1':
-						if strproc.plugin_xml_data is not None:
-							plugin_xml_data = strproc.plugin_xml_data
-							attrib = plugin_xml_data.attrib
-							if 'voice_count' in attrib: 
-								plugin_obj.poly.max = int(attrib['voice_count'])
-							if 'mod_wheel_value' in attrib: 
-								plugin_obj.datavals.add('mod_wheel_value', float(attrib['mod_wheel_value']))
-							for x_part in plugin_xml_data:
-								if x_part.tag == 'zn':
-									for x_inpart in x_part:
-										if x_inpart.tag == 'state':
-											extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
-											try: 
-												statedata = juce_memoryblock.fromJuceBase64Encoding(x_inpart.text)
-												extmanu_obj.vst2__import_presetdata('raw', statedata, None)
-											except: pass
 
 class input_zenbeats(plugins.base):
 	def is_dawvert_plugin(self):
@@ -175,8 +329,12 @@ class input_zenbeats(plugins.base):
 						placement_obj.locked = zb_pattern.locked
 
 						for zb_note in zb_pattern.notes:
+							pan = (zb_note.pan_linear-0.5)*2
 							note_dur = max(zb_note.end-zb_note.start, 0)
-							placement_obj.notelist.add_r(zb_note.start, note_dur, zb_note.semitone-60, zb_note.velocity/127, None)
+							extradata = {}
+							if pan: extradata['pan'] = pan
+							if zb_note.probability != 1: extradata['probability'] = zb_note.probability
+							placement_obj.notelist.add_r(zb_note.start, note_dur, zb_note.semitone-60, zb_note.velocity/127, extradata if extradata else None)
 	
 				if zb_track.type == 2:
 					track_obj = convproj_obj.track__add(zb_track.uid, 'audio', 1, False)

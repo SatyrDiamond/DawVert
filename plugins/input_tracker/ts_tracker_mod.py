@@ -35,6 +35,8 @@ class input_mod(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import tracker_mod as proj_mod
 		from objects import audio_data
+		from objects import globalstore
+		globalstore.dataset.load('tracker_various', './data_main/dataset/tracker_various.dset')
 		
 		project_obj = proj_mod.mod_song()
 		if dawvert_intent.input_mode == 'file':
@@ -48,7 +50,7 @@ class input_mod(plugins.base):
 
 		tracker_obj = convproj_obj.main__create_tracker_single()
 		tracker_obj.set_num_chans(project_obj.num_chans)
-		tracker_obj.maincolor = [0.47, 0.47, 0.47]
+		tracker_obj.mainvisual.from_dset('tracker_various', 'mod', 'main', True)
 		tracker_obj.tempo = 125
 		tracker_obj.speed = 6
 		tracker_obj.orders = project_obj.l_order

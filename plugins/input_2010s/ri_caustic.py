@@ -51,7 +51,7 @@ def add_caustic_fx(convproj_obj, track_obj, caustic_fx, start_plugid):
 			plugin_obj.role = 'fx'
 			plugin_obj.fxdata_add(bool(not int(controls_data[5])), 1)
 			plugin_obj.visual.from_dset('caustic', 'plugin_fx', fxtype, True)
-
+			plugin_obj.datavals.add('mode', caustic_fx_data.mode)
 			for param_id, dset_param in globalstore.dataset.get_params('caustic', 'plugin_fx', fxtype):
 				if param_id != '5':
 					outval = controls_data[int(param_id)] if int(param_id) in controls_data else None

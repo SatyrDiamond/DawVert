@@ -4,6 +4,7 @@
 import numpy as np
 import objects.midi_modernize.gfunc as gfunc
 import objects.midi_modernize.devices_types as devices_types
+import objects.midi_modernize.instruments as instruments
 from functions import value_midi
 
 class midivis_data:
@@ -141,13 +142,7 @@ class visstore_data:
 				if cus_inst.visual.name:
 					minst = self.used_inst[w]
 					insto.name_used = True
-					cname = cus_inst.visual.name
-					cname = cname.replace('$track$', str(minst['track']+1))
-					cname = cname.replace('$chan$', str(minst['chan']+1))
-					cname = cname.replace('$bank_hi$', str(minst['bank_hi']))
-					cname = cname.replace('$bank$', str(minst['bank']))
-					cname = cname.replace('$patch$', str(minst['patch']))
-					insto.name = cname
+					insto.name = instruments.replacetxt(minst, cus_inst.visual.name)
 
 	def set_used_inst(self, used_inst):
 		self.used_inst = used_inst

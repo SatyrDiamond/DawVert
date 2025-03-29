@@ -100,3 +100,21 @@ def cvpj_create_instrument(convproj_obj, inst):
 	midi_obj.device = devices_types.get_devname(inst['device'])
 	inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 	return inst_obj
+
+def match_custom(inst, custinst):
+	getdict = custinst.get_match_dict()
+	outc = True
+	if 'track' in getdict: outc = outc or getdict['track']==inst['track']
+	if 'chan' in getdict: outc = outc or getdict['chan']==inst['chan']
+	if 'bank_hi' in getdict: outc = outc or getdict['bank_hi']==inst['bank_hi']
+	if 'bank' in getdict: outc = outc or getdict['bank']==inst['bank']
+	if 'patch' in getdict: outc = outc or getdict['patch']==inst['patch']
+	return outc
+
+def replacetxt(inst, cname):
+	cname = cname.replace('$track$', str(inst['track']+1))
+	cname = cname.replace('$chan$', str(inst['chan']+1))
+	cname = cname.replace('$bank_hi$', str(inst['bank_hi']))
+	cname = cname.replace('$bank$', str(inst['bank']))
+	cname = cname.replace('$patch$', str(inst['patch']))
+	return cname

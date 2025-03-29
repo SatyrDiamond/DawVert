@@ -293,6 +293,10 @@ def convert(convproj_obj):
 		inst_obj = instruments.cvpj_create_instrument(convproj_obj, inst)
 		inst_obj.fxrack_channel = fxmaker.get_fxid(inst['port'], inst['chan'])
 		visstore_data.vis_inst[n].to_cvpj_visual(inst_obj.visual)
+		for x in convproj_obj.midi_cust_inst:
+			if instruments.match_custom(inst, x):
+				pluginid = instruments.replacetxt(inst, x.pluginid)
+				inst_obj.plugslots.set_synth(pluginid)
 
 	for po in range(num_ports):
 		for ch in range(num_channels):

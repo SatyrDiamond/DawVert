@@ -334,6 +334,7 @@ class input_zenbeats(plugins.base):
 							extradata = {}
 							if pan: extradata['pan'] = pan
 							if zb_note.probability != 1: extradata['probability'] = zb_note.probability
+							if zb_note.pitch_offset != 0: extradata['finepitch'] = zb_note.pitch_offset
 							placement_obj.notelist.add_r(zb_note.start, note_dur, zb_note.semitone-60, zb_note.velocity/127, extradata if extradata else None)
 	
 				if zb_track.type == 2:

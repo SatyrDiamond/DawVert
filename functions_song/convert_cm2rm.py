@@ -342,7 +342,8 @@ def convert(convproj_obj):
 								None)
 		
 		else:
-			for n, track_obj in enumerate(trackdata):
+			for n, strackdata in enumerate(trackdata):
+				track_obj = strackdata[1]
 				visstore_data.vis_track[n].to_cvpj_visual(track_obj.visual)
 				midievents_obj = track_obj.placements.midievents
 				midievents = midievents_obj.data

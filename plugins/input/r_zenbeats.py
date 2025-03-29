@@ -258,6 +258,7 @@ class input_zenbeats(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['plugin_included'] = ['universal:eq:bands','universal:limiter','universal:eq:8limited','universal:limiter','universal:compressor','universal:limiter','universal:filter']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import zenbeats as proj_zenbeats

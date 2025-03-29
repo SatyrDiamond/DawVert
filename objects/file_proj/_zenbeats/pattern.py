@@ -59,6 +59,7 @@ class zenbeats_note:
 		self.filter_high_cut = None
 		self.reverse = 0
 		self.pan_linear = 0.5
+		self.pitch_offset = 0
 
 		if xml_data is not None: self.read(xml_data)
 
@@ -77,6 +78,7 @@ class zenbeats_note:
 		if 'filter_high_cut' in attrib: self.filter_high_cut = float(attrib['filter_high_cut'])
 		if 'reverse' in attrib: self.reverse = float(attrib['reverse'])
 		if 'pan_linear' in attrib: self.pan_linear = float(attrib['pan_linear'])
+		if 'pitch_offset' in attrib: self.pitch_offset = float(attrib['pitch_offset'])*100
 
 	def write(self, xml_data):
 		tempxml = ET.SubElement(xml_data, "note")

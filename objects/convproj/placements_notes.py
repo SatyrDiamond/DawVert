@@ -151,6 +151,18 @@ class cvpj_placements_notes:
 
 		self.data = new_data_notes
 
+	def make_base_from_midi(self, midip):
+		plb_obj = cvpj_placement_notes(self.time_ppq, self.time_float)
+		plb_obj.time = midip.time.copy()
+		plb_obj.time_ppq = midip.time_ppq
+		plb_obj.time_float = midip.time_float
+		plb_obj.muted = midip.muted
+		plb_obj.visual = midip.visual
+		plb_obj.group = midip.group
+		plb_obj.locked = midip.locked
+		self.data.append(plb_obj)
+		return plb_obj
+
 class cvpj_placement_notes:
 	__slots__ = ['time','muted','visual','notelist','time_ppq','time_float','auto','timesig_auto','timemarkers','group','locked']
 	def __init__(self, time_ppq, time_float):

@@ -36,7 +36,7 @@ class input_s3m(plugins.base):
 		from objects.file_proj_tracker import tracker_s3m as proj_s3m
 		from objects import globalstore
 		globalstore.dataset.load('tracker_various', './data_main/dataset/tracker_various.dset')
-		
+
 		project_obj = proj_s3m.s3m_song()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
@@ -69,7 +69,7 @@ class input_s3m(plugins.base):
 			wave_path = samplefolder+str(s3m_numinst).zfill(2)+'.wav'
 			inst_obj = tracker_obj.add_inst(convproj_obj, s3m_numinst, None)
 			inst_obj.visual.name = cvpj_inst_name
-			if not s3m_inst.type: inst_obj.visual.color.set_float([0.32, 0.27, 0.16])
+			if not s3m_inst.type: inst_obj.visual.color *= 0.4
 			inst_obj.params.add('vol', 0.3, 'float')
 
 			if s3m_inst.type == 1:

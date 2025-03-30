@@ -89,6 +89,8 @@ class output_bandlab(plugins.base):
 					qt_track.view.foreground_color = '#'+color.get_hex()
 					qt_track.view.background_color = '#'+(color*0.6).get_hex()
 
+				qt_track.view.height = int(track_obj.visual_ui.height*96)
+
 				if track_obj.type == 'audio':
 					qt_track.type = 'audio'
 					for audiopl_obj in track_obj.placements.pl_audio:
@@ -124,6 +126,7 @@ class output_bandlab(plugins.base):
 						qt_clip.midiclip = proj_qtractor.qtractor_clip_midiclip(None)
 
 						notelist = notespl_obj.notelist
+						notelist.mod_limit(-60, 67)
 						if notelist not in tracknotes_midinames:
 							tracknotes_midinames.append(notelist)
 							filename = 'track_%s_clip_%i' % (trackid, len(tracknotes_midinames)-1)

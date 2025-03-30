@@ -394,6 +394,7 @@ class output_lmms(plugins.base):
 			if track_obj.type in ['instrument', 'audio']:
 				lmms_track = proj_lmms.lmms_track()
 				lmms_track.name = trackname
+				lmms_track.height = int(max(track_obj.visual_ui.height, 1)*32)
 				song_obj.trackcontainer.tracks.append(lmms_track)
 
 				if trackcolor: lmms_track.color = '#' + trackcolor.get_hex()

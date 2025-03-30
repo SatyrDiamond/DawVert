@@ -627,6 +627,7 @@ class input_flp(plugins.base):
 						playlist_obj = convproj_obj.playlist__add(playlistline-1, 1, True)
 						color = fl_arrangement.tracks[playlistline].color.to_bytes(4, "little")
 						if color != b'HQV\x00': playlist_obj.visual.color.set_int([color[0],color[1],color[2]])
+						playlist_obj.visual_ui.height = fl_arrangement.tracks[playlistline].height
 						temp_pl_track[playlistline] = playlist_obj
 
 				if item.itemindex > item.patternbase and playlistline in temp_pl_track:

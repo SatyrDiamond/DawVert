@@ -66,6 +66,9 @@ class input_midi(plugins.base):
 			if qtrack.view.foreground_color:
 				track_obj.visual.color.set_hex(qtrack.view.foreground_color)
 
+			if qtrack.view.height:
+				track_obj.visual_ui.height = qtrack.view.height/96
+
 			track_obj.params.add('vol', qtrack.state.gain, 'float')
 			track_obj.params.add('pan', qtrack.state.panning, 'float')
 			track_obj.params.add('enabled', bool(not qtrack.state.mute), 'bool')

@@ -312,6 +312,8 @@ class cvpj_placements:
 
 	def add_video(self): return self.pl_video.add()
 
+	def add_midi(self): return self.pl_midi.add(self.time_ppq, self.time_float)
+
 	def add_custom(self): return self.pl_custom.add()
 
 	def all_stretch_set_pitch_nonsync(self):

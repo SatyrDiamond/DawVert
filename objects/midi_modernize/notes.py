@@ -15,6 +15,7 @@ midinote_premake = dynbytearr.dynbytearr_premake([
 	('key', np.uint8),
 	('vol', np.uint8),
 	('inst', instruments.midi_instrument),
+	('section', np.uint64),
 	])
 
 max64 = 18446744073709551615
@@ -60,6 +61,7 @@ class notes_data:
 		cur_notes['vol'] = vol
 		cur_notes['complete'] = 1
 		cur_notes['end'] = pos+dur
+		return cur_notes
 
 	def add_note_on(self, track, pos, chan, port, key, vol):
 		cur_notes = self.cur_notes
@@ -70,6 +72,7 @@ class notes_data:
 		cur_notes['key'] = key
 		cur_notes['vol'] = vol
 		self.notes[port][chan][key].append(self.cur_notes.pos)
+		return cur_notes
 
 	def add_note_off(self, chan, port, key, pos):
 		nd = self.notes[port][chan][key]
@@ -139,6 +142,10 @@ class notes_data:
 	def filter_track(self, n):
 		notesdata = self.all_notes.data
 		return notesdata[np.where(notesdata['track']==n)]
+
+	def filter_track_section(self, n, s):
+		notesdata = self.all_notes.get_used()
+		return notesdata[np.logical_and(notesdata['track']==n, notesdata['section']==s)]
 
 	def get_global_startpos(self):
 		gstartpos = self.startpos[self.startpos!=-1]

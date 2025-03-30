@@ -275,7 +275,7 @@ class qtractor_track_view:
 
 	def read(self, xml_proj):
 		for xmlpart in xml_proj:
-			if xmlpart.tag == 'height': self.height = xmlpart.text
+			if xmlpart.tag == 'height': self.height = int(xmlpart.text)
 			if xmlpart.tag == 'background-color': self.background_color = xmlpart.text
 			if xmlpart.tag == 'foreground-color': self.foreground_color = xmlpart.text
 

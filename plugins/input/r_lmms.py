@@ -459,6 +459,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.params.add('enabled', cvpj_enabled, 'bool')
 			track_obj.params.add('solo', cvpj_solo, 'bool')
 			track_obj.visual.name = lmms_track.name
+			track_obj.visual_ui.height = lmms_track.height/32
 			if isbb: track_obj.visual.name += ' [BB]'
 
 			insttr_obj = lmms_track.instrumenttrack
@@ -611,6 +612,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.params.add('enabled', cvpj_enabled, 'bool')
 			track_obj.params.add('solo', cvpj_solo, 'bool')
 			track_obj.visual.name = lmms_track.name
+			track_obj.visual_ui.height = lmms_track.height/32
 			if isbb: track_obj.visual.name += ' [BB]'
 			if lmms_track.color: track_obj.visual.color.set_hex(lmms_track.color)
 

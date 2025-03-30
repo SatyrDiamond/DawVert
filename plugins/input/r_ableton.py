@@ -500,6 +500,10 @@ class input_ableton(plugins.base):
 					track_obj.armed.on = True
 					track_obj.armed.in_keys = True
 
+				AutomationLanes = als_track.DeviceChain.AutomationLanes.AutomationLanes
+				if 0 in AutomationLanes:
+					track_obj.visual_ui.height = AutomationLanes[0].LaneHeight/85
+
 			elif tracktype == 'audio':
 				fxloc = ['track', track_id]
 				track_vol = doparam(track_mixer.Volume, 'Volume', 'float', 0, fxloc+['vol'], None)
@@ -530,6 +534,10 @@ class input_ableton(plugins.base):
 				if mainseq.Recorder.IsArmed:
 					track_obj.armed.on = True
 					track_obj.armed.in_audio = True
+
+				AutomationLanes = als_track.DeviceChain.AutomationLanes.AutomationLanes
+				if 0 in AutomationLanes:
+					track_obj.visual_ui.height = AutomationLanes[0].LaneHeight/85
 
 				if not DEBUG_DISABLE_PLACEMENTS:
 					
@@ -659,6 +667,10 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				track_obj.latency_offset = lattime
 
+				AutomationLanes = als_track.DeviceChain.AutomationLanes.AutomationLanes
+				if 0 in AutomationLanes:
+					track_obj.visual_ui.height = AutomationLanes[0].LaneHeight/68
+
 				if track_mixer.PanMode == 1:
 					track_obj.datavals.add('pan_mode', 'split')
 					splitstereopanl = doparam(track_mixer.SplitStereoPanL, 'Pan L', 'float', 0, fxloc+['splitpan_left'], None)
@@ -683,6 +695,10 @@ class input_ableton(plugins.base):
 				track_obj.params.add('pan', track_pan, 'float')
 				if track_inside_group != -1: track_obj.group = 'group_'+str(track_inside_group)
 				track_obj.latency_offset = lattime
+
+				AutomationLanes = als_track.DeviceChain.AutomationLanes.AutomationLanes
+				if 0 in AutomationLanes:
+					track_obj.visual_ui.height = AutomationLanes[0].LaneHeight/85
 
 				if track_mixer.PanMode == 1:
 					track_obj.datavals.add('pan_mode', 'split')

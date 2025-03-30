@@ -776,6 +776,7 @@ class lmms_track:
 		self.type = 0
 		self.name = ''
 		self.color = ''
+		self.height = 32
 		self.patterns = []
 		self.instrumenttrack = lmms_instrumenttrack()
 		self.sampletrack = lmms_sampletrack()
@@ -791,6 +792,7 @@ class lmms_track:
 			if n == 'type': self.type = int(v)
 			if n == 'name': self.name = v
 			if n == 'color': self.color = v
+			if n == 'height': self.height = int(v)
 
 		for xmlpart in xmldata:
 			if xmlpart.tag == 'instrumenttrack':
@@ -822,6 +824,8 @@ class lmms_track:
 		self.muted.write(tempxml)
 		self.solo.write(tempxml)
 		tempxml.set('name', self.name)
+
+		if self.height != 32: tempxml.set('height', str(self.height))
 
 		if self.color: tempxml.set('color', self.color)
 		if self.type == 0: self.instrumenttrack.write(tempxml)

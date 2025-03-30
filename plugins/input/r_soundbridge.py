@@ -285,6 +285,16 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 	metadata = sb_track.metadata
 	trackcolor = metadata['TrackColor'] if 'TrackColor' in metadata else None
+
+	visual_size = 1
+
+	if 'SequencerTrackHeightState' in metadata:
+		SequencerTrackHeightState = int(metadata['SequencerTrackHeightState'])
+		size_first = SequencerTrackHeightState&0xffff
+		size_second = SequencerTrackHeightState>>20
+		if 44>size_first>39 and size_second<50:
+			visual_size = (((size_first-40) + size_second)+1)/4
+
 	cvpj_trackid = ('main' if not groupname else groupname)+'__'+str(num)
 
 	if sb_track.type == 4:
@@ -296,6 +306,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 		track_obj.armed.on = bool(sb_track.armed)
 		track_obj.armed.in_keys = bool(sb_track.armed)
+		track_obj.visual_ui.height = visual_size
 
 		if groupname:
 			track_obj.group = groupname
@@ -314,7 +325,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 			placement_obj.visual.color.set_hex(trackcolor)
 			placement_obj.visual.name = block.name
 			placement_obj.muted = bool(block.muted)
-			for note in parse_notes(io.BytesIO(blockdata)): placement_obj.notelist.add_r(note['pos'], note['dur'], note['key']-60, note['vol']/127, None)
+			for note in parse_notes(io.BytesIO(blockdata)): placement_obj.notelist.add_r(int(note['pos']), int(note['dur']), int(note['key'])-60, int(note['vol'])/127, None)
 			for block in block.automationBlocks:
 				valmul = 1
 				valadd = 0
@@ -355,6 +366,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 		track_obj.armed.on = bool(sb_track.armed)
 		track_obj.armed.in_audio = bool(sb_track.armed)
+		track_obj.visual_ui.height = visual_size
 
 		if groupname:
 			track_obj.group = groupname
@@ -421,6 +433,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		returnid = 'return__'+str(global_returnids)
 		track_obj = convproj_obj.track_master.fx__return__add(returnid)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
+		track_obj.visual_ui.height = visual_size
 
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
@@ -439,6 +452,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		do_markers(track_obj, sb_track.markers)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
+		track_obj.visual_ui.height = visual_size
 
 		for x in sb_track.automationContainer.automationTracks:
 			if x.parameterIndex == 2: add_auto(x.defaultValue, 'vol', convproj_obj, ['group', cvpj_trackid, 'vol'], x.blocks, 0, 1)
@@ -498,7 +512,7 @@ class input_soundbridge(plugins.base):
 
 		project_obj = proj_soundbridge.soundbridge_song()
 		if dawvert_intent.input_mode == 'file':
-			project_obj.load_from_file(dawvert_intent.input_file+'\\project.xml')
+			project_obj.load_from_file(os.path.join(dawvert_intent.input_file, 'project.xml'))
 
 		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
 		

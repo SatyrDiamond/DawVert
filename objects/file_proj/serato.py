@@ -125,6 +125,7 @@ class serato_arrangement_track:
 		self.type = json_data['type']
 		self.name = json_data['name']
 		self.channel_strip = serato_channel_strip(json_data['channel_strip'] if 'channel_strip' in json_data else None)
+		self.view = json_data['view'] if 'view' in json_data else {}
 		self.clips = [serato_arrangement_clip(x) for x in json_data['clips']] if 'clips' in json_data else []
 
 class serato_arrangement:

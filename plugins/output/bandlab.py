@@ -211,6 +211,7 @@ class output_bandlab(plugins.base):
 			os.makedirs(os.path.join(folder, namet, 'Assets', 'MIDI'), exist_ok=True)
 
 			for notelist_id, notelist_obj in notelist_assoc.items():
+				notelist_obj.mod_limit(-60, 67)
 				notelist_obj.midi_to(os.path.join(folder, namet, 'Assets', 'MIDI', notelist_id+'.mid'), bpm)
 
 			for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():

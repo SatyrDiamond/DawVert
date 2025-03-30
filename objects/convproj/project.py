@@ -503,6 +503,13 @@ class cvpj_project:
 		for trackid in self.track_order:
 			if trackid in self.track_data: yield trackid, self.track_data[trackid]
 
+	def track__iter_num(self):
+		num = 0
+		for trackid in self.track_order:
+			if trackid in self.track_data: 
+				yield num, trackid, self.track_data[trackid]
+				num += 1
+
 	def track__add_scene(self, i_track, i_sceneid, i_lane):
 		if i_track in self.track_data: return self.track_data[i_track].scene__add(i_sceneid, i_lane)
 		else: return None

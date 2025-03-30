@@ -64,8 +64,6 @@ class input_cvpj_f(plugins.base):
 			if tmp_track.phrases:
 				channel = tmp_track.channel
 
-				print(channel)
-
 				curpos = 0
 				for phrase in tmp_track.phrases:
 					curpos += phrase.td

@@ -268,7 +268,7 @@ class midi_modernize:
 		if self.num_miditracks>1:
 			self.visstore_data.proc__track_to_fx__track()
 			self.visstore_data.proc__track_to_fx__inst()
-			self.visstore_data.proc__track_to_inst()
+			#self.visstore_data.proc__track_to_inst()
 			self.visstore_data.proc__inst_to_fx()
 			self.visstore_data.proc__fx_to_track()
 			self.visstore_data.proc__inst_to_track()
@@ -315,7 +315,7 @@ class midi_modernize:
 					tracknotes = self.notes_data.filter_chanport(chanport)
 					portnum, channum = gfunc.split_channum(chanport, self.num_channels)
 					self.visstore_data.vis_fxchan[portnum][channum].to_cvpj_visual(track_obj.visual)
-					self.midinotes_to_cvpjnotes(tracknotes, track_obj.placements.notelist)
+					self.midinotes_to_cvpjnotes(tracknotes, track_obj.placements.notelist, 0)
 			else:
 				for n, strackdata in enumerate(self.cvpj_tracks):
 					track_obj = strackdata[2]
@@ -328,7 +328,7 @@ class midi_modernize:
 					for plnum, pl_midi in enumerate(track_obj.placements.pl_midi):
 						pl_notes = track_obj.placements.pl_notes.make_base_from_midi(pl_midi)
 						pl_tracknotes = self.notes_data.filter_track_section(n, plnum+1)
-						self.midinotes_to_cvpjnotes(pl_tracknotes, pl_notes.notelist, pl_notes.time.position)
+						self.midinotes_to_cvpjnotes(pl_tracknotes, pl_notes.notelist, pl_notes.time.position, 0)
 						
 					tracknotes = self.notes_data.filter_track_section(n, 0)
 	

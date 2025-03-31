@@ -95,6 +95,7 @@ class ableton_parampart:
 		if self.type == 'param': return float(self.value)
 		if self.type == 'bool': return self.value
 		if self.type == 'buffer': return self.value
+		if self.type == 'sampleparts': return self.value
 
 	def __str__(self):
 		return str(self.getval())
@@ -107,7 +108,14 @@ class ableton_parampart:
 		
 	def __bool__(self):
 		val = self.getval()
-		return bool(float(val)) if val is not None else False
+		if self.type == 'value':
+			try: return bool(float(self.value))
+			except: return bool(self.value)
+		elif self.type == 'param': return bool(float(self.value))
+		elif self.type == 'bool': return self.value
+		elif self.type == 'buffer': return bool(self.value)
+		elif self.type == 'sampleparts': return bool(len(self.value))
+		else: return bool(float(val)) if val is not None else False
 
 	@classmethod
 	def as_bool(cls, name, valuetxt):

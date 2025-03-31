@@ -414,7 +414,6 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 					if pitchTempoProcessorMode == 4:
 						stretch_obj.algorithm = 'soundtouch'
-						#stretch_obj.params['GranularityTones'] = 80
 
 					warp_obj = stretch_obj.warp
 

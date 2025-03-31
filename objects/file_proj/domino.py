@@ -213,11 +213,11 @@ class dms_track:
 
 			if chunkid == 1000: self.out_port = song_data.uint16()
 			elif chunkid == 1001: self.channel = song_data.uint8()
-			elif chunkid == 1002: self.name = song_data.string(trk_chunk_obj.size)
+			elif chunkid == 1002: self.name = song_data.string(trk_chunk_obj.size, encoding="shift-jis")
 			elif chunkid == 1004: self.is_rhythm = song_data.uint8()
 			elif chunkid == 1006: self.volume = song_data.uint8()
 			elif chunkid == 1007: self.gate = song_data.int32()
-			elif chunkid == 1009: self.rhythm_name = song_data.string(trk_chunk_obj.size)
+			elif chunkid == 1009: self.rhythm_name = song_data.string(trk_chunk_obj.size, encoding="shift-jis")
 			elif chunkid == 1012: self.tick_adjust = song_data.uint32()
 			elif chunkid == 1015: self.enabled = song_data.int32()
 			elif chunkid == 1016: self.gate_adjust = song_data.int32()

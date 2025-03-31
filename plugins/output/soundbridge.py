@@ -927,6 +927,8 @@ class output_soundbridge(plugins.base):
 
 				blockContainer = proj_soundbridge.soundbridge_blockContainer(None)
 
+				stretchrep = {}
+
 				for audiopl_obj in track_obj.placements.pl_audio:
 					block = proj_soundbridge.soundbridge_block(None)
 
@@ -950,6 +952,23 @@ class output_soundbridge(plugins.base):
 					if ref_found:
 						if sampleref_obj.found:
 							stretch_obj = audiopl_obj.sample.stretch
+
+							pitchTempoProcessorMode = 2
+
+							if stretch_obj.algorithm == 'elastique_v3':
+								if stretch_obj.algorithm_mode in ['mono', 'speech']:
+									pitchTempoProcessorMode = 0
+
+							if stretch_obj.algorithm == 'elastique_v2':
+								if stretch_obj.algorithm_mode in ['mono', 'speech']:
+									pitchTempoProcessorMode = 0
+
+							if stretch_obj.algorithm == 'soundtouch':
+								pitchTempoProcessorMode = 4
+
+							if pitchTempoProcessorMode not in stretchrep: stretchrep[pitchTempoProcessorMode] = 0
+							stretchrep[pitchTempoProcessorMode] += 1
+
 							warp_obj = stretch_obj.warp
 
 							warp_obj.points__add__based_beat(0)
@@ -987,7 +1006,6 @@ class output_soundbridge(plugins.base):
 							time_add(event, audiopl_obj.time, block)
 
 							event.stretchMarks = []
-
 
 							event.positionStart = int(event.positionStart)
 							event.loopOffset = int(event.loopOffset)
@@ -1048,6 +1066,10 @@ class output_soundbridge(plugins.base):
 						blockContainer.blocks.append(block)
 					else:
 						clipsnotplaced += 1
+
+				if stretchrep:
+					stretchrep = sorted(stretchrep.items(), key=lambda item: item[1])
+					sb_track.pitchTempoProcessorMode = stretchrep[0][0]
 
 				sb_track.blockContainers.append(blockContainer)
 

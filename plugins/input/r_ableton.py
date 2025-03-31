@@ -603,7 +603,7 @@ class input_ableton(plugins.base):
 								stretch_obj.params['loopmode'] = clipobj.TransientLoopMode
 								stretch_obj.params['envelope'] = clipobj.TransientEnvelope
 							if clipobj.WarpMode == 1:
-								stretch_obj.algorithm = 'ableton_tones'
+								stretch_obj.algorithm = 'tones'
 								stretch_obj.params['GranularityTones'] = clipobj.GranularityTones
 							if clipobj.WarpMode == 2:
 								stretch_obj.algorithm = 'ableton_texture'

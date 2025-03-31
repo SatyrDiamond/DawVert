@@ -462,6 +462,10 @@ class input_reaper(plugins.base):
 				cvpj_audio_pitch = rpp_trackitem.playrate['pitch']
 				cvpj_audio_file = ''
 
+				rppart_audio_stretch = int(rpp_trackitem.playrate['stretch_mode'])
+				rppart_audio_params = rppart_audio_stretch&0xFFFF
+				rppart_audio_stretch = rppart_audio_stretch>>16
+
 				midi_notes_out = midi_notes()
 				midi_ppq = 960
 
@@ -547,6 +551,43 @@ class input_reaper(plugins.base):
 					startoffset = (cvpj_offset_bpm/cvpj_audio_rate) + (startpos/cvpj_audio_rate)*8
 
 					stretch_obj = placement_obj.sample.stretch
+
+					if rppart_audio_stretch == 9:
+						stretch_obj.algorithm = 'elastique_v3'
+						stretch_obj.algorithm_mode = 'pro'
+
+					if rppart_audio_stretch == 10:
+						stretch_obj.algorithm = 'elastique_v3'
+						stretch_obj.algorithm_mode = 'efficient'
+
+					if rppart_audio_stretch == 11:
+						stretch_obj.algorithm = 'elastique_v3'
+						stretch_obj.algorithm_mode = 'mono'
+						if rppart_audio_params&2: stretch_obj.algorithm_mode = 'speech'
+
+					if rppart_audio_stretch == 6:
+						stretch_obj.algorithm = 'elastique_v2'
+						stretch_obj.algorithm_mode = 'pro'
+
+					if rppart_audio_stretch == 7:
+						stretch_obj.algorithm = 'elastique_v2'
+						stretch_obj.algorithm_mode = 'efficient'
+
+					if rppart_audio_stretch == 8:
+						stretch_obj.algorithm = 'elastique_v2'
+						stretch_obj.algorithm_mode = 'mono'
+						if rppart_audio_params&2: stretch_obj.algorithm_mode = 'speech'
+
+					if rppart_audio_stretch == 13:
+						stretch_obj.algorithm = 'rubberband'
+
+					if rppart_audio_stretch == 0:
+						stretch_obj.algorithm = 'soundtouch'
+						if rppart_audio_params == 1: stretch_obj.params['mode'] = 'hq'
+						if rppart_audio_params == 2: stretch_obj.params['mode'] = 'fast'
+
+					if rppart_audio_stretch == 2:
+						stretch_obj.algorithm = 'simple_windowing'
 
 					if rpp_trackitem.stretchmarks:
 						#print('I', cvpj_audio_rate)

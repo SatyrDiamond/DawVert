@@ -179,7 +179,7 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 				if 'resolution' in stretch_obj.params: warp_obj.TransientResolution = stretch_obj.params['resolution']
 				if 'loopmode' in stretch_obj.params: warp_obj.TransientLoopMode = stretch_obj.params['loopmode']
 				if 'envelope' in stretch_obj.params: warp_obj.TransientEnvelope = stretch_obj.params['envelope']
-			elif stretch_obj.algorithm == 'ableton_tones':
+			elif stretch_obj.algorithm == 'tones':
 				warp_obj.WarpMode = 1
 				if 'GranularityTones' in stretch_obj.params: warp_obj.GranularityTones = stretch_obj.params['GranularityTones']
 			elif stretch_obj.algorithm == 'ableton_texture':
@@ -555,7 +555,7 @@ def do_audio_stretch(als_audioclip, stretch_obj):
 			if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
 			if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
 			if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
-		elif stretch_obj.algorithm == 'ableton_tones':
+		elif stretch_obj.algorithm == 'tones':
 			als_audioclip.WarpMode = 1
 			if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
 		elif stretch_obj.algorithm == 'ableton_texture':
@@ -568,6 +568,21 @@ def do_audio_stretch(als_audioclip, stretch_obj):
 			als_audioclip.WarpMode = 6
 			if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
 			if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
+		elif stretch_obj.algorithm == 'soundtouch':
+			stmode = None
+			if 'mode' in stretch_obj.params: stmode = stretch_obj.params['mode']
+			if stmode == 'hq':
+				als_audioclip.WarpMode = 2
+				als_audioclip.GranularityTexture = 50
+				als_audioclip.FluctuationTexture = 100
+			elif stmode == 'fast':
+				als_audioclip.WarpMode = 2
+				als_audioclip.GranularityTexture = 120
+				als_audioclip.FluctuationTexture = 100
+			else:
+				als_audioclip.WarpMode = 1
+				als_audioclip.GranularityTones = 75
+
 		else:
 			als_audioclip.WarpMode = 4
 

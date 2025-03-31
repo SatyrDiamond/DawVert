@@ -368,6 +368,9 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		track_obj.armed.in_audio = bool(sb_track.armed)
 		track_obj.visual_ui.height = visual_size
 
+		stretch_algo = 'stretch'
+		pitchTempoProcessorMode = sb_track.pitchTempoProcessorMode
+
 		if groupname:
 			track_obj.group = groupname
 			track_obj.sends.to_master_active = False
@@ -397,6 +400,14 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 					stretch_obj = sp_obj.stretch
 					stretch_obj.preserve_pitch = True
 					stretch_obj.is_warped = True
+
+					if pitchTempoProcessorMode == 0:
+						stretch_obj.algorithm = 'elastique_v3'
+						stretch_obj.algorithm_mode = 'mono'
+
+					if pitchTempoProcessorMode == 4:
+						stretch_obj.algorithm = 'soundtouch'
+						#stretch_obj.params['GranularityTones'] = 80
 
 					warp_obj = stretch_obj.warp
 

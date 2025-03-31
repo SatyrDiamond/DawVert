@@ -573,6 +573,36 @@ class output_reaper(plugins.base):
 				sp_obj = audiopl_obj.sample
 				stretch_obj = sp_obj.stretch
 
+				rppart_audio_params = 0
+				rppart_audio_stretch = 0
+
+				if stretch_obj.algorithm == 'elastique_v3':
+					if stretch_obj.algorithm_mode == 'pro': rppart_audio_stretch = 9
+					if stretch_obj.algorithm_mode == 'efficient': rppart_audio_stretch = 10
+					if stretch_obj.algorithm_mode == 'mono': rppart_audio_stretch = 11
+					if stretch_obj.algorithm_mode == 'speech': 
+						rppart_audio_stretch = 11
+						rppart_audio_params = 2
+
+				if stretch_obj.algorithm == 'elastique_v2':
+					if stretch_obj.algorithm_mode == 'pro': rppart_audio_stretch = 6
+					if stretch_obj.algorithm_mode == 'efficient': rppart_audio_stretch = 7
+					if stretch_obj.algorithm_mode == 'mono': rppart_audio_stretch = 8
+					if stretch_obj.algorithm_mode == 'speech': 
+						rppart_audio_stretch = 8
+						rppart_audio_params = 2
+
+				if stretch_obj.algorithm == 'rubberband': rppart_audio_stretch = 13
+
+				if stretch_obj.algorithm == 'soundtouch':
+					stmode = stretch_obj.params['mode'] if 'mode' in stretch_obj.params else None
+					if stmode == 'hq': rppart_audio_params = 1
+					elif stmode == 'fast': rppart_audio_params = 2
+
+				if stretch_obj.algorithm == 'simple_windowing': rppart_audio_stretch = 2
+
+				rpp_item_obj.playrate['stretch_mode'] = (rppart_audio_stretch<<16) + rppart_audio_params
+
 				if not stretch_obj.is_warped:
 					audiorate = stretch_obj.calc_real_speed
 					rpp_item_obj.playrate['rate'] = audiorate

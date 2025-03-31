@@ -50,6 +50,7 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		fl_channel_obj.params.stretchingmode = 0
 	elif sre_obj.stretch.algorithm == 'elastique_v3':
 		if sre_obj.stretch.algorithm_mode == 'mono': fl_channel_obj.params.stretchingmode = 2
+		elif sre_obj.stretch.algorithm_mode == 'speech': fl_channel_obj.params.stretchingmode = 9
 		else: fl_channel_obj.params.stretchingmode = 1
 	elif sre_obj.stretch.algorithm == 'slice_stretch':
 		fl_channel_obj.params.stretchingmode = 3

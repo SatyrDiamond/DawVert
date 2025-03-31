@@ -245,7 +245,9 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 						param_val = doparam(param_value.value, cvpj_param_name, 'float', 0, ['plugin', pluginid, cvpj_param_name], None)
 						plugin_obj.params.add_named(cvpj_param_name, param_val, 'float', str(param_name))
 
-				if 2 in binflags: plugin_obj.role = 'synth'
+				if 2 in binflags: 
+					plugin_obj.role = 'synth'
+					track_obj.visual_inst.name = vst_PlugName
 				else: plugin_obj.role = 'fx'
 
 				track_obj.plugin_autoplace(plugin_obj, pluginid)
@@ -253,6 +255,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 			if '0/Vst3PluginInfo' in PluginDesc:
 				VstPluginInfo = PluginDesc['0/Vst3PluginInfo']
 
+				vst_PlugName = str(VstPluginInfo['Name'])
 				vst_DeviceType = int(VstPluginInfo['DeviceType'])
 				vst_WinPosX = int(VstPluginInfo['WinPosX'])
 				vst_WinPosY = int(VstPluginInfo['WinPosY'])
@@ -278,6 +281,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 
 				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 				extmanu_obj.vst3__replace_data('id', hexuuid, ProcessorState, 'win')
+
+				if plugin_obj.role == 'synth': track_obj.visual_inst.name = vst_PlugName
 
 				track_obj.plugin_autoplace(plugin_obj, pluginid)
 

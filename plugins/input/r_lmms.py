@@ -199,7 +199,7 @@ def asdflfo(plugin_obj, elenv, asdrtype):
 	lfo_obj.amount = lfo_amount
 	lfo_obj.retrigger = False
 
-def decodeplugin(convproj_obj, lmms_plugin, pluginname):
+def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 	out_color = None
 	pluginid = ''
 
@@ -240,6 +240,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 		sp_obj.loop_start = float(lmms_plugin.get_param('lframe', 0))
 		sp_obj.loop_end = float(lmms_plugin.get_param('eframe', 1))
 		sp_obj.end = sp_obj.loop_end
+		sp_obj.trigger = 'oneshot' if isbb else 'normal'
 
 		if looped == 2: sp_obj.loop_mode = "pingpong"
 		if lmms_interpolation == 0: sp_obj.interpolation = "none"
@@ -476,10 +477,10 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			pluginname = insttr_obj.instrument.name
 			insttr_obj = lmms_track.instrumenttrack
-			plug_color, instpluginid, plugin_obj = decodeplugin(convproj_obj, insttr_obj.instrument.plugin, pluginname)
+			plug_color, instpluginid, plugin_obj = decodeplugin(convproj_obj, insttr_obj.instrument.plugin, pluginname, isbb)
 
 			if lmms_track.color: track_obj.visual.color.set_hex(lmms_track.color)
-			elif plug_color: track_obj.visual.color = plug_color
+			if plug_color: track_obj.visual_inst.color = plug_color.copy()
 
 			track_obj.plugslots.set_synth(instpluginid)
 			if plugin_obj: asdflfo_get(insttr_obj, plugin_obj)

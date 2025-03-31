@@ -155,6 +155,9 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 						sp_obj.pan = float(SamplePart.Panorama)
 
 			if plugin_obj:
+				plugin_on = doparam(device.On, 'On', 'bool', 1, ['slot', pluginid, 'enabled'], None)
+				plugin_obj.fxdata_add(plugin_on, 1)
+
 				envstarttxt = 'VolumeAndPan/Envelope/'
 				AttackTime = float(parampaths[envstarttxt+'AttackTime']) if envstarttxt+'AttackTime' in parampaths else 0
 				DecayTime = float(parampaths[envstarttxt+'DecayTime']) if envstarttxt+'DecayTime' in parampaths else 0
@@ -183,6 +186,9 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 				windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
 				windata_obj.pos_x = int(VstPluginInfo['WinPosX'])
 				windata_obj.pos_y = int(VstPluginInfo['WinPosY'])
+
+				plugin_on = doparam(device.On, 'On', 'bool', 1, ['slot', pluginid, 'enabled'], None)
+				plugin_obj.fxdata_add(plugin_on, 1)
 
 				if 'Path' in VstPluginInfo:
 					vst_Path = str(VstPluginInfo['Path']).replace('/','\\')

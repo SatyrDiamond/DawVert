@@ -6,6 +6,8 @@ import objects.midi_modernize.gfunc as gfunc
 import objects.midi_modernize.devices_types as devices_types
 import objects.midi_modernize.instruments as instruments
 from functions import value_midi
+import logging
+logger_project = logging.getLogger('project')
 
 class midivis_data:
 	def __init__(self):
@@ -43,14 +45,18 @@ class midivis_data:
 			self.uses_name = True
 
 	def get_from_other(self, oobj, force_color, force_name):
+		outval = []
 		if (not self.uses_name or force_name) and oobj.uses_name:
 			self.name = oobj.name
 			self.uses_name = True
+			outval.append('name')
 		if (not self.uses_color or force_color) and oobj.uses_color:
 			self.color = oobj.color
 			self.uses_color = True
+			outval.append('color')
 		if not self.used and oobj.used:
 			self.used = oobj.used
+		return ','.join(outval)
 
 	def to_cvpj_visual(self, visual_obj):
 		visual_obj.name = self.name
@@ -170,17 +176,20 @@ class visstore_data:
 				first_inst = found_inst[0]
 				first_num = chanwhere[0]
 				if np.all(found_inst[visstore_data.instvs]==first_inst[visstore_data.instvs]):
-					self.vis_fxchan[port][chan].get_from_other(self.vis_inst[first_num], 0, 0)
+					o = self.vis_fxchan[port][chan].get_from_other(self.vis_inst[first_num], 0, 0)
+					if o:
+						logger_project.debug('cm2rm: Visual: %s | Inst #%i > FX %i:%i (inst_to_fx)'  % (o, first_num, port, chan))
 
 	def proc__track_to_inst(self):
-		if len(self.vis_track)>1:
-			for n, v in enumerate(self.vis_track):
-				trackinsts_where = np.where(self.used_inst['track']==n)[0]
-				if len(trackinsts_where):
-					found_inst = self.used_inst[trackinsts_where]
-					first_inst = found_inst[0]
-					for n in trackinsts_where:
-						self.vis_inst[n].get_from_other(v, 1, 0)
+		for tracknum, v in enumerate(self.vis_track):
+			trackinsts_where = np.where(self.used_inst['track']==tracknum)[0]
+			if len(trackinsts_where)==1:
+				found_inst = self.used_inst[trackinsts_where]
+				first_inst = found_inst[0]
+				for n in trackinsts_where:
+					o = self.vis_inst[n].get_from_other(v, 1, 0)
+					if o:
+						logger_project.debug('cm2rm: Visual: %s | Track #%i > Inst %i (track_to_inst)'  % (o, tracknum, n))
 
 	def proc__track_to_fx__inst(self):
 		for n, v in enumerate(self.vis_track):
@@ -191,7 +200,9 @@ class visstore_data:
 				if np.all(found_inst[visstore_data.instvs]==first_inst[visstore_data.instvs]):
 					p, c = gfunc.split_channum(first_inst['chanport'], self.num_channels)
 					curfx = self.vis_fxchan[p][c]
-					curfx.get_from_other(self.vis_inst[chanwhere[0]], 0, 0)
+					o = curfx.get_from_other(self.vis_inst[chanwhere[0]], 0, 0)
+					if o:
+						logger_project.debug('cm2rm: Visual: %s | Track #%i > FX %i:%i (track_to_fx__inst)' % (o, chanwhere[0], p, c))
 					if not curfx.uses_name:
 						curfx.name = "Track #%i (%s)" % (n+1, curfx.name)
 
@@ -200,7 +211,9 @@ class visstore_data:
 			chanport = self.vis_track_chan[n]
 			if chanport != -1:
 				p, c = gfunc.split_channum(chanport, self.num_channels)
-				self.vis_fxchan[p][c].get_from_other(v, 0, 0)
+				o = self.vis_fxchan[p][c].get_from_other(v, 0, 0)
+				if o:
+					logger_project.debug('cm2rm: Visual: %s | Track #%i > FX %i:%i (track_to_fx__track)' % (o, n, p, c))
 
 	def proc__fx_to_track(self):
 		for n, v in enumerate(self.vis_track):
@@ -210,7 +223,9 @@ class visstore_data:
 				first_inst = found_inst[0]
 				if np.all(found_inst['chanport']==first_inst['chanport']):
 					p, c = gfunc.split_channum(first_inst['chanport'], self.num_channels)
-					v.get_from_other(self.vis_fxchan[p][c], 0, 0)
+					o = v.get_from_other(self.vis_fxchan[p][c], 0, 0)
+					if o:
+						logger_project.debug('cm2rm: Visual: %s | FX %i:%i > Track #%i (proc__fx_to_track)' % (o, p, c, n))
 
 	def proc__inst_to_track(self):
 		for n, v in enumerate(self.vis_track):
@@ -219,4 +234,6 @@ class visstore_data:
 				found_inst = self.used_inst[trackinsts_where]
 				first_inst = found_inst[0]
 				if np.all(found_inst[visstore_data.instvs]==first_inst[visstore_data.instvs]):
-					v.get_from_other(self.vis_inst[trackinsts_where[0]], 0, 0)
+					o = v.get_from_other(self.vis_inst[trackinsts_where[0]], 0, 0)
+					if o:
+						logger_project.debug('cm2rm: Visual: %s | Inst %i > Track #%i (inst_to_track)' % (o, trackinsts_where[0], n))

@@ -187,6 +187,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 			plugin_obj.external_info.name = sb_plugin.name
 			plugin_obj.external_info.fourid = fourid
 			plugin_obj.external_info.creator = sb_plugin.vendor
+			if issynth: track_obj.visual_inst.name = sb_plugin.name
 
 			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 
@@ -253,6 +254,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 			pluguuid = dev_uuid.hex().upper()
 
 			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			if issynth: track_obj.visual_inst.name = sb_plugin.name
 
 			statereader = bytereader.bytereader()
 			statereader.load_raw(statedata)

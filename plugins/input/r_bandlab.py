@@ -119,6 +119,7 @@ class input_bandlab(plugins.base):
 				if blx_track.type == 'creators-kit':
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					track_obj.plugslots.set_synth(pluginid)
+					track_obj.is_drum = True
 					samplerkit = blx_track.samplerKit
 					if samplerkit:
 						if 'kit' in samplerkit:
@@ -207,7 +208,7 @@ def do_track_common(convproj_obj, track_obj, blx_track):
 
 		else:
 			for n, v in plugparams.items():
-				if not isinstance(v, str):
+				if not isinstance(v, str) and isinstance(v, dict):
 					plugparams.add(n, v, 'float')
 					if n in blx_effect.automation:
 						do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n])

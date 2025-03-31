@@ -312,10 +312,20 @@ def do_audioclip(convproj_obj, npa_obj, inclip):
 
 			if stretch_algo == 'stretch_subbands': stretch_obj.algorithm = 'stretch_subbands'
 			if stretch_algo == 'slice': stretch_obj.algorithm = 'slice'
-			if stretch_algo == 'elastique_solo': stretch_obj.algorithm = 'elastique_solo'
-			if stretch_algo == 'elastique': stretch_obj.algorithm = 'elastique'
-			if stretch_algo == 'elastique_eco': stretch_obj.algorithm = 'elastique_eco'
-			if stretch_algo == 'elastique_pro': stretch_obj.algorithm = 'elastique_pro'
+			if stretch_algo == 'elastique_solo':
+				stretch_obj.algorithm = 'elastique_v3'
+				stretch_obj.algorithm_mode = 'mono'
+
+			if stretch_algo == 'elastique':
+				stretch_obj.algorithm = 'elastique_v3'
+
+			if stretch_algo == 'elastique_eco':
+				stretch_obj.algorithm = 'elastique_v3'
+				stretch_obj.algorithm_mode = 'efficient'
+
+			if stretch_algo == 'elastique_pro':
+				stretch_obj.algorithm = 'elastique_v3'
+				stretch_obj.algorithm_mode = 'pro'
 
 			stretch_obj.preserve_pitch = stretch_algo != 'repitch'
 			stretch_obj.is_warped = True

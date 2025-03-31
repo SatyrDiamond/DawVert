@@ -49,10 +49,12 @@ def convert(convproj_obj):
 			inst_obj.midi = copy.deepcopy(track_obj.midi)
 			inst_obj.plugslots = copy.deepcopy(track_obj.plugslots)
 			inst_obj.is_drum = track_obj.is_drum
-			if track_obj.plugslots.synth:
-				isfound, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
-				if isfound:
-					if plugin_obj.visual.color: inst_obj.visual.color = plugin_obj.visual.color.copy()
+
+			if track_obj.visual_inst.name: inst_obj.visual.name = track_obj.visual_inst.name
+			else: inst_obj.visual.name = track_obj.visual.name
+
+			if track_obj.visual_inst.color: inst_obj.visual.color = track_obj.visual_inst.color.copy()
+			else: inst_obj.visual.color = track_obj.visual.color.copy()
 
 	convproj_obj.automation.move_everything(['track'], ['inst'])
 

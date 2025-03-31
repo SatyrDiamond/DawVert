@@ -114,6 +114,9 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 	if len(uiddata) == 16 and statedata:
 		hexdata = uiddata.hex()
 
+		if uiddata == b'CTSV7prritmix\x00\x00\x00':
+			track_obj.is_drum = True
+
 		if uiddata == b'\xb7\xe4~\xd75\xc2\xa8H\x97JL\xe1\x82.\xc2^':
 			statereader = bytereader.bytereader()
 			statereader.load_raw(statedata)
@@ -138,24 +141,26 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 					samplepart_obj.point_value_type = "samples"
 					samplepart_obj.start = sb_sample.start
 					samplepart_obj.end = sb_sample.end
-					samplepart_obj.visual.name = sb_sample.name
 					track_obj.datavals.add('middlenote', (sample_params.key_root-60))
-					if 'SampleColor' in sb_sample.metadata:
-						samplepart_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
-						plugin_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
 				else:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'slicer')
 					plugin_obj.role = 'synth'
 					samplepart_obj = plugin_obj.samplepart_add('sample')
 					samplepart_obj.from_sampleref(convproj_obj, sb_sample.filename)
-					if 'SampleColor' in sb_sample.metadata:
-						plugin_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
 					for sslice in sb_sample.slices:
 						slice_param = sampler_data.params[sslice[0]]
 						slice_obj = samplepart_obj.add_slice()
 						slice_obj.start = sslice[1]
 						slice_obj.is_custom_key = True
 						slice_obj.custom_key = slice_param.key_root-60
+
+				samplepart_obj.visual.name = sb_sample.name
+				track_obj.visual_inst.name = sb_sample.name
+				if 'SampleColor' in sb_sample.metadata:
+					samplecolor = sb_sample.metadata['SampleColor']
+					samplepart_obj.visual.color.set_hex(samplecolor)
+					plugin_obj.visual.color.set_hex(samplecolor)
+					track_obj.visual_inst.color.set_hex(samplecolor)
 
 			elif len(sampler_data.samples)>1 and sampler_data.sampler_mode==1:
 				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')

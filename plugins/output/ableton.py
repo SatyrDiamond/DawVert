@@ -581,7 +581,7 @@ def do_audio_stretch(als_audioclip, stretch_obj):
 				als_audioclip.FluctuationTexture = 100
 			else:
 				als_audioclip.WarpMode = 1
-				als_audioclip.GranularityTones = 75
+				als_audioclip.GranularityTones = 70
 
 		else:
 			als_audioclip.WarpMode = 4

@@ -526,6 +526,10 @@ class input_wavtool(plugins.base):
 		convproj_obj.timesig = [wavtool_obj.beatNumerator, wavtool_obj.beatDenominator]
 		convproj_obj.params.add('bpm', wavtool_obj.bpm, 'float')
 
+		convproj_obj.transport.loop_active = wavtool_obj.loopEnabled
+		convproj_obj.transport.loop_start = wavtool_obj.loopStart
+		convproj_obj.transport.loop_end = wavtool_obj.loopEnd
+
 		for x in wavtool_obj.bpmAutomation:
 			point_tempo = x['value'] if 'value' in x else 120
 			point_time = x['time'] if 'time' in x else 0

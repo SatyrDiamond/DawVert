@@ -158,12 +158,25 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 		if bool(stretch_obj):
 			if stretch_obj.preserve_pitch:
 				dp_audio.algorithm = 'stretch_subbands'
-				if stretch_obj.algorithm == 'stretch_subbands': dp_audio.algorithm = 'stretch_subbands'
-				if stretch_obj.algorithm == 'slice': dp_audio.algorithm = 'slice'
-				if stretch_obj.algorithm == 'elastique_solo': dp_audio.algorithm = 'elastique_solo'
-				if stretch_obj.algorithm == 'elastique': dp_audio.algorithm = 'elastique'
-				if stretch_obj.algorithm == 'elastique_eco': dp_audio.algorithm = 'elastique_eco'
-				if stretch_obj.algorithm == 'elastique_pro': dp_audio.algorithm = 'elastique_pro'
+				if stretch_obj.algorithm == 'stretch_subbands':
+					dp_audio.algorithm = 'stretch_subbands'
+
+				if stretch_obj.algorithm == 'slice':
+					dp_audio.algorithm = 'slice'
+
+				if stretch_obj.algorithm == 'elastique_v3':
+					if stretch_obj.algorithm_mode == 'mono': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'speech': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'efficient': dp_audio.algorithm = 'elastique_eco'
+					elif stretch_obj.algorithm_mode == 'pro': dp_audio.algorithm = 'elastique_pro'
+					else: dp_audio.algorithm = 'elastique'
+
+				if stretch_obj.algorithm == 'elastique_v2':
+					if stretch_obj.algorithm_mode == 'mono': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'speech': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'efficient': dp_audio.algorithm = 'elastique_eco'
+					elif stretch_obj.algorithm_mode == 'pro': dp_audio.algorithm = 'elastique_pro'
+					else: dp_audio.algorithm = 'elastique'
 			else:
 				dp_audio.algorithm = 'repitch'
 

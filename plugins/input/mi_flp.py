@@ -223,7 +223,8 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 		sre_obj.stretch.algorithm = 'elastique_v2'
 		sre_obj.stretch.algorithm_mode = 'speech'
 	if t_stretchingmode == -2: 
-		sre_obj.stretch.algorithm = 'elastique_pro'
+		sre_obj.stretch.algorithm = 'elastique_v3'
+		sre_obj.stretch.algorithm_mode = 'pro'
 		sre_obj.stretch.params['formant'] = fl_channel_obj.params.stretchingformant
 
 	if sampleref_obj.found:

@@ -90,6 +90,10 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
 				track_obj.plugslots.set_synth(pluginid)
 				sp_obj = plugin_obj.samplepart_add('sample')
+				if 'name' in soundlayer: 
+					sname = soundlayer['name']
+					sp_obj.visual.name = sname
+					track_obj.visual_inst.name = sname
 				soundlayer_samplepart(sp_obj, soundlayer, layerparams, True)
 				adsr = [0, 0, 1, 0]
 				if 'attackParam' in layerparams: adsr[0] = layerparams['attackParam']

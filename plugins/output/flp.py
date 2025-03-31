@@ -66,6 +66,10 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		if sre_obj.stretch.algorithm_mode == 'transient': fl_channel_obj.params.stretchingmode = 7
 		elif sre_obj.stretch.algorithm_mode == 'mono': fl_channel_obj.params.stretchingmode = 8
 		elif sre_obj.stretch.algorithm_mode == 'speech': fl_channel_obj.params.stretchingmode = 9
+		elif sre_obj.stretch.algorithm_mode == 'pro':
+			fl_channel_obj.params.stretchingmode = -2
+			if 'formant' in sre_obj.stretch.params:
+				fl_channel_obj.params.stretchingformant = sre_obj.stretch.params['formant']
 		else: fl_channel_obj.params.stretchingmode = 6
 	elif sre_obj.stretch.algorithm == 'stretch':
 		fl_channel_obj.params.stretchingmode = -1

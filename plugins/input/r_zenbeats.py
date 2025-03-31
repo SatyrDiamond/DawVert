@@ -88,6 +88,9 @@ def do_plugin(convproj_obj, strproc, track_obj):
 
 		if strproc.plugin.format == 'StageLight':
 
+			if strproc.plugin.name == 'Drums':
+				track_obj.is_drum = True
+
 			if strproc.plugin.name == 'Zenbeats EQ':
 				plugin_obj.type_set('universal', 'eq', 'bands')
 				xmlparams = data_xml.find_first(plugin_xml_data, 'RolandEQ')

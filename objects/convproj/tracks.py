@@ -191,7 +191,7 @@ class cvpj_armstate:
 		self.in_audio = False
 
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots','latency_offset','visual_keynotes']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','visual_inst','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots','latency_offset','visual_keynotes']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -202,6 +202,7 @@ class cvpj_track:
 		self.lanes = {}
 		self.visual = visual.cvpj_visual()
 		self.visual_ui = visual.cvpj_visual_ui()
+		self.visual_inst = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
 		self.datavals = params.cvpj_datavals()
 		self.midi = cvpj_midiport()

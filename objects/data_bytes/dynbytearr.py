@@ -22,6 +22,12 @@ class cursor:
 		self.baseobj.num_parts += num
 		self.pos += num
 
+	def add_copied(self, indata):
+		self.baseobj.alloc_auto(1)
+		self.baseobj.num_parts += 1
+		self.pos += 1
+		self.baseobj.data[:][self.pos] = indata
+
 	def getcur(self):
 		return self.baseobj.data[self.pos]
 
@@ -44,6 +50,8 @@ class dynbytearr_premake:
 				self.dtype
 				)
 		return dynbytearr(self.out_dtype)
+
+VERBOSE = False
 
 class dynbytearr:
 	__slots__ = ['dtype', 'alloc_size', 'data', 'cursor', 'num_parts']
@@ -86,8 +94,14 @@ class dynbytearr:
 		self.num_parts = 0
 
 	def extend(self, num):
+		if VERBOSE:
+			olddataloc = self.data.__array_interface__['data'][0]
 		zeros = np.zeros(num, dtype=self.dtype)
 		self.data = np.hstack((self.data,zeros))
+		if VERBOSE:
+			newdataloc = self.data.__array_interface__['data'][0]
+			if newdataloc != olddataloc:
+				print('DATA REALLOC %i > %i' % (len(self.data), len(self.data)+num))
 
 	def sort(self, elements):
 		nums = self.data.argsort(order=['used']+elements)

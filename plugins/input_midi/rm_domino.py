@@ -58,6 +58,8 @@ class input_domino(plugins.base):
 			track_obj.midi.out_chanport.port = track.out_port
 
 			events_obj = track_obj.placements.midievents
+			events_obj.has_duration = True
+			events_obj.data.alloc_size = 256
 
 			for x in track.notes:
 				events_obj.add_note_dur(x.pos, channel, x.key, x.vel, x.dur)

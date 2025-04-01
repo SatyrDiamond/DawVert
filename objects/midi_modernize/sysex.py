@@ -23,11 +23,11 @@ class seqspec_data:
 	def __init__(self):
 		self.data = {}
 
-	def add(self, track, seqspecbytes):
+	def add(self, pos, track, seqspecbytes):
 		seqspec_obj = sysex_decode.seqspec_obj()
 		seqspec_obj.detect(seqspecbytes)
-		if track not in self.data: self.data[track] = []
-		self.data[track].append(seqspec_obj)
+		if pos not in self.data: self.data[pos] = []
+		self.data[pos].append(sysex_obj)
 
 	def get(self, track):
 		if track in self.data: return self.data[track]

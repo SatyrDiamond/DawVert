@@ -24,7 +24,7 @@ class input_cvpj_f(plugins.base):
 		in_dict['file_ext'] = ['mid']
 		in_dict['fxrack_params'] = ['vol','pan','pitch']
 		in_dict['auto_types'] = ['nopl_ticks']
-		in_dict['track_nopl'] = True
+		in_dict['track_nopl'] = False
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'cm'
@@ -72,6 +72,7 @@ class input_cvpj_f(plugins.base):
 					placement_obj.time.set_posdur(curpos, phrase.d)
 
 					midievents_obj = placement_obj.midievents
+					midievents_obj.has_duration = True
 
 					ncurpos = 0
 					for event in phrase.events:

@@ -325,3 +325,12 @@ class bytereader:
 			if char not in [b'\x00', b'']: output += char
 			else: terminated = 1
 		return output.decode(**kwargs)
+
+	def string16_t(self):
+		output = b''
+		terminated = 0
+		while terminated == 0:
+			char = self.buf.read(2)
+			if char not in [b'\x00'b'\x00', b'\x00', b'']: output += char
+			else: terminated = 1
+		return output.decode("utf-16")

@@ -36,10 +36,10 @@ class reader_midifile_class():
 			elif type(msg) == MidiEvents.TempoEvent: events_obj.add_tempo(curpos, 60000000/msg.tempo)
 			elif type(msg) == MidiEvents.TimeSignatureEvent: events_obj.add_timesig(curpos, msg.numerator, msg.denominator**2)
 			elif type(msg) == MidiEvents.TextEvent: events_obj.add_text(curpos, msg.text)
-			elif type(msg) == MidiEvents.SysExEvent: events_obj.add_sysex(curpos, msg.data)
+			elif type(msg) == MidiEvents.SysExEvent: events_obj.add_sysex(curpos, msg.data[0:-1])
 			elif type(msg) == MidiEvents.MarkerEvent: events_obj.add_marker(curpos, msg.marker)
 			elif type(msg) == MidiEvents.LyricEvent: events_obj.add_lyric(curpos, msg.lyric)
-			elif type(msg) == MidiEvents.SequencerEvent: events_obj.add_seq_spec(msg.data)
+			elif type(msg) == MidiEvents.SequencerEvent: events_obj.add_seq_spec(curpos, msg.data)
 			elif type(msg) == MidiEvents.MidiPortEvent: events_obj.add_port(msg.port)
 			elif type(msg) == MidiEvents.EndOfTrackEvent: break
 

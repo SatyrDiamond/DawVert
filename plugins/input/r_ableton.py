@@ -14,9 +14,10 @@ import os
 DEBUG_DISABLE_PLACEMENTS = False
 DEBUG_DISABLE_SAMPLER = False
 	
-def sampleref__get(convproj_obj, alssampleref_obj):
+def sampleref__get(convproj_obj, alssampleref_obj, dawvert_intent):
 	filename = alssampleref_obj.FileRef.Path
 	sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
+	sampleref_obj.search_local(dawvert_intent.input_folder)
 	sampleref_obj.dur_samples = alssampleref_obj.DefaultDuration
 	sampleref_obj.hz = alssampleref_obj.DefaultSampleRate
 	sampleref_obj.timebase = sampleref_obj.hz
@@ -60,8 +61,8 @@ def findlists(parampaths):
 
 	return parsedout
 
-def do_samplepart(convproj_obj, sp_obj, SamplePart):
-	sampleref_obj, samplerefid = sampleref__get(convproj_obj, SamplePart.SampleRef)
+def do_samplepart(convproj_obj, sp_obj, SamplePart, dawvert_intent):
+	sampleref_obj, samplerefid = sampleref__get(convproj_obj, SamplePart.SampleRef, dawvert_intent)
 	sp_obj.sampleref = samplerefid
 	sp_obj.point_value_type = "samples"
 	sp_obj.start = float(SamplePart.SampleStart)
@@ -94,7 +95,7 @@ def do_automation(convproj_obj, AutomationEnvelopes):
 					else:
 						convproj_obj.timesig = [(alsevent.Value%99)+1, 2**(alsevent.Value//99)]
 
-def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
+def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent):
 	global vector_shapesdata
 
 	middlenote = 0
@@ -130,7 +131,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 					middlenote = int(SamplePart.RootKey)-60
 					track_obj.datavals.add('middlenote', middlenote-60)
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, None, None)
-					do_samplepart(convproj_obj, sp_obj, SamplePart)
+					do_samplepart(convproj_obj, sp_obj, SamplePart, dawvert_intent)
 					sp_obj.reverse = int(parampaths['Player/Reverse'])
 					sp_obj.vol = float(SamplePart.Volume)
 					sp_obj.pan = float(SamplePart.Panorama)
@@ -145,7 +146,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj):
 						vel_cf = [int(SamplePart.VelocityRange.CrossfadeMin), SamplePart.VelocityRange.CrossfadeMax]
 						middlenote = int(SamplePart.RootKey)
 						sp_obj = plugin_obj.sampleregion_add(key_r[0]-60, key_r[1]-60, middlenote-60, None)
-						do_samplepart(convproj_obj, sp_obj, SamplePart)
+						do_samplepart(convproj_obj, sp_obj, SamplePart, dawvert_intent)
 						sp_obj.reverse = float(parampaths['Player/Reverse'])
 						sp_obj.data['key_fade'] = [key_cf[0]-key_r[0], key_r[1]-key_cf[1]]
 						sp_obj.data['r_vel_fade'] = [x/127 for x in vel_cf]
@@ -450,7 +451,7 @@ class input_ableton(plugins.base):
 		convproj_obj.track_master.params.add('pan', mas_track_pan, 'float')
 		convproj_obj.params.add('bpm', tempo, 'float')
 		convproj_obj.track_master.latency_offset = calc_lattime(project_obj.MasterTrack.TrackDelay)
-		do_devices(project_obj.MasterTrack.DeviceChain.devices, None, convproj_obj.track_master, convproj_obj)
+		do_devices(project_obj.MasterTrack.DeviceChain.devices, None, convproj_obj.track_master, convproj_obj, dawvert_intent)
 
 		returnid = 1
 
@@ -560,7 +561,7 @@ class input_ableton(plugins.base):
 						placement_obj.visual.color.from_colorset_num(colordata, int(clipobj.Color))
 						placement_obj.muted = clipobj.Disabled
 						placement_obj.sample.vol = clipobj.SampleVolume
-						sampleref_obj, placement_obj.sample.sampleref = sampleref__get(convproj_obj, clipobj.SampleRef)
+						sampleref_obj, placement_obj.sample.sampleref = sampleref__get(convproj_obj, clipobj.SampleRef, dawvert_intent)
 
 						for _, e in clipobj.Envelopes.items():
 							mpetype = None
@@ -730,7 +731,7 @@ class input_ableton(plugins.base):
 					track_obj.sends.add('return_'+str(sendid), sendautoid, sendlevel)
 					sendcount += 1
 
-			middlenote, issampler = do_devices(als_track.DeviceChain.devices, track_id, track_obj, convproj_obj)
+			middlenote, issampler = do_devices(als_track.DeviceChain.devices, track_id, track_obj, convproj_obj, dawvert_intent)
 			track_obj.datavals.add('middlenote', middlenote)
 
 			if tracktype == 'midi':

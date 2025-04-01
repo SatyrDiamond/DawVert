@@ -77,6 +77,14 @@ class input_bandlab(plugins.base):
 			else:
 				track_obj = convproj_obj.track__add(blx_track.id, 'instrument', 1, False)
 
+			if blx_track.type in ['voice', 'drum-machine', 'strings', 'guitar', 'piano']:
+				track_obj.visual_inst.name = blx_track.soundbank
+			if blx_track.type in ['creators-kit']:
+				if 'displayName' in blx_track.samplerKit:
+					track_obj.visual_inst.name = blx_track.samplerKit['displayName']
+				elif 'id' in blx_track.samplerKit:
+					track_obj.visual_inst.name = blx_track.samplerKit['id']
+
 			if blx_track.autoPitch:
 				autoPitch = blx_track.autoPitch
 				fxid = blx_track.id+'_autopitch'

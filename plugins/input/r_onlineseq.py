@@ -103,6 +103,9 @@ class input_onlinesequencer(plugins.base):
 			multig[trueinstid].append(track_obj)
 
 			midifound = track_obj.from_dataset('onlineseq', 'inst', str(trueinstid), True)
+
+			track_obj.visual_inst = track_obj.visual.copy()
+
 			if midifound: 
 				track_obj.to_midi(convproj_obj, trackid, True)
 			else:

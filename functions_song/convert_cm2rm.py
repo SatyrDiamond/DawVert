@@ -25,9 +25,6 @@ def convert(convproj_obj):
 	modernize_obj.from_cvpj__add_tracks(convproj_obj)
 
 	for n, trackid, track_obj in convproj_obj.track__iter_num():
-		modernize_obj.add_events_seq_spec(n, track_obj.placements.midievents)
-
-	for n, trackid, track_obj in convproj_obj.track__iter_num():
 
 		if track_obj.type == 'midi':
 			logger_project.debug('cm2rm: Track '+trackid)

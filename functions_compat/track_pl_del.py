@@ -14,8 +14,17 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_int
 					track_obj.placements.notelist.merge(notespl_obj.notelist, notespl_obj.time.position)
 
 				track_obj.placements.pl_notes.clear()
-
 			return True
+
+		elif convproj_obj.type in ['cs', 'cm']: 
+			for cvpj_trackid, track_obj in convproj_obj.track__iter():
+				notes = []
+				for midipl_obj in track_obj.placements.pl_midi:
+					track_obj.placements.midievents.merge(midipl_obj.midievents, midipl_obj.time.position, midipl_obj.time.duration, 0)
+
+				track_obj.placements.pl_notes.clear()
+			return True
+
 		else: 
 			return False
 

@@ -11,6 +11,7 @@ import objects.midi_modernize.automation as automation
 import objects.midi_modernize.devices_types as devices_types
 import objects.midi_modernize.visstore as visstore
 import objects.midi_modernize.gfunc as gfunc
+import objects.midi_modernize.sysex_decode as sysex_decode
 import numpy as np
 import struct
 from objects.convproj import midievents
@@ -31,7 +32,6 @@ class midi_modernize:
 		self.tempo_data = automation.tempo_data()
 		self.timesig_data = automation.timesig_data()
 		self.sysex_data = sysex.sysex_data()
-		self.seqspec_data = sysex.seqspec_data()
 		self.notes_data = midinotes.notes_data(1, self.num_channels)
 		self.ctrl_data = ctrls.ctrl_data(1, self.num_channels)
 		self.pitch_data = pitch.pitch_data(1, self.num_channels)
@@ -87,21 +87,9 @@ class midi_modernize:
 
 
 
-	def add_events_seq_spec(self, tracknum, midievents_obj):
-		for data in midievents_obj.seq_spec:
-			self.seqspec_data.add(tracknum, data)
-
 	def add_track_visual(self, tracknum, visual_obj):
 		if visual_obj.name: self.visstore_data.vis_track_set_name(tracknum, visual_obj.name)
 		if visual_obj.color: self.visstore_data.vis_track_set_color_force(tracknum, visual_obj.color.get_int())
-	
-		for seqspec_obj in self.seqspec_data.get(tracknum):
-			if seqspec_obj.sequencer == 'signal_midi' and seqspec_obj.param == 'color':
-				self.visstore_data.vis_track_set_color_force(tracknum, seqspec_obj.value)
-			if seqspec_obj.sequencer == 'anvil_studio' and seqspec_obj.param == 'color':
-				self.visstore_data.vis_track_set_color_force(tracknum, seqspec_obj.value)
-			if seqspec_obj.sequencer == 'studio_one' and seqspec_obj.param == 'color':
-				self.visstore_data.vis_track_set_color_force(tracknum, seqspec_obj.value)
 	
 	def visual_chan(self, tracknum, portnum, usedchans):
 		if len(usedchans)==1:
@@ -166,6 +154,18 @@ class midi_modernize:
 					timemarker_obj.position = pos
 					if marker_data: timemarker_obj.visual.name = marker_data
 
+				elif x['type'] == midievents.EVENTID__SEQSPEC:
+					seqspecbytes = midievents_obj.seq_spec[x['uhival']]
+
+					seqspec_obj = sysex_decode.seqspec_obj()
+					seqspec_obj.detect(seqspecbytes)
+					if seqspec_obj.sequencer == 'signal_midi' and seqspec_obj.param == 'color':
+						self.visstore_data.vis_track_set_color_force(tracknum, seqspec_obj.value)
+					if seqspec_obj.sequencer == 'anvil_studio' and seqspec_obj.param == 'color':
+						self.visstore_data.vis_track_set_color_force(tracknum, seqspec_obj.value)
+					if seqspec_obj.sequencer == 'studio_one' and seqspec_obj.param == 'color':
+						self.visstore_data.vis_track_set_color_force(tracknum, seqspec_obj.value)
+	
 		self.start_pos = self.notes_data.get_global_startpos()
 
 	def instchange_from_sysex(self):

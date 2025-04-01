@@ -5,19 +5,6 @@ import plugins
 import json
 from functions import xtramath
 
-unusedchannel = 0
-
-def getunusedchannel():
-	global unusedchannel
-	unusedchannel += 1
-	if unusedchannel == 10: unusedchannel += 1
-	if unusedchannel == 16: unusedchannel = 1
-	return unusedchannel
-
-def add_cmd(i_list, i_pos, i_cmd):
-	if i_pos not in i_list: i_list[i_pos] = []
-	i_list[i_pos].append(i_cmd)
-
 class output_midi(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
@@ -29,7 +16,7 @@ class output_midi(plugins.base):
 		return 'midi'
 	
 	def gettype(self):
-		return 'r'
+		return 'cm'
 	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'mid'
@@ -38,82 +25,96 @@ class output_midi(plugins.base):
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
-		in_dict['projtype'] = 'r'
+		in_dict['projtype'] = 'cm'
 	
 	def parse(self, convproj_obj, dawvert_intent):
 		import mido
 
-		convproj_obj.change_timings(384, False)
-		
+		metamsg = mido.MetaMessage
+		rmsg = mido.Message
+
 		midiobj = mido.MidiFile()
 		midiobj.ticks_per_beat = convproj_obj.time_ppq
-		multi_miditrack = []
 
 		autotrack = mido.MidiTrack()
 		midi_numerator, midi_denominator = convproj_obj.timesig
-		midi_tempo = mido.bpm2tempo(convproj_obj.params.get('bpm', 120).value)
-		autotrack.append(mido.MetaMessage('time_signature', numerator=midi_numerator, denominator=midi_denominator, clocks_per_click=24, notated_32nd_notes_per_beat=8, time=0))
-		autotrack.append(mido.MetaMessage('set_tempo', tempo=midi_tempo, time=0))
-		multi_miditrack.append(autotrack)
+
+		if 'bpm' in convproj_obj.params.list():
+			midi_tempo = mido.bpm2tempo(convproj_obj.params.get('bpm', 120).value)
+			autotrack.append(metamsg('set_tempo', tempo=midi_tempo, time=0))
+			autotrack.append(metamsg('track_name', name='Auto Track', time=0))
+
+		if len(autotrack):
+			midiobj.tracks.append(autotrack)
 
 		for trackid, track_obj in convproj_obj.track__iter():
 			miditrack = mido.MidiTrack()
-
-			midi_channel = None
-			midi_inst = None
 			midi_trackname = track_obj.visual.name if track_obj.visual.name else ''
 			midi_trackcolor = track_obj.visual.color
 
-			midi_found, midiinst_obj = track_obj.get_midi(convproj_obj)
-
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
-			if midi_channel == None: midi_channel = getunusedchannel()
-
-			if midi_trackname != '': miditrack.append(mido.MetaMessage('track_name', name=midi_trackname, time=0))
-
+			if midi_trackname != '': 
+				miditrack.append(metamsg('track_name', name=midi_trackname, time=0))
 			if midi_trackcolor: 
 				midi_trackcolor = midi_trackcolor.get_int()
-
-				miditrack.append(mido.MetaMessage('sequencer_specific', data=(83, 105, 103, 110, 1, 255, midi_trackcolor[2], midi_trackcolor[1], midi_trackcolor[0]))) #from Signal MIDI Editor
-				miditrack.append(mido.MetaMessage('sequencer_specific', data=(80, 114, 101, 83, 1, 255, midi_trackcolor[2], midi_trackcolor[1], midi_trackcolor[0]))) #from Studio One
-
+				miditrack.append(metamsg('sequencer_specific', data=(83, 105, 103, 110, 1, 255, midi_trackcolor[2], midi_trackcolor[1], midi_trackcolor[0]))) #from Signal MIDI Editor
+				miditrack.append(metamsg('sequencer_specific', data=(80, 114, 101, 83, 1, 255, midi_trackcolor[2], midi_trackcolor[1], midi_trackcolor[0]))) #from Studio One
 				red_p1 = midi_trackcolor[0] >> 2
 				red_p2 = (midi_trackcolor[0] << 5) & 0x7f
 				green_p1 = midi_trackcolor[1] >> 3
 				green_p2 = (midi_trackcolor[1] << 4) & 0x7f
 				blue_p1 = midi_trackcolor[2] >> 4
 				blue_p2 = midi_trackcolor[2] & 0x0f
-
 				anvilcolor = [blue_p2,green_p2+blue_p1,red_p2+green_p1,red_p1]
-				miditrack.append(mido.MetaMessage('sequencer_specific', data=(5, 15, 52, anvilcolor[0], anvilcolor[1], anvilcolor[2], anvilcolor[3], 0))) #from Anvil Studio
+				miditrack.append(metamsg('sequencer_specific', data=(5, 15, 52, anvilcolor[0], anvilcolor[1], anvilcolor[2], anvilcolor[3], 0))) #from Anvil Studio
 
-			miditrack.append(mido.Message('program_change', channel=midi_channel, program=midiinst_obj.patch, time=0))
+			midievents_obj = track_obj.placements.midievents
+			midievents_obj.sort()
+			midievents_obj.del_note_durs()
+			midievents_obj.sort()
 
-			i_list = {}
+			for x in midievents_obj.iter_events():
+				etype = x[1]
+				etime = int(x['pos_dif'])
 
-			track_obj.placements.notelist.sort()
-			for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in track_obj.placements.notelist.iter():
-				for t_key in t_keys:
-					cvmi_n_pos = int(t_pos)
-					cvmi_n_dur = int(t_dur)
-					cvmi_n_key = int(t_key)+60-middlenote
-					cvmi_n_vol = xtramath.clamp(int(t_vol*127), 0, 127)
-					add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
-					add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
+				if etype == 'NOTE_OFF':
+					outnote = int(x[3])-middlenote
+					if 127>outnote>=0:
+						miditrack.append(rmsg('note_off', channel=int(x[2]), note=outnote, time=etime))
 
-			i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
+				elif etype == 'NOTE_ON':
+					outnote = int(x[3])-middlenote
+					if 127>outnote>=0:
+						miditrack.append(rmsg('note_on', channel=int(x[2]), note=outnote, velocity=int(x[4]), time=etime))
 
-			prevpos = 0
-			for i_list_e in i_list:
-				for midi_notedata in i_list[i_list_e]:
-					if midi_notedata[0] == 'note_on': miditrack.append(mido.Message('note_on', channel=midi_channel, note=midi_notedata[1], velocity=midi_notedata[2], time=i_list_e-prevpos))
-					if midi_notedata[0] == 'note_off': miditrack.append(mido.Message('note_off', channel=midi_channel, note=midi_notedata[1], time=i_list_e-prevpos))
-					prevpos = i_list_e
+				elif etype == 'PROGRAM':
+					miditrack.append(rmsg('program_change', channel=int(x[2]), program=int(x[3]), time=etime))
 
-			multi_miditrack.append(miditrack)
+				elif etype == 'CONTROL':
+					miditrack.append(rmsg('control_change', channel=int(x[2]), control=int(x[3]), value=int(x[4]), time=etime))
 
-		for x in multi_miditrack: midiobj.tracks.append(x)
-		
+				elif etype == 'TEMPO':
+					miditrack.append(metamsg('set_tempo', tempo=mido.bpm2tempo(x[6]), time=etime))
+
+				elif etype == 'PITCH':
+					miditrack.append(rmsg('pitchwheel', pitch=int(x[3]/4096), time=etime))
+
+				elif etype == 'TIMESIG':
+					miditrack.append(metamsg('time_signature', numerator=4, denominator=4, time=etime))
+
+				elif etype == 'SYSEX':
+					sysexdata = bytearray(midievents_obj.sysex[int(x[3])])
+					miditrack.append(rmsg('sysex', data=sysexdata, time=etime))
+
+				elif etype == 'TEXT':
+					miditrack.append(metamsg('text', text=midievents_obj.texts[int(x[3])], time=etime))
+
+				elif etype == 'SEQSPEC':
+					sysexdata = bytearray(midievents_obj.seq_spec[int(x[3])])
+					miditrack.append(metamsg('sequencer_specific', data=sysexdata, time=etime))
+
+			midiobj.tracks.append(miditrack)
+
 		if dawvert_intent.output_mode == 'file':
 			midiobj.save(dawvert_intent.output_file)

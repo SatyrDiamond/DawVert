@@ -35,6 +35,19 @@ EVENTID__SYSEX = 102
 EVENTID__TEXT = 103
 EVENTID__MARKER = 104
 EVENTID__LYRIC = 105
+EVENTID__SEQSPEC = 106
+
+state_dtype = np.dtype([
+	('pos', np.uint64),
+	('type', np.str_, 8),
+	('chan', np.uint8),
+	('val1', np.int64),
+	('val2', np.int64),
+	('val3', np.int64),
+	('hqval', np.double),
+	('pos_prev', np.uint64),
+	('pos_dif', np.uint64),
+	])
 
 class midievents:
 	def __init__(self):
@@ -48,8 +61,74 @@ class midievents:
 		self.texts = {}
 		self.markers = {}
 		self.lyrics = {}
-		self.seq_spec = []
+		self.seq_spec = {}
 		self.has_duration = False
+
+	def iter_events(self):
+		state = np.zeros(1, state_dtype)[0]
+		for x in self.data:
+			if x['used']:
+				etype = x['type']
+				state[0] = x['pos']
+				state[8] = state[0]-state[7]
+				state[2] = x['chan']
+				if etype == EVENTID__NOTE_OFF:
+					state[1] = "NOTE_OFF"
+					state[3] = x['value']
+					state[4] = x['value2']
+				elif etype == EVENTID__NOTE_ON:
+					state[1] = "NOTE_ON"
+					state[3] = x['value']
+					state[4] = x['value2']
+				elif etype == EVENTID__NOTE_DUR:
+					state[1] = "NOTE_DUR"
+					state[3] = x['value']
+					state[4] = x['value2']
+					state[5] = x['uhival']
+				elif etype == EVENTID__CONTROL:
+					state[1] = "CONTROL"
+					state[3] = x['value']
+					state[4] = x['uhival']
+				elif etype == EVENTID__PROGRAM:
+					state[1] = "PROGRAM"
+					state[3] = x['value']
+				elif etype == EVENTID__NOTE_PRESSURE:
+					state[1] = "NOTE_PRS"
+					state[3] = x['value']
+					state[4] = x['uhival']
+				elif etype == EVENTID__PRESSURE:
+					state[1] = "PRESSURE"
+					state[3] = x['uhival']
+				elif etype == EVENTID__PITCH:
+					state[1] = "PITCH"
+					state[3] = x['shival']
+				elif etype == EVENTID__TEMPO:
+					state[1] = "TEMPO"
+					state[6] = struct.unpack('f', struct.pack('I', x['uhival']))[0]
+				elif etype == EVENTID__TIMESIG:
+					state[1] = "TIMESIG"
+					state[3] = x['value']
+					state[4] = x['value2']
+				elif etype == EVENTID__SYSEX:
+					state[1] = "SYSEX"
+					state[3] = x['uhival']
+				elif etype == EVENTID__TEXT:
+					state[1] = "TEXT"
+					state[3] = x['uhival']
+				elif etype == EVENTID__MARKER:
+					state[1] = "MARKER"
+					state[3] = x['uhival']
+				elif etype == EVENTID__LYRIC:
+					state[1] = "LYRIC"
+					state[3] = x['uhival']
+				elif etype == EVENTID__SEQSPEC:
+					state[1] = "SEQSPEC"
+					state[3] = x['uhival']
+				else:
+					state[1] = "UNKNOWN"
+
+				state[7] = x['pos']
+				yield state
 
 	def __iter__(self):
 		for x in self.data:
@@ -91,6 +170,17 @@ class midievents:
 						non['type'] = EVENTID__NOTE_DUR
 			self.has_duration = True
 
+	def del_note_durs(self):
+		if self.has_duration:
+			notedata = self.data.data
+			wherebools = notedata['type']==EVENTID__NOTE_DUR
+			self.data.data['type'][wherebools] = EVENTID__NOTE_ON
+			wb = self.data.data[wherebools]
+			self.data.extend(len(wb))
+			for n in wb:
+				self.add_note_off(n['pos']+n['uhival'], n['chan'], n['value'], n['value2'])
+			self.has_duration = False
+
 	def add_note_off(self, curpos, channel, key, vol):
 		self.cursor.add()
 		cursor = self.cursor
@@ -108,7 +198,7 @@ class midievents:
 		cursor['chan'] = channel
 		cursor['value'] = key
 		cursor['value2'] = vol
-		cursor['shival'] = 1
+		cursor['proc_complete'] = 1
 
 	def add_note_dur(self, curpos, channel, key, vol, dur):
 		self.cursor.add()
@@ -254,11 +344,24 @@ class midievents:
 		cursor['chan'] = 255
 		self.lyrics[lyricnum] = txtdata
 
-	def add_seq_spec(self, data):
-		self.seq_spec.append(data)
+	def add_seq_spec(self, curpos, data):
+		seqspecnum = 0
+		while True:
+			seqspecnum += 1
+			if seqspecnum not in self.seq_spec: break
+
+		self.cursor.add()
+		cursor = self.cursor
+		cursor['pos'] = curpos
+		cursor['type'] = EVENTID__SEQSPEC
+		cursor['uhival'] = seqspecnum
+		cursor['chan'] = 255
+		self.seq_spec[seqspecnum] = data
 
 	def sort(self):
-		self.data.sort(['pos'])
+		is_sorted = np.all(np.diff(self.data.get_used()['pos'].astype(np.int64)) >= 0)
+		if not is_sorted:
+			self.data.sort(['pos'])
 
 	def clean(self):
 		self.data.clean()
@@ -271,3 +374,18 @@ class midievents:
 		used_data = self.data.get_used()
 		used_data = used_data[used_data['proc_complete']==1]
 		return used_data[['pos','uhival','chan','value','value2']]
+
+	def merge(self, other_event, pos, dur, offset):
+
+		useddata = other_event.data.get_used()
+
+		if other_event.has_duration:
+			self.has_duration = other_event.has_duration
+
+		o = np.logical_and((dur+offset)>useddata['pos'], useddata['pos']>=offset)
+		trimmed_events = useddata[o]
+
+		for t in trimmed_events:
+			#t['pos'] += pos
+			if t['type'] not in [EVENTID__SYSEX, EVENTID__TEXT, EVENTID__MARKER, EVENTID__LYRIC, EVENTID__SEQSPEC]:
+				self.cursor.add_copied(t)

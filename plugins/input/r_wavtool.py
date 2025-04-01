@@ -30,6 +30,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 		effects = []
 		instrument_dev = None
+		instrument_dev_data = None
 
 		trackdevices = []
 		TrackMIDIReceiver = None
@@ -51,6 +52,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 				if devicedata.sourceId == 'df142a04-31c6-4495-a8a4-c49f8429d557':
 					plugin_obj = convproj_obj.plugin__add(deviceid, 'native', 'wavtool', 'wavetable')
 					instrument_dev = deviceid
+					instrument_dev_data = devicedata
 					wavetableA = base64.b64decode(constantsdata["wavetableA"]) if "wavetableA" in constantsdata else None
 					wavetableB = base64.b64decode(constantsdata["wavetableB"]) if "wavetableB" in constantsdata else None
 
@@ -106,6 +108,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'synth-osc', None)
 					inst_fallback = deviceid
 					instrument_dev = deviceid
+					instrument_dev_data = devicedata
 					osc_data = plugin_obj.osc_add()
 					osc_data.prop.shape = 'saw'
 
@@ -122,6 +125,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					inst_fallback = deviceid
 					plugin_obj.role = 'synth'
 					instrument_dev = deviceid
+					instrument_dev_data = devicedata
 
 					for samplenum in range(1,13):
 						endstr = str(samplenum)
@@ -160,6 +164,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						wave_path = extract_audio(bufferid)
 						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(deviceid, wave_path, None, sampleid=bufferid)
 						instrument_dev = deviceid
+						instrument_dev_data = devicedata
 
 						attack = inputdata["attack"]/48000 if "attack" in inputdata else 0.001
 						decay = inputdata["decay"]/48000 if "decay" in inputdata else 0.1
@@ -344,6 +349,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 					if isinst: 
 						instrument_dev = deviceid
+						instrument_dev_data = devicedata
 						if plugin_obj: plugin_obj.role = 'synth'
 					else:
 						effects.append(deviceid)
@@ -367,6 +373,8 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					d_in = connections[d_in]
 					if d_in == instrument_dev: 
 						track_obj.plugslots.set_synth(instrument_dev)
+						if 'presetName' in instrument_dev_data.data:
+							track_obj.visual_inst.name = instrument_dev_data.data['presetName']
 						logger_input.info('Instrument Device: '+instrument_dev)
 					if d_in in effects: 
 						track_obj.plugslots.slots_audio.append(d_in)

@@ -169,6 +169,22 @@ class cvpj_s_automation:
 	# |      | iiii | OOOO | <--1 | M | convert____pl_ticks___nopl_points
     
 	# | iiii | OOOO |      |      | S | convert__nopl_ticks_____pl_ticks
+	# | OOOO | iiii |      |      | S | convert____pl_ticks___nopl_ticks
+
+	def convert____pl_ticks___nopl_ticks(self):
+		if self.u_pl_ticks and not self.u_nopl_ticks:
+			self.u_nopl_ticks = True
+			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, self.valtype)
+			for x in self.pl_ticks:
+				pos = x.time.position
+				dur = x.time.duration
+				offset = x.time.cut_start if x.time.cut_type == 'cut' else 0
+				for p, v in x.data.points.items():
+					if dur>p>=offset:
+						self.nopl_ticks.points[p+pos] = v
+
+			self.pl_ticks = None
+			self.u_pl_ticks = False
 
 	def convert__nopl_ticks_____pl_ticks(self):
 		if self.u_nopl_ticks:
@@ -308,6 +324,11 @@ class cvpj_s_automation:
 					self.convert____pl_ticks_____pl_points()
 				elif (pl_points, nopl_points) == (False, True):
 					self.convert____pl_ticks___nopl_points()
+
+		if if_ticks and not if_points:
+			if not (pl_ticks) and nopl_ticks:
+					self.convert____pl_ticks___nopl_ticks()
+
 
 class cvpj_autoloc:
 	def __init__(self, indata):
@@ -574,6 +595,14 @@ class cvpj_automation:
 		if autopath in self.data:
 			autodata = self.data[autopath]
 			if autodata.u_nopl_points: return True, autodata.nopl_points
+			else: return False, None
+		else: return False, None
+
+	def get_autoticks(self, autopath):
+		autopath = cvpj_autoloc(autopath)
+		if autopath in self.data:
+			autodata = self.data[autopath]
+			if autodata.u_nopl_ticks: return True, autodata.nopl_ticks
 			else: return False, None
 		else: return False, None
 

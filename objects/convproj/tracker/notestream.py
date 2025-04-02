@@ -43,6 +43,10 @@ class autostream:
 				autopoint_obj.pos = tap[0]-tpl[1][0][0]
 				autopoint_obj.value = tap[1]
 				autopoint_obj.type = 'instant'
+			autoti_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
+			autoti_obj.time.set_posdur((tpl[0])+tpl[1][0][0], tpl[2])
+			for tap in tpl[1]: 
+				autoti_obj.data.add_point(tap[0]-tpl[1][0][0], tap[1])
 
 class notestream:
 	def __init__(self, assoc_instid):

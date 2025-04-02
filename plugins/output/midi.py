@@ -45,10 +45,13 @@ class output_midi(plugins.base):
 			midi_tempo = mido.bpm2tempo(convproj_obj.params.get('bpm', 120).value)
 			autotrack.append(metamsg('set_tempo', tempo=midi_tempo, time=0))
 		aid_found, aid_data = convproj_obj.automation.get_autoticks(['main', 'bpm'])
-
 		if aid_found:
-			for pos, val in aid_data:
-				headcmd.append([pos, 'tempo', val])
+			for pos, val in aid_data: headcmd.append([pos, 'tempo', val])
+
+		if convproj_obj.transport.loop_active:
+			headcmd.append([int(convproj_obj.transport.loop_start), 'loop_start'])
+			if convproj_obj.transport.loop_end:
+				headcmd.append([int(convproj_obj.transport.loop_end), 'loop_end'])
 
 		headcmd = sorted(headcmd)
 		prevpos = 0
@@ -57,6 +60,11 @@ class output_midi(plugins.base):
 			if hcmd[1] == 'tempo': 
 				midi_tempo = mido.bpm2tempo(hcmd[2])
 				autotrack.append(metamsg('set_tempo', tempo=midi_tempo, time=posdif))
+			if hcmd[1] == 'loop_start': 
+				autotrack.append(rmsg('control_change', channel=0, control=111, value=0, time=posdif))
+				autotrack.append(rmsg('control_change', channel=0, control=116, value=0, time=posdif))
+			if hcmd[1] == 'loop_end': 
+				autotrack.append(rmsg('control_change', channel=0, control=117, value=0, time=posdif))
 			prevpos = hcmd[0]
 
 		if len(autotrack):

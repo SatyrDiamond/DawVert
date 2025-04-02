@@ -103,6 +103,18 @@ class input_hydrogen(plugins.base):
 			plugin_obj.role = 'synth'
 			inst_obj.plugslots.set_synth(synthid)
 
+			inst_obj.datavals.add('middlenote', -int(instrument.pitchOffset))
+
+			if instrument.filterActive:
+				filter_id = str(instrument.id)+'_filter'
+				filtplug_obj = convproj_obj.plugin__add(filter_id, 'universal', 'filter', None)
+				filtplug_obj.filter.on = True
+				filtplug_obj.filter.type.set('low_pass', None)
+				filtplug_obj.filter.freq = xtramath.midi_filter(instrument.filterCutoff)*2.3
+				filtplug_obj.filter.q = (instrument.filterResonance*10)+1
+				filtplug_obj.role = 'effect'
+				inst_obj.plugslots.slots_audio.append(filter_id)
+
 			for layer in instrument.instrumentComponent.layers:
 				filename = layer.filename
 				sampleid = drumkit+'__'+filename
@@ -114,6 +126,7 @@ class input_hydrogen(plugins.base):
 				sp_obj.vel_max = layer.max
 				sp_obj.vol = layer.gain
 				sp_obj.trigger = 'oneshot'
+				sp_obj.pitch = layer.pitch
 			#inst_obj.sends.add('return__0', None, instrument.FX1Level)
 			#inst_obj.sends.add('return__1', None, instrument.FX2Level)
 			#inst_obj.sends.add('return__2', None, instrument.FX3Level)

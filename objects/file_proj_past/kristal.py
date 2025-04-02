@@ -61,8 +61,8 @@ class CTransport:
 		unks.append(byr_stream.uint32())
 		unks.append(byr_stream.uint16())
 		unks.append(byr_stream.uint8())
-		unks.append(byr_stream.uint32())
-		unks.append(byr_stream.uint32())
+		self.timesig_num = byr_stream.uint32()
+		self.timesig_denom = byr_stream.uint32()
 		unks.append(byr_stream.uint32())
 		if VERBOSE: print(unks)
 

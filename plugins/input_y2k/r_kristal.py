@@ -108,6 +108,8 @@ class input_kristal(plugins.base):
 
 		if project_obj.globalinserts:
 			for icid, inpart in project_obj.globalinserts:
+				if icid == 'CTransport':
+					convproj_obj.timesig = [inpart.timesig_num, inpart.timesig_denom]
 				if icid == 'CMetronome':
 					convproj_obj.params.add('bpm', inpart.bpm, 'float')
 					bpm = inpart.bpm

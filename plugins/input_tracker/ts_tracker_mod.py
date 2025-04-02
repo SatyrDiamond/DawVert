@@ -30,7 +30,7 @@ class input_mod(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'ts'
-		in_dict['auto_types'] = ['pl_points']
+		in_dict['auto_types'] = ['pl_points', 'pl_ticks']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import tracker_mod as proj_mod

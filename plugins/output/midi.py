@@ -39,12 +39,28 @@ class output_midi(plugins.base):
 		autotrack = mido.MidiTrack()
 		midi_numerator, midi_denominator = convproj_obj.timesig
 
+
+		headcmd = []
 		if 'bpm' in convproj_obj.params.list():
 			midi_tempo = mido.bpm2tempo(convproj_obj.params.get('bpm', 120).value)
 			autotrack.append(metamsg('set_tempo', tempo=midi_tempo, time=0))
-			autotrack.append(metamsg('track_name', name='Auto Track', time=0))
+		aid_found, aid_data = convproj_obj.automation.get_autoticks(['main', 'bpm'])
+
+		if aid_found:
+			for pos, val in aid_data:
+				headcmd.append([pos, 'tempo', val])
+
+		headcmd = sorted(headcmd)
+		prevpos = 0
+		for hcmd in headcmd:
+			posdif = hcmd[0]-prevpos
+			if hcmd[1] == 'tempo': 
+				midi_tempo = mido.bpm2tempo(hcmd[2])
+				autotrack.append(metamsg('set_tempo', tempo=midi_tempo, time=posdif))
+			prevpos = hcmd[0]
 
 		if len(autotrack):
+			autotrack.insert(0, metamsg('track_name', name='Auto Track', time=0))
 			midiobj.tracks.append(autotrack)
 
 		for trackid, track_obj in convproj_obj.track__iter():

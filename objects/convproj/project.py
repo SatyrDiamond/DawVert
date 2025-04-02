@@ -331,9 +331,16 @@ class cvpj_project:
 		elif self.type in ['m', 'ts'] and out_type == 'mi':
 			if self.type == 'ts': convert_ts2m.convert(self)
 			convert_m2mi.convert(self)
-		elif self.type in ['m', 'ts'] and out_type == 'r': 
+		elif self.type in ['m', 'ts'] and out_type in ['r', 'cs', 'cm']: 
 			if self.type == 'ts': convert_ts2m.convert(self)
 			convert_m2r.convert(self)
+			if out_type == 'cs':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cs.convert(self)
+			if out_type == 'cm':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cs.convert(self)
+				convert_cs2cm.convert(self)
 
 		elif self.type == 'r' and out_type == 'm': convert_r2m.convert(self)
 		elif self.type == 'r' and out_type == 'mi': 

@@ -196,7 +196,7 @@
 		<bytes_header data="505454554e452d2d3230303731313139"/>
 	</plugin>
 
-	<plugin pluginset="y2k" name="mmf">
+	<plugin pluginset="midi" name="mmf">
 		<file fileext=".mmf"/>
 		<bytes_header data="4d4d4d44"/>
 	</plugin>
@@ -216,7 +216,7 @@
 		<bytes_header data="43727973"/>
 	</plugin>
 
-	<plugin pluginset="ancient" name="temper">
+	<plugin pluginset="midi" name="temper">
 		<file fileext=".squ"/>
 		<xml root_name="music-sequence"/>
 	</plugin>

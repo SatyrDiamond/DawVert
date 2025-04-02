@@ -401,10 +401,18 @@ class cvpj_project:
 			convert_rm2m.convert(self, True)
 			convert_m2mi.convert(self)
 
-		elif self.type == 'ms' and out_type == 'r': 
+		elif self.type == 'ms' and out_type in ['r', 'cs', 'cm']: 
 			convert_ms2rm.convert(self, out_dawinfo)
 			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2r.convert(self)
+			if out_type == 'cs':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cs.convert(self)
+			if out_type == 'cm':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cs.convert(self)
+				convert_cs2cm.convert(self)
+
 
 		elif self.type == 'cm' and out_type == 'r':
 			convert_cm2rm.convert(self)

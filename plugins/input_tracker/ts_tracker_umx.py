@@ -46,6 +46,7 @@ class input_mod(plugins.base):
 		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'ts'
+		in_dict['auto_types'] = ['pl_points', 'pl_ticks']
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'\xc1\x83\x2a\x9e'])

@@ -228,14 +228,30 @@ class sony_acid_file:
 		self.ports = []
 		self.root_note = 60
 		self.ppq = 768
+		self.filename = ''
 		self.tempmap = np.zeros(0, dtype=tempmap_dtype)
+		self.loop_enable = 0
+		self.loop_start = 0
+		self.loop_end = 0
 
 	def load_from_file(self, input_file):
 		acidchunks = riff_chunks.riff_chunk()
 		byr_stream = acidchunks.load_from_file(input_file, False)
 
 		for x in acidchunks.iter_wseek(byr_stream):
-			if x.name == b'tlst':
+
+			if x.name == b'fmt ':
+				with byr_stream.isolate_size(x.size, False) as bye_stream:
+					unk = []
+					bye_stream.skip(25)
+					self.loop_enable = bye_stream.uint32()
+					bye_stream.skip(7)
+					self.filename = bye_stream.string16(256)
+					bye_stream.skip(8)
+					self.loop_start = bye_stream.uint32()
+					self.loop_end = bye_stream.uint32()
+
+			elif x.name == b'tlst':
 				for i in x.iter_wseek(byr_stream):
 					if i.name == b'trak': 
 						track_obj = sdml_track()

@@ -104,6 +104,10 @@ class input_acid_old(plugins.base):
 
 		auto_basenotes[0] = project_obj.root_note
 
+		convproj_obj.transport.loop_active = bool(project_obj.loop_enable)
+		convproj_obj.transport.loop_start = project_obj.loop_start
+		convproj_obj.transport.loop_end = project_obj.loop_end
+
 		if len(project_obj.tempmap):
 			convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', 0, project_obj.tempo)
 

@@ -73,7 +73,7 @@ class hydrogen_instrumentComponent:
 		for x_part in xmldata:
 			name = x_part.tag
 			if name == 'component_id': self.component_id = int(x_part.text)
-			if name == 'gain': self.gain = int(x_part.text)
+			if name == 'gain': self.gain = float(x_part.text)
 			if name == 'layer': self.layers.append(hydrogen_layer(x_part))
 
 class hydrogen_instrument:

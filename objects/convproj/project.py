@@ -356,21 +356,19 @@ class cvpj_project:
 			convert_mi2m.convert(self, dawvert_intent)
 			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2r.convert(self)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			if out_type == 'cs':
-				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 				convert_r2cs.convert(self)
 			if out_type == 'cm':
-				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 				convert_r2cs.convert(self)
 				convert_cs2cm.convert(self)
 	
 		elif self.type == 'rm' and out_type in ['r', 'cs', 'cm']: 
 			convert_rm2r.convert(self)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			if out_type == 'cs':
-				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 				convert_r2cs.convert(self)
 			if out_type == 'cm':
-				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 				convert_r2cs.convert(self)
 				convert_cs2cm.convert(self)
 		elif self.type == 'rm' and out_type == 'm': convert_rm2m.convert(self, True)

@@ -32,6 +32,7 @@ class input_bandlab(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['time_seconds'] = True
 		in_dict['file_ext'] = ['blx']
+		in_dict['notes_midi'] = True
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['plugin_included'] = ['native:bandlab']
@@ -147,13 +148,13 @@ class input_bandlab(plugins.base):
 										add_sample(convproj_obj, dawvert_intent, layer['sampleId'], sampledurs)
 
 				for blx_region in blx_track.regions:
-					placement_obj = track_obj.placements.add_notes()
+					placement_obj = track_obj.placements.add_midi()
 					placement_obj.time.position_real = blx_region.startPosition
 					placement_obj.time.duration_real = blx_region.endPosition-blx_region.startPosition
 					if blx_region.name: placement_obj.visual.name = blx_region.name
-					midipath = os.path.join(dawvert_intent.input_file, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
+					midipath = os.path.join(dawvert_intent.input_folder, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
 					do_loop(placement_obj.time, blx_region, tempomul, 1)
-					placement_obj.notelist.midi_from(midipath)
+					placement_obj.midi_from(midipath)
 
 def add_sample(convproj_obj, dawvert_intent, sampleid, sampledurs):
 	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', sampleid+'.*')

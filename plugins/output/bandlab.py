@@ -31,6 +31,7 @@ class output_bandlab(plugins.base):
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['file_ext'] = 'blx'
 		in_dict['placement_cut'] = True
+		in_dict['notes_midi'] = True
 		in_dict['plugin_included'] = ['native:bandlab']
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -178,12 +179,12 @@ class output_bandlab(plugins.base):
 					blx_track.soundbank = 'studio-grand-v2-v4'
 
 					track_obj.placements.pl_audio.sort()
-					for notespl_obj in track_obj.placements.pl_notes:
-						notebytes = notespl_obj.notelist.getvalue()
+					for midipl_obj in track_obj.placements.pl_midi:
+						notebytes = midipl_obj.midievents.getvalue()
 						uuiddata = str( data_values.bytes__to_uuid( notebytes ) )
 
 						if uuiddata not in notelist_assoc:
-							notelist_assoc[uuiddata] = notespl_obj.notelist
+							notelist_assoc[uuiddata] = midipl_obj.midievents
 							bl_sample = proj_bandlab.bandlab_sample(None) 
 							bl_sample.creatorId = creatorId
 							bl_sample.isMidi = True
@@ -191,7 +192,7 @@ class output_bandlab(plugins.base):
 							project_obj.samples.append(bl_sample)
 
 						blx_region = proj_bandlab.bandlab_region(None)
-						add_region_common(blx_region, notespl_obj, blx_track, tempomul, True)
+						add_region_common(blx_region, midipl_obj, blx_track, tempomul, True)
 						blx_region.file = uuiddata+'.mid'
 						blx_track.regions.append(blx_region)
 
@@ -210,9 +211,8 @@ class output_bandlab(plugins.base):
 			os.makedirs(os.path.join(folder, namet, 'Assets', 'Audio'), exist_ok=True)
 			os.makedirs(os.path.join(folder, namet, 'Assets', 'MIDI'), exist_ok=True)
 
-			for notelist_id, notelist_obj in notelist_assoc.items():
-				notelist_obj.mod_limit(-60, 67)
-				notelist_obj.midi_to(os.path.join(folder, namet, 'Assets', 'MIDI', notelist_id+'.mid'), bpm)
+			for midilist_id, midilist_obj in notelist_assoc.items():
+				midilist_obj.midi_to(os.path.join(folder, namet, 'Assets', 'MIDI', midilist_id+'.mid'))
 
 			for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 				if sampleref_id in used_samples:

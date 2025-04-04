@@ -5,6 +5,7 @@ from functions import xtramath
 import copy
 import math
 import numpy as np
+import os
 
 from objects.convproj import placements
 from objects.convproj import autopoints
@@ -119,6 +120,18 @@ class cvpj_placements_midi:
 
 		self.data = new_data_midi
 
+	def make_base_from_notes(self, notesp):
+		plb_obj = cvpj_placement_midi(self.time_ppq, self.time_float)
+		plb_obj.time = notesp.time.copy()
+		plb_obj.time_ppq = notesp.time_ppq
+		plb_obj.time_float = notesp.time_float
+		plb_obj.muted = notesp.muted
+		plb_obj.visual = notesp.visual
+		plb_obj.group = notesp.group
+		plb_obj.locked = notesp.locked
+		self.data.append(plb_obj)
+		return plb_obj
+
 class cvpj_placement_midi:
 	__slots__ = ['time','muted','visual','midievents','time_ppq','time_float','auto','group','locked']
 	def __init__(self, time_ppq, time_float):
@@ -146,3 +159,28 @@ class cvpj_placement_midi:
 	def add_autopoints(self, a_type):
 		self.auto[a_type] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
 		return self.auto[a_type]
+
+	def midi_from(self, input_file):
+		from objects_midi.parser import MidiFile
+		from objects_midi import events as MidiEvents
+
+		if os.path.exists(input_file):
+			midifile = MidiFile.fromFile(input_file)
+
+			events_obj = self.midievents
+			events_obj.ppq = midifile.ppqn
+
+			if midifile.tracks:
+				for eventlist in midifile.tracks:
+					curpos = 0
+					for msg in eventlist.events:
+						curpos += msg.deltaTime
+						if type(msg) == MidiEvents.NoteOnEvent: events_obj.add_note_on(curpos, msg.channel, msg.note, msg.velocity)
+						elif type(msg) == MidiEvents.NoteOffEvent: events_obj.add_note_off(curpos, msg.channel, msg.note, 0)
+						elif type(msg) == MidiEvents.CopyrightEvent: events_obj.add_copyright(msg.copyright)
+						elif type(msg) == MidiEvents.PitchBendEvent: events_obj.add_pitch(curpos, msg.channel, msg.pitch)
+						elif type(msg) == MidiEvents.ControllerEvent: events_obj.add_control(curpos, msg.channel, msg.controller, msg.value)
+						elif type(msg) == MidiEvents.ProgramEvent: events_obj.add_program(curpos, msg.channel, msg.program)
+						elif type(msg) == MidiEvents.EndOfTrackEvent: break
+
+

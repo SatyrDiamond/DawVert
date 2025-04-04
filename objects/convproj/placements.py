@@ -281,6 +281,7 @@ class cvpj_placements:
 		self.pl_audio.change_seconds(is_seconds, bpm, ppq)
 		self.pl_custom.change_seconds(is_seconds, bpm, ppq)
 		self.pl_video.change_seconds(is_seconds, bpm, ppq)
+		self.pl_midi.change_seconds(is_seconds, bpm, ppq)
 
 	def remove_cut(self):
 		self.pl_notes.remove_cut()

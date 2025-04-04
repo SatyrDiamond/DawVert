@@ -18,7 +18,7 @@ def process_r(convproj_obj):
 			trackroute_sendobj = org_trackroute[trackid] if trackid in org_trackroute else None
 
 			if_audio = track_obj.placements.pl_audio or track_obj.placements.pl_audio_nested
-			if_notes = track_obj.placements.pl_notes or track_obj.placements.notelist
+			if_notes = track_obj.placements.pl_notes or track_obj.placements.notelist or track_obj.placements.pl_midi
 			if_video = track_obj.placements.pl_video
 
 			if track_obj.type == 'hybrid':
@@ -29,6 +29,7 @@ def process_r(convproj_obj):
 				a_track_obj.placements.pl_audio = track_obj.placements.pl_audio
 				a_track_obj.placements.pl_audio_nested = track_obj.placements.pl_audio_nested
 				n_track_obj.placements.pl_notes = track_obj.placements.pl_notes
+				n_track_obj.placements.pl_midi = track_obj.placements.pl_midi
 				n_track_obj.placements.notelist = track_obj.placements.notelist
 				v_track_obj.placements.pl_video = track_obj.placements.pl_video
 
@@ -49,7 +50,7 @@ def process_r(convproj_obj):
 					convproj_obj.automation.copy_everything(['track', trackid], ['track', trackid_s])
 
 				if if_video:
-					trackid_s = trackid+'_unhybrid_audio'
+					trackid_s = trackid+'_unhybrid_video'
 					v_track_obj.type = 'video'
 					convproj_obj.track_order.append(trackid_s)
 					convproj_obj.track_data[trackid_s] = v_track_obj

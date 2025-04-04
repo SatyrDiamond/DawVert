@@ -30,6 +30,7 @@ class input_midi(plugins.base):
 		in_dict['auto_types'] = ['nopl_ticks']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
+		in_dict['notes_midi'] = True
 		in_dict['time_seconds'] = True
 
 	def get_detect_info(self, detectdef_obj):
@@ -103,15 +104,13 @@ class input_midi(plugins.base):
 
 			if qtrack.type == 'midi':
 				for clip in qtrack.clips:
-					placement_obj = track_obj.placements.add_notes()
+					placement_obj = track_obj.placements.add_midi()
 					placement_obj.time.position_real = calcsec(clip.properties.start, ppq)
 					placement_obj.time.duration_real = calcsec(clip.properties.length, ppq)
 					placement_obj.visual.name = clip.name
 
 					if clipcolor: placement_obj.visual.color.set_hex(clipcolor)
 					filepath = clip.midiclip.filename
-
 					fileref_obj = convproj_obj.fileref__add(filepath, filepath, None)
 					fileref_obj.search_local(os.path.dirname(dawvert_intent.input_file))
-
-					placement_obj.notelist.midi_from(fileref_obj.get_path(None, False))
+					placement_obj.midi_from(fileref_obj.get_path(None, False))

@@ -97,6 +97,7 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					#print(init_pooledenvinst.values)
 
 		elif autodata.u_nopl_points:
+			autodata.nopl_points.remove_instant()
 			for x in autodata.nopl_points:
 				out = float(x.value)
 				if inverted: out = 1-out
@@ -321,13 +322,13 @@ def midi_add_cmd(i_list, i_pos, i_cmd):
 	if i_pos not in i_list: i_list[i_pos] = []
 	i_list[i_pos].append(i_cmd)
 
-def convert_midi(rpp_source_obj,notelist, tempo, num, dem, notespl_obj):
+def convert_midi(rpp_source_obj,notelist, tempo, num, dem, midipl_obj):
 	i_list = {}
 	notelist.sort()
 	notelist.change_timings(960, False)
 
 	n_enddur = notelist.get_dur()
-	p_enddur = notespl_obj.time.duration*(960//4)
+	p_enddur = midipl_obj.time.duration*(960//4)
 
 	for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notelist.iter():
 		for t_key in t_keys:
@@ -397,6 +398,7 @@ class output_reaper(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
+		in_dict['notes_midi'] = True
 		in_dict['auto_types'] = ['nopl_points', 'pl_points']
 		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
@@ -518,31 +520,50 @@ class output_reaper(plugins.base):
 				rpp_vst_obj.vst_fourid = 1919118692
 				rpp_vst_obj.vst_uuid = '56535472636D64726561636F6E74726F'
 
-			for notespl_obj in track_obj.placements.pl_notes:
+			for midipl_obj in track_obj.placements.pl_midi:
 
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
-				if notespl_obj.time.cut_type == 'cut': rpp_item_obj.soffs.set(notespl_obj.time.cut_start/8/tempomul)
-				rpp_item_obj.position.set(notespl_obj.time.position_real)
-				rpp_item_obj.length.set(notespl_obj.time.duration_real)
-				rpp_item_obj.mute['mute'] = int(notespl_obj.muted)
-				if notespl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(notespl_obj.visual.color))
-				if notespl_obj.visual.name: rpp_item_obj.name.set(notespl_obj.visual.name)
+				if midipl_obj.time.cut_type == 'cut': rpp_item_obj.soffs.set(midipl_obj.time.cut_start/8/tempomul)
+				rpp_item_obj.position.set(midipl_obj.time.position_real)
+				rpp_item_obj.length.set(midipl_obj.time.duration_real)
+				rpp_item_obj.mute['mute'] = int(midipl_obj.muted)
+				if midipl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(midipl_obj.visual.color))
+				if midipl_obj.visual.name: rpp_item_obj.name.set(midipl_obj.visual.name)
 				rpp_source_obj = rpp_item_obj.source = rpp_source.rpp_source()
+
+				midievents_obj = midipl_obj.midievents
+
 				rpp_source_obj.type = 'MIDI'
 				rpp_source_obj.hasdata.used = True
 				rpp_source_obj.hasdata['hasdata'] = 1
+				rpp_source_obj.hasdata['ppq'] = midievents_obj.ppq
 
-				do_auto_clip(notespl_obj, rpp_item_obj.volenv, 'gain', 'float', False, False)
-				do_auto_clip(notespl_obj, rpp_item_obj.panenv, 'pan', 'float', False, False)
-				do_auto_clip(notespl_obj, rpp_item_obj.muteenv, 'mute', 'bool', False, True)
-				do_auto_clip(notespl_obj, rpp_item_obj.pitchenv, 'pitch', 'float', False, False)
+				do_auto_clip(midipl_obj, rpp_item_obj.volenv, 'gain', 'float', False, False)
+				do_auto_clip(midipl_obj, rpp_item_obj.panenv, 'pan', 'float', False, False)
+				do_auto_clip(midipl_obj, rpp_item_obj.muteenv, 'mute', 'bool', False, True)
+				do_auto_clip(midipl_obj, rpp_item_obj.pitchenv, 'pitch', 'float', False, False)
 
-				convert_midi(rpp_source_obj,notespl_obj.notelist,reaper_tempo,'4','4',notespl_obj)
+				midievents_obj.sort()
+				midievents_obj.del_note_durs()
+				midievents_obj.sort()
 
-				if notespl_obj.locked: rpp_item_obj.lock.set(int(notespl_obj.locked))
+				ppos = 0
+				for x in midievents_obj.iter_events():
+					etype = x[1]
+					posdir = int(x[0])-ppos
+					if etype == 'NOTE_ON':
+						rpp_source_obj.notes.append([False,	posdir, f'{(144+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
+						ppos = int(x[0])
+					if etype == 'NOTE_OFF':
+						rpp_source_obj.notes.append([False,	posdir, f'{(128+int(x[2])):x}', f'{(int(x[3])):x}', '00'])
+						ppos = int(x[0])
 
-				if notespl_obj.group:
-					groupidtr = notespl_obj.group
+				#convert_midi(rpp_source_obj,midipl_obj.notelist,reaper_tempo,'4','4',midipl_obj)
+
+				if midipl_obj.locked: rpp_item_obj.lock.set(int(midipl_obj.locked))
+
+				if midipl_obj.group:
+					groupidtr = midipl_obj.group
 					if groupidtr not in groupassoc:
 						groupassoc[groupidtr] = groupcounter
 						groupcounter += 1

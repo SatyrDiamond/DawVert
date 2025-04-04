@@ -39,38 +39,6 @@ def reaper_color_to_cvpj_color(i_color, isreversed):
 	else:
 		return [60, 60, 60]
 
-class midi_notes():
-	def __init__(self): 
-		self.active_notes = [[[] for x in range(127)] for x in range(16)]
-		self.midipos = 0
-		pass
-
-	def do_note(self, tracksource_var):
-		self.midipos += int(tracksource_var[1])
-		midicmd, midich = data_bytes.splitbyte(int(tracksource_var[2],16))
-		midikey = int(tracksource_var[3],16)
-		midivel = int(tracksource_var[4],16)
-		if midicmd == 9: self.active_notes[midich][midikey].append([self.midipos, None, midivel])
-		if midicmd == 8: self.active_notes[midich][midikey][-1][1] = self.midipos
-
-	def do_output(self, cvpj_notelist, ppq):
-		for c_mid_ch in range(16):
-			for c_mid_key in range(127):
-				if self.active_notes[c_mid_ch][c_mid_key] != []:
-					for notedurpos in self.active_notes[c_mid_ch][c_mid_key]:
-						if notedurpos[1] != None:
-							cvpj_notelist.add_r(
-								notedurpos[0]/(ppq), 
-								(notedurpos[1]-notedurpos[0])/(ppq), 
-								c_mid_key-60, 
-								notedurpos[2]/127, 
-								{'channel': c_mid_ch}
-								)
-							cvpj_notelist.time_ppq = 1
-							cvpj_notelist.time_float = True
-		cvpj_notelist.sort()
-		#print(cvpj_notelist.data[:])
-
 def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert): 
 	bpm = convproj_obj.params.get('bpm', 120).value
 	tempomul = bpm/120
@@ -178,6 +146,7 @@ class input_reaper(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
+		in_dict['notes_midi'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
@@ -466,7 +435,6 @@ class input_reaper(plugins.base):
 				rppart_audio_params = rppart_audio_stretch&0xFFFF
 				rppart_audio_stretch = rppart_audio_stretch>>16
 
-				midi_notes_out = midi_notes()
 				midi_ppq = 960
 
 				samplemode = 0
@@ -476,9 +444,6 @@ class input_reaper(plugins.base):
 					if rpp_source.type in ['MP3','FLAC','VORBIS','WAVE','WAVPACK']:
 						cvpj_placement_type = 'audio'
 						cvpj_audio_file = rpp_source.file.get()
-					if rpp_source.type in ['MIDI']:
-						midi_ppq = rpp_source.hasdata['ppq']
-						for note in rpp_source.notes: midi_notes_out.do_note(note)
 					if rpp_source.type == 'VIDEO':
 						cvpj_placement_type = 'video'
 						cvpj_audio_file = rpp_source.file.get()
@@ -494,10 +459,9 @@ class input_reaper(plugins.base):
 									cvpj_audio_file = insource.file.get()
 
 				cvpj_offset_bpm = ((cvpj_offset)*8)*tempomul
-				cvpj_end_bpm = ((midi_notes_out.midipos/midi_ppq)*4)
 
 				if cvpj_placement_type == 'notes': 
-					placement_obj = track_obj.placements.add_notes()
+					placement_obj = track_obj.placements.add_midi()
 
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
@@ -505,11 +469,30 @@ class input_reaper(plugins.base):
 					placement_obj.time.duration_real = cvpj_duration
 
 					placement_obj.time.cut_type = 'loop'
-					placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
 
 					placement_obj.muted = bool(cvpj_muted)
 
-					midi_notes_out.do_output(placement_obj.notelist, midi_ppq)
+					midievents_obj = placement_obj.midievents
+
+					if rpp_trackitem.source != None:
+						rpp_source = rpp_trackitem.source
+						if rpp_source.type == 'MIDI':
+							midievents_obj.ppq = rpp_source.hasdata['ppq']
+							curpos = 0
+							for note in rpp_source.notes: 
+								curpos += int(note[1])
+
+								midicmd, midich = data_bytes.splitbyte(int(note[2],16))
+
+								if midicmd == 9:
+									midievents_obj.add_note_on(curpos, midich, int(note[3],16), int(note[4],16))
+
+								if midicmd == 8:
+									midievents_obj.add_note_off(curpos, midich, int(note[3],16), 0)
+
+					if curpos:
+						cvpj_end_bpm = ((curpos/midievents_obj.ppq)*4)
+						placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
 
 					do_auto_clip_notes(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
 					do_auto_clip_notes(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)

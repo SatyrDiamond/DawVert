@@ -139,8 +139,9 @@ class input_acid_old(plugins.base):
 		for tracknum, track in enumerate(project_obj.tracks):
 			cvpj_trackid = 'track_'+str(tracknum)
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
+			color = colordata.getcolornum(track.color)
 			track_obj.visual.name = track.name
-			track_obj.visual.color.set_int(colordata.getcolornum(track.color))
+			track_obj.visual.color.set_int(color)
 			track_obj.params.add('vol', track.vol, 'float')
 			track_obj.params.add('pan', track.pan, 'float')
 			track_obj.is_drum = 1 not in track.flags
@@ -243,6 +244,10 @@ class input_acid_old(plugins.base):
 					sp_obj.usemasterpitch = False
 					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)
 					pls.append(placement_obj)
+
+				for p in pls:
+					p.visual.name = track.name
+					p.visual.color.set_int(color)
 
 				for env in region.envs:
 					if len(env.points)==1 and env.type == 0:

@@ -4,7 +4,7 @@
 def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_intent):
 
 	if convproj_obj.type == 'r': 
-		if in__midi_notes == True and out__midi_notes == False:
+		if in__midi_notes == True and out__midi_notes == False and out_type not in ['cm', 'cs']:
 			for cvpj_trackid, track_obj in convproj_obj.track__iter(): 
 				for midpl in track_obj.placements.pl_midi:
 					midievents_obj = midpl.midievents

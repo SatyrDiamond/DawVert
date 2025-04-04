@@ -23,6 +23,7 @@ from functions_compat import track_pl_add
 from functions_compat import track_pl_del
 from functions_compat import unhybrid
 from functions_compat import sep_nest_audio
+from functions_compat import midi_notes
 
 import json
 import math
@@ -46,6 +47,8 @@ class song_compat:
 	def makecompat(self, convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		if self.currenttime == None: self.currenttime = in_dawinfo.time_seconds
 		if 'time_seconds' in self.finished_processes: self.currenttime = out_dawinfo.time_seconds
+
+		self.process_part('midi_notes', midi_notes,				convproj_obj, cvpj_type, in_dawinfo.notes_midi, out_dawinfo.notes_midi, out_type, dawvert_intent)
 
 		self.process_part('fxchange', fxchange,						convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 

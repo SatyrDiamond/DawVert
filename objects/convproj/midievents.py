@@ -375,8 +375,10 @@ class midievents:
 		used_data = used_data[used_data['proc_complete']==1]
 		return used_data[['pos','uhival','chan','value','value2']]
 
-	def merge(self, other_event, pos, dur, offset):
+	def getvalue(self):
+		return self.data.get_used().tobytes()
 
+	def merge(self, other_event, pos, dur, offset):
 		useddata = other_event.data.get_used()
 
 		if other_event.has_duration:
@@ -389,3 +391,61 @@ class midievents:
 			#t['pos'] += pos
 			if t['type'] not in [EVENTID__SYSEX, EVENTID__TEXT, EVENTID__MARKER, EVENTID__LYRIC, EVENTID__SEQSPEC]:
 				self.cursor.add_copied(t)
+
+	def midi_to(self, output_file):
+		import mido
+
+		metamsg = mido.MetaMessage
+		rmsg = mido.Message
+
+		midiobj = mido.MidiFile()
+		midiobj.ticks_per_beat = self.ppq
+
+		miditrack = mido.MidiTrack()
+
+		self.sort()
+		self.del_note_durs()
+		self.sort()
+
+		for x in self.iter_events():
+			etype = x[1]
+			etime = int(x['pos_dif'])
+
+			if etype == 'NOTE_OFF':
+				outnote = int(x[3])
+				if 127>outnote>=0:
+					miditrack.append(rmsg('note_off', channel=int(x[2]), note=outnote, time=etime))
+
+			elif etype == 'NOTE_ON':
+				outnote = int(x[3])
+				if 127>outnote>=0:
+					miditrack.append(rmsg('note_on', channel=int(x[2]), note=outnote, velocity=int(x[4]), time=etime))
+
+			elif etype == 'PROGRAM':
+				miditrack.append(rmsg('program_change', channel=int(x[2]), program=int(x[3]), time=etime))
+
+			elif etype == 'CONTROL':
+				miditrack.append(rmsg('control_change', channel=int(x[2]), control=int(x[3]), value=int(x[4]), time=etime))
+
+			elif etype == 'TEMPO':
+				miditrack.append(metamsg('set_tempo', tempo=mido.bpm2tempo(x[6]), time=etime))
+
+			elif etype == 'PITCH':
+				miditrack.append(rmsg('pitchwheel', pitch=int(x[3]/4096), time=etime))
+
+			elif etype == 'TIMESIG':
+				miditrack.append(metamsg('time_signature', numerator=4, denominator=4, time=etime))
+
+			elif etype == 'SYSEX':
+				sysexdata = bytearray(self.sysex[int(x[3])])
+				miditrack.append(rmsg('sysex', data=sysexdata, time=etime))
+
+			elif etype == 'TEXT':
+				miditrack.append(metamsg('text', text=self.texts[int(x[3])], time=etime))
+
+			elif etype == 'SEQSPEC':
+				sysexdata = bytearray(self.seq_spec[int(x[3])])
+				miditrack.append(metamsg('sequencer_specific', data=sysexdata, time=etime))
+
+		midiobj.tracks.append(miditrack)
+		midiobj.save(output_file)

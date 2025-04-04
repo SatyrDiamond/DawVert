@@ -29,6 +29,7 @@ class info_daw:
 		self.fxchain_mixer = False
 		self.fxtype = 'none'
 		self.time_seconds = False
+		self.notes_midi = False
 		self.projtype = '?'
 
 	def from_dict(self, indict):
@@ -53,6 +54,7 @@ class info_daw:
 		if 'fxtype' in indict: self.fxtype = indict['fxtype']
 		if 'time_seconds' in indict: self.time_seconds = indict['time_seconds']
 		if 'projtype' in indict: self.projtype = indict['projtype']
+		if 'notes_midi' in indict: self.notes_midi = indict['notes_midi']
 
 class info_plugconv:
 	def __init__(self):

@@ -77,7 +77,7 @@
 | R-M | ```y2k``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | R-S | ```ancient``` | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
 | R-S | ```midi``` | ```domino``` | Domino | ```.dms``` | ✔️ | |
-| R-S | ```y2k``` | ```sf_acid``` | Sonic Foundry ACID | ```.acd``` | ✔️ | |
+| R-S | ```y2k``` | ```sf_acid``` | Sonic Foundry ACID<br>Super Duper Music Looper<br>Sony Jam Trax | ```.acd``` | ✔️ | |
 
 ## Experiments
 | DataType | PluginSet | Short Name | Name | Info |

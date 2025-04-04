@@ -263,11 +263,14 @@ class sony_acid_file:
 						self.audios.append(i.dump_list(byr_stream))
 			elif x.name == b'INFO':
 				for i in x.iter_wseek(byr_stream):
-					if i.name == b'INAM': self.name = byr_stream.string(i.size)
-					if i.name == b'IART': self.artist = byr_stream.string(i.size)
-					if i.name == b'ISFT': self.createdBy = byr_stream.string(i.size)
-					if i.name == b'ICMT': self.comments = byr_stream.string(i.size)
-					if i.name == b'ICOP': self.copyright = byr_stream.string(i.size)
+					try:
+						if i.name == b'INAM': self.name = byr_stream.string(i.size)
+						if i.name == b'IART': self.artist = byr_stream.string(i.size)
+						if i.name == b'ISFT': self.createdBy = byr_stream.string(i.size)
+						if i.name == b'ICMT': self.comments = byr_stream.string(i.size)
+						if i.name == b'ICOP': self.copyright = byr_stream.string(i.size)
+					except:
+						pass
 			elif x.name == b'tmap':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
 					_size = bye_stream.uint32()

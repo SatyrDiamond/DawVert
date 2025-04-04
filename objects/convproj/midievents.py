@@ -8,8 +8,8 @@ import struct
 in_dtype = np.dtype([
 	('used', np.uint8),
 
-	('pos', np.uint32),
-	('proc_end', np.uint32),
+	('pos', np.uint64),
+	('proc_end', np.uint64),
 	('proc_complete', np.uint8),
 
 	('type', np.uint8),
@@ -146,6 +146,11 @@ class midievents:
 		track_name_same = self.track_name == nlo.track_name
 		copyright_same = self.copyright == nlo.copyright
 		return nl_same and sysex_same and texts_same and markers_same and lyrics_same and seq_spec_same and seq_spec_same and seq_spec_same and ppq_same and track_name_same and copyright_same
+
+	def change_ppq(self, inppq):
+		ppqcalc = self.ppq/inppq
+		self.data.data['pos'] = self.data.data['pos']/ppqcalc
+		self.ppq = inppq
 
 	def get_channums(self):
 		used_chan = np.unique(self.data.get_used()['chan'])
@@ -388,7 +393,7 @@ class midievents:
 		trimmed_events = useddata[o]
 
 		for t in trimmed_events:
-			#t['pos'] += pos
+			t['pos'] += pos
 			if t['type'] not in [EVENTID__SYSEX, EVENTID__TEXT, EVENTID__MARKER, EVENTID__LYRIC, EVENTID__SEQSPEC]:
 				self.cursor.add_copied(t)
 

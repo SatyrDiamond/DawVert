@@ -288,6 +288,7 @@ class cvpj_placements:
 
 	def remove_loops(self, out__placement_loop):
 		self.pl_notes.remove_loops(out__placement_loop)
+		self.pl_midi.remove_loops(out__placement_loop)
 		self.pl_audio.remove_loops(out__placement_loop)
 		self.pl_audio_nested.remove_loops(out__placement_loop)
 		self.pl_notes_indexed.remove_loops(out__placement_loop)

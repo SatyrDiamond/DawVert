@@ -39,4 +39,4 @@ def convert(convproj_obj):
 						midievents_obj.add_note_dur(t_pos, channel, outnote, min(int(t_vol*127), 127), t_dur)
 			track_obj.type = 'midi'
 
-	convproj_obj.type = 'cs'
+	convproj_obj.type = 'cm'

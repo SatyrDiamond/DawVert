@@ -9,4 +9,4 @@ import struct
 logger_project = logging.getLogger('project')
 
 def convert(convproj_obj):
-	convproj_obj.type = 'rm'
+	convproj_obj.type = 'cs'

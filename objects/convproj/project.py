@@ -43,7 +43,7 @@ from functions_song import convert_ms2rm
 from functions_song import convert_rs2r
 from functions_song import convert_cm2rm
 from functions_song import convert_cs2cm
-from functions_song import convert_r2cs
+from functions_song import convert_r2cm
 
 typelist = {}
 typelist['r'] = 'Regular'
@@ -320,11 +320,10 @@ class cvpj_project:
 			convert_ri2r.convert(self)
 			if out_type == 'cs':
 				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
-				convert_r2cs.convert(self)
+				convert_r2cm.convert(self)
 			if out_type == 'cm':
 				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
-				convert_r2cs.convert(self)
-				convert_cs2cm.convert(self)
+				convert_r2cm.convert(self)
 
 		elif self.type == 'ts' and out_type == 'm':
 			convert_ts2m.convert(self)
@@ -336,11 +335,10 @@ class cvpj_project:
 			convert_m2r.convert(self)
 			if out_type == 'cs':
 				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
-				convert_r2cs.convert(self)
+				convert_r2cm.convert(self)
 			if out_type == 'cm':
 				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
-				convert_r2cs.convert(self)
-				convert_cs2cm.convert(self)
+				convert_r2cm.convert(self)
 
 		elif self.type == 'r' and out_type == 'm': convert_r2m.convert(self)
 		elif self.type == 'r' and out_type == 'mi': 
@@ -348,7 +346,7 @@ class cvpj_project:
 			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 		elif self.type == 'r' and out_type in ['cs', 'cm']: 
-			convert_r2cs.convert(self)
+			convert_r2cm.convert(self)
 			if out_type == 'cm': convert_cs2cm.convert(self)
 
 		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dawvert_intent)
@@ -358,19 +356,17 @@ class cvpj_project:
 			convert_m2r.convert(self)
 			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			if out_type == 'cs':
-				convert_r2cs.convert(self)
+				convert_r2cm.convert(self)
 			if out_type == 'cm':
-				convert_r2cs.convert(self)
-				convert_cs2cm.convert(self)
+				convert_r2cm.convert(self)
 	
 		elif self.type == 'rm' and out_type in ['r', 'cs', 'cm']: 
 			convert_rm2r.convert(self)
 			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			if out_type == 'cs':
-				convert_r2cs.convert(self)
+				convert_r2cm.convert(self)
 			if out_type == 'cm':
-				convert_r2cs.convert(self)
-				convert_cs2cm.convert(self)
+				convert_r2cm.convert(self)
 		elif self.type == 'rm' and out_type == 'm': convert_rm2m.convert(self, True)
 		elif self.type == 'rm' and out_type == 'mi': 
 			convert_rm2m.convert(self, True)
@@ -390,7 +386,7 @@ class cvpj_project:
 		elif self.type == 'rs' and out_type in ['cs', 'cm']: 
 			convert_rs2r.convert(self)
 			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
-			convert_r2cs.convert(self)
+			convert_r2cm.convert(self)
 			if out_type == 'cm': convert_cs2cm.convert(self)
 
 		elif self.type == 'ms' and out_type == 'mi': 
@@ -405,11 +401,10 @@ class cvpj_project:
 			convert_rm2r.convert(self)
 			if out_type == 'cs':
 				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
-				convert_r2cs.convert(self)
+				convert_r2cm.convert(self)
 			if out_type == 'cm':
 				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
-				convert_r2cs.convert(self)
-				convert_cs2cm.convert(self)
+				convert_r2cm.convert(self)
 
 
 		elif self.type == 'cm' and out_type == 'r':

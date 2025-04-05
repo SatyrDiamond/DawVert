@@ -47,11 +47,39 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 	if wf_plugin.plugtype == 'vst':
 		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
 
-		if vstname == 'Micro Sampler':
+		if vstname == 'Multi Sampler':
 			if "state" in wf_plugin.params:
 				sampler_obj = sampler.waveform_sampler_main()
 				sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
-				sampler_obj.write()
+
+				program = sampler_obj.program.programdata
+				if isinstance(program, sampler.prosampler):
+					soundlayers = program.soundlayers
+					if len(soundlayers) == 1:
+						firstlayer = soundlayers[0]
+						layerparams = firstlayer.soundparameters
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
+						track_obj.plugslots.set_synth(pluginid)
+						sp_obj = plugin_obj.samplepart_add('sample')
+						if sp_obj.visual.name: track_obj.visual_inst.name = sp_obj.visual.name
+						soundlayer_samplepart(sp_obj, firstlayer, layerparams)
+						soundlayer_adsr(plugin_obj, layerparams, 'vol')
+	
+					elif len(soundlayers) > 1:
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+						track_obj.plugslots.set_synth(pluginid)
+						for layernum, soundlayer in enumerate(soundlayers):
+							layerparams = soundlayer.soundparameters
+							endstr = str(layernum)
+							sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
+							sp_obj.envs['vol'] = 'vol_'+endstr
+							soundlayer_samplepart(sp_obj, soundlayer, layerparams)
+							soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
+
+		elif vstname == 'Micro Sampler':
+			if "state" in wf_plugin.params:
+				sampler_obj = sampler.waveform_sampler_main()
+				sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
 
 				program = sampler_obj.program.programdata
 				if isinstance(program, sampler.tinysampler):

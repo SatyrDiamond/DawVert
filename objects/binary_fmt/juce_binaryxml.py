@@ -74,6 +74,11 @@ class juce_binaryxml_object:
 				#byr_stream.debug__peek()
 				exit()
 
+	def to_bytes(self, byw_stream):
+		byw_stream = bytewriter.bytewriter()
+		self.write_byw(byw_stream)
+		return byw_stream.getvalue()
+
 	def write_byw(self, byw_stream):
 		if self.type:
 			outs_stream = bytewriter.bytewriter()

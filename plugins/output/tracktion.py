@@ -51,44 +51,35 @@ def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
 		autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
 		wf_plugin.automationcurves.append(autocurve_obj)
 
-def sampler_param(bxml_obj, key, value): 
-	bxml_param = bxml_obj.add_child('SOUNDPARAMETER')
-	bxml_param.set('id', key)
-	bxml_param.set('value', value)
-
-def soundlayer_samplepart(plugin_obj, gpitch, bxml_main, lowNote, highNote, rootNote, sp_obj, sampleref_assoc, sampleref_obj_assoc): 
+def soundlayer_samplepart(plugin_obj, gpitch, programdata, lowNote, highNote, rootNote, sp_obj, sampleref_assoc, sampleref_obj_assoc): 
 	if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
 		adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
 		sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
 		sp_obj.convpoints_samples(sampleref_obj)
-		bxml_layer = bxml_main.add_child('SOUNDLAYER')
-		bxml_layer.set('active', True)
-		bxml_layer.set('name', str(sp_obj.visual.name) if sp_obj.visual.name else sp_obj.sampleref)
-		bxml_layer.set('reverse', bool(sp_obj.reverse))
-		bxml_layer.set('sampleDataName', ':'+sampleref_assoc[sp_obj.sampleref])
-		bxml_layer.set('sampleIn', int(sp_obj.start))
-		bxml_layer.set('sampleLoopIn', int(sp_obj.loop_start))
-		bxml_layer.set('sampleOut', int(sp_obj.end))
-		bxml_layer.set('sampleLoopOut', int(sp_obj.loop_end))
-		bxml_layer.set('rootNote', int(rootNote))
-		bxml_layer.set('lowNote', int(lowNote))
-		bxml_layer.set('highNote', int(highNote))
-		bxml_layer.set('fineTune', 4294967289)
-		bxml_layer.set('fixedPitch', False)
-		bxml_layer.set('pitchShift', False)
-		bxml_layer.set('looped', bool(sp_obj.loop_active))
-		bxml_layer.set('loopMode', 1)
-		sampler_param(bxml_layer, 'attackParam', float(adsr_obj.attack))
-		sampler_param(bxml_layer, 'decayParam', float(adsr_obj.decay))
-		sampler_param(bxml_layer, 'sustainParam', float(adsr_obj.sustain)*100)
-		sampler_param(bxml_layer, 'releaseParam', float(adsr_obj.release))
-		sampler_param(bxml_layer, 'envModeParam', float(sp_obj.trigger=='normal'))
-		sampler_param(bxml_layer, 'pitchParam', float(sp_obj.pitch+gpitch))
+		samplelayer = programdata.add_layer()
+		samplelayer.name = str(sp_obj.visual.name) if sp_obj.visual.name else sp_obj.sampleref
+		samplelayer.reverse = bool(sp_obj.reverse)
+		samplelayer.sampleDataName = ':'+sampleref_assoc[sp_obj.sampleref]
+		samplelayer.sampleIn = int(sp_obj.start)
+		samplelayer.sampleLoopIn = int(sp_obj.loop_start)
+		samplelayer.sampleOut = int(sp_obj.end)
+		samplelayer.sampleLoopOut = int(sp_obj.loop_end)
+		samplelayer.rootNote = int(rootNote)
+		samplelayer.lowNote = int(lowNote)
+		samplelayer.highNote = int(highNote)
+		samplelayer.looped = bool(sp_obj.loop_active)
 
-		#print([(d, k) for d, k in bxml_layer.attrib.items() if d in ['rootNote', 'lowNote', 'highNote']])
+		soundparameters = samplelayer.soundparameters
+		soundparameters['attackParam'] = float(adsr_obj.attack)
+		soundparameters['decayParam'] = float(adsr_obj.decay)
+		soundparameters['sustainParam'] = float(adsr_obj.sustain)*100
+		soundparameters['releaseParam'] = float(adsr_obj.release)
+		soundparameters['envModeParam'] = float(sp_obj.trigger=='normal')
+		soundparameters['pitchParam'] = float(sp_obj.pitch+gpitch)
 
 def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
 	from objects.file_proj import tracktion_edit as proj_tracktion_edit
+	from objects.file_proj._waveform import sampler
 	from objects.inst_params import juce_plugin
 	from objects.binary_fmt import juce_binaryxml
 	from functions.juce import juce_memoryblock
@@ -101,72 +92,112 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 		if plugin_obj.check_wildmatch('universal', 'sampler', None):
 			gpitch = tparams_obj.get('pitch', 0).value
 
-			wf_plugin = proj_tracktion_edit.tracktion_plugin()
-			wf_plugin.plugtype = plugin_obj.type.subtype
-			wf_plugin.presetDirty = 1
-			wf_plugin.enabled = fx_on
-			wf_plugin.params['type'] = 'vst'
-			wf_plugin.params['uniqueId'] = '0'
-			wf_plugin.params['uid'] = '0'
-			wf_plugin.params['filename'] = 'Micro Sampler'
-			wf_plugin.params['name'] = 'Micro Sampler'
-			dsetfound = True
-
-			bxml_data = juce_binaryxml.juce_binaryxml_element()
-			bxml_data.tag = 'PROGRAM'
-			bxml_data.set('presetDirty', True)
-
-			bxml_main = bxml_data.add_child('TINYSAMPLER')
-			bxml_main.set('version', 2)
-			bxml_main.set('fxOrder1', "reverb,delay,comp,filter,eq,dist,chorus")
-			bxml_main.set('fxOrder2', "delay,reverb,comp,filter,eq,dist,chorus")
-			bxml_main.set('currentPage', 0)
 
 			if plugin_obj.type.subtype == 'single':
+				wf_plugin = proj_tracktion_edit.tracktion_plugin()
+				wf_plugin.plugtype = plugin_obj.type.subtype
+				wf_plugin.presetDirty = 1
+				wf_plugin.enabled = fx_on
+				wf_plugin.params['type'] = 'vst'
+				wf_plugin.params['uniqueId'] = '0'
+				wf_plugin.params['uid'] = '0'
+				wf_plugin.params['filename'] = 'Micro Sampler'
+				wf_plugin.params['name'] = 'Micro Sampler'
+				wf_plugin.params['manufacturer'] = 'Tracktion'
+				dsetfound = True
+
+				sampler_obj = sampler.waveform_sampler_main()
+				sampler_obj.program.presetDirty = True
+				programdata = sampler_obj.set_tinysampler()
 				sp_obj = plugin_obj.samplepart_get('sample')
-				soundlayer_samplepart(plugin_obj, gpitch, bxml_main, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
-				outbytes = bxml_data.to_bytes()
-				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+				soundlayer_samplepart(plugin_obj, gpitch, programdata, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 
 			if plugin_obj.type.subtype == 'slicer':
+				wf_plugin = proj_tracktion_edit.tracktion_plugin()
+				wf_plugin.plugtype = plugin_obj.type.subtype
+				wf_plugin.presetDirty = 1
+				wf_plugin.enabled = fx_on
+				wf_plugin.params['type'] = 'vst'
+				wf_plugin.params['uniqueId'] = '0'
+				wf_plugin.params['uid'] = '0'
+				wf_plugin.params['filename'] = 'Micro Sampler'
+				wf_plugin.params['name'] = 'Micro Sampler'
+				wf_plugin.params['manufacturer'] = 'Tracktion'
+				dsetfound = True
+
+				sampler_obj = sampler.waveform_sampler_main()
+				sampler_obj.program.presetDirty = True
 				sp_obj = plugin_obj.samplepart_get('sample')
+				programdata = sampler_obj.set_tinysampler()
 				if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
 					sp_obj.add_slice_endpoints()
-					for n, sample_slice in enumerate(sp_obj.slicer_slices):
-						key = 60+n
-						bxml_layer = bxml_main.add_child('SOUNDLAYER')
-						bxml_layer.set('active', True)
-						bxml_layer.set('name', str(sample_slice.name) if sample_slice.name else 'Slice #'+str(n+1))
-						bxml_layer.set('reverse', bool(sample_slice.reverse))
-						bxml_layer.set('sampleDataName', ':'+sampleref_assoc[sp_obj.sampleref])
-						bxml_layer.set('sampleIn', int(sample_slice.start))
-						bxml_layer.set('sampleOut', int(sample_slice.end))
-						bxml_layer.set('rootNote', key)
-						bxml_layer.set('lowNote', key)
-						bxml_layer.set('highNote', key)
-				outbytes = bxml_data.to_bytes()
-				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+					for n, slice_obj in enumerate(sp_obj.slicer_slices):
+						key = 60+slice_obj.custom_key if slice_obj.is_custom_key else 60+n
+						samplelayer = programdata.add_layer()
+						samplelayer.active = True
+						samplelayer.name = str(slice_obj.name) if slice_obj.name else 'Slice #'+str(n+1)
+						samplelayer.reverse = bool(slice_obj.reverse)
+						samplelayer.sampleDataName = ':'+sampleref_assoc[sp_obj.sampleref]
+						samplelayer.sampleIn = int(slice_obj.start)
+						samplelayer.sampleOut = int(slice_obj.end)
+						samplelayer.rootNote = key
+						samplelayer.lowNote = key
+						samplelayer.highNote = key
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 
 			if plugin_obj.type.subtype == 'multi':
+				wf_plugin = proj_tracktion_edit.tracktion_plugin()
+				wf_plugin.plugtype = plugin_obj.type.subtype
+				wf_plugin.presetDirty = 1
+				wf_plugin.enabled = fx_on
+				wf_plugin.params['type'] = 'vst'
+				wf_plugin.params['uniqueId'] = '0'
+				wf_plugin.params['uid'] = '0'
+				wf_plugin.params['filename'] = 'Micro Sampler'
+				wf_plugin.params['name'] = 'Micro Sampler'
+				wf_plugin.params['manufacturer'] = 'Tracktion'
+				dsetfound = True
+
+				sampler_obj = sampler.waveform_sampler_main()
+				sampler_obj.program.presetDirty = True
+				programdata = sampler_obj.set_tinysampler()
 				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					sp_obj = plugin_obj.samplepart_get(samplerefid)
-					soundlayer_samplepart(plugin_obj, gpitch, bxml_main, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
-				outbytes = bxml_data.to_bytes()
-				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+					soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 
 			if plugin_obj.type.subtype == 'drums':
-				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
-					key_l, key_h, key_r, samplerefid, extradata = sampleregion
-					sp_obj = plugin_obj.samplepart_get(samplerefid)
-					soundlayer_samplepart(plugin_obj, gpitch, bxml_main, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
-				outbytes = bxml_data.to_bytes()
-				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(outbytes)
+				wf_plugin = proj_tracktion_edit.tracktion_plugin()
+				wf_plugin.plugtype = plugin_obj.type.subtype
+				wf_plugin.presetDirty = 1
+				wf_plugin.enabled = fx_on
+				wf_plugin.params['type'] = 'vst'
+				wf_plugin.params['uniqueId'] = '0'
+				wf_plugin.params['uid'] = '0'
 				wf_plugin.params['filename'] = 'Micro Drum Sampler'
 				wf_plugin.params['name'] = 'Micro Drum Sampler'
+				wf_plugin.params['manufacturer'] = 'Tracktion'
+				dsetfound = True
+
+				sampler_obj = sampler.waveform_sampler_main()
+				sampler_obj.program.presetDirty = True
+				programdata = sampler_obj.set_microsampler()
+				useddrums = []
+				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+					key_l, key_h, key_r, samplerefid, extradata = sampleregion
+					drumkey = key_r+60
+					if drumkey not in useddrums:
+						sp_obj = plugin_obj.samplepart_get(samplerefid)
+						soundlayer_samplepart(plugin_obj, gpitch, programdata, drumkey, drumkey, drumkey, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+						pad_obj = programdata.add_pad(drumkey)
+						if sp_obj.visual.name: pad_obj.name = sp_obj.visual.name
+						useddrums.append(drumkey)
+				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):

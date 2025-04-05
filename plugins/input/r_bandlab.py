@@ -70,7 +70,7 @@ class input_bandlab(plugins.base):
 		for blx_sample in project_obj.samples:
 			add_sample(convproj_obj, dawvert_intent, blx_sample.id, sampledurs)
 
-		blx_tracks = sorted(project_obj.tracks, key=lambda x: x.order, reverse=True)
+		blx_tracks = sorted(project_obj.tracks, key=lambda x: x.order, reverse=False)
 		
 		for blx_track in blx_tracks:
 			if blx_track.type == 'voice':

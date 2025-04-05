@@ -378,11 +378,12 @@ class input_cvpj_r(plugins.base):
 
 			if machine.mach_id != 'NULL':
 				for num, pattern in enumerate(machdata.patterns.data):
-					patid = patids[num]
-					nle_obj = track_obj.notelistindex__add(patid)
-					nle_obj.visual.name = patid
-					for n in pattern.notes: 
-						nle_obj.notelist.add_r(n['pos'], n['dur'], n['key']-60, n['vol'], None)
+					if len(pattern.notes):
+						patid = patids[num]
+						nle_obj = track_obj.notelistindex__add(patid)
+						nle_obj.visual.name = patid
+						for n in pattern.notes: 
+							nle_obj.notelist.add_r(n['pos'], n['dur'], n['key']-60, n['vol'], None)
 
 			c_fxdata = project_obj.effx.fxslots[machnum*2:machnum*2+2]
 			add_caustic_fx(convproj_obj, track_obj, c_fxdata, 'machine'+str(machnum))

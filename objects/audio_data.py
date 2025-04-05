@@ -190,8 +190,8 @@ class audio_obj:
 		numchans = self.channels/channels
 		oldcodec = self.codec.codectxt_to()
 		self.pcm_to_float()
-		olddata = self.data.copy()
-		self.data = self.data[:,0]/numchans
+		olddata = numpy.reshape(self.data, (len(self.data)//self.channels, self.channels))
+		self.data = olddata[:,0]/numchans
 		for x in range(channels): self.data += (olddata[:,x+1]/numchans)
 		self.pcm_changecodec(oldcodec)
 

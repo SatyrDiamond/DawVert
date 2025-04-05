@@ -23,7 +23,7 @@ class input_pyav(plugins.base):
 		return usable, usable_meg
 		
 	def get_prop(self, in_dict): 
-		in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg', 'wv']
+		in_dict['file_formats'] = ['wav', 'mp3', 'flac', 'ogg', 'wv', 'm4a']
 
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		import av

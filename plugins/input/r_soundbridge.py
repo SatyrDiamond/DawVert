@@ -422,7 +422,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 					stretch_obj.preserve_pitch = True
 					stretch_obj.is_warped = True
 					
-					self.make_stretch(pitchTempoProcessorMode, stretch_obj)
+					make_stretch(pitchTempoProcessorMode, stretch_obj)
 
 					warp_obj = stretch_obj.warp
 

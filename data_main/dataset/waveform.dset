@@ -328,5 +328,12 @@
             <param id="pan" name="Pan" type="float" min="-1" />
             <param id="volume" name="Volume" type="float" def="1" />
         </object>
+        <colorset id="drum_sampler">
+            <color>#5089C2</color>
+            <color>#35A567</color>
+            <color>#B77817</color>
+            <color>#BF4042</color>
+            <color>#BF9542</color>
+        </colorset>
     </category>
 </dataset>

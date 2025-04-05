@@ -25,7 +25,7 @@ class input_bandlab(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['audio_filetypes'] = ['wav', 'mp3', 'flac']
+		in_dict['audio_filetypes'] = ['wav', 'mp3', 'flac', 'm4a']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['projtype'] = 'r'

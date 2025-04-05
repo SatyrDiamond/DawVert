@@ -77,6 +77,8 @@ def soundlayer_samplepart(plugin_obj, gpitch, programdata, lowNote, highNote, ro
 		soundparameters['envModeParam'] = float(sp_obj.trigger=='normal')
 		soundparameters['pitchParam'] = float(sp_obj.pitch+gpitch)
 
+		return samplelayer
+
 def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
 	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	from objects.file_proj._waveform import sampler
@@ -156,18 +158,21 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				wf_plugin.params['type'] = 'vst'
 				wf_plugin.params['uniqueId'] = '0'
 				wf_plugin.params['uid'] = '0'
-				wf_plugin.params['filename'] = 'Micro Sampler'
-				wf_plugin.params['name'] = 'Micro Sampler'
+				wf_plugin.params['filename'] = 'Multi Sampler'
+				wf_plugin.params['name'] = 'Multi Sampler'
 				wf_plugin.params['manufacturer'] = 'Tracktion'
 				dsetfound = True
 
 				sampler_obj = sampler.waveform_sampler_main()
 				sampler_obj.program.presetDirty = True
-				programdata = sampler_obj.set_tinysampler()
+				programdata = sampler_obj.set_prosampler()
 				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					sp_obj = plugin_obj.samplepart_get(samplerefid)
-					soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+					samplelayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+					if samplelayer:
+						samplelayer.lowVelocity = int(sp_obj.vel_min*127)
+						samplelayer.highVelocity = int(sp_obj.vel_max*127)
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 

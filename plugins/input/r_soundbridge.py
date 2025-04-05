@@ -105,6 +105,14 @@ def make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid):
 				track_obj.sends.add('return__'+str(splitret[1]), sendautoid, x.defaultValue)
 				add_auto(x.defaultValue, None, convproj_obj, ['send', sendautoid, 'amount'], x.blocks, 0, 1)
 
+def make_stretch(pitchTempoProcessorMode, stretch_obj):
+	if pitchTempoProcessorMode == 0:
+		stretch_obj.algorithm = 'elastique_v3'
+		stretch_obj.algorithm_mode = 'mono'
+
+	if pitchTempoProcessorMode == 4:
+		stretch_obj.algorithm = 'soundtouch'
+
 def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 	from objects.file_proj._soundbridge import sampler
 	uiddata = soundbridge_func.decode_chunk(sb_plugin.uid)
@@ -162,6 +170,10 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 					plugin_obj.visual.color.set_hex(samplecolor)
 					track_obj.visual_inst.color.set_hex(samplecolor)
 
+				stretch_obj = samplepart_obj.stretch
+				stretch_obj.set_rate_speed(120, 1, False)
+				stretch_obj.preserve_pitch = True
+
 			elif len(sampler_data.samples)>1 and sampler_data.sampler_mode==1:
 				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 				for sb_sample in sampler_data.samples:
@@ -176,6 +188,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 					sp_obj.start = sb_sample.start
 					sp_obj.end = sb_sample.end
 					sp_obj.visual.name = sb_sample.name
+					sp_obj.stretch.set_rate_speed(120, 1, False)
 					if 'SampleColor' in sb_sample.metadata:
 						sp_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
 
@@ -311,6 +324,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		do_fx(cvpj_trackid, convproj_obj, sb_track, track_obj)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 
+		pitchTempoProcessorMode = sb_track.pitchTempoProcessorMode
 		track_obj.armed.on = bool(sb_track.armed)
 		track_obj.armed.in_keys = bool(sb_track.armed)
 		track_obj.visual_ui.height = visual_size
@@ -407,13 +421,8 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 					stretch_obj = sp_obj.stretch
 					stretch_obj.preserve_pitch = True
 					stretch_obj.is_warped = True
-
-					if pitchTempoProcessorMode == 0:
-						stretch_obj.algorithm = 'elastique_v3'
-						stretch_obj.algorithm_mode = 'mono'
-
-					if pitchTempoProcessorMode == 4:
-						stretch_obj.algorithm = 'soundtouch'
+					
+					self.make_stretch(pitchTempoProcessorMode, stretch_obj)
 
 					warp_obj = stretch_obj.warp
 

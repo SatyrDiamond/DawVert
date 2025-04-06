@@ -737,7 +737,14 @@ class output_soundbridge(plugins.base):
 							sb_plugin = sb_track.midiInstrument = make_sampler(convproj_obj, plugin_obj)
 							statewriter = bytewriter.bytewriter()
 							sampler_data = sampler.soundbridge_sampler_main()
-							sampler_data.sampler_mode = 1
+
+							multi_mode = plugin_obj.datavals.get('multi_mode', 'all')
+							if multi_mode == 'all': sampler_data.sampler_mode = 1
+							elif multi_mode == 'random': sampler_data.sampler_mode = 2
+							elif multi_mode == 'forward': sampler_data.sampler_mode = 3
+							elif multi_mode == 'backward': sampler_data.sampler_mode = 4
+							elif multi_mode == 'forward_backward': sampler_data.sampler_mode = 5
+							else: sampler_data.sampler_mode = 1
 
 							is_sampler = True
 							ordernum = 0

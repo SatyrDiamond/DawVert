@@ -24,9 +24,13 @@ def soundlayer_samplepart(sp_obj, soundlayer, layerparams):
 	sp_obj.loop_active = int(soundlayer.looped)
 	sp_obj.enabled = not soundlayer.mute
 
-	sp_obj.trigger = 'normal' if (layerparams['envModeParam'] if 'envModeParam' in layerparams else 1) else 'oneshot'
+	sp_obj.trigger = 'normal' if (layerparams['envModeParam'] if 'envModeParam' in layerparams else 1) else 'normal'
 	sp_obj.vol = layerparams['gainParam'] if 'gainParam' in layerparams else 1
 	sp_obj.pan = layerparams['panParam'] if 'panParam' in layerparams else 0
+	sp_obj.stretch.set_rate_speed(120, soundlayer.offlineTimeStretch, True)
+	if soundlayer.pitchShift or soundlayer.offlineTimeStretch != 1: sp_obj.stretch.preserve_pitch = True
+	sp_obj.pitch = soundlayer.offlinePitchShift
+	sp_obj.no_pitch = soundlayer.fixedPitch
 
 def soundlayer_adsr(plugin_obj, layerparams, env_name): 
 	adsr = [0, 0, 1, 0]
@@ -44,16 +48,19 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 	from functions.juce import juce_memoryblock
 	from objects.file_proj._waveform import sampler
 
+	pitch = None
+
 	if wf_plugin.plugtype == 'vst':
 		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
 
-		if vstname == 'Multi Sampler':
+		if vstname in ['Multi Sampler', 'Micro Sampler']:
 			if "state" in wf_plugin.params:
 				sampler_obj = sampler.waveform_sampler_main()
 				sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
 
 				program = sampler_obj.program.programdata
-				if isinstance(program, sampler.prosampler):
+
+				if isinstance(program, sampler.prosampler) or isinstance(program, sampler.tinysampler):
 					soundlayers = program.soundlayers
 					if len(soundlayers) == 1:
 						firstlayer = soundlayers[0]
@@ -64,9 +71,22 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 						if sp_obj.visual.name: track_obj.visual_inst.name = sp_obj.visual.name
 						soundlayer_samplepart(sp_obj, firstlayer, layerparams)
 						soundlayer_adsr(plugin_obj, layerparams, 'vol')
-	
+
+						pitch = 0
+						if 'pitchParam' in layerparams:
+							if layerparams['pitchParam'] is not None: pitch = layerparams['pitchParam']
+						transpose, tune = xtramath.transpose_tune(pitch)
+						transpose -= firstlayer.rootNote-60
+						track_obj.datavals.add('middlenote', -transpose)
+						track_obj.params.add('pitch', tune, 'float')
+
 					elif len(soundlayers) > 1:
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+						playMode = program.playMode
+						if playMode == 0: plugin_obj.datavals.add('multi_mode', 'all')
+						if playMode == 1: plugin_obj.datavals.add('multi_mode', 'round_robin')
+						if playMode == 2: plugin_obj.datavals.add('multi_mode', 'random')
+						plugin_obj.poly.mono = program.mono
 						track_obj.plugslots.set_synth(pluginid)
 						for layernum, soundlayer in enumerate(soundlayers):
 							layerparams = soundlayer.soundparameters
@@ -75,35 +95,9 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 							sp_obj.envs['vol'] = 'vol_'+endstr
 							soundlayer_samplepart(sp_obj, soundlayer, layerparams)
 							soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
-
-		elif vstname == 'Micro Sampler':
-			if "state" in wf_plugin.params:
-				sampler_obj = sampler.waveform_sampler_main()
-				sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
-
-				program = sampler_obj.program.programdata
-				if isinstance(program, sampler.tinysampler):
-					soundlayers = program.soundlayers
-					if len(soundlayers) == 1:
-						firstlayer = soundlayers[0]
-						layerparams = firstlayer.soundparameters
-						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
-						track_obj.plugslots.set_synth(pluginid)
-						sp_obj = plugin_obj.samplepart_add('sample')
-						if sp_obj.visual.name: track_obj.visual_inst.name = sp_obj.visual.name
-						soundlayer_samplepart(sp_obj, firstlayer, layerparams)
-						soundlayer_adsr(plugin_obj, layerparams, 'vol')
-	
-					elif len(soundlayers) > 1:
-						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
-						track_obj.plugslots.set_synth(pluginid)
-						for layernum, soundlayer in enumerate(soundlayers):
-							layerparams = soundlayer.soundparameters
-							endstr = str(layernum)
-							sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
-							sp_obj.envs['vol'] = 'vol_'+endstr
-							soundlayer_samplepart(sp_obj, soundlayer, layerparams)
-							soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
+							if 'pitchParam' in layerparams:
+								if layerparams['pitchParam'] is not None:
+									sp_obj.pitch = layerparams['pitchParam']
 
 		elif vstname == 'Micro Drum Sampler':
 			from objects import colors
@@ -123,6 +117,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 						endstr = str(layernum)
 						sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
 						soundlayer_samplepart(sp_obj, soundlayer, layerparams)
+						sp_obj.pitch = layerparams['pitchParam'] if 'pitchParam' in layerparams else 0
 						if soundlayer.rootNote in program.pads:
 							paddata = program.pads[soundlayer.rootNote]
 							if paddata.name: sp_obj.visual.name = paddata.name
@@ -340,7 +335,7 @@ def do_track(convproj_obj, wf_track, track_obj):
 
 			placement_obj.video_fileref = audioclip.srcVideo
 	
-
+	middlenote += track_obj.datavals.get('middlenote', 0)
 	track_obj.datavals.add('middlenote', middlenote)
 
 def do_tracks(convproj_obj, in_tracks, counter_track, groupid):

@@ -56,28 +56,28 @@ def soundlayer_samplepart(plugin_obj, gpitch, programdata, lowNote, highNote, ro
 		adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
 		sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
 		sp_obj.convpoints_samples(sampleref_obj)
-		samplelayer = programdata.add_layer()
-		samplelayer.name = str(sp_obj.visual.name) if sp_obj.visual.name else sp_obj.sampleref
-		samplelayer.reverse = bool(sp_obj.reverse)
-		samplelayer.sampleDataName = ':'+sampleref_assoc[sp_obj.sampleref]
-		samplelayer.sampleIn = int(sp_obj.start)
-		samplelayer.sampleLoopIn = int(sp_obj.loop_start)
-		samplelayer.sampleOut = int(sp_obj.end)
-		samplelayer.sampleLoopOut = int(sp_obj.loop_end)
-		samplelayer.rootNote = int(rootNote)
-		samplelayer.lowNote = int(lowNote)
-		samplelayer.highNote = int(highNote)
-		samplelayer.looped = bool(sp_obj.loop_active)
-
-		soundparameters = samplelayer.soundparameters
+		soundlayer = programdata.add_layer()
+		soundlayer.name = str(sp_obj.visual.name) if sp_obj.visual.name else sp_obj.sampleref
+		soundlayer.reverse = bool(sp_obj.reverse)
+		soundlayer.sampleDataName = ':'+sampleref_assoc[sp_obj.sampleref]
+		soundlayer.sampleIn = int(sp_obj.start)
+		soundlayer.sampleLoopIn = int(sp_obj.loop_start)
+		soundlayer.sampleOut = int(sp_obj.end)
+		soundlayer.sampleLoopOut = int(sp_obj.loop_end)
+		soundlayer.rootNote = int(rootNote)
+		soundlayer.lowNote = int(lowNote)
+		soundlayer.highNote = int(highNote)
+		soundlayer.looped = bool(sp_obj.loop_active)
+		soundlayer.fixedPitch = bool(sp_obj.no_pitch)
+		if sp_obj.stretch.preserve_pitch: soundlayer.pitchShift = True
+		soundparameters = soundlayer.soundparameters
 		soundparameters['attackParam'] = float(adsr_obj.attack)
 		soundparameters['decayParam'] = float(adsr_obj.decay)
 		soundparameters['sustainParam'] = float(adsr_obj.sustain)*100
 		soundparameters['releaseParam'] = float(adsr_obj.release)
 		soundparameters['envModeParam'] = float(sp_obj.trigger=='normal')
 		soundparameters['pitchParam'] = float(sp_obj.pitch+gpitch)
-
-		return samplelayer
+		return soundlayer
 
 def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
 	from objects.file_proj import tracktion_edit as proj_tracktion_edit
@@ -94,7 +94,6 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 		if plugin_obj.check_wildmatch('universal', 'sampler', None):
 			gpitch = tparams_obj.get('pitch', 0).value
 
-
 			if plugin_obj.type.subtype == 'single':
 				wf_plugin = proj_tracktion_edit.tracktion_plugin()
 				wf_plugin.plugtype = plugin_obj.type.subtype
@@ -103,16 +102,28 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				wf_plugin.params['type'] = 'vst'
 				wf_plugin.params['uniqueId'] = '0'
 				wf_plugin.params['uid'] = '0'
-				wf_plugin.params['filename'] = 'Micro Sampler'
-				wf_plugin.params['name'] = 'Micro Sampler'
 				wf_plugin.params['manufacturer'] = 'Tracktion'
 				dsetfound = True
 
 				sampler_obj = sampler.waveform_sampler_main()
 				sampler_obj.program.presetDirty = True
-				programdata = sampler_obj.set_tinysampler()
+
 				sp_obj = plugin_obj.samplepart_get('sample')
-				soundlayer_samplepart(plugin_obj, gpitch, programdata, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+
+				if sp_obj.pitch or sp_obj.stretch.calc_real_size!=1:
+					programdata = sampler_obj.set_prosampler()
+					wf_plugin.params['filename'] = 'Multi Sampler'
+					wf_plugin.params['name'] = 'Multi Sampler'
+				else:
+					programdata = sampler_obj.set_tinysampler()
+					wf_plugin.params['filename'] = 'Micro Sampler'
+					wf_plugin.params['name'] = 'Micro Sampler'
+
+				soundlayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+				if soundlayer:
+					soundlayer.offlinePitchShift = sp_obj.pitch
+					soundlayer.offlineTimeStretch = sp_obj.stretch.calc_real_size
+
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 
@@ -137,16 +148,16 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 					sp_obj.add_slice_endpoints()
 					for n, slice_obj in enumerate(sp_obj.slicer_slices):
 						key = 60+slice_obj.custom_key if slice_obj.is_custom_key else 60+n
-						samplelayer = programdata.add_layer()
-						samplelayer.active = True
-						samplelayer.name = str(slice_obj.name) if slice_obj.name else 'Slice #'+str(n+1)
-						samplelayer.reverse = bool(slice_obj.reverse)
-						samplelayer.sampleDataName = ':'+sampleref_assoc[sp_obj.sampleref]
-						samplelayer.sampleIn = int(slice_obj.start)
-						samplelayer.sampleOut = int(slice_obj.end)
-						samplelayer.rootNote = key
-						samplelayer.lowNote = key
-						samplelayer.highNote = key
+						soundlayer = programdata.add_layer()
+						soundlayer.active = True
+						soundlayer.name = str(slice_obj.name) if slice_obj.name else 'Slice #'+str(n+1)
+						soundlayer.reverse = bool(slice_obj.reverse)
+						soundlayer.sampleDataName = ':'+sampleref_assoc[sp_obj.sampleref]
+						soundlayer.sampleIn = int(slice_obj.start)
+						soundlayer.sampleOut = int(slice_obj.end)
+						soundlayer.rootNote = key
+						soundlayer.lowNote = key
+						soundlayer.highNote = key
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 
@@ -166,13 +177,21 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				sampler_obj = sampler.waveform_sampler_main()
 				sampler_obj.program.presetDirty = True
 				programdata = sampler_obj.set_prosampler()
+
+				multi_mode = plugin_obj.datavals.get('multi_mode', 'all')
+				if multi_mode == 'round_robin': programdata.playMode = 1
+				if multi_mode == 'random': programdata.playMode = 2
+				programdata.mono = plugin_obj.poly.mono
+
 				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					sp_obj = plugin_obj.samplepart_get(samplerefid)
-					samplelayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
-					if samplelayer:
-						samplelayer.lowVelocity = int(sp_obj.vel_min*127)
-						samplelayer.highVelocity = int(sp_obj.vel_max*127)
+					soundlayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+					if soundlayer:
+						soundlayer.lowVelocity = int(sp_obj.vel_min*127)
+						soundlayer.highVelocity = int(sp_obj.vel_max*127)
+						soundlayer.offlinePitchShift = sp_obj.pitch
+						soundlayer.offlineTimeStretch = sp_obj.stretch.calc_real_size
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 

@@ -50,6 +50,8 @@ class sampler_soundlayer:
 		self.highVelocity = 127
 		self.chokeGroup = None
 		self.soundparameters = {}
+		self.offlineTimeStretch = 1.0
+		self.offlinePitchShift = 0.0
 
 	def read(self, bxml):
 		attrib = bxml.attrib
@@ -76,6 +78,8 @@ class sampler_soundlayer:
 		if 'lowVelocity' in attrib: self.lowVelocity = int(attrib['lowVelocity'])
 		if 'highVelocity' in attrib: self.highVelocity = int(attrib['highVelocity'])
 		if 'chokeGroup' in attrib: self.chokeGroup = int(attrib['chokeGroup'])
+		if 'offlineTimeStretch' in attrib: self.offlineTimeStretch = float(attrib['offlineTimeStretch'])
+		if 'offlinePitchShift' in attrib: self.offlinePitchShift = float(attrib['offlinePitchShift'])
 		for x in bxml:
 			if x.tag == "SOUNDPARAMETER": 
 				attrib = x.attrib
@@ -107,6 +111,8 @@ class sampler_soundlayer:
 		bxml_main.set('lowVelocity', self.lowVelocity)
 		bxml_main.set('highVelocity', self.highVelocity)
 		if self.chokeGroup: bxml_main.set('chokeGroup', self.chokeGroup)
+		if self.offlineTimeStretch != 1: bxml_main.set('offlineTimeStretch', self.offlineTimeStretch)
+		if self.offlinePitchShift: bxml_main.set('offlinePitchShift', self.offlinePitchShift)
 
 		for i, v in self.soundparameters.items():
 			bxml_param = bxml_main.add_child('SOUNDPARAMETER')

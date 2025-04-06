@@ -12,6 +12,7 @@
 | R | ```main``` | ```soundbridge``` | SoundBridge | ```.soundbridge``` | ✔️ | |
 | R | ```main``` | ```tracktion_edit``` | tracktion Edit | ```.tracktionedit``` | ✔️ | |
 | R | ```main``` | ```zenbeats``` | ZenBeats | ```.song``` | ✔️ | |
+| R | ```main``` | ```bandlab_blx``` | Bandlab BLX | ```.blx``` | ✔️ | |
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 

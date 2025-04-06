@@ -179,6 +179,10 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				programdata = sampler_obj.set_tinysampler()
 				if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
 					sp_obj.add_slice_endpoints()
+
+					sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
+					hzmod = sampleref_obj.hz/44100
+
 					for n, slice_obj in enumerate(sp_obj.slicer_slices):
 						key = 60+slice_obj.custom_key if slice_obj.is_custom_key else 60+n
 						soundlayer = programdata.add_layer()
@@ -186,8 +190,8 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 						soundlayer.name = str(slice_obj.name) if slice_obj.name else 'Slice #'+str(n+1)
 						soundlayer.reverse = bool(slice_obj.reverse)
 						soundlayer.sampleDataName = ':'+sampleref_assoc[sp_obj.sampleref]
-						soundlayer.sampleIn = int(slice_obj.start)
-						soundlayer.sampleOut = int(slice_obj.end)
+						soundlayer.sampleIn = int(slice_obj.start*hzmod)
+						soundlayer.sampleOut = int(slice_obj.end*hzmod)
 						soundlayer.rootNote = key
 						soundlayer.lowNote = key
 						soundlayer.highNote = key

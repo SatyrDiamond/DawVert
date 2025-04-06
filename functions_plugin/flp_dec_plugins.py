@@ -323,7 +323,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			slice_obj = sre_obj.add_slice()
 			slice_obj.name = fl_plugstr.c_string__int8(encoding='utf-8')
 			slice_obj.start = fl_plugstr.uint32()
-			slice_obj.start *= (slicechannels/2)
 			custom_key = fl_plugstr.int32()
 			if custom_key != -1:
 				slice_obj.is_custom_key = True

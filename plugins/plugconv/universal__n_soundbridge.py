@@ -6,20 +6,20 @@ from functions import extpluglog
 from functions import xtramath
 import math
 
-def calc_eq_freq(in_freq): return 30 * ((2/3)*1000)**in_freq
-
 def calc_eq_q(q): return xtramath.between_from_one(0.1, 24, q)
 
 def calc_eq_gain(gain): return xtramath.between_from_one(-24, 24, gain)
 
 def eq_get(params_obj, starttxt, filter_obj): 
+	from objects.file_proj._soundbridge import mathalgo
+
 	eq_hz = params_obj.get(starttxt+'hz', 0.35304760932922363).value
 	eq_q = params_obj.get(starttxt+'q', 0.03765690326690674).value
 	eq_gain = params_obj.get(starttxt+'gain', 0.5).value
 	eq_on = params_obj.get(starttxt+'on', 0).value
 
 	filter_obj.on = bool(eq_on)
-	filter_obj.freq = calc_eq_freq(eq_hz)
+	filter_obj.freq = mathalgo.freq__from_one(eq_hz)
 	filter_obj.q = calc_eq_q(eq_q)
 	filter_obj.gain = calc_eq_gain(eq_gain)
 
@@ -50,6 +50,7 @@ class plugconv(plugins.base):
 		in_dict['out_daws'] = []
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
+
 		if plugin_obj.type.check_wildmatch('native', 'soundbridge', 'limiter'):
 			extpluglog.convinternal('SoundBridge', 'Limiter', 'Universal', 'Limiter')
 			threshold = plugin_obj.params.get('threshold', 1).value

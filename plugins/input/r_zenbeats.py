@@ -190,14 +190,6 @@ def do_plugin(convproj_obj, strproc, track_obj):
 					param_find(plugin_obj, 'gain', xmlparams, 'Gain', 0, 1)
 					param_find(plugin_obj, 'knee', xmlparams, 'Knee', 0, 1)
 
-			if strproc.plugin.name == 'Limiter':
-				plugin_obj.type_set('universal', 'limiter', None)
-				xmlparams = data_xml.find_first(plugin_xml_data, 'Limiter')
-				if xmlparams is not None:
-					param_find(plugin_obj, 'pregain', xmlparams, 'Gain', 0, 1)
-					param_find(plugin_obj, 'release', xmlparams, 'Release', 0, 0.001)
-					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
-	
 			if strproc.plugin.name == 'Filter':
 				plugin_obj.type_set('universal', 'filter', None)
 				xmlparams = data_xml.find_first(plugin_xml_data, 'Filter')

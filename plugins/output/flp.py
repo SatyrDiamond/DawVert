@@ -181,6 +181,7 @@ class output_cvpjs(plugins.base):
 			fl_channel_obj.basicparams.pitch = inst_obj.params.get('pitch',0).value*100
 			fl_channel_obj.params.main_pitch = int(inst_obj.params.get('usemasterpitch',not inst_obj.is_drum).value)
 			middlenote = inst_obj.datavals.get('middlenote', 0)
+
 			if middlenote != 0: fl_channel_obj.middlenote = middlenote+60
 			fl_channel_obj.icon = 0
 

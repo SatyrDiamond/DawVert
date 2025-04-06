@@ -72,7 +72,7 @@ def setparams(convproj_obj, plugin_obj):
 		bytesout.uint32(len(sre_obj.slicer_slices))
 		for slice_obj in sre_obj.slicer_slices:
 			bytesout.c_string__int8__nonull(slice_obj.name)
-			bytesout.uint32(int(slice_obj.start//(sampleref_obj.channels/2)))
+			bytesout.uint32(int(slice_obj.start))
 			bytesout.int32(slice_obj.custom_key+60 if slice_obj.is_custom_key else -1)
 			bytesout.uint16(0)
 			bytesout.uint8(128)

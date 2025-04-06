@@ -202,7 +202,7 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 
 		for sample_slice in cvpj_samplepart.slicer_slices:
 			als_slice = als_samplepart.add_slice()
-			als_slice.TimeInSeconds = sample_slice.start/sampleref_obj.hz
+			als_slice.TimeInSeconds = sample_slice.start/44100
 			als_slice.Rank = 0
 			als_slice.NormalizedEnergy = 1
 

@@ -827,7 +827,6 @@ class output_soundbridge(plugins.base):
 									
 									data = sampler_data.add_slices(len(sp_obj.slicer_slices))
 									if data:
-										chanmul = 2//sampleref_obj.channels
 										sampler_entry, slicedata = data
 										sampler_entry.filename = str(sb_id)
 										sampler_entry.name = sp_obj.visual.name if sp_obj.visual.name else str(sb_id.filename)
@@ -852,7 +851,7 @@ class output_soundbridge(plugins.base):
 												sample_params.key_root = 60+slice_obj.custom_key
 												sample_params.key_min = 60+slice_obj.custom_key
 												sample_params.key_max = 60+slice_obj.custom_key
-											sampler_entry.slices[num][1] = int(slice_obj.start*hzchange*chanmul)
+											sampler_entry.slices[num][1] = int(slice_obj.start*hzchange)
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
 

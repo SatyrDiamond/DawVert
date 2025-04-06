@@ -373,6 +373,27 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 				sp_obj = plugin_obj.samplepart_add(out_str)
 				sp_obj.sampleid = sampleid
 
+		if pluginname == "slicert":
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'slicer')
+			plugin_obj.role = 'synth'
+
+			filepath = lmms_plugin.get_param('src', '').value
+			sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, None)
+
+			sp_obj = plugin_obj.samplepart_add('sample')
+			sp_obj.from_sampleref(convproj_obj, filepath)
+
+			if sampleref_obj.dur_samples:
+				slicenum = 1
+				while True:
+					value = lmms_plugin.get_param('slice_'+str(slicenum), '')
+					if not value: break
+					else: 
+						slice_obj = sp_obj.add_slice()
+						slice_obj.start = int(float(value)*sampleref_obj.dur_samples)
+						slicenum += 1
+
+
 	plugin_obj.visual.from_dset('lmms', 'plugin', pluginname, True)
 
 	return plugin_obj.visual.color, pluginid, plugin_obj

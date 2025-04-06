@@ -493,6 +493,19 @@ def do_markers(timemarkers_obj, sb_markers):
 		sb_marker.linearTimeBase = 0
 		sb_markers.append(sb_marker)
 
+def sampler_do_filter(sampler_entry, sample_params, filter_obj):
+	from objects.file_proj._soundbridge import mathalgo
+	sample_params.filter_freq = mathalgo.freq__to_one(filter_obj.freq)
+	sample_params.filter_res = filter_obj.q
+
+	if filter_obj.on:
+		filtertype = filter_obj.type
+		i_type = filtertype.type
+		if i_type == 'low_pass': sampler_entry.filter_type = 1
+		if i_type == 'high_pass': sampler_entry.filter_type = 2
+		if i_type == 'band_pass': sampler_entry.filter_type = 3
+		if i_type == 'notch': sampler_entry.filter_type = 4
+
 class output_soundbridge(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
@@ -566,8 +579,8 @@ class output_soundbridge(plugins.base):
 		#convproj_obj.sampleref__remove_nonaudiopl()
 
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
-			if sampleref_obj.fileref.exists('win'):
-				obj_filename = sampleref_obj.fileref.get_path('win', False)
+			if sampleref_obj.fileref.exists(None):
+				obj_filename = sampleref_obj.fileref.get_path(None, False)
 				obj_outfilename = sampleref_obj.fileref.copy()
 				obj_outfilename.file.extension = 'wav'
 
@@ -668,6 +681,7 @@ class output_soundbridge(plugins.base):
 								sp_obj.convpoints_samples(sampleref_obj)
 
 								if isfound:
+									filter_obj = plugin_obj.filter
 									sb_plugin = sb_track.midiInstrument = make_sampler(convproj_obj, plugin_obj)
 									statewriter = bytewriter.bytewriter()
 									sampler_data = sampler.soundbridge_sampler_main()
@@ -689,6 +703,8 @@ class output_soundbridge(plugins.base):
 										sample_params.env_r = 0
 										sample_params.pitch_semi = pitch.__floor__()*0.5
 										sample_params.pitch_cent = (pitch%1)*100
+										sampler_do_filter(sampler_entry, sample_params, filter_obj)
+
 									sampler_data.write(statewriter)
 									sb_plugin.state = soundbridge_func.encode_chunk(statewriter.getvalue())
 
@@ -781,6 +797,9 @@ class output_soundbridge(plugins.base):
 											sample_params.vel_max = int(sp_obj.vel_max*127)
 											sample_params.pitch_semi = sp_obj.pitch.__floor__()*0.5
 											sample_params.pitch_cent = (sp_obj.pitch%1)*100
+											filt_exists, filt_obj = plugin_obj.named_filter_get_exists(sp_obj.filter_assoc)
+											if filt_exists:
+												sampler_do_filter(sampler_entry, sample_params, filt_obj)
 										ordernum += 1
 
 							sampler_data.write(statewriter)

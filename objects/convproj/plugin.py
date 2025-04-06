@@ -463,7 +463,7 @@ class cvpj_plugin:
 	def named_eq_add(self, eq_name): return self.state.named_eq_add(eq_name)
 
 	# -------------------------------------------------- named_filter
-	def named_filter_add(self, filt_name):  return self.state.named_filter_add(filt_name)
+	def named_filter_add(self, filt_name): return self.state.named_filter_add(filt_name)
 	def named_filter_get(self, filt_name): return self.state.named_filter_get(filt_name)
 	def named_filter_get_exists(self, filt_name): return self.state.named_filter_get_exists(filt_name)
 	def named_filter_rename(self, filt_name, new_name): return self.state.named_filter_rename(filt_name, new_name)

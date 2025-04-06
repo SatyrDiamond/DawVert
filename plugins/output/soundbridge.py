@@ -703,6 +703,8 @@ class output_soundbridge(plugins.base):
 										sample_params.env_r = 0
 										sample_params.pitch_semi = pitch.__floor__()*0.5
 										sample_params.pitch_cent = (pitch%1)*100
+										if 'vel_sens' in sp_obj.data:
+											sample_params.vol_vel = sp_obj.data['vel_sens']
 										sampler_do_filter(sampler_entry, sample_params, filter_obj)
 
 									sampler_data.write(statewriter)
@@ -744,6 +746,8 @@ class output_soundbridge(plugins.base):
 											sample_params.vel_max = int(sp_obj.vel_max*127)
 											sample_params.pitch_semi = sp_obj.pitch.__floor__()*0.5
 											sample_params.pitch_cent = (sp_obj.pitch%1)*100
+											if 'vel_sens' in sp_obj.data:
+												sample_params.vol_vel = sp_obj.data['vel_sens']
 										ordernum += 1
 
 							sampler_data.write(statewriter)
@@ -800,6 +804,8 @@ class output_soundbridge(plugins.base):
 											filt_exists, filt_obj = plugin_obj.named_filter_get_exists(sp_obj.filter_assoc)
 											if filt_exists:
 												sampler_do_filter(sampler_entry, sample_params, filt_obj)
+											if 'vel_sens' in sp_obj.data:
+												sample_params.vol_vel = sp_obj.data['vel_sens']
 										ordernum += 1
 
 							sampler_data.write(statewriter)

@@ -156,6 +156,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 					samplepart_obj.point_value_type = "samples"
 					samplepart_obj.start = sb_sample.start
 					samplepart_obj.end = sb_sample.end
+					samplepart_obj.data['vel_sens'] = sample_params.vol_vel
 					track_obj.datavals.add('middlenote', (sample_params.key_root-60))
 					filter_obj = plugin_obj.filter
 					filter_obj.on = bool(sb_sample.filter_type)

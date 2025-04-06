@@ -118,6 +118,7 @@ class input_bandlab(plugins.base):
 					sp_obj.sampleref = blx_region.sampleId
 					sp_obj.vol = blx_region.gain
 					sp_obj.stretch.set_rate_speed(bpm, (1/speed), True)
+					sp_obj.stretch.uses_tempo = True
 					sp_obj.stretch.preserve_pitch = True
 
 					placement_obj.fade_in.set_dur(blx_region.fadeIn, 'seconds')

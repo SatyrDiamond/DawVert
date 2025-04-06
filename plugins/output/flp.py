@@ -110,7 +110,7 @@ class output_cvpjs(plugins.base):
 		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
-		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec','m4a']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2','universal:invert','universal:swap_lr']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_ext_arch'] = [32, 64]

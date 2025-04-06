@@ -48,10 +48,11 @@ def filternum(i_filtertype):
 
 	if i_type == 'band_pass':
 		if i_subtype == 'csg': lmms_filternum = 2
-		if i_subtype == 'czpg': lmms_filternum = 3
-		if i_subtype == 'rc12': lmms_filternum = 9
-		if i_subtype == 'rc24': lmms_filternum = 12
-		if i_subtype == 'sv': lmms_filternum = 17
+		elif i_subtype == 'czpg': lmms_filternum = 3
+		elif i_subtype == 'rc12': lmms_filternum = 9
+		elif i_subtype == 'rc24': lmms_filternum = 12
+		elif i_subtype == 'sv': lmms_filternum = 17
+		else: lmms_filternum = 2
 
 	if i_type == 'formant':
 		lmms_filternum = 14

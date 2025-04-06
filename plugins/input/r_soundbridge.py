@@ -174,8 +174,15 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 				stretch_obj.set_rate_speed(120, 1, False)
 				stretch_obj.preserve_pitch = True
 
-			elif len(sampler_data.samples)>1 and sampler_data.sampler_mode==1:
+			elif len(sampler_data.samples)>1 and sampler_data.sampler_mode>0:
 				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+
+				if sampler_data.sampler_mode==1: plugin_obj.datavals.add('multi_mode', 'all')
+				if sampler_data.sampler_mode==2: plugin_obj.datavals.add('multi_mode', 'random')
+				if sampler_data.sampler_mode==3: plugin_obj.datavals.add('multi_mode', 'forward')
+				if sampler_data.sampler_mode==4: plugin_obj.datavals.add('multi_mode', 'backward')
+				if sampler_data.sampler_mode==5: plugin_obj.datavals.add('multi_mode', 'forward_backward')
+ 
 				for sb_sample in sampler_data.samples:
 					sample_params = sampler_data.params[sb_sample.params_num]
 					sp_obj = plugin_obj.sampleregion_add(sample_params.key_min-60, sample_params.key_max-60, sample_params.key_root-60, None)

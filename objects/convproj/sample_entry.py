@@ -43,6 +43,7 @@ class cvpj_sample_entry:
 	stretch: cvpj_stretch = field(default_factory=cvpj_stretch)
 	interpolation: str = "linear"
 	trigger: str = "normal"
+	no_pitch: bool = False
 
 	length: float = -1
 

@@ -11,14 +11,14 @@ limiter_lookahead = [0,3,5,10]
 
 filter_list = ['low_pass','high_pass','band_pass','notch']
 
-def calc_freq(in_freq): return (math.log(max(30, in_freq)/30) / math.log((2/3)*1000))
-
 def calc_q(q): return xtramath.between_to_one(0.1, 24, q)
 
 def calc_gain(gain): return xtramath.between_to_one(-24, 24, gain)
 
 def eq_get(filter_obj, params_obj, starttxt): 
-	params_obj.add(starttxt+'hz', calc_freq(filter_obj.freq), 'float')
+	from objects.file_proj._soundbridge import mathalgo
+
+	params_obj.add(starttxt+'hz', mathalgo.freq__to_one(filter_obj.freq), 'float')
 	params_obj.add(starttxt+'q', calc_q(filter_obj.q), 'float')
 	params_obj.add(starttxt+'gain', calc_gain(filter_obj.gain), 'float')
 	params_obj.add(starttxt+'on', int(filter_obj.on), 'float')

@@ -52,6 +52,7 @@ class cvpj_sample_entry:
 	end: float = 1
 
 	envs: dict = field(default_factory=dict)
+	filter_assoc: str = ''
 
 	vel_min: float = 0
 	vel_max: float = 1

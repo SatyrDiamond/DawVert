@@ -51,6 +51,37 @@ def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
 		autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
 		wf_plugin.automationcurves.append(autocurve_obj)
 
+def sampler_do_filter(soundlayer, filter_obj):
+	layerparams = soundlayer.soundparameters
+	layerparams['filterEnableParam'] = float(int(filter_obj.on))
+	layerparams['cuttoffParam'] = filter_obj.freq
+
+	filtertype = filter_obj.type
+	i_type = filtertype.type
+	i_subtype = filtertype.subtype
+
+	outfilter = 0
+
+	if i_type == 'low_pass':
+		if filter_obj.slope>12: outfilter = 2
+		elif filter_obj.slope<12: outfilter = 0
+		else: outfilter = 1
+
+	if i_type == 'band_pass':
+		if filter_obj.slope>12: outfilter = 4
+		else: outfilter = 3
+
+	if i_type == 'high_pass':
+		if filter_obj.slope>12: outfilter = 7
+		elif filter_obj.slope<12: outfilter = 5
+		else: outfilter = 6
+
+	if i_type == 'notch':
+		if filter_obj.slope>12: outfilter = 9
+		else: outfilter = 8
+
+	layerparams['filterModeParam'] = float(outfilter)
+
 def soundlayer_samplepart(plugin_obj, gpitch, programdata, lowNote, highNote, rootNote, sp_obj, sampleref_assoc, sampleref_obj_assoc): 
 	if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
 		adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
@@ -77,6 +108,7 @@ def soundlayer_samplepart(plugin_obj, gpitch, programdata, lowNote, highNote, ro
 		soundparameters['releaseParam'] = float(adsr_obj.release)
 		soundparameters['envModeParam'] = float(sp_obj.trigger=='normal')
 		soundparameters['pitchParam'] = float(sp_obj.pitch+gpitch)
+		if 'vel_sens' in sp_obj.data: soundparameters['sensParam'] = float(sp_obj.data['vel_sens'])
 		return soundlayer
 
 def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, cvpj_fxid, isinstrument):
@@ -110,7 +142,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 
 				sp_obj = plugin_obj.samplepart_get('sample')
 
-				if sp_obj.pitch or sp_obj.stretch.calc_real_size!=1:
+				if sp_obj.pitch or sp_obj.stretch.calc_real_size!=1 or plugin_obj.filter.on:
 					programdata = sampler_obj.set_prosampler()
 					wf_plugin.params['filename'] = 'Multi Sampler'
 					wf_plugin.params['name'] = 'Multi Sampler'
@@ -123,6 +155,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				if soundlayer:
 					soundlayer.offlinePitchShift = sp_obj.pitch
 					soundlayer.offlineTimeStretch = sp_obj.stretch.calc_real_size
+					sampler_do_filter(soundlayer, plugin_obj.filter)
 
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
@@ -192,6 +225,9 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 						soundlayer.highVelocity = int(sp_obj.vel_max*127)
 						soundlayer.offlinePitchShift = sp_obj.pitch
 						soundlayer.offlineTimeStretch = sp_obj.stretch.calc_real_size
+						filt_exists, filt_obj = plugin_obj.named_filter_get_exists(sp_obj.filter_assoc)
+						if filt_exists: sampler_do_filter(soundlayer, filt_obj)
+
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 

@@ -32,6 +32,9 @@ def soundlayer_samplepart(sp_obj, soundlayer, layerparams):
 	sp_obj.pitch = soundlayer.offlinePitchShift
 	sp_obj.no_pitch = soundlayer.fixedPitch
 
+	if 'sensParam' in layerparams:
+		if layerparams['sensParam'] is not None: sp_obj.data['vel_sens'] = layerparams['sensParam']
+
 def soundlayer_adsr(plugin_obj, layerparams, env_name): 
 	adsr = [0, 0, 1, 0]
 	if 'attackParam' in layerparams:
@@ -43,6 +46,60 @@ def soundlayer_adsr(plugin_obj, layerparams, env_name):
 	if 'releaseParam' in layerparams:
 		if layerparams['releaseParam'] is not None: adsr[3] = layerparams['releaseParam']
 	plugin_obj.env_asdr_add(env_name, 0, adsr[0], 0, adsr[1], adsr[2], adsr[3], 1)
+
+def sampler_do_filter(plugin_obj, soundlayer, filter_obj):
+	layerparams = soundlayer.soundparameters
+
+	filterEnableParam = False
+	filterModeParam = 0
+	qParam = 0
+	cuttoffParam = 20000
+
+	if 'filterEnableParam' in layerparams:
+		if layerparams['filterEnableParam'] is not None: filterEnableParam = bool(layerparams['filterEnableParam'])
+	if 'filterModeParam' in layerparams:
+		if layerparams['filterModeParam'] is not None: filterModeParam = int(layerparams['filterModeParam'])
+	if 'qParam' in layerparams:
+		if layerparams['qParam'] is not None: qParam = layerparams['qParam']
+	if 'cuttoffParam' in layerparams:
+		if layerparams['cuttoffParam'] is not None: cuttoffParam = layerparams['cuttoffParam']
+
+	filter_obj.on = filterEnableParam
+	filter_obj.freq = cuttoffParam
+	filter_obj.q = qParam+1
+	if filterModeParam == 0: 
+		filter_obj.type.set('low_pass', None)
+		filter_obj.slope = 6
+	if filterModeParam == 1: 
+		filter_obj.type.set('low_pass', None)
+		filter_obj.slope = 12
+	if filterModeParam == 2: 
+		filter_obj.type.set('low_pass', None)
+		filter_obj.slope = 24
+
+	if filterModeParam == 3: 
+		filter_obj.type.set('band_pass', None)
+		filter_obj.slope = 12
+	if filterModeParam == 4: 
+		filter_obj.type.set('band_pass', None)
+		filter_obj.slope = 24
+
+	if filterModeParam == 5: 
+		filter_obj.type.set('high_pass', None)
+		filter_obj.slope = 6
+	if filterModeParam == 6: 
+		filter_obj.type.set('high_pass', None)
+		filter_obj.slope = 12
+	if filterModeParam == 7: 
+		filter_obj.type.set('high_pass', None)
+		filter_obj.slope = 24
+
+	if filterModeParam == 8: 
+		filter_obj.type.set('notch', None)
+		filter_obj.slope = 12
+	if filterModeParam == 9: 
+		filter_obj.type.set('notch', None)
+		filter_obj.slope = 24
 
 def do_plugin(convproj_obj, wf_plugin, track_obj): 
 	from functions.juce import juce_memoryblock
@@ -71,6 +128,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 						if sp_obj.visual.name: track_obj.visual_inst.name = sp_obj.visual.name
 						soundlayer_samplepart(sp_obj, firstlayer, layerparams)
 						soundlayer_adsr(plugin_obj, layerparams, 'vol')
+						sampler_do_filter(plugin_obj, firstlayer, plugin_obj.filter)
 
 						pitch = 0
 						if 'pitchParam' in layerparams:
@@ -95,6 +153,9 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 							sp_obj.envs['vol'] = 'vol_'+endstr
 							soundlayer_samplepart(sp_obj, soundlayer, layerparams)
 							soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
+							filter_obj = plugin_obj.named_filter_add(endstr)
+							sampler_do_filter(plugin_obj, soundlayer, filter_obj)
+							sp_obj.filter_assoc = endstr
 							if 'pitchParam' in layerparams:
 								if layerparams['pitchParam'] is not None:
 									sp_obj.pitch = layerparams['pitchParam']

@@ -2,17 +2,17 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import numpy as np
-import io
-import os
-import uuid
-import struct
-from objects.convproj import fileref
 from functions import xtramath
-import math
-from objects import globalstore
-from objects.data_bytes import bytereader
 from functions_spec import soundbridge as soundbridge_func
+from objects import globalstore
+from objects.convproj import fileref
+from objects.data_bytes import bytereader
+import io
+import math
+import numpy as np
+import os
+import struct
+import uuid
 
 sb_auto_dtype = np.dtype([('pos', '>I'), ('val', '>f'),('unk1', '>f'),('unk2', '>f')])
 
@@ -113,8 +113,15 @@ def make_stretch(pitchTempoProcessorMode, stretch_obj):
 	if pitchTempoProcessorMode == 4:
 		stretch_obj.algorithm = 'soundtouch'
 
+def do_filter_type(filter_obj, num):
+	if num == 1: filter_obj.type.set('low_pass', None)
+	if num == 2: filter_obj.type.set('high_pass', None)
+	if num == 3: filter_obj.type.set('band_pass', None)
+	if num == 4: filter_obj.type.set('notch', None)
+
 def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 	from objects.file_proj._soundbridge import sampler
+	from objects.file_proj._soundbridge import mathalgo
 	uiddata = soundbridge_func.decode_chunk(sb_plugin.uid)
 	statedata = soundbridge_func.decode_chunk(sb_plugin.state)
 	pluginid = None
@@ -150,6 +157,12 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 					samplepart_obj.start = sb_sample.start
 					samplepart_obj.end = sb_sample.end
 					track_obj.datavals.add('middlenote', (sample_params.key_root-60))
+					filter_obj = plugin_obj.filter
+					filter_obj.on = bool(sb_sample.filter_type)
+					filter_obj.freq = mathalgo.freq__from_one(sample_params.filter_freq)
+					filter_obj.q = sample_params.filter_res
+					do_filter_type(filter_obj, sb_sample.filter_type)
+
 				else:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'slicer')
 					plugin_obj.role = 'synth'
@@ -174,7 +187,7 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 				stretch_obj.set_rate_speed(120, 1, False)
 				stretch_obj.preserve_pitch = True
 
-			elif len(sampler_data.samples)>1 and sampler_data.sampler_mode>0:
+			elif sampler_data.sampler_mode>0:
 				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 
 				if sampler_data.sampler_mode==1: plugin_obj.datavals.add('multi_mode', 'all')
@@ -183,7 +196,8 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 				if sampler_data.sampler_mode==4: plugin_obj.datavals.add('multi_mode', 'backward')
 				if sampler_data.sampler_mode==5: plugin_obj.datavals.add('multi_mode', 'forward_backward')
  
-				for sb_sample in sampler_data.samples:
+				for layernum, sb_sample in enumerate(sampler_data.samples):
+					endstr = str(layernum)
 					sample_params = sampler_data.params[sb_sample.params_num]
 					sp_obj = plugin_obj.sampleregion_add(sample_params.key_min-60, sample_params.key_max-60, sample_params.key_root-60, None)
 					sp_obj.vel_min = sample_params.vel_min/127
@@ -196,8 +210,16 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 					sp_obj.end = sb_sample.end
 					sp_obj.visual.name = sb_sample.name
 					sp_obj.stretch.set_rate_speed(120, 1, False)
+					sp_obj.stretch.preserve_pitch = True
 					if 'SampleColor' in sb_sample.metadata:
 						sp_obj.visual.color.set_hex(sb_sample.metadata['SampleColor'])
+
+					filter_obj = plugin_obj.named_filter_add(endstr)
+					sp_obj.filter_assoc = endstr
+					filter_obj.on = bool(sb_sample.filter_type)
+					filter_obj.freq = mathalgo.freq__from_one(sample_params.filter_freq)
+					filter_obj.q = sample_params.filter_res
+					do_filter_type(filter_obj, sb_sample.filter_type)
 
 		elif uiddata[0:8] == b'\x00\x00\x00\x00SV2T':
 			fourid = struct.unpack('>I', uiddata[8:12])[0]

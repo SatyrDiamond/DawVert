@@ -496,6 +496,25 @@ class output_lmms(plugins.base):
 							else:
 								logger_output.warning('VST2 plugin not placed: file path not found.')
 
+						elif plugin_obj.check_match('universal', 'sampler', 'slicer'):
+							sp_obj = plugin_obj.samplepart_get('sample')
+							issampfound, sampleref_obj = cvpj_obj.sampleref__get(sp_obj.sampleref)
+							if issampfound and sampleref_obj.dur_samples:
+								lmms_inst_obj.name = 'slicert'
+								lmms_plug_obj.name = 'slicert'
+	
+								hzmod = sampleref_obj.hz/44100
+
+								sp_obj.convpoints_percent(sampleref_obj)
+
+								lmms_plug_obj.add_param('src', sp_obj.get_filepath(cvpj_obj, False) )
+								lmms_plug_obj.add_param('totalSlices', str(len(sp_obj.slicer_slices)) )
+
+								for slicenum, slice_obj in enumerate(sp_obj.slicer_slices):
+									lmms_plug_obj.add_param('slice_'+str(slicenum+1), str((slice_obj.start*hzmod)/sampleref_obj.dur_samples) )
+
+								middlenotefix -= 1
+
 						elif plugin_obj.check_wildmatch('native', 'lmms', None):
 							lmms_inst_obj.name = plugin_obj.type.subtype
 							lmms_plug_obj.name = plugin_obj.type.subtype

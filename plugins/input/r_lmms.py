@@ -379,19 +379,22 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 
 			filepath = lmms_plugin.get_param('src', '').value
 			sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, None)
+			plugin_obj.datavals.add('fade_out', float(lmms_plugin.get_param('fadeOut', 0).value))
 
 			sp_obj = plugin_obj.samplepart_add('sample')
 			sp_obj.from_sampleref(convproj_obj, filepath)
 
+			numslices = int(lmms_plugin.get_param('totalSlices', 0))
+
+			hzmod = 44100/sampleref_obj.hz
+
 			if sampleref_obj.dur_samples:
 				slicenum = 1
-				while True:
-					value = lmms_plugin.get_param('slice_'+str(slicenum), '')
-					if not value: break
-					else: 
-						slice_obj = sp_obj.add_slice()
-						slice_obj.start = int(float(value)*sampleref_obj.dur_samples)
-						slicenum += 1
+				for n in range(numslices):
+					value = lmms_plugin.get_param('slice_'+str(n+1), 0).value
+					slice_obj = sp_obj.add_slice()
+					slice_obj.start = int(float(value)*hzmod*sampleref_obj.dur_samples)
+					slicenum += 1
 
 
 	plugin_obj.visual.from_dset('lmms', 'plugin', pluginname, True)
@@ -527,6 +530,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			noteoffset = 0
 			if pluginname == 'audiofileprocessor': noteoffset = 3
 			elif pluginname == 'sf2player': noteoffset = 12
+			elif pluginname == 'slicert': noteoffset = 1
 			elif pluginname == 'OPL2': noteoffset = 24
 			elif pluginname == 'zynaddsubfx': noteoffset = 0
 			elif pluginname == 'vestige': noteoffset = 0

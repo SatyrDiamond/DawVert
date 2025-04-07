@@ -45,8 +45,8 @@ def setparams(convproj_obj, plugin_obj):
 		slicer_bpm = plugin_obj.datavals.get('bpm', 4)
 		slicer_pitch = int(sre_obj.pitch*100)
 		slicer_fitlen = int(math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
-		slicer_att = plugin_obj.datavals.get('fade_in', 4)
-		slicer_dec = plugin_obj.datavals.get('fade_out', 4)
+		slicer_att = int(plugin_obj.datavals.get('fade_in', 4))
+		slicer_dec = int(plugin_obj.datavals.get('fade_out', 4))
 		
 		if sre_obj.stretch.algorithm == 'elastique_pro': 
 			if sre_obj.stretch.algorithm_mode == 'transient': slicer_stretchtype = 3

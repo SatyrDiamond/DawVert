@@ -570,6 +570,8 @@ class input_soundbridge(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			project_obj.load_from_file(os.path.join(dawvert_intent.input_file, 'project.xml'))
 
+		convproj_obj.metadata.name = project_obj.name
+
 		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
 		
 		pfreq = int(project_obj.sampleRate)/2
@@ -610,11 +612,10 @@ class input_soundbridge(plugins.base):
 				placement_obj.time.set_posdur(block.position, block.framesCount)
 				placement_obj.video_fileref = block.filename
 
-		master_track = project_obj.masterTrack
-		add_params(project_obj.masterTrack.state, convproj_obj.track_master.params)
-		track_visual(convproj_obj.track_master.visual, project_obj.masterTrack)
-		do_fx('master', convproj_obj, project_obj.masterTrack, convproj_obj.track_master)
-		convproj_obj.track_master.latency_offset = project_obj.masterTrack.latencyOffset/(pfreq/500)
+		add_params(master_track.state, convproj_obj.track_master.params)
+		track_visual(convproj_obj.track_master.visual, master_track)
+		do_fx('master', convproj_obj, master_track, convproj_obj.track_master)
+		convproj_obj.track_master.latency_offset = master_track.latencyOffset/(pfreq/500)
 
 		for x in master_track.automationContainer.automationTracks:
 			if x.parameterIndex == 2: add_auto(x.defaultValue, 'vol', convproj_obj, ['master', 'vol'], x.blocks, 0, 1)

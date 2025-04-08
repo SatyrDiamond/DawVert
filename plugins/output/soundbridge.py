@@ -549,6 +549,9 @@ class output_soundbridge(plugins.base):
 		globalstore.datadef.load('soundbridge', './data_main/datadef/soundbridge.ddef')
 		globalstore.dataset.load('soundbridge', './data_main/dataset/soundbridge.dset')
 
+		if convproj_obj.metadata.name is not None:
+			project_obj.name = convproj_obj.metadata.name
+
 		tempo = convproj_obj.params.get('bpm', 120).value
 
 		sb_timeSignature = project_obj.timeline.timeSignature
@@ -564,6 +567,7 @@ class output_soundbridge(plugins.base):
 		make_plugins_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master.plugslots)
 
 		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = '#'+master_track.visual.color.get_hex()
+		if master_track.visual.name: project_obj.masterTrack.name = master_track.visual.name
 
 		project_obj.masterTrack.latencyOffset = calc_lattime(master_track.latency_offset)
 		project_obj.masterTrack.state = set_params(master_track.params)

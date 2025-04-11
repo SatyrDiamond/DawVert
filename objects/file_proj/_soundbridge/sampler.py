@@ -13,6 +13,8 @@ def makestring(textd, byw_stream):
 	byw_stream.uint64_b(len(data))
 	byw_stream.raw(data)
 
+debug_count = 0
+
 class soundbridge_sampler_main:
 	def __init__(self):
 		self.sampler_mode = 0
@@ -73,6 +75,24 @@ class soundbridge_sampler_main:
 		self.treshold = byr_stream.float_b()
 		self._unk2 = byr_stream.float_b()
 		for n in range(64): self.params[n].read(byr_stream)
+		#self.debug_to_json()
+
+	def debug_to_json(self):
+		global debug_count
+
+		import json
+		out = {}
+		out['sampler_mode'] = self.sampler_mode
+		out['samples'] = [x.debug_to_json() for x in self.samples]
+		out['params'] = [x.debug_to_json() for x in self.params]
+		out['params_used'] = self.params_used
+		out['treshold'] = self.treshold
+		out['_unk1'] = self._unk1
+		out['_unk2'] = self._unk2
+
+		with open(str(debug_count)+'_out.txt', 'w') as f: json.dump(out, f, indent=2)
+
+		debug_count += 1
 
 	def write(self, byw_stream):
 		byw_stream.uint64_b(1)
@@ -136,6 +156,27 @@ class soundbridge_sampler_entry:
 			byr_stream.skip(3)
 			self.slices.append([slice1, slice2, slice3, slice4])
 
+	def debug_to_json(self):
+		out = {}
+		out['params_num'] = self.params_num
+		out['start'] = self.start
+		out['end'] = self.end
+		out['filter_on'] = self.filter_on
+		out['filter_type'] = self.filter_type
+		out['pitch_algo'] = self.pitch_algo
+		out['env_amp_on'] = self.env_amp_on
+		out['env_filter_on'] = self.env_filter_on
+		out['env_pitch_on'] = self.env_pitch_on
+		out['slicemode'] = self.slicemode
+		out['params_num_end'] = self.params_num_end
+		out['order'] = self.order
+		out['filename'] = self.filename
+		out['name'] = self.name
+		out['metadata'] = self.metadata
+		out['numslices'] = self.numslices
+		out['slices'] = self.slices
+		return out
+
 	def write(self, byw_stream):
 		byw_stream.uint64_b(self.params_num)
 		byw_stream.uint64_b(self.start)
@@ -180,6 +221,17 @@ class soundbridge_sampler_params_env:
 	def debugtxt(self):
 		print('ENV:', self.env_a, self.env_d, self.env_s, self.env_r, '|', self.cnvx_a, self.cnvx_d, self.cnvx_r, '|')
 
+	def debug_to_json(self):
+		out = {}
+		out['env_a'] = self.env_a
+		out['cnvx_a'] = self.cnvx_a
+		out['env_d'] = self.env_d
+		out['cnvx_d'] = self.cnvx_d
+		out['env_s'] = self.env_s
+		out['env_r'] = self.env_r
+		out['cnvx_r'] = self.cnvx_r
+		return out
+
 	def read(self, byr_stream):
 		self.env_a = byr_stream.float_b()
 		self.cnvx_a = byr_stream.float_b()
@@ -218,6 +270,32 @@ class soundbridge_sampler_params:
 		self._unk2 = 1.0
 		self.filt_env_amt = 0.5
 		self.pitch_env_amt = 0.5
+
+	def debug_to_json(self):
+		out = {}
+		out['key_root'] = self.key_root
+		out['key_min'] = self.key_min
+		out['key_max'] = self.key_max
+		out['pitch_semi'] = self.pitch_semi
+		out['pitch_cent'] = self.pitch_cent
+		out['vel_min'] = self.vel_min
+		out['vel_max'] = self.vel_max
+		out['env_amp'] = self.env_amp
+		out['env_filt'] = self.env_filt
+		out['env_pitch'] = self.env_pitch
+		out['gain'] = self.gain
+		out['pan'] = self.pan
+		out['filter_freq'] = self.filter_freq
+		out['filter_res'] = self.filter_res
+		out['vol_vel'] = self.vol_vel
+		out['_unk2'] = self._unk2
+		out['filt_env_amt'] = self.filt_env_amt
+		out['pitch_env_amt'] = self.pitch_env_amt
+
+		out['env_amp'] = self.env_amp.debug_to_json()
+		out['env_filt'] = self.env_filt.debug_to_json()
+		out['env_pitch'] = self.env_pitch.debug_to_json()
+		return out
 
 	def debugtxt(self):
 		print('MAIN:', self.gain, self.pan, '|')

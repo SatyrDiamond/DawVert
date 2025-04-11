@@ -64,7 +64,10 @@ def add_auto(defaultValue, valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 				autopoint_obj.value = int(point['val']<0.5)
 			else:
 				autopoint_obj.value = (point['val']+add)*mul
-			autopoint_obj.tension = math.log10(point['unk1'])
+			try:
+				autopoint_obj.tension = math.log10(point['unk1'])
+			except:
+				pass
 			autopoint_obj.type = 'normal'
 
 	auto_obj = convproj_obj.automation.get_opt(autoloc)

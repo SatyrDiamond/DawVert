@@ -6,7 +6,7 @@ from objects.file_proj._ableton.func import *
 from objects.file_proj._ableton.automation import *
 from objects.file_proj._ableton.visual import *
 from objects.file_proj._ableton.device import *
-from objects.file_proj import proj_ableton
+from objects.file_proj import ableton as proj_ableton
 
 import xml.etree.ElementTree as ET
 
@@ -387,7 +387,7 @@ class ableton_TrackDelay:
 	def __init__(self, xmltag):
 		if xmltag:
 			x_TrackDelay = xmltag.findall('TrackDelay')[0]
-			self.Value = int(get_value(x_TrackDelay, 'Value', 0))
+			self.Value = float(get_value(x_TrackDelay, 'Value', 0))
 			self.IsValueSampleBased = get_bool(x_TrackDelay, 'IsValueSampleBased', 0)
 		else:
 			self.Value = 0

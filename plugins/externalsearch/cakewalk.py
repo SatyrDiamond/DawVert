@@ -43,13 +43,19 @@ def reg_checkexist(winregpath):
 	except: return False
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'cakewalk'
-	def get_name(self): return 'Cakewalk'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['win']
+	def get_shortname(self):
+		return 'cakewalk'
+	
+	def get_name(self):
+		return 'Cakewalk'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict):
+		in_dict['supported_os'] = ['win']
+	
 	def import_plugins(self):
-
 		vst2count = 0
 		vst3count = 0
 

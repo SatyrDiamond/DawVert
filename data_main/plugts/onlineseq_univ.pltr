@@ -1,17 +1,17 @@
-
-[eq]
->input
-	type|native:onlineseq:eq
-	param|eq_low
-	param|eq_mid
-	param|eq_high
-<input
-
->output
-	type|universal:eq:3band
-	param|low_gain<eq_low
-	param|mid_gain<eq_mid
-	param|high_gain<eq_high
-	param|lowmid_freq%250.0
-	param|midhigh_freq%2500.0
-<output
+<plugtransform>
+    <transform name="eq">
+        <input plugtype="native:onlineseq:eq">
+            <param from="eq_low" type="float">0</param>
+            <param from="eq_mid" type="float">0</param>
+            <param from="eq_high" type="float">0</param>
+        </input>
+        <proc />
+        <output plugtype="universal:eq:3band">
+            <param to="low_gain" from="eq_low" type="float">0</param>
+            <param to="mid_gain" from="eq_mid" type="float">0</param>
+            <param to="high_gain" from="eq_high" type="float">0</param>
+            <param to="lowmid_freq" type="float">250.0</param>
+            <param to="midhigh_freq" type="float">2500.0</param>
+        </output>
+    </transform>
+</plugtransform>

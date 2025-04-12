@@ -16,16 +16,19 @@ threeosc_shapes = {
 pluckwave = [124, 219, 235, 222, 220, 214, 188, 161, 141, 109, 90, 74, 49, 41, 21, 0, 7, 37, 97, 139, 131, 116, 113, 111, 137, 180, 202, 194, 134, 64, 53, 72, 114, 150, 133, 130, 154, 160, 163, 171, 198, 216, 165, 109, 108, 130, 153, 161, 151, 131, 96, 68, 68, 82, 98, 106, 116, 100, 49, 42, 113, 191, 228, 227, 208, 197, 165, 134, 169, 200, 145, 60, 38, 112, 188, 158, 106, 116, 162, 199, 200, 172, 121, 78, 79, 89, 101, 149, 196, 195, 193, 199, 172, 138, 129, 113, 91, 99, 125, 126, 146, 201, 188, 107, 41, 16, 23, 56, 90, 113, 113, 101, 133, 180, 194, 197, 169, 103, 66, 75, 76, 75, 115, 169, 179, 133, 91, 106, 150, 167, 146, 141, 177, 181, 143, 144, 177, 200, 212, 213, 203, 170, 115, 101, 152, 194, 168, 115, 80, 56, 45, 60, 98, 143, 171, 181, 169, 144, 116, 84, 87, 116, 103, 63, 59, 84, 96, 78, 55, 86]
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return -100
+	
 	def get_prop(self, in_dict):
 		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flp']
 		in_dict['out_plugins'] = [['native', 'lmms', None]]
 		in_dict['out_daws'] = ['lmms']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity stereo shaper'):
 			extpluglog.convinternal('FL Studio', 'Stereo Shaper', 'LMMS', 'Stereo Matrix')
 			plugin_obj.plugts_transform('./data_main/plugts/flstudio_lmms.pltr', 'fruity_stereo_shaper', convproj_obj, pluginid)

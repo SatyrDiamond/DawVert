@@ -2,30 +2,20 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from plugins import base as dv_plugins
-from functions_plugin_ext import plugin_vst2
 
-from functions import song_compat
 from functions import plug_conv
+from objects import format_detect
+from objects import globalstore
 import pathlib
 
-from functions_song import convert_r2m
-from functions_song import convert_ri2mi
-from functions_song import convert_ri2r
-from functions_song import convert_rm2r
-from functions_song import convert_m2r
-from functions_song import convert_m2mi
-from functions_song import convert_mi2m
-from functions_song import convert_rm2m
-
-from functions_song import convert_ms2rm
-from functions_song import convert_rs2r
-
 from objects.convproj import project as convproj
+from objects.convproj import fileref
 
 import os
 import configparser
 import platform
 import logging
+import copy
 
 logFormatter = logging.Formatter(fmt='%(levelname)8s | %(name)12s | %(message)s')
 consoleHandler = logging.StreamHandler()
@@ -48,6 +38,7 @@ logger_audiofile = logging.getLogger('audiofile')
 logger_projparse = logging.getLogger('projparse')
 logger_plugins = logging.getLogger('plugins')
 logger_filesearch = logging.getLogger('filesearch')
+logger_extplug = logging.getLogger('extplug')
 
 logger_core.addHandler(consoleHandler)
 logger_compat.addHandler(consoleHandler)
@@ -62,6 +53,7 @@ logger_plugconv_ext.addHandler(consoleHandler)
 logger_audiofile.addHandler(consoleHandler)
 logger_projparse.addHandler(consoleHandler)
 logger_plugins.addHandler(consoleHandler)
+logger_extplug.addHandler(consoleHandler)
 logger_filesearch.addHandler(consoleHandler)
 
 logger_core.setLevel(logging.INFO)
@@ -77,6 +69,7 @@ logger_plugconv_ext.setLevel(logging.INFO)
 logger_audiofile.setLevel(logging.INFO)
 logger_projparse.setLevel(logging.INFO)
 logger_plugins.setLevel(logging.INFO)
+logger_extplug.setLevel(logging.INFO)
 
 log_pathsearchonly = False
 
@@ -95,45 +88,94 @@ if log_pathsearchonly:
 	logger_audiofile.setLevel(logging.ERROR)
 	logger_projparse.setLevel(logging.ERROR)
 	logger_plugins.setLevel(logging.ERROR)
+	logger_extplug.setLevel(logging.ERROR)
 
-class config_data:
-	path_samples_extracted = os.getcwd() + '/__samples_extracted/'
-	path_samples_downloaded = os.getcwd() + '/__samples_downloaded/'
-	path_samples_generated = os.getcwd() + '/__samples_generated/'
-	path_samples_converted = os.getcwd() + '/__samples_converted/'
-	path_external_data = os.getcwd() + '/_external_data/'
-	path_extrafile = None
-	path_soundfont = None
-	paths_soundfonts = {}
-	allow_download = True
-	songnum = 1
-	extplug_cat = []
-	flags_convproj = []
-	flags_core = []
-	splitter_mode = 0
-	splitter_detect_start = False
-	searchpaths = []
+class dawvert_intent:
+	def __init__(self):
+		self.input_file = ''
+		self.input_folder = ''
+		self.input_data = b''
+		self.input_mode = 'file'
+		self.input_visname = ''
+		self.input_params = {}
+		
+		self.output_file = ''
+		self.output_folder = ''
+		self.output_mode = 'file'
+		self.output_params = {}
+		self.output_visname = ''
+		self.output_samples = ''
+
+		self.curdir = None
+
+		self.plugin_set = True
+		self.plugin_input = None
+		self.plugin_output = None
+		self.plugset_input = None
+		self.plugset_output = None
+
+		self.path_samples = {}
+		self.path_soundfonts = {}
+		self.path_external_data = ''
+
+		self.splitter_mode = 0
+		self.splitter_detect_start = False
+
+		self.flags_compat = []
+		self.flag_overwrite = False
+
+		self.extplug_cat = []
+		self.songnum = 0
+
+		self.custom_config = {}
+
+		self.set_defualt_path()
+
+	def copy(self):
+		return copy.deepcopy(self)
+
+	def set_file_input(self, fileloc):
+		if self.curdir: self.curdir = os.getcwd()
+		self.input_mode = 'file'
+		self.input_file = os.path.abspath(fileloc)
+		self.input_folder = os.path.dirname(self.input_file)
+		self.input_visname = os.path.basename(fileloc)
+		self.input_visname = os.path.splitext(self.input_visname)[0]
+
+	def set_file_output(self, fileloc):
+		if self.curdir: self.curdir = os.getcwd()
+		self.output_mode = 'file'
+		self.output_file = os.path.abspath(fileloc)
+		self.output_folder = os.path.dirname(self.output_file)
+		self.output_visname = os.path.basename(fileloc)
+		self.output_visname = os.path.splitext(self.output_visname)[0]
 
 	def set_defualt_path(self):
-		config_data.path_samples_extracted = os.getcwd() + '/__samples_extracted/'
-		config_data.path_samples_downloaded = os.getcwd() + '/__samples_downloaded/'
-		config_data.path_samples_generated = os.getcwd() + '/__samples_generated/'
-		config_data.path_samples_converted = os.getcwd() + '/__samples_converted/'
+		self.path_samples['extracted'] = os.getcwd() + '/__samples_extracted/'
+		self.path_samples['downloaded'] = os.getcwd() + '/__samples_downloaded/'
+		self.path_samples['generated'] = os.getcwd() + '/__samples_generated/'
+		self.path_samples['converted'] = os.getcwd() + '/__samples_converted/'
 
-	def set_projname_path(self, file_name):
+	def set_projname_path(self):
+		file_name = self.input_visname
 		self.set_defualt_path()
-		config_data.path_samples_extracted += file_name + '/'
-		config_data.path_samples_downloaded += file_name + '/'
-		config_data.path_samples_generated += file_name + '/'
-		config_data.path_samples_converted += file_name + '/'
+		self.path_samples['extracted'] += file_name + '/'
+		self.path_samples['downloaded'] += file_name + '/'
+		self.path_samples['generated'] += file_name + '/'
+		self.path_samples['converted'] += file_name + '/'
 
-	def load(self, filepath):
-		global paths_soundfonts
+	def create_folder_paths(self):
+		os.makedirs(self.path_samples['extracted'], exist_ok=True)
+		os.makedirs(self.path_samples['downloaded'], exist_ok=True)
+		os.makedirs(self.path_samples['generated'], exist_ok=True)
+		os.makedirs(self.path_samples['converted'], exist_ok=True)
+
+	def config_load(self, filepath):
 		config = configparser.ConfigParser()
 		if os.path.exists(filepath):
 			config.read_file(open(filepath))
 			for devtype in ['gm', 'xg', 'gs', 'mt32', 'mariopaint']:
-				try: self.paths_soundfonts[devtype] = config.get('soundfont2', devtype)
+				try: self.path_soundfonts[devtype] = config.get('soundfont2', devtype)
 				except: pass
 			for plugcat in ['foss', 'nonfree', 'shareware', 'old']:
 				try:
@@ -168,11 +210,18 @@ class dawinfo:
 
 pluginsets_input = {
 'main': ['', 'Main'],
+'tracker': ['tracker', 'Tracker'],
+'uncommon': ['uncommon', 'Uncommon'],
+'2010s': ['2010s', "2010's"],
+'y2k': ['y2k', 'Y2K'],
+'ancient': ['ancient', 'Ancient'],
+'midi': ['midi', 'MIDI'],
 'exper': ['exper', 'Experiments'],
-'ai': ['ai', 'AI'],
+'mariopaint': ['mariopaint', 'Mario Paint'],
 'vgm': ['vgm', 'VGM'],
 'gameres': ['gameres', 'Game Mod'],
 'gamespec': ['gamespec', 'Game Specific'],
+'nn': ['nn', 'NeuralNet'],
 'old': ['old', 'Old/Broken']
 }
 
@@ -182,19 +231,56 @@ pluginsets_output = {
 'old': ['old', 'Old/Broken']
 }
 
+filedetector_obj = format_detect.file_detector()
+filedetector_obj.load_def('data_main/autodetect.xml')
+
 class core:
 	def __init__(self):
 		platform_architecture = platform.architecture()
 		if platform_architecture[1] == 'WindowsPE': self.platform_id = 'win'
 		else: self.platform_id = 'lin'
 
-		self.config = config_data()
-
 		self.currentplug_input = dv_plugins.create_selector('input')
 		self.currentplug_output = dv_plugins.create_selector('output')
 		dv_plugins.load_plugindir('audiofile', '')
 		dv_plugins.load_plugindir('audiocodecs', '')
 		dv_plugins.load_plugindir('audioconv', '')
+
+	def intent_setplugins(self, dawvert_intent):
+		if dawvert_intent.plugin_set:
+
+			self.output_load_plugins(dawvert_intent.plugset_output if dawvert_intent.plugset_output else 'main')
+
+			if dawvert_intent.plugin_input == None:
+				if dawvert_intent.input_mode == 'file':
+					outdetected = filedetector_obj.detect_file(dawvert_intent.input_file)
+					if outdetected:
+						plugset, plugname = outdetected
+						dawvert_intent.plugin_input = plugname
+						self.input_load_plugins(plugset)
+						det = self.input_set(dawvert_intent.plugin_input)
+						if not det:
+							logger_core.error('plugin, "'+str(dawvert_intent.plugin_input)+'" is defined in autodetect.xml, but the plugin is not loaded.')
+							return False
+					else:
+						logger_core.error('Could not identify the input format')
+						return False
+			else:
+				self.input_load_plugins(dawvert_intent.plugset_input if dawvert_intent.plugset_input else 'main')
+				if dawvert_intent.plugin_input in self.input_get_plugins():
+					self.input_set(dawvert_intent.plugin_input)
+				else:
+					logger_core.error('Input format plugin not found')
+					return False
+
+			if dawvert_intent.plugin_output in self.output_get_plugins():
+				out_class = self.output_set(dawvert_intent.plugin_output)
+			else:
+				logger_core.error('Output format plugin not found')
+				return False
+
+		return True
+
 
 	def logger_only_plugconv(self):
 		logger_core.setLevel(logging.WARNING)
@@ -254,20 +340,6 @@ class core:
 	def input_unset(self, pluginname): 
 		return self.currentplug_input.unset()
 
-	def input_autoset(self, in_file): return self.currentplug_input.set_auto(in_file)
-
-	def input_autoset_keepset(self, in_file): return self.currentplug_input.set_auto_keepset(in_file)
-
-	def input_autoset_fileext(self, in_file):
-		fileext = pathlib.Path(in_file).suffix
-		shortname = None
-		for shortname, plug_obj, prop_obj in self.currentplug_input.iter():
-			if prop_obj.file_ext_detect:
-				if fileext.lower() in ['.'+x.lower() for x in prop_obj.file_ext]:
-					self.input_set(shortname)
-					return shortname
-		if shortname: self.input_unset(shortname)
-
 	def output_load_plugins(self, pluginset):
 		if pluginset in pluginsets_output: 
 			plugsetfolder, fullname = pluginsets_output[pluginset]
@@ -311,41 +383,42 @@ class core:
 
 	def output_set(self, pluginname): return self.currentplug_output.set(pluginname)
 
-	def parse_input(self, in_file, dv_config): 
+	def parse_input(self, dawvert_intent): 
 		self.convproj_obj = convproj.cvpj_project()
-		dv_config.searchpaths.append(os.path.dirname(in_file))
 		selected_plugin = self.currentplug_input.selected_plugin
 		plug_obj = selected_plugin.plug_obj
 		if selected_plugin.usable:
-			plug_obj.parse(self.convproj_obj, in_file, dv_config)
+			plug_obj.parse(self.convproj_obj, dawvert_intent)
 		else:
 			logger_core.error(self.currentplug_input.selected_shortname+' is not usable: '+selected_plugin.usable_meg)
 			exit()
 
-	def convert_type_output(self, dv_config): 
+	def convert_type_output(self, dawvert_intent): 
 		global in_dawinfo
 		global out_dawinfo
 		in_type = self.convproj_obj.type
 		out_type = self.currentplug_output.selected_plugin.plug_obj.gettype()
 		in_dawinfo = self.currentplug_input.selected_plugin.prop_obj
 		out_dawinfo = self.currentplug_output.selected_plugin.prop_obj
-		plugin_vst2.cpu_arch_list = out_dawinfo.plugin_ext_arch
+		globalstore.os_info_target.bits = out_dawinfo.plugin_ext_arch
 
 		logger_core.info('' + convproj.typelist[in_type] + ' > ' + convproj.typelist[out_type])
 
-		self.convproj_obj.main__change_type(in_dawinfo, out_dawinfo, out_type, dv_config)
+		self.convproj_obj.main__change_type(in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 		if 'do_sorttracks' in self.convproj_obj.do_actions: self.convproj_obj.main__sort_tracks()
 
 		isconverted = False
 		for sampleref_id, sampleref_obj in self.convproj_obj.samplerefs.items():
 			if sampleref_obj.found:
 				if sampleref_obj.fileformat not in out_dawinfo.audio_filetypes:
-					isconverted = sampleref_obj.convert(out_dawinfo.audio_filetypes, dv_config.path_samples_converted)
+					isconverted = sampleref_obj.convert(out_dawinfo.audio_filetypes, dawvert_intent.path_samples['converted'])
 
-	def convert_plugins(self, dv_config): 
-		plug_conv.convproj(self.convproj_obj, in_dawinfo, out_dawinfo, self.currentplug_output.selected_shortname, dv_config)
+	def convert_plugins(self, dawvert_intent): 
+		if out_dawinfo.plugin_ext_arch:
+			globalstore.os_info_target.bits = out_dawinfo.plugin_ext_arch
+		plug_conv.convproj(self.convproj_obj, in_dawinfo, out_dawinfo, self.currentplug_output.selected_shortname, dawvert_intent)
 
-	def parse_output(self, out_file): 
+	def parse_output(self, dawvert_intent): 
 		plug_obj = self.currentplug_output.selected_plugin.plug_obj
-		plug_obj.parse(self.convproj_obj, out_file)
-		logger_core.info('File outputted: '+out_file)
+		plug_obj.parse(self.convproj_obj, dawvert_intent)
+		#logger_core.info('File outputted: '+out_file)

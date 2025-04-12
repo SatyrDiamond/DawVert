@@ -29,6 +29,8 @@ def convert(convproj_obj, change_instnames):
 				new_inst = copy.deepcopy(old_instruments[instid])
 				if new_inst.plugslots.synth not in used_plugins:
 					used_plugins.append(new_inst.plugslots.synth)
+				for x in new_inst.plugslots.slots_audio:
+					if x not in used_plugins: used_plugins.append(x)
 				convproj_obj.instruments[newinstid] = new_inst
 				convproj_obj.instruments_order.append(newinstid)
 			else:
@@ -38,7 +40,7 @@ def convert(convproj_obj, change_instnames):
 			if convproj_obj.instruments[newinstid].fxrack_channel == -1:
 				convproj_obj.instruments[newinstid].fxrack_channel = track_obj.fxrack_channel 
 		
-		if change_instnames:	  
+		if change_instnames:
 			track_obj.placements.notelist.appendtxt_inst('rm2m__'+trackid+'__', '')
 
 		for audiopl_obj in track_obj.placements.pl_audio:

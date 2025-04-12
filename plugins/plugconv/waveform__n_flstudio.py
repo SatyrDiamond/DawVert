@@ -15,14 +15,16 @@ threeosc_shapes = {
 	6: 4}
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flp']
 		in_dict['out_plugins'] = [['native', 'tracktion', None]]
 		in_dict['out_daws'] = ['waveform_edit']
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+		
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.subtype == None: plugin_obj.type.subtype = ''
 	
 		if plugin_obj.type.subtype.lower() == 'fruity balance':  

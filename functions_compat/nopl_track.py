@@ -4,19 +4,21 @@
 from objects.convproj import placements
 from objects import notelist_splitter
 
-def process(convproj_obj, in__track_nopl, out__track_nopl, out_type):
+def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_intent):
 
 	if in__track_nopl == True and out__track_nopl == False:
 
 		if convproj_obj.type in (['r'] if 'r' in out_type else ['r', 'rm']): 
 			timesigblocks_obj = notelist_splitter.timesigblocks()
-			timesigblocks_obj.create_points_cut(convproj_obj)
+			timesigblocks_obj.create_points_cut(convproj_obj, dawvert_intent)
 
 			if 'do_singlenotelistcut' in convproj_obj.do_actions:
-				npsplit = notelist_splitter.cvpj_notelist_splitter(timesigblocks_obj, convproj_obj.time_ppq, 1)
-				for cvpj_trackid, track_obj in convproj_obj.track__iter(): 
-					npsplit.add_nl(track_obj.placements)
+				npsplit = notelist_splitter.cvpj_notelist_splitter(timesigblocks_obj, convproj_obj.time_ppq)
+				mplacements = [track_obj.placements for cvpj_trackid, track_obj in convproj_obj.track__iter()]
+				for cvpj_trackid, track_obj in convproj_obj.track__iter():
+					npsplit.add_plnl(track_obj.placements)
 				npsplit.process()
+				return True
 			else:
 				for cvpj_trackid, track_obj in convproj_obj.track__iter(): 
 					placement_obj = track_obj.placements.add_notes()
@@ -24,7 +26,8 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type):
 					placement_obj.time.duration = track_obj.placements.notelist.get_dur()
 					track_obj.placements.notelist.clear()
 				return True
-		else: return False
+		else: 
+			return False
 
 	elif in__track_nopl == False and out__track_nopl == True:
 		if convproj_obj.type in ['r']: 
@@ -36,6 +39,8 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type):
 				track_obj.placements.pl_notes.clear()
 
 			return True
+		else: 
+			return False
 
 	else: return False
 	

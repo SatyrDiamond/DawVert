@@ -35,6 +35,8 @@ def do_sample_part(sampler_params, sampleref_obj, sp_obj):
 		dur = sampleref_obj.dur_samples
 		hz = sampleref_obj.hz
 
+		sp_obj.convpoints_samples(sampleref_obj)
+
 		sampler_params['loop_on'] = int(sp_obj.loop_active)
 
 		if hz:
@@ -61,14 +63,61 @@ def do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj):
 			sampler_params['env_sustain'] = adsr_obj.sustain
 			sampler_params['env_release'] = adsr_obj.release/2
 
+def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted,):
+	if_found, autodata = convproj_obj.automation.get(autopath, valtype)
+
+	if if_found:
+		rpp_env.used = True
+		rpp_env.eguid.set('{'+str(uuid.uuid4()).upper()+'}')
+
+		if autodata.u_pl_points:
+			if autodata.pl_points:
+				rpp_env.used = True
+				rpp_env.act['bypass'] = 1
+				rpp_env.arm.set(1)
+				
+				for n, p in enumerate(autodata.pl_points):
+					poolid = len(rpp_project.pooledenvs)+1
+					pooledenv = rpp_project.add_pooledenv()
+					pooledenv.id.set(poolid)
+					if p.visual.name: pooledenv.name.set(p.visual.name)
+					pooledenv.srclen.set(p.time.duration_real*2)
+					for pn, x in enumerate(p.data):
+						out = float(x.value)
+						if inverted: out = 1-out
+						if n==0 and pn==0: rpp_env.points.append([0, out])
+						pooledenv.points.append([(x.pos_real*2), out, 5 if x.tension else 0, -x.tension])
+	
+					init_pooledenvinst = rpp_env.init_pooledenvinst()
+					init_pooledenvinst['id'] = poolid
+					init_pooledenvinst['unk1'] = poolid
+					init_pooledenvinst['position'] = p.time.position_real
+					init_pooledenvinst['length'] = p.time.duration_real
+	
+					#print(init_pooledenvinst.values)
+
+		elif autodata.u_nopl_points:
+			autodata.nopl_points.remove_instant()
+			for x in autodata.nopl_points:
+				out = float(x.value)
+				if inverted: out = 1-out
+
+				if x.tension == 0:
+					rpp_env.points.append([x.pos_real, out, 0])
+				else:
+					rpp_env.points.append([x.pos_real, out, 5, 1, 0, 0, -x.tension])
+
 def add_auto(rpp_env, autopoints_obj):
 	for x in autopoints_obj:
 		rpp_env.points.append([x.pos_real, x.value])
 
-def add_plugin(rpp_fxchain, pluginid, convproj_obj):
+def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+
 	if plugin_found:
 		fx_on, fx_wet = plugin_obj.fxdata_get()
+
+		pitch = track_obj.params.get('pitch',0).value
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
 			sp_obj = plugin_obj.samplepart_get('sample')
@@ -79,6 +128,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
 			sampler_params['pitch_start'] = (-60/80)/2 + 0.5
 			sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
+			sampler_params['pitch_offset'] = (pitch/80)/2 + 0.5
 
 			adsr_obj = plugin_obj.env_asdr_get('vol')
 			do_sample_part(sampler_params, sampleref_obj, sp_obj)
@@ -87,6 +137,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 			make_sampler(rpp_fxchain, sampler_params)
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'multi'):
+			adsr_obj = plugin_obj.env_asdr_get('vol')
 			for sampleregion in plugin_obj.sampleregions:
 				key_l, key_h, key_r, samplerefid, extradata = sampleregion
 
@@ -103,20 +154,49 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				sampler_params['pitch_start'] = (pitch/80)/2 + 0.5
 				sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
 				_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+
 				do_sample_part(sampler_params, sampleref_obj, sp_obj)
+				if sampleref_obj:
+					adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
+					do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
+				make_sampler(rpp_fxchain, sampler_params)
+
+		if plugin_obj.check_wildmatch('universal', 'sampler', 'drums'):
+			adsr_obj = plugin_obj.env_asdr_get('vol')
+			for sampleregion in plugin_obj.sampleregions:
+				key_l, key_h, key_r, samplerefid, extradata = sampleregion
+
+				sp_obj = plugin_obj.samplepart_get(samplerefid)
+
+				sampler_params = base_sampler.copy()
+				sampler_params['mode'] = 2
+				sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
+				sampler_params['key_start'] = (key_l+60)/127
+				sampler_params['key_end'] = (key_h+60)/127
+
+				pitch = -60 + key_l+60 - key_r
+
+				sampler_params['pitch_start'] = (pitch/80)/2 + 0.5
+				sampler_params['obey_note_offs'] = 0
+				_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+
+				#do_sample_part(sampler_params, sampleref_obj, sp_obj)
+				if sampleref_obj:
+					adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
+					#do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
 				make_sampler(rpp_fxchain, sampler_params)
 
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			vst_fx_fourid = plugin_obj.datavals_global.get('fourid', 0)
+			vst_fx_fourid = plugin_obj.external_info.fourid
 			if vst_fx_fourid:
 				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
 				vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-				vst_fx_datatype = plugin_obj.datavals_global.get('datatype', None)
-				vst_fx_numparams = plugin_obj.datavals_global.get('numparams', 0)
+				vst_fx_datatype = plugin_obj.external_info.datatype
+				vst_fx_numparams = max(plugin_obj.external_info.numparams, 0)
 
-				rpp_vst_obj.vst_name = plugin_obj.datavals_global.get('basename', '')
-				if not rpp_vst_obj.vst_name: plugin_obj.datavals_global.get('name', '')
+				rpp_vst_obj.vst_name = plugin_obj.external_info.basename
+				if not rpp_vst_obj.vst_name: rpp_vst_obj.vst_name = plugin_obj.external_info.name
 
 				rpp_vst_obj.vst_lib = os.path.basename(vst_fx_path)
 				rpp_vst_obj.vst_fourid = vst_fx_fourid
@@ -157,20 +237,20 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				rpp_plug_obj.wet['wet'] = fx_wet
 				if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_all_external(pluginid):
 					parmenv_obj = rpp_plug_obj.add_env()
 					parmenv_obj.param_id = paramnum
-					add_auto(parmenv_obj, autodata)
+					add_auto_all(rpp_project, convproj_obj, parmenv_obj, list(autoloc), 'float', False)
 			else:
 				logger_output.warning('VST2 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			vst_fx_id = plugin_obj.datavals_global.get('id', 0)
+			vst_fx_id = plugin_obj.external_info.id
 			if vst_fx_id:
 				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_fxchain.add_vst()
-				vst_fx_name = plugin_obj.datavals_global.get('name', None)
+				vst_fx_name = plugin_obj.external_info.name
 				vst_fx_path = plugin_obj.getpath_fileref(convproj_obj, 'file', None, True)
-				vst_fx_version = plugin_obj.datavals_global.get('version', None)
+				vst_fx_version = plugin_obj.external_info.version
 
 				chunkdata = plugin_obj.rawdata_get('chunk')
 				vstparams = struct.pack('II', len(chunkdata), 1)+chunkdata+b'\x00\x00\x00\x00\x00\x00\x00\x00'
@@ -181,6 +261,7 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 					else: vstheader += b'\x00\x00\x00\x00\x00\x00\x00\x00'
 				vstheader_end = (len(chunkdata)+16).to_bytes(4, 'little')+b'\x01\x00\x00\x00\xff\xff\x10\x00'
 
+				rpp_vst_obj.vst_name = plugin_obj.external_info.name
 				rpp_vst_obj.vst_fourid = 0
 				rpp_vst_obj.vst3_uuid = vst_fx_id
 				rpp_vst_obj.data_con = vstheader+vstheader_end
@@ -189,32 +270,33 @@ def add_plugin(rpp_fxchain, pluginid, convproj_obj):
 				rpp_plug_obj.wet['wet'] = fx_wet
 				if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_all_external(pluginid):
 					parmenv_obj = rpp_plug_obj.add_env()
 					parmenv_obj.param_id = paramnum
-					add_auto(parmenv_obj, autodata)
+					add_auto_all(rpp_project, convproj_obj, parmenv_obj, list(autoloc), 'float', False)
 			else:
 				logger_output.warning('VST3 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'clap', None):
-			clap_fx_id = plugin_obj.datavals_global.get('id', '')
+			clap_fx_id = plugin_obj.external_info.id
 			if clap_fx_id:
 				rpp_plug_obj, rpp_clap_obj, rpp_guid = rpp_fxchain.add_clap()
 				clap_fx_name = plugin_obj.visual.name
-	
+				if not clap_fx_name: clap_fx_name = plugin_obj.external_info.name
+
 				chunkdata = plugin_obj.rawdata_get('chunk')
 				rpp_clap_obj.data_chunk = chunkdata
-				rpp_clap_obj.clap_name = clap_fx_name
+				if clap_fx_name: rpp_clap_obj.clap_name = clap_fx_name
 				rpp_clap_obj.clap_id = clap_fx_id
 	
 				rpp_plug_obj.bypass['bypass'] = not fx_on
 				rpp_plug_obj.wet['wet'] = fx_wet
 				if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-				for autoloc, autodata, paramnum in convproj_obj.automation.iter_nopl_points_external(pluginid):
+				for autoloc, autodata, paramnum in convproj_obj.automation.iter_all_external(pluginid):
 					parmenv_obj = rpp_plug_obj.add_env()
 					parmenv_obj.param_id = paramnum
-					add_auto(parmenv_obj, autodata)
+					add_auto_all(rpp_project, convproj_obj, parmenv_obj, list(autoloc), 'float', False)
 			else:
 				logger_output.warning('CLAP plugin not placed: no ID found.')
 
@@ -240,13 +322,13 @@ def midi_add_cmd(i_list, i_pos, i_cmd):
 	if i_pos not in i_list: i_list[i_pos] = []
 	i_list[i_pos].append(i_cmd)
 
-def convert_midi(rpp_source_obj,notelist, tempo, num, dem, notespl_obj):
+def convert_midi(rpp_source_obj,notelist, tempo, num, dem, midipl_obj):
 	i_list = {}
 	notelist.sort()
 	notelist.change_timings(960, False)
 
 	n_enddur = notelist.get_dur()
-	p_enddur = notespl_obj.time.duration*(960//4)
+	p_enddur = midipl_obj.time.duration*(960//4)
 
 	for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notelist.iter():
 		for t_key in t_keys:
@@ -285,12 +367,30 @@ def do_fade(fade_data, fadevals, bpm):
 	fadevals['fade_type'] = 2
 	fadevals['curve'] = 0
 
+def do_auto_clip(placement_obj, rpp_env, mpetype, paramtype, invert, instant): 
+	if mpetype in placement_obj.auto:
+		autopoints_obj = placement_obj.auto[mpetype]
+		autopoints_obj.remove_instant()
+		rpp_env.used = True
+		rpp_env.act['bypass'] = 1
+		for x in autopoints_obj:
+			out = float(x.value)
+			if invert: out = 1-out
+			rpp_env.points.append([x.pos_real, out])
+
 class output_reaper(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'REAPER'
-	def get_shortname(self): return 'reaper'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'REAPER'
+	
+	def get_shortname(self):
+		return 'reaper'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'rpp'
 		in_dict['placement_cut'] = True
@@ -298,16 +398,18 @@ class output_reaper(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['audio_stretch'] = ['rate']
+		in_dict['notes_midi'] = True
+		in_dict['auto_types'] = ['nopl_points', 'pl_points']
+		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
-		from objects.file_proj import proj_reaper
+	
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import reaper as proj_reaper
 		from objects.file_proj._rpp import fxchain as rpp_fxchain
 		from objects.file_proj._rpp import source as rpp_source
 
@@ -331,7 +433,30 @@ class output_reaper(plugins.base):
 		rpp_project.tempo['num'] = convproj_obj.timesig[0]
 		rpp_project.tempo['denom'] = convproj_obj.timesig[1]
 
+		groupassoc = {}
+		groupcounter = 2
+
+		if convproj_obj.metadata.name:
+			rpp_project.title.set(convproj_obj.metadata.name)
+		if convproj_obj.metadata.author:
+			rpp_project.author.set(convproj_obj.metadata.author)
+		for t in convproj_obj.metadata.comment_text.replace("\r\n", "\r").replace("\n", "\r").split('\r'):
+			rpp_project.notes_data.append(t)
+		if convproj_obj.metadata.show == 1:
+			rpp_project.notes_vals.read([3,3])
+
+		rpp_project.loop.set(int(convproj_obj.transport.loop_active))
+		rpp_project.selection['start'] = convproj_obj.transport.loop_start
+		rpp_project.selection['end'] = convproj_obj.transport.loop_end
+		rpp_project.cursor.set(convproj_obj.transport.current_pos)
+
 		track_uuids = ['{'+str(uuid.uuid4())+'}' for _ in convproj_obj.track__iter()]
+
+		for num, timemarker_obj in enumerate(convproj_obj.timemarkers):
+			name = timemarker_obj.visual.name if timemarker_obj.visual.name else ''
+			color = cvpj_color_to_reaper_color(timemarker_obj.visual.color) if timemarker_obj.visual.color else 0
+			outmarker = [num+1, timemarker_obj.position, name, 0, color, 1, 'R', '{'+str(uuid.uuid4()).upper()+'}', 0]
+			rpp_project.markers.append(outmarker)
 
 		trackdata = []
 
@@ -343,9 +468,33 @@ class output_reaper(plugins.base):
 
 			rpp_track_obj.trackid.set(track_uuid)
 			if track_obj.visual.name: rpp_track_obj.name.set(track_obj.visual.name)
-			if track_obj.visual.color: rpp_track_obj.peakcol.set(cvpj_color_to_reaper_color(track_obj.visual.color))
+			if track_obj.visual.color: 
+				rpp_track_obj.peakcol.set(cvpj_color_to_reaper_color(track_obj.visual.color))
 			rpp_track_obj.volpan['vol'] = track_obj.params.get('vol', 1.0).value
 			rpp_track_obj.volpan['pan'] = track_obj.params.get('pan', 0).value
+			rpp_track_obj.mutesolo['mute'] = int(not track_obj.params.get('enabled', 1).value)
+			rpp_track_obj.mutesolo['solo'] = int(track_obj.params.get('solo', 0).value)
+
+			pan_mode = track_obj.datavals.get('pan_mode', '')
+			if pan_mode == 'mono': rpp_track_obj.panmode.set(3)
+			if pan_mode == 'stereo': rpp_track_obj.panmode.set(5)
+			if pan_mode == 'split': 
+				rpp_track_obj.panmode.set(6)
+				rpp_track_obj.volpan['left'] = track_obj.params.get('splitpan_left', -1).value
+				rpp_track_obj.volpan['right'] = track_obj.params.get('splitpan_right', 1).value
+
+			for pluginid in track_obj.plugslots.slots_mixer:
+				plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+				if plugin_found:
+					if plugin_obj.check_match('universal', 'invert', None):
+						inverse_on, _ = plugin_obj.fxdata_get()
+						rpp_track_obj.iphase.set(int(inverse_on))
+
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.volenv2, ['track', trackid, 'vol'], "float", False)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.panenv2, ['track', trackid, 'pan'], "float", False)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.muteenv, ['track', trackid, 'enabled'], "bool", True)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.dualpanenvl2, ['track', trackid, 'splitpan_left'], "float", False)
+			add_auto_all(rpp_project, convproj_obj, rpp_track_obj.dualpanenv2, ['track', trackid, 'splitpan_right'], "float", False)
 
 			rpp_track_obj.rec['armed'] = int(track_obj.armed.on)
 
@@ -355,6 +504,9 @@ class output_reaper(plugins.base):
 			if plugin_found: middlenote += plugin_obj.datavals_global.get('middlenotefix', 0)
 
 			rpp_track_obj.fxchain = rpp_fxchain.rpp_fxchain()
+
+			rpp_track_obj.playoffs['time'] = track_obj.latency_offset/1000
+			rpp_track_obj.playoffs['mode'] = 0 if track_obj.latency_offset else 1
 
 			if middlenote != 0:
 				rpp_plug_obj, rpp_vst_obj, rpp_guid = rpp_track_obj.fxchain.add_vst()
@@ -368,30 +520,60 @@ class output_reaper(plugins.base):
 				rpp_vst_obj.vst_fourid = 1919118692
 				rpp_vst_obj.vst_uuid = '56535472636D64726561636F6E74726F'
 
-			for notespl_obj in track_obj.placements.pl_notes:
+			for midipl_obj in track_obj.placements.pl_midi:
 
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
-				if notespl_obj.time.cut_type == 'cut': rpp_item_obj.soffs.set(notespl_obj.time.cut_start/8/tempomul)
-				rpp_item_obj.position.set(notespl_obj.time.position_real)
-				rpp_item_obj.length.set(notespl_obj.time.duration_real)
-				rpp_item_obj.mute['mute'] = int(notespl_obj.muted)
-				if notespl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(notespl_obj.visual.color))
-				if notespl_obj.visual.name: rpp_item_obj.name.set(notespl_obj.visual.name)
+				if midipl_obj.time.cut_type == 'cut': rpp_item_obj.soffs.set(midipl_obj.time.cut_start/8/tempomul)
+				rpp_item_obj.position.set(midipl_obj.time.position_real)
+				rpp_item_obj.length.set(midipl_obj.time.duration_real)
+				rpp_item_obj.mute['mute'] = int(midipl_obj.muted)
+				if midipl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(midipl_obj.visual.color))
+				if midipl_obj.visual.name: rpp_item_obj.name.set(midipl_obj.visual.name)
 				rpp_source_obj = rpp_item_obj.source = rpp_source.rpp_source()
+
+				midievents_obj = midipl_obj.midievents
+
 				rpp_source_obj.type = 'MIDI'
 				rpp_source_obj.hasdata.used = True
 				rpp_source_obj.hasdata['hasdata'] = 1
+				rpp_source_obj.hasdata['ppq'] = midievents_obj.ppq
 
-				convert_midi(rpp_source_obj,notespl_obj.notelist,reaper_tempo,'4','4',notespl_obj)
+				do_auto_clip(midipl_obj, rpp_item_obj.volenv, 'gain', 'float', False, False)
+				do_auto_clip(midipl_obj, rpp_item_obj.panenv, 'pan', 'float', False, False)
+				do_auto_clip(midipl_obj, rpp_item_obj.muteenv, 'mute', 'bool', False, True)
+				do_auto_clip(midipl_obj, rpp_item_obj.pitchenv, 'pitch', 'float', False, False)
+
+				midievents_obj.sort()
+				midievents_obj.del_note_durs()
+				midievents_obj.sort()
+
+				ppos = 0
+				for x in midievents_obj.iter_events():
+					etype = x[1]
+					posdir = int(x[0])-ppos
+					if etype == 'NOTE_ON':
+						rpp_source_obj.notes.append([False,	posdir, f'{(144+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
+						ppos = int(x[0])
+					if etype == 'NOTE_OFF':
+						rpp_source_obj.notes.append([False,	posdir, f'{(128+int(x[2])):x}', f'{(int(x[3])):x}', '00'])
+						ppos = int(x[0])
+
+				#convert_midi(rpp_source_obj,midipl_obj.notelist,reaper_tempo,'4','4',midipl_obj)
+
+				if midipl_obj.locked: rpp_item_obj.lock.set(int(midipl_obj.locked))
+
+				if midipl_obj.group:
+					groupidtr = midipl_obj.group
+					if groupidtr not in groupassoc:
+						groupassoc[groupidtr] = groupcounter
+						groupcounter += 1
+					rpp_item_obj.group.set(groupassoc[groupidtr])
 
 			for audiopl_obj in track_obj.placements.pl_audio:
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 
-				audiorate = audiopl_obj.sample.stretch.calc_real_speed
 				clip_startat = 0
-				if audiopl_obj.time.cut_type == 'cut': clip_startat = audiopl_obj.time.cut_start/8
-				clip_startat *= audiopl_obj.sample.stretch.calc_tempo_speed
-				rpp_item_obj.soffs.set(clip_startat)
+				if audiopl_obj.time.cut_type == 'cut': clip_startat = (audiopl_obj.time.cut_start/8)/tempomul
 
 				rpp_item_obj.position.set(audiopl_obj.time.position_real)
 				rpp_item_obj.length.set(audiopl_obj.time.duration_real)
@@ -401,11 +583,74 @@ class output_reaper(plugins.base):
 				rpp_item_obj.volpan['vol'] = audiopl_obj.sample.vol
 				rpp_item_obj.volpan['pan'] = audiopl_obj.sample.pan
 
+				do_auto_clip(audiopl_obj, rpp_item_obj.volenv, 'gain', 'float', False, False)
+				do_auto_clip(audiopl_obj, rpp_item_obj.panenv, 'pan', 'float', False, False)
+				do_auto_clip(audiopl_obj, rpp_item_obj.muteenv, 'mute', 'bool', False, True)
+				do_auto_clip(audiopl_obj, rpp_item_obj.pitchenv, 'pitch', 'float', False, False)
+
 				do_fade(audiopl_obj.fade_in, rpp_item_obj.fadein, reaper_tempo)
 				do_fade(audiopl_obj.fade_out, rpp_item_obj.fadeout, reaper_tempo)
 
-				rpp_item_obj.playrate['rate'] = audiorate
-				rpp_item_obj.playrate['preserve_pitch'] = int(audiopl_obj.sample.stretch.preserve_pitch)
+				sp_obj = audiopl_obj.sample
+				stretch_obj = sp_obj.stretch
+
+				rppart_audio_params = 0
+				rppart_audio_stretch = 0
+
+				if stretch_obj.algorithm == 'elastique_v3':
+					if stretch_obj.algorithm_mode == 'pro': rppart_audio_stretch = 9
+					if stretch_obj.algorithm_mode == 'efficient': rppart_audio_stretch = 10
+					if stretch_obj.algorithm_mode == 'mono': rppart_audio_stretch = 11
+					if stretch_obj.algorithm_mode == 'speech': 
+						rppart_audio_stretch = 11
+						rppart_audio_params = 2
+
+				if stretch_obj.algorithm == 'elastique_v2':
+					if stretch_obj.algorithm_mode == 'pro': rppart_audio_stretch = 6
+					if stretch_obj.algorithm_mode == 'efficient': rppart_audio_stretch = 7
+					if stretch_obj.algorithm_mode == 'mono': rppart_audio_stretch = 8
+					if stretch_obj.algorithm_mode == 'speech': 
+						rppart_audio_stretch = 8
+						rppart_audio_params = 2
+
+				if stretch_obj.algorithm == 'rubberband': rppart_audio_stretch = 13
+
+				if stretch_obj.algorithm == 'soundtouch':
+					stmode = stretch_obj.params['mode'] if 'mode' in stretch_obj.params else None
+					if stmode == 'hq': rppart_audio_params = 1
+					elif stmode == 'fast': rppart_audio_params = 2
+
+				if stretch_obj.algorithm == 'simple_windowing': rppart_audio_stretch = 2
+
+				rpp_item_obj.playrate['stretch_mode'] = (rppart_audio_stretch<<16) + rppart_audio_params
+
+				if not stretch_obj.is_warped:
+					audiorate = stretch_obj.calc_real_speed
+					rpp_item_obj.playrate['rate'] = audiorate
+					clip_startat *= audiorate
+				else:
+					warp_obj = stretch_obj.warp
+					warprate = warp_obj.speed
+					audiorate = warprate*tempomul
+					rpp_item_obj.playrate['rate'] = round(audiorate, 14) 
+					rpp_item_obj.stretchmarks = []
+
+					offmod = clip_startat
+					offmod *= warprate
+					offmod *= tempomul
+					offmod = round(offmod, 7)
+
+					warp_obj.fix__onlyone()
+					warp_obj.manp__speed_mul(warprate)
+					for num, warp_point_obj in enumerate(warp_obj.points__iter()):
+						m_beat = (warp_point_obj.beat/4)*2
+						m_second = warp_point_obj.second
+						m_beat -= offmod
+						rpp_item_obj.stretchmarks.append([m_beat, m_second])
+
+				rpp_item_obj.soffs.set(clip_startat)
+
+				rpp_item_obj.playrate['preserve_pitch'] = int(stretch_obj.preserve_pitch)
 				rpp_item_obj.playrate['pitch'] = audiopl_obj.sample.pitch
 
 				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
@@ -420,11 +665,44 @@ class output_reaper(plugins.base):
 						rpp_insource_obj = rpp_source_obj.source = rpp_source.rpp_source()
 						file_source(rpp_insource_obj, fileref_obj, filename)
 
+				if audiopl_obj.locked: rpp_item_obj.lock.set(int(audiopl_obj.locked))
+
+				if audiopl_obj.group:
+					groupidtr = audiopl_obj.group
+					if groupidtr not in groupassoc:
+						groupassoc[groupidtr] = groupcounter
+						groupcounter += 1
+					rpp_item_obj.group.set(groupassoc[groupidtr])
+
+			for videopl_obj in track_obj.placements.pl_video:
+				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
+
+				clip_startat = 0
+				if videopl_obj.time.cut_type == 'cut': clip_startat = (videopl_obj.time.cut_start/8)/tempomul
+
+				rpp_item_obj.position.set(videopl_obj.time.position_real)
+				rpp_item_obj.length.set(videopl_obj.time.duration_real)
+				rpp_item_obj.mute['mute'] = int(videopl_obj.muted)
+				if videopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(videopl_obj.visual.color))
+				if videopl_obj.visual.name: rpp_item_obj.name.set(videopl_obj.visual.name)
+				rpp_item_obj.volpan['vol'] = videopl_obj.vol
+
+				clip_startat = 0
+				if videopl_obj.time.cut_type == 'cut': clip_startat = (videopl_obj.time.cut_start/8)/tempomul
+				rpp_item_obj.soffs.set(clip_startat)
+
+				ref_found, fileref_obj = convproj_obj.fileref__get(videopl_obj.video_fileref)
+				if ref_found:
+					filename = fileref_obj.get_path(None, False)
+					rpp_source_obj = rpp_item_obj.source = rpp_source.rpp_source()
+					rpp_source_obj.type = 'VIDEO'
+					rpp_source_obj.file.set(filename)
+	
 			for fxid in track_obj.plugslots.slots_synths:
-				add_plugin(rpp_track_obj.fxchain, fxid, convproj_obj)
+				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj, track_obj)
 
 			for fxid in track_obj.plugslots.slots_audio:
-				add_plugin(rpp_track_obj.fxchain, fxid, convproj_obj)
+				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj, track_obj)
 
 			trackdata.append(rpp_track_obj)
 
@@ -439,10 +717,16 @@ class output_reaper(plugins.base):
 					for target, send_obj in sends_obj.iter():
 						if target in convproj_obj.track_order:
 							trackrecnum = convproj_obj.track_order.index(target)
-							auxrecv_obj = trackdata[trackrecnum].add_auxrecv()
+							rpp_track = trackdata[trackrecnum]
+							auxrecv_obj = rpp_track.add_auxrecv()
 							auxrecv_obj['tracknum'] = tracksendnum
 							auxrecv_obj['vol'] = send_obj.params.get('amount', 1).value
 							auxrecv_obj['pan'] = send_obj.params.get('pan', 0).value
-
+							if send_obj.sendautoid:
+								aux_env = rpp_track.add_aux_env('vol', tracksendnum)
+								add_auto_all(rpp_project, convproj_obj, aux_env, ['send', send_obj.sendautoid, 'amount'], 'float', False)
+								aux_env = rpp_track.add_aux_env('pan', tracksendnum)
+								add_auto_all(rpp_project, convproj_obj, aux_env, ['send', send_obj.sendautoid, 'pan'], 'float', False)
 		
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

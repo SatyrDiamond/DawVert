@@ -7,6 +7,10 @@ import os
 import logging
 import numpy as np
 from functions_plugin_ext import plugin_vst2
+from objects import globalstore
+
+DATASETPATH = './data_ext/dataset/airwindows.dset'
+DATASETNAME = 'airwindows'
 
 logger_plugins = logging.getLogger('plugins')
 
@@ -67,7 +71,7 @@ class extplugin(plugins.base):
 	def check_plug(self, plugin_obj): 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			arwindb.load_db()
-			checkvst = plugin_obj.datavals_global.get('fourid', 0)
+			checkvst = plugin_obj.external_info.fourid
 			if checkvst in arwindb.dbdata['vst2_id']: return 'vst2'
 		return None
 
@@ -76,7 +80,7 @@ class extplugin(plugins.base):
 	def decode_data(self, plugintype, plugin_obj):
 		arwindb.load_db()
 		if plugintype == 'vst2':
-			checkvst = plugin_obj.datavals_global.get('fourid', 0)
+			checkvst = plugin_obj.external_info.fourid
 			namefound = np.where(checkvst==arwindb.dbdata['vst2_id'])[0]
 			if len(namefound):
 				chunkdata = plugin_obj.rawdata_get('chunk')
@@ -95,6 +99,7 @@ class extplugin(plugins.base):
 				param_obj.visual.name = dbd['params']['visname'][n]
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		if not (self.plugin_data is None):
 			dbd, paramdata = self.plugin_data
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
@@ -107,6 +112,7 @@ class extplugin(plugins.base):
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		arwindb.load_db()
 		namefound = np.where(plugin_obj.type.subtype==arwindb.dbdata['name'])[0]
 		if len(namefound):

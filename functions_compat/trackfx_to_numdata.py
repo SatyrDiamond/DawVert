@@ -9,6 +9,11 @@ class to_numdata:
 		self.idnum_return = {}
 		self.idnum_group = {}
 
+	def trackfx_to_numdata_send_from_return(self, dest, sends_obj):
+		for target, send_obj in sends_obj.iter():
+			if target in self.idnum_return:
+				send_amt = send_obj.params.get('amount',1).value
+				self.output_ids[dest][4].append([self.idnum_return[target], send_amt, send_obj.sendautoid])
 
 	def trackfx_to_numdata_track(self, convproj_obj, trackid, ingroupnum):
 		if ingroupnum == None: self.output_ids.append([self.tracknum, 'track', trackid, [-1, 1, None], []  ])
@@ -17,12 +22,8 @@ class to_numdata:
 
 		track_obj = convproj_obj.track_data[trackid]
 		self.tracknum = self.idnum_tracks[trackid]
-		for target, send_obj in track_obj.sends.iter():
-			if target in self.idnum_return:
-				send_amt = send_obj.params.get('amount',1).value
-				self.output_ids[self.tracknum][4].append([self.idnum_return[target], send_amt, send_obj.sendautoid])
+		self.trackfx_to_numdata_send_from_return(self.tracknum, track_obj.sends)
 		self.tracknum += 1
-
 
 	def trackfx_to_numdata(self, convproj_obj, order_mode): 
 		group_trk = {}
@@ -50,6 +51,7 @@ class to_numdata:
 				if parent_group != None: groups_inside[self.tracknum] = parent_group
 				self.idnum_group[groupid] = self.tracknum
 				self.output_ids.append([self.tracknum, 'group', groupid, [-1, 1, None], []  ])
+				self.trackfx_to_numdata_send_from_return(self.tracknum, group_obj.sends)
 				self.tracknum += 1
 				if order_mode == 0:
 					for trackid in group_trk[groupid]:

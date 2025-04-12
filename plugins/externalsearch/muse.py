@@ -14,13 +14,19 @@ def muse_getvalue(fallback, xmldata, name):
 		else: return outval[0].text
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'muse'
-	def get_name(self): return 'MusE'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['lin']
+	def get_shortname(self):
+		return 'muse'
+	
+	def get_name(self):
+		return 'MusE'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict):
+		in_dict['supported_os'] = ['lin']
+	
 	def import_plugins(self):
-
 		l_path_muse = os.path.join(globalstore.home_folder,".cache", "MusE", "MusE", "scanner")
 		vst2count = 0
 		ladspacount = 0

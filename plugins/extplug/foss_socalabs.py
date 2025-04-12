@@ -21,6 +21,9 @@ dt_socalabsdb = np.dtype([
 		('vst3_id', np.str_, 32)
 		])
 
+DATASETPATH = './data_ext/dataset/socalabs.dset'
+DATASETNAME = 'socalabs'
+
 class socalabsdb():
 	dbdata = np.zeros(0, dtype=dt_socalabsdb)
 	db_filename = './data_ext/json/socalabs.json'
@@ -64,17 +67,17 @@ class extplugin(plugins.base):
 	def check_plug(self, plugin_obj):
 		socalabsdb.load_db()
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			checkvst = plugin_obj.datavals_global.get('fourid', 0)
+			checkvst = plugin_obj.external_info.fourid
 			if checkvst in socalabsdb.dbdata['vst2_id']: return 'vst2'
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			checkvst = plugin_obj.datavals_global.get('id', '')
+			checkvst = plugin_obj.external_info.id
 			if checkvst in socalabsdb.dbdata['vst3_id']: return 'vst3'
 		return None
 
 	def decode_data(self, plugintype, plugin_obj):
 		socalabsdb.load_db()
 		if plugintype == 'vst2':
-			checkvst = plugin_obj.datavals_global.get('fourid', 0)
+			checkvst = plugin_obj.external_info.fourid
 			namefound = np.where(checkvst==socalabsdb.dbdata['vst2_id'])[0]
 			if len(namefound):
 				chunkdata = plugin_obj.rawdata_get('chunk')
@@ -83,7 +86,7 @@ class extplugin(plugins.base):
 				self.plugin_type = 'vst2'
 				return True
 		if plugintype == 'vst3':
-			checkvst = plugin_obj.datavals_global.get('id', '')
+			checkvst = plugin_obj.external_info.id
 			namefound = np.where(checkvst==socalabsdb.dbdata['vst3_id'])[0]
 			if len(namefound):
 				chunkdata = plugin_obj.rawdata_get('chunk')
@@ -105,6 +108,7 @@ class extplugin(plugins.base):
 			return True
 
 	def params_from_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		if self.plugin_data:
 			plugname = self.plugin_data[0]['name']
 			manufile = '.\\data_ext\\remap\\socalabs\\'+plugname+'.csv'
@@ -129,6 +133,7 @@ class extplugin(plugins.base):
 		return False
 
 	def params_to_plugin(self, convproj_obj, plugin_obj, pluginid, plugintype):
+		globalstore.dataset.load(DATASETNAME, DATASETPATH)
 		socalabsdb.load_db()
 		namefound = np.where(plugin_obj.type.subtype==socalabsdb.dbdata['name'])[0]
 		if len(namefound):

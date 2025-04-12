@@ -3,6 +3,7 @@ import traceback
 import glob
 import logging
 from importlib import util
+from objects.data_bytes import bytereader
 
 logger_plugins = logging.getLogger('plugins')
 
@@ -28,6 +29,7 @@ class info_daw:
 		self.fxchain_mixer = False
 		self.fxtype = 'none'
 		self.time_seconds = False
+		self.notes_midi = False
 		self.projtype = '?'
 
 	def from_dict(self, indict):
@@ -52,6 +54,7 @@ class info_daw:
 		if 'fxtype' in indict: self.fxtype = indict['fxtype']
 		if 'time_seconds' in indict: self.time_seconds = indict['time_seconds']
 		if 'projtype' in indict: self.projtype = indict['projtype']
+		if 'notes_midi' in indict: self.notes_midi = indict['notes_midi']
 
 class info_plugconv:
 	def __init__(self):
@@ -124,10 +127,112 @@ class info_externalsearch:
 	def from_dict(self, indict):
 		if 'supported_os' in indict: self.supported_os = indict['supported_os']
 		
+class dv_plugin_bindetect:
+	def __init__(self):
+		self.used = False
+		self.type = 'bytes'
+		self.headers = []
+		self.containers = []
+		self.container_only = False
 
+	def detect_container__file(self, inpath):
+		if os.path.exists(inpath):
+			byw_reader = bytereader.bytereader()
+			byw_reader.load_file(inpath)
+			for containerd in self.containers:
 
+				if containerd[0] == 'gzip':
+					bytepos = containerd[1] if len(containerd)>1 else 0
+					byw_reader.seek(bytepos)
+					if byw_reader.raw(3) == b'\x1f\x8b\x08':
+						import gzip
+						if self.type == 'bytes':
+							try:
+								d = open(inpath, 'rb')
+								d.seek(bytepos)
+								f = gzip.GzipFile(fileobj=d)
+								return self.detect_headers__data(f.read(512))
+							except:
+								return False
+						else:
+							return False
 
+				if containerd[0] == 'zlib':
+					bytepos = containerd[1] if len(containerd)>1 else 0
+					byw_reader.seek(bytepos)
+					if byw_reader.raw(2) in [b'\x78\x08', b'\x78\x5E', b'\x78\x9C', b'\x78\xDA']:
+						import zlib
+						byw_reader.seek(bytepos)
+						if self.type == 'bytes':
+							try:
+								decomp_obj = zlib.decompressobj(wbits=zlib.MAX_WBITS)
+								data = decomp_obj.decompress(byw_reader.raw(1024), max_length=512)
+								return self.detect_headers__data(data)
+							except:
+								return False
+						else:
+							return False
 
+				if containerd[0] == 'zip':
+					byw_reader.seek(0)
+					if byw_reader.raw(4) == b'PK\x03\x04':
+						import zipfile
+						import fnmatch
+						try:
+							zip_data = zipfile.ZipFile(inpath, 'r')
+							validnames = [x for x in zip_data.namelist() if fnmatch.fnmatch(x, containerd[1])]
+							if validnames: return True
+							else: return False
+						except:
+							return False
+						return False
+			return False
+		else:
+			return False
+
+	def detect_headers__data(self, indata):
+		if self.type == 'bytes':
+			byw_reader = bytereader.bytereader(indata)
+			outseries = []
+			for x in self.headers:
+				if byw_reader.end>x[0]+len(x[1]):
+					byw_reader.seek(x[0])
+					outseries.append(byw_reader.raw(len(x[1]))==x[1])
+				else: outseries.append(False)
+			return all(outseries) if outseries else False
+		if self.type == 'xml':
+			import xml.etree.ElementTree as ET
+			try: 
+				tree = ET.fromstring(indata)
+				root = tree.getroot()
+				for x in self.headers:
+					if root.tag == x[0]: return True
+				return False
+			except:
+				return False
+
+	def detect_headers__file(self, inpath):
+		if os.path.exists(inpath):
+			if self.type == 'bytes':
+				byw_reader = bytereader.bytereader()
+				byw_reader.load_file(inpath)
+				outseries = []
+				for x in self.headers:
+					if byw_reader.end>x[0]+len(x[1]):
+						byw_reader.seek(x[0])
+						outseries.append(byw_reader.raw(len(x[1]))==x[1])
+					else: outseries.append(False)
+				return all(outseries) if outseries else False
+			if self.type == 'xml':
+				import xml.etree.ElementTree as ET
+				try: 
+					tree = ET.parse(inpath)
+					root = tree.getroot()
+					for x in self.headers:
+						if root.tag == x[0]: return True
+					return False
+				except:
+					return False
 
 
 
@@ -139,10 +244,10 @@ class dv_plugin:
 		self.prop = {}
 		self.prop_obj = None
 		self.plug_obj = None
-		self.supported_autodetect = False
 		self.priority = 100
 		self.usable = True
 		self.usable_meg = ''
+		self.detectdef = dv_plugin_bindetect()
 
 	def propproc(self):
 		if self.type in ['input','output']:
@@ -185,7 +290,6 @@ class dv_plugin:
 			propobj.from_dict(self.prop)
 			self.prop_obj = propobj
 
-
 class plugin_selector:
 	def __init__(self, plugintype, loaded_plugins):
 		self.selected_shortname = None
@@ -211,37 +315,36 @@ class plugin_selector:
 				return dvplugsn
 
 	def set_auto(self, indata):
-		if self.plugintype in self.pluginlist:
-			for shortname, dvplugin in self.pluginlist[self.plugintype].items():
-				if dvplugin.supported_autodetect:
-					funclist = dir(dvplugin.plug_obj)
-					if 'detect' in funclist:
-						try:
-							detected_format = dvplugin.plug_obj.detect(indata)
-							if detected_format:
-								self.selected_shortname = shortname
-								self.selected_plugin = self.pluginlist[self.plugintype][shortname]
-								logger_plugins.info('Auto-Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
-								return shortname
-						except PermissionError:
-							pass
-		self.unset()
+		outname = self.set_auto_keepset(indata)
+		if not outname: self.unset()
+		return outname
 
-	def set_auto_keepset(self, indata):
+	def set_auto_keepset(self, inpath):
 		if self.plugintype in self.pluginlist:
-			for shortname, dvplugin in self.pluginlist[self.plugintype].items():
-				if dvplugin.supported_autodetect:
-					funclist = dir(dvplugin.plug_obj)
-					if 'detect' in funclist:
-						try:
-							detected_format = dvplugin.plug_obj.detect(indata)
-							if detected_format:
-								self.selected_shortname = shortname
-								self.selected_plugin = self.pluginlist[self.plugintype][shortname]
-								logger_plugins.info('Auto-Set '+self.plugintype+' plugin: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
-								return shortname
-						except PermissionError:
-							pass
+
+			d_containers = {}
+			d_non_containers = []
+
+			outd = [(shortname, dvplugin.detectdef) for shortname, dvplugin in self.pluginlist[self.plugintype].items() if dvplugin.detectdef.used]
+
+			outname = None
+
+			for shortname, detectdef_obj in outd:
+				try:
+					detectf = detectdef_obj.detect_container__file(inpath)
+					if detectf: outname = shortname
+					elif not detectdef_obj.container_only:
+						ddd = detectdef_obj.detect_headers__file(inpath)
+						if ddd: 
+							outname = shortname
+				except:
+					pass
+
+			if outname:
+				self.selected_shortname = outname
+				self.selected_plugin = self.pluginlist[self.plugintype][outname]
+				logger_plugins.info('Auto-Set '+self.plugintype+' plugin from data: '+self.selected_shortname+' ('+ self.selected_plugin.name+')')
+				return outname
 
 	def get_prop_obj(self):
 		return self.selected_plugin.prop_obj if self.selected_plugin else None
@@ -294,14 +397,18 @@ class base:
 			if dvplug_obj.shortname not in base.loaded_plugins:
 				dvplug_obj.type = plugintype
 				dvplug_obj.plug_obj = in_object
-				if 'supported_autodetect' in dir(in_object): dvplug_obj.supported_autodetect = in_object.supported_autodetect()
+
 				if 'get_priority' in dir(in_object): dvplug_obj.priority = in_object.get_priority()
 				if 'get_name' in dir(in_object): dvplug_obj.name = in_object.get_name()
+				if 'get_detect_info' in dir(in_object): 
+					dvplug_obj.detectdef.used = True
+					in_object.get_detect_info(dvplug_obj.detectdef)
 				in_object.get_prop(dvplug_obj.prop)
 				dvplug_obj.propproc()
 				base.loaded_plugins[plugintype][dvplug_obj.shortname] = dvplug_obj
 
-		except Exception: 
+		except: 
+			traceback.print_exc()
 			pass
 
 	def create_selector(plug_type):
@@ -327,7 +434,8 @@ class base:
 				try: 
 					load_module(os.path.join(dirpath, filename))
 					plugincount += 1
-				except Exception: traceback.print_exc()
+				except: 
+					traceback.print_exc()
 		if plug_type in base.loaded_plugins: 
 			base.loaded_plugins[plug_type] = dict(sorted(base.loaded_plugins[plug_type].items()))
 		logger_plugins.info('Loaded '+str(plugincount)+' '+plug_type+' Plugins.')

@@ -6,7 +6,7 @@ from objects.file_proj._ableton.clip import *
 from objects.file_proj._ableton.fileref import *
 from objects.file_proj._ableton.midiclip import *
 from objects.file_proj._ableton.audioclip import *
-from objects.file_proj import proj_ableton
+from objects.file_proj import ableton as proj_ableton
 
 import xml.etree.ElementTree as ET
 

@@ -8,11 +8,18 @@ import xml.etree.ElementTree as ET
 from objects import globalstore
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'waveform'
-	def get_name(self): return 'Waveform'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['win', 'lin']
+	def get_shortname(self):
+		return 'waveform'
+	
+	def get_name(self):
+		return 'Waveform'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict):
+		in_dict['supported_os'] = ['win', 'lin']
+
 	def import_plugins(self):
 		if globalstore.os_platform == 'win': searchpath = os.path.join(globalstore.home_folder, "AppData", "Roaming", "Tracktion", "Waveform")
 		if globalstore.os_platform == 'lin': searchpath = os.path.join(globalstore.home_folder, ".config", "Tracktion", "Waveform")

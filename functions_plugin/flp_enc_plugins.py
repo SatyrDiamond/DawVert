@@ -45,8 +45,8 @@ def setparams(convproj_obj, plugin_obj):
 		slicer_bpm = plugin_obj.datavals.get('bpm', 4)
 		slicer_pitch = int(sre_obj.pitch*100)
 		slicer_fitlen = int(math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
-		slicer_att = plugin_obj.datavals.get('fade_in', 4)
-		slicer_dec = plugin_obj.datavals.get('fade_out', 4)
+		slicer_att = int(plugin_obj.datavals.get('fade_in', 4))
+		slicer_dec = int(plugin_obj.datavals.get('fade_out', 4))
 		
 		if sre_obj.stretch.algorithm == 'elastique_pro': 
 			if sre_obj.stretch.algorithm_mode == 'transient': slicer_stretchtype = 3
@@ -72,7 +72,7 @@ def setparams(convproj_obj, plugin_obj):
 		bytesout.uint32(len(sre_obj.slicer_slices))
 		for slice_obj in sre_obj.slicer_slices:
 			bytesout.c_string__int8__nonull(slice_obj.name)
-			bytesout.uint32(int(slice_obj.start//(sampleref_obj.channels/2)))
+			bytesout.uint32(int(slice_obj.start))
 			bytesout.int32(slice_obj.custom_key+60 if slice_obj.is_custom_key else -1)
 			bytesout.uint16(0)
 			bytesout.uint8(128)
@@ -173,10 +173,10 @@ def setparams(convproj_obj, plugin_obj):
 		fl_pluginparams = bytesout.getvalue()
 
 	if plugin_obj.check_wildmatch('native', 'flstudio', None):
-		outbytes = plugin_obj.to_bytes('fl_studio', 'fl_studio', 'plugin', plug_type[1], None)
+		outbytes = plugin_obj.to_bytes('fl_studio', 'fl_studio', 'plugin', plug_type[2], None)
 
 		if outbytes:
-			fl_plugin = plug_type[1]
+			fl_plugin = plug_type[2]
 			fl_pluginparams = outbytes
 		else:
 			fl_pluginparams = plugin_obj.rawdata_get('fl')
@@ -207,12 +207,12 @@ def setparams(convproj_obj, plugin_obj):
 		fl_pluginparams += b'\xff\xff\xff\xff\x00\xff\xff\xff\xff\x00\x00'
 
 	if plugin_obj.check_wildmatch('external', 'vst2', None):
-		vst_numparams = plugin_obj.datavals_global.get('numparams', 0)
+		vst_numparams = plugin_obj.external_info.numparams
 		vst_current_program = plugin_obj.current_program
 		vst_use_program = plugin_obj.program_used
-		vst_datatype = plugin_obj.datavals_global.get('datatype', 'chunk')
-		vst_fourid = plugin_obj.datavals_global.get('fourid', 0)
-		vst_name = plugin_obj.datavals_global.get('name', None)
+		vst_datatype = plugin_obj.external_info.datatype
+		vst_fourid = plugin_obj.external_info.fourid
+		vst_name = plugin_obj.external_info.name
 
 		ref_found, fileref_obj = plugin_obj.fileref__get_global('plugin', convproj_obj)
 		vst_path = fileref_obj.get_path('win', False) if ref_found else None
@@ -220,10 +220,10 @@ def setparams(convproj_obj, plugin_obj):
 		isvalid = True
 		if vst_fourid:
 			if vst_name or vst_path:
-				if vst_datatype in ['chunk', 'param']:
+				if vst_datatype in ['chunk', 'param', 'bank']:
 					isvalid = True
 				else:
-					logger_output.warning('VST2 plugin not placed: unknown datatype:', vst_datatype)
+					logger_output.warning('VST2 plugin not placed: unknown datatype:', str(vst_datatype))
 			else:
 				logger_output.warning('VST2 plugin not placed: name or file path not found.')
 		else:
@@ -247,7 +247,7 @@ def setparams(convproj_obj, plugin_obj):
 					wrapper_state.raw(b'\x00\x00\x00\x00\x00\x00\x00\x00')
 					wrapper_state.raw(vstdata_bytes)
 
-			if vst_datatype == 'param':
+			if vst_datatype in ['param', 'bank']:
 				prognums = list(plugin_obj.programs)
 				prognum = prognums.index(plugin_obj.current_program) if plugin_obj.current_program in prognums else 0
 	

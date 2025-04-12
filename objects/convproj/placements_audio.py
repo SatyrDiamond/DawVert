@@ -12,8 +12,10 @@ from objects.convproj import time
 from objects.convproj import sample_entry
 
 class cvpj_placements_audio:
-	__slots__ = ['data']
-	def __init__(self):
+	__slots__ = ['data','time_ppq','time_float']
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
 		self.data = []
 
 	def __iter__(self):
@@ -25,7 +27,7 @@ class cvpj_placements_audio:
 	def __bool__(self):
 		return bool(self.data)
 
-	def merge_crop(self, apl_obj, pos, dur, visualfill):
+	def merge_crop(self, apl_obj, pos, dur, visualfill, groupid):
 		for n in apl_obj.data:
 			if n.time.position < dur:
 				copy_apl_obj = copy.deepcopy(n)
@@ -37,10 +39,11 @@ class cvpj_placements_audio:
 					copy_apl_obj.visual.name = visualfill.name
 				if visualfill.color and not copy_apl_obj.visual.color:
 					copy_apl_obj.visual.color = visualfill.color
+				copy_apl_obj.group = groupid
 				self.data.append(copy_apl_obj)
 
 	def add(self):
-		pl_obj = cvpj_placement_audio()
+		pl_obj = cvpj_placement_audio(self.time_ppq, self.time_float)
 		self.data.append(pl_obj)
 		return pl_obj
 
@@ -50,7 +53,7 @@ class cvpj_placements_audio:
 	def get_start(self):
 		start_final = 100000000000000000
 		for pl in self.data:
-			pl_start = pl.position
+			pl_start = pl.time.position
 			if pl_start < start_final: start_final = pl_start
 		return start_final
 
@@ -61,23 +64,54 @@ class cvpj_placements_audio:
 			if duration_final < pl_end: duration_final = pl_end
 		return duration_final
 
+	def change_timings(self, time_ppq, time_float):
+		for pl in self.data:
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			if pl.auto:
+				for mpename, autodata in pl.auto.items():
+					autodata.change_timings(time_ppq, time_float)
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+
 	def change_seconds(self, is_seconds, bpm, ppq):
 		for pl in self.data: 
 			pl.time.change_seconds(is_seconds, bpm, ppq)
+			for _, a in pl.auto.items(): a.change_seconds(is_seconds, bpm, ppq)
+
 		
 	def remove_loops(self, out__placement_loop):
 		new_data = []
 		for audiopl_obj in self.data: 
-			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'] and audiopl_obj.time.cut_type not in out__placement_loop:
+			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_eq', 'loop_adv', 'loop_adv_off'] and audiopl_obj.time.cut_type not in out__placement_loop:
+
 				loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
-				duration = audiopl_obj.time.duration
-				for cutpoint in xtramath.cutloop(audiopl_obj.time.position, duration, loop_start, loop_loopstart, loop_loopend):
+				if audiopl_obj.time.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
+					dur = audiopl_obj.time.duration
+					offset = audiopl_obj.time.cut_start
+	
 					cutplpl_obj = copy.deepcopy(audiopl_obj)
-					cutplpl_obj.time.position = cutpoint[0]
-					cutplpl_obj.time.duration = cutpoint[1]
-					cutplpl_obj.time.cut_type = 'cut'
-					cutplpl_obj.time.cut_start = cutpoint[2]
+					cutplpl_obj.time.duration = min(loop_loopend-offset, dur)
+					cutplpl_obj.time.set_offset(audiopl_obj.time.cut_start)
 					new_data.append(cutplpl_obj)
+	
+					if dur>loop_loopend:
+						cutplpl_obj = copy.deepcopy(audiopl_obj)
+						cutplpl_obj.time.position += loop_loopend-offset
+						cutplpl_obj.time.duration = (dur-loop_loopend)+offset
+						cutplpl_obj.time.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
+						new_data.append(cutplpl_obj)
+
+				else:
+					loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
+					duration = audiopl_obj.time.duration
+					duration = duration+audiopl_obj.time.cut_start if audiopl_obj.time.cut_type == 'loop_eq' else duration
+					for cutpoint in xtramath.cutloop(audiopl_obj.time.position, duration, loop_start, loop_loopstart, loop_loopend):
+						cutplpl_obj = copy.deepcopy(audiopl_obj)
+						cutplpl_obj.time.position = cutpoint[0]
+						cutplpl_obj.time.duration = cutpoint[1]
+						cutplpl_obj.time.cut_type = 'cut'
+						cutplpl_obj.time.cut_start = cutpoint[2]
+						new_data.append(cutplpl_obj)
 			else: new_data.append(audiopl_obj)
 
 			for n, x in enumerate(new_data):
@@ -122,25 +156,45 @@ class cvpj_placements_audio:
 		for x in self.data:
 			x.changestretch(convproj_obj, target, tempo)
 
+	def remove_overlaps(self):
+		old_data_audio = copy.deepcopy(self.data)
+		new_data_audio = []
+
+		prev = None
+		for pl in old_data_audio:
+			endpos = pl.time.duration+pl.time.position
+			if prev:
+				poevendpos = prev.time.duration+prev.time.position
+				prev.time.duration = min(prev.time.duration, pl.time.position-prev.time.position)
+			prev = pl
+			new_data_audio.append(pl)
+
+		self.data = new_data_audio
+
 
 class cvpj_placement_audio:
-	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto']
+	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto','time_ppq','time_float','group','locked']
 
-	def __init__(self):
-		self.time = placements.cvpj_placement_timing()
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.muted = False
 		self.sample = sample_entry.cvpj_sample_entry()
 		self.visual = self.sample.visual
 		self.fade_in = placements.cvpj_placement_fade()
 		self.fade_out = placements.cvpj_placement_fade()
 		self.auto = {}
+		self.group = None
+		self.locked = False
 
 	def changestretch(self, convproj_obj, target, tempo):
 		stretch_obj = self.sample.stretch
 		pos_offset, cut_offset, finalspeed = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
 
-		if self.time.cut_type == 'cut':
+		if self.time.cut_type in ['cut', 'none']:
 			self.time.cut_start += cut_offset
+			self.time.cut_type = 'cut'
 		if self.time.cut_type == 'loop':
 			self.time.cut_loopend += cut_offset
 			self.time.cut_loopstart += cut_offset
@@ -158,8 +212,10 @@ class cvpj_placement_audio:
 		self.time.loop_scale(pitch)
 
 class cvpj_placements_nested_audio:
-	__slots__ = ['data']
-	def __init__(self):
+	__slots__ = ['data','time_ppq','time_float']
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
 		self.data = []
 
 	def __iter__(self):
@@ -169,7 +225,7 @@ class cvpj_placements_nested_audio:
 		return bool(self.data)
 
 	def add(self):
-		pl_obj = cvpj_placement_nested_audio()
+		pl_obj = cvpj_placement_nested_audio(self.time_ppq, self.time_float)
 		self.data.append(pl_obj)
 		return pl_obj
 
@@ -183,22 +239,32 @@ class cvpj_placements_nested_audio:
 	def remove_loops(self, out__placement_loop):
 		self.data = placements.internal_removeloops(self.data, out__placement_loop)
 
+	def change_timings(self, time_ppq, time_float):
+		for pl in self.data:
+			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			for x in pl.events: x.time.change_timing(self.time_ppq, time_ppq, time_float)
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+
 	def change_seconds(self, is_seconds, bpm):
 		for pl in self.data: pl.change_seconds(is_seconds, bpm)
 
 class cvpj_placement_nested_audio:
-	__slots__ = ['time','visual','events','fade_in','fade_out','muted']
+	__slots__ = ['time','visual','events','fade_in','fade_out','muted','time_ppq','time_float','locked']
 
-	def __init__(self):
-		self.time = placements.cvpj_placement_timing()
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.visual = visual.cvpj_visual()
 		self.events = []
 		self.muted = False
 		self.fade_in = placements.cvpj_placement_fade()
 		self.fade_out = placements.cvpj_placement_fade()
+		self.locked = False
 
 	def add(self):
-		apl_obj = cvpj_placement_audio()
+		apl_obj = cvpj_placement_audio(self.time_ppq, self.time_float)
 		self.events.append(apl_obj)
 		return apl_obj
 

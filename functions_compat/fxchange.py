@@ -17,8 +17,10 @@ def move_fx0_to_mastertrack(convproj_obj):
 		fxchannel_obj.params.move(convproj_obj.track_master.params, 'pan')
 		convproj_obj.track_master.plugslots.slots_audio = fxchannel_obj.plugslots.slots_audio.copy()
 		convproj_obj.track_master.plugslots.slots_mixer = fxchannel_obj.plugslots.slots_mixer.copy()
+		convproj_obj.track_master.plugslots.slots_audio_enabled = fxchannel_obj.plugslots.slots_audio_enabled
 		fxchannel_obj.plugslots.slots_audio = []
 		fxchannel_obj.plugslots.slots_mixer = []
+		convproj_obj.track_master.latency_offset = fxchannel_obj.latency_offset
 		del convproj_obj.fxrack[0]
 
 def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, doboth, autoloc):
@@ -29,8 +31,10 @@ def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, doboth, 
 	if data_obj.visual.color: fxchannel_obj.visual.color = data_obj.visual.color.copy()
 	fxchannel_obj.plugslots.slots_audio = data_obj.plugslots.slots_audio.copy()
 	fxchannel_obj.plugslots.slots_mixer = data_obj.plugslots.slots_mixer.copy()
+	fxchannel_obj.plugslots.slots_audio_enabled = data_obj.plugslots.slots_audio_enabled
 	data_obj.plugslots.slots_audio = []
 	data_obj.plugslots.slots_mixer = []
+	fxchannel_obj.latency_offset = data_obj.latency_offset
 
 	vol = data_obj.params.get('vol', 1).value
 	data_obj.params.remove('vol')
@@ -50,7 +54,7 @@ def track2fxrack(convproj_obj, data_obj, fxnum, defualtname, starttext, doboth, 
 
 	return fxchannel_obj
 
-def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
+def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 	in_fxtype = convproj_obj.fxtype
 	out_fxtype = out_dawinfo.fxtype
 	#print('fxchange: '+in_fxtype+' > '+out_fxtype+' - Proj Type: '+convproj_obj.type)
@@ -84,10 +88,12 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 		fxchannel_obj.params = copy.deepcopy(convproj_obj.track_master.params)
 		fxchannel_obj.plugslots.slots_audio = convproj_obj.track_master.plugslots.slots_audio.copy()
 		fxchannel_obj.plugslots.slots_mixer = convproj_obj.track_master.plugslots.slots_mixer.copy()
+		fxchannel_obj.plugslots.slots_audio_enabled = convproj_obj.track_master.plugslots.slots_audio_enabled
 		convproj_obj.track_master.plugslots.slots_audio = []
 		convproj_obj.track_master.plugslots.slots_mixer = []
 		convproj_obj.automation.move(['master','vol'], ['fxmixer','0','vol'])
 		convproj_obj.automation.move(['master','pan'], ['fxmixer','0','pan'])
+		fxchannel_obj.latency_offset = convproj_obj.track_master.latency_offset
 		for count, iterval in enumerate(convproj_obj.instrument__iter()):
 			fxnum = count+1
 			inst_id, inst_obj = iterval
@@ -96,6 +102,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 			fxchannel_obj.params = copy.deepcopy(inst_obj.params)
 			fxchannel_obj.plugslots.slots_audio = inst_obj.plugslots.slots_audio.copy()
 			fxchannel_obj.plugslots.slots_mixer = inst_obj.plugslots.slots_mixer.copy()
+			fxchannel_obj.plugslots.slots_audio_enabled = inst_obj.plugslots.slots_audio_enabled
 			inst_obj.plugslots.slots_audio = []
 			inst_obj.plugslots.slots_mixer = []
 			inst_obj.fxrack_channel = fxnum
@@ -107,10 +114,15 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 
 	elif in_fxtype == 'none' and out_fxtype == 'rack' and convproj_obj.type in ['r', 'ri', 'rm', 'ms', 'rs']:
 		tracknum = 1
+		
+		track2fxrack(convproj_obj, convproj_obj.track_master, 0, 'Master', '', True, ['master'])
+
 		for trackid, track_obj in convproj_obj.track__iter():
 			fxchannel_obj = track2fxrack(convproj_obj, track_obj, tracknum, '', '', True, ['track',trackid])
 			track_obj.fxrack_channel = tracknum
+			track_obj.placements.add_fxrack_channel(tracknum)
 			tracknum += 1
+		return True
 
 	elif in_fxtype == 'groupreturn' and out_fxtype == 'rack' and convproj_obj.type in ['r', 'ri', 'rm', 'ms', 'rs']:
 		t2m = trackfx_to_numdata.to_numdata()
@@ -143,7 +155,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 
 			fxchannel_obj.sends.add(output_id[3][0]+1, output_id[3][2], output_id[3][1])
 
-			for senddata in output_id[4]: 
+			for senddata in output_id[4]:
 				fxchannel_obj.sends.add(senddata[0]+1, senddata[2], senddata[1])
 				#fxchannel_obj.sends[5].to_master_active = False
 
@@ -205,6 +217,8 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				fxchannel_obj.params.move(group_obj.params, 'pan')
 				group_obj.plugslots.slots_audio = fxchannel_obj.plugslots.slots_audio.copy()
 				group_obj.plugslots.slots_mixer = fxchannel_obj.plugslots.slots_mixer.copy()
+				group_obj.plugslots.slots_audio_enabled = fxchannel_obj.plugslots.slots_audio_enabled
+				group_obj.latency_offset = fxchannel_obj.latency_offset
 				fxchannel_obj.plugslots.slots_audio = []
 				fxtracks = fx_trackids[fx_num]
 				if fxchannel_obj.visual.name: group_obj.visual.name = fxchannel_obj.visual.name
@@ -280,6 +294,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 			track_obj.visual = fx_obj.visual
 			track_obj.visual.name = '[FX '+str(fxnum)+'] '+(track_obj.visual.name if track_obj.visual.name else '')
 			track_obj.plugslots.slots_audio = fx_obj.plugslots.slots_audio.copy()
+			track_obj.plugslots.slots_audio_enabled = fx_obj.plugslots.slots_audio_enabled
 			fx_obj.plugslots.slots_audio = []
 
 			convproj_obj.trackroute['fxrack_'+str(fxnum)].to_master_active = fx_obj.sends.to_master_active
@@ -326,6 +341,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 			group_obj.visual = track_obj.visual.copy()
 			group_obj.plugslots.slots_audio = track_obj.plugslots.slots_audio
 			group_obj.plugslots.slots_mixer = track_obj.plugslots.slots_mixer
+			group_obj.plugslots.slots_audio_enabled = track_obj.plugslots.slots_audio_enabled
 
 		return True
 
@@ -365,7 +381,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 
 		return True
 
-	elif in_fxtype == 'groupreturn' and out_fxtype == 'route' and convproj_obj.type in ['r', 'ri', 'rm', 'ms', 'rs']:
+	elif in_fxtype == 'groupreturn' and out_fxtype == 'route' and convproj_obj.type in ['r', 'ri', 'rs']:
 
 		convproj_obj.fx__route__clear()
 		strgrptrk = convproj_obj.group__iter_stream_inside()
@@ -390,24 +406,47 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type):
 				group_obj = convproj_obj.fx__group__get(i)
 				track_obj = convproj_obj.track__add(oi, 'fx', 1, 0)
 				track_obj.visual = group_obj.visual.copy()
+				track_obj.params = group_obj.params
+				track_obj.datavals = group_obj.datavals
+				track_obj.plugslots.slots_audio = group_obj.plugslots.slots_audio.copy()
+				convproj_obj.automation.move(['group',i,'vol'], ['track',oi,'vol'])
+				convproj_obj.automation.move(['group',i,'pan'], ['track',oi,'pan'])
 				if track_obj.visual.name: track_obj.visual.name = '[Group] '+track_obj.visual.name
 				else: track_obj.visual.name = '[Group]'
+
+				trackr = convproj_obj.fx__route__add(oi)
+				for i, x in group_obj.sends.iter():
+					send_obj = trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj.sendautoid = x.sendautoid
 
 			if t == 'TRACK':
 				track_obj = old_track_data[i]
 				senddat = track_obj.sends.data
+
 				trackr = convproj_obj.fx__route__add(oi)
 				for i, x in track_obj.sends.iter():
-					trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj = trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj.sendautoid = x.sendautoid
+
 				convproj_obj.track_data[oi] = track_obj
 				convproj_obj.track_order.append(oi)
+
+				convproj_obj.automation.move(['group',i,'vol'], ['track',oi,'vol'])
+				convproj_obj.automation.move(['group',i,'pan'], ['track',oi,'pan'])
 			num += 1
 
 		for returnid, return_obj in convproj_obj.track_master.returns.items(): 
-			track_obj = convproj_obj.track__add('RETURN_'+returnid, 'fx', 1, 0)
+			oi = 'RETURN_'+returnid
+			track_obj = convproj_obj.track__add(oi, 'fx', 1, 0)
 			track_obj.visual = return_obj.visual.copy()
 			if track_obj.visual.name: track_obj.visual.name = '[Return] '+track_obj.visual.name
 			else: track_obj.visual.name = '[Return]'
+
+			trackr = convproj_obj.fx__route__add(oi)
+			for i, x in return_obj.sends.iter():
+				if 'RETURN_'+i != oi:
+					send_obj = trackr.add('RETURN_'+i, None, x.params.get('amount', 0).value)
+					send_obj.sendautoid = x.sendautoid
 
 		convproj_obj.fx__group__clear()
 		return True

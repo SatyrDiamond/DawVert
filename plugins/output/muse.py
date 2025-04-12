@@ -53,8 +53,8 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 			pluginsupported = True
 			muse_track.synth_synthType = 'VST (synths)'
 
-			vstname = plugin_obj.datavals_global.get('name', '')
-			vstclass = plugin_obj.datavals_global.get('name', '')
+			vstname = plugin_obj.external_info.name
+			vstclass = plugin_obj.external_info.name
 			if vstclass == 'Vitalium': vstclass = 'vitalium'
 			muse_track.synth_class = vstclass
 			muse_track.synth_label = vstname
@@ -75,7 +75,7 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 	synthidnum += 1
 
 def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
-	from objects.file_proj import proj_muse
+	from objects.file_proj import muse as proj_muse
 	global tracknum
 	global synthidnum
 	logger_output.info('MusE:  Midi Track '+str(tracknum)+(': '+trackname if trackname else ''))
@@ -112,7 +112,7 @@ WAVE_FREQUENCY = 48000
 wavetime = WAVE_FREQUENCY/768
 
 def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bpm):
-	from objects.file_proj import proj_muse
+	from objects.file_proj import muse as proj_muse
 	global tracknum
 	global synthidnum
 	logger_output.info('MusE:  Wave Track '+str(tracknum)+(': '+track_obj.visual.name if track_obj.visual.name else ''))
@@ -171,11 +171,18 @@ def add_timesig(x_siglist, pos, numerator, denominator):
 	addvalue(x_sig, 'denom', str(int(denominator)))
 
 class output_cvpj(plugins.base):
-	def __init__(self): pass
-	def get_name(self): return 'MusE'
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'muse'
-	def gettype(self): return 'r'
+	def get_name(self):
+		return 'MusE'
+	
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'muse'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'med'
 		in_dict['plugin_arch'] = [64]
@@ -187,10 +194,9 @@ class output_cvpj(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['projtype'] = 'r'
-	def getsupportedplugins(self): return []
-	def getfileextension(self): return 'med'
-	def parse(self, convproj_obj, output_file):
-		from objects.file_proj import proj_muse
+	
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import muse as proj_muse
 		global tracknum
 		global synthidnum
 		tracknum = 1
@@ -249,4 +255,5 @@ class output_cvpj(plugins.base):
 		#	timesig_point.denom = value[1]
 		#	project_obj.siglist.append(timesig_point)
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

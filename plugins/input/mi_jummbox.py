@@ -60,8 +60,11 @@ class jummbox_autotype():
 	def get_data(self):
 		autoloc, m_add, m_mul = None, 0, 1
 
-		if self.tracknum == -1:
-			if self.param == 2:    return ['master', 'vol'], 0, 0.01
+		if self.tracknum == -2:
+			if self.param == 0:  return ['main', 'bpm'], 180, 1
+		elif self.tracknum == -1:
+			if self.param == 0:  return ['main', 'bpm'], 30, 1
+			elif self.param == 2:    return ['master', 'vol'], 0, 0.01
 			elif self.param == 1:  return ['main', 'bpm'], 30, 1
 			elif self.param == 3:  return ['slot', 'main_reverb', 'wet'], 0, 1/32
 			elif self.param == 17: return ['main', 'pitch'], 250, 0.01
@@ -134,11 +137,12 @@ def get_harmonics(harmonics_obj, i_harmonics):
 	harmonics_obj.add(n+2, i_harmonics[-1]/100, {})
 
 def get_asdr(plugin_obj, bb_inst, jummbox_obj):
+	bb_data = bb_inst.data
 	a_attack = bb_inst.fadeInSeconds
 	a_decay = 3
 	a_sustain = 1
 	a_release = abs(bb_inst.fadeOutTicks)/(jummbox_obj.ticksPerBeat*32)
-	if bb_inst.type == 'Picked String' and 'stringSustain' in bb_inst.data: a_sustain = bb_inst.data['stringSustain']/100
+	if bb_inst.type == 'Picked String' and 'stringSustain' in bb_data: a_sustain = bb_data['stringSustain']/100
 	plugin_obj.env_asdr_add('vol', 0, a_attack, 0, a_decay, a_sustain, a_release, 1)
 
 def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
@@ -180,6 +184,16 @@ def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
 					autopoint_obj.value = point['pitchBend']
 
 def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
+
+	if 'chord type' in bb_fx.used:
+		if bb_fx.chord == 'arpeggio' and bb_fx.arpeggioSpeed:
+			nfx_plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'arpeggiator', None)
+			nfx_plugin_obj.role = 'notefx'
+			nfx_plugin_obj.datavals.add('mode', 'sort')
+			timing_obj = nfx_plugin_obj.timing_add('main')
+			timing_obj.set_steps((1/4)/(bb_fx.arpeggioSpeed/12), convproj_obj)
+			inst_obj.plugslots.slots_notes.append(pluginid)
+
 	if 'echo' in bb_fx.used:
 		from objects.inst_params import fx_delay
 		fx_pluginid = cvpj_instid+'_echo'
@@ -196,7 +210,7 @@ def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 	if 'distortion' in bb_fx.used:
 		fxplugin_obj = addfx(convproj_obj, inst_obj, 'simple', cvpj_instid, 'distortion', None)
 		fxplugin_obj.visual.name = 'Distortion'
-		param_obj = fxplugin_obj.params.add_named('amount', bb_fx.distortion/100, 'float', 'Amount')
+		fxplugin_obj.params.add_named('amount', bb_fx.distortion/100, 'float', 'Amount')
 	
 	if 'bitcrusher' in bb_fx.used:
 		fxplugin_obj = addfx(convproj_obj, inst_obj, 'universal', cvpj_instid, 'bitcrush', None)
@@ -216,26 +230,31 @@ def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 		fxplugin_obj.fxdata_add(1, bb_fx.reverb/100)
 						
 class input_jummbox(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'jummbox'
-	def get_name(self): return 'Beepbox/Jummbox'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'jummbox'
+	
+	def get_name(self):
+		return 'Beepbox/Jummbox'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['json']
 		in_dict['file_ext_detect'] = False
 		in_dict['auto_types'] = ['pl_points']
 		in_dict['track_lanes'] = True
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_included'] = ['native:jummbox','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
+		in_dict['plugin_included'] = ['native:jummbox','universal:midi','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
 		in_dict['projtype'] = 'mi'
 
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_jummbox
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import jummbox as proj_jummbox
 
 		convproj_obj.type = 'mi'
-		convproj_obj.set_timings(16, True)
 
 		globalstore.dataset.load('beepbox', './data_main/dataset/beepbox.dset')
 
@@ -245,7 +264,8 @@ class input_jummbox(plugins.base):
 		rawchipwaves_obj = rawchipwaves()
 		rawchipwaves_obj.load_from_file(os.path.join('data_main','text','beepbox_shapes.txt')) 
 
-		bytestream = open(input_file, 'r', encoding='utf8')
+		if dawvert_intent.input_mode == 'file':
+			bytestream = open(dawvert_intent.input_file, 'r', encoding='utf8')
 
 		try:
 			jummbox_json = json.load(bytestream)
@@ -255,6 +275,9 @@ class input_jummbox(plugins.base):
 			raise ProjectFileParserException('jummbox: JSON parsing error: '+str(t))
 
 		jummbox_obj = proj_jummbox.jummbox_project(jummbox_json)
+
+		convproj_obj.set_timings(8*(jummbox_obj.beatsPerBar/8), True)
+
 		convproj_obj.params.add('bpm', jummbox_obj.beatsPerMinute, 'float')
 		convproj_obj.track_master.params.add('vol', jummbox_obj.masterGain, 'float')
 		if jummbox_obj.name: convproj_obj.metadata.name = jummbox_obj.name
@@ -264,7 +287,7 @@ class input_jummbox(plugins.base):
 		durpos = jummbox_obj.get_durpos()
 
 		convproj_obj.timesig = [4,8]
-		convproj_obj.timemarker__from_patlenlist(durpos, -1)
+		convproj_obj.timemarker__from_patlenlist(durpos, jummbox_obj.introBars)
 
 		for channum, bb_chan in enumerate(jummbox_obj.channels):
 			if bb_chan.type in ['pitch', 'drum']:
@@ -281,21 +304,27 @@ class input_jummbox(plugins.base):
 					cvpj_volume = (bb_inst.volume/50)+0.5
 					preset = str(bb_inst.preset) if bb_inst.preset else None
 
-					main_dso = globalstore.dataset.get_obj('beepbox', 'preset', bb_inst.preset)
-					ds_bb = main_dso.midi if main_dso else None
-
 					midifound = False
-					if ds_bb:
-						if ds_bb.used != False:
-							midifound = True
-							inst_obj, plugin_obj = convproj_obj.instrument__add_from_dset(cvpj_instid, preset, 'beepbox', preset, None, bb_color)
+					if preset:
+						main_dso = globalstore.dataset.get_obj('beepbox', 'preset', preset)
+						ds_bb = main_dso.midi if main_dso else None
+						if ds_bb:
+							if ds_bb.used != False:
+								midifound = True
+								inst_obj = convproj_obj.instrument__add(cvpj_instid)
+								inst_obj.plugslots.set_synth(cvpj_instid)
+								inst_obj.visual.name = main_dso.visual.name
+								plugin_obj = convproj_obj.plugin__addspec__midi(cvpj_instid, 0, 0, ds_bb.patch, False, 'gm')
+								inst_obj.plugslots.set_synth(cvpj_instid)
 
 					if not midifound:
 						inst_obj = convproj_obj.instrument__add(cvpj_instid)
 						inst_obj.plugslots.set_synth(cvpj_instid)
 						plugin_obj = convproj_obj.plugin__add(cvpj_instid, 'native', 'jummbox', bb_inst.type)
 
-						if 'unison' in bb_inst.data: plugin_obj.datavals.add('unison', bb_inst.data['unison'])
+						bb_data = bb_inst.data
+
+						if 'unison' in bb_data: plugin_obj.datavals.add('unison', bb_data['unison'])
 
 						if bb_chan.type == 'pitch': inst_obj.visual.from_dset('beepbox', 'inst', bb_inst.type, False)
 						if bb_chan.type == 'drum': 
@@ -303,63 +332,88 @@ class input_jummbox(plugins.base):
 							inst_obj.is_drum = True
 
 						if bb_inst.type == 'chip':
-							bb_inst_wave = bb_inst.data['wave']
-							inst_obj.visual.name = data_values.text__insidename_type(inst_obj.visual.name, bb_inst_wave, bb_inst.type)
-							rawchipwaves_obj.apply_wave(plugin_obj, bb_inst_wave, 'chipwave')
+							if 'wave' in bb_data: 
+								bb_inst_wave = bb_data['wave']
+								inst_obj.visual.name = data_values.text__insidename_type(inst_obj.visual.name, bb_inst_wave, bb_inst.type)
+								rawchipwaves_obj.apply_wave(plugin_obj, bb_inst_wave, 'chipwave')
 				
 						if bb_inst.type == 'PWM':
-							pulseWidth = bb_inst.data['pulseWidth']
-							inst_obj.visual.name = str(pulseWidth)+'% pulse ('+inst_obj.visual.name+')'
-							param_obj = plugin_obj.params.add("pulse_width", pulseWidth/100, 'float')
-							param_obj.visual.name = "Pulse Width"
+							if 'pulseWidth' in bb_data: 
+								pulseWidth = bb_data['pulseWidth']
+								inst_obj.visual.name = str(pulseWidth)+'% pulse ('+inst_obj.visual.name+')'
+								param_obj = plugin_obj.params.add("pulse_width", pulseWidth/100, 'float')
+								param_obj.visual.name = "Pulse Width"
 				
 						if bb_inst.type == 'harmonics':
-							harmonics_obj = plugin_obj.harmonics_add('harmonics')
-							get_harmonics(harmonics_obj, bb_inst.data['harmonics'])
+							if 'harmonics' in bb_data: 
+								harmonics_obj = plugin_obj.harmonics_add('harmonics')
+								get_harmonics(harmonics_obj, bb_data['harmonics'])
 				
 						if bb_inst.type == 'Picked String':
-							harmonics_obj = plugin_obj.harmonics_add('harmonics')
-							get_harmonics(harmonics_obj, bb_inst.data['harmonics'])
+							if 'harmonics' in bb_data: 
+								harmonics_obj = plugin_obj.harmonics_add('harmonics')
+								get_harmonics(harmonics_obj, bb_data['harmonics'])
 
 						if bb_inst.type == 'spectrum':
-							plugin_obj.datavals.add('spectrum', bb_inst.data['spectrum'])
+							if 'spectrum' in bb_data: 
+								plugin_obj.datavals.add('spectrum', bb_data['spectrum'])
 				
 						if bb_inst.type == 'FM':
-							plugin_obj.datavals.add('algorithm', bb_inst.data['algorithm'])
-							plugin_obj.datavals.add('feedback_type', bb_inst.data['feedbackType'])
-							param_obj = plugin_obj.params.add("feedback_amplitude", bb_inst.data['feedbackAmplitude'], 'int')
-							param_obj.visual.name = "Feedback Amplitude"
+							if 'algorithm' in bb_data: plugin_obj.datavals.add('algorithm', bb_data['algorithm'])
+							if 'feedbackType' in bb_data: plugin_obj.datavals.add('feedback_type', bb_data['feedbackType'])
+							if 'feedbackAmplitude' in bb_data: 
+								param_obj = plugin_obj.params.add("feedback_amplitude", bb_data['feedbackAmplitude'], 'int')
+								param_obj.visual.name = "Feedback Amplitude"
 				
-							for opnum in range(4):
-								opdata = bb_inst.data['operators'][opnum]
-								opnumtext = 'op'+str(opnum+1)+'/'
-								plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
-								plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
-								plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
-								plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
+							if 'operators' in bb_data: 
+								for opnum in range(4):
+									opdata = bb_data['operators'][opnum]
+									opnumtext = 'op'+str(opnum+1)+'/'
+									plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
+									plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
+									plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
+									plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
 				
 						if bb_inst.type == 'custom chip':
-							customChipWave = bb_inst.data['customChipWave']
-							customChipWave = [customChipWave[str(i)] for i in range(64)]
-							wave_obj = plugin_obj.wave_add('chipwave')
-							wave_obj.set_all_range(customChipWave, -24, 24)
+							if 'customChipWave' in bb_data: 
+								customChipWave = bb_data['customChipWave']
+								customChipWave = [customChipWave[str(i)] for i in range(64)]
+								wave_obj = plugin_obj.wave_add('chipwave')
+								wave_obj.set_all_range(customChipWave, -24, 24)
 				
 						if bb_inst.type == 'FM6op': #goldbox
-							plugin_obj.datavals.add('algorithm', bb_inst.data['algorithm'])
-							plugin_obj.datavals.add('feedback_type', bb_inst.data['feedbackType'])
-							param_obj = plugin_obj.params.add_named("feedback_amplitude", bb_inst.data['feedbackAmplitude'], 'int', "Feedback Amplitude")
+							if 'algorithm' in bb_data: 
+								plugin_obj.datavals.add('algorithm', bb_data['algorithm'])
+							if 'feedbackType' in bb_data: 
+								plugin_obj.datavals.add('feedback_type', bb_data['feedbackType'])
+							if 'feedbackAmplitude' in bb_data: 
+								param_obj = plugin_obj.params.add_named("feedback_amplitude", bb_data['feedbackAmplitude'], 'int', "Feedback Amplitude")
 				
-							for opnum in range(4):
-								opdata = bb_inst.data['operators'][opnum]
-								opnumtext = 'op'+str(opnum+1)+'_'
-								plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
-								plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
-								plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
-								plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
+							if 'operators' in bb_data: 
+								for opnum in range(4):
+									opdata = bb_data['operators'][opnum]
+									opnumtext = 'op'+str(opnum+1)+'_'
+									plugin_obj.datavals.add(opnumtext+'frequency', opdata['frequency'])
+									plugin_obj.datavals.add(opnumtext+'waveform', data_values.get_value(opdata, 'waveform', 'sine'))
+									plugin_obj.datavals.add(opnumtext+'pulseWidth', data_values.get_value(opdata, 'pulseWidth', 0))
+									plugin_obj.params.add(opnumtext+"amplitude", opdata['amplitude'], 'int')
 				
-							if bb_inst.data['algorithm'] == 'Custom': plugin_obj.datavals.add('customAlgorithm', bb_inst.data['customAlgorithm'])
+							if 'algorithm' in bb_data: 
+								if bb_data['algorithm'] == 'Custom':
+									plugin_obj.datavals.add('customAlgorithm', bb_data['customAlgorithm'])
 
-					inst_obj.visual.color.set_float(bb_color)
+						if bb_inst.type == 'supersaw':
+							if 'pulseWidth' in bb_data: plugin_obj.params.add('pulseWidth', bb_data['pulseWidth'], 'float')
+							if 'decimalOffset' in bb_data: plugin_obj.params.add('decimalOffset', bb_data['decimalOffset'], 'float')
+							if 'dynamism' in bb_data: plugin_obj.params.add('dynamism', bb_data['dynamism'], 'float')
+							if 'spread' in bb_data: plugin_obj.params.add('spread', bb_data['spread'], 'float')
+							if 'shape' in bb_data: plugin_obj.params.add('shape', bb_data['shape'], 'float')
+
+						if bb_inst.type == 'noise':
+							if 'wave' in bb_data: plugin_obj.datavals.add('wave', bb_data['wave'])
+							if 'unison' in bb_data: plugin_obj.datavals.add('unison', bb_data['unison'])
+
+					inst_obj.visual.color.set_int(bb_color)
 				
 					inst_obj.params.add('vol', cvpj_volume, 'float')
 
@@ -372,7 +426,11 @@ class input_jummbox(plugins.base):
 							lfo_obj.time.set_seconds(0.7*(1/bb_fx.vibratoSpeed))
 							lfo_obj.amount = bb_fx.vibratoDepth
 			
-					get_asdr(plugin_obj, bb_inst, jummbox_obj)
+					noenv = False
+					if 'chord type' in bb_fx.used:
+						if (bb_fx.chord == 'arpeggio' and bb_fx.arpeggioSpeed): noenv = True
+
+					if not noenv: get_asdr(plugin_obj, bb_inst, jummbox_obj)
 					plugin_obj.role = 'synth'
 
 				for patnum, bb_pat in enumerate(bb_chan.patterns):
@@ -381,7 +439,7 @@ class input_jummbox(plugins.base):
 					if bb_pat.notes:
 						nle_obj = convproj_obj.notelistindex__add(cvpj_patid)
 						nle_obj.visual.name = nid_name
-						nle_obj.visual.color.set_float(bb_color)
+						nle_obj.visual.color.set_int(bb_color)
 						for note in bb_pat.notes:
 							points = note.points
 							pitches = [(x-48 + jummbox_key) for x in note.pitches]
@@ -421,7 +479,7 @@ class input_jummbox(plugins.base):
 					bb_partdur = durpos[seqpos]
 					if patnum != 0:
 						playlist_obj = convproj_obj.playlist__add(channum, True, True)
-						playlist_obj.visual.color.set_float(bb_color)
+						playlist_obj.visual.color.set_int(bb_color)
 						cvpj_placement = playlist_obj.placements.add_notes_indexed()
 						cvpj_placement.fromindex = text_patternid(channum, patnum-1)
 						cvpj_placement.time.set_posdur(placement_pos, bb_partdur)
@@ -472,9 +530,9 @@ class input_jummbox(plugins.base):
 		#if 'introBars' in jummbox_json and 'loopBars' in jummbox_json:
 		#	introbars = sum(patlentable[0:jummbox_json['introBars']])
 		#	loopbars = (sum(patlentable[0:jummbox_json['loopBars']]) + introbars)
-		#	convproj_obj.loop_active = True
-		#	convproj_obj.loop_start = introbars
-		#	convproj_obj.loop_end = loopbars if loopbars else patlentable[-1]
+		#	convproj_obj.transport.loop_active = True
+		#	convproj_obj.transport.loop_start = introbars
+		#	convproj_obj.transport.loop_end = loopbars if loopbars else patlentable[-1]
 
 		#convproj_obj.automation.sort()
 

@@ -18,16 +18,20 @@ def process_r(convproj_obj):
 			trackroute_sendobj = org_trackroute[trackid] if trackid in org_trackroute else None
 
 			if_audio = track_obj.placements.pl_audio or track_obj.placements.pl_audio_nested
-			if_notes = track_obj.placements.pl_notes or track_obj.placements.notelist
+			if_notes = track_obj.placements.pl_notes or track_obj.placements.notelist or track_obj.placements.pl_midi
+			if_video = track_obj.placements.pl_video
 
 			if track_obj.type == 'hybrid':
 				a_track_obj = track_obj.make_base()
 				n_track_obj = track_obj.make_base()
+				v_track_obj = track_obj.make_base()
 
 				a_track_obj.placements.pl_audio = track_obj.placements.pl_audio
 				a_track_obj.placements.pl_audio_nested = track_obj.placements.pl_audio_nested
 				n_track_obj.placements.pl_notes = track_obj.placements.pl_notes
+				n_track_obj.placements.pl_midi = track_obj.placements.pl_midi
 				n_track_obj.placements.notelist = track_obj.placements.notelist
+				v_track_obj.placements.pl_video = track_obj.placements.pl_video
 
 				if if_notes:
 					trackid_s = trackid+'_unhybrid_notes'
@@ -44,6 +48,13 @@ def process_r(convproj_obj):
 					convproj_obj.track_data[trackid_s] = a_track_obj
 					if trackroute_sendobj != None: convproj_obj.trackroute[trackid_s] = trackroute_sendobj
 					convproj_obj.automation.copy_everything(['track', trackid], ['track', trackid_s])
+
+				if if_video:
+					trackid_s = trackid+'_unhybrid_video'
+					v_track_obj.type = 'video'
+					convproj_obj.track_order.append(trackid_s)
+					convproj_obj.track_data[trackid_s] = v_track_obj
+
 				#if not (if_audio and if_notes):
 				#	n_track_obj.type = 'instrument'
 				#	convproj_obj.track_order.append(trackid)
@@ -52,7 +63,7 @@ def process_r(convproj_obj):
 
 	return True
 
-def process(convproj_obj, in__track_hybrid, out__track_hybrid, out_type):
+def process(convproj_obj, in__track_hybrid, out__track_hybrid, out_type, dawvert_intent):
 	if in__track_hybrid == True and out__track_hybrid == False:
 		if convproj_obj.type in ['r', 'ri', 'rm']: return process_r(convproj_obj)
 		else: return False

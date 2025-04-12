@@ -1,48 +1,42 @@
-
-[compressor]
->input
-	type|native:soundation:com.soundation.degrader
-	param|reduction
-	param|rate
-	param|mix
-<input
-
->proc
-	calc|rate|from_one|44100|1000
-	calc|reduction|mul|50
-	calc|attack|mul|200
-	calc|attack|div|1000
-<proc
-
->output
-	type|universal:bitcrush
-	param|bits<reduction
-	param|freq<rate
-	wet|mix
-<output
-
-[equalizer]
->input
-	type|native:soundation:com.soundation.equalizer
-	param|low
-	param|mid
-	param|high
-<input
-
->proc
-	calc|low|sub|0.5
-	calc|mid|sub|0.5
-	calc|high|sub|0.5
-	calc|low|mul|24
-	calc|mid|mul|24
-	calc|high|mul|24
-<proc
-
->output
-	type|universal:eq:3band
-	param|low_gain<low
-	param|mid_gain<mid
-	param|high_gain<high
-	param|lowmid_freq%250.0
-	param|midhigh_freq%2500.0
-<output
+<plugtransform>
+    <transform name="compressor">
+        <input plugtype="native:soundation:com.soundation.degrader">
+            <param from="reduction" type="float">0</param>
+            <param from="rate" type="float">0</param>
+            <param from="mix" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="rate" type="from_one">44100;1000</calc>
+            <calc name="reduction" type="mul">50</calc>
+            <calc name="attack" type="mul">200</calc>
+            <calc name="attack" type="div">1000</calc>
+        </proc>
+        <output plugtype="universal:bitcrush">
+            <param to="bits" from="reduction" type="float">0</param>
+            <param to="freq" from="rate" type="float">0</param>
+            <wet from="mix" type="float">1</wet>
+        </output>
+    </transform>
+    <transform name="equalizer">
+        <input plugtype="native:soundation:com.soundation.equalizer">
+            <param from="low" type="float">0</param>
+            <param from="mid" type="float">0</param>
+            <param from="high" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="low" type="sub">0.5</calc>
+            <calc name="mid" type="sub">0.5</calc>
+            <calc name="high" type="sub">0.5</calc>
+            <calc name="low" type="mul">24</calc>
+            <calc name="mid" type="mul">24</calc>
+            <calc name="high" type="mul">24</calc>
+        </proc>
+        <output plugtype="universal:eq:3band">
+            <param to="low_gain" from="low" type="float">0</param>
+            <param to="mid_gain" from="mid" type="float">0</param>
+            <param to="high_gain" from="high" type="float">0</param>
+            <param to="lowmid_freq" type="float">250.0</param>
+            <param to="midhigh_freq" type="float">2500.0</param>
+        </output>
+    </transform>
+</plugtransform>

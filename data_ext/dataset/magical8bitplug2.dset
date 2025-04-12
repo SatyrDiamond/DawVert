@@ -1,317 +1,84 @@
-{
-    "plugin": {
-        "objects": {
-            "main": {
-                "params": {
-                    "arpeggiodirection": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "Direction",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 11
-                            }
-                        },
-                        "extplug_paramid": "arpeggioDirection"
-                    },
-                    "arpeggiotime": {
-                        "type": "float",
-                        "def": 0.0299999993294478,
-                        "max": 0.299999982118607,
-                        "name": "Time",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 10
-                            }
-                        },
-                        "extplug_paramid": "arpeggioTime"
-                    },
-                    "attack": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 5.0,
-                        "name": "Attack",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 5
-                            }
-                        },
-                        "extplug_paramid": "attack"
-                    },
-                    "bendrange": {
-                        "type": "float",
-                        "def": 2.0,
-                        "max": 24.0,
-                        "name": "Bend Range",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 12
-                            }
-                        },
-                        "extplug_paramid": "bendRange"
-                    },
-                    "colorscheme": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 5.0,
-                        "name": "Color Scheme",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 1
-                            }
-                        },
-                        "extplug_paramid": "colorScheme"
-                    },
-                    "decay": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 5.0,
-                        "name": "Decay",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 6
-                            }
-                        },
-                        "extplug_paramid": "decay"
-                    },
-                    "duty": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 2.0,
-                        "name": "Duty",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 19
-                            }
-                        },
-                        "extplug_paramid": "duty"
-                    },
-                    "gain": {
-                        "type": "float",
-                        "def": 0.5,
-                        "name": "Gain",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 3
-                            }
-                        },
-                        "extplug_paramid": "gain"
-                    },
-                    "isadvancedpanelopen_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "Advanced",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 0
-                            }
-                        },
-                        "extplug_paramid": "isAdvancedPanelOpen_raw"
-                    },
-                    "isarpeggioenabled_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "Arpeggio Enabled",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "name": "Enabled",
-                                "num": 9
-                            }
-                        },
-                        "extplug_paramid": "isArpeggioEnabled_raw"
-                    },
-                    "isdutysequenceenabled_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "DutySeq Enabled",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "name": "Enabled",
-                                "num": 24
-                            }
-                        },
-                        "extplug_paramid": "isDutySequenceEnabled_raw"
-                    },
-                    "ispitchsequenceenabled_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "PitchSeq Enabled",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "name": "Enabled",
-                                "num": 23
-                            }
-                        },
-                        "extplug_paramid": "isPitchSequenceEnabled_raw"
-                    },
-                    "isvolumesequenceenabled_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "VolumeSeq Enabled",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "name": "Enabled",
-                                "num": 22
-                            }
-                        },
-                        "extplug_paramid": "isVolumeSequenceEnabled_raw"
-                    },
-                    "maxpoly": {
-                        "type": "float",
-                        "def": 8.0,
-                        "max": 64.0,
-                        "min": 1.0,
-                        "name": "Max Poly",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 4
-                            }
-                        },
-                        "extplug_paramid": "maxPoly"
-                    },
-                    "noisealgorithm_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 2.0,
-                        "name": "Algorithm",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 20
-                            }
-                        },
-                        "extplug_paramid": "noiseAlgorithm_raw"
-                    },
-                    "osc": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 2.0,
-                        "name": "OSC Type",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 2
-                            }
-                        },
-                        "extplug_paramid": "osc"
-                    },
-                    "pitchsequencemode_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "Mode",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 25
-                            }
-                        },
-                        "extplug_paramid": "pitchSequenceMode_raw"
-                    },
-                    "release": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 5.0,
-                        "name": "Release",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 8
-                            }
-                        },
-                        "extplug_paramid": "release"
-                    },
-                    "restrictstonesfrequency_raw": {
-                        "type": "float",
-                        "def": 0.0,
-                        "name": "Restricts to NES frequency",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 21
-                            }
-                        },
-                        "extplug_paramid": "restrictsToNESFrequency_raw"
-                    },
-                    "suslevel": {
-                        "type": "float",
-                        "def": 1.0,
-                        "name": "Sustain",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 7
-                            }
-                        },
-                        "extplug_paramid": "suslevel"
-                    },
-                    "sweepinitialpitch": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 24.0,
-                        "min": -24.0,
-                        "name": "Ini.Pitch",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 17
-                            }
-                        },
-                        "extplug_paramid": "sweepInitialPitch"
-                    },
-                    "sweeptime": {
-                        "type": "float",
-                        "def": 0.100000001490116,
-                        "max": 5.0,
-                        "min": 0.00999999977648258,
-                        "name": "Time",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 18
-                            }
-                        },
-                        "extplug_paramid": "sweepTime"
-                    },
-                    "vibratodelay": {
-                        "type": "float",
-                        "def": 0.299999982118607,
-                        "name": "Delay",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 15
-                            }
-                        },
-                        "extplug_paramid": "vibratoDelay"
-                    },
-                    "vibratodepth": {
-                        "type": "float",
-                        "def": 0.0,
-                        "max": 2.0,
-                        "name": "Depth",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 14
-                            }
-                        },
-                        "extplug_paramid": "vibratoDepth"
-                    },
-                    "vibratoignoreswheel_raw": {
-                        "type": "float",
-                        "def": 1.0,
-                        "name": "Ignores Wheel",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 16
-                            }
-                        },
-                        "extplug_paramid": "vibratoIgnoresWheel_raw"
-                    },
-                    "vibratorate": {
-                        "type": "float",
-                        "def": 0.150000005960465,
-                        "min": 0.00999999977648258,
-                        "name": "Rate",
-                        "extplug_assoc": {
-                            "vst2": {
-                                "num": 13
-                            }
-                        },
-                        "extplug_paramid": "vibratoRate"
-                    }
-                }
-            }
-        }
-    }
-}
+<dataset>
+    <category id="plugin">
+        <object id="main">
+            <param id="arpeggiodirection" name="Direction" type="float" ext_id="arpeggioDirection">
+                <extplug_assoc type="vst2" num="11" />
+            </param>
+            <param id="arpeggiotime" name="Time" type="float" def="0.03" max="0.3" ext_id="arpeggioTime">
+                <extplug_assoc type="vst2" num="10" />
+            </param>
+            <param id="attack" name="Attack" type="float" max="5" ext_id="attack">
+                <extplug_assoc type="vst2" num="5" />
+            </param>
+            <param id="bendrange" name="Bend Range" type="float" def="2.0" max="24" ext_id="bendRange">
+                <extplug_assoc type="vst2" num="12" />
+            </param>
+            <param id="colorscheme" name="Color Scheme" type="float" max="5" ext_id="colorScheme">
+                <extplug_assoc type="vst2" num="1" />
+            </param>
+            <param id="decay" name="Decay" type="float" max="5" ext_id="decay">
+                <extplug_assoc type="vst2" num="6" />
+            </param>
+            <param id="duty" name="Duty" type="float" max="2" ext_id="duty">
+                <extplug_assoc type="vst2" num="19" />
+            </param>
+            <param id="gain" name="Gain" type="float" def="0.5" ext_id="gain">
+                <extplug_assoc type="vst2" num="3" />
+            </param>
+            <param id="isadvancedpanelopen_raw" name="Advanced" type="float" ext_id="isAdvancedPanelOpen_raw">
+                <extplug_assoc type="vst2" num="0" />
+            </param>
+            <param id="isarpeggioenabled_raw" name="Arpeggio Enabled" type="float" ext_id="isArpeggioEnabled_raw">
+                <extplug_assoc type="vst2" name="Enabled" num="9" />
+            </param>
+            <param id="isdutysequenceenabled_raw" name="DutySeq Enabled" type="float" ext_id="isDutySequenceEnabled_raw">
+                <extplug_assoc type="vst2" name="Enabled" num="24" />
+            </param>
+            <param id="ispitchsequenceenabled_raw" name="PitchSeq Enabled" type="float" ext_id="isPitchSequenceEnabled_raw">
+                <extplug_assoc type="vst2" name="Enabled" num="23" />
+            </param>
+            <param id="isvolumesequenceenabled_raw" name="VolumeSeq Enabled" type="float" ext_id="isVolumeSequenceEnabled_raw">
+                <extplug_assoc type="vst2" name="Enabled" num="22" />
+            </param>
+            <param id="maxpoly" name="Max Poly" type="float" def="8.0" max="64" min="1" ext_id="maxPoly">
+                <extplug_assoc type="vst2" num="4" />
+            </param>
+            <param id="noisealgorithm_raw" name="Algorithm" type="float" max="2" ext_id="noiseAlgorithm_raw">
+                <extplug_assoc type="vst2" num="20" />
+            </param>
+            <param id="osc" name="OSC Type" type="float" max="2" ext_id="osc">
+                <extplug_assoc type="vst2" num="2" />
+            </param>
+            <param id="pitchsequencemode_raw" name="Mode" type="float" ext_id="pitchSequenceMode_raw">
+                <extplug_assoc type="vst2" num="25" />
+            </param>
+            <param id="release" name="Release" type="float" max="5" ext_id="release">
+                <extplug_assoc type="vst2" num="8" />
+            </param>
+            <param id="restrictstonesfrequency_raw" name="Restricts to NES frequency" type="float" ext_id="restrictsToNESFrequency_raw">
+                <extplug_assoc type="vst2" num="21" />
+            </param>
+            <param id="suslevel" name="Sustain" type="float" def="1.0" ext_id="suslevel">
+                <extplug_assoc type="vst2" num="7" />
+            </param>
+            <param id="sweepinitialpitch" name="Ini.Pitch" type="float" max="24" min="-24" ext_id="sweepInitialPitch">
+                <extplug_assoc type="vst2" num="17" />
+            </param>
+            <param id="sweeptime" name="Time" type="float" def="0.1" max="5" min="0.01" ext_id="sweepTime">
+                <extplug_assoc type="vst2" num="18" />
+            </param>
+            <param id="vibratodelay" name="Delay" type="float" def="0.3" ext_id="vibratoDelay">
+                <extplug_assoc type="vst2" num="15" />
+            </param>
+            <param id="vibratodepth" name="Depth" type="float" max="2" ext_id="vibratoDepth">
+                <extplug_assoc type="vst2" num="14" />
+            </param>
+            <param id="vibratoignoreswheel_raw" name="Ignores Wheel" type="float" def="1.0" ext_id="vibratoIgnoresWheel_raw">
+                <extplug_assoc type="vst2" num="16" />
+            </param>
+            <param id="vibratorate" name="Rate" type="float" def="0.15" min="0.01" ext_id="vibratoRate">
+                <extplug_assoc type="vst2" num="13" />
+            </param>
+        </object>
+    </category>
+</dataset>

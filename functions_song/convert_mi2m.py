@@ -6,10 +6,10 @@ import logging
 
 logger_project = logging.getLogger('project')
 
-def convert(convproj_obj, dv_config):
+def convert(convproj_obj, dawvert_intent):
 	logger_project.info('ProjType Convert: MultipleIndexed > Multiple')
 
-	do_unused = 'mi2m-output-unused-nle' in dv_config.flags_convproj
+	do_unused = 'mi2m-output-unused-nle' in dawvert_intent.flags_compat
 
 	nle_list = [x for x in convproj_obj.notelist_index]
 	used_nle = []

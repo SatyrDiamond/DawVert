@@ -6,16 +6,19 @@ from objects.inst_params import fx_delay
 from functions import extpluglog
  
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'digibooster', None]]
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'digibooster', 'pro_echo'):
 			extpluglog.convinternal('DigiBooster', 'Pro Echo', 'Universal', 'Delay')
 			p_delay = plugin_obj.params.get("delay", 0).value*0.004

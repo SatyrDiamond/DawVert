@@ -34,36 +34,25 @@ def check_exists(bycat, in_val):
 	return globalstore.extplug.check('clap', bycat, in_val)
 
 def replace_data(convproj_obj, plugin_obj, bycat, platform, in_val, data):
+	globalstore.extplug.load()
+
 	global cpu_arch_list
 	platformtxt = getplatformtxt(platform)
 
 	pluginfo_obj = globalstore.extplug.get('clap', bycat, in_val, platformtxt, cpu_arch_list)
 
 	if pluginfo_obj.out_exists:
-		if plugin_obj.type.type != 'clap': plugin_obj.replace('external', 'clap', None)
+		if plugin_obj.type.type != 'clap': plugin_obj.replace('external', 'clap', platformtxt)
 		else: plugin_obj.type.subtype = platformtxt
-		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(cpu_arch_list)
-		if vst_cpuarch and vst_path:
-			convproj_obj.fileref__add(vst_path, vst_path, None)
-			plugin_obj.filerefs_global['plugin'] = vst_path
-			plugin_obj.datavals_global.add('cpu_arch', vst_cpuarch)
 
-		plugin_obj.datavals_global.add('name', pluginfo_obj.name)
-		plugin_obj.datavals_global.add('id', pluginfo_obj.id)
-		plugin_obj.datavals_global.add('creator', pluginfo_obj.creator)
-		plugin_obj.datavals_global.add('numparams', pluginfo_obj.num_params)
-		plugin_obj.role = pluginfo_obj.type
-		plugin_obj.audioports.setnums_auto(pluginfo_obj.audio_num_inputs, pluginfo_obj.audio_num_outputs)
-
-		plugin_obj.datavals_global.add('datatype', 'chunk')
-		plugin_obj.rawdata_add('chunk', data)
+		plugin_obj.external__from_pluginfo_obj(convproj_obj, pluginfo_obj, cpu_arch_list)
+		plugin_obj.external__set_chunk(data)
 	elif bycat == 'id':
 		plugin_obj.replace('external', 'clap', platformtxt)
-		plugin_obj.datavals_global.add('id', in_val)
-		plugin_obj.datavals_global.add('datatype', 'chunk')
-		plugin_obj.rawdata_add('chunk', data)
+		plugin_obj.external_info.id = in_val
+		plugin_obj.external__set_chunk(data)
 	else:
-		pluginname = plugin_obj.datavals_global.get('name', None)
+		pluginname = plugin_obj.external_info.name
 		outtxt = '"'+str(in_val)+'" from '+str(bycat)
 		if pluginname: outtxt = pluginname
 		logger_plugins.warning('clap: plugin not found in database: '+outtxt)
@@ -82,7 +71,7 @@ def import_presetdata_file(convproj_obj, plugin_obj, fxfile, platform):
 
 def export_presetdata(plugin_obj):
 	clap_obj = preset_clap.clap_preset()
-	clap_obj.id = plugin_obj.datavals_global.get('id', None)
+	clap_obj.id = plugin_obj.external_info.id
 	clap_obj.data = plugin_obj.rawdata_get('chunk')
 	if clap_obj.id != None: 
 		return clap_obj.write_to_raw()

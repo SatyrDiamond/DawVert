@@ -1,53 +1,47 @@
-
-[chorus]
->input
-	type|native:amped:Chorus
-	param|delayLfoDepth%0.15
-	param|delayLfoRateHz%0.7585
-	param|mix%0.85
-	param|tone%0.2
-<input
-
->proc
-	calc|delayLfoDepth|mul|2
-	calc|delayLfoDepth|clamp|0|1
-<proc
-
->output
-	type|native:ableton:Chorus2
-	param|Rate<delayLfoRateHz
-	param|DryWet<mix
-	param|Amount<delayLfoDepth
-	param|Mode%0
-	param|Width%1
-	param|OutputGain%1
-<output
-
-[phaser]
->input
-	type|native:amped:Phaser
-	param|feedback%0
-	param|hzmin%400
-	param|hzrange%4
-	param|mix%1
-	param|rate%1.5
-	param|stages%8
-<input
-
->proc
-	calc|feedback|div|4
-	calc|hzrange|div|20
-	calc|rate|div|2
-<proc
-
->output
-	type|native:ableton:PhaserNew
-	param|Feedback<feedback
-	param|CenterFrequency<hzmin
-	param|Spread<hzrange
-	param|DryWet<mix
-	param|Modulation_Frequency<rate
-	param|Notches<stages
-	param|Modulation_Amount%0.2
-	param|OutputGain%1
-<output
+<plugtransform>
+    <transform name="chorus">
+        <input plugtype="native:amped:Chorus">
+            <param from="delayLfoDepth" type="float">0.15</param>
+            <param from="delayLfoRateHz" type="float">0.7585</param>
+            <param from="mix" type="float">0.85</param>
+            <param from="tone" type="float">0.2</param>
+        </input>
+        <proc>
+            <calc name="delayLfoDepth" type="mul">2</calc>
+            <calc name="delayLfoDepth" type="clamp">0;1</calc>
+        </proc>
+        <output plugtype="native:ableton:Chorus2">
+            <param to="Rate" from="delayLfoRateHz" type="float">0</param>
+            <param to="DryWet" from="mix" type="float">0</param>
+            <param to="Amount" from="delayLfoDepth" type="float">0</param>
+            <param to="Mode" type="float">0</param>
+            <param to="Width" type="float">1</param>
+            <param to="OutputGain" type="float">1</param>
+        </output>
+    </transform>
+    <transform name="phaser">
+        <input plugtype="native:amped:Phaser">
+            <param from="feedback" type="float">0</param>
+            <param from="hzmin" type="float">400.0</param>
+            <param from="hzrange" type="float">4.0</param>
+            <param from="mix" type="float">1</param>
+            <param from="rate" type="float">1.5</param>
+            <param from="stages" type="float">8.0</param>
+        </input>
+        <proc>
+            <calc name="feedback" type="div">4</calc>
+            <calc name="hzrange" type="div">20</calc>
+            <calc name="rate" type="div">2</calc>
+        </proc>
+        <output plugtype="native:ableton:PhaserNew">
+            <param to="Feedback" from="feedback" type="float">0</param>
+            <param to="CenterFrequency" from="hzmin" type="float">0</param>
+            <param to="Spread" from="hzrange" type="float">0</param>
+            <param to="DryWet" from="mix" type="float">0</param>
+            <param to="Modulation_Frequency" from="rate" type="float">0</param>
+            <param to="Notches" from="stages" type="float">0</param>
+            <param to="Modulation_Amount" type="float">0.2</param>
+            <param to="OutputGain" type="float">1</param>
+        </output>
+    </transform>
+</plugtransform>

@@ -48,10 +48,11 @@ def filternum(i_filtertype):
 
 	if i_type == 'band_pass':
 		if i_subtype == 'csg': lmms_filternum = 2
-		if i_subtype == 'czpg': lmms_filternum = 3
-		if i_subtype == 'rc12': lmms_filternum = 9
-		if i_subtype == 'rc24': lmms_filternum = 12
-		if i_subtype == 'sv': lmms_filternum = 17
+		elif i_subtype == 'czpg': lmms_filternum = 3
+		elif i_subtype == 'rc12': lmms_filternum = 9
+		elif i_subtype == 'rc24': lmms_filternum = 12
+		elif i_subtype == 'sv': lmms_filternum = 17
+		else: lmms_filternum = 2
 
 	if i_type == 'formant':
 		lmms_filternum = 14
@@ -117,12 +118,14 @@ def parse_auto(lmms_points, autopoints_obj):
 		curpoint += 1
 
 def make_auto_track(autoidnum, autodata, visualname, automode):
-	from objects.file_proj import proj_lmms
+	from objects.file_proj import lmms as proj_lmms
 
 	global song_obj
 	lmms_track = proj_lmms.lmms_track()
 	lmms_track.type = 5
 	lmms_track.name = visualname
+
+	autodata.remove_loops([])
 
 	for autopl_obj in autodata:
 		autopl_obj.remove_cut()
@@ -130,7 +133,8 @@ def make_auto_track(autoidnum, autodata, visualname, automode):
 		lmms_autopat.pos = autopl_obj.time.position
 		lmms_autopat.len = autopl_obj.time.duration
 		lmms_autopat.prog = automode
-		lmms_autopat.name = visualname
+		lmms_autopat.name = autopl_obj.visual.name if autopl_obj.visual.name else visualname
+		if autopl_obj.visual.color: lmms_autopat.color = '#' + autopl_obj.visual.color.get_hex()
 		parse_auto(lmms_autopat.auto_points, autopl_obj.data)
 		lmms_autopat.auto_target.append(autoidnum)
 		lmms_track.automationpatterns.append(lmms_autopat)
@@ -177,8 +181,8 @@ def setvstparams(lmms_plug_obj, plugin_obj, pluginid, keysdict):
 	if keysdict != None: keysdict['file'] = vstpath
 
 	middlenotefix = plugin_obj.datavals_global.get('middlenotefix', 0)
-	datatype = plugin_obj.datavals_global.get('datatype', 'chunk')
-	numparams = plugin_obj.datavals_global.get('numparams', 0)
+	datatype = plugin_obj.external_info.datatype
+	numparams = plugin_obj.external_info.numparams
 
 	if datatype == 'chunk':
 		lmms_plug_obj.add_param('chunk', plugin_obj.rawdata_get_b64('chunk'))
@@ -214,7 +218,7 @@ def setvstparams(lmms_plug_obj, plugin_obj, pluginid, keysdict):
 	return middlenotefix
 
 def encode_effectslot(effect_obj, plugin_obj, pluginid):
-	from objects.file_proj import proj_lmms
+	from objects.file_proj import lmms as proj_lmms
 
 	paramauto(effect_obj.on, plugin_obj.params_slot, 'enabled', True, None, ['slot', pluginid], 'Slot', 'On')
 	paramauto(effect_obj.wet, plugin_obj.params_slot, 'wet', 1, None, ['slot', pluginid], 'Slot', 'Wet')
@@ -271,9 +275,10 @@ def encode_effectslot(effect_obj, plugin_obj, pluginid):
 				lmms_plug_obj.ladspa_params[lmms_paramid] = ladspa_param_obj
 
 def encode_fxchain(lmms_fxchain, track_obj, trackname, autoloc):
-	from objects.file_proj import proj_lmms
+	from objects.file_proj import lmms as proj_lmms
 
-	#paramauto(lmms_fxchain.enabled, track_obj.params, 'fx_enabled', False, None, autoloc, trackname, 'FX Enabled')
+	lmms_fxchain.enabled.value = int(track_obj.plugslots.slots_audio_enabled)
+
 	for pluginid in track_obj.plugslots.slots_audio:
 		plugin_found, plugin_obj = cvpj_obj.plugin__get(pluginid)
 		if plugin_found: 
@@ -326,11 +331,18 @@ def asdrlfo_set(plugin_obj, eldata):
 	asdrlfo(plugin_obj, eldata.elres, 'reso')
 
 class output_lmms(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'LMMS'
-	def get_shortname(self): return 'lmms'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'LMMS'
+	
+	def get_shortname(self):
+		return 'lmms'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'mmp'
 		in_dict['fxtype'] = 'rack'
@@ -343,8 +355,8 @@ class output_lmms(plugins.base):
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['projtype'] = 'r'
 		
-	def parse(self, i_cvpj_obj, output_file):
-		from objects.file_proj import proj_lmms
+	def parse(self, i_cvpj_obj, dawvert_intent):
+		from objects.file_proj import lmms as proj_lmms
 
 		global lmms_bpm
 		global cvpj_obj
@@ -383,6 +395,7 @@ class output_lmms(plugins.base):
 			if track_obj.type in ['instrument', 'audio']:
 				lmms_track = proj_lmms.lmms_track()
 				lmms_track.name = trackname
+				lmms_track.height = int(max(track_obj.visual_ui.height, 1)*32)
 				song_obj.trackcontainer.tracks.append(lmms_track)
 
 				if trackcolor: lmms_track.color = '#' + trackcolor.get_hex()
@@ -483,6 +496,25 @@ class output_lmms(plugins.base):
 							else:
 								logger_output.warning('VST2 plugin not placed: file path not found.')
 
+						elif plugin_obj.check_match('universal', 'sampler', 'slicer'):
+							sp_obj = plugin_obj.samplepart_get('sample')
+							issampfound, sampleref_obj = cvpj_obj.sampleref__get(sp_obj.sampleref)
+							if issampfound and sampleref_obj.dur_samples:
+								lmms_inst_obj.name = 'slicert'
+								lmms_plug_obj.name = 'slicert'
+	
+								hzmod = sampleref_obj.hz/44100
+
+								sp_obj.convpoints_percent(sampleref_obj)
+
+								lmms_plug_obj.add_param('src', sp_obj.get_filepath(cvpj_obj, False) )
+								lmms_plug_obj.add_param('totalSlices', str(len(sp_obj.slicer_slices)) )
+
+								for slicenum, slice_obj in enumerate(sp_obj.slicer_slices):
+									lmms_plug_obj.add_param('slice_'+str(slicenum+1), str((slice_obj.start*hzmod)/sampleref_obj.dur_samples) )
+
+								middlenotefix -= 1
+
 						elif plugin_obj.check_wildmatch('native', 'lmms', None):
 							lmms_inst_obj.name = plugin_obj.type.subtype
 							lmms_plug_obj.name = plugin_obj.type.subtype
@@ -547,8 +579,8 @@ class output_lmms(plugins.base):
 					midiport_obj.outputprogram = track_obj.midi.out_inst.patch
 					midiport_obj.writable = int(track_obj.midi.out_enabled)
 					midiport_obj.fixedinputvelocity = track_obj.midi.in_fixedvelocity
-					midiport_obj.inputchannel = track_obj.midi.in_chan+1
-					midiport_obj.outputchannel = track_obj.midi.out_chan+1
+					midiport_obj.inputchannel = track_obj.midi.in_chanport.chan+1
+					midiport_obj.outputchannel = track_obj.midi.out_chanport.chan+1
 					midiport_obj.fixedoutputnote = track_obj.midi.out_inst.key
 					encode_fxchain(insttrack_obj.fxchain, track_obj, trackname, autoloc)
 
@@ -629,13 +661,14 @@ class output_lmms(plugins.base):
 			if cvpj_obj.metadata.comment_datatype == 'text': 
 				song_obj.projectnotes.text += cvpj_obj.metadata.comment_text.replace('\n', '<br/>').replace('\r', '<br/>')
 
-		if cvpj_obj.loop_active:
-			song_obj.timeline.lpstate = int(cvpj_obj.loop_active)
-			song_obj.timeline.lp0pos = cvpj_obj.loop_start
-			song_obj.timeline.lp1pos = cvpj_obj.loop_end
+		if cvpj_obj.transport.loop_active:
+			song_obj.timeline.lpstate = int(cvpj_obj.transport.loop_active)
+			song_obj.timeline.lp0pos = cvpj_obj.transport.loop_start
+			song_obj.timeline.lp1pos = cvpj_obj.transport.loop_end
 		else:
 			song_obj.timeline.lpstate = 1
-			song_obj.timeline.lp0pos = cvpj_obj.start_pos
+			song_obj.timeline.lp0pos = cvpj_obj.transport.start_pos
 			song_obj.timeline.lp1pos = cvpj_obj.get_dur()
 
-		project_obj.save_to_file(output_file)
+		if dawvert_intent.output_mode == 'file':
+			project_obj.save_to_file(dawvert_intent.output_file)

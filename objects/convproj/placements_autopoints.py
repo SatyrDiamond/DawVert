@@ -5,6 +5,7 @@ from functions import xtramath
 from objects.convproj import placements
 from objects.convproj import autopoints
 from objects.convproj import visual
+import copy
 
 class cvpj_placements_autopoints:
 	__slots__ = ['data','type','time_ppq','time_float','val_type']
@@ -22,6 +23,16 @@ class cvpj_placements_autopoints:
 
 	def __bool__(self):
 		return bool(self.data)
+
+	def merge_crop(self, apl_obj, pos, dur):
+		for n in apl_obj.data:
+			if n.time.position < dur:
+				copy_apl_obj = copy.deepcopy(n)
+				plend = copy_apl_obj.time.get_end()
+				numval = copy_apl_obj.time.duration+min(0, dur-plend)
+				copy_apl_obj.time.position += pos
+				copy_apl_obj.time.duration = numval
+				self.data.append(copy_apl_obj)
 
 	def sort(self):
 		ta_bsort = {}
@@ -71,11 +82,19 @@ class cvpj_placements_autopoints:
 			else:
 				x.data.edit_trimmove(0, x.time.duration)
 
+	def remove_loops(self, out__placement_loop):
+		self.data = placements.internal_removeloops(self.data, out__placement_loop)
+
+	def change_seconds(self, is_seconds, bpm, ppq):
+		for pl in self.data: 
+			pl.time.change_seconds(is_seconds, bpm, ppq)
+			pl.data.change_seconds(is_seconds, bpm, ppq)
+
 class cvpj_placement_autopoints:
 	__slots__ = ['time','muted','visual','data']
 
 	def __init__(self, time_ppq, time_float, val_type):
-		self.time = placements.cvpj_placement_timing()
+		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.data = autopoints.cvpj_autopoints(time_ppq, time_float, val_type)
 		self.muted = False
 		self.visual = visual.cvpj_visual()
@@ -86,3 +105,5 @@ class cvpj_placement_autopoints:
 		if self.time.cut_type == 'none':
 			self.data.edit_trimmove(0, self.time.duration)
 
+	def change_seconds(self, is_seconds, bpm):
+		self.time.change_seconds(is_seconds, bpm, ppq)

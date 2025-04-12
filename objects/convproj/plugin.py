@@ -25,6 +25,7 @@ from objects.convproj import chord
 from objects.convproj import plugstate
 from objects.convproj import midi_inst
 from objects import plugdatamanu
+from objects import extplugmanu
 
 logger_plugins = logging.getLogger('plugins')
 logger_plugconv = logging.getLogger('plugconv')
@@ -48,6 +49,52 @@ class cvpj_audioports:
 		for x in range(max(self.num_inputs, self.num_outputs)):
 			self.ports.append([x])
 
+class cvpj_plugin_external:
+	def __init__(self):
+		self.plugtype = None
+		self.name = None
+		self.id = None
+		self.fourid = None
+		self.creator = None
+		self.datatype = 'chunk'
+		self.numparams = -1
+		self.basename = None
+		self.version_bytes = 0
+		self.version = None
+		self.is_bank = False
+		self.cpu_arch = 0
+
+	def from_pluginfo_obj(self, pluginfo_obj, inplugtype):
+		if pluginfo_obj.plugtype: plugtype = pluginfo_obj.plugtype
+		else: plugtype = inplugtype
+
+		if plugtype == 'vst2': 
+			if self.fourid != pluginfo_obj.id: self.__init__()
+		elif plugtype == 'vst3': 
+			if self.id != pluginfo_obj.id: self.__init__()
+		elif plugtype == 'clap': 
+			if self.id != pluginfo_obj.id: self.__init__()
+		else:
+			self.__init__()
+
+		self.plugtype = pluginfo_obj.plugtype
+		if not self.plugtype: self.plugtype = plugtype
+		if pluginfo_obj.name: self.name = pluginfo_obj.name
+		if pluginfo_obj.creator: self.creator = pluginfo_obj.creator
+		if pluginfo_obj.num_params: self.numparams = pluginfo_obj.num_params
+		if pluginfo_obj.basename: self.basename = pluginfo_obj.basename
+		self.version = pluginfo_obj.version
+
+		if self.plugtype == 'vst2': 
+			self.fourid = int(pluginfo_obj.id)
+			if pluginfo_obj.version not in [None, '']: 
+				versionsplit = [int(i) for i in pluginfo_obj.version.split('.')]
+				versionbytes = struct.pack('B'*len(versionsplit), *versionsplit)
+				self.version_bytes = int.from_bytes(versionbytes, "little")
+		else: self.id = pluginfo_obj.id
+		
+
+
 class cvpj_plugin:
 
 	extplug_selector = dv_plugins.create_selector('extplugin')
@@ -56,6 +103,7 @@ class cvpj_plugin:
 		self.type = triplestr()
 		self.visual = visual.cvpj_visual()
 		self.params_slot = params.cvpj_paramset()
+		self.datavals_slot = params.cvpj_datavals()
 		self.filerefs_global = {}
 		self.datavals_global = params.cvpj_datavals()
 		self.datavals_cvpj = params.cvpj_datavals()
@@ -66,7 +114,43 @@ class cvpj_plugin:
 		self.midi = midi_inst.cvpj_midi_inst()
 		self.current_program = 0
 		self.program_used = False
+		self.external_info = cvpj_plugin_external()
 		self.set_program(0)
+
+	def external__from_pluginfo_obj(self, convproj_obj, pluginfo_obj, cpu_arch_list):
+		self.external_info.__init__()
+		vst_cpuarch, vst_path = pluginfo_obj.find_locpath(cpu_arch_list)
+		if vst_cpuarch and vst_path:
+			convproj_obj.fileref__add(vst_path, vst_path, None)
+			self.filerefs_global['plugin'] = vst_path
+			self.external_info.cpu_arch = vst_cpuarch
+
+		if pluginfo_obj.name: 
+			self.external_info.name = pluginfo_obj.name
+		if pluginfo_obj.creator: 
+			self.external_info.creator = pluginfo_obj.creator
+		if pluginfo_obj.num_params: 
+			self.external_info.numparams = pluginfo_obj.num_params
+		if pluginfo_obj.basename: 
+			self.external_info.basename = pluginfo_obj.basename
+		self.external_info.version = pluginfo_obj.version
+
+		if self.type.type == 'vst2': 
+			self.external_info.fourid = int(pluginfo_obj.id)
+
+			if pluginfo_obj.version not in [None, '']: 
+				versionsplit = [int(i) for i in pluginfo_obj.version.split('.')]
+				versionbytes = struct.pack('B'*len(versionsplit), *versionsplit)
+				self.external_info.version_bytes = int.from_bytes(versionbytes, "little")
+
+		else: self.external_info.id = pluginfo_obj.id
+		
+		self.role = pluginfo_obj.type
+		self.audioports.setnums_auto(pluginfo_obj.audio_num_inputs, pluginfo_obj.audio_num_outputs)
+
+	def external__set_chunk(self, chunk):
+		self.external_info.datatype = 'chunk'
+		self.rawdata_add('chunk', chunk)
 
 	def set_program(self, prenum):
 		if prenum not in self.programs: 
@@ -184,6 +268,7 @@ class cvpj_plugin:
 		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.set_program(0)
 		self.program_used = False
+		self.external_info = cvpj_plugin_external()
 		self.data = {}
 
 	def replace_keepprog(self, i_category, i_type, i_subtype):
@@ -257,6 +342,9 @@ class cvpj_plugin:
 	# -------------------------------------------------- sampleregions
 	def sampleregion_add(self, i_min, i_max, i_middle, i_data, **kwargs):
 		return self.state.sampleregion_add(i_min, i_max, i_middle, i_data, **kwargs)
+		
+	def sampledrum_add(self, i_key, i_data, **kwargs):
+		return self.state.sampledrum_add(i_key, i_data, **kwargs)
 
 	# -------------------------------------------------- regions
 	def region_add(self, i_name, i_min, i_max, i_value):
@@ -375,7 +463,7 @@ class cvpj_plugin:
 	def named_eq_add(self, eq_name): return self.state.named_eq_add(eq_name)
 
 	# -------------------------------------------------- named_filter
-	def named_filter_add(self, filt_name):  return self.state.named_filter_add(filt_name)
+	def named_filter_add(self, filt_name): return self.state.named_filter_add(filt_name)
 	def named_filter_get(self, filt_name): return self.state.named_filter_get(filt_name)
 	def named_filter_get_exists(self, filt_name): return self.state.named_filter_get_exists(filt_name)
 	def named_filter_rename(self, filt_name, new_name): return self.state.named_filter_rename(filt_name, new_name)
@@ -391,6 +479,9 @@ class cvpj_plugin:
 
 	def create_manu_obj(self, convproj_obj, pluginid):
 		return plugdatamanu.plug_manu(self, convproj_obj, pluginid)
+
+	def create_ext_manu_obj(self, convproj_obj, pluginid):
+		return extplugmanu.extplug_manu(self, convproj_obj, pluginid)
 
 	def plugts_transform(self, plugts_path, plugts_tr, convproj_obj, pluginid):
 		globalstore.plugts.load(plugts_path, plugts_path)
@@ -424,19 +515,19 @@ class cvpj_plugin:
 					
 	# -------------------------------------------------- convert
 
-	def convert_internal(self, convproj_obj, pluginid, target_daw, dv_config):
+	def convert_internal(self, convproj_obj, pluginid, target_daw, dawvert_intent):
 		plugconv_int_selector = dv_plugins.create_selector('plugconv')
 		converted_val = 2
 		for shortname, dvplug_obj, prop_obj in plugconv_int_selector.iter():
 			ismatch = self.check_str_multi(prop_obj.in_plugins)
 			correctdaw = (target_daw in prop_obj.out_daws) if prop_obj.out_daws else True
 			if ismatch and correctdaw:
-				converted_val_p = dvplug_obj.convert(convproj_obj, self, pluginid, dv_config)
+				converted_val_p = dvplug_obj.convert(convproj_obj, self, pluginid, dawvert_intent)
 				if converted_val_p < converted_val: converted_val = converted_val_p
 				if converted_val == 0: break
 		return converted_val
 
-	def convert_external(self, convproj_obj, pluginid, target_extplugs, dv_config):
+	def convert_external(self, convproj_obj, pluginid, target_extplugs, dawvert_intent):
 		from functions import extpluglog
 		plugconv_ext_selector = dv_plugins.create_selector('plugconv_ext')
 		extpluglog.extpluglist.clear()
@@ -444,10 +535,10 @@ class cvpj_plugin:
 		for shortname, dvplug_obj, prop_obj in plugconv_ext_selector.iter():
 			ismatch = self.check_wildmatch(prop_obj.in_plugin[0], prop_obj.in_plugin[1], prop_obj.in_plugin[2])
 			extmatch = True in [(x in target_extplugs) for x in prop_obj.ext_formats]
-			catmatch = data_values.list__only_values(prop_obj.plugincat, dv_config.extplug_cat)
+			catmatch = data_values.list__only_values(prop_obj.plugincat, dawvert_intent.extplug_cat)
 	
 			if ismatch and extmatch and catmatch:
-				ext_conv_val = dvplug_obj.convert(convproj_obj, self, pluginid, dv_config, target_extplugs)
+				ext_conv_val = dvplug_obj.convert(convproj_obj, self, pluginid, dawvert_intent, target_extplugs)
 				if ext_conv_val: break
 		return ext_conv_val
 

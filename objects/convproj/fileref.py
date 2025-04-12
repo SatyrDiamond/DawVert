@@ -6,6 +6,7 @@ import sys
 import getpass
 import glob
 
+from objects import audio_data
 from plugins import base as dv_plugins
 from functions import data_values
 from objects.convproj import visual
@@ -242,6 +243,45 @@ class cvpj_fileref:
 	def copy(self):
 		return copy.deepcopy(self)
 
+	def search_local(self, dirpath):
+		if self.folder.partial:
+			if self.exists(None):
+				orgpath = self.get_path(None, False)
+				self.internal_setpath_any(os.path.abspath(orgpath), False)
+				logger_filesearch.debug('    >>| abs file found: searchmissing >'+self.get_path(None, False))
+				return True
+
+		filesearcher.scan_local_files(dirpath)
+		files = filesearcher.searchcache
+		filename = str(self.file)
+
+		if not self.exists(None):
+			orgloc = self.folder.folderloc.copy()
+			tempcopy = self.copy()
+			tempcopy.set_folder(None, dirpath, False)
+			newloc = tempcopy.folder.folderloc.copy()
+			lenl = len(orgloc)
+			found = False
+			for f in range(lenl):
+				tempcopy.folder.folderloc = newloc+orgloc[lenl-f-1:lenl]
+				if tempcopy.exists(None): 
+					found = True
+					logger_filesearch.debug('    >>| path file found: searchmissing >'+self.get_path(None, False))
+					self.set_folder_obj(tempcopy)
+					return True
+
+		if not self.exists(None):
+			if filename in files: 
+				logger_filesearch.debug('    >>| file found: searchmissing >'+self.get_path(None, False))
+				fileref = files[filename]
+				self.file = fileref.file
+				self.folder = fileref.folder
+				self.is_file = fileref.is_file
+				return True
+			else:
+				logger_filesearch.debug('    ..| file not found: searchmissing > '+str(self.get_path(None, False)))
+				return False
+
 	def search(self, searchseries):
 		iffound = False
 
@@ -290,6 +330,12 @@ class cvpj_fileref:
 					self.folder.os_type = 'win'
 					self.folder.win_drive = splitpath[3][6:].upper()
 					splitpath = splitpath[4:]
+
+			if len(splitpath)>3:
+				if splitpath[0] == 'mnt' and len(splitpath[1])==1:
+					self.folder.os_type = 'win'
+					self.folder.win_drive = splitpath[1].upper()
+					splitpath = splitpath[2:]
 
 		return splitpath
 
@@ -422,7 +468,7 @@ class cvpj_sampleref:
 		self.fileref = cvpj_fileref()
 		self.found = False
 		self.dur_samples = 0
-		self.dur_sec = 0
+		self.dur_sec = -1
 		self.timebase = 44100
 		self.hz = 44100
 		self.channels = 1
@@ -453,17 +499,23 @@ class cvpj_sampleref:
 
 		return False
 
-	def search_local(self, dirpath):
-		filesearcher.scan_local_files(dirpath)
-		files = filesearcher.searchcache
-		filename = str(self.fileref.file)
+	def copy_resample(self, os_type, outfilename):
+		try:
+			filename = self.fileref.get_path(None, False)
+			if not os.path.exists(outfilename):
+				audiof_obj = audio_data.audio_obj()
+				audiof_obj.from_file_wav(filename)
+				logger_project.warning('Resampling '+str(self.fileref.file))
+				audiof_obj.resample(44100)
+				audiof_obj.to_file_wav(outfilename)
+				self.set_path(os_type, outfilename)
+			sampleref_obj.hz = 44100
+		except:
+			pass
 
-		if filename in files: 
-			logger_filesearch.debug('    >>| file found: searchmissing >'+self.fileref.get_path(None, False))
-			self.fileref = files[filename]
+	def search_local(self, dirpath):
+		if self.fileref.search_local(dirpath):
 			self.get_info()
-		else:
-			logger_filesearch.debug('    ..| file not found: searchmissing > '+str(self.fileref.get_path(None, False)))
 
 	def get_info(self):
 		wav_realpath = self.fileref.get_path(os_path, False)

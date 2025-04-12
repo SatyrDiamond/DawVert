@@ -3,7 +3,7 @@
 
 from functions import data_values
 
-def process(convproj_obj, in__placement_audio_stretch, out__placement_audio_stretch, out_type):
+def process(convproj_obj, in__placement_audio_stretch, out__placement_audio_stretch, out_type, dawvert_intent):
 	target = None
 	if 'warp' in in__placement_audio_stretch and 'warp' not in out__placement_audio_stretch: target = 'rate'
 	if 'rate' in in__placement_audio_stretch and 'rate' not in out__placement_audio_stretch: target = 'warp'

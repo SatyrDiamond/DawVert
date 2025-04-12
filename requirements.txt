@@ -4,6 +4,7 @@ mido
 lxml
 chardet
 av
+scipy
 beautifulsoup4
 blackboxprotobuf
 pypng

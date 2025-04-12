@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.exceptions import ProjectFileParserException
+from functions import note_data
 import plugins
 import zipfile
 import os
@@ -29,7 +30,7 @@ def do_param(convproj_obj, paramset, dp_param, cvpj_paramid, i_addmul, i_type, i
 		outval = (float(outval)+i_addmul[0])*i_addmul[1] if i_addmul != None else float(outval)
 		if i_type == 'bool': outval = bool(outval)
 		if i_type == 'int': outval = int(outval)
-		paramset.add(cvpj_paramid, outval, i_type)
+		if paramset is not None: paramset.add(cvpj_paramid, outval, i_type)
 
 def do_visual(track_obj, dp_track):
 	if dp_track.name: track_obj.visual.name = dp_track.name
@@ -58,52 +59,122 @@ def do_masterparams(convproj_obj, dp_channel, paramset):
 def do_sends(convproj_obj, track_obj, dp_channel):
 	for send in dp_channel.sends:
 		send_obj = track_obj.sends.add(send.destination, send.id, 1)
-		do_param(convproj_obj, send_obj.params, send.volume, 'amount', None, 'float', ['send', send.id, 'amount'])
+		if send.id:
+			do_param(convproj_obj, send_obj.params, send.volume, 'amount', None, 'float', ['send', send.id, 'amount'])
 
 def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
-	from functions_plugin_ext import plugin_clap
-
 	for device in dp_devices:
 		plugin_obj = None
+		pluginid = device.id
+		#print(device.plugintype, device.params)
+
+		if device.plugintype == 'Equalizer':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'eq', 'bands')
+
+			for band in device.bands:
+				filter_obj, filter_id = plugin_obj.eq_add()
+				filter_obj.on = band.enabled.value=='true'
+				filter_obj.gain = band.gain.value
+
+				if band.type == 'notch': filter_obj.type.set('notch', None)
+				if band.type == 'highShelf': filter_obj.type.set('high_shelf', None)
+				if band.type == 'lowPass': filter_obj.type.set('low_pass', None)
+				if band.type == 'bell': filter_obj.type.set('peak', None)
+				if band.type == 'lowShelf': filter_obj.type.set('low_shelf', None)
+				if band.type == 'highPass': filter_obj.type.set('high_pass', None)
+
+				autoid_assoc.define(str(band.enabled.id), ['n_filter', pluginid, filter_id, 'on'], 'bool', None)
+				autoid_assoc.define(str(band.freq.id), ['n_filter', pluginid, filter_id, 'freq'], 'float', None)
+				autoid_assoc.define(str(band.gain.id), ['n_filter', pluginid, filter_id, 'gain'], 'float', None)
+
+				if band.q.value != 0:
+					filter_obj.q = band.q.value
+					autoid_assoc.define(str(band.q.id), ['n_filter', pluginid, filter_id, 'q'], 'float', None)
+
+				if band.freq.unit == 'semitone':
+					filter_obj.freq = note_data.note_to_freq(band.freq.value-72)
+					freqpath = ['n_filter', pluginid, filter_id, 'freq']
+					convproj_obj.automation.calc(freqpath, 'add', -72, 0, 0, 0)
+					convproj_obj.automation.calc(freqpath, 'note2freq', 0, 0, 0, 0)
+				if band.freq.unit == 'hertz':
+					filter_obj.freq = band.freq.value
+					freqpath = ['n_filter', pluginid, filter_id, 'freq']
+
+		if device.plugintype == 'Compressor':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'compressor', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', pluginid, 'attack'])
+			if 'AutoMakeup' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['AutoMakeup'], 'automakeup', None, 'bool', ['plugin', pluginid, 'automakeup'])
+			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', pluginid, 'pregain'])
+			if 'OutputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['OutputGain'], 'gain', None, 'float', ['plugin', pluginid, 'gain'])
+			if 'Ratio' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Ratio'], 'ratio', None, 'float', ['plugin', pluginid, 'ratio'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', pluginid, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', pluginid, 'threshold'])
+
+		if device.plugintype == 'Limiter':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'limiter', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', pluginid, 'pregain'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', pluginid, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', pluginid, 'threshold'])
+
+		if device.plugintype == 'NoiseGate':
+			pprms = device.params
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'noise_gate', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+			if 'Attack' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Attack'], 'attack', None, 'float', ['plugin', pluginid, 'attack'])
+			if 'Range' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Range'], 'range', None, 'float', ['plugin', pluginid, 'range'])
+			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', pluginid, 'release'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', pluginid, 'threshold'])
 
 		if device.plugintype == 'Vst3Plugin':
-			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'vst3', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			vst3_state = zip_data.read(str(device.state))
-			plugin_vst3.import_presetdata_raw(convproj_obj, plugin_obj, vst3_state, None)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst3', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			try: extmanu_obj.vst3__import_presetdata('raw', zip_data.read(str(device.state)), None)
+			except: pass
+
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
-				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', pluginid, cvpj_paramid])
 
 		if device.plugintype == 'Vst2Plugin':
-			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'vst2', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			vst2_state = zip_data.read(str(device.state))
-			plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, vst2_state, None)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			try: extmanu_obj.vst2__import_presetdata('raw', zip_data.read(str(device.state)), None)
+			except: pass
+
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
-				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', pluginid, cvpj_paramid])
 
 		if device.plugintype == 'ClapPlugin':
-			plugin_obj = convproj_obj.plugin__add(device.id, 'external', 'clap', None)
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
-			clap_state = zip_data.read(str(device.state))
-			plugin_clap.import_presetdata_raw(convproj_obj, plugin_obj, clap_state, None)
-			if device.deviceName: plugin_obj.datavals_global.add('name', device.deviceName)
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'clap', None)
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
+
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			try: extmanu_obj.clap__import_presetdata('raw', zip_data.read(str(device.state)), None)
+			except: pass
+
+			if device.deviceName: plugin_obj.external_info.name = device.deviceName
 			for realparam in device.realparameter:
 				cvpj_paramid = 'ext_param_'+str(realparam.parameterID)
-				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', device.id, cvpj_paramid])
+				do_realparam(convproj_obj, plugin_obj.params, realparam, cvpj_paramid, None, 'float', ['plugin', pluginid, cvpj_paramid])
 
 		if plugin_obj and track_obj:
-			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', device.id, 'enabled'])
+			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
 			if device.deviceRole == 'instrument' and not ismaster:
 				plugin_obj.role = 'inst'
-				track_obj.plugslots.set_synth(device.id)
+				track_obj.plugslots.set_synth(pluginid)
 			elif device.deviceRole == 'audioFX':
 				plugin_obj.role = 'effect'
-				track_obj.plugslots.slots_audio.append(device.id)
+				track_obj.plugslots.slots_audio.append(pluginid)
 
 def do_tracks(convproj_obj, dp_tracks, groupid):
 	global samplefolder
@@ -226,8 +297,8 @@ def do_audio(convproj_obj, npa_obj, audio_obj):
 
 def do_audioclip(convproj_obj, npa_obj, inclip):
 	if inclip.fadeTimeUnit == 'beats':
-		if inclip.fadeInTime: npa_obj.fade_in.set_dur(inclip.FadeInLength, 'beats')
-		if inclip.fadeOutTime: npa_obj.fade_out.set_dur(inclip.FadeInLength, 'beats')
+		if inclip.fadeInTime: npa_obj.fade_in.set_dur(inclip.fadeInTime, 'beats')
+		if inclip.fadeOutTime: npa_obj.fade_out.set_dur(inclip.fadeOutTime, 'beats')
 
 	if inclip.audio: 
 		sampleref_obj = do_audio(convproj_obj, npa_obj, inclip.audio)
@@ -241,18 +312,30 @@ def do_audioclip(convproj_obj, npa_obj, inclip):
 
 			if stretch_algo == 'stretch_subbands': stretch_obj.algorithm = 'stretch_subbands'
 			if stretch_algo == 'slice': stretch_obj.algorithm = 'slice'
-			if stretch_algo == 'elastique_solo': stretch_obj.algorithm = 'elastique_solo'
-			if stretch_algo == 'elastique': stretch_obj.algorithm = 'elastique'
-			if stretch_algo == 'elastique_eco': stretch_obj.algorithm = 'elastique_eco'
-			if stretch_algo == 'elastique_pro': stretch_obj.algorithm = 'elastique_pro'
+			if stretch_algo == 'elastique_solo':
+				stretch_obj.algorithm = 'elastique_v3'
+				stretch_obj.algorithm_mode = 'mono'
+
+			if stretch_algo == 'elastique':
+				stretch_obj.algorithm = 'elastique_v3'
+
+			if stretch_algo == 'elastique_eco':
+				stretch_obj.algorithm = 'elastique_v3'
+				stretch_obj.algorithm_mode = 'efficient'
+
+			if stretch_algo == 'elastique_pro':
+				stretch_obj.algorithm = 'elastique_v3'
+				stretch_obj.algorithm_mode = 'pro'
 
 			stretch_obj.preserve_pitch = stretch_algo != 'repitch'
 			stretch_obj.is_warped = True
+			warp_obj = stretch_obj.warp
+			warp_obj.seconds = sampleref_obj.dur_sec
 			for x in inclip.warps.points:
-				warp_point_obj = stretch_obj.add_warp_point()
+				warp_point_obj = warp_obj.points__add()
 				warp_point_obj.beat = x.time
 				warp_point_obj.second = x.contentTime
-			stretch_obj.calc_warp_points()
+			warp_obj.calcpoints__speed()
 
 def do_audioauto(npa_obj, mpepoints):
 	target_obj = mpepoints.target
@@ -300,22 +383,21 @@ def do_clips(convproj_obj, track_obj, clip, clips):
 				do_audioauto(npa_obj, points)
 
 class input_dawproject(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'dawproject'
-	def get_name(self): return 'DawProject'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return True
-	def detect(self, input_file): 
-		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
-			if 'project.xml' in zip_data.namelist(): return True
-			else: return False
-		except:
-			return False
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'dawproject'
+	
+	def get_name(self):
+		return 'DawProject'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['dawproject']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']
@@ -326,9 +408,13 @@ class input_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
+		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']
 
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_dawproject
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.containers.append(['zip', 'project.xml'])
+
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import dawproject as proj_dawproject
 		from objects import auto_id
 
 		convproj_obj.type = 'r'
@@ -344,11 +430,12 @@ class input_dawproject(plugins.base):
 
 		autoid_assoc = auto_id.convproj2autoid(48, False)
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		project_obj = proj_dawproject.dawproject_song()
 		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
 		except zipfile.BadZipFile as t:
 			raise ProjectFileParserException('dawproject: Bad ZIP File: '+str(t))
 
@@ -408,6 +495,8 @@ class input_dawproject(plugins.base):
 				timemarker_obj.position = marker.time
 
 		autoid_assoc.output(convproj_obj)
+
+		convproj_obj.automation.attempt_after()
 
 		dp_obj = project_obj.metadata
 		meta_obj = convproj_obj.metadata

@@ -10,6 +10,7 @@ import xml.etree.ElementTree as ET
 from xml.dom import minidom
 from objects import globalstore
 from functions import data_values
+from functions import note_data
 
 import logging
 logger_output = logging.getLogger('output')
@@ -18,6 +19,7 @@ from objects.file_proj._dawproject import clips
 from objects.file_proj._dawproject import points
 from objects.file_proj._dawproject import track
 from objects.file_proj._dawproject import device
+from objects.file_proj._dawproject import param
 
 def do_visual(visual_obj, dp_track):
 	if visual_obj.name: dp_track.name = visual_obj.name
@@ -81,12 +83,12 @@ def do_params(convproj_obj, lane_obj, paramset_obj, dp_channel, starttxt, autolo
 	from_cvpj_auto(convproj_obj, lane_obj.points, autoloc+['vol'], 'float', dp_channel.volume.id, None)
 
 def make_time(clip_obj, cvpjtime_obj):
-	clip_obj.time = cvpjtime_obj.position
-	clip_obj.duration = cvpjtime_obj.duration
-	clip_obj.playStart = cvpjtime_obj.cut_start
-	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off']:
-		clip_obj.loopStart = cvpjtime_obj.cut_loopstart
-		clip_obj.loopEnd = cvpjtime_obj.cut_loopend
+	clip_obj.time = round(cvpjtime_obj.position, 7)
+	clip_obj.duration = round(cvpjtime_obj.duration, 7)
+	clip_obj.playStart = round(cvpjtime_obj.cut_start, 7)
+	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off','loop_eq']:
+		clip_obj.loopStart = round(cvpjtime_obj.cut_loopstart, 7)
+		clip_obj.loopEnd = round(cvpjtime_obj.cut_loopend, 7)
 
 def do_mpe_val(value, mpetype):
 	dppoints_obj = points.dawproject_points()
@@ -104,7 +106,7 @@ def do_mpe_val(value, mpetype):
 	dppoints_obj.points.append(dppoint_obj)
 	return mpetype, dppoints_obj
 
-def make_send(send_obj, returnid):
+def make_send(send_obj, returnid, convproj_obj, dptrack_obj, lane_obj):
 	dp_send = track.dawproject_send()
 	dp_send.destination = 'channel_return__'+returnid
 	dp_send.type = 'post'
@@ -116,7 +118,15 @@ def make_send(send_obj, returnid):
 	dp_send.volume.name = 'Send'
 	if send_obj.sendautoid: 
 		dp_send.volume.id = 'send__'+send_obj.sendautoid+'__param__amount'
+		from_cvpj_auto(convproj_obj, lane_obj.points, ['send', send_obj.sendautoid, 'amount'], 'float', dp_send.volume.id, None)
 	return dp_send
+
+def make_sends(master_returns, cvpj_sendsdata, dp_track, convproj_obj, lane_obj):
+	for returnid, x in master_returns.items():
+		if returnid in cvpj_sendsdata:
+			send_obj = cvpj_sendsdata[returnid]
+			dp_send = make_send(send_obj, returnid, convproj_obj, dp_track, lane_obj)
+			dp_track.channel.sends.append(dp_send)
 
 def do_auto_mpe(autopoints_obj, mpetype, dppoints_obj):
 	if mpetype == 'pitch': 
@@ -148,12 +158,25 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 		if bool(stretch_obj):
 			if stretch_obj.preserve_pitch:
 				dp_audio.algorithm = 'stretch_subbands'
-				if stretch_obj.algorithm == 'stretch_subbands': dp_audio.algorithm = 'stretch_subbands'
-				if stretch_obj.algorithm == 'slice': dp_audio.algorithm = 'slice'
-				if stretch_obj.algorithm == 'elastique_solo': dp_audio.algorithm = 'elastique_solo'
-				if stretch_obj.algorithm == 'elastique': dp_audio.algorithm = 'elastique'
-				if stretch_obj.algorithm == 'elastique_eco': dp_audio.algorithm = 'elastique_eco'
-				if stretch_obj.algorithm == 'elastique_pro': dp_audio.algorithm = 'elastique_pro'
+				if stretch_obj.algorithm == 'stretch_subbands':
+					dp_audio.algorithm = 'stretch_subbands'
+
+				if stretch_obj.algorithm == 'slice':
+					dp_audio.algorithm = 'slice'
+
+				if stretch_obj.algorithm == 'elastique_v3':
+					if stretch_obj.algorithm_mode == 'mono': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'speech': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'efficient': dp_audio.algorithm = 'elastique_eco'
+					elif stretch_obj.algorithm_mode == 'pro': dp_audio.algorithm = 'elastique_pro'
+					else: dp_audio.algorithm = 'elastique'
+
+				if stretch_obj.algorithm == 'elastique_v2':
+					if stretch_obj.algorithm_mode == 'mono': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'speech': dp_audio.algorithm = 'elastique_solo'
+					elif stretch_obj.algorithm_mode == 'efficient': dp_audio.algorithm = 'elastique_eco'
+					elif stretch_obj.algorithm_mode == 'pro': dp_audio.algorithm = 'elastique_pro'
+					else: dp_audio.algorithm = 'elastique'
 			else:
 				dp_audio.algorithm = 'repitch'
 
@@ -168,10 +191,12 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 			dp_warps.contentTimeUnit = 'seconds'
 			dp_warps.timeUnit = 'beats'
 			dp_warps.audio = dp_audio
-			for warppoint in stretch_obj.warppoints:
+
+			warp_obj = stretch_obj.warp
+			for warppoint in warp_obj.points__iter():
 				dp_warppoint = clips.dawproject_warppoint()
-				dp_warppoint.time = warppoint.beat
-				dp_warppoint.contentTime = warppoint.second
+				dp_warppoint.time = round(warppoint.beat, 9)
+				dp_warppoint.contentTime = round(warppoint.second, 9)
 				dp_warps.points.append(dp_warppoint)
 				maxlen = warppoint.beat
 
@@ -186,6 +211,16 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 	dp_clip_obj.contentTimeUnit = 'beats'
 	do_visual_clip(cvpj_audioclip.visual, dp_clip_obj)
 
+	stretch_obj = cvpj_audioclip.sample.stretch
+
+	warp_obj = stretch_obj.warp
+	warp_obj.fix__onlyone()
+	warp_obj.calcpoints__speed()
+	#warp_obj.fixpl__offset(cvpj_audioclip.time, 1)
+
+
+
+
 	dp_audio, dp_warps, zip_filepath, real_filepath, maxlen = make_dp_audio(convproj_obj, cvpj_audioclip.sample)
 	if dp_warps: dp_clip_obj.warps = dp_warps
 	else: dp_clip_obj.audio = dp_audio
@@ -193,8 +228,10 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 	if dotime: make_time(dp_clip_obj, cvpj_audioclip.time)
 	else: 
 		dp_clip_obj.time = 0
-		dp_clip_obj.duration = maxlen
+		dp_clip_obj.duration = round(maxlen, 7)
 		dp_clip_obj.playStart = 0
+
+	#print(dp_clip_obj.time, dp_clip_obj.duration, dp_clip_obj.playStart, dp_clip_obj.loopStart, dp_clip_obj.loopEnd)
 
 	if os.path.exists(real_filepath) and zip_filepath not in dawproject_zip.namelist(): 
 		dawproject_zip.write(real_filepath, zip_filepath)
@@ -337,23 +374,170 @@ def do_extparams(param_obj, pluginid, convproj_obj, lane_obj, dp_device):
 		do_autopoints(autodata, dppoints_obj)
 		lane_obj.points.append(dppoints_obj)
 
-def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
-	from functions_plugin_ext import plugin_clap
+def add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, unit, name, dpname, p_min, p_max):
+	if name in plugin_obj.params.list():
+		dp_param_id = 'plugin__'+pluginid+'__param__'+name
+	
+		param_obj = plugin_obj.params.get(name, 0)
+	
+		if param_obj.type in ["int", "float"]: 
+			dp_param = param.dawproject_param_numeric(dpname)
+			dp_param.max = p_max
+			dp_param.min = p_min
+		if param_obj.type in ["bool"]: 
+			dp_param = param.dawproject_param_bool(dpname)
+		dp_param.used = True
+		dp_param.unit = unit
+		dp_param.value = param_obj.value
+		dp_param.id = dp_param_id
+		dp_param.name = dpname
+		dp_device.params[dpname] = dp_param
+	
+		from_cvpj_auto(convproj_obj, lane_obj.points, ['plugin', pluginid, name], 'float', dp_param_id, None)
 
+def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 	if plugin_found:
 		dp_device = None
+
+		if plugin_obj.check_match('universal', 'compressor', None):
+			dp_device = device.dawproject_device('Compressor')
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'attack', 'Attack', 0.000204, 0)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, '', 'automakeup', 'AutoMakeup', 0, 1)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'pregain', 'InputGain', -20, 20)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'gain', 'OutputGain', -20, 20)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'percent', 'ratio', 'Ratio', 0, 100)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.038905, 1.412538)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -60, 0)
+
+		if plugin_obj.check_match('universal', 'limiter', None):
+			dp_device = device.dawproject_device('Limiter')
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'pregain', 'InputGain', -36, 36)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.01, 10)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -36, 0)
+
+		if plugin_obj.check_match('universal', 'noise_gate', None):
+			dp_device = device.dawproject_device('NoiseGate')
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'attack', 'Attack', 0.001, 0.1)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'range', 'Range', 120, 0)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.001, 1)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -1000000, 0)
+
+		if plugin_obj.check_match('universal', 'filter', None):
+			dp_device = device.dawproject_device('Equalizer')
+			dp_device.deviceID = 'e4815188-ba6f-4d14-bcfc-2dcb8f778ccb'
+			dp_device.deviceName = plugin_obj.external_info.name
+			dp_device.name = 'EQ+'
+			dp_device.deviceRole = 'audioFX'
+
+			band = device.dawproject_band()
+			filter_obj = plugin_obj.filter
+			cvpjbandtype = filter_obj.type.type
+
+			if cvpjbandtype == 'notch': band.type = 'notch'
+			if cvpjbandtype == 'high_shelf': band.type = 'highShelf'
+			if cvpjbandtype == 'low_pass': band.type = 'lowPass'
+			if cvpjbandtype == 'peak': band.type = 'bell'
+			if cvpjbandtype == 'low_shelf': band.type = 'lowShelf'
+			if cvpjbandtype == 'high_pass': band.type = 'highPass'
+
+			band.enabled.value = 'true' if filter_obj.on else 'false'
+			band.enabled.used = True
+			band.enabled.id = 'nfilter__'+pluginid+'__enabled'
+
+			band.freq.value = filter_obj.freq
+			band.freq.used = True
+			band.freq.id = 'nfilter__'+pluginid+'__freq'
+			band.freq.unit = 'hertz'
+			band.freq.max = 20
+			band.freq.min = 20000
+
+			band.gain.value = filter_obj.gain
+			band.gain.used = True
+			band.gain.id = 'nfilter__'+pluginid+'__gain'
+			band.gain.unit = 'decibel'
+			band.gain.max = 30.000000
+			band.gain.min = -30.000000
+
+			band.q.value = filter_obj.q
+			band.q.used = True
+			band.q.id = 'nfilter__'+pluginid+'__q'
+			band.q.unit = 'linear'
+			band.q.max = 40.003685
+			band.q.min = 0.024998
+
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'on'], 'bool', band.enabled.id, None)
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'freq'], 'float', band.freq.id, None)
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'gain'], 'float', band.gain.id, None)
+			from_cvpj_auto(convproj_obj, lane_obj.points, ['filter', pluginid, 'q'], 'float', band.q.id, None)
+
+			dp_device.bands.append(band)
+
+		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
+		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
+		if is_eq_bands or is_eq_8limited:
+			if is_eq_8limited: plugin_obj.eq.from_8limited(pluginid)
+			dp_device = device.dawproject_device('Equalizer')
+			dp_device.deviceID = 'e4815188-ba6f-4d14-bcfc-2dcb8f778ccb'
+			dp_device.deviceName = plugin_obj.external_info.name
+			dp_device.name = 'EQ+'
+			dp_device.deviceRole = 'audioFX'
+
+			for filter_id, filter_obj in plugin_obj.eq:
+				band = device.dawproject_band()
+
+				cvpjbandtype = filter_obj.type.type
+
+				if cvpjbandtype == 'notch': band.type = 'notch'
+				if cvpjbandtype == 'high_shelf': band.type = 'highShelf'
+				if cvpjbandtype == 'low_pass': band.type = 'lowPass'
+				if cvpjbandtype == 'peak': band.type = 'bell'
+				if cvpjbandtype == 'low_shelf': band.type = 'lowShelf'
+				if cvpjbandtype == 'high_pass': band.type = 'highPass'
+
+				band.enabled.value = 'true' if filter_obj.on else 'false'
+				band.enabled.used = True
+				band.enabled.id = 'nfilter__'+filter_id+'__enabled'
+
+				band.freq.value = filter_obj.freq
+				band.freq.used = True
+				band.freq.id = 'nfilter__'+pluginid+'__'+filter_id+'__freq'
+				band.freq.unit = 'hertz'
+				band.freq.max = 20
+				band.freq.min = 20000
+
+				band.gain.value = filter_obj.gain
+				band.gain.used = True
+				band.gain.id = 'nfilter__'+pluginid+'__'+filter_id+'__gain'
+				band.gain.unit = 'decibel'
+				band.gain.max = 30.000000
+				band.gain.min = -30.000000
+
+				band.q.value = filter_obj.q
+				band.q.used = True
+				band.q.id = 'nfilter__'+pluginid+'__'+filter_id+'__q'
+				band.q.unit = 'linear'
+				band.q.max = 40.003685
+				band.q.min = 0.024998
+
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'on'], 'bool', band.enabled.id, None)
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'freq'], 'float', band.freq.id, None)
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'gain'], 'float', band.gain.id, None)
+				from_cvpj_auto(convproj_obj, lane_obj.points, ['n_filter', pluginid, filter_id, 'q'], 'float', band.q.id, None)
+
+				dp_device.bands.append(band)
+
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
-			fourid = plugin_obj.datavals_global.get('fourid', None)
+			fourid = plugin_obj.external_info.fourid
 			if fourid:
 				dp_device = device.dawproject_device('Vst2Plugin')
 				dp_device.deviceID = fourid
-				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-				dp_device.name = plugin_obj.datavals_global.get('name', None)
+				dp_device.deviceName = plugin_obj.external_info.name
+				dp_device.name = plugin_obj.external_info.name
 
-				fxpdata = plugin_vst2.export_presetdata(plugin_obj)
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+				fxpdata = extmanu_obj.vst2__export_presetdata(None)
+
 				statepath = 'plugins/'+str(uuid.uuid4())+'.fxp'
 				dawproject_zip.writestr(statepath, fxpdata)
 				dp_device.state.set(statepath)
@@ -365,14 +549,16 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				logger_output.warning('VST2 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'vst3', None):
-			vstid = plugin_obj.datavals_global.get('id', None)
+			vstid = plugin_obj.external_info.id
 			if vstid:
 				dp_device = device.dawproject_device('Vst3Plugin')
 				dp_device.deviceID = vstid
-				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-				dp_device.name = plugin_obj.datavals_global.get('name', None)
+				dp_device.deviceName = plugin_obj.external_info.name
+				dp_device.name = plugin_obj.external_info.name
 
-				fxpdata = plugin_vst3.export_presetdata(plugin_obj)
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+				fxpdata = extmanu_obj.vst3__export_presetdata(None)
+
 				statepath = 'plugins/'+str(uuid.uuid4())+'.vstpreset'
 				dawproject_zip.writestr(statepath, fxpdata)
 				dp_device.state.set(statepath)
@@ -382,14 +568,16 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 				logger_output.warning('VST3 plugin not placed: no ID found.')
 
 		if plugin_obj.check_wildmatch('external', 'clap', None):
-			clapid = plugin_obj.datavals_global.get('id', None)
+			clapid = plugin_obj.external_info.id
 			if clapid:
 				dp_device = device.dawproject_device('ClapPlugin')
-				dp_device.deviceID = plugin_obj.datavals_global.get('id', None)
-				dp_device.deviceName = plugin_obj.datavals_global.get('name', None)
-				dp_device.name = plugin_obj.datavals_global.get('name', None)
+				dp_device.deviceID = plugin_obj.external_info.id
+				dp_device.deviceName = plugin_obj.external_info.name
+				dp_device.name = plugin_obj.external_info.name
 
-				fxpdata = plugin_clap.export_presetdata(plugin_obj)
+				extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+				fxpdata = extmanu_obj.clap__export_presetdata(None)
+
 				if fxpdata:
 					statepath = 'plugins/'+str(uuid.uuid4())+'.clap-preset'
 					dawproject_zip.writestr(statepath, fxpdata)
@@ -419,7 +607,7 @@ def do_devices(convproj_obj, dp_channel, lane_obj, inst_pluginid, fxslots_audio)
 
 def maketrack_notes(convproj_obj, track_obj, trackid, lane_obj):
 	dp_track, dp_channel = make_track('notes', 'regular', 'track__'+trackid, 'channel__'+trackid)
-	dp_channel.destination = 'masterchannel'
+	dp_channel.destination = 'masterchannel' if not track_obj.group else 'channel_group__'+track_obj.group
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
@@ -428,7 +616,7 @@ def maketrack_notes(convproj_obj, track_obj, trackid, lane_obj):
 
 def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
 	dp_track, dp_channel = make_track('audio', 'regular', 'track__'+trackid, 'channel__'+trackid)
-	dp_channel.destination = 'masterchannel'
+	dp_channel.destination = 'masterchannel' if not track_obj.group else 'channel_group__'+track_obj.group
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
@@ -437,7 +625,7 @@ def maketrack_audio(convproj_obj, track_obj, trackid, lane_obj):
 
 def maketrack_hybrid(convproj_obj, track_obj, trackid, lane_obj):
 	dp_track, dp_channel = make_track('audio notes', 'regular', 'track__'+trackid, 'channel__'+trackid)
-	dp_channel.destination = 'masterchannel'
+	dp_channel.destination = 'masterchannel' if not track_obj.group else 'channel_group__'+track_obj.group
 	do_visual(track_obj.visual, dp_track)
 	do_params(convproj_obj, lane_obj, track_obj.params, dp_channel, dp_track.id+'__param__', ['track', trackid])
 	make_clips(dp_track.id, convproj_obj, track_obj, lane_obj, trackid)
@@ -475,17 +663,23 @@ def maketrack_master(convproj_obj, track_obj, arrangement):
 		from_cvpj_auto_dppoints_obj(convproj_obj, tempoauto, ['main', 'bpm'], 'float', 'main__bpm', None)
 	return dp_track
 
-
 class output_dawproject(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'dawproject'
-	def get_name(self): return 'DawProject'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'dawproject'
+	
+	def get_name(self):
+		return 'DawProject'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'dawproject'
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv','loop_adv_off']
-		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv','loop_adv_off']
+		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac', 'm4a']
 		in_dict['placement_cut'] = True
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_stretch'] = ['warp']
@@ -495,8 +689,10 @@ class output_dawproject(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
-		from objects.file_proj import proj_dawproject
+		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']
+	
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import dawproject as proj_dawproject
 
 		global arrangement_obj
 		global dawproject_zip
@@ -530,6 +726,7 @@ class output_dawproject(plugins.base):
 			grp_lane_obj = make_lane('group__'+groupid)
 			group_obj = convproj_obj.fx__group__get(groupid)
 			dp_group = maketrack_group(convproj_obj, group_obj, groupid, grp_lane_obj)
+			make_sends(master_returns, group_obj.sends.data, dp_group, convproj_obj, grp_lane_obj)
 			groups_data[groupid] = dp_group
 			if insidegroup: 
 				groups_data[insidegroup].tracks.append(dp_group)
@@ -558,18 +755,15 @@ class output_dawproject(plugins.base):
 				if dp_track:
 					dp_tracks.append(dp_track)
 
-				for returnid, x in master_returns.items():
-					if returnid in track_obj.sends.data:
-						send_obj = track_obj.sends.data[returnid]
-						dp_send = make_send(send_obj, returnid)
-						dp_track.channel.sends.append(dp_send)
+				make_sends(master_returns, track_obj.sends.data, dp_track, convproj_obj, lane_obj)
 
 		for returnid, return_obj in master_returns.items():
 			dp_track = maketrack_return(convproj_obj, return_obj, returnid)
 			for ireturnid, x in master_returns.items():
+				lane_obj = make_lane('return__'+trackid)
 				if ireturnid in return_obj.sends.data:
 					send_obj = return_obj.sends.data[ireturnid]
-					dp_send = make_send(send_obj, returnid)
+					dp_send = make_send(send_obj, returnid, convproj_obj, dp_track, lane_obj)
 					dp_track.channel.sends.append(dp_send)
 			project_obj.tracks.append(dp_track)
 
@@ -596,12 +790,21 @@ class output_dawproject(plugins.base):
 			dp_timesig = project_obj.arrangement.timesignatureautomation = points.dawproject_points_timesig()
 			dp_timesig.id = 'main__timesig'
 
+			firstpoint = True
 			for pos, value in convproj_obj.timesig_auto:
+				if firstpoint:
+					if pos != 0:
+						point_obj = points.dawproject_timesigpoint()
+						point_obj.time = 0
+						point_obj.numerator = convproj_obj.timesig[0]
+						point_obj.denominator = convproj_obj.timesig[1]
+						dp_timesig.points.append(point_obj)
 				point_obj = points.dawproject_timesigpoint()
 				point_obj.time = pos
 				point_obj.numerator = value[0]
 				point_obj.denominator = value[1]
 				dp_timesig.points.append(point_obj)
+				firstpoint = False
 
 		dp_obj = project_obj.metadata
 		meta_obj = convproj_obj.metadata
@@ -621,4 +824,7 @@ class output_dawproject(plugins.base):
 		dawproject_zip.writestr('metadata.xml', project_obj.save_metadata())
 		dawproject_zip.close()
 
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
+
+		open('outdebug.xml', 'wb').write(project_obj.save_to_text())

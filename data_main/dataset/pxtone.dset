@@ -1,18 +1,15 @@
-{
-    "track": {
-        "colorset": {
-            "main": [
-                [0.94, 0.5, 0.0],
-                [0.41, 0.47, 1.0],
-                [0.79, 0.72, 0.72],
-                [0.68, 0.25, 1.0],
-                [0.57, 0.78, 0.0],
-                [0.99, 0.2, 0.8],
-                [0.0, 0.75, 0.38],
-                [1.0, 0.47, 0.36],
-                [0.0, 0.74, 1.0]
-            ]
-        },
-        "objects": {}
-    }
-}
+<dataset>
+    <category id="track">
+        <colorset id="main">
+            <color>#00BDFF</color>
+            <color>#FF775D</color>
+            <color>#00C060</color>
+            <color>#FC32CB</color>
+            <color>#92C600</color>
+            <color>#AE40FF</color>
+            <color>#CAB8B8</color>
+            <color>#6979FF</color>
+            <color>#F08000</color>
+        </colorset>
+    </category>
+</dataset>

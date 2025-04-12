@@ -1,55 +1,57 @@
-
-area_struct|crio
-part|float|amp/boost
-part|float|amp/sat
-part|float|amp/vol
-part|float|__unknown_3
-part|float|__unknown_4
-part|float|__unknown_5
-part|float|__unknown_6
-part|float|__unknown_7
-part|float|__unknown_8
-part|float|__unknown_9
-part|float|__unknown_10
-part|float|__unknown_11
-part|float|__unknown_12
-part|float|__unknown_13
-part|float|__unknown_14
-part|float|__unknown_15
-part|float|__unknown_16
-part|float|__unknown_17
-part|float|__unknown_18
-part|float|__unknown_19
-part|float|__unknown_20
-part|float|__unknown_21
-part|float|__unknown_22
-part|float|__unknown_23
-part|float|__unknown_24
-part|float|__unknown_25
-part|float|__unknown_26
-part|float|__unknown_27
-part|float|__unknown_28
-part|float|__unknown_29
-part|float|__unknown_30
-part|float|__unknown_31
-part|float|__unknown_32
-part|float|__unknown_33
-part|float|__unknown_34
-part|float|__unknown_35
-part|float|__unknown_36
-part|float|__unknown_37
-part|float|__unknown_38
-part|float|__unknown_39
-part|float|__unknown_40
-part|float|__unknown_41
-part|float|__unknown_42
-part|float|__unknown_43
-part|float|__unknown_44
-part|float|__unknown_45
-part|float|__unknown_46
-part|float|__unknown_47
-part|float|__unknown_48
-part|float|osc/sub_on
-part|float|slide
-part|float|lfo/rate_source
-part|string.32|preset_name
+<datadef>
+  <struct name="crio">
+    <part type="float" name="amp/boost"/>
+    <part type="float" name="amp/sat"/>
+    <part type="float" name="amp/vol"/>
+    <part type="float" name="__unknown_3"/>
+    <part type="float" name="__unknown_4"/>
+    <part type="float" name="__unknown_5"/>
+    <part type="float" name="__unknown_6"/>
+    <part type="float" name="__unknown_7"/>
+    <part type="float" name="__unknown_8"/>
+    <part type="float" name="__unknown_9"/>
+    <part type="float" name="__unknown_10"/>
+    <part type="float" name="__unknown_11"/>
+    <part type="float" name="__unknown_12"/>
+    <part type="float" name="__unknown_13"/>
+    <part type="float" name="__unknown_14"/>
+    <part type="float" name="__unknown_15"/>
+    <part type="float" name="__unknown_16"/>
+    <part type="float" name="__unknown_17"/>
+    <part type="float" name="__unknown_18"/>
+    <part type="float" name="__unknown_19"/>
+    <part type="float" name="__unknown_20"/>
+    <part type="float" name="__unknown_21"/>
+    <part type="float" name="__unknown_22"/>
+    <part type="float" name="__unknown_23"/>
+    <part type="float" name="__unknown_24"/>
+    <part type="float" name="__unknown_25"/>
+    <part type="float" name="__unknown_26"/>
+    <part type="float" name="__unknown_27"/>
+    <part type="float" name="__unknown_28"/>
+    <part type="float" name="__unknown_29"/>
+    <part type="float" name="__unknown_30"/>
+    <part type="float" name="__unknown_31"/>
+    <part type="float" name="__unknown_32"/>
+    <part type="float" name="__unknown_33"/>
+    <part type="float" name="__unknown_34"/>
+    <part type="float" name="__unknown_35"/>
+    <part type="float" name="__unknown_36"/>
+    <part type="float" name="__unknown_37"/>
+    <part type="float" name="__unknown_38"/>
+    <part type="float" name="__unknown_39"/>
+    <part type="float" name="__unknown_40"/>
+    <part type="float" name="__unknown_41"/>
+    <part type="float" name="__unknown_42"/>
+    <part type="float" name="__unknown_43"/>
+    <part type="float" name="__unknown_44"/>
+    <part type="float" name="__unknown_45"/>
+    <part type="float" name="__unknown_46"/>
+    <part type="float" name="__unknown_47"/>
+    <part type="float" name="__unknown_48"/>
+    <part type="float" name="osc/sub_on"/>
+    <part type="float" name="slide"/>
+    <part type="float" name="lfo/rate_source"/>
+    <part type="string" name="preset_name" size="32"/>
+  </struct>
+</datadef>

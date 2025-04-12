@@ -12,7 +12,7 @@ class rpp_track:
 	def __init__(self):
 		self.volpan = rvd([1,0,-1,-1,1], ['vol','pan','panlaw','left','right'], None, True)
 		self.mutesolo = rvd([0,0,0], ['mute','solo','solo_defeat'], [bool,bool,bool], True)
-		self.playoffs = rvd([0,1], None, None, True)
+		self.playoffs = rvd([0,1], ['time','mode'], [float,int], True)
 		self.isbus = rvd([0,0], None, None, True)
 		self.buscomp = rvd([0,0,0,0,0], None, None, True)
 		self.showinmix = rvd([1.0,0.6667,0.5,1.0,0.5,0.0,0.0,0.0], None, None, True)
@@ -25,6 +25,7 @@ class rpp_track:
 		self.peakcol = rvs(16576, int, True)
 		self.beat = rvs(0, float, True)
 		self.automode = rvs(0.0, float, True)
+		self.panmode = rvs(0, int, True)
 		self.panlawflags = rvs(0, float, False)
 		self.iphase = rvs(0.0, float, True)
 		self.sel = rvs(0.0, float, True)
@@ -37,11 +38,20 @@ class rpp_track:
 		self.items = []
 		self.fxchain = None
 		self.auxrecv = []
+		self.auxvolenv = {}
+		self.auxpanenv = {}
+		self.auxmuteenv = {}
+
 		self.panenv2 = rpp_env.rpp_env()
 		self.volenv2 = rpp_env.rpp_env()
 		self.muteenv = rpp_env.rpp_env()
+		self.panenv = rpp_env.rpp_env()
+		self.widthenv2 = rpp_env.rpp_env()
+		self.dualpanenvl2 = rpp_env.rpp_env()
+		self.dualpanenv2 = rpp_env.rpp_env()
 
 	def load(self, rpp_data):
+		lastauxnum = 0
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
 			if name == 'NAME': self.name.set(values[0])
 			if name == 'PEAKCOL': self.peakcol.set(values[0])
@@ -49,6 +59,7 @@ class rpp_track:
 			if name == 'AUTOMODE': self.automode.set(values[0])
 			if name == 'PANLAWFLAGS': self.panlawflags.set(values[0])
 			if name == 'VOLPAN': self.volpan.read(values)
+			if name == 'PANMODE': self.panmode.read(values)
 			if name == 'MUTESOLO': self.mutesolo.read(values)
 			if name == 'IPHASE': self.iphase.set(values[0])
 			if name == 'PLAYOFFS': self.playoffs.read(values)
@@ -70,9 +81,14 @@ class rpp_track:
 			if name == 'PANENV2': self.panenv2.read(inside_dat, values)
 			if name == 'VOLENV2': self.volenv2.read(inside_dat, values)
 			if name == 'MUTEENV': self.muteenv.read(inside_dat, values)
+			if name == 'PANENV': self.panenv.read(inside_dat, values)
+			if name == 'WIDTHENV2': self.widthenv2.read(inside_dat, values)
+			if name == 'DUALPANENVL2': self.dualpanenvl2.read(inside_dat, values)
+			if name == 'DUALPANENV2': self.dualpanenv2.read(inside_dat, values)
 			if name == 'AUXRECV': 
 				auxrecv_obj = self.add_auxrecv()
 				auxrecv_obj.read(values)
+				lastauxnum = auxrecv_obj['tracknum']
 			if name == 'ITEM': 
 				item_obj = rpp_item.rpp_item()
 				item_obj.load(inside_dat)
@@ -81,7 +97,28 @@ class rpp_track:
 				fxchain_obj = rpp_fxchain.rpp_fxchain()
 				fxchain_obj.load(inside_dat)
 				self.fxchain = fxchain_obj
+			if name == 'AUXVOLENV': 
+				auxvolenv = rpp_env.rpp_env()
+				auxvolenv.read(inside_dat, values)
+				self.auxvolenv[lastauxnum] = auxvolenv
+			if name == 'AUXPANENV': 
+				auxpanenv = rpp_env.rpp_env()
+				auxpanenv.read(inside_dat, values)
+				self.auxpanenv[lastauxnum] = auxvolenv
+			if name == 'AUXMUTEENV': 
+				auxmuteenv = rpp_env.rpp_env()
+				auxmuteenv.read(inside_dat, values)
+				self.auxmuteenv[lastauxnum] = auxvolenv
 
+	def add_aux_env(self, atype, num):
+		env_obj = rpp_env.rpp_env()
+		env_obj.used = True
+		env_obj.act['bypass'] = 1
+		if atype == 'vol': self.auxvolenv[num] = env_obj
+		if atype == 'pan': self.auxpanenv[num] = env_obj
+		if atype == 'mute': self.auxmuteenv[num] = env_obj
+		return env_obj
+	
 	def add_auxrecv(self):
 		auxrecv_obj = rvd(
 			[1,0,1,0,0,0,0,0,0,'-1:U',0,-1,''], 
@@ -104,6 +141,7 @@ class rpp_track:
 		self.peakcol.write('PEAKCOL',rpp_data)
 		self.beat.write('BEAT',rpp_data)
 		self.automode.write('AUTOMODE',rpp_data)
+		self.panmode.write('PANMODE',rpp_data)
 		self.panlawflags.write('PANLAWFLAGS',rpp_data)
 		self.volpan.write('VOLPAN', rpp_data)
 		self.mutesolo.write('MUTESOLO', rpp_data)
@@ -122,12 +160,22 @@ class rpp_track:
 		self.fx.write('FX',rpp_data)
 		self.trackid.write('TRACKID',rpp_data)
 		self.perf.write('PERF',rpp_data)
-		for r in self.auxrecv: r.write('AUXRECV', rpp_data)
+		for r in self.auxrecv: 
+			r.write('AUXRECV', rpp_data)
+			tracknum = r['tracknum']
+			if tracknum in self.auxvolenv: self.auxvolenv[tracknum].write('AUXVOLENV', rpp_data)
+			if tracknum in self.auxpanenv: self.auxpanenv[tracknum].write('AUXPANENV', rpp_data)
+			if tracknum in self.auxmuteenv: self.auxmuteenv[tracknum].write('AUXMUTEENV', rpp_data)
 		self.midiout.write('MIDIOUT',rpp_data)
 		self.mainsend.write('MAINSEND', rpp_data)
 		self.panenv2.write('PANENV2', rpp_data)
 		self.volenv2.write('VOLENV2', rpp_data)
 		self.muteenv.write('MUTEENV', rpp_data)
+		self.panenv.write('PANENV', rpp_data)
+		self.widthenv2.write('WIDTHENV2', rpp_data)
+		self.dualpanenvl2.write('DUALPANENVL2', rpp_data)
+		self.dualpanenv2.write('DUALPANENV2', rpp_data)
+
 		if self.fxchain != None:
 			rpp_fxchaindata = robj('FXCHAIN',[])
 			self.fxchain.write(rpp_fxchaindata)

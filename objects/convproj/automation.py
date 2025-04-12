@@ -5,6 +5,7 @@ import copy
 
 from objects import counter
 from functions import note_data
+from functions import xtramath
 from objects.convproj import autoticks
 from objects.convproj import autopoints
 from objects.convproj import placements_autopoints
@@ -14,7 +15,7 @@ import logging
 logger_automation = logging.getLogger('automation')
 
 class cvpj_s_automation:
-	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres']
+	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres','persist','defualt_val']
 	def __init__(self, time_ppq, time_float, valtype):
 		self.pl_points = None
 		self.pl_ticks = None
@@ -32,12 +33,19 @@ class cvpj_s_automation:
 		self.time_float = time_float
 		self.valtype = valtype
 
+		self.persist = True
+		self.defualt_val = 0
+
+	def make_base(self):
+		outv = cvpj_s_automation(self.time_ppq, self.time_float, self.valtype)
+		return outv
+
 	def __repr__(self):
 		outtxt = ''
-		if self.u_pl_points: outtxt += 'pl_points '
-		if self.u_pl_ticks: outtxt += 'pl_ticks '
-		if self.u_nopl_points: outtxt += 'nopl_points '
-		if self.u_nopl_ticks: outtxt += 'nopl_ticks '
+		if self.u_pl_points: outtxt += 'pl_points:'+str(len(self.pl_points))+' '
+		if self.u_pl_ticks: outtxt += 'pl_ticks:'+str(len(self.pl_ticks))+' '
+		if self.u_nopl_points: outtxt += 'nopl_points:'+str(len(self.nopl_points))+' '
+		if self.u_nopl_ticks: outtxt += 'nopl_ticks:'+str(len(self.nopl_ticks))+' '
 
 		return 'AutoSet '+ outtxt
 
@@ -96,6 +104,7 @@ class cvpj_s_automation:
 		if self.u_nopl_ticks: self.nopl_ticks.calc(mathtype, val1, val2, val3, val4)
 		if self.u_pl_points: self.pl_points.calc(mathtype, val1, val2, val3, val4)
 		if self.u_pl_ticks: self.pl_ticks.calc(mathtype, val1, val2, val3, val4)
+		self.defualt_val = xtramath.do_math(self.defualt_val, mathtype, val1, val2, val3, val4)
 
 	def add_autotick(self, p_pos, p_val):
 		self.make_nopl_ticks()
@@ -107,6 +116,7 @@ class cvpj_s_automation:
 		autopoint_obj.pos = p_pos
 		autopoint_obj.value = p_val
 		autopoint_obj.type = p_type
+		return autopoint_obj
 
 	def add_autopoint_real(self, p_pos, p_val, p_type):
 		self.make_nopl_points()
@@ -114,6 +124,7 @@ class cvpj_s_automation:
 		autopoint_obj.pos_real = p_pos
 		autopoint_obj.value = p_val
 		autopoint_obj.type = p_type
+		return autopoint_obj
 
 	def add_autopoints_twopoints(self, twopoints):
 		self.make_nopl_points()
@@ -144,6 +155,7 @@ class cvpj_s_automation:
 		self.time_float = time_float
 
 	def change_seconds(self, is_seconds, bpm, ppq):
+		if self.u_pl_points: self.pl_points.change_seconds(is_seconds, bpm, ppq)
 		if self.u_nopl_points: self.nopl_points.change_seconds(is_seconds, bpm, ppq)
 		
 	# | Ticks       | Points      |
@@ -157,6 +169,22 @@ class cvpj_s_automation:
 	# |      | iiii | OOOO | <--1 | M | convert____pl_ticks___nopl_points
     
 	# | iiii | OOOO |      |      | S | convert__nopl_ticks_____pl_ticks
+	# | OOOO | iiii |      |      | S | convert____pl_ticks___nopl_ticks
+
+	def convert____pl_ticks___nopl_ticks(self):
+		if self.u_pl_ticks and not self.u_nopl_ticks:
+			self.u_nopl_ticks = True
+			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, self.valtype)
+			for x in self.pl_ticks:
+				pos = x.time.position
+				dur = x.time.duration
+				offset = x.time.cut_start if x.time.cut_type == 'cut' else 0
+				for p, v in x.data.points.items():
+					if dur>p>=offset:
+						self.nopl_ticks.points[p+pos] = v
+
+			self.pl_ticks = None
+			self.u_pl_ticks = False
 
 	def convert__nopl_ticks_____pl_ticks(self):
 		if self.u_nopl_ticks:
@@ -208,11 +236,24 @@ class cvpj_s_automation:
 
 	def convert____pl_points__nopl_points(self):
 		if self.u_pl_points:
+			self.pl_points.remove_loops([])
+
+			if not self.persist: self.add_autopoint(0, self.defualt_val, 'instant')
+
+			endpos = -1
+			difval = 0
 			for x in self.pl_points:
 				x.remove_cut()
+				if endpos != -1: 
+					difval = x.time.position-endpos
+					if difval>0 and not self.persist: 
+						self.add_autopoint(endpos, self.defualt_val, 'instant')
+
+				endpos = x.time.position+x.time.duration
 				for c, p in enumerate(x.data.points):
 					self.add_autopoint(p.pos+x.time.position, p.value, p.type if c != 0 else 'instant')
-				
+
+			if not self.persist: self.add_autopoint(x.time.position+x.time.duration, self.defualt_val, 'instant')
 
 		self.pl_points = None
 		self.u_pl_points = False
@@ -284,6 +325,11 @@ class cvpj_s_automation:
 				elif (pl_points, nopl_points) == (False, True):
 					self.convert____pl_ticks___nopl_points()
 
+		if if_ticks and not if_points:
+			if not (pl_ticks) and nopl_ticks:
+					self.convert____pl_ticks___nopl_ticks()
+
+
 class cvpj_autoloc:
 	def __init__(self, indata):
 		if isinstance(indata, list): self.autoloc = indata
@@ -333,6 +379,21 @@ class cvpj_automation:
 	def __setitem__(self, p, v):
 		autoloc = cvpj_autoloc(p)
 		self.autoloc[autoloc] = v
+
+	def set_persist_all(self, on):
+		for _, v in self.data.items():
+			v.persist = on
+
+	def merge(self, sceneauto, pos, dur):
+		for a, v in sceneauto.data.items():
+			if a not in self.data: self.data[copy.deepcopy(a)] = v.make_base()
+			mainauto = self.data[a]
+			otherauto = v
+			if otherauto.u_pl_points:
+				if not mainauto.u_pl_points: 
+					mainauto.make_pl_points()
+					mainauto.u_pl_points = True
+				mainauto.pl_points.merge_crop(otherauto.pl_points, pos, dur)
 
 	def attempt_after(self):
 		for autopath, mathtype, val1, val2, val3, val4 in self.calcnotfound:
@@ -390,11 +451,19 @@ class cvpj_automation:
 			self.data[autopath].id = self.auto_num.get()
 			if autopath == ['main', 'bpm']:
 				self.data[autopath].conv_tres = 8
+		return self.data[autopath]
+
+	def exists(self, autopath):
+		return cvpj_autoloc(autopath) in self.data
 
 	def get(self, autopath, valtype):
 		autopath = cvpj_autoloc(autopath)
 		if autopath in self.data: return True, self.data[autopath]
 		else: return False, cvpj_s_automation(self.time_ppq, self.time_float, valtype)
+
+	def get_opt(self, autopath):
+		autopath = cvpj_autoloc(autopath)
+		if autopath in self.data: return self.data[autopath]
 
 	def pop_f(self, autopath):
 		autopath = ';'.join(autopath)
@@ -474,12 +543,12 @@ class cvpj_automation:
 	def add_autopoint(self, autopath, valtype, p_pos, p_val, p_type):
 		self.create(autopath, valtype, False)
 		autopath = cvpj_autoloc(autopath)
-		self.data[autopath].add_autopoint(p_pos, p_val, p_type)
+		return self.data[autopath].add_autopoint(p_pos, p_val, p_type)
 
 	def add_autopoint_real(self, autopath, valtype, p_pos, p_val, p_type):
 		self.create(autopath, valtype, False)
 		autopath = cvpj_autoloc(autopath)
-		self.data[autopath].add_autopoint_real(p_pos, p_val, p_type)
+		return self.data[autopath].add_autopoint_real(p_pos, p_val, p_type)
 
 	def add_autopoints_twopoints(self, autopath, valtype, twopoints):
 		self.create(autopath, valtype, False)
@@ -529,6 +598,30 @@ class cvpj_automation:
 			else: return False, None
 		else: return False, None
 
+	def get_autoticks(self, autopath):
+		autopath = cvpj_autoloc(autopath)
+		if autopath in self.data:
+			autodata = self.data[autopath]
+			if autodata.u_nopl_ticks: return True, autodata.nopl_ticks
+			else: return False, None
+		else: return False, None
+
+	def get_pl_autopoints(self, autopath):
+		autopath = cvpj_autoloc(autopath)
+		if autopath in self.data:
+			autodata = self.data[autopath]
+			if autodata.u_pl_points: return True, autodata.pl_points
+			else: return False, None
+		else: return False, None
+
+	def iter_all_external(self, pluginid):
+		for autoloc, autodata in self.data.items():
+			paramname = autoloc[-1]
+			if autoloc[0] in ['slot', 'plugin']:
+				if autoloc[1] == pluginid:
+					if paramname.startswith('ext_param_'):
+						paramnum = int(paramname[10:])
+						yield autoloc, autodata, paramnum
 
 	def iter_nopl_points_external(self, pluginid):
 		for autoloc, autodata in self.iter_nopl_points(filter=['plugin', pluginid]):

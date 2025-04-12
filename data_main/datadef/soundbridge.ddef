@@ -1,145 +1,147 @@
-
-area_struct|eq
-part|float_b|ls_hz
-part|float_b|ls_q
-part|float_b|ls_gain
-part|float_b|ls_unknown
-part|float_b|ls_on
-part|float_b|p1_hz
-part|float_b|p1_q
-part|float_b|p1_gain
-part|float_b|p1_unknown
-part|float_b|p1_on
-part|float_b|p2_hz
-part|float_b|p2_q
-part|float_b|p2_gain
-part|float_b|p2_unknown
-part|float_b|p2_on
-part|float_b|p3_hz
-part|float_b|p3_q
-part|float_b|p3_gain
-part|float_b|p3_unknown
-part|float_b|p3_on
-part|float_b|p4_hz
-part|float_b|p4_q
-part|float_b|p4_gain
-part|float_b|p4_unknown
-part|float_b|p4_on
-part|float_b|hs_hz
-part|float_b|hs_q
-part|float_b|hs_gain
-part|float_b|hs_unknown
-part|float_b|hs_on
-
-area_struct|filter_unit
-part|float_b|type
-part|float_b|freq
-part|float_b|q
-part|float_b|unknown
-
-area_struct|reverb
-part|float_b|freeze
-part|float_b|wet
-part|float_b|pre_delay
-part|float_b|bass_boost
-part|float_b|high_cut_freq
-part|float_b|high_cut_amount
-part|float_b|time
-part|float_b|el_rl_balance
-part|float_b|er
-part|float_b|lr
-part|float_b|liveness
-part|float_b|diffusion
-part|float_b|steepness
-part|float_b|quality
-
-area_struct|compressor_expander
-part|float_b|threshold
-part|float_b|ratio
-part|float_b|attack
-part|float_b|release
-part|float_b|gain
-part|float_b|lookahead
-part|float_b|link_channels
-part|float_b|mode
-
-area_struct|limiter
-part|float_b|threshold
-part|float_b|__unk_2
-part|float_b|attack
-part|float_b|release
-part|float_b|gain
-part|float_b|lookahead
-part|float_b|link_channels
-
-area_struct|noise_gate
-part|float_b|threshold
-part|float_b|__unk_2
-part|float_b|attack
-part|float_b|release
-part|float_b|gain
-part|float_b|lookahead
-part|float_b|link_channels
-
-area_struct|resonance_filter
-part|float_b|lfo_depth
-part|float_b|lfo_rate
-part|float_b|freq
-part|float_b|q
-part|float_b|__unk_5
-part|float_b|shape
-part|float_b|__unk_7
-part|float_b|lfo_rate_sync
-part|float_b|lfo_sync_on
-
-area_struct|bit_crusher
-part|float_b|bits
-part|float_b|downsample
-part|float_b|clip_lvl
-part|float_b|clip_mode
-
-area_struct|phaser
-part|float_b|lfo_depth
-part|float_b|lfo_rate
-part|float_b|feedback
-part|float_b|__unk_4
-part|float_b|__unk_5
-part|float_b|lpf_fb
-part|float_b|stereo_fade
-part|float_b|wet
-part|float_b|shape
-part|float_b|__unk_10
-part|float_b|lfo_rate_sync
-part|float_b|lfo_sync_on
-
-area_struct|delay
-part|float_b|lfo_depth
-part|float_b|lfo_rate_nonsync
-part|float_b|time_nonsync
-part|float_b|feedback
-part|float_b|__unk_5
-part|float_b|__unk_6
-part|float_b|lpf_fb
-part|float_b|stereo_fade
-part|float_b|wet
-part|float_b|shape
-part|float_b|__unk_11
-part|float_b|time_sync
-part|float_b|time_sync_on
-part|float_b|lfo_rate_sync
-part|float_b|lfo_rate_sync_on
-
-area_struct|chorus_flanger
-part|float_b|lfo_depth
-part|float_b|lfo_rate_nonsync
-part|float_b|delay_time
-part|float_b|feedback
-part|float_b|__unk_5
-part|float_b|__unk_6
-part|float_b|lpf_fb
-part|float_b|stereo_fade
-part|float_b|wet
-part|float_b|shape
-part|float_b|__unk_11
-part|float_b|lfo_rate_sync
-part|float_b|lfo_rate_sync_on
+<datadef>
+  <struct name="eq">
+    <part type="float_b" name="ls_hz"/>
+    <part type="float_b" name="ls_q"/>
+    <part type="float_b" name="ls_gain"/>
+    <part type="float_b" name="ls_unknown"/>
+    <part type="float_b" name="ls_on"/>
+    <part type="float_b" name="p1_hz"/>
+    <part type="float_b" name="p1_q"/>
+    <part type="float_b" name="p1_gain"/>
+    <part type="float_b" name="p1_unknown"/>
+    <part type="float_b" name="p1_on"/>
+    <part type="float_b" name="p2_hz"/>
+    <part type="float_b" name="p2_q"/>
+    <part type="float_b" name="p2_gain"/>
+    <part type="float_b" name="p2_unknown"/>
+    <part type="float_b" name="p2_on"/>
+    <part type="float_b" name="p3_hz"/>
+    <part type="float_b" name="p3_q"/>
+    <part type="float_b" name="p3_gain"/>
+    <part type="float_b" name="p3_unknown"/>
+    <part type="float_b" name="p3_on"/>
+    <part type="float_b" name="p4_hz"/>
+    <part type="float_b" name="p4_q"/>
+    <part type="float_b" name="p4_gain"/>
+    <part type="float_b" name="p4_unknown"/>
+    <part type="float_b" name="p4_on"/>
+    <part type="float_b" name="hs_hz"/>
+    <part type="float_b" name="hs_q"/>
+    <part type="float_b" name="hs_gain"/>
+    <part type="float_b" name="hs_unknown"/>
+    <part type="float_b" name="hs_on"/>
+  </struct>
+  <struct name="filter_unit">
+    <part type="float_b" name="type"/>
+    <part type="float_b" name="freq"/>
+    <part type="float_b" name="q"/>
+    <part type="float_b" name="unknown"/>
+  </struct>
+  <struct name="reverb">
+    <part type="float_b" name="freeze"/>
+    <part type="float_b" name="wet"/>
+    <part type="float_b" name="pre_delay"/>
+    <part type="float_b" name="bass_boost"/>
+    <part type="float_b" name="high_cut_freq"/>
+    <part type="float_b" name="high_cut_amount"/>
+    <part type="float_b" name="time"/>
+    <part type="float_b" name="el_rl_balance"/>
+    <part type="float_b" name="er"/>
+    <part type="float_b" name="lr"/>
+    <part type="float_b" name="liveness"/>
+    <part type="float_b" name="diffusion"/>
+    <part type="float_b" name="steepness"/>
+    <part type="float_b" name="quality"/>
+  </struct>
+  <struct name="compressor_expander">
+    <part type="float_b" name="threshold"/>
+    <part type="float_b" name="ratio"/>
+    <part type="float_b" name="attack"/>
+    <part type="float_b" name="release"/>
+    <part type="float_b" name="gain"/>
+    <part type="float_b" name="lookahead"/>
+    <part type="float_b" name="link_channels"/>
+    <part type="float_b" name="mode"/>
+  </struct>
+  <struct name="limiter">
+    <part type="float_b" name="threshold"/>
+    <part type="float_b" name="__unk_2"/>
+    <part type="float_b" name="attack"/>
+    <part type="float_b" name="release"/>
+    <part type="float_b" name="gain"/>
+    <part type="float_b" name="lookahead"/>
+    <part type="float_b" name="link_channels"/>
+  </struct>
+  <struct name="noise_gate">
+    <part type="float_b" name="threshold"/>
+    <part type="float_b" name="__unk_2"/>
+    <part type="float_b" name="attack"/>
+    <part type="float_b" name="release"/>
+    <part type="float_b" name="gain"/>
+    <part type="float_b" name="lookahead"/>
+    <part type="float_b" name="link_channels"/>
+  </struct>
+  <struct name="resonance_filter">
+    <part type="float_b" name="lfo_depth"/>
+    <part type="float_b" name="lfo_rate"/>
+    <part type="float_b" name="freq"/>
+    <part type="float_b" name="q"/>
+    <part type="float_b" name="__unk_5"/>
+    <part type="float_b" name="shape"/>
+    <part type="float_b" name="__unk_7"/>
+    <part type="float_b" name="lfo_rate_sync"/>
+    <part type="float_b" name="lfo_sync_on"/>
+  </struct>
+  <struct name="bit_crusher">
+    <part type="float_b" name="bits"/>
+    <part type="float_b" name="downsample"/>
+    <part type="float_b" name="clip_lvl"/>
+    <part type="float_b" name="clip_mode"/>
+  </struct>
+  <struct name="phaser">
+    <part type="float_b" name="lfo_depth"/>
+    <part type="float_b" name="lfo_rate"/>
+    <part type="float_b" name="feedback"/>
+    <part type="float_b" name="__unk_4"/>
+    <part type="float_b" name="__unk_5"/>
+    <part type="float_b" name="lpf_fb"/>
+    <part type="float_b" name="stereo_fade"/>
+    <part type="float_b" name="wet"/>
+    <part type="float_b" name="shape"/>
+    <part type="float_b" name="__unk_10"/>
+    <part type="float_b" name="lfo_rate_sync"/>
+    <part type="float_b" name="lfo_sync_on"/>
+  </struct>
+  <struct name="delay">
+    <part type="float_b" name="lfo_depth"/>
+    <part type="float_b" name="lfo_rate_nonsync"/>
+    <part type="float_b" name="time_nonsync"/>
+    <part type="float_b" name="feedback"/>
+    <part type="float_b" name="__unk_5"/>
+    <part type="float_b" name="__unk_6"/>
+    <part type="float_b" name="lpf_fb"/>
+    <part type="float_b" name="stereo_fade"/>
+    <part type="float_b" name="wet"/>
+    <part type="float_b" name="shape"/>
+    <part type="float_b" name="__unk_11"/>
+    <part type="float_b" name="time_sync"/>
+    <part type="float_b" name="time_sync_on"/>
+    <part type="float_b" name="lfo_rate_sync"/>
+    <part type="float_b" name="lfo_rate_sync_on"/>
+  </struct>
+  <struct name="chorus_flanger">
+    <part type="float_b" name="lfo_depth"/>
+    <part type="float_b" name="lfo_rate_nonsync"/>
+    <part type="float_b" name="delay_time"/>
+    <part type="float_b" name="feedback"/>
+    <part type="float_b" name="__unk_5"/>
+    <part type="float_b" name="__unk_6"/>
+    <part type="float_b" name="lpf_fb"/>
+    <part type="float_b" name="stereo_fade"/>
+    <part type="float_b" name="wet"/>
+    <part type="float_b" name="shape"/>
+    <part type="float_b" name="__unk_11"/>
+    <part type="float_b" name="lfo_rate_sync"/>
+    <part type="float_b" name="lfo_rate_sync_on"/>
+  </struct>
+</datadef>

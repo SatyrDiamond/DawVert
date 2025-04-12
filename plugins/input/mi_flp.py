@@ -150,7 +150,7 @@ def get_sample(i_value):
 	#plugins.add_asdr_env(cvpj_l, pluginid, envtype, el_env_predelay, el_env_attack, el_env_hold, el_env_decay, el_env_sustain, el_env_release, el_env_aomunt)
 	#plugins.add_asdr_env_tension(cvpj_l, pluginid, envtype, el_env_attack_tension, el_env_decay_tension, el_env_release_tension)
 
-def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, dv_config):
+def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, dawvert_intent):
 	filename_sample = get_sample(fl_channel_obj.samplefilename)
 	sampleref_obj = convproj_obj.sampleref__add(filename_sample, filename_sample, 'win')
 
@@ -173,9 +173,9 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 
 	sre_obj.reverse = bool(fl_channel_obj.fxflags & 2)
 	sre_obj.data['swap_stereo'] = bool(fl_channel_obj.fxflags & 256)
-	sre_obj.data['remove_dc'] = fl_channel_obj.params.remove_dc
-	sre_obj.data['normalize'] = fl_channel_obj.params.normalize
-	sre_obj.data['reversepolarity'] = fl_channel_obj.params.reversepolarity
+	sre_obj.data['remove_dc'] = bool(fl_channel_obj.params.remove_dc)
+	sre_obj.data['normalize'] = bool(fl_channel_obj.params.normalize)
+	sre_obj.data['reversepolarity'] = bool(fl_channel_obj.params.reversepolarity)
 	sre_obj.interpolation = "sinc" if (fl_channel_obj.sampleflags & 1) else "none"
 
 	if sampleref_obj.fileref.file.extension.lower() != 'ds':
@@ -223,7 +223,8 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 		sre_obj.stretch.algorithm = 'elastique_v2'
 		sre_obj.stretch.algorithm_mode = 'speech'
 	if t_stretchingmode == -2: 
-		sre_obj.stretch.algorithm = 'elastique_pro'
+		sre_obj.stretch.algorithm = 'elastique_v3'
+		sre_obj.stretch.algorithm_mode = 'pro'
 		sre_obj.stretch.params['formant'] = fl_channel_obj.params.stretchingformant
 
 	if sampleref_obj.found:
@@ -233,6 +234,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 		elif t_stretchingtime == 0:
 			sre_obj.stretch.set_rate_speed(flp_obj.tempo, 1/t_stretchingmultiplier, False)
 
+
 	return sre_obj, sampleref_obj
 
 
@@ -240,11 +242,18 @@ DEBUGAUTOTICKS = False
 
 
 class input_flp(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio 12-24'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'flp'
+	
+	def get_name(self):
+		return 'FL Studio 12-24'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['flp']
 		in_dict['auto_types'] = ['pl_ticks', 'pl_points']
@@ -253,29 +262,21 @@ class input_flp(plugins.base):
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2','universal:invert','universal:swap_lr']
 		in_dict['fxchain_mixer'] = True
-		in_dict['plugin_ext'] = ['vst2']
+		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_ext_arch'] = [32, 64]
-		in_dict['plugin_ext_platforms'] = ['win', 'unix']
+		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
-			for filename in zip_data.namelist():
-				if filename.endswith('.flp'): return True
-			return False
-		except:
-			bytestream = open(input_file, 'rb')
-			bytestream.seek(0)
-			bytesdata = bytestream.read(4)
-			if bytesdata == b'FLhd': return True
-			else: return False
-	def parse(self, convproj_obj, input_file, dv_config):
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.headers.append([0, b'FLhd'])
+		detectdef_obj.containers.append(['zip', '*.flp'])
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from functions_plugin import flp_dec_plugins
-		from objects.file_proj import proj_flp
+		from objects.file_proj import flp as proj_flp
 		from objects.inst_params import fx_delay
 
 		convproj_obj.fxtype = 'rack'
@@ -303,13 +304,15 @@ class input_flp(plugins.base):
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3\\", 'win')
 
 		flp_obj = proj_flp.flp_project()
-		flp_obj.read(input_file)
+
+		if dawvert_intent.input_mode == 'file':
+			flp_obj.read(dawvert_intent.input_file)
 
 		if flp_obj.zipped:
 			for filename in flp_obj.zipfile.namelist():
 				if not filename.endswith('.flp'):
 					try:
-						flp_obj.zipfile.extract(filename, path=dv_config.path_samples_extracted, pwd=None)
+						flp_obj.zipfile.extract(filename, path=dawvert_intent.path_samples['extracted'], pwd=None)
 					except PermissionError:
 						pass
 
@@ -336,7 +339,7 @@ class input_flp(plugins.base):
 		id_pat = {}
 		sampleinfo = {}
 		samplestretch = {}
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		instdata_chans = []
 
@@ -375,7 +378,7 @@ class input_flp(plugins.base):
 				if fl_channel_obj.type == 0:
 					inst_obj.plugslots.set_synth(instplugid)
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(instplugid, get_sample(fl_channel_obj.samplefilename), 'win')
-					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
+					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
 					samplepart_obj.trigger = 'normal' # if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
@@ -396,7 +399,7 @@ class input_flp(plugins.base):
 
 						if fl_channel_obj.samplefilename:
 							sp_obj = plugin_obj.samplepart_add('audiofile')
-							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dv_config)
+							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
 
 				if fl_channel_obj.type == 3:
 					layer_chans[channelnum] = fl_channel_obj.layer_chans
@@ -511,8 +514,10 @@ class input_flp(plugins.base):
 
 			if fl_channel_obj.type == 4:
 				sre_obj = convproj_obj.sampleindex__add('FLSample' + str(instrument))
-				samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dv_config)
+				samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dawvert_intent)
 
+				sre_obj.usemasterpitch = bool(fl_channel_obj.params.main_pitch)
+				
 				if sampleref_obj.found:
 					samplestretch[instrument] = sre_obj.stretch
 
@@ -549,8 +554,8 @@ class input_flp(plugins.base):
 					if fl_note.finep != 120: note_extra['finepitch'] = (fl_note.finep-120)*10
 					if fl_note.finep != 64: note_extra['release'] = fl_note.rel/128
 					if fl_note.finep != 64: note_extra['pan'] = (fl_note.pan-64)/64
-					if fl_note.finep != 128: note_extra['cutoff'] = fl_note.mod_x/255
-					if fl_note.finep != 128: note_extra['reso'] = fl_note.mod_y/255
+					if fl_note.finep != 128: note_extra['mod_x'] = fl_note.mod_x/255
+					if fl_note.finep != 128: note_extra['mod_y'] = fl_note.mod_y/255
 					notechan = data_bytes.splitbyte(fl_note.midich)[1]
 					if notechan: note_extra['channel'] = notechan+1
 
@@ -623,6 +628,7 @@ class input_flp(plugins.base):
 						playlist_obj = convproj_obj.playlist__add(playlistline-1, 1, True)
 						color = fl_arrangement.tracks[playlistline].color.to_bytes(4, "little")
 						if color != b'HQV\x00': playlist_obj.visual.color.set_int([color[0],color[1],color[2]])
+						playlist_obj.visual_ui.height = fl_arrangement.tracks[playlistline].height
 						temp_pl_track[playlistline] = playlist_obj
 
 				if item.itemindex > item.patternbase and playlistline in temp_pl_track:
@@ -650,6 +656,13 @@ class input_flp(plugins.base):
 
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
 								autopl_obj.time = placement_obj.time.copy()
+								if pattern in flp_obj.patterns:
+									pat_obj = flp_obj.patterns[pattern]
+									if pat_obj.color:
+										color = pat_obj.color.to_bytes(4, "little")
+										if color != b'HQV\x00': autopl_obj.visual.color.set_int([color[0],color[1],color[2]])
+									if pat_obj.name: autopl_obj.visual.name = pat_obj.name
+
 								for pos, val in autodata: 
 									autopl_obj.data.add_point(pos, (val+aadd)/adiv)
 									if DEBUGAUTOTICKS: t.append(val)
@@ -671,6 +684,12 @@ class input_flp(plugins.base):
 							if autoloc: 
 								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 								autopl_obj.time.set_posdur(item.position, item.length)
+								if item.itemindex in flp_obj.channels:
+									fl_channel_obj = flp_obj.channels[item.itemindex]
+									autopl_obj.visual.name = fl_channel_obj.name if fl_channel_obj.name else ''
+									if (fl_channel_obj.color not in commoncolors):
+										autopl_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
+
 								if item.startoffset not in [4294967295, 3212836864]: 
 									if item.startoffset > 0:
 										posdata = item.startoffset
@@ -678,9 +697,9 @@ class input_flp(plugins.base):
 										autopl_obj.time.set_offset(posdata*flp_obj.ppq)
 
 								curpos = 0
-								for point in fl_autopoints.points:
+								for point, tension in fl_autopoints:
 									curpos += point.pos
-	
+
 									auto_pos = int(curpos*flp_obj.ppq)
 									auto_val = xtramath.between_from_one(amin, amax, point.val)
 	
@@ -688,6 +707,7 @@ class input_flp(plugins.base):
 									autopoint_obj.pos = auto_pos
 									autopoint_obj.value = auto_val
 									autopoint_obj.type = 'normal' if point.type!=2 else 'instant'
+									autopoint_obj.tension = tension
 	
 									#print(auto_pos, auto_val)
 
@@ -700,6 +720,9 @@ class input_flp(plugins.base):
 
 						placement_obj.muted = bool(item.flags & 0b0001000000000000)
 						placement_obj.fromindex = 'FLSample' + str(item.itemindex)
+
+						placement_obj.vol = item.vol
+
 						stretch_obj = samplestretch[item.itemindex] if item.itemindex in samplestretch else None
 	
 						out_rate = stretch_obj.calc_tempo_speed if stretch_obj else 1
@@ -712,27 +735,28 @@ class input_flp(plugins.base):
 				if fl_timemark.type == 8:
 					convproj_obj.timesig_auto.add_point(fl_timemark.pos, [fl_timemark.numerator, fl_timemark.denominator])
 				else:
-					timemarker_obj = convproj_obj.timemarker__add()
-					timemarker_obj.visual.name = fl_timemark.name
-					timemarker_obj.position = fl_timemark.pos
-					if fl_timemark.type == 5: timemarker_obj.type = 'start'
-					if fl_timemark.type == 4: 
-						timemarker_obj.type = 'loop'
-						convproj_obj.loop_start = timemarker_obj.position
-						convproj_obj.loop_active = True
-					if fl_timemark.type == 1: timemarker_obj.type = 'markerloop'
-					if fl_timemark.type == 2: timemarker_obj.type = 'markerskip'
-					if fl_timemark.type == 3: timemarker_obj.type = 'pause'
-					if fl_timemark.type == 9: timemarker_obj.type = 'punchin'
-					if fl_timemark.type == 10: timemarker_obj.type = 'punchout'
+					if fl_timemark.type == 5: 
+						convproj_obj.transport.start_pos = fl_timemark.pos
+					elif fl_timemark.type == 4: 
+						convproj_obj.transport.loop_start = fl_timemark.pos
+						convproj_obj.transport.loop_active = True
+					else:
+						timemarker_obj = convproj_obj.timemarker__add()
+						timemarker_obj.visual.name = fl_timemark.name
+						timemarker_obj.position = fl_timemark.pos
+						if fl_timemark.type == 1: timemarker_obj.type = 'markerloop'
+						elif fl_timemark.type == 2: timemarker_obj.type = 'markerskip'
+						elif fl_timemark.type == 3: timemarker_obj.type = 'pause'
+						elif fl_timemark.type == 9: timemarker_obj.type = 'punchin'
+						elif fl_timemark.type == 10: timemarker_obj.type = 'punchout'
 
 		
 		#print(flp_obj.initfxvals.initvals)
 		#exit()
 
 		for mixer_id, mixer_obj in flp_obj.mixer.items():
-
 			fxchannel_obj = convproj_obj.fx__chan__add(mixer_id)
+			fxchannel_obj.latency_offset = mixer_obj.latency
 			if mixer_obj.name: fxchannel_obj.visual.name = mixer_obj.name
 			if mixer_obj.color: 
 				if mixer_obj.color not in [9801863, 8814968]:
@@ -751,6 +775,10 @@ class input_flp(plugins.base):
 
 			fxchannel_obj.params.add('vol', fx_vol**2, 'float')
 			fxchannel_obj.params.add('pan', fx_pan, 'float')
+			fxchannel_obj.params.add('enabled', bool(mixer_obj.enabled), 'bool')
+			fxchannel_obj.params.add('solo', bool(mixer_obj.solo), 'bool')
+
+			fxchannel_obj.plugslots.slots_audio_enabled = int(mixer_obj.fx_enabled)
 
 			fxchannel_obj.sends.to_master_active = False
 
@@ -819,6 +847,16 @@ class input_flp(plugins.base):
 					filter_obj.gain = eq_level
 				fxchannel_obj.plugslots.slots_mixer.append(eq_fxid)
 
+			if mixer_obj.reversepolarity:
+				rp_fxid = 'FLPlug_ME_RP_'+str(mixer_id)
+				plugin_obj = convproj_obj.plugin__add(rp_fxid, 'universal', 'invert', None)
+				fxchannel_obj.plugslots.slots_mixer.append(rp_fxid)
+
+			if mixer_obj.swap_lr:
+				rp_fxid = 'FLPlug_ME_LR_'+str(mixer_id)
+				plugin_obj = convproj_obj.plugin__add(rp_fxid, 'universal', 'swap_lr', None)
+				fxchannel_obj.plugslots.slots_mixer.append(rp_fxid)
+
 		#if len(flp_obj.arrangements) == 0 and len(FL_Patterns) == 1 and len(FL_Channels) == 0:
 		#	fst_chan_notelist = [[] for x in range(16)]
 		#	for cvpj_notedata in cvpj_l_notelistindex['FLPat0']['notelist']:
@@ -843,7 +881,7 @@ class input_flp(plugins.base):
 		convproj_obj.do_actions.append('do_lanefit')
 		convproj_obj.do_actions.append('do_addloop')
 
-		convproj_obj.loop_end = convproj_obj.get_dur()
+		convproj_obj.transport.loop_end = convproj_obj.get_dur()
 
 		convproj_obj.automation.attempt_after()
 
@@ -875,8 +913,10 @@ class input_flp(plugins.base):
 		if flp_obj.genre: convproj_obj.metadata.genre = flp_obj.genre
 		if flp_obj.url: convproj_obj.metadata.url = flp_obj.url
 		if flp_obj.comment: convproj_obj.metadata.comment_text = flp_obj.comment
+		convproj_obj.metadata.show = flp_obj.showinfo
 
-		convproj_obj.sampleref__searchmissing(input_file)
+		if dawvert_intent.input_mode == 'file':
+			convproj_obj.sampleref__searchmissing(dawvert_intent.input_file)
 
 		#for n, d in convproj_obj.automation.data.items():
 		#	print(n, [x.value for x in d.pl_points.data[0].data])

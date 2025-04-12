@@ -8,15 +8,19 @@ from functions import xtramath
 from functions import extpluglog
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return -100
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+	
+	def get_priority(self):
+		return -100
+	
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'flstudio', None]]
 		in_dict['in_daws'] = ['flp']
 		in_dict['out_plugins'] = [['universal', 'midi', None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
+
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		flpluginname = plugin_obj.type.subtype.lower()
 
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'boobass'):

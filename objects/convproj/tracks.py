@@ -30,8 +30,8 @@ class lanefit:
 		isplaced = False
 		while not isplaced:
 			if len(self.mergeddata_notes) < nummlane: 
-				self.mergeddata_notes.append(placements_notes.cvpj_placements_notes())
-				self.mergeddata_audio.append(placements_audio.cvpj_placements_audio())
+				self.mergeddata_notes.append(placements_notes.cvpj_placements_notes(pl_data.time_ppq, pl_data.time_float))
+				self.mergeddata_audio.append(placements_audio.cvpj_placements_audio(pl_data.time_ppq, pl_data.time_float))
 
 			if not is_audio:
 				overlapped = self.mergeddata_notes[-1].check_overlap(pl_data.time.position, pl_data.time.duration)
@@ -58,25 +58,32 @@ class cvpj_nle:
 cvpj_visual = visual.cvpj_visual
 cvpj_stretch = stretch.cvpj_stretch
 
+class cvpj_chanport:
+	def __init__(self):
+		self.chan = False
+		self.port = -1
+		self.port_name = ''
+
 class cvpj_midiport:
 	def __init__(self):
 		self.in_enabled = False
-		self.in_chan = -1
+		self.in_chanport = cvpj_chanport()
 		self.in_fixedvelocity = -1
 
 		self.out_enabled = False
+		self.out_chanport = cvpj_chanport()
 		self.out_fixedvelocity = -1
-		self.out_chan = -1
 		self.out_inst = midi_inst.cvpj_midi_inst()
 
 		self.basevelocity = 63
 
 class cvpj_plugslots:
-	__slots__ = ['slots_notes','slots_audio','slots_mixer','slots_synths','synth']
+	__slots__ = ['slots_notes','slots_audio','slots_mixer','slots_synths','synth','slots_audio_enabled']
 	def __init__(self):
 		self.slots_synths = []
 		self.slots_notes = []
 		self.slots_audio = []
+		self.slots_audio_enabled = True
 		self.slots_mixer = []
 		self.synth = ''
 
@@ -101,7 +108,7 @@ class cvpj_plugslots:
 		for x in self.slots_audio: yield 'audio', x
 
 class cvpj_instrument:
-	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots']
+	__slots__ = ['visual','params','datavals','midi','fxrack_channel','pluginid','is_drum','plugslots','group','latency_offset','visual_keynotes']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
@@ -110,6 +117,9 @@ class cvpj_instrument:
 		self.is_drum = False
 		self.fxrack_channel = -1
 		self.plugslots = cvpj_plugslots()
+		self.latency_offset = 0
+		self.group = None
+		self.visual_keynotes = visual.cvpj_visual_keynote()
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -153,7 +163,7 @@ class cvpj_instrument:
 		return plugin_obj
 
 class cvpj_return_track:
-	__slots__ = ['visual','visual_ui','params','datavals','sends','plugslots']
+	__slots__ = ['visual','visual_ui','params','datavals','sends','plugslots','latency_offset']
 	def __init__(self):
 		self.visual = visual.cvpj_visual()
 		self.visual_ui = visual.cvpj_visual_ui()
@@ -161,6 +171,7 @@ class cvpj_return_track:
 		self.datavals = params.cvpj_datavals()
 		self.plugslots = cvpj_plugslots()
 		self.sends = sends.cvpj_sends()
+		self.latency_offset = 0
 
 	def plugin_autoplace(self, plugin_obj, pluginid):
 		self.plugslots.plugin_autoplace(plugin_obj, pluginid)
@@ -180,7 +191,7 @@ class cvpj_armstate:
 		self.in_audio = False
 
 class cvpj_track:
-	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots']
+	__slots__ = ['time_ppq','time_float','uses_placements','lanes','is_indexed','type','is_laned','datavals','visual','visual_ui','visual_inst','params','midi','fxrack_channel','placements','sends','group','returns','notelist_index','scenes','audio_channels','is_drum','timemarkers','armed','plugslots','latency_offset','visual_keynotes']
 	def __init__(self, track_type, time_ppq, time_float, uses_placements, is_indexed):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -191,6 +202,7 @@ class cvpj_track:
 		self.lanes = {}
 		self.visual = visual.cvpj_visual()
 		self.visual_ui = visual.cvpj_visual_ui()
+		self.visual_inst = visual.cvpj_visual()
 		self.params = params.cvpj_paramset()
 		self.datavals = params.cvpj_datavals()
 		self.midi = cvpj_midiport()
@@ -206,6 +218,8 @@ class cvpj_track:
 		self.is_drum = False
 		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq, time_float)
 		self.armed = cvpj_armstate()
+		self.latency_offset = 0
+		self.visual_keynotes = visual.cvpj_visual_keynote()
 
 	def from_dataset(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_dset(ds_id, ds_cat, ds_obj, ow_vis)
@@ -277,6 +291,8 @@ class cvpj_track:
 		c_obj.returns = self.returns
 		c_obj.notelist_index = self.notelist_index
 		c_obj.armed = copy.deepcopy(self.armed)
+		c_obj.latency_offset = self.latency_offset
+		c_obj.visual_keynotes = copy.deepcopy(self.visual_keynotes)
 		return c_obj
 
 	def make_base_inst(self, inst_obj):
@@ -287,6 +303,8 @@ class cvpj_track:
 		track_obj.midi = copy.deepcopy(inst_obj.midi)
 		track_obj.fxrack_channel = inst_obj.fxrack_channel
 		track_obj.plugslots = copy.deepcopy(inst_obj.plugslots)
+		track_obj.latency_offset = inst_obj.latency_offset
+		track_obj.visual_keynotes = copy.deepcopy(inst_obj.visual_keynotes)
 		return track_obj
 
 	def notelistindex__add(self, i_id):

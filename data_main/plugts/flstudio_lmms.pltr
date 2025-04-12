@@ -1,24 +1,22 @@
-
-[fruity_stereo_shaper]
->input
-	type|native:flstudio:fruity stereo shaper
-	param|r2l
-	param|l2l
-	param|r2r
-	param|l2r
-<input
-
->proc
-	calc|r2l|div|12800
-	calc|l2l|div|12800
-	calc|r2r|div|12800
-	calc|l2r|div|12800
-<proc
-
->output
-	type|native:lmms:stereomatrix
-	param|l-r<l2r
-	param|r-l<r2l
-	param|r-r<r2r
-	param|l-l<l2l
-<output
+<plugtransform>
+    <transform name="fruity_stereo_shaper">
+        <input plugtype="native:flstudio:fruity stereo shaper">
+            <param from="r2l" type="float">0</param>
+            <param from="l2l" type="float">0</param>
+            <param from="r2r" type="float">0</param>
+            <param from="l2r" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="r2l" type="div">12800</calc>
+            <calc name="l2l" type="div">12800</calc>
+            <calc name="r2r" type="div">12800</calc>
+            <calc name="l2r" type="div">12800</calc>
+        </proc>
+        <output plugtype="native:lmms:stereomatrix">
+            <param to="l-r" from="l2r" type="float">0</param>
+            <param to="r-l" from="r2l" type="float">0</param>
+            <param to="r-r" from="r2r" type="float">0</param>
+            <param to="l-l" from="l2l" type="float">0</param>
+        </output>
+    </transform>
+</plugtransform>

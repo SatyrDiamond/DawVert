@@ -36,6 +36,11 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 	fl_channel_obj.fxflags += int(sre_obj.reverse)<<1
 	fl_channel_obj.fxflags += int(sre_obj.get_data('swap_stereo', False))<<8
 
+	fl_channel_obj.params.remove_dc = int(sre_obj.get_data('remove_dc', False))
+	fl_channel_obj.params.normalize = int(sre_obj.get_data('normalize', False))
+	fl_channel_obj.params.reversepolarity = int(sre_obj.get_data('reversepolarity', False))
+	fl_channel_obj.sampleflags += int(sre_obj.interpolation!='none')
+
 	sre_obj.convpoints_percent(sampleref_obj)
 	if sre_obj.end>sre_obj.start:
 		fl_channel_obj.params.start = sre_obj.start
@@ -45,6 +50,11 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		fl_channel_obj.params.stretchingmode = 0
 	elif sre_obj.stretch.algorithm == 'elastique_v3':
 		if sre_obj.stretch.algorithm_mode == 'mono': fl_channel_obj.params.stretchingmode = 2
+		elif sre_obj.stretch.algorithm_mode == 'speech': fl_channel_obj.params.stretchingmode = 9
+		elif sre_obj.stretch.algorithm_mode == 'pro':
+			fl_channel_obj.params.stretchingmode = -2
+			if 'formant' in sre_obj.stretch.params:
+				fl_channel_obj.params.stretchingformant = sre_obj.stretch.params['formant']
 		else: fl_channel_obj.params.stretchingmode = 1
 	elif sre_obj.stretch.algorithm == 'slice_stretch':
 		fl_channel_obj.params.stretchingmode = 3
@@ -56,9 +66,11 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		if sre_obj.stretch.algorithm_mode == 'transient': fl_channel_obj.params.stretchingmode = 7
 		elif sre_obj.stretch.algorithm_mode == 'mono': fl_channel_obj.params.stretchingmode = 8
 		elif sre_obj.stretch.algorithm_mode == 'speech': fl_channel_obj.params.stretchingmode = 9
+		elif sre_obj.stretch.algorithm_mode == 'pro':
+			fl_channel_obj.params.stretchingmode = -2
+			if 'formant' in sre_obj.stretch.params:
+				fl_channel_obj.params.stretchingformant = sre_obj.stretch.params['formant']
 		else: fl_channel_obj.params.stretchingmode = 6
-	elif sre_obj.stretch.algorithm == 'elastique_pro':
-		fl_channel_obj.params.stretchingmode = -2
 	elif sre_obj.stretch.algorithm == 'stretch':
 		fl_channel_obj.params.stretchingmode = -1
 	else:
@@ -78,11 +90,18 @@ DEBUG_IGNORE_PLACEMENTS = False
 DEBUG_IGNORE_PATTERNS = False
 
 class output_cvpjs(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_shortname(self): return 'flp'
-	def get_name(self): return 'FL Studio 20'
-	def gettype(self): return 'mi'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_shortname(self):
+		return 'flp'
+	
+	def get_name(self):
+		return 'FL Studio 20'
+	
+	def gettype(self):
+		return 'mi'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'flp'
 		in_dict['auto_types'] = ['pl_ticks']
@@ -91,16 +110,17 @@ class output_cvpjs(plugins.base):
 		in_dict['fxtype'] = 'rack'
 		in_dict['fxrack_params'] = ['enabled','vol','pan']
 		in_dict['audio_stretch'] = ['rate']
-		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
-		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2']
+		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec','m4a']
+		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2','universal:invert','universal:swap_lr']
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['projtype'] = 'mi'
-	def parse(self, convproj_obj, output_file):
+	
+	def parse(self, convproj_obj, dawvert_intent):
 		from bs4 import BeautifulSoup
 		from functions_plugin import flp_enc_plugins
-		from objects.file_proj import proj_flp
+		from objects.file_proj import flp as proj_flp
 		from objects.file_proj._flp import channel
 		from objects.file_proj._flp import arrangement
 		from objects.file_proj._flp import fx
@@ -127,8 +147,11 @@ class output_cvpjs(plugins.base):
 			flp_obj.comment = convproj_obj.metadata.comment_text
 		flp_obj.comment = flp_obj.comment.replace("\r\n", "\r").replace("\n", "\r")
 
-		if flp_obj.title or flp_obj.author or flp_obj.url or flp_obj.genre or flp_obj.comment:
-			flp_obj.showinfo = 1
+		if convproj_obj.metadata.show == -1:
+			if flp_obj.title or flp_obj.author or flp_obj.url or flp_obj.genre or flp_obj.comment:
+				flp_obj.showinfo = 1
+		else:
+			flp_obj.showinfo = convproj_obj.metadata.show
 
 		flp_obj.tempo = convproj_obj.params.get('bpm',120).value
 
@@ -158,6 +181,7 @@ class output_cvpjs(plugins.base):
 			fl_channel_obj.basicparams.pitch = inst_obj.params.get('pitch',0).value*100
 			fl_channel_obj.params.main_pitch = int(inst_obj.params.get('usemasterpitch',not inst_obj.is_drum).value)
 			middlenote = inst_obj.datavals.get('middlenote', 0)
+
 			if middlenote != 0: fl_channel_obj.middlenote = middlenote+60
 			fl_channel_obj.icon = 0
 
@@ -218,6 +242,7 @@ class output_cvpjs(plugins.base):
 		for samp_id, sre_obj in convproj_obj.sampleindex__iter():
 			fl_channel_obj = channel.flp_channel()
 			fl_channel_obj.type = 4
+			fl_channel_obj.params.main_pitch = int(sre_obj.usemasterpitch)
 
 			samplestretch[samp_id] = from_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj)
 
@@ -254,8 +279,8 @@ class output_cvpjs(plugins.base):
 							if t_extra:
 								if 'finepitch' in t_extra: fl_note_obj.finep = int((t_extra['finepitch']/10)+120)
 								if 'release' in t_extra: fl_note_obj.rel = int(xtramath.clamp(t_extra['release'],0,1)*128)
-								if 'cutoff' in t_extra: fl_note_obj.mod_x = int(xtramath.clamp(t_extra['cutoff'],0,1)*255)
-								if 'reso' in t_extra: fl_note_obj.mod_y = int(xtramath.clamp(t_extra['reso'],0,1)*255)
+								if 'mod_x' in t_extra: fl_note_obj.mod_x = int(xtramath.clamp(t_extra['mod_x'],0,1)*255)
+								if 'mod_y' in t_extra: fl_note_obj.mod_y = int(xtramath.clamp(t_extra['mod_y'],0,1)*255)
 								if 'pan' in t_extra: fl_note_obj.pan = int((xtramath.clamp(float(t_extra['pan']),-1,1)*64)+64)
 							else:
 								fl_note_obj.finep = 120
@@ -299,6 +324,8 @@ class output_cvpjs(plugins.base):
 				flp_timemarker_obj.numerator = value[0]
 				flp_timemarker_obj.denominator = value[1]
 				fl_pattern_obj.timemarkers.append(flp_timemarker_obj)
+
+			fl_pattern_obj.timemarkers.sort(key=lambda x: x.pos)
 
 			flp_obj.patterns[pat_num] = fl_pattern_obj
 
@@ -381,28 +408,44 @@ class output_cvpjs(plugins.base):
 			playlistposvalues = FL_Playlist_Sorted[itemposition]
 			for itemrow in playlistposvalues: arrangement_obj.items.append(itemrow)
 
-		for pos, value in convproj_obj.timesig_auto:
+		if convproj_obj.transport.loop_active:
 			flp_timemarker_obj = arrangement.flp_timemarker()
-			flp_timemarker_obj.pos = pos
-			flp_timemarker_obj.type = 8
-			flp_timemarker_obj.name = str(value[0])+'/'+str(value[1])
-			flp_timemarker_obj.numerator = value[0]
-			flp_timemarker_obj.denominator = value[1]
+			flp_timemarker_obj.pos = convproj_obj.transport.loop_start
+			flp_timemarker_obj.type = 4
 			arrangement_obj.timemarkers.append(flp_timemarker_obj)
 
-		for timemarker_obj in convproj_obj.timemarkers:
+		start_pos = convproj_obj.transport.start_pos
+
+		if start_pos:
 			flp_timemarker_obj = arrangement.flp_timemarker()
-			flp_timemarker_obj.pos = timemarker_obj.position
-			flp_timemarker_obj.type = 0
-			flp_timemarker_obj.name = timemarker_obj.visual.name if timemarker_obj.visual.name else ""
-			if timemarker_obj.type == 'start': flp_timemarker_obj.type = 5
-			elif timemarker_obj.type == 'loop': flp_timemarker_obj.type = 4
-			elif timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
-			elif timemarker_obj.type == 'markerskip': flp_timemarker_obj.type = 2
-			elif timemarker_obj.type == 'pause': flp_timemarker_obj.type = 3
-			elif timemarker_obj.type == 'punchin': flp_timemarker_obj.type = 9
-			elif timemarker_obj.type == 'punchout': flp_timemarker_obj.type = 10
+			flp_timemarker_obj.pos = start_pos
+			flp_timemarker_obj.type = 5
 			arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
+		for pos, value in convproj_obj.timesig_auto:
+			if start_pos<=pos:
+				flp_timemarker_obj = arrangement.flp_timemarker()
+				flp_timemarker_obj.pos = pos
+				flp_timemarker_obj.type = 8
+				flp_timemarker_obj.name = str(value[0])+'/'+str(value[1])
+				flp_timemarker_obj.numerator = value[0]
+				flp_timemarker_obj.denominator = value[1]
+				arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
+		for timemarker_obj in convproj_obj.timemarkers:
+			if start_pos<=timemarker_obj.position:
+				flp_timemarker_obj = arrangement.flp_timemarker()
+				flp_timemarker_obj.pos = timemarker_obj.position
+				flp_timemarker_obj.type = 0
+				flp_timemarker_obj.name = timemarker_obj.visual.name if timemarker_obj.visual.name else ""
+				if timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1
+				elif timemarker_obj.type == 'markerskip': flp_timemarker_obj.type = 2
+				elif timemarker_obj.type == 'pause': flp_timemarker_obj.type = 3
+				elif timemarker_obj.type == 'punchin': flp_timemarker_obj.type = 9
+				elif timemarker_obj.type == 'punchout': flp_timemarker_obj.type = 10
+				arrangement_obj.timemarkers.append(flp_timemarker_obj)
+
+		arrangement_obj.timemarkers.sort(key=lambda x: x.pos)
 
 		flp_obj.arrangements[0] = arrangement_obj
 
@@ -436,9 +479,11 @@ class output_cvpjs(plugins.base):
 		for fx_num, fxchannel_obj in convproj_obj.fx__chan__iter():
 			if fx_num in flp_obj.mixer:
 				fl_fxchan = flp_obj.mixer[fx_num]
+				fl_fxchan.latency = fxchannel_obj.latency_offset
 				if fxchannel_obj.visual.name: fl_fxchan.name = fxchannel_obj.visual.name
 				if fxchannel_obj.visual.color: fl_fxchan.color = decode_color(fxchannel_obj.visual.color)
- 	
+				fl_fxchan.fx_enabled = bool(fxchannel_obj.plugslots.slots_audio_enabled)
+
 				if 'docked' in fxchannel_obj.visual_ui.other:
 					dockedpos = fxchannel_obj.visual_ui.other['docked']
 					if dockedpos == 1: fl_fxchan.docked_center, fl_fxchan.docked_pos = False, True
@@ -453,6 +498,7 @@ class output_cvpjs(plugins.base):
 				flp_obj.initfxvals.initvals[fxptxt+'vol'] = int(12800*vol)
 				flp_obj.initfxvals.initvals[fxptxt+'pan'] = int(6400*fxchannel_obj.params.get('pan', 0).value)
 				fl_fxchan.enabled = int(fxchannel_obj.params.get('enabled', True).value)
+				fl_fxchan.solo = int(fxchannel_obj.params.get('solo', False).value)
 
 				if fx_num != 0:
 					if fxchannel_obj.sends.to_master_active:
@@ -473,6 +519,14 @@ class output_cvpjs(plugins.base):
 
 
 				if fx_num == 0: fxchannel_obj.outchannum = 1
+
+				for pluginid in fxchannel_obj.plugslots.slots_mixer:
+					plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+					if plugin_found:
+						if plugin_obj.check_match('universal', 'invert', None):
+							fl_fxchan.reversepolarity, _ = plugin_obj.fxdata_get()
+						if plugin_obj.check_match('universal', 'swap_lr', None):
+							fl_fxchan.swap_lr, _ = plugin_obj.fxdata_get()
 
 				slotnum = 0
 				for pluginid in fxchannel_obj.plugslots.slots_audio:
@@ -496,4 +550,5 @@ class output_cvpjs(plugins.base):
 			else:
 				logger_output.warning('Mixer Channel "'+str(fx_num)+'" does not exist.')
 
-		flp_obj.make(output_file)
+		if dawvert_intent.output_mode == 'file':
+			flp_obj.make(dawvert_intent.output_file)

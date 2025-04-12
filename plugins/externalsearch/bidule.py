@@ -7,13 +7,19 @@ from objects import globalstore
 import uuid
 
 class plugsearch(plugins.base):
-	def __init__(self): pass
-	def get_shortname(self): return 'bidule'
-	def get_name(self): return 'Bidule'
-	def is_dawvert_plugin(self): return 'externalsearch'
-	def get_prop(self, in_dict): in_dict['supported_os'] = ['win']
-	def import_plugins(self):
+	def get_shortname(self):
+		return 'bidule'
+	
+	def get_name(self):
+		return 'Bidule'
+	
+	def is_dawvert_plugin(self):
+		return 'externalsearch'
+	
+	def get_prop(self, in_dict):
+		in_dict['supported_os'] = ['win']
 
+	def import_plugins(self):
 		path_ploguebidule = os.path.join(globalstore.home_folder, "AppData", "Roaming", "Plogue", "Bidule")
 		path_ploguebidule_vst3_64 = os.path.join(globalstore.home_folder, "AppData", "Roaming", "Plogue", "Bidule", "vst3_x64.cache")
 		path_ploguebidule_vst2_64 = os.path.join(globalstore.home_folder, "AppData", "Roaming", "Plogue", "Bidule", "vst_x64.cache")

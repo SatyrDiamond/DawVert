@@ -3,7 +3,7 @@
 
 from functions import data_values
 
-def process(convproj_obj, in_compat, out_compat, out_type):
+def process(convproj_obj, in_compat, out_compat, out_type, dawvert_intent):
 
 	if convproj_obj.type in ['ri','r']:
 		if in_compat == out_compat: return False

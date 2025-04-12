@@ -1,19 +1,40 @@
-{
-    "chip": {
-        "objects": {
-            "dpcm": {"visual": {"color": [0.48,0.83,0.49],"name": "DPCM"}},
-            "fds": {"visual": {"color": [0.94,0.94,0.65],"name": "FDS"}},
-            "mmc5": {"visual": {"color": [0.65,0.34,0.84],"name": "MMC5"}},
-            "n163": {"visual": {"color": [0.97,0.97,0.36],"name": "Namco 163"}},
-            "noise": {"visual": {"color": [0.33,0.74,0.9],"name": "Noise"}},
-            "s5b": {"visual": {"color": [0.58,0.94,0.33],"name": "Sunsoft 5B"}},
-            "square1": {"visual": {"color": [0.97,0.56,0.36],"name": "Square"}},
-            "square2": {"visual": {"color": [0.97,0.56,0.36],"name": "Square"}},
-            "triangle": {"visual": {"color": [0.94,0.33,0.58],"name": "Triangle"}},
-            "vrc6_saw": {"visual": {"color": [0.46,0.52,0.91],"name": "VRC6 Saw"}},
-            "vrc6_square": {"visual": {"color": [0.6,0.44,0.93],"name": "VRC6 Square"}},
-            "vrc7_fm": {"visual": {"color": [1.0,0.46,0.44],"name": "VRC7 FM"}
-            }
-        }
-    }
-}
+<dataset>
+    <category id="chip">
+        <object id="dpcm">
+            <visual name="DPCM" color="#7ad37c" />
+        </object>
+        <object id="fds">
+            <visual name="FDS" color="#efefa5" />
+        </object>
+        <object id="mmc5">
+            <visual name="MMC5" color="#a556d6" />
+        </object>
+        <object id="n163">
+            <visual name="Namco 163" color="#f7f75b" />
+        </object>
+        <object id="noise">
+            <visual name="Noise" color="#54bce5" />
+        </object>
+        <object id="s5b">
+            <visual name="Sunsoft 5B" color="#93ef54" />
+        </object>
+        <object id="square1">
+            <visual name="Square" color="#f78e5b" />
+        </object>
+        <object id="square2">
+            <visual name="Square" color="#f78e5b" />
+        </object>
+        <object id="triangle">
+            <visual name="Triangle" color="#ef5493" />
+        </object>
+        <object id="vrc6_saw">
+            <visual name="VRC6 Saw" color="#7584e8" />
+        </object>
+        <object id="vrc6_square">
+            <visual name="VRC6 Square" color="#9970ed" />
+        </object>
+        <object id="vrc7_fm">
+            <visual name="VRC7 FM" color="#ff7570" />
+        </object>
+    </category>
+</dataset>

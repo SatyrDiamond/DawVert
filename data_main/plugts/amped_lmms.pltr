@@ -1,19 +1,17 @@
-
-[reverb]
->input
-	type|native:amped:Reverb
-	param|fb
-	param|lpf
-	param|mix
-<input
-
->proc
-	calc|fb|pow|2
-<proc
-
->output
-	type|native:lmms:reverbsc
-	param|size<fb
-	param|color<lpf
-	wet|mix
-<output
+<plugtransform>
+    <transform name="reverb">
+        <input plugtype="native:amped:Reverb">
+            <param from="fb" type="float">0</param>
+            <param from="lpf" type="float">0</param>
+            <param from="mix" type="float">0</param>
+        </input>
+        <proc>
+            <calc name="fb" type="pow">2</calc>
+        </proc>
+        <output plugtype="native:lmms:reverbsc">
+            <param to="size" from="fb" type="float">0</param>
+            <param to="color" from="lpf" type="float">0</param>
+            <wet from="mix" type="float">1</wet>
+        </output>
+    </transform>
+</plugtransform>

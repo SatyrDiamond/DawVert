@@ -43,16 +43,19 @@ autotune_chords = {
 
 
 class plugconv(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'plugconv'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'plugconv'
+
+	def get_priority(self):
+		return 0
+
 	def get_prop(self, in_dict): 
 		in_dict['in_plugins'] = [['native', 'soundation', None]]
 		in_dict['in_daws'] = ['soundation']
 		in_dict['out_plugins'] = [['universal', None, None]]
 		in_dict['out_daws'] = []
-	def convert(self, convproj_obj, plugin_obj, pluginid, dv_config):
 
+	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.filter'):
 			extpluglog.convinternal('Soundation', 'Filter', 'Universal', 'Filter')
 			filter_cutoff = plugin_obj.params.get('cutoff', 0).value

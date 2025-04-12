@@ -6,11 +6,15 @@ from functions import xtramath
 import copy
 
 from objects.convproj import notelist
+from objects.convproj import midievents
 from objects.convproj import tracks
 
+from objects.convproj import placements_midi
 from objects.convproj import placements_notes
 from objects.convproj import placements_audio
 from objects.convproj import placements_index
+from objects.convproj import placements_video
+from objects.convproj import placements_custom
 from objects.convproj import time
 
 def internal_addloops(pldata, eq_connect, loopcompat):
@@ -38,16 +42,43 @@ def internal_addloops(pldata, eq_connect, loopcompat):
 
 def internal_removeloops(pldata, out__placement_loop):
 	new_data = []
+
 	for oldpl_obj in pldata: 
-		if oldpl_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv'] and oldpl_obj.time.cut_type not in out__placement_loop:
+		if oldpl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'] and oldpl_obj.time.cut_type not in out__placement_loop:
 			loop_start, loop_loopstart, loop_loopend = oldpl_obj.time.get_loop_data()
-			for cutpoint in xtramath.cutloop(oldpl_obj.time.position, oldpl_obj.time.duration, loop_start, loop_loopstart, loop_loopend):
+			if oldpl_obj.time.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
+				dur = oldpl_obj.time.duration
+				offset = oldpl_obj.time.cut_start
+
 				cutplpl_obj = copy.deepcopy(oldpl_obj)
-				cutplpl_obj.time.position = cutpoint[0]
-				cutplpl_obj.time.duration = cutpoint[1]
-				cutplpl_obj.time.cut_type = 'cut'
-				cutplpl_obj.time.cut_start = cutpoint[2]
+				cutplpl_obj.time.duration = min(loop_loopend-offset, dur)
+				cutplpl_obj.time.set_offset(oldpl_obj.time.cut_start)
 				new_data.append(cutplpl_obj)
+
+				if dur>loop_loopend:
+					cutplpl_obj = copy.deepcopy(oldpl_obj)
+					cutplpl_obj.time.position += loop_loopend-offset
+					cutplpl_obj.time.duration = (dur-loop_loopend)+offset
+					cutplpl_obj.time.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
+					new_data.append(cutplpl_obj)
+
+			else:
+				outeq = oldpl_obj.time.duration
+				if oldpl_obj.time.cut_type == 'loop_eq': 
+					dur = outeq+oldpl_obj.time.cut_start
+				elif oldpl_obj.time.cut_type == 'loop_adv_off': 
+					durr = oldpl_obj.time.cut_start-(loop_loopend-loop_loopstart)
+					dur = outeq+oldpl_obj.time.cut_start-durr
+				else: 
+					dur = outeq
+
+				for cutpoint in xtramath.cutloop(oldpl_obj.time.position, dur, loop_start, loop_loopstart, loop_loopend):
+					cutplpl_obj = copy.deepcopy(oldpl_obj)
+					cutplpl_obj.time.position = cutpoint[0]
+					cutplpl_obj.time.duration = cutpoint[1] 
+					cutplpl_obj.time.cut_type = 'cut'
+					cutplpl_obj.time.cut_start = cutpoint[2]
+					new_data.append(cutplpl_obj)
 		else: new_data.append(oldpl_obj)
 	return new_data
 
@@ -93,16 +124,14 @@ class cvpj_placement_fade:
 
 #					|_______|_______|_______|_______|_______|_______|_______|_______|
 #	loop			Start/LoopStart                                                 LoopEnd
+#	loop_eq							Start/LoopStart                                 LoopEnd
 #	loop_off		LoopStart                       Start                           LoopEnd
 #	loop_adv		Start                           LoopStart                       LoopEnd
 #	loop_adv_off	        Start                   LoopStart                       LoopEnd
 
-
-
-
 class cvpj_placement_timing:
-	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend']
-	def __init__(self):
+	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend','time_ppq','time_float']
+	def __init__(self, time_ppq, time_float):
 		self.position = 0
 		self.duration = 0
 		self.position_real = None
@@ -111,6 +140,11 @@ class cvpj_placement_timing:
 		self.cut_start = 0
 		self.cut_loopstart = 0
 		self.cut_loopend = -1
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+		#self.cut_start = time.cvpj_time_size()
+		#self.cut_loopstart = time.cvpj_time_size()
+		#self.cut_loopend = time.cvpj_time_size()
 
 	def set_block_dur(self, durval, blksize):
 		self.duration = (durval/blksize).__ceil__()*blksize
@@ -142,9 +176,12 @@ class cvpj_placement_timing:
 		self.cut_start = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_start)
 		self.cut_loopstart = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_loopstart)
 		self.cut_loopend = xtramath.change_timing(old_ppq, new_ppq, is_float, self.cut_loopend)
+		self.time_ppq = new_ppq
+		self.time_float = is_float
 
 	def set_loop_data(self, start, loopstart, loopend):
-		if loopstart and start: self.cut_type = 'loop_adv_off'
+		if start and start==loopstart: self.cut_type = 'loop_eq'
+		elif loopstart and start: self.cut_type = 'loop_adv_off'
 		elif loopstart: self.cut_type = 'loop_adv'
 		elif start: self.cut_type = 'loop_off'
 		elif loopend: self.cut_type = 'loop'
@@ -180,7 +217,7 @@ class cvpj_placement_timing:
 			self.duration = xtramath.sec2step(self.duration_real, bpm)
 		
 class cvpj_placements:
-	__slots__ = ['pl_notes','pl_audio','pl_notes_indexed','pl_audio_indexed','pl_audio_nested','notelist','time_ppq','time_float','uses_placements','is_indexed']
+	__slots__ = ['pl_midi','pl_notes','pl_audio','pl_notes_indexed','pl_audio_indexed','pl_audio_nested','pl_video','pl_custom','notelist','midievents','time_ppq','time_float','uses_placements','is_indexed']
 	def __init__(self, time_ppq, time_float, uses_placements, is_indexed):
 		self.uses_placements = uses_placements
 		self.is_indexed = is_indexed
@@ -188,14 +225,20 @@ class cvpj_placements:
 		self.time_float = time_float
 
 		self.notelist = notelist.cvpj_notelist(time_ppq, time_float)
+		self.midievents = midievents.midievents()
 
-		self.pl_notes = placements_notes.cvpj_placements_notes()
-		self.pl_audio = placements_audio.cvpj_placements_audio()
+		self.pl_midi = placements_midi.cvpj_placements_midi(self.time_ppq, self.time_float)
 
-		self.pl_notes_indexed = placements_index.cvpj_placements_index()
-		self.pl_audio_indexed = placements_index.cvpj_placements_index()
+		self.pl_notes = placements_notes.cvpj_placements_notes(self.time_ppq, self.time_float)
+		self.pl_audio = placements_audio.cvpj_placements_audio(self.time_ppq, self.time_float)
 
-		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio()
+		self.pl_notes_indexed = placements_index.cvpj_placements_index(self.time_ppq, self.time_float)
+		self.pl_audio_indexed = placements_index.cvpj_placements_index(self.time_ppq, self.time_float)
+
+		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio(self.time_ppq, self.time_float)
+
+		self.pl_video = placements_video.cvpj_placements_video(self.time_ppq, self.time_float)
+		self.pl_custom = placements_custom.cvpj_placements_custom(self.time_ppq, self.time_float)
 
 	def sort(self):
 		self.pl_notes.sort()
@@ -203,15 +246,17 @@ class cvpj_placements:
 		self.pl_notes_indexed.sort()
 		self.pl_audio_indexed.sort()
 		self.pl_audio_nested.sort()
+		self.pl_video.sort()
+		self.pl_custom.sort()
 
 	def autosplit(self):
 		self.pl_notes.autosplit(self.time_ppq)
 
-	def merge_crop(self, pl_obj, pos, dur, visualfill):
+	def merge_crop(self, pl_obj, pos, dur, visualfill, groupid):
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
 			self.pl_notes.merge_crop(pl_obj.pl_notes, pos, dur, visualfill)
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
-			self.pl_audio.merge_crop(pl_obj.pl_audio, pos, dur, visualfill)
+			self.pl_audio.merge_crop(pl_obj.pl_audio, pos, dur, visualfill, groupid)
 
 	def merge_crop_nestedaudio(self, pl_obj, pos, dur, visualfill):
 		if (self.uses_placements==pl_obj.uses_placements) and (self.is_indexed==pl_obj.is_indexed) and (self.time_ppq==pl_obj.time_ppq) and (self.time_float==pl_obj.time_float):
@@ -227,21 +272,29 @@ class cvpj_placements:
 		return max(self.pl_notes.get_dur(),self.pl_audio.get_dur(),self.pl_notes_indexed.get_dur(),self.pl_audio_indexed.get_dur(),self.notelist.get_dur())
 
 	def get_start(self):
-		return min(self.pl_notes.get_start(),self.pl_audio.get_start(),self.notelist.get_start_end()[0])
+		outcount = min(self.pl_notes.get_start(),self.pl_audio.get_start())
+		if self.notelist.count(): outcount = min(self.notelist.get_start_end()[0], outcount)
+		return outcount
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		self.pl_notes.change_seconds(is_seconds, bpm, ppq)
 		self.pl_audio.change_seconds(is_seconds, bpm, ppq)
+		self.pl_custom.change_seconds(is_seconds, bpm, ppq)
+		self.pl_video.change_seconds(is_seconds, bpm, ppq)
+		self.pl_midi.change_seconds(is_seconds, bpm, ppq)
 
 	def remove_cut(self):
 		self.pl_notes.remove_cut()
 
 	def remove_loops(self, out__placement_loop):
 		self.pl_notes.remove_loops(out__placement_loop)
+		self.pl_midi.remove_loops(out__placement_loop)
 		self.pl_audio.remove_loops(out__placement_loop)
 		self.pl_audio_nested.remove_loops(out__placement_loop)
 		self.pl_notes_indexed.remove_loops(out__placement_loop)
 		self.pl_audio_indexed.remove_loops(out__placement_loop)
+		self.pl_video.remove_loops(out__placement_loop)
+		self.pl_custom.remove_loops(out__placement_loop)
 
 	def add_loops(self, loopcompat):
 		self.pl_notes.add_loops(loopcompat)
@@ -258,6 +311,12 @@ class cvpj_placements:
 	def add_notes_indexed(self): return self.pl_notes_indexed.add()
 
 	def add_audio_indexed(self): return self.pl_audio_indexed.add()
+
+	def add_video(self): return self.pl_video.add()
+
+	def add_midi(self): return self.pl_midi.add(self.time_ppq, self.time_float)
+
+	def add_custom(self): return self.pl_custom.add()
 
 	def all_stretch_set_pitch_nonsync(self):
 		if not self.is_indexed: 
@@ -276,30 +335,15 @@ class cvpj_placements:
 	def change_timings(self, time_ppq, time_float):
 		self.notelist.change_timings(time_ppq, time_float)
 
-		for pl in self.pl_notes:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-			if not self.is_indexed: 
-				pl.notelist.change_timings(time_ppq, time_float)
-				pl.timesig_auto.change_timings(time_ppq, time_float)
-				pl.timemarkers.change_timings(time_ppq, time_float)
-				for mpename, autodata in pl.auto.items():
-					autodata.change_timings(time_ppq, time_float)
-
-		for pl in self.pl_audio:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-			if pl.auto:
-				for mpename, autodata in pl.auto.items():
-					autodata.change_timings(time_ppq, time_float)
-
-		for pl in self.pl_notes_indexed:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-
-		for pl in self.pl_audio_indexed:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-
-		for pl in self.pl_audio_nested:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-			for x in pl.events: x.time.change_timing(self.time_ppq, time_ppq, time_float)
+		self.pl_notes.change_timings(time_ppq, time_float, self.is_indexed)
+		self.pl_notes.change_timings(time_ppq, time_float, self.is_indexed)
+		self.pl_audio.change_timings(time_ppq, time_float)
+		self.pl_midi.change_timings(time_ppq, time_float)
+		self.pl_notes_indexed.change_timings(time_ppq, time_float)
+		self.pl_audio_indexed.change_timings(time_ppq, time_float)
+		self.pl_audio_nested.change_timings(time_ppq, time_float)
+		self.pl_video.change_timings(time_ppq, time_float)
+		self.pl_custom.change_timings(time_ppq, time_float)
 
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -327,7 +371,7 @@ class cvpj_placements:
 
 	def unindex_notes(self, notelist_index):
 		for indexpl_obj in self.pl_notes_indexed:
-			new_notespl_obj = placements_notes.cvpj_placement_notes(1, 1)
+			new_notespl_obj = placements_notes.cvpj_placement_notes(self.time_ppq, self.time_float)
 			new_notespl_obj.time = indexpl_obj.time.copy()
 			new_notespl_obj.muted = indexpl_obj.muted
 
@@ -339,12 +383,12 @@ class cvpj_placements:
 				new_notespl_obj.timemarkers = nle_obj.timemarkers.copy()
 
 			self.pl_notes.data.append(new_notespl_obj)
-		self.pl_notes_indexed = placements_index.cvpj_placements_index()
+		self.pl_notes_indexed = placements_index.cvpj_placements_index(self.time_ppq, self.time_float)
 		self.is_indexed = False
 
 	def unindex_audio(self, sample_index):
 		for indexpl_obj in self.pl_audio_indexed:
-			apl_obj = placements_audio.cvpj_placement_audio()
+			apl_obj = placements_audio.cvpj_placement_audio(self.time_ppq, self.time_float)
 
 			if indexpl_obj.fromindex in sample_index:
 				sle_obj = sample_index[indexpl_obj.fromindex]
@@ -354,15 +398,17 @@ class cvpj_placements:
 				apl_obj.fade_out = indexpl_obj.fade_out
 				
 				apl_obj.visual = sle_obj.visual
-				apl_obj.sample = sle_obj
+				apl_obj.sample = copy.deepcopy(sle_obj)
+
+				apl_obj.sample.vol *= indexpl_obj.vol
 				self.pl_audio.data.append(apl_obj)
 
-		self.pl_audio_indexed = placements_index.cvpj_placements_index()
+		self.pl_audio_indexed = placements_index.cvpj_placements_index(self.time_ppq, self.time_float)
 		self.is_indexed = False
 
 	def to_indexed_notes(self, existingpatterns, pattern_number):
 		existingpatterns = []
-		self.pl_notes_indexed = placements_index.cvpj_placements_index()
+		self.pl_notes_indexed = placements_index.cvpj_placements_index(self.time_ppq, self.time_float)
 
 		for notepl_obj in self.pl_notes:
 			nle_data = [notepl_obj.notelist, notepl_obj.visual.name, notepl_obj.visual.color]
@@ -380,7 +426,7 @@ class cvpj_placements:
 				pattern_number += 1
 
 
-			new_index_obj = placements_index.cvpj_placement_index()
+			new_index_obj = placements_index.cvpj_placement_index(self.time_ppq, self.time_float)
 			new_index_obj.time = notepl_obj.time.copy()
 			new_index_obj.fromindex = dupepatternfound
 			new_index_obj.muted = notepl_obj.muted
@@ -388,12 +434,12 @@ class cvpj_placements:
 			self.pl_notes_indexed.data.append(new_index_obj)
 
 		self.is_indexed = True
-		self.pl_notes = placements_notes.cvpj_placements_notes()
+		self.pl_notes = placements_notes.cvpj_placements_notes(self.time_ppq, self.time_float)
 		return existingpatterns, pattern_number
 
 	def to_indexed_audio(self, existingsamples, sample_number):
 		new_data_audio = []
-		self.pl_audio_indexed = placements_index.cvpj_placements_index()
+		self.pl_audio_indexed = placements_index.cvpj_placements_index(self.time_ppq, self.time_float)
 
 		for audiopl_obj in self.pl_audio:
 			sle_obj = audiopl_obj.sample
@@ -410,13 +456,13 @@ class cvpj_placements:
 				dupepatternfound = patid
 				sample_number += 1
 
-			new_index_obj = placements_index.cvpj_placement_index()
+			new_index_obj = placements_index.cvpj_placement_index(self.time_ppq, self.time_float)
 			new_index_obj.time = audiopl_obj.time.copy()
 			new_index_obj.fromindex = dupepatternfound
 			new_index_obj.muted = audiopl_obj.muted
 			self.pl_audio_indexed.data.append(new_index_obj)
 
-		self.pl_audio = placements_audio.cvpj_placements_audio()
+		self.pl_audio = placements_audio.cvpj_placements_audio(self.time_ppq, self.time_float)
 		return existingsamples, sample_number
 
 	def add_nested_audio(self):
@@ -432,6 +478,8 @@ class cvpj_placements:
 					e.sample.fxrack_channel = fxnum
 
 	def remove_nested(self):
+
+		self.pl_audio_nested.remove_loops([])
 		for nestedpl_obj in self.pl_audio_nested:
 			main_s = nestedpl_obj.time.cut_start
 			main_e = nestedpl_obj.time.duration+main_s
@@ -453,7 +501,7 @@ class cvpj_placements:
 					out_end = min(main_e, event_e)
 
 					scs = out_start-event_s
-
+					
 					if False:
 						print('E ', end='| ')
 						for x in [main_s+event_o, main_e]: print(str(round(x, 4)).ljust(7), end=' ')
@@ -467,15 +515,19 @@ class cvpj_placements:
 
 					cutplpl_obj = copy.deepcopy(e)
 					cutplpl_obj.time.position = (out_start+basepos)-main_s
-					cutplpl_obj.time.duration = out_end-out_start
+
+					sco = out_start-event_o
+					offset_d = (main_e-main_s)-sco
+
+					cutplpl_obj.time.duration = min(max(out_end-out_start, offset_d), event_et)
 					cutplpl_obj.time.cut_type = 'cut'
 					cutplpl_obj.time.cut_start += scs
-					cutplpl_obj.muted = nestedpl_obj.muted
+					cutplpl_obj.muted = cutplpl_obj.muted or nestedpl_obj.muted
 					if not cutplpl_obj.visual.name: 
 						cutplpl_obj.visual.name = nestedpl_obj.visual.name
 					self.pl_audio.data.append(cutplpl_obj)
 
-		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio()
+		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio(self.time_ppq, self.time_float)
 
 	def debugtxt(self):
 		print(len(self.notelist.nl), end='|')

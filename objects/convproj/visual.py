@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from dataclasses import dataclass
+from functions import xtramath
 from objects import globalstore
 import numpy as np
 import copy
@@ -254,13 +255,23 @@ class cvpj_color:
 
 	def from_colorset_num(self, colorset_obj, num):
 		if colorset_obj:
-			self.set_float(colorset_obj.getcolornum(num))
+			self.set_int(colorset_obj.getcolornum(num))
 
 	def closest_color_index(self, colorset_obj, fallbacknum):
 		if colorset_obj:
 			if colorset_obj.colorset and self.used:
 				colors = np.array(colorset_obj.colorset)
 				color = np.array([self.r_f, self.g_f, self.b_f])
+				distances = np.sqrt(np.sum((colors-color)**2,axis=1))
+				index_of_smallest = np.where(distances==np.amin(distances))
+				return index_of_smallest[0][0]
+		return fallbacknum
+
+	def closest_color_index_int(self, colorset_obj, fallbacknum):
+		if colorset_obj:
+			if colorset_obj.colorset and self.used:
+				colors = np.array(colorset_obj.colorset)
+				color = np.array([self.r_i, self.g_i, self.b_i])
 				distances = np.sqrt(np.sum((colors-color)**2,axis=1))
 				index_of_smallest = np.where(distances==np.amin(distances))
 				return index_of_smallest[0][0]
@@ -321,16 +332,27 @@ class cvpj_visual:
 		d = globalstore.dataset.get_obj(d_id, d_cat, d_item)
 		if d: 
 			if overwrite or (not self.name): self.name = d.visual.name
-			if overwrite or (not self.color): self.color.set_float(d.visual.color)
+			if overwrite or (not self.color): self.color.set_int(d.visual.color)
+			return True
+		else:
+			return False
 
 	def from_dset_midi(self, m_bank_hi, m_bank, m_inst, m_drum, m_dev, overwrite):
 		midi_dev = m_dev if m_dev else 'gm'
-		startcat = midi_dev+'_inst' if not m_drum else midi_dev+'_drums'
-		dset_inst = str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst)
-		dset_fb = '0_0_'+str(m_inst)
 		globalstore.dataset.load('midi', './data_main/dataset/midi.dset')
-		self.from_dset('midi', startcat, dset_inst, overwrite)
-		self.from_dset('midi', startcat, dset_fb, overwrite)
+		if midi_dev == 'xg':
+			startcat = 'xg_inst'
+			if m_drum: m_bank = 127
+			dset_inst = str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst)
+			self.from_dset('midi', startcat, dset_inst, overwrite)
+			dset_inst_fallb = '0_'+str(m_bank)+'_'+str(m_inst)
+			self.from_dset('midi', startcat, dset_inst_fallb, overwrite)
+		else:
+			startcat = midi_dev+'_inst' if not m_drum else midi_dev+'_drums'
+			dset_inst = str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst)
+			dset_fb = '0_0_'+str(m_inst)
+			self.from_dset('midi', startcat, dset_inst, overwrite)
+			self.from_dset('midi', startcat, dset_fb, overwrite)
 
 	def copy(self):
 		return copy.deepcopy(self)
@@ -355,6 +377,7 @@ class cvpj_metadata:
 		self.songwriter = ''
 		self.producer = ''
 		self.copyright = ''
+		self.show = -1
 
 class cvpj_window_data:
 	__slots__ = ['pos_x','pos_y','size_x','size_y','open','detatched','maximized','minimized']
@@ -367,3 +390,15 @@ class cvpj_window_data:
 		self.maximized = -1
 		self.minimized = -1
 		self.detatched = -1
+
+class cvpj_visual_keynote:
+	def __init__(self):
+		self.data = {}
+
+	def __bool__(self):
+		return bool(self.other) and self.height!=1
+
+	def add_key(self, k):
+		visual_obj = cvpj_visual()
+		self.data[k] = visual_obj
+		return visual_obj

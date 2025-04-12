@@ -43,6 +43,7 @@ class cvpj_sample_entry:
 	stretch: cvpj_stretch = field(default_factory=cvpj_stretch)
 	interpolation: str = "linear"
 	trigger: str = "normal"
+	no_pitch: bool = False
 
 	length: float = -1
 
@@ -51,6 +52,7 @@ class cvpj_sample_entry:
 	end: float = 1
 
 	envs: dict = field(default_factory=dict)
+	filter_assoc: str = ''
 
 	vel_min: float = 0
 	vel_max: float = 1
@@ -65,6 +67,8 @@ class cvpj_sample_entry:
 	slicer_active: bool = False
 	slicer_slices: list = field(default_factory=list)
 
+	usemasterpitch: bool = True
+	
 	#def __eq__(self, other):
 	#	from dataclasses import asdict
 	#	dictdata_a = asdict(self.stretch)
@@ -116,6 +120,14 @@ class cvpj_sample_entry:
 				self.start = self.start * sampleref_obj.dur_samples
 				self.end = self.end * sampleref_obj.dur_samples
 			self.point_value_type = 'samples'
+
+	def add_slice_endpoints(self): 
+		slice_obj = cvpj_sample_slice()
+		for num in range(len(self.slicer_slices)-1):
+			self.slicer_slices[num].end = self.slicer_slices[num+1].start
+		self.slicer_slices[-1].end = self.end
+
+		return slice_obj
 
 	def add_slice(self): 
 		slice_obj = cvpj_sample_slice()

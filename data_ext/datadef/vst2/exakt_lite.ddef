@@ -1,85 +1,87 @@
-
-area_struct|main
-part|int|header
-part|byte|unknown_0
-part|byte|unknown_1
-part|byte|unknown_2
-part|byte|unknown_3
-part|byte|unknown_4
-part|byte|unknown_5
-part|byte|unknown_6
-part|byte|unknown_7
-part|struct.op_param|op1_env
-part|struct.op_param|op2_env
-part|struct.op_param|op3_env
-part|struct.op_param|op4_env
-part|struct.op_param|filter_env
-part|struct.op_extra|op1_params
-part|struct.op_extra|op2_params
-part|struct.op_extra|op3_params
-part|struct.op_extra|op4_params
-part|skip_n.8|
-part|skip_n.8|
-part|skip_n.8|
-part|skip_n.8|
-part|skip_n.8|
-part|skip_n.8|
-part|double|algo
-part|double|feedback
-part|struct.filter|filter
-part|double|gain
-part|struct.lfo|lfo
-part|string.256|name
-
-area_struct|op_param
-part|int|unk1
-part|byte|sustain
-part|int|unk2
-part|double|point0_time
-part|double|point0_lvl_end
-part|double|point0_unk
-part|double|point1_time
-part|double|point1_lvl_start
-part|double|point1_lvl_end
-part|double|point2_unk
-part|double|point2_time
-part|double|point2_lvl_start
-part|double|point2_lvl_end
-part|double|point4_unk
-part|double|point3_time
-part|double|point3_lvl_start
-part|double|point3_lvl_end
-part|double|point4_unk
-part|double|point4_time
-
-area_struct|op_extra
-part|double|shape
-part|double|rate
-part|double|offset
-part|double|detune
-part|double|phase
-part|double|level
-part|double|pan
-part|double|invert
-part|double|vel_sens
-
-area_struct|filter
-part|double|type
-part|double|cutoff
-part|double|reso
-part|double|amount
-part|double|vel_sens
-
-area_struct|lfo
-part|double|lfo_shape
-part|double|lfo_rate_free
-part|double|lfo_rate_sync
-part|double|lfo_sync
-part|double|lfo_free
-part|double|lfo_depth
-part|double|lfo_level_a
-part|double|lfo_level_b
-part|double|lfo_level_c
-part|double|lfo_level_d
-part|double|lfo_pitch
-part|double|lfo_cutoff
+<datadef>
+  <struct name="main">
+    <part type="int" name="header"/>
+    <part type="byte" name="unknown_0"/>
+    <part type="byte" name="unknown_1"/>
+    <part type="byte" name="unknown_2"/>
+    <part type="byte" name="unknown_3"/>
+    <part type="byte" name="unknown_4"/>
+    <part type="byte" name="unknown_5"/>
+    <part type="byte" name="unknown_6"/>
+    <part type="byte" name="unknown_7"/>
+    <part type="struct" name="op1_env" struct_name="op_param"/>
+    <part type="struct" name="op2_env" struct_name="op_param"/>
+    <part type="struct" name="op3_env" struct_name="op_param"/>
+    <part type="struct" name="op4_env" struct_name="op_param"/>
+    <part type="struct" name="filter_env" struct_name="op_param"/>
+    <part type="struct" name="op1_params" struct_name="op_extra"/>
+    <part type="struct" name="op2_params" struct_name="op_extra"/>
+    <part type="struct" name="op3_params" struct_name="op_extra"/>
+    <part type="struct" name="op4_params" struct_name="op_extra"/>
+    <part type="skip" size="8"/>
+    <part type="skip" size="8"/>
+    <part type="skip" size="8"/>
+    <part type="skip" size="8"/>
+    <part type="skip" size="8"/>
+    <part type="skip" size="8"/>
+    <part type="double" name="algo"/>
+    <part type="double" name="feedback"/>
+    <part type="struct" name="filter" struct_name="filter"/>
+    <part type="double" name="gain"/>
+    <part type="struct" name="lfo" struct_name="lfo"/>
+    <part type="string" name="name" size="256"/>
+  </struct>
+  <struct name="op_param">
+    <part type="int" name="unk1"/>
+    <part type="byte" name="sustain"/>
+    <part type="int" name="unk2"/>
+    <part type="double" name="point0_time"/>
+    <part type="double" name="point0_lvl_end"/>
+    <part type="double" name="point0_unk"/>
+    <part type="double" name="point1_time"/>
+    <part type="double" name="point1_lvl_start"/>
+    <part type="double" name="point1_lvl_end"/>
+    <part type="double" name="point2_unk"/>
+    <part type="double" name="point2_time"/>
+    <part type="double" name="point2_lvl_start"/>
+    <part type="double" name="point2_lvl_end"/>
+    <part type="double" name="point4_unk"/>
+    <part type="double" name="point3_time"/>
+    <part type="double" name="point3_lvl_start"/>
+    <part type="double" name="point3_lvl_end"/>
+    <part type="double" name="point4_unk"/>
+    <part type="double" name="point4_time"/>
+  </struct>
+  <struct name="op_extra">
+    <part type="double" name="shape"/>
+    <part type="double" name="rate"/>
+    <part type="double" name="offset"/>
+    <part type="double" name="detune"/>
+    <part type="double" name="phase"/>
+    <part type="double" name="level"/>
+    <part type="double" name="pan"/>
+    <part type="double" name="invert"/>
+    <part type="double" name="vel_sens"/>
+  </struct>
+  <struct name="filter">
+    <part type="double" name="type"/>
+    <part type="double" name="cutoff"/>
+    <part type="double" name="reso"/>
+    <part type="double" name="amount"/>
+    <part type="double" name="vel_sens"/>
+  </struct>
+  <struct name="lfo">
+    <part type="double" name="lfo_shape"/>
+    <part type="double" name="lfo_rate_free"/>
+    <part type="double" name="lfo_rate_sync"/>
+    <part type="double" name="lfo_sync"/>
+    <part type="double" name="lfo_free"/>
+    <part type="double" name="lfo_depth"/>
+    <part type="double" name="lfo_level_a"/>
+    <part type="double" name="lfo_level_b"/>
+    <part type="double" name="lfo_level_c"/>
+    <part type="double" name="lfo_level_d"/>
+    <part type="double" name="lfo_pitch"/>
+    <part type="double" name="lfo_cutoff"/>
+  </struct>
+</datadef>

@@ -28,7 +28,7 @@ def autopoints_get(autoloc, add, mul):
 	return sngauto
 
 def add_fx(convproj_obj, soundation_channel, fxchain_audio):
-	from objects.file_proj import proj_soundation
+	from objects.file_proj import soundation as proj_soundation
 	for pluginid in fxchain_audio:
 		plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
 		if plugin_found: 
@@ -75,11 +75,18 @@ def addsample(zip_sngz, filepath, alredyexists):
 	return zipfilename
 
 class output_soundation(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Soundation'
-	def get_shortname(self): return 'soundation'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Soundation'
+	
+	def get_shortname(self):
+		return 'soundation'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'sngz'
 		in_dict['placement_cut'] = True
@@ -87,11 +94,11 @@ class output_soundation(plugins.base):
 		in_dict['fxtype'] = 'route'
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation','universal:midi']
 		in_dict['auto_types'] = ['nopl_points']
-		in_dict['placement_loop'] = ['loop']
+		in_dict['placement_loop'] = ['loop', 'loop_eq']
 		in_dict['projtype'] = 'r'
 
-	def parse(self, i_convproj_obj, output_file):
-		from objects.file_proj import proj_soundation
+	def parse(self, i_convproj_obj, dawvert_intent):
+		from objects.file_proj import soundation as proj_soundation
 
 		global convproj_obj
 		global audio_id
@@ -123,9 +130,9 @@ class output_soundation(plugins.base):
 		beatNumerator, beatDenominator = convproj_obj.timesig
 		soundation_obj.timeSignature = str(beatNumerator)+'/'+str(beatDenominator)
 
-		soundation_obj.looping = convproj_obj.loop_active
-		soundation_obj.loopStart = convproj_obj.loop_start
-		soundation_obj.loopEnd = convproj_obj.loop_end
+		soundation_obj.looping = convproj_obj.transport.loop_active
+		soundation_obj.loopStart = convproj_obj.transport.loop_start
+		soundation_obj.loopEnd = convproj_obj.transport.loop_end
 
 		bpmdiv = 120/bpm
 
@@ -179,12 +186,12 @@ class output_soundation(plugins.base):
 						middlenote = track_obj.datavals.get('middlenote', 0)
 						pitch = track_obj.params.get('pitch', 0).value
 
-						negpitch = -1 if pitch<0 else 1
+						#negpitch = -1 if pitch<0 else 1
 						transpose = round(pitch)
 						detune = pitch-transpose
 
 						transpose = xtramath.between_to_one(-48, 48, transpose)
-						detune = xtramath.between_to_one(-1, 1, detune*negpitch)
+						detune = xtramath.between_to_one(-1, 1, detune)
 
 						set_asdr(soundation_instrument, plugin_obj)
 						soundation_instrument.params.add('playback_mode', 2, [])
@@ -326,10 +333,16 @@ class output_soundation(plugins.base):
 					soundation_region.length = int(notespl_obj.time.duration)
 					soundation_region.loopcount = 1
 					soundation_region.contentPosition = 0
+					soundation_region.muted = notespl_obj.muted
 
-					if notespl_obj.time.cut_type in ['loop']:
+					if notespl_obj.time.cut_type == 'loop':
 						soundation_region.length = notespl_obj.time.cut_loopend
 						soundation_region.loopcount = notespl_obj.time.duration/notespl_obj.time.cut_loopend
+
+					if notespl_obj.time.cut_type == 'loop_eq':
+						soundation_region.contentPosition = -(notespl_obj.time.cut_start)
+						soundation_region.length = notespl_obj.time.cut_loopend-notespl_obj.time.cut_start
+						soundation_region.loopcount = notespl_obj.time.duration/soundation_region.length
 
 					if notespl_obj.time.cut_type == 'cut': 
 						soundation_region.contentPosition = -(notespl_obj.time.cut_start)
@@ -362,6 +375,7 @@ class output_soundation(plugins.base):
 					soundation_region.length = int(audiopl_obj.time.duration)
 					soundation_region.loopcount = 1
 					soundation_region.contentPosition = 0
+					soundation_region.muted = audiopl_obj.muted
 
 					if audiopl_obj.time.cut_type in ['loop', 'loop_off']:
 						soundation_region.length = audiopl_obj.time.cut_loopend
@@ -395,9 +409,9 @@ class output_soundation(plugins.base):
 
 			sng_channels.append(soundation_channel)
 
-		soundation_obj.looping = convproj_obj.loop_active
-		soundation_obj.loopStart = int(convproj_obj.loop_start)
-		soundation_obj.loopEnd = int(convproj_obj.loop_end)
+		soundation_obj.looping = convproj_obj.transport.loop_active
+		soundation_obj.loopStart = int(convproj_obj.transport.loop_start)
+		soundation_obj.loopEnd = int(convproj_obj.transport.loop_end)
 
 		#iseffectexists = 'fx' in [convproj_obj.track_data[x].type for x in convproj_obj.track_order]
 #
@@ -431,8 +445,9 @@ class output_soundation(plugins.base):
 
 		jsonwrite = soundation_obj.write()
 
-		zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
-		zip_sngz.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			zip_sngz.writestr('song.sng', json.dumps(jsonwrite))
+			zip_sngz.close()
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
 
 		#with open('soundation_debug', "w") as fileout: json.dump(jsonwrite, fileout, indent=4)

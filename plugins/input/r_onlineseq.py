@@ -8,32 +8,41 @@ import struct
 def int2float(value): return struct.unpack("<f", struct.pack("<I", value))[0]
 
 class input_onlinesequencer(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'onlineseq'
-	def get_name(self): return 'Online Sequencer'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'onlineseq'
+	
+	def get_name(self):
+		return 'Online Sequencer'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['sequence']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_onlineseq
+
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import onlineseq as proj_onlineseq
 		from objects.inst_params import fx_delay
 
 		global onlseq_notelist
 		global onlseq_customnames
 
 		convproj_obj.type = 'r'
+		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.set_timings(4, True)
 
 		globalstore.dataset.load('onlineseq', './data_main/dataset/onlineseq.dset')
 
 		project_obj = proj_onlineseq.onlineseq_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		used_fx = {}
 		synthdata = {}
@@ -43,11 +52,12 @@ class input_onlinesequencer(plugins.base):
 			synthdata[instid] = instparam.synth
 		for target, params in project_obj.seperate_markers().items(): 
 			if target != -1:
-				if ((3 in params) or (4 in params) or (5 in params)) and 'eq' not in used_fx[target]: used_fx[instid].append('eq')
-				if (6 in params) and 'delay' not in used_fx[target]: used_fx[instid].append('delay')
-				if ((7 in params) or (12 in params)) and 'reverb' not in used_fx[target]: used_fx[instid].append('reverb')
-				if ((13 in params) or (14 in params)) and 'distort' not in used_fx[target]: used_fx[instid].append('distort')
-				if ((18 in params) or (19 in params) or (20 in params)) and 'bitcrush' not in used_fx[target]: used_fx[instid].append('bitcrush')
+				if target in used_fx:
+					if ((3 in params) or (4 in params) or (5 in params)) and 'eq' not in used_fx[target]: used_fx[instid].append('eq')
+					if (6 in params) and 'delay' not in used_fx[target]: used_fx[instid].append('delay')
+					if ((7 in params) or (12 in params)) and 'reverb' not in used_fx[target]: used_fx[instid].append('reverb')
+					if ((13 in params) or (14 in params)) and 'distort' not in used_fx[target]: used_fx[instid].append('distort')
+					if ((18 in params) or (19 in params) or (20 in params)) and 'bitcrush' not in used_fx[target]: used_fx[instid].append('bitcrush')
 
 			for paramid, markers in params.items(): 
 				autoloc = None
@@ -79,13 +89,23 @@ class input_onlinesequencer(plugins.base):
 				if autoloc:
 					for marker in markers: convproj_obj.automation.add_autopoint(autoloc, 'float', marker.pos, marker.value/div, 'normal' if marker.type else 'instant')
 
+		multig = {}
+
 		sep_notes = project_obj.seperate_notes(False)
 		for instid, notes in sep_notes.items():
 			s_used_fx = used_fx[instid] if instid in used_fx else []
+
 			trackid = 'os_'+str(instid)
 			trueinstid = instid%10000
+
+			if trueinstid not in multig: multig[trueinstid] = []
 			track_obj = convproj_obj.track__add(trackid, 'instrument', 0, False)
+			multig[trueinstid].append(track_obj)
+
 			midifound = track_obj.from_dataset('onlineseq', 'inst', str(trueinstid), True)
+
+			track_obj.visual_inst = track_obj.visual.copy()
+
 			if midifound: 
 				track_obj.to_midi(convproj_obj, trackid, True)
 			else:
@@ -183,6 +203,12 @@ class input_onlinesequencer(plugins.base):
 
 			for key, pos, dur, inst, vol in notes: 
 				track_obj.placements.notelist.add_r(pos, dur, key-60, vol, {})
+
+		for k, v in multig.items():
+			if len(v)>1:
+				group_obj = convproj_obj.fx__group__add(str(k))
+				group_obj.visual.from_dset('onlineseq', 'inst', str(k), True)
+				for x in v: x.group = str(k)
 
 		convproj_obj.timesig = [project_obj.numerator, 4]
 		convproj_obj.do_actions.append('do_addloop')

@@ -24,16 +24,13 @@ def extract_audio(audioname):
 	return audio_filename
 
 def add_devices(convproj_obj, track_obj, trackid, devices_obj):
-	from functions_plugin_ext import plugin_vst2
-	from functions_plugin_ext import plugin_vst3
 	from objects.inst_params import fx_delay
-	from functions_plugin import juce_memoryblock
-	from functions_plugin_ext import data_vc2xml
 	if trackid in devices_obj.tracks:
 		device_track = devices_obj.tracks[trackid]
 
 		effects = []
 		instrument_dev = None
+		instrument_dev_data = None
 
 		trackdevices = []
 		TrackMIDIReceiver = None
@@ -55,6 +52,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 				if devicedata.sourceId == 'df142a04-31c6-4495-a8a4-c49f8429d557':
 					plugin_obj = convproj_obj.plugin__add(deviceid, 'native', 'wavtool', 'wavetable')
 					instrument_dev = deviceid
+					instrument_dev_data = devicedata
 					wavetableA = base64.b64decode(constantsdata["wavetableA"]) if "wavetableA" in constantsdata else None
 					wavetableB = base64.b64decode(constantsdata["wavetableB"]) if "wavetableB" in constantsdata else None
 
@@ -110,6 +108,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'synth-osc', None)
 					inst_fallback = deviceid
 					instrument_dev = deviceid
+					instrument_dev_data = devicedata
 					osc_data = plugin_obj.osc_add()
 					osc_data.prop.shape = 'saw'
 
@@ -122,12 +121,11 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					plugin_obj.env_asdr_add('vol', 0, attack, 0, decay, sustain, release, 1)
 
 				elif devicedata.sourceId == 'c2fc1730-9cc9-4643-bb54-9435a920c927':
-					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'sampler', 'multi')
+					plugin_obj = convproj_obj.plugin__add(deviceid, 'universal', 'sampler', 'drums')
 					inst_fallback = deviceid
 					plugin_obj.role = 'synth'
 					instrument_dev = deviceid
-
-					plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
+					instrument_dev_data = devicedata
 
 					for samplenum in range(1,13):
 						endstr = str(samplenum)
@@ -145,14 +143,14 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 							samp_key = samplenum-1
 
-							sp_obj = plugin_obj.sampleregion_add(samp_key, samp_key, samp_key, None)
+							sp_obj = plugin_obj.sampledrum_add(samp_key, None)
 							sp_obj.sampleref = bufferid
 							sp_obj.envs['vol'] = 'vol_'+endstr
 							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0
 							sp_obj.vol = inputdata["gain"+endstr] if "gain"+endstr in inputdata else 1
 							sp_obj.pitch = inputdata["pitch"+endstr] if "pitch"+endstr in inputdata else 0
 
-							sp_obj = plugin_obj.sampleregion_add(samp_key-12, samp_key-12, samp_key-12, None)
+							sp_obj = plugin_obj.sampledrum_add(samp_key-12, None)
 							sp_obj.sampleref = bufferid
 							sp_obj.envs['vol'] = 'vol_'+endstr
 							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0
@@ -166,6 +164,7 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 						wave_path = extract_audio(bufferid)
 						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(deviceid, wave_path, None, sampleid=bufferid)
 						instrument_dev = deviceid
+						instrument_dev_data = devicedata
 
 						attack = inputdata["attack"]/48000 if "attack" in inputdata else 0.001
 						decay = inputdata["decay"]/48000 if "decay" in inputdata else 0.1
@@ -325,6 +324,8 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					effects.append(deviceid)
 
 			if devicedata.type == 'Bridge':
+				from objects.inst_params import juce_plugin
+
 				encodedState = base64.b64decode(devicedata.data['encodedState']) if 'encodedState' in devicedata.data else ''
 				sourceId = devicedata.data['sourceId'] if 'sourceId' in devicedata.data else ''
 				sourceName = devicedata.data['sourceName'] if 'sourceName' in devicedata.data else ''
@@ -332,28 +333,28 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 				inputSpec = devicedata.data['inputSpec'] if 'inputSpec' in devicedata.data else {}
 				outputSpec = devicedata.data['outputSpec'] if 'outputSpec' in devicedata.data else {}
 
+				juceobj = juce_plugin.juce_plugin()
+				juceobj.name = sourceName
+				juceobj.manufacturer = sourceManufacturer
+
 				isinst = 'midiInput' in inputSpec
 
 				if len(encodedState)>96:
 					encodedSig = encodedState[0:96]
 					encodedData = encodedState[96:]
-					if encodedData[0:4] == b'CcnK':
-						plugin_obj = convproj_obj.plugin__add(deviceid, 'external', 'vst2', 'win')
-						plugin_vst2.import_presetdata_raw(convproj_obj, plugin_obj, encodedData, None)
-					if encodedData[0:4] == b'VC2!':
-						pluginstate_x = data_vc2xml.get(encodedData)
-						IComponent = data_xml.find_first(pluginstate_x, 'IComponent')
-						if IComponent != None and sourceName:
-							chunkdata = juce_memoryblock.fromJuceBase64Encoding(IComponent.text)
-							plugin_vst3.replace_data(convproj_obj, plugin_obj, 'name', None, sourceName, chunkdata)
+					if encodedData[0:4] == b'CcnK': juceobj.plugtype = 'vst2'
+					if encodedData[0:4] == b'VC2!': juceobj.plugtype = 'vst3'
+					juceobj.rawdata = encodedData
+					plugin_obj, _ = juceobj.to_cvpj(convproj_obj, deviceid)
 
-				if isinst: 
-					instrument_dev = deviceid
-					if plugin_obj: plugin_obj.role = 'synth'
-				else:
-					effects.append(deviceid)
-					if plugin_obj: plugin_obj.role = 'effect'
-
+					if isinst: 
+						instrument_dev = deviceid
+						instrument_dev_data = devicedata
+						if plugin_obj: plugin_obj.role = 'synth'
+					else:
+						effects.append(deviceid)
+						if plugin_obj: plugin_obj.role = 'fx'
+	
 			trackdevices.append(deviceid)
 
 		if TrackMIDIReceiver:
@@ -372,6 +373,8 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 					d_in = connections[d_in]
 					if d_in == instrument_dev: 
 						track_obj.plugslots.set_synth(instrument_dev)
+						if 'presetName' in instrument_dev_data.data:
+							track_obj.visual_inst.name = instrument_dev_data.data['presetName']
 						logger_input.info('Instrument Device: '+instrument_dev)
 					if d_in in effects: 
 						track_obj.plugslots.slots_audio.append(d_in)
@@ -383,15 +386,22 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 			track_obj.plugslots.set_synth(inst_fallback)
 
 class input_wavtool(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'wavtool'
-	def get_name(self): return 'Wavtool'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'wavtool'
+	
+	def get_name(self):
+		return 'Wavtool'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['zip']
 		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
 		in_dict['audio_stretch'] = ['warp']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
@@ -401,9 +411,9 @@ class input_wavtool(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return False
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_wavtool
+
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import wavtool as proj_wavtool
 
 		global zip_data
 		global samplefolder
@@ -413,12 +423,13 @@ class input_wavtool(plugins.base):
 		convproj_obj.set_timings(1, True)
 
 		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
 		except zipfile.BadZipFile as t:
 			raise ProjectFileParserException('wavtool: Bad ZIP File: '+str(t))
 
 		json_filename = None
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 		for jsonname in zip_data.namelist():
 			if '.json' in jsonname: json_filename = jsonname
 		if not json_filename:
@@ -464,7 +475,7 @@ class input_wavtool(plugins.base):
 					sp_obj = placement_obj.sample
 
 					audio_filename = extract_audio(wavtool_clip.audioBufferId)
-					convproj_obj.sampleref__add(wavtool_clip.audioBufferId, audio_filename, None)
+					sampleref_obj = convproj_obj.sampleref__add(wavtool_clip.audioBufferId, audio_filename, None)
 					sp_obj.sampleref = wavtool_clip.audioBufferId
 
 					loopon = True
@@ -495,11 +506,13 @@ class input_wavtool(plugins.base):
 							stretch_obj.set_rate_tempo(wavtool_obj.bpm, sourcebpmmod, True)
 						else:
 							stretch_obj.is_warped = True
+							warp_obj = stretch_obj.warp
+							warp_obj.seconds = sampleref_obj.dur_sec
 							for anchor in wt_warp_anchors: 
-								warp_point_obj = stretch_obj.add_warp_point()
+								warp_point_obj = warp_obj.points__add()
 								warp_point_obj.beat = (float(anchor))
 								warp_point_obj.second = (wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
-							stretch_obj.calc_warp_points()
+							warp_obj.calcpoints__speed()
 
 					else: 
 						stretch_obj.set_rate_speed(wavtool_obj.bpm, pow(2, wavtool_clip.transpose/12), False)
@@ -520,6 +533,10 @@ class input_wavtool(plugins.base):
 
 		convproj_obj.timesig = [wavtool_obj.beatNumerator, wavtool_obj.beatDenominator]
 		convproj_obj.params.add('bpm', wavtool_obj.bpm, 'float')
+
+		convproj_obj.transport.loop_active = wavtool_obj.loopEnabled
+		convproj_obj.transport.loop_start = wavtool_obj.loopStart
+		convproj_obj.transport.loop_end = wavtool_obj.loopEnd
 
 		for x in wavtool_obj.bpmAutomation:
 			point_tempo = x['value'] if 'value' in x else 120

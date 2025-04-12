@@ -1,0 +1,25 @@
+<dataset>
+    <category id="track">
+        <colorset id="acid_1">
+            <color>#B6C800</color>
+            <color>#C800C8</color>
+            <color>#00C8C8</color>
+            <color>#31C800</color>
+            <color>#C80000</color>
+        </colorset>
+        <colorset id="sdml">
+            <color>#5B5BFF</color>
+            <color>#FF5B5B</color>
+            <color>#FF902A</color>
+            <color>#00C62A</color>
+            <color>#5BFF5B</color>
+        </colorset>
+        <colorset id="acid_4">
+            <color>#33897C</color>
+            <color>#7C3441</color>
+            <color>#5973A8</color>
+            <color>#599CA8</color>
+            <color>#5D4181</color>
+        </colorset>
+    </category>
+</dataset>

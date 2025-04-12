@@ -95,14 +95,12 @@ class cvpj_envelope_adsr:
 		use_fadeout = env_pointsdata.data['use_fadeout'] if 'use_fadeout' in env_pointsdata.data else 0
 		fadeout = env_pointsdata.data['fadeout'] if 'fadeout' in env_pointsdata.data else True
 
-		debug_num = 0
 		if point_start.value != point_end.value:
 			if env_pointsdata.loop_on and env_pointsdata.loop_start < env_pointsdata.loop_end:
-				debug_num = 200
 				self.release = fadeout
 				self.amount = 1
 				if plugin_obj:
-					if VERBOSE: print("[env_asdr_from_points] 2 | LFO")
+					if VERBOSE: print("env_asdr_from_points | 2 | LFO")
 					lfo_obj = plugin_obj.lfo_add(a_type)
 					lfo_obj.prop.shape = 'saw' if env_value>0 else 'saw_down'
 					lfo_obj.time.set_seconds(env_duration)
@@ -111,21 +109,22 @@ class cvpj_envelope_adsr:
 
 			elif sustainp:
 				self.release = env_duration
-				if env_value < 0: 
-					self.amount = -1
-					debug_num = 201
+				if point_start.value>point_end.value: 
+					if VERBOSE: print("env_asdr_from_points | 2A | █▁")
+					self.release = env_duration
+					self.sustain = 1
+					return 201
+
 			else:
 				if env_value > 0:
-					if VERBOSE: print("[env_asdr_from_points] 2 | ^_")
+					if VERBOSE: print("env_asdr_from_points | 2B | █▁")
 					self.decay = env_duration
 					self.sustain = minval
-					debug_num = 202
+					return 202
 				else: 
-					if VERBOSE: print("[env_asdr_from_points] 2 | _^")
+					if VERBOSE: print("env_asdr_from_points | 2B | ▁█")
 					self.attack = env_duration
-					debug_num = 203
-
-		return debug_num
+					return 203
 
 	def from_envpoints__internal_3point(self, sustainnum, plugin_obj, env_pointsdata):
 		use_fadeout = env_pointsdata.data['use_fadeout'] if 'use_fadeout' in env_pointsdata.data else 0
@@ -140,8 +139,6 @@ class cvpj_envelope_adsr:
 		firstmid_s = envv_first-envv_middle
 		midend_s = envv_end-envv_middle
 
-		debug_num = 0
-
 		#if VERBOSE: print(pointsdata[0].pos, pointsdata[0].value)
 		#if VERBOSE: print(pointsdata[1].pos, pointsdata[1].value)
 		#if VERBOSE: print(pointsdata[2].pos, pointsdata[2].value)
@@ -149,76 +146,78 @@ class cvpj_envelope_adsr:
 
 		if firstmid_s > 0 and sustainnum == -1: a_sustain = 0
 
+		debugnum = 0
+
 		if firstmid_s > 0 and midend_s == 0:
-			if VERBOSE: print("[env_asdr_from_points] 3 | ^__" )
+			if VERBOSE: print("env_asdr_from_points | 3 | █__" )
 			if sustainnum == -1: self.decay = envp_middle
 			if sustainnum == 0: self.release = envp_middle
-			debug_num = 300
+			debugnum = 300
 
 		elif firstmid_s > 0 and midend_s < 0:
-			if VERBOSE: print("[env_asdr_from_points] 3 | ^._" )
+			if VERBOSE: print("env_asdr_from_points | 3 | █▄▁" )
 			if sustainnum == -1: 
 				self.decay = envp_end
 				self.decay_tension = (envv_middle-(envv_first/2))*2
 				self.sustain = 0
 				if use_fadeout: self.release = fadeout
-				debug_num = 301
+				debugnum = 301
 
 			if sustainnum == 0: 
 				self.release = envp_end
 				self.release_tension = ((((envp_middle/envp_end)/2)+(envv_middle/2))-0.5)*2
-				debug_num = 302
+				debugnum = 302
 
 			if sustainnum == 1: 
 				self.decay = envp_middle
 				self.release = envp_end-envp_middle
 				self.sustain = envv_middle
-				debug_num = 303
+				debugnum = 303
    
 		elif firstmid_s < 0 and midend_s < 0:
-			if VERBOSE: print("[env_asdr_from_points] 3 | _^." )
+			if VERBOSE: print("env_asdr_from_points | 3 | ▁█▄" )
 			if sustainnum in [0, -1]: 
 				self.attack = envp_middle
 				self.decay = (envp_end-envp_middle)
 				self.sustain = envv_end
-				debug_num = 304
+				debugnum = 304
 			if sustainnum == 1: 
 				self.attack = envp_middle
 				self.release = (envp_end-envp_middle)
-				debug_num = 305
+				debugnum = 305
 
 		elif firstmid_s == 0 and midend_s < 0:
-			if VERBOSE: print("[env_asdr_from_points] 3 | ^^.")
+			if VERBOSE: print("env_asdr_from_points | 3 | ██▄")
 			if sustainnum == -1:
 				self.hold = envp_middle
 				self.decay = envp_end-envp_middle
 				self.sustain = envv_end
-				debug_num = 306
+				debugnum = 306
 			if sustainnum == 0: 
 				self.hold = envp_middle
 				self.release = envp_end-envp_middle
-				debug_num = 307
+				debugnum = 307
 
 		elif firstmid_s < 0 and midend_s > 0:
-			if VERBOSE: print("[env_asdr_from_points] 3 | _.^")
+			if VERBOSE: print("env_asdr_from_points | 3 | ▁▄█")
 			self.attack = envp_end
 			self.attack_tension = ((envp_end-envp_middle)-1)
-			debug_num = 308
+			debugnum = 308
 
 		elif firstmid_s == 0 and midend_s > 0:
-			if VERBOSE: print("[env_asdr_from_points] 3 | __^")
+			if VERBOSE: print("env_asdr_from_points | 3 | __█")
 			self.predelay = envp_middle
 			self.attack = envp_end-envp_middle
-			debug_num = 309
+			debugnum = 309
 
 		elif firstmid_s < 0 and midend_s == 0:
-			if VERBOSE: print("[env_asdr_from_points] 3 | _^^")
+			if VERBOSE: print("env_asdr_from_points | 3 | _██")
 			self.attack = envp_middle
 			self.hold = envp_end-envp_middle
-			debug_num = 310
+			debugnum = 310
 
 		#elif firstmid_s > 0 and midend_s > 0:
-		#	#print("[env_asdr_from_points] 3 | ^.^")
+		#	#print("env_asdr_from_points | 3 | █.█")
 		#	if sustainnum in [None, 1]:
 		#		self.attack = envp_middle
 		#		a_decay = (envp_end-envp_middle)
@@ -227,52 +226,65 @@ class cvpj_envelope_adsr:
 		#		self.attack = envp_middle
 		#		self.release = (envp_end-envp_middle)
 		#		a_amount = envv_middle-1
-		#	debug_num = True
+		#	return True
 
-		if debug_num != 0 and self.sustain != 0 and self.release == 0: self.release = fadeout
-		return debug_num
+		if debugnum != 0 and self.sustain != 0 and self.release == 0: self.release = fadeout
+		return debugnum
 
 	def from_envpoints(self, env_pointsdata, a_type, plugin_obj):
 		self.reset()
 		
+
 		use_fadeout = env_pointsdata.data['use_fadeout'] if 'use_fadeout' in env_pointsdata.data else 0
 		fadeout = env_pointsdata.data['fadeout'] if 'fadeout' in env_pointsdata.data else True
 		pointsdata = env_pointsdata.points
 		numpoints = len(pointsdata)
+		if VERBOSE: 
+			if not data_values.list__ifallsame([x.value for x in pointsdata]):
+				env_pointsdata.debugview()
 
 		sustainnum = -1 if (not env_pointsdata.sustain_on or env_pointsdata.sustain_point > numpoints-1) else env_pointsdata.sustain_point
-		debug_num = 0
 
 		if numpoints == 2:
-			debug_num = self.from_envpoints__internal_2point(sustainnum, a_type, plugin_obj, env_pointsdata)
+			return self.from_envpoints__internal_2point(sustainnum, a_type, plugin_obj, env_pointsdata)
 
 		elif numpoints == 3:
-			debug_num = self.from_envpoints__internal_3point(sustainnum, plugin_obj, env_pointsdata)
+			return self.from_envpoints__internal_3point(sustainnum, plugin_obj, env_pointsdata)
 
-		elif numpoints == 4 and (
-			(sustainnum in [-1, 2]) and 
-			(pointsdata[0].value == 0) and 
-			(pointsdata[3].value == 0) and 
-			(pointsdata[1].value>=pointsdata[2].value)):
-				if VERBOSE: print("[env_asdr_from_points] 4 | ADSR")
+		elif numpoints == 4:
+			cond_sus = sustainnum in [-1, 2]
+			cond_adsr1 = pointsdata[0].value == 0
+			cond_adsr3 = pointsdata[1].value>=pointsdata[2].value
+			cond_adsr2 = pointsdata[3].value == 0
+
+			if cond_sus and cond_adsr1 and cond_adsr2 and cond_adsr3:
+				if VERBOSE: print("env_asdr_from_points | 4 | ADSR")
 				self.attack = pointsdata[1].pos
 				self.decay = pointsdata[2].pos-pointsdata[1].pos
 				self.sustain = pointsdata[2].value
 				self.release = pointsdata[3].pos-pointsdata[2].pos
-				debug_num = 400
+				return 400
 
-		elif numpoints > 3:
+		if numpoints > 3:
 
 			if env_pointsdata['pos'][-1] != 0:
+				cond1 = not env_pointsdata.loop_on
+				cond2 = env_pointsdata.loop_on and env_pointsdata.loop_start==env_pointsdata.loop_end
 
-				if not env_pointsdata.loop_on:
+				t_dif = data_values.list__dif_val(env_pointsdata['value'], None)
+
+				if cond1 or cond2:
 					if sustainnum in [-1, 0]:
 						lastpos = env_pointsdata['pos'][-1]
-						t_dif = data_values.list__dif_val(env_pointsdata['value'], None)
 						tension = tension_detect(env_pointsdata, None, None)
+						outv = False
+						while len(t_dif)>1:
+							if t_dif[-1]==0: del t_dif[-1]
+							else: break
+
 						if min(t_dif)<=0 and max(t_dif)<0:
-							debug_num = 500
-							if VERBOSE: print("[env_asdr_from_points] 5 | _.^._")
+							if VERBOSE: print("env_asdr_from_points | 5 | █▄▁")
+							outv = True
 							if sustainnum == -1:
 								self.decay = lastpos
 								self.decay_tension = tension
@@ -281,56 +293,89 @@ class cvpj_envelope_adsr:
 								self.release = lastpos
 								self.release_tension = tension
 						if min(t_dif)>0 and max(t_dif)>=0:
-							if VERBOSE: print("[env_asdr_from_points] 5 | _.^")
-							debug_num = 501
+							if VERBOSE: print("env_asdr_from_points | 5 | ▁▄█")
+							outv = True
 							self.attack = lastpos
 							self.attack_tension = tension
+						if outv: return 500
 
-					else:
-						firstpos = env_pointsdata['pos'][0]
-						firstval = env_pointsdata['value'][0]
+					susmode = True
+					if sustainnum == -1:
+						susmode = False
+						sustainnum = 0
+						for x in t_dif:
+							if x>0: sustainnum += 1
+							else: break
 
-						midpos = env_pointsdata['pos'][sustainnum]
-						midval = env_pointsdata['value'][sustainnum]
+					firstpos = env_pointsdata['pos'][0]
+					firstval = env_pointsdata['value'][0]
+					midpos = env_pointsdata['pos'][sustainnum]
+					midval = env_pointsdata['value'][sustainnum]
+					lastpos = env_pointsdata['pos'][-1]
+					lastval = env_pointsdata['value'][-1]
+					dif_first = data_values.list__dif_val(env_pointsdata['value'][0:sustainnum+1], None)
+					dif_last = data_values.list__dif_val(env_pointsdata['value'][sustainnum:numpoints], None)
+					if not dif_first: dif_first = [0]
+					if not dif_last: dif_last = [0]
+					first_dif_higher = (min(dif_first)>=0 and max(dif_first)>=0)
+					last_dif_lower = (min(dif_last)<=0 and max(dif_last)<0)
 
-						lastpos = env_pointsdata['pos'][-1]
-						lastval = env_pointsdata['value'][-1]
+					outv = False
 
-						dif_first = data_values.list__dif_val(env_pointsdata['value'][0:sustainnum+1], None)
-						dif_last = data_values.list__dif_val(env_pointsdata['value'][sustainnum:numpoints], None)
-
-						if not dif_first: dif_first = [0]
-						if not dif_last: dif_last = [0]
-
-						first_dif_higher = (min(dif_first)>=0 and max(dif_first)>=0)
-						last_dif_lower = (min(dif_last)<=0 and max(dif_last)<0)
-
+					if susmode:
 						if firstval<midval:
 							if first_dif_higher:
-								if VERBOSE: print("[env_asdr_from_points] 5 F| _.^")
+								if VERBOSE: print("env_asdr_from_points | 5F| ▁▄█")
 								self.attack = midpos
 								self.attack_tension = tension_detect(env_pointsdata, 0, sustainnum+1)
-								debug_num = 502
+								outv = True
+	
 						elif firstval>midval:
 							if not first_dif_higher:
-								if VERBOSE: print("[env_asdr_from_points] 5 F| ^._")
+								if VERBOSE: print("env_asdr_from_points | 5F| █▄▁")
 								self.decay = midpos
 								self.decay_tension = tension_detect(env_pointsdata, 0, sustainnum+1)
 								self.sustain = midval
-								debug_num = 502
-
+								outv = True
 
 						if lastval<midval:
 							if last_dif_lower:
-								if VERBOSE: print("[env_asdr_from_points] 5 L| ^._")
+								if VERBOSE: print("env_asdr_from_points | 5L| █▄▁")
 								self.release = lastpos-midpos
 								self.release_tension = tension_detect(env_pointsdata, sustainnum, numpoints)
-								debug_num = 502
-						#elif (
+								outv = True
+						if outv: return 501
+					else:
+						if firstval<midval:
+							if first_dif_higher:
+								if VERBOSE: print("env_asdr_from_points | 6F| ▁▄█")
+								self.attack = midpos
+								self.attack_tension = tension_detect(env_pointsdata, 0, sustainnum+1)
+								outv = True
 
+						if lastval<midval:
+							if last_dif_lower:
+								if VERBOSE: print("env_asdr_from_points | 6L| █▄▁")
+								self.decay = lastpos-midpos
+								self.decay_tension = tension_detect(env_pointsdata, sustainnum, numpoints)
+								self.sustain = 0
+								outv = True
+						if outv: return 601
+
+					outv = 0
+					for x in t_dif:
+						if x<=0: outv += 1
+						else: break
+
+					if outv:
+						if VERBOSE: print("env_asdr_from_points | 7 | █▄▁▄")
+						self.release = env_pointsdata['pos'][outv]
+
+				#elif VERBOSE: print("env_asdr_from_points | unknown 2")
+			#elif VERBOSE: print("env_asdr_from_points | unknown 1")
 				#exit()
 
-		#if VERBOSE: print(numpoints, a_type, sustainnum, debug_num)
+		#elif VERBOSE: print("env_asdr_from_points | unknown 0")
 
 
 

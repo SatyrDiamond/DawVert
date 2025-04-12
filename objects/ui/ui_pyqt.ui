@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QWidget" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>878</width>
+    <height>595</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="AreasIO">
+     <item>
+      <widget class="QGroupBox" name="InputGroup">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>240</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Input</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <item>
+         <layout class="QHBoxLayout" name="InputFileArea">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetDefaultConstraint</enum>
+          </property>
+          <item>
+           <widget class="QLabel" name="InputTextFile">
+            <property name="text">
+             <string>File</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="InputFilePath"/>
+          </item>
+          <item>
+           <widget class="QToolButton" name="InputFileButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QPushButton" name="AutoDetectButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Auto-Detect</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="InputListArea">
+          <item row="2" column="1">
+           <widget class="QListWidget" name="ListWidget_InPlugin">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">font: 15pt &quot;Ubuntu&quot;;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QListWidget" name="ListWidget_InPlugSet">
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>10000</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QLabel" name="label_4">
+            <property name="text">
+             <string>Input Plugin</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel" name="label_7">
+            <property name="text">
+             <string>Plugin Set</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="ConfigArea">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title">
+        <string>Config</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_7">
+        <item>
+         <widget class="QTreeWidget" name="ConfigList">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
+          </property>
+          <column>
+           <property name="text">
+            <string>Name</string>
+           </property>
+          </column>
+          <column>
+           <property name="text">
+            <string>Value</string>
+           </property>
+          </column>
+         </widget>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QSpinBox" name="ConfigInt"/>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="ConfigFloat"/>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="ConfigString"/>
+          </item>
+          <item>
+           <widget class="QCheckBox" name="ConfigBool">
+            <property name="text">
+             <string>Value</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="OutputGroup">
+       <property name="minimumSize">
+        <size>
+         <width>240</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="title">
+        <string>Output</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="OutputFileArea">
+          <item>
+           <widget class="QLabel" name="OutputTextFile">
+            <property name="text">
+             <string>File</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="OutputFilePath"/>
+          </item>
+          <item>
+           <widget class="QToolButton" name="OutputFileButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="OutputSampleArea_2">
+          <item>
+           <widget class="QLabel" name="OutputSampleFile">
+            <property name="text">
+             <string>Samples</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLineEdit" name="OutputSamplePath"/>
+          </item>
+          <item>
+           <widget class="QToolButton" name="OutputSampleButton">
+            <property name="text">
+             <string>...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QGridLayout" name="OutputListArea">
+          <item row="1" column="0">
+           <widget class="QListWidget" name="ListWidget_OutPlugSet">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>9</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="minimumSize">
+             <size>
+              <width>0</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>100</width>
+              <height>10000</height>
+             </size>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0">
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Plugin Set</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1">
+           <widget class="QListWidget" name="ListWidget_OutPlugin">
+            <property name="styleSheet">
+             <string notr="true">font: 15pt &quot;Ubuntu&quot;;</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QLabel" name="label_9">
+            <property name="text">
+             <string>Output Plugin</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="BottomArea">
+     <item>
+      <layout class="QVBoxLayout" name="AreaInteract">
+       <item>
+        <widget class="QLabel" name="StatusText">
+         <property name="styleSheet">
+          <string notr="true">font: 18pt &quot;Ubuntu&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Status: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="SubStatusText">
+         <property name="text">
+          <string>Status Text</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QProgressBar" name="progressBar">
+         <property name="value">
+          <number>0</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="ConvertButton">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>222</width>
+           <height>0</height>
+          </size>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">font: 20pt &quot;Source Sans Pro&quot;;</string>
+         </property>
+         <property name="text">
+          <string>Convert</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="ExtPluginArea">
+         <item>
+          <widget class="QGroupBox" name="ExtPlugScannerGroup">
+           <property name="title">
+            <string>External Plugin Scanner</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_5">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="QPushButton" name="PluginScanButton">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Scan Plugins</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="PluginScanStatus">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QLabel" name="ExtCountVST2">
+                <property name="text">
+                 <string>VST2: 0</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="ExtCountVST3">
+                <property name="text">
+                 <string>VST3: 0</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="ExtCountCLAP">
+                <property name="text">
+                 <string>CLAP: 0</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="ExtPlugCatsGroup">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="title">
+            <string>External Plugins Groups</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
+             <layout class="QGridLayout" name="gridLayout">
+              <item row="0" column="0">
+               <widget class="QCheckBox" name="ExtPlugG_FOSS">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>FOSS</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="0">
+               <widget class="QCheckBox" name="ExtPlugG_Shareware">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Shareware</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="1">
+               <widget class="QCheckBox" name="ExtPlugG_Old">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Old/Discontinued</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QCheckBox" name="ExtPlugG_NonFree">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Non-Free</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QGroupBox" name="groupBox">
+           <property name="title">
+            <string>File Settings</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_6">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_3">
+              <item>
+               <widget class="QCheckBox" name="OverwriteOut">
+                <property name="text">
+                 <string>Overwrite Output</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="AutoConvert">
+                <property name="text">
+                 <string>Auto-Convert</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_4">
+              <item>
+               <widget class="QLabel" name="label">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>DragDrop Out Path</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QComboBox" name="DndOutPathSelection">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

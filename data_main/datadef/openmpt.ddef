@@ -1,78 +1,89 @@
-area_struct|chorus
-part|skip_n.4|
-part|float|wetdrymix
-part|float|depth
-part|float|frequency
-part|float|waveshape
-part|float|phase
-part|float|feedback
-part|float|delay
+<datadef>
+  <struct name="chorus">
+    <part type="skip" size="4"/>
+    <part type="float" name="wetdrymix"/>
+    <part type="float" name="depth"/>
+    <part type="float" name="frequency"/>
+    <part type="float" name="waveshape"/>
+    <part type="float" name="phase"/>
+    <part type="float" name="feedback"/>
+    <part type="float" name="delay"/>
+  </struct>
 
-area_struct|compressor
-part|skip_n.4|
-part|float|gain
-part|float|attack
-part|float|release
-part|float|threshold
-part|float|ratio
-part|float|predelay
+  <struct name="compressor">
+    <part type="skip" size="4"/>
+    <part type="float" name="gain"/>
+    <part type="float" name="attack"/>
+    <part type="float" name="release"/>
+    <part type="float" name="threshold"/>
+    <part type="float" name="ratio"/>
+    <part type="float" name="predelay"/>
+  </struct>
 
-area_struct|distortion
-part|skip_n.4|
-part|float|gain
-part|float|edge
-part|float|prelowpasscutoff
-part|float|posteqcenterfrequency
-part|float|posteqbandwidth
+  <struct name="distortion">
+    <part type="skip" size="4"/>
+    <part type="float" name="gain"/>
+    <part type="float" name="edge"/>
+    <part type="float" name="prelowpasscutoff"/>
+    <part type="float" name="posteqcenterfrequency"/>
+    <part type="float" name="posteqbandwidth"/>
+  </struct>
 
-area_struct|echo
-part|skip_n.4|
-part|float|wetdry
-part|float|feedback
-part|float|leftdelay
-part|float|rightdelay
-part|float|pandelay
+  <struct name="echo">
+    <part type="skip" size="4"/>
+    <part type="float" name="wetdry"/>
+    <part type="float" name="feedback"/>
+    <part type="float" name="leftdelay"/>
+    <part type="float" name="rightdelay"/>
+    <part type="float" name="pandelay"/>
+  </struct>
 
-area_struct|flanger
-part|skip_n.4|
-part|float|wetdrymix
-part|float|waveshape
-part|float|frequency
-part|float|depth
-part|float|phase
-part|float|feedback
-part|float|delay
+  <struct name="flanger">
+    <part type="skip" size="4"/>
+    <part type="float" name="wetdrymix"/>
+    <part type="float" name="waveshape"/>
+    <part type="float" name="frequency"/>
+    <part type="float" name="depth"/>
+    <part type="float" name="phase"/>
+    <part type="float" name="feedback"/>
+    <part type="float" name="delay"/>
+  </struct>
 
-area_struct|gargle
-part|skip_n.4|
-part|float|rate
-part|float|waveshape
+  <struct name="gargle">
+    <part type="skip" size="4"/>
+    <part type="float" name="rate"/>
+    <part type="float" name="waveshape"/>
+  </struct>
 
-area_struct|i3dl2reverb
-part|skip_n.4|
-part|float|room
-part|float|roomhf
-part|float|roomrollofffactor
-part|float|decaytime
-part|float|decayhfratio
-part|float|reflections
-part|float|reflectionsdelay
-part|float|reverb
-part|float|reverbdelay
-part|float|diffusion
-part|float|density
-part|float|hfreference
-part|float|quality
+  <struct name="i3dl2reverb">
+    <part type="skip" size="4"/>
+    <part type="float" name="room"/>
+    <part type="float" name="roomhf"/>
+    <part type="float" name="roomrollofffactor"/>
+    <part type="float" name="decaytime"/>
+    <part type="float" name="decayhfratio"/>
+    <part type="float" name="reflections"/>
+    <part type="float" name="reflectionsdelay"/>
+    <part type="float" name="reverb"/>
+    <part type="float" name="reverbdelay"/>
+    <part type="float" name="diffusion"/>
+    <part type="float" name="density"/>
+    <part type="float" name="hfreference"/>
+    <part type="float" name="quality"/>
+  </struct>
 
-area_struct|parameq
-part|skip_n.4|
-part|float|center
-part|float|bandwidth
-part|float|eqgain
+  <struct name="parameq">
+    <part type="skip" size="4"/>
+    <part type="float" name="center"/>
+    <part type="float" name="bandwidth"/>
+    <part type="float" name="eqgain"/>
+  </struct>
 
-area_struct|wavesreverb
-part|skip_n.4|
-part|float|ingain
-part|float|reverbmix
-part|float|reverbtime
-part|float|highfreqrtratio
+  <struct name="wavesreverb">
+    <part type="skip" size="4"/>
+    <part type="float" name="ingain"/>
+    <part type="float" name="reverbmix"/>
+    <part type="float" name="reverbtime"/>
+    <part type="float" name="highfreqrtratio"/>
+  </struct>
+</datadef>

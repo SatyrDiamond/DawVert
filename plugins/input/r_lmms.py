@@ -96,7 +96,8 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	
 	pluginpath = str(lmms_plugin.get_param('plugin', ''))
 
-	plugin_obj.datavals_global.add('path', pluginpath)
+	extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+	extmanu_obj.vst2__replace_data('path', pluginpath, None, None, False)
 
 	vst2_pathid = pluginid+'_vstpath'
 	convproj_obj.fileref__add(vst2_pathid, pluginpath, None)
@@ -112,7 +113,7 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	vst_data = str(lmms_plugin.get_param('chunk', ''))
 
 	if vst_data:
-		plugin_obj.datavals_global.add('datatype', 'chunk')
+		plugin_obj.external_info.datatype = 'chunk'
 		plugin_obj.rawdata_add_b64('chunk', vst_data)
 
 		for paramname, lmms_param in lmms_plugin.params.items():
@@ -128,20 +129,14 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 			if vst_param.id: autoid_assoc.define(vst_param.id, ['plugin', pluginid, cparamid], 'float', None)
 
 	elif vst_numparams != -1:
-		plugin_obj.datavals_global.add('datatype', 'param')
-		plugin_obj.datavals_global.add('numparams', int(vst_numparams))
+		plugin_obj.external_info.datatype = 'param'
+		plugin_obj.external_info.numparams = int(vst_numparams)
 
 	for param, vst_param in lmms_plugin.vst_params.items():
 		paramnum = 'ext_param_'+str(param)
 		param_obj = plugin_obj.params.add(paramnum, vst_param.value, 'float')
 		if vst_param.visname: param_obj.visual.name = vst_param.visname
 		if vst_param.id: autoid_assoc.define(vst_param.id, ['plugin', pluginid, paramnum], 'float', None)
-
-	pluginfo_obj = globalstore.extplug.get('vst2', 'path', pluginpath, 'win', [32, 64])
-
-	if pluginfo_obj.out_exists:
-		plugin_obj.datavals_global.add('name', pluginfo_obj.name)
-		plugin_obj.datavals_global.add('fourid', int(pluginfo_obj.id))
 
 def doparam(lmms_param_obj, i_type, i_addmul, i_loc):
 	global autoid_assoc
@@ -204,7 +199,7 @@ def asdflfo(plugin_obj, elenv, asdrtype):
 	lfo_obj.amount = lfo_amount
 	lfo_obj.retrigger = False
 
-def decodeplugin(convproj_obj, lmms_plugin, pluginname):
+def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 	out_color = None
 	pluginid = ''
 
@@ -245,6 +240,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 		sp_obj.loop_start = float(lmms_plugin.get_param('lframe', 0))
 		sp_obj.loop_end = float(lmms_plugin.get_param('eframe', 1))
 		sp_obj.end = sp_obj.loop_end
+		sp_obj.trigger = 'oneshot' if isbb else 'normal'
 
 		if looped == 2: sp_obj.loop_mode = "pingpong"
 		if lmms_interpolation == 0: sp_obj.interpolation = "none"
@@ -377,6 +373,30 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname):
 				sp_obj = plugin_obj.samplepart_add(out_str)
 				sp_obj.sampleid = sampleid
 
+		if pluginname == "slicert":
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'slicer')
+			plugin_obj.role = 'synth'
+
+			filepath = lmms_plugin.get_param('src', '').value
+			sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, None)
+			plugin_obj.datavals.add('fade_out', float(lmms_plugin.get_param('fadeOut', 0).value))
+
+			sp_obj = plugin_obj.samplepart_add('sample')
+			sp_obj.from_sampleref(convproj_obj, filepath)
+
+			numslices = int(lmms_plugin.get_param('totalSlices', 0))
+
+			hzmod = 44100/sampleref_obj.hz
+
+			if sampleref_obj.dur_samples:
+				slicenum = 1
+				for n in range(numslices):
+					value = lmms_plugin.get_param('slice_'+str(n+1), 0).value
+					slice_obj = sp_obj.add_slice()
+					slice_obj.start = int(float(value)*hzmod*sampleref_obj.dur_samples)
+					slicenum += 1
+
+
 	plugin_obj.visual.from_dset('lmms', 'plugin', pluginname, True)
 
 	return plugin_obj.visual.color, pluginid, plugin_obj
@@ -464,6 +484,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.params.add('enabled', cvpj_enabled, 'bool')
 			track_obj.params.add('solo', cvpj_solo, 'bool')
 			track_obj.visual.name = lmms_track.name
+			track_obj.visual_ui.height = lmms_track.height/32
 			if isbb: track_obj.visual.name += ' [BB]'
 
 			insttr_obj = lmms_track.instrumenttrack
@@ -480,26 +501,28 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			pluginname = insttr_obj.instrument.name
 			insttr_obj = lmms_track.instrumenttrack
-			plug_color, instpluginid, plugin_obj = decodeplugin(convproj_obj, insttr_obj.instrument.plugin, pluginname)
+			plug_color, instpluginid, plugin_obj = decodeplugin(convproj_obj, insttr_obj.instrument.plugin, pluginname, isbb)
 
 			if lmms_track.color: track_obj.visual.color.set_hex(lmms_track.color)
-			elif plug_color: track_obj.visual.color = plug_color
+			if plug_color: track_obj.visual_inst.color = plug_color.copy()
 
 			track_obj.plugslots.set_synth(instpluginid)
 			if plugin_obj: asdflfo_get(insttr_obj, plugin_obj)
 
 			midiport_obj = insttr_obj.midiport
 			track_obj.midi.in_enabled = bool(int(midiport_obj.readable))
-			track_obj.midi.in_chan = int(midiport_obj.inputchannel)-1
+			track_obj.midi.in_chanport.chan = int(midiport_obj.inputchannel)-1
 			track_obj.midi.in_fixedvelocity = int(midiport_obj.fixedinputvelocity)
 			track_obj.midi.out_enabled = int(midiport_obj.writable)
-			track_obj.midi.out_chan = int(midiport_obj.outputchannel)
+			track_obj.midi.out_chanport.chan = int(midiport_obj.outputchannel)
 			track_obj.midi.out_inst.patch = int(midiport_obj.outputprogram)
 			track_obj.midi.out_fixedvelocity = int(midiport_obj.fixedoutputvelocity)
 			track_obj.midi.out_inst.key = int(midiport_obj.fixedoutputnote)
 			track_obj.midi.basevelocity = int(midiport_obj.basevelocity)
 
-			track_obj.plugslots.slots_audio += decodefxchain(convproj_obj, insttr_obj.fxchain)
+			fxchain_obj = insttr_obj.fxchain
+			track_obj.plugslots.slots_audio_enabled = bool(fxchain_obj.enabled.value)
+			track_obj.plugslots.slots_audio += decodefxchain(convproj_obj, fxchain_obj)
 
 			if insttr_obj.fxch != -1: track_obj.fxrack_channel = int(insttr_obj.fxch)
 
@@ -507,6 +530,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			noteoffset = 0
 			if pluginname == 'audiofileprocessor': noteoffset = 3
 			elif pluginname == 'sf2player': noteoffset = 12
+			elif pluginname == 'slicert': noteoffset = 1
 			elif pluginname == 'OPL2': noteoffset = 24
 			elif pluginname == 'zynaddsubfx': noteoffset = 0
 			elif pluginname == 'vestige': noteoffset = 0
@@ -519,7 +543,8 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 				placement_obj = track_obj.placements.add_notes() if not isbb else placements_notes.cvpj_placement_notes(track_obj.time_ppq, track_obj.time_float)
 				placement_obj.time.position = lmms_pattern.pos
 				placement_obj.visual.name = lmms_pattern.name
-				if lmms_pattern.color: placement_obj.visual.color.set_float(lmms_pattern.color)
+				if lmms_pattern.color: 
+					placement_obj.visual.color.set_hex(lmms_pattern.color)
 				placement_obj.muted = bool(int(lmms_pattern.muted))
 				for lmms_note in lmms_pattern.notes:
 					placement_obj.notelist.add_r(lmms_note.pos, max(lmms_note.len, 0), lmms_note.key-60, lmms_note.vol/100, {'pan': lmms_note.pan/100})
@@ -613,8 +638,9 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.params.add('enabled', cvpj_enabled, 'bool')
 			track_obj.params.add('solo', cvpj_solo, 'bool')
 			track_obj.visual.name = lmms_track.name
+			track_obj.visual_ui.height = lmms_track.height/32
 			if isbb: track_obj.visual.name += ' [BB]'
-			if lmms_track.color: track_obj.visual.color.set_hex(track_color)
+			if lmms_track.color: track_obj.visual.color.set_hex(lmms_track.color)
 
 			samptr_obj = lmms_track.sampletrack
 			cvpj_pan = doparam(samptr_obj.pan, 'float', [0, 0.01], ['track', cvpj_trackid, 'pan'])
@@ -627,7 +653,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			if samptr_obj.fxch != -1: track_obj.fxrack_channel = int(samptr_obj.fxch)
 
 			for lmms_sampletco in lmms_track.sampletcos:
-				placement_obj = track_obj.placements.add_audio() if not isbb else placements_audio.cvpj_placement_audio()
+				placement_obj = track_obj.placements.add_audio() if not isbb else placements_audio.cvpj_placement_audio(48, False)
 				placement_obj.time.set_posdur(lmms_sampletco.pos, lmms_sampletco.len)
 				placement_obj.time.set_offset(lmms_sampletco.off*-1 if lmms_sampletco.off != -1 else 0)
 				placement_obj.muted = bool(lmms_sampletco.muted)
@@ -644,6 +670,8 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 					for id_num in lmms_automationpattern.auto_target:
 						autopl_obj = convproj_obj.automation.add_pl_points(['id',str(id_num)], 'float')
 						autopl_obj.time.set_posdur(lmms_automationpattern.pos, lmms_automationpattern.len)
+						if lmms_automationpattern.name: autopl_obj.visual.name = lmms_automationpattern.name
+						if lmms_automationpattern.color: autopl_obj.visual.color.set_hex(lmms_automationpattern.color)
 						for p_pos, p_val in lmms_automationpattern.auto_points.items():
 							autopoint_obj = autopl_obj.data.add_point()
 							autopoint_obj.pos = p_pos
@@ -656,11 +684,18 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 	return tracks
 
 class input_lmms(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'lmms'
-	def get_name(self): return 'LMMS'
-	def get_priority(self): return 0
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'lmms'
+	
+	def get_name(self):
+		return 'LMMS'
+	
+	def get_priority(self):
+		return 0
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['mmp', 'mmpz']
 		in_dict['fxrack_params'] = ['enabled','vol']
@@ -674,16 +709,14 @@ class input_lmms(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
 		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'r'
-	def supported_autodetect(self): return True
-	def detect(self, input_file):
-		try:
-			root = get_xml_tree(input_file)
-			if root.tag == "lmms-project": output = True
-			else: output = False
-		except ET.ParseError: output = False
-		return output
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_lmms
+
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.type = 'xml'
+		detectdef_obj.headers.append(['lmms-project'])
+		detectdef_obj.containers.append(['zlib', 4])
+
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import lmms as proj_lmms
 
 		global dataset
 		global autoid_assoc
@@ -700,7 +733,8 @@ class input_lmms(plugins.base):
 		convproj_obj.set_timings(48, False)
 
 		project_obj = proj_lmms.lmms_project()
-		if not project_obj.load_from_file(input_file): exit()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		head_obj = project_obj.head
 		song_obj = project_obj.song
@@ -718,10 +752,11 @@ class input_lmms(plugins.base):
 		convproj_obj.params.add('vol', cvpj_vol, 'float')
 		convproj_obj.params.add('pitch', cvpj_pitch, 'float')
 
-		if len(song_obj.projectnotes.text): 
-			convproj_obj.metadata.comment_text = song_obj.projectnotes.text
-			convproj_obj.metadata.comment_datatype = 'html'
-			add_window_data(song_obj.projectnotes.window, convproj_obj, 'main', 'project_notes')
+		if song_obj.projectnotes.text:
+			if len(song_obj.projectnotes.text): 
+				convproj_obj.metadata.comment_text = song_obj.projectnotes.text
+				convproj_obj.metadata.comment_datatype = 'html'
+				add_window_data(song_obj.projectnotes.window, convproj_obj, 'main', 'project_notes')
 
 		lmms_decode_tracks(convproj_obj, song_obj.trackcontainer.tracks, False, 'LMMS_Track')
 
@@ -758,9 +793,9 @@ class input_lmms(plugins.base):
 		add_window_data(song_obj.automationeditor, convproj_obj, 'main', 'automation_editor')
 		add_window_data(song_obj.projectnotes.window, convproj_obj, 'main', 'project_notes')
 
-		convproj_obj.loop_active = bool(int(song_obj.timeline.lpstate))
-		convproj_obj.loop_start = song_obj.timeline.lp0pos
-		convproj_obj.loop_end = song_obj.timeline.lp1pos
+		convproj_obj.transport.loop_active = bool(int(song_obj.timeline.lpstate))
+		convproj_obj.transport.loop_start = song_obj.timeline.lp0pos
+		convproj_obj.transport.loop_end = song_obj.timeline.lp1pos
 		
 		#convproj_obj.do_actions.append('force_addloop')
 

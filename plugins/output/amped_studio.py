@@ -23,7 +23,7 @@ def convauto(autopoints, param_obj):
 	return ampedauto
 
 def createclip(audiopl_obj, audio_id):
-	from objects.file_proj import proj_amped
+	from objects.file_proj import amped as proj_amped
 	amped_audclip = proj_amped.amped_clip(None)
 	amped_audclip.contentGuid.is_custom = True
 	amped_audclip.contentGuid.id = audio_id[audiopl_obj.sample.sampleref] if audiopl_obj.sample.sampleref in audio_id else ''
@@ -33,6 +33,7 @@ def createclip(audiopl_obj, audio_id):
 	amped_audclip.offset = 0
 	amped_audclip.stretch = audiopl_obj.sample.stretch.calc_real_size
 	amped_audclip.pitchShift = audiopl_obj.sample.pitch
+	amped_audclip.reversed = audiopl_obj.sample.reverse
 	return amped_audclip
 
 def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, amped_auto):
@@ -112,11 +113,18 @@ def amped_parse_effects(amped_track, convproj_obj, fxchain_audio, amped_auto):
 	return outdata
 
 class output_amped(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Amped Studio'
-	def get_shortname(self): return 'amped'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Amped Studio'
+	
+	def get_shortname(self):
+		return 'amped'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'amped'
 		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
@@ -127,8 +135,9 @@ class output_amped(plugins.base):
 		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
-		from objects.file_proj import proj_amped
+		
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import amped as proj_amped
 
 		global counter_id
 		global counter_devid
@@ -148,9 +157,10 @@ class output_amped(plugins.base):
 		amped_obj = proj_amped.amped_project(None)
 		amped_obj.tempo = int(convproj_obj.params.get('bpm', 120).value)
 		amped_obj.timesig_num, amped_obj.timesig_den = convproj_obj.timesig
-		amped_obj.loop_active = convproj_obj.loop_active
-		amped_obj.loop_start = convproj_obj.loop_start
-		amped_obj.loop_end = convproj_obj.loop_end
+		amped_obj.loop_active = convproj_obj.transport.loop_active
+		amped_obj.loop_start = convproj_obj.transport.loop_start/4
+		amped_obj.loop_end = convproj_obj.transport.loop_end/4
+		amped_obj.playheadPosition = convproj_obj.transport.current_pos
 
 		amped_obj.createdWith = "DawVert"
 		amped_obj.settings = {"deviceDelayCompensation": True}
@@ -160,6 +170,8 @@ class output_amped(plugins.base):
 		audio_id = {}
 		amped_filenames = {}
 		audioidnum = 0
+
+		convproj_obj.sampleref__remove_nonaudiopl()
 
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			audio_id[sampleref_id] = audioidnum
@@ -290,6 +302,7 @@ class output_amped(plugins.base):
 
 				amped_region = amped_track.add_region(notespl_obj.time.position, notespl_obj.time.duration, amped_offset, counter_id.get())
 				amped_region.name = notespl_obj.visual.name if notespl_obj.visual.name else ''
+				amped_region.mute = int(notespl_obj.muted)
 
 				notespl_obj.notelist.sort()
 				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
@@ -309,11 +322,14 @@ class output_amped(plugins.base):
 				amped_region = amped_track.add_region(audiopl_obj.time.position, audiopl_obj.time.duration, amped_offset, counter_id.get())
 				amped_audclip = createclip(audiopl_obj, audio_id)
 				amped_audclip.fadeIn = audiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
+				amped_audclip.length = (audiopl_obj.time.duration/4) + (audiopl_obj.time.cut_start/4)
 				amped_region.clips = [amped_audclip]
+				amped_region.mute = int(audiopl_obj.muted)
 
 			for nestedaudiopl_obj in track_obj.placements.pl_audio_nested:
 				if len(nestedaudiopl_obj.events):
 					amped_region = amped_track.add_region(nestedaudiopl_obj.time.position, nestedaudiopl_obj.time.duration, 0, counter_id.get())
+					amped_region.mute = int(nestedaudiopl_obj.muted)
 					for insideaudiopl_obj in nestedaudiopl_obj.events: 
 						amped_audclip = createclip(insideaudiopl_obj, audio_id)
 						amped_audclip.position = insideaudiopl_obj.time.position/4
@@ -332,4 +348,5 @@ class output_amped(plugins.base):
 		zip_amped.writestr('amped-studio-project.json', json.dumps(amped_obj.write()))
 		zip_amped.writestr('filenames.json', json.dumps(amped_filenames))
 		zip_amped.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())

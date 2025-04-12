@@ -37,9 +37,13 @@ from functions_song import convert_m2r
 from functions_song import convert_m2mi
 from functions_song import convert_mi2m
 from functions_song import convert_rm2m
+from functions_song import convert_ts2m
 
 from functions_song import convert_ms2rm
 from functions_song import convert_rs2r
+from functions_song import convert_cm2rm
+from functions_song import convert_cs2cm
+from functions_song import convert_r2cm
 
 typelist = {}
 typelist['r'] = 'Regular'
@@ -49,6 +53,9 @@ typelist['rs'] = 'RegularScened'
 typelist['m'] = 'Multiple'
 typelist['mi'] = 'MultipleIndexed'
 typelist['ms'] = 'MultipleScened'
+typelist['ts'] = 'TrackerSingle'
+typelist['cm'] = 'ClassicalMultiple'
+typelist['cs'] = 'ClassicalSingle'
 
 logger_project = logging.getLogger('project')
 logger_filesearch = logging.getLogger('filesearch')
@@ -74,7 +81,8 @@ plugin_id_counter = idcounter.counter(1000, 'plugin_')
 def routetrackord(trackord, groupdata, outl, insidegroup):
 	for t, i in trackord:
 		outl.append([t, i, insidegroup])
-		if t == 'GROUP': routetrackord(groupdata[i], groupdata, outl, i)
+		if i in groupdata:
+			if t == 'GROUP': routetrackord(groupdata[i], groupdata, outl, i)
 
 class groupassoc():
 	def __init__(self):
@@ -112,16 +120,84 @@ class cvpj_fxchannel:
 		self.params = params.cvpj_paramset()
 		self.plugslots = tracks.cvpj_plugslots()
 		self.sends = sends.cvpj_sends()
+		self.latency_offset = 0
 
 class cvpj_scene:
-	def __init__(self):
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
 		self.visual = visual.cvpj_visual()
+		self.automation = automation.cvpj_automation(time_ppq, time_float)
+
+	def change_timings(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+		self.automation.change_timings(time_ppq, time_float)
 
 class cvpj_scenepl:
 	def __init__(self):
 		self.position = 0
 		self.duration = 0
 		self.id = ''
+
+class cvpj_transport:
+	def __init__(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+
+		self.is_seconds = False
+
+		self.loop_active = False
+		self.loop_start = 0
+		self.loop_end = 0
+		self.start_pos = 0
+
+		self.current_pos = 0
+
+	def change_timings(self, time_ppq, time_float):
+		if not self.is_seconds:
+			self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
+			self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
+			self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
+			self.current_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.current_pos)
+
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if is_seconds and not self.is_seconds:
+			self.loop_start = xtramath.step2sec(self.loop_start, bpm)/(ppq/4)
+			self.loop_end = xtramath.step2sec(self.loop_end, bpm)/(ppq/4)
+			self.start_pos = xtramath.step2sec(self.start_pos, bpm)/(ppq/4)
+			self.current_pos = xtramath.step2sec(self.current_pos, bpm)/(ppq/4)
+			self.is_seconds = True
+		elif self.is_seconds:
+			self.loop_start = xtramath.sec2step(self.loop_start, bpm)
+			self.loop_end = xtramath.sec2step(self.loop_end, bpm)
+			self.start_pos = xtramath.sec2step(self.start_pos, bpm)
+			self.current_pos = xtramath.sec2step(self.current_pos, bpm)
+			self.is_seconds = False
+		
+class cvpj_project_midi_custom_instrument:
+	def __init__(self):
+		self.track = None
+		self.chan = None
+		self.bank_hi = None
+		self.bank = None
+		self.patch = None
+		self.visual = visual.cvpj_visual()
+		self.pluginid = None
+
+	def get_match_dict(self):
+		out = {}
+		if self.track is not None: out['track'] = self.track
+		if self.chan is not None: out['chan'] = self.chan
+		if self.bank_hi is not None: out['bank_hi'] = self.bank_hi
+		if self.bank is not None: out['bank'] = self.bank
+		if self.patch is not None: out['patch'] = self.patch
+		return out
+
+class cvpj_project_midi:
+	def __init__(self):
+		self.num_channels = 16
+		self.num_ports = 1
 
 class cvpj_project:
 	def __init__(self):
@@ -148,10 +224,7 @@ class cvpj_project:
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
 		self.metadata = visual.cvpj_metadata()
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
-		self.loop_active = False
-		self.loop_start = 0
-		self.loop_end = 0
-		self.start_pos = 0
+		self.transport = cvpj_transport(self.time_ppq, self.time_float)
 		self.filerefs = {}
 		self.samplerefs = {}
 		self.window_data = {}
@@ -160,10 +233,19 @@ class cvpj_project:
 		self.sample_folders = []
 		self.scenes = {}
 		self.scene_placements = []
+		self.tracker_single = None
+		self.midi = cvpj_project_midi()
+		self.midi_cust_inst = []
 
 		self._m2r_visual_playlist_first = False
 
 # --------------------------------------------------------- MAIN ---------------------------------------------------------
+
+	def main__create_tracker_single(self):
+		from objects.convproj.tracker import pat_single
+		self.type = 'ts'
+		self.tracker_single = pat_single.convproj_tracker_patsong()
+		return self.tracker_single
 
 	def main__sort_tracks(self):
 		sortpos = {}
@@ -174,7 +256,7 @@ class cvpj_project:
 		self.track_order = []
 		for n in sorted(sortpos):
 			for i in sortpos[n]: self.track_order += i
- 
+
 	def set_timings(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -182,6 +264,7 @@ class cvpj_project:
 		self.automation.time_ppq = self.time_ppq
 		self.automation.time_float = self.time_float
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
+		self.transport = cvpj_transport(self.time_ppq, self.time_float)
 
 	def change_timings(self, time_ppq, time_float):
 		logger_project.info('Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
@@ -195,13 +278,12 @@ class cvpj_project:
 			n.notelist.change_timings(time_ppq, time_float)
 			n.timesig_auto.change_timings(time_ppq, time_float)
 		self.timemarkers.change_timings(time_ppq, time_float)
-		self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
-		self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
-		self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
 		self.timesig_auto.change_timings(time_ppq, time_float)
+		self.transport.change_timings(time_ppq, time_float)
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.automation.change_timings(time_ppq, time_float)
+		for _, scene in self.scenes.items(): scene.change_timings(time_ppq, time_float)
 
 	def get_dur(self):
 		duration_final = 0
@@ -227,63 +309,157 @@ class cvpj_project:
 	def add_autopoints_twopoints(self, autopath, v_type, twopoints):
 		for x in twopoints: self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
-	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dv_config):
+	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		compactclass = song_compat.song_compat()
 
-		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type)
+		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
 		if self.type == 'ri' and out_type == 'mi': convert_ri2mi.convert(self)
 		elif self.type == 'ri' and out_type == 'r': convert_ri2r.convert(self)
+		elif self.type == 'ri' and out_type in ['r', 'cs', 'cm']: 
+			convert_ri2r.convert(self)
+			if out_type == 'cs':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cm.convert(self)
+			if out_type == 'cm':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cm.convert(self)
 
-		elif self.type == 'm' and out_type == 'mi': convert_m2mi.convert(self)
-		elif self.type == 'm' and out_type == 'r': convert_m2r.convert(self)
+		elif self.type == 'ts' and out_type == 'm':
+			convert_ts2m.convert(self)
+		elif self.type in ['m', 'ts'] and out_type == 'mi':
+			if self.type == 'ts': convert_ts2m.convert(self)
+			convert_m2mi.convert(self)
+		elif self.type in ['m', 'ts'] and out_type in ['r', 'cs', 'cm']: 
+			if self.type == 'ts': convert_ts2m.convert(self)
+			convert_m2r.convert(self)
+			if out_type == 'cs':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cm.convert(self)
+			if out_type == 'cm':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cm.convert(self)
 
 		elif self.type == 'r' and out_type == 'm': convert_r2m.convert(self)
 		elif self.type == 'r' and out_type == 'mi': 
 			convert_r2m.convert(self)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
+		elif self.type == 'r' and out_type in ['cs', 'cm']: 
+			convert_r2cm.convert(self)
+			if out_type == 'cm': convert_cs2cm.convert(self)
 
-		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dv_config)
-		elif self.type == 'mi' and out_type == 'r': 
-			convert_mi2m.convert(self, dv_config)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+		elif self.type == 'mi' and out_type == 'm': convert_mi2m.convert(self, dawvert_intent)
+		elif self.type == 'mi' and out_type in ['r', 'cs', 'cm']: 
+			convert_mi2m.convert(self, dawvert_intent)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2r.convert(self)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			if out_type == 'cs':
+				convert_r2cm.convert(self)
+			if out_type == 'cm':
+				convert_r2cm.convert(self)
 	
-		elif self.type == 'rm' and out_type == 'r': convert_rm2r.convert(self)
+		elif self.type == 'rm' and out_type in ['r', 'cs', 'cm']: 
+			convert_rm2r.convert(self)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			if out_type == 'cs':
+				convert_r2cm.convert(self)
+			if out_type == 'cm':
+				convert_r2cm.convert(self)
 		elif self.type == 'rm' and out_type == 'm': convert_rm2m.convert(self, True)
 		elif self.type == 'rm' and out_type == 'mi': 
 			convert_rm2m.convert(self, True)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
 		elif self.type == 'rs' and out_type == 'mi': 
 			convert_rs2r.convert(self)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_r2m.convert(self)
-			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_m2mi.convert(self)
 
-		elif self.type == 'rs' and out_type == 'r': convert_rs2r.convert(self)
+		elif self.type == 'rs' and out_type == 'r': 
+			convert_rs2r.convert(self)
+
+		elif self.type == 'rs' and out_type in ['cs', 'cm']: 
+			convert_rs2r.convert(self)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_r2cm.convert(self)
+			if out_type == 'cm': convert_cs2cm.convert(self)
 
 		elif self.type == 'ms' and out_type == 'mi': 
 			convert_ms2rm.convert(self, out_dawinfo)
-			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2m.convert(self, True)
 			convert_m2mi.convert(self)
 
-		elif self.type == 'ms' and out_type == 'r': 
+		elif self.type == 'ms' and out_type in ['r', 'cs', 'cm']: 
 			convert_ms2rm.convert(self, out_dawinfo)
-			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type)
+			compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 			convert_rm2r.convert(self)
+			if out_type == 'cs':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cm.convert(self)
+			if out_type == 'cm':
+				compactclass.makecompat(self, 'r', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+				convert_r2cm.convert(self)
+
+
+		elif self.type == 'cm' and out_type == 'r':
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2r.convert(self)
+
+		elif self.type == 'cm' and out_type == 'm':
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+
+		elif self.type == 'cm' and out_type == 'mi': 
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_m2mi.convert(self)
+
+		elif self.type == 'cs' and out_type == 'cm':
+			convert_cs2cm.convert(self)
+
+		elif self.type == 'cs' and out_type == 'r':
+			convert_cs2cm.convert(self)
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2r.convert(self)
+
+		elif self.type == 'cs' and out_type == 'm':
+			convert_cs2cm.convert(self)
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+
+		elif self.type == 'cs' and out_type == 'mi': 
+			convert_cs2cm.convert(self)
+			convert_cm2rm.convert(self)
+			compactclass.makecompat(self, 'rm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_rm2m.convert(self, True)
+			compactclass.makecompat(self, 'm', in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+			convert_m2mi.convert(self)
 
 		elif self.type == out_type: 
 			pass
 		
 		else:
-			logger_project.error(typelist[in_type]+' to '+typelist[out_type]+' is not supported.')
+			logger_project.error(typelist[self.type]+' to '+typelist[out_type]+' is not supported.')
 			exit()
 
-		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type)
+		compactclass.makecompat(self, out_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
+
+	def main__add_midi_custom_inst(self):
+		cust_inst = cvpj_project_midi_custom_instrument()
+		self.midi_cust_inst.append(cust_inst)
+		return cust_inst
 
 # --------------------------------------------------------- GROUPS ---------------------------------------------------------
 
@@ -319,7 +495,7 @@ class cvpj_project:
 # --------------------------------------------------------- SCENE ---------------------------------------------------------
 
 	def scene__add(self, i_sceneid):
-		scene_obj = cvpj_scene()
+		scene_obj = cvpj_scene(self.time_ppq, self.time_float)
 		#cpr_int('[project] Scene - '+str(i_sceneid), 'magenta')
 		logger_project.info('Scene - '+str(i_sceneid))
 		self.scenes[i_sceneid] = scene_obj
@@ -334,6 +510,9 @@ class cvpj_project:
 
 	def timemarker__add(self):
 		return self.timemarkers.add()
+
+	def timemarker__add_key(self, key):
+		return self.timemarkers.add_key(key)
 
 	def timemarker__from_patlenlist(self, PatternLengthList, pos_loop):
 		prevtimesig = self.timesig
@@ -356,12 +535,27 @@ class cvpj_project:
 
 # --------------------------------------------------------- TRACKS ---------------------------------------------------------
 
+	def track__clear(self):
+		self.track_data = {}
+		self.track_order = []
+
+	def track__del(self, trackid):
+		if trackid in self.track_data: del self.track_data[trackid]
+		if trackid in self.track_order: self.track_order.remove(trackid)
+
 	def track__get(self, trackid):
 		return self.track_data[trackid] if trackid in self.track_data else None
 
 	def track__iter(self):
 		for trackid in self.track_order:
 			if trackid in self.track_data: yield trackid, self.track_data[trackid]
+
+	def track__iter_num(self):
+		num = 0
+		for trackid in self.track_order:
+			if trackid in self.track_data: 
+				yield num, trackid, self.track_data[trackid]
+				num += 1
 
 	def track__add_scene(self, i_track, i_sceneid, i_lane):
 		if i_track in self.track_data: return self.track_data[i_track].scene__add(i_sceneid, i_lane)
@@ -372,6 +566,9 @@ class cvpj_project:
 		self.track_data[track_id] = tracks.cvpj_track(tracktype, self.time_ppq, self.time_float, uses_placements, is_indexed)
 		self.track_order.append(track_id)
 		return self.track_data[track_id]
+
+	def track__count(self):
+		return len(self.track_order)
 
 	def track__addspec__midi(self, track_id, plug_id, m_bank, m_inst, m_drum, uses_pl, indexed):
 		plugin_obj = self.plugin__addspec__midi(plug_id, 0, m_bank, m_inst, m_drum, 'gm')
@@ -447,6 +644,10 @@ class cvpj_project:
 		if fileid in self.filerefs: return True, self.filerefs[fileid]
 		else: return False, None
 
+	def fileref__iter(self):
+		for fileid_id, fileid_obj in self.filerefs.items():
+			yield fileid_id, fileid_obj
+
 # --------------------------------------------------------- SAMPLEREF ---------------------------------------------------------
 
 	def sampleref__add(self, fileid, filepath, os_type):
@@ -466,12 +667,28 @@ class cvpj_project:
 
 	def sampleref__searchmissing(self, input_file):
 		dirpath = os.path.dirname(input_file)
-		#files = fileref.filesearcher.searchcache
+		files = fileref.filesearcher.searchcache
 
 		for sampleref_id, sampleref_obj in self.sampleref__iter():
 			if not sampleref_obj.found:
 				fileref.filesearcher.scan_local_files(dirpath)
 				sampleref_obj.search_local(dirpath)
+
+	def sampleref__remove_nonaudiopl(self):
+		sflist = list(self.samplerefs)
+		for trackid, track_obj in self.track__iter():
+			for audiopl_obj in track_obj.placements.pl_audio:
+				if audiopl_obj.sample.sampleref in sflist: sflist.remove(audiopl_obj.sample.sampleref)
+
+			for nestedpl_obj in track_obj.placements.pl_audio_nested:
+				for audiopl_obj in nestedpl_obj.events:
+					if audiopl_obj.sample.sampleref in sflist: sflist.remove(audiopl_obj.sample.sampleref)
+
+			for laneid, lane_obj in track_obj.lanes.items():
+				for audiopl_obj in lane_obj.placements.pl_audio:
+					if audiopl_obj.sample.sampleref in sflist: sflist.remove(audiopl_obj.sample.sampleref)
+					
+		for s in sflist: del self.samplerefs[s]
 
 # --------------------------------------------------------- FX ---------------------------------------------------------
 

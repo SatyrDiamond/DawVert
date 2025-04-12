@@ -160,7 +160,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 				plugin_obj.role = 'synth'
 
 		elif devicetype == ['Drumpler', 'Drumpler']:
-			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
+			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'drums')
 			plugin_obj.role = 'synth'
 			track_obj.plugslots.set_synth(pluginid)
 			track_obj.is_drum = True
@@ -177,7 +177,7 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			if 'pad' in drumplerdata:
 				for num, data in drumplerdata['pad'].items():
 					keynum = int(num)-1
-					sp_obj = plugin_obj.sampleregion_add(keynum, keynum, keynum, None)
+					sp_obj = plugin_obj.sampledrum_add(keynum, None)
 					sp_obj.start = data['start']
 					sp_obj.end = data['end']
 					sp_obj.pitch = data['pitch']
@@ -313,20 +313,21 @@ def ampedauto_to_cvpjauto(autopoints):
 	for autopoint in autopoints: yield autopoint['pos'], autopoint['value']
 
 class input_amped(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'input'
-	def get_shortname(self): return 'amped'
-	def get_name(self): return 'Amped Studio'
-	def get_priority(self): return 0
-	def supported_autodetect(self): return True
-	def detect(self, input_file): 
-		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
-			if 'amped-studio-project.json' in zip_data.namelist(): return True
-			else: return False
-		except:
-			return False
-
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'amped'
+	
+	def get_name(self):
+		return 'Amped Studio'
+	
+	def get_priority(self):
+		return 0
+	
+	def supported_autodetect(self):
+		return True
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = ['amped']
 		in_dict['track_lanes'] = True
@@ -339,13 +340,17 @@ class input_amped(plugins.base):
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
 
-	def parse(self, convproj_obj, input_file, dv_config):
-		from objects.file_proj import proj_amped
+	def get_detect_info(self, detectdef_obj):
+		detectdef_obj.containers.append(['zip', 'amped-studio-project.json'])
+
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects.file_proj import amped as proj_amped
 
 		global samplefolder
 
 		try:
-			zip_data = zipfile.ZipFile(input_file, 'r')
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
 		except zipfile.BadZipFile as t:
 			raise ProjectFileParserException('amped: Bad ZIP File: '+str(t))
 
@@ -355,7 +360,7 @@ class input_amped(plugins.base):
 		globalstore.dataset.load('amped', './data_main/dataset/amped.dset')
 		globalstore.dataset.load('synth_nonfree', './data_main/dataset/synth_nonfree.dset')
 
-		samplefolder = dv_config.path_samples_extracted
+		samplefolder = dawvert_intent.path_samples['extracted']
 
 		try:
 			jsonfilenames = zip_data.read('filenames.json')
@@ -383,6 +388,11 @@ class input_amped(plugins.base):
 
 		convproj_obj.track_master.params.add('vol', amped_obj.masterTrack.volume, 'float')
 
+		convproj_obj.transport.loop_active = amped_obj.loop_active
+		convproj_obj.transport.loop_start = amped_obj.loop_start
+		convproj_obj.transport.loop_end = amped_obj.loop_end
+		convproj_obj.transport.current_pos = amped_obj.playheadPosition
+
 		encode_devices(convproj_obj, amped_obj.masterTrack.devices, convproj_obj.track_master, None)
 
 		for amped_track in amped_obj.tracks:
@@ -396,6 +406,7 @@ class input_amped(plugins.base):
 			track_obj.params.add('pan', amped_track.pan, 'float')
 			track_obj.params.add('enabled', bool(not amped_track.mute), 'bool')
 			track_obj.params.add('solo', bool(amped_track.solo), 'bool')
+			track_obj.datavals.add('pan_mode', 'stereo')
 
 			if amped_track.armed:
 				amped_armed = amped_track.armed
@@ -426,10 +437,11 @@ class input_amped(plugins.base):
 
 				if amped_region.midi_notes: 
 					placement_obj = track_obj.placements.add_notes()
-					placement_obj.time.set_posdur(amped_region.position, amped_region.length+amped_region.offset)
+					placement_obj.time.set_posdur(amped_region.position, amped_region.length)
 					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
+					placement_obj.muted = bool(amped_region.mute)
 					for amped_note in amped_region.midi_notes:
 						if amped_note['position'] >= 0:
 							placement_obj.notelist.add_r(amped_note['position'], amped_note['length'], amped_note['key']-60, amped_note['velocity']/127, {})
@@ -440,18 +452,19 @@ class input_amped(plugins.base):
 					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
+					placement_obj.muted = bool(amped_region.mute)
 
 					for amped_clip in amped_region.clips:
 						npa_obj = placement_obj.add()
 						npa_obj.time.position = amped_clip.position
 						npa_obj.time.duration = amped_clip.length
-						amped_clip_offset = amped_clip.offset
-						npa_obj.time.set_offset(amped_clip_offset*(120/amped_obj.tempo))
+						npa_obj.time.set_offset(amped_clip.offset)
 						sample_obj = npa_obj.sample
 						sample_obj.vol = amped_clip.gain
 						sample_obj.pitch = amped_clip.pitchShift
 						sample_obj.sampleref = str(amped_clip.contentGuid.id)
 						sample_obj.stretch.set_rate_speed(amped_obj.tempo, amped_clip.stretch, True)
-						sample_obj.stretch.uses_tempo = True
 						sample_obj.stretch.algorithm = 'stretch'
+						sample_obj.stretch.preserve_pitch = True
+						sample_obj.stretch.uses_tempo = True
 						sample_obj.reverse = amped_clip.reversed

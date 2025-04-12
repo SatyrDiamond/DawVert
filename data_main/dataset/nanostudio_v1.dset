@@ -1,0 +1,25 @@
+<dataset>
+    <category id="clips">
+        <colorset id="main">
+            <color>#5EA351</color>
+            <color>#B053A2</color>
+            <color>#5252AE</color>
+            <color>#53AFA3</color>
+            <color>#93B053</color>
+            <color>#8753AF</color>
+            <color>#B07253</color>
+            <color>#AE525B</color>
+        </colorset>
+    </category>
+    <category id="plugin">
+        <object id="TCE-1">
+            <visual name="TCE-1 Compressor" color="#28829e" />
+            <param id="RMS" name="RMS" type="float" def="1" />
+            <param id="Attack" name="Attack" type="float" def="0.0001" min="0.0001" />
+            <param id="Release" name="Release" type="float" def="0.01" />
+            <param id="Threshold" name="Threshold" type="float" def="-10.5" max="9" min="-30" />
+            <param id="Ratio" name="Ratio" type="float" def="0.5" />
+            <param id="OutputGain" name="OutputGain" type="float" def="4.25" max="24" />
+        </object>
+    </category>
+</dataset>

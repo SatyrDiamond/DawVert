@@ -7,6 +7,7 @@ from functions import data_values
 import numpy as np
 import copy
 import hashlib
+import os
 
 class pitchmod:
 	def __init__(self, c_note):
@@ -115,6 +116,15 @@ class notelist_cursor:
 		for pos, data in enumerate(self.base_nl):
 			self.pos = pos
 			yield data
+		self.pos = oldpos
+		self.enable_go_last = True
+
+	def reverse_iter(self):
+		oldpos = self.pos
+		self.enable_go_last = False
+		for pos in range(len(self.base_nl)-1, -1, -1):
+			self.pos = pos
+			yield self.base_nl[pos]
 		self.pos = oldpos
 		self.enable_go_last = True
 
@@ -379,7 +389,14 @@ class notelist_data:
 		return self.nl.__setitem__(a, b)
 
 	def count(self):
-		return np.count_nonzero(self.nl['used'])
+		w_used = np.where(self.nl['used'] == 1)
+		is_multikeys = self.nl[w_used]['is_multikey']
+		assoc_multikeys = self.nl[w_used]['assoc_multikey']
+		count = len(assoc_multikeys[np.where(is_multikeys == 0)])
+		count_multi = assoc_multikeys[np.where(is_multikeys != 0)]
+		for n in count_multi: 
+			count += len(self.v_assoc_multikey[n])
+		return count
 
 	def alloc_auto(self, pos):
 		newsize = self.num_notes+pos
@@ -432,6 +449,9 @@ class notelist_data:
 				copy_nl['assoc_inst'][n] = remap_inst[x]
 		self.nl = np.concatenate([self.nl, copy_nl])
 		self.after_proc()
+
+	def appendtxt_inst(self, start, end):
+		self.v_assoc_inst = [start+x+end for x in self.v_assoc_inst]
 
 	def appendtxt_inst(self, start, end):
 		self.v_assoc_inst = [start+x+end for x in self.v_assoc_inst]
@@ -809,6 +829,59 @@ class cvpj_notelist:
 
 	def appendtxt_inst(self, start, end):
 		self.data.appendtxt_inst(start, end)
+
+	def getvalue(self):
+		nl = self.data.nl
+		return nl[np.nonzero(nl['used'])].tobytes()
+
+	def midi_to(self, output_file, tempo):
+		import mido
+
+		outnl = self.__copy__()
+		outnl.change_timings(480, False)
+		
+		midiobj = mido.MidiFile()
+		midiobj.ticks_per_beat = 480
+
+		miditrack = mido.MidiTrack()
+
+		i_list = {}
+
+		outnl.sort()
+		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in outnl.iter():
+			for t_key in t_keys:
+				cvmi_n_pos = int(t_pos)
+				cvmi_n_dur = int(t_dur)
+				cvmi_n_key = int(t_key)+60
+				cvmi_n_vol = xtramath.clamp(int(t_vol*127), 0, 127)
+				data_values.list__addpend(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
+				data_values.list__addpend(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
+
+		i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
+
+		midi_tempo = mido.bpm2tempo(tempo)
+		miditrack.append(mido.MetaMessage('set_tempo', tempo=midi_tempo, time=0))
+
+		prevpos = 0
+		for i_list_e in i_list:
+			for midi_notedata in i_list[i_list_e]:
+				if midi_notedata[0] == 'note_on': miditrack.append(mido.Message('note_on', channel=0, note=midi_notedata[1], velocity=midi_notedata[2], time=i_list_e-prevpos))
+				if midi_notedata[0] == 'note_off': miditrack.append(mido.Message('note_off', channel=0, note=midi_notedata[1], time=i_list_e-prevpos))
+				prevpos = i_list_e
+
+		midiobj.tracks.append(miditrack)
+		midiobj.save(output_file)
+
+	def only_one(self):
+		cursor_obj = self.create_cursor()
+		lastnote = None
+		for note in cursor_obj.reverse_iter():
+			if note['used']:
+				if lastnote is not None:
+					total = note['pos']+note['dur']
+					calc = lastnote['pos']-total
+					note['dur'] += min(calc, 0)
+				lastnote = note
 
 	#def multikey_comb(self):
 	#	prev_note = None

@@ -20,14 +20,8 @@ def addsample(zip_wt, filepath, alredyexists):
 			audio_id[filepath] = datauuid
 			if os.path.exists(filepath):
 				filename, filetype = os.path.basename(filepath).split('.')
-
 				if datauuid not in zip_wt.namelist():
-					if filetype in ['wav', 'mp3']:
-						zip_wt.write(filepath, datauuid+'.'+filetype)
-					else:
-						zip_wt.writestr(datauuid+'.wav', audio.convert_to_wav(filepath))
-
-				zip_wt.write(filepath, datauuid+'.'+filetype)
+					zip_wt.write(filepath, datauuid+'.'+filetype)
 			datauuid = audio_id[filepath]
 		else:
 			datauuid = audio_id[filepath]
@@ -40,7 +34,7 @@ def addsample(zip_wt, filepath, alredyexists):
 		   
 
 def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoints, color, istrack):
-	from objects.file_proj import proj_wavtool
+	from objects.file_proj import wavtool as proj_wavtool
 	endtext = (autoid+'-'+trackid) if istrack == True else autoname
 	wt_autoid_AutoTrack = 'DawVert-AutoTrack-'+endtext
 	wt_autoid_AutoRec = 'DawVert-AutoRec-'+endtext
@@ -102,11 +96,18 @@ def make_automation(autoid, trackid, autoname, stripdevice, trackdevice, autopoi
 
 
 class output_wavtool(plugins.base):
-	def __init__(self): pass
-	def is_dawvert_plugin(self): return 'output'
-	def get_name(self): return 'Wavtool'
-	def get_shortname(self): return 'wavtool'
-	def gettype(self): return 'r'
+	def is_dawvert_plugin(self):
+		return 'output'
+	
+	def get_name(self):
+		return 'Wavtool'
+	
+	def get_shortname(self):
+		return 'wavtool'
+	
+	def gettype(self):
+		return 'r'
+	
 	def get_prop(self, in_dict): 
 		in_dict['file_ext'] = 'zip'
 		in_dict['placement_cut'] = True
@@ -117,9 +118,10 @@ class output_wavtool(plugins.base):
 		in_dict['plugin_ext'] = ['vst2']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-	def parse(self, convproj_obj, output_file):
+
+	def parse(self, convproj_obj, dawvert_intent):
 		from functions_plugin_ext import plugin_vst2
-		from objects.file_proj import proj_wavtool
+		from objects.file_proj import wavtool as proj_wavtool
 
 		global audio_id
 		global wavtool_obj
@@ -322,7 +324,7 @@ class output_wavtool(plugins.base):
 						#if plugin_obj.check_match('vst2', 'win'):
 						#	inst_supported = True
 						#	device_obj = wavtool_obj.devices.add_device(wt_trackid, wt_trackid_Instrument)
-						#	device_obj.name = plugin_obj.datavals_global.get('name', '')
+						#	device_obj.name = plugin_obj.external_info.name
 						#	device_obj.type = 'Bridge'
 						#	device_obj.x = 160
 						#	device_obj.y = 10
@@ -333,8 +335,8 @@ class output_wavtool(plugins.base):
 						#	chunkdata += b'\x00'*64
 						#	chunkdata += statedata
 #
-						#	device_obj.data['sourceName'] = plugin_obj.datavals_global.get('name', '')
-						#	device_obj.data['sourceManufacturer'] = plugin_obj.datavals_global.get('creator', '')
+						#	device_obj.data['sourceName'] = plugin_obj.external_info.name
+						#	device_obj.data['sourceManufacturer'] = plugin_obj.external_info.creator
 						#	device_obj.data['inputSpec'] = {'midiInput': {'type': 'MIDI', 'name': 'In', 'expose': True}}
 						#	device_obj.data['outputSpec'] = {'audioOutput': {'type': 'Stereo', 'name': 'Out', 'expose': True}}
 						#	device_obj.data['encodedState'] = base64.b64encode(chunkdata).decode()
@@ -416,10 +418,12 @@ class output_wavtool(plugins.base):
 						audioBufferId = addsample(zip_wt, audiofilename, False)
 						wavtool_clip.audioBufferId = audioBufferId
 
-						if not audiopl_obj.sample.stretch.is_warped:
-							warprate = audiopl_obj.sample.stretch.calc_tempo_speed
-							if not audiopl_obj.sample.stretch.preserve_pitch:
-								wavtool_clip.transpose = (math.log2(audiopl_obj.sample.stretch.calc_real_speed)*12)
+						stretch_obj = audiopl_obj.sample.stretch
+
+						if not stretch_obj.is_warped:
+							warprate = stretch_obj.calc_tempo_speed
+							if not stretch_obj.preserve_pitch:
+								wavtool_clip.transpose = (math.log2(stretch_obj.calc_real_speed)*12)
 							else:
 								dur_sec = sampleref_obj.dur_sec
 								warpdata = {}
@@ -440,7 +444,8 @@ class output_wavtool(plugins.base):
 							warpdata['anchors'] = {}
 							warpdata['enabled'] = True
 
-							for warp_point_obj in audiopl_obj.sample.stretch.iter_warp_points():
+							warp_obj = stretch_obj.warp
+							for warp_point_obj in warp_obj.points__iter():
 								wt_warp_pos = (warp_point_obj.beat)
 								wt_warp_pos_real = (warp_point_obj.second)*2
 								warpdata['anchors']["%g" % wt_warp_pos_real] = {"destination": wt_warp_pos, "pinned": False}
@@ -467,9 +472,9 @@ class output_wavtool(plugins.base):
 						wavtool_obj.tracks[wt_trackauto.id] = wt_trackauto
 
 		wavtool_obj.id = "DawVertConverted-"+str(uuid.uuid4())
-		wavtool_obj.loopStart = max(convproj_obj.loop_start, 0)
-		wavtool_obj.loopEnd = max(convproj_obj.loop_end, 0)
-		wavtool_obj.loopEnabled = convproj_obj.loop_active
+		wavtool_obj.loopStart = max(convproj_obj.transport.loop_start, 0)
+		wavtool_obj.loopEnd = max(convproj_obj.transport.loop_end, 0)
+		wavtool_obj.loopEnabled = convproj_obj.transport.loop_active
 		wavtool_obj.bpm = bpm
 		wavtool_obj.beatNumerator, wavtool_obj.beatDenominator = convproj_obj.timesig
 		wavtool_obj.name = convproj_obj.metadata.name
@@ -481,13 +486,15 @@ class output_wavtool(plugins.base):
 		wavtool_obj.focusedTrackId = 'DawVert-Track-'+convproj_obj.track_order[0]
 		wavtool_obj.selectedDeviceId = "metronome"
 
-		wavtool_obj.loopStart = convproj_obj.loop_start
-		wavtool_obj.loopEnd = convproj_obj.loop_end
-		wavtool_obj.loopEnabled = convproj_obj.loop_active
+		wavtool_obj.loopStart = convproj_obj.transport.loop_start
+		wavtool_obj.loopEnd = convproj_obj.transport.loop_end
+		wavtool_obj.loopEnabled = convproj_obj.transport.loop_active
 
 		zip_wt.writestr('WavTool Project.json', json.dumps(wavtool_obj.write()))
 		zip_wt.close()
-		open(output_file, 'wb').write(zip_bio.getbuffer())
+		
+		if dawvert_intent.output_mode == 'file':
+			open(dawvert_intent.output_file, 'wb').write(zip_bio.getbuffer())
 
 		#with open('wavtool_debug.json', "w") as fileout:
 		#	json.dump(wavtool_obj.write(), fileout, indent=4)

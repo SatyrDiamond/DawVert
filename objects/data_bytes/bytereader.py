@@ -10,17 +10,36 @@ from contextlib import contextmanager
 class chunk_size:
 	def __init__(self):
 		self.size_id = 4
+		self.size_id_num = False
 		self.size_chunk = 4
 		self.endian = False
 		self.unpackfunc = struct.Struct('<I').unpack
+		self.unpackfunc_id = struct.Struct('4s').unpack
 
 	def set_sizes(self, size_id, size_chunk, endian):
 		self.size_id = size_id
 		self.size_chunk = size_chunk
 		self.endian = endian
+		self.size_id_num = False
+		self.set_unpackfunc()
+
+	def set_sizes_num(self, size_id, size_chunk, endian):
+		self.size_id = size_id
+		self.size_chunk = size_chunk
+		self.endian = endian
+		self.size_id_num = True
+		self.set_unpackfunc()
+
+	def set_unpackfunc(self):
 		if self.size_chunk == 1: self.unpackfunc = struct.Struct('B').unpack
 		if self.size_chunk == 2: self.unpackfunc = struct.Struct('>H' if self.endian else '<H').unpack
 		if self.size_chunk == 4: self.unpackfunc = struct.Struct('>I' if self.endian else '<I').unpack
+		if not self.size_id_num:
+			self.unpackfunc_id = struct.Struct(str(self.size_id)+'s').unpack
+		else:
+			if self.size_id == 1: self.unpackfunc_id = struct.Struct('B').unpack
+			if self.size_id == 2: self.unpackfunc_id = struct.Struct('>H' if self.endian else '<H').unpack
+			if self.size_id == 4: self.unpackfunc_id = struct.Struct('>I' if self.endian else '<I').unpack
 
 class chunk_loc:
 	def __init__(self, byteread, sizedata):
@@ -47,10 +66,15 @@ class iff_chunkdata:
 	def set_sizes(self, size_id, size_chunk, endian):
 		self.sizedata.set_sizes(size_id, size_chunk, endian)
 
+	def set_sizes_num(self, size_id, size_chunk, endian):
+		self.sizedata.set_sizes_num(size_id, size_chunk, endian)
+
 	def read(self, end):
 		chunk_obj = chunk_loc(self.byteread, self.sizedata)
-		chunk_obj.id = self.byteread.read(self.sizedata.size_id)
-		if chunk_obj.id:
+		sizebytes = self.byteread.read(self.sizedata.size_id)
+		if not len(sizebytes): return False, chunk_obj
+		chunk_obj.id = self.sizedata.unpackfunc_id(sizebytes)[0]
+		if chunk_obj.id or self.sizedata.size_id_num:
 			chunk_obj.size = self.sizedata.unpackfunc(self.byteread.read(self.sizedata.size_chunk))[0]
 			chunk_obj.start = self.byteread.tell()
 			chunk_obj.end = chunk_obj.start+chunk_obj.size
@@ -237,10 +261,14 @@ class bytereader:
 
 	def raw(self, size): return self.buf.read(size)
 
+	def debug_peek(self): 
+		self.buf.seek(self.buf.tell()-64)
+		print(self.buf.read(128)) 
+
 	def rest(self): return self.buf.read(self.end-self.buf.tell())
 
 	def string(self, size, **kwargs): return self.buf.read(size).split(b'\x00')[0].decode(**kwargs)
-	def string16(self, size): return self.buf.read(size*2).decode("utf-16")
+	def string16(self, size): return self.buf.read(size*2).decode("utf-16").rstrip('\x00')
 
 	def l_int4(self, num): 
 		out = []
@@ -297,3 +325,12 @@ class bytereader:
 			if char not in [b'\x00', b'']: output += char
 			else: terminated = 1
 		return output.decode(**kwargs)
+
+	def string16_t(self):
+		output = b''
+		terminated = 0
+		while terminated == 0:
+			char = self.buf.read(2)
+			if char not in [b'\x00'b'\x00', b'\x00', b'']: output += char
+			else: terminated = 1
+		return output.decode("utf-16")

@@ -418,6 +418,7 @@ def lmms_decode_effectslot(convproj_obj, lmms_effect):
 		plugin_obj.role = 'effect'
 		external_info = plugin_obj.external_info
 		external_info.plugtype = 'ladspa'
+		external_info.datatype = 'param'
 
 		if 'file' in lmms_effect.keys:
 			external_info.basename = lmms_effect.keys['file']

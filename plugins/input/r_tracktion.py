@@ -279,7 +279,11 @@ def do_foldertrack(convproj_obj, wf_track, counter_track):
 
 def do_track(convproj_obj, wf_track, track_obj): 
 	track_obj.visual.name = wf_track.name
-	if wf_track.colour != '0': track_obj.visual.color.set_hex(wf_track.colour)
+	colour = wf_track.colour
+	if colour != '0': 
+		if len(colour)==8: track_obj.visual.color.set_hex(colour[2:])
+		if len(colour)==6: track_obj.visual.color.set_hex(colour)
+
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
 	bpm = convproj_obj.params.get('bpm', 120).value

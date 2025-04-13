@@ -42,6 +42,7 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 	fl_channel_obj.sampleflags += int(sre_obj.interpolation!='none')
 
 	sre_obj.convpoints_percent(sampleref_obj)
+
 	if sre_obj.end>sre_obj.start:
 		fl_channel_obj.params.start = sre_obj.start
 		fl_channel_obj.params.length = min((sre_obj.end-sre_obj.start)/(1-sre_obj.start), 1)

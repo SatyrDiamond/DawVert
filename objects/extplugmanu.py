@@ -78,6 +78,12 @@ class extplug_manu:
 
 # --------------------------------------------------- MAIN ---------------------------------------------------
 
+	def add_param(self, num, val, name):
+		plugin_obj = self.plugin_obj
+		param_obj = plugin_obj.params.add('ext_param_'+str(num), val, 'float')
+		if name: param_obj.visual.name = name
+		return param_obj
+
 	def external__from_pluginfo_obj(self, pluginfo_obj):
 		plugin_obj = self.plugin_obj
 		external_info = plugin_obj.external_info
@@ -223,13 +229,15 @@ class extplug_manu:
 		if self.db__setinfo('vst2', bycat, in_val, platformtxt):
 			self.external__set_chunk(data)
 			external_info.is_bank = isbank
+			external_info.chunk_is_bank = isbank
 			return True
 		return False
 
 	def vst2__setup_params(self, bycat, in_val, nump, platformtxt, isbank):
 		external_info = self.plugin_obj.external_info
 		if self.db__setinfo('vst2', bycat, in_val, platformtxt):
-			external_info.datatype = 'param' if not isbank else 'bank'
+			external_info.datatype = 'param'
+			external_info.is_bank = isbank
 			external_info.numparams = nump
 			return True
 		self.state_vst2_params.set_numprogs(1, nump)
@@ -253,12 +261,20 @@ class extplug_manu:
 			fxp_obj.parse(indata)
 
 		vst_prog = fxp_obj.program
-		if vst_prog.type in [1,4]:
+
+		if vst_prog.type == 1:
 			fpch = vst_prog.data
 			if fpch.fourid: external_info.fourid = fpch.fourid
 			else: fpch.fourid = external_info.fourid
-			self.vst2__replace_data('id', fpch.fourid, fpch.chunk, platformtxt, vst_prog.type != 4)
+			self.vst2__replace_data('id', fpch.fourid, fpch.chunk, platformtxt, True)
 			plugin_obj.preset.name = fpch.prgname
+			external_info.version_bytes = fpch.version
+
+		if vst_prog.type == 4:
+			fpch = vst_prog.data
+			if fpch.fourid: external_info.fourid = fpch.fourid
+			else: fpch.fourid = external_info.fourid
+			self.vst2__replace_data('id', fpch.fourid, fpch.chunk, platformtxt, False)
 			external_info.version_bytes = fpch.version
 
 		if vst_prog.type == 2:
@@ -297,11 +313,13 @@ class extplug_manu:
 		fxp_obj = preset_vst2.vst2_main()
 
 		outdata = b''
+
 		if fourid != None:
 			program = fxp_obj.program
 
 			if datatype == 'chunk':
-				if external_info.is_bank: fpch = program.set_fxChunkSet_bank(None)
+				if external_info.is_bank and external_info.chunk_is_bank: 
+					fpch = program.set_fxChunkSet_bank(None)
 				else: fpch = program.set_fxChunkSet(None)
 				fpch.fourid = fourid
 				fpch.version = external_info.version_bytes
@@ -312,31 +330,31 @@ class extplug_manu:
 				outdata = byw_stream.getvalue()
 	
 			if datatype == 'param':
-				fxck = program.set_fxProgram(None)
-				fxck.fourid = fourid
-				fxck.version = external_info.version_bytes
-				fxck.num_params = external_info.numparams
-				fxck.prgname = plugin_obj.preset.name
-				fxck.params = [plugin_obj.params.get('ext_param_'+str(c), 0).value for c in range(fxck.num_params)]
-				fxp_obj.write(byw_stream)
-				outdata = byw_stream.getvalue()
-	
-			if datatype == 'bank':
-				fxbk = program.set_fxBank(None)
-				fxbk.fourid = fourid
-				fxbk.version = external_info.version_bytes
-				fxbk.current_program = plugin_obj.current_program
-				for num, program in plugin_obj.programs.items():
-					inccnk = preset_vst2.vst2_program()
-					fxck = inccnk.set_fxProgram(None)
+				if not external_info.is_bank:
+					fxck = program.set_fxProgram(None)
 					fxck.fourid = fourid
-					fxck.version = fxbk.version
+					fxck.version = external_info.version_bytes
 					fxck.num_params = external_info.numparams
-					fxck.prgname = program.preset.name
-					fxck.params = [program.params.get('ext_param_'+str(c), 0).value for c in range(fxck.num_params)]
-					fxbk.programs.append([1130589771, inccnk])
-				fxp_obj.write(byw_stream)
-				outdata = byw_stream.getvalue()
+					fxck.prgname = plugin_obj.preset.name
+					fxck.params = [plugin_obj.params.get('ext_param_'+str(c), 0).value for c in range(fxck.num_params)]
+					fxp_obj.write(byw_stream)
+					outdata = byw_stream.getvalue()
+				else:
+					fxbk = program.set_fxBank(None)
+					fxbk.fourid = fourid
+					fxbk.version = external_info.version_bytes
+					fxbk.current_program = plugin_obj.current_program
+					for num, program in plugin_obj.programs.items():
+						inccnk = preset_vst2.vst2_program()
+						fxck = inccnk.set_fxProgram(None)
+						fxck.fourid = fourid
+						fxck.version = fxbk.version
+						fxck.num_params = external_info.numparams
+						fxck.prgname = program.preset.name
+						fxck.params = [program.params.get('ext_param_'+str(c), 0).value for c in range(fxck.num_params)]
+						fxbk.programs.append([1130589771, inccnk])
+					fxp_obj.write(byw_stream)
+					outdata = byw_stream.getvalue()
 
 			if filename:
 				with open(filename, 'wb') as f: f.write(outdata)

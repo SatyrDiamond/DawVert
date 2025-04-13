@@ -4,6 +4,7 @@
 import plugins
 import os
 import math
+import base64
 
 import logging
 logger_input = logging.getLogger('input')
@@ -74,6 +75,33 @@ class input_midi(plugins.base):
 			track_obj.params.add('pan', qtrack.state.panning, 'float')
 			track_obj.params.add('enabled', bool(not qtrack.state.mute), 'bool')
 			track_obj.params.add('solo', bool(qtrack.state.solo), 'bool')
+
+			for qplug in qtrack.plugins:
+				if qplug.type == 'VST2':
+					plugfilename = qplug.filename
+					chunkdata = None
+
+					for config in qplug.configs:
+						if config[0] == 'chunk':
+							try:
+								chunkdata = config[2].replace('\n', '').replace(' ', '')
+							except:
+								pass
+
+					if plugfilename and chunkdata:
+						plugfilename = plugfilename.replace('/', '\\')
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst2', 'unix')
+						extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+						extmanu_obj.vst2__replace_data('path_unix', plugfilename, None, None, False)
+						plugin_obj.external_info.datatype = 'chunk'
+						try: plugin_obj.rawdata_add_b64('chunk', chunkdata)
+						except: pass
+
+						for param in qplug.params:
+							extmanu_obj.add_param(param.index, param.value, param.name)
+
+						track_obj.plugslots.plugin_autoplace(plugin_obj, pluginid)
+						
 
 			clipcolor = qtrack.view.background_color
 			

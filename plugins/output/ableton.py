@@ -215,7 +215,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 
 	visname = plugin_obj.external_info.name
 
-	if ((vstdatatype=='param' and vstnumparams) or vstdatatype in ['chunk', 'bank']) and vstid:
+	if ((vstdatatype=='param' and vstnumparams) or vstdatatype == 'chunk') and vstid:
 		wobj = convproj_obj.viswindow__get(['plugin', pluginid])
 		vstpath = plugin_obj.getpath_fileref(convproj_obj, 'plugin', 'win', True)
 		vstname = os.path.basename(vstpath).split('.')[0]

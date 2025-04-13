@@ -154,7 +154,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 	
 							extmanu_obj.vst2__replace_data('id', wrapperdata['fourid'], wrapper_vstdata, None, False)
 							if 'name' in wrapperdata: plugin_obj.external_info.name = wrapperdata['name']
-	
+							plugin_obj.program_used = True
+							plugin_obj.current_program = wrapper_vstprogram
 							numparams = plugin_obj.external_info.numparams = -1
 	
 						if wrapper_vststate[4] in [5, 4]:

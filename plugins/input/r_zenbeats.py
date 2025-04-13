@@ -57,6 +57,13 @@ def set_param_attrib(params_obj, cvpj_name, xml_name, attribvals, add, div):
 	if xml_name in attribvals:
 		params_obj.add(cvpj_name, (float(attribvals[xml_name])+add)/div, 'float')
 
+def add_dataval(datavals_obj, plugin_xml_data, cvpj_name, xml_name, attribname, inval):
+	x_firstv = data_xml.find_first(plugin_xml_data, xml_name)
+
+	if x_firstv is not None: 
+		paramv = x_firstv.get(attribname)
+		if paramv is not None: datavals_obj.add(cvpj_name, inval(paramv))
+
 def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 	pluginid = strproc.uid
 	#plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', strproc.plugin.name)
@@ -155,6 +162,12 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 				track_obj.plugslots.slots_audio.append(pluginid)
 				xmlparams = data_xml.find_first(plugin_xml_data, 'ZenbeatsSCPump')
 				if xmlparams is not None:
+					add_dataval(plugin_obj.datavals, xmlparams, 'input_trigger_type', 'input_trigger_type', 'type', int)
+					add_dataval(plugin_obj.datavals, xmlparams, 'envelope_action', 'envelope_action', 'action', int)
+					add_dataval(plugin_obj.datavals, xmlparams, 'filter_index', 'filter_index', 'index', int)
+					add_dataval(plugin_obj.datavals, xmlparams, 'window_len', 'window_len', 'beats', float)
+					add_dataval(plugin_obj.datavals, xmlparams, 'random', 'random', 'seed', int)
+
 					attribvals = xmlparams.attrib
 					param_find(plugin_obj, 'crossfadetime', xmlparams, 'CrossfadeTime', 0, 1)
 					param_find(plugin_obj, 'inputtriggerlevel', xmlparams, 'InputTriggerLevel', 0, 1)
@@ -178,6 +191,121 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 					param_find(plugin_obj, 'releasecontroly', xmlparams, 'ReleaseControlY', 0, 1)
 					param_find(plugin_obj, 'releaseendx', xmlparams, 'ReleaseEndX', 0, 1)
 					param_find(plugin_obj, 'releaseendy', xmlparams, 'ReleaseEndY', 0, 1)
+
+			if strproc.plugin.name == 'Zenbeats SC-Envelope':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'zenbeats_scenvelope')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'ZenbeatsSCEnvelope')
+				if xmlparams is not None:
+					add_dataval(plugin_obj.datavals, xmlparams, 'input_trigger_type', 'input_trigger_type', 'type', int)
+					add_dataval(plugin_obj.datavals, xmlparams, 'envelope_action', 'envelope_action', 'action', int)
+					add_dataval(plugin_obj.datavals, xmlparams, 'filter_index', 'filter_index', 'index', int)
+					add_dataval(plugin_obj.datavals, xmlparams, 'window_len', 'window_len', 'beats', float)
+					add_dataval(plugin_obj.datavals, xmlparams, 'random', 'random', 'seed', int)
+
+					attribvals = xmlparams.attrib
+					param_find(plugin_obj, 'crossfadetime', xmlparams, 'CrossfadeTime', 0, 1)
+					param_find(plugin_obj, 'inputtriggerlevel', xmlparams, 'InputTriggerLevel', 0, 1)
+					param_find(plugin_obj, 'randomfloor', xmlparams, 'RandomFloor', 0, 1)
+					param_find(plugin_obj, 'randomceiling', xmlparams, 'RandomCeiling', 0, 1)
+					param_find(plugin_obj, 'randomstartattack', xmlparams, 'RandomStartAttack', 0, 1)
+					param_find(plugin_obj, 'randomendattack', xmlparams, 'RandomEndAttack', 0, 1)
+					param_find(plugin_obj, 'randomstartrelease', xmlparams, 'RandomStartRelease', 0, 1)
+					param_find(plugin_obj, 'randomendrelease', xmlparams, 'RandomEndRelease', 0, 1)
+					param_find(plugin_obj, 'filterresonance', xmlparams, 'FilterResonance', 0, 1)
+					param_find(plugin_obj, 'randomresonance', xmlparams, 'RandomResonance', 0, 1)
+					param_find(plugin_obj, 'attackstartx', xmlparams, 'AttackStartX', 0, 1)
+					param_find(plugin_obj, 'attackstarty', xmlparams, 'AttackStartY', 0, 1)
+					param_find(plugin_obj, 'attackcontrolx1', xmlparams, 'AttackControlX1', 0, 1)
+					param_find(plugin_obj, 'attackcontroly', xmlparams, 'AttackControlY', 0, 1)
+					param_find(plugin_obj, 'attackendx', xmlparams, 'AttackEndX', 0, 1)
+					param_find(plugin_obj, 'attackendy', xmlparams, 'AttackEndY', 0, 1)
+					param_find(plugin_obj, 'releasestartx', xmlparams, 'ReleaseStartX', 0, 1)
+					param_find(plugin_obj, 'releasestarty', xmlparams, 'ReleaseStartY', 0, 1)
+					param_find(plugin_obj, 'releasecontrolx1', xmlparams, 'ReleaseControlX1', 0, 1)
+					param_find(plugin_obj, 'releasecontroly', xmlparams, 'ReleaseControlY', 0, 1)
+					param_find(plugin_obj, 'releaseendx', xmlparams, 'ReleaseEndX', 0, 1)
+					param_find(plugin_obj, 'releaseendy', xmlparams, 'ReleaseEndY', 0, 1)
+
+			if strproc.plugin.name == 'AutoWah':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'autowah')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'AutoWah')
+				if xmlparams is not None:
+					filterdata = data_xml.find_first(xmlparams, 'Filter')
+					if filterdata is not None:
+						plugin_obj.filter.on = True
+						set_filter_type(plugin_obj.filter, filterdata.get('filterType'))
+						plugin_obj.filter.freq = get_value(filterdata, 'Freq', 18007)
+						plugin_obj.filter.q = get_value(filterdata, 'Res', 1)
+						lfodata = data_xml.find_first(filterdata, 'LFO')
+						if lfodata is not None:
+							lfo_obj = plugin_obj.lfo_add('cutoff')
+							lfo_obj.time.set_steps(get_value(lfodata, 'LFOF', 1)*4, convproj_obj)
+					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
+					param_find(plugin_obj, 'attack', xmlparams, 'Attack', 0, 1)
+					param_find(plugin_obj, 'release', xmlparams, 'Release', 0, 1)
+					param_find(plugin_obj, 'base', xmlparams, 'Base', 0, 1)
+					param_find(plugin_obj, 'strength', xmlparams, 'Strength', 0, 1)
+
+			if strproc.plugin.name == 'Chorus':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'chorus')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Chorus')
+				if xmlparams is not None:
+					lfodata = data_xml.find_first(xmlparams, 'LFO')
+					if lfodata is not None:
+						lfo_obj = plugin_obj.lfo_add('chorus')
+						lfo_obj.time.set_hz(get_value(lfodata, 'Speed', 1)*4)
+					param_find(plugin_obj, 'delay', xmlparams, 'Delay', 0, 1)
+					param_find(plugin_obj, 'depth', xmlparams, 'Depth', 0, 1)
+					param_find(plugin_obj, 'stereo', xmlparams, 'Stereo', 0, 1)
+
+			if strproc.plugin.name == 'BitCrusher':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'bitcrusher')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'BitCrusher')
+				if xmlparams is not None:
+					param_find(plugin_obj, 'noise', xmlparams, 'Noise', 0, 1)
+					param_find(plugin_obj, 'bits', xmlparams, 'Bits', 0, 1)
+					param_find(plugin_obj, 'rate', xmlparams, 'Rate', 0, 1)
+
+			if strproc.plugin.name == 'Delay':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'delay')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				attrib = plugin_xml_data.attrib
+				if 'Quantize' in attrib: plugin_obj.datavals.add('quantize', float(attrib['Quantize']))
+				if 'linking' in attrib: plugin_obj.datavals.add('linking', float(attrib['linking']))
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Delay')
+				if xmlparams is not None:
+					param_find(plugin_obj, 'gain1', xmlparams, 'Gain1', 0, 1)
+					param_find(plugin_obj, 'feedback1', xmlparams, 'Feedback1', 0, 1)
+					param_find(plugin_obj, 'rate1', xmlparams, 'Rate1', 0, 1)
+					param_find(plugin_obj, 'pan1', xmlparams, 'Pan1', 0, 1)
+					param_find(plugin_obj, 'lowcut1', xmlparams, 'LowCut1', 0, 1)
+					param_find(plugin_obj, 'highcut1', xmlparams, 'HighCut1', 0, 1)
+					param_find(plugin_obj, 'gain2', xmlparams, 'Gain2', 0, 1)
+					param_find(plugin_obj, 'feedback2', xmlparams, 'Feedback2', 0, 1)
+					param_find(plugin_obj, 'rate2', xmlparams, 'Rate2', 0, 1)
+					param_find(plugin_obj, 'pan2', xmlparams, 'Pan2', 0, 1)
+					param_find(plugin_obj, 'lowcut2', xmlparams, 'LowCut2', 0, 1)
+					param_find(plugin_obj, 'highcut2', xmlparams, 'HighCut2', 0, 1)
+
+			if strproc.plugin.name == 'Drive':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'drive')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Drive')
+				if xmlparams is not None:
+					param_find(plugin_obj, 'pregain', xmlparams, 'PreGain', 0, 1)
+					param_find(plugin_obj, 'hardness', xmlparams, 'Hardness', 0, 1)
+					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
+					param_find(plugin_obj, 'overdrive', xmlparams, 'Overdrive', 0, 1)
 
 			# ------------------------- Universal -------------------------
 
@@ -341,6 +469,21 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 					set_filter_type(plugin_obj.filter, xmlparams.get('filterType'))
 					plugin_obj.filter.freq = get_value(xmlparams, 'Freq', 18007)
 					plugin_obj.filter.q = get_value(xmlparams, 'Res', 1)
+
+			if strproc.plugin.name == 'AutoFilter':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'filter', None)
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'AutoFilter')
+				if xmlparams is not None:
+					plugin_obj.filter.on = True
+					set_filter_type(plugin_obj.filter, xmlparams.get('filterType'))
+					plugin_obj.filter.freq = get_value(xmlparams, 'Freq', 18007)
+					plugin_obj.filter.q = get_value(xmlparams, 'Res', 1)
+					lfodata = data_xml.find_first(xmlparams, 'LFO')
+					if lfodata is not None:
+						lfo_obj = plugin_obj.lfo_add('cutoff')
+						lfo_obj.time.set_steps(get_value(lfodata, 'LFOF', 1)*4, convproj_obj)
 
 def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc, dawvert_intent):
 

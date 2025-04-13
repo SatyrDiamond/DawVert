@@ -361,6 +361,7 @@ def make_vst2(convproj_obj, plugin_obj, issynth, pluginid, sb_track):
 		sb_plugin.uid = soundbridge_func.encode_chunk(uid)
 		sb_plugin.name = plugin_obj.external_info.name
 		sb_plugin.vendor = plugin_obj.external_info.creator
+
 		if issynth: sb_plugin.metadata['AudioUnitType'] = 3
 
 		extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)

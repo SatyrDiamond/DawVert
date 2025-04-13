@@ -17,6 +17,7 @@ class juce_plugin:
 		self.filename = None
 		self.manufacturer = None
 		self.fourid = None
+		self.program_num = None
 
 	def from_cvpj(self, convproj_obj, plugin_obj):
 		plugin_obj.type.type
@@ -46,12 +47,13 @@ class juce_plugin:
 		extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 
 		if chunkdata:
+
 			if self.plugtype == 'vst2':
 				if chunkdata[0:4] != b'CcnK':
 					pluginfo_obj = plugin_vst2.replace_data(convproj_obj, plugin_obj, 'basename', None, self.name, 'chunk', chunkdata, None)
 					out_exists = extmanu_obj.vst2__replace_data('path', self.filename, chunkdata, None, False)
 					if self.manufacturer: plugin_obj.external_info.creator = self.manufacturer
-	
+
 					if not out_exists: 
 						if self.name: plugin_obj.external_info.basename = self.name
 						if self.filename:
@@ -61,7 +63,11 @@ class juce_plugin:
 								plugin_obj.filerefs_global['plugin'] = vst2_pathid
 				else: 
 					extmanu_obj.vst2__import_presetdata('raw', chunkdata, None)
-	
+
+				if self.program_num is not None:
+					plugin_obj.program_used = True
+					plugin_obj.current_program = self.program_num
+
 			if self.plugtype == 'vst3':
 				pluginstate_x = data_vc2xml.get(chunkdata)
 				IComponent = data_xml.find_first(pluginstate_x, 'IComponent')

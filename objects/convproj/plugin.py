@@ -56,13 +56,19 @@ class cvpj_plugin_external:
 		self.id = None
 		self.fourid = None
 		self.creator = None
-		self.datatype = 'chunk'
 		self.numparams = -1
 		self.basename = None
 		self.version_bytes = 0
 		self.version = None
-		self.is_bank = False
 		self.cpu_arch = 0
+		
+		self.seperated_channels = False
+
+		self.inplugid = None
+
+		self.datatype = 'chunk'
+		self.is_bank = False
+		self.chunk_is_bank = False
 
 	def from_pluginfo_obj(self, pluginfo_obj, inplugtype):
 		if pluginfo_obj.plugtype: plugtype = pluginfo_obj.plugtype
@@ -76,6 +82,8 @@ class cvpj_plugin_external:
 			if self.id != pluginfo_obj.id: self.__init__()
 		else:
 			self.__init__()
+
+		self.is_external = True
 
 		self.plugtype = pluginfo_obj.plugtype
 		if not self.plugtype: self.plugtype = plugtype

@@ -101,7 +101,7 @@ class plugconv(plugins.base):
 			f_freq = plugin_obj.params.get('freq', 1).value
 			f_q = plugin_obj.params.get('q', 0.5).value
 
-			filter_type = ['low_pass','high_pass','band_pass','notch'][min(int(f_q), 3)]
+			filter_type = ['low_pass','high_pass','band_pass','notch'][min(int(f_type), 3)]
 
 			plugin_obj.replace('universal', 'filter', None)
 			plugin_obj.filter.on = True

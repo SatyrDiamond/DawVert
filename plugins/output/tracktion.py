@@ -344,7 +344,7 @@ class output_tracktion_edit(plugins.base):
 		return 'output'
 	
 	def get_name(self):
-		return 'Waveform Edit'
+		return 'Waveform Pro'
 	
 	def get_shortname(self):
 		return 'waveform'

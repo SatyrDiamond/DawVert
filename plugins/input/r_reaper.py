@@ -309,6 +309,7 @@ class input_reaper(plugins.base):
 									vstdataconreader.skip(1) # 16
 
 									plugin_obj.clear_prog_keep(programnum)
+
 									extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 									if uses_chunk:
 										extmanu_obj.vst2__replace_data('id', fourid, rpp_extplug.data_chunk, None, False)
@@ -318,6 +319,9 @@ class input_reaper(plugins.base):
 										extmanu_obj.vst2__setup_params('id', fourid, numparams, None, False)
 										for n, v in enumerate(vstparams): extmanu_obj.vst2__set_param(n, v)
 										extmanu_obj.vst2__params_output()
+
+									plugin_obj.program_used = True
+									plugin_obj.current_program = programnum
 								except:
 									pass
 

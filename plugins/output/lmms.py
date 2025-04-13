@@ -251,11 +251,13 @@ def encode_effectslot(effect_obj, plugin_obj, pluginid):
 		effect_obj.name = 'ladspaeffect'
 		lmms_plug_obj.name = 'ladspacontrols'
 
-		effect_obj.keys['file'] = Path(plugin_obj.datavals.get('path', '')).stem
-		effect_obj.keys['plugin'] = plugin_obj.datavals.get('plugin', '')
+		external_info = plugin_obj.external_info
+		
+		effect_obj.keys['file'] = external_info.basename
+		effect_obj.keys['plugin'] = external_info.inplugid
 
-		ladspa_sep_chan = plugin_obj.datavals.get('seperated_channels', False)
-		ladspa_numparams = plugin_obj.datavals.get('numparams', 0)
+		ladspa_sep_chan = external_info.seperated_channels
+		ladspa_numparams = external_info.numparams
 		lmms_plug_obj.ladspa_ports = ladspa_numparams*2
 		lmms_plug_obj.ladspa_link = int(not ladspa_sep_chan)
 

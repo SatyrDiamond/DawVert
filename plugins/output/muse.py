@@ -50,19 +50,19 @@ def maketrack_synth(project_obj, convproj_obj, track_obj, portnum):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 	if plugin_found: 
 		if plugin_obj.check_match('external', 'vst2', 'win'):
-			pluginsupported = True
-			muse_track.synth_synthType = 'VST (synths)'
-
 			vstname = plugin_obj.external_info.name
-			vstclass = plugin_obj.external_info.name
-			if vstclass == 'Vitalium': vstclass = 'vitalium'
-			muse_track.synth_class = vstclass
-			muse_track.synth_label = vstname
+			vstbasename = plugin_obj.external_info.basename
+			vstclass = vstbasename if vstbasename else vstname
 
-			vstdata_bytes = plugin_obj.rawdata_get('chunk')
-			muse_track.synth_customData = b''
-			muse_track.synth_customData += len(vstdata_bytes).to_bytes(4, 'big')
-			muse_track.synth_customData += zlib.compress(vstdata_bytes)
+			if vstclass:
+				muse_track.synth_synthType = 'VST (synths)'
+				pluginsupported = True
+				muse_track.synth_class = vstclass
+				muse_track.synth_label = vstname
+				vstdata_bytes = plugin_obj.rawdata_get('chunk')
+				muse_track.synth_customData = b''
+				muse_track.synth_customData += len(vstdata_bytes).to_bytes(4, 'big')
+				muse_track.synth_customData += zlib.compress(vstdata_bytes)
 
 	if pluginsupported == False:
 		muse_track.synth_synthType = 'MESS'

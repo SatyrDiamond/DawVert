@@ -221,17 +221,19 @@ class vst2:
 	
 			if pluginfo_obj.path_32bit:
 				if os.path.exists(pluginfo_obj.path_32bit):
-					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE vst2 SET path_32bit_win = ? WHERE id = ?", (pluginfo_obj.path_32bit, pluginfo_obj.id,))
-					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE vst2 SET path_32bit_unix = ? WHERE id = ?", (pluginfo_obj.path_32bit, pluginfo_obj.id,))
+					outpath = pluginfo_obj.path_32bit.replace('/', '\\')
+					if platformtxt == 'win': extplug_db.db_plugins.execute("UPDATE vst2 SET path_32bit_win = ? WHERE id = ?", (outpath, pluginfo_obj.id,))
+					if platformtxt == 'lin': extplug_db.db_plugins.execute("UPDATE vst2 SET path_32bit_unix = ? WHERE id = ?", (outpath, pluginfo_obj.id,))
 	
 			if pluginfo_obj.path_64bit:
 				if os.path.exists(pluginfo_obj.path_64bit):
+					outpath = pluginfo_obj.path_64bit.replace('/', '\\')
 					if platformtxt == 'win': 
-						extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
-						extplug_db.db_plugins.execute("UPDATE vst2 SET basename = ? WHERE id = ?", (os.path.splitext(os.path.basename(pluginfo_obj.path_64bit))[0], pluginfo_obj.id,))
+						extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_win = ? WHERE id = ?", (outpath, pluginfo_obj.id,))
+						extplug_db.db_plugins.execute("UPDATE vst2 SET basename = ? WHERE id = ?", (os.path.splitext(os.path.basename(outpath))[0], pluginfo_obj.id,))
 					if platformtxt == 'lin': 
-						extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_unix = ? WHERE id = ?", (pluginfo_obj.path_64bit, pluginfo_obj.id,))
-						extplug_db.db_plugins.execute("UPDATE vst2 SET basename = ? WHERE id = ?", (os.path.splitext(os.path.basename(pluginfo_obj.path_64bit))[0], pluginfo_obj.id,))
+						extplug_db.db_plugins.execute("UPDATE vst2 SET path_64bit_unix = ? WHERE id = ?", (outpath, pluginfo_obj.id,))
+						extplug_db.db_plugins.execute("UPDATE vst2 SET basename = ? WHERE id = ?", (os.path.splitext(os.path.basename(outpath))[0], pluginfo_obj.id,))
 	
 			if pluginfo_obj.version: extplug_db.db_plugins.execute("UPDATE vst2 SET version = ? WHERE id = ?", (pluginfo_obj.version, pluginfo_obj.id,))
 			if pluginfo_obj.audio_num_inputs: extplug_db.db_plugins.execute("UPDATE vst2 SET audio_num_inputs = ? WHERE id = ?", (pluginfo_obj.audio_num_inputs, pluginfo_obj.id,))
@@ -264,12 +266,19 @@ class vst2:
 	
 			if bycat == 'basename':
 				founddata = extplug_db.db_plugins.execute(vst2.exe_txt_start+" WHERE basename = ?", (in_val,)).fetchone()
-	
+
 			if bycat == 'path':
 				patharch = 'win' if in_platformtxt == 'win' else 'unix'
 				in_val = in_val.replace('/', '\\')
 				founddata_path32 = extplug_db.db_plugins.execute(vst2.exe_txt_start+" WHERE path_32bit_"+patharch+" = ?", (in_val,)).fetchone()
 				founddata_path64 = extplug_db.db_plugins.execute(vst2.exe_txt_start+" WHERE path_64bit_"+patharch+" = ?", (in_val,)).fetchone()
+				if founddata_path32 and 32 in cpu_arch_list: founddata = founddata_path32
+				if founddata_path64 and 64 in cpu_arch_list: founddata = founddata_path64
+
+			if bycat == 'path_unix':
+				in_val = in_val.replace('/', '\\')
+				founddata_path32 = extplug_db.db_plugins.execute(vst2.exe_txt_start+" WHERE path_32bit_unix = ?", (in_val,)).fetchone()
+				founddata_path64 = extplug_db.db_plugins.execute(vst2.exe_txt_start+" WHERE path_64bit_unix = ?", (in_val,)).fetchone()
 				if founddata_path32 and 32 in cpu_arch_list: founddata = founddata_path32
 				if founddata_path64 and 64 in cpu_arch_list: founddata = founddata_path64
 
@@ -360,6 +369,13 @@ class vst3:
 				in_val = in_val.replace('/', '\\')
 				founddata_path32 = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE path_32bit_"+patharch+" = ?", (in_val,)).fetchone()
 				founddata_path64 = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE path_64bit_"+patharch+" = ?", (in_val,)).fetchone()
+				if founddata_path32 and 32 in cpu_arch_list: founddata = founddata_path32
+				if founddata_path64 and 64 in cpu_arch_list: founddata = founddata_path64
+
+			if bycat == 'path_unix':
+				in_val = in_val.replace('/', '\\')
+				founddata_path32 = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE path_32bit_unix = ?", (in_val,)).fetchone()
+				founddata_path64 = extplug_db.db_plugins.execute(vst3.exe_txt_start+" WHERE path_64bit_unix = ?", (in_val,)).fetchone()
 				if founddata_path32 and 32 in cpu_arch_list: founddata = founddata_path32
 				if founddata_path64 and 64 in cpu_arch_list: founddata = founddata_path64
 

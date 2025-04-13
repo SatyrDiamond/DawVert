@@ -49,6 +49,7 @@ class plugsearch(plugins.base):
 						pluginfo_obj.audio_num_inputs = muse_getvalue(0, x_vst_plug_cache, 'inports')
 						pluginfo_obj.audio_num_outputs = muse_getvalue(0, x_vst_plug_cache, 'outports')
 						pluginfo_obj.num_params = muse_getvalue(0, x_vst_plug_cache, 'ctlInports')
+						pluginfo_obj.path_64bit = muse_file
 						vst2count += 1
 
 		if os.path.exists(muse_g_path_ladspa):

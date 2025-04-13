@@ -220,7 +220,7 @@ def setparams(convproj_obj, plugin_obj):
 		isvalid = True
 		if vst_fourid:
 			if vst_name or vst_path:
-				if vst_datatype in ['chunk', 'param', 'bank']:
+				if vst_datatype in ['chunk', 'param']:
 					isvalid = True
 				else:
 					logger_output.warning('VST2 plugin not placed: unknown datatype:', str(vst_datatype))
@@ -247,7 +247,7 @@ def setparams(convproj_obj, plugin_obj):
 					wrapper_state.raw(b'\x00\x00\x00\x00\x00\x00\x00\x00')
 					wrapper_state.raw(vstdata_bytes)
 
-			if vst_datatype in ['param', 'bank']:
+			if vst_datatype == 'param':
 				prognums = list(plugin_obj.programs)
 				prognum = prognums.index(plugin_obj.current_program) if plugin_obj.current_program in prognums else 0
 	

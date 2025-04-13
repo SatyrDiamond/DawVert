@@ -132,6 +132,9 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 		plugin_obj.external_info.datatype = 'param'
 		plugin_obj.external_info.numparams = int(vst_numparams)
 
+	plugin_obj.program_used = True
+	plugin_obj.current_program = prognum
+	
 	for param, vst_param in lmms_plugin.vst_params.items():
 		paramnum = 'ext_param_'+str(param)
 		param_obj = plugin_obj.params.add(paramnum, vst_param.value, 'float')
@@ -413,20 +416,20 @@ def lmms_decode_effectslot(convproj_obj, lmms_effect):
 	elif lmms_effect.name == 'ladspaeffect':
 		plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'ladspa', None)
 		plugin_obj.role = 'effect'
+		external_info = plugin_obj.external_info
+		external_info.plugtype = 'ladspa'
 
 		if 'file' in lmms_effect.keys:
-			plugin_obj.datavals.add('name', lmms_effect.keys['file'])
-			plugin_obj.datavals.add('path', lmms_effect.keys['file'])
+			external_info.basename = lmms_effect.keys['file']
 
 		if 'plugin' in lmms_effect.keys:
-			plugin_obj.datavals.add('plugin', lmms_effect.keys['plugin'])
+			external_info.inplugid = lmms_effect.keys['plugin']
 
-		seperated_channels = False
+		ladspa_ports = lmms_plugin.ladspa_ports
 		if lmms_plugin.ladspa_link != -1: 
-			lmms_plugin.ladspa_ports //= 2
-			if lmms_plugin.ladspa_link == 0: seperated_channels = True
-
-		plugin_obj.datavals.add('numparams', lmms_plugin.ladspa_ports)
+			ladspa_ports //= 2
+			if lmms_plugin.ladspa_link == 0: external_info.seperated_channels = True
+		external_info.numparams = ladspa_ports
 
 		for paramname, lmms_ladspa_param in lmms_plugin.ladspa_params.items():
 			if paramname.startswith('port'):
@@ -436,8 +439,6 @@ def lmms_decode_effectslot(convproj_obj, lmms_effect):
 				paramval = doparam(lmms_ladspa_param.data, 'float', None, ['plugin', pluginid, paramid])
 				plugin_obj.params.add(paramid, paramval, 'float')
 
-		plugin_obj.datavals.add('seperated_channels', seperated_channels)
-		
 	elif lmms_effect.name == 'delay':
 		DelayTimeSamples = lmms_plugin.get_param('DelayTimeSamples', 1)
 		delay_obj = fx_delay.fx_delay()

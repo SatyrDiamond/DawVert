@@ -193,11 +193,12 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				juceobj.name = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
 				juceobj.filename = wf_plugin.params['filename'] if "filename" in wf_plugin.params else ''
 				juceobj.manufacturer = wf_plugin.params['manufacturer'] if "manufacturer" in wf_plugin.params else ''
+				if "programNum" in wf_plugin.params: juceobj.program_num = int(wf_plugin.params['programNum'])
 				juceobj.memoryblock = wf_plugin.params['state']
 	
 				plugin_obj, pluginid = juceobj.to_cvpj(convproj_obj, None)
 				plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
-	
+
 				track_obj.plugin_autoplace(plugin_obj, pluginid)
 	
 				if pluginid:
@@ -212,6 +213,8 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 								convproj_obj.automation.add_autopoint_real(['plugin',pluginid,'ext_param_'+autocurves.paramid], 'float', time, val, 'normal')
 
 			except:
+				#import traceback
+				#print(traceback.format_exc())
 				pass
 
 	elif wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
@@ -502,7 +505,7 @@ class input_tracktion_edit(plugins.base):
 		convproj_obj.transport.loop_active = bool(transport_obj.looping)
 		convproj_obj.transport.loop_start = max(0, transport_obj.loopPoint1)
 		convproj_obj.transport.loop_end = max(0, transport_obj.loopPoint2)
-		convproj_obj.transport.start_pos = max(0, transport_obj.start)
+		#convproj_obj.transport.start_pos = max(0, transport_obj.start)
 		convproj_obj.transport.current_pos = transport_obj.position
 		convproj_obj.transport.is_seconds = True
 		convproj_obj.timemarkers.is_seconds = True

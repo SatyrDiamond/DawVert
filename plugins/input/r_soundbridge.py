@@ -251,17 +251,23 @@ def create_plugin(convproj_obj, sb_plugin, issynth, track_obj):
 				if statereader.magic_check(b'CcnK'):
 					statereader.skip(4)
 					chunk_type = statereader.read(4)
+
 					if chunk_type == b'FBCh':
 						statereader.skip(16)
 						statereader.skip(128)
 						chunkdata = statereader.raw(statereader.uint32_b())
 						plugin_obj.clear_prog_keep(programnum)
 						extmanu_obj.vst2__replace_data('id', fourid, chunkdata, 'win', True)
+						plugin_obj.program_used = True
+						plugin_obj.current_program = programnum
+
 					if chunk_type == b'FxBk':
 						statereader.skip(16)
 						statereader.skip(128)
 						plugin_obj.clear_prog_keep(programnum)
 						extmanu_obj.vst2__import_presetdata('raw', statereader.rest(), 'win')
+						plugin_obj.program_used = True
+						plugin_obj.current_program = programnum
 
 					for x in sb_plugin.automationContainer.automationTracks:
 						paramid = 'ext_param_'+str(x.parameterIndex)

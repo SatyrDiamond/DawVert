@@ -1038,6 +1038,8 @@ class lmms_song:
 
 			if xmlpart.tag == 'fxmixer': self.fxmixer.read(xmlpart)
 
+			if xmlpart.tag == 'mixer': self.fxmixer.read(xmlpart)
+
 			if xmlpart.tag == 'track':
 				track_obj = lmms_track()
 				track_obj.read(xmlpart)

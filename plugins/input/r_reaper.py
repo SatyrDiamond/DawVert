@@ -36,8 +36,8 @@ def reaper_color_to_cvpj_color(i_color, isreversed):
 	if bytecolors[3]:
 		if isreversed == True: return [bytecolors[0],bytecolors[1],bytecolors[2]]
 		else: return [bytecolors[2],bytecolors[1],bytecolors[0]]
-	else:
-		return [60, 60, 60]
+	#else:
+	#	return [60, 60, 60]
 
 def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert): 
 	bpm = convproj_obj.params.get('bpm', 120).value
@@ -288,8 +288,6 @@ class input_reaper(plugins.base):
 										samplers.append([filenames, dfdict])
 
 							else:
-								plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', None)
-								plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 
 								pluginfo_obj = globalstore.extplug.get('vst2', 'id', fourid, None, [64, 32])
 
@@ -308,8 +306,8 @@ class input_reaper(plugins.base):
 									vstdataconreader.skip(1) # 16
 									vstdataconreader.skip(1) # 16
 
-									plugin_obj.clear_prog_keep(programnum)
-
+									plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', None)
+									plugin_obj.fxdata_add(not rpp_plugin.bypass['bypass'], rpp_plugin.wet['wet'])
 									extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 									if uses_chunk:
 										extmanu_obj.vst2__replace_data('id', fourid, rpp_extplug.data_chunk, None, False)
@@ -320,17 +318,18 @@ class input_reaper(plugins.base):
 										for n, v in enumerate(vstparams): extmanu_obj.vst2__set_param(n, v)
 										extmanu_obj.vst2__params_output()
 
-									plugin_obj.program_used = True
+									for parmenv in rpp_plugin.parmenv:
+										if parmenv.is_param:
+											do_auto(pooledenvs, convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
+	
+									if fourid == 1919118692: track_obj.plugslots.slots_notes.append(pluginid)
+									else: track_obj.plugin_autoplace(plugin_obj, pluginid)
+
 									plugin_obj.current_program = programnum
 								except:
+									#import traceback
+									#print(traceback.format_exc())
 									pass
-
-								for parmenv in rpp_plugin.parmenv:
-									if parmenv.is_param:
-										do_auto(pooledenvs, convproj_obj, parmenv, ['plugin', pluginid, 'ext_param_'+str(parmenv.param_id)], False, 'float', False)
-
-								if fourid == 1919118692: track_obj.plugslots.slots_notes.append(pluginid)
-								else: track_obj.plugin_autoplace(plugin_obj, pluginid)
 
 						else:
 							plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst3', None)
@@ -472,7 +471,7 @@ class input_reaper(plugins.base):
 					placement_obj.time.position_real = cvpj_position
 					placement_obj.time.duration_real = cvpj_duration
 
-					placement_obj.time.cut_type = 'loop'
+					placement_obj.time.cut_type = 'loop' if cvpj_loop else 'cut'
 
 					placement_obj.muted = bool(cvpj_muted)
 
@@ -480,23 +479,36 @@ class input_reaper(plugins.base):
 
 					if rpp_trackitem.source != None:
 						rpp_source = rpp_trackitem.source
+
 						if rpp_source.type == 'MIDI':
-							midievents_obj.ppq = rpp_source.hasdata['ppq']
-							curpos = 0
-							for note in rpp_source.notes: 
-								curpos += int(note[1])
+							midifile = rpp_source.file.get()
 
-								midicmd, midich = data_bytes.splitbyte(int(note[2],16))
+							maxdur = 0
 
-								if midicmd == 9:
-									midievents_obj.add_note_on(curpos, midich, int(note[3],16), int(note[4],16))
+							if not midifile:
+								midievents_obj.ppq = rpp_source.hasdata['ppq']
+								curpos = 0
+	
+								for note in rpp_source.notes: 
+									curpos += int(note[1])
+	
+									midicmd, midich = data_bytes.splitbyte(int(note[2],16))
+	
+									if midicmd == 9:
+										midievents_obj.add_note_on(curpos, midich, int(note[3],16), int(note[4],16))
+	
+									if midicmd == 8:
+										midievents_obj.add_note_off(curpos, midich, int(note[3],16), 0)
 
-								if midicmd == 8:
-									midievents_obj.add_note_off(curpos, midich, int(note[3],16), 0)
+							else:
+								midifile = os.path.join(dawvert_intent.input_folder, midifile)
+								placement_obj.midi_from(midifile)
 
-					if curpos:
-						cvpj_end_bpm = ((curpos/midievents_obj.ppq)*4)
-						placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
+							maxdur = midievents_obj.get_dur()
+
+							if maxdur and cvpj_loop:
+								cvpj_end_bpm = ((maxdur/midievents_obj.ppq)*4)
+								placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
 
 					do_auto_clip_notes(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
 					do_auto_clip_notes(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)

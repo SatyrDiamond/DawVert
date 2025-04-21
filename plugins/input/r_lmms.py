@@ -107,7 +107,6 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 	windata_obj.open = bool(lmms_plugin.get_param('guivisible', False))
 
 	prognum = int(lmms_plugin.get_param('program', 0))
-	plugin_obj.clear_prog_keep(prognum)
 
 	vst_numparams = int(lmms_plugin.get_param('numparams', -1))
 	vst_data = str(lmms_plugin.get_param('chunk', ''))
@@ -132,7 +131,6 @@ def getvstparams(convproj_obj, plugin_obj, pluginid, lmms_plugin):
 		plugin_obj.external_info.datatype = 'param'
 		plugin_obj.external_info.numparams = int(vst_numparams)
 
-	plugin_obj.program_used = True
 	plugin_obj.current_program = prognum
 	
 	for param, vst_param in lmms_plugin.vst_params.items():

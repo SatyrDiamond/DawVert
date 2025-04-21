@@ -209,7 +209,6 @@ def setparams(convproj_obj, plugin_obj):
 	if plugin_obj.check_wildmatch('external', 'vst2', None):
 		vst_numparams = plugin_obj.external_info.numparams
 		vst_current_program = plugin_obj.current_program
-		vst_use_program = plugin_obj.program_used
 		vst_datatype = plugin_obj.external_info.datatype
 		vst_fourid = plugin_obj.external_info.fourid
 		vst_name = plugin_obj.external_info.name
@@ -235,7 +234,7 @@ def setparams(convproj_obj, plugin_obj):
 			wrapper_state = bytewriter.bytewriter()
 
 			if vst_datatype == 'chunk':
-				if vst_use_program:
+				if vst_current_program != -1:
 					wrapper_state.raw(b'\xf7\xff\xff\xff\r\xfe\xff\xff\xff')
 					wrapper_state.uint32(len(vstdata_bytes))
 					wrapper_state.raw(b'\x00\x00\x00\x00')
@@ -260,9 +259,10 @@ def setparams(convproj_obj, plugin_obj):
 				vst_num_names = len(plugin_obj.programs)
 				vst_params_data = bytewriter.bytewriter()
 				vst_names = bytewriter.bytewriter()
-	
+
 				for _, progstate in plugin_obj.programs.items():
 					vst_total_params += vst_numparams
+
 					for num in range(vst_numparams):
 						paramval = progstate.params.get('ext_param_'+str(num), 0).value
 						vst_params_data.float(paramval)

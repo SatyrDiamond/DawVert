@@ -149,12 +149,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 						extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 					
 						if wrapper_vststate[4] in [13, 12]:
-							plugin_obj.clear_prog_keep(wrapper_vstprogram)
 							plugin_obj.rawdata_add('chunk', wrapper_vstdata)
 	
 							extmanu_obj.vst2__replace_data('id', wrapperdata['fourid'], wrapper_vstdata, None, False)
 							if 'name' in wrapperdata: plugin_obj.external_info.name = wrapperdata['name']
-							plugin_obj.program_used = True
 							plugin_obj.current_program = wrapper_vstprogram
 							numparams = plugin_obj.external_info.numparams = -1
 	
@@ -171,7 +169,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 							numparamseach = vst_total_params//vst_num_names
 							bankparams = data_values.list__chunks(vst_params_data, numparamseach)
 	
-							plugin_obj.clear_prog_keep(0)
 							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'param', None, numparamseach)
 	
 							extmanu_obj.vst2__setup_params('id', wrapperdata['fourid'], numparamseach, None, False)

@@ -37,12 +37,13 @@ class extplug_vst2_params:
 		self.param_names[num] = val
 
 	def output(self, plugin_obj):
+		plugin_obj.program__reset()
 		for num, presetdata in enumerate(self.programs):
-			plugin_obj.set_program(num)
+			plugin_obj.program__set(num)
 			plugin_obj.preset.name = presetdata['name'].decode()
 			for paramnum, paramval in enumerate(presetdata['params']):
 				plugin_obj.params.add_named('ext_param_'+str(paramnum), paramval, 'float', self.param_names[paramnum])
-		plugin_obj.set_program(self.cur_program)
+		plugin_obj.program__set(self.cur_program)
 
 class extplug_manu:
 	def __init__(self, plugin_obj, convproj_obj, pluginid):
@@ -107,7 +108,6 @@ class extplug_manu:
 
 	def set_type(self, plugtype, platformtxt):
 		plugin_obj = self.plugin_obj
-		external_info = plugin_obj.external_info
 		if plugin_obj.type.subtype != plugtype: plugin_obj.replace('external', plugtype, platformtxt)
 		else: plugin_obj.type.subtype = platformtxt
 
@@ -135,6 +135,22 @@ class extplug_manu:
 			if pluginname: outtxt = pluginname
 			logger_plugins.warning(plugtype+': plugin not found in database: '+outtxt)
 			return False
+
+	def get_chunk(self, byr_stream, offset, platformtxt):
+		byr_stream.seek(offset)
+		if byr_stream.detectheader(offset, b'CcnK'):
+			self.vst2__import_presetdata('byr', byr_stream, platformtxt)
+			return True
+
+		byr_stream.seek(offset)
+		if byr_stream.detectheader(offset, b'VST3'):
+			self.vst3__import_presetdata('byr', byr_stream, platformtxt)
+			return True
+
+		byr_stream.seek(offset)
+		if byr_stream.detectheader(offset, b'clap'):
+			self.clap__import_presetdata('byr', byr_stream, platformtxt)
+			return True
 
 # --------------------------------------------------- VST3 ---------------------------------------------------
 
@@ -284,7 +300,8 @@ class extplug_manu:
 			self.vst2__setup_params('id', fxck.fourid, fxck.num_params, platformtxt, False)
 			plugin_obj.preset.name = fxck.prgname
 			external_info.version_bytes = fxck.version
-			for c, p in enumerate(fxck.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')
+			for c, p in enumerate(fxck.params): 
+				plugin_obj.params.add('ext_param_'+str(c), p, 'float')
 			self.vst2__params_output()
 
 		if vst_prog.type == 3:
@@ -293,13 +310,20 @@ class extplug_manu:
 			if fxck.programs:
 				num_params = fxck.programs[0][1].data.num_params
 				self.vst2__setup_params('id', fxck.fourid, num_params, platformtxt, True)
+				self.vst2__set_numprogs(len(fxck.programs))
 				for num, vst_program in enumerate(fxck.programs):
+					self.vst2__set_program(num)
 					if vst_program[1].type == 2:
 						pprog = vst_program[1].data
-						plugin_obj.set_program(num)
-						plugin_obj.preset.name = pprog.prgname
-						for c, p in enumerate(pprog.params): plugin_obj.params.add('ext_param_'+str(c), p, 'float')
-				plugin_obj.set_program(fxck.current_program)
+						self.vst2__set_program_name(pprog.prgname)
+						try:
+							for c, p in enumerate(pprog.params): 
+								self.vst2__set_param(c, p)
+						except:
+							import traceback
+							print(traceback.format_exc())
+							pass
+				plugin_obj.program__set(fxck.current_program)
 			self.vst2__params_output()
 
 	def vst2__export_presetdata(self, filename):

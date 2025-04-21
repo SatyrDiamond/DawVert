@@ -108,7 +108,7 @@ class rpp_track:
 			if name == 'AUXMUTEENV': 
 				auxmuteenv = rpp_env.rpp_env()
 				auxmuteenv.read(inside_dat, values)
-				self.auxmuteenv[lastauxnum] = auxvolenv
+				self.auxmuteenv[lastauxnum] = auxmuteenv
 
 	def add_aux_env(self, atype, num):
 		env_obj = rpp_env.rpp_env()

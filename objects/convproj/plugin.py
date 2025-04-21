@@ -116,14 +116,80 @@ class cvpj_plugin:
 		self.datavals_global = params.cvpj_datavals()
 		self.datavals_cvpj = params.cvpj_datavals()
 		self.visual_custom = {}
-		self.programs = {0: plugstate.cvpj_plugin_state()}
 		self.audioports = cvpj_audioports()
 		self.role = 'fx'
 		self.midi = midi_inst.cvpj_midi_inst()
-		self.current_program = 0
-		self.program_used = False
 		self.external_info = cvpj_plugin_external()
-		self.set_program(0)
+		#self.set_program(0)
+
+		self.state_nonprog = plugstate.cvpj_plugin_state()
+		self.state = self.state_nonprog
+		self.using_programs = False
+		self.current_program = -1
+		self.programs = {}
+
+	def program__reset(self):
+		self.current_program = 0
+		self.using_programs = False
+		self.programs = {}
+		self.state_nonprog = plugstate.cvpj_plugin_state()
+		self.internal__state_main(self.state_nonprog)
+
+	def program__set(self, num):
+		self.current_program = num
+		if not self.using_programs:
+			self.programs = {}
+			self.programs[self.current_program] = self.state_nonprog
+			self.using_programs = True
+		if self.current_program not in self.programs:
+			self.programs[self.current_program] = plugstate.cvpj_plugin_state()
+		self.internal__state_main(self.programs[self.current_program])
+
+	def program__enable(self):
+		if not self.using_programs:
+			if self.current_program == -1:
+				self.current_program = 0
+			self.programs = {}
+			self.programs[self.current_program] = self.state_nonprog
+			self.internal__state_main(self.programs[self.current_program])
+			self.using_programs = True
+
+	def program__disable(self):
+		if self.using_programs:
+			self.state_nonprog = self.programs[self.current_program]
+			self.programs = {}
+			self.internal__state_main(self.state_nonprog)
+			self.using_programs = False
+
+	def internal__state_main(self, oldstate):
+		self.params = oldstate.params
+		self.datavals = oldstate.datavals
+		self.poly = oldstate.poly
+		self.bytesdata = oldstate.bytesdata
+		self.regions = oldstate.regions
+		self.sampleregions = oldstate.sampleregions
+		self.env_adsr = oldstate.env_adsr
+		self.env_points = oldstate.env_points
+		self.env_points_vars = oldstate.env_points_vars
+		self.env_blocks = oldstate.env_blocks
+		self.filter = oldstate.filter
+		self.named_filter = oldstate.named_filter
+		self.eq = oldstate.eq
+		self.named_eq = oldstate.named_eq
+		self.lfos = oldstate.lfos
+		self.waves = oldstate.waves
+		self.harmonics = oldstate.harmonics
+		self.wavetables = oldstate.wavetables
+		self.filerefs = oldstate.filerefs
+		self.sampleparts = oldstate.sampleparts
+		self.oscs = oldstate.oscs
+		self.timing = oldstate.timing
+		self.chord = oldstate.chord
+		self.arrays = oldstate.arrays
+		self.midi = oldstate.midi
+		self.preset = oldstate.preset
+		self.audios = oldstate.audios
+		self.modulations = oldstate.modulations
 
 	def external__from_pluginfo_obj(self, convproj_obj, pluginfo_obj, cpu_arch_list):
 		self.external_info.__init__()
@@ -160,108 +226,6 @@ class cvpj_plugin:
 		self.external_info.datatype = 'chunk'
 		self.rawdata_add('chunk', chunk)
 
-	def set_program(self, prenum):
-		if prenum not in self.programs: 
-			self.programs[prenum] = plugstate.cvpj_plugin_state()
-			self.program_used = True
-
-		self.current_program = prenum
-		self.state = self.programs[prenum]
-
-		self.params = self.state.params
-		self.datavals = self.state.datavals
-		self.poly = self.state.poly
-		self.bytesdata = self.state.bytesdata
-		self.regions = self.state.regions
-		self.sampleregions = self.state.sampleregions
-		self.env_adsr = self.state.env_adsr
-		self.env_points = self.state.env_points
-		self.env_points_vars = self.state.env_points_vars
-		self.env_blocks = self.state.env_blocks
-		self.filter = self.state.filter
-		self.named_filter = self.state.named_filter
-		self.eq = self.state.eq
-		self.named_eq = self.state.named_eq
-		self.lfos = self.state.lfos
-		self.waves = self.state.waves
-		self.harmonics = self.state.harmonics
-		self.wavetables = self.state.wavetables
-		self.filerefs = self.state.filerefs
-		self.sampleparts = self.state.sampleparts
-		self.oscs = self.state.oscs
-		self.timing = self.state.timing
-		self.chord = self.state.chord
-		self.arrays = self.state.arrays
-		self.midi = self.state.midi
-		self.preset = self.state.preset
-		self.audios = self.state.audios
-		self.modulations = self.state.modulations
-
-	def clear_prog_keep(self, prenum):
-		old_poly = self.poly
-		old_bytesdata = self.bytesdata
-		old_regions = self.regions
-		old_sampleregions = self.sampleregions
-		old_env_adsr = self.env_adsr
-		old_env_points = self.env_points
-		old_env_points_vars = self.env_points_vars
-		old_env_blocks = self.env_blocks
-		old_filter = self.filter
-		old_named_filter = self.named_filter
-		old_eq = self.eq
-		old_named_eq = self.named_eq
-		old_lfos = self.lfos
-		old_waves = self.waves
-		old_harmonics = self.harmonics
-		old_wavetables = self.wavetables
-		old_filerefs = self.filerefs
-		old_sampleparts = self.sampleparts
-		old_oscs = self.oscs
-		old_timing = self.timing
-		old_chord = self.chord
-		old_arrays = self.arrays
-		old_midi = self.midi
-		old_preset = self.preset
-		old_audios = self.audios
-		old_modulations = self.modulations
-
-		self.current_program = prenum
-		self.programs = {prenum: plugstate.cvpj_plugin_state()}
-		self.state = self.programs[prenum]
-
-		self.params = self.state.params
-		self.datavals = self.state.datavals
-		self.poly = self.state.poly = old_poly
-		self.bytesdata = self.state.bytesdata = old_bytesdata
-		self.regions = self.state.regions = old_regions
-		self.sampleregions = self.state.sampleregions = old_sampleregions
-		self.env_adsr = self.state.env_adsr = old_env_adsr
-		self.env_points = self.state.env_points = old_env_points
-		self.env_points_vars = self.state.env_points_vars = old_env_points_vars
-		self.env_blocks = self.state.env_blocks = old_env_blocks
-		self.filter = self.state.filter = old_filter
-		self.named_filter = self.state.named_filter = old_named_filter
-		self.eq = self.state.eq = old_eq
-		self.named_eq = self.state.named_eq = old_named_eq
-		self.lfos = self.state.lfos = old_lfos
-		self.waves = self.state.waves = old_waves
-		self.audios = self.state.audios = old_audios
-		self.harmonics = self.state.harmonics = old_harmonics
-		self.wavetables = self.state.wavetables = old_wavetables
-		self.filerefs = self.state.filerefs = old_filerefs
-		self.sampleparts = self.state.sampleparts = old_sampleparts
-		self.oscs = self.state.oscs = old_oscs
-		self.timing = self.state.timing = old_timing
-		self.chord = self.state.chord = old_chord
-		self.arrays = self.state.arrays = old_arrays
-		self.midi = self.state.midi = old_midi
-		self.preset = self.state.preset = old_preset
-		self.modulations = self.state.modulations = old_modulations
-
-	def move_prog(self, prenum):
-		self.programs[prenum] = self.state = self.programs.pop(self.current_program)
-		self.current_program = prenum
-
 	def type_set(self, i_category, i_type, i_subtype):
 		self.type.set(i_category, i_type, i_subtype)
 
@@ -273,24 +237,17 @@ class cvpj_plugin:
 
 	def replace_hard(self, i_category, i_type, i_subtype):
 		self.type.set(i_category, i_type, i_subtype)
-		self.programs = {0: plugstate.cvpj_plugin_state()}
-		self.set_program(0)
-		self.program_used = False
+		self.program__reset()
 		self.external_info = cvpj_plugin_external()
 		self.data = {}
 
 	def replace_keepprog(self, i_category, i_type, i_subtype):
 		self.type.set(i_category, i_type, i_subtype)
-		self.programs = {self.current_program: plugstate.cvpj_plugin_state()}
-		self.clear_prog_keep(self.current_program)
-		self.program_used = False
 		self.data = {}
 
 	def replace(self, i_category, i_type, i_subtype):
 		self.type.set(i_category, i_type, i_subtype)
-		self.programs = {0: plugstate.cvpj_plugin_state()}
-		self.clear_prog_keep(0)
-		self.program_used = False
+		self.program__reset()
 		self.data = {}
 
 	def check_match(self, i_category, i_type, i_subtype):

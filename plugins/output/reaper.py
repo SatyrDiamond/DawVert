@@ -76,6 +76,9 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 				rpp_env.act['bypass'] = 1
 				rpp_env.arm.set(1)
 				
+				if not autodata.persist:
+					rpp_env.points.append([0, autodata.defualt_val, 0])
+
 				for n, p in enumerate(autodata.pl_points):
 					poolid = len(rpp_project.pooledenvs)+1
 					pooledenv = rpp_project.add_pooledenv()
@@ -85,7 +88,7 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					for pn, x in enumerate(p.data):
 						out = float(x.value)
 						if inverted: out = 1-out
-						if n==0 and pn==0: rpp_env.points.append([0, out])
+						#if n==0 and pn==0: rpp_env.points.append([0, out])
 						pooledenv.points.append([(x.pos_real*2), out, 5 if x.tension else 0, -x.tension])
 	
 					init_pooledenvinst = rpp_env.init_pooledenvinst()
@@ -94,8 +97,6 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					init_pooledenvinst['position'] = p.time.position_real
 					init_pooledenvinst['length'] = p.time.duration_real
 	
-					#print(init_pooledenvinst.values)
-
 		elif autodata.u_nopl_points:
 			autodata.nopl_points.remove_instant()
 			for x in autodata.nopl_points:
@@ -318,43 +319,6 @@ def cvpj_color_to_reaper_color_clip(i_color):
 	cvpj_trackcolor = bytes(i_color.getbgr_int())+b'\x01'
 	return int.from_bytes(cvpj_trackcolor, 'little')
 
-def midi_add_cmd(i_list, i_pos, i_cmd):
-	if i_pos not in i_list: i_list[i_pos] = []
-	i_list[i_pos].append(i_cmd)
-
-def convert_midi(rpp_source_obj,notelist, tempo, num, dem, midipl_obj):
-	i_list = {}
-	notelist.sort()
-	notelist.change_timings(960, False)
-
-	n_enddur = notelist.get_dur()
-	p_enddur = midipl_obj.time.duration*(960//4)
-
-	for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notelist.iter():
-		for t_key in t_keys:
-			cvmi_n_pos = int(t_pos)
-			cvmi_n_dur = int(t_dur)
-			cvmi_n_key = int(t_key)+60
-			cvmi_n_vol = xtramath.clamp(int(t_vol*127), 0, 127)
-			midi_add_cmd(i_list, cvmi_n_pos, ['note_on', cvmi_n_key, cvmi_n_vol])
-			midi_add_cmd(i_list, cvmi_n_pos+cvmi_n_dur, ['note_off', cvmi_n_key])
-
-	if p_enddur-n_enddur >= 0:
-		midi_add_cmd(i_list, p_enddur, ['end'])
-
-	i_list = dict(sorted(i_list.items(), key=lambda item: item[0]))
-
-	prevpos = 0
-	for i_list_e in i_list:
-		for midi_notedata in i_list[i_list_e]:
-			if midi_notedata[0] == 'note_on': 
-				rpp_source_obj.notes.append([False,i_list_e-prevpos, '90', hex(midi_notedata[1])[2:], hex(midi_notedata[2])[2:]])
-			if midi_notedata[0] == 'note_off': 
-				rpp_source_obj.notes.append([False,i_list_e-prevpos, '80', hex(midi_notedata[1])[2:], '00'])
-			if midi_notedata[0] == 'end': 
-				rpp_source_obj.notes.append([False,int(i_list_e-prevpos), 'b0', '7b', '00'])
-			prevpos = i_list_e
-	
 def file_source(rpp_source_obj, fileref_obj, filename):
 	rpp_source_obj.file.set(filename)
 	if fileref_obj.file.extension == 'mp3': rpp_source_obj.type = 'MP3'
@@ -552,10 +516,10 @@ class output_reaper(plugins.base):
 					etype = x[1]
 					posdir = int(x[0])-ppos
 					if etype == 'NOTE_ON':
-						rpp_source_obj.notes.append([False,	posdir, f'{(144+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
+						rpp_source_obj.notes.append([True, posdir, f'{(144+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
 						ppos = int(x[0])
 					if etype == 'NOTE_OFF':
-						rpp_source_obj.notes.append([False,	posdir, f'{(128+int(x[2])):x}', f'{(int(x[3])):x}', '00'])
+						rpp_source_obj.notes.append([True,	posdir, f'{(128+int(x[2])):x}', f'{(int(x[3])):x}', '00'])
 						ppos = int(x[0])
 
 				#convert_midi(rpp_source_obj,midipl_obj.notelist,reaper_tempo,'4','4',midipl_obj)
@@ -595,7 +559,7 @@ class output_reaper(plugins.base):
 				stretch_obj = sp_obj.stretch
 
 				rppart_audio_params = 0
-				rppart_audio_stretch = 0
+				rppart_audio_stretch = 9
 
 				if stretch_obj.algorithm == 'elastique_v3':
 					if stretch_obj.algorithm_mode == 'pro': rppart_audio_stretch = 9
@@ -619,6 +583,7 @@ class output_reaper(plugins.base):
 					stmode = stretch_obj.params['mode'] if 'mode' in stretch_obj.params else None
 					if stmode == 'hq': rppart_audio_params = 1
 					elif stmode == 'fast': rppart_audio_params = 2
+					rppart_audio_stretch = 0
 
 				if stretch_obj.algorithm == 'simple_windowing': rppart_audio_stretch = 2
 

@@ -11,6 +11,9 @@ import json
 import os
 import glob
 
+def tempo_calc(mul, seconds):
+	return ((seconds)/mul)*8
+
 class input_bandlab(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -30,7 +33,7 @@ class input_bandlab(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['projtype'] = 'r'
 		in_dict['fxtype'] = 'groupreturn'
-		in_dict['time_seconds'] = True
+		in_dict['time_seconds'] = False
 		in_dict['file_ext'] = ['blx']
 		in_dict['notes_midi'] = True
 		in_dict['placement_cut'] = True
@@ -101,11 +104,11 @@ class input_bandlab(plugins.base):
 				track_obj.plugin_autoplace(plugin_obj, fxid)
 
 			if blx_track.type == 'voice':
-				do_track_common(convproj_obj, track_obj, blx_track)
+				do_track_common(convproj_obj, track_obj, blx_track, tempomul)
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_audio()
-					placement_obj.time.position_real = blx_region.startPosition
-					placement_obj.time.duration_real = blx_region.endPosition-blx_region.startPosition
+					placement_obj.time.position = tempo_calc(tempomul, blx_region.startPosition)
+					placement_obj.time.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
 					if blx_region.name: placement_obj.visual.name = blx_region.name
 
 					reverse = blx_region.playbackRate<0
@@ -125,7 +128,7 @@ class input_bandlab(plugins.base):
 					placement_obj.fade_out.set_dur(blx_region.fadeOut, 'seconds')
 
 			else:
-				do_track_common(convproj_obj, track_obj, blx_track)
+				do_track_common(convproj_obj, track_obj, blx_track, tempomul)
 				if blx_track.type == 'creators-kit':
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					track_obj.plugslots.set_synth(pluginid)
@@ -150,8 +153,8 @@ class input_bandlab(plugins.base):
 
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_midi()
-					placement_obj.time.position_real = blx_region.startPosition
-					placement_obj.time.duration_real = blx_region.endPosition-blx_region.startPosition
+					placement_obj.time.position = tempo_calc(tempomul, blx_region.startPosition)
+					placement_obj.time.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
 					if blx_region.name: placement_obj.visual.name = blx_region.name
 					midipath = os.path.join(dawvert_intent.input_folder, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
 					do_loop(placement_obj.time, blx_region, tempomul, 1)
@@ -161,25 +164,24 @@ def add_sample(convproj_obj, dawvert_intent, sampleid, sampledurs):
 	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', sampleid+'.*')
 	for file in glob.glob(filename):
 		sampleref_obj = convproj_obj.sampleref__add(sampleid, file, None)
-		sampleref_obj.convert(['wav'], dawvert_intent.path_samples['converted'])
 		sampledurs[sampleid] = sampleref_obj.dur_sec
 		break
 
 def do_loop(time_obj, blx_region, tempomul, speed):
-	loopLength = (blx_region.loopLength/tempomul)*8
-	sampleOffset = (blx_region.sampleOffset/tempomul)*8
-	duration = ((blx_region.startPosition-blx_region.endPosition)/tempomul)*8
+	loopLength = tempo_calc(tempomul, blx_region.loopLength)
+	sampleOffset = tempo_calc(tempomul, blx_region.sampleOffset)
+	duration = tempo_calc(tempomul, blx_region.startPosition-blx_region.endPosition)
 
 	if loopLength == 0:
 		time_obj.set_offset(sampleOffset)
 	else:
 		time_obj.set_loop_data(sampleOffset, sampleOffset, loopLength)
 
-def do_automation(convproj_obj, blx_auto, autoloc):
+def do_automation(convproj_obj, blx_auto, autoloc, tempomul):
 	for p in blx_auto.points:
-		convproj_obj.automation.add_autopoint_real(autoloc, 'float', p.position, p.value, 'normal')
+		convproj_obj.automation.add_autopoint(autoloc, 'float', p.position, p.value, 'normal')
 
-def do_track_common(convproj_obj, track_obj, blx_track):
+def do_track_common(convproj_obj, track_obj, blx_track, tempomul):
 	track_obj.visual.name = blx_track.name
 	track_obj.visual.color.set_hex(blx_track.color)
 	track_obj.params.add('enabled', not blx_track.isMuted, 'bool')
@@ -190,11 +192,11 @@ def do_track_common(convproj_obj, track_obj, blx_track):
 	for blx_auxSend in blx_track.auxSends:
 		sendautoid = blx_track.id+'__'+'return__'+str(blx_auxSend.id)
 		track_obj.sends.add(blx_auxSend.id, sendautoid, blx_auxSend.sendLevel)
-		do_automation(convproj_obj, blx_auxSend.automation, ['send', sendautoid, 'amount'])
+		do_automation(convproj_obj, blx_auxSend.automation, ['send', sendautoid, 'amount'], tempomul)
 
 	if blx_track.automation:
-		do_automation(convproj_obj, blx_track.automation.pan, ['track', blx_track.id, 'pan'])
-		do_automation(convproj_obj, blx_track.automation.volume, ['track', blx_track.id, 'vol'])
+		do_automation(convproj_obj, blx_track.automation.pan, ['track', blx_track.id, 'pan'], tempomul)
+		do_automation(convproj_obj, blx_track.automation.volume, ['track', blx_track.id, 'vol'], tempomul)
 		
 	for n, blx_effect in enumerate(blx_track.effects):
 		fxid = blx_track.id+'_'+str(n)
@@ -212,7 +214,8 @@ def do_track_common(convproj_obj, track_obj, blx_track):
 				paramv = plugparams[param_id] if param_id in plugparams else dset_param.defv
 				if not dset_param.noauto:
 					plugin_obj.params.add(param_id, paramv, 'float')
-					if n in blx_effect.automation: do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n])
+					if n in blx_effect.automation: 
+						do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n], tempomul)
 				else:
 					plugin_obj.datavals.add(param_id, paramv)
 
@@ -221,7 +224,7 @@ def do_track_common(convproj_obj, track_obj, blx_track):
 				if not isinstance(v, str) and isinstance(v, dict):
 					plugparams.add(n, v, 'float')
 					if n in blx_effect.automation:
-						do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n])
+						do_automation(convproj_obj, blx_effect.automation[n], ['plugin', fxid, n], tempomul)
 				else:
 					plugin_obj.datavals.add(n, v)
 

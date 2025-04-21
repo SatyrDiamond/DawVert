@@ -148,20 +148,20 @@ class vst2_program:
 
 	def parse(self, byr_stream, size):
 		if size:
-			with byr_stream.isolate_size(size, False) as bye_stream: 
+			with byr_stream.isolate_size(size, True) as bye_stream: 
 				ccnk_type = bye_stream.raw(4)
 				ccnk_size = bye_stream.uint32_b()
 				if ccnk_type == b'FPCh': self.set_fxChunkSet(bye_stream)
-				if ccnk_type == b'FxCk': self.set_fxProgram(bye_stream)
-				if ccnk_type == b'FxBk': self.set_fxBank(bye_stream)
-				if ccnk_type == b'FBCh': self.set_fxChunkSet_bank(bye_stream)
+				elif ccnk_type == b'FxCk': self.set_fxProgram(bye_stream)
+				elif ccnk_type == b'FxBk': self.set_fxBank(bye_stream)
+				elif ccnk_type == b'FBCh': self.set_fxChunkSet_bank(bye_stream)
 		else:
 			ccnk_type = byr_stream.raw(4)
 			ccnk_size = byr_stream.uint32_b()
 			if ccnk_type == b'FPCh': self.set_fxChunkSet(byr_stream)
-			if ccnk_type == b'FxCk': self.set_fxProgram(byr_stream)
-			if ccnk_type == b'FxBk': self.set_fxBank(byr_stream)
-			if ccnk_type == b'FBCh': self.set_fxChunkSet_bank(byr_stream)
+			elif ccnk_type == b'FxCk': self.set_fxProgram(byr_stream)
+			elif ccnk_type == b'FxBk': self.set_fxBank(byr_stream)
+			elif ccnk_type == b'FBCh': self.set_fxChunkSet_bank(byr_stream)
 
 	def write(self):
 		ccnk_type = b'    '

@@ -88,6 +88,7 @@ class output_soundation(plugins.base):
 		return 'r'
 	
 	def get_prop(self, in_dict): 
+		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg']
 		in_dict['file_ext'] = 'sngz'
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = []

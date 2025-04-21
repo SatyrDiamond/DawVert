@@ -65,7 +65,6 @@ class juce_plugin:
 					extmanu_obj.vst2__import_presetdata('raw', chunkdata, None)
 
 				if self.program_num is not None:
-					plugin_obj.program_used = True
 					plugin_obj.current_program = self.program_num
 
 			if self.plugtype == 'vst3':

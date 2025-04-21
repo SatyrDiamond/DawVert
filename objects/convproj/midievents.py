@@ -36,6 +36,7 @@ EVENTID__TEXT = 103
 EVENTID__MARKER = 104
 EVENTID__LYRIC = 105
 EVENTID__SEQSPEC = 106
+EVENTID__TRACKEND = 255
 
 state_dtype = np.dtype([
 	('pos', np.uint64),
@@ -124,6 +125,8 @@ class midievents:
 				elif etype == EVENTID__SEQSPEC:
 					state[1] = "SEQSPEC"
 					state[3] = x['uhival']
+				elif etype == EVENTID__TRACKEND:
+					state[1] = "END"
 				else:
 					state[1] = "UNKNOWN"
 
@@ -363,10 +366,20 @@ class midievents:
 		cursor['chan'] = 255
 		self.seq_spec[seqspecnum] = data
 
+	def add_end_track(self, curpos):
+		self.cursor.add()
+		cursor = self.cursor
+		cursor['pos'] = curpos
+		cursor['type'] = EVENTID__TRACKEND
+		cursor['chan'] = 255
+
 	def sort(self):
 		is_sorted = np.all(np.diff(self.data.get_used()['pos'].astype(np.int64)) >= 0)
 		if not is_sorted:
 			self.data.sort(['pos'])
+
+	def get_dur(self):
+		return max(self.data.get_used()['pos'].astype(np.int64))
 
 	def clean(self):
 		self.data.clean()

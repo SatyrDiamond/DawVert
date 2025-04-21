@@ -217,7 +217,6 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 				if Buffer:
 					extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 					if 10 in binflags: 
-						plugin_obj.clear_prog_keep(prognum)
 						extmanu_obj.vst2__replace_data('id', vst_UniqueId, Buffer, 'win', False)
 					else:
 						extmanu_obj.vst2__setup_params('id', vst_UniqueId, vst_NumberOfParameters, 'win', True)

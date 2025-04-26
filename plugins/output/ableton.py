@@ -968,7 +968,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				als_device = als_track.DeviceChain.add_device('MultiSampler')
 				spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
 
-				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+				for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					als_samplepart = spd.value[spn] = ableton_MultiSamplePart(None)
 					als_samplepart.Selection = True
@@ -1016,7 +1016,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				als_device = als_track.DeviceChain.add_device('MultiSampler')
 				spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
 
-				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+				for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					als_samplepart = spd.value[spn] = ableton_MultiSamplePart(None)
 					als_samplepart.Selection = True

@@ -45,7 +45,7 @@ class input_bandlab(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4, True)
 
 		project_obj = proj_bandlab.bandlab_project()
 

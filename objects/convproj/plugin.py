@@ -305,6 +305,9 @@ class cvpj_plugin:
 	def rawdata_get_b64(self, i_name): return self.state.rawdata_get_b64(i_name)
 
 	# -------------------------------------------------- sampleregions
+	def sampleregion_getall(self):
+		return self.state.sampleregion_getall()
+		
 	def sampleregion_add(self, i_min, i_max, i_middle, i_data, **kwargs):
 		return self.state.sampleregion_add(i_min, i_max, i_middle, i_data, **kwargs)
 		
@@ -406,6 +409,9 @@ class cvpj_plugin:
 		return fileref_obj.get_path(os_type, nofile) if ref_found else ''
 
 	# -------------------------------------------------- fileref
+	def fileref__set(self, name, convproj_id): 
+		return self.state.fileref__set(name, convproj_id)
+
 	def fileref__get(self, fileref_name, convproj_obj): 
 		return self.state.fileref__get(fileref_name, convproj_obj)
 

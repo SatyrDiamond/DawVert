@@ -43,6 +43,7 @@ class output_coolbeat(plugins.base):
 		in_dict['placement_loop'] = ['loop']
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['fxtype'] = 'groupreturn'
+		in_dict['plugin_included'] = ['universal:soundfont2']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_mobile import viscentsoft_coolbeat
@@ -67,6 +68,26 @@ class output_coolbeat(plugins.base):
 				track_obj.params.add('pan', (track.pan-0.5)*2, 'float')
 				track_obj.params.add('enabled', not track.muteState, 'bool')
 				track_obj.params.add('solo', track.solo, 'bool')
+
+				if tracktype == 1:
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
+					plugin_obj.role = 'synth'
+					for cn, channel in enumerate(track.channels):
+						sampleid = do_sample(convproj_obj, channel.soundPack, channel.fileName, dawvert_intent)
+						sp_obj = plugin_obj.sampledrum_add(cn, None)
+						sp_obj.sampleref = sampleid
+						sp_obj.vol = channel.volume
+						sp_obj.pan = (channel.pan-0.5)*2
+					track_obj.plugslots.set_synth(pluginid)
+
+				if tracktype == 3:
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'soundfont2', None)
+					plugin_obj.role = 'synth'
+					track_obj.plugslots.set_synth(pluginid)
+					fileref_obj = convproj_obj.fileref__add(trackid, track.filePath, None)
+					fileref_obj.search_local(dawvert_intent.input_folder)
+					plugin_obj.fileref__set('file', trackid)
+
 				for section in track.sections:
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.time.set_posdur(section.startTick, section.length)
@@ -93,8 +114,9 @@ class output_coolbeat(plugins.base):
 					placement_obj.time.set_posdur(section.startTick, section.length)
 
 					sp_obj = placement_obj.sample
-					sp_obj.stretch.set_rate_tempo(project_obj.tempo, 1, True)
+					sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
 					sp_obj.stretch.preserve_pitch = True
+					sp_obj.stretch.uses_tempo = True
 					sp_obj.sampleref = sampleid
 
 		#print('d')

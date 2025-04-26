@@ -270,7 +270,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 		#print(fileref_obj.get_path('win', False))
 
-		plugin_obj.filerefs['file'] = flsf_filename
+		plugin_obj.fileref__set('file', flsf_filename)
 
 		plugin_obj.env_asdr_add('vol', 0, asdflfo_att, 0, asdflfo_dec, asdflfo_sus, asdflfo_rel, asdflfo_amt)
 		plugin_obj.midi.from_sf2(flsf_bank, flsf_patch)

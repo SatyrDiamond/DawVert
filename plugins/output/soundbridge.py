@@ -723,7 +723,7 @@ class output_soundbridge(plugins.base):
 
 							is_sampler = True
 							ordernum = 0
-							for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+							for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 								key_l, key_h, key_r, samplerefid, extradata = sampleregion
 								sp_obj = plugin_obj.samplepart_get(samplerefid)
 
@@ -773,7 +773,7 @@ class output_soundbridge(plugins.base):
 
 							is_sampler = True
 							ordernum = 0
-							for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+							for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 								key_l, key_h, key_r, samplerefid, extradata = sampleregion
 								sp_obj = plugin_obj.samplepart_get(samplerefid)
 

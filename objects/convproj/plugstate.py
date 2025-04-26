@@ -222,6 +222,9 @@ class cvpj_plugin_state:
 		return base64.b64encode(self.bytesdata[i_name] if i_name in self.bytesdata else b'').decode('ascii')
 
 	# -------------------------------------------------- sampleregions
+	def sampleregion_getall(self):
+		return self.sampleregions
+
 	def sampleregion_add(self, i_min, i_max, i_middle, i_data, **kwargs):
 		samplepartid = kwargs['samplepartid'] if 'samplepartid' in kwargs else 'multi_'+randbytes(8).hex()
 		samplepart_obj = self.samplepart_add(samplepartid)
@@ -420,7 +423,10 @@ class cvpj_plugin_state:
 			
 	# -------------------------------------------------- fileref
 
-	def fileref__get(self, fileref_name, convproj_obj): 
+	def fileref__set(self, name, convproj_id):
+		self.filerefs[name] = convproj_id
+
+	def fileref__get(self, fileref_name, convproj_obj):
 		if fileref_name in self.filerefs:
 			fileref_id = self.filerefs[fileref_name]
 			return convproj_obj.fileref__get(fileref_id)

@@ -220,7 +220,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				if multi_mode == 'random': programdata.playMode = 2
 				programdata.mono = plugin_obj.poly.mono
 
-				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+				for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					sp_obj = plugin_obj.samplepart_get(samplerefid)
 					soundlayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
@@ -252,7 +252,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				sampler_obj.program.presetDirty = True
 				programdata = sampler_obj.set_microsampler()
 				useddrums = []
-				for spn, sampleregion in enumerate(plugin_obj.sampleregions):
+				for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					drumkey = key_r+60
 					if drumkey not in useddrums:

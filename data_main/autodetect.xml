@@ -91,7 +91,7 @@
 		<archived type="zip" file="project.xml"/>
 	</plugin>
 
-	<plugin pluginset="main" name="fl_mobile">
+	<plugin pluginset="mobile" name="fl_mobile">
 		<file fileext=".flm"/>
 		<archived type="zip" file="*.flm" optional="1"/>
 		<bytes_header data="31304c46"/>
@@ -108,7 +108,7 @@
 		<xml root_name="lmms-project"/>
 	</plugin>
 
-	<plugin pluginset="2010s" name="nanostudio_v1">
+	<plugin pluginset="mobile" name="nanostudio_v1">
 		<folder fileext=".prj" files="Package.sng;Package.prj"/>
 	</plugin>
 
@@ -157,7 +157,7 @@
 		<file fileext=".zmm"/>
 	</plugin>
 
-	<plugin pluginset="2010s" name="caustic">
+	<plugin pluginset="mobile" name="caustic">
 		<file fileext=".caustic"/>
 		<bytes_header data="5241434b"/>
 	</plugin>

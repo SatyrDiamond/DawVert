@@ -23,6 +23,20 @@ def do_sample(convproj_obj, soundPack, filename, dawvert_intent):
 		convproj_obj.sampleref__add(sampleid, wave_path, None)
 	return sampleid
 
+def calc_pan(i): return (i-0.5)*2
+
+def do_auto(convproj_obj, autoloc, imin, imax, sections, defval):
+	for section in sections:
+		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+		autopl_obj.time.position = section.startTick
+		autopl_obj.time.duration = section.length
+		autopoints_obj = autopl_obj.data
+		for node in section.nodes: 
+			autopoints_obj.points__add_normal(node.position, xtramath.between_from_one(imin, imax, node.value), 0, None)
+
+	auto_obj = convproj_obj.automation.get_opt(autoloc)
+	if auto_obj is not None: auto_obj.defualt_val = defval
+
 class output_coolbeat(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -58,6 +72,18 @@ class output_coolbeat(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
+		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
+		convproj_obj.track_master.params.add('vol', project_obj.masterVolume, 'float')
+		convproj_obj.track_master.params.add('pan', calc_pan(project_obj.masterPan), 'float')
+
+		for an, masterAuto in enumerate(project_obj.masterAutos):
+			if an == 0:
+				do_auto(convproj_obj, ['main', 'bpm'], 50, 300, masterAuto.sections, project_obj.tempo)
+			if an == 1:
+				do_auto(convproj_obj, ['master', 'vol'], 0, 1, masterAuto.sections, project_obj.masterVolume)
+			if an == 2:
+				do_auto(convproj_obj, ['master', 'pan'], -1, 1, masterAuto.sections, calc_pan(project_obj.masterPan))
+
 		for n, track in enumerate(project_obj.tracks):
 			trackid = 'track_'+str(n)
 			tracktype = track.type
@@ -65,7 +91,7 @@ class output_coolbeat(plugins.base):
 				track_obj = convproj_obj.track__add(trackid, 'instrument', 1, False)
 				track_obj.visual.name = track.label
 				track_obj.params.add('vol', track.volume, 'float')
-				track_obj.params.add('pan', (track.pan-0.5)*2, 'float')
+				track_obj.params.add('pan', calc_pan(track.pan), 'float')
 				track_obj.params.add('enabled', not track.muteState, 'bool')
 				track_obj.params.add('solo', track.solo, 'bool')
 
@@ -77,7 +103,7 @@ class output_coolbeat(plugins.base):
 						sp_obj = plugin_obj.sampledrum_add(cn, None)
 						sp_obj.sampleref = sampleid
 						sp_obj.vol = channel.volume
-						sp_obj.pan = (channel.pan-0.5)*2
+						sp_obj.pan = calc_pan(channel.pan)
 					track_obj.plugslots.set_synth(pluginid)
 
 				if tracktype == 3:
@@ -105,7 +131,7 @@ class output_coolbeat(plugins.base):
 				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
 				track_obj.visual.name = track.label
 				track_obj.params.add('vol', track.volume, 'float')
-				track_obj.params.add('pan', (track.pan-0.5)*2, 'float')
+				track_obj.params.add('pan', calc_pan(track.pan), 'float')
 				track_obj.params.add('enabled', not track.muteState, 'bool')
 				track_obj.params.add('solo', track.solo, 'bool')
 				sampleid = do_sample(convproj_obj, track.soundPack, track.fileName, dawvert_intent)
@@ -119,4 +145,10 @@ class output_coolbeat(plugins.base):
 					sp_obj.stretch.uses_tempo = True
 					sp_obj.sampleref = sampleid
 
-		#print('d')
+			for an, ta in enumerate(track.autos):
+				if an == 0:
+					do_auto(convproj_obj, ['track', trackid, 'vol'], 0, 1, ta.sections, track.volume)
+				if an == 1:
+					do_auto(convproj_obj, ['track', trackid, 'pan'], -1, 1, ta.sections, calc_pan(track.pan))
+
+		convproj_obj.automation.set_persist_all(False)

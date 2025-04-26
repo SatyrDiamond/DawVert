@@ -431,8 +431,8 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 				convproj_obj.track_data[oi] = track_obj
 				convproj_obj.track_order.append(oi)
 
-				convproj_obj.automation.move(['group',i,'vol'], ['track',oi,'vol'])
-				convproj_obj.automation.move(['group',i,'pan'], ['track',oi,'pan'])
+				convproj_obj.automation.move(['track',i,'vol'], ['track',oi,'vol'])
+				convproj_obj.automation.move(['track',i,'pan'], ['track',oi,'pan'])
 			num += 1
 
 		for returnid, return_obj in convproj_obj.track_master.returns.items(): 

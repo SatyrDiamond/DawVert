@@ -48,8 +48,6 @@ class song_compat:
 		if self.currenttime == None: self.currenttime = in_dawinfo.time_seconds
 		if 'time_seconds' in self.finished_processes: self.currenttime = out_dawinfo.time_seconds
 
-		self.process_part('midi_notes', midi_notes,				convproj_obj, cvpj_type, in_dawinfo.notes_midi, out_dawinfo.notes_midi, out_type, dawvert_intent)
-
 		self.process_part('fxchange', fxchange,						convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
 		self.process_part('unhybrid', unhybrid,					   convproj_obj, cvpj_type, in_dawinfo.track_hybrid, out_dawinfo.track_hybrid, out_type, dawvert_intent)
@@ -63,6 +61,10 @@ class song_compat:
 			self.process_part('removecut', removecut,				 convproj_obj, cvpj_type, in_dawinfo.placement_cut, out_dawinfo.placement_cut, out_type, dawvert_intent)
 			self.process_part('track_pl_add', track_pl_add,			   convproj_obj, cvpj_type, in_dawinfo.track_nopl, out_dawinfo.track_nopl, out_type, dawvert_intent)
 			self.process_part('loops_add', loops_add,				 convproj_obj, cvpj_type, in_dawinfo.placement_loop, out_dawinfo.placement_loop, out_type, dawvert_intent)
+
+		self.process_part('midi_notes', midi_notes,				convproj_obj, cvpj_type, in_dawinfo.notes_midi, out_dawinfo.notes_midi, out_type, dawvert_intent)
+
+		if self.currenttime == False:
 			self.process_part('track_pl_del', track_pl_del,			   convproj_obj, cvpj_type, in_dawinfo.track_nopl, out_dawinfo.track_nopl, out_type, dawvert_intent)
 
 		if cvpj_type in ['r']:

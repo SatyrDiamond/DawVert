@@ -36,8 +36,10 @@ class input_ex_basic_pitch(plugins.base):
 
 		track_obj, plugin_obj = convproj_obj.track__addspec__midi('basicpitch', 'basicpitch', 0, 0, False, 1, False)
 
+		cvpj_notelist = track_obj.placements.notelist
+
 		for note_event in note_events:
-			track_obj.placements.notelist.add_r(
+			cvpj_notelist.add_r(
 				float(note_event[0])*8, 
 				float(note_event[1]-note_event[0])*8, 
 				int(note_event[2]-60), 
@@ -46,6 +48,4 @@ class input_ex_basic_pitch(plugins.base):
 
 			if not all(item == 0 for item in note_event[4]):
 				for num, point in enumerate(note_event[4]):
-					autopoint_obj = track_obj.placements.notelist.last_add_auto('pitch')
-					autopoint_obj.pos = num*0.1
-					autopoint_obj.value = (point-1)/4
+					cvpj_notelist.last_add_auto('pitch', num*0.1, (point-1)/4)

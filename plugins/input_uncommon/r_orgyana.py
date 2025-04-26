@@ -89,8 +89,18 @@ class input_orgyana(plugins.base):
 				endnote = None
 				notedur = 0
 				org_notelist = []
+
+				cvpj_notelist = track_obj.placements.notelist
+
+				pan_autoid = ['track', idval, 'pan']
+
+				last_pan_pos = 0
+				last_pan_val = 0
+
 				for pos, orgnote in posnotes.items():
 					note, dur, vol, pan = orgnote
+					pan = (pan-6)/6
+
 					if endnote != None: 
 						if pos >= endnote: endnote = None
 					if orgnote[1] != 1:
@@ -99,7 +109,20 @@ class input_orgyana(plugins.base):
 					if endnote != None: isinsidenote = False if endnote-pos == notedur else True
 					else: isinsidenote = False
 					if not isinsidenote: 
-						track_obj.placements.notelist.add_r(pos, dur, note-24 if tracknum > 7 else note-36, vol/254, {'pan': (pan-6)/6})
+						cvpj_notelist.add_r(pos, dur, note-24 if tracknum > 7 else note-36, vol/254, None)
+						notepos = pos
+						if pan or last_pan_val:
+							convproj_obj.automation.add_autopoint(pan_autoid, 'float', pos, pan, 'instant')
+						last_pan_pos = pos
+						last_pan_val = pan
+					else:
+						if pan!=last_pan_val:
+							if last_pan_pos>1:
+								insidepos = pos-notepos
+								convproj_obj.automation.add_autopoint(pan_autoid, 'float', pos-0.25, last_pan_val, 'normal')
+								convproj_obj.automation.add_autopoint(pan_autoid, 'float', pos+0.25, pan, 'normal')
+						last_pan_pos = pos
+						last_pan_val = pan
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')

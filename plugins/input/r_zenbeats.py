@@ -610,15 +610,16 @@ class input_zenbeats(plugins.base):
 						placement_obj.muted = not zb_pattern.active
 						placement_obj.locked = zb_pattern.locked
 
+						cvpj_notelist = placement_obj.notelist
+
 						for zb_note in zb_pattern.notes:
-							pan = (zb_note.pan_linear-0.5)*2
 							note_dur = max(zb_note.end-zb_note.start, 0)
 							extradata = {}
-							if pan: extradata['pan'] = pan
 							if zb_note.probability != 1: extradata['probability'] = zb_note.probability
-							if zb_note.pitch_offset != 0: extradata['finepitch'] = zb_note.pitch_offset
-							placement_obj.notelist.add_r(zb_note.start, note_dur, zb_note.semitone-60, zb_note.velocity/127, extradata if extradata else None)
-	
+							cvpj_notelist.add_r(zb_note.start, note_dur, zb_note.semitone-60, zb_note.velocity/127, extradata if extradata else None)
+							cvpj_notelist.last_add_pan((zb_note.pan_linear-0.5)*2)
+							cvpj_notelist.last_add_finepitch(zb_note.pitch_offset)
+
 				if zb_track.type == 2:
 					track_obj = convproj_obj.track__add(zb_track.uid, 'audio', 1, False)
 					do_rack(convproj_obj, project_obj, track_obj, zb_track, ['track', zb_track.uid], dawvert_intent)

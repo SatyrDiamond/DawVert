@@ -138,11 +138,12 @@ class input_hydrogen(plugins.base):
 			nle_obj.visual.comment = pattern.info
 			nle_obj.visual.color.set_int(color_pattern.getcolornum(n))
 			nle_obj.timesig_auto.add_point(0, [4, pattern.denominator])
+			cvpj_notelist = nle_obj.notelist
 			for note in pattern.noteList:
 				extra = {}
-				if note.pan: extra['pan'] = note.pan
 				if note.probability: extra['probability'] = note.probability
-				nle_obj.notelist.add_m(str(note.instrument), note.position, 12, 0, note.velocity, extra if extra else None)
+				cvpj_notelist.add_m(str(note.instrument), note.position, 12, 0, note.velocity, extra if extra else None)
+				cvpj_notelist.last_add_pan(note.pan)
 
 		maxdup = min([len(x) for x in project_obj.patternSequence]) if project_obj.patternSequence else 0
 

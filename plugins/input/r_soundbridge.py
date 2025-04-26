@@ -53,22 +53,22 @@ def add_auto(defaultValue, valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 		autopl_obj.time.position = block.position
 		autopl_obj.time.duration = block.framesCount
+		autopl_obj.time.set_offset(block.positionStart)
 		autopl_obj.visual.name = block.name
 		if 'BlockColor' in block.metadata: autopl_obj.visual.color.set_hex(block.metadata['BlockColor'])
+
+		autopoints_obj = autopl_obj.data
 		for point in parse_auto(block.blockData):
-			autopoint_obj = autopl_obj.data.add_point()
-			autopoint_obj.pos = point['pos']
-			if valtype == 'vol':
-				autopoint_obj.value = calc_vol(point['val'])
-			elif valtype == 'invert':
-				autopoint_obj.value = int(point['val']<0.5)
-			else:
-				autopoint_obj.value = (point['val']+add)*mul
-			try:
-				autopoint_obj.tension = math.log10(point['unk1'])
-			except:
-				pass
-			autopoint_obj.type = 'normal'
+			a_pos = point['pos']
+
+			if valtype == 'vol': a_value = calc_vol(point['val'])
+			elif valtype == 'invert': a_value = int(point['val']<0.5)
+			else: a_value = (point['val']+add)*mul
+
+			try: a_tension = math.log10(point['unk1'])
+			except: a_tension = 0
+
+			autopoints_obj.points__add_normal(a_pos, a_value, a_tension, None)
 
 	auto_obj = convproj_obj.automation.get_opt(autoloc)
 	if auto_obj is not None: 
@@ -380,7 +380,9 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 			placement_obj.visual.color.set_hex(trackcolor)
 			placement_obj.visual.name = block.name
 			placement_obj.muted = bool(block.muted)
-			for note in parse_notes(io.BytesIO(blockdata)): placement_obj.notelist.add_r(int(note['pos']), int(note['dur']), int(note['key'])-60, int(note['vol'])/127, None)
+			cvpj_notelist = placement_obj.notelist
+			for note in parse_notes(io.BytesIO(blockdata)):
+				cvpj_notelist.add_r(int(note['pos']), int(note['dur']), int(note['key'])-60, int(note['vol'])/127, None)
 			for block in block.automationBlocks:
 				valmul = 1
 				valadd = 0
@@ -398,9 +400,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 				autopoints_obj = placement_obj.add_autopoints(mpetype)
 				for a in parse_auto(block.blockData):
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = a['pos']-block.positionStart
-					autopoint_obj.value = (a['val']-valadd)*valmul
+					autopoints_obj.points__add_normal(a['pos']-block.positionStart, (a['val']-valadd)*valmul, 0, None)
 
 		if sb_track.midiInstrument:
 			midiinst = sb_track.midiInstrument
@@ -479,9 +479,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 					for autoblock in blockevent.automationBlocks:
 						autopoints_obj = placement_obj.add_autopoints('gain', pfreq, True)
 						for a in parse_auto(autoblock.blockData):
-							autopoint_obj = autopoints_obj.add_point()
-							autopoint_obj.pos = a['pos']-autoblock.positionStart
-							autopoint_obj.value = a['val']/2
+							autopoints_obj.points__add_normal(a['pos']-autoblock.positionStart, a['val']/2, 0, None)
 
 	if sb_track.type in [3,4]:
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
@@ -639,6 +637,8 @@ class input_soundbridge(plugins.base):
 		for x in sb_timeSignature.sections:
 			convproj_obj.timesig_auto.add_point(x.position, [x.timeSigNumerator, x.timeSigDenominator])
 
+
+
 		for x in sb_tempo.sections:
 			autopl_obj = convproj_obj.automation.add_pl_points(['main', 'bpm'], 'float')
 			autopl_obj.time.position = x.position
@@ -650,15 +650,12 @@ class input_soundbridge(plugins.base):
 				colorval = colorval[3:]
 				if len(colorval)==6: autopl_obj.visual.color.set_hex('#'+colorval)
 
-			autopoint_obj = autopl_obj.data.add_point()
-			autopoint_obj.pos = 0
-			autopoint_obj.value = x.startTempo
-			autopoint_obj.type = 'normal'
-		
-			autopoint_obj = autopl_obj.data.add_point()
-			autopoint_obj.pos = x.length-1
-			autopoint_obj.value = x.endTempo
-			autopoint_obj.type = 'normal'
+			autopoints_obj = autopl_obj.data
+			autopoints_obj.points__add_normal(0, x.startTempo, 0, None)
+			autopoints_obj.points__add_normal(x.length-1, x.endTempo, 0, None)
+
+		auto_obj = convproj_obj.automation.get_opt(['main', 'bpm'])
+		if auto_obj is not None: auto_obj.defualt_val = project_obj.tempo
 
 		projmeta = project_obj.metadata
 		if 'TransportLoop' in projmeta: convproj_obj.transport.loop_active = projmeta['TransportLoop'] == 'true'

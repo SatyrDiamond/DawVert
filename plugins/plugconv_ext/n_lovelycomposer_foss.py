@@ -53,16 +53,9 @@ class plugconv(plugins.base):
 					lfo_obj.time.set_hz(hzd)
 					autopoints_obj = plugin_obj.env_points_add('lc_fx', 1, True, 'float')
 
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0
-					autopoint_obj.value = 0.5
-					autopoint_obj.tension = 0.2
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0.5
-					autopoint_obj.value = 0
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 1
-					autopoint_obj.value = 0
+					autopoints_obj.points__add_normal(0, 0.5, 0.2, None)
+					autopoints_obj.points__add_normal(0.5, 0, 0, None)
+					autopoints_obj.points__add_normal(1, 0, 0, None)
 
 					modulation_obj = plugin_obj.modulation_add_native('lfo_1', 'osc_1_transpose')
 					modulation_obj.amount = 0.5
@@ -77,16 +70,9 @@ class plugconv(plugins.base):
 					lfo_obj.time.set_hz(8)
 					autopoints_obj = plugin_obj.env_points_add('lc_fx', 1, True, 'float')
 
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0
-					autopoint_obj.value = 0.5
-					autopoint_obj.tension = 0.2
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0.5
-					autopoint_obj.value = 1
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 1
-					autopoint_obj.value = 1
+					autopoints_obj.points__add_normal(0, 0.5, 0.2, None)
+					autopoints_obj.points__add_normal(0.5, 1, 0, None)
+					autopoints_obj.points__add_normal(1, 1, 0, None)
 
 					modulation_obj = plugin_obj.modulation_add_native('lfo_1', 'osc_1_transpose')
 					modulation_obj.amount = 0.5
@@ -101,20 +87,10 @@ class plugconv(plugins.base):
 					lfo_obj.time.set_hz(4)
 					autopoints_obj = plugin_obj.env_points_add('lc_fx', 1, True, 'float')
 
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0
-					autopoint_obj.value = 0.5
-					autopoint_obj.tension = 0.2
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0.5
-					autopoint_obj.value = 0
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0.5
-					autopoint_obj.value = 0.5
-					autopoint_obj.tension = 0.2
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 1
-					autopoint_obj.value = 0
+					autopoints_obj.points__add_normal(0, 0.5, 0.2, None)
+					autopoints_obj.points__add_normal(0.5, 0, 0, None)
+					autopoints_obj.points__add_normal(0.5, 0.5, 0.2, None)
+					autopoints_obj.points__add_normal(1, 0, 0, None)
 
 					modulation_obj = plugin_obj.modulation_add_native('lfo_1', 'osc_1_transpose')
 					modulation_obj.amount = 0.5
@@ -129,24 +105,12 @@ class plugconv(plugins.base):
 					lfo_obj.time.set_hz(12)
 					autopoints_obj = plugin_obj.env_points_add('lc_fx', 1, True, 'float')
 
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 0/3
-					autopoint_obj.value = 1
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 1/3
-					autopoint_obj.value = 1
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 1/3
-					autopoint_obj.value = 0.5
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 2/3
-					autopoint_obj.value = 0.5
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 2/3
-					autopoint_obj.value = 0
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = 3/3
-					autopoint_obj.value = 0
+					autopoints_obj.points__add_normal(0/3, 1, 0, None)
+					autopoints_obj.points__add_normal(1/3, 1, 0, None)
+					autopoints_obj.points__add_normal(1/3, 0.5, 0, None)
+					autopoints_obj.points__add_normal(2/3, 0.5, 0, None)
+					autopoints_obj.points__add_normal(2/3, 0, 0, None)
+					autopoints_obj.points__add_normal(3/3, 0, 0, None)
 
 					modulation_obj = plugin_obj.modulation_add_native('lfo_1', 'osc_1_transpose')
 					modulation_obj.amount = 0.5

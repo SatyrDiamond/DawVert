@@ -321,16 +321,14 @@ def do_track(convproj_obj, wf_track, track_obj):
 	
 		placement_obj.group = str(midiclip.groupID) if midiclip.groupID!=-1 else None
 
+		cvpj_notelist = placement_obj.notelist
 		for note in midiclip.sequence.notes:
-			placement_obj.notelist.add_r(note.pos*4, note.dur*4, note.key-60, note.vel/100, {})
+			cvpj_notelist.add_r(note.pos*4, note.dur*4, note.key-60, note.vel/100, {})
 			for a_type, a_data in note.auto.items():
 				autoname = autonames[a_type] if a_type in autonames else None
 				if autoname:
 					for pos, val in a_data.items():
-						autopoint_obj = placement_obj.notelist.last_add_auto(autoname)
-						autopoint_obj.pos = pos*4
-						autopoint_obj.value = val
-						autopoint_obj.type = 'instant'
+						cvpj_notelist.last_add_auto_instant(autoname, pos*4, val)
 
 	for audioclip in wf_track.audioclips:
 

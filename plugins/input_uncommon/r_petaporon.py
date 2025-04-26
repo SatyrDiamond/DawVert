@@ -110,7 +110,9 @@ class input_petaporon(plugins.base):
 				if instnum == 7: plugin_obj.env_asdr_add('vol', 0, 0.3, 0, 0.3, 0.2, 0.3, 1)
 				if instnum == 8: plugin_obj.env_asdr_add('vol', 0, 0, 0, 0.4, 0, 0, 1)
 
-			for n in peta_notelists[instnum]: track_obj.placements.notelist.add_r(n[0], n[1], n[2], 1, {})
+			cvpj_notelist = track_obj.placements.notelist
+
+			for n in peta_notelists[instnum]: cvpj_notelist.add_r(n[0], n[1], n[2], 1, None)
 
 		convproj_obj.do_actions.append('do_singlenotelistcut')
 		convproj_obj.params.add('bpm', petapo_data['t'], 'float')

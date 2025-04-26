@@ -140,6 +140,8 @@ class input_nanostudio_v1(plugins.base):
 						placement_obj.time.set_posdur(clip['position']*256, clip['duration']*256)
 						if clip['duration']>clipsize: placement_obj.time.set_loop_data(0, 0, clipsize*256)
 
+						cvpj_notelist = placement_obj.notelist
+				
 						for event in events:
 							if event['type'] == 0:
-								placement_obj.notelist.add_r(event['position'], event['duration'], event['key']-60, event['vol_val']/127, None)
+								cvpj_notelist.add_r(event['position'], event['duration'], event['key']-60, event['vol_val']/127, None)

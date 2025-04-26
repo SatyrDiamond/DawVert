@@ -883,7 +883,7 @@ class output_soundbridge(plugins.base):
 					time_add(block, notespl_obj.time, None)
 
 					numnote = 0
-					for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+					for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
 						for t_key in t_keys:
 							notearray[numnote]['id'] = numnote
 							notearray[numnote]['pos'] = t_pos
@@ -1170,32 +1170,82 @@ class output_soundbridge(plugins.base):
 				sb_videotrack.blocks.append(block)
 
 		aid_found, aid_data = convproj_obj.automation.get(['main', 'bpm'], 'float')
+
 		if aid_found:
-			aid_data.convert____pl_points__nopl_points()
 
-			if aid_data.u_nopl_points:
-				if len(aid_data.nopl_points):
-					numpoints = len(aid_data.nopl_points)
+			sb_tempo_obj = project_obj.timeline.tempo
 
-					sb_tempo_obj = project_obj.timeline.tempo
+			if True:
+				aid_data.convert____pl_points__nopl_points()
+				nopl_points = aid_data.nopl_points
+				if nopl_points:
+					regions = nopl_points.to_regions()
+					for r in regions:
+						#print(r['pos_start'], r['dur'], r['value_start'], r['value_end'])
+						add_tempo_section(
+							sb_tempo_obj, 
+							r['pos_start'], 
+							int(r['dur']), 
+							r['value_start'], 
+							r['value_end']
+							)
 
-					prev_val = data_values.dif_val(aid_data.nopl_points[0].value)
-					first_pos = aid_data.nopl_points[0].pos
-					first_val = aid_data.nopl_points[0].value
+					max_dur = convproj_obj.get_dur()
+					pos_end = int(r['pos_end'])
+					if max_dur>pos_end:
+						add_tempo_section(
+							sb_tempo_obj, 
+							pos_end, 
+							int(max_dur-pos_end), 
+							r['value_end'], 
+							r['value_end']
+							)
 
-					aid_data.nopl_points.sort()
-
-					for n, autopoint_obj in enumerate(aid_data.nopl_points):
-						val_dif = prev_val.do_value(autopoint_obj.value)
-						s_block_pos = aid_data.nopl_points[n-1].pos if n>0 else 0
-						s_block_val = aid_data.nopl_points[n-1].value
-						e_block_pos = autopoint_obj.pos
-						e_block_val = autopoint_obj.value if not autopoint_obj.type == 'instant' else s_block_val
-						tempolen = e_block_pos-s_block_pos
-						if tempolen:
-							add_tempo_section(sb_tempo_obj, s_block_pos, tempolen, s_block_val, e_block_val)
-						if autopoint_obj.type == 'instant' and n == numpoints-1:
-							add_tempo_section(sb_tempo_obj, e_block_pos, e_block_pos+PROJECT_FREQ, autopoint_obj.value, autopoint_obj.value)
+			else:
+				if aid_data.pl_points:
+					aid_data.pl_points.sort()
+					prevpos = 0
+					prevtempo = tempo
+					for n, autopl_obj in enumerate(aid_data.pl_points):
+						pos = autopl_obj.time.position
+						autopl_obj.remove_cut()
+						pl_points = autopl_obj.data
+						pl_points.remove_instant()
+						pl_points.add_instant()
+						regions = pl_points.to_regions()
+	
+						for rn, r in enumerate(regions):
+							#print(r['pos_start'], r['dur'], r['value_start'], r['value_end'])
+							calcpos = int(r['pos_start']+pos)
+							if n and not rn: 
+								if (calcpos-prevpos)>0:
+									add_tempo_section(
+										sb_tempo_obj, 
+										prevpos, 
+										int(calcpos-prevpos), 
+										prevtempo, 
+										prevtempo
+										)
+	
+							add_tempo_section(
+								sb_tempo_obj, 
+								calcpos, 
+								int(r['dur']), 
+								r['value_start'], 
+								r['value_end']
+								)
+							prevpos = int(r['pos_end'])+pos
+							prevtempo = float(r['value_end'])
+	
+					max_dur = convproj_obj.get_dur()
+					if max_dur>prevpos:
+						add_tempo_section(
+							sb_tempo_obj, 
+							prevpos, 
+							int(max_dur-prevpos), 
+							prevtempo, 
+							prevtempo
+							)
 
 		if convproj_obj.transport.loop_active:
 			project_obj.metadata['TransportLoop'] = 'true'

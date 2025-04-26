@@ -131,8 +131,9 @@ class input_zmaestro(plugins.base):
 					else:
 						placement_obj.time.set_posdur(part.start, part.length)
 
+					cvpj_notelist = placement_obj.notelist
 					for note in part.notes:
-						placement_obj.notelist.add_r(note.start, note.length, note.pitch-60, note.velocity/127, None)
+						cvpj_notelist.add_r(note.start, note.length, note.pitch-60, note.velocity/127, None)
 
 			if tracktype == 'AudioTrack':
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)

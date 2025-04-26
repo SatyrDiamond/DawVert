@@ -23,8 +23,10 @@ def autopoints_get(autoloc, add, mul):
 	sngauto = []
 	if_found, autopoints = convproj_obj.automation.get_autopoints(autoloc)
 	if if_found:
+		autopoints.remove_instant()
 		for autopoint in autopoints:
 			sngauto.append({"pos": autopoint.pos, "value": (autopoint.value/mul)-add})
+	print(sngauto)
 	return sngauto
 
 def add_fx(convproj_obj, soundation_channel, fxchain_audio):
@@ -143,7 +145,7 @@ class output_soundation(plugins.base):
 		soundation_channel.name = "Master Channel"
 		soundation_channel.type = "master"
 		soundation_channel.volumeAutomation = autopoints_get(['master','vol'], 0, 1)
-		soundation_channel.panAutomation = autopoints_get(['master','pan'], -1, 2)
+		soundation_channel.panAutomation = autopoints_get(['master','pan'], -.5, 2)
 
 		add_fx(convproj_obj, soundation_channel, convproj_obj.track_master.plugslots.slots_audio)
 		soundation_obj.channels.append(soundation_channel)
@@ -170,7 +172,7 @@ class output_soundation(plugins.base):
 
 			add_fx(convproj_obj, soundation_channel, track_obj.plugslots.slots_audio)
 			soundation_channel.volumeAutomation = autopoints_get(['track',trackid,'vol'], 0, 1)
-			soundation_channel.panAutomation = autopoints_get(['track',trackid,'pan'], -1, 2)
+			soundation_channel.panAutomation = autopoints_get(['track',trackid,'pan'], -.5, 2)
 
 			if track_obj.type == 'instrument':
 				pluginid = track_obj.plugslots.synth
@@ -355,7 +357,7 @@ class output_soundation(plugins.base):
 
 					notespl_obj.notelist.sort()
 
-					for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+					for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
 						for t_key in t_keys:
 							if 0 <= t_key+60 <= 128:
 								sng_note = {}

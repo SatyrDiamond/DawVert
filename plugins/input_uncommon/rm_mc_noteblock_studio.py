@@ -66,8 +66,13 @@ class input_gt_mnbs(plugins.base):
 			track_obj.visual.name = layer_obj.name if layer_obj.name else 'Layer #'+cvpj_trackid
 			track_obj.params.add('vol', layer_obj.vol/100, 'float')
 			track_obj.params.add('pan', (layer_obj.stereo/100)-1, 'float')
+
+			cvpj_notelist = track_obj.placements.notelist
+
 			for note_obj in layer_obj.notes: 
-				track_obj.placements.notelist.add_m('NoteBlock'+str(note_obj.inst), note_obj.pos*notelen, 2*notelen, note_obj.key-39, note_obj.vel/100, {'pan': (note_obj.pan/100)-1, 'finepitch': note_obj.pitch})
+				cvpj_notelist.add_m('NoteBlock'+str(note_obj.inst), note_obj.pos*notelen, 2*notelen, note_obj.key-39, note_obj.vel/100, None)
+				cvpj_notelist.last_add_pan((note_obj.pan/100)-1)
+				cvpj_notelist.last_add_finepitch(note_obj.pitch)
 
 		custominstid = 16
 		for custominstid, custom_obj in enumerate(project_obj.custom):

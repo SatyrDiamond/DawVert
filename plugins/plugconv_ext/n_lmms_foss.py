@@ -412,8 +412,6 @@ class plugconv(plugins.base):
 
 				autopoints_obj = plugin_obj.env_points_add('shape', 1, True, 'float')
 				for pointnum in range(50): 
-					autopoint_obj = autopoints_obj.add_point()
-					autopoint_obj.pos = pointnum/49
-					autopoint_obj.value = waveshapepoints[pointnum*4]
+					autopoints_obj.points__add_normal(pointnum/49, waveshapepoints[pointnum*4], 0, None)
 				plugin_obj.user_to_external(convproj_obj, pluginid, exttype, 'any')
 				return True

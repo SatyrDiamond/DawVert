@@ -165,7 +165,7 @@ def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
 
 		for bb_instrument in bb_instruments:
 			t_instrument = text_instid(channum, bb_instrument)
-			cvpj_notelist.add_m_multi(t_instrument, points[0]['tick'], cvpj_note_dur, pitches, t_vol, {})
+			cvpj_notelist.add_m_multi(t_instrument, points[0]['tick'], cvpj_note_dur, pitches, t_vol, None)
 
 			ifnotsame_gain = (all(element == arr_volvals[0] for element in arr_volvals) == False) and maxvol != 0
 			ifnotsame_pitch = (all(element == arr_bendvals[0] for element in arr_bendvals) == False)
@@ -174,14 +174,10 @@ def parse_notes(cvpj_notelist, channum, bb_notes, bb_instruments):
 				auto_pos = point['tick']-points[0]['tick']
 
 				if ifnotsame_gain: 
-					autopoint_obj = cvpj_notelist.last_add_auto('gain')
-					autopoint_obj.pos = auto_pos
-					autopoint_obj.value = (point['volume']*(1/maxvol))
+					cvpj_notelist.last_add_auto('gain', auto_pos, (point['volume']*(1/maxvol)))
 
 				if ifnotsame_pitch: 
-					autopoint_obj = cvpj_notelist.last_add_auto('pitch')
-					autopoint_obj.pos = auto_pos
-					autopoint_obj.value = point['pitchBend']
+					cvpj_notelist.last_add_auto('pitch', auto_pos, point['pitchBend'])
 
 def add_inst_fx(convproj_obj, inst_obj, bb_fx, cvpj_instid):
 
@@ -455,9 +451,11 @@ class input_jummbox(plugins.base):
 							maxvol = max(arr_volvals)
 							t_vol = maxvol/100
 
+							cvpj_notelist = nle_obj.notelist
+
 							for instnum, chan_inst in enumerate(chan_insts):
 								t_instrument = 'bb_ch'+str(channum)+'_inst'+str(instnum+1)
-								nle_obj.notelist.add_m_multi(t_instrument, pos, dur, pitches, t_vol, {})
+								cvpj_notelist.add_m_multi(t_instrument, pos, dur, pitches, t_vol, {})
 								ifnotsame_gain = (not all(x == arr_volvals[0] for x in arr_volvals)) and maxvol != 0
 								ifnotsame_pitch = (not all(x == arr_bendvals[0] for x in arr_bendvals))
 
@@ -465,14 +463,10 @@ class input_jummbox(plugins.base):
 									auto_pos = point[0]-pos
 				
 									if ifnotsame_gain: 
-										autopoint_obj = nle_obj.notelist.last_add_auto('gain')
-										autopoint_obj.pos = auto_pos
-										autopoint_obj.value = (point[2]*(1/maxvol))
+										cvpj_notelist.last_add_auto('gain', auto_pos, (point[2]*(1/maxvol)))
 				
 									if ifnotsame_pitch: 
-										autopoint_obj = nle_obj.notelist.last_add_auto('pitch')
-										autopoint_obj.pos = auto_pos
-										autopoint_obj.value = point[1]
+										cvpj_notelist.last_add_auto('pitch', auto_pos, point[1])
 
 				placement_pos = 0
 				for seqpos, patnum in enumerate(bb_chan.sequence):
@@ -520,10 +514,9 @@ class input_jummbox(plugins.base):
 								autopl_obj.time.position = placement_pos+pos
 								autopl_obj.time.duration = ap[-1][0]
 
+								autopoints_obj = autopl_obj.data
 								for s_ap in ap: 
-									autopoint_obj = autopl_obj.data.add_point()
-									autopoint_obj.pos = s_ap[0]
-									autopoint_obj.value = (s_ap[1]*m_mul)+m_add
+									autopoints_obj.points__add_normal(s_ap[0], (s_ap[1]*m_mul)+m_add, 0, None)
 
 					placement_pos += bb_partdur
 

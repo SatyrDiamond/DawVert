@@ -55,6 +55,7 @@ def add_auto(defaultValue, valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 		autopl_obj.time.duration = block.framesCount
 		autopl_obj.time.set_offset(block.positionStart)
 		autopl_obj.visual.name = block.name
+		autopl_obj.muted = bool(block.muted)
 		if 'BlockColor' in block.metadata: autopl_obj.visual.color.set_hex(block.metadata['BlockColor'])
 
 		autopoints_obj = autopl_obj.data

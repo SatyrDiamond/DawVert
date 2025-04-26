@@ -97,7 +97,8 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					init_pooledenvinst['unk1'] = poolid
 					init_pooledenvinst['position'] = p.time.position_real
 					init_pooledenvinst['length'] = p.time.duration_real
-	
+					init_pooledenvinst['enabled'] = int(bool(p.muted))
+
 		elif autodata.u_nopl_points:
 			autodata.nopl_points.remove_instant()
 			for x in autodata.nopl_points:

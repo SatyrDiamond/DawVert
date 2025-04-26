@@ -51,6 +51,7 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
 			autopl_obj.time.position_real = x['position']
 			autopl_obj.time.duration_real = x['length']
+			autopl_obj.muted = bool(x['enabled'])
 			autopl_obj.visual.name = reappo.name.get()
 			autopoints_obj = autopl_obj.data
 

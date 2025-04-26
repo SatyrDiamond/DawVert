@@ -56,7 +56,7 @@ class rpp_env:
 	def init_pooledenvinst(self):
 		pooledenvinst = rvd(
 			[1,0,0,0.0,1.0,False,0.5,1.0,True,False,False,3,0,0,0.012,0], 
-			['id','position','length','offset','rate','timeBased','baseline','amplitude','loop','extra1','extra2','unk1','unk2','unk3','unk4','unk5','unk6'], 
+			['id','position','length','offset','rate','timeBased','baseline','amplitude','loop','extra1','extra2','unk1','enabled','unk3','unk4','unk5','unk6'], 
 			[int,float,float,float,float,bool,float,float,bool,bool,bool,int,int,int,float,int,int], True)
 		self.pooledenvinst.append(pooledenvinst)
 		return pooledenvinst

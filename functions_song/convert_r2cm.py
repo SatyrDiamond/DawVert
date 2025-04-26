@@ -32,7 +32,7 @@ def convert(convproj_obj):
 			else:
 				channel = get_unused_chan()
 
-			for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in track_obj.placements.notelist.iter():
+			for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in track_obj.placements.notelist.iter():
 				for t_key in t_keys:
 					outnote = t_key+60
 					if 127>outnote>=0:

@@ -219,19 +219,13 @@ def make_auto(convproj_obj, fs_pattern, NoteLength, timemul, patpos, patdur, cha
 		autopl_obj.time.set_posdur(patpos, patdur)
 		if fs_pattern.Color: autopl_obj.visual.color.set_hex(fs_pattern.Color)
 
+		autopoints_obj = autopl_obj.data
+
 		prev_slidetarg = None
 		for c_pos, c_val, slitarget in vol_auto:
-
 			if prev_slidetarg != None:
-				autopoint_obj = autopl_obj.data.add_point()
-				autopoint_obj.pos = c_pos
-				autopoint_obj.value = prev_slidetarg/15
-
-			autopoint_obj = autopl_obj.data.add_point()
-			autopoint_obj.pos = c_pos
-			autopoint_obj.value = c_val/15
-			autopoint_obj.type = 'instant'
-
+				autopoints_obj.points__add_normal(c_pos, prev_slidetarg/15, 0, None)
+			autopoints_obj.points__add_instant(c_pos, c_val/15)
 			prev_slidetarg = slitarget
 
 def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
@@ -245,15 +239,13 @@ def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
 						t_key = notedata.Value + 24
 						if chiptype[0:6] == 'EPSMFM': t_key -= 12
 						t_instrument = get_instshape(chiptype)+'-'+notedata.Instrument
-						cvpj_notelist.add_m(t_instrument, t_position, t_duration, t_key, 1, {})
+						cvpj_notelist.add_m(t_instrument, t_position, t_duration, t_key, 1, None)
 
 						if notedata.SlideTarget:
 							t_slidenote = notedata.SlideTarget + 24
 							cvpj_notelist.last_add_slide(0, t_duration, t_slidenote, 1, {})
-							autopoint_obj = cvpj_notelist.last_add_auto('pitch')
-							autopoint_obj = cvpj_notelist.last_add_auto('pitch')
-							autopoint_obj.pos = t_duration
-							autopoint_obj.value = t_slidenote-t_key
+							cvpj_notelist.last_add_auto('pitch', 0, 0)
+							cvpj_notelist.last_add_auto('pitch', t_duration, t_slidenote-t_key)
 
 						if notedata.Arpeggio:
 							if notedata.Arpeggio in arpeggios:
@@ -265,9 +257,9 @@ def parse_notes(cvpj_notelist, fs_notes, chiptype, NoteLength, arpeggios):
 			else:
 				t_key = notedata.Value + 24
 				if notedata.Instrument: 
-					cvpj_notelist.add_m('DPCM'+'-'+notedata.Instrument, t_position, t_duration, t_key, 1, {})
+					cvpj_notelist.add_m('DPCM'+'-'+notedata.Instrument, t_position, t_duration, t_key, 1, None)
 				else: 
-					cvpj_notelist.add_m('DPCM', t_position, t_duration, t_key, 1, {})
+					cvpj_notelist.add_m('DPCM', t_position, t_duration, t_key, 1, None)
 	cvpj_notelist.only_one()
 
 class input_famistudio(plugins.base):

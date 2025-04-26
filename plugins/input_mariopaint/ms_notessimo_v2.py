@@ -84,10 +84,12 @@ class input_notessimo_v2(plugins.base):
 				for l_num, layer in enumerate(layers):
 					if layer:
 						trscene_obj = convproj_obj.track__add_scene(str(l_num+1), sceneid, 'main')
+
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.visual.name = 'Pat #'+str(pat_num+1)+', Layer #'+str(l_num+1)
 						placement_obj.time.set_posdur(0, x.size)
-						for nnn in layer: placement_obj.notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, {})
+						cvpj_notelist = placement_obj.notelist
+						for nnn in layer: cvpj_notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, None)
 
 		fxchan_data = convproj_obj.fx__chan__add(1)
 		fxchan_data.visual.name = 'Drums'
@@ -116,8 +118,9 @@ class input_notessimo_v2(plugins.base):
 
 			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
 			autopl_obj.time.set_posdur(curpos, size)
-			autopoint_obj = autopl_obj.data.add_point()
-			autopoint_obj.value = tempo_len[pat_num][0]
+
+			autopoints_obj = autopl_obj.data
+			autopoints_obj.points__add_normal(0, tempo_len[pat_num][0], 0, None)
 
 			curpos += size
 

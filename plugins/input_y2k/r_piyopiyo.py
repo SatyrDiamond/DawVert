@@ -8,11 +8,15 @@ import os.path
 from objects import globalstore
 
 def parse_notes(convproj_obj, trackid, notes_data, track_obj, keyoffset):
+	cvpj_notelist = track_obj.placements.notelist
+
 	for pos, nd in enumerate(notes_data):
 		notes, pan = nd
-		track_obj.placements.notelist.add_r_multi(pos, 1, [(x+keyoffset)-12 for x in notes], 1, {})
+		cvpj_notelist.add_r_multi(pos, 1, [(x+keyoffset)-12 for x in notes], 1, None)
 		if pan != 0:
 			convproj_obj.automation.add_autotick(['track', trackid, 'pan'], 'float', pos, (pan-4)/3)
+
+	cvpj_notelist.sort()
 
 class input_piyopiyo(plugins.base):
 	def is_dawvert_plugin(self):

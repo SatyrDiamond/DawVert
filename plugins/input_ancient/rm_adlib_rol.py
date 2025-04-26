@@ -75,13 +75,15 @@ class input_adlib_rol(plugins.base):
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 			track_obj.visual.name = rol_track.voice.name
 
+			cvpj_notelist = track_obj.placements.notelist
+			
 			curtrackpos = 0
 			for note, pos in rol_track.voice.events:
-				if note >= 12: track_obj.placements.notelist.add_m(None, curtrackpos, pos, note-48-12, 1, {})
+				if note >= 12: cvpj_notelist.add_m(None, curtrackpos, pos, note-48-12, 1, None)
 				curtrackpos += pos
 
 			upper_timbre = [[i, p.upper()] for i, p in rol_track.timbre.events.copy()]
-			track_obj.placements.notelist.add_instpos(upper_timbre)
+			cvpj_notelist.add_instpos(upper_timbre)
 			for pos, val in rol_track.volume.events: convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'vol'], 'float', pos, val)
 			for pos, val in rol_track.pitch.events: convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pitch'], 'float', pos, val)
 

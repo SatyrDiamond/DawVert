@@ -94,7 +94,7 @@ def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
 		muse_part.poslen.tick = int(notespl_obj.time.position)
 
 		notespl_obj.notelist.sort()
-		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
 			for t_key in t_keys:
 				muse_event = proj_muse.muse_midi_event()
 				muse_event.tick = int(t_pos+muse_part.poslen.tick)

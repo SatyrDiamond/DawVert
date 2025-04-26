@@ -113,6 +113,8 @@ class input_cvpj_f(plugins.base):
 					placement_obj.visual.name = 'Pat #'+str(pat_num+1)
 					placement_obj.time.set_posdur(0, pat_data_r.length)
 
+					cvpj_notelist = placement_obj.notelist
+
 					for nnn in instnote:
 						pos = nnn[4]
 						dur = nnn[5]
@@ -122,7 +124,7 @@ class input_cvpj_f(plugins.base):
 						else:
 							dur += swing
 
-						if nnn[2]: placement_obj.notelist.add_r(pos, dur, nnn[0]-78, nnn[2]/100, {})
+						if nnn[2]: cvpj_notelist.add_r(pos, dur, nnn[0]-78, nnn[2]/100, None)
 
 		curpos = 0
 		for pat_num in project_obj.order:

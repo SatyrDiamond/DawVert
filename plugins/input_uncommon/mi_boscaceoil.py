@@ -176,7 +176,9 @@ class input_ceol(plugins.base):
 			cvpj_patcolor = color_main.getcolornum(ceol_pat_obj.palette)
 
 			nle_obj = convproj_obj.notelistindex__add(cvpj_pat_id)
-			for ceol_note_obj in ceol_pat_obj.notes: nle_obj.notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, {})
+			cvpj_notelist = nle_obj.notelist
+			for ceol_note_obj in ceol_pat_obj.notes: 
+				cvpj_notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, None)
 			nle_obj.visual.name = str(patnum+1)
 			nle_obj.visual.color.set_int(cvpj_patcolor)
 
@@ -214,18 +216,16 @@ class input_ceol(plugins.base):
 
 						f_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'freq'], 'float')
 						f_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
+						autopoints_obj = f_autopl_obj.data
 						for n, x in enumerate(recordfilter_freq):
-							autopoint_obj = f_autopl_obj.data.add_point()
-							autopoint_obj.pos = n
-							autopoint_obj.value = x
+							autopoints_obj.points__add_normal(n, x, 0, None)
 
 						recordfilter_reso = [x+1 for x in recordfilter[:,2]]
 						q_autopl_obj = convproj_obj.automation.add_pl_points(['filter', autofilterfxid, 'q'], 'float')
 						q_autopl_obj.time.set_block_posdur(plpos, project_obj.pattern_length)
+						autopoints_obj = q_autopl_obj.data
 						for n, x in enumerate(recordfilter_reso):
-							autopoint_obj = q_autopl_obj.data.add_point()
-							autopoint_obj.pos = n
-							autopoint_obj.value = x
+							autopoints_obj.points__add_normal(n, x, 0, None)
 
 			if prev_pl != None:
 				for n in range(8):

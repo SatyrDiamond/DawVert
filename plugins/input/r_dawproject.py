@@ -245,15 +245,13 @@ def docliptime(pl_time, clip):
 	elif offset:
 		pl_time.set_offset(offset)
 
-def do_mpe(notelist, mpepoints):
+def do_mpe(cvpj_notelist, mpepoints):
 	target_obj = mpepoints.target
 	mpetype = target_obj.expression
 	if mpetype:
 		if mpetype == 'transpose': mpetype = 'pitch'
 		for point in mpepoints.points:
-			autopoint_obj = notelist.last_add_auto(mpetype)
-			autopoint_obj.pos = point.time
-			autopoint_obj.value = point.value
+			cvpj_notelist.last_add_auto(mpetype, point.time, point.value)
 
 def do_notes(track_obj, clip, notes):
 	placement_obj = track_obj.placements.add_notes()
@@ -265,12 +263,13 @@ def do_notes(track_obj, clip, notes):
 		note_extra = {}
 		if note.rel != None: note_extra['release'] = note.rel
 		if note.channel != None: note_extra['channel'] = note.channel
-		placement_obj.notelist.add_r(note.time, note.duration, note.key-60, note_vel, note_extra)
-		if note.points: 
-			do_mpe(placement_obj.notelist, note.points)
+
+		cvpj_notelist = placement_obj.notelist
+
+		cvpj_notelist.add_r(note.time, note.duration, note.key-60, note_vel, note_extra)
+		if note.points: do_mpe(cvpj_notelist, note.points)
 		if note.lanes:
-			for points in note.lanes.points: 
-				do_mpe(placement_obj.notelist, points)
+			for points in note.lanes.points: do_mpe(cvpj_notelist, points)
 
 def do_audio(convproj_obj, npa_obj, audio_obj):
 	global samplefolder
@@ -357,9 +356,7 @@ def do_audioauto(npa_obj, mpepoints):
 		elif len(mpepoints.points)>1:
 			autopoints_obj = npa_obj.add_autopoints(mpetype, 1, True)
 			for point in mpepoints.points:
-				autopoint_obj = autopoints_obj.add_point()
-				autopoint_obj.pos = point.time
-				autopoint_obj.value = point.value
+				autopoints_obj.points__add_normal(point.time, point.value, 0, None)
 
 def do_clips(convproj_obj, track_obj, clip, clips):
 	placement_obj = track_obj.placements.add_nested_audio()
@@ -469,7 +466,7 @@ class input_dawproject(plugins.base):
 					if target_obj.parameter:
 						autoloc = ['id',target_obj.parameter]
 						for point in points.points: 
-							convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, 'normal')
+							convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, None)
 						for point in points.points_bool: 
 							convproj_obj.automation.add_autopoint(autoloc, 'bool', point.time, point.value, 'instant')
 
@@ -484,7 +481,7 @@ class input_dawproject(plugins.base):
 			if target_obj.parameter:
 				autoloc = ['id',target_obj.parameter]
 				for point in tempoauto.points: 
-					convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, 'normal')
+					convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, None)
 
 		if project_obj.arrangement.markers:
 			markers = project_obj.arrangement.markers.markers

@@ -161,8 +161,6 @@ class input_pxtone(plugins.base):
 				if e['eventnum'] == 14: unitstream.pitch(e['d_position'], e['value'])
 				if e['eventnum'] == 15: unitstream.pan(e['d_position'], e['value'])
 
-			track_obj.placements.notelist.notemod_conv()
-
 		if project_obj.repeat != 0: 
 			convproj_obj.transport.loop_active = True
 			convproj_obj.transport.loop_start = project_obj.repeat

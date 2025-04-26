@@ -17,9 +17,7 @@ def env_to_cvpj(it_env, plugin_obj, t_type, i_div):
 	autopoints_obj.loop_end = it_env.loop_end
 
 	for pv, pp in it_env.env_points:
-		autopoint_obj = autopoints_obj.add_point()
-		autopoint_obj.pos = pp
-		autopoint_obj.value = pv/i_div
+		autopoints_obj.points__add_normal(pp, pv/i_div, 0, None)
 
 	maxval = max([i[1]/i_div for i in it_env.env_points]) if it_env.env_points else 1
 	return autopoints_obj, maxval

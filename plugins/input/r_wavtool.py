@@ -455,8 +455,9 @@ class input_wavtool(plugins.base):
 					placement_obj.visual.name = wavtool_clip.name
 					placement_obj.time.set_startend(wavtool_clip.timelineStart, wavtool_clip.timelineEnd)
 					placement_obj.time.set_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
+					cvpj_notelist = placement_obj.notelist
 					for note in wavtool_clip.notes:
-						placement_obj.notelist.add_r(note['start'], note['end']-note['start'], note['pitch']-60, note['velocity'], {})
+						cvpj_notelist.add_r(note['start'], note['end']-note['start'], note['pitch']-60, note['velocity'], None)
 				add_devices(convproj_obj, track_obj, trackid, wavtool_obj.devices)
 
 			if wavtool_track.type == 'Audio':

@@ -266,12 +266,10 @@ class input_acid_old(plugins.base):
 							autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 							autopl_obj.time.set_startend(region.start, region.end)
 							for point in env.points:
-								autopoint_obj = autopl_obj.data.add_point()
-								autopoint_obj.pos = point[0]
-								if point[0] == 2: autopoint_obj.tension = 1
-								if point[0] == -2: autopoint_obj.tension = -1
-								autopoint_obj.type = 'normal'
-								autopoint_obj.value = point[1]
+								tension = 0
+								if point[0] == 2: tension = 1
+								if point[0] == -2: tension = -1
+								autopl_obj.data.points__add_normal(point[0], point[1], tension, None)
 							auto_obj = convproj_obj.automation.get_opt(autoloc)
 							if auto_obj is not None: 
 								if env.type == 0: auto_obj.defualt_val = track.vol

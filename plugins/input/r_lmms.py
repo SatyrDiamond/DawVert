@@ -546,15 +546,20 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 				if lmms_pattern.color: 
 					placement_obj.visual.color.set_hex(lmms_pattern.color)
 				placement_obj.muted = bool(int(lmms_pattern.muted))
+
+				cvpj_notelist = placement_obj.notelist
 				for lmms_note in lmms_pattern.notes:
-					placement_obj.notelist.add_r(lmms_note.pos, max(lmms_note.len, 0), lmms_note.key-60, lmms_note.vol/100, {'pan': lmms_note.pan/100})
+					cvpj_notelist.add_r(lmms_note.pos, max(lmms_note.len, 0), lmms_note.key-60, lmms_note.vol/100, None)
+					cvpj_notelist.last_add_pan(lmms_note.pan/100)
 					for a_name, a_data in lmms_note.auto.items():
 						if a_name == 'detuning':
-							for p_pos, p_val in a_data.auto_points.items():
-								autopoint_obj = placement_obj.notelist.last_add_auto('pitch')
-								autopoint_obj.pos = p_pos
-								autopoint_obj.value = p_val
-								autopoint_obj.type = 'instant' if a_data.prog == 0 else 'normal'
+							if a_data.prog == 0:
+								for p_pos, p_val in a_data.auto_points.items():
+									cvpj_notelist.last_add_auto_instant('pitch', p_pos, p_val)
+							else:
+								for p_pos, p_val in a_data.auto_points.items():
+									cvpj_notelist.last_add_auto('pitch', p_pos, p_val)
+
 				if isbb: bbpld[cvpj_trackid].append([0, placement_obj, lmms_pattern.steps])
 				else: placement_obj.auto_dur(192, 192)
 
@@ -672,11 +677,14 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 						autopl_obj.time.set_posdur(lmms_automationpattern.pos, lmms_automationpattern.len)
 						if lmms_automationpattern.name: autopl_obj.visual.name = lmms_automationpattern.name
 						if lmms_automationpattern.color: autopl_obj.visual.color.set_hex(lmms_automationpattern.color)
-						for p_pos, p_val in lmms_automationpattern.auto_points.items():
-							autopoint_obj = autopl_obj.data.add_point()
-							autopoint_obj.pos = p_pos
-							autopoint_obj.value = p_val
-							autopoint_obj.type = 'instant' if lmms_automationpattern.prog == 0 else 'normal'
+						autopoints_obj = autopl_obj.data
+						if lmms_automationpattern.prog == 0:
+							for p_pos, p_val in lmms_automationpattern.auto_points.items():
+								autopoints_obj.points__add_instant(p_pos, p_val)
+						else:
+							for p_pos, p_val in lmms_automationpattern.auto_points.items():
+								autopoints_obj.points__add_normal(p_pos, p_val, 0, None)
+
 
 		else:
 			tracks[cvpj_trackid] = None

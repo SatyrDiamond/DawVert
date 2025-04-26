@@ -199,10 +199,10 @@ class input_onlinesequencer(plugins.base):
 					plugin_obj.visual.name = 'EQ'
 					track_obj.plugslots.slots_audio.append(pluginid)
 
-			track_obj.placements.notelist.clear_size(len(notes))
-
+			cvpj_notelist = track_obj.placements.notelist
+			cvpj_notelist.clear_size(len(notes))
 			for key, pos, dur, inst, vol in notes: 
-				track_obj.placements.notelist.add_r(pos, dur, key-60, vol, {})
+				cvpj_notelist.add_r(pos, dur, key-60, vol, {})
 
 		for k, v in multig.items():
 			if len(v)>1:

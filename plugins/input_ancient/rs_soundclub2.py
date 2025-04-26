@@ -119,6 +119,9 @@ class input_soundclub2(plugins.base):
 				n_curvol = 1
 				n_curpan = 0
 				curpos = 0
+
+				cvpj_notelist = placement_obj.notelist
+				
 				for event in patvoice_obj.events:
 					curpos += event.len
 					if event.type == 17: 
@@ -132,8 +135,8 @@ class input_soundclub2(plugins.base):
 						scnote_obj.end = curpos-scnote_obj.start
 						scnote_obj = t_active_notes[event.value]
 						if scnote_obj.active:
-							placement_obj.notelist.add_r(scnote_obj.start, scnote_obj.end, scnote_obj.key-36, n_curvol, {})
-							for s_pos, s_len, s_key in scnote_obj.porta: placement_obj.notelist.last_add_slide(s_pos, s_len, s_key-36, n_curvol, None)
+							cvpj_notelist.add_r(scnote_obj.start, scnote_obj.end, scnote_obj.key-36, n_curvol, None)
+							for s_pos, s_len, s_key in scnote_obj.porta: cvpj_notelist.last_add_slide(s_pos, s_len, s_key-36, n_curvol, None)
 
 					elif event.type == 20: n_curvol = event.value/31
 					elif event.type == 21: 
@@ -145,8 +148,6 @@ class input_soundclub2(plugins.base):
 						t_active_notes[event.p_key].porta.append([curpos-t_active_notes[event.value].start, event.p_len, event.p_key])
 						t_active_notes[event.value] = notestate.blank() 
 
-				placement_obj.notelist.notemod_conv()
-
 				scenedur = max(scenedur, curpos)
 
 				placement_obj.visual.name = sn2_pat_obj.name
@@ -156,9 +157,7 @@ class input_soundclub2(plugins.base):
 				if panpoints:
 					autopoints_obj = placement_obj.add_autopoints('pan')
 					for p, v in panpoints.items():
-						autopoint_obj = autopoints_obj.add_point()
-						autopoint_obj.pos = p
-						autopoint_obj.value = v
+						autopoints_obj.points__add_normal(p, v, 0, None)
 
 			scenedurs.append(scenedur)
 
@@ -176,11 +175,9 @@ class input_soundclub2(plugins.base):
 
 			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
 			autopl_obj.time.set_posdur(curpos, size)
+			autopoints_obj = autopl_obj.data
 			for pat_tempo in pat_tempos:
-				autopoint_obj = autopl_obj.data.add_point()
-				autopoint_obj.pos = pat_tempo[0]
-				autopoint_obj.value = decode_tempopl(pat_tempo[1], globaltempo)
-				autopoint_obj.type = 'instant'
+				autopoints_obj.points__add_instant(pat_tempo[0], decode_tempopl(pat_tempo[1], globaltempo))
 
 			curpos += size
 

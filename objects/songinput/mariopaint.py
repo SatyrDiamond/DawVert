@@ -36,8 +36,7 @@ class mariopaint_chord():
 def add_tempo_point(convproj_obj, position, value, notelen): 
 	autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
 	autopl_obj.time.set_posdur(position, notelen)
-	autopoint_obj = autopl_obj.data.add_point()
-	autopoint_obj.value = value/notelen
+	autopl_obj.data.points__add_normal(0, value/notelen, 0, None)
 
 class mariopaint_song():
 	def __init__(self):
@@ -60,6 +59,8 @@ class mariopaint_song():
 
 		outtempo, notelen = xtramath.get_lower_tempo(self.tempo, 1, 180)
 
+		cvpj_notelist = track_obj.placements.notelist
+
 		for pos, chord_obj in self.chords.items():
 			if chord_obj.bookmark:
 				timemarker_obj = convproj_obj.timemarker__add()
@@ -69,9 +70,9 @@ class mariopaint_song():
 			if chord_obj.speedmark != -1:
 				add_tempo_point(convproj_obj, (pos/notelen), chord_obj.speedmark, notelen)
 			for n in chord_obj.notes:
-				track_obj.placements.notelist.add_m(n.inst, (pos/notelen), (1/notelen), n.get(), chord_obj.volume, None)
+				cvpj_notelist.add_m(n.inst, (pos/notelen), (1/notelen), n.get(), chord_obj.volume, None)
 
-		used_inst = track_obj.placements.notelist.get_used_inst()
+		used_inst = cvpj_notelist.get_used_inst()
 
 		for instnum, instname in enumerate(used_inst): 
 			inst_obj = convproj_obj.instrument__add(instname)

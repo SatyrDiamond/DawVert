@@ -128,8 +128,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 	
 				if numzones == 1:
 					SamplePart = SampleParts.value[next(iter(SampleParts.value))]
-					middlenote = int(SamplePart.RootKey)-60
-					track_obj.datavals.add('middlenote', middlenote-60)
+					smiddlenote = int(SamplePart.RootKey)-60
+					middlenote += smiddlenote
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, None, None)
 					do_samplepart(convproj_obj, sp_obj, SamplePart, dawvert_intent)
 					sp_obj.reverse = int(parampaths['Player/Reverse'])
@@ -144,8 +144,8 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 						key_cf = [int(SamplePart.KeyRange.CrossfadeMin), int(SamplePart.KeyRange.CrossfadeMax)]
 						vel_r = [int(SamplePart.VelocityRange.Min), int(SamplePart.VelocityRange.Max)]
 						vel_cf = [int(SamplePart.VelocityRange.CrossfadeMin), SamplePart.VelocityRange.CrossfadeMax]
-						middlenote = int(SamplePart.RootKey)
-						sp_obj = plugin_obj.sampleregion_add(key_r[0]-60, key_r[1]-60, middlenote-60, None)
+						mmiddlenote = int(SamplePart.RootKey)
+						sp_obj = plugin_obj.sampleregion_add(key_r[0]-60, key_r[1]-60, mmiddlenote-60, None)
 						do_samplepart(convproj_obj, sp_obj, SamplePart, dawvert_intent)
 						sp_obj.reverse = float(parampaths['Player/Reverse'])
 						sp_obj.data['key_fade'] = [key_cf[0]-key_r[0], key_r[1]-key_cf[1]]
@@ -219,17 +219,20 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 					if 10 in binflags: 
 						extmanu_obj.vst2__replace_data('id', vst_UniqueId, Buffer, 'win', False)
 					else:
-						extmanu_obj.vst2__setup_params('id', vst_UniqueId, vst_NumberOfParameters, 'win', True)
-						dtype_vstprog = np.dtype([('name', '<S28'),('params', np.float32, vst_NumberOfParameters)]) 
-						programs = np.frombuffer(Buffer, dtype=dtype_vstprog)
-						extmanu_obj.vst2__set_numprogs(len(programs))
-						for num, presetdata in enumerate(programs):
-							extmanu_obj.vst2__set_program(num)
-							extmanu_obj.vst2__set_program_name(presetdata['name'])
-							for paramnum, paramval in enumerate(presetdata['params']): 
-								extmanu_obj.vst2__set_param(paramnum, paramval)
-						extmanu_obj.vst2__set_program(prognum)
-						extmanu_obj.vst2__params_output()
+						try:
+							extmanu_obj.vst2__setup_params('id', vst_UniqueId, vst_NumberOfParameters, 'win', True)
+							dtype_vstprog = np.dtype([('name', '<S28'),('params', np.float32, vst_NumberOfParameters)]) 
+							programs = np.frombuffer(Buffer, dtype=dtype_vstprog)
+							extmanu_obj.vst2__set_numprogs(len(programs))
+							for num, presetdata in enumerate(programs):
+								extmanu_obj.vst2__set_program(num)
+								extmanu_obj.vst2__set_program_name(presetdata['name'])
+								for paramnum, paramval in enumerate(presetdata['params']): 
+									extmanu_obj.vst2__set_param(paramnum, paramval)
+							extmanu_obj.vst2__set_program(prognum)
+							extmanu_obj.vst2__params_output()
+						except:
+							pass
 				else:
 					extmanu_obj.vst2__replace_data('id', vst_UniqueId, b'', 'win', False)
 
@@ -574,9 +577,7 @@ class input_ableton(plugins.base):
 								autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
 								for mid, mtype, mobj in e.Automation.Events:
 									if mtype == 'FloatEvent':
-										autopoint_obj = autopoints_obj.add_point()
-										autopoint_obj.pos = mobj.Time
-										autopoint_obj.value = mobj.Value
+										autopoints_obj.points__add_normal(mobj.Time, mobj.Value, 0, None)
 
 						if clipobj.Loop.LoopOn:
 							placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
@@ -731,6 +732,7 @@ class input_ableton(plugins.base):
 					sendcount += 1
 
 			middlenote, issampler = do_devices(als_track.DeviceChain.devices, track_id, track_obj, convproj_obj, dawvert_intent)
+
 			track_obj.datavals.add('middlenote', middlenote)
 
 			if tracktype == 'midi':
@@ -765,9 +767,7 @@ class input_ableton(plugins.base):
 								autopoints_obj = placement_obj.add_autopoints(mpetype)
 								for mid, mtype, mobj in e.Automation.Events:
 									if mtype == 'FloatEvent':
-										autopoint_obj = autopoints_obj.add_point()
-										autopoint_obj.pos = mobj.Time*4
-										autopoint_obj.value = mobj.Value
+										autopoints_obj.points__add_normal(mobj.Time*4, mobj.Value, 0, None)
 
 						if clipobj.Loop.LoopOn == 1:
 							cut_start = (clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4
@@ -785,6 +785,8 @@ class input_ableton(plugins.base):
 							if nes.NoteId not in t_notes_auto: t_notes_auto[nes.NoteId] = {}
 							t_notes_auto[nes.NoteId][nes.CC] = points
 
+						cvpj_notelist = placement_obj.notelist
+
 						for nid, kt in clipobj.Notes.KeyTrack.items():
 							for event in kt.NoteEvents:
 								t_note_id = event.NoteId
@@ -795,7 +797,7 @@ class input_ableton(plugins.base):
 								t_note_extra['enabled'] = event.IsEnabled
 								notevol = (event.Velocity/100)
 								#if issampler: notevol = notevol**3
-								placement_obj.notelist.add_r(event.Time*4, event.Duration*4, kt.MidiKey-60, notevol, t_note_extra)
+								cvpj_notelist.add_r(event.Time*4, event.Duration*4, kt.MidiKey-60, notevol, t_note_extra)
 								if t_note_id in t_notes_auto:
 									for atype, adata in t_notes_auto[t_note_id].items():
 										mpetype = None
@@ -810,9 +812,6 @@ class input_ableton(plugins.base):
 
 										if mpetype:
 											for autopoints in adata:
-												autopoint_obj = placement_obj.notelist.last_add_auto(mpetype)
-												autopoint_obj.pos = autopoints[0]
-												autopoint_obj.value = autopoints[1]/autodiv
-
+												cvpj_notelist.last_add_auto(mpetype, autopoints[0], autopoints[1]/autodiv)
 
 		autoid_assoc.output(convproj_obj)

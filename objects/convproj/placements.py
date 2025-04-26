@@ -208,6 +208,9 @@ class cvpj_placement_timing:
 	def get_end(self):
 		return self.position+self.duration
 
+	def get_startend(self):
+		return self.position, self.position+self.duration
+
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if is_seconds:
 			self.position_real = xtramath.step2sec(self.position, bpm)/(ppq/4)

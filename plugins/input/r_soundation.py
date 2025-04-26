@@ -177,8 +177,9 @@ class input_soundation(plugins.base):
 					placement_obj.muted = soundation_region.muted
 
 					if sound_chan_type == 'instrument':
+						cvpj_notelist = placement_obj.notelist
 						for sndstat_note in soundation_region.notes: 
-							placement_obj.notelist.add_r(sndstat_note['position'], sndstat_note['length'], sndstat_note['note']-60, sndstat_note['velocity'], {})
+							cvpj_notelist.add_r(sndstat_note['position'], sndstat_note['length'], sndstat_note['note']-60, sndstat_note['velocity'], None)
 						placement_obj.antiminus()
 
 					if sound_chan_type == 'audio':

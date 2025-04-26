@@ -46,7 +46,6 @@ class cvpj_s_automation:
 		if self.u_pl_ticks: outtxt += 'pl_ticks:'+str(len(self.pl_ticks))+' '
 		if self.u_nopl_points: outtxt += 'nopl_points:'+str(len(self.nopl_points))+' '
 		if self.u_nopl_ticks: outtxt += 'nopl_ticks:'+str(len(self.nopl_ticks))+' '
-
 		return 'AutoSet '+ outtxt
 
 	def merge(self, other):
@@ -112,26 +111,19 @@ class cvpj_s_automation:
 
 	def add_autopoint(self, p_pos, p_val, p_type):
 		self.make_nopl_points()
-		autopoint_obj = self.nopl_points.add_point()
-		autopoint_obj.pos = p_pos
-		autopoint_obj.value = p_val
-		autopoint_obj.type = p_type
+		autopoint_obj = self.nopl_points.points__add_point(p_pos, p_val, p_type)
 		return autopoint_obj
 
 	def add_autopoint_real(self, p_pos, p_val, p_type):
 		self.make_nopl_points()
-		autopoint_obj = self.nopl_points.add_point()
-		autopoint_obj.pos_real = p_pos
-		autopoint_obj.value = p_val
-		autopoint_obj.type = p_type
+		self.nopl_points.is_seconds = True
+		autopoint_obj = self.nopl_points.points__add_point(p_pos, p_val, p_type)
 		return autopoint_obj
 
 	def add_autopoints_twopoints(self, twopoints):
 		self.make_nopl_points()
 		for twopoint in twopoints:
-			autopoint_obj = self.nopl_points.add_point()
-			autopoint_obj.pos = twopoint[0]
-			autopoint_obj.value = twopoint[1]
+			self.nopl_points.points__add_point(twopoint[0], twopoint[1], None)
 
 	def add_pl_points(self):
 		self.make_pl_points()
@@ -212,7 +204,6 @@ class cvpj_s_automation:
 		self.u_nopl_ticks = False
 
 	def convert____pl_ticks_____pl_points(self):
-
 		if self.u_pl_ticks:
 			for x in self.pl_ticks:
 				pl = self.add_pl_points()
@@ -221,11 +212,7 @@ class cvpj_s_automation:
 				pl.visual = x.visual
 				points_out = x.data.to_points(8*self.conv_tres)
 				for x in points_out:
-					autopoint_obj = pl.data.add_point()
-					autopoint_obj.pos = x[0]
-					autopoint_obj.value = x[1]
-					autopoint_obj.type = 'normal' if x[2] else 'instant'
-
+					pl.data.points__add_point(x[0], x[1], None if x[2] else 'instant')
 
 		self.pl_ticks = None
 		self.u_pl_ticks = False
@@ -238,22 +225,16 @@ class cvpj_s_automation:
 		if self.u_pl_points:
 			self.pl_points.remove_loops([])
 
-			if not self.persist: self.add_autopoint(0, self.defualt_val, 'instant')
-
-			endpos = -1
-			difval = 0
-			for x in self.pl_points:
-				x.remove_cut()
-				if endpos != -1: 
-					difval = x.time.position-endpos
-					if difval>0 and not self.persist: 
-						self.add_autopoint(endpos, self.defualt_val, 'instant')
-
-				endpos = x.time.position+x.time.duration
-				for c, p in enumerate(x.data.points):
-					self.add_autopoint(p.pos+x.time.position, p.value, p.type if c != 0 else 'instant')
-
-			if not self.persist: self.add_autopoint(x.time.position+x.time.duration, self.defualt_val, 'instant')
+			if self.persist: 
+				self.make_nopl_points()
+				for x in self.pl_points:
+					start, end = x.time.get_startend()
+					self.nopl_points.inject(x.data, start, end, x.time.cut_start)
+			else:
+				self.make_nopl_points()
+				for x in self.pl_points:
+					start, end = x.time.get_startend()
+					self.nopl_points.inject(x.data, start, end, x.time.cut_start, self.defualt_val)
 
 		self.pl_points = None
 		self.u_pl_points = False
@@ -265,41 +246,18 @@ class cvpj_s_automation:
 	def convert__nopl_points____pl_points(self):
 		#print('--------------')
 
-		if self.u_nopl_points and self.nopl_points.check():
+		if self.u_nopl_points and self.nopl_points:
+
 			tres = self.nopl_points.time_ppq
-			oldpos = 0
-			oldval = 0
-			startpos = self.nopl_points.points[0].pos
+			areas = self.nopl_points.find_areas(tres)
 
-			outdata = [[startpos, startpos+tres, []]]
-
-			s, e = self.nopl_points.get_durpos()
-
-			for m, point in enumerate(self.nopl_points):
-				difpos = point.pos-oldpos
-
-				diffval = (point.value != oldval) if point.type == 'normal' else False
-				dont_split = difpos<tres or diffval
-
-				if not dont_split: outdata.append([point.pos, point.pos+tres, []])
-				else: outdata[-1][1] += difpos
-				outdata[-1][2].append(point)
-
-				oldpos = point.pos
-				oldval = point.value
-
-			for ppl in outdata:
+			for ppl in areas:
 				pl = self.add_pl_points()
 				pl.time.position = ppl[0]
 				pl.time.duration = ppl[1]-pl.time.position
 
-				for point in ppl[2]:
-					autopoint_obj = pl.data.add_point()
-					autopoint_obj.pos = point.pos-ppl[0]
-					autopoint_obj.value = point.value
-					autopoint_obj.type = point.type
-					autopoint_obj.tension = point.tension
-					autopoint_obj.extra = point.extra
+				pl.data.inject(self.nopl_points, 0, pl.time.duration, ppl[0])
+
 
 		self.u_nopl_points = False
 		self.nopl_points = None

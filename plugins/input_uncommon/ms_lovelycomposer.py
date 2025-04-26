@@ -122,10 +122,11 @@ def chord_parser(chordval):
 		if chordid == 6: output_val = [0, 3, 6]
 		if chordid == 5: output_val = [0, 4, 8]
 		if chordid == 4: output_val = [0, 5, 7]
-		if chordbytes_seven == 1: output_val.append(10)
-		if chordbytes_seven == 2: output_val.append(11)
-		if chordbytes_nine == 1: output_val.append(14)
-		if chordbytes_nine == 2: output_val.append(13)
+		if output_val:
+			if chordbytes_seven == 1: output_val.append(10)
+			if chordbytes_seven == 2: output_val.append(11)
+			if chordbytes_nine == 1: output_val.append(14)
+			if chordbytes_nine == 2: output_val.append(13)
 	return output_val
 
 def customtone(project_obj, tonenum, osc_data, plugin_obj):
@@ -194,7 +195,7 @@ class input_lc(plugins.base):
 			track_obj.params.add('enabled', not project_obj.mixer_channel_switch_list[tracknum], 'bool')
 
 			track_obj.visual.name = "Part "+cvpj_instid if tracknum != 4 else "Chord"
-			track_obj.visual.color.set_float(color)
+			track_obj.visual.color.set_int(color)
 			voi_notes, voi_chord = project_obj.get_channel(tracknum)
 
 			used_insts = []
@@ -237,16 +238,12 @@ class input_lc(plugins.base):
 						for nnn in t_notelist:
 							maxvol = max(nnn[4])
 							cvpj_ninstid = '_'.join([str(tracknum),lc_instlist[nnn[3]][1]])
-							cvpj_notelist.add_m(cvpj_ninstid, nnn[0], nnn[1], nnn[2]-60, maxvol, {})
+							cvpj_notelist.add_m(cvpj_ninstid, nnn[0], nnn[1], nnn[2]-60, maxvol, None)
 							if maxvol:
 								for pos, val in enumerate(nnn[4]): 
-									autopoint_obj = cvpj_notelist.last_add_auto('gain')
-									autopoint_obj.pos = pos
-									autopoint_obj.value = val/maxvol
+									cvpj_notelist.last_add_auto('gain', pos, val/maxvol)
 							for pos, val in enumerate(nnn[5]): 
-								autopoint_obj = cvpj_notelist.last_add_auto('pan')
-								autopoint_obj.pos = pos
-								autopoint_obj.value = val
+								cvpj_notelist.last_add_auto('pan', pos, val)
 
 					for i in used_inst:
 						if i not in used_insts: used_insts.append(i)
@@ -295,7 +292,7 @@ class input_lc(plugins.base):
 					inst_obj = convproj_obj.instrument__add(cvpj_ninstid)
 					inst_obj.plugslots.set_synth(pluginid)
 					inst_obj.visual.name = instdata[1]
-					inst_obj.visual.color.set_float(color)
+					inst_obj.visual.color.set_int(color)
 					inst_obj.is_drum = instdata[1] in ['Noise', 'FreqNoise']
 
 					if instdata[1] == 'Sine': 
@@ -346,7 +343,7 @@ class input_lc(plugins.base):
 			else:
 				inst_obj = convproj_obj.instrument__add('chord')
 				inst_obj.visual.name = 'Chord'
-				inst_obj.visual.color.set_float(color)
+				inst_obj.visual.color.set_int(color)
 	
 		patternlen = []
 		voi_notes, voi_chord = project_obj.get_channel(tracknum)
@@ -361,11 +358,11 @@ class input_lc(plugins.base):
 
 			autopl_obj = convproj_obj.automation.add_pl_points(['main', 'bpm'], 'float')
 			autopl_obj.time.set_posdur(curpos, patlen)
-			autopoint_obj = autopl_obj.data.add_point()
-			autopoint_obj.value = decode_tempo(voi_note.play_speed)
+			autopl_obj.data.points__add_normal(0, decode_tempo(voi_note.play_speed), 0, None)
 
 			curpos += patlen
 
 		convproj_obj.do_actions.append('do_addloop')
+		convproj_obj.do_actions.append('do_sorttracks')
 		convproj_obj.params.add('pitch', float(project_obj.mixer_transpose), 'float')
 		convproj_obj.params.add('bpm', decode_tempo(project_obj.speed), 'float')

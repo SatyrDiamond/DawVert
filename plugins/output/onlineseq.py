@@ -9,14 +9,16 @@ from functions import data_values
 
 def create_auto(project_obj, convproj_obj, os_target, os_param, autoloc, mul):
 	from objects.file_proj import onlineseq as proj_onlineseq
-	auto_found, auto_points = convproj_obj.automation.get_autopoints(autoloc)
+	auto_found, autopoints_obj = convproj_obj.automation.get_autopoints(autoloc)
 
 	if auto_found:
-		for auto_point in auto_points:
+		autopoints_obj.remove_instant()
+		autopoints_obj.add_instant()
+		for autopoint_obj in autopoints_obj:
 			os_marker = proj_onlineseq.onlineseq_marker(None)
-			os_marker.pos = auto_point.pos
-			os_marker.value = auto_point.value*mul
-			os_marker.type = 0 if auto_point.type == 'instant' else 1
+			os_marker.pos = autopoint_obj.pos
+			os_marker.value = autopoint_obj.value*mul
+			os_marker.type = 0 if autopoint_obj.instant_mode else 1
 			os_marker.id = os_target
 			os_marker.param = os_param
 			project_obj.markers.append(os_marker)
@@ -89,7 +91,7 @@ class output_onlineseq(plugins.base):
 
 			if track_obj.visual.name: iparams.name = track_obj.visual.name
 
-			for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in track_obj.placements.notelist.iter():
+			for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in track_obj.placements.notelist.iter():
 				for t_key in t_keys:
 					onlineseq_note = [int(t_key+60-middlenote),t_pos,t_dur,onlineseqnum,t_vol]
 					project_obj.notes.append(onlineseq_note)

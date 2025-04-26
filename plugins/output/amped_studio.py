@@ -15,10 +15,19 @@ from functions_plugin import synth_nonfree_values
 
 audioidnum = 0
 
-def convauto(autopoints, param_obj):
+def convauto_man(autopoints, param_obj):
 	ampedauto = []
+	autopoints.remove_instant()
 	for autopoint in autopoints:
 		value = xtramath.between_to_one(param_obj.min, param_obj.max, autopoint.value)
+		ampedauto.append({"pos": autopoint.pos/4, "value": value})
+	return ampedauto
+
+def convauto(autopoints, minv, maxv):
+	ampedauto = []
+	autopoints.remove_instant()
+	for autopoint in autopoints:
+		value = xtramath.between_to_one(minv, maxv, autopoint.value)
 		ampedauto.append({"pos": autopoint.pos/4, "value": value})
 	return ampedauto
 
@@ -48,7 +57,7 @@ def do_idparams(amped_track, convproj_obj, plugin_obj, pluginid, amped_device, a
 		if ap_f: 
 			if ap_d.u_nopl_points:
 				autospec = {"type": "numeric", "min": param_obj.min, "max": param_obj.max, "curve": 0, "step": 0}
-				amped_auto = amped_track.add_auto(paramid, True, amped_device.id, convauto(ap_d.nopl_points, param_obj), autospec)
+				amped_track.add_auto(paramid, True, amped_device.id, convauto(ap_d.nopl_points, param_obj), autospec)
 
 		amped_device.add_param(paramnum, ampedpid, param_obj.value)
 	return paramout
@@ -306,7 +315,7 @@ class output_amped(plugins.base):
 				amped_region.mute = int(notespl_obj.muted)
 
 				notespl_obj.notelist.sort()
-				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto in notespl_obj.notelist.iter():
 					for t_key in t_keys:
 						if 0 <= t_key+60 <= 128:
 							amped_region.midi_notes.append({

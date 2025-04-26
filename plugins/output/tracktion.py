@@ -48,7 +48,7 @@ def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
 		autopoints.remove_instant()
 		autocurve_obj = proj_tracktion_edit.tracktion_automationcurve()
 		autocurve_obj.paramid = param_id
-		autocurve_obj.points = [[x.pos_real, x.value, None] for x in autopoints]
+		autocurve_obj.points = [[x.pos, x.value, None] for x in autopoints]
 		wf_plugin.automationcurves.append(autocurve_obj)
 
 def sampler_do_filter(soundlayer, filter_obj):
@@ -513,7 +513,7 @@ class output_tracktion_edit(plugins.base):
 					wf_midiclip.groupID = groupassoc[groupidtr]
 
 				notespl_obj.notelist.sort()
-				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
 					for t_key in t_keys:
 						notepitch = 0
 						if t_extra:

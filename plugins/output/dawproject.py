@@ -36,7 +36,7 @@ def do_autopoints(autopoints_obj, dppoints_obj):
 			dppoint_obj = points.dawproject_realpoint()
 			dppoint_obj.time = autopoint_obj.pos
 			dppoint_obj.value = autopoint_obj.value
-			if autopoint_obj.type != 'instant': dppoint_obj.interpolation = "linear" 
+			dppoint_obj.interpolation = "linear"
 			dppoints_obj.points.append(dppoint_obj)
 	if autopoints_obj.val_type == 'bool':
 		for autopoint_obj in autopoints_obj:
@@ -280,7 +280,8 @@ def make_clips(starttxt, convproj_obj, track_obj, lane_obj, trackid):
 		do_visual_clip(notespl_obj.visual, clip_obj)
 
 		clip_obj.notes = clips.dawproject_notes()
-		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
+			if t_autopack: t_autopack.convert_to('auto', t_keys, t_vol)
 			for t_key in t_keys:
 				note_obj = clips.dawproject_note()
 				note_obj.time = t_pos
@@ -290,7 +291,8 @@ def make_clips(starttxt, convproj_obj, track_obj, lane_obj, trackid):
 				if t_extra: 
 					note_obj.channel = t_extra['channel'] if 'channel' in t_extra else 0
 					note_obj.rel = t_extra['release'] if 'release' in t_extra else t_vol
-				if t_auto:
+				if t_autopack is not None:
+					t_auto = t_autopack.auto
 					if len(t_auto) == 1:
 						mpetype = list(t_auto)[0]
 						note_obj.points = points.dawproject_points()
@@ -301,7 +303,7 @@ def make_clips(starttxt, convproj_obj, track_obj, lane_obj, trackid):
 							dp_points = points.dawproject_points()
 							do_auto_mpe(a, mpetype, dp_points)
 							note_obj.lanes.points.append(dp_points)
-			clip_obj.notes.notes.append(note_obj)
+				clip_obj.notes.notes.append(note_obj)
 		lane_obj.clips.clips.append(clip_obj)
 
 	for audiopl_obj in track_obj.placements.pl_audio:

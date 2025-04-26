@@ -64,9 +64,9 @@ ss_envvol_mul = 7
 ss_envsvf_mul = 7
 
 envshapes = {
-	0: 'normal',
+	0: None,
 	1: 'doublecurve',
-	2: 'instant',
+	2: None,
 	3: 'stairs',
 	4: 'smooth_stairs',
 	5: 'pulse',
@@ -470,12 +470,11 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 		autopoints_obj = plugin_obj.env_points_add('shape', 4, True, 'float')
 		for point in autodata_table:
-			autopoint_obj = autopoints_obj.add_point()
-			autopoint_obj.pos = point[0]
-			autopoint_obj.value = point[1][0]
-			autopoint_obj.type = envshapes[point[3]]
-			autopoint_obj.tension = point[2]
-	
+			if point[3] == 2:
+				autopoints_obj.points__add_instant(point[0], point[1][0])
+			else:
+				autopoints_obj.points__add_normal(point[0], point[1][0], point[2], envshapes[point[3]])
+
 	elif flplugin.name in ['bassdrum', 'pitcher']:
 		sslfdata = decode_sslf(fl_plugstr)
 

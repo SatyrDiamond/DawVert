@@ -22,9 +22,8 @@ def env_to_cvpj(xm_env, plugin_obj, ispan, fadeout):
 	autopoints_obj.loop_end = xm_env.loop_end
 	for n in range(min(xm_env.numpoints, len(xm_env.points))):
 		xm_point = xm_env.points[n]
-		autopoint_obj = autopoints_obj.add_point()
-		autopoint_obj.pos = xm_point[0]
-		autopoint_obj.value = (xm_point[1]-32)/32 if ispan else xm_point[1]/64
+		value = (xm_point[1]-32)/32 if ispan else xm_point[1]/64
+		autopoints_obj.points__add_normal(xm_point[0], value, 0, None)
 
 	if not ispan: 
 		if fadeout: autopoints_obj.data['fadeout'] = (256/fadeout)

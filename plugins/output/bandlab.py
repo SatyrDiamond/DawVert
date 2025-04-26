@@ -179,6 +179,7 @@ class output_bandlab(plugins.base):
 					blx_track.soundbank = 'studio-grand-v2-v4'
 
 					track_obj.placements.pl_audio.sort()
+
 					for midipl_obj in track_obj.placements.pl_midi:
 						notebytes = midipl_obj.midievents.getvalue()
 						uuiddata = str( data_values.bytes__to_uuid( notebytes ) )

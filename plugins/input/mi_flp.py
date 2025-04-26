@@ -535,6 +535,7 @@ class input_flp(plugins.base):
 		for pattern, fl_pattern in flp_obj.patterns.items():
 
 			nle_obj = convproj_obj.notelistindex__add('FLPat' + str(pattern))
+			cvpj_notelist = nle_obj.notelist
 
 			autoticks_pat[pattern] = fl_pattern.automation
 
@@ -551,30 +552,30 @@ class input_flp(plugins.base):
 					numnotenum_chans[fl_note.rack] += 1
 
 					note_extra = {}
-					if fl_note.finep != 120: note_extra['finepitch'] = (fl_note.finep-120)*10
-					if fl_note.finep != 64: note_extra['release'] = fl_note.rel/128
-					if fl_note.finep != 64: note_extra['pan'] = (fl_note.pan-64)/64
-					if fl_note.finep != 128: note_extra['mod_x'] = fl_note.mod_x/255
-					if fl_note.finep != 128: note_extra['mod_y'] = fl_note.mod_y/255
+					if fl_note.rel != 64: note_extra['release'] = fl_note.rel/128
+					if fl_note.mod_x != 128: note_extra['mod_x'] = fl_note.mod_x/255
+					if fl_note.mod_y != 128: note_extra['mod_y'] = fl_note.mod_y/255
 					notechan = data_bytes.splitbyte(fl_note.midich)[1]
 					if notechan: note_extra['channel'] = notechan+1
 
 					is_slide = bool(fl_note.flags & 0b000000000001000)
 
 					if is_slide == True: 
+						if fl_note.finep != 120: note_extra['finepitch'] = (fl_note.finep-120)*10
+						if fl_note.pan != 64: note_extra['pan'] = (fl_note.pan-64)/64
 						slidenotes.append([note_inst, note_pos, note_dur, note_key, note_vol, note_extra if note_extra else None])
 					else: 
-						nle_obj.notelist.add_m(note_inst, note_pos, note_dur, note_key, note_vol, note_extra if note_extra else None)
+						cvpj_notelist.add_m(note_inst, note_pos, note_dur, note_key, note_vol, note_extra if note_extra else None)
+						if fl_note.finep != 120: cvpj_notelist.last_add_finepitch((fl_note.finep-120)*10)
+						if fl_note.pan != 64: cvpj_notelist.last_add_pan((fl_note.pan-64)/64)
 
 				for sn in slidenotes: 
-					nle_obj.notelist.auto_add_slide(sn[0], sn[1], sn[2], sn[3], sn[4], sn[5])
-				nle_obj.notelist.notemod_conv()
-				nle_obj.notelist.extra_to_noteenv()
+					cvpj_notelist.auto_add_slide(sn[0], sn[1], sn[2], sn[3], sn[4], sn[5])
 
 				for channum, lchans in layer_chans.items():
 					note_inst = id_inst[str(channum)] if str(channum) in id_inst else ''
 					if lchans and note_inst:
-						basenotes = nle_obj.notelist.__copy__()
+						basenotes = cvpj_notelist.__copy__()
 						basenotes.mod_filter_inst(note_inst)
 						for lchan in lchans:
 							channote = basenotes.__copy__()
@@ -582,7 +583,7 @@ class input_flp(plugins.base):
 							channote.inst_all(lchani)
 							imin, imax = chan_range[lchan]
 							channote.mod_limit(imin-60, imax-60)
-							nle_obj.notelist.merge(channote, 0)
+							cvpj_notelist.merge(channote, 0)
 
 				id_pat[str(pattern)] = 'FLPat' + str(pattern)
 
@@ -703,11 +704,12 @@ class input_flp(plugins.base):
 									auto_pos = int(curpos*flp_obj.ppq)
 									auto_val = xtramath.between_from_one(amin, amax, point.val)
 	
-									autopoint_obj = autopl_obj.data.add_point()
-									autopoint_obj.pos = auto_pos
-									autopoint_obj.value = auto_val
-									autopoint_obj.type = 'normal' if point.type!=2 else 'instant'
-									autopoint_obj.tension = tension
+									autopoints_obj = autopl_obj.data
+
+									if point.type!=2:
+										autopoints_obj.points__add_normal(auto_pos, auto_val, tension, None)
+									else:
+										autopoints_obj.points__add_instant(auto_pos, auto_val)
 	
 									#print(auto_pos, auto_val)
 

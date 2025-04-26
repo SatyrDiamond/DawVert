@@ -4,6 +4,7 @@
 def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_intent):
 
 	if convproj_obj.type == 'r': 
+
 		if in__midi_notes == True and out__midi_notes == False and out_type not in ['cm', 'cs']:
 			for cvpj_trackid, track_obj in convproj_obj.track__iter(): 
 				for midpl in track_obj.placements.pl_midi:
@@ -23,7 +24,7 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 				track_obj.placements.pl_midi.data = []
 			return True
 
-		elif in__midi_notes == False and out__midi_notes == True:
+		elif in__midi_notes == False and out__midi_notes == True and out_type not in ['rm']:
 			for cvpj_trackid, track_obj in convproj_obj.track__iter(): 
 
 				pll = [track_obj.placements]+[x[1].placements for x in track_obj.lanes.items()]
@@ -35,7 +36,7 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 						midi_pl = tpl.pl_midi.make_base_from_notes(notespl_obj)
 						midievents_obj = midi_pl.midievents
 						midievents_obj.ppq = 960
-						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
 							for t_key in t_keys:
 								if t_extra is not None:
 									channel = t_extra['channel'] if 'channel' in t_extra else 0
@@ -45,6 +46,7 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 						midievents_obj.has_duration = True
 						midievents_obj.del_note_durs()
 					tpl.pl_notes.data = []
+			return True
 
 		else: 
 			return False

@@ -81,6 +81,8 @@ class input_cvpj_f(plugins.base):
 			track_obj.params.add('enabled', bool(int(not getvalue(mmc_track, 'Mute', 0))), 'bool')
 			track_obj.params.add('solo', bool(int(getvalue(mmc_track, 'Solo', 0))), 'bool')
 
+			cvpj_notelist = track_obj.placements.notelist
+
 			for mmc_note in mmc_track["Notes"]:
 				mmc_wv = mmc_note['WaveVolume']
 
@@ -95,7 +97,8 @@ class input_cvpj_f(plugins.base):
 				notevol = getvalue(mmc_wv, 'Volume', 1)*1.5
 				notepan = getvalue(mmc_wv, 'Pan', 0)*-1
 
-				track_obj.placements.notelist.add_r(notepos, notedur, notekey, notevol, {'pan': notepan})
+				cvpj_notelist.add_r(notepos, notedur, notekey, notevol, None)
+				cvpj_notelist.last_add_pan(notepan)
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')

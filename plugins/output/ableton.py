@@ -74,12 +74,12 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 		if_found, autopoints = convproj_obj.automation.get_autopoints(cvpj_autoloc)
 		if if_found:
 			autopoints.sort()
-			if autopoints.check():
+			if autopoints:
 				als_param.AutomationTarget.set_unused()
 				AutomationEnvelope_obj = als_auto.add(als_param.AutomationTarget.id)
 				autopoints.sort()
 				autopoints.remove_instant()
-				firstpoint = autopoints.points[0]
+				firstpoint = autopoints[0]
 				firstval = firstpoint.value
 				if cvpj_type == 'float':
 					alsevent = proj_ableton.ableton_FloatEvent(None)
@@ -266,8 +266,9 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 		vstpreset['ParametersListWrapperLomId'] = ableton_parampart.as_value('ParametersListWrapperLomId', 0)
 		vstpreset['Type'] = ableton_parampart.as_value('Type', 1182286443 if vstdatatype == 'param' else 1178747752)
 		vstpreset['ProgramCount'] = ableton_parampart.as_value('ProgramCount', 1)
-		if vstnumparams != None: vstpreset['ParameterCount'] = ableton_parampart.as_value('ParameterCount', vstnumparams)
+		#if vstnumparams != None: vstpreset['ParameterCount'] = ableton_parampart.as_value('ParameterCount', vstnumparams)
 		if vstdatatype == 'chunk': 
+			chunkdata = plugin_obj.rawdata_get('chunk')
 			vstpreset['Buffer'] = ableton_parampart.as_buffer('Buffer', plugin_obj.rawdata_get('chunk'))
 			vstpreset['ProgramNumber'] = ableton_parampart.as_value('ProgramNumber', plugin_obj.current_program)
 		if vstdatatype == 'param': 
@@ -838,7 +839,6 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					timesigc = als_midiclip.TimeSignatures[0]
 					timesigc.Numerator, timesigc.Denominator = notespl_obj.timesig_auto.points[0]
 	
-				notespl_obj.notelist.notemod_conv()
 				notespl_obj.notelist.mod_limit(-60, 67)
 				notespl_obj.notelist.remove_overlap()
 
@@ -857,12 +857,13 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 	
 				t_keydata = {}
 				
-				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
+					if t_autopack: t_autopack.convert_to('auto', t_keys, t_vol)
 					for t_key in t_keys:
 						if t_key not in t_keydata: t_keydata[t_key] = []
 						notevol = t_vol
 						#notevol = t_vol**(1/3) if issampler else t_vol
-						t_keydata[t_key].append([counter_note.get(), t_pos, t_dur, notevol, t_inst, t_extra, t_auto, t_slide])
+						t_keydata[t_key].append([counter_note.get(), t_pos, t_dur, notevol, t_inst, t_extra, t_autopack])
 	
 				t_keydata = dict(sorted(t_keydata.items(), key=lambda item: item[0]))
 	
@@ -870,7 +871,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				for key, notedata in t_keydata.items():
 					KeyTrack_obj = proj_ableton.ableton_KeyTrack(None)
 	
-					for t_id, t_pos, t_dur, t_vol, t_inst, t_extra, t_auto, t_slide in notedata:
+					for t_id, t_pos, t_dur, t_vol, t_inst, t_extra, t_autopack in notedata:
 						MidiNoteEvent_obj = proj_ableton.ableton_x_MidiNoteEvent(None)
 						MidiNoteEvent_obj.NoteId = t_id
 						MidiNoteEvent_obj.Time = t_pos
@@ -881,8 +882,9 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 							if 'probability' in t_extra: MidiNoteEvent_obj.Probability = t_extra['probability']
 							if 'enabled' in t_extra: MidiNoteEvent_obj.IsEnabled = bool(t_extra['enabled'])
 							if 'velocity_range' in t_extra: MidiNoteEvent_obj.VelocityDeviation = t_extra['velocity_range']
-	
-						if t_auto:
+						
+						if t_autopack:
+							t_auto = t_autopack.auto
 							for mpetype,d in t_auto.items():
 								atype = None
 								autodiv = 1
@@ -1340,10 +1342,10 @@ class output_ableton(plugins.base):
 
 		ta_found, ta_points = convproj_obj.automation.get_autopoints(['main', 'bpm'])
 		if ta_found:
-			if ta_points.check():
+			if ta_points:
 				ta_points.sort()
 				ta_points.remove_instant()
-				firstpoint = ta_points.points[0]
+				firstpoint = ta_points[0]
 				firstval = firstpoint.value
 				tempoauto.Automation.Events[0][2].Value = firstval
 				for num, autopoint in enumerate(ta_points):

@@ -375,12 +375,11 @@ class input_serato(plugins.base):
 
 								autoseries = scene_obj.automation.create(autoloc, valtype, False)
 								pl_points = autoseries.add_pl_points()
+
+								autopoints_obj = pl_points.data
 								for kf in sauto.keyframes:
-									autopoint = pl_points.data.add_point()
-									autopoint.pos = kf.time
-									autopoint.value = kf.value
-									autopoint.tension = kf.curvature*-2
-									autopoint.type = 'normal'
+									autopoints_obj.points__add_normal(kf.time, kf.value, kf.curvature*-2, None)
+
 								pl_points.time.set_posdur(0, max(960*4, pl_points.data.get_dur()))
 
 							except:
@@ -393,6 +392,7 @@ class input_serato(plugins.base):
 						placement_obj = trscene_obj.add_notes()
 						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
 						placement_obj.time.set_posdur(0, scenedur)
+						cvpj_notelist = placement_obj.notelist
 						for note in deck_sequence.notes:
 							valid = False
 							if scene.length != None:
@@ -402,8 +402,8 @@ class input_serato(plugins.base):
 							if valid:
 								key = note.number+note.channel
 								if key >= 60: key -= 60
-								placement_obj.notelist.add_m('track_'+str(decknum+1)+'_'+str(key), note.start, note.duration, 0, note.velocity/100, None)
-						placement_obj.notelist.sort()
+								cvpj_notelist.add_m('track_'+str(decknum+1)+'_'+str(key), note.start, note.duration, 0, note.velocity/100, None)
+						cvpj_notelist.sort()
 
 					if scene_deck.type in ['instrument', 'plugin']:
 						placement_obj = trscene_obj.add_notes()

@@ -125,13 +125,15 @@ class input_audiosanua(plugins.base):
 				placement_obj.time.set_loop_data(0, 0, as_pattern.patternLength)
 				placement_obj.visual.color.set_int(colordata.getcolornum(as_pattern.patternColor))
 
+				cvpj_notelist = placement_obj.notelist
+				
 				for t_note in pat_notes: 
 					n_pos = max(0,t_note.startTick-as_pattern.startTick)
 					n_dur = t_note.endTick-t_note.startTick
 					n_key = t_note.pitch-60
 					n_volume = t_note.noteVolume/100
 					n_extra = {'cutoff': 1-(t_note.noteCutoff/100)}
-					placement_obj.notelist.add_r(n_pos, n_dur, n_key, n_volume, n_extra)
+					cvpj_notelist.add_r(n_pos, n_dur, n_key, n_volume, n_extra)
 
 			if as_chan.device != None:
 				as_device = as_chan.device

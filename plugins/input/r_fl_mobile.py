@@ -154,17 +154,20 @@ class input_fl_mobile(plugins.base):
 
 								if flm_clip.evn2:
 									slidenotes = []
+
+									cvpj_notelist = placement_obj.notelist
+
 									for event in flm_clip.evn2.events:
 										if len(event) > 7:
 											if event[7]: 
 												slidenotes.append([event[0]/128, event[1], event[2]-60, event[4]/127, None])
 											else: 
-												placement_obj.notelist.add_r(event[0]/128, event[1], event[2]-60, event[4]/127, None)
+												cvpj_notelist.add_r(event[0]/128, event[1], event[2]-60, event[4]/127, None)
 										else:
-											placement_obj.notelist.add_r(event[0]/128, event[1], event[2]-60, event[4]/127, None)
+											cvpj_notelist.add_r(event[0]/128, event[1], event[2]-60, event[4]/127, None)
 
 									for sn in slidenotes: 
-										placement_obj.notelist.auto_add_slide(None, sn[0], sn[1], sn[2], sn[3], sn[4])
+										cvpj_notelist.auto_add_slide(None, sn[0], sn[1], sn[2], sn[3], sn[4])
 
 					if lanedata.auto_on == 3:
 						lane_obj = track_obj.add_lane(str(lanenum))
@@ -206,23 +209,17 @@ class input_fl_mobile(plugins.base):
 									if env_vol:
 										autopoints_obj = placement_obj.add_autopoints('gain', 128, False)
 										for flmpoint in env_vol:
-											autopoint_obj = autopoints_obj.add_point()
-											autopoint_obj.pos = flmpoint[0]
-											autopoint_obj.value = flmpoint[5]/65534
+											autopoints_obj.points__add_normal(flmpoint[0], flmpoint[5]/65534, 0, None)
 
 									if env_pan:
 										autopoints_obj = placement_obj.add_autopoints('pan', 128, False)
 										for flmpoint in env_pan:
-											autopoint_obj = autopoints_obj.add_point()
-											autopoint_obj.pos = flmpoint[0]
-											autopoint_obj.value = ((flmpoint[5]/65534)*2)-1
+											autopoints_obj.points__add_normal(flmpoint[0], ((flmpoint[5]/65534)*2)-1, 0, None)
 
 									if env_pitch:
 										autopoints_obj = placement_obj.add_autopoints('speed', 128, False)
 										for flmpoint in env_pitch:
-											autopoint_obj = autopoints_obj.add_point()
-											autopoint_obj.pos = flmpoint[0]
-											autopoint_obj.value = ((flmpoint[5]/65534)*48)-24
+											autopoints_obj.points__add_normal(flmpoint[0], ((flmpoint[5]/65534)*48)-24, 0, None)
 
 								if flm_clip.sample:
 									flm_sample = flm_clip.sample
@@ -431,14 +428,14 @@ def add_params(params_obj, flm_rack):
 	params_obj.add('enabled', not flm_rack.mute, 'float')
 	params_obj.add('solo', flm_rack.solo, 'float')
 
-def do_auto(evn2_events, autopoints, startpos, v_add, v_mul, v_bool):
-	duration = 0
+def do_auto(evn2_events, autopoints_obj, startpos, v_add, v_mul, v_bool):
+	pos = 0
 	for event in evn2_events:
 		if event[2] != -1:
-			autopoint_obj = autopoints.add_point()
-			duration = autopoint_obj.pos = event[0]/128
-			autopoint_obj.value = ((event[5]/65534)+v_add)*v_mul if not v_bool else int((event[5]>32767))
-	return duration
+			pos = event[0]/128
+			value = ((event[5]/65534)+v_add)*v_mul if not v_bool else int((event[5]>32767))
+			autopoints_obj.points__add_normal(pos, value, 0, None)
+	return pos
 
 def add_visual(visual_obj, flm_channel):
 	visual_obj.name = flm_channel.name

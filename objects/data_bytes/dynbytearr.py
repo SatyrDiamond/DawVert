@@ -31,11 +31,40 @@ class cursor:
 	def getcur(self):
 		return self.baseobj.data[self.pos]
 
+	def sort(self, elements):
+		nums = self.baseobj.data.argsort(order=['used']+elements)
+		nonzero = np.count_nonzero(self.baseobj.data['used'])
+		self.baseobj.data[:] = np.roll(self.baseobj.data[nums], nonzero)
+		self.pos = nonzero-1
+
+	def clean(self):
+		cleanval = self.baseobj.clean()
+		self.pos = cleanval-1
+		return cleanval
+
+	def clear(self):
+		self.baseobj.clear()
+		self.pos = -1
+
+	def clear_keep_size(self):
+		self.baseobj.clear_keep_size()
+		self.pos = -1
+
+	def alloc(self, num):
+		self.baseobj.alloc(num)
+		self.pos = -1
+
 	def __getitem__(self, x):
 		return self.baseobj.data[self.pos].__getitem__(x)
 
 	def __setitem__(self, n, x):
 		return self.baseobj.data[self.pos].__setitem__(n, x)
+
+	def __repr__(self):
+		if self.pos<len(self.baseobj.data):
+			return str(self.baseobj.data[self.pos])
+		else:
+			return '[invalid pos]'
 
 class dynbytearr_premake:
 	__slots__ = ['dtype', 'out_dtype']
@@ -54,7 +83,7 @@ class dynbytearr_premake:
 VERBOSE = False
 
 class dynbytearr:
-	__slots__ = ['dtype', 'alloc_size', 'data', 'cursor', 'num_parts']
+	__slots__ = ['dtype', 'alloc_size', 'data', 'num_parts']
 	def __init__(self, dtype):
 		self.dtype = dtype
 		self.alloc_size = 16
@@ -72,12 +101,14 @@ class dynbytearr:
 
 	def clear(self):
 		self.data = np.zeros(0, dtype=self.dtype)
-		self.cursor = -1
+		self.num_parts = 0
+
+	def clear_keep_size(self):
+		self.data[:] = 0
 		self.num_parts = 0
 
 	def init_data(self):
 		self.data = np.zeros(0, dtype=self.dtype)
-		self.cursor = -1
 		self.num_parts = 0
 
 	def create_cursor(self):
@@ -90,7 +121,6 @@ class dynbytearr:
 
 	def alloc(self, num):
 		self.data = np.zeros(num, dtype=self.dtype)
-		self.cursor = -1
 		self.num_parts = 0
 
 	def extend(self, num):
@@ -107,7 +137,6 @@ class dynbytearr:
 		nums = self.data.argsort(order=['used']+elements)
 		nonzero = np.count_nonzero(self.data['used'])
 		self.data[:] = np.roll(self.data[nums], nonzero)
-		self.cursor = nonzero-1
 
 	def clean(self):
 		used_nums = self.used_nums()[0]
@@ -115,11 +144,11 @@ class dynbytearr:
 		unused_len = len(self.data)-used_len
 		self.data[0:used_len] = self.data[used_nums]
 		self.data[used_len:used_len+unused_len] = 0
+		return used_len
 
 	def unique(self, vals):
 		unique_elements, indices = np.unique(self.data[:][vals], return_index = True)
 		self.data = self.data[indices]
-		self.cursor = indices
 		self.num_parts = indices
 
 	def remove_minus(self, name):

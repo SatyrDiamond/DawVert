@@ -118,3 +118,42 @@ class triplestr:
 		eq_type = self.type==i_type if i_type else True
 		eq_subtype = self.subtype==i_subtype if i_subtype else True
 		return False not in (eq_cat, eq_type, eq_subtype)
+
+class indexed_value:
+	def __init__(self):
+		self.data = []
+
+	def __contains__(self, v):
+		return v in self.data
+
+	def items(self):
+		for n, x in enumerate(self.data):
+			if x is not None:
+				yield (n, x)
+
+	def get(self, n):
+		if None in self.data: self.data[self.data.index(None)] = v
+		else: return None
+
+	def add(self, v):
+		if v is not None:
+			if v not in self.data: 
+				if None in self.data: self.data[self.data.index(None)] = v
+				else: self.data.append(v)
+			return self.data.index(v)+1
+		else:
+			return 0
+
+	def remove(self, v):
+		if v is not None:
+			if v in self.data: 
+				indexv = self.data.index(v)
+				self.data[indexv] = None
+				return indexv+1
+		return 0
+
+	def merge_other(self, other):
+		out = {}
+		for n, x in other.items():
+			out[n+1] = self.add(x)
+		return out

@@ -4,9 +4,7 @@
 def env_ds_to_cvpj(plugin_obj, env_name, dsenv):
 	autopoints_obj = plugin_obj.env_points_add(env_name, 44100, False, 'int')
 	for pp, pv in dsenv:
-		autopoint_obj = autopoints_obj.add_point()
-		autopoint_obj.pos = pp
-		autopoint_obj.value = pv
+		autopoints_obj.points__add_normal(pp, pv, 0, None)
 
 def to_cvpj(drumsynth_obj, plugin_obj):
 	plugin_obj.datavals.add('tuning', drumsynth_obj.Tuning)

@@ -64,6 +64,8 @@ class input_sop(plugins.base):
 			track_obj.visual.name = '#'+str(cvpj_trackid)+' '+str()+trackname_endtext
 			track_obj.visual.color.set_float(maincolor)
 			
+			cvpj_notelist = track_obj.placements.notelist
+			
 			curtick = 0
 			instpos = []
 			for event in soptrack.events:
@@ -78,12 +80,12 @@ class input_sop(plugins.base):
 					instpos.append([curtick, str(event[2])])
 
 				elif event[1] == 'NOTE': 
-					track_obj.placements.notelist.add_m(None, curtick, event[3], event[2]-60, 1, {})
+					cvpj_notelist.add_m(None, curtick, event[3], event[2]-60, 1, {})
 
 				#else:
 				#	print(event)
 
-			track_obj.placements.notelist.add_instpos(instpos)
+			cvpj_notelist.add_instpos(instpos)
 
 		for event in project_obj.controltrack:
 			curtick += event[0]

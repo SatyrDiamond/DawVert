@@ -263,17 +263,19 @@ class input_notessimo_v3(plugins.base):
 
 			sheetnoteofs = notess_noteoffset[sheet_data.signature]
 
+			cvpj_notelist = nle_obj.notelist
+			
 			for nnn in sheet_data.get_allnotes():
 				out_note, out_key, out_oct = nnn.get_key_nooffs()
 				inum = 0
 				if nnn.sharp: inum = 1
 				if nnn.flat: inum = 2
 				noteoffs = sheetnoteofs[inum][1][out_key]
-				nle_obj.notelist.add_m(nnn.inst, nnn.pos*2, nnn.dur*4, out_note+noteoffs, 1, None)
+				cvpj_notelist.add_m(nnn.inst, nnn.pos*2, nnn.dur*4, out_note+noteoffs, 1, None)
 				if nnn.inst not in used_insts: used_insts.append(nnn.inst)
-			nle_obj.notelist.sort()
+			cvpj_notelist.sort()
 
-			sheetrealsize[sheet_id] = nle_obj.notelist.get_dur()
+			sheetrealsize[sheet_id] = cvpj_notelist.get_dur()
 
 		firstlayer = True
 		for layer_id, layer_data in notet_cursong_data.layers.items():
@@ -285,8 +287,8 @@ class input_notessimo_v3(plugins.base):
 					if firstlayer:
 						autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
 						autopl_obj.time.set_posdur(pos*2, dur*2)
-						autopoint_obj = autopl_obj.data.add_point()
-						autopoint_obj.value = tempo
+						autopoints_obj = autopl_obj.data
+						autopoints_obj.points__add_normal(0, tempo, 0, None)
 						convproj_obj.timesig_auto.add_point(pos*2, [numer, denum])
 
 					cvpj_placement = playlist_obj.placements.add_notes_indexed()

@@ -262,13 +262,13 @@ class output_cvpjs(plugins.base):
 			if nle_obj.visual.name: fl_pattern_obj.name = nle_obj.visual.name
 			if nle_obj.visual.color: fl_pattern_obj.color = decode_color(nle_obj.visual.color)
 
-			nle_obj.notelist.notemod_conv()
-
 			fl_notes = {}
 
 			if not DEBUG_IGNORE_PATTERNS:
 				nle_obj.notelist.sort()
-				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in nle_obj.notelist.iter():
+				for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in nle_obj.notelist.iter():
+					if t_autopack: t_autopack.convert_to('slide', t_keys, t_vol)
+
 					if t_inst in g_inst_id:
 						for t_key in t_keys:
 							fl_note_obj = proj_flp.flp_note()
@@ -277,23 +277,28 @@ class output_cvpjs(plugins.base):
 							fl_note_obj.dur = int(t_dur)
 							fl_note_obj.key = int(t_key)+60
 							fl_note_obj.velocity = int(xtramath.clamp(t_vol,0,1)*100)
+
+							if t_autopack:
+								fl_note_obj.finep = int((t_autopack.mod_pitch/10)+120)
+								fl_note_obj.pan = int((xtramath.clamp(float(t_autopack.mod_pan),-1,1)*64)+64)
+							else:
+								fl_note_obj.finep = 120
+								fl_note_obj.pan = 64
+
 							if t_extra:
-								if 'finepitch' in t_extra: fl_note_obj.finep = int((t_extra['finepitch']/10)+120)
 								if 'release' in t_extra: fl_note_obj.rel = int(xtramath.clamp(t_extra['release'],0,1)*128)
 								if 'mod_x' in t_extra: fl_note_obj.mod_x = int(xtramath.clamp(t_extra['mod_x'],0,1)*255)
 								if 'mod_y' in t_extra: fl_note_obj.mod_y = int(xtramath.clamp(t_extra['mod_y'],0,1)*255)
-								if 'pan' in t_extra: fl_note_obj.pan = int((xtramath.clamp(float(t_extra['pan']),-1,1)*64)+64)
 							else:
-								fl_note_obj.finep = 120
 								fl_note_obj.rel = 64
 								fl_note_obj.mod_x = 128
 								fl_note_obj.mod_y = 128
-								fl_note_obj.pan = 64
 		
 							if fl_note_obj.pos not in fl_notes: fl_notes[fl_note_obj.pos] = []
 							fl_notes[fl_note_obj.pos].append(fl_note_obj)
-		
-							if t_slide:
+
+							if t_autopack:
+								t_slide = t_autopack.slide
 								for s_pos, s_dur, s_key, s_vol, s_extra in t_slide:
 									fl_note_obj = proj_flp.flp_note()
 									fl_note_obj.rack = g_inst_id[t_inst]

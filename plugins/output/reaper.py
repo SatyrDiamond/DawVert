@@ -85,11 +85,12 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					pooledenv.id.set(poolid)
 					if p.visual.name: pooledenv.name.set(p.visual.name)
 					pooledenv.srclen.set(p.time.duration_real*2)
+
 					for pn, x in enumerate(p.data):
 						out = float(x.value)
 						if inverted: out = 1-out
 						#if n==0 and pn==0: rpp_env.points.append([0, out])
-						pooledenv.points.append([(x.pos_real*2), out, 5 if x.tension else 0, -x.tension])
+						pooledenv.points.append([(x.pos*2), out, 5 if x.tension else 0, -x.tension])
 	
 					init_pooledenvinst = rpp_env.init_pooledenvinst()
 					init_pooledenvinst['id'] = poolid
@@ -104,13 +105,13 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 				if inverted: out = 1-out
 
 				if x.tension == 0:
-					rpp_env.points.append([x.pos_real, out, 0])
+					rpp_env.points.append([x.pos, out, 0])
 				else:
-					rpp_env.points.append([x.pos_real, out, 5, 1, 0, 0, -x.tension])
+					rpp_env.points.append([x.pos, out, 5, 1, 0, 0, -x.tension])
 
 def add_auto(rpp_env, autopoints_obj):
 	for x in autopoints_obj:
-		rpp_env.points.append([x.pos_real, x.value])
+		rpp_env.points.append([x.pos, x.value])
 
 def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 	plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
@@ -340,7 +341,7 @@ def do_auto_clip(placement_obj, rpp_env, mpetype, paramtype, invert, instant):
 		for x in autopoints_obj:
 			out = float(x.value)
 			if invert: out = 1-out
-			rpp_env.points.append([x.pos_real, out])
+			rpp_env.points.append([x.pos, out])
 
 class output_reaper(plugins.base):
 	def is_dawvert_plugin(self):

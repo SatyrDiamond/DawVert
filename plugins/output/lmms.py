@@ -102,16 +102,18 @@ def fix_value(val_type, value):
 	else: return value
 
 def parse_auto(lmms_points, autopoints_obj):
+	autopoints_obj.remove_instant()
+
 	curpoint = 0
 	auto_points = {}
 	for point in autopoints_obj:
 		if point.pos in auto_points: 
 			auto_points[point.pos-1] = auto_points[point.pos]
 			del auto_points[point.pos]
-		auto_points[point.pos] = [point.value, point.type]
+		auto_points[point.pos] = [point.value, point.instant_mode]
 
 	for p, d in auto_points.items():
-		if curpoint != 0 and autopoints_obj.val_type != 'bool' and d[1] == 'instant': 
+		if curpoint != 0 and autopoints_obj.val_type != 'bool' and d[1]: 
 			lmms_points[p-1] = fix_value(autopoints_obj.val_type, prevvalue)
 		lmms_points[p] = fix_value(autopoints_obj.val_type, d[0])
 		prevvalue = d[0]
@@ -554,18 +556,19 @@ class output_lmms(plugins.base):
 						lmms_pattern.name = notespl_obj.visual.name if notespl_obj.visual.name else ""
 						if notespl_obj.visual.color: lmms_pattern.color = '#' + notespl_obj.visual.color.get_hex()
 						notespl_obj.notelist.sort()
-						notespl_obj.notelist.notemod_conv()
-						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
+							if t_autopack: t_autopack.convert_to('auto', t_keys, t_vol)
 							for t_key in t_keys:
 								lmms_note = proj_lmms.lmms_note()
 								lmms_note.key = int(t_key)+60
 								lmms_note.pos = int(t_pos)
-								if t_extra: 
-									if 'pan' in t_extra: lmms_note.pan = oneto100(t_extra['pan'])
+								if t_autopack:
+									lmms_note.pan = oneto100(t_autopack.mod_pan)
 								lmms_note.len = int(max(1,t_dur))
 								lmms_note.vol = int(oneto100(t_vol))
 								lmms_pattern.notes.append(lmms_note)
-								if t_auto:
+								if t_autopack:
+									t_auto = t_autopack.auto
 									if 'pitch' in t_auto: 
 										detuneauto = proj_lmms.lmms_automationpattern()
 										detuneauto.prog = 1

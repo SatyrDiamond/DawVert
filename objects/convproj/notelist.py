@@ -2,106 +2,12 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import xtramath
-from objects.convproj import autopoints
+from objects.convproj import notelist_auto
 from functions import data_values
 import numpy as np
 import copy
 import hashlib
 import os
-
-class pitchmod:
-	def __init__(self, c_note):
-		self.current_pitch = 0
-		self.start_note = c_note
-		self.porta_target = c_note
-		self.pitch_change = 1
-		self.slide_data = {}
-
-	def slide_tracker_porta_targ(self, note):
-		self.porta_target = note
-
-	def slide_porta(self, pos, pitch):
-		if pitch != 0: self.pitch_change = pitch*1.5
-		self.slide_data[pos] = [1.0, 'porta', self.pitch_change, self.porta_target]
-
-	def slide_up(self, pos, pitch):
-		if pitch != 0: self.pitch_change = pitch
-		self.slide_data[pos] = [1.0, 'slide_c', self.pitch_change, self.porta_target]
-
-	def slide_down(self, pos, pitch):
-		if pitch != 0: self.pitch_change = pitch
-		self.slide_data[pos] = [1.0, 'slide_c', -self.pitch_change, self.porta_target]
-
-	def slide_note(self, pos, pitch, dur):
-		self.slide_data[pos] = [dur, 'slide_n', dur, pitch]
-
-	def to_pointdata(self):
-		outslide = []
-
-		prevpos = -10000
-		slide_list = []
-		for slidepart in self.slide_data:
-			slide_list.append([slidepart]+self.slide_data[slidepart])
-
-		for index, slidepart in enumerate(slide_list):
-			if index != 0:
-				slidepart_prev = slide_list[index-1]
-				minval = min(slidepart[0]-slidepart_prev[0], slidepart_prev[1])
-				mulval = minval/slidepart_prev[1] if slidepart_prev[1] != 0 else 1
-				slidepart_prev[1] = minval
-				if slidepart_prev[2] != 'slide_n': 
-					slidepart_prev[3] = slidepart_prev[3]*mulval
-
-		out_blocks = []
-
-		cur_pitch = self.start_note
-
-		for slidepart in slide_list:
-
-			output_blk = False
-
-			if slidepart[2] == 'slide_c': 
-				cur_pitch += slidepart[3]
-				output_blk = True
-
-			if slidepart[2] == 'slide_n': 
-				partslide = slidepart[1]/slidepart[3] if slidepart[3] != 0 else 1
-				cur_pitch += (slidepart[4]-cur_pitch)*partslide
-				output_blk = True
-				
-			if slidepart[2] == 'porta': 
-				max_dur = min(abs(cur_pitch-slidepart[4]), slidepart[3])
-				if cur_pitch > slidepart[4]: 
-					cur_pitch -= max_dur
-					output_blk = True
-				if cur_pitch < slidepart[4]: 
-					cur_pitch += max_dur
-					output_blk = True
-				slidepart[1] *= max_dur/slidepart[3]
-
-			if output_blk: out_blocks.append([slidepart[0], slidepart[1], cur_pitch-self.start_note])
-
-		islinked = False
-		prevpos = -10000
-		prevval = 0
-
-		out_pointdata = []
-
-		for slidepart in out_blocks:
-			islinked = slidepart[0]-prevpos == slidepart[1]
-			if not islinked: out_pointdata.append([slidepart[0], prevval])
-			out_pointdata.append([slidepart[0]+slidepart[1], slidepart[2]])
-			prevval = slidepart[2]
-			prevpos = slidepart[0]
-
-		return out_pointdata
-
-	def to_points(self, notelist_obj):
-		pointdata = self.to_pointdata()
-		for spoint in pointdata:
-			autopoints_obj = notelist_obj.last_add_auto('pitch')
-			autopoints_obj.pos = spoint[0]
-			autopoints_obj.value = spoint[1]
 
 class notelist_cursor:
 	def __init__(self, base_nl):
@@ -225,33 +131,19 @@ class notelist_cursor:
 		note = self.getcur()
 		return v_assoc_extra[note['assoc_extra']] if note['is_extra'] else None
 
-	def assoc_auto_set(self):
+	def assoc_auto_set(self, time_ppq, time_float):
 		v_assoc_auto = self.base_nl.v_assoc_auto
 		note = self.getcur()
 		if not note['is_auto']:
 			note['is_auto'] = 1
 			note['assoc_auto'] = len(v_assoc_auto)
-			v_assoc_auto.append({})
+			v_assoc_auto.append(notelist_auto.notelist_note_auto(time_ppq, time_float))
 		return v_assoc_auto[note['assoc_auto']]
 
 	def assoc_auto_get(self):
 		v_assoc_auto = self.base_nl.v_assoc_auto
 		note = self.getcur()
 		return v_assoc_auto[note['assoc_auto']] if note['is_auto'] else None
-
-	def assoc_slide_append(self, slide):
-		v_assoc_slide = self.base_nl.v_assoc_slide
-		note = self.getcur()
-		if not note['is_slide']:
-			note['is_slide'] = 1
-			note['assoc_slide'] = len(v_assoc_slide)
-			v_assoc_slide.append([])
-		v_assoc_slide[note['assoc_slide']].append(slide)
-
-	def assoc_slide_get(self):
-		v_assoc_slide = self.base_nl.v_assoc_slide
-		note = self.getcur()
-		return v_assoc_slide[note['assoc_slide']] if note['is_slide'] else None
 
 	def assoc_inst_add(self, t_inst):
 		if t_inst:
@@ -263,47 +155,10 @@ class notelist_cursor:
 		note = self.getcur()
 		return self.base_nl.v_assoc_inst[note['assoc_inst']] if note['is_inst'] else None
 
-	def extra_to_noteenv(self, time_ppq, time_float):
-		nl_obj = self.base_nl
-		extra_d = self.assoc_extra_get()
-		auto_d = self.assoc_auto_get()
-		if extra_d != None and auto_d == None:
-			auto_d = self.assoc_auto_set()
-			if 'pitch' not in auto_d:
-				auto_d['pitch'] = autopoints.cvpj_autopoints(time_ppq, time_float, 'float')
-				if 'finepitch' in extra_d:
-					autopoint = auto_d['pitch'].add_point()
-					autopoint.pos = 0
-					autopoint.value = extra_d['finepitch']/100
-
-	def notemod_conv(self, time_ppq, time_float):
-		nl_obj = self.base_nl
-		note = self.getcur()
-		if note['is_auto'] or note['is_slide']:
-			auto_d = self.assoc_auto_get()
-			slide_d = self.assoc_slide_get()
-
-			if slide_d != None and auto_d == None:
-				pointsdata = pitchmod(note['key'])
-				for slidenote in slide_d: pointsdata.slide_note(slidenote[0], slidenote[2], slidenote[1])
-				nmp = pointsdata.to_pointdata()
-				auto_d = self.assoc_auto_set()
-				auto_d['pitch'] = autopoints.cvpj_autopoints(time_ppq, time_float, 'float')
-				for nmps in nmp:
-					autopoint = auto_d['pitch'].add_point()
-					autopoint.pos = nmps[0]
-					autopoint.value = nmps[1]
-
-			if slide_d == None and auto_d != None:
-				if 'pitch' in auto_d:
-					pitchauto = auto_d['pitch']
-					pitchauto.remove_instant()
-					pitchblocks = pitchauto.blocks()
-					maxnote = max(self.assoc_multikey_get())
-					for pb in pitchblocks:
-						self.assoc_slide_append([pb[0], pb[1], pb[2]+maxnote, note[3], {}])
-
 verbose_copy = False
+
+
+
 
 class notelist_data:
 	dt = np.dtype([
@@ -315,18 +170,15 @@ class notelist_data:
 		('is_inst', np.int8), 
 		('is_extra', np.int8), 
 		('is_auto', np.int8), 
-		('is_slide', np.int8), 
 		('is_multikey', np.int8), 
 		('assoc_inst', np.uint16), 
 		('assoc_extra', np.int32), 
 		('assoc_auto', np.int32), 
-		('assoc_slide', np.int32), 
 		('assoc_multikey', np.int32), 
 		]) 
 
 	__slots__ = [
-		'v_assoc_inst', 'v_assoc_extra', 'v_assoc_auto', 
-		'v_assoc_slide', 'v_assoc_multikey', 'alloc_size', 
+		'v_assoc_inst', 'v_assoc_extra', 'v_assoc_auto', 'v_assoc_multikey', 'alloc_size', 
 		'num_notes', 'nl', 'go_last'
 		]
 
@@ -335,7 +187,6 @@ class notelist_data:
 		self.v_assoc_inst = []
 		self.v_assoc_extra = []
 		self.v_assoc_auto = []
-		self.v_assoc_slide = []
 		self.v_assoc_multikey = []
 		self.alloc_size = 16
 		self.num_notes = 0
@@ -359,7 +210,6 @@ class notelist_data:
 		new_obj.v_assoc_inst = copy.deepcopy(self.v_assoc_inst)
 		new_obj.v_assoc_extra = copy.deepcopy(self.v_assoc_extra)
 		new_obj.v_assoc_auto = copy.deepcopy(self.v_assoc_auto)
-		new_obj.v_assoc_slide = copy.deepcopy(self.v_assoc_slide)
 		new_obj.v_assoc_multikey = copy.deepcopy(self.v_assoc_multikey)
 		new_obj.alloc_size = self.alloc_size
 		new_obj.nl = self.nl.copy()
@@ -370,10 +220,9 @@ class notelist_data:
 		same_v_assoc_inst = self.v_assoc_inst == nlo.v_assoc_inst
 		same_v_assoc_extra = self.v_assoc_extra == nlo.v_assoc_extra
 		same_v_assoc_auto = self.v_assoc_auto == nlo.v_assoc_auto
-		same_v_assoc_slide = self.v_assoc_slide == nlo.v_assoc_slide
 		same_v_assoc_multikey = self.v_assoc_multikey == nlo.v_assoc_multikey
 
-		all_issame = nl_same and same_v_assoc_inst and same_v_assoc_extra and same_v_assoc_auto and same_v_assoc_slide and same_v_assoc_multikey
+		all_issame = nl_same and same_v_assoc_inst and same_v_assoc_extra and same_v_assoc_auto and same_v_assoc_multikey
 		return all_issame
 
 	def __len__(self):
@@ -431,17 +280,14 @@ class notelist_data:
 		self.v_assoc_inst, remap_inst = data_values.assoc_remap(self.v_assoc_inst, targ.v_assoc_inst)
 		copy_nl['assoc_extra'] += len(self.v_assoc_extra)
 		copy_nl['assoc_auto'] += len(self.v_assoc_auto)
-		copy_nl['assoc_slide'] += len(self.v_assoc_slide)
 		copy_nl['assoc_multikey'] += len(self.v_assoc_multikey)
 
 		copy_nl['assoc_extra'] *= copy_nl['is_extra']
 		copy_nl['assoc_auto'] *= copy_nl['is_auto']
-		copy_nl['assoc_slide'] *= copy_nl['is_slide']
 		copy_nl['assoc_multikey'] *= copy_nl['is_multikey']
 
 		self.v_assoc_extra += targ.v_assoc_extra
 		self.v_assoc_auto += targ.v_assoc_auto
-		self.v_assoc_slide += targ.v_assoc_slide
 		self.v_assoc_multikey += targ.v_assoc_multikey
 		self.go_last = True
 		if remap_inst:
@@ -508,7 +354,6 @@ class cvpj_notelist:
 				splitnld.v_assoc_inst = [inst]
 				splitnld.v_assoc_extra = self.data.v_assoc_extra.copy()
 				splitnld.v_assoc_auto = self.data.v_assoc_auto.copy()
-				splitnld.v_assoc_slide = copy.deepcopy(self.data.v_assoc_slide)
 				splitnld.v_assoc_multikey = self.data.v_assoc_multikey.copy()
 				splitnld.num_notes = len(splitnld.nl)
 				out_nl[inst] = splitnl
@@ -524,17 +369,12 @@ class cvpj_notelist:
 			note['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['pos'])
 			note['dur'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['dur'])
 
-		for slides in self.data.v_assoc_slide:
-			for sn in slides:
-				sn[0] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, sn[0])
-				sn[1] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, sn[1])
-
-		for autos in self.data.v_assoc_auto:
-			for t in autos: autos[t].change_timings(time_ppq, time_float)
-
 	def change_timings(self, time_ppq, time_float):
 		if verbose: print(len(self.data),'change_timings', time_ppq, time_float)
 		self.stretch(time_ppq, time_float)
+
+		for autos in self.data.v_assoc_auto:
+			autos.change_timings(time_ppq, time_float)
 
 		self.time_ppq = time_ppq
 		self.time_float = time_float
@@ -551,22 +391,36 @@ class cvpj_notelist:
 	def add_m_multi(self, t_inst, t_pos, t_dur, m_keys, t_vol, t_extra):
 		self.cursor.add_m_multi(t_inst, t_pos, t_dur, m_keys, t_vol, t_extra)
 
-	def last_add_auto(self, a_type):
+	def last_add_auto(self, a_type, pos, val):
 		if self.__len__():
-			autodata = self.cursor.assoc_auto_set()
-			if a_type not in autodata: 
-				autodata[a_type] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
-			return autodata[a_type].add_point()
-		else:
-			dummyp = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
-			return dummyp.add_point()
+			autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+			autodata.auto__add_point(a_type, pos, val)
+
+	def last_add_auto_instant(self, a_type, pos, val):
+		if self.__len__():
+			autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+			autodata.last_add_auto_instant(a_type, pos, val)
 
 	def last_add_slide(self, t_pos, t_dur, t_key, t_vol, t_extra):
-		slidedata = self.cursor.assoc_slide_append([t_pos, t_dur, t_key, t_vol, t_extra])
+		if self.__len__():
+			autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+			autodata.slide__add_point(t_pos, t_dur, t_key, t_vol, t_extra)
 
 	def last_add_vol(self, i_val):
 		note = self.cursor.getcur()
 		note['vol'] = i_val
+
+	def last_add_pan(self, pan):
+		if pan!=0:
+			if self.__len__():
+				autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+				autodata.notemod__add_pan(pan)
+
+	def last_add_finepitch(self, finepitch):
+		if finepitch!=0:
+			if self.__len__():
+				autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+				autodata.notemod__add_finepitch(finepitch)
 
 	def last_add_extra(self, i_name, i_val):
 		note = self.cursor.assoc_extra_set(i_name, i_val)
@@ -592,7 +446,9 @@ class cvpj_notelist:
 			if note['used'] and match_pos and match_inst:
 				sn_pos = t_pos - note['pos']
 				sn_key = t_key
-				slidedata = self.cursor.assoc_slide_append([sn_pos, t_dur, sn_key, t_vol, t_extra])
+
+				autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+				autodata.slide__add_point(sn_pos, t_dur, sn_key, t_vol, t_extra)
 
 	def notesfound(self):
 		return self.count() != 0
@@ -652,7 +508,6 @@ class cvpj_notelist:
 		new_data.v_assoc_inst = copy.deepcopy(self.data.v_assoc_inst)
 		new_data.v_assoc_extra = copy.deepcopy(self.data.v_assoc_extra)
 		new_data.v_assoc_auto = copy.deepcopy(self.data.v_assoc_auto)
-		new_data.v_assoc_slide = copy.deepcopy(self.data.v_assoc_slide)
 		new_data.v_assoc_multikey = copy.deepcopy(self.data.v_assoc_multikey)
 		new_data.nl = self.data.nl[used].copy()
 		new_data.nl['pos'] += -startat
@@ -721,7 +576,6 @@ class cvpj_notelist:
 		nld.v_assoc_inst = []
 		nld.v_assoc_extra = []
 		nld.v_assoc_auto = []
-		nld.v_assoc_slide = []
 		nld.v_assoc_multikey = []
 
 	def clear_size(self, i_size):
@@ -730,7 +584,6 @@ class cvpj_notelist:
 		nld.v_assoc_inst = []
 		nld.v_assoc_extra = []
 		nld.v_assoc_auto = []
-		nld.v_assoc_slide = []
 		nld.v_assoc_multikey = []
 		nld.alloc(i_size)
 
@@ -792,14 +645,7 @@ class cvpj_notelist:
 				t_inst = cursor_obj.assoc_inst_get()
 				t_extra = cursor_obj.assoc_extra_get()
 				t_auto = cursor_obj.assoc_auto_get()
-				t_slide = cursor_obj.assoc_slide_get()
-				yield t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide
-
-	def notemod_conv(self):
-		cursor_obj = self.create_cursor()
-		for note in cursor_obj:
-			if note['used']:
-				cursor_obj.notemod_conv(self.time_ppq, self.time_float)
+				yield t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto
 
 	def extra_to_noteenv(self):
 		cursor_obj = self.create_cursor()
@@ -848,7 +694,7 @@ class cvpj_notelist:
 		i_list = {}
 
 		outnl.sort()
-		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in outnl.iter():
+		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto in outnl.iter():
 			for t_key in t_keys:
 				cvmi_n_pos = int(t_pos)
 				cvmi_n_dur = int(t_dur)
@@ -906,29 +752,3 @@ class cvpj_notelist:
 	#			)
 	#			iffound_5 = np.logical_and(iffound_1,iffound_2)
 	#			iffound_6 = np.logical_and(iffound_3,iffound_4)
-#
-	#			iffound = np.logical_and(iffound_5,iffound_6,self.data.nl['used']==1)
-#
-	#			foundvals = np.where(iffound)[0]
-	#			if len(foundvals) > 1:
-	#				multikeys = list(self.data.nl['key'][foundvals])
-	#				self.data.nl['is_multikey'][foundvals[0]] = 1
-	#				self.data.nl['assoc_multikey'][foundvals[0]] = len(self.data.v_assoc_multikey)
-	#				self.data.v_assoc_multikey.append(multikeys)
-#
-	#				for kn in foundvals[1:]: self.data.nl['used'][kn] = 0
-#
-	#	self.clean()
-#
-	#def get_hash(self):
-	#	m = hashlib.md5()
-	#	notebytes = self.data.tobytes()
-	#	m.update(notebytes)
-	#	return m.hexdigest() if len(notebytes) else None
-#
-	#def get_hash_range(self, startat, endat):
-	#	new_nl = self.new_nl_start_end(startat, endat)
-	#	return new_nl.get_hash()
-#
-	#def get_hash_split(self, splitdur, endat):
-	#	return [self.get_hash_range(x, x+splitdur) for x in range(0, endat, splitdur)]

@@ -52,15 +52,17 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 			autopl_obj.time.position_real = x['position']
 			autopl_obj.time.duration_real = x['length']
 			autopl_obj.visual.name = reappo.name.get()
+			autopoints_obj = autopl_obj.data
+
 			for point in reappo.points:
 				val = point[1] if not invert else 1-point[1]
 				if isbool: val = bool(val)
-				autopoint_obj = autopl_obj.data.add_point()
-				autopoint_obj.pos_real = (point[0]/2)/tempomul
-				autopoint_obj.value = val
+
+				tension = 0
 				if len(point)>3:
-					if point[2]:
-						autopoint_obj.tension = -point[3]
+					if point[2]: tension = -point[3]
+
+				autopoints_obj.points__add_normal((point[0]/2)/tempomul, val, tension, None)
 
 	if rpp_autodata.used:
 		for point in rpp_autodata.points:
@@ -108,25 +110,32 @@ def do_auto_clip_notes(placement_obj, clip_env, mpetype, paramtype, invert, inst
 	isbool = paramtype=='bool'
 	if clip_env.used:
 		autopoints_obj = placement_obj.add_autopoints(mpetype)
-		for point in clip_env.points:
-			val = point[1] if not invert else 1-point[1]
-			if isbool: val = bool(val)
-			autopoint_obj = autopoints_obj.add_point()
-			autopoint_obj.pos_real = point[0]
-			autopoint_obj.value = val
-			autopoint_obj.type = 'normal' if not instant else 'instant'
+		autopoints_obj.is_seconds = True
+		if instant:
+			for point in clip_env.points:
+				val = point[1] if not invert else 1-point[1]
+				if isbool: val = bool(val)
+				autopoints_obj.points__add_instant(point[0], val)
+		else:
+			for point in clip_env.points:
+				val = point[1] if not invert else 1-point[1]
+				if isbool: val = bool(val)
+				autopoints_obj.points__add_normal(point[0], val, 0, None)
 
 def do_auto_clip(placement_obj, clip_env, mpetype, paramtype, invert, instant): 
 	isbool = paramtype=='bool'
 	if clip_env.used:
 		autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
-		for point in clip_env.points:
-			val = point[1] if not invert else 1-point[1]
-			if isbool: val = bool(val)
-			autopoint_obj = autopoints_obj.add_point()
-			autopoint_obj.pos_real = point[0]
-			autopoint_obj.value = val
-			autopoint_obj.type = 'normal' if not instant else 'instant'
+		if instant:
+			for point in clip_env.points:
+				val = point[1] if not invert else 1-point[1]
+				if isbool: val = bool(val)
+				autopoints_obj.points__add_instant(point[0], val)
+		else:
+			for point in clip_env.points:
+				val = point[1] if not invert else 1-point[1]
+				if isbool: val = bool(val)
+				autopoints_obj.points__add_normal(point[0], val, 0, None)
 
 class input_reaper(plugins.base):
 	def is_dawvert_plugin(self):

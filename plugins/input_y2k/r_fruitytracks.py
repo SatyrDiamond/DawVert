@@ -16,24 +16,15 @@ def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, 
 
 	autopoints_obj = autopl_obj.data
 
-	autopoint_obj = autopoints_obj.add_point()
-	autopoint_obj.pos = 1
-	autopoint_obj.value = startval if not iseff else startval*defval
-	autopoint_obj.type = 'normal'
+	autopoints_obj.points__add_normal(1, startval if not iseff else startval*defval, 0, None)
 
 	if envpoints:
 		for pos, val in envpoints:
 			pos = calc_tick_val(bpmdiv, pos)
 			if pos<pldur:
-				autopoint_obj = autopoints_obj.add_point()
-				autopoint_obj.pos = pos
-				autopoint_obj.value = val if not iseff else val*defval
-				autopoint_obj.type = 'normal'
+				autopoints_obj.points__add_normal(pos, val if not iseff else val*defval, 0, None)
 
-	autopoint_obj = autopoints_obj.add_point()
-	autopoint_obj.pos = pldur-0.0001
-	autopoint_obj.value = endval if not iseff else endval*defval
-	autopoint_obj.type = 'normal'
+	autopoints_obj.points__add_normal(pldur-0.0001, endval if not iseff else endval*defval, 0, None)
 
 	return autopl_obj
 

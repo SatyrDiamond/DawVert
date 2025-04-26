@@ -52,7 +52,6 @@ def convert(convproj_obj):
 					if ui not in used_inst: used_inst.append(ui)
 
 				if tpl[1].notesfound():
-					tpl[1].notemod_conv()
 					placement_obj = playlist_obj.placements.add_notes()
 					placement_obj.time.set_posdur(cur_pl_pos, tpl[0])
 					placement_obj.notelist = tpl[1]

@@ -375,7 +375,7 @@ class output_wavtool(plugins.base):
 						wavtool_clip.name = notespl_obj.visual.name if notespl_obj.visual.name else ''
 						wavtool_clip.color = '#'+notespl_obj.visual.color.get_hex_fb(50,50,50)
 
-						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_auto, t_slide in notespl_obj.notelist.iter():
+						for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
 							for t_key in t_keys:
 								if 0 <= t_key+60 <= 128:
 									wt_note = {}

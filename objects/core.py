@@ -222,6 +222,7 @@ pluginsets_input = {
 'gameres': ['gameres', 'Game Mod'],
 'gamespec': ['gamespec', 'Game Specific'],
 'nn': ['nn', 'NeuralNet'],
+'mobile': ['mobile', 'Mobile'],
 'old': ['old', 'Old/Broken']
 }
 

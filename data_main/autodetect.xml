@@ -255,6 +255,10 @@
 		<file fileext=".qtr"/>
 	</plugin>
 
+	<plugin pluginset="mobile" name="viscentsoft_coolbeat">
+		<file fileext=".mlp"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

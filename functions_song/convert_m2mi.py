@@ -56,7 +56,7 @@ def convert(convproj_obj):
 			if len(plnums)==1 and fromindex in convproj_obj.notelist_index:
 				playlist_obj = convproj_obj.playlist[plnums[0]]
 				sle_data = convproj_obj.notelist_index[fromindex]
-				if not sle_data.visual.color:
+				if not sle_data.visual.color and playlist_obj.visual.color:
 					sle_data.visual.color = playlist_obj.visual.color.copy()
 
 	convproj_obj.type = 'mi'

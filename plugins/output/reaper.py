@@ -141,7 +141,7 @@ def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'multi'):
 			adsr_obj = plugin_obj.env_asdr_get('vol')
-			for sampleregion in plugin_obj.sampleregions:
+			for sampleregion in plugin_obj.sampleregion_getall():
 				key_l, key_h, key_r, samplerefid, extradata = sampleregion
 
 				sp_obj = plugin_obj.samplepart_get(samplerefid)
@@ -166,7 +166,7 @@ def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'drums'):
 			adsr_obj = plugin_obj.env_asdr_get('vol')
-			for sampleregion in plugin_obj.sampleregions:
+			for sampleregion in plugin_obj.sampleregion_getall():
 				key_l, key_h, key_r, samplerefid, extradata = sampleregion
 
 				sp_obj = plugin_obj.samplepart_get(samplerefid)

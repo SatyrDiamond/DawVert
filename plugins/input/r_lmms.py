@@ -215,7 +215,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 		
 		sf2_path = str(lmms_plugin.get_param('src', 0))
 		convproj_obj.fileref__add(sf2_path, sf2_path, None)
-		plugin_obj.filerefs['file'] = sf2_path
+		plugin_obj.fileref__set('file', sf2_path)
 
 		param_obj = plugin_obj.params.add('gain', float(lmms_plugin.get_param('gain', 0)), 'float')
 		param_obj.visual.name = 'Gain'

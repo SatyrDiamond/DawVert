@@ -249,6 +249,7 @@ class cvpj_track:
 		self.plugslots.synth = plug_id
 		self.params.add('usemasterpitch', not m_drum, 'bool')
 		if use_visual: self.visual.from_dset_midi(m_bank_hi, m_bank, m_inst, m_drum, m_dev, False)
+		self.visual_inst.from_dset_midi(m_bank_hi, m_bank, m_inst, m_drum, m_dev, False)
 		return plugin_obj
 
 	def used_insts(self):

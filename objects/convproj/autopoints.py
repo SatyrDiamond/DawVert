@@ -248,8 +248,9 @@ class cvpj_autopoints:
 			self.is_seconds = False
 		
 	def change_timings(self, time_ppq, time_float):
-		for n, x in enumerate(self.points.data):
-			self.points.data[n]['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, x['pos'])
+		if not self.is_seconds:
+			for n, x in enumerate(self.points.data):
+				self.points.data[n]['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, x['pos'])
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 

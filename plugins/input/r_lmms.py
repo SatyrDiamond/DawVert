@@ -675,6 +675,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 					for id_num in lmms_automationpattern.auto_target:
 						autopl_obj = convproj_obj.automation.add_pl_points(['id',str(id_num)], 'float')
 						autopl_obj.time.set_posdur(lmms_automationpattern.pos, lmms_automationpattern.len)
+						autopl_obj.muted = bool(int(lmms_automationpattern.mute))
 						if lmms_automationpattern.name: autopl_obj.visual.name = lmms_automationpattern.name
 						if lmms_automationpattern.color: autopl_obj.visual.color.set_hex(lmms_automationpattern.color)
 						autopoints_obj = autopl_obj.data

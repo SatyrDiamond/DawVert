@@ -7,6 +7,7 @@ from objects.file_proj._ableton.samplepart import *
 
 from functions import data_values
 import xml.etree.ElementTree as ET
+import binascii
 
 verbose = False
 
@@ -272,9 +273,10 @@ class ableton_parampart:
 				v.create(xmlp)
 		if self.type == 'buffer': 
 			xmlg = ET.SubElement(xmltag, self.name)
-			xmlg.text = '\n'
-			for num in range((len(self.value)/40).__ceil__()):
-				xmlg.text += self.value[num*40:(num+1)*40].hex().upper()+'\n'
+			#xmlg.text = '\n'
+			#for num in range((len(self.value)/40).__ceil__()):
+			#	xmlg.text += self.value[num*40:(num+1)*40].hex().upper()+'\n'
+			xmlg.text = binascii.hexlify(self.value).decode()
 
 		if self.type == 'sampleref': self.value.write(xmltag)
 

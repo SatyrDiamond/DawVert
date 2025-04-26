@@ -1,11 +1,11 @@
 <dataset>
     <category id="track">
         <colorset id="main">
-            <color>D4186C</color>
-            <color>E9C35B</color>
-            <color>70C6A9</color>
-            <color>395C98</color>
-            <color>A3A3A3</color>
+            <color>#D4186C</color>
+            <color>#E9C35B</color>
+            <color>#70C6A9</color>
+            <color>#395C98</color>
+            <color>#A3A3A3</color>
         </colorset>
     </category>
 </dataset>

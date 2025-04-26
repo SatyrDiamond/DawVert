@@ -49,9 +49,9 @@
 ## Other
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
+| C-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | R-I | ```2010s``` | ```caustic``` | Caustic 3 | ```.caustic``` | ✔️ | 
 | R | ```2010s``` | ```nanostudio_v1``` | NanoStudio 1 | ```.prj``` | ✔️ | |
-| R-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
 | R-M | ```uncommon``` | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ✔️ | 
 
 ## Mario Paint
@@ -66,19 +66,19 @@
 ## Old
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
+| R | ```2010s``` | ```z_maestro``` | Z-Maestro | ```.zmm``` | ✔️ | |
 | R | ```uncommon``` | ```orgyana``` | Orgyana/OrgMaker | ```.org``` | ✔️ | |
-| R-M | ```uncommon``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
-| R | ```y2k``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
 | R | ```y2k``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R | ```y2k``` | ```kristal``` | KRISTAL Audio Engine | ```.kristal``` | ✔️ | |
-| R | ```ancient``` | ```temper``` | Temper | ```.squ``` | ✔️ | |
-| R | ```2010s``` | ```z_maestro``` | Z-Maestro | ```.zmm``` | ✔️ | |
+| R | ```y2k``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
 | R-M | ```ancient``` | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
 | R-M | ```ancient``` | ```adlib_sop``` | Note FM Tracker | ```.sop``` | ✔️ | 
-| R-M | ```y2k``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
+| R-M | ```uncommon``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
 | R-S | ```ancient``` | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
-| R-S | ```midi``` | ```domino``` | Domino | ```.dms``` | ✔️ | |
 | R-S | ```y2k``` | ```sf_acid``` | Sonic Foundry ACID<br>Super Duper Music Looper<br>Sony Jam Trax | ```.acd``` | ✔️ | |
+| C-M | ```midi``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
+| C-M | ```midi``` | ```temper``` | Temper | ```.squ``` | ✔️ | |
+| C-S | ```midi``` | ```domino``` | Domino | ```.dms``` | ✔️ | |
 
 ## Experiments
 | DataType | PluginSet | Short Name | Name | Info |

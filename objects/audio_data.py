@@ -68,6 +68,14 @@ class audio_obj:
 
 # -------------------------------- data --------------------------------
 
+	def pcm_from_file(self, in_file): 
+		if os.path.exists(in_file):
+			file_stats = os.stat(in_file)
+			in_size = file_stats.st_size
+			f = open(in_file)
+			self.data = numpy.fromfile(f, dtype=self.codec.get_dtype(), count=in_size*(self.codec.pcm_bits//8))
+			self.pcm_from_postproc()
+
 	def pcm_from_stream(self, in_arr, in_size): 
 		self.data = numpy.fromfile(in_arr, dtype=self.codec.get_dtype(), count=in_size*(self.codec.pcm_bits//8))
 		self.pcm_from_postproc()

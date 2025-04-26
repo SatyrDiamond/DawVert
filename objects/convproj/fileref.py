@@ -103,23 +103,15 @@ class filesearcher:
 			filesearcher.searchcache = {}
 			numfile = 0
 
-			for n, file in enumerate(glob.glob(os.path.join(dirpath, '*'))):
-				fileref_obj = cvpj_fileref()
-				fileref_obj.set_path(None, file, True)
-				filename = str(fileref_obj.file)
-				if filename not in filesearcher.searchcache:
-					filesearcher.searchcache[filename] = fileref_obj
-					numfile += 1
-					if numfile > sampleref__searchmissing_limit: break
-
-			for n, file in enumerate(glob.glob(os.path.join(dirpath, '**', '*'))):
-				fileref_obj = cvpj_fileref()
-				fileref_obj.set_path(None, file, True)
-				filesearcher.searchcache[str(fileref_obj.file)] = fileref_obj
-				if filename not in filesearcher.searchcache:
-					filesearcher.searchcache[filename] = fileref_obj
-					numfile += 1
-					if numfile > sampleref__searchmissing_limit: break
+			for n, file in enumerate(glob.glob(os.path.join(dirpath, "**/*"), recursive=True)):
+				if os.path.isfile(file):
+					fileref_obj = cvpj_fileref()
+					fileref_obj.set_path(None, file, True)
+					filename = str(fileref_obj.file)
+					if filename not in filesearcher.searchcache:
+						filesearcher.searchcache[filename] = fileref_obj
+						numfile += 1
+						if numfile > sampleref__searchmissing_limit: break
 
 	def add_basepath(searchseries, in_path):
 		pathdata = cvpj_fileref()

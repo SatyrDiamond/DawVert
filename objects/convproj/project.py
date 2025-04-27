@@ -28,21 +28,20 @@ from objects.convproj import notelist
 from objects.convproj import stretch
 from objects.convproj import timemarker
 
-from functions_song import convert_r2m
-from functions_song import convert_ri2mi
-from functions_song import convert_ri2r
-from functions_song import convert_rm2r
-from functions_song import convert_m2r
-from functions_song import convert_m2mi
-from functions_song import convert_mi2m
-from functions_song import convert_rm2m
-from functions_song import convert_ts2m
-
-from functions_song import convert_ms2rm
-from functions_song import convert_rs2r
-from functions_song import convert_cm2rm
-from functions_song import convert_cs2cm
-from functions_song import convert_r2cm
+from functions.convproj_types import convert_r2m
+from functions.convproj_types import convert_ri2mi
+from functions.convproj_types import convert_ri2r
+from functions.convproj_types import convert_rm2r
+from functions.convproj_types import convert_m2r
+from functions.convproj_types import convert_m2mi
+from functions.convproj_types import convert_mi2m
+from functions.convproj_types import convert_rm2m
+from functions.convproj_types import convert_ts2m
+from functions.convproj_types import convert_ms2rm
+from functions.convproj_types import convert_rs2r
+from functions.convproj_types import convert_cm2rm
+from functions.convproj_types import convert_cs2cm
+from functions.convproj_types import convert_r2cm
 
 typelist = {}
 typelist['r'] = 'Regular'

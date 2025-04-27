@@ -218,15 +218,6 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 				except:
 					pass
 
-			if vstname == 'SoundSampler3':
-
-				try:
-					chunkdata = decodevst3_chunk(str(wf_plugin.params['state']))
-					print(chunkdata)
-
-				except:
-					pass
-
 		else:
 			try:
 				from objects.inst_params import juce_plugin

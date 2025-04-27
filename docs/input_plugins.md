@@ -10,14 +10,14 @@
 | R | ```main``` | ```dawproject``` | DawProject | ```.dawproject``` | ✔️ | |
 | M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
 | R | ```main``` | ```soundbridge``` | SoundBridge | ```.soundbridge``` | ✔️ | |
-| R | ```main``` | ```tracktion_edit``` | tracktion Edit | ```.tracktionedit``` | ✔️ | |
+| R | ```main``` | ```tracktion_edit``` | Waveform<br>SoundBug/音虫 | ```.tracktionedit``` | ✔️ | |
 | R | ```main``` | ```zenbeats``` | ZenBeats | ```.song``` | ✔️ | |
 | R | ```main``` | ```bandlab_blx``` | Bandlab BLX | ```.blx``` | ✔️ | |
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| M | ```tracker``` | ```mod``` | ProTracker | ```.mod``` | ❌ | |
+| M | ```tracker``` | ```mod``` | ProTracker | ```.mod``` | ✔️ | |
 | M | ```tracker``` | ```xm``` | FastTracker 2 | ```.xm``` | ✔️ | |
 | M | ```tracker``` | ```s3m``` | Scream Tracker 3 | ```.s3m``` | ✔️ | |
 | M | ```tracker``` | ```it``` | Impulse Tracker | ```.it``` | ✔️ | |
@@ -26,13 +26,13 @@
 ## Chiptune/Retro
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| M-I | ```uncommon``` | ```ceol``` | Bosca Ceoil | ```.txt``` | ❌ | |
+| M-I | ```uncommon``` | ```ceol``` | Bosca Ceoil | ```.txt``` | ✔️ | |
 | M-I | ```tracker``` | ```deflemask``` | DefleMask | ```.dmf``` | ✔️ | DMF Legacy only|
 | M-I | ```main``` | ```famistudio_txt``` | FamiStudio Text | ```.txt``` | ❌ | Some Arps is converted to Chords |
 | M-I | ```tracker``` | ```famitracker_txt``` | Famitracker Text | ```.txt``` | ❌ | |
 | M-I | ```tracker``` | ```trackerboy``` | TrackerBoy | ```.tbm``` | ✔️ | |
-| M-S | ```uncommon``` | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ❌ | |
-| M-S | ```uncommon``` | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ❌ | |
+| M-S | ```uncommon``` | ```1bitdragon``` | 1BITDRAGON | ```.ibd``` | ✔️ | |
+| M-S | ```uncommon``` | ```lovelycomposer``` | Lovely Composer | ```.jsonl``` | ✔️ | |
 | R-S | ```uncommon``` | ```pixitracker``` | PixiTracker | ```.piximod``` | ✔️ | |
 
 ## Web
@@ -40,28 +40,34 @@
 | --- | --- | --- | :--- | :--- | :--- | :--- |
 | M-I | ```main``` | ```jummbox``` | Beepbox/Jummbox | ```.json``` | ❌ | |
 | R | ```main``` | ```amped``` | Amped Studio | ```.json``` | ✔️ | |
-| R | ```main``` | ```onlineseq``` | Online Sequencer | ```.sequence``` | ❌ | |
+| R | ```main``` | ```onlineseq``` | Online Sequencer | ```.sequence``` | ✔️ | |
 | R | ```uncommon``` | ```petaporon``` | Petaporon | ```.json``` | ❌ | |
-| R | ```main``` | ```soundation``` | Soundation | ```.sng``` | ❌ | |
+| R | ```main``` | ```soundation``` | Soundation | ```.sng``` | ✔️ | |
 | R | ```main``` | ```wavtool``` | WavTool | ```.zip``` | ❌ | |
 | R | ```2010s``` | ```audiosauna``` | AudioSauna | ```.song``` | ✔️ | |
+
+## Mobile
+| DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
+| --- | --- | --- | :--- | :--- | :--- | :--- |
+| R-I | ```mobile``` | ```caustic``` | Caustic 3 | ```.caustic``` | ✔️ |  |
+| R | ```mobile``` | ```fl_mobile``` | FL Studio Mobile | ```.flm``` | ✔️ | | 
+| R | ```mobile``` | ```nanostudio_v1``` | NanoStudio 1 | ```.prj``` | ✔️ | |
+| R | ```mobile``` | ```viscentsoft_coolbeat``` | 玩酷电音/CoolBeat | ```.mlp``` | ✔️ | |
 
 ## Other
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
 | C-M | ```main``` | ```midi``` | MIDI | ```.mid``` | ✔️ | 
-| R-I | ```2010s``` | ```caustic``` | Caustic 3 | ```.caustic``` | ✔️ | 
-| R | ```2010s``` | ```nanostudio_v1``` | NanoStudio 1 | ```.prj``` | ✔️ | |
 | R-M | ```uncommon``` | ```mnbs``` | Minecraft Note Block Studio | ```.nbs``` | ✔️ | 
 
 ## Mario Paint
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 
 | --- | --- | --- | :--- | :--- | :--- | :--- |
-| M-S | ```mariopaint``` | ```notessimo_v2``` | Notessimo V2 | ```.note``` | ❌ | |
-| M-S | ```mariopaint``` | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ❌ | |
-| R-M | ```mariopaint``` | ```mariosequencer``` | MarioSequencer | ```.msq``` | ❌ | |
+| M-S | ```mariopaint``` | ```notessimo_v2``` | Notessimo V2 | ```.note``` | ✔️ | |
+| M-S | ```mariopaint``` | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ✔️ | |
+| R-M | ```mariopaint``` | ```mariosequencer``` | MarioSequencer | ```.msq``` | ✔️ | |
 | R-M | ```mariopaint``` | ```adv_mario_seq``` | Advanced Mario Sequencer | ```.mss``` | ✔️ | |
-| R-M | ```mariopaint``` | ```super_mario_paint``` | Super Mario Paint | ```.txt``` | ❌ | |
+| R-M | ```mariopaint``` | ```super_mario_paint``` | Super Mario Paint | ```.txt``` | ✔️ | |
 
 ## Old
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 

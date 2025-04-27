@@ -128,6 +128,9 @@ class juce_binaryxml_element:
 		self.children.append(jg_child)
 		return jg_child
 
+	def get(self, name):
+		return self.attrib[name] if name in self.attrib else None
+
 	def set(self, name, value):
 		jobj = juce_binaryxml_object()
 		jobj.set(value)

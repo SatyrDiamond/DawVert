@@ -259,6 +259,11 @@
 		<file fileext=".mlp"/>
 	</plugin>
 
+	<plugin pluginset="main" name="tracktion_edit">
+		<bytes_header data="534E4452"/>
+		<file fileext=".sndt"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

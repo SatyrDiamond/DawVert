@@ -359,7 +359,7 @@ class tracktion_midiclip:
 			elif n == 'loopStartBeats': self.loopStartBeats = float(v)
 			elif n == 'loopLengthBeats': self.loopLengthBeats = float(v)
 			elif n == 'groupID': self.groupID = int(v)
-			else: logger_projparse.warning('waveform_edit: midiclip: unimplemented attrib: '+n)
+			else: logger_projparse.warning('tracktion_edit: midiclip: unimplemented attrib: '+n)
 
 		for subxml in xmldata:
 			if subxml.tag == 'SEQUENCE': self.sequence.load(subxml)
@@ -582,7 +582,7 @@ class tracktion_audioclip:
 			elif n == 'srcVideoY': self.srcVideoY = int(v)
 			elif n == 'videoX': self.videoX = int(v)
 
-			else: logger_projparse.warning('waveform_edit: audioclip: unimplemented attrib: '+n)
+			else: logger_projparse.warning('tracktion_edit: audioclip: unimplemented attrib: '+n)
 
 		for subxml in xmldata:
 			if subxml.tag == 'LOOPINFO': self.loopinfo.load(subxml)
@@ -862,7 +862,9 @@ class tracktion_edit:
 
 		x_EDIT = xml_data.getroot()
 		if x_EDIT == None: raise ProjectFileParserException('tracktion_edit: no XML root found')
+		return self.load_from_elementdata(x_EDIT)
 
+	def load_from_elementdata(self, x_EDIT):
 		self.appVersion = x_EDIT.get('appVersion')
 		self.projectID = x_EDIT.get('projectID')
 		self.creationTime = x_EDIT.get('creationTime')

@@ -3,11 +3,13 @@
 
 from objects import counter
 from objects import globalstore
-from objects.binary_fmt import juce_binaryxml
 from functions import xtramath
 import plugins
+import logging
 import math
 import os
+
+logger_input = logging.getLogger('input')
 
 def soundlayer_samplepart(sp_obj, soundlayer, layerparams): 
 	sp_obj.visual.name = soundlayer.name
@@ -101,89 +103,129 @@ def sampler_do_filter(plugin_obj, soundlayer, filter_obj):
 		filter_obj.type.set('notch', None)
 		filter_obj.slope = 24
 
-def do_plugin(convproj_obj, wf_plugin, track_obj): 
+def decodevst3_chunk(memoryblock): 
+	from functions.juce import juce_memoryblock
+	from functions_plugin_ext import data_vc2xml
+	from functions import data_xml
+	chunkdata = juce_memoryblock.fromJuceBase64Encoding(memoryblock)
+	pluginstate_x = data_vc2xml.get(chunkdata)
+	IComponent = data_xml.find_first(pluginstate_x, 'IComponent')
+	chunkdata = juce_memoryblock.fromJuceBase64Encoding(IComponent.text)
+	return chunkdata
+
+def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode): 
 	from functions.juce import juce_memoryblock
 	from objects.file_proj._waveform import sampler
 
 	pitch = None
 
-	if wf_plugin.plugtype == 'vst':
-		vstname = wf_plugin.params['name'] if "name" in wf_plugin.params else ''
+	plugtype = str(wf_plugin.plugtype)
 
-		if vstname in ['Multi Sampler', 'Micro Sampler']:
-			if "state" in wf_plugin.params:
-				sampler_obj = sampler.waveform_sampler_main()
-				sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
+	if plugtype == 'vst':
+		vstname = str(wf_plugin.params['name']) if "name" in wf_plugin.params else ''
 
-				program = sampler_obj.program.programdata
-
-				if isinstance(program, sampler.prosampler) or isinstance(program, sampler.tinysampler):
-					soundlayers = program.soundlayers
-					if len(soundlayers) == 1:
-						firstlayer = soundlayers[0]
-						layerparams = firstlayer.soundparameters
-						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
-						track_obj.plugslots.set_synth(pluginid)
-						sp_obj = plugin_obj.samplepart_add('sample')
-						if sp_obj.visual.name: track_obj.visual_inst.name = sp_obj.visual.name
-						soundlayer_samplepart(sp_obj, firstlayer, layerparams)
-						soundlayer_adsr(plugin_obj, layerparams, 'vol')
-						sampler_do_filter(plugin_obj, firstlayer, plugin_obj.filter)
-
-						pitch = 0
-						if 'pitchParam' in layerparams:
-							if layerparams['pitchParam'] is not None: pitch = layerparams['pitchParam']
-						transpose, tune = xtramath.transpose_tune(pitch)
-						transpose -= firstlayer.rootNote-60
-						track_obj.datavals.add('middlenote', -transpose)
-						track_obj.params.add('pitch', tune, 'float')
-
-					elif len(soundlayers) > 1:
-						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
-						playMode = program.playMode
-						if playMode == 0: plugin_obj.datavals.add('multi_mode', 'all')
-						if playMode == 1: plugin_obj.datavals.add('multi_mode', 'round_robin')
-						if playMode == 2: plugin_obj.datavals.add('multi_mode', 'random')
-						plugin_obj.poly.mono = program.mono
-						track_obj.plugslots.set_synth(pluginid)
+		if software_mode == 'waveform':
+			if vstname in ['Multi Sampler', 'Micro Sampler']:
+				if "state" in wf_plugin.params:
+					sampler_obj = sampler.waveform_sampler_main()
+					sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
+	
+					program = sampler_obj.program.programdata
+	
+					if isinstance(program, sampler.prosampler) or isinstance(program, sampler.tinysampler):
+						soundlayers = program.soundlayers
+						if len(soundlayers) == 1:
+							firstlayer = soundlayers[0]
+							layerparams = firstlayer.soundparameters
+							plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
+							track_obj.plugslots.set_synth(pluginid)
+							sp_obj = plugin_obj.samplepart_add('sample')
+							if sp_obj.visual.name: track_obj.visual_inst.name = sp_obj.visual.name
+							soundlayer_samplepart(sp_obj, firstlayer, layerparams)
+							soundlayer_adsr(plugin_obj, layerparams, 'vol')
+							sampler_do_filter(plugin_obj, firstlayer, plugin_obj.filter)
+	
+							pitch = 0
+							if 'pitchParam' in layerparams:
+								if layerparams['pitchParam'] is not None: pitch = layerparams['pitchParam']
+							transpose, tune = xtramath.transpose_tune(pitch)
+							transpose -= firstlayer.rootNote-60
+							track_obj.datavals.add('middlenote', -transpose)
+							track_obj.params.add('pitch', tune, 'float')
+	
+						elif len(soundlayers) > 1:
+							plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+							playMode = program.playMode
+							if playMode == 0: plugin_obj.datavals.add('multi_mode', 'all')
+							if playMode == 1: plugin_obj.datavals.add('multi_mode', 'round_robin')
+							if playMode == 2: plugin_obj.datavals.add('multi_mode', 'random')
+							plugin_obj.poly.mono = program.mono
+							track_obj.plugslots.set_synth(pluginid)
+							for layernum, soundlayer in enumerate(soundlayers):
+								layerparams = soundlayer.soundparameters
+								endstr = str(layernum)
+								sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
+								sp_obj.envs['vol'] = 'vol_'+endstr
+								soundlayer_samplepart(sp_obj, soundlayer, layerparams)
+								soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
+								filter_obj = plugin_obj.named_filter_add(endstr)
+								sampler_do_filter(plugin_obj, soundlayer, filter_obj)
+								sp_obj.filter_assoc = endstr
+								if 'pitchParam' in layerparams:
+									if layerparams['pitchParam'] is not None:
+										sp_obj.pitch = layerparams['pitchParam']
+	
+			elif vstname == 'Micro Drum Sampler':
+				from objects import colors
+	
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
+				track_obj.plugslots.set_synth(pluginid)
+	
+				if "state" in wf_plugin.params:
+					colordata = colors.colorset.from_dataset('waveform', 'plugin', 'drum_sampler')
+					sampler_obj = sampler.waveform_sampler_main()
+					sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
+					program = sampler_obj.program.programdata
+					if isinstance(program, sampler.microsampler):
+						soundlayers = program.soundlayers
 						for layernum, soundlayer in enumerate(soundlayers):
 							layerparams = soundlayer.soundparameters
 							endstr = str(layernum)
 							sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
-							sp_obj.envs['vol'] = 'vol_'+endstr
 							soundlayer_samplepart(sp_obj, soundlayer, layerparams)
-							soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
-							filter_obj = plugin_obj.named_filter_add(endstr)
-							sampler_do_filter(plugin_obj, soundlayer, filter_obj)
-							sp_obj.filter_assoc = endstr
-							if 'pitchParam' in layerparams:
-								if layerparams['pitchParam'] is not None:
-									sp_obj.pitch = layerparams['pitchParam']
+							sp_obj.pitch = layerparams['pitchParam'] if 'pitchParam' in layerparams else 0
+							if soundlayer.rootNote in program.pads:
+								paddata = program.pads[soundlayer.rootNote]
+								if paddata.name: sp_obj.visual.name = paddata.name
+								colorint = colordata.getcolornum(paddata.colour)
+								sp_obj.visual.color.set_int(colorint)
 
-		elif vstname == 'Micro Drum Sampler':
-			from objects import colors
+		elif software_mode == 'soundbug':
 
-			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
-			track_obj.plugslots.set_synth(pluginid)
+			if vstname == 'SoundSynth':
 
-			if "state" in wf_plugin.params:
-				colordata = colors.colorset.from_dataset('waveform', 'plugin', 'drum_sampler')
-				sampler_obj = sampler.waveform_sampler_main()
-				sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
-				program = sampler_obj.program.programdata
-				if isinstance(program, sampler.microsampler):
-					soundlayers = program.soundlayers
-					for layernum, soundlayer in enumerate(soundlayers):
-						layerparams = soundlayer.soundparameters
-						endstr = str(layernum)
-						sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
-						soundlayer_samplepart(sp_obj, soundlayer, layerparams)
-						sp_obj.pitch = layerparams['pitchParam'] if 'pitchParam' in layerparams else 0
-						if soundlayer.rootNote in program.pads:
-							paddata = program.pads[soundlayer.rootNote]
-							if paddata.name: sp_obj.visual.name = paddata.name
-							colorint = colordata.getcolornum(paddata.colour)
-							sp_obj.visual.color.set_int(colorint)
+				try:
+					chunkdata = decodevst3_chunk(str(wf_plugin.params['state']))
+	
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst3', None)
+					plugin_obj.role = 'synth'
+					plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
+	
+					extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+					extmanu_obj.vst3__replace_data('name', 'Surge XT', chunkdata, None)
+	
+					track_obj.plugin_autoplace(plugin_obj, pluginid)
+				except:
+					pass
+
+			if vstname == 'SoundSampler3':
+
+				try:
+					chunkdata = decodevst3_chunk(str(wf_plugin.params['state']))
+					print(chunkdata)
+
+				except:
+					pass
 
 		else:
 			try:
@@ -217,28 +259,35 @@ def do_plugin(convproj_obj, wf_plugin, track_obj):
 				#print(traceback.format_exc())
 				pass
 
-	elif wf_plugin.plugtype not in ['volume', 'level'] and wf_plugin.plugtype != '':
-		plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'tracktion', wf_plugin.plugtype)
-		plugin_obj.role = 'effect'
-		plugin_obj.fxdata_add(wf_plugin.enabled, None)
+	elif software_mode == 'waveform':
 
-		if wf_plugin.windowX and wf_plugin.windowY:
-			windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
-			windata_obj.pos_x = wf_plugin.windowX
-			windata_obj.pos_y = wf_plugin.windowY
+		if plugtype not in ['volume', 'level'] and plugtype != '':
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'tracktion', plugtype)
+			plugin_obj.role = 'effect'
+			plugin_obj.fxdata_add(wf_plugin.enabled, None)
+	
+			if wf_plugin.windowX and wf_plugin.windowY:
+				windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
+				windata_obj.pos_x = wf_plugin.windowX
+				windata_obj.pos_y = wf_plugin.windowY
+	
+			for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', plugtype):
+				paramval = wf_plugin.params[param_id] if param_id in wf_plugin.params else None
+				plugin_obj.dset_param__add(param_id, paramval, dset_param)
+	
+			for autocurves in wf_plugin.automationcurves:
+				if autocurves.paramid:
+					for time, val, curve in autocurves.points:
+						convproj_obj.automation.add_autopoint_real(['plugin',pluginid,autocurves.paramid], 'float', time, val, 'normal')
+	
+			plugin_obj.fxdata_add(wf_plugin.enabled, 1)
+			if plugtype not in ['4osc']: track_obj.plugslots.slots_audio.append(pluginid)
+			else: track_obj.plugslots.set_synth(pluginid)
 
-		for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
-			paramval = wf_plugin.params[param_id] if param_id in wf_plugin.params else None
-			plugin_obj.dset_param__add(param_id, paramval, dset_param)
+	#elif software_mode == 'soundbug':
 
-		for autocurves in wf_plugin.automationcurves:
-			if autocurves.paramid:
-				for time, val, curve in autocurves.points:
-					convproj_obj.automation.add_autopoint_real(['plugin',pluginid,autocurves.paramid], 'float', time, val, 'normal')
+	#	print(wf_plugin.plugtype, wf_plugin.params)
 
-		plugin_obj.fxdata_add(wf_plugin.enabled, 1)
-		if wf_plugin.plugtype not in ['4osc']: track_obj.plugslots.slots_audio.append(pluginid)
-		else: track_obj.plugslots.set_synth(pluginid)
 
 autonames = {
 	'PITCHBEND': 'pitch',
@@ -246,10 +295,10 @@ autonames = {
 	'PRESSURE': 'pressure',
 }
 
-def do_foldertrack(convproj_obj, wf_track, counter_track): 
+def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode): 
 	groupid = str(wf_track.id_num)
 	track_obj = convproj_obj.fx__group__add(groupid)
-	track_obj.visual.name = wf_track.name
+	track_obj.visual.name = str(wf_track.name)
 	if wf_track.colour != '0': track_obj.visual.color.set_hex(wf_track.colour)
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
@@ -271,15 +320,15 @@ def do_foldertrack(convproj_obj, wf_track, counter_track):
 						convproj_obj.automation.add_autopoint_real(['group',groupid,'pan'], 'float', time, val, 'normal')
 
 		else:
-			do_plugin(convproj_obj, wf_plugin, track_obj)
+			do_plugin(convproj_obj, wf_plugin, track_obj, software_mode)
 
 	track_obj.params.add('vol', vol, 'float')
 	track_obj.params.add('pan', pan, 'float')
-	do_tracks(convproj_obj, wf_track.tracks, counter_track, groupid)
+	do_tracks(convproj_obj, wf_track.tracks, counter_track, groupid, software_mode)
 
-def do_track(convproj_obj, wf_track, track_obj): 
-	track_obj.visual.name = wf_track.name
-	colour = wf_track.colour
+def do_track(convproj_obj, wf_track, track_obj, software_mode): 
+	track_obj.visual.name = str(wf_track.name)
+	colour = str(wf_track.colour)
 	if colour != '0': 
 		if len(colour)==8: track_obj.visual.color.set_hex(colour[2:])
 		if len(colour)==6: track_obj.visual.color.set_hex(colour)
@@ -302,7 +351,7 @@ def do_track(convproj_obj, wf_track, track_obj):
 			if 'semitonesUp' in wf_plugin.params: middlenote -= int(wf_plugin.params['semitonesUp'])
 
 		else:
-			do_plugin(convproj_obj, wf_plugin, track_obj)
+			do_plugin(convproj_obj, wf_plugin, track_obj, software_mode)
 
 	track_obj.params.add('vol', vol, 'float')
 	track_obj.params.add('pan', pan, 'float')
@@ -404,16 +453,16 @@ def do_track(convproj_obj, wf_track, track_obj):
 	middlenote += track_obj.datavals.get('middlenote', 0)
 	track_obj.datavals.add('middlenote', middlenote)
 
-def do_tracks(convproj_obj, in_tracks, counter_track, groupid):
+def do_tracks(convproj_obj, in_tracks, counter_track, groupid, software_mode):
 	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	for wf_track in in_tracks:
 		tracknum = counter_track.get()
 		if isinstance(wf_track, proj_tracktion_edit.tracktion_track):
 			track_obj = convproj_obj.track__add(str(tracknum), 'hybrid', 1, False)
 			if groupid: track_obj.group = groupid
-			do_track(convproj_obj, wf_track, track_obj)
+			do_track(convproj_obj, wf_track, track_obj, software_mode)
 		if isinstance(wf_track, proj_tracktion_edit.tracktion_foldertrack):
-			do_foldertrack(convproj_obj, wf_track, counter_track)
+			do_foldertrack(convproj_obj, wf_track, counter_track, software_mode)
 
 class input_tracktion_edit(plugins.base):
 	def is_dawvert_plugin(self):
@@ -457,25 +506,58 @@ class input_tracktion_edit(plugins.base):
 		samples = {}
 		videos = {}
 		project_obj = proj_tracktion_edit.tracktion_edit()
-		if dawvert_intent.input_mode == 'file':
-			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		software_mode = ''
 
 		if dawvert_intent.input_mode == 'file':
-			if project_obj.projectID:
-				projectfile = project_obj.projectID.split('/')
-				if projectfile:
-					projectid = projectfile[0]
-					projfolder = os.path.dirname(dawvert_intent.input_file)
-					projfolder = os.path.abspath(projfolder)
-					tprojpaths = onlyfiles = [f for f in os.listdir(projfolder) if (os.path.isfile(os.path.join(projfolder, f)) and f.endswith('.tracktion'))]
-					for tprojpath in tprojpaths:
-						try:
-							tproj = proj_tracktion_project.tracktion_project()
-							tproj.load_from_file(os.path.join(projfolder, tprojpath))
-							samples |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'wave')])
-							videos |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'video')])
-						except:
-							pass
+			try:
+				project_obj.load_from_file(dawvert_intent.input_file)
+
+				logger_input.info('Software Mode: Waveform')
+				software_mode = 'waveform'
+
+				if project_obj.projectID:
+					projectfile = project_obj.projectID.split('/')
+					if projectfile:
+						projectid = projectfile[0]
+						projfolder = os.path.dirname(dawvert_intent.input_file)
+						projfolder = os.path.abspath(projfolder)
+						tprojpaths = onlyfiles = [f for f in os.listdir(projfolder) if (os.path.isfile(os.path.join(projfolder, f)) and f.endswith('.tracktion'))]
+						for tprojpath in tprojpaths:
+							try:
+								tproj = proj_tracktion_project.tracktion_project()
+								tproj.load_from_file(os.path.join(projfolder, tprojpath))
+								samples |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'wave')])
+								videos |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'video')])
+							except:
+								pass
+			except:
+				pass
+
+			try:
+				from objects.data_bytes import bytereader
+				from objects.binary_fmt import juce_binaryxml
+				import zlib
+
+				byr_stream = bytereader.bytereader()
+				byr_stream.load_file(dawvert_intent.input_file)
+				byr_stream.magic_check(b'SNDR')
+				compdata = byr_stream.raw(byr_stream.uint32())
+				decompdata = zlib.decompress(compdata)
+				decompdata = zlib.decompress(decompdata)
+		
+				main_obj = juce_binaryxml.juce_binaryxml_element()
+				main_obj.read_bytes(decompdata)
+				project_obj.load_from_elementdata(main_obj)
+				logger_input.info('Software Mode: Waveform')
+				software_mode = 'soundbug'
+			except:
+				pass
+
+
+		if not software_mode:
+			logger_input.error('Not a Valid File.')
+			exit()
 
 		for sid, spath in samples.items(): 
 			sampleref_obj = convproj_obj.sampleref__add(sid, spath, None)
@@ -500,7 +582,7 @@ class input_tracktion_edit(plugins.base):
 				convproj_obj.timesig_auto.add_point(pos, timesig)
 
 		for wf_plugin in project_obj.masterplugins:
-			do_plugin(convproj_obj, wf_plugin, convproj_obj.track_master)
+			do_plugin(convproj_obj, wf_plugin, convproj_obj.track_master, software_mode)
 
 		transport_obj = project_obj.transport
 
@@ -515,4 +597,4 @@ class input_tracktion_edit(plugins.base):
 		tracknum = 0
 		counter_track = counter.counter(1000, '')
 
-		do_tracks(convproj_obj, project_obj.tracks, counter_track, None)
+		do_tracks(convproj_obj, project_obj.tracks, counter_track, None, software_mode)

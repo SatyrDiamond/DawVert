@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_values
-from functions_compat import trackfx_to_numdata
+from functions.convproj_compat import trackfx_to_numdata
 import copy
 
 import logging

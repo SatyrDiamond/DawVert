@@ -4,26 +4,25 @@
 from functions import data_values
 from functions import xtramath
 
-#from functions_compat import fxrack2trackfx
-#from functions_compat import trackfx2fxrack
+#from functions.convproj_compat import fxrack2trackfx
+#from functions.convproj_compat import trackfx2fxrack
 
-from functions_compat import fxchange
-
-from functions_compat import autopl_addrem
-from functions_compat import changestretch
-from functions_compat import fxrack_moveparams
-from functions_compat import loops_add
-from functions_compat import loops_remove
-from functions_compat import removecut
-from functions_compat import removelanes
-from functions_compat import time_seconds
-from functions_compat import timesigblocks
-from functions_compat import nopl_track
-from functions_compat import track_pl_add
-from functions_compat import track_pl_del
-from functions_compat import unhybrid
-from functions_compat import sep_nest_audio
-from functions_compat import midi_notes
+from functions.convproj_compat import fxchange
+from functions.convproj_compat import autopl_addrem
+from functions.convproj_compat import changestretch
+from functions.convproj_compat import fxrack_moveparams
+from functions.convproj_compat import loops_add
+from functions.convproj_compat import loops_remove
+from functions.convproj_compat import removecut
+from functions.convproj_compat import removelanes
+from functions.convproj_compat import time_seconds
+from functions.convproj_compat import timesigblocks
+from functions.convproj_compat import nopl_track
+from functions.convproj_compat import track_pl_add
+from functions.convproj_compat import track_pl_del
+from functions.convproj_compat import unhybrid
+from functions.convproj_compat import sep_nest_audio
+from functions.convproj_compat import midi_notes
 
 import json
 import math

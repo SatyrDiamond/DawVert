@@ -13,8 +13,7 @@ import bisect
 import os
 import logging
 
-from functions import song_compat
-
+from objects.convproj import song_compat
 from objects.convproj import sample_entry
 from objects.convproj import automation
 from objects.convproj import plugin
@@ -879,11 +878,10 @@ class cvpj_project:
 			samplepart_obj = plugin_obj.samplepart_add('sample')
 			if file_path:
 				samplepart_obj.sampleref = sampleref
-				from objects.file import audio_drumsynth
-				from functions_plugin_cvpj import params_drumsynth
-				drumsynth_obj = audio_drumsynth.drumsynth_main()
-				drumsynth_obj.read(file_path)
-				params_drumsynth.to_cvpj(drumsynth_obj, plugin_obj)
+				from objects.inst_params import drumsynth
+				drumsynth_obj = drumsynth.drumsynth_main()
+				drumsynth_obj.load_from_file(file_path)
+				drumsynth_obj.to_plugin(plugin_obj)
 
 		return plugin_obj, sampleref_obj, samplepart_obj
 

@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-from functions_spec import soundbridge as soundbridge_func
+from functions.dawspecific import soundbridge as soundbridge_func
 from functions import xtramath
 
 def readstring(byr_stream):

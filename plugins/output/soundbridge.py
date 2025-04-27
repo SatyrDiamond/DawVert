@@ -12,7 +12,7 @@ from functions import data_values
 from functions import xtramath
 from objects import globalstore
 from objects.data_bytes import bytewriter
-from functions_spec import soundbridge as soundbridge_func
+from functions.dawspecific import soundbridge as soundbridge_func
 import logging
 
 PROJECT_FREQ = 22050

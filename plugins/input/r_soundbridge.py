@@ -3,7 +3,7 @@
 
 import plugins
 from functions import xtramath
-from functions_spec import soundbridge as soundbridge_func
+from functions.dawspecific import soundbridge as soundbridge_func
 from objects import globalstore
 from objects.convproj import fileref
 from objects.data_bytes import bytereader

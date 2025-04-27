@@ -3,7 +3,7 @@
 
 import winreg
 
-from functions_spec import soundbridge as soundbridge_func
+from functions.dawspecific import soundbridge as soundbridge_func
 from objects import globalstore
 from os.path import exists
 import os

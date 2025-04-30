@@ -66,6 +66,13 @@ class input_old_magix_maker(plugins.base):
 			for tracknum, mmm_track in enumerate(data_trks.data_trck):
 				trackid = str(tracknum)
 				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
+
+				data_trci = mmm_track.data_trci
+				if data_trci is not None:
+					track_obj.visual.name = data_trci.name
+					track_obj.params.add('pan', data_trci.pan, 'float')
+					track_obj.params.add('vol', data_trci.vol, 'float')
+
 				for obj in mmm_track.data_objs:
 					data_objc = obj.data_objc
 					if data_objc is not None:

@@ -41,12 +41,34 @@ class item_file:
 class item_trci:
 	def __init__(self):
 		self.data = None
+		self.unknowns = []
+		self.vol = 1
+		self.pan = 0
+		self.name = ''
 
 	@classmethod
 	def from_byr_stream(cls, byr_stream, size):
 		cls = cls()
 		with byr_stream.isolate_size(size, False) as bye_stream:
-			cls.data = bye_stream.raw(size)
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint16() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint16() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): val1 = bye_stream.float()
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint16() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint16() )
+			if bye_stream.remaining(): cls.vol = bye_stream.int32()/32767
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint16() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint16() )
+			if bye_stream.remaining(): cls.name = bye_stream.string(48)
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): cls.unknowns.append( bye_stream.uint32() )
+			if bye_stream.remaining(): cls.pan = bye_stream.float()/32767
+			if bye_stream.remaining(): cls.data = bye_stream.rest()
 		return cls
 
 
@@ -352,7 +374,7 @@ class group_trks:
 
 class group_trck:
 	def __init__(self):
-		self.data_trci = []
+		self.data_trci = None
 		self.data_cntr = []
 		self.data_objs = []
 		self.data_rubb = []
@@ -362,7 +384,7 @@ class group_trck:
 		cls = cls()
 		for x in riffchunks.iter_wseek(byr_stream):
 			if x.name == b'trci':
-				if not x.is_list: cls.data_trci.append(item_trci.from_byr_stream(byr_stream, x.size))
+				if not x.is_list: cls.data_trci = item_trci.from_byr_stream(byr_stream, x.size)
 				elif VERBOSE: print(x.name, 'is not an item')
 			elif x.name == b'cntr':
 				if not x.is_list: cls.data_cntr.append(item_cntr.from_byr_stream(byr_stream, x.size))

@@ -74,6 +74,7 @@ class input_old_magix_maker(plugins.base):
 						placement_obj.time.set_startend(data_objc.start, data_objc.end)
 						placement_obj.fade_in.set_dur((data_objc.fade_in/sample_time), 'beats')
 						placement_obj.fade_out.set_dur((data_objc.fade_out/sample_time), 'beats')
+						placement_obj.group = str(data_objc.group) if data_objc.group else None
 
 						if data_objc.loop_end: 
 							placement_obj.time.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
@@ -84,9 +85,10 @@ class input_old_magix_maker(plugins.base):
 						sample_obj = placement_obj.sample
 						sample_obj.sampleref = 'sample_'+str(data_objc.fileid)
 						sample_obj.vol = data_objc.vol/65535
+						sample_obj.pitch = data_objc.pitch
 						sample_obj.stretch.set_rate_speed(tempo, data_objc.speed/hzspeed, False)
+						sample_obj.stretch.uses_tempo = True
 						sample_obj.stretch.algorithm = 'stretch'
 						sample_obj.stretch.preserve_pitch = True
-						sample_obj.stretch.uses_tempo = True
 
 		#self.loop_end = 0

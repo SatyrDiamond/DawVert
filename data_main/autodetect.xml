@@ -264,6 +264,14 @@
 		<file fileext=".sndt"/>
 	</plugin>
 
+	<plugin pluginset="y2k" name="magix_old">
+		<file fileext=".mmm"/>
+	</plugin>
+
+	<plugin pluginset="y2k" name="magix_old">
+		<file fileext=".vip"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

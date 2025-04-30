@@ -1,0 +1,92 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import plugins
+from objects import globalstore
+import os
+
+class input_old_magix_maker(plugins.base):
+	def is_dawvert_plugin(self):
+		return 'input'
+	
+	def get_shortname(self):
+		return 'magix_old'
+	
+	def get_name(self):
+		return 'Magix Music Maker'
+	
+	def get_priority(self):
+		return 0
+	
+	def get_prop(self, in_dict): 
+		in_dict['file_ext'] = ['mmm']
+		in_dict['projtype'] = 'r'
+		in_dict['placement_loop'] = ['loop', 'loop_off']
+
+	def parse(self, convproj_obj, dawvert_intent):
+		from objects import colors
+		from objects.file_proj_past import magix_music_maker
+
+		convproj_obj.type = 'r'
+
+		project_obj = magix_music_maker.root_group()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		sample_time = 44100//2
+		sample_rate = 44100
+
+		tempomul = 1
+
+		tempo = 120
+		data_proi = project_obj.data_proi
+		if data_proi is not None:
+			tempo = data_proi.tempo
+			convproj_obj.params.add('bpm', tempo, 'float')
+			convproj_obj.timesig = [data_proi.timeisg_num, data_proi.timeisg_denom]
+			#sample_time = data_proi.sample_rate
+			sample_rate = data_proi.sample_rate
+			tempomul = 120/data_proi.tempo
+
+		convproj_obj.set_timings(sample_time*tempomul, True)
+
+		sampleref_objs = {}
+		data_phys = project_obj.data_phys
+		if data_phys is not None:
+			for n, x in enumerate(data_phys.files):
+				sampleid = 'sample_'+str(n)
+				joinedpath = '\\'.join([x.file, x.file2])
+				sampleref_obj = convproj_obj.sampleref__add(sampleid, joinedpath, 'win')
+				sampleref_obj.search_local(dawvert_intent.input_folder)
+				sampleref_objs[n] = sampleref_obj
+
+		data_trks = project_obj.data_trks
+		if data_trks is not None:
+			for tracknum, mmm_track in enumerate(data_trks.data_trck):
+				trackid = str(tracknum)
+				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
+				for obj in mmm_track.data_objs:
+					data_objc = obj.data_objc
+					if data_objc is not None:
+						placement_obj = track_obj.placements.add_audio()
+						placement_obj.visual.name = data_objc.name
+						placement_obj.visual.color.set_int(list(data_objc.bg_color[0:3]))
+						placement_obj.time.set_startend(data_objc.start, data_objc.end)
+						placement_obj.fade_in.set_dur((data_objc.fade_in/sample_time), 'beats')
+						placement_obj.fade_out.set_dur((data_objc.fade_out/sample_time), 'beats')
+
+						if data_objc.loop_end: 
+							placement_obj.time.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
+
+						sampleref_obj = sampleref_objs[data_objc.fileid]
+						hzspeed = sampleref_obj.hz/sample_rate
+
+						sample_obj = placement_obj.sample
+						sample_obj.sampleref = 'sample_'+str(data_objc.fileid)
+						sample_obj.vol = data_objc.vol/65535
+						sample_obj.stretch.set_rate_speed(tempo, data_objc.speed/hzspeed, False)
+						sample_obj.stretch.algorithm = 'stretch'
+						sample_obj.stretch.preserve_pitch = True
+						sample_obj.stretch.uses_tempo = True
+
+		#self.loop_end = 0

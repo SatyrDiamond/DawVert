@@ -22,6 +22,7 @@ class input_old_magix_maker(plugins.base):
 		in_dict['file_ext'] = ['mmm']
 		in_dict['projtype'] = 'r'
 		in_dict['placement_loop'] = ['loop', 'loop_off']
+		in_dict['audio_stretch'] = ['rate']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
@@ -91,4 +92,6 @@ class input_old_magix_maker(plugins.base):
 						sample_obj.stretch.algorithm = 'stretch'
 						sample_obj.stretch.preserve_pitch = True
 
+				track_obj.placements.pl_audio.sort()
+				track_obj.placements.pl_audio.remove_overlaps()
 		#self.loop_end = 0

@@ -502,8 +502,9 @@ class cvpj_sampleref:
 				audiof_obj.to_file_wav(outfilename)
 				self.set_path(os_type, outfilename)
 			sampleref_obj.hz = 44100
+			return True
 		except:
-			pass
+			return False
 
 	def search_local(self, dirpath):
 		if self.fileref.search_local(dirpath):

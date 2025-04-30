@@ -23,7 +23,7 @@ class output_bandlab(plugins.base):
 		return 'r'
 	
 	def get_prop(self, in_dict): 
-		in_dict['audio_filetypes'] = ['wav', 'mp3', 'flac']
+		in_dict['audio_filetypes'] = ['wav']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['projtype'] = 'r'
 		in_dict['audio_stretch'] = ['rate']
@@ -85,7 +85,7 @@ class output_bandlab(plugins.base):
 			"isFork": False,
 			"isForkable": False,
 			"isPublic": False,
-			"name": "audioc",
+			"name": convproj_obj.metadata.name if convproj_obj.metadata.name else 'Untitled',
 			"original": None,
 			"originalSongId": None,
 			"picture": {
@@ -212,7 +212,8 @@ class output_bandlab(plugins.base):
 			os.makedirs(os.path.join(folder, namet, 'Assets', 'MIDI'), exist_ok=True)
 
 			for midilist_id, midilist_obj in notelist_assoc.items():
-				midilist_obj.midi_to(os.path.join(folder, namet, 'Assets', 'MIDI', midilist_id+'.mid'))
+				midipath = os.path.join(folder, namet, 'Assets', 'MIDI', midilist_id+'.mid')
+				midilist_obj.midi_to(midipath)
 
 			for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 				if sampleref_id in used_samples:
@@ -222,7 +223,7 @@ class output_bandlab(plugins.base):
 					try:
 						sampleref_obj.copy_resample(None, a_out)
 					except:
-						pass
+						shutil.move(a_in, a_out)
 
 			os.makedirs(foldpath, exist_ok=True)
 			outpath = os.path.join(folder, namet, os.path.basename(dawvert_intent.output_file))

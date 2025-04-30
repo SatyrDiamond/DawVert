@@ -228,7 +228,12 @@ class output_bandlab(plugins.base):
 					except:
 						pass
 					
-					if not is_resampled: shutil.move(a_in, a_out)
+					if not is_resampled:
+						try:
+							shutil.move(a_in, a_out)
+						except:
+							pass
+
 
 			os.makedirs(foldpath, exist_ok=True)
 			outpath = os.path.join(folder, namet, os.path.basename(dawvert_intent.output_file))

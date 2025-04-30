@@ -15,7 +15,7 @@ class dualstr:
 	@classmethod
 	def from_str(cls, in_str):
 		outobj = cls()
-		outobj.parse_str(in_str)
+		outobj.set_str(in_str)
 		return outobj
 
 	def __str__(self):

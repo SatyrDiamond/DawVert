@@ -80,7 +80,8 @@ class item_objc:
 		self.loop_end = 0
 		self.name = ''
 		self.speed = 1
-		self.pitch = 1
+		self.pitch = 0
+		self.group = 0
 
 	@classmethod
 	def from_byr_stream(cls, byr_stream, size):
@@ -102,7 +103,7 @@ class item_objc:
 			cls.unk_color = bye_stream.l_uint8(4)
 			cls.fg_color = bye_stream.l_uint8(4)
 			cls.bg_color = bye_stream.l_uint8(4)
-			cls.unknowns.append( bye_stream.uint32() )
+			cls.group = bye_stream.uint32()
 			cls.unknowns.append( bye_stream.uint32() )
 			cls.unknowns.append( bye_stream.uint32() )
 			cls.fade_in = bye_stream.uint64()
@@ -124,9 +125,10 @@ class item_objc:
 			cls.unknowns.append( bye_stream.uint32() )
 			cls.unknowns.append( bye_stream.int32() )
 			cls.unknowns.append( bye_stream.uint32() )
-			if bye_stream.remaining(): 
-				bye_stream.skip(4)
-				cls.speed = bye_stream.float()
+			if bye_stream.remaining(): bye_stream.raw(4)
+			if bye_stream.remaining(): cls.speed = bye_stream.float()
+			if bye_stream.remaining(): bye_stream.skip(8)
+			if bye_stream.remaining(): cls.pitch = bye_stream.float()
 
 		return cls
 

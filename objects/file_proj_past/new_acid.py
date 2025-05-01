@@ -1,0 +1,291 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+from objects.data_bytes import bytereader
+from objects.data_bytes import bytewriter
+import logging
+
+VERBOSE = False
+SHOWALL = False
+
+# ---------------------- CHUNKS ----------------------
+
+class chunk__unknown_data:
+	def __init__(self, byr_stream):
+		size = byr_stream.int32()
+		self.unknowndata = []
+		self.data_a = byr_stream.int32()
+		self.data_b = byr_stream.float()
+		self.data_c = byr_stream.int32()
+
+class chunk__regiondata:
+	def __init__(self, byr_stream):
+		self.unknowndata = []
+		self.unknowndata.append( byr_stream.uint32() )
+		numchars1 = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		numchars2 = byr_stream.uint32()
+		self.filename = byr_stream.string16(numchars1//2)
+		self.filename2 = byr_stream.string16(numchars2//2)
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+
+class chunk__peak:
+	def __init__(self, byr_stream):
+		self.unknowndata = []
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int64() )
+		self.unknowndata.append( byr_stream.float() )
+
+class chunk__region:
+	def __init__(self, byr_stream):
+		self.header = []
+		self.header.append( byr_stream.int32() )
+		self.header.append( byr_stream.int32() )
+		self.flags = byr_stream.flags64()
+		self.unknowndata = []
+		self.pos = byr_stream.int64()
+		self.size = byr_stream.int64()
+		self.offset = byr_stream.int64()
+		self.pitch = byr_stream.double()
+		self.unknowndata.append( byr_stream.double() )
+		self.unknowndata.append( byr_stream.int64() )
+		self.unknowndata.append( byr_stream.int64() )
+		self.unknowndata.append( byr_stream.int64() )
+		self.unknowndata.append( byr_stream.int64() )
+		self.fade_in = byr_stream.int64()
+		self.fade_out = byr_stream.int64()
+		self.unknowndata.append( byr_stream.int32() )
+		#if byr_stream.remaining(): self.fade_in_type = byr_stream.int32()
+		#if byr_stream.remaining(): self.fade_out_type = byr_stream.int32()
+
+class chunk__maindata:
+	def __init__(self, byr_stream):
+		self.unknowndata = []
+		size = byr_stream.int32()
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.freq = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.double() )
+		self.tempo = byr_stream.double()
+		self.unknowndata.append( byr_stream.uint64() )
+		self.timesig_num = byr_stream.uint16()
+		self.timesig_denom = byr_stream.uint16()
+		self.ppq = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		numchars1 = byr_stream.uint32()//2
+		numchars2 = byr_stream.uint32()//2
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.file_project = byr_stream.string16(numchars1)
+		self.file_prog = byr_stream.string16(numchars2)
+
+class chunk__track_data:
+	def __init__(self, byr_stream):
+		self.unknowndata = []
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.flags = byr_stream.flags32()
+		self.size = byr_stream.uint32()
+		self.type = byr_stream.uint32()
+		self.color = byr_stream.uint32()
+		self.stretchtype = byr_stream.uint32()
+		self.id = byr_stream.uint32()
+		stringsize1 = byr_stream.uint32()//2
+		stringsize2 = byr_stream.uint32()//2
+		self.numaudio = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.uint32() )
+		self.seconds = byr_stream.uint32()/10000000
+		self.unknowndata.append( byr_stream.uint32() )
+		stringsize3 = byr_stream.uint32()//2
+		self.unknowndata.append( byr_stream.uint32() )
+		self.filename = byr_stream.string16(stringsize1)
+		self.name = byr_stream.string16(stringsize2)
+		self.name2 = byr_stream.string16(stringsize3)
+
+class chunk__audioinfo:
+	def __init__(self, byr_stream):
+		self.unknowndata = []
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.vol = byr_stream.float()
+		self.pan = byr_stream.float()
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.float() )
+		self.unknowndata.append( byr_stream.int32() )
+		#self.unknowndata.append( byr_stream.rest() )
+
+class chunk__marker:
+	def __init__(self, byr_stream):
+		size = byr_stream.uint32()
+		byr_stream.skip(4)
+		self.pos = byr_stream.int64()
+		self.end = byr_stream.int64()
+		self.id = byr_stream.int32()
+		self.type = byr_stream.int32()
+		numchars = byr_stream.int32()//2
+		byr_stream.skip(4)
+		self.name = byr_stream.string16(numchars)
+
+class chunk__tempokeypoint:
+	def __init__(self, byr_stream):
+		size = byr_stream.uint32()
+		self.unknowndata = []
+		byr_stream.skip(4)
+		self.pos_synctime = byr_stream.int64()
+		self.pos_samples = byr_stream.int64()
+		self.tempo = byr_stream.int32()
+		self.base_note = byr_stream.int32()
+
+class chunk__audiostretch:
+	def __init__(self, byr_stream):
+		size = byr_stream.uint32()
+		self.unknowndata = []
+		self.unknowndata.append( byr_stream.uint32() )
+		self.flags = byr_stream.flags32()
+		self.root_note = byr_stream.uint8()
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.downbeat_offset = byr_stream.uint32()
+		self.timesig_num = byr_stream.uint16()
+		self.timesig_denom = byr_stream.uint16()
+		self.tempo = byr_stream.float()
+
+chunksdef = {}
+chunksdef['754be33a5ef5ec44a2f0f4eb3c53af7d'] = chunk__peak
+chunksdef['6a208d162123d21186b000c04f8edb8a'] = chunk__region
+chunksdef['5a2d8fb20f23d21186af00c04f8edb8a'] = chunk__maindata
+chunksdef['49076c4d1623d21186b000c04f8edb8a'] = chunk__track_data
+chunksdef['276cd4690b7fd211871700c04f8edb8a'] = chunk__audioinfo
+chunksdef['4212abe5d43b1e439148fb80c038eaeb'] = chunk__unknown_data
+chunksdef['5d2d8fb20f23d21186af00c04f8edb8a'] = chunk__regiondata
+chunksdef['5662f7ab2d39d21186c700c04f8edb8a'] = chunk__marker
+chunksdef['07521655f6713e4e83be9dee9c5ba303'] = chunk__tempokeypoint
+chunksdef['5287535c45e3784f83b8551935b4c6f7'] = chunk__audiostretch
+
+# ---------------------- INDATA ----------------------
+
+verboseid = {}
+verboseid['5a2d8fb20f23d21186af00c04f8edb8a'] = 'MainData'
+verboseid['49076c4d1623d21186b000c04f8edb8a'] = 'TrackData'
+verboseid['276cd4690b7fd211871700c04f8edb8a'] = 'TrackAudioInfo'
+verboseid['3e0c0223541dfc44aab68330c9121f22'] = 'TrackMIDIInfo'
+verboseid['6a208d162123d21186b000c04f8edb8a'] = 'TrackRegion'
+verboseid['d0fb0bbbaec4044685662b4bf9cccbb5'] = 'TrackSFolder'
+verboseid['2b959c4d344c664295f519126b4420a8'] = 'TrackSTrack'
+verboseid['9d74b872ab14884594a939343aeef7cc'] = 'MixerChannel'
+verboseid['a132b74c04e40d498806ede87d7d2c4f'] = 'TrackGroove'
+verboseid['5c1b70846368d21186fd00c04f8edb8a'] = 'TrackAutomation'
+verboseid['1b1ce45016af194e8cdba707237b7921'] = 'GrooveInfo'
+verboseid['b5c7e0971f2d46449de8c07ff6f43b3b'] = 'RegionData'
+verboseid['5662f7ab2d39d21186c700c04f8edb8a'] = 'Marker'
+verboseid['754be33a5ef5ec44a2f0f4eb3c53af7d'] = 'Peak?'
+verboseid['4212abe5d43b1e439148fb80c038eaeb'] = 'V3Peak?'
+verboseid['5287535c45e3784f83b8551935b4c6f7'] = 'AudioStretch'
+verboseid['07521655f6713e4e83be9dee9c5ba303'] = 'TempoKeyPoint'
+verboseid['44030abfa7f8f44788cba63c7756ba9e'] = 'AudioDef:Info'
+verboseid['5d2d8fb20f23d21186af00c04f8edb8a'] = 'RegionData'
+
+verboseid['a95c808a7402c242b8b9572f6786317c'] = 'Group:AudioDef'
+verboseid['5b2d8fb20f23d21186af00c04f8edb8a'] = 'Group:RegionDatas'
+verboseid['a59e8054b89bcd458d2b3ef94586a8e0'] = 'Group:GroovePool'
+verboseid['48076c4d1623d21186b000c04f8edb8a'] = 'Group:Track'
+verboseid['47076c4d1623d21186b000c04f8edb8a'] = 'Group:TrackList'
+verboseid['e42b0d22d37fd211871800c04f8edb8a'] = 'Group:Mixer'
+verboseid['f40e02902d39d21186c700c04f8edb8a'] = 'Group:Markers'
+verboseid['172d16be624d2c48b80bfcf30fa53b02'] = 'Group:Peaks'
+verboseid['4a076c4d1623d21186b000c04f8edb8a'] = 'Group:Regions'
+verboseid['266cd4690b7fd211871700c04f8edb8a'] = 'Group:AudioInfo'
+verboseid['07521655f6713e4e83be9dee9c5ba303'] = 'Group:TempoKeyPoints'
+verboseid['5287535c45e3784f83b8551935b4c6f7'] = 'Group:AudioStretch'
+
+class sony_acid_chunk:
+	def __init__(self):
+		self.id = None
+		self.size = 0
+		self.start = 0
+		self.end = 0
+		self.is_list = False
+		self.in_data = []
+		self.def_data = None
+
+	def __getitem__(self, v):
+		return self.in_data[v]
+
+	def __iter__(self):
+		return self.in_data.__iter__()
+
+	def __repr__(self):
+		idname = self.id.hex()
+		if idname in verboseid: visname = verboseid[idname]
+		else: visname = 'UnknownData:'+self.id.hex()
+		return '<SF ACID Chunk - %s>' % visname
+
+	def iter_wtypes(self):
+		for x in self.in_data.__iter__():
+			idname = x.id.hex()
+			yield x, verboseid[idname] if idname in verboseid else None
+
+	def read(self, byr_stream, tnum):
+		self.id = byr_stream.raw(16)
+		self.size = byr_stream.uint64()-24
+		self.start = byr_stream.tell_real()
+		self.is_list = self.id[0:4] in [b'riff', b'list']
+
+		if self.is_list:
+			self.id = byr_stream.raw(16)
+			gidname = self.id.hex()
+			if gidname in verboseid: gidname = verboseid[gidname]
+			if VERBOSE: print('\t'*tnum, '$Group %s \\' % gidname)
+			with byr_stream.isolate_size(self.size-16, True) as bye_stream: 
+				while bye_stream.remaining():
+					inchunk = sony_acid_chunk()
+					inchunk.read(bye_stream, tnum+1)
+					self.in_data.append(inchunk)
+			if VERBOSE: print('\t'*tnum, '       /')
+
+		else:
+			idname = self.id.hex()
+
+			if VERBOSE:
+				if idname in verboseid: visname = verboseid[idname]
+				else: visname = 'UnknownData:'+self.id.hex()
+				print('\t'*tnum,  visname)
+
+			if idname in chunksdef and not SHOWALL: 
+				with byr_stream.isolate_size(self.size, True) as bye_stream:
+					self.def_data = chunksdef[idname](bye_stream)
+				#print(byr_stream.raw(self.size).hex())
+			else:
+				if VERBOSE: print('\t'*tnum,  byr_stream.raw(self.size).hex())
+				else: byr_stream.skip(self.size)
+
+class sony_acid_song:
+	def __init__(self):
+		self.root = sony_acid_chunk()
+
+	def load_from_file(self, input_file):
+		byr_stream = bytereader.bytereader()
+		byr_stream.load_file(input_file)
+
+		self.root = sony_acid_chunk()
+		self.root.read(byr_stream, 0)
+		return True
+
+#apeinst_obj = sony_acid_song()
+#apeinst_obj.load_from_file("testin.acd")

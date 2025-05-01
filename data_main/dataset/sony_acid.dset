@@ -15,11 +15,14 @@
             <color>#5BFF5B</color>
         </colorset>
         <colorset id="acid_4">
-            <color>#33897C</color>
-            <color>#7C3441</color>
             <color>#5973A8</color>
+            <color>#7C3441</color>
             <color>#599CA8</color>
             <color>#5D4181</color>
+            <color>#33897C</color>
+            <color>#7C7634</color>
+            <color>#415E81</color>
+            <color>#59A869</color>
         </colorset>
     </category>
 </dataset>

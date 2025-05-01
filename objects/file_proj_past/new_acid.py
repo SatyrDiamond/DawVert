@@ -174,11 +174,10 @@ class chunk__startingparam:
 		size = byr_stream.uint32()
 		self.unknowndata = []
 		self.unknowndata.append( byr_stream.uint32() )
-		self.unknowndata.append( byr_stream.uint32() )
+		self.tempo = byr_stream.uint32()
 		self.root_note = byr_stream.uint32()
 		self.unknowndata.append( byr_stream.uint32() )
 		self.unknowndata.append( byr_stream.uint32() )
-		self.unknowndata.append( byr_stream.rest() )
 
 chunksdef = {}
 chunksdef['754be33a5ef5ec44a2f0f4eb3c53af7d'] = chunk__peak

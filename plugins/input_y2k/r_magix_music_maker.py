@@ -71,18 +71,27 @@ class input_old_magix_maker(plugins.base):
 				if data_trci is not None:
 					track_obj.visual.name = data_trci.name
 					track_obj.params.add('pan', data_trci.pan, 'float')
-					track_obj.params.add('vol', data_trci.vol, 'float')
+					track_obj.params.add('vol', max(0, data_trci.vol), 'float')
+				
+				totalcolors = []
+				uniquecolors = {}
 
 				for obj in mmm_track.data_objs:
 					data_objc = obj.data_objc
 					if data_objc is not None:
 						placement_obj = track_obj.placements.add_audio()
+						color = list(data_objc.bg_color[0:3])
 						placement_obj.visual.name = data_objc.name
-						placement_obj.visual.color.set_int(list(data_objc.bg_color[0:3]))
+						placement_obj.visual.color.set_int(color)
 						placement_obj.time.set_startend(data_objc.start, data_objc.end)
 						placement_obj.fade_in.set_dur((data_objc.fade_in/sample_time), 'beats')
 						placement_obj.fade_out.set_dur((data_objc.fade_out/sample_time), 'beats')
 						placement_obj.group = str(data_objc.group) if data_objc.group else None
+
+						if color not in totalcolors: 
+							uniquecolors[len(totalcolors)] = 0
+							totalcolors.append(color)
+						uniquecolors[totalcolors.index(color)] += 1
 
 						if data_objc.loop_end: 
 							placement_obj.time.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
@@ -94,10 +103,17 @@ class input_old_magix_maker(plugins.base):
 						sample_obj.sampleref = 'sample_'+str(data_objc.fileid)
 						sample_obj.vol = data_objc.vol/65535
 						sample_obj.pitch = data_objc.pitch
-						sample_obj.stretch.set_rate_speed(tempo, data_objc.speed/hzspeed, False)
-						sample_obj.stretch.uses_tempo = True
-						sample_obj.stretch.algorithm = 'stretch'
-						sample_obj.stretch.preserve_pitch = True
+						if data_objc.speed:
+							sample_obj.stretch.set_rate_speed(tempo, data_objc.speed/hzspeed, False)
+							sample_obj.stretch.uses_tempo = True
+							sample_obj.stretch.algorithm = 'stretch'
+							sample_obj.stretch.preserve_pitch = True
+
+						#print(color)
+
+				if uniquecolors:
+					trackcolor = totalcolors[max(uniquecolors, key=lambda k: uniquecolors.get(k))]
+					track_obj.visual.color.set_int(trackcolor)
 
 				track_obj.placements.pl_audio.sort()
 				track_obj.placements.pl_audio.remove_overlaps()

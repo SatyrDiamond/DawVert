@@ -132,7 +132,7 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 				block.loopOffset = 0
 				block.framesCount = int(time_obj.duration+1)
 				block.loopEnabled = 0
-				block.muted = int(notespl_obj.muted)
+				block.muted = int(autopl_obj.muted)
 				block.version = 1
 
 				if autopl_obj.time.cut_type == 'cut':

@@ -26,7 +26,6 @@ def autopoints_get(autoloc, add, mul):
 		autopoints.remove_instant()
 		for autopoint in autopoints:
 			sngauto.append({"pos": autopoint.pos, "value": (autopoint.value/mul)-add})
-	print(sngauto)
 	return sngauto
 
 def add_fx(convproj_obj, soundation_channel, fxchain_audio):

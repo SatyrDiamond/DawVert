@@ -133,7 +133,7 @@ class cvpj_placements_midi:
 		return plb_obj
 
 class cvpj_placement_midi:
-	__slots__ = ['time','muted','visual','midievents','time_ppq','time_float','auto','group','locked']
+	__slots__ = ['time','muted','visual','midievents','time_ppq','time_float','auto','group','locked','pitch']
 	def __init__(self, time_ppq, time_float):
 		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
 		self.time_ppq = time_ppq
@@ -144,6 +144,7 @@ class cvpj_placement_midi:
 		self.auto = {}
 		self.group = None
 		self.locked = False
+		self.pitch = 0
 
 	def make_base(self):
 		plb_obj = cvpj_placement_midi(self.time_ppq, self.time_float)

@@ -73,7 +73,7 @@ class input_acid_3(plugins.base):
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['audio_stretch'] = ['rate']
-		in_dict['auto_types'] = ['pl_points','nopl_ticks']
+		in_dict['auto_types'] = ['nopl_points']
 		in_dict['notes_midi'] = True
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -170,6 +170,24 @@ class input_acid_3(plugins.base):
 											for reg_chunk, reg_name in trackg_chunk.iter_wtypes():
 												if reg_name == 'TrackRegion':
 													track_regions.append(reg_chunk.def_data)
+
+								if track_name == 'Group:TrackAuto': 
+									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
+										if trackg_name == 'TrackAutomation':
+											if track_header:
+												track_auto = trackg_chunk.def_data
+												autoloc = None
+												
+												trackid = 'track_'+str(track_header.id)
+	
+												if not track_auto.group:
+													if track_auto.param == 0: autoloc = ['track', trackid, 'vol']
+													if track_auto.param == 1: autoloc = ['track', trackid, 'pan']
+		
+												if autoloc:
+													for p in track_auto.points:
+														convproj_obj.automation.add_autopoint(autoloc, 'float', p[0], p[2], 'normal')
+
 
 							else:
 								if track_name == 'TrackData':
@@ -292,6 +310,7 @@ class input_acid_3(plugins.base):
 										time_obj = placement_obj.time
 										time_obj.set_posdur(region.pos, outsize)
 
+										placement_obj.pitch = int(region.pitch)
 										placement_obj.midi_from(filename)
 
 										midievents_obj = placement_obj.midievents
@@ -305,15 +324,13 @@ class input_acid_3(plugins.base):
 										if maxdur>0:
 											time_obj.set_loop_data(region.offset, 0, maxdur*ppq)
 
-
-
 			elif root_name == 'Group:TempoKeyPoints':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'Group:TempoKeyPoints':
 						def_data = regs_chunk.def_data
 						if def_data.tempo:
 							tempov = (500000/def_data.tempo)*120
-							convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', def_data.pos_samples, tempov)
+							convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', def_data.pos_samples, tempov, 'instant')
 						if def_data.base_note:
 							timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[def_data.pos_samples]-60)
 							timemarker_obj.position = def_data.pos_samples

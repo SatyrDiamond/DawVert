@@ -379,7 +379,8 @@ class midievents:
 			self.data.sort(['pos'])
 
 	def get_dur(self):
-		return max(self.data.get_used()['pos'].astype(np.int64))
+		used_data = self.data.get_used()
+		return max(used_data['pos'].astype(np.int64)) if len(used_data) else -1
 
 	def clean(self):
 		self.data.clean()

@@ -182,5 +182,7 @@ class cvpj_placement_midi:
 						elif type(msg) == MidiEvents.ControllerEvent: events_obj.add_control(curpos, msg.channel, msg.controller, msg.value)
 						elif type(msg) == MidiEvents.ProgramEvent: events_obj.add_program(curpos, msg.channel, msg.program)
 						elif type(msg) == MidiEvents.EndOfTrackEvent: break
-
+						elif type(msg) == MidiEvents.TrackNameEvent:
+							if not events_obj.track_name:
+								events_obj.track_name = msg.name
 

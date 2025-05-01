@@ -61,7 +61,7 @@ class input_acid_old(plugins.base):
 		return 'sf_acid'
 	
 	def get_name(self):
-		return 'Sonic Foundry ACID'
+		return 'Sonic Foundry ACID 1.x-2.x'
 	
 	def get_priority(self):
 		return 0

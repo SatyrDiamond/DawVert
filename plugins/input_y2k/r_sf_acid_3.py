@@ -62,7 +62,7 @@ class input_acid_3(plugins.base):
 		return 'sf_acid_3'
 	
 	def get_name(self):
-		return 'Sonic Foundry ACID 3.0'
+		return 'Sonic Foundry ACID 3.x-4.x'
 	
 	def get_priority(self):
 		return 0
@@ -297,10 +297,13 @@ class input_acid_3(plugins.base):
 										midievents_obj = placement_obj.midievents
 										midievents_obj.sort()
 
-										maxdur = (midievents_obj.get_dur()/midievents_obj.ppq)*ppq
+										maxdur = (midievents_obj.get_dur()/midievents_obj.ppq)
+										maxdur = maxdur.__ceil__()
+										
+										placement_obj.visual.name = midievents_obj.track_name
 
 										if maxdur>0:
-											time_obj.set_loop_data(region.offset, 0, maxdur)
+											time_obj.set_loop_data(region.offset, 0, maxdur*ppq)
 
 
 

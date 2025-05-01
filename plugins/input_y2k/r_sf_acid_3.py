@@ -7,6 +7,53 @@ import bisect
 from objects import globalstore
 from objects.convproj import fileref
 
+class rootnote_stor():
+	def __init__(self):
+		self.data = []
+	
+	def add_pos(self, p):
+		if self.data:
+			for n, x in enumerate(self.data):
+				if x[1]==-1:
+					self.data[n][0] = p
+					self.data.insert(n, [0,p,60])
+					break
+				elif x[1]>p:
+					self.data.insert(n, [0,p,60])
+					break
+		else:
+			self.data = [[p,-1,60]]
+
+		for n, x in enumerate(self.data):
+			if (len(self.data)-1)>n>0:
+				self.data[n][0] = self.data[n-1][1]
+
+	def add_notes(self, notedata):
+		notepos = list(notedata)
+		for x in notepos:
+			b = bisect.bisect_left(notepos, x)
+			if b<len(self.data): self.data[b][2] = notedata[x]
+
+	def iterd(self, ostart, oend):
+		for start, end, root_note in self.data:
+			if end != -1:
+				cond = ((end>ostart) and (start<oend))
+				if cond: yield max(start, ostart), min(end, oend), root_note
+			else:
+				cond = (start<oend)
+				if cond: yield max(start, ostart), oend, root_note
+
+def calc_root(proj_root, track_root):
+	roottrack = (proj_root-60)
+	roottrack = roottrack%12
+
+	notetrack = track_root-60
+	notetrack = notetrack%12
+
+	outt = roottrack-notetrack
+	outt -= ((outt+6)//12)*12
+	return outt
+
 class input_acid_3(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -43,16 +90,41 @@ class input_acid_3(plugins.base):
 		globalstore.dataset.load('sony_acid', './data_main/dataset/sony_acid.dset')
 		colordata = colors.colorset.from_dataset('sony_acid', 'track', 'acid_4')
 		
+		auto_basenotes = {}
+
 		tempo = 120
+		starttempo = 0
 
 		files = {}
 		filecount = 0
 		tracknum = -1
 
 		for root_chunk, root_name in project_obj.root.iter_wtypes():
+			if root_name == 'Group:TempoKeyPoints':
+				for regs_chunk, regs_name in root_chunk.iter_wtypes():
+					if regs_name == 'Group:TempoKeyPoints':
+						def_data = regs_chunk.def_data
+						if not def_data.pos_samples:
+							if def_data.tempo:
+								starttempo = (500000/def_data.tempo)*120
+								tempo = starttempo
+						if def_data.base_note:
+							auto_basenotes[def_data.pos_samples] = int(def_data.base_note)
+
+			if root_name == 'Group:StartingParams':
+				for regs_chunk, regs_name in root_chunk.iter_wtypes():
+					if regs_name == 'Group:StartingParams':
+						def_data = regs_chunk.def_data
+						auto_basenotes[0] = int(def_data.root_note)
+
+		rootnote_auto = rootnote_stor()
+		for pos in list(auto_basenotes): rootnote_auto.add_pos(pos)
+		rootnote_auto.add_notes(auto_basenotes)
+
+		for root_chunk, root_name in project_obj.root.iter_wtypes():
 			if root_name == 'MainData':
 				def_data = root_chunk.def_data
-				tempo = def_data.tempo
+				if not starttempo: tempo = def_data.tempo
 				convproj_obj.params.add('bpm', tempo, 'float')
 				convproj_obj.timesig = [def_data.timesig_num, def_data.timesig_denom]
 
@@ -128,39 +200,72 @@ class input_acid_3(plugins.base):
 	
 									sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
 									sampleref_obj.search_local(dawvert_intent.input_folder)
-	
+
+									pls = []
+
 									for region in track_regions:
-	
-										#offset = (int(region.offset/mul2)/5000000)*ppq
-	
-										outsize = region.size
-	
-										placement_obj = track_obj.placements.add_audio()
 
 										if stretch_type == 0:
-											time_obj = placement_obj.time
-											time_obj.set_posdur(region.pos, outsize)
-											time_obj.set_loop_data(0, 0, sample_beats*ppq)
-											sp_obj = placement_obj.sample 
-											sp_obj.sampleref = filename
-											sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
-											sp_obj.stretch.preserve_pitch = True
-											sp_obj.pitch = region.pitch
+											offset = 0
+											ppq_beats = num_beats*ppq
+
+											if 1 in track_audiostretch.flags:
+												for start, end, cur_root in rootnote_auto.iterd(region.pos, region.pos+region.size):
+													placement_obj = track_obj.placements.add_audio()
+													time_obj = placement_obj.time
+													time_obj.set_startend(start, end)
+													time_obj.set_loop_data((offset*ppq)+((start-region.pos)%ppq_beats), 0, ppq_beats)
+													sp_obj = placement_obj.sample 
+													sp_obj.sampleref = filename
+													sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
+													sp_obj.stretch.preserve_pitch = True
+	
+													if cur_root != 127 and 1 in track_audiostretch.flags:
+														notetrack = calc_root(cur_root, track_root_note)
+														sp_obj.pitch = notetrack+region.pitch
+													else:
+														sp_obj.usemasterpitch = False
+														sp_obj.pitch = region.pitch
+	
+													pls.append(placement_obj)
+											else:
+												placement_obj = track_obj.placements.add_audio()
+												time_obj = placement_obj.time
+												time_obj.set_startend(region.pos, region.pos+region.size)
+												time_obj.set_loop_data(0, 0, ppq_beats)
+												sp_obj = placement_obj.sample 
+												sp_obj.sampleref = filename
+												sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
+												sp_obj.usemasterpitch = False
+												sp_obj.pitch = region.pitch
+												pls.append(placement_obj)
+
 
 										if stretch_type == 1:
+											placement_obj = track_obj.placements.add_audio()
 											ssize = (int(region.size)/5000000)*ppq
 											time_obj = placement_obj.time
 											time_obj.set_posdur(region.pos, ssize)
 											sp_obj = placement_obj.sample 
 											sp_obj.sampleref = filename
+											pls.append(placement_obj)
 
 										if stretch_type == 2:
+											placement_obj = track_obj.placements.add_audio()
 											time_obj = placement_obj.time
-											time_obj.set_posdur(region.pos, outsize)
+											time_obj.set_posdur(region.pos, region.size)
 											sp_obj = placement_obj.sample 
 											sp_obj.sampleref = filename
 											sp_obj.stretch.set_rate_tempo(tempo, mul1, True)
 											sp_obj.pitch = region.pitch
+											pls.append(placement_obj)
+
+									for p in pls:
+										p.visual.name = track_header.name
+										p.visual.color.set_int(color)
+
+									track_obj.placements.pl_audio.sort()
+									track_obj.placements.pl_audio.remove_overlaps()
 
 							if track_header.type == 4:
 								cvpj_trackid = 'track_'+str(track_header.id)
@@ -194,3 +299,31 @@ class input_acid_3(plugins.base):
 										if maxdur>0:
 											time_obj.set_loop_data(region.offset, 0, maxdur)
 
+
+
+			elif root_name == 'Group:TempoKeyPoints':
+				for regs_chunk, regs_name in root_chunk.iter_wtypes():
+					if regs_name == 'Group:TempoKeyPoints':
+						def_data = regs_chunk.def_data
+						if def_data.tempo:
+							tempov = (500000/def_data.tempo)*120
+							convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', def_data.pos_samples, tempov)
+						if def_data.base_note:
+							timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[def_data.pos_samples]-60)
+							timemarker_obj.position = def_data.pos_samples
+							timemarker_obj.visual.color.set_int([56, 95, 125])
+
+			elif root_name == 'Group:Markers':
+				for regs_chunk, regs_name in root_chunk.iter_wtypes():
+					if regs_name == 'Marker':
+						marker = regs_chunk.def_data
+
+						timemarker_obj = convproj_obj.timemarker__add()
+						timemarker_obj.position = marker.pos
+						timemarker_obj.duration = marker.end
+						timemarker_obj.visual.name = marker.name if marker.name else '[%i]' % marker.id
+						if marker.type == 1: 
+							timemarker_obj.type = 'region'
+							timemarker_obj.visual.color.set_int([84,158,101])
+						else:
+							timemarker_obj.visual.color.set_int([219,142,87])

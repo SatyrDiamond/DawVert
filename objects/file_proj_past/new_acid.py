@@ -84,7 +84,10 @@ class chunk__maindata:
 		self.unknowndata.append( byr_stream.uint32() )
 		self.unknowndata.append( byr_stream.uint32() )
 		self.unknowndata.append( byr_stream.uint32() )
-		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
+		self.unknowndata.append( byr_stream.uint8() )
 		self.unknowndata.append( byr_stream.uint32() )
 		self.file_project = byr_stream.string16(numchars1)
 		self.file_prog = byr_stream.string16(numchars2)
@@ -166,6 +169,17 @@ class chunk__audiostretch:
 		self.timesig_denom = byr_stream.uint16()
 		self.tempo = byr_stream.float()
 
+class chunk__startingparam:
+	def __init__(self, byr_stream):
+		size = byr_stream.uint32()
+		self.unknowndata = []
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.root_note = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.rest() )
+
 chunksdef = {}
 chunksdef['754be33a5ef5ec44a2f0f4eb3c53af7d'] = chunk__peak
 chunksdef['6a208d162123d21186b000c04f8edb8a'] = chunk__region
@@ -177,6 +191,7 @@ chunksdef['5d2d8fb20f23d21186af00c04f8edb8a'] = chunk__regiondata
 chunksdef['5662f7ab2d39d21186c700c04f8edb8a'] = chunk__marker
 chunksdef['07521655f6713e4e83be9dee9c5ba303'] = chunk__tempokeypoint
 chunksdef['5287535c45e3784f83b8551935b4c6f7'] = chunk__audiostretch
+chunksdef['be3967941a398443878538bda35f409a'] = chunk__startingparam
 
 # ---------------------- INDATA ----------------------
 
@@ -200,6 +215,7 @@ verboseid['5287535c45e3784f83b8551935b4c6f7'] = 'AudioStretch'
 verboseid['07521655f6713e4e83be9dee9c5ba303'] = 'TempoKeyPoint'
 verboseid['44030abfa7f8f44788cba63c7756ba9e'] = 'AudioDef:Info'
 verboseid['5d2d8fb20f23d21186af00c04f8edb8a'] = 'RegionData'
+verboseid['be3967941a398443878538bda35f409a'] = 'StartingParams'
 
 verboseid['a95c808a7402c242b8b9572f6786317c'] = 'Group:AudioDef'
 verboseid['5b2d8fb20f23d21186af00c04f8edb8a'] = 'Group:RegionDatas'
@@ -213,6 +229,7 @@ verboseid['4a076c4d1623d21186b000c04f8edb8a'] = 'Group:Regions'
 verboseid['266cd4690b7fd211871700c04f8edb8a'] = 'Group:AudioInfo'
 verboseid['07521655f6713e4e83be9dee9c5ba303'] = 'Group:TempoKeyPoints'
 verboseid['5287535c45e3784f83b8551935b4c6f7'] = 'Group:AudioStretch'
+verboseid['be3967941a398443878538bda35f409a'] = 'Group:StartingParams'
 
 class sony_acid_chunk:
 	def __init__(self):

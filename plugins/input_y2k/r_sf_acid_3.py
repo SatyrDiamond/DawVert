@@ -116,6 +116,7 @@ class input_acid_3(plugins.base):
 					if regs_name == 'Group:StartingParams':
 						def_data = regs_chunk.def_data
 						auto_basenotes[0] = int(def_data.root_note)
+						starttempo = (500000/def_data.tempo)*120
 
 		rootnote_auto = rootnote_stor()
 		for pos in list(auto_basenotes): rootnote_auto.add_pos(pos)
@@ -124,12 +125,13 @@ class input_acid_3(plugins.base):
 		for root_chunk, root_name in project_obj.root.iter_wtypes():
 			if root_name == 'MainData':
 				def_data = root_chunk.def_data
-				if not starttempo: tempo = def_data.tempo
-				convproj_obj.params.add('bpm', tempo, 'float')
-				convproj_obj.timesig = [def_data.timesig_num, def_data.timesig_denom]
-
 				ppq = def_data.ppq
 				convproj_obj.set_timings(ppq, False)
+
+				if not starttempo: tempo = def_data.tempo
+				else: tempo = starttempo
+				convproj_obj.params.add('bpm', tempo, 'float')
+				convproj_obj.timesig = [def_data.timesig_num, def_data.timesig_denom]
 
 			elif root_name == 'Group:RegionDatas':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():

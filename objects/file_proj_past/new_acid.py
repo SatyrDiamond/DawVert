@@ -179,6 +179,29 @@ class chunk__startingparam:
 		self.unknowndata.append( byr_stream.uint32() )
 		self.unknowndata.append( byr_stream.uint32() )
 
+class chunk__track_automation:
+	def __init__(self, byr_stream):
+		size = byr_stream.uint32()
+
+		self.points = []
+		self.unknowndata = []
+		self.group = byr_stream.uint32()
+		self.param = byr_stream.uint32()
+		self.min = byr_stream.float()
+		self.max = byr_stream.float()
+		self.defv = byr_stream.float()
+		self.numpoints = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.uint32() )
+
+		for _ in range(self.numpoints):
+			pointdata = []
+			pointdata.append( byr_stream.uint32() )
+			pointdata.append( byr_stream.uint32() )
+			pointdata.append( byr_stream.float() )
+			pointdata.append( byr_stream.uint32() )
+			self.points.append(pointdata)
+
+
 chunksdef = {}
 chunksdef['754be33a5ef5ec44a2f0f4eb3c53af7d'] = chunk__peak
 chunksdef['6a208d162123d21186b000c04f8edb8a'] = chunk__region
@@ -191,6 +214,7 @@ chunksdef['5662f7ab2d39d21186c700c04f8edb8a'] = chunk__marker
 chunksdef['07521655f6713e4e83be9dee9c5ba303'] = chunk__tempokeypoint
 chunksdef['5287535c45e3784f83b8551935b4c6f7'] = chunk__audiostretch
 chunksdef['be3967941a398443878538bda35f409a'] = chunk__startingparam
+chunksdef['5c1b70846368d21186fd00c04f8edb8a'] = chunk__track_automation
 
 # ---------------------- INDATA ----------------------
 
@@ -229,6 +253,7 @@ verboseid['266cd4690b7fd211871700c04f8edb8a'] = 'Group:AudioInfo'
 verboseid['07521655f6713e4e83be9dee9c5ba303'] = 'Group:TempoKeyPoints'
 verboseid['5287535c45e3784f83b8551935b4c6f7'] = 'Group:AudioStretch'
 verboseid['be3967941a398443878538bda35f409a'] = 'Group:StartingParams'
+verboseid['5d1b70846368d21186fd00c04f8edb8a'] = 'Group:TrackAuto'
 
 class sony_acid_chunk:
 	def __init__(self):

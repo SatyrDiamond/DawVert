@@ -238,6 +238,7 @@ class input_acid_3(plugins.base):
 												sp_obj = placement_obj.sample 
 												sp_obj.sampleref = filename
 												sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
+												sp_obj.stretch.preserve_pitch = True
 												sp_obj.usemasterpitch = False
 												sp_obj.pitch = region.pitch
 												pls.append(placement_obj)

@@ -141,6 +141,9 @@ class output_bandlab(plugins.base):
 				if track_obj.visual.color:
 					blx_track.color = '#'+track_obj.visual.color.get_hex().upper()
 					blx_track.colorName = 'Custom'
+				else:
+					blx_track.color = '#EEEEEE'
+					blx_track.colorName = 'Custom'
 
 				blx_track.isMuted = not track_obj.params.get('enabled', True).value
 				blx_track.isSolo = track_obj.params.get('solo', False).value
@@ -230,7 +233,7 @@ class output_bandlab(plugins.base):
 					
 					if not is_resampled:
 						try:
-							shutil.move(a_in, a_out)
+							shutil.copy(a_in, a_out)
 						except:
 							pass
 

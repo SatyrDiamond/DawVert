@@ -199,21 +199,34 @@ class input_acid_old(plugins.base):
 					if auto_basenotes and track.flags:
 						ppq_beats = sample_beats*ppq
 
-						for start, end, cur_root in rootnote_auto.iterd(region.start, region.end):
+						if 1 in track.flags:
+							for start, end, cur_root in rootnote_auto.iterd(region.start, region.end):
+								placement_obj = track_obj.placements.add_audio()
+								time_obj = placement_obj.time
+								time_obj.set_startend(start, end)
+								time_obj.set_loop_data((offset*ppq)+((start-region.start)%ppq_beats), 0, ppq_beats)
+								sp_obj = placement_obj.sample
+								sp_obj.sampleref = sample_path
+								sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
+								sp_obj.stretch.preserve_pitch = True
+								if cur_root != 127:
+									notetrack = calc_root(cur_root, track_root_note)
+									sp_obj.pitch = notetrack+region.pitch
+								else:
+									sp_obj.usemasterpitch = False
+									sp_obj.pitch = region.pitch
+								pls.append(placement_obj)
+						else:
 							placement_obj = track_obj.placements.add_audio()
 							time_obj = placement_obj.time
-							time_obj.set_startend(start, end)
-							time_obj.set_loop_data((offset*ppq)+((start-region.start)%ppq_beats), 0, ppq_beats)
+							time_obj.set_startend(region.start, region.end)
+							time_obj.set_loop_data(offset, 0, ppq_beats)
 							sp_obj = placement_obj.sample
 							sp_obj.sampleref = sample_path
 							sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
 							sp_obj.stretch.preserve_pitch = True
-							if cur_root != 127 and 1 in track.flags:
-								notetrack = calc_root(cur_root, track_root_note)
-								sp_obj.pitch = notetrack+region.pitch
-							else:
-								sp_obj.usemasterpitch = False
-								sp_obj.pitch = region.pitch
+							sp_obj.usemasterpitch = False
+							sp_obj.pitch = region.pitch
 							pls.append(placement_obj)
 
 					else:

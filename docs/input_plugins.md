@@ -77,11 +77,12 @@
 | R | ```y2k``` | ```fruitytracks``` | FruityTracks v1.5.0 | ```.ftr``` | ✔️ | |
 | R | ```y2k``` | ```kristal``` | KRISTAL Audio Engine | ```.kristal``` | ✔️ | |
 | R | ```y2k``` | ```piyopiyo``` | PiyoPiyo | ```.pmd``` | ✔️ | |
+| R | ```y2k``` | ```sf_acid``` | Sonic Foundry ACID 1.x<br>Sonic Foundry ACID 2.x<br>Sonic Foundry ACID Style 1.0<br>Sonic Foundry ACID DJ 1.0<br>Super Duper Music Looper<br>Sony Jam Trax | ```.acd``` | ✔️ | |
+| R | ```y2k``` | ```sf_acid_3``` | Sonic Foundry ACID 3.x<br>Sonic Foundry ACID 4.x<br>Sonic Foundry ACID Pro 5.x<br>Sonic Foundry ACID XPress 5.0 | ```.acd``` | ✔️ | |
 | R-M | ```ancient``` | ```adlib_rol``` | AdLib Visual Composer | ```.rol``` | ✔️ | 
 | R-M | ```ancient``` | ```adlib_sop``` | Note FM Tracker | ```.sop``` | ✔️ | 
 | R-M | ```uncommon``` | ```ptcop``` | PxTone | ```.ptcop``` | ✔️ | |
 | R-S | ```ancient``` | ```soundclub2``` | Sound Club 2 | ```.sn2``` | ✔️ | |
-| R-S | ```y2k``` | ```sf_acid``` | Sonic Foundry ACID<br>Super Duper Music Looper<br>Sony Jam Trax | ```.acd``` | ✔️ | |
 | C-M | ```midi``` | ```mmf``` | Mobile Music File | ```.mmf``` | ✔️ | 
 | C-M | ```midi``` | ```temper``` | Temper | ```.squ``` | ✔️ | |
 | C-S | ```midi``` | ```domino``` | Domino | ```.dms``` | ✔️ | |

@@ -540,6 +540,8 @@ class cvpj_sampleref:
 				except:
 					pass
 
+			isvalid = False
+			iserror = False
 			for shortname, plug_obj, prop_obj in cvpj_sampleref.audiofile_selector.iter():
 				self.found = True
 				self.visual.name = self.fileref.file.filename
@@ -551,7 +553,9 @@ class cvpj_sampleref:
 					if VERBOSE:
 						import traceback
 						print(traceback.format_exc())
-					logger_project.warning('fileref: audioinfo: error using: '+shortname)
+						iserror = True
+			if not isvalid and iserror:
+				logger_project.warning('fileref: audioinfo: error getting info from '+shortname)
 
 	def convert(self, dawaudiofiles, outpath):
 		for shortname, plug_obj, prop_obj in cvpj_sampleref.audioconv_selector.iter():

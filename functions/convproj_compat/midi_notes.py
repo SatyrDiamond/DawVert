@@ -21,6 +21,7 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 							ext = {'channel': channel} if channel else None
 							notelist_obj.add_r(int(x[0]), int(x[5]), int(x[3])-60, int(x[4])/127, ext)
 					notelist_obj.change_timings(midpl.time_ppq, midpl.time_ppq)
+					notelist_obj.mod_transpose(midpl.pitch)
 				track_obj.placements.pl_midi.data = []
 			return True
 

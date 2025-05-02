@@ -5,6 +5,7 @@ import os
 import sys
 import getpass
 import glob
+import shutil
 
 from objects import audio_data
 from plugins import base as dv_plugins
@@ -497,13 +498,19 @@ class cvpj_sampleref:
 			if not os.path.exists(outfilename):
 				audiof_obj = audio_data.audio_obj()
 				audiof_obj.from_file_wav(filename)
-				logger_project.warning('Resampling '+str(self.fileref.file))
+				logger_project.warning('Started Resampling '+str(self.fileref.file))
 				audiof_obj.resample(44100)
 				audiof_obj.to_file_wav(outfilename)
 				self.set_path(os_type, outfilename)
 			sampleref_obj.hz = 44100
 			return True
 		except:
+			filename = self.fileref.get_path(None, False)
+			logger_project.warning('Failed to Resample '+str(self.fileref.file)+'. Copying instead.')
+			try:
+				shutil.copy(filename, outfilename)
+				self.set_path(os_type, outfilename)
+			except: pass
 			return False
 
 	def search_local(self, dirpath):

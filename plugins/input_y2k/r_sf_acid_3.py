@@ -370,7 +370,7 @@ class input_acid_3(plugins.base):
 
 
 							if track_header.type == 4:
-								track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 1, False)
+								track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 								color = colordata.getcolornum(track_header.color)
 								track_obj.visual.name = track_header.name
 								track_obj.visual.color.set_int(color)

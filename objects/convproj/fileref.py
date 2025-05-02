@@ -502,7 +502,7 @@ class cvpj_sampleref:
 				audiof_obj.resample(44100)
 				audiof_obj.to_file_wav(outfilename)
 				self.set_path(os_type, outfilename)
-			sampleref_obj.hz = 44100
+			self.hz = 44100
 			return True
 		except:
 			filename = self.fileref.get_path(None, False)

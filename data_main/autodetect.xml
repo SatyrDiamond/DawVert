@@ -266,7 +266,8 @@
 
 	<plugin pluginset="y2k" name="sf_acid_3">
 		<bytes_header data="726966662E91CF11A5D628DB04C10000"/>
-		<file fileext=".acd"/>
+		<archived type="zip" file="*.acd" optional="1"/>
+		<file fileext=".acd;.acd-zip"/>
 	</plugin>
 
 	<plugin pluginset="y2k" name="magix_old">

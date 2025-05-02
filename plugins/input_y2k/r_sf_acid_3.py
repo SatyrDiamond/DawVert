@@ -226,15 +226,18 @@ class input_acid_3(plugins.base):
 									for region in track_regions:
 
 										if stretch_type == 0:
-											offset = 0
 											ppq_beats = num_beats*ppq
+
+											calc_offset = region.offset*(mul2**1.000004)
+											calc_offset = calc_offset/5000000
+											offset = calc_offset*ppq
 
 											if 1 in track_audiostretch.flags:
 												for start, end, cur_root in rootnote_auto.iterd(region.pos, region.pos+region.size):
 													placement_obj = track_obj.placements.add_audio()
 													time_obj = placement_obj.time
 													time_obj.set_startend(start, end)
-													time_obj.set_loop_data((offset*ppq)+((start-region.pos)%ppq_beats), 0, ppq_beats)
+													time_obj.set_loop_data((offset)+((start-region.pos)%ppq_beats), 0, ppq_beats)
 													sp_obj = placement_obj.sample 
 													sp_obj.sampleref = filename
 													sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
@@ -252,7 +255,7 @@ class input_acid_3(plugins.base):
 												placement_obj = track_obj.placements.add_audio()
 												time_obj = placement_obj.time
 												time_obj.set_startend(region.pos, region.pos+region.size)
-												time_obj.set_loop_data(0, 0, ppq_beats)
+												time_obj.set_loop_data(offset, 0, ppq_beats)
 												sp_obj = placement_obj.sample 
 												sp_obj.sampleref = filename
 												sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)

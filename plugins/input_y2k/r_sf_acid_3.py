@@ -65,7 +65,7 @@ def add_audio_regions(
 	placements_obj, ppq, rootnote_auto, 
 	region, stretch_type, num_beats, seconds,
 	stretchflags, filename, tempo,
-	track_root_note, audiotempo
+	track_root_note, audiotempo, pitch
 	):
 
 	mul1 = audiotempo/120 if audiotempo else 1
@@ -91,13 +91,16 @@ def add_audio_regions(
 				sp_obj.sampleref = filename
 				sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
 				sp_obj.stretch.preserve_pitch = True
+				if 1 in region.flags: placement_obj.muted = True
+				if 3 in region.flags: placement_obj.locked = True
+				if 5 in region.flags: sp_obj.reverse = True
 
 				if cur_root != 127:
 					notetrack = calc_root(cur_root, track_root_note)
-					sp_obj.pitch = notetrack+region.pitch
+					sp_obj.pitch = notetrack+region.pitch+pitch
 				else:
 					sp_obj.usemasterpitch = False
-					sp_obj.pitch = region.pitch
+					sp_obj.pitch = region.pitch+pitch
 
 				pls.append(placement_obj)
 		else:
@@ -110,9 +113,11 @@ def add_audio_regions(
 			sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
 			sp_obj.stretch.preserve_pitch = True
 			sp_obj.usemasterpitch = False
-			sp_obj.pitch = region.pitch
+			sp_obj.pitch = region.pitch+pitch
+			if 1 in region.flags: placement_obj.muted = True
+			if 3 in region.flags: placement_obj.locked = True
+			if 5 in region.flags: sp_obj.reverse = True
 			pls.append(placement_obj)
-
 
 	if stretch_type == 1:
 		placement_obj = placements_obj.add_audio()
@@ -121,6 +126,9 @@ def add_audio_regions(
 		time_obj.set_posdur(region.pos, ssize)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
+		if 1 in region.flags: placement_obj.muted = True
+		if 3 in region.flags: placement_obj.locked = True
+		if 5 in region.flags: sp_obj.reverse = True
 		pls.append(placement_obj)
 
 	if stretch_type == 2:
@@ -130,7 +138,10 @@ def add_audio_regions(
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
 		sp_obj.stretch.set_rate_tempo(tempo, mul1, True)
-		sp_obj.pitch = region.pitch
+		sp_obj.pitch = region.pitch+pitch
+		if 1 in region.flags: sp_obj.muted = True
+		if 3 in region.flags: sp_obj.locked = True
+		if 5 in region.flags: sp_obj.reverse = True
 		pls.append(placement_obj)
 
 	return pls
@@ -184,6 +195,7 @@ class input_acid_3(plugins.base):
 
 		for root_chunk, root_name in project_obj.root.iter_wtypes():
 			if root_name == 'Group:TempoKeyPoints':
+				prevpoint = 0
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'Group:TempoKeyPoints':
 						def_data = regs_chunk.def_data
@@ -192,7 +204,10 @@ class input_acid_3(plugins.base):
 								starttempo = (500000/def_data.tempo)*120
 								tempo = starttempo
 						if def_data.base_note:
-							auto_basenotes[def_data.pos_samples] = int(def_data.base_note)
+							base_note = int(def_data.base_note)
+							if prevpoint is not base_note:
+								auto_basenotes[def_data.pos_samples] = base_note
+							prevpoint = base_note
 
 			if root_name == 'Group:StartingParams':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
@@ -320,8 +335,12 @@ class input_acid_3(plugins.base):
 												track_obj.placements, ppq, rootnote_auto, 
 												region, track_header.stretchtype, track_audiostretch.downbeat_offset, track_header.seconds,
 												track_audiostretch.flags, filename, tempo,
-												track_audiostretch.root_note, track_audiostretch.tempo
+												track_audiostretch.root_note, track_audiostretch.tempo, 0
 												)
+	
+											for p in pls:
+												p.visual.name = track_header.name
+												p.visual.color.set_int(color)
 	
 									elif track_audiodefs is not None:
 										for audiodef, audiostretch in track_audiodefs:
@@ -338,17 +357,14 @@ class input_acid_3(plugins.base):
 												track_obj.placements, ppq, rootnote_auto, 
 												region, def_header.stretchtype, def_audiostretch.downbeat_offset, def_header.seconds,
 												def_audiostretch.flags, def_header.filename, tempo,
-												def_audiostretch.root_note, def_audiostretch.tempo
+												def_audiostretch.root_note, def_audiostretch.tempo, def_header.pitch
 												)
 
-											#print(track_header.seconds)
+											for p in pls:
+												p.visual.name = def_header.name
+												color = colordata.getcolornum(def_header.color)
+												p.visual.color.set_int(color)
 
-
-
-									for p in pls:
-										p.visual.name = track_header.name
-										p.visual.color.set_int(color)
-	
 									track_obj.placements.pl_audio.sort()
 									track_obj.placements.pl_audio.remove_overlaps()
 
@@ -407,9 +423,10 @@ class input_acid_3(plugins.base):
 							tempov = (500000/def_data.tempo)*120
 							convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', def_data.pos_samples, tempov, 'instant')
 						if def_data.base_note:
-							timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[def_data.pos_samples]-60)
-							timemarker_obj.position = def_data.pos_samples
-							timemarker_obj.visual.color.set_int([56, 95, 125])
+							if def_data.pos_samples in auto_basenotes:
+								timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[def_data.pos_samples]-60)
+								timemarker_obj.position = def_data.pos_samples
+								timemarker_obj.visual.color.set_int([56, 95, 125])
 
 			elif root_name == 'Group:Markers':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():

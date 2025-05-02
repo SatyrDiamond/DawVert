@@ -54,7 +54,7 @@ class chunk__region:
 		self.unknowndata.append( byr_stream.double() )
 		self.unknowndata.append( byr_stream.int32() )
 		self.unknowndata.append( byr_stream.int32() )
-		self.unknowndata.append( byr_stream.int32() )
+		self.id = byr_stream.int32()
 		self.unknowndata.append( byr_stream.int32() )
 		self.index = byr_stream.int32()
 		self.unknowndata.append( byr_stream.int32() )

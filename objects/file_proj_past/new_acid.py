@@ -43,33 +43,34 @@ class chunk__peak:
 
 class chunk__region:
 	def __init__(self, byr_stream):
-		self.header = []
-		self.header.append( byr_stream.int32() )
-		self.header.append( byr_stream.int32() )
-		self.flags = byr_stream.flags64()
+		size = byr_stream.int32()
 		self.unknowndata = []
+		self.unknowndata.append( byr_stream.int32() )
+		self.flags = byr_stream.flags64()
 		self.pos = byr_stream.int64()
 		self.size = byr_stream.int64()
 		self.offset = byr_stream.int64()
 		self.pitch = byr_stream.double()
 		self.unknowndata.append( byr_stream.double() )
-		self.unknowndata.append( byr_stream.int64() )
-		self.unknowndata.append( byr_stream.int64() )
-		self.unknowndata.append( byr_stream.int64() )
-		self.unknowndata.append( byr_stream.int64() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.index = byr_stream.int32()
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
+		self.unknowndata.append( byr_stream.int32() )
 		self.fade_in = byr_stream.int64()
 		self.fade_out = byr_stream.int64()
-		self.unknowndata.append( byr_stream.int32() )
-		if byr_stream.remaining(): self.fade_in_type = byr_stream.int32()
-		if byr_stream.remaining(): self.fade_out_type = byr_stream.int32()
+		self.unknowndata.append( byr_stream.float() )
 
 class chunk__maindata:
 	def __init__(self, byr_stream):
 		self.unknowndata = []
 		size = byr_stream.int32()
 		self.version = byr_stream.uint16()
-		if self.version>5:
-			raise ProjectFileParserException('new_acid: Version '+str(self.version)+' is not supported.') 
+		#if self.version>5:
+		#	raise ProjectFileParserException('new_acid: Version '+str(self.version)+' is not supported.') 
 		self.unknowndata.append( byr_stream.uint16() )
 		self.unknowndata.append( byr_stream.uint32() )
 		self.freq = byr_stream.uint32()
@@ -118,7 +119,7 @@ class chunk__track_data:
 		self.unknowndata.append( byr_stream.uint32() )
 		self.filename = byr_stream.string16(stringsize1)
 		self.name = byr_stream.string16(stringsize2)
-		self.name2 = byr_stream.string16(stringsize3)
+		#self.name2 = byr_stream.string16(stringsize3)
 
 class chunk__audioinfo:
 	def __init__(self, byr_stream):
@@ -206,6 +207,34 @@ class chunk__track_automation:
 			pointdata.append( byr_stream.uint32() )
 			self.points.append(pointdata)
 
+class chunk__audiodefinfo:
+	def __init__(self, byr_stream):
+		size = byr_stream.uint32()
+		self.unknowndata = []
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.color = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.uint32() )
+		numchars1 = byr_stream.uint32()//2
+		numchars2 = byr_stream.uint32()//2
+		numchars3 = byr_stream.uint32()//2
+		self.pitch = byr_stream.float()
+		self.filename = byr_stream.string16(numchars1)
+		self.filename2 = byr_stream.string16(numchars2)
+		self.name = byr_stream.string16(numchars3)
+		self.unknowndata.append( byr_stream.uint32() )
+		self.unknowndata.append( byr_stream.uint32() )
+		self.stretchtype = byr_stream.uint32()
+		self.preserve_pitch = byr_stream.uint32()
+		self.seconds = byr_stream.uint32()/10000000
+		self.unknowndata.append( byr_stream.uint32() )
+		self.stretch_algo = byr_stream.uint32()
+		self.stretch_algo_mode = byr_stream.uint32()
+		self.unknowndata.append( byr_stream.uint32() )
+		self.formant_shift = byr_stream.float()
+		self.unknowndata.append( byr_stream.float() )
+		self.unknowndata.append( byr_stream.uint32() )
+
 
 chunksdef = {}
 chunksdef['754be33a5ef5ec44a2f0f4eb3c53af7d'] = chunk__peak
@@ -220,6 +249,7 @@ chunksdef['07521655f6713e4e83be9dee9c5ba303'] = chunk__tempokeypoint
 chunksdef['5287535c45e3784f83b8551935b4c6f7'] = chunk__audiostretch
 chunksdef['be3967941a398443878538bda35f409a'] = chunk__startingparam
 chunksdef['5c1b70846368d21186fd00c04f8edb8a'] = chunk__track_automation
+chunksdef['44030abfa7f8f44788cba63c7756ba9e'] = chunk__audiodefinfo
 
 # ---------------------- INDATA ----------------------
 
@@ -245,7 +275,8 @@ verboseid['44030abfa7f8f44788cba63c7756ba9e'] = 'AudioDef:Info'
 verboseid['5d2d8fb20f23d21186af00c04f8edb8a'] = 'RegionData'
 verboseid['be3967941a398443878538bda35f409a'] = 'StartingParams'
 
-verboseid['a95c808a7402c242b8b9572f6786317c'] = 'Group:AudioDef'
+verboseid['a95c808a7402c242b8b9572f6786317c'] = 'Group:AudioDefList'
+verboseid['1d54047b1c0adc4faeb3d4935206611d'] = 'Group:AudioDef'
 verboseid['5b2d8fb20f23d21186af00c04f8edb8a'] = 'Group:RegionDatas'
 verboseid['a59e8054b89bcd458d2b3ef94586a8e0'] = 'Group:GroovePool'
 verboseid['48076c4d1623d21186b000c04f8edb8a'] = 'Group:Track'

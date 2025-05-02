@@ -54,6 +54,89 @@ def calc_root(proj_root, track_root):
 	outt -= ((outt+6)//12)*12
 	return outt
 
+def extract_audio(filename, sampleref_obj, dawvert_intent, zipfile):
+	filename = str(sampleref_obj.fileref.file)
+	try: zipfile.extract(filename, path=dawvert_intent.path_samples['extracted'], pwd=None)
+	except PermissionError: pass
+	filepath = os.path.join(dawvert_intent.path_samples['extracted'], filename)
+	sampleref_obj.set_path(None, filepath)
+
+def add_audio_regions(
+	placements_obj, ppq, rootnote_auto, 
+	region, stretch_type, num_beats, seconds,
+	stretchflags, filename, tempo,
+	track_root_note, audiotempo
+	):
+
+	mul1 = audiotempo/120 if audiotempo else 1
+
+	mul2 = num_beats/(seconds*2)
+	samplemul = mul2
+
+	pls = []
+
+	if stretch_type == 0:
+		ppq_beats = num_beats*ppq
+		calc_offset = region.offset*(mul2**1.000004)
+		calc_offset = calc_offset/5000000
+		offset = calc_offset*ppq
+
+		if 1 in stretchflags:
+			for start, end, cur_root in rootnote_auto.iterd(region.pos, region.pos+region.size):
+				placement_obj = placements_obj.add_audio()
+				time_obj = placement_obj.time
+				time_obj.set_startend(start, end)
+				time_obj.set_loop_data((offset)+((start-region.pos)%ppq_beats), 0, ppq_beats)
+				sp_obj = placement_obj.sample 
+				sp_obj.sampleref = filename
+				sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
+				sp_obj.stretch.preserve_pitch = True
+
+				if cur_root != 127:
+					notetrack = calc_root(cur_root, track_root_note)
+					sp_obj.pitch = notetrack+region.pitch
+				else:
+					sp_obj.usemasterpitch = False
+					sp_obj.pitch = region.pitch
+
+				pls.append(placement_obj)
+		else:
+			placement_obj = placements_obj.add_audio()
+			time_obj = placement_obj.time
+			time_obj.set_startend(region.pos, region.pos+region.size)
+			time_obj.set_loop_data(offset, 0, ppq_beats)
+			sp_obj = placement_obj.sample 
+			sp_obj.sampleref = filename
+			sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
+			sp_obj.stretch.preserve_pitch = True
+			sp_obj.usemasterpitch = False
+			sp_obj.pitch = region.pitch
+			pls.append(placement_obj)
+
+
+	if stretch_type == 1:
+		placement_obj = placements_obj.add_audio()
+		ssize = (int(region.size)/5000000)*ppq
+		time_obj = placement_obj.time
+		time_obj.set_posdur(region.pos, ssize)
+		sp_obj = placement_obj.sample 
+		sp_obj.sampleref = filename
+		pls.append(placement_obj)
+
+	if stretch_type == 2:
+		placement_obj = placements_obj.add_audio()
+		time_obj = placement_obj.time
+		time_obj.set_posdur(region.pos, region.size)
+		sp_obj = placement_obj.sample 
+		sp_obj.sampleref = filename
+		sp_obj.stretch.set_rate_tempo(tempo, mul1, True)
+		sp_obj.pitch = region.pitch
+		pls.append(placement_obj)
+
+	return pls
+
+
+
 class input_acid_3(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -62,7 +145,7 @@ class input_acid_3(plugins.base):
 		return 'sf_acid_3'
 	
 	def get_name(self):
-		return 'Sonic Foundry ACID 3.x-5.x'
+		return 'Sony ACID 3+'
 	
 	def get_priority(self):
 		return 0
@@ -151,13 +234,28 @@ class input_acid_3(plugins.base):
 						track_audiostretch = None
 						track_regions = []
 
+						track_audiodefs = []
+
 						for track_chunk, track_name in trks_chunk.iter_wtypes():
 
 							if track_chunk.is_list:
+
 								if track_name == 'Group:AudioInfo': 
 									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
 										if trackg_name == 'TrackAudioInfo':
 											track_audioinfo = trackg_chunk.def_data
+
+								if track_name == 'Group:AudioDef': 
+									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
+										if trackg_name == 'Group:AudioDefList':
+											audiodefd = [None, None]
+											for audiodef_chunk, audiodef_name in trackg_chunk.iter_wtypes():
+												if audiodef_name == 'AudioDef:Info': audiodefd[0] = audiodef_chunk.def_data
+												if audiodef_name == 'Group:AudioStretch': 
+													for as_chunk, as_name in audiodef_chunk.iter_wtypes():
+														if as_name == 'Group:AudioStretch':
+															audiodefd[1] = as_chunk.def_data
+											track_audiodefs.append(audiodefd)
 
 								if track_name == 'Group:AudioStretch': 
 									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
@@ -194,8 +292,10 @@ class input_acid_3(plugins.base):
 									track_header = track_chunk.def_data
 
 						if track_header:
+
+							cvpj_trackid = 'track_'+str(tracknum)
+
 							if track_header.type == 2:
-								cvpj_trackid = 'track_'+str(track_header.id)
 								track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
 								color = colordata.getcolornum(track_header.color)
 								track_obj.visual.name = track_header.name
@@ -204,105 +304,56 @@ class input_acid_3(plugins.base):
 									track_obj.params.add('vol', track_audioinfo.vol, 'float')
 									track_obj.params.add('pan', track_audioinfo.pan, 'float')
 
-								if track_regions and track_audiostretch:
-									stretch_type = track_header.stretchtype
-									track_root_note = track_audiostretch.root_note
-									filename = track_header.filename
-									num_beats = track_audiostretch.downbeat_offset
-									seconds = track_header.seconds
-	
-									mul1 = track_audiostretch.tempo/120 if track_audiostretch.tempo else 1
-									mul2 = num_beats/(seconds*2)
-	
-									samplemul = mul2
-	
-									sample_beats = num_beats
-	
-									sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
-									if not project_obj.zipped:
-										sampleref_obj.search_local(dawvert_intent.input_folder)
-									else:
-										filename = str(sampleref_obj.fileref.file)
-										try:
-											project_obj.zipfile.extract(filename, path=dawvert_intent.path_samples['extracted'], pwd=None)
-										except PermissionError:
-											pass
-										sampleref_obj.set_path('win', 
-											os.path.join(dawvert_intent.path_samples['extracted'], filename)
-											)
+								if track_regions:
 
 									pls = []
 
-									for region in track_regions:
-
-										if stretch_type == 0:
-											ppq_beats = num_beats*ppq
-
-											calc_offset = region.offset*(mul2**1.000004)
-											calc_offset = calc_offset/5000000
-											offset = calc_offset*ppq
-
-											if 1 in track_audiostretch.flags:
-												for start, end, cur_root in rootnote_auto.iterd(region.pos, region.pos+region.size):
-													placement_obj = track_obj.placements.add_audio()
-													time_obj = placement_obj.time
-													time_obj.set_startend(start, end)
-													time_obj.set_loop_data((offset)+((start-region.pos)%ppq_beats), 0, ppq_beats)
-													sp_obj = placement_obj.sample 
-													sp_obj.sampleref = filename
-													sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
-													sp_obj.stretch.preserve_pitch = True
+									if track_audiostretch is not None:
+										filename = track_header.filename
 	
-													if cur_root != 127 and 1 in track_audiostretch.flags:
-														notetrack = calc_root(cur_root, track_root_note)
-														sp_obj.pitch = notetrack+region.pitch
-													else:
-														sp_obj.usemasterpitch = False
-														sp_obj.pitch = region.pitch
+										sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
+										if not project_obj.zipped: sampleref_obj.search_local(dawvert_intent.input_folder)
+										else: extract_audio(filename, sampleref_obj, dawvert_intent, project_obj.zipfile)
+
+										for region in track_regions:
+											pls += add_audio_regions(
+												track_obj.placements, ppq, rootnote_auto, 
+												region, track_header.stretchtype, track_audiostretch.downbeat_offset, track_header.seconds,
+												track_audiostretch.flags, filename, tempo,
+												track_audiostretch.root_note, track_audiostretch.tempo
+												)
 	
-													pls.append(placement_obj)
-											else:
-												placement_obj = track_obj.placements.add_audio()
-												time_obj = placement_obj.time
-												time_obj.set_startend(region.pos, region.pos+region.size)
-												time_obj.set_loop_data(offset, 0, ppq_beats)
-												sp_obj = placement_obj.sample 
-												sp_obj.sampleref = filename
-												sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
-												sp_obj.stretch.preserve_pitch = True
-												sp_obj.usemasterpitch = False
-												sp_obj.pitch = region.pitch
-												pls.append(placement_obj)
+									elif track_audiodefs is not None:
+										for audiodef, audiostretch in track_audiodefs:
+											if audiodef and audiostretch:
+												filename = audiodef.filename
+												sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
+												if not project_obj.zipped: sampleref_obj.search_local(dawvert_intent.input_folder)
+												else: extract_audio(filename, sampleref_obj, dawvert_intent, project_obj.zipfile)
+
+										for region in track_regions:
+											def_header, def_audiostretch = track_audiodefs[region.index]
+
+											pls += add_audio_regions(
+												track_obj.placements, ppq, rootnote_auto, 
+												region, def_header.stretchtype, def_audiostretch.downbeat_offset, def_header.seconds,
+												def_audiostretch.flags, def_header.filename, tempo,
+												def_audiostretch.root_note, def_audiostretch.tempo
+												)
+
+											#print(track_header.seconds)
 
 
-										if stretch_type == 1:
-											placement_obj = track_obj.placements.add_audio()
-											ssize = (int(region.size)/5000000)*ppq
-											time_obj = placement_obj.time
-											time_obj.set_posdur(region.pos, ssize)
-											sp_obj = placement_obj.sample 
-											sp_obj.sampleref = filename
-											pls.append(placement_obj)
-
-										if stretch_type == 2:
-											placement_obj = track_obj.placements.add_audio()
-											time_obj = placement_obj.time
-											time_obj.set_posdur(region.pos, region.size)
-											sp_obj = placement_obj.sample 
-											sp_obj.sampleref = filename
-											sp_obj.stretch.set_rate_tempo(tempo, mul1, True)
-											sp_obj.pitch = region.pitch
-											pls.append(placement_obj)
 
 									for p in pls:
 										p.visual.name = track_header.name
 										p.visual.color.set_int(color)
-
+	
 									track_obj.placements.pl_audio.sort()
 									track_obj.placements.pl_audio.remove_overlaps()
 
+
 							if track_header.type == 4:
-								cvpj_trackid = 'track_'+str(track_header.id)
 								track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 1, False)
 								color = colordata.getcolornum(track_header.color)
 								track_obj.visual.name = track_header.name

@@ -4,6 +4,7 @@
 from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 import logging
+import zipfile
 
 VERBOSE = False
 SHOWALL = False
@@ -319,10 +320,27 @@ class sony_acid_chunk:
 class sony_acid_song:
 	def __init__(self):
 		self.root = sony_acid_chunk()
+		self.zipped = False
+		self.zipfile = None
 
 	def load_from_file(self, input_file):
+		self.zipped = False
+		self.zipfile = None
+
 		byr_stream = bytereader.bytereader()
 		byr_stream.load_file(input_file)
+
+		if byr_stream.read(2) == b'PK':
+			self.zipped = True
+			self.zipfile = zipfile.ZipFile(input_file, 'r')
+			acdfound = False
+			for filename in self.zipfile.namelist():
+				if filename.endswith('.acd'):
+					byr_stream.load_raw(self.zipfile.read(filename))
+					acdfound = True
+			if not acdfound:
+				raise ProjectFileParserException('new_acid: ACID file not found in zip')
+		byr_stream.seek(0)
 
 		self.root = sony_acid_chunk()
 		self.root.read(byr_stream, 0)

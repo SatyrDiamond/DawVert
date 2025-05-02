@@ -219,7 +219,17 @@ class input_acid_3(plugins.base):
 									sample_beats = num_beats
 	
 									sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
-									sampleref_obj.search_local(dawvert_intent.input_folder)
+									if not project_obj.zipped:
+										sampleref_obj.search_local(dawvert_intent.input_folder)
+									else:
+										filename = str(sampleref_obj.fileref.file)
+										try:
+											project_obj.zipfile.extract(filename, path=dawvert_intent.path_samples['extracted'], pwd=None)
+										except PermissionError:
+											pass
+										sampleref_obj.set_path('win', 
+											os.path.join(dawvert_intent.path_samples['extracted'], filename)
+											)
 
 									pls = []
 
@@ -301,7 +311,18 @@ class input_acid_3(plugins.base):
 								if track_regions:
 									filename_obj = fileref.cvpj_fileref()
 									filename_obj.set_path('win', track_header.filename, True)
-									filename_obj.search_local(dawvert_intent.input_folder)
+
+									if not project_obj.zipped:
+										filename_obj.search_local(dawvert_intent.input_folder)
+									else:
+										filename = str(filename_obj.file)
+										try:
+											project_obj.zipfile.extract(filename, path=dawvert_intent.path_samples['extracted'], pwd=None)
+										except PermissionError:
+											pass
+										filepath = os.path.join(dawvert_intent.path_samples['extracted'], filename)
+										filename_obj.set_path('win', filepath, True)
+
 									filename = filename_obj.get_path('win', False)
 
 									for region in track_regions:

@@ -5,6 +5,7 @@ from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 import logging
 import zipfile
+from objects.exceptions import ProjectFileParserException
 
 VERBOSE = False
 SHOWALL = False
@@ -59,14 +60,17 @@ class chunk__region:
 		self.fade_in = byr_stream.int64()
 		self.fade_out = byr_stream.int64()
 		self.unknowndata.append( byr_stream.int32() )
-		#if byr_stream.remaining(): self.fade_in_type = byr_stream.int32()
-		#if byr_stream.remaining(): self.fade_out_type = byr_stream.int32()
+		if byr_stream.remaining(): self.fade_in_type = byr_stream.int32()
+		if byr_stream.remaining(): self.fade_out_type = byr_stream.int32()
 
 class chunk__maindata:
 	def __init__(self, byr_stream):
 		self.unknowndata = []
 		size = byr_stream.int32()
-		self.unknowndata.append( byr_stream.uint32() )
+		self.version = byr_stream.uint16()
+		if self.version>5:
+			raise ProjectFileParserException('new_acid: Version '+str(self.version)+' is not supported.') 
+		self.unknowndata.append( byr_stream.uint16() )
 		self.unknowndata.append( byr_stream.uint32() )
 		self.freq = byr_stream.uint32()
 		self.unknowndata.append( byr_stream.double() )

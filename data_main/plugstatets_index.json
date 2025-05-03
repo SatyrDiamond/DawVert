@@ -181,6 +181,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\flp2bandlab\\fruity phaser.pstr": {
+    "file": "data_main\\plugstatets\\flp2bandlab\\fruity phaser.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:flstudio:fruity phaser",
+    "plugtype_out": [
+      "native:bandlab:phaser"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\flp2lmms\\fruity_stereo_shaper.pstr": {
     "file": "data_main\\plugstatets\\flp2lmms\\fruity_stereo_shaper.pstr",
     "daw_in": [
@@ -237,8 +251,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__bitcrush.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__bitcrush.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -248,8 +262,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__compressor.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__compressor.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__compressor.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -259,8 +273,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__expander.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__expander.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__expander.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__expander.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -270,8 +284,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__gate.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__gate.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__gate.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__gate.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -281,8 +295,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__limiter.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__limiter.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__limiter.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -292,8 +306,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__spectrum_analyzer.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__spectrum_analyzer.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__spectrum_analyzer.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__spectrum_analyzer.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -303,8 +317,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__tremolo.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__tremolo.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__tremolo.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__tremolo.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -314,8 +328,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__tuner.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__tuner.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__tuner.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__tuner.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -325,8 +339,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__vibrato.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__vibrato.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__vibrato.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__vibrato.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -336,8 +350,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__ableton__volpan.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__ableton__volpan.pstr",
+  "data_main\\plugstatets\\_from_univ\\ableton__volpan.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__volpan.pstr",
     "daw_out": [
       "ableton"
     ],
@@ -347,8 +361,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__flp__spectrum_analyzer.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__flp__spectrum_analyzer.pstr",
+  "data_main\\plugstatets\\_from_univ\\flp__spectrum_analyzer.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\flp__spectrum_analyzer.pstr",
     "daw_out": [
       "flp"
     ],
@@ -358,8 +372,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__flp__tuner.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__flp__tuner.pstr",
+  "data_main\\plugstatets\\_from_univ\\flp__tuner.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\flp__tuner.pstr",
     "daw_out": [
       "flp"
     ],
@@ -369,8 +383,19 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__lmms__bitcrush.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__lmms__bitcrush.pstr",
+  "data_main\\plugstatets\\_from_univ\\flstudio__fruity_reeverb_2.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\flstudio__fruity_reeverb_2.pstr",
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "universal:reverb",
+    "plugtype_out": [
+      "native:flstudio:fruity reeverb 2"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\lmms__bitcrush.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\lmms__bitcrush.pstr",
     "daw_out": [
       "lmms"
     ],
@@ -380,8 +405,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__lmms__spectrum_analyzer.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__lmms__spectrum_analyzer.pstr",
+  "data_main\\plugstatets\\_from_univ\\lmms__spectrum_analyzer.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\lmms__spectrum_analyzer.pstr",
     "daw_out": [
       "lmms"
     ],
@@ -391,8 +416,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__lmms__volpan.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__lmms__volpan.pstr",
+  "data_main\\plugstatets\\_from_univ\\lmms__volpan.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\lmms__volpan.pstr",
     "daw_out": [
       "lmms"
     ],
@@ -402,8 +427,8 @@
     ],
     "priority": 100
   },
-  "data_main\\plugstatets\\_from_univ\\u2n__waveform__filter.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\u2n__waveform__filter.pstr",
+  "data_main\\plugstatets\\_from_univ\\waveform__filter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\waveform__filter.pstr",
     "daw_out": [
       "tracktion_edit"
     ],
@@ -413,8 +438,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__ableton__compressor2.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__ableton__compressor2.pstr",
+  "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -425,8 +450,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__ableton__filtereq3.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__ableton__filtereq3.pstr",
+  "data_main\\plugstatets\\_to_univ\\ableton__filtereq3.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__filtereq3.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -436,8 +461,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__ableton__gate.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__ableton__gate.pstr",
+  "data_main\\plugstatets\\_to_univ\\ableton__gate.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__gate.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -447,8 +472,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__ableton__limiter.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__ableton__limiter.pstr",
+  "data_main\\plugstatets\\_to_univ\\ableton__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__limiter.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -458,8 +483,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__ableton__redux2.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__ableton__redux2.pstr",
+  "data_main\\plugstatets\\_to_univ\\ableton__redux2.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__redux2.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -469,8 +494,52 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__flstudio__fruity_balance.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__flstudio__fruity_balance.pstr",
+  "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:compr1176",
+    "plugtype_out": [
+      "universal:compressor:fet"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:compressor",
+    "plugtype_out": [
+      "universal:compressor"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:deEsser",
+    "plugtype_out": [
+      "universal:de_ess"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:pitchShifter",
+    "plugtype_out": [
+      "universal:pitchshift"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_balance.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_balance.pstr",
     "daw_in": [
       "flp"
     ],
@@ -480,8 +549,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__flstudio__fruity_reeverb.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__flstudio__fruity_reeverb.pstr",
+  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb.pstr",
     "daw_in": [
       "flp"
     ],
@@ -491,8 +560,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__flstudio__fruity_reeverb_2.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__flstudio__fruity_reeverb_2.pstr",
+  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb_2.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb_2.pstr",
     "daw_in": [
       "flp"
     ],
@@ -502,8 +571,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__waveform__comp.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__waveform__comp.pstr",
+  "data_main\\plugstatets\\_to_univ\\waveform__comp.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__comp.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -513,8 +582,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__waveform__gate.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__waveform__gate.pstr",
+  "data_main\\plugstatets\\_to_univ\\waveform__gate.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__gate.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -524,8 +593,8 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\n2u__waveform__limiter.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\n2u__waveform__limiter.pstr",
+  "data_main\\plugstatets\\_to_univ\\waveform__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__limiter.pstr",
     "daw_in": [
       "tracktion_edit"
     ],

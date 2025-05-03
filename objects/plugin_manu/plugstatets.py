@@ -35,10 +35,35 @@ class action__in__param:
 			self.in_name = v_from
 			self.storename = v_to
 		self.valtype = xmldata.get('type')
-		self.value = fixval(xmldata.text, self.valtype)
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
 
 	def do_action(self, manu_obj):
 		manu_obj.in__param(self.storename, self.in_name, self.value)
+
+class action__in__dataval:
+	def __init__(self):
+		self.in_name = None
+		self.storename = None
+		self.value = 0
+		self.valtype = None
+
+	def from_xml(self, xmldata):
+		v_from = xmldata.get('from')
+		v_to = xmldata.get('to')
+		if v_from and not v_to: 
+			self.in_name = v_from
+			self.storename = v_from
+		elif not v_from and v_to: 
+			self.in_name = v_to
+			self.storename = v_to
+		elif v_from and v_to:
+			self.in_name = v_from
+			self.storename = v_to
+		self.valtype = xmldata.get('type')
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
+
+	def do_action(self, manu_obj):
+		manu_obj.in__dataval(self.storename, self.in_name, self.value)
 
 class action__in__wet:
 	def __init__(self):
@@ -98,6 +123,18 @@ class action__replace:
 	def do_action(self, manu_obj):
 		i_category, i_type, i_subtype = [(self.plugtype[n] if len(self.plugtype)>n else None) for n in range(3)]
 		manu_obj.plugin_obj.replace(i_category, i_type, i_subtype)
+
+class action__replace_hard:
+	def __init__(self):
+		self.plugtype = []
+
+	def from_xml(self, xmldata):
+		plugtype = xmldata.get('plugtype')
+		if plugtype: self.plugtype = plugtype.split(':')
+
+	def do_action(self, manu_obj):
+		i_category, i_type, i_subtype = [(self.plugtype[n] if len(self.plugtype)>n else None) for n in range(3)]
+		manu_obj.plugin_obj.replace_hard(i_category, i_type, i_subtype)
 
 class action__calc:
 	def __init__(self):
@@ -162,7 +199,7 @@ class action__out__param:
 			self.out_name = v_to
 
 		self.valtype = xmldata.get('type')
-		self.value = fixval(xmldata.text, self.valtype)
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
 
 	def do_action(self, manu_obj):
 		manu_obj.out__param(self.storename, self.value, self.out_name, None)
@@ -216,7 +253,7 @@ class action__define_remap:
 				self.fallback = out_val
 
 	def do_action(self, manu_obj):
-		manu_obj.def_remap(self.name, self.vals, self.fallback, self.in_type, self.out_type)
+		manu_obj.def_remap(self.name, self.fallback, self.in_type, self.out_type)
 		for k, v in self.vals.items():
 			manu_obj.def_remap_add_val(self.name,k, v)
 
@@ -265,6 +302,7 @@ actionclasses['in__param'] = action__in__param
 actionclasses['in__wet'] = action__in__wet
 actionclasses['in__filterparam'] = action__in__filter_param
 actionclasses['in__value'] = action__in__value
+actionclasses['in__dataval'] = action__in__dataval
 actionclasses['out__param'] = action__out__param
 actionclasses['out__wet'] = action__out__wet
 actionclasses['out__filterparam'] = action__out__filter_param
@@ -272,6 +310,7 @@ actionclasses['cond__single'] = action__cond__single
 actionclasses['calc'] = action__calc
 actionclasses['remap'] = action__remap
 actionclasses['replace'] = action__replace
+actionclasses['replace_hard'] = action__replace_hard
 actionclasses['tobool'] = action__tobool
 actionclasses['define_remap'] = action__define_remap
 

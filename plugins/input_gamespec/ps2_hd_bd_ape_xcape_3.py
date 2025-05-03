@@ -154,7 +154,7 @@ class input_petaporon(plugins.base):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'ps2_hd_bd_ape_xcape_3'
+		return 'ps2_hdbd_ax3'
 	
 	def get_name(self):
 		return 'Ape Escape 3'

@@ -54,5 +54,6 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, in_dawname, daw
 	#		plugin_obj.external_make_compat(convproj_obj, out_dawinfo.plugin_ext)
 
 		if not is_external:
-			converted_val = plugin_obj.convert_internal(convproj_obj, pluginid, out_dawname, dawvert_intent)
+			#print(plugin_obj.type)
 			plugin_conv_obj.convert_plugin(convproj_obj, plugin_obj, pluginid)
+			#plugin_obj.params.debugtxt()

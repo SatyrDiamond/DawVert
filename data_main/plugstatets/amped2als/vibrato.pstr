@@ -4,7 +4,7 @@
   
   <replace plugtype="native:ableton:Chorus2" />
 
-  <out__param to="Amount" from="delayLfoDepth" type="float">0</out__param>
-  <out__param to="Rate" from="delayLfoRateHz" type="float">0</out__param>
+  <out__param to="Amount" from="delayLfoDepth" type="float" />
+  <out__param to="Rate" from="delayLfoRateHz" type="float" />
   <out__param to="Mode" type="float">2.0</out__param>
 </plugstatetransform>

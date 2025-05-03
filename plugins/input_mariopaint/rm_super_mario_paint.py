@@ -18,7 +18,7 @@ class input_mariopaint_smp(plugins.base):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'super_mario_paint'
+		return 'smp_paint'
 	
 	def get_name(self):
 		return 'Super Mario Paint'

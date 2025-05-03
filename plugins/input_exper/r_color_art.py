@@ -16,6 +16,7 @@ class input_color_art(plugins.base):
 	
 	def get_prop(self, in_dict): 
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
+		in_dict['projtype'] = 'r'
 
 	def usable(self): 
 		usable = importlib.util.find_spec('PIL')

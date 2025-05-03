@@ -72,7 +72,7 @@ class action__in__wet:
 
 	def from_xml(self, xmldata):
 		self.storename = xmldata.get('from')
-		self.value = float(xmldata.text)
+		self.value = float(xmldata.text) if xmldata.text else None
 
 	def do_action(self, manu_obj):
 		manu_obj.in__wet(self.storename, self.value)
@@ -184,6 +184,7 @@ class action__out__param:
 		self.value = 0
 		self.valtype = None
 		self.remap = None
+		self.only_value = False
 
 	def from_xml(self, xmldata):
 		v_from = xmldata.get('from')
@@ -198,11 +199,17 @@ class action__out__param:
 			self.storename = v_from
 			self.out_name = v_to
 
+		only_value = xmldata.get('only_value')
+		if only_value: self.only_value = bool(int(only_value))
 		self.valtype = xmldata.get('type')
 		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
 
 	def do_action(self, manu_obj):
-		manu_obj.out__param(self.storename, self.value, self.out_name, None)
+		if not self.only_value:
+			manu_obj.out__param(self.storename, self.value, self.out_name, None)
+		else:
+			manu_obj.out__param_val(self.storename, self.value)
+
 
 class action__out__wet:
 	def __init__(self):
@@ -211,7 +218,7 @@ class action__out__wet:
 
 	def from_xml(self, xmldata):
 		self.storename = xmldata.get('from')
-		self.value = float(xmldata.text)
+		self.value = float(xmldata.text) if xmldata.text else None
 
 	def do_action(self, manu_obj):
 		manu_obj.out__wet(self.storename, self.value)

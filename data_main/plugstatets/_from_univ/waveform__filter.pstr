@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="tracktion_edit" plugtype="universal:filter:single">
+<plugstatetransform daw_out="waveform" plugtype="universal:filter:single">
 
   <define_remap name="filter_types" in_type="filter_type" out_type="int">
     <val in_val="low_pass" out_val="0"/>
@@ -17,7 +17,7 @@
 
   <remap name="type" remapdef="filter_types"/>
 
-  <replace plugtype="universal:tracktion:1bandEq" />
+  <replace_hard plugtype="universal:tracktion:1bandEq" />
 
   <out__param to="freq" type="float">44100</out__param>
   <out__param to="q" type="float">1</out__param>

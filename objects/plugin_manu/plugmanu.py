@@ -98,9 +98,10 @@ class plug_manu:
 	def in__wet(self, storename, fb):
 		if DEBUG__TXT: print('DEBUG: in__wet:', storename.__repr__(), fb.__repr__())
 		auto_obj = self.convproj_obj.automation.pop_f(['slot', self.pluginid, 'wet'])
-		param_obj = self.plugin_obj.params_slot.pop('wet',fb)
-		self.cur_params[storename] = valuepack(float(param_obj.value), auto_obj, 'numeric')
-		return self.cur_params[storename]
+		if 'wet' in self.plugin_obj.params_slot or fb is not None:
+			param_obj = self.plugin_obj.params_slot.pop('wet',fb)
+			self.cur_params[storename] = valuepack(float(param_obj.value), auto_obj, 'numeric')
+			return self.cur_params[storename]
 
 	def in__param(self, storename, paramname, fb):
 		if DEBUG__TXT: print('DEBUG: in__param:', storename.__repr__(), paramname.__repr__(), fb.__repr__())
@@ -137,6 +138,9 @@ class plug_manu:
 			return self.cur_params[storename]
 
 # --------------------------------------------------------- OUTPUT ---------------------------------------------------------
+
+	def out__param_val(self, valuename, value):
+		self.plugin_obj.params.add(valuename, value, 'float')
 
 	def out__param(self, storename, fallbackval, paramname, valuename):
 		if DEBUG__TXT: print('DEBUG: out__param:', storename.__repr__(), fallbackval.__repr__(), paramname.__repr__(), valuename.__repr__())

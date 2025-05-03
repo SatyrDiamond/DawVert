@@ -1,0 +1,5 @@
+<plugstatetransform daw_out="waveform" plugtype="universal:pitchshift">
+  <in__param from="pitch" type="float" />
+  <replace plugtype="native:tracktion:pitchShifter" />
+  <out__param to="semitonesUp" from="pitch" type="float" />
+</plugstatetransform>

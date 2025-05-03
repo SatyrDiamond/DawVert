@@ -1,14 +1,14 @@
-<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:gate">
+<plugstatetransform daw_out="waveform" plugtype="universal:gate">
   <in__param from="attack" type="float" />
   <in__param from="hold" type="float" />
   <in__param from="release" type="float" />
   <in__param from="threshold" type="float" />
   
-  <calc name="attack" type="div">1000</calc>
-  <calc name="hold" type="div">1000</calc>
-  <calc name="release" type="div">1000</calc>
+  <calc name="attack" type="mul">1000</calc>
+  <calc name="hold" type="mul">1000</calc>
+  <calc name="release" type="mul">1000</calc>
 
-  <replace plugtype="universal:gate" />
+  <replace plugtype="native:tracktion:gate" />
 
   <out__param to="attack" type="float" />
   <out__param to="hold" type="float" />

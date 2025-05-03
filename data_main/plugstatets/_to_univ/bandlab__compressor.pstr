@@ -1,21 +1,14 @@
-<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:comp">
+<plugstatetransform daw_in="bandlab_blx" plugtype="native:bandlab:compressor">
   <in__param from="attack" type="float" />
-  <in__param from="inputDb" type="float" />
   <in__param from="knee" type="float" />
-  <in__param from="outputDb" type="float" />
   <in__param from="ratio" type="float" />
   <in__param from="release" type="float" />
   <in__param from="threshold" type="float" />
-  
-  <calc name="attack" type="div">100</calc>
-  <calc name="release" type="div">100</calc>
 
   <replace plugtype="universal:compressor" />
 
   <out__param to="attack" type="float" />
-  <out__param to="pregain" from="inputDb" type="float" />
   <out__param to="knee" type="float" />
-  <out__param to="postgain" from="outputDb" type="float" />
   <out__param to="ratio" type="float" />
   <out__param to="release" type="float" />
   <out__param to="threshold" type="float" />

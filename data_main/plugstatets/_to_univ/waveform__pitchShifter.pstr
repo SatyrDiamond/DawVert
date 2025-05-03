@@ -1,0 +1,5 @@
+<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:pitchShifter">
+  <in__param from="semitonesUp" type="float">0</in__param>
+  <replace plugtype="universal:pitchshift" />
+  <out__param to="pitch" from="semitonesUp" type="float">0</out__param>
+</plugstatetransform>

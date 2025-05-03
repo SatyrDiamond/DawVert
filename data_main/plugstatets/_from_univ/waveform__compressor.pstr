@@ -1,21 +1,21 @@
-<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:comp">
+<plugstatetransform daw_out="waveform" plugtype="universal:compressor">
   <in__param from="attack" type="float" />
-  <in__param from="inputDb" type="float" />
+  <in__param from="pregain" type="float" />
   <in__param from="knee" type="float" />
-  <in__param from="outputDb" type="float" />
+  <in__param from="postgain" type="float" />
   <in__param from="ratio" type="float" />
   <in__param from="release" type="float" />
   <in__param from="threshold" type="float" />
   
-  <calc name="attack" type="div">100</calc>
-  <calc name="release" type="div">100</calc>
+  <calc name="attack" type="mul">100</calc>
+  <calc name="release" type="mul">100</calc>
 
-  <replace plugtype="universal:compressor" />
+  <replace plugtype="native:tracktion:comp" />
 
   <out__param to="attack" type="float" />
-  <out__param to="pregain" from="inputDb" type="float" />
+  <out__param to="inputDb" from="pregain" type="float" />
   <out__param to="knee" type="float" />
-  <out__param to="postgain" from="outputDb" type="float" />
+  <out__param to="outputDb" from="postgain" type="float" />
   <out__param to="ratio" type="float" />
   <out__param to="release" type="float" />
   <out__param to="threshold" type="float" />

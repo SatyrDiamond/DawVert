@@ -991,13 +991,5 @@
       "universal:pitchshift"
     ],
     "priority": -100
-  },
-  "data_main\\plugstatets\\__testing\\testytesty.pstr": {
-    "file": "data_main\\plugstatets\\__testing\\testytesty.pstr",
-    "plugtype_in": "test:test:test",
-    "plugtype_out": [
-      "test:test:test2"
-    ],
-    "priority": 0
   }
 }

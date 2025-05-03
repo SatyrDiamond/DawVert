@@ -1,0 +1,20 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="amped" plugtype="native:tracktion:phaser2">
+  <in__param from="feedback" type="float" />
+  <in__param from="floor" type="float" />
+  <in__param from="mix" type="float" />
+  <in__param from="rateSyncOff" type="float" />
+  <in__param from="stages" type="float" />
+
+  <calc name="floor" type="valrange">20;20000;100;1000</calc>
+  <calc name="depth" type="div">100</calc>
+  <calc name="feedback" type="div">100</calc>
+
+  <replace plugtype="native:amped:Phaser" />
+
+  <out__param to="feedback" from="feedback" type="float" />
+  <out__param to="hzmin" from="floor" type="float" />
+  <out__param to="mix" type="float" />
+  <out__param to="rate" from="rateSyncOff" type="float" />
+  <out__param to="stages" from="stages" type="float" />
+
+</plugstatetransform> 

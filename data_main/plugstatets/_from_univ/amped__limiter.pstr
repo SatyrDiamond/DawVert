@@ -1,0 +1,18 @@
+<plugstatetransform daw_out="amped" plugtype="universal:limiter">
+  <in__param from="attack" type="float" />
+  <in__param from="ceiling" type="float" />
+  <in__param from="gain" type="float" />
+  <in__param from="pregain" type="float" />
+  <in__param from="release" type="float" />
+  
+  <calc name="release" type="mul">1000</calc>
+  <calc name="attack" type="mul">1000</calc>
+
+  <replace plugtype="native:amped:Limiter" />
+
+  <out__param to="attackTimeMS" from="attack" type="float" />
+  <out__param to="postGainDB" from="gain" type="float" />
+  <out__param to="preGainDB" from="pregain" type="float" />
+  <out__param to="releaseTimeMS" from="release" type="float" />
+  <out__param to="thresholdDB" from="ceiling" type="float" />
+</plugstatetransform>

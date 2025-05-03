@@ -1,0 +1,21 @@
+<plugstatetransform daw_in="amped" plugtype="native:amped:Gate">
+  <in__param to="attack" from="attackTimeMS" type="float" />
+  <in__param to="gain" from="postGainDB" type="float" />
+  <in__param to="pregain" from="preGainDB" type="float" />
+  <in__param to="release" from="releaseTimeMS" type="float" />
+  <in__param to="threshold" from="thresholdDB" type="float" />
+  <in__param to="lookahead" from="lookaheadTimeMS" type="float" />
+  
+  <calc name="release" type="div">1000</calc>
+  <calc name="attack" type="div">1000</calc>
+  <calc name="lookahead" type="div">1000</calc>
+
+  <replace plugtype="universal:gate" />
+
+  <out__param to="attack" type="float" />
+  <out__param to="gain" type="float" />
+  <out__param to="lookahead" type="float" />
+  <out__param to="pregain" type="float" />
+  <out__param to="release" type="float" />
+  <out__param to="threshold" type="float" />
+</plugstatetransform>

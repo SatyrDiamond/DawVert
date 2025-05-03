@@ -193,7 +193,7 @@ class action__tobool:
 			valpack = manu_obj.cur_params[self.storename]
 			valpack.value = eval(self.cond, None, {'x': valpack.value})
 			valpack.automation = None
-			valpack.isbool = True
+			valpack.valuetype = 'bool'
 
 class action__define_remap:
 	def __init__(self):

@@ -18,6 +18,9 @@ class dualstr:
 		outobj.set_str(in_str)
 		return outobj
 
+	def __repr__(self):
+		return "<DualString - %s>" % self.__str__()
+
 	def __str__(self):
 		if self.type != None and self.subtype != None: return self.type+':'+self.subtype
 		elif self.type != None and self.subtype == None: return self.type
@@ -76,6 +79,9 @@ class triplestr:
 		outobj.set_str(in_str)
 		return outobj
 
+	def __repr__(self):
+		return "<TripleString - %s>" % self.__str__()
+
 	def __str__(self):
 		if self.category != None and self.type != None and self.subtype != None: return self.category+':'+self.type+':'+self.subtype
 		elif self.category != None and self.type != None and self.subtype == None: return self.category+':'+self.type
@@ -90,6 +96,9 @@ class triplestr:
 
 	def obj_wildmatch(self, in_obj):
 		return self.check_wildmatch(in_obj.category, in_obj.type, in_obj.subtype)
+
+	def obj_wildmatch_multi(self, multiobjs):
+		return (True in [obj_wildmatch(x) for x in multiobjs])
 
 	def set(self, i_category, i_type, i_subtype):
 		self.category = i_category

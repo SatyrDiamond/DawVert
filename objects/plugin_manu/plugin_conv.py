@@ -99,22 +99,15 @@ class convproj_plug_conv:
 					if cond_daw_out_a:
 						if priority not in self.active_queue: self.active_queue[priority] = []
 						self.active_queue[priority].append([k, mappdata])
-			else:
-				print(mappdata.plugtype_in, mappdata.plugtype_out)
-
+			#else:
+			#	print(mappdata.plugtype_in, mappdata.plugtype_out)
 
 	def convert_plugin(self, convproj_obj, plugin_obj, pluginid):
 		if self.current_daw_in != self.current_daw_out:
 			for num, i in self.active_queue.items():
 				for k, mappdata in i:
-	
-					#if (not mappdata.daw_in and not mappdata.daw_out):
-					#	print(mappdata.plugtype_in)
-
 					old_type = copy.copy(plugin_obj.type)
-	
 					is_converted = mappdata.convert_plugin(convproj_obj, plugin_obj, pluginid, self)
-					
 					if is_converted:
 						print('INT    | "%s" > "%s"' % (str(old_type), str(plugin_obj.type)))
 						if k in self.finish_ids: return 1

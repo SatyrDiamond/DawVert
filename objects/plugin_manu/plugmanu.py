@@ -105,9 +105,10 @@ class plug_manu:
 	def in__param(self, storename, paramname, fb):
 		if DEBUG__TXT: print('DEBUG: in__param:', storename.__repr__(), paramname.__repr__(), fb.__repr__())
 		auto_obj = self.convproj_obj.automation.pop_f(['plugin', self.pluginid, paramname])
-		param_obj = self.plugin_obj.params.pop(paramname,fb)
-		self.cur_params[storename] = valuepack(param_obj.value, auto_obj, valtype_from_ptype(param_obj.type))
-		return self.cur_params[storename]
+		if paramname in self.plugin_obj.params or fb is not None:
+			param_obj = self.plugin_obj.params.pop(paramname,fb)
+			self.cur_params[storename] = valuepack(param_obj.value, auto_obj, valtype_from_ptype(param_obj.type))
+			return self.cur_params[storename]
 
 	def in__dataval(self, storename, paramname, fb):
 		if DEBUG__TXT: print('DEBUG: in__dataval:', storename.__repr__(), paramname.__repr__(), fb.__repr__())
@@ -217,8 +218,8 @@ class plug_manu:
 
 # --------------------------------------------------------- MANU ---------------------------------------------------------
 
-	def def_remap(self, name, vals, fallback, in_type, out_type):
-		if DEBUG__TXT: print('DEBUG: def_remap:', name.__repr__(), vals.__repr__(), fallback.__repr__(), in_type.__repr__(), out_type.__repr__())
+	def def_remap(self, name, fallback, in_type, out_type):
+		if DEBUG__TXT: print('DEBUG: def_remap:', name.__repr__(), fallback.__repr__(), in_type.__repr__(), out_type.__repr__())
 		remap_obj = remap_def()
 		remap_obj.in_type = in_type
 		remap_obj.out_type = out_type
@@ -250,7 +251,6 @@ class plug_manu:
 			ptypeo = valtype_from_ptype(remap_obj.out_type)
 
 			if ptypei==storeval.valuetype:
-				pass
 				if ptypei == 'filter_type' and ptypeo != 'filter_type':
 					val = storeval.value
 					is_found = False
@@ -258,13 +258,11 @@ class plug_manu:
 						if val.obj_wildmatch(dualstr.from_str(k)):
 							storeval.value = v
 							storeval.valuetype = ptypeo
-							storeval.automation = None
 							is_found = True
 							break
 					if not is_found:
 						storeval.value = remap_obj.fallback
 						storeval.valuetype = ptypeo
-						storeval.automation = None
 				else:
 					if storeval.value in remap_obj.vals: 
 						storeval.value = remap_obj.vals[storeval.value]
@@ -272,8 +270,7 @@ class plug_manu:
 					else: 
 						storeval.value = remap_obj.fallback
 						storeval.valuetype = ptypeo
-
-				pass
+				storeval.automation = None
 			else:
 				logger_plugconv.warning('plugmanu: remap type mismatch "%s" is defined not "%s"' % (ptypei, storeval.valuetype))
 

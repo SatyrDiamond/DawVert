@@ -8,7 +8,7 @@
   <replace plugtype="native:lmms:amplifier" />
 
   <out__param to="pan" type="float">0</out__param>
-  <out__param to="volume" from="vol" type="float">0</out__param>
-  <out__param to="right" type="float">100.0</out__param>
-  <out__param to="left" type="float">100.0</out__param>
+  <out__param to="volume" from="vol" type="float">100</out__param>
+  <out__param to="right" type="float">100</out__param>
+  <out__param to="left" type="float">100</out__param>
 </plugstatetransform>

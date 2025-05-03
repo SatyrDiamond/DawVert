@@ -415,6 +415,11 @@ class base:
 		selector_obj = plugin_selector(plug_type, base.loaded_plugins)
 		return selector_obj
 
+	def iter_list(plug_type):
+		if plug_type in base.loaded_plugins:
+			for x in base.loaded_plugins[plug_type].items():
+				yield x
+
 	def get_list(plug_type):
 		return list(base.loaded_plugins[plug_type]) if plug_type in base.loaded_plugins else []
 

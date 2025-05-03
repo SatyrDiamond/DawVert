@@ -44,7 +44,7 @@ class output_coolbeat(plugins.base):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'viscentsoft_coolbeat'
+		return 'vs_coolbeat'
 	
 	def get_name(self):
 		return '玩酷电音/CoolBeat'
@@ -60,6 +60,7 @@ class output_coolbeat(plugins.base):
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['plugin_included'] = ['universal:soundfont2']
+		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_mobile import viscentsoft_coolbeat

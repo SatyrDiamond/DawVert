@@ -577,6 +577,7 @@ class input_soundbridge(plugins.base):
 		in_dict['plugin_ext_platforms'] = ['win']
 		in_dict['plugin_included'] = ['native:soundbridge','universal:invert']
 		in_dict['audio_nested'] = True
+		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import soundbridge as proj_soundbridge

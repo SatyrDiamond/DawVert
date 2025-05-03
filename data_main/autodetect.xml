@@ -255,7 +255,7 @@
 		<file fileext=".qtr"/>
 	</plugin>
 
-	<plugin pluginset="mobile" name="viscentsoft_coolbeat">
+	<plugin pluginset="mobile" name="vs_coolbeat">
 		<file fileext=".mlp"/>
 	</plugin>
 

@@ -109,7 +109,7 @@ class convproj_plug_conv:
 					old_type = copy.copy(plugin_obj.type)
 					is_converted = mappdata.convert_plugin(convproj_obj, plugin_obj, pluginid, self)
 					if is_converted:
-						print('INT    | "%s" > "%s"' % (str(old_type), str(plugin_obj.type)))
+						logger_plugconv.info('INT    | "%s" > "%s"' % (str(old_type), str(plugin_obj.type)))
 						if k in self.finish_ids: return 1
 			#print('       | No equivalent to "%s" found or not supported' % (str(plugin_obj.type)))
 			return 0

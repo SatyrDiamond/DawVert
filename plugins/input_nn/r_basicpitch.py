@@ -17,6 +17,7 @@ class input_ex_basic_pitch(plugins.base):
 	
 	def get_prop(self, in_dict): 
 		in_dict['track_nopl'] = True
+		in_dict['projtype'] = 'r'
 
 	def usable(self): 
 		usable = importlib.util.find_spec('basic_pitch')

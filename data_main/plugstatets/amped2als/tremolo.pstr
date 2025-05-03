@@ -4,6 +4,6 @@
   
   <replace plugtype="native:ableton:AutoPan" />
 
-  <out__param to="Lfo/LfoAmount" from="lfoADepth" type="float">0</out__param>
-  <out__param to="Lfo/Frequency" from="lfoARateHz" type="float">0</out__param>
+  <out__param to="Lfo/LfoAmount" from="lfoADepth" type="float" />
+  <out__param to="Lfo/Frequency" from="lfoARateHz" type="float" />
 </plugstatetransform>

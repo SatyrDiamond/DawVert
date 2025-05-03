@@ -310,6 +310,8 @@ class core:
 
 	def input_get_plugins(self): return dv_plugins.get_list('input')
 
+	def input_iter_plugins(self): return dv_plugins.iter_list('input')
+
 	def input_get_plugins_names(self): return dv_plugins.get_list_names('input')
 
 	def input_get_plugins_props(self): return dv_plugins.get_list_prop_obj('input')
@@ -348,6 +350,8 @@ class core:
 		else: dv_plugins.load_plugindir('output', '')
 
 	def output_get_plugins(self): return dv_plugins.get_list('output')
+
+	def output_iter_plugins(self): return dv_plugins.iter_list('output')
 
 	def output_get_plugins_names(self): return dv_plugins.get_list_names('output')
 

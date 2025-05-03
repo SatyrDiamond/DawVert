@@ -239,7 +239,6 @@ class output_amped(plugins.base):
 				#	if plugin_obj.type.subtype == "Dexed": wamClassName = 'DEXED'
 				#	amped_device.data['wamClassName'] = wamClassName
 				#	amped_device.data['wamPreset'] = plugin_obj.datavals.get('data', '{}')
-				#	amped_track.devices.append(amped_device)
 				#	amped_device.bypass = False
 
 				if plugin_obj.check_matchmulti('native', 'amped', ['Volt', 'VoltMini', 'Granny']):
@@ -248,7 +247,6 @@ class output_amped(plugins.base):
 					if plugin_obj.type.subtype == "VoltMini": amped_device = amped_track.add_device('VoltMini', 'VOLT Mini', counter_devid.get())
 					if plugin_obj.type.subtype == "Granny": amped_device = amped_track.add_device('Granny', 'Granny', counter_devid.get())
 					do_idparams(amped_track, convproj_obj, plugin_obj, track_obj.plugslots.synth, amped_device, amped_track.automations)
-					amped_track.devices.append(amped_device)
 					amped_device.bypass = False
 
 				if plugin_obj.check_match('user', 'reasonstudios', 'europa'):
@@ -281,7 +279,6 @@ class output_amped(plugins.base):
 					wamPreset['settings'] = ET.tostring(europa_patch).decode()
 					wamPreset['encodedSampleData'] = plugin_obj.datavals.get('encodedSampleData', [])
 					amped_device.data['wamPreset'] = json.dumps(wamPreset)
-					amped_track.devices.append(amped_device)
 					amped_device.bypass = False
 
 				#if plugin_obj.check_match('vst2', 'win'):
@@ -303,7 +300,6 @@ class output_amped(plugins.base):
 				amped_device.add_param(3, 'gain', 0.75)
 				amped_device.add_param(4, 'omni', 1)
 				amped_device.data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
-				amped_track.devices.append(amped_device)
 				amped_device.bypass = False
 
 			for notespl_obj in track_obj.placements.pl_notes:
@@ -349,7 +345,8 @@ class output_amped(plugins.base):
 							amped_audclip.offset = (insideaudiopl_obj.time.cut_start/4)
 						amped_region.clips.append(amped_audclip)
 
-			amped_track.devices += amped_parse_effects(amped_track, convproj_obj, track_obj.plugslots.slots_audio, amped_track.automations)
+			amped_parse_effects(amped_track, convproj_obj, track_obj.plugslots.slots_audio, amped_track.automations)
+
 			amped_obj.tracks.append(amped_track)
 
 		amped_obj.metronome = {"active": False, "level": 1}

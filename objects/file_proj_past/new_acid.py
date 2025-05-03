@@ -62,7 +62,7 @@ class chunk__region:
 		self.unknowndata.append( byr_stream.int32() )
 		self.fade_in = byr_stream.int64()
 		self.fade_out = byr_stream.int64()
-		self.unknowndata.append( byr_stream.float() )
+		self.vol = byr_stream.float()
 
 class chunk__maindata:
 	def __init__(self, byr_stream):

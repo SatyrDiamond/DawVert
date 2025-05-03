@@ -302,6 +302,21 @@ class action__out__filter_param:
 		if self.valtype == 'filter_type':
 			manu_obj.out__filter_param(self.storename, self.value, self.out_name)
 
+class action__out__dataval_val:
+	def __init__(self):
+		self.in_name = None
+		self.valtype = None
+		self.value = 0
+
+	def from_xml(self, xmldata):
+		self.out_name = xmldata.get('to')
+		self.valtype = xmldata.get('type')
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
+
+	def do_action(self, manu_obj):
+		if self.out_name and self.value is not None:
+			manu_obj.out__dataval_val(self.out_name, self.value)
+
 # --------------------------------------------------------- MAIN ---------------------------------------------------------
 
 actionclasses = {}
@@ -313,6 +328,7 @@ actionclasses['in__dataval'] = action__in__dataval
 actionclasses['out__param'] = action__out__param
 actionclasses['out__wet'] = action__out__wet
 actionclasses['out__filterparam'] = action__out__filter_param
+actionclasses['out__dataval_val'] = action__out__dataval_val
 actionclasses['cond__single'] = action__cond__single
 actionclasses['calc'] = action__calc
 actionclasses['remap'] = action__remap

@@ -251,8 +251,92 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2flp\\phaser.pstr": {
-    "file": "data_main\\plugstatets\\waveform2flp\\phaser.pstr",
+  "data_main\\plugstatets\\waveform2bandlab\\chorusEffect.pstr": {
+    "file": "data_main\\plugstatets\\waveform2bandlab\\chorusEffect.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:tracktion:chorusEffect",
+    "plugtype_out": [
+      "native:bandlab:chorus"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2bandlab\\distortion.pstr": {
+    "file": "data_main\\plugstatets\\waveform2bandlab\\distortion.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:tracktion:distortion",
+    "plugtype_out": [
+      "native:bandlab:overdrive"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2bandlab\\naturalReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2bandlab\\naturalReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:tracktion:naturalReverb",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2bandlab\\nonLinearReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2bandlab\\nonLinearReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:tracktion:nonLinearReverb",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2bandlab\\phaser2.pstr": {
+    "file": "data_main\\plugstatets\\waveform2bandlab\\phaser2.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:tracktion:phaser2",
+    "plugtype_out": [
+      "native:bandlab:phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2bandlab\\plateReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2bandlab\\plateReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:tracktion:plateReverb",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2flp\\phaser2.pstr": {
+    "file": "data_main\\plugstatets\\waveform2flp\\phaser2.pstr",
     "daw_in": [
       "tracktion_edit"
     ],

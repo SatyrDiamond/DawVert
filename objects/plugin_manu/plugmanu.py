@@ -166,6 +166,9 @@ class plug_manu:
 			logger_plugconv.warning('plugmanu: val "%s" is not found for OUT_PARAM' % storename)
 		return False
 
+	def out__dataval_val(self, valuename, value):
+		self.plugin_obj.datavals.add(valuename, value)
+
 	def out__wet(self, storename, fallbackval):
 		if DEBUG__TXT: print('DEBUG: out__wet:', storename.__repr__(), fallbackval.__repr__())
 		#if DEBUG__TXT: print('	> wet    |'+storename)

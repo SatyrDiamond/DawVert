@@ -53,25 +53,18 @@ if args.list:
 	in_pluginsets = dawvert_core.input_get_pluginsets()
 	out_pluginsets = dawvert_core.output_get_pluginsets()
 
+	listprint_obj = core.list_printer(dawvert_core)
+
 	for ps in in_pluginsets:
-		dawvert_core.input_load_plugins(ps)
-
-		for shortname, plugobj in dawvert_core.input_iter_plugins():
-			pluglist.append(['IN', ps, plugobj.prop_obj.projtype, shortname, plugobj.name])
-
+		listprint_obj.read_plug_in(ps)
+		listprint_obj.print()
+		listprint_obj.reset_list()
 
 	for ps in out_pluginsets:
-		dawvert_core.output_load_plugins(ps)
+		listprint_obj.read_plug_out(ps)
+		listprint_obj.print()
+		listprint_obj.reset_list()
 
-		for shortname, plugobj in dawvert_core.output_iter_plugins():
-			pluglist.append(['OUT', ps, plugobj.prop_obj.projtype, shortname, plugobj.name])
-
-	for x in sorted(pluglist, key=lambda x: x[3], reverse=False):
-		print(
-			'%s | %s | %s | %s | %s' %
-			(x[0].ljust(3), x[1].ljust(10), x[2].ljust(2).upper(), x[3].ljust(24), x[4])
-			)
-		
 	exit()
 
 

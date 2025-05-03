@@ -108,7 +108,9 @@ class inst_manager():
 		start_pitch = do_key(inst_set.pitch_start_1, inst_set.octave_start_1, inst_set.accidental_start_1)
 		end_pitch = do_key(inst_set.pitch_end_1, inst_set.octave_end_1, inst_set.accidental_end_1)
 
-		if notet_sample and sampleref_obj:
+		dur_samples = sampleref_obj.get_dur_samples()
+
+		if notet_sample and sampleref_obj and dur_samples:
 			if sampleid:
 				sp_obj = plugin_obj.sampleregion_add(start_pitch, end_pitch, samplekey, None)
 				sp_obj.sampleref = sampleid
@@ -117,7 +119,7 @@ class inst_manager():
 				sp_obj.loop_start = notet_sample.start
 				sp_obj.loop_end = notet_sample.end
 				sp_obj.start = notet_sample.sample_start
-				sp_obj.end = sampleref_obj.dur_samples
+				sp_obj.end = dur_samples
 
 	def add_inst(convproj_obj, instid, project_obj, maindata_obj):
 		inst_obj = convproj_obj.instrument__add(instid)
@@ -163,7 +165,9 @@ class inst_manager():
 
 				sampleid, notet_sample, samplekey, sampleref_obj = sample_manager.add_sample(notet_data, convproj_obj, notet_inst.sample)
 
-				if notet_sample and sampleref_obj:
+				dur_samples = sampleref_obj.get_dur_samples()
+
+				if notet_sample and sampleref_obj and dur_samples:
 					sp_obj = plugin_obj.samplepart_add('sample')
 					sp_obj.sampleref = sampleid
 					sp_obj.point_value_type = "samples"
@@ -171,7 +175,7 @@ class inst_manager():
 					sp_obj.loop_start = notet_sample.start
 					sp_obj.loop_end = notet_sample.end
 					sp_obj.start = notet_sample.sample_start
-					sp_obj.end = sampleref_obj.dur_samples
+					sp_obj.end = dur_samples
 
 					inst_obj.datavals.add('middlenote', samplekey)
 				

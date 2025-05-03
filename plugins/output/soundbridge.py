@@ -681,7 +681,8 @@ class output_soundbridge(plugins.base):
 								sb_id = audio_ids[sp_obj.sampleref]
 								isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 	
-								hzchange = (PROJECT_FREQ*2)/sampleref_obj.hz if sampleref_obj.hz else 1
+								samp_hz = sampleref_obj.get_hz()
+								hzchange = (PROJECT_FREQ*2)/samp_hz if samp_hz else 1
 
 								sp_obj.convpoints_samples(sampleref_obj)
 
@@ -730,7 +731,8 @@ class output_soundbridge(plugins.base):
 								if sp_obj.sampleref in audio_ids:
 									sb_id = audio_ids[sp_obj.sampleref]
 									isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
-									hzchange = (PROJECT_FREQ*2)/sampleref_obj.hz if sampleref_obj.hz else 1
+									samp_hz = sampleref_obj.get_hz()
+									hzchange = (PROJECT_FREQ*2)/samp_hz if samp_hz else 1
 									sp_obj.convpoints_samples(sampleref_obj)
  
 									if isfound:
@@ -780,7 +782,8 @@ class output_soundbridge(plugins.base):
 								if sp_obj.sampleref in audio_ids:
 									sb_id = audio_ids[sp_obj.sampleref]
 									isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
-									hzchange = (PROJECT_FREQ*2)/sampleref_obj.hz if sampleref_obj.hz else 1
+									samp_hz = sampleref_obj.get_hz()
+									hzchange = (PROJECT_FREQ*2)/samp_hz if samp_hz else 1
 									sp_obj.convpoints_samples(sampleref_obj)
  
 									if isfound:
@@ -822,7 +825,8 @@ class output_soundbridge(plugins.base):
 							if sp_obj.sampleref in audio_ids:
 								sb_id = audio_ids[sp_obj.sampleref]
 								isfound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
-								hzchange = (PROJECT_FREQ*2)/sampleref_obj.hz if sampleref_obj.hz else 1
+								samp_hz = sampleref_obj.get_hz()
+								hzchange = (PROJECT_FREQ*2)/samp_hz if samp_hz else 1
 								sp_obj.convpoints_samples(sampleref_obj)
 
 								if isfound:
@@ -939,6 +943,13 @@ class output_soundbridge(plugins.base):
 							block.automationBlocks.append(autoblock)
 
 					sb_track.blocks.append(block)
+
+				if track_obj.visual_keynotes:
+					keynotes = []
+					for k, v in track_obj.visual_keynotes.items():
+						note = str(k+60)
+						keynotes += [note, v.name.replace(',', '')]
+					sb_track.metadata['MidiTrackPitchNames'] = ','.join(keynotes)
 
 				sb_track.midiUnits = []
 				sb_track.type = 4

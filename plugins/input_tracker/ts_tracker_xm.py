@@ -153,7 +153,13 @@ class input_xm(plugins.base):
 				inst_obj.params.add('vol', 0.3*(trsamp.vol), 'float')
 				filename = samplefolder+str(xm_cursamplenum)+'.wav'
 
-				plugin_obj, synthid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(filename, None)
+				sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+				sampleref_obj.set_channels(1 if not trsamp.stereo else 2)
+				sampleref_obj.set_dur_samples(trsamp.get_len())
+				sampleref_obj.set_fileformat('wav')
+
+				plugin_obj, synthid, sp_obj = convproj_obj.plugin__addspec__sampler__genid__s_obj(sampleref_obj, filename)
+
 				inst_obj.plugslots.set_synth(synthid)
 				sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = trsamp.get_loop()
 				if not sp_obj.loop_active: sp_obj.loop_end = trsamp.length
@@ -166,8 +172,14 @@ class input_xm(plugins.base):
 				inst_obj.plugslots.set_synth(synthid)
 				for instnum, r_start, e_end in sampleregions:
 					filename = samplefolder + str(xm_cursamplenum+instnum) + '.wav'
-					sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+
 					trsamp = xm_inst.samp_head[instnum]
+
+					sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+					sampleref_obj.set_channels(1 if not trsamp.stereo else 2)
+					sampleref_obj.set_dur_samples(trsamp.get_len())
+					sampleref_obj.set_fileformat('wav')
+
 					sp_obj = plugin_obj.sampleregion_add(r_start, e_end, 0, None)
 					sp_obj.loop_active, sp_obj.loop_mode, sp_obj.loop_start, sp_obj.loop_end = trsamp.get_loop()
 					if not sp_obj.loop_active: sp_obj.loop_end = trsamp.length

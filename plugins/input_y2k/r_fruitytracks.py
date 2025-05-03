@@ -119,7 +119,7 @@ class input_fruitytracks(plugins.base):
 					pldur = (ftr_clip.dur/bpmticks)
 					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks))
 				else:
-					audduration = sampleref_obj.dur_sec*8
+
 					pldur = calc_tick_val(bpmdiv, ftr_clip.dur)
 					repeatlen = calc_tick_val(bpmdiv, ftr_clip.repeatlen)
 					placement_obj.time.set_loop_data(
@@ -128,7 +128,10 @@ class input_fruitytracks(plugins.base):
 						calc_tick_val(bpmdiv, ftr_clip.repeatlen)
 						)
 					placement_obj.sample.stretch.algorithm = 'resample'
-					placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
+					dur_sec = sampleref_obj.get_dur_sec()
+					if dur_sec:
+						audduration = dur_sec*8
+						placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
 				placement_obj.time.set_posdur(plpos, pldur)
 
 				envpoints = ftr_clip.vol_env

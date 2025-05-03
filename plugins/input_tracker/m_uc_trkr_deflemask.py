@@ -103,7 +103,9 @@ class input_deflemask(plugins.base):
 				audio_obj.pcm_from_list(sample_obj.data)
 				audio_obj.to_file_wav(wave_path)
 				sampleid = 'sample_'+str(n).zfill(2)
-				convproj_obj.sampleref__add(sampleid, wave_path, None)
+				sampleref_obj = convproj_obj.sampleref__add(sampleid, wave_path, None)
+				sampleref_obj.set_fileformat('wav')
+				audio_obj.to_sampleref_obj(sampleref_obj)
 				sampleparts.append([sampleid, sample_obj.name])
 			else:
 				sampleparts.append([None, ''])

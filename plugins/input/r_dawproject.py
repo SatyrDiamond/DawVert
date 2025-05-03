@@ -275,22 +275,17 @@ def do_audio(convproj_obj, npa_obj, audio_obj):
 	global samplefolder
 	global zip_data
 
-	channels = audio_obj.channels
-	duration = audio_obj.duration
-	samplerate = audio_obj.sampleRate
 	filepath = str(audio_obj.file)
 	extfilepath = os.path.join(samplefolder, filepath)
 	try: zip_data.extract(filepath, path=samplefolder, pwd=None)
 	except: pass
 	sampleref_obj = convproj_obj.sampleref__add(filepath, extfilepath, None)
-	if not sampleref_obj.dur_samples and not sampleref_obj.dur_sec:
-		if samplerate:
-			sampleref_obj.hz = samplerate
-			sampleref_obj.timebase = samplerate
-			if duration:
-				sampleref_obj.dur_samples = duration*samplerate
-				sampleref_obj.dur_sec = duration
-	if not sampleref_obj.channels and channels: sampleref_obj.channels = channels
+	sampleref_obj.convert__path__fileformat()
+
+	if audio_obj.channels: sampleref_obj.set_channels(audio_obj.channels)
+	if audio_obj.duration: sampleref_obj.set_dur_sec(audio_obj.duration)
+	if audio_obj.sampleRate: sampleref_obj.set_hz(audio_obj.sampleRate)
+
 	npa_obj.sample.sampleref = filepath
 	return sampleref_obj
 
@@ -329,7 +324,8 @@ def do_audioclip(convproj_obj, npa_obj, inclip):
 			stretch_obj.preserve_pitch = stretch_algo != 'repitch'
 			stretch_obj.is_warped = True
 			warp_obj = stretch_obj.warp
-			warp_obj.seconds = sampleref_obj.dur_sec
+			dur_sec = sampleref_obj.get_dur_sec()
+			if dur_sec: warp_obj.seconds = dur_sec
 			for x in inclip.warps.points:
 				warp_point_obj = warp_obj.points__add()
 				warp_point_obj.beat = x.time

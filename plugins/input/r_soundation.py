@@ -302,12 +302,13 @@ class input_soundation(plugins.base):
 								if 'name' in sampfile: sp_obj.visual.name = sampfile['name']
 								if env is not None:
 									if sampleref_obj:
-										dur_sec = sampleref_obj.dur_sec
-										attack = env['p2'] if 'p2' in env else 0
-										release = 1-env['p3'] if 'p3' in env else 0
-										sustain = env['sustain'] if 'sustain' in env else 1
-										plugin_obj.env_asdr_add('vol_'+endstr, 0, attack*dur_sec, 0, 0, sustain, release*dur_sec, 1)
-										sp_obj.envs['vol'] = 'vol_'+endstr
+										dur_sec = sampleref_obj.get_dur_sec()
+										if dur_sec is not None:
+											attack = env['p2'] if 'p2' in env else 0
+											release = 1-env['p3'] if 'p3' in env else 0
+											sustain = env['sustain'] if 'sustain' in env else 1
+											plugin_obj.env_asdr_add('vol_'+endstr, 0, attack*dur_sec, 0, 0, sustain, release*dur_sec, 1)
+											sp_obj.envs['vol'] = 'vol_'+endstr
 
 					elif instpluginname == 'com.soundation.drummachine':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)

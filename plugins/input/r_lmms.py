@@ -387,14 +387,18 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 
 			numslices = int(lmms_plugin.get_param('totalSlices', 0))
 
-			hzmod = 44100/sampleref_obj.hz
+			samp_hz = sampleref_obj.get_hz()
+			if samp_hz is not None: hzmod = 44100/samp_hz
+			else: hzmod = 1
 
-			if sampleref_obj.dur_samples:
+			dur_samples = sampleref_obj.get_dur_samples()
+			
+			if dur_samples:
 				slicenum = 1
 				for n in range(numslices):
 					value = lmms_plugin.get_param('slice_'+str(n+1), 0).value
 					slice_obj = sp_obj.add_slice()
-					slice_obj.start = int(float(value)*hzmod*sampleref_obj.dur_samples)
+					slice_obj.start = int(float(value)*hzmod*dur_samples)
 					slicenum += 1
 
 
@@ -663,7 +667,9 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 				placement_obj.time.set_offset(lmms_sampletco.off*-1 if lmms_sampletco.off != -1 else 0)
 				placement_obj.muted = bool(lmms_sampletco.muted)
 				filepath = get_sample(lmms_sampletco.src)
-				convproj_obj.sampleref__add(filepath, filepath, None)
+				sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, None)
+				if lmms_sampletco.sample_rate:
+					sampleref_obj.set_hz(lmms_sampletco.sample_rate)
 				sp_obj = placement_obj.sample
 				sp_obj.sampleref = filepath
 

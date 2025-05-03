@@ -18,10 +18,8 @@ def sampleref__get(convproj_obj, alssampleref_obj, dawvert_intent):
 	filename = alssampleref_obj.FileRef.Path
 	sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
 	sampleref_obj.search_local(dawvert_intent.input_folder)
-	sampleref_obj.dur_samples = alssampleref_obj.DefaultDuration
-	sampleref_obj.hz = alssampleref_obj.DefaultSampleRate
-	sampleref_obj.timebase = sampleref_obj.hz
-	sampleref_obj.dur_sec = sampleref_obj.dur_samples / sampleref_obj.hz
+	sampleref_obj.set_hz(alssampleref_obj.DefaultSampleRate)
+	sampleref_obj.set_dur_samples(alssampleref_obj.DefaultDuration)
 	return sampleref_obj, filename
 
 def doparam(alsparam, varname, vartype, i_fallback, i_loc, i_addmul): 
@@ -625,7 +623,8 @@ class input_ableton(plugins.base):
 							if AUDWARPVERBOSE: print('i')
 
 							with stretch_obj.setup_warp() as warp_obj:
-								warp_obj.seconds = sampleref_obj.dur_sec
+								dur_sec = sampleref_obj.get_dur_sec()
+								if dur_sec: warp_obj.seconds = dur_sec
 								for _, WarpMarker in clipobj.WarpMarkers.items():
 									warp_point_obj = warp_obj.points__add()
 									warp_point_obj.beat = WarpMarker.BeatTime

@@ -388,7 +388,9 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 	
 			stretch_amt = 1
 			if sampleref_exists:
-				stretch_amt = (sampleref_obj.dur_sec*2)/audioclip.loopinfo.numBeats
+				dur_sec = sampleref_obj.get_dur_sec()
+				if dur_sec is not None:
+					stretch_amt = (dur_sec*2)/audioclip.loopinfo.numBeats
 	
 			bpmdiv = (bpm/120)
 			if audioclip.loopStartBeats == 0 and audioclip.loopLengthBeats == 0:

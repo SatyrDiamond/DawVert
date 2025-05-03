@@ -504,19 +504,23 @@ class output_lmms(plugins.base):
 						elif plugin_obj.check_match('universal', 'sampler', 'slicer'):
 							sp_obj = plugin_obj.samplepart_get('sample')
 							issampfound, sampleref_obj = cvpj_obj.sampleref__get(sp_obj.sampleref)
-							if issampfound and sampleref_obj.dur_samples:
-								lmms_inst_obj.name = 'slicert'
-								lmms_plug_obj.name = 'slicert'
+
+							if issampfound:
+								samp_hz = sampleref_obj.get_hz()
+								dur_samples = sampleref_obj.get_dur_samples()
+
+								if samp_hz and dur_samples:
+									lmms_inst_obj.name = 'slicert'
+									lmms_plug_obj.name = 'slicert'
+		
+									sp_obj.convpoints_percent(sampleref_obj)
 	
-								hzmod = sampleref_obj.hz/44100
-
-								sp_obj.convpoints_percent(sampleref_obj)
-
-								lmms_plug_obj.add_param('src', sp_obj.get_filepath(cvpj_obj, False) )
-								lmms_plug_obj.add_param('totalSlices', str(len(sp_obj.slicer_slices)) )
-
-								for slicenum, slice_obj in enumerate(sp_obj.slicer_slices):
-									lmms_plug_obj.add_param('slice_'+str(slicenum+1), str((slice_obj.start*hzmod)/sampleref_obj.dur_samples) )
+									lmms_plug_obj.add_param('src', sp_obj.get_filepath(cvpj_obj, False) )
+									lmms_plug_obj.add_param('totalSlices', str(len(sp_obj.slicer_slices)) )
+	
+									hzmod = samp_hz/44100 if samp_hz else 1
+									for slicenum, slice_obj in enumerate(sp_obj.slicer_slices):
+										lmms_plug_obj.add_param('slice_'+str(slicenum+1), str((slice_obj.start*hzmod)/dur_samples) )
 
 								middlenotefix -= 1
 

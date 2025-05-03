@@ -452,7 +452,7 @@ class cvpj_fileref_state:
 VERBOSE = False
 
 class cvpj_sampleref:
-	__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat','loop_found','loop_start','loop_end','slices']
+	#__slots__ = ['fileref','dur_samples','dur_sec','timebase','hz','channels','found','file_size','file_date', 'visual','fileformat','loop_found','loop_start','loop_end','slices']
 
 	audiofile_selector = dv_plugins.create_selector('audiofile')
 	audioconv_selector = dv_plugins.create_selector('audioconv')
@@ -460,7 +460,7 @@ class cvpj_sampleref:
 	def __init__(self):
 		self.fileref = cvpj_fileref()
 		self.found = False
-		self.dur_samples = 0
+		self.dur_samples = -1
 		self.dur_sec = -1
 		self.timebase = 44100
 		self.hz = 44100
@@ -473,10 +473,108 @@ class cvpj_sampleref:
 		self.loop_end = 0
 		self.slices = []
 		self.visual = visual.cvpj_visual()
+		self.defined_meta = []
+
+
+
+
+
+	def set_hz(self, val):
+		if 'hz' not in self.defined_meta:
+			self.defined_meta.append('hz')
+		self.hz = val
+		self.timebase = val
+
+	def set_dur_samples(self, val):
+		if 'dur_samples' not in self.defined_meta: self.defined_meta.append('dur_samples')
+		self.dur_samples = val
+
+	def set_dur_sec(self, val):
+		if 'dur_sec' not in self.defined_meta: self.defined_meta.append('dur_sec')
+		self.dur_sec = val
+
+	def set_channels(self, val):
+		if 'channels' not in self.defined_meta: self.defined_meta.append('channels')
+		self.channels = val
+
+	def set_fileformat(self, val):
+		if 'fileformat' not in self.defined_meta: self.defined_meta.append('fileformat')
+		self.fileformat = val
+
+
+
+
+
+	def convert__dur_sec__dur_samples(self, overwrite):
+		cond_samp = ('dur_samples' not in self.defined_meta) or overwrite
+		if ('dur_sec' in self.defined_meta) or cond_samp:
+			if ('hz' in self.defined_meta): 
+				#logger_project.warning('Guessing dur_samples from dur_sec')
+				self.set_dur_samples(int(self.dur_sec*self.timebase))
+				return 1
+			else: return -1
+		else: return 0
+
+	def convert__dur_samples__dur_sec(self, overwrite):
+		cond_samp = ('dur_sec' not in self.defined_meta) or overwrite
+		if ('dur_samples' in self.defined_meta) or cond_samp:
+			if ('hz' in self.defined_meta): 
+				#logger_project.warning('Guessing dur_sec from dur_samples')
+				self.set_dur_sec(self.dur_samples/self.timebase)
+				return 1
+			else: return -1
+		else: return 0
+
+	def convert__path__fileformat(self):
+		if ('fileformat' not in self.defined_meta):
+			self.set_fileformat(self.fileref.file.extension.lower())
+
+
+
+	def get_hz(self):
+		if 'hz' not in self.defined_meta: self.get_info('get_hz')
+		if 'hz' in self.defined_meta: return self.hz
+
+	def get_hz_opt(self):
+		if 'hz' in self.defined_meta: return self.hz
+
+	def get_dur_samples(self):
+		resd = self.convert__dur_sec__dur_samples(False)
+		if resd == -1:
+			if self.get_info('get_dur_samples'): self.convert__dur_sec__dur_samples(False)
+
+		if 'dur_samples' in self.defined_meta:
+			return self.dur_samples
+
+	def get_dur_sec(self):
+		resd = self.convert__dur_samples__dur_sec(False)
+		if resd == -1:
+			if self.get_info('get_dur_sec'): self.convert__dur_samples__dur_sec(False)
+
+		if 'dur_sec' in self.defined_meta:
+			return self.dur_sec
+
+	def get_channels(self):
+		if 'channels' not in self.defined_meta: self.get_info('get_channels')
+		if 'channels' in self.defined_meta: return self.channels
+
+	def get_channels_opt(self):
+		if 'channels' in self.defined_meta: return self.channels
+
+	def get_fileformat(self):
+		if 'fileformat' not in self.defined_meta: self.get_info('get_fileformat')
+		if 'fileformat' in self.defined_meta: return self.fileformat
+
+	def get_exists(self):
+		orgpath = self.fileref.get_path(None, False)
+		return os.path.exists(orgpath)
+
+
+
 
 	def set_path(self, in_os_type, in_path):
 		self.fileref.set_path(in_os_type, in_path, 0)
-		self.get_info()
+		#self.get_info()
 
 	def find_relative(self, searchseries):
 		if not self.found:
@@ -486,7 +584,7 @@ class cvpj_sampleref:
 			if not os.path.exists(orgpath):
 				iffound = self.fileref.search(searchseries)
 
-			if iffound: self.get_info()
+			#if iffound: self.get_info()
 
 			return iffound
 
@@ -506,7 +604,7 @@ class cvpj_sampleref:
 			return True
 		except:
 			filename = self.fileref.get_path(None, False)
-			logger_project.warning('Failed to Resample '+str(self.fileref.file)+'. Copying instead.')
+			logger_project.warning('fileref: Failed to Resample '+str(self.fileref.file)+'. Copying instead.')
 			try:
 				shutil.copy(filename, outfilename)
 				self.set_path(os_type, outfilename)
@@ -514,13 +612,14 @@ class cvpj_sampleref:
 			return False
 
 	def search_local(self, dirpath):
-		if self.fileref.search_local(dirpath):
-			self.get_info()
+		return self.fileref.search_local(dirpath)
 
-	def get_info(self):
+	def get_info(self, *args):
 		wav_realpath = self.fileref.get_path(os_path, False)
 
 		if os.path.exists(wav_realpath):
+
+			logger_project.warning('fileref: Getting Info from "%s"' % str(self.fileref.file) + (' because of '+args[0] if args else ''))
 
 			self.file_size = os.path.getsize(wav_realpath)
 			self.file_date = int(os.path.getmtime(wav_realpath))
@@ -557,10 +656,20 @@ class cvpj_sampleref:
 			if not isvalid and iserror:
 				logger_project.warning('fileref: audioinfo: error getting info from '+shortname)
 
+			return True
+
+		else:
+			logger_project.warning('fileref: Sample Not Found "%s"' % str(self.fileref.file))
+
+			return False
+
 	def convert(self, dawaudiofiles, outpath):
+
 		for shortname, plug_obj, prop_obj in cvpj_sampleref.audioconv_selector.iter():
 			usable, usable_meg = plug_obj.usable()
-			if (self.fileformat in prop_obj.in_file_formats):
+			fileformat = self.get_fileformat()
+
+			if (fileformat in prop_obj.in_file_formats):
 				if usable:
 					filesupported = data_values.list__in_both(dawaudiofiles, prop_obj.out_file_formats)
 					if filesupported:

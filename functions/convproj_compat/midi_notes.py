@@ -23,6 +23,7 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 					notelist_obj.change_timings(midpl.time_ppq, midpl.time_ppq)
 					notelist_obj.mod_transpose(midpl.pitch)
 				track_obj.placements.pl_midi.data = []
+
 			return True
 
 		elif in__midi_notes == False and out__midi_notes == True and out_type not in ['rm']:

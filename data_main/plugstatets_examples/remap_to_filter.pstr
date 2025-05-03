@@ -1,0 +1,18 @@
+<plugstatetransform plugtype="test:test:test">
+
+  <define_remap name="filter_types" in_type="int" out_type="filter_type">
+    <val in_val="0" out_val="low_pass"/>
+    <val in_val="1" out_val="low_shelf"/>
+    <val in_val="2" out_val="peak"/>
+    <val in_val="5" out_val="high_shelf"/>
+    <val in_val="6" out_val="high_pass"/>
+    <fallback out_val="high_pass"/>
+  </define_remap>
+
+  <in__param from="val0" to="wth"/>
+  <remap name="wth" remapdef="filter_types"/>
+
+  <replace plugtype="output:thing:whatever" />
+
+  <out__filterparam to="type" from="wth" type="filter_type">0</out__filterparam>
+</plugstatetransform>

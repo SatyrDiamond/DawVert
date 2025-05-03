@@ -1,0 +1,18 @@
+<plugstatetransform daw_in="amped" daw_out="ableton" plugtype="native:amped:Flanger">
+  <in__param from="delayLfoDepth" type="float">0.75</in__param>
+  <in__param from="delayLfoRateHz" type="float">1.0579</in__param>
+  <in__param from="delayTimeMS" type="float">4.0</in__param>
+  <in__param from="mix" type="float">1</in__param>
+
+  <calc name="rate" type="div">4</calc>
+  <calc name="delayTimeMS" type="div">1000</calc>
+  
+  <replace plugtype="native:ableton:PhaserNew" />
+
+  <out__param to="DryWet" from="mix" type="float">0</out__param>
+  <out__param to="FlangerDelayTime" from="delayTimeMS" type="float">0</out__param>
+  <out__param to="Modulation_Amount" from="delayLfoDepth" type="float">0</out__param>
+  <out__param to="Modulation_Frequency" from="delayLfoRateHz" type="float">0</out__param>
+  <out__param to="Modulation_Sync" type="bool">0</out__param>
+  <out__param to="Mode" type="int">1</out__param>
+</plugstatetransform>

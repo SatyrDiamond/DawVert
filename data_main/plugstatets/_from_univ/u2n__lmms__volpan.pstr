@@ -1,0 +1,14 @@
+<plugstatetransform daw_out="lmms" plugtype="universal:volpan">
+  <in__param from="pan" type="float">0</in__param>
+  <in__param from="vol" type="float">0</in__param>
+
+  <calc name="pan" type="mul">100</calc>
+  <calc name="vol" type="mul">100</calc>
+  
+  <replace plugtype="native:lmms:amplifier" />
+
+  <out__param to="pan" type="float">0</out__param>
+  <out__param to="volume" from="vol" type="float">0</out__param>
+  <out__param to="right" type="float">100.0</out__param>
+  <out__param to="left" type="float">100.0</out__param>
+</plugstatetransform>

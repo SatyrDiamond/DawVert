@@ -24,8 +24,8 @@ from objects.convproj import time
 from objects.convproj import chord
 from objects.convproj import plugstate
 from objects.convproj import midi_inst
-from objects import plugdatamanu
-from objects import extplugmanu
+from objects.plugin_manu import plugmanu as plugdatamanu
+from objects.plugin_manu import extplug as extplugmanu
 
 logger_plugins = logging.getLogger('plugins')
 logger_plugconv = logging.getLogger('plugconv')

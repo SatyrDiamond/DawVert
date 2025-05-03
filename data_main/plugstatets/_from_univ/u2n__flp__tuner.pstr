@@ -1,0 +1,9 @@
+<plugstatetransform daw_out="flp" plugtype="universal:tuner">
+  <in__param from="refrence" type="float">440</in__param>
+
+  <calc name="refrence" type="valrange">400;480;0;6000</calc>
+
+  <replace plugtype="native:flstudio:tuner" />
+
+  <out__param to="refrence" from="refrence" type="float">0</out__param>
+</plugstatetransform>

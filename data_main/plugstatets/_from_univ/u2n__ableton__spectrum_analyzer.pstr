@@ -1,0 +1,3 @@
+<plugstatetransform daw_out="ableton" plugtype="universal:spectrum_analyzer">
+  <replace plugtype="native:ableton:SpectrumAnalyzer" />
+</plugstatetransform>

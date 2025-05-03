@@ -1,0 +1,29 @@
+<plugstatetransform daw_in="amped" daw_out="flp" plugtype="native:amped:Phaser">
+  <in__param from="stages" type="float">0</in__param>
+  <in__param from="rate" type="float">0</in__param>
+  <in__param from="feedback" type="float">0</in__param>
+  <in__param from="hzmin" type="float">0</in__param>
+  <in__param from="hzrange" type="float">0</in__param>
+  <in__param from="mix" type="float">0</in__param>
+
+  <calc name="pan" type="div">128</calc>
+  <calc name="hzmin" type="div">2000</calc>
+  <calc name="hzrange" type="div">10</calc>
+  <calc name="mix" type="div">2</calc>
+  <calc name="rate" type="mul">5000</calc>
+  <calc name="feedback" type="mul">1000</calc>
+  <calc name="hzmin" type="mul">1000</calc>
+  <calc name="hzrange" type="mul">1000</calc>
+  <calc name="stages" type="sub">1</calc>
+  <calc name="mix" type="mul">1024</calc>
+  
+  <replace plugtype="native:flstudio:fruity phaser" />
+
+  <out__param to="num_stages" from="stages" type="float">0</out__param>
+  <out__param to="sweep_freq" from="rate" type="float">0</out__param>
+  <out__param to="feedback" type="float">0</out__param>
+  <out__param to="depth_min" from="hzmin" type="float">0</out__param>
+  <out__param to="depth_max" from="hzrange" type="float">0</out__param>
+  <out__param to="drywet" from="mix" type="float">0</out__param>
+  <out__param to="gain" type="float">4000.0</out__param>
+</plugstatetransform>

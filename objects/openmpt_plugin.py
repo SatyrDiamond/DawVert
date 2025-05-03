@@ -1,7 +1,7 @@
 
 #datadef = dv_datadef.datadef('./data_main/datadef/openmpt.ddef')
 #dataset = dv_dataset.dataset('./data_main/dataset/openmpt.dset')
-from functions_plugin_ext import plugin_vst2
+#from functions_plugin_ext import plugin_vst2
 
 class openmpt_plugin:
 	def __init__(self):
@@ -43,9 +43,9 @@ class openmpt_plugin:
 		if self.type == b'OMXD':
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'directx', self.libname)
 			plugin_obj.from_bytes(self.data, 'directx', 'directx', 'plugin', self.libname.lower(), None)
-		elif self.type == b'PtsV':
-			plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', None)
-			plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', self.id, 'chunk', self.data, 0)
+		#elif self.type == b'PtsV':
+		#	plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'vst2', None)
+		#	plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id', 'win', self.id, 'chunk', self.data, 0)
 		elif self.type == b'DBM0':
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'digibooster', 'pro_echo')
 			plugin_obj.params.add('delay', self.params[0], 'int')

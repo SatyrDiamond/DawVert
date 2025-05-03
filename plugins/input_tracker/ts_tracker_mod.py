@@ -81,10 +81,12 @@ class input_mod(plugins.base):
 				if loopstart != 0 or loopend != 2: audio_obj.loop = [loopstart, loopend]
 
 				audio_obj.pcm_change_bits(16)
-
 				audio_obj.to_file_wav(wave_path)
 
 				plugin_obj, inst_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+				sampleref_obj.set_fileformat('wav')
+				audio_obj.to_sampleref_obj(sampleref_obj)
+
 				sp_obj.point_value_type = "samples"
 				sp_obj.loop_active = loopstart != 0 and loopend != 2
 				sp_obj.loop_start = loopstart

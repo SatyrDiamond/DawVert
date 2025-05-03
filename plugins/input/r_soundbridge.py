@@ -3,6 +3,7 @@
 
 import plugins
 from functions import xtramath
+from functions import data_values
 from functions.dawspecific import soundbridge as soundbridge_func
 from objects import globalstore
 from objects.convproj import fileref
@@ -413,6 +414,16 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		if sb_track.midiOutput:
 			track_obj.midi.out_chanport.chan = sb_track.midiOutput.channelIndex+1
 
+		if 'MidiTrackPitchNames' in metadata:
+			try:
+				MidiTrackPitchNames = metadata['MidiTrackPitchNames'].split(',')
+				MidiTrackPitchNames = data_values.list__chunks(MidiTrackPitchNames, 2)
+				for key, name in MidiTrackPitchNames:
+					visual_obj = track_obj.visual_keynotes.add_key(int(key)-60)
+					visual_obj.name = name
+			except:
+				pass
+
 	if sb_track.type == 3:
 		track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
 		track_visual(track_obj.visual, sb_track)
@@ -468,12 +479,16 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 					maxbeat = 0
 
-					warp_obj.seconds = sampleref_obj.dur_sec
-					for stretchMark in blockevent.stretchMarks:
-						warp_point_obj = warp_obj.points__add()
-						warp_point_obj.beat = stretchMark.newPosition/pfreq
-						warp_point_obj.second = stretchMark.initPosition/(sampleref_obj.hz if sampleref_obj else pfreq)
-						maxbeat = stretchMark.newPosition
+					dur_sec = sampleref_obj.get_dur_sec()
+					samp_hz = sampleref_obj.get_hz()
+
+					if dur_sec is not None:
+						warp_obj.seconds = dur_sec
+						for stretchMark in blockevent.stretchMarks:
+							warp_point_obj = warp_obj.points__add()
+							warp_point_obj.beat = stretchMark.newPosition/pfreq
+							warp_point_obj.second = stretchMark.initPosition/(samp_hz if samp_hz is not None else pfreq)
+							maxbeat = stretchMark.newPosition
 
 					warp_obj.calcpoints__speed()
 					
@@ -588,7 +603,9 @@ class input_soundbridge(plugins.base):
 			ofilename = filename
 			if dawvert_intent.input_file.endswith('.soundbridge'): 
 				ofilename = os.path.join(dawvert_intent.input_file, filename)
-			convproj_obj.sampleref__add(filename, ofilename, None)
+			sampleref_obj = convproj_obj.sampleref__add(filename, ofilename, None)
+			if audiosource.channelCount:
+				sampleref_obj.set_channels(audiosource.channelCount)
 
 		for videosource in project_obj.pool.videoSources:
 			filename = videosource.fileName

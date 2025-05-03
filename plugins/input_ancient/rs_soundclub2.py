@@ -82,6 +82,9 @@ class input_soundclub2(plugins.base):
 				plugin_obj, synthid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
 				track_obj.plugslots.set_synth(synthid)
 
+				sampleref_obj.set_fileformat('wav')
+				audio_obj.to_sampleref_obj(sampleref_obj)
+
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				sp_obj.point_value_type = "samples"
 				sp_obj.start = 0

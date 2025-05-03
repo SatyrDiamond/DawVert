@@ -73,7 +73,7 @@ class triplestr:
 	@classmethod
 	def from_str(cls, in_str):
 		outobj = cls()
-		outobj.parse_str(in_str)
+		outobj.set_str(in_str)
 		return outobj
 
 	def __str__(self):
@@ -97,7 +97,7 @@ class triplestr:
 		self.subtype = i_subtype
 
 	def set_str(self, in_str):
-		self.set_list(in_str.split(':', 2))
+		self.set_list(in_str.split(':', 3))
 
 	def set_list(self, in_list):
 		self.category = None

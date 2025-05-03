@@ -1,0 +1,6 @@
+<plugstatetransform daw_in="lmms" daw_out="flp" plugtype="native:lmms:spectrumanalyzer">
+  <replace plugtype="native:flstudio:fruity spectroman" />
+  
+  <out__param to="amp" type="float">128.0</out__param>
+  <out__param to="scale" type="float">128.0</out__param>
+</plugstatetransform>

@@ -229,7 +229,9 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 
 	if sampleref_obj.found:
 		if t_stretchingtime != 0:
-			sre_obj.stretch.set_rate_tempo(flp_obj.tempo, (sampleref_obj.dur_sec/t_stretchingtime)/t_stretchingmultiplier, False)
+			dur_sec = sampleref_obj.get_dur_sec()
+			if dur_sec is not None:
+				sre_obj.stretch.set_rate_tempo(flp_obj.tempo, (dur_sec/t_stretchingtime)/t_stretchingmultiplier, False)
 
 		elif t_stretchingtime == 0:
 			sre_obj.stretch.set_rate_speed(flp_obj.tempo, 1/t_stretchingmultiplier, False)

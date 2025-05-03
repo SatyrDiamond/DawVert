@@ -149,9 +149,15 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 		filepath = sampleref_obj.fileref.get_path(None, False)
 		basename = sampleref_obj.fileref.file.basename
 		dp_audio = clips.dawproject_audio()
-		dp_audio.channels = sampleref_obj.channels
-		dp_audio.duration = sampleref_obj.dur_sec
-		dp_audio.sampleRate = sampleref_obj.hz
+
+		dur_sec = sampleref_obj.get_dur_sec()
+		if dur_sec: dp_audio.duration = dur_sec
+
+		samp_hz = sampleref_obj.get_hz()
+		if samp_hz: dp_audio.sampleRate = samp_hz
+
+		samp_channels = sampleref_obj.get_channels()
+		if samp_channels: dp_audio.channels = samp_channels
 
 		stretch_obj = samplepart_obj.stretch
 

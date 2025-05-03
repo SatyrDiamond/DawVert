@@ -215,6 +215,7 @@ class input_petaporon(plugins.base):
 				sample_id = '_'.join([str(instnum), str(sampnum), sample_offset])
 				wav_path = samplefolder + sample_offset + '.wav'
 
+				audio_obj = None
 				if vagsamp['offset'] not in offset_points:
 					logger_input.info('Ripping Sample #'+str(sampnum+1)+' from Instrument #'+str(instnum+1))
 					sample_data = sample_obj.rip_sample((vagsamp['offset']+2)*8)
@@ -224,6 +225,9 @@ class input_petaporon(plugins.base):
 					offset_points[vagsamp['offset']] = wav_path
 
 				sampleref_obj = convproj_obj.sampleref__add(sample_id, wav_path, None)
+				sampleref_obj.set_fileformat('wav')
+				audio_obj.to_sampleref_obj(sampleref_obj)
+
 				sp_obj = plugin_obj.sampleregion_add(vagsamp['key_min']-60, vagsamp['key_max']-60, vagsamp['key_root']-60, None, samplepartid=sample_id)
 				sp_obj.sampleref = sample_id
 				sp_obj.from_sampleref(convproj_obj, sp_obj.sampleref)

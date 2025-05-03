@@ -390,30 +390,34 @@ class cvpj_stretch:
 				self.is_warped = True
 				warp_obj.points = []
 
-				if self.uses_tempo:
-					pos_real = sampleref_obj.dur_sec*self.calc_tempo_size
-	
-					warp_point_obj = warp_obj.points__add()
-					warp_point_obj.beat = 0
-					warp_point_obj.second = 0
-					warp_point_obj.speed = self.calc_tempo_size
-	
-					warp_point_obj = warp_obj.points__add()
-					warp_point_obj.beat = pos_real*2
-					warp_point_obj.second = sampleref_obj.dur_sec
-					warp_point_obj.speed = self.calc_tempo_size
-				else:
-					pos_real = sampleref_obj.dur_sec*self.calc_real_size
-	
-					pitch = pow(2, -pitch/12)
+				dur_sec = sampleref_obj.get_dur_sec()
 
-					warp_point_obj = warp_obj.points__add()
-					warp_point_obj.beat = 0
-					warp_point_obj.second = 0
+				if self.uses_tempo:
+					if dur_sec:
+						pos_real = sampleref_obj.dur_sec*self.calc_tempo_size
+		
+						warp_point_obj = warp_obj.points__add()
+						warp_point_obj.beat = 0
+						warp_point_obj.second = 0
+						warp_point_obj.speed = self.calc_tempo_size
+		
+						warp_point_obj = warp_obj.points__add()
+						warp_point_obj.beat = pos_real*2
+						warp_point_obj.second = sampleref_obj.dur_sec
+						warp_point_obj.speed = self.calc_tempo_size
+				else:
+					if dur_sec:
+						pos_real = sampleref_obj.dur_sec*self.calc_real_size
+		
+						pitch = pow(2, -pitch/12)
 	
-					warp_point_obj = warp_obj.points__add()
-					warp_point_obj.beat = pos_real*2*self.calc_bpm_size*pitch
-					warp_point_obj.second = sampleref_obj.dur_sec
+						warp_point_obj = warp_obj.points__add()
+						warp_point_obj.beat = 0
+						warp_point_obj.second = 0
+		
+						warp_point_obj = warp_obj.points__add()
+						warp_point_obj.beat = pos_real*2*self.calc_bpm_size*pitch
+						warp_point_obj.second = sampleref_obj.dur_sec
 
 				warp_obj.calcpoints__speed()
 

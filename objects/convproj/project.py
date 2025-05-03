@@ -884,6 +884,19 @@ class cvpj_project:
 
 		return plugin_obj, sampleref_obj, samplepart_obj
 
+	def plugin__addspec__sampler__s_obj(self, plug_id, sampleref_obj, sampleref, **kwargs):
+		plugin_obj = self.plugin__add(plug_id, 'universal', 'sampler', 'single')
+		plugin_obj.role = 'synth'
+		samplepart_obj = plugin_obj.samplepart_add('sample')
+		samplepart_obj.from_sampleref(self, sampleref)
+		return plugin_obj, samplepart_obj
+
+	def plugin__addspec__sampler__genid__s_obj(self, sampleref_obj, sampleref, **kwargs):
+		plug_id = plugin_id_counter.get_str_txt()
+		plugin_obj, samplepart_obj = self.plugin__addspec__sampler__s_obj(plug_id, sampleref_obj, sampleref, **kwargs)
+		plugin_obj.role = 'synth'
+		return plugin_obj, plug_id, samplepart_obj
+
 	def plugin__addspec__midi(self, plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev):
 		plugin_obj = self.plugin__add(plug_id, 'universal', 'midi', None)
 		plugin_obj.role = 'synth'

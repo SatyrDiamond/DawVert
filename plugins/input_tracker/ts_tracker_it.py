@@ -63,7 +63,13 @@ def idsamp_spobj(it_samp, sp_obj):
 
 def add_single_sampler(convproj_obj, it_samp, sampleidnum):
 	filename = samplefolder+str(sampleidnum)+'.wav'
-	plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(filename, None)
+
+	sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+	sampleref_obj.set_dur_samples(it_samp.length)
+	sampleref_obj.set_hz(it_samp.C5_speed)
+	sampleref_obj.set_fileformat('wav')
+	plugin_obj, pluginid, sp_obj = convproj_obj.plugin__addspec__sampler__genid__s_obj(sampleref_obj, filename)
+
 	idsamp_spobj(it_samp, sp_obj)
 	sample_vibrato(it_samp, plugin_obj)
 	return plugin_obj, pluginid, sampleref_obj
@@ -265,10 +271,15 @@ class input_it(plugins.base):
 
 						filename = samplefolder + str(instrumentnum) + '.wav'
 						sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+
 						sp_obj = plugin_obj.sampleregion_add(sampleregion[1], sampleregion[2], -(sampleregion[0][0]-60), None)
 						sp_obj.sampleref = filename
 						if instrumentnum-1 < len(project_obj.samples): 
-							idsamp_spobj(project_obj.samples[instrumentnum-1], sp_obj)
+							it_samp = project_obj.samples[instrumentnum-1]
+							idsamp_spobj(it_samp, sp_obj)
+							sampleref_obj.set_dur_samples(it_samp.length)
+							sampleref_obj.set_hz(it_samp.C5_speed)
+							sampleref_obj.set_fileformat('wav')
 
 				if inst_used:
 					interpolation = data_values.list__optionalindex(it_inst.resampling, 'linear', ['none','linear','cubic_spline','sinc','sinc_lowpass'])

@@ -137,6 +137,7 @@ class output_bandlab(plugins.base):
 				do_automation(convproj_obj, ['track', trackid, 'vol'], blx_track.automation.volume, tempomul)
 
 				blx_track.order = tracknum
+				blx_track.preset = "custom"
 
 				blx_track.name = track_obj.visual.name
 				if track_obj.visual.color:

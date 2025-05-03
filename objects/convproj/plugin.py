@@ -162,34 +162,9 @@ class cvpj_plugin:
 			self.using_programs = False
 
 	def internal__state_main(self, oldstate):
+		self.state = oldstate
 		self.params = oldstate.params
 		self.datavals = oldstate.datavals
-		self.poly = oldstate.poly
-		self.bytesdata = oldstate.bytesdata
-		self.regions = oldstate.regions
-		self.sampleregions = oldstate.sampleregions
-		self.env_adsr = oldstate.env_adsr
-		self.env_points = oldstate.env_points
-		self.env_points_vars = oldstate.env_points_vars
-		self.env_blocks = oldstate.env_blocks
-		self.filter = oldstate.filter
-		self.named_filter = oldstate.named_filter
-		self.eq = oldstate.eq
-		self.named_eq = oldstate.named_eq
-		self.lfos = oldstate.lfos
-		self.waves = oldstate.waves
-		self.harmonics = oldstate.harmonics
-		self.wavetables = oldstate.wavetables
-		self.filerefs = oldstate.filerefs
-		self.sampleparts = oldstate.sampleparts
-		self.oscs = oldstate.oscs
-		self.timing = oldstate.timing
-		self.chord = oldstate.chord
-		self.arrays = oldstate.arrays
-		self.midi = oldstate.midi
-		self.preset = oldstate.preset
-		self.audios = oldstate.audios
-		self.modulations = oldstate.modulations
 
 	def external__from_pluginfo_obj(self, convproj_obj, pluginfo_obj, cpu_arch_list):
 		self.external_info.__init__()

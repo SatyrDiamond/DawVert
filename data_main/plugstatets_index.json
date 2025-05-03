@@ -361,6 +361,39 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr",
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "universal:compressor",
+    "plugtype_out": [
+      "native:bandlab:compressor"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\bandlab__deess.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__deess.pstr",
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "universal:de_ess",
+    "plugtype_out": [
+      "native:bandlab:deEsser"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr",
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "universal:pitchshift",
+    "plugtype_out": [
+      "native:bandlab:pitchShifter"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\flp__spectrum_analyzer.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\flp__spectrum_analyzer.pstr",
     "daw_out": [
@@ -438,6 +471,17 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\_from_univ\\waveform__pitchshift.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\waveform__pitchshift.pstr",
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "universal:pitchshift",
+    "plugtype_out": [
+      "native:tracktion:pitchShifter"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr",
     "daw_in": [
@@ -497,7 +541,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab_blx"
     ],
     "plugtype_in": "native:bandlab:compr1176",
     "plugtype_out": [
@@ -508,7 +552,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab_blx"
     ],
     "plugtype_in": "native:bandlab:compressor",
     "plugtype_out": [
@@ -519,7 +563,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab_blx"
     ],
     "plugtype_in": "native:bandlab:deEsser",
     "plugtype_out": [
@@ -530,7 +574,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab_blx"
     ],
     "plugtype_in": "native:bandlab:pitchShifter",
     "plugtype_out": [
@@ -601,6 +645,17 @@
     "plugtype_in": "native:tracktion:limiter",
     "plugtype_out": [
       "universal:limiter"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\waveform__pitchShifter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__pitchShifter.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "plugtype_in": "native:tracktion:pitchShifter",
+    "plugtype_out": [
+      "universal:pitchshift"
     ],
     "priority": -100
   },

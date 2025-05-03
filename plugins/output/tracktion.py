@@ -309,7 +309,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 					for param_id in paramlist:
 						wf_plugin.params[param_id] = plugin_obj.params.get(param_id, 0).value
 						add_auto_curves(convproj_obj, ['plugin', cvpj_fxid, param_id], wf_plugin, param_id)
-					return wf_plugin
+			return wf_plugin
 
 			
 

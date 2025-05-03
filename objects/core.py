@@ -90,6 +90,33 @@ if log_pathsearchonly:
 	logger_plugins.setLevel(logging.ERROR)
 	logger_extplug.setLevel(logging.ERROR)
 
+class list_printer:
+	def __init__(self, dawvert_core):
+		self.dawvert_core = dawvert_core
+		self.pluglist = []
+
+	def reset_list(self):
+		self.pluglist = []
+
+	def read_plug_in(self, ps):
+		self.dawvert_core.input_load_plugins(ps)
+		for shortname, plugobj in self.dawvert_core.input_iter_plugins():
+			self.pluglist.append(['IN', ps, plugobj.prop_obj.projtype, shortname, plugobj.name])
+
+	def read_plug_out(self, ps):
+		self.dawvert_core.output_load_plugins(ps)
+		for shortname, plugobj in self.dawvert_core.output_iter_plugins():
+			self.pluglist.append(['OUT', ps, plugobj.prop_obj.projtype, shortname, plugobj.name])
+
+	def print(self):
+		for x in sorted(self.pluglist, key=lambda x: x[3], reverse=False):
+			print(
+				'%s | %s | %s | %s | %s' %
+				(x[0].ljust(3), x[1].ljust(10), x[2].ljust(2).upper(), x[3].ljust(16), x[4])
+				)
+		
+
+
 class dawvert_intent:
 	def __init__(self):
 		self.input_file = ''

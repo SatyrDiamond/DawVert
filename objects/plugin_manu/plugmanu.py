@@ -8,6 +8,8 @@ from objects.convproj import project as convproj
 from objects.valobjs import dualstr
 import logging
 
+DEBUG__TXT = False
+
 logger_plugconv = logging.getLogger('plugconv')
 
 def fixval(v, vtype):
@@ -74,8 +76,6 @@ def valtype_from_obj(value):
 	elif type(value) == dualstr: valtype = 'filter_type'
 	else: valtype = 'other'
 	return valtype
-
-DEBUG__TXT = False
 
 class remap_def:
 	def __init__(self):

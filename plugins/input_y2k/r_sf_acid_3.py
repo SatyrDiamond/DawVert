@@ -65,7 +65,7 @@ def add_audio_regions(
 	placements_obj, ppq, rootnote_auto, 
 	region, stretch_type, num_beats, seconds,
 	stretchflags, filename, tempo,
-	track_root_note, audiotempo, pitch
+	track_root_note, audiotempo, pitch, version
 	):
 
 	mul1 = audiotempo/120 if audiotempo else 1
@@ -94,6 +94,7 @@ def add_audio_regions(
 				if 1 in region.flags: placement_obj.muted = True
 				if 3 in region.flags: placement_obj.locked = True
 				if 5 in region.flags: sp_obj.reverse = True
+				if version>8: sp_obj.vol = region.vol
 
 				if cur_root != 127:
 					notetrack = calc_root(cur_root, track_root_note)
@@ -117,6 +118,7 @@ def add_audio_regions(
 			if 1 in region.flags: placement_obj.muted = True
 			if 3 in region.flags: placement_obj.locked = True
 			if 5 in region.flags: sp_obj.reverse = True
+			if version>8: sp_obj.vol = region.vol
 			pls.append(placement_obj)
 
 	if stretch_type == 1:
@@ -129,6 +131,7 @@ def add_audio_regions(
 		if 1 in region.flags: placement_obj.muted = True
 		if 3 in region.flags: placement_obj.locked = True
 		if 5 in region.flags: sp_obj.reverse = True
+		if version>8: sp_obj.vol = region.vol
 		pls.append(placement_obj)
 
 	if stretch_type == 2:
@@ -142,6 +145,7 @@ def add_audio_regions(
 		if 1 in region.flags: sp_obj.muted = True
 		if 3 in region.flags: sp_obj.locked = True
 		if 5 in region.flags: sp_obj.reverse = True
+		if version>8: sp_obj.vol = region.vol
 		pls.append(placement_obj)
 
 	return pls
@@ -220,11 +224,14 @@ class input_acid_3(plugins.base):
 		for pos in list(auto_basenotes): rootnote_auto.add_pos(pos)
 		rootnote_auto.add_notes(auto_basenotes)
 
+		version = 0
+
 		for root_chunk, root_name in project_obj.root.iter_wtypes():
 			if root_name == 'MainData':
 				def_data = root_chunk.def_data
 				ppq = def_data.ppq
 				convproj_obj.set_timings(ppq, False)
+				version = def_data.version
 
 				if not starttempo: tempo = def_data.tempo
 				else: tempo = starttempo
@@ -336,7 +343,7 @@ class input_acid_3(plugins.base):
 												track_obj.placements, ppq, rootnote_auto, 
 												region, track_header.stretchtype, track_audiostretch.downbeat_offset, track_header.seconds,
 												track_audiostretch.flags, filename, tempo,
-												track_audiostretch.root_note, track_audiostretch.tempo, 0
+												track_audiostretch.root_note, track_audiostretch.tempo, 0, version
 												)
 	
 											for p in pls:
@@ -359,7 +366,7 @@ class input_acid_3(plugins.base):
 												track_obj.placements, ppq, rootnote_auto, 
 												region, def_header.stretchtype, def_audiostretch.downbeat_offset, def_header.seconds,
 												def_audiostretch.flags, def_header.filename, tempo,
-												def_audiostretch.root_note, def_audiostretch.tempo, def_header.pitch
+												def_audiostretch.root_note, def_audiostretch.tempo, def_header.pitch, version
 												)
 
 											for p in pls:

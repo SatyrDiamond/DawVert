@@ -145,7 +145,7 @@ class action__calc:
 	def from_xml(self, xmldata):
 		self.storename = xmldata.get('name')
 		self.calc_type = xmldata.get('type')
-		self.values = [float(x) for x in xmldata.text.split(';')]
+		self.values = [float(x) for x in xmldata.text.split(';')] if xmldata.text else []
 
 	def do_action(self, manu_obj):
 		val1, val2, val3, val4 = [(self.values[n] if len(self.values)>n else 0) for n in range(4)]
@@ -299,8 +299,7 @@ class action__out__filter_param:
 		self.value = xmldata.text
 
 	def do_action(self, manu_obj):
-		if self.valtype == 'filter_type':
-			manu_obj.out__filter_param(self.storename, self.value, self.out_name)
+		manu_obj.out__filter_param(self.storename, self.value, self.out_name)
 
 class action__out__dataval_val:
 	def __init__(self):

@@ -8,6 +8,6 @@
   <replace plugtype="universal:limiter" />
 
   <out__param to="ceiling" type="float" />
-  <out__param to="gain" type="float" />
+  <out__param to="pregain" from="gain" type="float" />
   <out__param to="release" type="float" />
 </plugstatetransform>

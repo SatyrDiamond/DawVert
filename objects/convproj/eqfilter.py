@@ -13,6 +13,15 @@ class cvpj_filter:
 		self.slope = 12
 		self.filter_algo = ''
 
+	def debugtxt(self):
+		print('FILTER on', '|', self.on )
+		print('FILTER type', '|', self.type )
+		print('FILTER freq', '|', self.freq )
+		print('FILTER q', '|', self.q )
+		print('FILTER gain', '|', self.gain )
+		print('FILTER slope', '|', self.slope )
+		print('FILTER filter_algo', '|', self.filter_algo )
+
 class cvpj_eq:
 	def __init__(self, plugin_obj, basename):
 		self.basename = basename

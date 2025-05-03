@@ -268,6 +268,7 @@
             <param id="mix" name="mix" type="float" def="1" />
             <param id="mixLock" name="mixLock" type="bool" />
             <param id="rateSyncOn" name="rateSyncOn" type="int" def="8" max="35" />
+            <param id="rateSyncOff" name="rateSyncOff" type="float" def="0.02" max="5" />
             <param id="stages" name="stages" type="int" def="6" max="12" />
             <param id="sync" name="sync" type="bool" />
         </object>

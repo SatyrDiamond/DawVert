@@ -1,0 +1,9 @@
+<plugstatetransform daw_out="bandlab_blx" plugtype="universal:de_ess">
+  <in__param from="frequency" type="float">9000</in__param>
+  <in__param from="threshold" type="float">-19</in__param>
+  
+  <replace plugtype="native:bandlab:deEsser" />
+
+  <out__param to="frequency" type="float">9000</out__param>
+  <out__param to="threshold" type="float">-19</out__param>
+</plugstatetransform>

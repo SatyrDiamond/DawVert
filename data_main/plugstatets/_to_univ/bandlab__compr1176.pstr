@@ -1,0 +1,27 @@
+<plugstatetransform daw_in="bandlab_blx" plugtype="native:bandlab:compr1176">
+
+  <define_remap name="ratio_strings" in_type="string" out_type="float">
+    <val in_val="4" out_val="4"/>
+    <val in_val="8" out_val="8"/>
+    <val in_val="12" out_val="12"/>
+    <val in_val="20" out_val="20"/>
+    <val in_val="all" out_val="40"/>
+    <fallback out_val="4"/>
+  </define_remap>
+
+  <in__param from="attack" type="float" />
+  <in__param from="gain" type="float" />
+  <in__param from="makeup" type="float" />
+  <in__param from="release" type="float" />
+  <in__dataval from="ratio" type="string" />
+  
+  <remap name="ratio" remapdef="ratio_strings"/>
+
+  <replace plugtype="universal:compressor:fet" />
+
+  <out__param to="attack" type="float" />
+  <out__param to="gain" type="float" />
+  <out__param to="makeup" type="float" />
+  <out__param to="release" type="float" />
+  <out__param to="ratio" type="float">4</out__param>
+</plugstatetransform>

@@ -251,6 +251,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\waveform2flp\\phaser.pstr": {
+    "file": "data_main\\plugstatets\\waveform2flp\\phaser.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:tracktion:phaser2",
+    "plugtype_out": [
+      "native:flstudio:fruity phaser"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr",
     "daw_out": [
@@ -416,6 +430,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\flstudio__fruity_balance.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\flstudio__fruity_balance.pstr",
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "universal:volpan",
+    "plugtype_out": [
+      "native:flstudio:fruity balance"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\flstudio__fruity_reeverb_2.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\flstudio__fruity_reeverb_2.pstr",
     "daw_out": [
@@ -460,16 +485,49 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\waveform__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\waveform__compressor.pstr",
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "universal:compressor",
+    "plugtype_out": [
+      "native:tracktion:comp"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\waveform__filter.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\waveform__filter.pstr",
     "daw_out": [
-      "tracktion_edit"
+      "waveform"
     ],
     "plugtype_in": "universal:filter:single",
     "plugtype_out": [
       "universal:tracktion:1bandEq"
     ],
     "priority": 0
+  },
+  "data_main\\plugstatets\\_from_univ\\waveform__gate.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\waveform__gate.pstr",
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "universal:gate",
+    "plugtype_out": [
+      "native:tracktion:gate"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\waveform__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\waveform__limiter.pstr",
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "universal:limiter",
+    "plugtype_out": [
+      "native:tracktion:limiter"
+    ],
+    "priority": 100
   },
   "data_main\\plugstatets\\_from_univ\\waveform__pitchshift.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\waveform__pitchshift.pstr",
@@ -582,6 +640,28 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\flp__fruity spectroman.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__fruity spectroman.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "plugtype_in": "native:flstudio:fruity spectroman",
+    "plugtype_out": [
+      "universal:spectrum_analyzer"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flp__tuner.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__tuner.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "plugtype_in": "native:flstudio:tuner",
+    "plugtype_out": [
+      "universal:tuner"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\flstudio__fruity_balance.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_balance.pstr",
     "daw_in": [
@@ -612,6 +692,17 @@
     "plugtype_in": "native:flstudio:fruity reeverb 2",
     "plugtype_out": [
       "universal:reverb"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\lmms__spectrum_analyzer.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\lmms__spectrum_analyzer.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "plugtype_in": "native:lmms:spectrumanalyzer",
+    "plugtype_out": [
+      "universal:spectrum_analyzer"
     ],
     "priority": -100
   },

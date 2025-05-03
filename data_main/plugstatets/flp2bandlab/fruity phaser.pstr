@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="flp" daw_out="bandlab_blx" plugtype="native:flstudio:fruity phaser">
+  <in__param from="sweep_freq" type="float" />
+
+  <calc name="sweep_freq" type="valrange">0;5000;0;8</calc>
+  
+  <replace plugtype="native:bandlab:phaser" />
+
+  <out__param to="rate" from="sweep_freq" type="float">0</out__param>
+</plugstatetransform>

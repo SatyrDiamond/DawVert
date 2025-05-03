@@ -320,8 +320,8 @@ class extplug_manu:
 							for c, p in enumerate(pprog.params): 
 								self.vst2__set_param(c, p)
 						except:
-							import traceback
-							print(traceback.format_exc())
+							#import traceback
+							#print(traceback.format_exc())
 							pass
 				plugin_obj.program__set(fxck.current_program)
 			self.vst2__params_output()

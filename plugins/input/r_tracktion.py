@@ -386,12 +386,6 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 	
 			placement_obj.group = str(audioclip.groupID) if audioclip.groupID!=-1 else None
 	
-			stretch_amt = 1
-			if sampleref_exists:
-				dur_sec = sampleref_obj.get_dur_sec()
-				if dur_sec is not None:
-					stretch_amt = (dur_sec*2)/audioclip.loopinfo.numBeats
-	
 			bpmdiv = (bpm/120)
 			if audioclip.loopStartBeats == 0 and audioclip.loopLengthBeats == 0:
 				placement_obj.time.set_offset(audioclip.offset*8*bpmdiv)
@@ -413,9 +407,8 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 			sp_obj.pan = audioclip.pan
 	
 			stretch_obj = sp_obj.stretch
-			stretch_obj.set_rate_tempo(bpm, stretch_amt, False)
 			stretch_obj.preserve_pitch = True
-	
+		
 			for fx in audioclip.effects:
 				params = fx.plugin.params
 				if fx.fx_type == 'pitchShift':
@@ -429,12 +422,23 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 						stretch_obj.is_warped = True
 						warp_obj = sp_obj.stretch.warp
 						warp_obj.seconds = warptime.warpEndMarkerTime
+						sampleref_obj.set_dur_sec(warptime.warpEndMarkerTime)
 	
 						for warpmarker in warptime.warpmarkers:
 							warp_point_obj = warp_obj.points__add()
 							warp_point_obj.beat = (warpmarker.warpTime/stretch_amt)*2
 							warp_point_obj.second = warpmarker.sourceTime
 						warp_obj.calcpoints__speed()
+
+			if not stretch_obj.is_warped:
+				stretch_amt = 1
+				if sampleref_exists:
+					dur_sec = sampleref_obj.get_dur_sec()
+					if dur_sec is not None:
+						stretch_amt = (dur_sec*2)/audioclip.loopinfo.numBeats
+	
+				stretch_obj.set_rate_tempo(bpm, stretch_amt, False)
+
 		else:
 			placement_obj = track_obj.placements.add_video()
 	

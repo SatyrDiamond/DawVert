@@ -46,6 +46,8 @@ class input_orgyana(plugins.base):
 
 		orgsamp_filename = os.path.join(dawvert_intent.path_external_data, 'orgyana', 'orgsamp.dat')
 
+		orgdrum_sob = {}
+
 		orgsamp_obj = proj_orgyana.orgyana_orgsamp()
 		if os.path.exists(orgsamp_filename): orgsamp_obj.load_from_file(orgsamp_filename)
 
@@ -59,13 +61,19 @@ class input_orgyana(plugins.base):
 					track_obj.is_drum = True
 					if orgsamp_obj.loaded:
 						drum_filename = os.path.join(dawvert_intent.path_samples['extracted']+'orgmaker_drum_'+str(orgtrack_obj.instrument)+'.wav')
-						if not os.path.exists(drum_filename):
+
+						if orgtrack_obj.instrument not in orgdrum_sob:
 							audio_obj = audio_data.audio_obj()
 							audio_obj.set_codec('int8')
 							audio_obj.rate = orgsamp_obj.drum_rate
 							audio_obj.pcm_from_list(orgsamp_obj.drum_data[orgtrack_obj.instrument])
 							audio_obj.to_file_wav(drum_filename)
-						plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(drum_filename, None)
+							sampleref_obj = convproj_obj.sampleref__add(drum_filename, drum_filename, None)
+							sampleref_obj.set_fileformat('wav')
+							audio_obj.to_sampleref_obj(sampleref_obj)
+							orgdrum_sob[orgtrack_obj.instrument] = sampleref_obj
+
+						plugin_obj, pluginid, sp_obj = convproj_obj.plugin__addspec__sampler__genid__s_obj(orgdrum_sob[orgtrack_obj.instrument], drum_filename)
 						sp_obj.trigger = 'oneshot'
 						track_obj.plugslots.set_synth(pluginid)
 				else: 

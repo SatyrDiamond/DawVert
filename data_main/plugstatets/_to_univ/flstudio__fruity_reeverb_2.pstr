@@ -11,9 +11,10 @@
   <in__param from="wet" type="float">0</in__param>
   
   <calc name="highcut" type="mul">100</calc>
+  <calc name="hidamping" type="mul">100</calc>
+
   <calc name="predelay" type="div">38.4</calc>
   <calc name="decay" type="div">10</calc>
-  <calc name="hidamping" type="mul">100</calc>
   <calc name="bass" type="div">100</calc>
   <calc name="dry" type="div">128</calc>
   <calc name="wet" type="div">128</calc>
@@ -25,11 +26,12 @@
   <out__param to="low_cut" from="lowcut" type="float">0</out__param>
   <out__param to="high_cut" from="highcut" type="float">0</out__param>
   <out__param to="size" from="room_size" type="float">0</out__param>
+  <out__param to="high_xo" from="hidamping" type="float">0</out__param>
+  <out__param to="low_mult" from="bass" type="float">0</out__param>
+  
   <out__param to="predelay" type="float">0</out__param>
   <out__param to="diffusion" type="float">0</out__param>
   <out__param to="decay" type="float">0</out__param>
-  <out__param to="high_xo" from="hidamping" type="float">0</out__param>
-  <out__param to="low_mult" from="bass" type="float">0</out__param>
-  <out__param to="dry" type="float">0</out__param>
+  <out__param to="dry" type="float">128</out__param>
   <out__param to="wet" type="float">0</out__param>
 </plugstatetransform>

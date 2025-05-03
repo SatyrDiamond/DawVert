@@ -165,6 +165,8 @@ class input_mmf(plugins.base):
 					audio_obj.to_file_wav(wav_path)
 
 					sampleref_obj = convproj_obj.sampleref__add(sampleid, wav_path, None)
+					sampleref_obj.set_fileformat('wav')
+					audio_obj.to_sampleref_obj(sampleref_obj)
 
 		custinst_obj = convproj_obj.main__add_midi_custom_inst()
 		custinst_obj.bank = 124

@@ -1,0 +1,31 @@
+<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:1bandEq">
+
+  <define_remap name="filter_types" in_type="int" out_type="filter_type">
+    <val in_val="0" out_val="low_pass"/>
+    <val in_val="1" out_val="low_shelf"/>
+    <val in_val="2" out_val="peak"/>
+    <val in_val="5" out_val="high_shelf"/>
+    <val in_val="6" out_val="high_pass"/>
+    <fallback out_val="peak"/>
+  </define_remap>
+
+  <in__param to="freq" type="float">44100</in__param>
+  <in__param to="q" type="float">1</in__param>
+  <in__param to="gain" type="float">0</in__param>
+  <in__param to="slope" type="float">12</in__param>
+  <in__param to="type" from="shape">0</in__param>
+
+  <calc name="freq" type="add">-72</calc>
+  <calc name="freq" type="note2freq" />
+
+  <remap name="type" remapdef="filter_types"/>
+
+  <replace_hard plugtype="universal:filter:single" />
+
+  <out__filterparam to="type" from="type"/>
+  <out__filterparam to="freq" from="freq" type="float"/>
+  <out__filterparam to="q" from="q" type="float"/>
+  <out__filterparam to="gain" from="gain" type="float"/>
+  <out__filterparam to="slope" from="slope" type="float"/>
+
+</plugstatetransform>

@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab_blx" plugtype="native:tracktion:naturalReverb">
+  <in__param from="mix" type="float" />
+  <in__param from="size" type="float" />
+  
+  <calc name="size" type="mul">10</calc>
+
+  <replace plugtype="native:bandlab:reverbHybrid" />
+  
+  <out__param to="dryWetMix" from="mix" type="float" />
+  <out__param to="roomSize" from="size" type="float" />
+  <out__dataval_val to="irType" type="string">chamberShort</out__dataval_val>
+</plugstatetransform> 

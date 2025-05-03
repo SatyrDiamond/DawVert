@@ -1,0 +1,16 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab_blx" plugtype="native:tracktion:distortion">
+  <in__param from="tone" type="float" />
+  <in__param from="drive" type="float" />
+  
+  <calc name="tone" type="pow">4</calc>
+  <calc name="drive" type="pow">2</calc>
+
+  <calc name="tone" type="mul">16000</calc>
+  <calc name="drive" type="mul">10</calc>
+
+  <replace plugtype="native:bandlab:overdrive" />
+
+  <out__param to="tone" from="tone" type="float" />
+  <out__param to="amount" from="drive" type="float" />
+  <out__param to="outputGain" only_value="1" type="float">5</out__param>
+</plugstatetransform>

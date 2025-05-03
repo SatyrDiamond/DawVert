@@ -1,0 +1,10 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab_blx" plugtype="native:tracktion:phaser2">
+  <in__param from="rateSyncOff" type="float" />
+  
+  <calc name="rateSyncOff" type="div">8</calc>
+  <calc name="rateSyncOff" type="from_one">0.01;8</calc>
+
+  <replace plugtype="native:bandlab:phaser" />
+
+  <out__param to="rate" from="rateSyncOff" type="float" />
+</plugstatetransform>

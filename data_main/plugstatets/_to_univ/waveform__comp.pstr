@@ -7,8 +7,8 @@
   <in__param from="release" type="float" />
   <in__param from="threshold" type="float" />
   
-  <calc name="attack" type="div">100</calc>
-  <calc name="release" type="div">100</calc>
+  <calc name="attack" type="div">1000</calc>
+  <calc name="release" type="div">1000</calc>
 
   <replace plugtype="universal:compressor" />
 

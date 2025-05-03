@@ -251,6 +251,76 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr": {
+    "file": "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:chorusEffect",
+    "plugtype_out": [
+      "native:amped:Chorus"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2amped\\naturalReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2amped\\naturalReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:naturalReverb",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2amped\\nonLinearReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2amped\\nonLinearReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:nonLinearReverb",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2amped\\phaser2.pstr": {
+    "file": "data_main\\plugstatets\\waveform2amped\\phaser2.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:phaser2",
+    "plugtype_out": [
+      "native:amped:Phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2amped\\plateReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2amped\\plateReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:plateReverb",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\waveform2bandlab\\chorusEffect.pstr": {
     "file": "data_main\\plugstatets\\waveform2bandlab\\chorusEffect.pstr",
     "daw_in": [
@@ -456,6 +526,50 @@
     "plugtype_in": "universal:volpan",
     "plugtype_out": [
       "native:ableton:StereoGain"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\amped__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\amped__compressor.pstr",
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "universal:compressor",
+    "plugtype_out": [
+      "native:amped:Compressor"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\amped__filter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\amped__filter.pstr",
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "universal:filter",
+    "plugtype_out": [
+      "native:amped:EqualizerPro"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\amped__gate.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\amped__gate.pstr",
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "universal:gate",
+    "plugtype_out": [
+      "native:amped:Gate"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\amped__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\amped__limiter.pstr",
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "universal:limiter",
+    "plugtype_out": [
+      "native:amped:Limiter"
     ],
     "priority": 100
   },
@@ -680,6 +794,39 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\amped__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__compressor.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:Compressor",
+    "plugtype_out": [
+      "universal:compressor"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__gate.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__gate.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:Gate",
+    "plugtype_out": [
+      "universal:gate"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__limiter.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:Limiter",
+    "plugtype_out": [
+      "universal:limiter"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr",
     "daw_in": [
@@ -798,6 +945,17 @@
     "plugtype_in": "native:tracktion:comp",
     "plugtype_out": [
       "universal:compressor"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\waveform__filter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__filter.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "plugtype_in": "native:tracktion:1bandEq",
+    "plugtype_out": [
+      "universal:filter:single"
     ],
     "priority": -100
   },

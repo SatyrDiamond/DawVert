@@ -165,6 +165,7 @@ class cvpj_plugin:
 		self.state = oldstate
 		self.params = oldstate.params
 		self.datavals = oldstate.datavals
+		self.filter = oldstate.filter
 
 	def external__from_pluginfo_obj(self, convproj_obj, pluginfo_obj, cpu_arch_list):
 		self.external_info.__init__()

@@ -7,8 +7,8 @@
   <in__param from="release" type="float" />
   <in__param from="threshold" type="float" />
   
-  <calc name="attack" type="mul">100</calc>
-  <calc name="release" type="mul">100</calc>
+  <calc name="attack" type="mul">1000</calc>
+  <calc name="release" type="mul">1000</calc>
 
   <replace plugtype="native:tracktion:comp" />
 

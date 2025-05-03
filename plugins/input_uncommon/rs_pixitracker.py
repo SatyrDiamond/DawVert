@@ -70,6 +70,9 @@ class input_cvpj_f(plugins.base):
 			audio_obj.to_file_wav(wave_path)
 
 			plugin_obj, track_obj.plugslots.synth, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+			sampleref_obj.set_fileformat('wav')
+			audio_obj.to_sampleref_obj(sampleref_obj)
+
 			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 			samplepart_obj.point_value_type = "samples"
 			if pixi_sound.end != 0:

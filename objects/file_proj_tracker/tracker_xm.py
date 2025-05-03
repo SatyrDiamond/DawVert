@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-from objects import openmpt_plugin
+#from objects import openmpt_plugin
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -95,9 +95,16 @@ class xm_sample_header:
 		if self.type&1: self.loop = 1
 		elif self.type&2: self.loop = 2
 		else: self.loop = 0
-		self.stereo = self.type&32
+
+		self.stereo = bool(self.type&32)
 		self.loop_on = bool(self.loop)
 		self.double = bool(self.type&16)
+
+	def get_len(self):
+		outlen = self.length
+		if self.double: outlen //= 2
+		if self.stereo: outlen //= 2
+		return outlen
 
 	def get_loop(self): 
 		looptype = 'normal' if self.loop != 2 else 'pingpong'
@@ -244,12 +251,12 @@ class xm_song:
 				elif chunk_obj.id == b'CHFX': 
 					self.ompt_chfx = song_file.l_int32(chunk_obj.size//4)
 					print('[xm] Channel FX:',self.ompt_chfx)
-				elif chunk_obj.id[0:2] == b'FX':
-					plugnum = int(chunk_obj.id[2:4].decode())+1
-					plug_obj = openmpt_plugin.openmpt_plugin()
-					plug_obj.read(song_file)
-					print('[xm] '+chunk_obj.id.decode()+':',plug_obj.type.decode())
-					self.plugins[plugnum] = plug_obj
+				#elif chunk_obj.id[0:2] == b'FX':
+				#	plugnum = int(chunk_obj.id[2:4].decode())+1
+				#	plug_obj = openmpt_plugin.openmpt_plugin()
+				#	plug_obj.read(song_file)
+				#	print('[xm] '+chunk_obj.id.decode()+':',plug_obj.type.decode())
+				#	self.plugins[plugnum] = plug_obj
 				else: 
 					break
 				endd = song_file.tell()

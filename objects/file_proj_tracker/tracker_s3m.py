@@ -19,6 +19,10 @@ class s3m_instrument:
 		self.filename = song_file.string(12, encoding="windows-1252")
 		self.name = ''
 		self.volume = 1
+		self.length = 0
+		self.double = False
+		self.stereo = False
+		self.c2spd = 0
 		if self.type == 0 or self.type == 1:
 			self.ptrDataH = song_file.raw(1)
 			self.ptrDataL = song_file.raw(2)
@@ -53,6 +57,9 @@ class s3m_instrument:
 		if self.type == 0: logger_projparse.info('s3m: MSG | "' + self.name + '", Filename:"' + self.filename+ '"')
 		if self.type == 1: logger_projparse.info('s3m: PCM | "' + self.name + '", Filename:"' + self.filename+ '"')
 		if self.type == 2: logger_projparse.info('s3m: OPL | "' + self.name + '", Filename:"' + self.filename+ '"')
+
+	def get_len(self):
+		return self.length if not self.double else self.length*2
 
 	def rip_sample(self, samplefolder, s3m_samptype, wave_path):
 		if self.type == 1:

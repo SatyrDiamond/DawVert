@@ -1,0 +1,21 @@
+<plugstatetransform daw_in="amped" daw_out="ableton" plugtype="native:amped:Delay">
+  <in__param from="damp" type="float">0</in__param>
+  <in__param from="fb" type="float">0</in__param>
+  <in__param from="mix" type="float">0</in__param>
+  <in__param from="time" type="float">0</in__param>
+  <in__param from="cross" type="float">0</in__param>
+
+  <calc name="damp" type="mul">-6</calc>
+  <calc name="damp" type="add">9</calc>
+
+  <replace plugtype="native:ableton:Delay" />
+  
+  <out__param to="DelayLine_TimeL" from="time" type="float">0</out__param>
+  <out__param to="DryWet" from="mix" type="float">0</out__param>
+  <out__param to="Feedback" from="fb" type="float">0</out__param>
+  <out__param to="Filter_Bandwidth" from="damp" type="float">0</out__param>
+  <out__param to="DelayLine_SyncL" type="bool">0</out__param>
+  <out__param to="DelayLine_SmoothingMode" type="int">1</out__param>
+  <tobool name="cross" cond="x>=0.5"/>
+  <out__param to="DelayLine_PingPong" from="cross" type="bool">0</out__param>
+</plugstatetransform>

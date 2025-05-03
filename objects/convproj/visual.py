@@ -396,7 +396,14 @@ class cvpj_visual_keynote:
 		self.data = {}
 
 	def __bool__(self):
-		return bool(self.other) and self.height!=1
+		return bool(self.data)
+
+	def copy(self):
+		return copy.copy(self)
+
+	def items(self):
+		for x in self.data.items(): 
+			yield x
 
 	def add_key(self, k):
 		visual_obj = cvpj_visual()

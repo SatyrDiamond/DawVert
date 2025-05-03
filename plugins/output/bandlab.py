@@ -115,7 +115,8 @@ class output_bandlab(plugins.base):
 
 			bl_sample = proj_bandlab.bandlab_sample(None) 
 			bl_sample.creatorId = creatorId
-			bl_sample.duration = sampleref_obj.dur_sec
+			dur_sec = sampleref_obj.get_dur_sec()
+			if dur_sec: bl_sample.duration = dur_sec
 			bl_sample.id = uuiddata
 
 			project_obj.samples.append(bl_sample)

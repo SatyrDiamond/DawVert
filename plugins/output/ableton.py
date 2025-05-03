@@ -42,16 +42,20 @@ def fixtxt(inp):
 	inp = "".join(t for t in inp if t.isprintable())
 	return inp
 
-def do_sampleref(convproj_obj, als_sampleref, cvpj_sampleref):
+def do_sampleref(convproj_obj, als_sampleref, sampleref_obj):
 	als_fileref = als_sampleref.FileRef
-	if cvpj_sampleref != None:
+	if sampleref_obj != None:
 		als_fileref.RelativePathType = 0
-		outpath = cvpj_sampleref.fileref.get_path('win', False)
+		outpath = sampleref_obj.fileref.get_path('win', False)
 		#print(outpath)
 		als_fileref.Path = outpath.replace('\\','/')
 		als_fileref.Type = 1
-		als_sampleref.DefaultDuration = cvpj_sampleref.dur_samples
-		als_sampleref.DefaultSampleRate = cvpj_sampleref.hz
+
+		dur_samples = sampleref_obj.get_dur_samples()
+		if dur_samples: als_sampleref.DefaultDuration = int(dur_samples)
+
+		samp_hz = sampleref_obj.get_hz_opt()
+		if samp_hz: als_sampleref.DefaultSampleRate = int(samp_hz)
 
 def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvpj_autoloc, als_param, als_auto):
 	outval = 0
@@ -144,7 +148,11 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 	if iffound:
 		cvpj_samplepart.convpoints_samples(sampleref_obj)
 		do_sampleref(convproj_obj, als_samplepart.SampleRef, sampleref_obj)
-	
+		
+		dur_sec = sampleref_obj.get_dur_sec()
+
+		if not dur_sec: dur_sec = 1
+
 		#print(cvpj_samplepart.start, cvpj_samplepart.end, cvpj_samplepart.loop_start, cvpj_samplepart.loop_end, sampleref_obj.fileref.get_path(convproj_obj, 'win'))
 		if cvpj_samplepart.visual.name: als_samplepart.Name = cvpj_samplepart.visual.name
 
@@ -153,8 +161,8 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 		als_samplepart.SustainLoop.Start = cvpj_samplepart.loop_start
 		als_samplepart.SustainLoop.End = cvpj_samplepart.loop_end
 	
-		if als_samplepart.SampleEnd < 2: als_samplepart.SampleEnd = sampleref_obj.dur_sec
-		if als_samplepart.SustainLoop.End < 2: als_samplepart.SustainLoop.End = sampleref_obj.dur_sec
+		if als_samplepart.SampleEnd < 2: als_samplepart.SampleEnd = dur_sec
+		if als_samplepart.SustainLoop.End < 2: als_samplepart.SustainLoop.End = dur_sec
 	
 		if 'crossfade' in cvpj_samplepart.loop_data: als_samplepart.SustainLoop.Crossfade = cvpj_samplepart.loop_data['crossfade']
 		if 'detune' in cvpj_samplepart.loop_data: als_samplepart.SustainLoop.Detune = cvpj_samplepart.loop_data['detune']
@@ -194,11 +202,11 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 				if 'envelope' in stretch_obj.params: warp_obj.ComplexProEnvelope = stretch_obj.params['envelope']
 			else:
 				warp_obj.WarpMode = 4
-		
+
 		if not warpprop and stretch_obj.calc_real_size != 1:
-			warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj.dur_sec, 0)
+			warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, dur_sec, 0)
 		else:
-			do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj.dur_sec, 0)
+			do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, dur_sec, 0)
 
 		for sample_slice in cvpj_samplepart.slicer_slices:
 			als_slice = als_samplepart.add_slice()
@@ -650,8 +658,10 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		ats.loop_end = audiopl_obj.time.duration
 		ats.loop_on = False
 	
+		dur_sec = sampleref_obj.get_dur_sec()
+
 		if sampleref_obj:
-			second_dur = sampleref_obj.dur_sec if sampleref_obj.dur_sec else 1
+			second_dur = dur_sec if dur_sec else 1
 		else:
 			second_dur = 8
 

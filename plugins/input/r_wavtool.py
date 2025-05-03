@@ -506,14 +506,16 @@ class input_wavtool(plugins.base):
 						if wt_warp_numanchors<2: 
 							stretch_obj.set_rate_tempo(wavtool_obj.bpm, sourcebpmmod, True)
 						else:
-							stretch_obj.is_warped = True
-							warp_obj = stretch_obj.warp
-							warp_obj.seconds = sampleref_obj.dur_sec
-							for anchor in wt_warp_anchors: 
-								warp_point_obj = warp_obj.points__add()
-								warp_point_obj.beat = (float(anchor))
-								warp_point_obj.second = (wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
-							warp_obj.calcpoints__speed()
+							dur_sec = sampleref_obj.get_dur_sec()
+							if dur_sec is not None:
+								stretch_obj.is_warped = True
+								warp_obj = stretch_obj.warp
+								warp_obj.seconds = dur_sec
+								for anchor in wt_warp_anchors: 
+									warp_point_obj = warp_obj.points__add()
+									warp_point_obj.beat = (float(anchor))
+									warp_point_obj.second = (wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
+								warp_obj.calcpoints__speed()
 
 					else: 
 						stretch_obj.set_rate_speed(wavtool_obj.bpm, pow(2, wavtool_clip.transpose/12), False)

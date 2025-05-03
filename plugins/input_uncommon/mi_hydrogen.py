@@ -75,7 +75,8 @@ class input_hydrogen(plugins.base):
 			sre_obj.visual.from_dset('hydrogen', 'track', 'playback', False)
 			cvpj_placement = playlist_obj.placements.add_audio_indexed()
 			cvpj_placement.fromindex = 'playbackTrack'
-			cvpj_placement.time.set_posdur(0, sampleref_obj.dur_sec*48*2*(bpm/120))
+			dur_sec = sampleref_obj.get_dur_sec()
+			if dur_sec: cvpj_placement.time.set_posdur(0, dur_sec*48*2*(bpm/120))
 			plnum += 1
 
 		for tag in project_obj.timeLineTag:

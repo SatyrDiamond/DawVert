@@ -1,0 +1,37 @@
+<plugstatetransform daw_in="ableton" plugtype="native:ableton:Compressor2">
+  <in__param from="Model" type="int">0</in__param>
+  <in__param from="Threshold" type="float">0</in__param>
+  <in__param from="Attack" type="float">0</in__param>
+  <in__param from="Release" type="float">0</in__param>
+  <in__param from="Gain" type="float">0</in__param>
+  <in__param from="DryWet" type="float">0</in__param>
+  <in__param from="Knee" type="float">0</in__param>
+
+  <calc name="Threshold" type="log">0.8913</calc>
+  <calc name="Threshold" type="mul">-1</calc>
+  <calc name="Attack" type="div">1000</calc>
+  <calc name="Release" type="div">1000</calc>
+  <calc name="Knee" type="mul">6</calc>
+
+  <cond__single in="Model" data="x != 2">
+
+    <cond__true>
+      <in__param from="Ratio" type="float">0</in__param>
+      <replace plugtype="universal:compressor" />
+    </cond__true>
+
+    <cond__false>
+     <in__param from="ExpansionRatio" to="Ratio" type="float">0</in__param>
+     <replace plugtype="universal:expander" />
+    </cond__false>
+  
+  </cond__single>
+
+  <out__param to="threshold" from="Threshold" type="float">0</out__param>
+  <out__param to="ratio" from="Ratio" type="float">0</out__param>
+  <out__param to="attack" from="Attack" type="float">0</out__param>
+  <out__param to="release" from="Release" type="float">0</out__param>
+  <out__param to="postgain" from="Gain" type="float">0</out__param>
+  <out__param to="knee" from="Knee" type="float">0</out__param>
+  <out__wet from="DryWet" type="float">1</out__wet>
+</plugstatetransform>

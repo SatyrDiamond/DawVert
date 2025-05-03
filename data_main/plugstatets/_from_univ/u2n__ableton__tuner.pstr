@@ -1,0 +1,7 @@
+<plugstatetransform daw_out="ableton" plugtype="universal:tuner">
+  <in__param from="refrence" type="float">440</in__param>
+
+  <replace plugtype="native:ableton:Tuner" />
+
+  <out__param to="TuningFreq" from="refrence" type="float">440</out__param>
+</plugstatetransform>

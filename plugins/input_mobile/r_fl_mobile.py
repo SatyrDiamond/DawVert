@@ -228,16 +228,19 @@ class input_fl_mobile(plugins.base):
 									sampleref_obj = do_sample(convproj_obj, sample_path, project_obj.zipfile, dawvert_intent.input_file)
 
 									if sampleref_obj:
-										if not time_obj.duration:
-											if flm_sample.stretch_on: 
-												outdur = (sampleref_obj.dur_sec*2)
-												outdur /= flm_sample.stretch_size
-												outdur /= tempomul
-											else:
-												outdur = (sampleref_obj.dur_sec*2)
-												outdur *= tempomul
-												
-											time_obj.duration = outdur
+										dur_sec = sampleref_obj.get_dur_sec()
+
+										if dur_sec:
+											if not time_obj.duration:
+												if flm_sample.stretch_on: 
+													outdur = (dur_sec*2)
+													outdur /= flm_sample.stretch_size
+													outdur /= tempomul
+												else:
+													outdur = (dur_sec*2)
+													outdur *= tempomul
+													
+												time_obj.duration = outdur
 
 									placement_obj.visual.name = flm_clip.sample.sample_name
 

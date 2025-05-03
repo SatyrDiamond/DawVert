@@ -1,0 +1,7 @@
+<plugstatetransform daw_in="lmms" daw_out="flp" plugtype="native:lmms:stereoenhancer">
+  <in__param from="width" type="float">0</in__param>
+  
+  <replace plugtype="native:flstudio:fruity stereo enhancer" />
+
+  <out__param to="phase_offs" from="width" type="float">0</out__param>
+</plugstatetransform>

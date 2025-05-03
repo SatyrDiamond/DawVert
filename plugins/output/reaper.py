@@ -32,8 +32,8 @@ def make_sampler(rpp_fxchain, sampler_params):
 
 def do_sample_part(sampler_params, sampleref_obj, sp_obj):
 	if sampleref_obj:
-		dur = sampleref_obj.dur_samples
-		hz = sampleref_obj.hz
+		dur = sampleref_obj.get_dur_sec()
+		hz = sampleref_obj.get_hz()
 
 		sp_obj.convpoints_samples(sampleref_obj)
 
@@ -48,7 +48,7 @@ def do_sample_part(sampler_params, sampleref_obj, sp_obj):
 				sampler_params['end'] = max(sampler_params['end'], sp_obj.loop_end/dur)
 
 def do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj):
-	dur_sec = sampleref_obj.dur_sec
+	dur_sec = sampleref_obj.get_dur_sec()
 
 	if adsr_obj.amount:
 		if not sp_obj.loop_active: 
@@ -671,6 +671,12 @@ class output_reaper(plugins.base):
 
 			for fxid in track_obj.plugslots.slots_audio:
 				add_plugin(rpp_project, rpp_track_obj.fxchain, fxid, convproj_obj, track_obj)
+
+			if track_obj.visual_keynotes:
+				rpp_track_obj.midinotenames = []
+				for k, v in track_obj.visual_keynotes.items():
+					note = str(k+60)
+					rpp_track_obj.midinotenames.append(['-1', note, v.name, '0', note])
 
 			trackdata.append(rpp_track_obj)
 

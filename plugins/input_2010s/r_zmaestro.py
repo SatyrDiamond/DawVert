@@ -18,8 +18,8 @@ def do_automation(convproj_obj, trackid, atype, timelineobj, usetimeline):
 			if atype == 'pan': value = (event.value-50)/50
 			autopoint_obj = convproj_obj.automation.add_autopoint(autoloc, 'float', event.position, value, 'normal' if not nextinstant else 'instant')
 			if nextinstant: nextinstant = False
-			if event.fade == 'Exponential': autopoint_obj.tension = -1
-			if event.fade == 'Logarithmic': autopoint_obj.tension = 1
+			if event.fade == 'Exponential': autopoint_obj['tension'] = -1
+			if event.fade == 'Logarithmic': autopoint_obj['tension'] = 1
 			if event.fade == 'Edge': nextinstant = True
 
 keynums = {}
@@ -232,7 +232,9 @@ class input_zmaestro(plugins.base):
 						audio_obj.pcm_from_bytes(part.channels)
 						audio_obj.to_file_wav(wave_path)
 
-						convproj_obj.sampleref__add(sampleref_id, wave_path, None)
+						sampleref_obj = convproj_obj.sampleref__add(sampleref_id, wave_path, None)
+						sampleref_obj.set_fileformat('wav')
+						audio_obj.to_sampleref_obj(sampleref_obj)
 
 					if project_obj.zipfile:
 						try:
@@ -254,7 +256,9 @@ class input_zmaestro(plugins.base):
 								audio_obj.pcm_from_bytes(channels[0])
 
 							audio_obj.to_file_wav(wave_path)
-							convproj_obj.sampleref__add(sampleref_id, wave_path, None)
+							sampleref_obj = convproj_obj.sampleref__add(sampleref_id, wave_path, None)
+							sampleref_obj.set_fileformat('wav')
+							audio_obj.to_sampleref_obj(sampleref_obj)
 							sp_obj.sampleref = sampleref_id
 						except:
 							pass

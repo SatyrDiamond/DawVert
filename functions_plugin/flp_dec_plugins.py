@@ -9,9 +9,6 @@ import varint
 import uuid
 from functions import data_values
 from objects import globalstore
-from functions_plugin_ext import plugin_vst2
-from functions_plugin_ext import plugin_clap
-from functions_plugin_ext import plugin_vst3
 from io import BytesIO
 from objects.file import audio_wav
 from objects.data_bytes import bytereader
@@ -169,8 +166,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 							numparamseach = vst_total_params//vst_num_names
 							bankparams = data_values.list__chunks(vst_params_data, numparamseach)
 	
-							plugin_vst2.replace_data(convproj_obj, plugin_obj, 'id' ,'win', wrapperdata['fourid'], 'param', None, numparamseach)
-	
 							extmanu_obj.vst2__setup_params('id', wrapperdata['fourid'], numparamseach, None, False)
 							extmanu_obj.vst2__set_numprogs(vst_num_names)
 
@@ -296,7 +291,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		slicer_dec = fl_plugstr.int32()
 
 		slicer_filename = fl_plugstr.c_string__int8(encoding='utf-8')
-		slicechannels = 2
+		#slicechannels = 2
 
 		slicer_filename = get_sample(slicer_filename)
 
@@ -309,7 +304,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			if zipfile: sampleref_obj.find_relative('extracted')
 			sampleref_obj.find_relative('projectfile')
 			sampleref_obj.find_relative('factorysamples')
-			slicechannels = sampleref_obj.channels
+			#slicechannels = sampleref_obj.channels
 			sre_obj.from_sampleref(convproj_obj, slicer_filename)
 
 		if slicer_bpm: sre_obj.stretch.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)

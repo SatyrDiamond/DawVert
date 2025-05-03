@@ -66,6 +66,11 @@ class audio_obj:
 		self.codec.set_codec(codectype)
 		self.pcm_from_list([])
 
+	def to_sampleref_obj(self, sampleref_obj):
+		sampleref_obj.set_hz(self.rate)
+		sampleref_obj.set_channels(self.channels)
+		sampleref_obj.set_dur_samples(len(self.data)//self.channels)
+
 # -------------------------------- data --------------------------------
 
 	def pcm_from_file(self, in_file): 

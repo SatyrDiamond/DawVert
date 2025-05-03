@@ -425,15 +425,16 @@ class output_wavtool(plugins.base):
 							if not stretch_obj.preserve_pitch:
 								wavtool_clip.transpose = (math.log2(stretch_obj.calc_real_speed)*12)
 							else:
-								dur_sec = sampleref_obj.dur_sec
+								dur_sec = sampleref_obj.get_dur_sec()
 								warpdata = {}
 								warpdata['sourceBPM'] = 120
 								warpdata['anchors'] = {}
 								warpdata['enabled'] = True
 								warpdata['algorithm'] = 'Pro'
 								
-								warpdata['anchors']["0"] = {"destination": 0, "pinned": True}
-								warpdata['anchors']["%g" % (dur_sec*2)] = {"destination": (dur_sec*2)/warprate, "pinned": True}
+								if dur_sec:
+									warpdata['anchors']["0"] = {"destination": 0, "pinned": True}
+									warpdata['anchors']["%g" % (dur_sec*2)] = {"destination": (dur_sec*2)/warprate, "pinned": True}
 
 								wavtool_clip.warp = warpdata
 								wavtool_clip.transpose = audiopl_obj.sample.pitch

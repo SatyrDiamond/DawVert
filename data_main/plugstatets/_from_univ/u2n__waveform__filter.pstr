@@ -1,0 +1,28 @@
+<plugstatetransform daw_out="tracktion_edit" plugtype="universal:filter:single">
+
+  <define_remap name="filter_types" in_type="filter_type" out_type="int">
+    <val in_val="low_pass" out_val="0"/>
+    <val in_val="low_shelf" out_val="1"/>
+    <val in_val="peak" out_val="2"/>
+    <val in_val="high_shelf" out_val="5"/>
+    <val in_val="high_pass" out_val="6"/>
+    <fallback out_val="6"/>
+  </define_remap>
+
+  <in__filterparam from="type"/>
+  <in__filterparam from="freq" type="float"/>
+  <in__filterparam from="q" type="float"/>
+  <in__filterparam from="gain" type="float"/>
+  <in__filterparam from="slope" type="float"/>
+
+  <remap name="type" remapdef="filter_types"/>
+
+  <replace plugtype="universal:tracktion:1bandEq" />
+
+  <out__param to="freq" type="float">44100</out__param>
+  <out__param to="q" type="float">1</out__param>
+  <out__param to="gain" type="float">0</out__param>
+  <out__param to="slope" type="float">12</out__param>
+  <out__param to="shape" from="type">0</out__param>
+
+</plugstatetransform>

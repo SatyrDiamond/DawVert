@@ -809,7 +809,7 @@ class lmms_track:
 				automationpattern_obj = lmms_automationpattern()
 				automationpattern_obj.read(xmlpart)
 				self.automationpatterns.append(automationpattern_obj)
-			if xmlpart.tag == 'sampletco':
+			if xmlpart.tag in ['sampletco', 'sampleclip']:
 				sampletco_obj = lmms_sampletco()
 				sampletco_obj.read(xmlpart)
 				self.sampletcos.append(sampletco_obj)

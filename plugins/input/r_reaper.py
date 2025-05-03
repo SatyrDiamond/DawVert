@@ -75,28 +75,31 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 					autopoint_obj.tension = -point[6]
 
 def do_samplepart_loop(samplerj, sp_obj, sampleref_obj):
-	dur = sampleref_obj.dur_samples
-	dur_sec = sampleref_obj.dur_sec
-	hz = sampleref_obj.hz
+	dur = sampleref_obj.get_dur_samples()
+	hz = sampleref_obj.get_hz()
 
-	loop_on = samplerj['loop_on'] if 'loop_on' in samplerj else 0
-	start = samplerj['start'] if 'start' in samplerj else 0
-	end = samplerj['end'] if 'end' in samplerj else 1
-	loop_start = samplerj['loop_start'] if 'loop_start' in samplerj else 0
-	sp_obj.start = start*dur
-	sp_obj.end = end*dur
-	sp_obj.loop_active = bool(loop_on)
-	sp_obj.loop_start = loop_start*30*hz
-	sp_obj.loop_end = sp_obj.end
+	if dur:
+		loop_on = samplerj['loop_on'] if 'loop_on' in samplerj else 0
+		start = samplerj['start'] if 'start' in samplerj else 0
+		end = samplerj['end'] if 'end' in samplerj else 1
+		loop_start = samplerj['loop_start'] if 'loop_start' in samplerj else 0
+		sp_obj.start = start*dur
+		sp_obj.end = end*dur
+		if hz:
+			sp_obj.loop_active = bool(loop_on)
+			sp_obj.loop_start = loop_start*30*hz
+			sp_obj.loop_end = sp_obj.end
 
 def do_samplepart_adsr(samplerj, plugin_obj, sampleref_obj, asdrname):
-	dur_sec = sampleref_obj.dur_sec
+	dur_sec = sampleref_obj.get_dur_sec()
 	loop_on = samplerj['loop_on'] if 'loop_on' in samplerj else 0
 	env_attack = samplerj['env_attack'] if 'env_attack' in samplerj else 0
 	env_decay = samplerj['env_decay'] if 'env_decay' in samplerj else 0
 	env_sustain = samplerj['env_sustain'] if 'env_sustain' in samplerj else 1
 	env_release = samplerj['env_release'] if 'env_release' in samplerj else 0
-	if not loop_on: plugin_obj.env_asdr_add(asdrname, 0, env_attack*dur_sec, 0, env_decay*15, env_sustain, env_release*dur_sec, 1)
+	if not loop_on:
+		if dur_sec is not None:
+			plugin_obj.env_asdr_add(asdrname, 0, env_attack*dur_sec, 0, env_decay*15, env_sustain, env_release*dur_sec, 1)
 	else: plugin_obj.env_asdr_add(asdrname, 0, env_attack*2, 0, env_decay*15, env_sustain, env_release*2, 1)
 
 def do_fade(fade_data, fadevals, tempomul): 
@@ -269,6 +272,14 @@ class input_reaper(plugins.base):
 			track_obj.armed.in_keys = bool(rpp_track.rec['armed'])
 			track_obj.armed.in_audio = bool(rpp_track.rec['armed'])
 			
+			if rpp_track.midinotenames:
+				try:
+					for x in rpp_track.midinotenames:
+						visual_obj = track_obj.visual_keynotes.add_key(int(x[1])-60)
+						visual_obj.name = x[2]
+				except:
+					pass
+
 			latmode = int(rpp_track.playoffs['mode'])
 			lattime = float(rpp_track.playoffs['time'])
 			if latmode == 2: track_obj.latency_offset = lattime/44100
@@ -598,12 +609,17 @@ class input_reaper(plugins.base):
 					if rppart_audio_stretch == 2:
 						stretch_obj.algorithm = 'simple_windowing'
 
+					dur_sec = sampleref_obj.get_dur_sec()
+
 					if rpp_trackitem.stretchmarks:
 						#print('I', cvpj_audio_rate)
 						rate = cvpj_audio_rate/tempomul
 						stretch_obj.is_warped = True
+
 						warp_obj = stretch_obj.warp
-						warp_obj.seconds = sampleref_obj.dur_sec
+
+						if dur_sec: warp_obj.seconds = dur_sec
+
 						for data in rpp_trackitem.stretchmarks:
 							#for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
 							warp_point_obj = warp_obj.points__add()
@@ -620,8 +636,8 @@ class input_reaper(plugins.base):
 					stretch_obj.preserve_pitch = cvpj_audio_preserve_pitch
 					if not cvpj_loop:
 						placement_obj.time.set_offset(startoffset)
-					else:
-						maxdur = ((sampleref_obj.dur_sec*8)/cvpj_audio_rate)*tempomul if sampleref_obj.dur_sec else cvpj_duration
+					elif dur_sec:
+						maxdur = ((dur_sec*8)/cvpj_audio_rate)*tempomul if dur_sec else cvpj_duration
 						placement_obj.time.set_loop_data(startoffset, 0, maxdur)
 
 					if rpp_trackitem.lock.used: placement_obj.locked = bool(rpp_trackitem.lock.get())

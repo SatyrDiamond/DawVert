@@ -329,6 +329,7 @@ class input_acid_3(plugins.base):
 										sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
 										if not project_obj.zipped: sampleref_obj.search_local(dawvert_intent.input_folder)
 										else: extract_audio(filename, sampleref_obj, dawvert_intent, project_obj.zipfile)
+										sampleref_obj.set_dur_sec(track_header.seconds)
 
 										for region in track_regions:
 											pls += add_audio_regions(
@@ -349,6 +350,7 @@ class input_acid_3(plugins.base):
 												sampleref_obj = convproj_obj.sampleref__add(filename, filename, 'win')
 												if not project_obj.zipped: sampleref_obj.search_local(dawvert_intent.input_folder)
 												else: extract_audio(filename, sampleref_obj, dawvert_intent, project_obj.zipfile)
+												sampleref_obj.set_dur_sec(audiodef.seconds)
 
 										for region in track_regions:
 											def_header, def_audiostretch = track_audiodefs[region.index]

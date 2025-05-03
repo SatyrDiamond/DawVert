@@ -139,26 +139,28 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 
 		ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 		if ref_found: 
-			frameval *= sampleref_obj.hz/WAVE_FREQUENCY
-
-			event_obj = muse_part.new_event()
-			event_obj.file = sampleref_obj.fileref.get_path('unix', False)
-			event_obj.frame = int(frameval)
-			event_obj.poslen.len = (int(audiopl_obj.time.duration)*wavetime)*bpmcalc
-			event_obj.poslen.sample = (int(audiopl_obj.time.position)*wavetime)*bpmcalc
-
-			sample_obj = audiopl_obj.sample
-
-			if not sample_obj.stretch.is_warped:
-				stretch_speed = 1
-				stretch_pitch = 1
-				muse_pitch = pow(2, sample_obj.pitch/12)
-				if sample_obj.stretch.preserve_pitch:
-					stretch_speed = sample_obj.stretch.calc_real_size*muse_pitch
-					stretch_pitch = muse_pitch
-				else: stretch_pitch = sample_obj.stretch.calc_real_speed
-				stretchlist = [1, stretch_speed, stretch_pitch, 1, 7]
-				event_obj.stretchlist.append(stretchlist)
+			samp_hz = sampleref_obj.get_hz()
+			if samp_hz:
+				frameval *= samp_hz/WAVE_FREQUENCY
+	
+				event_obj = muse_part.new_event()
+				event_obj.file = sampleref_obj.fileref.get_path('unix', False)
+				event_obj.frame = int(frameval)
+				event_obj.poslen.len = (int(audiopl_obj.time.duration)*wavetime)*bpmcalc
+				event_obj.poslen.sample = (int(audiopl_obj.time.position)*wavetime)*bpmcalc
+	
+				sample_obj = audiopl_obj.sample
+	
+				if not sample_obj.stretch.is_warped:
+					stretch_speed = 1
+					stretch_pitch = 1
+					muse_pitch = pow(2, sample_obj.pitch/12)
+					if sample_obj.stretch.preserve_pitch:
+						stretch_speed = sample_obj.stretch.calc_real_size*muse_pitch
+						stretch_pitch = muse_pitch
+					else: stretch_pitch = sample_obj.stretch.calc_real_speed
+					stretchlist = [1, stretch_speed, stretch_pitch, 1, 7]
+					event_obj.stretchlist.append(stretchlist)
 
 		muse_track.audio_parts.append(muse_part)
 	tracknum += 1

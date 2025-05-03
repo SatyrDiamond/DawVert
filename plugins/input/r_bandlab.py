@@ -64,14 +64,13 @@ class input_bandlab(plugins.base):
 
 		tempomul = 120/bpm
 
-		sampledurs = {}
-
 		for blx_auxChannel in project_obj.auxChannels:
 			track_obj = convproj_obj.track_master.fx__return__add(blx_auxChannel.id)
 			track_obj.params.add('vol', blx_auxChannel.returnLevel, 'float')
 
 		for blx_sample in project_obj.samples:
-			add_sample(convproj_obj, dawvert_intent, blx_sample.id, sampledurs)
+			if not blx_sample.isMidi:
+				add_sample(convproj_obj, dawvert_intent, blx_sample)
 
 		blx_tracks = sorted(project_obj.tracks, key=lambda x: x.order, reverse=False)
 		
@@ -148,9 +147,6 @@ class input_bandlab(plugins.base):
 									sp_obj.vel_max = layer['minVelRange']/127 if 'minVelRange' in layer else 0
 									sp_obj.vol = layer['volume'] if 'volume' in layer else 0
 
-									if 'sampleId' in layer:
-										add_sample(convproj_obj, dawvert_intent, layer['sampleId'], sampledurs)
-
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_midi()
 					placement_obj.time.position = tempo_calc(tempomul, blx_region.startPosition)
@@ -160,11 +156,16 @@ class input_bandlab(plugins.base):
 					do_loop(placement_obj.time, blx_region, tempomul, 1)
 					placement_obj.midi_from(midipath)
 
-def add_sample(convproj_obj, dawvert_intent, sampleid, sampledurs):
-	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', sampleid+'.*')
+def add_sample(convproj_obj, dawvert_intent, blx_sample):
+	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', blx_sample.id+'.*')
+
 	for file in glob.glob(filename):
-		sampleref_obj = convproj_obj.sampleref__add(sampleid, file, None)
-		sampledurs[sampleid] = sampleref_obj.dur_sec
+		sampleref_obj = convproj_obj.sampleref__add(blx_sample.id, file, None)
+		sampleref_obj.convert__path__fileformat()
+		if blx_sample.duration:
+			sampleref_obj.set_dur_sec(blx_sample.duration)
+		else:
+			sampleref_obj.get_dur_sec()
 		break
 
 def do_loop(time_obj, blx_region, tempomul, speed):

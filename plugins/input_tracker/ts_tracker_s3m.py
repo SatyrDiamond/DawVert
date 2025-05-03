@@ -73,8 +73,14 @@ class input_s3m(plugins.base):
 			inst_obj.params.add('vol', 0.3, 'float')
 
 			if s3m_inst.type == 1:
+				sampleref_obj = convproj_obj.sampleref__add(wave_path, wave_path, None)
+				sampleref_obj.set_channels(1 if not s3m_inst.stereo else 2)
+				sampleref_obj.set_dur_samples(s3m_inst.get_len())
+				sampleref_obj.set_hz(s3m_inst.c2spd)
+				sampleref_obj.set_fileformat('wav')
+
 				s3m_inst.rip_sample(samplefolder, project_obj.samptype, wave_path)
-				plugin_obj, pluginid, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+				plugin_obj, pluginid, sp_obj = convproj_obj.plugin__addspec__sampler__genid__s_obj(sampleref_obj, wave_path)
 				sp_obj.point_value_type = "samples"
 
 				if s3m_inst.sampleloc != 0 and s3m_inst.length != 0:

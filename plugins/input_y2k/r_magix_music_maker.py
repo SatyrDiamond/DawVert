@@ -97,7 +97,9 @@ class input_old_magix_maker(plugins.base):
 							placement_obj.time.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
 
 						sampleref_obj = sampleref_objs[data_objc.fileid]
-						hzspeed = sampleref_obj.hz/sample_rate
+
+						samp_hz = sampleref_obj.get_hz()
+						hzspeed = samp_hz/sample_rate if samp_hz else 1
 
 						sample_obj = placement_obj.sample
 						sample_obj.sampleref = 'sample_'+str(data_objc.fileid)

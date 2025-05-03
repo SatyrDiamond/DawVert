@@ -166,12 +166,16 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 		if dpcm_sample in DPCMSamples:
 			if instname: filename = samplefolder+'dpcm_'+instname+'_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
 			else: filename = samplefolder+'dpcmg_'+dpcm_sample+'_'+str(dpcm_pitch)+'.wav'
+			sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 			audio_obj = audio_data.audio_obj()
 			audio_obj.decode_from_codec('dpcm', DPCMSamples[dpcm_sample].data_bytes)
 			audio_obj.rate = dpcm_rate_arr[dpcm_pitch]
 			audio_obj.to_file_wav(filename)
+			
+			sampleref_obj.set_fileformat('wav')
+			audio_obj.to_sampleref_obj(sampleref_obj)
+
 			correct_key = key+24
-			sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 			sp_obj = plugin_obj.sampledrum_add(correct_key, None)
 			sp_obj.visual.name = dpcm_sample
 			sp_obj.sampleref = filename

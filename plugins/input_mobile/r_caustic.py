@@ -199,9 +199,13 @@ class input_cvpj_r(plugins.base):
 						if region.mode not in [0, 1]: audio_obj.loop = [region.start, region.end]
 						audio_obj.to_file_wav(wave_path)
 
-					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, wave_path, None)
-					loopmode_cvpj(region, sp_obj)
-					sp_obj.point_value_type = "samples"
+						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, wave_path, None)
+
+						sampleref_obj.set_fileformat('wav')
+						audio_obj.to_sampleref_obj(sampleref_obj)
+
+						loopmode_cvpj(region, sp_obj)
+						sp_obj.point_value_type = "samples"
 
 					middlenote += region.key_root-60
 				else:
@@ -222,6 +226,9 @@ class input_cvpj_r(plugins.base):
 						audio_obj.to_file_wav(wave_path)
 
 						sampleref_obj = convproj_obj.sampleref__add(wave_path, wave_path, None)
+						sampleref_obj.set_fileformat('wav')
+						audio_obj.to_sampleref_obj(sampleref_obj)
+
 						sp_obj = plugin_obj.sampleregion_add(region.key_lo-60, region.key_hi-60, region.key_root-60, None)
 						sp_obj.vol = region.volume
 						sp_obj.pan = (region.pan-0.5)*2
@@ -262,6 +269,9 @@ class input_cvpj_r(plugins.base):
 					midkey = samplecount-12
 
 					sampleref_obj = convproj_obj.sampleref__add(wave_path, wave_path, None)
+					sampleref_obj.set_fileformat('wav')
+					audio_obj.to_sampleref_obj(sampleref_obj)
+
 					sp_obj = plugin_obj.sampledrum_add(midkey, None)
 					sp_obj.visual.name = region.name
 					sp_obj.start = 0

@@ -62,13 +62,10 @@ class input_soundfile(plugins.base):
 					audiodata = bye_stream.raw(data_end-data_pos)
 
 				samples, samplerate = soundfile.read(io.BytesIO(audiodata))
-				frames = len(samples)
-				sampleref_obj.hz = samplerate
-				sampleref_obj.timebase = samplerate
-				sampleref_obj.dur_samples = frames
-				sampleref_obj.dur_sec = frames/samplerate
-				sampleref_obj.channels = 2
-				sampleref_obj.fileformat = 'wav_ogg'
+				sampleref_obj.set_hz(samplerate)
+				sampleref_obj.set_dur_samples(len(samples))
+				sampleref_obj.set_channels(2)
+				sampleref_obj.set_fileformat('wav_ogg')
 				return True
 			return False
 		return False

@@ -128,6 +128,9 @@ class input_pxtone(plugins.base):
 				audio_obj.to_file_wav(wave_path)
 
 				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler__genid(wave_path, None)
+				sampleref_obj.set_fileformat('wav')
+				audio_obj.to_sampleref_obj(sampleref_obj)
+
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
 				if len(voice_obj.data) <= 256: 

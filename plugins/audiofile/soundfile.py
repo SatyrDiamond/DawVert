@@ -28,13 +28,15 @@ class input_soundfile(plugins.base):
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		from soundfile import SoundFile
 		sf_audio = SoundFile(input_file)
-		sampleref_obj.hz = sf_audio.samplerate
-		sampleref_obj.timebase = sf_audio.samplerate
-		sampleref_obj.dur_samples = sf_audio.frames
-		sampleref_obj.dur_sec = sf_audio.frames/sf_audio.samplerate
-		sampleref_obj.channels = sf_audio.channels
+
+		sampleref_obj.set_hz(sf_audio.samplerate)
+		sampleref_obj.set_channels(sf_audio.channels)
+
 		if fileextlow == 'mp3': 
+			sampleref_obj.set_dur_samples(sf_audio.frames*320)
 			sampleref_obj.timebase *= 320
-			sampleref_obj.dur_samples *= 320
-		sampleref_obj.fileformat = sampleref_obj.fileref.file.extension.lower()
+		else:
+			sampleref_obj.set_dur_samples(sf_audio.frames)
+
+		sampleref_obj.set_fileformat(sampleref_obj.fileref.file.extension.lower())
 		return True

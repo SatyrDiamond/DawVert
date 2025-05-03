@@ -89,11 +89,13 @@ class cvpj_sample_entry:
 
 	def from_sampleref_obj(self, sampleref_obj):
 		self.convpoints_samples(sampleref_obj)
-		self.loop_end = sampleref_obj.dur_samples
-		if sampleref_obj.loop_found:
-			self.loop_active = sampleref_obj.loop_found
-			self.loop_start = sampleref_obj.loop_start
-			self.loop_end = sampleref_obj.loop_end
+		dur_samples = sampleref_obj.get_dur_samples()
+		if dur_samples:
+			self.loop_end = dur_samples
+			if sampleref_obj.loop_found:
+				self.loop_active = sampleref_obj.loop_found
+				self.loop_start = sampleref_obj.loop_start
+				self.loop_end = sampleref_obj.loop_end
 
 	def from_sampleref(self, convproj_obj, sampleref): 
 		ref_found, sampleref_obj = convproj_obj.sampleref__get(sampleref)
@@ -102,23 +104,25 @@ class cvpj_sample_entry:
 			self.from_sampleref_obj(sampleref_obj)
 
 	def convpoints_percent(self, sampleref_obj): 
-		if self.point_value_type == 'samples' and sampleref_obj.dur_samples:
-			if sampleref_obj.dur_samples != 0:
-				self.loop_start = self.loop_start / sampleref_obj.dur_samples
-				self.loop_end = self.loop_end / sampleref_obj.dur_samples
-				self.start = self.start / sampleref_obj.dur_samples
-				self.end = self.end / sampleref_obj.dur_samples
+		dur_samples = sampleref_obj.get_dur_samples()
+		if self.point_value_type == 'samples' and dur_samples:
+			if dur_samples != 0:
+				self.loop_start = self.loop_start / dur_samples
+				self.loop_end = self.loop_end / dur_samples
+				self.start = self.start / dur_samples
+				self.end = self.end / dur_samples
 				if self.loop_end == 0 or self.loop_start == self.loop_end: self.loop_end = 1.0
 			self.point_value_type = 'percent'
 
 	def convpoints_samples(self, sampleref_obj): 
-		if self.point_value_type == 'percent' and sampleref_obj.dur_samples:
-			if sampleref_obj.dur_samples != 0:
+		dur_samples = sampleref_obj.get_dur_samples()
+		if self.point_value_type == 'percent' and dur_samples:
+			if dur_samples != 0:
 				if self.loop_end == 0 or self.loop_start == self.loop_end: self.loop_end = 1.0
-				self.loop_start = self.loop_start * sampleref_obj.dur_samples
-				self.loop_end = self.loop_end * sampleref_obj.dur_samples
-				self.start = self.start * sampleref_obj.dur_samples
-				self.end = self.end * sampleref_obj.dur_samples
+				self.loop_start = self.loop_start * dur_samples
+				self.loop_end = self.loop_end * dur_samples
+				self.start = self.start * dur_samples
+				self.end = self.end * dur_samples
 			self.point_value_type = 'samples'
 
 	def add_slice_endpoints(self): 

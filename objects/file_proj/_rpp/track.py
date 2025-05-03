@@ -50,6 +50,8 @@ class rpp_track:
 		self.dualpanenvl2 = rpp_env.rpp_env()
 		self.dualpanenv2 = rpp_env.rpp_env()
 
+		self.midinotenames = None
+
 	def load(self, rpp_data):
 		lastauxnum = 0
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -109,6 +111,8 @@ class rpp_track:
 				auxmuteenv = rpp_env.rpp_env()
 				auxmuteenv.read(inside_dat, values)
 				self.auxmuteenv[lastauxnum] = auxmuteenv
+			if name == 'MIDINOTENAMES':
+				self.midinotenames = inside_dat
 
 	def add_aux_env(self, atype, num):
 		env_obj = rpp_env.rpp_env()
@@ -183,4 +187,9 @@ class rpp_track:
 		for item in self.items:
 			rpp_itemdata = robj('ITEM',[])
 			item.write(rpp_itemdata)
+			rpp_data.children.append(rpp_itemdata)
+
+		if self.midinotenames is not None:
+			rpp_itemdata = robj('MIDINOTENAMES',[])
+			rpp_itemdata.children = self.midinotenames
 			rpp_data.children.append(rpp_itemdata)

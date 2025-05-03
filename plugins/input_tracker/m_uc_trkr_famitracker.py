@@ -146,6 +146,8 @@ class input_famitracker_txt(plugins.base):
 									audio_obj.rate = dpcm_rate_arr[dpcm_key.pitch]
 									audio_obj.to_file_wav(filename)
 									sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+									sampleref_obj.set_fileformat('wav')
+									audio_obj.to_sampleref_obj(sampleref_obj)
 									sp_obj = plugin_obj.sampleregion_add(dkey, dkey, dkey, None)
 									sp_obj.visual.name = dpcm_data.name
 									sp_obj.sampleref = filename

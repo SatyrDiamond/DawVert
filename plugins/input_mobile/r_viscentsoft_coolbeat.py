@@ -20,7 +20,9 @@ def do_sample(convproj_obj, soundPack, filename, dawvert_intent):
 		audio_obj.pcm_from_file(fileref_obj.get_path(None, 0))
 		wave_path = samplefolder+filename+'.wav'
 		audio_obj.to_file_wav(wave_path)
-		convproj_obj.sampleref__add(sampleid, wave_path, None)
+		sampleref_obj = convproj_obj.sampleref__add(sampleid, wave_path, None)
+		sampleref_obj.set_fileformat('wav')
+		audio_obj.to_sampleref_obj(sampleref_obj)
 	return sampleid
 
 def calc_pan(i): return (i-0.5)*2

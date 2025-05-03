@@ -1,0 +1,13 @@
+<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:limiter">
+  <in__param from="ceiling" type="float">0</in__param>
+  <in__param from="gain" type="float">0</in__param>
+  <in__param from="release" type="float">0</in__param>
+  
+  <calc name="release" type="div">1000</calc>
+
+  <replace plugtype="universal:limiter" />
+
+  <out__param to="ceiling" type="float">0</out__param>
+  <out__param to="gain" type="float">0</out__param>
+  <out__param to="release" type="float">0</out__param>
+</plugstatetransform>

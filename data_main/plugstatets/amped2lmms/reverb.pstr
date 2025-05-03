@@ -1,0 +1,13 @@
+<plugstatetransform daw_in="amped" daw_out="lmms" plugtype="native:amped:Reverb">
+  <in__param from="fb" type="float">0</in__param>
+  <in__param from="lpf" type="float">0</in__param>
+  <in__param from="mix" type="float">0</in__param>
+
+  <calc name="fb" type="pow">2</calc>
+  
+  <replace plugtype="native:lmms:reverbsc" />
+
+  <out__param to="size" from="fb" type="float">0</out__param>
+  <out__param to="color" from="lpf" type="float">0</out__param>
+  <out__wet from="mix" type="float">1</out__wet>
+</plugstatetransform>

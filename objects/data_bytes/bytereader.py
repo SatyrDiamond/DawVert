@@ -267,8 +267,10 @@ class bytereader:
 
 	def rest(self): return self.buf.read(self.end-self.buf.tell())
 
-	def string(self, size, **kwargs): return self.buf.read(size).split(b'\x00')[0].decode(**kwargs)
-	def string16(self, size): return self.buf.read(size*2).decode("utf-16").rstrip('\x00')
+	def string(self, size, **kwargs): 
+		return self.buf.read(size).split(b'\x00')[0].decode(**kwargs)
+	def string16(self, size): 
+		return self.buf.read(size*2).decode("utf-16").rstrip('\x00')
 
 	def l_int4(self, num): 
 		out = []

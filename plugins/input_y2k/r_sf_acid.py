@@ -173,6 +173,8 @@ class input_acid_old(plugins.base):
 				sampleref_obj = convproj_obj.sampleref__add(sample_path, sample_path, 'win')
 				sampleref_obj.search_local(dawvert_intent.input_folder)
 
+			sampleref_obj.set_dur_samples(track.num_samples)
+			
 			trackpitch = track.pitch
 			track_root_note = track.root_note
 
@@ -181,14 +183,17 @@ class input_acid_old(plugins.base):
 
 			stretch_type = track.stretch__type
 
-			samplemul = sample_tempo/120
+			dur_sec = sampleref_obj.get_dur_sec()
+			if dur_sec: samplemul = sample_beats/(dur_sec*2)
+			else: samplemul = sample_tempo/120
 
 			for region in track.regions:
 
 				offsamp = 0
 				if sampleref_obj is not None:
 					if sampleref_obj.found:
-						offsamp = region.offset/sampleref_obj.hz
+						samp_hz = sampleref_obj.get_hz()
+						if samp_hz: offsamp = region.offset/(samp_hz if samp_hz else 44100)
 
 				pls = []
 

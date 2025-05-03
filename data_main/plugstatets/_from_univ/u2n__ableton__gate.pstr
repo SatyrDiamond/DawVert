@@ -1,0 +1,24 @@
+<plugstatetransform daw_out="ableton" plugtype="universal:gate">
+  <in__param from="attack" type="float">0</in__param>
+  <in__param from="hold" type="float">0</in__param>
+  <in__param from="release" type="float">0</in__param>
+  <in__param from="threshold" type="float">0</in__param>
+  <in__param from="flip" type="float">0</in__param>
+  <in__param from="return" type="float">0</in__param>
+  
+  <calc name="threshold" type="mul">-1</calc>
+  <calc name="threshold" type="pow_r">0.8913</calc>
+  <calc name="attack" type="mul">1000</calc>
+  <calc name="release" type="mul">1000</calc>
+  <calc name="hold" type="mul">1000</calc>
+  <calc name="return" type="mul">1000</calc>
+
+  <replace plugtype="native:ableton:Gate" />
+
+  <out__param to="Attack" from="attack" type="float">0</out__param>
+  <out__param to="Hold" from="hold" type="float">0</out__param>
+  <out__param to="Release" from="release" type="float">0</out__param>
+  <out__param to="Threshold" from="threshold" type="float">0</out__param>
+  <out__param to="FlipMode" from="flip" type="float">0</out__param>
+  <out__param to="Return" from="return" type="float">0</out__param>
+</plugstatetransform>

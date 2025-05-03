@@ -1,0 +1,17 @@
+<plugstatetransform daw_in="flp" daw_out="ableton" plugtype="native:flstudio:plucked!">
+  <in__param from="decay" type="int">256</in__param>
+  <in__param from="color" type="int">128</in__param>
+  <in__value to="StringDamping" type="float">0.6</in__value>
+
+  <calc name="decay" type="div">256</calc>
+  <calc name="decay" type="sub_r">1</calc>
+
+  <calc name="color" type="div">128</calc>
+  <calc name="color" type="sub_r">1</calc>
+
+  <replace plugtype="native:ableton:StringStudio" />
+
+  <out__param to="GeoExcitatorPosition" from="color" type="float">0</out__param>
+  <out__param to="StringDecayRatio" from="decay" type="float">0</out__param>
+  <out__param to="StringDamping" type="float">0.6</out__param>
+</plugstatetransform>

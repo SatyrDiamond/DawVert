@@ -176,9 +176,10 @@ class input_serato(plugins.base):
 								inst_obj.visual.color.set_hex(drumsamp.color[3:])
 
 							samplepart_obj.point_value_type = 'percent'
-							if sampleref_obj.dur_sec:
-								samplepart_obj.start = drumsamp.start/sampleref_obj.dur_sec
-								samplepart_obj.end = drumsamp.end/sampleref_obj.dur_sec
+							dur_sec = sampleref_obj.get_dur_sec()
+							if dur_sec is not None:
+								samplepart_obj.start = drumsamp.start/dur_sec
+								samplepart_obj.end = drumsamp.end/dur_sec
 							else:
 								samplepart_obj.start = 0
 								samplepart_obj.end = 1
@@ -444,8 +445,10 @@ class input_serato(plugins.base):
 									color = cuedata['color'][3:] if 'color' in cuedata else None
 									reverse = cuedata['reverse'] if 'reverse' in cuedata else False 
 									if reverse: 
-										c_start = sampleref.dur_sec-c_start
-										c_end = sampleref.dur_sec-c_end
+										dur_sec = sampleref_obj.get_dur_sec()
+										if dur_sec:
+											c_start = dur_sec-c_start
+											c_end = dur_sec-c_end
 
 									startoffset = calcpos_stretch(c_start, scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, True)
 									endoffset = calcpos_stretch(c_end, scene_deck.original_bpm, project_obj.bpm, sampledeck.playback_speed, False)

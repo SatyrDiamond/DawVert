@@ -16,5 +16,5 @@
   <out__param to="gain" from="postGainDB" type="float" />
   <out__param to="pregain" from="preGainDB" type="float" />
   <out__param to="release" from="releaseTimeMS" type="float" />
-  <out__param to="ceiling" from="thresholdDB" type="float" />
+  <out__param to="threshold" from="thresholdDB" type="float" />
 </plugstatetransform>

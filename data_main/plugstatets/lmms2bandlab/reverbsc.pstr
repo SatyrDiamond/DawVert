@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="lmms" daw_out="bandlab_blx" plugtype="native:lmms:reverbsc">
+<plugstatetransform daw_in="lmms" daw_out="bandlab" plugtype="native:lmms:reverbsc">
   <in__param from="color" type="float" />
   <in__param from="size" type="float" />
   <in__wet to="wet" type="float" />

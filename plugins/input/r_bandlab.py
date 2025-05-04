@@ -19,7 +19,7 @@ class input_bandlab(plugins.base):
 		return 'input'
 	
 	def get_shortname(self):
-		return 'bandlab_blx'
+		return 'bandlab'
 	
 	def get_name(self):
 		return 'BandLab BLX'

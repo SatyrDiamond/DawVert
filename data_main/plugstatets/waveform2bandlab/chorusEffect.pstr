@@ -1,3 +1,3 @@
-<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab_blx" plugtype="native:tracktion:chorusEffect">
+<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab" plugtype="native:tracktion:chorusEffect">
   <replace plugtype="native:bandlab:chorus" />
 </plugstatetransform> 

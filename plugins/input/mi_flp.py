@@ -472,7 +472,7 @@ class input_flp(plugins.base):
 
 					polynum = 1 if bool(fl_channel_obj.poly.flags&1) else fl_channel_obj.poly.max
 
-					poly_obj = plugin_obj.poly
+					poly_obj = plugin_obj.state.poly
 					poly_obj.max = polynum
 					poly_obj.limited = polynum != 0
 					poly_obj.mono = bool(fl_channel_obj.poly.flags&1)
@@ -808,8 +808,10 @@ class input_flp(plugins.base):
 					try:
 						pluginid = 'FLPlug_F_'+str(mixer_id)+'_'+str(slot_id)
 						plugin_obj = flp_dec_plugins.getparams(convproj_obj, pluginid, slot_obj.plugin, samplefolder, flp_obj.zipfile)
+
 						plugin_obj.fxdata_add(bool(route_on), route_wet)
 						plugin_obj.role = 'effect'
+
 						if slot_obj.name: plugin_obj.visual.name = slot_obj.name
 						if slot_obj.color: plugin_obj.visual.color.set_int(conv_color(slot_obj.color))
 						if slot_obj.plugin.name == 'fruity wrapper':

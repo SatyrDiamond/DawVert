@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="bandlab_blx" plugtype="universal:compressor">
+<plugstatetransform daw_out="bandlab" plugtype="universal:compressor">
   <in__param from="attack" type="float" />
   <in__param from="knee" type="float" />
   <in__param from="ratio" type="float" />

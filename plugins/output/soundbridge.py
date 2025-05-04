@@ -49,6 +49,14 @@ def set_params(params_obj):
 	pan = params_obj.get('pan', 0).value/2 + 0.5
 	return soundbridge_func.encode_chunk(struct.pack('>ffff', *(mute, vol, vol, pan)))
 
+def to_color(color_obj):
+	outcolor = color_obj.copy()
+	if outcolor.fx_allowed:
+		outcolor *= 0.9
+		outcolor += 0.1
+		outcolor.fx_pow(0.5)
+	return '#'+outcolor.get_hex()
+
 def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 	from objects.file_proj import soundbridge as proj_soundbridge
 	if groupid not in groups_data:
@@ -69,7 +77,7 @@ def make_group(convproj_obj, groupid, groups_data, sb_maintrack):
 			sb_grouptrack.metadata["SequencerTrackCollapsedState"] = 8
 			sb_grouptrack.metadata["SequencerTrackHeightState"] = 43
 			if group_obj.visual.color: 
-				sb_grouptrack.metadata["TrackColor"] = '#'+group_obj.visual.color.get_hex()
+				sb_grouptrack.metadata["TrackColor"] = to_color(group_obj.visual.color)
 			else:
 				sb_grouptrack.metadata["TrackColor"] = '#b0ff91'
 
@@ -143,7 +151,7 @@ def make_auto_track(valtype, convproj_obj, autoloc, blocks, add, mul, trackmeta)
 					block.positionStart = max(block.positionStart, 0)
 
 				if autopl_obj.visual.color:
-					block.metadata["BlockColor"] = '#'+autopl_obj.visual.color.get_hex()
+					block.metadata["BlockColor"] = to_color(autopl_obj.visual.color)
 				elif 'TrackColor' in trackmeta:
 					block.metadata["BlockColor"] = trackmeta["TrackColor"]
 
@@ -567,7 +575,7 @@ class output_soundbridge(plugins.base):
 
 		make_plugins_fx(convproj_obj, project_obj.masterTrack, convproj_obj.track_master.plugslots)
 
-		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = '#'+master_track.visual.color.get_hex()
+		if master_track.visual.color: project_obj.masterTrack.metadata["TrackColor"] = to_color(master_track.visual.color)
 		if master_track.visual.name: project_obj.masterTrack.name = master_track.visual.name
 
 		project_obj.masterTrack.latencyOffset = calc_lattime(master_track.latency_offset)
@@ -645,7 +653,7 @@ class output_soundbridge(plugins.base):
 				sb_track = proj_soundbridge.soundbridge_track(None)
 				sb_track.state = set_params(track_obj.params)
 				if track_obj.visual.name: sb_track.name = track_obj.visual.name
-				if track_obj.visual.color: sb_track.metadata["TrackColor"] = '#'+track_obj.visual.color.get_hex()
+				if track_obj.visual.color: sb_track.metadata["TrackColor"] = to_color(track_obj.visual.color)
 				sb_track.midiInput = proj_soundbridge.soundbridge_deviceRoute(None)
 				sb_track.midiInput.externalDeviceIndex = 0
 				sb_track.midiInput.channelIndex = track_obj.midi.in_chanport.chan-1
@@ -897,7 +905,7 @@ class output_soundbridge(plugins.base):
 							numnote += 1
 
 					if notespl_obj.visual.color: 
-						block.metadata["BlockColor"] = '#'+notespl_obj.visual.color.get_hex()
+						block.metadata["BlockColor"] = to_color(notespl_obj.visual.color)
 
 					datasize = sb_notes_dtype.itemsize*numnotes
 
@@ -958,7 +966,7 @@ class output_soundbridge(plugins.base):
 				sb_track = proj_soundbridge.soundbridge_track(None)
 				sb_track.state = set_params(track_obj.params)
 				if track_obj.visual.name: sb_track.name = track_obj.visual.name
-				if track_obj.visual.color: sb_track.metadata["TrackColor"] = '#'+track_obj.visual.color.get_hex()
+				if track_obj.visual.color: sb_track.metadata["TrackColor"] = to_color(track_obj.visual.color)
 				sb_track.type = 3
 				sb_track.channelCount = 2
 				sb_track.pitchTempoProcessorMode = 2
@@ -988,7 +996,7 @@ class output_soundbridge(plugins.base):
 					block.timeBaseMode = 0
 
 					if audiopl_obj.visual.color: 
-						block.metadata["BlockColor"] = '#'+audiopl_obj.visual.color.get_hex()
+						block.metadata["BlockColor"] = to_color(audiopl_obj.visual.color)
 
 					block.crossfades = []
 					block.events = []
@@ -1128,7 +1136,7 @@ class output_soundbridge(plugins.base):
 			sb_track = proj_soundbridge.soundbridge_track(None)
 			sb_track.state = set_params(track_obj.params)
 			if return_obj.visual.name: sb_track.name = return_obj.visual.name
-			if return_obj.visual.color: sb_track.metadata["TrackColor"] = '#'+return_obj.visual.color.get_hex()
+			if return_obj.visual.color: sb_track.metadata["TrackColor"] = to_color(return_obj.visual.color)
 			sb_track.type = 2
 			sb_track.sourceBufferType = 2
 			sb_track.audioOutput = proj_soundbridge.soundbridge_deviceRoute(None)
@@ -1143,7 +1151,7 @@ class output_soundbridge(plugins.base):
 
 		if videotrack_obj:
 			if videotrack_obj.visual.color: 
-				sb_videotrack.metadata["Color"] = '#'+videotrack_obj.visual.color.get_hex()
+				sb_videotrack.metadata["Color"] = to_color(videotrack_obj.visual.color)
 
 			for videopl_obj in videotrack_obj.placements.pl_video:
 				time_obj = videopl_obj.time
@@ -1151,7 +1159,7 @@ class output_soundbridge(plugins.base):
 				block = proj_soundbridge.soundbridge_block(None)
 				block.name = videopl_obj.visual.name if videopl_obj.visual.name else ""
 				if videopl_obj.visual.color:
-					block.metadata["BlockColor"] = '#'+videopl_obj.visual.color.get_hex()
+					block.metadata["BlockColor"] = to_color(videopl_obj.visual.color)
 				block.timeBaseMode = 1
 				block.position = int(time_obj.position)
 				block.positionStart = 0

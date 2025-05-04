@@ -17,7 +17,11 @@ logger_output = logging.getLogger('output')
 filename_len = {}
 
 def decode_color(color):
-	return int.from_bytes(bytes(color.get_int()), "little")
+	cvpj_color = color
+	if cvpj_color.fx_allowed: 
+		cvpj_color = cvpj_color.copy()
+		cvpj_color.fx_saturate(0.3)
+	return int.from_bytes(bytes(cvpj_color.get_int()), "little")
 
 def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj):
 	ref_found, sampleref_obj = convproj_obj.sampleref__get(sre_obj.sampleref)

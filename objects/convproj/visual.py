@@ -293,6 +293,18 @@ class cvpj_color:
 			if not self: self.copy_to_self(other_color)
 			elif other_color.priority > self.priority and other_color: self.copy_to_self(other_color)
 
+	def fx_saturate(self, amount):
+		self *= 1-amount
+		self += amount/2
+
+	def fx_pow(self, amount):
+		if self.used:
+			self.r_f **= amount
+			self.g_f **= amount
+			self.b_f **= amount
+			self.internal_clamp()
+			self.internal_toint()
+
 class cvpj_visual_ui:
 	def __init__(self):
 		self.height = 1

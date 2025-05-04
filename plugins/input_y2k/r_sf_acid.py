@@ -142,6 +142,7 @@ class input_acid_old(plugins.base):
 			color = colordata.getcolornum(track.color)
 			track_obj.visual.name = track.name
 			track_obj.visual.color.set_int(color)
+			track_obj.visual.color.fx_allowed = True
 			track_obj.params.add('vol', track.vol, 'float')
 			track_obj.params.add('pan', track.pan, 'float')
 			track_obj.is_drum = 1 not in track.flags
@@ -266,6 +267,7 @@ class input_acid_old(plugins.base):
 				for p in pls:
 					p.visual.name = track.name
 					p.visual.color.set_int(color)
+					p.visual.color.fx_allowed = True
 
 				for env in region.envs:
 					if len(env.points)==1 and env.type == 0:

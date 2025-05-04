@@ -271,11 +271,8 @@
 	</plugin>
 
 	<plugin pluginset="y2k" name="magix_old">
-		<file fileext=".mmm"/>
-	</plugin>
-
-	<plugin pluginset="y2k" name="magix_old">
-		<file fileext=".vip"/>
+		<bytes_header pos="8" data="53454B4453564950"/>
+		<file fileext=".mmm;.vip"/>
 	</plugin>
 
 	<plugin pluginset="exper" name="libopenmpt">

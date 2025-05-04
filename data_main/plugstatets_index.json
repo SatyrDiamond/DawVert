@@ -419,6 +419,62 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\waveform2soundation\\naturalReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2soundation\\naturalReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "native:tracktion:naturalReverb",
+    "plugtype_out": [
+      "native:soundation:com.soundation.reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2soundation\\nonLinearReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2soundation\\nonLinearReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "native:tracktion:nonLinearReverb",
+    "plugtype_out": [
+      "native:soundation:com.soundation.reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2soundation\\phaser2.pstr": {
+    "file": "data_main\\plugstatets\\waveform2soundation\\phaser2.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "native:tracktion:phaser2",
+    "plugtype_out": [
+      "native:soundation:com.soundation.phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2soundation\\plateReverb.pstr": {
+    "file": "data_main\\plugstatets\\waveform2soundation\\plateReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "native:tracktion:plateReverb",
+    "plugtype_out": [
+      "native:soundation:com.soundation.reverb"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr",
     "daw_out": [
@@ -680,6 +736,17 @@
     "plugtype_in": "universal:volpan",
     "plugtype_out": [
       "native:lmms:amplifier"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\soundation__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\soundation__limiter.pstr",
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "universal:limiter",
+    "plugtype_out": [
+      "native:soundation:com.soundation.limiter"
     ],
     "priority": 100
   },

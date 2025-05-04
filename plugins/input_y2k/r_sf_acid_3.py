@@ -61,6 +61,8 @@ def extract_audio(filename, sampleref_obj, dawvert_intent, zipfile):
 	filepath = os.path.join(dawvert_intent.path_samples['extracted'], filename)
 	sampleref_obj.set_path(None, filepath)
 
+volumeversion = 4
+
 def add_audio_regions(
 	placements_obj, ppq, rootnote_auto, 
 	region, stretch_type, num_beats, seconds,
@@ -70,8 +72,12 @@ def add_audio_regions(
 
 	mul1 = audiotempo/120 if audiotempo else 1
 
-	mul2 = num_beats/(seconds*2)
-	samplemul = mul2
+	if seconds is not None:
+		mul2 = num_beats/(seconds*2)
+		samplemul = mul2
+	else:
+		mul2 = mul1
+		samplemul = mul1
 
 	pls = []
 
@@ -94,7 +100,7 @@ def add_audio_regions(
 				if 1 in region.flags: placement_obj.muted = True
 				if 3 in region.flags: placement_obj.locked = True
 				if 5 in region.flags: sp_obj.reverse = True
-				if version>8: sp_obj.vol = region.vol
+				if version>volumeversion: sp_obj.vol = region.vol
 
 				if cur_root != 127:
 					notetrack = calc_root(cur_root, track_root_note)
@@ -118,7 +124,7 @@ def add_audio_regions(
 			if 1 in region.flags: placement_obj.muted = True
 			if 3 in region.flags: placement_obj.locked = True
 			if 5 in region.flags: sp_obj.reverse = True
-			if version>8: sp_obj.vol = region.vol
+			if version>volumeversion: sp_obj.vol = region.vol
 			pls.append(placement_obj)
 
 	if stretch_type == 1:
@@ -131,7 +137,7 @@ def add_audio_regions(
 		if 1 in region.flags: placement_obj.muted = True
 		if 3 in region.flags: placement_obj.locked = True
 		if 5 in region.flags: sp_obj.reverse = True
-		if version>8: sp_obj.vol = region.vol
+		if version>volumeversion: sp_obj.vol = region.vol
 		pls.append(placement_obj)
 
 	if stretch_type == 2:
@@ -145,7 +151,7 @@ def add_audio_regions(
 		if 1 in region.flags: sp_obj.muted = True
 		if 3 in region.flags: sp_obj.locked = True
 		if 5 in region.flags: sp_obj.reverse = True
-		if version>8: sp_obj.vol = region.vol
+		if version>volumeversion: sp_obj.vol = region.vol
 		pls.append(placement_obj)
 
 	return pls
@@ -241,8 +247,9 @@ class input_acid_3(plugins.base):
 			elif root_name == 'Group:RegionDatas':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'RegionData':
-						def_data = regs_chunk.def_data
-						files[filecount] = def_data.filename
+						if regs_chunk.def_data:
+							def_data = regs_chunk.def_data
+							files[filecount] = def_data.filename
 						filecount += 1
 
 			elif root_name == 'Group:TrackList':

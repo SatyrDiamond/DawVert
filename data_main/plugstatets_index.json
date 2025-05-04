@@ -746,6 +746,28 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\flp__fruity_balance.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\flp__fruity_balance.pstr",
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "universal:volpan",
+    "plugtype_out": [
+      "native:flstudio:fruity balance"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\flp__fruity_reeverb_2.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\flp__fruity_reeverb_2.pstr",
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "universal:reverb",
+    "plugtype_out": [
+      "native:flstudio:fruity reeverb 2"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\flp__spectrum_analyzer.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\flp__spectrum_analyzer.pstr",
     "daw_out": [
@@ -765,28 +787,6 @@
     "plugtype_in": "universal:tuner",
     "plugtype_out": [
       "native:flstudio:tuner"
-    ],
-    "priority": 100
-  },
-  "data_main\\plugstatets\\_from_univ\\flstudio__fruity_balance.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\flstudio__fruity_balance.pstr",
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "universal:volpan",
-    "plugtype_out": [
-      "native:flstudio:fruity balance"
-    ],
-    "priority": 100
-  },
-  "data_main\\plugstatets\\_from_univ\\flstudio__fruity_reeverb_2.pstr": {
-    "file": "data_main\\plugstatets\\_from_univ\\flstudio__fruity_reeverb_2.pstr",
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "universal:reverb",
-    "plugtype_out": [
-      "native:flstudio:fruity reeverb 2"
     ],
     "priority": 100
   },
@@ -900,6 +900,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\waveform__spectrum_analyzer.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\waveform__spectrum_analyzer.pstr",
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "universal:spectrum_analyzer",
+    "plugtype_out": [
+      "native:tracktion:spectrum"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr",
     "daw_in": [
@@ -956,6 +967,39 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\ableton__spectrum_analyzer.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__spectrum_analyzer.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "plugtype_in": "native:ableton:SpectrumAnalyzer",
+    "plugtype_out": [
+      "universal:spectrum_analyzer"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\ableton__tuner.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__tuner.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "plugtype_in": "native:ableton:Tuner",
+    "plugtype_out": [
+      "universal:tuner"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__bitcrush.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__bitcrush.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:BitCrusher",
+    "plugtype_out": [
+      "universal:bitcrush"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\amped__compressor.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\amped__compressor.pstr",
     "daw_in": [
@@ -964,6 +1008,17 @@
     "plugtype_in": "native:amped:Compressor",
     "plugtype_out": [
       "universal:compressor"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__expander.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__expander.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:Expander",
+    "plugtype_out": [
+      "universal:expander"
     ],
     "priority": -100
   },
@@ -986,6 +1041,39 @@
     "plugtype_in": "native:amped:Limiter",
     "plugtype_out": [
       "universal:limiter"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__limiter_mini.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__limiter_mini.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:LimiterMini",
+    "plugtype_out": [
+      "universal:limiter"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__tremolo.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__tremolo.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:Tremolo",
+    "plugtype_out": [
+      "universal:autopan"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__vibrato.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__vibrato.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:Vibrato",
+    "plugtype_out": [
+      "universal:vibrato"
     ],
     "priority": -100
   },
@@ -1033,14 +1121,69 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\flp__fruity spectroman.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\flp__fruity spectroman.pstr",
+  "data_main\\plugstatets\\_to_univ\\flp__fruity_balance.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__fruity_balance.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "plugtype_in": "native:flstudio:fruity balance",
+    "plugtype_out": [
+      "universal:volpan"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flp__fruity_compressor.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__fruity_compressor.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "plugtype_in": "native:flstudio:fruity compressor",
+    "plugtype_out": [
+      "universal:compressor"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flp__fruity_reeverb.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__fruity_reeverb.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "plugtype_in": "native:flstudio:fruity reeverb",
+    "plugtype_out": [
+      "universal:reverb"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flp__fruity_reeverb_2.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__fruity_reeverb_2.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "plugtype_in": "native:flstudio:fruity reeverb 2",
+    "plugtype_out": [
+      "universal:reverb"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flp__fruity_spectroman.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__fruity_spectroman.pstr",
     "daw_in": [
       "flp"
     ],
     "plugtype_in": "native:flstudio:fruity spectroman",
     "plugtype_out": [
       "universal:spectrum_analyzer"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flp__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flp__limiter.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:flstudio:fruity limiter",
+    "plugtype_out": [
+      "universal:limiter"
     ],
     "priority": -100
   },
@@ -1055,50 +1198,6 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_balance.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_balance.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "plugtype_in": "native:flstudio:fruity balance",
-    "plugtype_out": [
-      "universal:volpan"
-    ],
-    "priority": -100
-  },
-  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_compressor.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_compressor.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "plugtype_in": "native:flstudio:fruity compressor",
-    "plugtype_out": [
-      "universal:compressor"
-    ],
-    "priority": -100
-  },
-  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "plugtype_in": "native:flstudio:fruity reeverb",
-    "plugtype_out": [
-      "universal:reverb"
-    ],
-    "priority": -100
-  },
-  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb_2.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_reeverb_2.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "plugtype_in": "native:flstudio:fruity reeverb 2",
-    "plugtype_out": [
-      "universal:reverb"
-    ],
-    "priority": -100
-  },
   "data_main\\plugstatets\\_to_univ\\lmms__spectrum_analyzer.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\lmms__spectrum_analyzer.pstr",
     "daw_in": [
@@ -1107,6 +1206,39 @@
     "plugtype_in": "native:lmms:spectrumanalyzer",
     "plugtype_out": [
       "universal:spectrum_analyzer"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\soundation__butterworthfilter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\soundation__butterworthfilter.pstr",
+    "daw_in": [
+      "soundation"
+    ],
+    "plugtype_in": "native:soundation:com.soundation.butterworthfilter",
+    "plugtype_out": [
+      "universal:filter:single"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\soundation__degrader.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\soundation__degrader.pstr",
+    "daw_in": [
+      "soundation"
+    ],
+    "plugtype_in": "native:soundation:com.soundation.degrader",
+    "plugtype_out": [
+      "universal:bitcrush"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\soundation__filter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\soundation__filter.pstr",
+    "daw_in": [
+      "soundation"
+    ],
+    "plugtype_in": "native:soundation:com.soundation.filter",
+    "plugtype_out": [
+      "universal:filter:single"
     ],
     "priority": -100
   },
@@ -1173,6 +1305,83 @@
     "plugtype_in": "native:tracktion:pitchShifter",
     "plugtype_out": [
       "universal:pitchshift"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\waveform__spectrum.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__spectrum.pstr",
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "native:tracktion:spectrum",
+    "plugtype_out": [
+      "universal:spectrum_analyzer"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_u\\caustic__master_eq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_u\\caustic__master_eq.pstr",
+    "daw_in": [
+      "caustic"
+    ],
+    "plugtype_in": "native:caustic:master_eq",
+    "plugtype_out": [
+      "universal:3band"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_u\\caustic__master_limiter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_u\\caustic__master_limiter.pstr",
+    "daw_in": [
+      "caustic"
+    ],
+    "plugtype_in": "native:caustic:master_limiter",
+    "plugtype_out": [
+      "universal:limiter"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_u\\caustic__master_reverb.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_u\\caustic__master_reverb.pstr",
+    "daw_in": [
+      "caustic"
+    ],
+    "plugtype_in": "native:caustic:master_reverb",
+    "plugtype_out": [
+      "universal:reverb"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_u\\onlineseq__eq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_u\\onlineseq__eq.pstr",
+    "daw_in": [
+      "onlineseq"
+    ],
+    "plugtype_in": "native:onlineseq:eq",
+    "plugtype_out": [
+      "universal:3band"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_u\\serato__decimate_crusher.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_u\\serato__decimate_crusher.pstr",
+    "daw_in": [
+      "serato"
+    ],
+    "plugtype_in": "native:serato-fx:Decimate Crusher.serato-effect-definition",
+    "plugtype_out": [
+      "universal:bitcrush"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_u\\serato__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_u\\serato__limiter.pstr",
+    "daw_in": [
+      "serato"
+    ],
+    "plugtype_in": "native:serato-fx:Limiter.serato-effect-definition",
+    "plugtype_out": [
+      "universal:limiter"
     ],
     "priority": -100
   }

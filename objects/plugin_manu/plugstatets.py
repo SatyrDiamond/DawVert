@@ -303,7 +303,7 @@ class action__out__filter_param:
 
 class action__out__dataval_val:
 	def __init__(self):
-		self.in_name = None
+		self.out_name = None
 		self.valtype = None
 		self.value = 0
 

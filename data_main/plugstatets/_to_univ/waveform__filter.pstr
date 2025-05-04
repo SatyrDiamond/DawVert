@@ -16,7 +16,7 @@
   <in__param to="type" from="shape">0</in__param>
 
   <calc name="freq" type="add">-72</calc>
-  <calc name="freq" type="note2freq" />
+  <calc name="freq" type="note2freq"/>
 
   <remap name="type" remapdef="filter_types"/>
 
@@ -27,5 +27,4 @@
   <out__filterparam to="q" from="q" type="float"/>
   <out__filterparam to="gain" from="gain" type="float"/>
   <out__filterparam to="slope" from="slope" type="float"/>
-
 </plugstatetransform>

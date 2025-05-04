@@ -9,6 +9,15 @@ from objects import globalstore
 from functions import data_values
 from functions import xtramath
 
+def to_color(color_obj):
+	outcolor = color_obj.copy()
+	if outcolor.fx_allowed:
+		outcolor *= 0.9
+		outcolor += 0.1
+		outcolor.fx_pow(0.4)
+		outcolor.fx_saturate(0.2)
+	return '#'+outcolor.get_hex()
+
 class output_bandlab(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'output'
@@ -141,7 +150,7 @@ class output_bandlab(plugins.base):
 
 				blx_track.name = track_obj.visual.name
 				if track_obj.visual.color:
-					blx_track.color = '#'+track_obj.visual.color.get_hex().upper()
+					blx_track.color = to_color(track_obj.visual.color)
 					blx_track.colorName = 'Custom'
 				else:
 					blx_track.color = '#EEEEEE'

@@ -197,7 +197,7 @@ class input_acid_old(plugins.base):
 
 				pls = []
 
-				if stretch_type in [1, 3]:
+				if stretch_type in [1]:
 
 					offset = (offsamp*samplemul)*2
 
@@ -257,7 +257,7 @@ class input_acid_old(plugins.base):
 					sp_obj.sampleref = sample_path
 
 					time_obj.set_startend(region.start, region.end)
-					time_obj.set_offset(offsamp*ppq)
+					time_obj.set_offset(offsamp*(ppq*2))
 					sampmul = pow(2, region.pitch/-12)
 					sp_obj.usemasterpitch = False
 					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)

@@ -209,6 +209,62 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\lmms2amped\\reverb.pstr": {
+    "file": "data_main\\plugstatets\\lmms2amped\\reverb.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:lmms:reverbsc",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\lmms2bandlab\\bassbooster.pstr": {
+    "file": "data_main\\plugstatets\\lmms2bandlab\\bassbooster.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:lmms:bassbooster",
+    "plugtype_out": [
+      "native:bandlab:filter"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\lmms2bandlab\\reverbsc.pstr": {
+    "file": "data_main\\plugstatets\\lmms2bandlab\\reverbsc.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:lmms:reverbsc",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\lmms2bandlab\\stereoenhancer.pstr": {
+    "file": "data_main\\plugstatets\\lmms2bandlab\\stereoenhancer.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "bandlab_blx"
+    ],
+    "plugtype_in": "native:lmms:stereoenhancer",
+    "plugtype_out": [
+      "native:bandlab:stereoSpreader"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\lmms2flp\\spectrumanalyzer.pstr": {
     "file": "data_main\\plugstatets\\lmms2flp\\spectrumanalyzer.pstr",
     "daw_in": [
@@ -419,6 +475,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\waveform2soundation\\distortion.pstr": {
+    "file": "data_main\\plugstatets\\waveform2soundation\\distortion.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "native:tracktion:distortion",
+    "plugtype_out": [
+      "native:soundation:com.soundation.distortion"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\waveform2soundation\\naturalReverb.pstr": {
     "file": "data_main\\plugstatets\\waveform2soundation\\naturalReverb.pstr",
     "daw_in": [
@@ -472,6 +542,20 @@
     "plugtype_in": "native:tracktion:plateReverb",
     "plugtype_out": [
       "native:soundation:com.soundation.reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\waveform2soundation\\stereoDelay.pstr": {
+    "file": "data_main\\plugstatets\\waveform2soundation\\stereoDelay.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "native:tracktion:stereoDelay",
+    "plugtype_out": [
+      "native:soundation:com.soundation.delay"
     ],
     "priority": 0
   },
@@ -739,6 +823,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\soundation__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\soundation__compressor.pstr",
+    "daw_out": [
+      "soundation"
+    ],
+    "plugtype_in": "universal:compressor",
+    "plugtype_out": [
+      "native:soundation:com.soundation.compressor"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\soundation__limiter.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\soundation__limiter.pstr",
     "daw_out": [
@@ -999,6 +1094,17 @@
       "lmms"
     ],
     "plugtype_in": "native:lmms:spectrumanalyzer",
+    "plugtype_out": [
+      "universal:spectrum_analyzer"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\soundbridge__analyzer.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\soundbridge__analyzer.pstr",
+    "daw_in": [
+      "soundbridge"
+    ],
+    "plugtype_in": "native:soundbridge:analyzer",
     "plugtype_out": [
       "universal:spectrum_analyzer"
     ],

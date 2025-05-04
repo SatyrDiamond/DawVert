@@ -442,15 +442,6 @@ def lmms_decode_effectslot(convproj_obj, lmms_effect):
 				paramval = doparam(lmms_ladspa_param.data, 'float', None, ['plugin', pluginid, paramid])
 				plugin_obj.params.add(paramid, paramval, 'float')
 
-	elif lmms_effect.name == 'delay':
-		DelayTimeSamples = lmms_plugin.get_param('DelayTimeSamples', 1)
-		delay_obj = fx_delay.fx_delay()
-		delay_obj.feedback[0] = float(lmms_plugin.get_param('FeebackAmount', 0.5))
-		is_steps, timeval = get_timedata(DelayTimeSamples)
-		timing_obj = delay_obj.timing_add(0)
-		if is_steps: timing_obj.set_steps(timeval, convproj_obj)
-		else: timing_obj.set_seconds(float(DelayTimeSamples))
-		plugin_obj, pluginid = delay_obj.to_cvpj(convproj_obj, None)
 	else:
 		plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'lmms', lmms_effect.name)
 		plugin_obj.role = 'effect'

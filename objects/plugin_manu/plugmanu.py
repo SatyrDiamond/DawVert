@@ -99,6 +99,7 @@ class plug_manu:
 		if DEBUG__TXT: print('DEBUG: in__wet:', storename.__repr__(), fb.__repr__())
 		auto_obj = self.convproj_obj.automation.pop_f(['slot', self.pluginid, 'wet'])
 		if 'wet' in self.plugin_obj.params_slot or fb is not None:
+			if not storename: storename = 'wet'
 			param_obj = self.plugin_obj.params_slot.pop('wet',fb)
 			self.cur_params[storename] = valuepack(float(param_obj.value), auto_obj, 'numeric')
 			return self.cur_params[storename]

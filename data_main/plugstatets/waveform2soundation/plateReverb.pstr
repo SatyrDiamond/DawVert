@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="soundation" plugtype="native:tracktion:plateReverb">
+  <in__param from="mix" type="float" />
+  <in__param from="size" type="float" />
+  <calc name="size" type="pow">0.5</calc>
+  <calc name="size" type="mul">0.6</calc>
+  <replace plugtype="native:soundation:com.soundation.reverb" />
+  <out__param to="size" from="size" type="float" />
+  <out__param to="wet" from="mix" type="float" />
+  <out__param to="dry" only_value="1" type="float">1</out__param>
+  <out__param to="damp" only_value="1" type="float">0.4</out__param>
+  <out__param to="width" only_value="1" type="float">1</out__param>
+</plugstatetransform> 

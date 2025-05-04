@@ -316,6 +316,13 @@ class action__out__dataval_val:
 		if self.out_name and self.value is not None:
 			manu_obj.out__dataval_val(self.out_name, self.value)
 
+class debug__storeview:
+	def from_xml(self, xmldata):
+		pass
+
+	def do_action(self, manu_obj):
+		print(manu_obj.cur_params)
+
 # --------------------------------------------------------- MAIN ---------------------------------------------------------
 
 actionclasses = {}
@@ -335,6 +342,7 @@ actionclasses['replace'] = action__replace
 actionclasses['replace_hard'] = action__replace_hard
 actionclasses['tobool'] = action__tobool
 actionclasses['define_remap'] = action__define_remap
+actionclasses['debug__storeview'] = debug__storeview
 
 def get_action(xmldata):
 	actionname = xmldata.tag

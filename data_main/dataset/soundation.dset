@@ -35,7 +35,7 @@
         <object id="com.soundation.distortion">
             <visual name="Distortion" />
             <param id="gain" name="gain" type="float" def="0.2" />
-            <param id="mode" name="mode" type="float" max="0" />
+            <param id="mode" name="mode" type="float" max="4" />
             <param id="volume" name="volume" type="float" def="0.5" />
         </object>
         <object id="com.soundation.equalizer">

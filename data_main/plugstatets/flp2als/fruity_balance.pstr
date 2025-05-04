@@ -9,16 +9,17 @@
   <replace plugtype="native:ableton:StereoGain" />
 
   <out__param to="Balance" from="pan" type="float">0</out__param>
-  <out__param to="LegacyGain" from="vol" type="float">0</out__param>
-  <out__param to="BassMono" type="bool">0</out__param>
-  <out__param to="BassMonoFrequency" type="float">120.0</out__param>
-  <out__param to="ChannelMode" type="float">1</out__param>
-  <out__param to="DcFilter" type="bool">0</out__param>
-  <out__param to="Gain" type="float">0</out__param>
-  <out__param to="MidSideBalance" type="float">1</out__param>
-  <out__param to="Mono" type="bool">0</out__param>
-  <out__param to="Mute" type="bool">0</out__param>
-  <out__param to="PhaseInvertL" type="bool">0</out__param>
-  <out__param to="PhaseInvertR" type="bool">0</out__param>
-  <out__param to="StereoWidth" type="float">1</out__param>
+  <out__param to="LegacyGain" from="vol" type="float">1</out__param>
+
+  <out__param to="BassMono" only_value="1" type="bool">0</out__param>
+  <out__param to="BassMonoFrequency" only_value="1" type="float">120.0</out__param>
+  <out__param to="ChannelMode" only_value="1" type="float">1</out__param>
+  <out__param to="DcFilter" only_value="1" type="bool">0</out__param>
+  <out__param to="Gain" only_value="1" type="float">0</out__param>
+  <out__param to="MidSideBalance" only_value="1" type="float">1</out__param>
+  <out__param to="Mono" only_value="1" type="bool">0</out__param>
+  <out__param to="Mute" only_value="1" type="bool">0</out__param>
+  <out__param to="PhaseInvertL" only_value="1" type="bool">0</out__param>
+  <out__param to="PhaseInvertR" only_value="1" type="bool">0</out__param>
+  <out__param to="StereoWidth" only_value="1" type="float">1</out__param>
 </plugstatetransform>

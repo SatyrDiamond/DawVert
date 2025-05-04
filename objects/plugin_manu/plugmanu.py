@@ -260,7 +260,9 @@ class plug_manu:
 			ptypei = valtype_from_ptype(remap_obj.in_type)
 			ptypeo = valtype_from_ptype(remap_obj.out_type)
 
-			if ptypei==storeval.valuetype:
+			cond_n_b = (ptypei=='numeric' and storeval.valuetype=='bool')
+
+			if ptypei==storeval.valuetype or cond_n_b:
 				if ptypei == 'filter_type' and ptypeo != 'filter_type':
 					val = storeval.value
 					is_found = False
@@ -274,8 +276,10 @@ class plug_manu:
 						storeval.value = remap_obj.fallback
 						storeval.valuetype = ptypeo
 				else:
-					if storeval.value in remap_obj.vals: 
-						storeval.value = remap_obj.vals[storeval.value]
+					svald = storeval.value
+					if cond_n_b: svald = int(svald)
+					if svald in remap_obj.vals: 
+						storeval.value = remap_obj.vals[svald]
 						storeval.valuetype = ptypeo
 					else: 
 						storeval.value = remap_obj.fallback

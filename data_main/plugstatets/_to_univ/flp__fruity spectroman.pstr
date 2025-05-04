@@ -1,3 +1,0 @@
-<plugstatetransform daw_in="flp" plugtype="native:flstudio:fruity spectroman">
-  <replace plugtype="universal:spectrum_analyzer" />
-</plugstatetransform>

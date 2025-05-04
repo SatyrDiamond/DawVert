@@ -323,6 +323,13 @@ class debug__storeview:
 	def do_action(self, manu_obj):
 		print(manu_obj.cur_params)
 
+class debug__paramview:
+	def from_xml(self, xmldata):
+		pass
+
+	def do_action(self, manu_obj):
+		print(manu_obj.plugin_obj.params.list())
+
 # --------------------------------------------------------- MAIN ---------------------------------------------------------
 
 actionclasses = {}
@@ -343,6 +350,7 @@ actionclasses['replace_hard'] = action__replace_hard
 actionclasses['tobool'] = action__tobool
 actionclasses['define_remap'] = action__define_remap
 actionclasses['debug__storeview'] = debug__storeview
+actionclasses['debug__paramview'] = debug__paramview
 
 def get_action(xmldata):
 	actionname = xmldata.tag

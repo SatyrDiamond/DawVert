@@ -187,7 +187,7 @@
       "flp"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:flstudio:fruity phaser",
     "plugtype_out": [
@@ -229,7 +229,7 @@
       "lmms"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:lmms:bassbooster",
     "plugtype_out": [
@@ -243,7 +243,7 @@
       "lmms"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:lmms:reverbsc",
     "plugtype_out": [
@@ -257,7 +257,7 @@
       "lmms"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:lmms:stereoenhancer",
     "plugtype_out": [
@@ -383,7 +383,7 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:tracktion:chorusEffect",
     "plugtype_out": [
@@ -397,7 +397,7 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:tracktion:distortion",
     "plugtype_out": [
@@ -411,7 +411,7 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:tracktion:naturalReverb",
     "plugtype_out": [
@@ -425,7 +425,7 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:tracktion:nonLinearReverb",
     "plugtype_out": [
@@ -439,7 +439,7 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:tracktion:phaser2",
     "plugtype_out": [
@@ -453,7 +453,7 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:tracktion:plateReverb",
     "plugtype_out": [
@@ -716,7 +716,7 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr",
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "universal:compressor",
     "plugtype_out": [
@@ -727,7 +727,7 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__deess.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__deess.pstr",
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "universal:de_ess",
     "plugtype_out": [
@@ -738,7 +738,7 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr",
     "daw_out": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "universal:pitchshift",
     "plugtype_out": [
@@ -992,7 +992,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr",
     "daw_in": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:bandlab:compr1176",
     "plugtype_out": [
@@ -1003,7 +1003,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr",
     "daw_in": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:bandlab:compressor",
     "plugtype_out": [
@@ -1014,7 +1014,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr",
     "daw_in": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:bandlab:deEsser",
     "plugtype_out": [
@@ -1025,7 +1025,7 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr",
     "daw_in": [
-      "bandlab_blx"
+      "bandlab"
     ],
     "plugtype_in": "native:bandlab:pitchShifter",
     "plugtype_out": [
@@ -1063,6 +1063,17 @@
     "plugtype_in": "native:flstudio:fruity balance",
     "plugtype_out": [
       "universal:volpan"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\flstudio__fruity_compressor.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\flstudio__fruity_compressor.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "plugtype_in": "native:flstudio:fruity compressor",
+    "plugtype_out": [
+      "universal:compressor"
     ],
     "priority": -100
   },

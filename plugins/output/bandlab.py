@@ -14,7 +14,7 @@ class output_bandlab(plugins.base):
 		return 'output'
 	
 	def get_shortname(self):
-		return 'bandlab_blx'
+		return 'bandlab'
 	
 	def get_name(self):
 		return 'BandLab BLX'

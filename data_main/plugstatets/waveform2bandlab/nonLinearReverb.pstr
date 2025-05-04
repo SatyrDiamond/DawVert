@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab_blx" plugtype="native:tracktion:nonLinearReverb">
+<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab" plugtype="native:tracktion:nonLinearReverb">
   <in__param from="mix" type="float" />
   <in__param from="size" type="float" />
   

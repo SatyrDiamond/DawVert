@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="bandlab_blx" plugtype="universal:pitchshift">
+<plugstatetransform daw_out="bandlab" plugtype="universal:pitchshift">
   <in__param from="pitch" type="float" />
 
   <replace plugtype="native:bandlab:pitchShifter" />

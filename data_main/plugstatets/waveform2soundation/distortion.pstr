@@ -1,0 +1,25 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="soundation" plugtype="native:tracktion:distortion">
+  <define_remap name="dist_types" in_type="int" out_type="int">
+    <val in_val="0" out_val="2"/>
+    <val in_val="1" out_val="4"/>
+    <val in_val="2" out_val="3"/>
+    <val in_val="3" out_val="0"/>
+    <val in_val="4" out_val="2"/>
+    <val in_val="5" out_val="2"/>
+    <fallback out_val="2"/>
+  </define_remap>
+
+  <in__param from="drive" type="float" />
+  <in__param from="dtype" type="float" />
+
+  <calc name="drive" type="pow">0.5</calc>
+  <calc name="drive" type="from_one">0.03;1</calc>
+  
+  <remap name="dtype" remapdef="dist_types"/>
+
+  <replace plugtype="native:soundation:com.soundation.distortion" />
+
+  <out__param to="gain" from="drive" type="float">0.03</out__param>
+  <out__param to="mode" from="dtype" type="float">2</out__param>
+  <out__param to="volume" only_value="1" type="float">1</out__param>
+</plugstatetransform> 

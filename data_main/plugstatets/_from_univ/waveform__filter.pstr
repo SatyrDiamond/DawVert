@@ -1,6 +1,6 @@
 <plugstatetransform daw_out="waveform" plugtype="universal:filter:single">
 
-  <define_remap name="filter_types" in_type="filter_type" out_type="int">
+  <define_remap name="filter_types" in_type="int" out_type="int">
     <val in_val="low_pass" out_val="0"/>
     <val in_val="low_shelf" out_val="1"/>
     <val in_val="peak" out_val="2"/>

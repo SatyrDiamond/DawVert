@@ -1,0 +1,25 @@
+<plugstatetransform daw_out="soundation" plugtype="universal:limiter">
+  <in__param from="ceiling" type="float" />
+  <in__param from="pregain" type="float" />
+  <in__param from="attack" type="float" />
+  <in__param from="release" type="float" />
+  
+  <calc name="pregain" type="to_one">-20;20</calc>
+  <calc name="pregain" type="pow">1.73</calc>
+
+  <calc name="attack" type="to_one">0;0.2</calc>
+  <calc name="attack" type="pow">0.5</calc>
+
+  <calc name="release" type="to_one">0.005;1</calc>
+  <calc name="release" type="pow">0.3</calc>
+
+  <calc name="ceiling" type="to_one">-60;-0.1</calc>
+  <calc name="ceiling" type="pow">4</calc>
+
+  <replace plugtype="native:soundation:com.soundation.limiter" />
+
+  <out__param to="threshold" from="ceiling" type="float" />
+  <out__param to="gain" from="pregain" type="float" />
+  <out__param to="attack" type="float" />
+  <out__param to="release" type="float" />
+</plugstatetransform>

@@ -1,0 +1,10 @@
+<plugstatetransform daw_in="lmms" daw_out="bandlab_blx" plugtype="native:lmms:reverbsc">
+  <in__param from="color" type="float" />
+  <in__param from="size" type="float" />
+  <in__wet to="wet" type="float" />
+  <calc name="size" type="mul">10</calc>
+  <replace plugtype="native:bandlab:reverbHybrid" />
+  <out__param to="roomSize" from="size" type="float" />
+  <out__param to="dampening" from="color" type="float" />
+  <out__param to="dryWetMix" from="wet" type="float" />
+</plugstatetransform>

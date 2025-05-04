@@ -1,0 +1,13 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="soundation" plugtype="native:tracktion:stereoDelay">
+  <in__param from="mix" type="float" />
+
+  <replace plugtype="native:soundation:com.soundation.delay" />
+
+  <out__param to="feedback" only_value="1" type="float">0.2</out__param>
+  <out__param to="timeBpmSync" only_value="1" type="float">1</out__param>
+  <out__param to="timeLSynced" only_value="1" type="float">0.125</out__param>
+  <out__param to="timeRSynced" only_value="1" type="float">0.25</out__param>
+  <out__param to="feedback_filter" only_value="1" type="float">1</out__param>
+  <out__param to="dry" only_value="1" type="float">1</out__param>
+  <out__param to="wet" from="mix" type="float" />
+</plugstatetransform> 

@@ -1,0 +1,6 @@
+<plugstatetransform daw_in="lmms" daw_out="bandlab_blx" plugtype="native:lmms:stereoenhancer">
+  <in__param from="width" type="float" />
+  <calc name="width" type="mul">2000</calc>
+  <replace plugtype="native:bandlab:stereoSpreader" />
+  <out__param to="upperFrequency" from="width" type="float" />
+</plugstatetransform>

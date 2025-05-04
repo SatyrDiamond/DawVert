@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="lmms" daw_out="bandlab_blx" plugtype="native:lmms:bassbooster">
+  <in__param from="freq" type="float" />
+  <in__param from="gain" type="float" />
+  <calc name="gain" type="mul">1.5</calc>
+  <replace plugtype="native:bandlab:filter" />
+  <out__param to="frequency" from="freq" type="float" />
+  <out__param to="gain" from="gain" type="float" />
+  <out__dataval_val to="filterType" type="string">lowshelf</out__dataval_val>
+</plugstatetransform>

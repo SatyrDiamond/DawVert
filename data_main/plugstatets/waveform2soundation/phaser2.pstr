@@ -1,0 +1,21 @@
+<plugstatetransform daw_in="tracktion_edit" daw_out="soundation" plugtype="native:tracktion:phaser2">
+  <in__param from="feedback" type="float" />
+  <in__param from="floor" type="float" />
+  <in__param from="mix" type="float" />
+  <in__param from="rateSyncOff" type="float" />
+  <in__param from="sync" type="float" />
+
+  <calc name="feedback" type="div">100</calc>
+  <calc name="rateSyncOff" type="div">7</calc>
+
+  <replace plugtype="native:soundation:com.soundation.phaser" />
+
+  <out__param to="dry" only_value="1" type="float">1</out__param>
+  <out__param to="feedback" type="float" />
+  <out__param to="freq" only_value="1" type="float">0.5</out__param>
+  <out__param to="range" only_value="1" type="float">0.5</out__param>
+  <out__param to="rate" from="rateSyncOff" type="float">0</out__param>
+  <out__param to="rateBpmSync" from="sync" type="float">0</out__param>
+  <out__param to="rateSynced" only_value="1" type="float">1</out__param>
+  <out__param to="wet" from="mix" type="float" />
+</plugstatetransform> 

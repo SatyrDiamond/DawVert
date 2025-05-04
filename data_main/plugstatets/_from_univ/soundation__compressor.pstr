@@ -1,0 +1,19 @@
+<plugstatetransform daw_out="soundation" plugtype="universal:compressor">
+  <in__param from="postgain" type="float" />
+  <in__param from="ratio" type="float" />
+  <in__param from="threshold" type="float" />
+  
+  <calc name="postgain" type="to_one">-20;20</calc>
+  <calc name="postgain" type="pow">1.73</calc>
+
+  <calc name="threshold" type="to_one">-50;0</calc>
+  <calc name="ratio" type="to_one">1;20</calc>
+
+  <replace plugtype="native:soundation:com.soundation.compressor" />
+
+  <out__param to="threshold" type="float" />
+  <out__param to="gain" from="postgain" type="float" />
+  <out__param to="ratio" type="float" />
+  <out__param to="attack" only_value="1" type="float">0.4</out__param>
+  <out__param to="release" only_value="1" type="float">0.4</out__param>
+</plugstatetransform>

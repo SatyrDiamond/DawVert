@@ -445,7 +445,7 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 			placement_obj.time.position_real = audioclip.start
 			placement_obj.time.duration_real = audioclip.length
 
-			placement_obj.video_fileref = audioclip.srcVideo
+			placement_obj.videoref = audioclip.srcVideo
 	
 	middlenote += track_obj.datavals.get('middlenote', 0)
 	track_obj.datavals.add('middlenote', middlenote)
@@ -561,10 +561,8 @@ class input_tracktion_edit(plugins.base):
 			sampleref_obj.find_relative('projectfile')
 
 		for sid, spath in videos.items(): 
-			fileref_obj = convproj_obj.fileref__add(sid, spath, None)
-			if dawvert_intent.input_mode == 'file':
-				if not fileref_obj.exists(None):
-					fileref_obj.search_local(os.path.dirname(dawvert_intent.input_file))
+			videoref_obj = convproj_obj.videoref__add(sid, spath, None)
+			videoref_obj.search_local(dawvert_intent.input_folder)
 
 		if project_obj.temposequence.tempo:
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))

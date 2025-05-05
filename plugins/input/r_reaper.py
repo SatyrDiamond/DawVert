@@ -663,7 +663,9 @@ class input_reaper(plugins.base):
 
 					convproj_obj.fileref__add(cvpj_audio_file, cvpj_audio_file, None)
 
-					placement_obj.video_fileref = cvpj_audio_file
+					videoref_obj = convproj_obj.videoref__add(cvpj_audio_file, cvpj_audio_file, None)
+					videoref_obj.find_relative('projectfile')
+					placement_obj.videoref = cvpj_audio_file
 
 			track_obj.placements.sort()
 			convproj_obj.fx__route__add(cvpj_trackid)

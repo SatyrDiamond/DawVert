@@ -609,11 +609,11 @@ class input_soundbridge(plugins.base):
 				sampleref_obj.set_channels(audiosource.channelCount)
 
 		for videosource in project_obj.pool.videoSources:
-			filename = videosource.fileName
+			filename = audiosource.fileName
 			ofilename = filename
 			if dawvert_intent.input_file.endswith('.soundbridge'): 
 				ofilename = os.path.join(dawvert_intent.input_file, filename)
-			convproj_obj.fileref__add(filename, ofilename, None)
+			videoref_obj = convproj_obj.videoref__add(filename, ofilename, None)
 
 		master_track = project_obj.masterTrack
 
@@ -631,7 +631,7 @@ class input_soundbridge(plugins.base):
 				if 'BlockColor' in clipmetadata: 
 					placement_obj.visual.color.set_hex(clipmetadata['BlockColor'])
 				placement_obj.time.set_posdur(block.position, block.framesCount)
-				placement_obj.video_fileref = block.filename
+				placement_obj.videoref = block.filename
 
 		add_params(master_track.state, convproj_obj.track_master.params)
 		track_visual(convproj_obj.track_master.visual, master_track)

@@ -28,7 +28,9 @@ class item_file:
 	def from_byr_stream(cls, byr_stream, size):
 		cls = cls()
 		with byr_stream.isolate_size(size, False) as bye_stream:
-			cls.folder = bye_stream.string(256, errors="ignore")
+			cls.folder = bye_stream.string(128, errors="ignore")
+			bye_stream.skip(2)
+			cls.video = bye_stream.string(126, errors="ignore")
 			bye_stream.skip(2)
 			cls.type = bye_stream.uint16()
 			cls.file = bye_stream.string(256, errors="ignore")

@@ -8,11 +8,11 @@ from objects.convproj import visual
 import copy
 
 class cvpj_placements_video:
-	__slots__ = ['data','video_fileref','time_ppq','time_float']
+	__slots__ = ['data','videoref','time_ppq','time_float']
 	def __init__(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
-		self.video_fileref = ''
+		self.videoref = ''
 		self.data = []
 
 	def __iter__(self):
@@ -87,15 +87,16 @@ class cvpj_placements_video:
 		self.data = placements.internal_addloops(self.data, self.eq_connect, loopcompat)
 
 class cvpj_placement_video:
-	__slots__ = ['time','muted','visual','video_fileref','fade_in','fade_out','time_ppq','time_float','vol']
+	__slots__ = ['time','muted','visual','videoref','fade_in','fade_out','time_ppq','time_float','vol','looped']
 
 	def __init__(self, time_ppq, time_float):
 		self.time_ppq = time_ppq
 		self.time_float = time_float
 		self.visual = visual.cvpj_visual()
 		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
-		self.video_fileref = ''
+		self.videoref = ''
 		self.muted = False
 		self.fade_in = placements.cvpj_placement_fade()
 		self.fade_out = placements.cvpj_placement_fade()
 		self.vol = 1
+		self.looped = False

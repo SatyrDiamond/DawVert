@@ -402,7 +402,7 @@ class input_wavtool(plugins.base):
 		in_dict['file_ext'] = ['zip']
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
-		in_dict['audio_stretch'] = ['warp']
+		in_dict['audio_stretch'] = ['warp', 'rate']
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_included'] = ['native:wavtool','universal:sampler:single','universal:sampler:multi']

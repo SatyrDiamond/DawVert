@@ -12,6 +12,7 @@ def process(convproj_obj, in_compat, out_compat, out_type, dawvert_intent):
 
 	if is_seconds:
 		if convproj_obj.type in ['r', 'rm', 'ri']: 
+			convproj_obj.automation.delete(['main', 'tempo'])
 			convproj_obj.transport.change_seconds(is_seconds==1, tempo, ppq)
 			convproj_obj.timemarkers.change_seconds(is_seconds==1, tempo, ppq)
 

@@ -69,7 +69,7 @@ class input_acid_old(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'r'
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_off']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['pl_points','nopl_ticks']

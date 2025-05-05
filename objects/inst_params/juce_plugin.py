@@ -17,7 +17,7 @@ class juce_plugin:
 		self.fourid = None
 		self.program_num = None
 
-	def from_cvpj(self, convproj_obj, plugin_obj):
+	def from_cvpj(self, convproj_obj, plugin_obj, pluginid):
 
 		if plugin_obj.type.type == 'vst2':
 			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)

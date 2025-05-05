@@ -348,7 +348,7 @@ class extplug_manu:
 				fpch.fourid = fourid
 				fpch.version = external_info.version_bytes
 				fpch.num_programs = 1
-				fpch.prgname = plugin_obj.preset.name
+				fpch.prgname = plugin_obj.state.preset.name
 				fpch.chunk = plugin_obj.rawdata_get('chunk')
 				fxp_obj.write(byw_stream)
 				outdata = byw_stream.getvalue()
@@ -359,7 +359,7 @@ class extplug_manu:
 					fxck.fourid = fourid
 					fxck.version = external_info.version_bytes
 					fxck.num_params = external_info.numparams
-					fxck.prgname = plugin_obj.preset.name
+					fxck.prgname = plugin_obj.state.preset.name
 					fxck.params = [plugin_obj.params.get('ext_param_'+str(c), 0).value for c in range(fxck.num_params)]
 					fxp_obj.write(byw_stream)
 					outdata = byw_stream.getvalue()

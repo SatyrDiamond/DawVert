@@ -93,6 +93,7 @@ def add_audio_regions(
 				time_obj = placement_obj.time
 				time_obj.set_startend(start, end)
 				time_obj.set_loop_data((offset)+((start-region.pos)%ppq_beats), 0, ppq_beats)
+
 				sp_obj = placement_obj.sample 
 				sp_obj.sampleref = filename
 				sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
@@ -183,7 +184,7 @@ class input_acid_3(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'r'
 		in_dict['audio_filetypes'] = ['wav']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		in_dict['placement_loop'] = ['loop', 'loop_off']
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['audio_stretch'] = ['rate']
 		in_dict['auto_types'] = ['nopl_points']
@@ -314,12 +315,12 @@ class input_acid_3(plugins.base):
 								#				track_auto = trackg_chunk.def_data
 								#				autoloc = None
 								#				
-								#				trackid = 'track_'+str(track_header.id)
-	#
+								#				trackid = 'track_'+str(tracknum)
+#
 								#				if not track_auto.group:
 								#					if track_auto.param == 0: autoloc = ['track', trackid, 'vol']
 								#					if track_auto.param == 1: autoloc = ['track', trackid, 'pan']
-		#
+#
 								#				if autoloc:
 								#					for p in track_auto.points:
 								#						convproj_obj.automation.add_autopoint(autoloc, 'float', p[0], p[2], 'normal')
@@ -354,6 +355,7 @@ class input_acid_3(plugins.base):
 										if not project_obj.zipped: sampleref_obj.search_local(dawvert_intent.input_folder)
 										else: extract_audio(filename, sampleref_obj, dawvert_intent, project_obj.zipfile)
 										sampleref_obj.set_dur_sec(track_header.seconds)
+										sampleref_obj.convert__path__fileformat()
 
 										for region in track_regions:
 											pls += add_audio_regions(
@@ -376,6 +378,7 @@ class input_acid_3(plugins.base):
 												if not project_obj.zipped: sampleref_obj.search_local(dawvert_intent.input_folder)
 												else: extract_audio(filename, sampleref_obj, dawvert_intent, project_obj.zipfile)
 												sampleref_obj.set_dur_sec(audiodef.seconds)
+												sampleref_obj.convert__path__fileformat()
 
 										for region in track_regions:
 											def_header, def_audiostretch = track_audiodefs[region.index]

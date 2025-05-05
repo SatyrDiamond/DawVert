@@ -1,0 +1,21 @@
+<plugstatetransform daw_in="caustic" plugtype="native:caustic:master_eq">
+  <in__param from="30" type="float" />
+  <in__param from="32" type="float" />
+  <in__param from="34" type="float" />
+  
+  <calc name="30" type="sub">1</calc>
+  <calc name="32" type="sub">1</calc>
+  <calc name="34" type="sub">1</calc>
+
+  <calc name="30" type="mul">6</calc>
+  <calc name="32" type="mul">6</calc>
+  <calc name="34" type="mul">6</calc>
+
+  <replace plugtype="universal:3band" />
+
+  <out__param to="low_gain" from="30" type="float" />
+  <out__param to="mid_gain" from="32" type="float" />
+  <out__param to="high_gain" from="34" type="float" />
+  <out__param to="lowmid_freq" only_value="1" type="float">1000</out__param>
+  <out__param to="midhigh_freq" only_value="1" type="float">6000</out__param>
+</plugstatetransform>

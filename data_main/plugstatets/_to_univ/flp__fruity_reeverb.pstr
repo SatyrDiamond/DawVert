@@ -1,0 +1,32 @@
+<plugstatetransform daw_in="flp" plugtype="native:flstudio:fruity reeverb">
+  <in__param from="lowcut" type="float">0</in__param>
+  <in__param from="highcut" type="float">0</in__param>
+  <in__param from="room_size" type="float">0</in__param>
+  <in__param from="predelay" type="float">0</in__param>
+  <in__param from="diffusion" type="float">0</in__param>
+  <in__param from="decay" type="float">0</in__param>
+  <in__param from="hidamping" type="float">0</in__param>
+  <in__param from="dry" type="float">0</in__param>
+  <in__param from="reverb" type="float">0</in__param>
+
+  <calc name="lowcut" type="valrange">0;65536;20;3000</calc>
+  <calc name="highcut" type="valrange">0;65536;500;22050</calc>
+  <calc name="room_size" type="div">65536</calc>
+  <calc name="diffusion" type="div">65536</calc>
+  <calc name="decay" type="valrange">0;65536;0.1;20</calc>
+  <calc name="hidamping" type="valrange">0;65536;500;22050</calc>
+  <calc name="dry" type="div">65536</calc>
+  <calc name="reverb" type="div">65536</calc>
+  
+  <replace plugtype="universal:reverb" />
+
+  <out__param to="low_cut" from="lowcut" type="float">0</out__param>
+  <out__param to="high_cut" from="highcut" type="float">0</out__param>
+  <out__param to="size" from="room_size" type="float">0</out__param>
+  <out__param to="predelay" type="float">0</out__param>
+  <out__param to="diffusion" type="float">0</out__param>
+  <out__param to="decay" type="float">0</out__param>
+  <out__param to="high_xo" from="hidamping" type="float">0</out__param>
+  <out__param to="dry" type="float">0</out__param>
+  <out__param to="wet" from="reverb" type="float">0</out__param>
+</plugstatetransform>

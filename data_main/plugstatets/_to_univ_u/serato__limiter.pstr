@@ -1,0 +1,8 @@
+<plugstatetransform daw_in="serato" plugtype="native:serato-fx:Limiter.serato-effect-definition">
+  <in__param from="amount" type="float" />
+  <calc name="amount" type="mul">12</calc>
+  <replace plugtype="universal:limiter" />
+  <out__param to="gain" from="amount" type="float" />
+  <out__param to="ceiling" only_value="1" type="float">0</out__param>
+  <out__param to="release" only_value="1" type="float">0.1</out__param>
+</plugstatetransform>

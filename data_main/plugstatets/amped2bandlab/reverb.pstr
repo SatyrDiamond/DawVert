@@ -1,0 +1,11 @@
+<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:Reverb">
+  <in__param from="fb" type="float">0</in__param>
+  <in__param from="lpf" type="float">0</in__param>
+  <in__wet to="wet" type="float">1</in__wet>
+  <calc name="fb" type="pow">0.5</calc>
+  <calc name="fb" type="mul">10</calc>
+  <replace plugtype="native:bandlab:reverbHybrid" />
+  <out__param to="roomSize" from="fb" type="float" />
+  <out__param to="dampening" from="lpf" type="float" />
+  <out__param to="dryWetMix" from="wet" type="float" />
+</plugstatetransform>

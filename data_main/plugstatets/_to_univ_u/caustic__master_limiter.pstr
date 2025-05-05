@@ -1,0 +1,13 @@
+<plugstatetransform daw_in="caustic" plugtype="native:caustic:master_limiter">
+  <in__param from="35" type="float" />
+  <in__param from="36" type="float" />
+  <in__param from="37" type="float" />
+  <in__param from="38" type="float" />
+  
+  <replace plugtype="universal:limiter" />
+
+  <out__param to="gain" from="35" type="float" />
+  <out__param to="attack" from="36" type="float" />
+  <out__param to="release" from="37" type="float" />
+  <out__param to="postgain" from="38" type="float" />
+</plugstatetransform>

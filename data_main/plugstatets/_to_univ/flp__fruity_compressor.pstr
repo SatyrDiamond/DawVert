@@ -1,0 +1,22 @@
+<plugstatetransform daw_in="flp" plugtype="native:flstudio:fruity compressor">
+
+  <in__param from="threshold" type="int" />
+  <in__param from="ratio" type="int" />
+  <in__param from="gain" type="int" />
+  <in__param from="attack" type="int" />
+  <in__param from="release" type="int" />
+
+  <calc name="threshold" type="div">10</calc>
+  <calc name="ratio" type="div">10</calc>
+  <calc name="gain" type="div">10</calc>
+  <calc name="attack" type="div">10000</calc>
+  <calc name="release" type="div">1000</calc>
+
+  <replace plugtype="universal:compressor" />
+
+  <out__param to="ratio" type="float" />
+  <out__param to="attack" type="float" />
+  <out__param to="gain" type="float" />
+  <out__param to="release" type="float" />
+  <out__param to="threshold" type="float" />
+</plugstatetransform>

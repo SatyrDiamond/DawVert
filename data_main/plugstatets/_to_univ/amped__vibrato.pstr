@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="amped" plugtype="native:amped:Vibrato">
+  <in__param from="delayLfoRateHz" type="float" />
+  <in__param from="delayLfoDepth" type="float" />
+  
+  <replace plugtype="universal:vibrato" />
+
+  <out__param to="freq" from="delayLfoRateHz" type="float" />
+  <out__param to="depth" from="delayLfoDepth" type="float" />
+</plugstatetransform>

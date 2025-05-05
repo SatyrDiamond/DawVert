@@ -1,0 +1,16 @@
+<plugstatetransform daw_out="bandlab" plugtype="universal:bitcrush">
+  <in__param from="bits" type="float" />
+  <in__param from="freq" type="float" />
+  <in__wet to="wet" type="float" />
+
+  <calc name="freq" type="div">22050</calc>
+  <calc name="freq" type="sub_r">1</calc>
+  <calc name="freq" type="pow">11</calc>
+  <calc name="freq" type="mul">200</calc>
+
+  <replace plugtype="native:bandlab:lofi" />
+
+  <out__param to="dryWetMix" from="wet" type="float" />
+  <out__param to="bitDepth" from="bits" type="float" />
+  <out__param to="downsample" from="freq" type="float" /> <!-- VALUE_IMPERFECT -->
+</plugstatetransform>

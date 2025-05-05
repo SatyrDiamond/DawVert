@@ -1,0 +1,68 @@
+<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:AutoFilter">
+
+  <define_remap name="filter_types" in_type="int" out_type="string">
+    <val in_val="0" out_val="lpf"/>
+    <val in_val="1" out_val="hpf"/>
+    <val in_val="2" out_val="bpf"/>
+    <val in_val="3" out_val="brf"/>
+    <fallback out_val="bpf"/>
+  </define_remap>
+
+  <define_remap name="filter_mode" in_type="int" out_type="string">
+    <val in_val="0" out_val="lfoRate"/>
+    <val in_val="1" out_val="syncLfoRate"/>
+    <fallback out_val="syncLfoRate"/>
+  </define_remap>
+
+  <define_remap name="filter_syncrate" in_type="int" out_type="string">
+    <val in_val="0" out_val="sixteenthNoteTriplet"/>
+    <val in_val="1" out_val="sixteenthNoteTriplet"/>
+    <val in_val="2" out_val="sixteenthNoteTriplet"/>
+    <val in_val="3" out_val="sixteenthNoteTriplet"/>
+    <val in_val="4" out_val="sixteenthNote"/>
+    <val in_val="5" out_val="dottedSixteenthNote"/>
+    <val in_val="6" out_val="eighthNote"/>
+    <val in_val="7" out_val="dottedEighthNote"/>
+    <val in_val="8" out_val="quarterNoteTriplet"/>
+    <val in_val="9" out_val="quarterNote"/>
+    <val in_val="10" out_val="quarterNote"/>
+    <val in_val="11" out_val="quarterNote"/>
+    <val in_val="12" out_val="quarterNote"/>
+    <val in_val="13" out_val="halfNote"/>
+    <fallback out_val="halfNote"/>
+  </define_remap>
+
+  <in__param to="frequency" from="Cutoff" type="float" />
+  <in__param to="resonance" from="Resonance" type="float" />
+  <in__param to="filterType" from="FilterType" type="float" />
+  <in__param to="lfoRate" from="Lfo/Frequency" type="float" />
+  <in__param to="lfoDepth" from="LfoAmount" type="float" />
+  <in__param to="lfoRateUnitSelection" from="Lfo/RateType" type="float" />
+  <in__param to="syncLfoRate" from="Lfo/BeatRate" type="float" />
+
+  <replace plugtype="native:bandlab:autoFilter" />
+
+  <calc name="frequency" type="sub">72</calc>
+  <calc name="frequency" type="note2freq"/>
+  <out__param to="frequency" type="float"/>
+
+  <calc name="resonance" type="mul">6.3</calc>
+  <calc name="resonance" type="add">0.1</calc>
+  <calc name="resonance" type="pow">2</calc>
+  <out__param to="resonance" type="float"/>
+
+  <remap name="filterType" remapdef="filter_types"/>
+  <out__dataval to="filterType" type="string"/>
+
+  <out__param to="lfoRate" type="float"/>
+
+  <calc name="lfoDepth" type="div">30</calc>
+  <out__param to="lfoDepth" type="float"/>
+
+  <remap name="lfoRateUnitSelection" remapdef="filter_mode"/>
+  <out__dataval to="lfoRateUnitSelection" type="string"/>
+
+  <remap name="syncLfoRate" remapdef="filter_syncrate"/>
+  <out__dataval to="syncLfoRate" type="string"/>
+
+</plugstatetransform>

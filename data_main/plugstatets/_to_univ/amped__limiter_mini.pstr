@@ -1,0 +1,15 @@
+<plugstatetransform daw_in="amped" plugtype="native:amped:LimiterMini">
+  <in__param from="postGainDB" type="float" />
+  <in__param from="preGainDB" type="float" />
+  <in__param from="releaseTimeMS" type="float" />
+  <in__param from="thresholdDB" type="float" />
+  
+  <calc name="releaseTimeMS" type="div">1000</calc>
+
+  <replace plugtype="universal:limiter" />
+
+  <out__param to="gain" from="postGainDB" type="float" />
+  <out__param to="pregain" from="preGainDB" type="float" />
+  <out__param to="release" from="releaseTimeMS" type="float" />
+  <out__param to="ceiling" from="thresholdDB" type="float" />
+</plugstatetransform>

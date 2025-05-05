@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:Phaser">
+  <in__param from="rate" type="float" />
+  
+  <replace plugtype="native:bandlab:phaser" />
+
+  <calc name="rate" type="div">3</calc>
+  <calc name="rate" type="pow">2</calc>
+  <out__param to="rate" type="float">0</out__param> <!-- VALUE_IMPERFECT -->
+</plugstatetransform>

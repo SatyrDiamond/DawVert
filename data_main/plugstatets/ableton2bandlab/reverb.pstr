@@ -1,0 +1,11 @@
+<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Reverb">
+  <in__param from="MixDirect" type="float" />
+  <in__param from="RoomSize" type="float" />
+  <calc name="RoomSize" type="div">500</calc>
+  <calc name="RoomSize" type="pow">0.4</calc>
+  <calc name="RoomSize" type="mul">10</calc>
+  <replace plugtype="native:bandlab:reverbHybrid" />
+  <out__param to="dryWetMix" from="MixDirect" type="float" />
+  <out__param to="roomSize" from="RoomSize" type="float" />
+  <out__dataval_val to="irType" type="string">chamberShort</out__dataval_val>
+</plugstatetransform> 

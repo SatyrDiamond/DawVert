@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Overdrive">
+  <in__param from="Drive" type="float" />
+  <in__param from="Tone" type="float" />
+
+  <calc name="Drive" type="div">10</calc>
+  <calc name="Tone" type="div">10</calc>
+
+  <replace plugtype="native:bandlab:bossBD2" />
+
+  <out__param to="drive" from="Drive" type="float" />
+  <out__param to="mid" from="Tone" type="float" />
+</plugstatetransform> 

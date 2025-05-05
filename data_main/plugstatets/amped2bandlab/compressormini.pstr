@@ -1,0 +1,7 @@
+<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:CompressorMini">
+  <in__param from="squash" type="float" />
+  <calc name="squash" type="mul">24</calc>
+  <replace plugtype="native:bandlab:rossCompr" />
+  <out__param to="sustain" from="squash" type="float" />
+  <out__param to="level" only_value="1" type="float">24</out__param>
+</plugstatetransform>

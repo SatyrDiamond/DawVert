@@ -1,0 +1,8 @@
+<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:Tremolo">
+  <in__param from="lfoADepth" type="float" />
+  <in__param from="lfoARateHz" type="float" />
+  <replace plugtype="native:bandlab:autoPan" />
+  <out__param to="rateHz" from="lfoARateHz" type="float" />
+  <out__param to="spread" from="lfoADepth" type="float" />
+  <out__dataval_val to="rateUnitSelection" type="string">rateHz</out__dataval_val>
+</plugstatetransform>

@@ -1,0 +1,15 @@
+<plugstatetransform daw_in="amped" plugtype="native:amped:BitCrusher">
+  <in__param from="bits" type="float" />
+  <in__param to="freq" from="down" type="float" />
+  <in__param from="mix" type="float" />
+  
+  <calc name="freq" type="mul">10</calc>
+  <calc name="freq" type="pow_r">2</calc>
+  <calc name="freq" type="mul">100</calc>
+
+  <replace plugtype="universal:bitcrush" />
+
+  <out__param to="bits" type="float" />
+  <out__param to="freq" type="float" />
+  <out__wet from="mix" type="float" />
+</plugstatetransform>

@@ -1,0 +1,26 @@
+<plugstatetransform daw_in="caustic" plugtype="native:caustic:master_reverb">
+  <in__param from="16" type="float" />
+  <in__param from="17" type="float" />
+  <in__param from="18" type="float" />
+  <in__param from="19" type="float" />
+  <in__param from="20" type="float" />
+  <in__param from="21" type="float" />
+  <in__param from="22" type="float" />
+  <in__param from="23" type="float" />
+  <in__param from="24" type="float" />
+  <in__param from="25" type="float" />
+  
+  <calc name="18" type="mul">1200</calc>
+  <calc name="18" type="add">200</calc>
+  <calc name="22" type="add">1</calc>
+
+  <replace plugtype="universal:reverb" />
+
+  <out__param to="predelay" from="16" type="float" />
+  <out__param to="size" from="17" type="float" />
+  <out__param to="low_xo" from="18" type="float" />
+  <out__param to="diffusion" from="19" type="float" />
+  <out__param to="low_mult" only_value="1" type="float">0.5</out__param>
+  <out__param to="decay" from="22" type="float" />
+  <out__param to="wet" from="25" type="float" />
+</plugstatetransform>

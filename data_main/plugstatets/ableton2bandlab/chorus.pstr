@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Chorus2">
+  <in__param from="Amount" type="float" />
+  <in__param from="Rate" type="float" />
+  <in__param from="mix" type="float" />
+
+  <replace plugtype="native:bandlab:bossCE5" />
+
+  <out__param to="wet" from="mix" type="float" />
+  <calc name="Rate" type="valrange">0;6;0;5</calc>
+  <calc name="Rate" type="div">1.2</calc>
+  <out__param to="speed" from="Rate" type="float" /> <!-- VALUE_IMPERFECT -->
+</plugstatetransform>

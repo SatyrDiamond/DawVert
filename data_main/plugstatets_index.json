@@ -27,6 +27,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\ableton2bandlab\\channeleq.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\channeleq.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:ChannelEq",
+    "plugtype_out": [
+      "native:bandlab:threeBandEq"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\ableton2bandlab\\chorus.pstr": {
     "file": "data_main\\plugstatets\\ableton2bandlab\\chorus.pstr",
     "daw_in": [
@@ -66,6 +80,20 @@
     "plugtype_in": "native:ableton:Hybrid",
     "plugtype_out": [
       "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\ableton2bandlab\\overdrive.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\overdrive.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Overdrive",
+    "plugtype_out": [
+      "native:bandlab:bossBD2"
     ],
     "priority": 0
   },
@@ -318,6 +346,34 @@
     "plugtype_in": "native:bandlab:autoFilter",
     "plugtype_out": [
       "native:ableton:AutoFilter"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\bandlab2ableton\\bossBD2.pstr": {
+    "file": "data_main\\plugstatets\\bandlab2ableton\\bossBD2.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:bandlab:bossBD2",
+    "plugtype_out": [
+      "native:ableton:Overdrive"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\bandlab2ableton\\threeBandEq.pstr": {
+    "file": "data_main\\plugstatets\\bandlab2ableton\\threeBandEq.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:threeBandEq",
+    "plugtype_out": [
+      "native:ableton:ChannelEq"
     ],
     "priority": 0
   },

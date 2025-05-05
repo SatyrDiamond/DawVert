@@ -1,0 +1,13 @@
+<plugstatetransform daw_in="onlineseq" plugtype="native:onlineseq:eq">
+  <in__param from="eq_low" type="float" />
+  <in__param from="eq_mid" type="float" />
+  <in__param from="eq_high" type="float" />
+  
+  <replace plugtype="universal:3band" />
+
+  <out__param to="low_gain" from="eq_low" type="float" />
+  <out__param to="mid_gain" from="eq_mid" type="float" />
+  <out__param to="high_gain" from="eq_high" type="float" />
+  <out__param to="lowmid_freq" only_value="1" type="float">250</out__param>
+  <out__param to="midhigh_freq" only_value="1" type="float">2500</out__param>
+</plugstatetransform>

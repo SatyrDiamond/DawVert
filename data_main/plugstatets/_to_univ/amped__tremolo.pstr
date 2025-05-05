@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="amped" plugtype="native:amped:Tremolo">
+  <in__param from="lfoARateHz" type="float" />
+  <in__param from="lfoADepth" type="float" />
+  
+  <replace plugtype="universal:autopan" />
+
+  <out__param to="freq" from="lfoARateHz" type="float" />
+  <out__param to="depth" from="lfoADepth" type="float" />
+</plugstatetransform>

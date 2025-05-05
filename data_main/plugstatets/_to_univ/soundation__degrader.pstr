@@ -1,0 +1,16 @@
+<plugstatetransform daw_in="soundation" plugtype="native:soundation:com.soundation.degrader">
+  <in__param from="reduction" type="float" />
+  <in__param from="rate" type="float" />
+  <in__param from="mix" type="float" />
+  
+  <calc name="reduction" type="mul">50</calc>
+  <calc name="reduction" type="sub_r">48</calc>
+  <calc name="rate" type="pow">0.1</calc>
+  <calc name="rate" type="from_one">44100</calc>
+
+  <replace plugtype="universal:bitcrush" />
+
+  <out__param to="bits" from="reduction" type="float" /> <!-- VALUE_IMPERFECT -->
+  <out__param to="freq" from="rate" type="float" /> <!-- VALUE_IMPERFECT -->
+  <out__wet from="mix" type="float" />
+</plugstatetransform>

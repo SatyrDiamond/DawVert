@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="serato" plugtype="native:serato-fx:Decimate Crusher.serato-effect-definition">
+  <in__param from="amount" type="float" />
+  <calc name="amount" type="pow">0.1</calc>
+  <calc name="amount" type="mul">15500</calc>
+  <calc name="amount" type="sub_r">16000</calc>
+  <replace plugtype="universal:bitcrush" />
+  <out__param to="freq" from="amount" type="float" />
+  <out__param to="bits" only_value="1" type="float">16</out__param>
+</plugstatetransform>

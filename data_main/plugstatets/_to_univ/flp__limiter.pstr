@@ -1,0 +1,7 @@
+<plugstatetransform daw_in="amped" plugtype="native:flstudio:fruity limiter">
+
+  <replace plugtype="universal:limiter" />
+
+  <out__param to="attack" only_value="1" type="float">0.002</out__param>
+  <out__param to="release" only_value="1" type="float">0.1</out__param>
+</plugstatetransform>

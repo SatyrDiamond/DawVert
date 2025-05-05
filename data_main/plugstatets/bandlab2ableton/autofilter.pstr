@@ -1,0 +1,62 @@
+<plugstatetransform daw_in="bandlab" daw_out="ableton" plugtype="native:bandlab:autoFilter">
+
+  <define_remap name="filter_types" in_type="string" out_type="int">
+    <val in_val="lpf" out_val="0"/>
+    <val in_val="hpf" out_val="1"/>
+    <val in_val="bpf" out_val="2"/>
+    <val in_val="brf" out_val="3"/>
+    <fallback out_val="0"/>
+  </define_remap>
+
+  <define_remap name="filter_mode" in_type="string" out_type="int">
+    <val in_val="lfoRate" out_val="0"/>
+    <val in_val="syncLfoRate" out_val="1"/>
+    <fallback out_val="0"/>
+  </define_remap>
+
+  <define_remap name="filter_syncrate" in_type="string" out_type="int">
+    <val in_val="sixteenthNoteTriplet" out_val="3"/>
+    <val in_val="sixteenthNote" out_val="4"/>
+    <val in_val="dottedSixteenthNote" out_val="5"/>
+    <val in_val="eighthNote" out_val="6"/>
+    <val in_val="dottedEighthNote" out_val="7"/>
+    <val in_val="quarterNoteTriplet" out_val="8"/>
+    <val in_val="quarterNote" out_val="9"/>
+    <val in_val="halfNote" out_val="13"/>
+    <fallback out_val="13"/>
+  </define_remap>
+
+  <in__param from="frequency" type="float"/>
+  <in__param from="resonance" type="float"/>
+  <in__param from="lfoDepth" type="float"/>
+  <in__param from="lfoRate" type="float"/>
+  <in__dataval from="filterType" type="string"/>
+  <in__dataval from="syncLfoRate" type="string"/>
+  <in__dataval from="lfoRateUnitSelection" type="string"/>
+
+  <replace plugtype="native:ableton:AutoFilter" />
+
+  <out__param to="Lfo/Frequency" from="lfoRate" type="float"/>
+  
+  <calc name="lfoDepth" type="mul">30</calc>
+  <out__param to="LfoAmount" from="lfoDepth" type="float"/>
+
+  <calc name="frequency" type="freq2note"/>
+  <calc name="frequency" type="add">72</calc>
+  <out__param to="Cutoff" from="frequency" type="float"/>
+
+  <calc name="resonance" type="pow">0.5</calc>
+  <calc name="resonance" type="sub">0.1</calc>
+  <calc name="resonance" type="div">6.3</calc>
+  <out__param to="Resonance" from="resonance" type="float" />
+
+  <remap name="filterType" remapdef="filter_types"/>
+  <out__param to="FilterType" from="filterType" type="float" />
+
+  <remap name="syncLfoRate" remapdef="filter_syncrate"/>
+  <out__param to="Lfo/BeatRate" from="syncLfoRate" type="float"/>
+
+  <remap name="lfoRateUnitSelection" remapdef="filter_mode"/>
+  <out__param to="Lfo/RateType" from="lfoRateUnitSelection" type="float"/>
+
+</plugstatetransform>

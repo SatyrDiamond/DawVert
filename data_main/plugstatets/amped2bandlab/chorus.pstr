@@ -1,0 +1,16 @@
+<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:Chorus">
+  <in__param from="delayLfoDepth" type="float" />
+  <in__param from="delayLfoRateHz" type="float" />
+  <in__param from="mix" type="float" />
+
+  <calc name="delayLfoDepth" type="mul">10</calc>
+  <calc name="delayLfoRateHz" type="valrange">0;6;0;5</calc>
+  <calc name="delayLfoRateHz" type="div">1.2</calc>
+  <calc name="mix" type="mul">10</calc>
+
+  <replace plugtype="native:bandlab:bossCE5" />
+
+  <out__param to="depth" from="delayLfoDepth" type="float" />
+  <out__param to="speed" from="delayLfoRateHz" type="float" /> <!-- VALUE_IMPERFECT -->
+  <out__param to="wet" from="mix" type="float" />
+</plugstatetransform>

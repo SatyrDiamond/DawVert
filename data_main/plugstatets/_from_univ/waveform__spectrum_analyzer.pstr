@@ -1,0 +1,3 @@
+<plugstatetransform daw_out="waveform" plugtype="universal:spectrum_analyzer">
+  <replace plugtype="native:tracktion:spectrum" />
+</plugstatetransform>

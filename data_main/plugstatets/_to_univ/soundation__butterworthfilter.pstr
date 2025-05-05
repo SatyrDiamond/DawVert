@@ -1,0 +1,16 @@
+<plugstatetransform daw_in="soundation" plugtype="native:soundation:com.soundation.butterworthfilter">
+
+  <in__param to="cutoff" type="float" />
+  <in__param to="resonance" type="float" />
+  <in__param to="mode" type="float" />
+
+  <calc name="cutoff" type="pow_r">1000</calc>
+  <calc name="cutoff" type="mul">20</calc>
+  <calc name="resonance" type="add">1</calc>
+
+  <replace_hard plugtype="universal:filter:single" />
+
+  <out__filterparam to="type" from="mode"/>
+  <out__filterparam to="freq" from="cutoff" type="float"/> <!-- VALUE_IMPERFECT -->
+  <out__filterparam to="q" from="resonance" type="float"/>
+</plugstatetransform>

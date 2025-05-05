@@ -72,10 +72,10 @@ class fx_delay:
 		self.to_cvpj_sep(plugin_obj, 'vol' in traits_seperated, 'vol', self.vol)
 
 		if 'time' in traits_seperated:
-			plugin_obj.timing['left'] = self.timings[0]
-			plugin_obj.timing['right'] = self.timings[1]
+			plugin_obj.state.timing['left'] = self.timings[0]
+			plugin_obj.state.timing['right'] = self.timings[1]
 		else:
-			plugin_obj.timing['center'] = self.timings[0]
+			plugin_obj.state.timing['center'] = self.timings[0]
 
 		plugin_obj.datavals.add('seperated', traits_seperated)
 

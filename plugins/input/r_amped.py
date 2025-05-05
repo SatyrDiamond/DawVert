@@ -402,6 +402,7 @@ class input_amped(plugins.base):
 			track_obj = convproj_obj.track__add(amped_tr_id, 'hybrid', 1, False)
 			track_obj.visual.name = amped_track.name
 			track_obj.visual.color.set_float(AMPED_COLORS[amped_track.color])
+			track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 			track_obj.params.add('vol', amped_track.volume, 'float')
 			track_obj.params.add('pan', amped_track.pan, 'float')
 			track_obj.params.add('enabled', bool(not amped_track.mute), 'bool')
@@ -441,6 +442,7 @@ class input_amped(plugins.base):
 					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
+					placement_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 					placement_obj.muted = bool(amped_region.mute)
 					cvpj_notelist = placement_obj.notelist
 					for amped_note in amped_region.midi_notes:
@@ -453,6 +455,7 @@ class input_amped(plugins.base):
 					placement_obj.time.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
+					placement_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 					placement_obj.muted = bool(amped_region.mute)
 
 					for amped_clip in amped_region.clips:

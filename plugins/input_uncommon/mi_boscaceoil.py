@@ -126,6 +126,7 @@ class input_ceol(plugins.base):
 			if ceol_inst_obj.inst <= 127:
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.color.set_int(cvpj_instcolor)
+				inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 				inst_obj.midi.out_inst.patch = ceol_inst_obj.inst
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
@@ -133,6 +134,7 @@ class input_ceol(plugins.base):
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.name = 'MIDI Drums'
 				inst_obj.visual.color.set_int(cvpj_instcolor)
+				inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 				inst_obj.midi.out_inst.drum = True
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
@@ -140,6 +142,7 @@ class input_ceol(plugins.base):
 				strinst = str(ceol_inst_obj.inst)
 				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.color.set_int(cvpj_instcolor)
+				inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 				inst_obj.from_dataset("boscaceoil", 'inst', strinst, False)
 				inst_ds_obj = globalstore.dataset.get_obj('boscaceoil', 'inst', strinst)
 				if inst_ds_obj:
@@ -181,11 +184,13 @@ class input_ceol(plugins.base):
 				cvpj_notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, None)
 			nle_obj.visual.name = str(patnum+1)
 			nle_obj.visual.color.set_int(cvpj_patcolor)
+			nle_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 		for num in range(8):
 			playlist_obj = convproj_obj.playlist__add(num, 1, True)
 			if color_track: 
 				playlist_obj.visual.color.set_int(color_track.getcolornum(num))
+				playlist_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 		# ---------- Placement ----------
 

@@ -443,3 +443,4 @@ def do_auto(evn2_events, autopoints_obj, startpos, v_add, v_mul, v_bool):
 def add_visual(visual_obj, flm_channel):
 	visual_obj.name = flm_channel.name
 	visual_obj.color.set_hsv((flm_channel.color*0.8)-0.21, 0.8, 1)
+	visual_obj.color.fx_allowed = ['saturate', 'brighter']

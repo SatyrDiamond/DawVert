@@ -51,7 +51,7 @@ class output_onlineseq(plugins.base):
 		project_obj = proj_onlineseq.onlineseq_project()
 		project_obj.bpm = int(convproj_obj.params.get('bpm', 120).value)
 
-		globalstore.idvals.load('midi_map', './data_main/dataset/onlineseq_map_midi.csv')
+		globalstore.idvals.load('midi_map', './data_main/idvals/onlineseq_map_midi.csv')
 		idvals_onlineseq_inst = globalstore.idvals.get('midi_map')
 
 		repeatedolinst = {}

@@ -51,6 +51,9 @@ class output_bandlab(plugins.base):
 
 		globalstore.dataset.load('bandlab', './data_main/dataset/bandlab.dset')
 
+		globalstore.idvals.load('midi_map', './data_main/idvals/bandlab_map_midi.csv')
+		idvals_bandlab_inst = globalstore.idvals.get('midi_map')
+
 		auxchannel_obj = proj_bandlab.bandlab_auxChannel(None)
 		auxchannel_obj.id = 'aux1'
 		project_obj.auxChannels.append(auxchannel_obj)
@@ -209,6 +212,20 @@ class output_bandlab(plugins.base):
 						add_region_common(blx_region, midipl_obj, blx_track, tempomul, True)
 						blx_region.file = uuiddata+'.mid'
 						blx_track.regions.append(blx_region)
+
+					midi_found, midi_inst = track_obj.get_midi(convproj_obj)
+					o_midi_bank, o_midi_patch = midi_inst.to_sf2()
+					if o_midi_patch:
+						if idvals_bandlab_inst:
+							t_instid = idvals_bandlab_inst.get_idval(str(o_midi_patch), 'outid')
+							if t_instid:
+								dset_obj = globalstore.dataset.get_obj('bandlab', 'inst', t_instid)
+								blx_track.soundbank = t_instid
+								if 'slug' in dset_obj.data:
+									track_obj.type = dset_obj.data['slug']
+					else:
+						blx_track.soundbank = 'general-midi-drums-v2-v4'
+						track_obj.type = 'percussion'
 
 				make_plugins_fx(convproj_obj, blx_track.autoPitch, blx_track.effects, track_obj.plugslots.slots_audio, tempomul)
 

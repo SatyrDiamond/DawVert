@@ -128,14 +128,10 @@ def add_audio_regions(
 			pls.append(placement_obj)
 
 	if stretch_type == 1:
-		calc_offset = region.offset/5000000
-		calc_offset = calc_offset*ppq
-
 		placement_obj = placements_obj.add_audio()
 		ssize = (int(region.size)/5000000)*ppq
 		time_obj = placement_obj.time
 		time_obj.set_posdur(region.pos, ssize)
-		time_obj.set_offset(calc_offset)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
 		if 1 in region.flags: placement_obj.muted = True
@@ -145,18 +141,13 @@ def add_audio_regions(
 		pls.append(placement_obj)
 
 	if stretch_type == 2:
-		calc_offset = region.offset/5000000
-		calc_offset = calc_offset*ppq*mul1
-
 		placement_obj = placements_obj.add_audio()
 		time_obj = placement_obj.time
 		time_obj.set_posdur(region.pos, region.size)
-		time_obj.set_offset(calc_offset)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
 		sp_obj.stretch.set_rate_tempo(tempo, mul1, True)
 		sp_obj.pitch = region.pitch+pitch
-		sp_obj.stretch.preserve_pitch = True
 		if 1 in region.flags: sp_obj.muted = True
 		if 3 in region.flags: sp_obj.locked = True
 		if 5 in region.flags: sp_obj.reverse = True
@@ -307,22 +298,22 @@ class input_acid_3(plugins.base):
 												if reg_name == 'TrackRegion':
 													track_regions.append(reg_chunk.def_data)
 
-								if track_name == 'Group:TrackAuto': 
-									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
-										if trackg_name == 'TrackAutomation':
-											if track_header:
-												track_auto = trackg_chunk.def_data
-												autoloc = None
-												
-												trackid = 'track_'+str(track_header.id)
-	
-												if not track_auto.group:
-													if track_auto.param == 0: autoloc = ['track', trackid, 'vol']
-													if track_auto.param == 1: autoloc = ['track', trackid, 'pan']
-		
-												if autoloc:
-													for p in track_auto.points:
-														convproj_obj.automation.add_autopoint(autoloc, 'float', p[0], p[2], 'normal')
+								#if track_name == 'Group:TrackAuto': 
+								#	for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
+								#		if trackg_name == 'TrackAutomation':
+								#			if track_header:
+								#				track_auto = trackg_chunk.def_data
+								#				autoloc = None
+								#				
+								#				trackid = 'track_'+str(track_header.id)
+	#
+								#				if not track_auto.group:
+								#					if track_auto.param == 0: autoloc = ['track', trackid, 'vol']
+								#					if track_auto.param == 1: autoloc = ['track', trackid, 'pan']
+		#
+								#				if autoloc:
+								#					for p in track_auto.points:
+								#						convproj_obj.automation.add_autopoint(autoloc, 'float', p[0], p[2], 'normal')
 
 
 							else:

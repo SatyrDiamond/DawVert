@@ -5,5 +5,5 @@
   
   <replace plugtype="native:bandlab:phaser" />
 
-  <out__param to="rate" from="sweep_freq" type="float">0</out__param>
+  <out__param to="rate" from="sweep_freq" type="float">0</out__param> <!-- VALUE_IMPERFECT -->
 </plugstatetransform>

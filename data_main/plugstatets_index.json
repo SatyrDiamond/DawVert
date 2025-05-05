@@ -1,4 +1,102 @@
 {
+  "data_main\\plugstatets\\ableton2bandlab\\autofilter.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\autofilter.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:AutoFilter",
+    "plugtype_out": [
+      "native:bandlab:autoFilter"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\ableton2bandlab\\autopan.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\autopan.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:AutoPan",
+    "plugtype_out": [
+      "native:bandlab:autoPan"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\ableton2bandlab\\chorus.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\chorus.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Chorus2",
+    "plugtype_out": [
+      "native:bandlab:bossCE5"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\ableton2bandlab\\corpus.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\corpus.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Corpus",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\ableton2bandlab\\hybrid.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\hybrid.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Hybrid",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\ableton2bandlab\\phaser.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\phaser.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:PhaserNew",
+    "plugtype_out": [
+      "native:bandlab:phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\ableton2bandlab\\reverb.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\reverb.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Reverb",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\amped2als\\chorus.pstr": {
     "file": "data_main\\plugstatets\\amped2als\\chorus.pstr",
     "daw_in": [
@@ -83,6 +181,76 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\amped2bandlab\\chorus.pstr": {
+    "file": "data_main\\plugstatets\\amped2bandlab\\chorus.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:amped:Chorus",
+    "plugtype_out": [
+      "native:bandlab:bossCE5"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\amped2bandlab\\compressormini.pstr": {
+    "file": "data_main\\plugstatets\\amped2bandlab\\compressormini.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:amped:CompressorMini",
+    "plugtype_out": [
+      "native:bandlab:rossCompr"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\amped2bandlab\\phaser.pstr": {
+    "file": "data_main\\plugstatets\\amped2bandlab\\phaser.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:amped:Phaser",
+    "plugtype_out": [
+      "native:bandlab:phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\amped2bandlab\\reverb.pstr": {
+    "file": "data_main\\plugstatets\\amped2bandlab\\reverb.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:amped:Reverb",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\amped2bandlab\\tremolo.pstr": {
+    "file": "data_main\\plugstatets\\amped2bandlab\\tremolo.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:amped:Tremolo",
+    "plugtype_out": [
+      "native:bandlab:autoPan"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\amped2flp\\delay.pstr": {
     "file": "data_main\\plugstatets\\amped2flp\\delay.pstr",
     "daw_in": [
@@ -136,6 +304,20 @@
     "plugtype_in": "native:amped:Reverb",
     "plugtype_out": [
       "native:lmms:reverbsc"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\bandlab2ableton\\autofilter.pstr": {
+    "file": "data_main\\plugstatets\\bandlab2ableton\\autofilter.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:bandlab:autoFilter",
+    "plugtype_out": [
+      "native:ableton:AutoFilter"
     ],
     "priority": 0
   },
@@ -713,6 +895,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\bandlab__bitcrush.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__bitcrush.pstr",
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "universal:bitcrush",
+    "plugtype_out": [
+      "native:bandlab:lofi"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr",
     "daw_out": [
@@ -732,6 +925,17 @@
     "plugtype_in": "universal:de_ess",
     "plugtype_out": [
       "native:bandlab:deEsser"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\bandlab__limiter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__limiter.pstr",
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "universal:limiter",
+    "plugtype_out": [
+      "native:bandlab:cleanLimiter"
     ],
     "priority": 100
   },

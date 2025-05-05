@@ -17,9 +17,9 @@
   
   <replace plugtype="native:flstudio:fruity flanger" />
 
-  <out__param to="depth" from="delayLfoDepth" type="float">0</out__param>
-  <out__param to="rate" from="delayLfoRateHz" type="float">0</out__param>
-  <out__param to="delay" from="delayTimeMS" type="float">0</out__param>
+  <out__param to="depth" from="delayLfoDepth" type="float">0</out__param> <!-- VALUE_IMPERFECT -->
+  <out__param to="rate" from="delayLfoRateHz" type="float">0</out__param> <!-- VALUE_IMPERFECT -->
+  <out__param to="delay" from="delayTimeMS" type="float">0</out__param> <!-- VALUE_IMPERFECT -->
   <out__param to="phase" type="float">180.0</out__param>
   <out__param to="cross" type="float">4000.0</out__param>
   <out__param to="dry" type="float">4000.0</out__param>

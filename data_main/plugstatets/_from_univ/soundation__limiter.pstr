@@ -18,8 +18,8 @@
 
   <replace plugtype="native:soundation:com.soundation.limiter" />
 
-  <out__param to="threshold" from="ceiling" type="float" />
-  <out__param to="gain" from="pregain" type="float" />
+  <out__param to="threshold" from="ceiling" type="float" /> <!-- VALUE_IMPERFECT -->
+  <out__param to="gain" from="pregain" type="float" /> <!-- VALUE_IMPERFECT -->
   <out__param to="attack" type="float" />
   <out__param to="release" type="float" />
 </plugstatetransform>

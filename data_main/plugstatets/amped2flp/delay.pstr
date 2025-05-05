@@ -19,7 +19,7 @@
   <out__param to="wet" from="mix" type="float">0</out__param>
   <out__param to="feedback_level" from="fb" type="float">0</out__param>
   <out__param to="feedback_cutoff" from="damp" type="float">0</out__param>
-  <out__param to="delay_time" from="time" type="float">0</out__param>
+  <out__param to="delay_time" from="time" type="float">0</out__param> <!-- VALUE_IMPERFECT -->
   <out__param to="dry" type="float">6000.0</out__param>
   <out__param to="feedback_bits" type="float">6000.0</out__param>
   <out__param to="feedback_sample_rate" type="float">60000.0</out__param>

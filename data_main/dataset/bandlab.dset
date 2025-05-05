@@ -240,6 +240,15 @@
             <param id="makeupGain" type="float" def="3" max="15" min="-15" />
             <param id="threshold" type="float" def="25" max="40" min="-10" />
         </object>
+        <object id="cleanLimiter">
+            <visual name="Clean Limiter" />
+            <param id="attack" type="string" def="fast" noauto="1" />
+            <param id="release" type="string" def="slow" noauto="1" />
+            <param id="type" type="string" def="none" noauto="1" />
+            <param id="input" type="float" def="0" max="24" min="-24" />
+            <param id="threshold" type="float" def="0" max="0" min="-24" />
+            <param id="truePeak" type="bool" />
+        </object>
         <object id="masteringLimiter">
             <visual name="Vintage Limiter" />
             <param id="attack" type="float" def="0.001" max="0.001" min="0.0005" />

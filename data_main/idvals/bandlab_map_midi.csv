@@ -1,0 +1,130 @@
+id;outid;midigroup;name
+-1;general-midi-drums-v2-v4;drums;
+0;grand-piano-v4-v4;piano;Acoustic Grand Piano
+1;bright-piano-v2-v4;piano;Bright Acoustic Piano
+2;electric-piano-v2-v4;piano;Electric Grand Piano
+3;honky-tonk-piano-v2-v4;piano;Honky-tonk Piano
+4;electric-piano-v2-v4;piano;Electric Piano 1
+5;electric-piano-v2-v4;piano;Electric Piano 2
+6;studio-harpsichord-v3-v4;piano;Harpsichord
+7;funky-tone-v4;piano;Clavi
+8;;chromaticperc;Celesta
+9;glockenspiel-v2-v4;chromaticperc;Glockenspiel
+10;xylophone-v2-v4;chromaticperc;Music Box
+11;vibraphone-v3-v4;chromaticperc;Vibraphone
+12;marimba-v2-v4;chromaticperc;Marimba
+13;xylophone-v2-v4;chromaticperc;Xylophone
+14;tubular-bells-v2-v4;chromaticperc;Tubular Bells
+15;hammered-dulcimer-v4;chromaticperc;Dulcimer
+16;church-organ-v3-v4;organ;Drawbar Organ
+17;house-organ-v2-v4;organ;Percussive Organ
+18;classic-rock-organ-v4;organ;Rock Organ
+19;church-organ-v3-v4;organ;Church Organ
+20;clean-5th-sine-organ-v4;organ;Reed Organ
+21;accordion-v3-v4;organ;Accordion
+22;harmonica-v4;organ;Harmonica
+23;dark-organ-v2-v4;organ;Tango Accordion
+24;nylon-guitar-v2-v4;guitar;Acoustic Guitar (nylon)
+25;steel-drum-v2-v4;guitar;Acoustic Guitar (steel)
+26;jazz-guitar-v2-v4;guitar;Electric Guitar (jazz)
+27;nylon-guitar-v2-v4;guitar;Electric Guitar (clean)
+28;clean-guitar-muted-v2-v4;guitar;Electric Guitar (muted)
+29;overdriven-guitar;guitar;Overdriven Guitar
+30;guitar-power-chord-v2-v4;guitar;Distortion Guitar
+31;trumpet-harmon-mute-v4;guitar;Guitar harmonics
+32;acoustic-bass-legato-v2-v4;bass;Acoustic Bass
+33;electric-bass-legato-v3-v4;bass;Electric Bass (finger)
+34;electric-bass-legato-v3-v4;bass;Electric Bass (pick)
+35;jazz-bass-v2-v4;bass;Fretless Bass
+36;slap-bass-v2-v4;bass;Slap Bass 1
+37;slap-bass-v2-v4;bass;Slap Bass 2
+38;classic-synth-bass-v3-v4;bass;Synth Bass 1
+39;electro-saw-bass-v2-v4;bass;Synth Bass 2
+40;solo-violin-v3-v4;strings;Violin
+41;viola-section-v2-v4;strings;Viola
+42;cello-section-v2-v4;strings;Cello
+43;;strings;Contrabass
+44;full-strings-tremolo-v3-v4;strings;Tremolo Strings
+45;full-strings-pizzicato-v3-v4;strings;Pizzicato Strings
+46;harp-v2-v4;strings;Orchestral Harp
+47;timpani-v3-v4;strings;Timpani
+48;full-strings-long-bows-v2-v4;ensemble;String Ensemble 1
+49;full-strings-short-bows-v2-v4;ensemble;String Ensemble 2
+50;string-orchestra-v2-v4;ensemble;SynthStrings 1
+51;string-orchestra-pizz-v2-v4;ensemble;SynthStrings 2
+52;ahh-synth-v3-v4;ensemble;Choir Aahs
+53;choir-synth-v2-v4;ensemble;Voice Oohs
+54;choir-synth-v2-v4;ensemble;Synth Voice
+55;string-orchestra-v2-v4;ensemble;Orchestra Hit
+56;trumpet-v2-v4;brass;Trumpet
+57;trombone-v2-v4;brass;Trombone
+58;tuba-v3-v4;brass;Tuba
+59;trumpet-harmon-mute-v4;brass;Muted Trumpet
+60;french-horn-v2-v4;brass;French Horn
+61;full-brass-v2-v4;brass;Brass Section
+62;retro-synth-brass-v2-v4;brass;SynthBrass 1
+63;retro-synth-brass-v2-v4;brass;SynthBrass 2
+64;saxophone-v2-v4;reed;Soprano Sax
+65;saxophone-v2-v4;reed;Alto Sax
+66;tenor-saxophone-v3-v4;reed;Tenor Sax
+67;saxophone-v2-v4;reed;Baritone Sax
+68;oboe-v3-v4;reed;Oboe
+69;flugelhorn-v2-v4;reed;English Horn
+70;bassoon-v3-v4;pipe;Bassoon
+71;clarinet-v3-v4;pipe;Clarinet
+72;;pipe;Piccolo
+73;flute-v2-v4;pipe;Flute
+74;;pipe;Recorder
+75;pan-flute-v4-v4;pipe;Pan Flute
+76;blown-bottle-v2-v4;pipe;Blown Bottle
+77;;pipe;Shakuhachi
+78;whistle-v3-v4;pipe;Whistle
+79;;pipe;Ocarina
+80;80s-square-lead-v4;synthlead;Square Lead
+81;dirty-legato-saw-v4;synthlead;Sawtooth Lead
+82;dance-lead-v2-v4;synthlead;Calliope Lead
+83;beginning-lead-v2-v4;synthlead;Chiff Lead
+84;Alien-lead-v4;synthlead;Charang Lead
+85;;synthlead;Voice Lead
+86;fm-lead-v2-v4;synthlead;Fifths Lead
+87;gfunk-saw-v4;synthlead;Bass + Lead
+88;new-age-synth-v2-v4;synthpad;New Age Pad
+89;ocean-pad-v4;synthpad;Warm Pad
+90;Seamless-pad-v4;synthpad;Polysynth Pad
+91;neo-soul-pad-v3-v4;synthpad;Choir Pad
+92;movie-pad-v2-v4;synthpad;Bowed Pad
+93;fm-pad-v2-v4;synthpad;Metallic Pad
+94;fm-pad-v2-v4;synthpad;Halo Pad
+95;duality-pad-v4;synthpad;Sweep Pad
+96;;synthfx;Ice Rain
+97;;synthfx;Soundtrack
+98;;synthfx;Crystal
+99;atmosphere-pad-v2-v4;synthfx;Atmosphere
+100;shadow-bells-v5-v4;synthfx;Brightness
+101;;synthfx;Goblin
+102;;synthfx;Echo Drops
+103;;synthfx;Star Theme
+104;sitar-v3-v4;Ethnic;Sitar
+105;banjo-v3-v4;Ethnic;Banjo
+106;;Ethnic;Shamisen
+107;koto-v3-v4;Ethnic;Koto
+108;kalimba-v3-v4;Ethnic;Kalimba
+109;bagpipe-v2-v4;Ethnic;Bag pipe
+110;;Ethnic;Fiddle
+111;;Ethnic;Shanai
+112;;perc;Tinkle Bell
+113;;perc;Agogo
+114;;perc;Steel Drums
+115;;perc;Woodblock
+116;;perc;Taiko Drum
+117;;perc;Melodic Tom
+118;;perc;Synth Drum
+119;;perc;Reverse Cymbal
+120;;perc;Guitar Fret Noise
+121;;sfx;Breath Noise
+122;;sfx;Seashore
+123;;sfx;Bird Tweet
+124;;sfx;Telephone Ring
+125;;sfx;Helicopter
+126;;sfx;Applause
+127;;sfx;Gunshot

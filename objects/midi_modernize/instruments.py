@@ -93,11 +93,11 @@ def cvpj_create_instrument(convproj_obj, inst):
 	cvpj_instid = get_inst_id(inst)
 	inst_obj = convproj_obj.instrument__add(cvpj_instid)
 	midi_obj = inst_obj.midi.out_inst
-	midi_obj.bank_hi = inst['bank_hi']
-	midi_obj.bank = inst['bank']
-	midi_obj.patch = inst['patch']
+	midi_obj.bank_hi = int(inst['bank_hi'])
+	midi_obj.bank = int(inst['bank'])
+	midi_obj.patch = int(inst['patch'])
 	midi_obj.drum = bool(inst['drum'])
-	midi_obj.device = devices_types.get_devname(inst['device'])
+	midi_obj.device = devices_types.get_devname(int(inst['device']))
 	inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 	return inst_obj
 

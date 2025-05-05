@@ -363,7 +363,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		pitchTempoProcessorMode = sb_track.pitchTempoProcessorMode
 		track_obj.armed.on = bool(sb_track.armed)
 		track_obj.armed.in_keys = bool(sb_track.armed)
-		track_obj.visual_ui.height = visual_size
+		#track_obj.visual_ui.height = visual_size
 
 		if groupname:
 			track_obj.group = groupname
@@ -433,7 +433,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 
 		track_obj.armed.on = bool(sb_track.armed)
 		track_obj.armed.in_audio = bool(sb_track.armed)
-		track_obj.visual_ui.height = visual_size
+		#track_obj.visual_ui.height = visual_size
 
 		stretch_algo = 'stretch'
 		pitchTempoProcessorMode = sb_track.pitchTempoProcessorMode
@@ -507,7 +507,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		returnid = 'return__'+str(global_returnids)
 		track_obj = convproj_obj.track_master.fx__return__add(returnid)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
-		track_obj.visual_ui.height = visual_size
+		#track_obj.visual_ui.height = visual_size
 
 		track_visual(track_obj.visual, sb_track)
 		add_params(sb_track.state, track_obj.params)
@@ -526,7 +526,7 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 		do_markers(track_obj, sb_track.markers)
 		track_obj.latency_offset = sb_track.latencyOffset/(pfreq/500)
 		make_sendauto(convproj_obj, sb_track, track_obj, cvpj_trackid)
-		track_obj.visual_ui.height = visual_size
+		#track_obj.visual_ui.height = visual_size
 
 		for x in sb_track.automationContainer.automationTracks:
 			if x.parameterIndex == 2: add_auto(x.defaultValue, 'vol', convproj_obj, ['group', cvpj_trackid, 'vol'], x.blocks, 0, 1)

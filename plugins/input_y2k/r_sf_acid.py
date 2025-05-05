@@ -198,13 +198,12 @@ class input_acid_old(plugins.base):
 
 				pls = []
 
-				if stretch_type in [1]:
+				if stretch_type == 1:
 
 					offset = (offsamp*samplemul)*2
 
 					if auto_basenotes and track.flags:
 						ppq_beats = sample_beats*ppq
-
 						if 1 in track.flags:
 							for start, end, cur_root in rootnote_auto.iterd(region.start, region.end):
 								placement_obj = track_obj.placements.add_audio()
@@ -244,6 +243,7 @@ class input_acid_old(plugins.base):
 						sp_obj.sampleref = sample_path
 						sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
 						sp_obj.stretch.preserve_pitch = True
+
 						if songroot != 127 and 1 in track.flags:
 							notetrack = calc_root(project_obj.root_note, track_root_note)
 							sp_obj.pitch = notetrack+region.pitch
@@ -251,18 +251,33 @@ class input_acid_old(plugins.base):
 							sp_obj.usemasterpitch = False
 							sp_obj.pitch = region.pitch
 						pls.append(placement_obj)
-				else:
+
+				if stretch_type == 4:
 					placement_obj = track_obj.placements.add_audio()
 					time_obj = placement_obj.time
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = sample_path
-
 					time_obj.set_startend(region.start, region.end)
 					time_obj.set_offset(offsamp*(ppq*2))
 					sampmul = pow(2, region.pitch/-12)
 					sp_obj.usemasterpitch = False
 					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)
 					pls.append(placement_obj)
+
+				if stretch_type == 3:
+					placement_obj = track_obj.placements.add_audio()
+					time_obj = placement_obj.time
+					sp_obj = placement_obj.sample
+					sp_obj.sampleref = sample_path
+					time_obj.set_startend(region.start, region.end)
+					sp_obj.usemasterpitch = False
+					if 2 not in track.flags:
+						sp_obj.stretch.set_rate_speed(project_obj.tempo, pow(2, region.pitch/-12), True)
+						time_obj.set_offset(offsamp*(ppq*2))
+					else:
+						sp_obj.stretch.set_rate_speed(project_obj.tempo, sample_tempo/120, True)
+						time_obj.set_offset(offsamp*(ppq*2)*sample_tempo/120)
+					sp_obj.stretch.preserve_pitch = True
 
 				for p in pls:
 					p.visual.name = track.name

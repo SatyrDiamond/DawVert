@@ -14,8 +14,8 @@
   <out__param to="feedback" type="float" />
   <out__param to="freq" only_value="1" type="float">0.5</out__param>
   <out__param to="range" only_value="1" type="float">0.5</out__param>
-  <out__param to="rate" from="rateSyncOff" type="float">0</out__param>
-  <out__param to="rateBpmSync" from="sync" type="float">0</out__param>
-  <out__param to="rateSynced" only_value="1" type="float">1</out__param>
+  <out__param to="rate" from="rateSyncOff" type="float">0</out__param> <!-- VALUE_TBD -->
+  <out__param to="rateBpmSync" from="sync" type="float">0</out__param> <!-- VALUE_TBD -->
+  <out__param to="rateSynced" only_value="1" type="float">1</out__param> <!-- VALUE_TBD -->
   <out__param to="wet" from="mix" type="float" />
 </plugstatetransform> 

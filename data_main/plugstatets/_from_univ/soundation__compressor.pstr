@@ -11,9 +11,9 @@
 
   <replace plugtype="native:soundation:com.soundation.compressor" />
 
-  <out__param to="threshold" type="float" />
+  <out__param to="threshold" type="float" /> <!-- VALUE_IMPERFECT -->
   <out__param to="gain" from="postgain" type="float" />
-  <out__param to="ratio" type="float" />
+  <out__param to="ratio" type="float" /> <!-- VALUE_IMPERFECT -->
   <out__param to="attack" only_value="1" type="float">0.4</out__param>
   <out__param to="release" only_value="1" type="float">0.4</out__param>
 </plugstatetransform>

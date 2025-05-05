@@ -3,7 +3,7 @@
 
 from functions import xtramath
 from objects.valobjs import dualstr
-from lxml import etree as ET
+import lxml.etree as ET
 
 def fixval(v, vtype):
 	if v:
@@ -183,7 +183,6 @@ class action__out__param:
 		self.out_name = None
 		self.value = 0
 		self.valtype = None
-		self.remap = None
 		self.only_value = False
 
 	def from_xml(self, xmldata):
@@ -210,6 +209,35 @@ class action__out__param:
 		else:
 			manu_obj.out__param_val(self.storename, self.value)
 
+class action__out__dataval:
+	def __init__(self):
+		self.storename = None
+		self.out_name = None
+		self.value = 0
+		self.valtype = None
+		self.only_value = False
+
+	def from_xml(self, xmldata):
+		v_from = xmldata.get('from')
+		v_to = xmldata.get('to')
+		if v_from and not v_to: 
+			self.storename = v_from
+			self.out_name = v_from
+		elif not v_from and v_to: 
+			self.storename = v_to
+			self.out_name = v_to
+		elif v_from and v_to:
+			self.storename = v_from
+			self.out_name = v_to
+
+		only_value = xmldata.get('only_value')
+		if only_value: self.only_value = bool(int(only_value))
+		self.valtype = xmldata.get('type')
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
+
+	def do_action(self, manu_obj):
+		if not self.only_value:
+			manu_obj.out__dataval(self.storename, self.value, self.out_name)
 
 class action__out__wet:
 	def __init__(self):
@@ -341,6 +369,7 @@ actionclasses['in__dataval'] = action__in__dataval
 actionclasses['out__param'] = action__out__param
 actionclasses['out__wet'] = action__out__wet
 actionclasses['out__filterparam'] = action__out__filter_param
+actionclasses['out__dataval'] = action__out__dataval
 actionclasses['out__dataval_val'] = action__out__dataval_val
 actionclasses['cond__single'] = action__cond__single
 actionclasses['calc'] = action__calc
@@ -375,7 +404,7 @@ class plugstatets:
 		self.state = plugstatets_current_state()
 
 	def load_from_file(self, filepath):
-		parser = ET.XMLParser()
+		parser = ET.XMLParser(remove_comments=True)
 		xml_data = ET.parse(filepath, parser)
 		xml_proj = xml_data.getroot()
 

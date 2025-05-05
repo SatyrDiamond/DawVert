@@ -20,7 +20,7 @@
   <replace plugtype="native:flstudio:fruity phaser" />
 
   <out__param to="num_stages" from="stages" type="float">0</out__param>
-  <out__param to="sweep_freq" from="rate" type="float">0</out__param>
+  <out__param to="sweep_freq" from="rate" type="float">0</out__param> <!-- VALUE_IMPERFECT -->
   <out__param to="feedback" type="float">0</out__param>
   <out__param to="depth_min" from="hzmin" type="float">0</out__param>
   <out__param to="depth_max" from="hzrange" type="float">0</out__param>

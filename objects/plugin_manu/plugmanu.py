@@ -148,7 +148,6 @@ class plug_manu:
 		#if DEBUG__TXT: print('	> param  |'+paramname+'<'+storename)
 		if storename in self.cur_params: 
 			valstored = self.cur_params[storename]
-			valtype = type(valstored.value)
 			if valstored.valuetype in ['numeric', 'bool']:
 				valauto = valstored.automation
 				if valauto: 
@@ -169,6 +168,22 @@ class plug_manu:
 
 	def out__dataval_val(self, valuename, value):
 		self.plugin_obj.datavals.add(valuename, value)
+
+	def out__dataval(self, storename, fallbackval, paramname):
+		if DEBUG__TXT: print('DEBUG: out__dataval:', storename.__repr__(), fallbackval.__repr__(), paramname.__repr__(), valuename.__repr__())
+		#if DEBUG__TXT: print('	> param  |'+paramname+'<'+storename)
+		if storename in self.cur_params: 
+			valstored = self.cur_params[storename]
+			if valstored.valuetype == 'numeric':
+				self.plugin_obj.datavals.add(paramname, valstored.value)
+			if valstored.valuetype == 'bool':
+				self.plugin_obj.datavals.add(paramname, valstored.value)
+			if valstored.valuetype == 'string':
+				self.plugin_obj.datavals.add(paramname, valstored.value)
+			return True
+		else:
+			logger_plugconv.warning('plugmanu: val "%s" is not found for OUT_DATAVAL' % storename)
+		return False
 
 	def out__wet(self, storename, fallbackval):
 		if DEBUG__TXT: print('DEBUG: out__wet:', storename.__repr__(), fallbackval.__repr__())

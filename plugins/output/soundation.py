@@ -65,7 +65,7 @@ def addsample(zip_sngz, filepath, alredyexists):
 
 	if filepath not in audio_id:
 		if os.path.exists(filepath):
-			filename, filetype = os.path.basename(filepath).split('.')
+			filename, filetype = os.path.basename(filepath).rsplit('.', 1)
 			zipfilename = datauuid+'.'+filetype
 			if zipfilename not in zip_sngz.namelist(): zip_sngz.write(filepath, zipfilename)
 			audio_id[filepath] = zipfilename

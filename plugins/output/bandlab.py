@@ -11,7 +11,7 @@ from functions import xtramath
 
 def to_color(color_obj):
 	outcolor = color_obj.copy()
-	if outcolor.fx_allowed:
+	if 'saturate' in outcolor.fx_allowed:
 		outcolor *= 0.9
 		outcolor += 0.1
 		outcolor.fx_pow(0.4)

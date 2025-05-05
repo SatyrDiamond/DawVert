@@ -43,15 +43,16 @@ class sdml_region:
 		for i in riffchunk.iter_wseek(byr_stream):
 			if i.name == b'rgnh':
 				with byr_stream.isolate_size(i.size, False) as bye_stream:
+					self.unknowndata = []
 					size = bye_stream.int32()
 					self.start = bye_stream.int32()
 					self.end = bye_stream.int32()
-					self.unk3 = bye_stream.int32()
+					self.unknowndata.append( bye_stream.int32() )
 					self.offset = bye_stream.int32()
-					self.unk5 = bye_stream.int32()
-					self.unk6 = bye_stream.int32()
+					self.unknowndata.append( bye_stream.int32() )
+					self.unknowndata.append( bye_stream.int32() )
 					self.pitch = bye_stream.int32()
-					self.unk8 = bye_stream.int32()
+					self.unknowndata.append( bye_stream.int32() )
 			elif i.name == b'xlst':
 				for x in i.iter_wseek(byr_stream):
 					if x.name == b' env':
@@ -116,13 +117,15 @@ class sdml_track:
 
 			elif x.name == b'trkh':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
-					unk1 = bye_stream.uint32()
+					self.unknowndata = []
+					self.unknowndata.append( bye_stream.uint32() )
 					self.stretch__type = bye_stream.uint32()
 					self.color = bye_stream.uint32()
-					unk3 = bye_stream.uint32()
+					self.unknowndata.append( bye_stream.uint32() )
 					self.num_samples = bye_stream.uint32()
 					self.pitch = bye_stream.int32()
-					unk5 = bye_stream.l_int32(2)
+					self.unknowndata.append( bye_stream.uint32() )
+					self.unknowndata.append( bye_stream.uint32() )
 					self.mutesolo = bye_stream.int32()
 					self.audio_device = bye_stream.int32()
 					strsize_path = bye_stream.uint32()
@@ -134,18 +137,19 @@ class sdml_track:
 
 			elif x.name == b'acid':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
+					self.unknowndata = []
 					self.flags = bye_stream.flags8()
-					self.unk2 = bye_stream.uint8()
-					self.unk3 = bye_stream.uint8()
-					self.unk4 = bye_stream.uint8()
+					self.unknowndata.append( bye_stream.uint8() )
+					self.unknowndata.append( bye_stream.uint8() )
+					self.unknowndata.append( bye_stream.uint8() )
 					self.root_note = bye_stream.uint8()
-					self.unk6 = bye_stream.uint8()
-					self.unk7 = bye_stream.uint8()
-					self.unk8 = bye_stream.uint8()
-					self.unk9 = bye_stream.uint32()
+					self.unknowndata.append( bye_stream.uint8() )
+					self.unknowndata.append( bye_stream.uint8() )
+					self.unknowndata.append( bye_stream.uint8() )
+					self.unknowndata.append( bye_stream.uint32() )
 					self.num_beats = bye_stream.uint32()
-					self.unk10 = bye_stream.uint16()
-					self.unk11 = bye_stream.uint16()
+					self.unknowndata.append( bye_stream.uint16() )
+					self.unknowndata.append( bye_stream.uint16() )
 					self.stretch__tempo = bye_stream.float()
 
 			elif x.name == b'rlst':

@@ -82,7 +82,7 @@
 		<archived type="zip" file="songdata.xml"/>
 	</plugin>
 
-	<plugin pluginset="main" name="bandlab_blx">
+	<plugin pluginset="main" name="bandlab">
 		<file fileext=".blx"/>
 	</plugin>
 

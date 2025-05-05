@@ -659,9 +659,9 @@ class output_reaper(plugins.base):
 				if videopl_obj.time.cut_type == 'cut': clip_startat = (videopl_obj.time.cut_start/8)/tempomul
 				rpp_item_obj.soffs.set(clip_startat)
 
-				ref_found, fileref_obj = convproj_obj.fileref__get(videopl_obj.video_fileref)
+				ref_found, videoref_obj = convproj_obj.videoref__get(videopl_obj.videoref)
 				if ref_found:
-					filename = fileref_obj.get_path(None, False)
+					filename = videoref_obj.fileref.get_path(None, False)
 					rpp_source_obj = rpp_item_obj.source = rpp_source.rpp_source()
 					rpp_source_obj.type = 'VIDEO'
 					rpp_source_obj.file.set(filename)

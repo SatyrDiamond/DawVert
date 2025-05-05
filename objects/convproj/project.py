@@ -225,6 +225,7 @@ class cvpj_project:
 		self.transport = cvpj_transport(self.time_ppq, self.time_float)
 		self.filerefs = {}
 		self.samplerefs = {}
+		self.videorefs = {}
 		self.window_data = {}
 		self.automation = automation.cvpj_automation(self.time_ppq, self.time_float)
 		self.groups = {}
@@ -918,3 +919,29 @@ class cvpj_project:
 	def instrument__iter(self):
 		for inst_id in self.instruments_order:
 			if inst_id in self.instruments: yield inst_id, self.instruments[inst_id]
+
+# --------------------------------------------------------- VIDEOREF ---------------------------------------------------------
+
+	def videoref__add(self, fileid, filepath, os_type):
+		if fileid not in self.videorefs: 
+			self.videorefs[fileid] = fileref.cvpj_videoref()
+			self.videorefs[fileid].set_path(os_type, filepath)
+			logger_project.info('VideoRef - '+fileid+' - '+filepath)
+		return self.videorefs[fileid]
+
+	def videoref__iter(self):
+		for videoref_id, videoref_obj in self.videorefs.items():
+			yield videoref_id, videoref_obj
+
+	def videoref__get(self, fileid):
+		if fileid in self.videorefs: return True, self.videorefs[fileid]
+		else: return False, None
+
+	def videoref__searchmissing(self, input_file):
+		dirpath = os.path.dirname(input_file)
+		files = fileref.filesearcher.searchcache
+
+		for videoref_id, videoref_obj in self.videoref__iter():
+			if not videoref_obj.found:
+				fileref.filesearcher.scan_local_files(dirpath)
+				videoref_obj.search_local(dirpath)

@@ -688,7 +688,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 			else: als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
 	
-		if stretch_obj.is_warped:
+		if stretch_obj.is_warped and warp_obj.points:
 			als_audioclip.IsWarped = True
 
 			if AUDWARPVERBOSE: print('o')

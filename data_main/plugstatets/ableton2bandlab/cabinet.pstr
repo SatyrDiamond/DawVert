@@ -1,0 +1,29 @@
+<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Cabinet">
+
+  <define_remap name="cab_types" in_type="int" out_type="string">
+    <val in_val="0" out_val="1x12JensonAlnico"/>
+    <val in_val="1" out_val="2x12Soldano"/>
+    <val in_val="2" out_val="4x12EnglXXL"/>
+    <val in_val="3" out_val="4x10JensonVintage"/>
+    <val in_val="4" out_val="4x10JensonVintage"/>
+    <fallback out_val="4x12EnglXXL"/>
+  </define_remap>
+
+  <define_remap name="mic_pos" in_type="int" out_type="string">
+    <val in_val="0" out_val="onAxis"/>
+    <val in_val="1" out_val="offAxis"/>
+    <val in_val="2" out_val="far"/>
+    <fallback out_val="onAxis"/>
+  </define_remap>
+
+  <in__param from="CabinetType" type="float" />
+  <in__param from="MicrophonePosition" type="float" />
+
+  <replace plugtype="native:bandlab:guitarCab" />
+
+  <remap name="CabinetType" remapdef="cab_types"/>
+  <remap name="MicrophonePosition" remapdef="mic_pos"/>
+
+  <out__dataval to="cabModel" from="CabinetType" type="float" />
+  <out__dataval to="micPosition" from="MicrophonePosition" type="float" />
+</plugstatetransform> 

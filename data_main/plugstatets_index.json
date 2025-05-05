@@ -27,6 +27,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\ableton2bandlab\\cabinet.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\cabinet.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Cabinet",
+    "plugtype_out": [
+      "native:bandlab:guitarCab"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\ableton2bandlab\\channeleq.pstr": {
     "file": "data_main\\plugstatets\\ableton2bandlab\\channeleq.pstr",
     "daw_in": [

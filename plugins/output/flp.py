@@ -227,7 +227,7 @@ class output_cvpjs(plugins.base):
 					if windowdata_obj.size_y != -1: fl_channel_obj.plugin.window_s_y = windowdata_obj.size_y
 					if windowdata_obj.open != -1: fl_channel_obj.plugin.visible = windowdata_obj.open
 
-					poly_obj = plugin_obj.poly
+					poly_obj = plugin_obj.state.poly
 
 					fl_channel_obj.poly.max = poly_obj.max if poly_obj.limited else 0
 					if fl_channel_obj.poly.max==1: fl_channel_obj.poly.flags += 1

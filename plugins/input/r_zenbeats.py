@@ -17,6 +17,7 @@ def do_visual(cvpj_visual, zb_visual, color_index, colordata):
 	if color_index != -1:
 		colorfloat = colordata.getcolornum(color_index)
 		cvpj_visual.color.set_int(colorfloat)
+		cvpj_visual.color.fx_allowed = ['saturate', 'brighter']
 
 def do_auto(convproj_obj, autoloc, curve, parammode):
 	valtype = 'float'

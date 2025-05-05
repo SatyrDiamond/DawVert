@@ -152,6 +152,7 @@ class input_pxtone(plugins.base):
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 0, False)
 			track_obj.visual.name = unit_obj.name
 			track_obj.visual.color.set_int(colordata.getcolor())
+			track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 			unitstream = pxtone_cmdstream(track_obj.placements.notelist, convproj_obj, cvpj_trackid)
 

@@ -338,6 +338,7 @@ class input_acid_3(plugins.base):
 								color = colordata.getcolornum(track_header.color)
 								track_obj.visual.name = track_header.name
 								track_obj.visual.color.set_int(color)
+								track_obj.visual.color.fx_allowed = ['brighter']
 								if track_audioinfo:
 									track_obj.params.add('vol', track_audioinfo.vol, 'float')
 									track_obj.params.add('pan', track_audioinfo.pan, 'float')
@@ -365,6 +366,7 @@ class input_acid_3(plugins.base):
 											for p in pls:
 												p.visual.name = track_header.name
 												p.visual.color.set_int(color)
+												p.visual.color.fx_allowed = ['brighter']
 	
 									elif track_audiodefs is not None:
 										for audiodef, audiostretch in track_audiodefs:
@@ -389,6 +391,7 @@ class input_acid_3(plugins.base):
 												p.visual.name = def_header.name
 												color = colordata.getcolornum(def_header.color)
 												p.visual.color.set_int(color)
+												p.visual.color.fx_allowed = ['brighter']
 
 									track_obj.placements.pl_audio.sort()
 									track_obj.placements.pl_audio.remove_overlaps()
@@ -399,6 +402,7 @@ class input_acid_3(plugins.base):
 								color = colordata.getcolornum(track_header.color)
 								track_obj.visual.name = track_header.name
 								track_obj.visual.color.set_int(color)
+								track_obj.visual.color.fx_allowed = ['brighter']
 
 								if track_regions:
 									filename_obj = fileref.cvpj_fileref()
@@ -467,3 +471,4 @@ class input_acid_3(plugins.base):
 							timemarker_obj.visual.color.set_int([84,158,101])
 						else:
 							timemarker_obj.visual.color.set_int([219,142,87])
+						timemarker_obj.visual.color.fx_allowed = ['brighter']

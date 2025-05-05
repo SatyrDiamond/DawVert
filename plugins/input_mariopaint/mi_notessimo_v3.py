@@ -195,9 +195,11 @@ def incolor(value, visual_obj):
 	if value not in ['0x000000', '', None]:
 		if value.startswith('0x') and len(value)==8: 
 			visual_obj.color.set_hex(value[2:])
+			visual_obj.color.fx_allowed = ['saturate', 'brighter']
 		elif value.isnumeric():
 			colorval = int(value).to_bytes(3, 'big')
 			visual_obj.color.set_int([colorval[0], colorval[1], colorval[2]])
+			visual_obj.color.fx_allowed = ['saturate', 'brighter']
 
 class input_notessimo_v3(plugins.base):
 	def is_dawvert_plugin(self):

@@ -77,8 +77,14 @@ class output_onlineseq(plugins.base):
 						if s_osc.prop.shape == 'triangle': onlineseqinst = 16
 						if s_osc.prop.shape == 'saw': onlineseqinst = 15
 				
-				if idvals_onlineseq_inst: t_instid = idvals_onlineseq_inst.get_idval(str(midiinst), 'outid')
-				else: t_instid = None
+				if not midi_inst.drum:
+					if idvals_onlineseq_inst: 
+						t_instid = idvals_onlineseq_inst.get_idval(str(midiinst), 'outid')
+					else: 
+						t_instid = None
+				else:
+					t_instid = 2
+
 				if t_instid not in ['null', None]: onlineseqinst = int(t_instid)
 
 			if onlineseqinst not in repeatedolinst: repeatedolinst[onlineseqinst] = 0

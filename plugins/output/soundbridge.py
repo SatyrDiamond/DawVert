@@ -598,9 +598,10 @@ class output_soundbridge(plugins.base):
 				obj_outfilename.file.extension = 'wav'
 
 				if dawvert_intent.output_mode == 'file':
+
 					filename = str(obj_filename)
 					outfilename = os.path.join(dawvert_intent.output_file, str(obj_outfilename.file))
-					if sampleref_obj.found:
+					if sampleref_obj.get_exists():
 						sampleref_obj.copy_resample(None, outfilename)
 					else:
 						sampleref_obj.set_path(None, outfilename)
@@ -1005,7 +1006,7 @@ class output_soundbridge(plugins.base):
 					ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
 					if ref_found:
-						if sampleref_obj.found:
+						if sampleref_obj.get_exists():
 							stretch_obj = audiopl_obj.sample.stretch
 
 							pitchTempoProcessorMode = 2

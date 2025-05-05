@@ -111,7 +111,7 @@ class output_soundation(plugins.base):
 		globalstore.dataset.load('soundation', './data_main/dataset/soundation.dset')
 		globalstore.dataset.load('synth_nonfree', './data_main/dataset/synth_nonfree.dset')
 
-		globalstore.idvals.load('gm_inst', './data_main/dataset/soundation_gm_inst.csv')
+		globalstore.idvals.load('gm_inst', './data_main/idvals/soundation_gm_inst.csv')
 		idvals_inst_gm2 = globalstore.idvals.get('gm_inst')
 
 		zip_bio = io.BytesIO()
@@ -302,25 +302,22 @@ class output_soundation(plugins.base):
 					soundation_instrument.identifier = 'com.soundation.GM-2'
 					gm2_samplepack = '2_0_Bright_Yamaha_Grand.smplpck'
 
-					if plugin_found:
-						if len(plugin_obj.oscs) == 1:
-							s_osc = plugin_obj.oscs[0]
+					midi_found, midi_inst = track_obj.get_midi(convproj_obj)
+					bank, patch = midi_inst.to_sf2()
+
+					soundation_instrument.params.add('sustain', 1, [])
+					soundation_instrument.params.add('release', 0, [])
+					soundation_instrument.params.add('decay', 0, [])
+					soundation_instrument.params.add('attack', 0, [])
+
+					if plugin_obj:
+						if len(plugin_obj.state.oscs) == 1:
+							s_osc = plugin_obj.state.oscs[0]
 							if s_osc.prop.shape == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
 							if s_osc.prop.shape == 'square': gm2_samplepack = '81_0_Square_Lead.smplpck'
 							if s_osc.prop.shape == 'triangle': gm2_samplepack = '85_0_Charang.smplpck'
 							if s_osc.prop.shape == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
 							set_asdr(soundation_instrument, plugin_obj)
-						else:
-							midi_found, midi_inst = track_obj.get_midi(convproj_obj)
-							bank, patch = midi_inst.to_sf2()
-							if idvals_inst_gm2: 
-								gm2_samplepack = idvals_inst_gm2.get_idval(str(patch+1)+'_'+str(bank), 'url')
-							set_asdr(soundation_instrument, plugin_obj)
-					else:
-						soundation_instrument.params.add('sustain', 1, [])
-						soundation_instrument.params.add('release', 0, [])
-						soundation_instrument.params.add('decay', 0, [])
-						soundation_instrument.params.add('attack', 0, [])
 
 					soundation_instrument.data['sample_pack'] = {'value': gm2_samplepack}
 

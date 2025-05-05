@@ -204,7 +204,7 @@ class cvpj_plugin_state:
 					if not dset_param.noauto: outdata = self.params.get(param_id, dset_param.defv).value
 					else: outdata = self.datavals.get(param_id, dset_param.defv)
 				else:
-					outdata = array_get(param_id, len(dset_param.defv))
+					outdata = self.array_get(param_id, dset_param.defv)
 				data_values.dict__nested_add_value(outdict, param_id.split('/'), outdata)
 		return outdict
 

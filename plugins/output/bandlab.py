@@ -215,7 +215,7 @@ class output_bandlab(plugins.base):
 
 					midi_found, midi_inst = track_obj.get_midi(convproj_obj)
 					o_midi_bank, o_midi_patch = midi_inst.to_sf2()
-					if o_midi_patch:
+					if o_midi_bank != 127:
 						if idvals_bandlab_inst:
 							t_instid = idvals_bandlab_inst.get_idval(str(o_midi_patch), 'outid')
 							if t_instid:

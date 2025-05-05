@@ -48,7 +48,7 @@ def add_auto_curves(convproj_obj, autoloc, wf_plugin, param_id):
 		autopoints.remove_instant()
 		autocurve_obj = proj_tracktion_edit.tracktion_automationcurve()
 		autocurve_obj.paramid = param_id
-		autocurve_obj.points = [[x.pos, x.value, None] for x in autopoints]
+		autocurve_obj.points = [[x.pos*4, x.value, None] for x in autopoints]
 		wf_plugin.automationcurves.append(autocurve_obj)
 
 def sampler_do_filter(soundlayer, filter_obj):
@@ -268,7 +268,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 
 		if plugin_obj.check_wildmatch('external', 'vst2', None):
 			juceobj = juce_plugin.juce_plugin()
-			juceobj.from_cvpj(convproj_obj, plugin_obj)
+			juceobj.from_cvpj(convproj_obj, plugin_obj, cvpj_fxid)
 			fourid = plugin_obj.external_info.fourid
 
 			if fourid: 

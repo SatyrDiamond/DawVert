@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from dataclasses import dataclass
+from dataclasses import field
 from functions import xtramath
 from objects import globalstore
 import numpy as np
@@ -32,7 +33,7 @@ class cvpj_color:
 	g_f: float = 0
 	b_f: float = 0
 	used: bool = False
-	fx_allowed: bool = False
+	fx_allowed: list = field(default_factory=list)
 	priority: int = 0
 
 	@classmethod

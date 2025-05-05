@@ -18,7 +18,7 @@ filename_len = {}
 
 def decode_color(color):
 	cvpj_color = color
-	if cvpj_color.fx_allowed: 
+	if 'saturate' in cvpj_color.fx_allowed:
 		cvpj_color = cvpj_color.copy()
 		cvpj_color.fx_saturate(0.3)
 	return int.from_bytes(bytes(cvpj_color.get_int()), "little")

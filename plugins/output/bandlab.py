@@ -174,7 +174,11 @@ class output_bandlab(plugins.base):
 
 						sp_obj = audiopl_obj.sample
 
-						add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False)
+						pmod = 1
+						if not sp_obj.stretch.uses_tempo:
+							pmod = pow(2, (-sp_obj.pitch)/12)
+
+						add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False, pmod)
 
 						blx_region.pitchShift = sp_obj.pitch
 						blx_region.gain = sp_obj.vol
@@ -209,7 +213,7 @@ class output_bandlab(plugins.base):
 							project_obj.samples.append(bl_sample)
 
 						blx_region = proj_bandlab.bandlab_region(None)
-						add_region_common(blx_region, midipl_obj, blx_track, tempomul, True)
+						add_region_common(blx_region, midipl_obj, blx_track, tempomul, True, 1)
 						blx_region.file = uuiddata+'.mid'
 						blx_track.regions.append(blx_region)
 
@@ -311,7 +315,7 @@ def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio, tempomul):
 
 				effects.append(blx_effect)
 
-def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi):
+def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi, pmod):
 	blx_region.trackId = blx_track.id
 	blx_region.id = str(uuid.uuid4())
 	blx_region.startPosition = (audiopl_obj.time.position/2)*tempomul
@@ -325,4 +329,4 @@ def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi):
 	cut_start = audiopl_obj.time.cut_start
 
 	if cut_type == 'cut':
-		blx_region.sampleOffset += (cut_start/2)*tempomul
+		blx_region.sampleOffset += ((cut_start/2)*tempomul)*pmod

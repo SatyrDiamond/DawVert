@@ -1709,7 +1709,7 @@
     "daw_in": [
       "fl_mobile"
     ],
-    "plugtype_in": "native:fl_mobile:9",
+    "plugtype_in": "native:fl_mobile:26",
     "plugtype_out": [
       "universal:spectrum_analyzer"
     ],

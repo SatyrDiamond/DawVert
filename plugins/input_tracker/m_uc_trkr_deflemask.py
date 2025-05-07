@@ -136,9 +136,14 @@ class input_deflemask(plugins.base):
 						plugin_obj.role = 'synth'
 						inst_obj.plugslots.set_synth(synthid)
 						osc_data = plugin_obj.osc_add()
-						if insttype == 'square': osc_data.prop.shape = 'square'
-						if insttype == 'triangle': osc_data.prop.shape = 'triangle'
-						if insttype == 'noise': osc_data.prop.shape = 'random'
+						if insttype == 'square':
+							osc_data.prop.shape = 'square'
+							plugin_obj.midi_fallback__add_inst(80)
+						if insttype == 'triangle':
+							osc_data.prop.shape = 'triangle'
+							plugin_obj.midi_fallback__add_inst(95)
+						if insttype == 'noise':
+							osc_data.prop.shape = 'random'
 	
 						volenv = dmf_inst.env_volume.values
 						if len(volenv) == 1: 

@@ -1,0 +1,3 @@
+<plugstatetransform daw_in="fl_mobile" daw_out="bandlab" plugtype="native:fl_mobile:15">
+  <replace plugtype="native:bandlab:stereoSpreader" />
+</plugstatetransform>

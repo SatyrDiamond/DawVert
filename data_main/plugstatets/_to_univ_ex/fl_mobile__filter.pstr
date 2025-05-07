@@ -1,0 +1,35 @@
+<plugstatetransform daw_in="fl_mobile" plugtype="native:fl_mobile:9">
+  <in__param from="param_1" type="float" />
+  <in__param from="param_2" type="float" />
+  <in__param from="param_3" type="float" />
+  <in__param from="param_4" type="float" />
+  
+  <define_remap name="filter_types" in_type="float" out_type="filter_type">
+    <val in_val="0" out_val="low_pass"/>
+    <val in_val="0.5" out_val="band_pass"/>
+    <val in_val="1" out_val="high_pass"/>
+    <fallback out_val="low_pass"/>
+  </define_remap>
+
+  <define_remap name="filter_slope" in_type="float" out_type="float">
+    <val in_val="0" out_val="24"/>
+    <val in_val="0.5" out_val="48"/>
+    <val in_val="1" out_val="96"/>
+    <fallback out_val="48"/>
+  </define_remap>
+
+  <calc name="param_1" type="pow_r">1260.7</calc>
+  <calc name="param_1" type="mul">16</calc>
+  <calc name="param_2" type="mul">6</calc>
+  <calc name="param_2" type="add">1</calc>
+  <remap name="param_3" remapdef="filter_types"/>
+  <remap name="param_4" remapdef="filter_slope"/>
+
+  <replace plugtype="universal:filter:single" />
+
+  <out__filterparam to="freq" from="param_1" type="float"/>
+  <out__filterparam to="q" from="param_2"/>
+  <out__filterparam to="type" from="param_3"/>
+  <out__filterparam to="slope" from="param_4"/>
+
+</plugstatetransform>

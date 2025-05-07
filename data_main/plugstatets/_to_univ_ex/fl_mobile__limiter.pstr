@@ -1,0 +1,16 @@
+<plugstatetransform daw_in="fl_mobile" plugtype="native:fl_mobile:28">
+  <in__param to="in_gain" from="param_1" type="float" />
+  <in__param to="out_gain" from="param_2" type="float" />
+  <in__param to="release" from="param_3" type="float" /> <!-- VALUE_TBD -->
+  <in__param to="threshold" from="param_4" type="float" />
+
+  <calc name="threshold" type="from_one">-24;0</calc>
+  <calc name="in_gain" type="from_one">-24;24</calc>
+  <calc name="out_gain" type="from_one">-24;24</calc>
+
+  <replace plugtype="universal:limiter" />
+
+  <out__param to="ceiling" from="threshold" type="float"/>
+  <out__param to="pregain" from="in_gain" type="float"/>
+  <out__param to="postgain" from="out_gain" type="float"/>
+</plugstatetransform>

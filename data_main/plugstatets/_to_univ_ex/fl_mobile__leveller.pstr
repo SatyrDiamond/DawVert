@@ -1,0 +1,13 @@
+<plugstatetransform daw_in="fl_mobile" plugtype="native:fl_mobile:20">
+  <in__param to="vol" from="param_1" type="float" />
+  <calc name="vol" type="from_one">-60;12</calc>
+  <calc name="vol" type="from_db"/>
+
+  <in__param to="pan" from="param_2" type="float" />
+  <calc name="pan" type="from_one">-1;1</calc>
+
+  <replace plugtype="universal:volpan" />
+
+  <out__param to="pan" type="float">0</out__param>
+  <out__param to="vol" type="float">0</out__param>
+</plugstatetransform>

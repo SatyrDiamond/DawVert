@@ -422,7 +422,7 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 			dp_device = device.dawproject_device('Limiter')
 			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'pregain', 'InputGain', -36, 36)
 			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'seconds', 'release', 'Release', 0.01, 10)
-			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'threshold', 'Threshold', -36, 0)
+			add_device_param_from_paramobj(convproj_obj, lane_obj, plugin_obj, pluginid, dp_device, 'decibel', 'ceiling', 'Threshold', -36, 0)
 
 		if plugin_obj.check_match('universal', 'noise_gate', None):
 			dp_device = device.dawproject_device('NoiseGate')

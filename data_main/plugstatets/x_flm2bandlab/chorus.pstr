@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="fl_mobile" daw_out="bandlab" plugtype="native:fl_mobile:11">
+  <in__param from="param_1" type="float" />
+  <in__param from="param_2" type="float" />
+  <in__param from="param_4" type="float" />
+  <calc name="param_1" type="mul">3.7</calc>
+  <calc name="param_2" type="mul">10</calc>
+  <calc name="param_4" type="mul">10</calc>
+  <replace plugtype="native:bandlab:bossCE5" />
+  <out__param to="speed" from="param_1" type="float" />
+  <out__param to="depth" from="param_2" type="float" />
+  <out__param to="wet" from="param_4" type="float" />
+</plugstatetransform>

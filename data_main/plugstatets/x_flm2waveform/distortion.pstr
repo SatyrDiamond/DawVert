@@ -1,0 +1,26 @@
+<plugstatetransform daw_in="fl_mobile" daw_out="waveform" plugtype="native:fl_mobile:6">
+
+  <define_remap name="dist_types" in_type="int" out_type="int">
+    <val in_val="0" out_val="2"/>
+    <val in_val="1" out_val="4"/>
+    <val in_val="2" out_val="0"/>
+    <val in_val="3" out_val="3"/>
+    <fallback out_val="0"/>
+  </define_remap>
+
+  <in__param to="drive" from="param_1" type="float" />
+  <in__param to="kind" from="param_5" type="float" />
+  <in__param to="gain" from="param_3" type="float" />
+
+  <calc name="kind" type="mul">3</calc>
+  <calc name="gain" type="from_one">-7.62;0</calc>
+  <calc name="gain" type="from_db"/>
+  <toint name="kind"/>
+  <remap name="kind" remapdef="dist_types"/>
+
+  <replace plugtype="native:tracktion:distortion"/>
+
+  <out__param to="drive" from="drive" type="float"/>
+  <out__param to="dtype" from="kind" type="float"/>
+  <out__param to="postGain" from="gain" type="float"/>
+</plugstatetransform>

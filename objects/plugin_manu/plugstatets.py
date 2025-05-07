@@ -267,6 +267,22 @@ class action__tobool:
 			valpack.automation = None
 			valpack.valuetype = 'bool'
 
+class action__toint:
+	def __init__(self):
+		self.storename = None
+		self.cond = None
+
+	def from_xml(self, xmldata):
+		self.storename = xmldata.get('name')
+		self.cond = xmldata.get('cond')
+
+	def do_action(self, manu_obj):
+		if self.storename in manu_obj.cur_params:
+			valpack = manu_obj.cur_params[self.storename]
+			valpack.value = int(valpack.value)
+			valpack.automation = None
+			valpack.valuetype = 'numeric'
+
 class action__define_remap:
 	def __init__(self):
 		self.name = None
@@ -376,6 +392,7 @@ actionclasses['calc'] = action__calc
 actionclasses['remap'] = action__remap
 actionclasses['replace'] = action__replace
 actionclasses['replace_hard'] = action__replace_hard
+actionclasses['toint'] = action__toint
 actionclasses['tobool'] = action__tobool
 actionclasses['define_remap'] = action__define_remap
 actionclasses['debug__storeview'] = debug__storeview

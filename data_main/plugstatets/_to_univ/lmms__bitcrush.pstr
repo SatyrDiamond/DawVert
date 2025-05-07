@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="lmms" plugtype="native:lmms:bitcrush">
+  <in__param from="levels" type="float"/>
+  <in__param from="rate" type="float"/>
+  
+  <replace plugtype="universal:bitcrush" />
+
+  <out__param to="bits" from="levels" type="float"/>
+  <out__param to="freq" from="rate" type="float"/>
+</plugstatetransform>

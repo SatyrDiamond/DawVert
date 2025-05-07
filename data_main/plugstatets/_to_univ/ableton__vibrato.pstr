@@ -1,0 +1,21 @@
+<plugstatetransform daw_in="ableton" plugtype="native:ableton:Chorus2">
+  <in__param from="DryWet" type="int">1</in__param>
+  <in__param from="Mode" type="int">0</in__param>
+  <in__param from="Rate" type="float">1</in__param>
+  <in__param from="Amount" type="float">0</in__param>
+  <cond__single in="Mode" data="x == 2">
+    <cond__true>
+      <replace plugtype="universal:vibrato" />
+      <calc name="Amount" type="mul">2</calc>
+      <out__param to="freq" from="Rate" type="float"/>
+      <out__param to="depth" from="Amount" type="float"/>
+      <out__wet from="DryWet" type="float">1</out__wet>
+    </cond__true>
+    <cond__false>
+      <out__param to="DryWet" type="float"/>
+      <out__param to="Mode" type="float"/>
+      <out__param to="Rate" type="float"/>
+      <out__param to="Amount" type="float"/>
+    </cond__false>
+  </cond__single>
+</plugstatetransform>

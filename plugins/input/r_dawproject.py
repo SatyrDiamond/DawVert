@@ -119,7 +119,7 @@ def do_devices(convproj_obj, track_obj, ismaster, dp_devices):
 			do_param(convproj_obj, plugin_obj.params_slot, device.enabled, 'enabled', None, 'bool', ['slot', pluginid, 'enabled'])
 			if 'InputGain' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['InputGain'], 'pregain', None, 'float', ['plugin', pluginid, 'pregain'])
 			if 'Release' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Release'], 'release', None, 'float', ['plugin', pluginid, 'release'])
-			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'threshold', None, 'float', ['plugin', pluginid, 'threshold'])
+			if 'Threshold' in pprms: do_param(convproj_obj, plugin_obj.params, pprms['Threshold'], 'ceiling', None, 'float', ['plugin', pluginid, 'threshold'])
 
 		if device.plugintype == 'NoiseGate':
 			pprms = device.params

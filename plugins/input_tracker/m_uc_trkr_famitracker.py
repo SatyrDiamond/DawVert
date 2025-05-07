@@ -157,9 +157,14 @@ class input_famitracker_txt(plugins.base):
 							plugin_obj.role = 'synth'
 							inst_obj.plugslots.set_synth(synthid)
 							osc_data = plugin_obj.osc_add()
-							if insttype in ['square1', 'square2']: osc_data.prop.shape = 'square'
-							if insttype == 'triangle': osc_data.prop.shape = 'triangle'
-							if insttype == 'noise': osc_data.prop.shape = 'random'
+							if insttype in ['square1', 'square2']:
+								osc_data.prop.shape = 'square'
+								plugin_obj.midi_fallback__add_inst(80)
+							if insttype == 'triangle':
+								osc_data.prop.shape = 'triangle'
+								plugin_obj.midi_fallback__add_inst(95)
+							if insttype == 'noise':
+								osc_data.prop.shape = 'random'
 
 							if ft_inst.macro_vol != -1: 
 								macro_vol = project_obj.macros[ft_inst.macro_vol]
@@ -183,6 +188,7 @@ class input_famitracker_txt(plugins.base):
 							inst_obj.plugslots.set_synth(synthid)
 							osc_data = plugin_obj.osc_add()
 							osc_data.prop.shape = 'square'
+							plugin_obj.midi_fallback__add_inst(80)
 
 						if insttype == 'vrc6_saw':
 							plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
@@ -190,6 +196,7 @@ class input_famitracker_txt(plugins.base):
 							inst_obj.plugslots.set_synth(synthid)
 							osc_data = plugin_obj.osc_add()
 							osc_data.prop.shape = 'saw'
+							plugin_obj.midi_fallback__add_inst(81)
 
 					elif ft_inst.chip == 'FDS' and insttype == 'fds':
 						plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)

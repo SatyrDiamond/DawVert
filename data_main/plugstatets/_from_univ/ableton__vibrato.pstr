@@ -1,6 +1,7 @@
 <plugstatetransform daw_out="ableton" plugtype="universal:vibrato">
   <in__param from="freq" type="float">0</in__param>
   <in__param from="depth" type="float">0</in__param>
+  <in__wet to="DryWet" type="float">1</in__wet>
   
   <calc name="depth" type="div">2</calc>
 

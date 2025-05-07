@@ -1,3 +1,0 @@
-<plugstatetransform daw_in="soundbridge" plugtype="native:soundbridge:analyzer">
-  <replace plugtype="universal:spectrum_analyzer" />
-</plugstatetransform>

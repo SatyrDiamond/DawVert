@@ -264,7 +264,11 @@ class cvpj_track:
 
 	def get_midi(self, convproj_obj):
 		plugin_found, plugin_obj = convproj_obj.plugin__get(self.plugslots.synth)
-		return plugin_found, plugin_obj.midi if plugin_found else midi_inst.cvpj_midi_inst()
+		if plugin_found:
+			if plugin_obj.midi_incompat_synth_on: return plugin_obj.midi_incompat_synth
+			else: return plugin_obj.midi
+		else:
+			return self.midi.out_inst if self.midi.out_enabled else None
 
 	def fx__return__add(self, returnid):
 		self.returns[returnid] = cvpj_track('return', self.time_ppq, self.time_float, False, False)

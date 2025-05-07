@@ -248,7 +248,6 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 		if lmms_interpolation == 1: sp_obj.interpolation = "linear"
 		if lmms_interpolation == 2: sp_obj.interpolation = "sinc"
 
-
 	elif pluginname == "vestige":
 		plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst2', 'win')
 		plugin_obj.role = 'synth'
@@ -336,6 +335,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 				wave_obj = plugin_obj.wave_add(graphid)
 				wave_obj.set_all_range(wave_data, 0, 1)
 				wave_obj.smooth = True
+			plugin_obj.midi_fallback__add_inst(24)
 
 		if pluginname == "bitinvader":
 			wave_data = get_wavestr(lmms_plugin, 'sampleShape')
@@ -401,6 +401,12 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 					slice_obj.start = int(float(value)*hzmod*dur_samples)
 					slicenum += 1
 
+		if pluginname == "malletsstk":
+			malpreset = lmms_plugin.get_param('preset', 0).value
+			if malpreset == 0: plugin_obj.midi_fallback__add_inst(12)
+			if malpreset == 1: plugin_obj.midi_fallback__add_inst(11)
+			if malpreset == 2: plugin_obj.midi_fallback__add_inst(113)
+			if malpreset == 9: plugin_obj.midi_fallback__add_inst(14)
 
 	plugin_obj.visual.from_dset('lmms', 'plugin', pluginname, True)
 

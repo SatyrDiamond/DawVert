@@ -54,9 +54,9 @@ class output_bandlab(plugins.base):
 		globalstore.idvals.load('midi_map', './data_main/idvals/bandlab_map_midi.csv')
 		idvals_bandlab_inst = globalstore.idvals.get('midi_map')
 
-		auxchannel_obj = proj_bandlab.bandlab_auxChannel(None)
-		auxchannel_obj.id = 'aux1'
-		project_obj.auxChannels.append(auxchannel_obj)
+		#auxchannel_obj = proj_bandlab.bandlab_auxChannel(None)
+		#auxchannel_obj.id = 'aux1'
+		#project_obj.auxChannels.append(auxchannel_obj)
 
 		project_obj.genres = [{"id": "other", "name": "Other"}]
 		project_obj.id = str(uuid.uuid4())
@@ -141,9 +141,9 @@ class output_bandlab(plugins.base):
 				blx_track.automation = proj_bandlab.bandlab_track_automation(None)
 				blx_track.automation.id = str(uuid.uuid4())
 				blx_track.id = str(uuid.uuid4())
-				auxsend_obj = proj_bandlab.bandlab_auxSend(None)
-				auxsend_obj.id = 'aux1'
-				blx_track.auxSends.append(auxsend_obj)
+				#auxsend_obj = proj_bandlab.bandlab_auxSend(None)
+				#auxsend_obj.id = 'aux1'
+				#blx_track.auxSends.append(auxsend_obj)
 
 				do_automation(convproj_obj, ['track', trackid, 'pan'], blx_track.automation.pan, tempomul)
 				do_automation(convproj_obj, ['track', trackid, 'vol'], blx_track.automation.volume, tempomul)
@@ -198,7 +198,43 @@ class output_bandlab(plugins.base):
 					blx_track.type = 'piano'
 					blx_track.soundbank = 'studio-grand-v2-v4'
 
-					track_obj.placements.pl_audio.sort()
+					pluginid = track_obj.plugslots.synth
+					plugin_found, plugin_obj = convproj_obj.plugin__get(pluginid)
+
+					inst_supported = 0
+					if plugin_found:
+						if plugin_obj.check_match('external', 'bandlab', 'instrument'):
+							in_inst = track_obj.datavals.get('instrument', '')
+							if in_inst:
+								blx_track.soundbank = in_inst
+								is_bandlab_inst = True
+								dset_obj = globalstore.dataset.get_obj('bandlab', 'inst', in_inst)
+								inst_supported = 1
+								if dset_obj:
+									if 'slug' in dset_obj.data: track_obj.type = dset_obj.data['slug']
+
+					if not inst_supported:
+						midi_inst = track_obj.get_midi(convproj_obj)
+						if midi_inst:
+							o_midi_bank, o_midi_patch = midi_inst.to_sf2()
+							if o_midi_bank != 127:
+								if idvals_bandlab_inst:
+									t_instid = idvals_bandlab_inst.get_idval(str(o_midi_patch), 'outid')
+									if t_instid:
+										dset_obj = globalstore.dataset.get_obj('bandlab', 'inst', t_instid)
+										if dset_obj:
+											blx_track.soundbank = t_instid
+											if 'slug' in dset_obj.data:
+												track_obj.type = dset_obj.data['slug']
+							else:
+								blx_track.soundbank = 'general-midi-drums-v2-v4'
+								track_obj.type = 'percussion'
+						else:
+							inst_supported = -1
+
+					if inst_supported == -1: blx_track.isMuted = True
+
+					track_obj.placements.pl_midi.sort()
 
 					for midipl_obj in track_obj.placements.pl_midi:
 						notebytes = midipl_obj.midievents.getvalue()
@@ -216,20 +252,6 @@ class output_bandlab(plugins.base):
 						add_region_common(blx_region, midipl_obj, blx_track, tempomul, True, 1)
 						blx_region.file = uuiddata+'.mid'
 						blx_track.regions.append(blx_region)
-
-					midi_found, midi_inst = track_obj.get_midi(convproj_obj)
-					o_midi_bank, o_midi_patch = midi_inst.to_sf2()
-					if o_midi_bank != 127:
-						if idvals_bandlab_inst:
-							t_instid = idvals_bandlab_inst.get_idval(str(o_midi_patch), 'outid')
-							if t_instid:
-								dset_obj = globalstore.dataset.get_obj('bandlab', 'inst', t_instid)
-								blx_track.soundbank = t_instid
-								if 'slug' in dset_obj.data:
-									track_obj.type = dset_obj.data['slug']
-					else:
-						blx_track.soundbank = 'general-midi-drums-v2-v4'
-						track_obj.type = 'percussion'
 
 				make_plugins_fx(convproj_obj, blx_track.autoPitch, blx_track.effects, track_obj.plugslots.slots_audio, tempomul)
 

@@ -389,6 +389,9 @@ class output_tracktion_edit(plugins.base):
 		sampleref_assoc = {}
 		sampleref_obj_assoc = {}
 
+		videoref_assoc = {}
+		videoref_obj_assoc = {}
+
 		for sampleref_id, sampleref_obj in convproj_obj.sampleref__iter():
 			tr_waveid = gen_hexid('3')
 			wave_obj = mainp_obj.objects[tr_waveid] = proj_tracktion_project.tracktion_project_object()
@@ -399,6 +402,17 @@ class output_tracktion_edit(plugins.base):
 			wave_obj.id2 = '40120000'
 			sampleref_assoc[sampleref_id] = tr_projectid+'/'+tr_waveid
 			sampleref_obj_assoc[sampleref_id] = sampleref_obj
+			
+		for videoref_id, videoref_obj in convproj_obj.videoref__iter():
+			tr_waveid = gen_hexid('4')
+			wave_obj = mainp_obj.objects[tr_waveid] = proj_tracktion_project.tracktion_project_object()
+			wave_obj.name = videoref_obj.fileref.file.filename if videoref_obj.fileref.file.filename else ''
+			wave_obj.type = 'movie'
+			wave_obj.path = videoref_obj.fileref.get_path(None, False)
+			wave_obj.info = "Imported|MediaObjectCategory|5"
+			wave_obj.id2 = '40120000'
+			videoref_assoc[videoref_id] = tr_projectid+'/'+tr_waveid
+			videoref_obj_assoc[videoref_id] = videoref_obj
 			
 		edit_obj = mainp_obj.objects[tr_editid] = proj_tracktion_project.tracktion_project_object()
 		edit_obj.name = 'Converted Edit'
@@ -643,6 +657,25 @@ class output_tracktion_edit(plugins.base):
 			make_level_plugin(wf_track)
 
 			wf_tracks.append(wf_track)
+
+			#for videopl_obj in track_obj.placements.pl_video:
+			#	wf_videoclip = proj_tracktion_edit.tracktion_audioclip()
+			#	wf_videoclip.id_num = counter_id.get()
+#
+			#	wf_videoclip.start = videopl_obj.time.position_real
+			#	wf_videoclip.length = videopl_obj.time.duration_real
+#
+			#	wf_videoclip.fadeIn = videopl_obj.fade_in.get_dur_seconds(bpm)
+			#	wf_videoclip.fadeOut = videopl_obj.fade_out.get_dur_seconds(bpm)
+#
+			#	if videopl_obj.visual.name: wf_videoclip.name = videopl_obj.visual.name
+			#	if videopl_obj.visual.color: wf_videoclip.colour = 'ff'+videopl_obj.visual.color.get_hex()
+			#	wf_videoclip.mute = int(videopl_obj.muted)
+#
+			#	if videopl_obj.videoref in videoref_assoc:
+			#		wf_videoclip.Video = videoref_assoc[videopl_obj.videoref]
+			#		wf_videoclip.videoEnabled = 1
+			#	wf_track.audioclips.append(wf_videoclip)
 
 		if dawvert_intent.output_mode == 'file':
 			project_obj.save_to_file(dawvert_intent.output_file)

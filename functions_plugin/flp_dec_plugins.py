@@ -269,6 +269,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 		plugin_obj.env_asdr_add('vol', 0, asdflfo_att, 0, asdflfo_dec, asdflfo_sus, asdflfo_rel, asdflfo_amt)
 		plugin_obj.midi.from_sf2(flsf_bank, flsf_patch)
+		plugin_obj.midi_fallback__add_inst(flsf_patch)
 		
 		pitch_amount = flsf_lfo_amount/128 if flsf_lfo_amount != -128 else 0
 		pitch_predelay = flsf_lfo_predelay/256 if flsf_lfo_predelay != -1 else 0
@@ -537,6 +538,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 	else:
 		plugin_obj.type_set('native', 'flstudio', flplugin.name)
+		if flplugin.name == 'sawer': plugin_obj.midi_fallback__add_inst(81)
+		if flplugin.name == 'plucked!': plugin_obj.midi_fallback__add_inst(25)
+		if flplugin.name == 'fl slayer': plugin_obj.midi_fallback__add_inst(30)
+		if flplugin.name == 'fl keys': plugin_obj.midi_fallback__add_inst(0)
 
 		if DEBUGSTUFF:
 			print(flplugin.name, flplugin.params.hex())

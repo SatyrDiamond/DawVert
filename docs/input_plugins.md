@@ -67,7 +67,7 @@
 | M-S | ```mariopaint``` | ```notessimo_v3``` | Notessimo V3 | ```.note``` | ✔️ | |
 | R-M | ```mariopaint``` | ```mariosequencer``` | MarioSequencer | ```.msq``` | ✔️ | |
 | R-M | ```mariopaint``` | ```adv_mario_seq``` | Advanced Mario Sequencer | ```.mss``` | ✔️ | |
-| R-M | ```mariopaint``` | ```super_mario_paint``` | Super Mario Paint | ```.txt``` | ✔️ | |
+| R-M | ```mariopaint``` | ```smp_paint``` | Super Mario Paint | ```.txt``` | ✔️ | |
 
 ## Old
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 

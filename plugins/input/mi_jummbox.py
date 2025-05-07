@@ -300,21 +300,18 @@ class input_jummbox(plugins.base):
 					cvpj_volume = (bb_inst.volume/50)+0.5
 					preset = str(bb_inst.preset) if bb_inst.preset else None
 
+					inst_obj = convproj_obj.instrument__add(cvpj_instid)
 					midifound = False
+
 					if preset:
-						main_dso = globalstore.dataset.get_obj('beepbox', 'preset', preset)
-						ds_bb = main_dso.midi if main_dso else None
-						if ds_bb:
-							if ds_bb.used != False:
-								midifound = True
-								inst_obj = convproj_obj.instrument__add(cvpj_instid)
-								inst_obj.plugslots.set_synth(cvpj_instid)
-								inst_obj.visual.name = main_dso.visual.name
-								plugin_obj = convproj_obj.plugin__addspec__midi(cvpj_instid, 0, 0, ds_bb.patch, False, 'gm')
-								inst_obj.plugslots.set_synth(cvpj_instid)
+						plugin_obj = convproj_obj.plugin__addspec__midi_from_dset(cvpj_instid, 'beepbox', 'preset', preset)
+						if plugin_obj:
+							inst_obj.plugslots.set_synth(cvpj_instid)
+							plugin_obj.midi.to_visual(inst_obj.visual, False)
+							midifound = True
+						inst_obj.visual.from_dset('beepbox', 'preset', preset, False)
 
 					if not midifound:
-						inst_obj = convproj_obj.instrument__add(cvpj_instid)
 						inst_obj.plugslots.set_synth(cvpj_instid)
 						plugin_obj = convproj_obj.plugin__add(cvpj_instid, 'native', 'jummbox', bb_inst.type)
 
@@ -349,6 +346,7 @@ class input_jummbox(plugins.base):
 							if 'harmonics' in bb_data: 
 								harmonics_obj = plugin_obj.harmonics_add('harmonics')
 								get_harmonics(harmonics_obj, bb_data['harmonics'])
+							plugin_obj.midi_fallback__add_inst(24)
 
 						if bb_inst.type == 'spectrum':
 							if 'spectrum' in bb_data: 

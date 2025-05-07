@@ -149,6 +149,14 @@ class input_bandlab(plugins.base):
 									sp_obj.vel_max = layer['minVelRange']/127 if 'minVelRange' in layer else 0
 									sp_obj.vol = layer['volume'] if 'volume' in layer else 0
 
+				else:
+					if blx_track.soundbank:
+						plugin_obj = convproj_obj.plugin__add(blx_track.id, 'native', 'bandlab', 'instrument')
+						plugin_obj.datavals.add('instrument', blx_track.soundbank)
+						plugin_obj.role = 'synth'
+						plugin_obj.midi_fallback__add_from_dset('bandlab', 'inst', blx_track.soundbank)
+						track_obj.plugslots.set_synth(blx_track.id)
+
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_midi()
 					placement_obj.time.position = tempo_calc(tempomul, blx_region.startPosition)

@@ -35,7 +35,7 @@ class input_ex_basic_pitch(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			model_output, midi_data, note_events = predict(dawvert_intent.input_file)
 
-		track_obj, plugin_obj = convproj_obj.track__addspec__midi('basicpitch', 'basicpitch', 0, 0, False, 1, False)
+		track_obj, plugin_obj = convproj_obj.track__addspec__midi('basicpitch', 0, 0, {})
 
 		cvpj_notelist = track_obj.placements.notelist
 

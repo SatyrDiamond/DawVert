@@ -235,6 +235,14 @@ class chunk__audiodefinfo:
 		self.unknowndata.append( byr_stream.float() )
 		self.unknowndata.append( byr_stream.uint32() )
 
+class chunk__metadata:
+	def __init__(self, byr_stream):
+		self.unk1 = byr_stream.uint32()
+		self.metadata = {}
+		for _ in range(byr_stream.uint32()):
+			chunk_name = byr_stream.raw(4)
+			chunk_data = byr_stream.string16(byr_stream.uint32()//2)
+			self.metadata[chunk_name] = chunk_data
 
 chunksdef = {}
 chunksdef['754be33a5ef5ec44a2f0f4eb3c53af7d'] = chunk__peak
@@ -250,6 +258,7 @@ chunksdef['5287535c45e3784f83b8551935b4c6f7'] = chunk__audiostretch
 chunksdef['be3967941a398443878538bda35f409a'] = chunk__startingparam
 chunksdef['5c1b70846368d21186fd00c04f8edb8a'] = chunk__track_automation
 chunksdef['44030abfa7f8f44788cba63c7756ba9e'] = chunk__audiodefinfo
+chunksdef['1d4f23715752d21186dc00c04f8edb8a'] = chunk__metadata
 
 # ---------------------- INDATA ----------------------
 
@@ -274,6 +283,7 @@ verboseid['07521655f6713e4e83be9dee9c5ba303'] = 'TempoKeyPoint'
 verboseid['44030abfa7f8f44788cba63c7756ba9e'] = 'AudioDef:Info'
 verboseid['5d2d8fb20f23d21186af00c04f8edb8a'] = 'RegionData'
 verboseid['be3967941a398443878538bda35f409a'] = 'StartingParams'
+verboseid['1d4f23715752d21186dc00c04f8edb8a'] = 'MetaData'
 
 verboseid['a95c808a7402c242b8b9572f6786317c'] = 'Group:AudioDefList'
 verboseid['1d54047b1c0adc4faeb3d4935206611d'] = 'Group:AudioDef'
@@ -290,6 +300,7 @@ verboseid['07521655f6713e4e83be9dee9c5ba303'] = 'Group:TempoKeyPoints'
 verboseid['5287535c45e3784f83b8551935b4c6f7'] = 'Group:AudioStretch'
 verboseid['be3967941a398443878538bda35f409a'] = 'Group:StartingParams'
 verboseid['5d1b70846368d21186fd00c04f8edb8a'] = 'Group:TrackAuto'
+verboseid['bc945f925a52d21186dc00c04f8edb8a'] = 'Group:MetaData'
 
 class sony_acid_chunk:
 	def __init__(self):
@@ -299,7 +310,7 @@ class sony_acid_chunk:
 		self.end = 0
 		self.is_list = False
 		self.in_data = []
-		self.def_data = None
+		self.content = None
 
 	def __getitem__(self, v):
 		return self.in_data[v]
@@ -346,7 +357,7 @@ class sony_acid_chunk:
 
 			if idname in chunksdef and not SHOWALL: 
 				with byr_stream.isolate_size(self.size, True) as bye_stream:
-					self.def_data = chunksdef[idname](bye_stream)
+					self.content = chunksdef[idname](bye_stream)
 				#print(byr_stream.raw(self.size).hex())
 			else:
 				if VERBOSE: print('\t'*tnum,  byr_stream.raw(self.size).hex())

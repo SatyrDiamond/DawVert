@@ -98,8 +98,8 @@ class input_notessimo_v2(plugins.base):
 		for used_inst in used_insts:
 			cvpj_instid = str(used_inst)
 			inst_obj = convproj_obj.instrument__add(cvpj_instid)
-			midifound = inst_obj.from_dataset('notessimo_v2', 'inst', cvpj_instid, True)
-			if midifound: inst_obj.to_midi(convproj_obj, cvpj_instid, True)
+			inst_obj.visual.from_dset('notessimo_v2', 'inst', cvpj_instid, True)
+			midifound = inst_obj.midi.out_inst.from_dataset('notessimo_v2', 'inst', cvpj_instid)
 			inst_obj.fxrack_channel = 1 if inst_obj.midi.out_inst.drum else fxnum
 			if midifound:
 				fxchan_data = convproj_obj.fx__chan__add(fxnum)

@@ -76,8 +76,9 @@ class mariopaint_song():
 
 		for instnum, instname in enumerate(used_inst): 
 			inst_obj = convproj_obj.instrument__add(instname)
-			midifound = inst_obj.from_dataset('mariopaint', 'inst', instname, True)
-			if midifound: inst_obj.to_midi(convproj_obj, instname, False)
+			inst_obj.visual.from_dset('mariopaint', 'inst', instname, True)
+			plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'mariopaint', None)
+			plugin_obj.midi_fallback__add_from_dset('mariopaint', 'inst', instname)
 			fxchan_data = convproj_obj.fx__chan__add(instnum+1)
 			fxchan_data.visual = copy.deepcopy(inst_obj.visual)
 			inst_obj.fxrack_channel = instnum+1

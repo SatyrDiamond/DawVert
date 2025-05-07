@@ -380,6 +380,7 @@ class input_soundation(plugins.base):
 
 						if instpluginname == 'com.soundation.supersaw':
 							get_asdr(plugin_obj, soundation_inst)
+							plugin_obj.midi_fallback__add_inst(81)
 
 					elif instpluginname == 'com.soundation.simple':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)

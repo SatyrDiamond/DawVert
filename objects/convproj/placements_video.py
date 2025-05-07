@@ -22,7 +22,7 @@ class cvpj_placements_video:
 		return self.data.__len__()
 
 	def __bool__(self):
-		return bool(self.data) or bool(self.video_fileref)
+		return bool(self.data) or bool(self.videoref)
 
 	def add(self):
 		pl_obj = cvpj_placement_video(self.time_ppq, self.time_float)

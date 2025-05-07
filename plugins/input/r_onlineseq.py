@@ -100,52 +100,65 @@ class input_onlinesequencer(plugins.base):
 
 			if trueinstid not in multig: multig[trueinstid] = []
 			track_obj = convproj_obj.track__add(trackid, 'instrument', 0, False)
+			track_obj.visual.from_dset('onlineseq', 'inst', str(trueinstid), True)
+			
 			multig[trueinstid].append(track_obj)
-
-			midifound = track_obj.from_dataset('onlineseq', 'inst', str(trueinstid), True)
 
 			track_obj.visual_inst = track_obj.visual.copy()
 
-			if midifound: 
-				track_obj.to_midi(convproj_obj, trackid, True)
+			if trueinstid in [13,14,15,16]: 
+				plugin_obj = convproj_obj.plugin__add(trackid, 'universal', 'synth-osc', None)
+				plugin_obj.role = 'synth'
+				track_obj.plugslots.set_synth(trackid)
+				osc_data = plugin_obj.osc_add()
+				if instid == 13:
+					plugin_obj.midi_fallback__add_inst(11)
+					osc_data.prop.shape = 'sine'
+				if instid == 14:
+					plugin_obj.midi_fallback__add_inst(80)
+					osc_data.prop.shape = 'square'
+				if instid == 15:
+					plugin_obj.midi_fallback__add_inst(81)
+					osc_data.prop.shape = 'saw'
+				if instid == 16:
+					plugin_obj.midi_fallback__add_inst(95)
+					osc_data.prop.shape = 'triangle'
+			
+			elif trueinstid == 55:
+				s_synthdata = synthdata[instid]
+				plugin_obj = convproj_obj.plugin__add(trackid, 'universal', 'synth-osc', None)
+				plugin_obj.role = 'synth'
+				filter_obj = plugin_obj.filter
+				track_obj.plugslots.set_synth(trackid)
+				osc_data = plugin_obj.osc_add()
+				osc_data.prop.shape = ['sine', 'square', 'saw', 'triangle'][s_synthdata.shape]
+				plugin_obj.midi_fallback__add_inst([11, 80, 81, 95][s_synthdata.shape])
+
+				if s_synthdata.env_vol:
+					env_data = s_synthdata.env_vol
+					if env_data.enabled: plugin_obj.env_asdr_add('vol', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 1)
+
+				if s_synthdata.env_filt:
+					env_data = s_synthdata.env_filt
+					if env_data.enabled: plugin_obj.env_asdr_add('cutoff', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 6000)
+
+				if s_synthdata.lfo_on:
+					lfo_obj = plugin_obj.lfo_add(['vol','pitch','cutoff'][s_synthdata.lfo_dest])
+					lfo_obj.amount = s_synthdata.lfo_amount if s_synthdata.lfo_dest != 1 else s_synthdata.lfo_amount/100
+					if s_synthdata.lfo_freq_custom: lfo_obj.time.set_hz(s_synthdata.lfo_freq)
+					else: lfo_obj.time.set_frac(1, int(s_synthdata.lfo_freq), '', convproj_obj)
+
+				filter_obj.on = True
+				filter_obj.freq = s_synthdata.filter_freq
+				filter_obj.q = ((s_synthdata.filter_reso+1)/11)**2.5
+				filter_obj.type.set(['low_pass','band_pass','high_pass'][s_synthdata.filter_type], None)
+
 			else:
-				if trueinstid in [13,14,15,16]: 
-					plugin_obj = convproj_obj.plugin__add(trackid, 'universal', 'synth-osc', None)
-					plugin_obj.role = 'synth'
-					track_obj.plugslots.set_synth(trackid)
-					osc_data = plugin_obj.osc_add()
-					if instid == 13: osc_data.prop.shape = 'sine'
-					if instid == 14: osc_data.prop.shape = 'square'
-					if instid == 15: osc_data.prop.shape = 'saw'
-					if instid == 16: osc_data.prop.shape = 'triangle'
-				
-				if trueinstid == 55:
-					s_synthdata = synthdata[instid]
-					plugin_obj = convproj_obj.plugin__add(trackid, 'universal', 'synth-osc', None)
-					plugin_obj.role = 'synth'
-					filter_obj = plugin_obj.filter
-					track_obj.plugslots.set_synth(trackid)
-					osc_data = plugin_obj.osc_add()
-					osc_data.prop.shape = ['sine', 'square', 'saw', 'triangle'][s_synthdata.shape]
-
-					if s_synthdata.env_vol:
-						env_data = s_synthdata.env_vol
-						if env_data.enabled: plugin_obj.env_asdr_add('vol', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 1)
-
-					if s_synthdata.env_filt:
-						env_data = s_synthdata.env_filt
-						if env_data.enabled: plugin_obj.env_asdr_add('cutoff', 0, env_data.attack, 0, env_data.decay, env_data.sustain, env_data.release, 6000)
-
-					if s_synthdata.lfo_on:
-						lfo_obj = plugin_obj.lfo_add(['vol','pitch','cutoff'][s_synthdata.lfo_dest])
-						lfo_obj.amount = s_synthdata.lfo_amount if s_synthdata.lfo_dest != 1 else s_synthdata.lfo_amount/100
-						if s_synthdata.lfo_freq_custom: lfo_obj.time.set_hz(s_synthdata.lfo_freq)
-						else: lfo_obj.time.set_frac(1, int(s_synthdata.lfo_freq), '', convproj_obj)
-
-					filter_obj.on = True
-					filter_obj.freq = s_synthdata.filter_freq
-					filter_obj.q = ((s_synthdata.filter_reso+1)/11)**2.5
-					filter_obj.type.set(['low_pass','band_pass','high_pass'][s_synthdata.filter_type], None)
+				plugin_obj = convproj_obj.plugin__add(trackid, 'native', 'onlineseq', 'instrument')
+				plugin_obj.datavals.add('instrument', trueinstid)
+				plugin_obj.role = 'synth'
+				plugin_obj.midi_fallback__add_from_dset('onlineseq', 'inst', str(trueinstid))
+				track_obj.plugslots.set_synth(trackid)
 
 			if instid in project_obj.params:
 				i_params = project_obj.params[instid]

@@ -40,28 +40,15 @@ class input_adlib_rol(plugins.base):
 
 		globalstore.dataset.load('adlib_rol', './data_main/dataset/adlib_rol.dset')
 
+		native_insts = {}
+
 		if 'extra_file' in dawvert_intent.input_params:
 			adlibbnk_obj = adlib_bnk.bnk_file()
 			adlibbnk_obj.read_file(dawvert_intent.input_params['extra_file'])
 			for instnum, used in enumerate(adlibbnk_obj.used):
-
 				if used:
-					instname = adlibbnk_obj.names[instnum].replace(" ", "")
-					instname_upper = instname.upper()
-					inst_obj = convproj_obj.instrument__add(instname_upper)
-					midifound = inst_obj.from_dataset('adlib_rol', 'inst', instname_upper, True)
-					if midifound: inst_obj.to_midi_noplug()
-					inst_obj.plugslots.set_synth(instname_upper)
-					opli = adlibbnk_obj.get_inst_index(instnum)
-					opli.to_cvpj(convproj_obj, inst_obj.plugslots.synth)
-		else:
-			instlist = globalstore.dataset.get_cat('adlib_rol', 'inst')
-			if instlist:
-				for instid in instlist.objects.list():
-					instname_upper = instid.upper()
-					inst_obj = convproj_obj.instrument__add(instname_upper)
-					midifound = inst_obj.from_dataset('adlib_rol', 'inst', instname_upper, True)
-					if midifound: inst_obj.to_midi(convproj_obj, instname_upper, True)
+					instname = adlibbnk_obj.names[instnum].replace(" ", "").upper()
+					native_insts[instname] = adlibbnk_obj.get_inst_index(instnum)
 
 		convproj_obj.set_timings(project_obj.tickBeat, False)
 
@@ -69,6 +56,8 @@ class input_adlib_rol(plugins.base):
 		convproj_obj.params.add('bpm', bpm, 'float')
 		for pos, bpmmod in project_obj.track_tempo.events: 
 			convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', pos, bpmmod*bpm)
+
+		used_voices = []
 
 		for tracknum, rol_track in enumerate(project_obj.tracks):
 			cvpj_trackid = 'track'+str(tracknum+1)
@@ -84,8 +73,28 @@ class input_adlib_rol(plugins.base):
 
 			upper_timbre = [[i, p.upper()] for i, p in rol_track.timbre.events.copy()]
 			cvpj_notelist.add_instpos(upper_timbre)
+
+			for x in upper_timbre:
+				if x[1] not in used_voices: used_voices.append(x[1])
+
 			for pos, val in rol_track.volume.events: convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'vol'], 'float', pos, val)
 			for pos, val in rol_track.pitch.events: convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pitch'], 'float', pos, val)
+
+		for used_voice in used_voices:
+			instname_upper = used_voice.upper()
+			inst_obj = convproj_obj.instrument__add(instname_upper)
+			inst_obj.visual.name = instname_upper
+			inst_obj.visual.from_dset('adlib_rol', 'inst', instname_upper, True)
+			if instname_upper in native_insts:
+				opli = native_insts[instname_upper]
+				plugin_obj = opli.to_cvpj(convproj_obj, instname_upper)
+				plugin_obj.midi_fallback__add_from_dset('adlib_rol', 'inst', instname_upper)
+				plugin_obj.midi_fallback__to_vis(inst_obj.visual, False)
+			else:
+				plugin_obj = convproj_obj.plugin__add(instname_upper, 'universal', 'midi', None)
+				plugin_obj.midi.from_dataset('adlib_rol', 'inst', instname_upper)
+				plugin_obj.midi.to_visual(inst_obj.visual, False)
+			inst_obj.plugslots.set_synth(instname_upper)
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')

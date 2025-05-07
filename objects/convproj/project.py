@@ -569,59 +569,13 @@ class cvpj_project:
 	def track__count(self):
 		return len(self.track_order)
 
-	def track__addspec__midi(self, track_id, plug_id, m_bank, m_inst, m_drum, uses_pl, indexed):
-		plugin_obj = self.plugin__addspec__midi(plug_id, 0, m_bank, m_inst, m_drum, 'gm')
+	def track__addspec__midi(self, track_id, uses_placements, is_indexed, indict):
+		plugin_obj = self.plugin__addspec__midi(plug_id, indict)
 		plugin_obj.role = 'synth'
 
-		track_obj = self.track__add(track_id, 'instrument', uses_pl, indexed)
-		track_obj.midi.out_inst.patch = m_inst
-		track_obj.midi.out_inst.bank = m_bank
-		track_obj.midi.out_inst.drum = m_drum
+		track_obj = self.track__add(track_id, 'instrument', uses_placements, is_indexed)
 		track_obj.plugslots.set_synth(plug_id)
 		track_obj.params.add('usemasterpitch', not m_drum, 'bool')
-		return track_obj, plugin_obj
-
-	def track__addspec__midi__dset(self, inst_id, plug_id, m_bank_hi, m_bank, m_inst, m_drum, def_name, def_color, uses_pl, indexed, **kwargs):
-		midi_type = kwargs['device'] if 'device' in kwargs else 'gm'
-		startcat = midi_type+'_inst' if not m_drum else midi_type+'_drums'
-
-		globalstore.dataset.load('midi', './data_main/dataset/midi.dset')
-
-		track_obj, plugin_obj = self.track__addspec__midi(inst_id, plug_id, m_bank, m_inst, m_drum, uses_pl, indexed)
-		if def_name: track_obj.visual.name = def_name
-		if def_color: track_obj.visual.color = def_color
-		track_obj.midi.out_inst.bank_hi = m_bank_hi
-		track_obj.midi.out_inst.device = midi_type
-
-		plugin_obj.midi.bank_hi = m_bank_hi
-		plugin_obj.midi.device = midi_type
-		plugin_obj.datavals.add('device', midi_type)
-		return track_obj, plugin_obj
-
-	def track__add__dset(self, track_id, plug_id, dset_name, ds_id, def_name, def_color, uses_pl, indexed):
-		main_dso = globalstore.dataset.get_obj(dset_name, 'inst', ds_id)
-		ds_midi = main_dso.midi if main_dso else None
-
-		globalstore.dataset.load('midi', './data_main/dataset/midi.dset')
-
-		midifound = False
-		if ds_midi:
-			if ds_midi.used != False:
-				midifound = True
-				track_obj, plugin_obj = self.track__addspec__midi__dset(track_id, plug_id, 0, ds_midi.bank, ds_midi.patch, ds_midi.is_drum, def_name, def_color, uses_pl, indexed)
-				track_obj.visual.from_dset_opt(dset_name, 'inst', ds_id)
-				track_obj.visual.from_dset_opt('midi', startcat, str(m_bank_hi)+'_'+str(m_bank)+'_'+str(m_inst) )
-				track_obj.visual.from_dset_opt('midi', startcat, '0_0_'+str(m_inst) )
-
-		if not midifound:
-			plugin_obj = self.plugin__add(plug_id, None, None, None)
-			plugin_obj.role = 'synth'
-			track_obj = self.track__add(track_id, 'instrument', uses_pl, indexed)
-			track_obj.plugslots.set_synth(plug_id)
-			track_obj.visual.name = def_name
-			track_obj.visual.color = def_color
-			track_obj.visual.from_dset_opt(dset_name, 'inst', ds_id)
-
 		return track_obj, plugin_obj
 
 # --------------------------------------------------------- AUTOMATION ---------------------------------------------------------
@@ -898,15 +852,24 @@ class cvpj_project:
 		plugin_obj.role = 'synth'
 		return plugin_obj, plug_id, samplepart_obj
 
-	def plugin__addspec__midi(self, plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev):
+	def plugin__addspec__midi(self, plug_id, indict):
 		plugin_obj = self.plugin__add(plug_id, 'universal', 'midi', None)
 		plugin_obj.role = 'synth'
-		plugin_obj.midi.bank_hi = m_bank_hi
-		plugin_obj.midi.bank = m_bank
-		plugin_obj.midi.patch = m_inst
-		plugin_obj.midi.drum = m_drum
-		plugin_obj.midi.device = m_dev
+		plugin_obj.midi.from_dict(indict)
 		return plugin_obj
+
+	def plugin__addspec__midi_from_dset(self, plug_id, ds_id, ds_cat, ds_obj):
+		dso_obj = globalstore.dataset.get_obj(ds_id, ds_cat, ds_obj)
+		dso_midi = dso_obj.midi if dso_obj else None
+
+		if dso_midi:
+			plugin_obj = self.plugin__add(plug_id, 'universal', 'midi', None)
+			plugin_obj.role = 'synth'
+			midi_obj = plugin_obj.midi
+			midi_obj.bank = dso_midi.bank
+			midi_obj.patch = dso_midi.patch
+			midi_obj.drum = dso_midi.is_drum
+			return plugin_obj
 
 # --------------------------------------------------------- INSTRUMENT ---------------------------------------------------------
 

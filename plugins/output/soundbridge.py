@@ -19,7 +19,7 @@ PROJECT_FREQ = 22050
 
 logger_output = logging.getLogger('output')
 
-sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('unk2', 'B')])
+sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('flags', 'B')])
 
 native_names = {}
 native_names['eq'] = ['2ed34074c14566409f62442c8545929f', 'ZPlane', 'EQ']
@@ -897,12 +897,16 @@ class output_soundbridge(plugins.base):
 
 					numnote = 0
 					for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
+
 						for t_key in t_keys:
 							notearray[numnote]['id'] = numnote
 							notearray[numnote]['pos'] = t_pos
 							notearray[numnote]['dur'] = t_dur
 							notearray[numnote]['key'] = t_key+60
 							notearray[numnote]['vol'] = int(min(t_vol*127, 127))
+							if t_extra:
+								if 'enabled' in t_extra:
+									if not t_extra['enabled']: notearray[numnote]['flags'] += 128
 							numnote += 1
 
 					if notespl_obj.visual.color: 

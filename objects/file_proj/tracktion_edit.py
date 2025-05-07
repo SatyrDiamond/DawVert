@@ -523,10 +523,10 @@ class tracktion_audioclip:
 
 		self.video = None
 		self.srcVideo = None
-		self.videoEnabled = None
-		self.srcVideoX = None
-		self.srcVideoY = None
-		self.videoX = None
+		self.videoEnabled = -1
+		self.srcVideoX = -1
+		self.srcVideoY = -1
+		self.videoX = -1
 
 		self.loopinfo = tracktion_loopinfo()
 		self.effects = []
@@ -635,6 +635,13 @@ class tracktion_audioclip:
 		if self.warpTime != 0: tempxml.set('warpTime', str(self.warpTime))
 		if self.effectsVisible != 1: tempxml.set('effectsVisible', str(self.effectsVisible))
 		if self.groupID != -1: tempxml.set('groupID', str(self.groupID))
+
+		if self.video: tempxml.set('video', str(self.video))
+		if self.srcVideo: tempxml.set('srcVideo', str(self.srcVideo))
+		if self.videoEnabled != -1: tempxml.set('videoEnabled', str(self.videoEnabled))
+		if self.srcVideoX != -1: tempxml.set('srcVideoX', str(self.srcVideoX))
+		if self.srcVideoY != -1: tempxml.set('srcVideoY', str(self.srcVideoY))
+		if self.videoX != -1: tempxml.set('videoX', str(self.videoX))
 
 		self.loopinfo.write(tempxml)
 

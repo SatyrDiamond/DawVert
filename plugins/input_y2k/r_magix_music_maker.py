@@ -23,6 +23,7 @@ class input_old_magix_maker(plugins.base):
 		in_dict['projtype'] = 'r'
 		in_dict['placement_loop'] = ['loop', 'loop_off']
 		in_dict['audio_stretch'] = ['rate']
+		in_dict['track_hybrid'] = True
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors

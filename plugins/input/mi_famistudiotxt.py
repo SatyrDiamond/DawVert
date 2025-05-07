@@ -60,10 +60,15 @@ def create_inst(vol, convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_n
 	synthid = None
 
 	if WaveType == 'Square1' or WaveType == 'Square2' or WaveType == 'Triangle' or WaveType == 'Noise':
-		if WaveType == 'Square1' or WaveType == 'Square2': wavetype = 'square'
-		if WaveType == 'Triangle': wavetype = 'triangle'
-		if WaveType == 'Noise': wavetype = 'noise'
 		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		if WaveType == 'Square1' or WaveType == 'Square2':
+			wavetype = 'square'
+			plugin_obj.midi_fallback__add_inst(80)
+		if WaveType == 'Triangle':
+			wavetype = 'triangle'
+			plugin_obj.midi_fallback__add_inst(95)
+		if WaveType == 'Noise':
+			wavetype = 'noise'
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = wavetype
 		add_envelopes(plugin_obj, fst_Instrument)
@@ -75,9 +80,13 @@ def create_inst(vol, convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_n
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'VRC6Square' or WaveType == 'VRC6Saw':
-		if WaveType == 'VRC6Saw': wavetype = 'saw'
-		if WaveType == 'VRC6Square': wavetype = 'square'
 		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		if WaveType == 'VRC6Saw':
+			plugin_obj.midi_fallback__add_inst(81)
+			wavetype = 'saw'
+		if WaveType == 'VRC6Square':
+			wavetype = 'square'
+			plugin_obj.midi_fallback__add_inst(80)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = wavetype
 		add_envelopes(plugin_obj, fst_Instrument)
@@ -98,17 +107,20 @@ def create_inst(vol, convproj_obj, WaveType, fst_Instrument, fxchannel_obj, fx_n
 
 	if WaveType == 'S5B':
 		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj.midi_fallback__add_inst(80)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 		add_envelopes(plugin_obj, fst_Instrument)
 
 	if WaveType == 'MMC5':
 		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj.midi_fallback__add_inst(80)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 
 	if WaveType == 'EPSMSquare':
 		plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'synth-osc', None)
+		plugin_obj.midi_fallback__add_inst(80)
 		osc_data = plugin_obj.osc_add()
 		osc_data.prop.shape = 'square'
 		add_envelopes(plugin_obj, fst_Instrument)

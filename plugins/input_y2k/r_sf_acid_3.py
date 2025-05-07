@@ -218,7 +218,7 @@ class input_acid_3(plugins.base):
 				prevpoint = 0
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'Group:TempoKeyPoints':
-						def_data = regs_chunk.def_data
+						def_data = regs_chunk.content
 						if not def_data.pos_samples:
 							if def_data.tempo:
 								starttempo = (500000/def_data.tempo)*120
@@ -232,7 +232,7 @@ class input_acid_3(plugins.base):
 			if root_name == 'Group:StartingParams':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'Group:StartingParams':
-						def_data = regs_chunk.def_data
+						def_data = regs_chunk.content
 						auto_basenotes[0] = int(def_data.root_note)
 						starttempo = (500000/def_data.tempo)*120
 
@@ -244,7 +244,7 @@ class input_acid_3(plugins.base):
 
 		for root_chunk, root_name in project_obj.root.iter_wtypes():
 			if root_name == 'MainData':
-				def_data = root_chunk.def_data
+				def_data = root_chunk.content
 				ppq = def_data.ppq
 				convproj_obj.set_timings(ppq, False)
 				version = def_data.version
@@ -257,8 +257,8 @@ class input_acid_3(plugins.base):
 			elif root_name == 'Group:RegionDatas':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'RegionData':
-						if regs_chunk.def_data:
-							def_data = regs_chunk.def_data
+						if regs_chunk.content:
+							def_data = regs_chunk.content
 							files[filecount] = def_data.filename
 						filecount += 1
 
@@ -282,37 +282,37 @@ class input_acid_3(plugins.base):
 								if track_name == 'Group:AudioInfo': 
 									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
 										if trackg_name == 'TrackAudioInfo':
-											track_audioinfo = trackg_chunk.def_data
+											track_audioinfo = trackg_chunk.content
 
 								if track_name == 'Group:AudioDef': 
 									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
 										if trackg_name == 'Group:AudioDefList':
 											audiodefd = [None, None]
 											for audiodef_chunk, audiodef_name in trackg_chunk.iter_wtypes():
-												if audiodef_name == 'AudioDef:Info': audiodefd[0] = audiodef_chunk.def_data
+												if audiodef_name == 'AudioDef:Info': audiodefd[0] = audiodef_chunk.content
 												if audiodef_name == 'Group:AudioStretch': 
 													for as_chunk, as_name in audiodef_chunk.iter_wtypes():
 														if as_name == 'Group:AudioStretch':
-															audiodefd[1] = as_chunk.def_data
+															audiodefd[1] = as_chunk.content
 											track_audiodefs.append(audiodefd)
 
 								if track_name == 'Group:AudioStretch': 
 									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
 										if trackg_name == 'Group:AudioStretch':
-											track_audiostretch = trackg_chunk.def_data
+											track_audiostretch = trackg_chunk.content
 
 								if track_name == 'TrackData': 
 									for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
 										if trackg_name == 'Group:Regions':
 											for reg_chunk, reg_name in trackg_chunk.iter_wtypes():
 												if reg_name == 'TrackRegion':
-													track_regions.append(reg_chunk.def_data)
+													track_regions.append(reg_chunk.content)
 
 								#if track_name == 'Group:TrackAuto': 
 								#	for trackg_chunk, trackg_name in track_chunk.iter_wtypes():
 								#		if trackg_name == 'TrackAutomation':
 								#			if track_header:
-								#				track_auto = trackg_chunk.def_data
+								#				track_auto = trackg_chunk.content
 								#				autoloc = None
 								#				
 								#				trackid = 'track_'+str(tracknum)
@@ -328,7 +328,7 @@ class input_acid_3(plugins.base):
 
 							else:
 								if track_name == 'TrackData':
-									track_header = track_chunk.def_data
+									track_header = track_chunk.content
 
 						if track_header:
 
@@ -343,6 +343,7 @@ class input_acid_3(plugins.base):
 								if track_audioinfo:
 									track_obj.params.add('vol', track_audioinfo.vol, 'float')
 									track_obj.params.add('pan', track_audioinfo.pan, 'float')
+									track_obj.datavals.add('pan_mode', 'stereo')
 
 								if track_regions:
 
@@ -450,7 +451,7 @@ class input_acid_3(plugins.base):
 			elif root_name == 'Group:TempoKeyPoints':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'Group:TempoKeyPoints':
-						def_data = regs_chunk.def_data
+						def_data = regs_chunk.content
 						if def_data.tempo:
 							tempov = (500000/def_data.tempo)*120
 							convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', def_data.pos_samples, tempov, 'instant')
@@ -463,7 +464,7 @@ class input_acid_3(plugins.base):
 			elif root_name == 'Group:Markers':
 				for regs_chunk, regs_name in root_chunk.iter_wtypes():
 					if regs_name == 'Marker':
-						marker = regs_chunk.def_data
+						marker = regs_chunk.content
 
 						timemarker_obj = convproj_obj.timemarker__add()
 						timemarker_obj.position = marker.pos
@@ -475,3 +476,13 @@ class input_acid_3(plugins.base):
 						else:
 							timemarker_obj.visual.color.set_int([219,142,87])
 						timemarker_obj.visual.color.fx_allowed = ['brighter']
+
+			elif root_name == 'Group:MetaData':
+				for regs_chunk, regs_name in root_chunk.iter_wtypes():
+					if regs_name == 'MetaData':
+						metadata = regs_chunk.content.metadata
+						if b'INAM' in metadata: convproj_obj.metadata.name = metadata[b'INAM']
+						if b'IENG' in metadata: convproj_obj.metadata.author = metadata[b'IENG']
+						if b'IART' in metadata: convproj_obj.metadata.original_author = metadata[b'IART']
+						if b'ICMT' in metadata: convproj_obj.metadata.comment_text = metadata[b'ICMT']
+						if b'ICOP' in metadata: convproj_obj.metadata.copyright = metadata[b'ICOP']

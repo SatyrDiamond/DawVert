@@ -119,14 +119,27 @@ class cvpj_plugin:
 		self.audioports = cvpj_audioports()
 		self.role = 'fx'
 		self.midi = midi_inst.cvpj_midi_inst()
+		self.midi_incompat_synth = midi_inst.cvpj_midi_inst()
+		self.midi_incompat_synth_on = False
 		self.external_info = cvpj_plugin_external()
-		#self.set_program(0)
 
 		self.state_nonprog = plugstate.cvpj_plugin_state()
 		self.state = self.state_nonprog
 		self.using_programs = False
 		self.current_program = -1
 		self.programs = {}
+
+	def midi_fallback__add_inst(self, patch):
+		self.midi_incompat_synth_on = True
+		self.midi_incompat_synth.patch = patch
+
+	def midi_fallback__add_from_dset(self, ds_id, ds_cat, ds_obj):
+		if self.midi_incompat_synth.from_dataset(ds_id, ds_cat, ds_obj):
+			self.midi_incompat_synth_on = True
+
+	def midi_fallback__to_vis(self, visual_obj, overwrite):
+		if self.midi_incompat_synth_on:
+			self.midi_incompat_synth.to_visual(visual_obj, overwrite)
 
 	def program__reset(self):
 		self.current_program = 0

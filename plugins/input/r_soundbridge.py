@@ -81,7 +81,7 @@ def add_auto(defaultValue, valtype, convproj_obj, autoloc, sb_blocks, add, mul):
 		else:
 			auto_obj.defualt_val = (defaultValue+add)*mul
 
-sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('unk2', 'B')])
+sb_notes_dtype = np.dtype([('id', '>I'),('pos', '>I'),('dur', '>I'),('key', 'B'),('vol', 'B'),('unk1', 'B'),('flags', 'B')])
 
 def parse_notes(notes_data):
 	unk_x = notes_data.read(4)
@@ -384,7 +384,11 @@ def make_track(convproj_obj, sb_track, groupname, num, pfreq):
 			placement_obj.muted = bool(block.muted)
 			cvpj_notelist = placement_obj.notelist
 			for note in parse_notes(io.BytesIO(blockdata)):
-				cvpj_notelist.add_r(int(note['pos']), int(note['dur']), int(note['key'])-60, int(note['vol'])/127, None)
+				note_disabled = bool(128&note['flags'])
+				t_note_extra = {}
+				if note_disabled: t_note_extra['enabled'] = False
+				cvpj_notelist.add_r(int(note['pos']), int(note['dur']), int(note['key'])-60, int(note['vol'])/127, t_note_extra)
+
 			for block in block.automationBlocks:
 				valmul = 1
 				valadd = 0
@@ -609,7 +613,7 @@ class input_soundbridge(plugins.base):
 				sampleref_obj.set_channels(audiosource.channelCount)
 
 		for videosource in project_obj.pool.videoSources:
-			filename = audiosource.fileName
+			filename = videosource.fileName
 			ofilename = filename
 			if dawvert_intent.input_file.endswith('.soundbridge'): 
 				ofilename = os.path.join(dawvert_intent.input_file, filename)

@@ -51,7 +51,8 @@ class input_sop(plugins.base):
 			cvpj_instname = str(instnum)
 			inst_obj = convproj_obj.instrument__add(cvpj_instname)
 			inst_obj.plugslots.set_synth(cvpj_instname)
-			inst_obj.visual.name = opli.name_long if not opli.name_long else opli.name
+			outname = opli.name_long if opli.name_long else opli.name
+			if outname: inst_obj.visual.name = outname
 			inst_obj.visual.color.set_float(maincolor)
 			inst_obj.is_drum = opli.perc_type!=0
 			opli.to_cvpj(convproj_obj, cvpj_instname)
@@ -74,7 +75,7 @@ class input_sop(plugins.base):
 					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'vol'], 'float', curtick, event[2]/127)
 
 				elif event[1] == 'PAN': 
-					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pan'], 'float', curtick, panvals[event[2]])
+					convproj_obj.automation.add_autotick(['track', cvpj_trackid, 'pan'], 'float', curtick, panvals[event[2]%3])
 
 				elif event[1] == 'INST': 
 					instpos.append([curtick, str(event[2])])

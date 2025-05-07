@@ -123,9 +123,7 @@ class inst_manager():
 
 	def add_inst(convproj_obj, instid, project_obj, maindata_obj):
 		inst_obj = convproj_obj.instrument__add(instid)
-		midifound = inst_obj.from_dataset('notessimo_v3', 'inst', instid, True)
-		if midifound: inst_obj.to_midi(convproj_obj, instid, True)
-		#inst_obj.fxrack_channel = 1 if inst_obj.midi.out_inst.drum else inst_manager.fxnum
+		inst_obj.visual.from_dset('notessimo_v3', 'inst', instid, True)
 		if inst_obj.visual.name and DEBUGINSTNAMES: inst_obj.visual.name = '[DSET] '+inst_obj.visual.name
 
 		notet_inst = None
@@ -152,6 +150,7 @@ class inst_manager():
 
 			if sampleids:
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'multi')
+				plugin_obj.midi_fallback__add_from_dset('notessimo_v3', 'inst', instid)
 				plugin_obj.role = 'synth'
 				inst_obj.plugslots.set_synth(instid)
 
@@ -160,6 +159,7 @@ class inst_manager():
 
 			elif notet_inst.sample:
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'single')
+				plugin_obj.midi_fallback__add_from_dset('notessimo_v3', 'inst', instid)
 				plugin_obj.role = 'synth'
 				inst_obj.plugslots.set_synth(instid)
 
@@ -182,14 +182,10 @@ class inst_manager():
 					outvol = xtramath.from_db(notet_sample.volume/3)
 					inst_obj.params.add('vol', outvol, 'float')
 
-				#print('S', dfrom, 0, notet_inst.sample)
-				#inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data)
-
-		#if inst_obj.fxrack_channel == 1:
-		#	fxchan_data = convproj_obj.fx__chan__add(inst_manager.fxnum)
-		#	fxchan_data.visual.name = inst_obj.visual.name
-		#	fxchan_data.visual.color = inst_obj.visual.color.copy()
-		#	inst_manager.fxnum += 1
+			else:
+				plugin_obj = convproj_obj.plugin__add(instname_upper, 'universal', 'midi', None)
+				plugin_obj.midi.from_dataset('notessimo_v3', 'inst', instid)
+				plugin_obj.midi.to_visual(inst_obj.visual, False)
 
 def incolor(value, visual_obj): 
 	if value not in ['0x000000', '', None]:

@@ -399,6 +399,7 @@ class input_dawproject(plugins.base):
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
 		in_dict['plugin_ext_arch'] = [32, 64]
 		in_dict['plugin_ext_platforms'] = ['win', 'unix']
+		in_dict['track_hybrid'] = True
 		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']

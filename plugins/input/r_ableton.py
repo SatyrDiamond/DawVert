@@ -192,7 +192,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 				if 'Path' in VstPluginInfo:
 					vst_Path = str(VstPluginInfo['Path']).replace('/','\\')
 					convproj_obj.fileref__add(vst_Path, vst_Path, 'win')
-					plugin_obj.filerefs['plugin'] = vst_Path
+					plugin_obj.state.filerefs['plugin'] = vst_Path
 
 				plugin_obj.external_info.fourid = vst_UniqueId
 				plugin_obj.external_info.numparams = vst_NumberOfParameters

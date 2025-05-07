@@ -220,7 +220,7 @@ class output_amped(plugins.base):
 					amped_device.data['wamPreset'] = json.dumps(wamPreset)
 					amped_device.bypass = False
 
-				if plugin_obj.check_match('external', 'smartelectronix', 'augur'):
+				elif plugin_obj.check_match('external', 'smartelectronix', 'augur'):
 					inst_supported = True
 					amped_device = amped_track.add_device('WAM', 'Augur', counter_devid.get())
 					wamPreset = {}
@@ -241,7 +241,7 @@ class output_amped(plugins.base):
 				#	amped_device.data['wamPreset'] = plugin_obj.datavals.get('data', '{}')
 				#	amped_device.bypass = False
 
-				if plugin_obj.check_matchmulti('native', 'amped', ['Volt', 'VoltMini', 'Granny']):
+				elif plugin_obj.check_matchmulti('native', 'amped', ['Volt', 'VoltMini', 'Granny']):
 					inst_supported = True
 					if plugin_obj.type.subtype == "Volt": amped_device = amped_track.add_device('Volt', 'VOLT', counter_devid.get())
 					if plugin_obj.type.subtype == "VoltMini": amped_device = amped_track.add_device('VoltMini', 'VOLT Mini', counter_devid.get())
@@ -249,7 +249,7 @@ class output_amped(plugins.base):
 					do_idparams(amped_track, convproj_obj, plugin_obj, track_obj.plugslots.synth, amped_device, amped_track.automations)
 					amped_device.bypass = False
 
-				if plugin_obj.check_match('user', 'reasonstudios', 'europa'):
+				elif plugin_obj.check_match('user', 'reasonstudios', 'europa'):
 					inst_supported = True
 					amped_device = amped_track.add_device('WAM','Europa',counter_devid.get())
 					amped_device.data['wamClassName'] = 'Europa'
@@ -281,6 +281,18 @@ class output_amped(plugins.base):
 					amped_device.data['wamPreset'] = json.dumps(wamPreset)
 					amped_device.bypass = False
 
+				elif plugin_obj.midi_incompat_synth_on:
+					o_midi_bank, o_midi_patch = plugin_obj.midi_incompat_synth.to_sf2()
+
+					amped_device = amped_track.add_device('SF2','GM Player',counter_devid.get())
+					amped_device.add_param(0, 'patch', 0)
+					amped_device.add_param(1, 'bank', o_midi_bank)
+					amped_device.add_param(2, 'preset', o_midi_patch)
+					amped_device.add_param(3, 'gain', 0.75)
+					amped_device.add_param(4, 'omni', 1)
+					amped_device.data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
+					amped_device.bypass = False
+
 				#if plugin_obj.check_match('vst2', 'win'):
 				#	inst_supported = True
 				#	vstcondata = amped_track.add_device('VSTConnection',"VST/Remote Beta", counter_devid.get())
@@ -291,16 +303,17 @@ class output_amped(plugins.base):
 				#	amped_track.devices.append(vstcondata)
 
 			if not inst_supported:
-				midi_found, midi_inst = track_obj.get_midi(convproj_obj)
-				o_midi_bank, o_midi_patch = midi_inst.to_sf2()
-				amped_device = amped_track.add_device('SF2','GM Player',counter_devid.get())
-				amped_device.add_param(0, 'patch', 0)
-				amped_device.add_param(1, 'bank', o_midi_bank)
-				amped_device.add_param(2, 'preset', o_midi_patch)
-				amped_device.add_param(3, 'gain', 0.75)
-				amped_device.add_param(4, 'omni', 1)
-				amped_device.data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
-				amped_device.bypass = False
+				midi_inst = track_obj.get_midi(convproj_obj)
+				if midi_inst:
+					o_midi_bank, o_midi_patch = midi_inst.to_sf2()
+					amped_device = amped_track.add_device('SF2','GM Player',counter_devid.get())
+					amped_device.add_param(0, 'patch', 0)
+					amped_device.add_param(1, 'bank', o_midi_bank)
+					amped_device.add_param(2, 'preset', o_midi_patch)
+					amped_device.add_param(3, 'gain', 0.75)
+					amped_device.add_param(4, 'omni', 1)
+					amped_device.data['sf2Preset'] = {"bank": o_midi_bank, "preset": o_midi_patch, "name": ""}
+					amped_device.bypass = False
 
 			for notespl_obj in track_obj.placements.pl_notes:
 				amped_offset = 0

@@ -9,7 +9,6 @@
 | R | ```main``` | ```reaper``` | Reaper | ```.rpp``` | ✔️ | |
 | R | ```main``` | ```dawproject``` | DawProject | ```.dawproject``` | ✔️ | |
 | M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
-| R | ```main``` | ```soundbridge``` | SoundBridge | ```.soundbridge``` | ✔️ | |
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 

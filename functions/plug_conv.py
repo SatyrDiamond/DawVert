@@ -37,7 +37,7 @@ plugconv_int_selector = dv_plugins.create_selector('plugconv')
 def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, in_dawname, dawvert_intent):
 
 	plugin_conv_obj = plugin_conv.convproj_plug_conv()
-	plugin_conv_obj.storage_pstr('data_main\\plugstatets_index.json')
+	plugin_conv_obj.storage_pstr(os.path.join('data_main','plugstatets_index.json'))
 	plugin_conv_obj.current_daw_in = in_dawname
 	plugin_conv_obj.current_daw_out = out_dawname
 	for pi in in_dawinfo.plugin_included: plugin_conv_obj.add_supported_plugin_in(pi)

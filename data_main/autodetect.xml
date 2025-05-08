@@ -139,10 +139,6 @@
 		<archived type="zip" file="*.sng"/>
 	</plugin>
 
-	<plugin pluginset="main" name="soundbridge">
-		<folder fileext=".soundbridge" files="project.xml"/>
-	</plugin>
-
 	<plugin pluginset="main" name="tracktion_edit">
 		<file fileext=".tracktionedit"/>
 		<xml root_name="EDIT"/>

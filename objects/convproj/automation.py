@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import copy
+import os
 
 from objects import counter
 from functions import note_data
@@ -13,6 +14,52 @@ from objects.convproj import placements_autoticks
 
 import logging
 logger_automation = logging.getLogger('automation')
+
+class midifile_to_automation:
+	def __init__(self, auto_obj):
+		self.defined = {}
+		self.auto_obj = auto_obj
+
+	def define_auto(self, channel, controller, autoloc, imin, imax, isbool):
+		if channel not in self.defined: self.defined[channel] = {}
+		self.defined[channel][controller] = [autoloc, imin, imax, isbool]
+
+	def do_midi_file(self, input_file, ppq, real, tempomul):
+		from objects_midi.parser import MidiFile
+		from objects_midi import events as MidiEvents
+
+		if os.path.exists(input_file):
+			if os.path.isfile(input_file):
+				midifile = MidiFile.fromFile(input_file)
+
+				outppq = midifile.ppqn*8*(tempomul) if real else ppq/midifile.ppqn
+
+				controlv = []
+
+				if midifile.tracks:
+					for eventlist in midifile.tracks:
+						curpos = 0
+						for msg in eventlist.events:
+							curpos += msg.deltaTime
+							if type(msg) == MidiEvents.ControllerEvent: 
+								controlv.append([curpos/outppq, msg.channel, msg.controller, msg.value])
+
+				for i_chan, z in self.defined.items():
+					for i_ctrl, i_vals in z.items():
+
+						valtype = 'bool' if i_vals[3] else 'float'
+
+						for pos, chan, controller, value in controlv:
+							if (i_chan==chan or i_chan==-1) and controller==i_ctrl:
+								if real:
+									self.auto_obj.add_autopoint_real(i_vals[0], valtype, pos, 
+										xtramath.between_from_one(i_vals[1], i_vals[2], value/127 if not i_vals[3] else value>=64)
+										, 'instant')
+								else:
+									self.auto_obj.add_autopoint(i_vals[0], valtype, pos, 
+										xtramath.between_from_one(i_vals[1], i_vals[2], value/127 if not i_vals[3] else value>=64)
+										, 'instant')
+
 
 class cvpj_s_automation:
 	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres','persist','defualt_val']
@@ -337,6 +384,9 @@ class cvpj_automation:
 	def __setitem__(self, p, v):
 		autoloc = cvpj_autoloc(p)
 		self.autoloc[autoloc] = v
+
+	def create_midi_auto_obj(self):
+		return midifile_to_automation(self)
 
 	def set_persist_all(self, on):
 		for _, v in self.data.items():

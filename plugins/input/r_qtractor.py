@@ -76,6 +76,24 @@ class input_midi(plugins.base):
 			track_obj.params.add('enabled', bool(not qtrack.state.mute), 'bool')
 			track_obj.params.add('solo', bool(qtrack.state.solo), 'bool')
 
+			midiauto_obj = convproj_obj.automation.create_midi_auto_obj()
+
+			if qtrack.curve_file.used:
+				midipath = os.path.join(os.path.dirname(dawvert_intent.input_file), qtrack.curve_file.filename)
+
+				for curve_item in qtrack.curve_file.curve_items:
+					if curve_item.index == 1:
+						midiauto_obj.define_auto(curve_item.p_channel, curve_item.p_param, ['track', cvpj_trackid, 'pan'], -1, 1, False)
+					if curve_item.index == 2:
+						midiauto_obj.define_auto(curve_item.p_channel, curve_item.p_param, ['track', cvpj_trackid, 'vol'], 0, 1, False)
+					if curve_item.index == 4:
+						midiauto_obj.define_auto(curve_item.p_channel, curve_item.p_param, ['track', cvpj_trackid, 'enabled'], 0, 1, True)
+					if curve_item.index == 5:
+						midiauto_obj.define_auto(curve_item.p_channel, curve_item.p_param, ['track', cvpj_trackid, 'solo'], 0, 1, True)
+
+				midiauto_obj.do_midi_file(midipath, 4, True, tempomul)
+			#print(midiauto_obj)
+
 			for qplug in qtrack.plugins:
 				if qplug.type == 'VST2':
 					plugfilename = qplug.filename

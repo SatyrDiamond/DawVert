@@ -204,7 +204,67 @@ class qtractor_plugin:
 		set_value(tempxml, 'editor-pos', self.editor_pos)
 		set_value(tempxml, 'form-pos', self.form_pos)
 
-# --------------------------------------------------------- CLIP ---------------------------------------------------------
+# --------------------------------------------------------- CURVE ---------------------------------------------------------
+
+class qtractor_track_curve_item:
+	def __init__(self, xmldata):
+		self.index = 0
+		self.mode = ''
+		self.name = ''
+		self.curve_item = []
+
+		self.p_type = "CONTROLLER"
+		self.p_channel = 0
+		self.p_param = 0
+		self.p_mode = ""
+		self.p_process = 0
+		self.p_capture = 0
+		self.p_locked = 0
+		self.p_logarithmic = 0
+		self.p_color = "#800000"
+
+		if xmldata is not None: self.read(xmldata)
+
+	def read(self, xml_proj):
+		self.used = True
+		trackattrib = xml_proj.attrib
+
+		if 'index' in trackattrib: self.index = int(trackattrib['index'])
+		if 'mode' in trackattrib: self.mode = trackattrib['mode']
+		if 'name' in trackattrib: self.name = trackattrib['name']
+
+		for xmlpart in xml_proj:
+			if xmlpart.tag == 'type': self.p_type = xmlpart.text
+			if xmlpart.tag == 'channel': self.p_channel = int(xmlpart.text)
+			if xmlpart.tag == 'param': self.p_param = int(xmlpart.text)
+			if xmlpart.tag == 'mode': self.p_mode = xmlpart.text
+			if xmlpart.tag == 'process': self.p_process = int(xmlpart.text)
+			if xmlpart.tag == 'capture': self.p_capture = int(xmlpart.text)
+			if xmlpart.tag == 'locked': self.p_locked = int(xmlpart.text)
+			if xmlpart.tag == 'logarithmic': self.p_logarithmic = int(xmlpart.text)
+			if xmlpart.tag == 'color': self.p_color = xmlpart.text
+
+class qtractor_track_curve_file:
+	def __init__(self, xmldata):
+		self.used = False
+		self.filename = ''
+		self.current = 4
+		self.curve_items = []
+		if xmldata is not None: self.read(xmldata)
+
+	def read(self, xml_proj):
+		self.used = True
+		trackattrib = xml_proj.attrib
+
+		for xmlpart in xml_proj:
+			if xmlpart.tag == 'filename': self.filename = xmlpart.text
+			if xmlpart.tag == 'current': self.current = int(xmlpart.text)
+			if xmlpart.tag == 'curve-items': 
+				for xmlinpart in xmlpart:
+					if xmlinpart.tag == 'curve-item': 
+						self.curve_items.append(qtractor_track_curve_item(xmlinpart))
+
+# --------------------------------------------------------- TRACK ---------------------------------------------------------
 
 class qtractor_track_properties:
 	def __init__(self, xmldata):
@@ -292,6 +352,7 @@ class qtractor_track:
 		self.properties = qtractor_track_properties(None)
 		self.state = qtractor_track_state(None)
 		self.view = qtractor_track_view(None)
+		self.curve_file = qtractor_track_curve_file(None)
 		self.clips = []
 		self.plugins = []
 		self.plug_audio_output_bus = None
@@ -308,6 +369,7 @@ class qtractor_track:
 			if xmlpart.tag == 'properties': self.properties.read(xmlpart)
 			if xmlpart.tag == 'state': self.state.read(xmlpart)
 			if xmlpart.tag == 'view': self.view.read(xmlpart)
+			if xmlpart.tag == 'curve-file': self.curve_file.read(xmlpart)
 			if xmlpart.tag == 'clips':
 				for xmlinpart in xmlpart:
 					self.clips.append(qtractor_clip(xmlinpart))

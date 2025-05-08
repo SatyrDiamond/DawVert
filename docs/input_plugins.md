@@ -9,7 +9,6 @@
 | R | ```main``` | ```reaper``` | Reaper | ```.rpp``` | ✔️ | |
 | R | ```main``` | ```dawproject``` | DawProject | ```.dawproject``` | ✔️ | |
 | M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
-| R | ```main``` | ```soundbridge``` | SoundBridge | ```.soundbridge``` | ✔️ | |
 | R | ```main``` | ```tracktion_edit``` | Waveform<br>SoundBug/音虫 | ```.tracktionedit``` | ✔️ | |
 | R | ```main``` | ```zenbeats``` | ZenBeats | ```.song``` | ✔️ | |
 | R | ```main``` | ```bandlab_blx``` | Bandlab BLX | ```.blx``` | ✔️ | |

@@ -12,7 +12,6 @@
 | R | ```main``` | ```midi``` | MIDI |
 | R | ```main``` | ```muse``` | MusE Sequencer |
 | R | ```main``` | ```onlineseq``` | Online Sequencer |
-| R | ```main``` | ```soundbridge``` | SoundBridge |
 | R | ```main``` | ```reaper``` | Reaper |
 | R | ```main``` | ```soundation``` | Soundation |
 | R | ```main``` | ```waveform``` | Waveform Edit |

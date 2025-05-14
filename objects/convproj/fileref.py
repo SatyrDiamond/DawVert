@@ -670,6 +670,13 @@ class cvpj_sampleref:
 			return iffound
 		return False
 
+	def copy_file(self, os_type, outfilename):
+		filename = self.fileref.get_path(None, False)
+		if os.path.exists(filename):
+			shutil.copy(filename, outfilename)
+			self.set_path(os_type, outfilename)
+			return True
+
 	def copy_resample(self, os_type, outfilename):
 		try:
 			filename = self.fileref.get_path(None, False)

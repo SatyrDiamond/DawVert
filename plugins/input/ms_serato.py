@@ -215,7 +215,7 @@ class input_serato(plugins.base):
 				inst_obj.plugslots.set_synth(synthid)
 				instrument_file = parse_filepath(scene_deck.instrument_file)
 				convproj_obj.fileref__add(scene_deck.instrument_file, instrument_file, 'win')
-				plugin_obj.filerefs['instrument'] = scene_deck.instrument_file
+				plugin_obj.state.filerefs['instrument'] = scene_deck.instrument_file
 				adsr_obj = plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, scene_deck.release, 1)
 				adsr_obj.release_tension = -1
 				eq_track[cvpj_trackid] = group_obj.plugslots.slots_audio

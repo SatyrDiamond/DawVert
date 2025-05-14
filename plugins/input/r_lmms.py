@@ -212,7 +212,7 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 		bank = int(lmms_plugin.get_param('bank', 0))
 		patch = int(lmms_plugin.get_param('patch', 0))
 		plugin_obj.midi.from_sf2(bank, patch)
-		
+
 		sf2_path = str(lmms_plugin.get_param('src', 0))
 		convproj_obj.fileref__add(sf2_path, sf2_path, None)
 		plugin_obj.fileref__set('file', sf2_path)
@@ -370,9 +370,10 @@ def decodeplugin(convproj_obj, lmms_plugin, pluginname, isbb):
 				out_str = 'userwavefile'+str(oscnum)
 				sampleid = pluginid+'_'+out_str
 				filepath = get_sample(lmms_plugin.get_param(out_str, ''))
-				sampleref_obj = convproj_obj.sampleref__add(sampleid, filepath, None)
-				sp_obj = plugin_obj.samplepart_add(out_str)
-				sp_obj.sampleid = sampleid
+				if filepath:
+					sampleref_obj = convproj_obj.sampleref__add(sampleid, filepath, None)
+					sp_obj = plugin_obj.samplepart_add(out_str)
+					sp_obj.sampleid = sampleid
 
 		if pluginname == "slicert":
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'slicer')

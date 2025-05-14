@@ -61,7 +61,7 @@ class input_old_magix_maker(plugins.base):
 				joinedpath = '\\'.join([x.file, x.file2])
 
 				if '.' in x.file2:
-					fileext = x.file2.rsplit('.', 1)[1]
+					fileext = x.file2.rsplit('.', 1)[1].lower()
 					if fileext == 'wav':
 						sampleref_obj = convproj_obj.sampleref__add(sampleid, joinedpath, 'win')
 						sampleref_obj.search_local(dawvert_intent.input_folder)
@@ -72,7 +72,7 @@ class input_old_magix_maker(plugins.base):
 						videoref_obj.search_local(dawvert_intent.input_folder)
 						videoref_objs[n] = videoref_obj
 				elif '.' in x.video:
-					fileext = x.video.rsplit('.', 1)[1]
+					fileext = x.video.rsplit('.', 1)[1].lower()
 					joinedpath = '\\'.join([x.folder, x.video])
 					if fileext == 'avi':
 						videoref_obj = convproj_obj.videoref__add(sampleid, joinedpath, 'win')

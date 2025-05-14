@@ -45,7 +45,8 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 	fl_channel_obj.params.reversepolarity = int(sre_obj.get_data('reversepolarity', False))
 	fl_channel_obj.sampleflags += int(sre_obj.interpolation!='none')
 
-	sre_obj.convpoints_percent(sampleref_obj)
+	if ref_found:
+		sre_obj.convpoints_percent(sampleref_obj)
 
 	if sre_obj.end>sre_obj.start:
 		fl_channel_obj.params.start = sre_obj.start
@@ -83,14 +84,15 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 
 	fl_channel_obj.params.stretchingpitch = int(sre_obj.pitch*100)
 
-	dur_sec = sampleref_obj.get_dur_sec()
-
-	if not sre_obj.stretch.uses_tempo: 
-		fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
-	else:
-		if dur_sec:
-			fl_channel_obj.params.stretchingtime = int((dur_sec*384)/sre_obj.stretch.calc_tempo_speed) if sampleref_obj else 1
-			if fl_channel_obj.params.stretchingtime < 0: fl_channel_obj.params.stretchingtime = 384
+	if ref_found:
+		dur_sec = sampleref_obj.get_dur_sec()
+	
+		if not sre_obj.stretch.uses_tempo: 
+			fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
+		else:
+			if dur_sec:
+				fl_channel_obj.params.stretchingtime = int((dur_sec*384)/sre_obj.stretch.calc_tempo_speed) if sampleref_obj else 1
+				if fl_channel_obj.params.stretchingtime < 0: fl_channel_obj.params.stretchingtime = 384
 
 	return sre_obj.stretch.calc_tempo_speed
 

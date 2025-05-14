@@ -277,7 +277,7 @@ class output_bandlab(plugins.base):
 					outfile = sampleref_assoc[sampleref_id]+'.'+sampleref_ext[sampleref_id]
 					a_in = sampleref_obj.fileref.get_path(None, False)
 					a_out = os.path.join(folder, namet, 'Assets', 'Audio', outfile)
-					sampleref_obj.copy_resample(None, a_out)
+					sampleref_obj.copy_file(None, a_out)
 
 			os.makedirs(foldpath, exist_ok=True)
 			outpath = os.path.join(folder, namet, os.path.basename(dawvert_intent.output_file))

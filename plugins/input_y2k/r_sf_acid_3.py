@@ -136,9 +136,11 @@ def add_audio_regions(
 		ssize = (int(region.size)/5000000)*ppq
 		time_obj = placement_obj.time
 		time_obj.set_posdur(region.pos, ssize)
-		time_obj.set_offset(calc_offset)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
+		sampmul = pow(2, (region.pitch+pitch)/-12)
+		time_obj.set_offset(calc_offset*sampmul)
+		sp_obj.stretch.set_rate_speed(120, sampmul, True)
 		if 1 in region.flags: placement_obj.muted = True
 		if 3 in region.flags: placement_obj.locked = True
 		if 5 in region.flags: sp_obj.reverse = True
@@ -166,7 +168,7 @@ def add_audio_regions(
 
 	if stretch_type == 3:
 		calc_offset = region.offset/5000000
-		calc_offset = calc_offset*ppq*mul1
+		calc_offset = calc_offset*ppq
 
 		placement_obj = placements_obj.add_audio()
 		time_obj = placement_obj.time

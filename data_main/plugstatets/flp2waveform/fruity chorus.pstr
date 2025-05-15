@@ -1,0 +1,19 @@
+<plugstatetransform daw_in="flp" daw_out="waveform" plugtype="native:flstudio:fruity chorus">
+  <in__wet to="wet" type="float" />
+  <in__param to="delay" type="float" />
+  <in__param to="depth" type="float" />
+  <in__param to="freq" type="float" />
+
+  <calc name="delay" type="valrange">0;1024;0.05;30</calc>
+  <calc name="depth" type="div">1000</calc>
+  <calc name="freq" type="div">5000</calc>
+  <calc name="freq" type="pow">2</calc>
+  <calc name="freq" type="mul">5</calc>
+
+  <replace plugtype="native:tracktion:chorusEffect"/>
+
+  <out__param to="mix" from="wet" type="float"/>
+  <out__param to="delay" from="delay" type="float"/>
+  <out__param to="depth" from="depth" type="float"/>
+  <out__param to="rateSyncOff" from="freq" type="float"/>
+</plugstatetransform>

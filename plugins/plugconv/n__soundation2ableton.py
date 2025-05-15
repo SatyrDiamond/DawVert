@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-from functions import extpluglog
 
 class plugconv(plugins.base):
 	def is_dawvert_plugin(self):
@@ -19,7 +18,7 @@ class plugconv(plugins.base):
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.check_wildmatch('native', 'soundation', 'com.soundation.va_synth'):
-			extpluglog.convinternal('Soundation', 'VA Synth', 'Ableton', 'UltraAnalog')
+			#extpluglog.convinternal('Soundation', 'VA Synth', 'Ableton', 'UltraAnalog')
 			manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 
 			aatt = plugin_obj.params.get('aatt', 0).value**0.7
@@ -113,7 +112,7 @@ class plugconv(plugins.base):
 			return True
 
 		if plugin_obj.check_wildmatch('native', 'soundation', 'com.soundation.noiser'):
-			extpluglog.convinternal('Soundation', 'Noiser', 'Ableton', 'Operator')
+			#extpluglog.convinternal('Soundation', 'Noiser', 'Ableton', 'Operator')
 
 			plugin_obj.replace('native', 'ableton', 'Operator')
 
@@ -131,7 +130,7 @@ class plugconv(plugins.base):
 			return True
 
 		if plugin_obj.check_wildmatch('native', 'soundation', 'com.soundation.simple'):
-			extpluglog.convinternal('Soundation', 'Simple Synth', 'Ableton', 'Operator')
+			#extpluglog.convinternal('Soundation', 'Simple Synth', 'Ableton', 'Operator')
 
 			opdata = []
 

@@ -36,22 +36,22 @@
         <object id="8bandEq">
             <visual name="8-Band Equalizer" color="#33363d" />
             <param id="analyzer" name="analyzer" type="int" def="0" />
-            <param id="enable1lm" name="enable1lm" type="float" def="1" />
-            <param id="enable1rs" name="enable1rs" type="float" def="1" />
-            <param id="enable2lm" name="enable2lm" type="float" def="1" />
-            <param id="enable2rs" name="enable2rs" type="float" def="1" />
-            <param id="enable3lm" name="enable3lm" type="float" def="1" />
-            <param id="enable3rs" name="enable3rs" type="float" def="1" />
-            <param id="enable4lm" name="enable4lm" type="float" def="1" />
-            <param id="enable4rs" name="enable4rs" type="float" def="1" />
-            <param id="enable5lm" name="enable5lm" type="float" def="1" />
-            <param id="enable5rs" name="enable5rs" type="float" def="1" />
-            <param id="enable6lm" name="enable6lm" type="float" def="1" />
-            <param id="enable6rs" name="enable6rs" type="float" def="1" />
-            <param id="enable7lm" name="enable7lm" type="float" def="1" />
-            <param id="enable7rs" name="enable7rs" type="float" def="1" />
-            <param id="enable8lm" name="enable8lm" type="float" def="1" />
-            <param id="enable8rs" name="enable8rs" type="float" def="1" />
+            <param id="enable1lm" name="enable1lm" type="float" def="0" />
+            <param id="enable1rs" name="enable1rs" type="float" def="0" />
+            <param id="enable2lm" name="enable2lm" type="float" def="0" />
+            <param id="enable2rs" name="enable2rs" type="float" def="0" />
+            <param id="enable3lm" name="enable3lm" type="float" def="0" />
+            <param id="enable3rs" name="enable3rs" type="float" def="0" />
+            <param id="enable4lm" name="enable4lm" type="float" def="0" />
+            <param id="enable4rs" name="enable4rs" type="float" def="0" />
+            <param id="enable5lm" name="enable5lm" type="float" def="0" />
+            <param id="enable5rs" name="enable5rs" type="float" def="0" />
+            <param id="enable6lm" name="enable6lm" type="float" def="0" />
+            <param id="enable6rs" name="enable6rs" type="float" def="0" />
+            <param id="enable7lm" name="enable7lm" type="float" def="0" />
+            <param id="enable7rs" name="enable7rs" type="float" def="0" />
+            <param id="enable8lm" name="enable8lm" type="float" def="0" />
+            <param id="enable8rs" name="enable8rs" type="float" def="0" />
             <param id="freq1lm" name="freq1lm" type="float" def="22.5063" />
             <param id="freq1rs" name="freq1rs" type="float" def="22.5063" />
             <param id="freq2lm" name="freq2lm" type="float" def="22.5063" />

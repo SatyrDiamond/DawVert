@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-from functions import extpluglog
 
 op_3osc_shape = {
 	0: 0,
@@ -35,7 +34,7 @@ class plugconv(plugins.base):
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', '3x osc'):
-			extpluglog.convinternal('FL Studio', '3xOsc', 'Ableton', 'Operator')
+			#extpluglog.convinternal('FL Studio', '3xOsc', 'Ableton', 'Operator')
 			fl_osc1_coarse = plugin_obj.params.get('osc1_coarse', 0).value
 			fl_osc1_detune = plugin_obj.params.get('osc1_detune', 0).value
 			fl_osc1_fine = plugin_obj.params.get('osc1_fine', 0).value
@@ -120,7 +119,7 @@ class plugconv(plugins.base):
 			return True
 			
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity dx10'):
-			extpluglog.convinternal('FL Studio', 'Fruity DX10', 'Ableton', 'Operator')
+			#extpluglog.convinternal('FL Studio', 'Fruity DX10', 'Ableton', 'Operator')
 
 			amp_att = plugin_obj.params.get("amp_att", 0).value/65536
 			amp_dec = plugin_obj.params.get("amp_dec", 0).value/65536

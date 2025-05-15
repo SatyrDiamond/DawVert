@@ -203,6 +203,8 @@ class plug_manu:
 		if DEBUG__TXT: print('DEBUG: out__filter_param:', storename.__repr__(), fallbackval.__repr__(), filterparam.__repr__())
 		#if DEBUG__TXT: print('	> filter |'+paramid+'%'+str(value))
 
+		plugin_obj = self.plugin_obj
+
 		if storename in self.cur_params: 
 			valstored = self.cur_params[storename]
 			valauto = valstored.automation
@@ -214,32 +216,30 @@ class plug_manu:
 				autopath = automation.cvpj_autoloc(autoloc)
 				self.convproj_obj.automation.data[autopath] = valauto
 
-		else: 
+		elif fallbackval is not None: 
 			val = fallbackval
 			valuetype = valtype_from_obj(val)
 
-		plugin_obj = self.plugin_obj
-
-		if filterparam == 'on': 
-			if valuetype == 'numeric': plugin_obj.filter.on = float(val)
-			if valuetype == 'bool': plugin_obj.filter.on = bool(val)
-			else:
-				logger_plugconv.warning('plugmanu: filter_param "on" type mismatch. should be "numeric" or "bool". not "%s".' % (valuetype))
-
-		if filterparam in ["freq", "q", "gain", "slope"]: 
-			if valuetype == 'numeric':
-				if filterparam == 'freq': plugin_obj.filter.freq = float(val)
-				if filterparam == 'q': plugin_obj.filter.q = float(val)
-				if filterparam == 'gain': plugin_obj.filter.gain = float(val)
-				if filterparam == 'slope': plugin_obj.filter.slope = float(val)
-			else:
-				logger_plugconv.warning('plugmanu: filter_param "%s" type mismatch. should be "numeric". not "%s".' % (filterparam, valuetype))
-
-		if filterparam == 'type': 
-			if valuetype == 'filter_type':
-				plugin_obj.filter.type = val
-			else:
-				logger_plugconv.warning('plugmanu: filter_param "type" type mismatch. should be "filter_type". not "%s".' % (valuetype))
+		if val is not None:
+			if filterparam == 'on': 
+				if valuetype == 'numeric': plugin_obj.filter.on = float(val)
+				if valuetype == 'bool': plugin_obj.filter.on = bool(val)
+				else:
+					logger_plugconv.warning('plugmanu: filter_param "on" type mismatch. should be "numeric" or "bool". not "%s".' % (valuetype))
+			if filterparam in ["freq", "q", "gain", "slope"]: 
+				if valuetype == 'numeric':
+					if filterparam == 'freq': plugin_obj.filter.freq = float(val)
+					if filterparam == 'q': plugin_obj.filter.q = float(val)
+					if filterparam == 'gain': plugin_obj.filter.gain = float(val)
+					if filterparam == 'slope': plugin_obj.filter.slope = float(val)
+				else:
+					logger_plugconv.warning('plugmanu: filter_param "%s" type mismatch. should be "numeric". not "%s".' % (filterparam, valuetype))
+	
+			if filterparam == 'type': 
+				if valuetype == 'filter_type':
+					plugin_obj.filter.type = val
+				else:
+					logger_plugconv.warning('plugmanu: filter_param "type" type mismatch. should be "filter_type". not "%s".' % (valuetype))
 
 # --------------------------------------------------------- MANU ---------------------------------------------------------
 

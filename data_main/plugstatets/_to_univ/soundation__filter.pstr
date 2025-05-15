@@ -18,6 +18,7 @@
 
   <replace_hard plugtype="universal:filter:single" />
 
+  <out__filterparam to="on" type="bool">1</out__filterparam>
   <out__filterparam to="type" from="mode"/>
   <out__filterparam to="freq" from="cutoff" type="float"/> <!-- VALUE_IMPERFECT -->
   <out__filterparam to="q" from="resonance" type="float"/>

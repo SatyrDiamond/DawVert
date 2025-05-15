@@ -461,6 +461,34 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\flp2waveform\\fruity chorus.pstr": {
+    "file": "data_main\\plugstatets\\flp2waveform\\fruity chorus.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "native:flstudio:fruity chorus",
+    "plugtype_out": [
+      "native:tracktion:chorusEffect"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\lmms2ableton\\delay.pstr": {
+    "file": "data_main\\plugstatets\\lmms2ableton\\delay.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:lmms:delay",
+    "plugtype_out": [
+      "native:ableton:Delay"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\lmms2amped\\reverb.pstr": {
     "file": "data_main\\plugstatets\\lmms2amped\\reverb.pstr",
     "daw_in": [
@@ -808,20 +836,6 @@
     "plugtype_in": "native:tracktion:stereoDelay",
     "plugtype_out": [
       "native:soundation:com.soundation.delay"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\x_caustic2ableton\\autopan.pstr": {
-    "file": "data_main\\plugstatets\\x_caustic2ableton\\autopan.pstr",
-    "daw_in": [
-      "caustic"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:caustic:autopan",
-    "plugtype_out": [
-      "native:ableton:AutoPan"
     ],
     "priority": 0
   },
@@ -1232,9 +1246,9 @@
     ],
     "plugtype_in": "universal:filter:single",
     "plugtype_out": [
-      "universal:tracktion:1bandEq"
+      "native:tracktion:8bandEq"
     ],
-    "priority": 0
+    "priority": 100
   },
   "data_main\\plugstatets\\_from_univ\\waveform__gate.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\waveform__gate.pstr",
@@ -1277,6 +1291,17 @@
     "plugtype_in": "universal:spectrum_analyzer",
     "plugtype_out": [
       "native:tracktion:spectrum"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\waveform__volpan.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\waveform__volpan.pstr",
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "universal:volpan",
+    "plugtype_out": [
+      "native:tracktion:volume"
     ],
     "priority": 100
   },
@@ -1652,6 +1677,17 @@
     "plugtype_in": "native:soundation:com.soundation.degrader",
     "plugtype_out": [
       "universal:bitcrush"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\soundation__equalizer.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\soundation__equalizer.pstr",
+    "daw_in": [
+      "soundation"
+    ],
+    "plugtype_in": "native:soundation:com.soundation.equalizer",
+    "plugtype_out": [
+      "universal:eq:3band"
     ],
     "priority": -100
   },

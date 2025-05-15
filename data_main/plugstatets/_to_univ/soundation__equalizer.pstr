@@ -1,0 +1,20 @@
+<plugstatetransform daw_in="soundation" plugtype="native:soundation:com.soundation.equalizer">
+  <in__param from="low" type="float" />
+  <in__param from="mid" type="float" />
+  <in__param from="high" type="float" />
+  
+  <calc name="low" type="sub">0.5</calc>
+  <calc name="mid" type="sub">0.5</calc>
+  <calc name="high" type="sub">0.5</calc>
+  <calc name="low" type="mul">24</calc>
+  <calc name="mid" type="mul">24</calc>
+  <calc name="high" type="mul">24</calc>
+
+  <replace plugtype="universal:eq:3band" />
+
+  <out__param to="low_gain" from="low" type="float">0</out__param>
+  <out__param to="mid_gain" from="mid" type="float">0</out__param>
+  <out__param to="high_gain" from="high" type="float">0</out__param>
+  <out__param to="lowmid_freq" only_value="1" type="float">250</out__param>
+  <out__param to="midhigh_freq" only_value="1" type="float">2500</out__param>
+</plugstatetransform>

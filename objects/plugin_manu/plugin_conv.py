@@ -129,23 +129,18 @@ class convproj_plug_conv:
 		self.active_queue = dict(sorted(self.active_queue.items(), key=lambda item: item[0]))
 
 	def convert_plugin(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		#print(plugin_obj.type)
-		#plugin_obj.params.debugtxt()
 
 		if self.current_daw_in != self.current_daw_out:
+
 			for num, i in self.active_queue.items():
 				for k, mappdata in i:
-
 					old_type = copy.copy(plugin_obj.type)
 					is_converted = mappdata.convert_plugin(convproj_obj, plugin_obj, pluginid, self, dawvert_intent)
 					if is_converted:
-						#print(plugin_obj.type)
-						#plugin_obj.params.debugtxt()
-						#plugin_obj.filter.debugtxt()
-						logger_plugconv.info('INT    | "%s" > "%s"' % (str(old_type), str(plugin_obj.type)))
+						logger_plugconv.info('INT    | %s | %s: "%s" > "%s"' % (mappdata.type, pluginid, str(old_type), str(plugin_obj.type)))
 						if k in self.finish_ids: 
 							return 1
-			#print('       | No equivalent to "%s" found or not supported' % (str(plugin_obj.type)))
+			logger_plugconv.warning('       | No equivalent to "%s" found or not supported' % (str(plugin_obj.type)))
 			return 0
 		else:
 			return -1

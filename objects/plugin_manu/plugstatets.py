@@ -326,6 +326,7 @@ class action__out__filter_param:
 		self.storename = None
 		self.valtype = None
 		self.value = 0
+		self.only_value = False
 
 	def from_xml(self, xmldata):
 		v_from = xmldata.get('from')
@@ -340,7 +341,9 @@ class action__out__filter_param:
 			self.storename = v_from
 			self.out_name = v_to
 		self.valtype = xmldata.get('type')
-		self.value = xmldata.text
+		only_value = xmldata.get('only_value')
+		if only_value: self.only_value = bool(int(only_value))
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
 
 	def do_action(self, manu_obj):
 		manu_obj.out__filter_param(self.storename, self.value, self.out_name)

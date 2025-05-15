@@ -12,6 +12,7 @@
   </define_remap>
 
   <in__filterparam from="type"/>
+  <in__filterparam from="on" type="bool"/>
   <in__filterparam from="freq" type="float"/>
   <in__filterparam from="q" type="float"/>
   <in__filterparam from="gain" type="float"/>
@@ -22,8 +23,11 @@
 
   <remap name="type" remapdef="filter_types"/>
 
+  <toint name="on"/>
+
   <replace_hard plugtype="native:tracktion:8bandEq" />
 
+  <out__param to="enable1lm" from="on" type="int">1</out__param>
   <out__param to="freq1lm" from="freq" type="float">44100</out__param>
   <out__param to="q1lm" from="q" type="float">1</out__param>
   <out__param to="gain1lm" from="gain" type="float">0</out__param>

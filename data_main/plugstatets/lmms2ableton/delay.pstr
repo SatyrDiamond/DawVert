@@ -1,0 +1,21 @@
+<plugstatetransform daw_in="lmms" daw_out="ableton" plugtype="native:lmms:delay">
+  <in__param from="DelayTimeSamples" type="float"/>
+  <in__param from="FeebackAmount" type="float"/>
+  <in__param from="LfoAmount" type="float"/>
+  <in__param from="LfoFrequency" type="float"/>
+  <in__wet to="wet" type="float">1</in__wet>
+
+  <replace plugtype="native:ableton:Delay" />
+  <calc name="Feedback" type="mul">100</calc>
+  <calc name="LfoAmount" type="pow">0.2</calc>
+
+  <out__param to="DelayLine_TimeL" from="DelayTimeSamples" type="float"/>
+  <out__param to="Feedback" from="FeebackAmount" type="float"/>
+  <out__param to="Modulation_AmountTime" from="LfoAmount" type="float"/>
+  <out__param to="Modulation_Frequency" from="LfoFrequency" type="float"/>
+  <out__param to="DryWet" from="wet" type="float"/>
+
+  <out__param to="Filter_On" only_value="1" type="bool">0</out__param>
+  <out__param to="DelayLine_SyncL" only_value="1" type="bool">0</out__param>
+
+</plugstatetransform>

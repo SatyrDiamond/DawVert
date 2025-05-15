@@ -16,8 +16,6 @@ logger_plugconv = logging.getLogger('plugconv')
 ______debugtxt______ = False
 
 def load_plugins():
-	dv_plugins.load_plugindir('plugconv', '')
-	dv_plugins.load_plugindir('plugconv_ext', '')
 	dv_plugins.load_plugindir('extplug', '')
 
 # -------------------- convproj --------------------
@@ -38,6 +36,7 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, in_dawname, daw
 
 	plugin_conv_obj = plugin_conv.convproj_plug_conv()
 	plugin_conv_obj.storage_pstr(os.path.join('data_main','plugstatets_index.json'))
+	plugin_conv_obj.storage_plugs()
 	plugin_conv_obj.current_daw_in = in_dawname
 	plugin_conv_obj.current_daw_out = out_dawname
 	for pi in in_dawinfo.plugin_included: plugin_conv_obj.add_supported_plugin_in(pi)
@@ -55,5 +54,5 @@ def convproj(convproj_obj, in_dawinfo, out_dawinfo, out_dawname, in_dawname, daw
 
 		if not is_external:
 			#print(plugin_obj.type)
-			plugin_conv_obj.convert_plugin(convproj_obj, plugin_obj, pluginid)
+			plugin_conv_obj.convert_plugin(convproj_obj, plugin_obj, pluginid, dawvert_intent)
 			#plugin_obj.params.debugtxt()

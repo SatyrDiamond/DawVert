@@ -1,9 +1,11 @@
 <plugstatetransform daw_out="waveform" plugtype="universal:filter:single">
 
-  <define_remap name="filter_types" in_type="int" out_type="int">
+  <define_remap name="filter_types" in_type="filter_type" out_type="int">
     <val in_val="low_pass" out_val="0"/>
     <val in_val="low_shelf" out_val="1"/>
     <val in_val="peak" out_val="2"/>
+    <val in_val="band_pass" out_val="3"/>
+    <val in_val="notch" out_val="4"/>
     <val in_val="high_shelf" out_val="5"/>
     <val in_val="high_pass" out_val="6"/>
     <fallback out_val="6"/>
@@ -15,14 +17,17 @@
   <in__filterparam from="gain" type="float"/>
   <in__filterparam from="slope" type="float"/>
 
+  <calc name="freq" type="freq2note"/>
+  <calc name="freq" type="sub">-72</calc>
+
   <remap name="type" remapdef="filter_types"/>
 
-  <replace_hard plugtype="universal:tracktion:1bandEq" />
+  <replace_hard plugtype="native:tracktion:8bandEq" />
 
-  <out__param to="freq" type="float">44100</out__param>
-  <out__param to="q" type="float">1</out__param>
-  <out__param to="gain" type="float">0</out__param>
-  <out__param to="slope" type="float">12</out__param>
-  <out__param to="shape" from="type">0</out__param>
+  <out__param to="freq1lm" from="freq" type="float">44100</out__param>
+  <out__param to="q1lm" from="q" type="float">1</out__param>
+  <out__param to="gain1lm" from="gain" type="float">0</out__param>
+  <out__param to="slope1lm" from="slope" type="float">12</out__param>
+  <out__param to="shape1lm" from="type">0</out__param>
 
 </plugstatetransform>

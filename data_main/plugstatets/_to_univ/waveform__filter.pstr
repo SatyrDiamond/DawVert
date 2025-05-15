@@ -15,8 +15,7 @@
   <in__param to="slope" type="float">12</in__param>
   <in__param to="type" from="shape">0</in__param>
 
-  <calc name="freq" type="add">-72</calc>
-  <calc name="freq" type="note2freq"/>
+  <calc name="freq" type="midi2freq"/>
 
   <remap name="type" remapdef="filter_types"/>
 

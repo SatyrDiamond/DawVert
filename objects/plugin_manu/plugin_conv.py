@@ -20,6 +20,7 @@ class plugconv_mapping:
 		self.type = None
 		self.file_pstr = None
 		self.loaded_pstr = None
+		self.plug_class = None
 
 	def load(self):
 		if self.type == 'pstr':
@@ -29,17 +30,23 @@ class plugconv_mapping:
 				self.loaded_pstr = plugstatets_obj
 			return True
 
-	def convert_plugin(self, convproj_obj, plugin_obj, pluginid, plugin_conv_obj):
+	def convert_plugin(self, convproj_obj, plugin_obj, pluginid, plugin_conv_obj, dawvert_intent):
 		cond_match = plugin_obj.type.obj_wildmatch(self.plugtype_in)
 		cond_inmat = plugin_conv_obj.current_daw_out not in self.daw_in
 
 		if cond_match and cond_inmat:
 			self.load()
+
 			if self.type == 'pstr':
 				if self.loaded_pstr:
 					manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
 					manu_obj.do_plugstatets(self.loaded_pstr)
 					return True
+
+			if self.type == 'plug':
+				plug_class = self.plug_class
+				return plug_class.convert(convproj_obj, plugin_obj, pluginid, dawvert_intent)
+
 
 class convproj_plug_conv:
 	def __init__(self):
@@ -78,6 +85,23 @@ class convproj_plug_conv:
 			if 'priority' in v: mappdata.priority = v['priority']
 			self.storage[k] = mappdata
 
+	def storage_plugs(self):
+		from plugins import base as dv_plugins
+		dv_plugins.load_plugindir('plugconv', '')
+
+		for shortname, plugdata in dv_plugins.iter_list('plugconv'):
+			prop_obj = plugdata.prop_obj
+
+			mappdata = plugconv_mapping()
+			mappdata.type = 'plug'
+			mappdata.daw_in = prop_obj.in_daws
+			mappdata.daw_out = prop_obj.out_daws
+			mappdata.plugtype_in = triplestr.from_str(prop_obj.in_plugin) 
+			mappdata.plugtype_out = [triplestr.from_str(x) for x in prop_obj.out_plugins]
+			mappdata.plug_class = plugdata.plug_obj
+
+			self.storage[shortname] = mappdata
+
 	def set_active(self):
 		self.active_queue = {}
 		self.finish_ids = []
@@ -104,7 +128,7 @@ class convproj_plug_conv:
 
 		self.active_queue = dict(sorted(self.active_queue.items(), key=lambda item: item[0]))
 
-	def convert_plugin(self, convproj_obj, plugin_obj, pluginid):
+	def convert_plugin(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		#print(plugin_obj.type)
 		#plugin_obj.params.debugtxt()
 
@@ -113,7 +137,7 @@ class convproj_plug_conv:
 				for k, mappdata in i:
 
 					old_type = copy.copy(plugin_obj.type)
-					is_converted = mappdata.convert_plugin(convproj_obj, plugin_obj, pluginid, self)
+					is_converted = mappdata.convert_plugin(convproj_obj, plugin_obj, pluginid, self, dawvert_intent)
 					if is_converted:
 						#print(plugin_obj.type)
 						#plugin_obj.params.debugtxt()

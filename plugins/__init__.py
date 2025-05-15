@@ -58,13 +58,13 @@ class info_daw:
 
 class info_plugconv:
 	def __init__(self):
-		self.in_plugins = []
+		self.in_plugin = ''
 		self.in_daws = []
 		self.out_plugins = []
 		self.out_daws = []
 
 	def from_dict(self, indict):
-		if 'in_plugins' in indict: self.in_plugins = indict['in_plugins']
+		if 'in_plugin' in indict: self.in_plugin = indict['in_plugin']
 		if 'in_daws' in indict: self.in_daws = indict['in_daws']
 		if 'out_plugins' in indict: self.out_plugins = indict['out_plugins']
 		if 'out_daws' in indict: self.out_daws = indict['out_daws']

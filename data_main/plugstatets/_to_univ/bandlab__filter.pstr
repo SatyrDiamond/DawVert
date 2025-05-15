@@ -1,0 +1,29 @@
+<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:filter">
+  <define_remap name="filter_types" in_type="string" out_type="filter_type">
+    <val in_val="peaking" out_val="peak"/>
+    <val in_val="lowpass" out_val="low_pass"/>
+    <val in_val="highpass" out_val="high_pass"/>
+    <val in_val="lowshelf" out_val="low_shelf"/>
+    <val in_val="highshelf" out_val="high_shelf"/>
+    <val in_val="bandpass" out_val="band_pass"/>
+    <val in_val="notch" out_val="notch"/>
+    <val in_val="allpass" out_val="all_pass"/>
+    <fallback out_val="low_pass"/>
+  </define_remap>
+
+  <in__param to="frequency" type="float" />
+  <in__param to="q" type="float" />
+  <in__param to="gain" type="float" />
+  <in__dataval to="filterType" type="float" />
+
+  <replace plugtype="universal:filter:single" />
+
+  <out__filterparam to="freq" from="frequency" type="float"/>
+
+  <out__filterparam to="q" from="q" type="float"/>
+
+  <out__filterparam to="gain" from="gain" type="float"/>
+
+  <remap name="filterType" remapdef="filter_types"/>
+  <out__filterparam to="type" from="filterType" type="float"/>
+</plugstatetransform>

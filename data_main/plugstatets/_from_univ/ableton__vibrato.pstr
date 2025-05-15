@@ -7,7 +7,7 @@
 
   <replace plugtype="native:ableton:Chorus2" />
 
-  <out__param to="Mode" type="float">2.0</out__param>
+  <out__param to="Mode" only_value="1" type="float">2.0</out__param>
   <out__param to="Width" type="float">1</out__param>
   <out__param to="OutputGain" type="float">1</out__param>
   <out__param to="DryWet" type="float">1</out__param>

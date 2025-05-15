@@ -42,8 +42,7 @@
 
   <replace plugtype="native:bandlab:autoFilter" />
 
-  <calc name="frequency" type="sub">72</calc>
-  <calc name="frequency" type="note2freq"/>
+  <calc name="frequency" type="midi2freq"/>
   <out__param to="frequency" type="float"/>
 
   <calc name="resonance" type="mul">6.3</calc>

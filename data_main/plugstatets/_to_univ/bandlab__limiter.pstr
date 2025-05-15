@@ -1,0 +1,7 @@
+<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:cleanLimiter">
+  <in__param from="input" type="float" />
+  <in__param from="threshold" type="float" />
+  <replace plugtype="universal:limiter" />
+  <out__param to="pregain" from="input" type="float" />
+  <out__param to="ceiling" from="threshold" type="float" />
+</plugstatetransform>

@@ -1,0 +1,23 @@
+<plugstatetransform daw_in="caustic" daw_out="ableton" plugtype="native:caustic:vibrato">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__dataval to="vibmode" from="mode" type="float" />
+  
+  <replace plugtype="native:ableton:Chorus2" />
+
+  <out__param to="Mode" only_value="1" type="float">2.0</out__param>
+
+  <calc name="1" type="div">1.76</calc>
+  <calc name="1" type="pow">2</calc>
+  <calc name="1" type="mul">3</calc>
+  <out__param to="Rate" from="1" type="float" />
+
+  <calc name="0" type="mul">3</calc>
+  <out__param to="Amount" from="0" type="float" />
+
+  <cond__single in="vibmode" data="x == 5">
+    <cond__true>
+      <out__param to="VibratoOffset" only_value="1" type="float">180</out__param>
+    </cond__true>
+  </cond__single>
+</plugstatetransform>

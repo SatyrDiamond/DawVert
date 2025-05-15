@@ -1,0 +1,14 @@
+<plugstatetransform daw_in="caustic" plugtype="native:caustic:vibrato">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  
+  <replace plugtype="universal:vibrato" />
+
+  <calc name="1" type="div">1.76</calc>
+  <calc name="1" type="pow">2</calc>
+  <calc name="1" type="mul">3</calc>
+  <out__param to="freq" from="1" type="float" />
+
+  <calc name="0" type="mul">3</calc>
+  <out__param to="depth" from="0" type="float" />
+</plugstatetransform>

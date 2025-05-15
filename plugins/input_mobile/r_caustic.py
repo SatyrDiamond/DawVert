@@ -41,12 +41,12 @@ for x in patletters:
 
 def add_caustic_fx(convproj_obj, track_obj, caustic_fx, start_plugid):
 	for slotnum, caustic_fx_data in enumerate(caustic_fx):
-		controls_data = caustic_fx_data.controls.data
-
 		fx_pluginid = start_plugid+'_slot'+str(slotnum+1)
 
 		if caustic_fx_data.fx_type not in [4294967295, -1]:
 			fxtype = caustic_fxtype[caustic_fx_data.fx_type]
+			controls_data = caustic_fx_data.controls.data
+
 			plugin_obj = convproj_obj.plugin__add(fx_pluginid, 'native', 'caustic', fxtype)
 			plugin_obj.role = 'fx'
 			plugin_obj.fxdata_add(bool(not int(controls_data[5])), 1)

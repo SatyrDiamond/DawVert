@@ -41,8 +41,7 @@
   <calc name="lfoDepth" type="mul">30</calc>
   <out__param to="LfoAmount" from="lfoDepth" type="float"/>
 
-  <calc name="frequency" type="freq2note"/>
-  <calc name="frequency" type="add">72</calc>
+  <calc name="frequency" type="freq2midi"/>
   <out__param to="Cutoff" from="frequency" type="float"/>
 
   <calc name="resonance" type="pow">0.5</calc>

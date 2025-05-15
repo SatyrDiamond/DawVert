@@ -1,5 +1,4 @@
 <plugstatetransform daw_out="bandlab" plugtype="universal:filter:single">
-
   <define_remap name="filter_types" in_type="filter_type" out_type="string">
     <val in_val="peak" out_val="peaking"/>
     <val in_val="low_pass" out_val="lowpass"/>
@@ -19,8 +18,6 @@
 
   <replace plugtype="native:bandlab:filter" />
 
-  <calc name="type" type="sub">72</calc>
-  <calc name="type" type="note2freq"/>
   <out__param to="frequency" from="freq" type="float"/>
 
   <out__param to="q" from="q" type="float"/>
@@ -29,5 +26,4 @@
 
   <remap name="type" remapdef="filter_types"/>
   <out__dataval to="filterType" from="type" type="string"/>
-
 </plugstatetransform>

@@ -64,6 +64,8 @@ def do_math(inputv, mathtype, val1, val2, val3, val4):
 	elif mathtype == 'log_r': return math.log(val1,inputv)
 	elif mathtype == 'note2freq': return note_data.note_to_freq(inputv)
 	elif mathtype == 'freq2note': return note_data.freq_to_note(inputv)
+	elif mathtype == 'midi2freq': return note_data.midi_to_freq(inputv)
+	elif mathtype == 'freq2midi': return note_data.freq_to_midi(inputv)
 	elif mathtype == 'from_db': return from_db(inputv)
 	elif mathtype == 'to_db': return to_db(inputv)
 	elif mathtype == 'floatbyteint2float': return struct.unpack("<f", struct.pack("<I", int(inputv)))[0]

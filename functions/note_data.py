@@ -29,6 +29,12 @@ def note_to_freq(note):
 
 
 
+def midi_to_freq(note):
+    return (440/32)*(2**((note-9)/12))
+
+def freq_to_midi(freq):
+    return 12*math.log2(freq/(440*pow(2, -4.75)))
+
 
 
 

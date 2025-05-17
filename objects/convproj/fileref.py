@@ -761,6 +761,8 @@ class cvpj_sampleref:
 					filesupported = data_values.list__in_both(dawaudiofiles, prop_obj.out_file_formats)
 					if filesupported:
 						isconverted = False
+						oldpath = self.fileref.get_path(None, False)
+
 						try: isconverted = plug_obj.convert_file(self, filesupported[0], outpath)
 						except PermissionError:
 							pass
@@ -770,8 +772,8 @@ class cvpj_sampleref:
 								print(traceback.format_exc())
 							logger_project.warning('fileref: audioconv: error using: '+shortname)
 						if isconverted: 
-							output_file = self.fileref.get_path(None, False)
-							logger_project.info('fileref: converted "'+output_file+'" to '+filesupported[0])
+							logger_project.info('fileref: converted "'+oldpath+'" to '+filesupported[0])
+							self.set_fileformat(filesupported[0])
 							break
 				else:
 					logger_project.error('fileref: audiofile plugin "'+shortname+'" is not usable: '+usable_meg)

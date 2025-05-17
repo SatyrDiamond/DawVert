@@ -124,6 +124,7 @@ class convproj_plug_conv:
 						if priority not in self.active_queue: self.active_queue[priority] = []
 						self.active_queue[priority].append([k, mappdata])
 			else:
+				if priority not in self.active_queue: self.active_queue[priority] = []
 				self.active_queue[priority].append([k, mappdata])
 
 		self.active_queue = dict(sorted(self.active_queue.items(), key=lambda item: item[0]))

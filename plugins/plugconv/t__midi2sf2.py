@@ -35,7 +35,9 @@ class plugconv(plugins.base):
 						sf2_loc = dawvert_intent.path_soundfonts[mididevice]
 	
 			if sf2_loc:
+				midi_obj = plugin_obj.midi
 				plugin_obj.replace('universal', 'soundfont2', None)
+				plugin_obj.midi = midi_obj
 				convproj_obj.fileref__add(sf2_loc, sf2_loc, None)
 				plugin_obj.state.filerefs['file'] = sf2_loc
 				return True

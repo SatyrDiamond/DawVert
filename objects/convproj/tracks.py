@@ -159,7 +159,7 @@ class cvpj_instrument:
 		midib = {}
 		midib['bank_hi'] = m_bank_hi
 		midib['bank'] = m_bank
-		midib['inst'] = m_inst
+		midib['patch'] = m_inst
 		midib['drum'] = m_drum
 		midib['dev'] = m_dev
 

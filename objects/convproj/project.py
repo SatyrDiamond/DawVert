@@ -13,6 +13,7 @@ import bisect
 import os
 import logging
 
+from objects.convproj import project_traits
 from objects.convproj import song_compat
 from objects.convproj import sample_entry
 from objects.convproj import automation
@@ -201,6 +202,7 @@ class cvpj_project:
 	def __init__(self):
 		self.type = None
 		self.fxtype = 'none'
+		self.traits = project_traits.cvpj_project_traits()
 
 		self.time_ppq = 96
 		self.time_float = False
@@ -256,57 +258,11 @@ class cvpj_project:
 		for n in sorted(sortpos):
 			for i in sortpos[n]: self.track_order += i
 
-	def set_timings(self, time_ppq, time_float):
-		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
-		self.automation.time_ppq = self.time_ppq
-		self.automation.time_float = self.time_float
-		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
-		self.transport = cvpj_transport(self.time_ppq, self.time_float)
-
-	def change_timings(self, time_ppq, time_float):
-		logger_project.info('Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
-		for p in self.track_data: 
-			track_data = self.track_data[p]
-			track_data.change_timings(time_ppq, time_float)
-			for e in track_data.notelist_index: 
-				track_data.notelist_index[e].notelist.change_timings(time_ppq, time_float)
-		for p in self.playlist: self.playlist[p].change_timings(time_ppq, time_float)
-		for _, n in self.notelist_index.items(): 
-			n.notelist.change_timings(time_ppq, time_float)
-			n.timesig_auto.change_timings(time_ppq, time_float)
-		self.timemarkers.change_timings(time_ppq, time_float)
-		self.timesig_auto.change_timings(time_ppq, time_float)
-		self.transport.change_timings(time_ppq, time_float)
-		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.automation.change_timings(time_ppq, time_float)
-		for _, scene in self.scenes.items(): scene.change_timings(time_ppq, time_float)
-
-	def get_dur(self):
-		duration_final = 0
-		for p in self.track_data: 
-			track_data = self.track_data[p]
-			trk_dur = track_data.placements.get_dur()
-			if duration_final < trk_dur: duration_final = trk_dur
-		for p in self.playlist: 
-			track_data = self.playlist[p]
-			trk_dur = track_data.placements.get_dur()
-			if duration_final < trk_dur: duration_final = trk_dur
-		return duration_final
-
-	def add_timesig_lengthbeat(self, pat_len, notes_p_beat):
-		self.timesig = xtramath.get_timesig(pat_len, notes_p_beat)
-
 	def main__do_lanefit(self):
 		for trackid, track_obj in self.track_data.items():
 			oldnum = len(track_obj.lanes)
 			track_obj.lanefit()
 			logger_project.info('LaneFit: '+ trackid+': '+str(oldnum)+' > '+str(len(track_obj.lanes)))
-
-	def add_autopoints_twopoints(self, autopath, v_type, twopoints):
-		for x in twopoints: self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
 	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		compactclass = song_compat.song_compat()
@@ -459,6 +415,52 @@ class cvpj_project:
 		cust_inst = cvpj_project_midi_custom_instrument()
 		self.midi_cust_inst.append(cust_inst)
 		return cust_inst
+
+	def set_timings(self, time_ppq, time_float):
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
+		self.automation.time_ppq = self.time_ppq
+		self.automation.time_float = self.time_float
+		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
+		self.transport = cvpj_transport(self.time_ppq, self.time_float)
+
+	def change_timings(self, time_ppq, time_float):
+		logger_project.info('Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
+		for p in self.track_data: 
+			track_data = self.track_data[p]
+			track_data.change_timings(time_ppq, time_float)
+			for e in track_data.notelist_index: 
+				track_data.notelist_index[e].notelist.change_timings(time_ppq, time_float)
+		for p in self.playlist: self.playlist[p].change_timings(time_ppq, time_float)
+		for _, n in self.notelist_index.items(): 
+			n.notelist.change_timings(time_ppq, time_float)
+			n.timesig_auto.change_timings(time_ppq, time_float)
+		self.timemarkers.change_timings(time_ppq, time_float)
+		self.timesig_auto.change_timings(time_ppq, time_float)
+		self.transport.change_timings(time_ppq, time_float)
+		self.time_ppq = time_ppq
+		self.time_float = time_float
+		self.automation.change_timings(time_ppq, time_float)
+		for _, scene in self.scenes.items(): scene.change_timings(time_ppq, time_float)
+
+	def get_dur(self):
+		duration_final = 0
+		for p in self.track_data: 
+			track_data = self.track_data[p]
+			trk_dur = track_data.placements.get_dur()
+			if duration_final < trk_dur: duration_final = trk_dur
+		for p in self.playlist: 
+			track_data = self.playlist[p]
+			trk_dur = track_data.placements.get_dur()
+			if duration_final < trk_dur: duration_final = trk_dur
+		return duration_final
+
+	def add_timesig_lengthbeat(self, pat_len, notes_p_beat):
+		self.timesig = xtramath.get_timesig(pat_len, notes_p_beat)
+
+	def add_autopoints_twopoints(self, autopath, v_type, twopoints):
+		for x in twopoints: self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
 # --------------------------------------------------------- GROUPS ---------------------------------------------------------
 

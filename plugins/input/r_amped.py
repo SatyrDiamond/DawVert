@@ -329,14 +329,6 @@ class input_amped(plugins.base):
 		return True
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['amped']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
-		in_dict['placement_cut'] = True
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['track_hybrid'] = True
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['audio_nested'] = True
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
 
@@ -355,6 +347,16 @@ class input_amped(plugins.base):
 			raise ProjectFileParserException('amped: Bad ZIP File: '+str(t))
 
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav', 'mp3', 'ogg', 'flac']
+		traits_obj.audio_nested = True
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.placement_cut = True
+		traits_obj.track_hybrid = True
+		traits_obj.track_lanes = True
+
 		convproj_obj.set_timings(1, True)
 
 		globalstore.dataset.load('amped', './data_main/dataset/amped.dset')

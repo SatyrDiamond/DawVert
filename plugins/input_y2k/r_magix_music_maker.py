@@ -19,17 +19,19 @@ class input_old_magix_maker(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['mmm']
 		in_dict['projtype'] = 'r'
-		in_dict['placement_loop'] = ['loop', 'loop_off']
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['track_hybrid'] = True
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj_past import magix_music_maker
 
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.placement_loop = ['loop', 'loop_off']
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.track_hybrid = True
 
 		project_obj = magix_music_maker.root_group()
 		if dawvert_intent.input_mode == 'file':

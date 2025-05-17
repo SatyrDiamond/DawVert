@@ -51,9 +51,6 @@ class input_trackerboy(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['tbm']
-		in_dict['track_lanes'] = True
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'm'
 
 	def get_detect_info(self, detectdef_obj):
@@ -68,6 +65,9 @@ class input_trackerboy(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+
 		samplefolder = dawvert_intent.path_samples['extracted']
 
 		globalstore.dataset.load('trackerboy', './data_main/dataset/trackerboy.dset')

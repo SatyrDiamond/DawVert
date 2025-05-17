@@ -28,13 +28,7 @@ class input_mmf(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['mmf']
-		in_dict['fxrack_params'] = ['vol','pan','pitch']
-		in_dict['auto_types'] = ['nopl_ticks']
-		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
-		in_dict['audio_filetypes'] = ['wav']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'cm'
 
 	def get_detect_info(self, detectdef_obj):
@@ -46,6 +40,12 @@ class input_mmf(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'cm'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.fxrack_params = ['vol','pan','pitch']
+		traits_obj.auto_types = ['nopl_ticks']
+		traits_obj.track_nopl = True
+		traits_obj.audio_filetypes = ['wav']
 
 		project_obj = proj_mmf.smaf_song()
 

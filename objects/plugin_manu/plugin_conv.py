@@ -123,8 +123,8 @@ class convproj_plug_conv:
 					if cond_daw_out_a:
 						if priority not in self.active_queue: self.active_queue[priority] = []
 						self.active_queue[priority].append([k, mappdata])
-			#else:
-			#	print(mappdata.plugtype_in, mappdata.plugtype_out)
+			else:
+				self.active_queue[priority].append([k, mappdata])
 
 		self.active_queue = dict(sorted(self.active_queue.items(), key=lambda item: item[0]))
 
@@ -140,7 +140,7 @@ class convproj_plug_conv:
 						logger_plugconv.info('INT    | %s | %s: "%s" > "%s"' % (mappdata.type, pluginid, str(old_type), str(plugin_obj.type)))
 						if k in self.finish_ids: 
 							return 1
-			logger_plugconv.warning('       | No equivalent to "%s" found or not supported' % (str(plugin_obj.type)))
+			#logger_plugconv.warning('       | No equivalent to "%s" found or not supported' % (str(plugin_obj.type)))
 			return 0
 		else:
 			return -1

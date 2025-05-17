@@ -20,10 +20,6 @@ class input_famitracker_txt(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['txt']
-		in_dict['file_ext_detect'] = False
-		in_dict['track_lanes'] = True
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'm'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -36,6 +32,9 @@ class input_famitracker_txt(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+
 		if project_obj.title: convproj_obj.metadata.name = project_obj.title
 		if project_obj.author: convproj_obj.metadata.author = project_obj.author
 		if project_obj.copyright: 

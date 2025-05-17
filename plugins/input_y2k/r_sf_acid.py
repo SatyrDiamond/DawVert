@@ -68,11 +68,6 @@ class input_acid_old(plugins.base):
 	
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'r'
-		in_dict['audio_filetypes'] = ['wav']
-		in_dict['placement_loop'] = ['loop', 'loop_off']
-		in_dict['fxtype'] = 'groupreturn'
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['auto_types'] = ['pl_points','nopl_ticks']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
@@ -80,6 +75,12 @@ class input_acid_old(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.placement_loop = ['loop', 'loop_off']
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.auto_types = ['pl_points','nopl_ticks']
 
 		project_obj = sony_acid.sony_acid_file()
 		if dawvert_intent.input_mode == 'file':

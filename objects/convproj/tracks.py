@@ -155,7 +155,15 @@ class cvpj_instrument:
 		m_inst = midi_obj.patch
 		m_drum = midi_obj.drum
 		m_dev = midi_obj.device
-		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev)
+
+		midib = {}
+		midib['bank_hi'] = m_bank_hi
+		midib['bank'] = m_bank
+		midib['inst'] = m_inst
+		midib['drum'] = m_drum
+		midib['dev'] = m_dev
+
+		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, midib)
 		plugin_obj.role = 'synth'
 		self.plugslots.synth = plug_id
 		self.params.add('usemasterpitch', not m_drum, 'bool')

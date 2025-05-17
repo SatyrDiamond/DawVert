@@ -399,17 +399,7 @@ class input_wavtool(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['zip']
-		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
-		in_dict['audio_stretch'] = ['warp', 'rate']
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_included'] = ['native:wavtool','universal:sampler:single','universal:sampler:multi']
-		in_dict['plugin_ext'] = ['vst2', 'vst3']
-		in_dict['plugin_ext_arch'] = [64]
-		in_dict['plugin_ext_platforms'] = ['win']
-		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -420,6 +410,17 @@ class input_wavtool(plugins.base):
 
 		convproj_obj.fxtype = 'route'
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+		traits_obj.audio_stretch = ['warp', 'rate']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
+		traits_obj.plugin_ext = ['vst2', 'vst3']
+		traits_obj.plugin_ext_arch = [64]
+		traits_obj.plugin_ext_platforms = ['win']
+
 		convproj_obj.set_timings(1, True)
 
 		try:

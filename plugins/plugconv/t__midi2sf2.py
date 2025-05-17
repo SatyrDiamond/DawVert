@@ -31,12 +31,11 @@ class plugconv(plugins.base):
 				mididevice = plugin_obj.datavals.get('device', 'gm')
 				if mididevice in dawvert_intent.path_soundfonts:
 					if dawvert_intent.path_soundfonts[mididevice]:
-						logger_plugconv.info('Using '+mididevice.upper()+' SF2.')
+						#logger_plugconv.info('Using '+mididevice.upper()+' SF2.')
 						sf2_loc = dawvert_intent.path_soundfonts[mididevice]
 	
 			if sf2_loc:
-				#extpluglog.convinternal('MIDI', 'MIDI', 'SoundFont2', 'SoundFont2')
 				plugin_obj.replace('universal', 'soundfont2', None)
 				convproj_obj.fileref__add(sf2_loc, sf2_loc, None)
-				plugin_obj.filerefs['file'] = sf2_loc
+				plugin_obj.state.filerefs['file'] = sf2_loc
 				return True

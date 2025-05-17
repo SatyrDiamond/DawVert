@@ -22,11 +22,6 @@ class input_nanostudio_v1(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['prj']
-		in_dict['audio_filetypes'] = ['wav']
-		in_dict['auto_types'] = ['pl_ticks']
-		in_dict['placement_loop'] = ['loop']
-		in_dict['track_lanes'] = True
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -39,6 +34,13 @@ class input_nanostudio_v1(plugins.base):
 		colordata = colors.colorset.from_dataset('nanostudio_v1', 'clips', 'main')
 
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.auto_types = ['pl_ticks']
+		traits_obj.placement_loop = ['loop']
+		traits_obj.track_lanes = True
+
 		convproj_obj.set_timings(256, True)
 
 		project_obj = proj_nanostudio.nanostudio_song()

@@ -61,10 +61,7 @@ class input_kristal(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['kristal']
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['projtype'] = 'r'
-		in_dict['audio_nested'] = True
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'Crys'])
@@ -95,6 +92,10 @@ class input_kristal(plugins.base):
 		from objects import audio_data
 
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.audio_nested = True
 
 		project_obj = proj_kristal.kristal_song()
 		if dawvert_intent.input_mode == 'file':

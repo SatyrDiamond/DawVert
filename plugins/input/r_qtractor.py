@@ -26,13 +26,7 @@ class input_midi(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['audio_filetypes'] = ['wav']
-		in_dict['file_ext'] = ['qtr']
-		in_dict['auto_types'] = ['nopl_ticks']
-		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
-		in_dict['notes_midi'] = True
-		in_dict['time_seconds'] = True
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'MThd'])
@@ -41,6 +35,13 @@ class input_midi(plugins.base):
 		from objects.file_proj import qtractor as proj_qtractor
 		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.auto_types = ['nopl_ticks']
+		traits_obj.notes_midi = True
+		traits_obj.time_seconds = True
+
 		convproj_obj.set_timings(4, True)
 
 		project_obj = proj_qtractor.qtractor_project()

@@ -22,9 +22,6 @@ class input_gt_mnbs(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['nbs']
-		in_dict['track_nopl'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:midi']
 		in_dict['projtype'] = 'rm'
 
@@ -35,6 +32,10 @@ class input_gt_mnbs(plugins.base):
 		convproj_obj.type = 'rm'
 		convproj_obj.set_timings(4, True)
 		
+		traits_obj = convproj_obj.traits
+		traits_obj.track_nopl = True
+		traits_obj.audio_filetypes = ['wav']
+
 		fileref.filesearcher.add_searchpath_partial('mnbs_sounds', '../Data/Sounds', 'projectfile')
 
 		project_obj = proj_nbs.nbs_song()

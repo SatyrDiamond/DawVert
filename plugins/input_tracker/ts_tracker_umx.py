@@ -41,12 +41,8 @@ class input_mod(plugins.base):
 		return 0
 
 	def get_prop(self, in_dict):
-		in_dict['file_ext'] = ['umx']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'ts'
-		in_dict['auto_types'] = ['pl_points', 'pl_ticks']
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'\xc1\x83\x2a\x9e'])

@@ -530,23 +530,22 @@ class input_zenbeats(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['song']
-		in_dict['plugin_included'] = []
-		in_dict['auto_types'] = ['nopl_points']
 		in_dict['projtype'] = 'r'
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
-		in_dict['audio_filetypes'] = ['wav']
-		in_dict['plugin_ext_platforms'] = ['win']
-		in_dict['fxtype'] = 'groupreturn'
-		in_dict['plugin_included'] = ['universal:eq:bands','universal:limiter','universal:eq:8limited','universal:limiter','universal:compressor','universal:limiter','universal:filter']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import zenbeats as proj_zenbeats
 
-		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
+		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
+		traits_obj.plugin_ext_platforms = ['win']
+
 		convproj_obj.set_timings(1, True)
 
 		globalstore.dataset.load('zenbeats', './data_main/dataset/zenbeats.dset')

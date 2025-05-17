@@ -50,11 +50,6 @@ class input_zmaestro(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['zmm']
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['audio_filetypes'] = ['wav']
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['placement_loop'] = ['loop']
 		in_dict['projtype'] = 'r'
 		in_dict['plugin_included'] = ['native:z_maestro','universal:midi','universal:soundfont2']
 
@@ -68,6 +63,13 @@ class input_zmaestro(plugins.base):
 		globalstore.dataset.load('z_maestro', './data_main/dataset/z_maestro.dset')
 
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.placement_loop = ['loop']
+
 		convproj_obj.set_timings(0.25, True)
 
 		project_obj = proj_z_maestro.zmaestro_song()

@@ -211,12 +211,7 @@ class input_notessimo_v3(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['note']
-		in_dict['file_ext_detect'] = False
-		in_dict['auto_types'] = ['pl_points']
-		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:midi']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
 		
 	def get_detect_info(self, detectdef_obj):
@@ -233,6 +228,11 @@ class input_notessimo_v3(plugins.base):
 		# ---------- CVPJ Start ----------
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'mi'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['pl_points']
+		traits_obj.track_lanes = True
+
 		convproj_obj.set_timings(4, True)
 
 		globalstore.dataset.load('notessimo_v3', './data_main/dataset/notessimo_v3.dset')

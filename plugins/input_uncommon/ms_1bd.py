@@ -54,8 +54,6 @@ class input_1bitdragon(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['1bd']
-		in_dict['track_lanes'] = True
 		in_dict['projtype'] = 'ms'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -63,6 +61,9 @@ class input_1bitdragon(plugins.base):
 
 		convproj_obj.set_timings(4, True)
 		convproj_obj.type = 'ms'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
 
 		project_obj = proj_1bitdragon.onebitd_song()
 		if dawvert_intent.input_mode == 'file':

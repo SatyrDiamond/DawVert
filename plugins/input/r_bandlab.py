@@ -28,23 +28,24 @@ class input_bandlab(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['audio_filetypes'] = ['wav', 'mp3', 'flac', 'm4a']
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['projtype'] = 'r'
-		in_dict['fxtype'] = 'groupreturn'
-		in_dict['time_seconds'] = False
-		in_dict['file_ext'] = ['blx']
-		in_dict['notes_midi'] = True
-		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['plugin_included'] = ['native:bandlab']
+		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import bandlab as proj_bandlab
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav', 'mp3', 'flac', 'm4a']
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.notes_midi = True
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
+		traits_obj.time_seconds = False
+
 		convproj_obj.set_timings(4, True)
 
 		project_obj = proj_bandlab.bandlab_project()

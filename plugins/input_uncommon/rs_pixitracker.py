@@ -20,9 +20,6 @@ class input_cvpj_f(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['piximod']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'rs'
 
@@ -33,6 +30,10 @@ class input_cvpj_f(plugins.base):
 		from objects import audio_data
 		from objects import colors
 		from objects.file_proj_uncommon import piximod as proj_piximod
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+		traits_obj.audio_filetypes = ['wav']
 
 		convproj_obj.type = 'rs'
 		convproj_obj.set_timings(4, True) 

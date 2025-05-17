@@ -57,13 +57,7 @@ class input_soundation(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['sng', 'sngz']
-		in_dict['placement_cut'] = True
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation']
-		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
-		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
 
 	def get_detect_info(self, detectdef_obj):
@@ -85,6 +79,15 @@ class input_soundation(plugins.base):
 		global convproj_obj
 
 		convproj_obj = i_convproj_obj
+
+		convproj_obj.fxtype = 'route'
+		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
 
 		soundation_obj = None
 
@@ -110,9 +113,6 @@ class input_soundation(plugins.base):
 				soundation_obj = proj_soundation.soundation_project(sndstat_data)
 			except:
 				raise ProjectFileParserException('soundation: file is not Zipped or JSON')
-
-		convproj_obj.fxtype = 'route'
-		convproj_obj.type = 'r'
 
 		globalstore.dataset.load('soundation', './data_main/dataset/soundation.dset')
 		globalstore.dataset.load('synth_nonfree', './data_main/dataset/synth_nonfree.dset')

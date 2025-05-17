@@ -25,14 +25,7 @@ class input_fl_mobile(plugins.base):
 		return 0
 
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['flm']
-		in_dict['auto_types'] = ['pl_points']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		in_dict['projtype'] = 'r'
-		in_dict['fxtype'] = 'route'
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav','mp3']
-		in_dict['audio_stretch'] = ['rate']
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'10LF'])
@@ -46,6 +39,14 @@ class input_fl_mobile(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'route'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['pl_points']
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		traits_obj.track_lanes = True
+		traits_obj.audio_filetypes = ['wav','mp3']
+		traits_obj.audio_stretch = ['rate']
+
 		convproj_obj.set_timings(1, True)
 
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')

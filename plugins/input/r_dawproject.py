@@ -389,20 +389,8 @@ class input_dawproject(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['dawproject']
-		in_dict['placement_loop'] = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
-		in_dict['audio_filetypes'] = ['wav', 'mp3', 'ogg', 'flac']
-		in_dict['placement_cut'] = True
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['audio_stretch'] = ['warp']
-		in_dict['audio_nested'] = True
-		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
-		in_dict['plugin_ext_arch'] = [32, 64]
-		in_dict['plugin_ext_platforms'] = ['win', 'unix']
-		in_dict['track_hybrid'] = True
-		in_dict['fxtype'] = 'groupreturn'
-		in_dict['projtype'] = 'r'
 		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']
+		in_dict['projtype'] = 'r'
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.containers.append(['zip', 'project.xml'])
@@ -413,6 +401,19 @@ class input_dawproject(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav', 'mp3', 'ogg', 'flac']
+		traits_obj.audio_nested = True
+		traits_obj.audio_stretch = ['warp']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
+		traits_obj.plugin_ext = ['vst2', 'vst3', 'clap']
+		traits_obj.plugin_ext_arch = [32, 64]
+		traits_obj.plugin_ext_platforms = ['win', 'unix']
+		traits_obj.track_hybrid = True
+
 		convproj_obj.set_timings(1, True)
 
 		global autoid_assoc

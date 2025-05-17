@@ -17,11 +17,14 @@ class input_ex_basic_pitch(plugins.base):
 		return 'Friday Night Funkin'
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = 'json'
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+
 		convproj_obj.set_timings(600, False)
 		convproj_obj.params.add('bpm', 120, 'float')
 

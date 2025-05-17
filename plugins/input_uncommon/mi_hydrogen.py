@@ -21,12 +21,8 @@ class input_hydrogen(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['h2song']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'mi'
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['fxtype'] = 'none'
-		in_dict['track_lanes'] = True
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_uncommon import hydrogen as proj_hydrogen
@@ -36,6 +32,10 @@ class input_hydrogen(plugins.base):
 		convproj_obj.type = 'mi'
 		convproj_obj.fxtype = 'none'
 		convproj_obj.set_timings(48, True)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.track_lanes = True
 
 		project_obj = proj_hydrogen.hydrogen_song()
 		if dawvert_intent.input_mode == 'file':

@@ -19,9 +19,6 @@ class input_orgyana(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['org']
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
 		in_dict['projtype'] = 'r'
 
@@ -36,6 +33,10 @@ class input_orgyana(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.track_nopl = True
 
 		globalstore.dataset.load('orgyana', './data_main/dataset/orgyana.dset')
 		colordata = colors.colorset.from_dataset('orgyana', 'track', 'orgmaker_2')

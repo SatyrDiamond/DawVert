@@ -25,12 +25,8 @@ class input_mod(plugins.base):
 		return 0
 		
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['mod']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'ts'
-		in_dict['auto_types'] = ['pl_points', 'pl_ticks']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import tracker_mod as proj_mod
@@ -38,6 +34,11 @@ class input_mod(plugins.base):
 		from objects import globalstore
 		globalstore.dataset.load('tracker_various', './data_main/dataset/tracker_various.dset')
 		
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.auto_types = ['pl_points', 'pl_ticks']
+
 		project_obj = proj_mod.mod_song()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file, IGNORE_ERRORS): exit()

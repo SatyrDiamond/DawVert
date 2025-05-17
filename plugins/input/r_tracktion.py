@@ -475,18 +475,7 @@ class input_tracktion_edit(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['tracktionedit']
-		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
-		in_dict['time_seconds'] = True
-		in_dict['track_hybrid'] = True
-		in_dict['audio_stretch'] = ['rate', 'warp']
-		in_dict['auto_types'] = ['nopl_points']
 		in_dict['plugin_included'] = ['native:tracktion','universal:sampler:single','universal:sampler:multi']
-		in_dict['plugin_ext'] = ['vst2', 'vst3']
-		in_dict['plugin_ext_arch'] = [64]
-		in_dict['plugin_ext_platforms'] = ['win', 'unix']
-		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -496,6 +485,18 @@ class input_tracktion_edit(plugins.base):
 
 		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_stretch = ['rate', 'warp']
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+		traits_obj.plugin_ext = ['vst2', 'vst3']
+		traits_obj.plugin_ext_arch = [64]
+		traits_obj.plugin_ext_platforms = ['win', 'unix']
+		traits_obj.time_seconds = True
+		traits_obj.track_hybrid = True
+
 		convproj_obj.set_timings(4, True)
 
 		globalstore.dataset.load('waveform', './data_main/dataset/waveform.dset')

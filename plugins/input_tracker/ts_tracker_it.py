@@ -88,12 +88,8 @@ class input_it(plugins.base):
 		return 0
 
 	def get_prop(self, in_dict):
-		in_dict['file_ext'] = ['it']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'ts'
-		in_dict['auto_types'] = ['pl_points', 'pl_ticks']
 
 	def get_detect_info(self, detectdef_obj):
 		detectdef_obj.headers.append([0, b'IMPM'])
@@ -103,6 +99,11 @@ class input_it(plugins.base):
 		global samplefolder
 		from objects import globalstore
 		globalstore.dataset.load('tracker_various', './data_main/dataset/tracker_various.dset')
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.auto_types = ['pl_points', 'pl_ticks']
 
 		project_obj = proj_it.it_song()
 		if dawvert_intent.input_mode == 'file':

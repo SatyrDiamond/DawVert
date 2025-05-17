@@ -102,11 +102,7 @@ class input_serato(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['track_lanes'] = True
-		in_dict['file_ext'] = ['ssp']
-		in_dict['audio_stretch'] = ['rate']
 		in_dict['projtype'] = 'ms'
-		in_dict['auto_types'] = ['pl_points']
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import serato as proj_serato
@@ -114,6 +110,13 @@ class input_serato(plugins.base):
 
 		convproj_obj.type = 'ms'
 		convproj_obj.fxtype = 'groupreturn'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.auto_types = ['pl_points']
+		traits_obj.track_lanes = True
+
 		convproj_obj.set_timings(960, True)
 
 		useaudioclips = True

@@ -257,24 +257,8 @@ class input_flp(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['flp']
-		in_dict['auto_types'] = ['pl_ticks', 'pl_points']
-		in_dict['track_lanes'] = True
-		in_dict['placement_cut'] = True
-		in_dict['fxrack_params'] = ['enabled','vol','pan']
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:arpeggiator','native:flstudio','universal:soundfont2','universal:invert','universal:swap_lr']
-		in_dict['fxchain_mixer'] = True
-		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
-		in_dict['plugin_ext_arch'] = [32, 64]
-		in_dict['plugin_ext_platforms'] = ['win']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
-
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'FLhd'])
-		detectdef_obj.containers.append(['zip', '*.flp'])
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from functions_plugin import flp_dec_plugins
@@ -283,6 +267,18 @@ class input_flp(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'mi'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav','flac','ogg','mp3','wv','ds','wav_codec']
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.auto_types = ['pl_ticks', 'pl_points']
+		traits_obj.fxchain_mixer = True
+		traits_obj.fxrack_params = ['enabled','vol','pan']
+		traits_obj.placement_cut = True
+		traits_obj.plugin_ext = ['vst2', 'vst3', 'clap']
+		traits_obj.plugin_ext_arch = [32, 64]
+		traits_obj.plugin_ext_platforms = ['win']
+		traits_obj.track_lanes = True
 
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 2024\\", 'win')

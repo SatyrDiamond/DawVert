@@ -38,12 +38,7 @@ class input_audiosanua(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['song']
-		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
-		in_dict['audio_filetypes'] = ['wav', 'mp3']
 		in_dict['plugin_included'] = ['native:audiosauna', 'universal:sampler:multi', 'universal:bitcrush']
-		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'r'
 
 	def get_detect_info(self, detectdef_obj):
@@ -56,6 +51,12 @@ class input_audiosanua(plugins.base):
 
 		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
+		traits_obj.audio_filetypes = ['wav', 'mp3']
+
 		convproj_obj.set_timings(128, False)
 
 		# ------------------------------------------ Start ------------------------------------------
@@ -119,7 +120,10 @@ class input_audiosanua(plugins.base):
 			track_obj.sends.add('audiosauna_send_reverb', None, as_chan.reverb/100)
 
 			for as_pattern in as_chan.patterns:
-				pat_notes = as_chan.track.notes[as_pattern.patternId]
+				if as_pattern.patternId in as_chan.track.notes:
+					pat_notes = as_chan.track.notes[as_pattern.patternId]
+				else:
+					pat_notes = []
 
 				placement_obj = track_obj.placements.add_notes()
 				placement_obj.time.set_startend(as_pattern.startTick, as_pattern.endTick)

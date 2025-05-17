@@ -21,9 +21,6 @@ class input_onlinesequencer(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['sequence']
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi','native:onlineseq','universal:synth-osc']
 		in_dict['projtype'] = 'r'
 
@@ -34,8 +31,13 @@ class input_onlinesequencer(plugins.base):
 		global onlseq_notelist
 		global onlseq_customnames
 
-		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
+		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['nopl_points']
+		traits_obj.track_nopl = True
+
 		convproj_obj.set_timings(4, True)
 
 		globalstore.dataset.load('onlineseq', './data_main/dataset/onlineseq.dset')

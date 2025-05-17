@@ -20,12 +20,7 @@ class input_domino(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['dms']
-		in_dict['fxrack_params'] = ['vol','pan','pitch']
-		in_dict['auto_types'] = ['nopl_ticks']
-		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'cs'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -34,6 +29,11 @@ class input_domino(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'cs'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.fxrack_params = ['vol','pan','pitch']
+		traits_obj.auto_types = ['nopl_ticks']
+		traits_obj.track_nopl = True
 
 		globalstore.dataset.load('midi', './data_main/dataset/midi.dset')
 		colordata = colors.colorset.from_dataset('midi', 'track', 'domino')

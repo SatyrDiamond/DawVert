@@ -15,7 +15,6 @@ class input_color_art(plugins.base):
 		return 'Color Art'
 	
 	def get_prop(self, in_dict): 
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
 		in_dict['projtype'] = 'r'
 
 	def usable(self): 
@@ -27,6 +26,9 @@ class input_color_art(plugins.base):
 		from PIL import Image
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, False)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
 
 		if dawvert_intent.input_mode == 'file':
 			im = Image.open(dawvert_intent.input_file)

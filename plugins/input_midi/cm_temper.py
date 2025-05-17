@@ -21,18 +21,18 @@ class input_cvpj_f(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['mid']
-		in_dict['fxrack_params'] = ['vol','pan','pitch']
-		in_dict['auto_types'] = ['nopl_ticks']
-		in_dict['track_nopl'] = False
 		in_dict['plugin_included'] = ['universal:midi']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'cm'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_past import temper as proj_temper
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'cm'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.fxrack_params = ['vol','pan','pitch']
+		traits_obj.auto_types = ['nopl_ticks']
+		traits_obj.audio_filetypes = ['wav']
 
 		convproj_obj.set_timings(6716, False)
 

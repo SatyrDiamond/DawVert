@@ -53,12 +53,6 @@ class output_coolbeat(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['audio_filetypes'] = ['wav', 'mp3']
-		in_dict['file_ext'] = 'mlp'
-		in_dict['auto_types'] = ['pl_points']
-		in_dict['placement_loop'] = ['loop']
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['fxtype'] = 'groupreturn'
 		in_dict['plugin_included'] = ['universal:soundfont2']
 		in_dict['projtype'] = 'r'
 
@@ -69,6 +63,12 @@ class output_coolbeat(plugins.base):
 
 		convproj_obj.fxtype = 'none'
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav', 'mp3']
+		traits_obj.auto_types = ['pl_points']
+		traits_obj.placement_loop = ['loop']
+		traits_obj.audio_stretch = ['rate']
 
 		convproj_obj.set_timings(480, False)
 

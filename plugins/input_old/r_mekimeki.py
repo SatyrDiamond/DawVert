@@ -30,14 +30,17 @@ class input_cvpj_f(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['json']
-		in_dict['file_ext_detect'] = False
-		in_dict['auto_types'] = ['nopl_points']
-		in_dict['track_nopl'] = True
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from functions import note_data
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_nopl = True
+		traits_obj.auto_types = ['nopl_points']
+
+		convproj_obj.type = 'r'
+		convproj_obj.set_timings(4, True)
 
 		if dawvert_intent.input_mode == 'file':
 			bytestream = open(dawvert_intent.input_file, 'r')
@@ -51,9 +54,6 @@ class input_cvpj_f(plugins.base):
 			mmc_main = json.loads(file_data)
 		except json.decoder.JSONDecodeError as t:
 			ProjectFileParserException('mekimekichip: JSON parsing error: '+str(t))
-
-		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, True)
 
 		#if 'debug' in dawvert_intent:
 		#	with open(input_file+'_pritty', "w") as fileout: json.dump(mmc_main, fileout, indent=4, sort_keys=True)

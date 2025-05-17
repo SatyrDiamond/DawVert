@@ -17,13 +17,14 @@ class input_petaporon(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['fmf']
-		in_dict['track_nopl'] = True
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import flipperzero as proj_flipperzero
 		from functions import note_data
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_nopl = True
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(1, True)

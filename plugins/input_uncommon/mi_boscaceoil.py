@@ -81,10 +81,6 @@ class input_ceol(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['ceol']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = []
-		in_dict['auto_types'] = ['pl_points']
 		in_dict['plugin_included'] = ['simple:chorus','simple:reverb','simple:distortion','simple:bassboost','universal:compressor','universal:filter','chip:fm:opm','universal:filter','universal:midi']
 		in_dict['projtype'] = 'mi'
 
@@ -101,6 +97,10 @@ class input_ceol(plugins.base):
 		# ---------- CVPJ Start ----------
 		convproj_obj.type = 'mi'
 		convproj_obj.set_timings(4, False)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+		traits_obj.auto_types = ['pl_points']
 
 		globalstore.dataset.load('boscaceoil', './data_main/dataset/boscaceoil.dset')
 		color_track = colors.colorset.from_dataset('boscaceoil', 'track', 'main')

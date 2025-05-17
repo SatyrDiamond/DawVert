@@ -25,7 +25,6 @@ class input_openmpt(plugins.base):
 		return usable, usable_meg
 
 	def get_prop(self, in_dict): 
-		in_dict['track_lanes'] = True
 		in_dict['projtype'] = 'ts'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -36,6 +35,9 @@ class input_openmpt(plugins.base):
 			moduledata = f.read()
 		if dawvert_intent.input_mode == 'bytes':
 			moduledata = dawvert_intent.input_data
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
 
 		openmpt_obj = openmpt.openmpt()
 		openmpt_obj.load_lib()

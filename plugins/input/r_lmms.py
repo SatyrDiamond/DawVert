@@ -710,17 +710,7 @@ class input_lmms(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['mmp', 'mmpz']
-		in_dict['fxrack_params'] = ['enabled','vol']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
-		in_dict['auto_types'] = ['pl_points']
-		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:sampler:single','chip:fm:opl2','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
-		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
-		in_dict['plugin_ext'] = ['vst2', 'ladspa']
-		in_dict['plugin_ext_arch'] = [32, 64]
-		in_dict['plugin_ext_platforms'] = ['win', 'unix']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'r'
 
 	def get_detect_info(self, detectdef_obj):
@@ -743,6 +733,17 @@ class input_lmms(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+		traits_obj.auto_types = ['pl_points']
+		traits_obj.fxrack_params = ['enabled','vol']
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+		traits_obj.plugin_ext = ['vst2', 'ladspa']
+		traits_obj.plugin_ext_arch = [32, 64]
+		traits_obj.plugin_ext_platforms = ['win', 'unix']
+		traits_obj.track_lanes = True
+
 		convproj_obj.set_timings(48, False)
 
 		project_obj = proj_lmms.lmms_project()

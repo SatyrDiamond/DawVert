@@ -239,11 +239,6 @@ class input_jummbox(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['json']
-		in_dict['file_ext_detect'] = False
-		in_dict['auto_types'] = ['pl_points']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['native:jummbox','universal:midi','universal:eq:bands','universal:delay','simple:distortion','universal:bitcrush','simple:chorus','simple:reverb']
 		in_dict['projtype'] = 'mi'
 
@@ -251,6 +246,11 @@ class input_jummbox(plugins.base):
 		from objects.file_proj import jummbox as proj_jummbox
 
 		convproj_obj.type = 'mi'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.auto_types = ['pl_points']
+		traits_obj.track_lanes = True
 
 		globalstore.dataset.load('beepbox', './data_main/dataset/beepbox.dset')
 

@@ -16,7 +16,6 @@ class input_ex_basic_pitch(plugins.base):
 		return 'Basic Pitch'
 	
 	def get_prop(self, in_dict): 
-		in_dict['track_nopl'] = True
 		in_dict['projtype'] = 'r'
 
 	def usable(self): 
@@ -30,6 +29,10 @@ class input_ex_basic_pitch(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, False)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_nopl = True
+
 		convproj_obj.params.add('bpm', 120, 'float')
 
 		if dawvert_intent.input_mode == 'file':

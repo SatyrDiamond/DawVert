@@ -33,9 +33,6 @@ class input_petaporon(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['json']
-		in_dict['file_ext_detect'] = False
-		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc','universal:midi']
 		in_dict['projtype'] = 'r'
 
@@ -53,6 +50,9 @@ class input_petaporon(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_nopl = True
 
 		peta_notedata = petapo_data['n'].encode('ascii')
 		peta_noteints = struct.unpack("B"*len(peta_notedata), peta_notedata)

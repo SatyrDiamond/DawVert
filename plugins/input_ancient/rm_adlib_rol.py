@@ -19,9 +19,6 @@ class input_adlib_rol(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['rol']
-		in_dict['auto_types'] = ['nopl_ticks']
-		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['chip:fm:opl2']
 		in_dict['projtype'] = 'rm'
 
@@ -33,6 +30,10 @@ class input_adlib_rol(plugins.base):
 		from objects.file import adlib_bnk
 
 		convproj_obj.type = 'rm'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['nopl_ticks']
+		traits_obj.track_nopl = True
 
 		project_obj = proj_adlib_rol.adlib_rol_project()
 		if dawvert_intent.input_mode == 'file':

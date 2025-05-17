@@ -205,6 +205,8 @@ class plug_manu:
 
 		plugin_obj = self.plugin_obj
 
+		val = None
+
 		if storename in self.cur_params: 
 			valstored = self.cur_params[storename]
 			valauto = valstored.automation

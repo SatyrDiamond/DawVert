@@ -42,12 +42,6 @@ class input_fruitytracks(plugins.base):
 		return 0
 
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['ftr']
-		in_dict['placement_cut'] = True
-		in_dict['audio_filetypes'] = ['wav', 'mp3']
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
-		in_dict['audio_stretch'] = ['rate']
-		in_dict['auto_types'] = ['pl_points']
 		in_dict['projtype'] = 'r'
 
 	def get_detect_info(self, detectdef_obj):
@@ -58,6 +52,13 @@ class input_fruitytracks(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.placement_cut = True
+		traits_obj.audio_filetypes = ['wav', 'mp3']
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+		traits_obj.audio_stretch = ['rate']
+		traits_obj.auto_types = ['pl_points']
 
 		fileref.filesearcher.add_searchpath_partial('fruitytracks', '../Samples/', 'projectfile')
 

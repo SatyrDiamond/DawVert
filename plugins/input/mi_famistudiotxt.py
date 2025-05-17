@@ -292,13 +292,7 @@ class input_famistudio(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['txt']
-		in_dict['file_ext_detect'] = False
-		in_dict['auto_types'] = ['nopl_points', 'pl_points']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['chip:epsm_rhythm','chip:fds','chip:fm:epsm','chip:fm:vrc7','chip:namco163_famistudio','universal:sampler:multi','universal:synth-osc']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'mi'
 		
 	def parse(self, i_convproj_obj, dawvert_intent):
@@ -310,6 +304,12 @@ class input_famistudio(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'mi'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav']
+		traits_obj.auto_types = ['nopl_points', 'pl_points']
+		traits_obj.track_lanes = True
+
 		convproj_obj.set_timings(4, True)
 
 		globalstore.dataset.load('famistudio', './data_main/dataset/famistudio.dset')

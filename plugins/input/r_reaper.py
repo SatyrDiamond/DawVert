@@ -155,20 +155,7 @@ class input_reaper(plugins.base):
 		return 0
 
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['rpp']
-		in_dict['placement_cut'] = True
-		in_dict['time_seconds'] = True
-		in_dict['track_hybrid'] = True
-		in_dict['notes_midi'] = True
-		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_adv']
-		in_dict['audio_stretch'] = ['rate', 'warp']
-		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
-		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
-		in_dict['plugin_ext_arch'] = [32, 64]
-		in_dict['plugin_ext_platforms'] = ['win', 'unix']
-		in_dict['auto_types'] = ['nopl_points', 'pl_points']
 		in_dict['plugin_included'] = ['universal:sampler:single','universal:sampler:multi']
-		in_dict['fxtype'] = 'route'
 		in_dict['projtype'] = 'r'
 		
 	def parse(self, convproj_obj, dawvert_intent):
@@ -191,6 +178,20 @@ class input_reaper(plugins.base):
 
 		convproj_obj.fxtype = 'route'
 		convproj_obj.type = 'r'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.audio_filetypes = ['wav','flac','ogg','mp3']
+		traits_obj.audio_stretch = ['rate', 'warp']
+		traits_obj.auto_types = ['nopl_points', 'pl_points']
+		traits_obj.notes_midi = True
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
+		traits_obj.plugin_ext = ['vst2', 'vst3', 'clap']
+		traits_obj.plugin_ext_arch = [32, 64]
+		traits_obj.plugin_ext_platforms = ['win', 'unix']
+		traits_obj.time_seconds = True
+		traits_obj.track_hybrid = True
+
 		convproj_obj.set_timings(4, True)
 
 		rpp_project = project_obj.project

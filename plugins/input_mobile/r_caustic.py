@@ -108,15 +108,7 @@ class input_cvpj_r(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['caustic']
-		in_dict['placement_cut'] = True
-		in_dict['placement_loop'] = ['loop']
-		in_dict['audio_stretch'] = ['warp']
-		in_dict['auto_types'] = ['pl_points', 'nopl_points']
 		in_dict['plugin_included'] = ['native:caustic','universal:sampler:single','universal:sampler:multi']
-		in_dict['fxchain_mixer'] = True
-		in_dict['audio_filetypes'] = ['wav']
-		in_dict['fxtype'] = 'groupreturn'
 		in_dict['projtype'] = 'ri'
 
 	def get_detect_info(self, detectdef_obj):
@@ -130,6 +122,15 @@ class input_cvpj_r(plugins.base):
 
 		convproj_obj.fxtype = 'groupreturn'
 		convproj_obj.type = 'ri'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.placement_cut = True
+		traits_obj.placement_loop = ['loop']
+		traits_obj.audio_stretch = ['warp']
+		traits_obj.auto_types = ['pl_points', 'nopl_points']
+		traits_obj.fxchain_mixer = True
+		traits_obj.audio_filetypes = ['wav']
+
 		convproj_obj.set_timings(1, True)
 
 		globalstore.dataset.load('caustic', './data_main/dataset/caustic.dset')

@@ -49,11 +49,7 @@ class input_mariopaint_msq(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['msq']
-		in_dict['track_lanes'] = True
-		in_dict['track_nopl'] = True
 		in_dict['plugin_included'] = ['universal:midi']
-		in_dict['fxtype'] = 'rack'
 		in_dict['projtype'] = 'rm'
 	
 	def parse(self, convproj_obj, dawvert_intent):
@@ -61,6 +57,11 @@ class input_mariopaint_msq(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		convproj_obj.type = 'rm'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+		traits_obj.track_nopl = True
+
 		mariopaint_obj = mariopaint.mariopaint_song()
 
 		msq_values = {}

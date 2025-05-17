@@ -39,9 +39,6 @@ class input_soundclub2(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['sn2']
-		in_dict['track_lanes'] = True
-		in_dict['audio_filetypes'] = ['wav']
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'rs'
 		
@@ -53,6 +50,11 @@ class input_soundclub2(plugins.base):
 		from objects.file_proj_past import soundclub2 as proj_soundclub2
 		
 		convproj_obj.type = 'rs'
+
+		traits_obj = convproj_obj.traits
+		traits_obj.track_lanes = True
+		traits_obj.audio_filetypes = ['wav']
+
 		convproj_obj.set_timings(4, False)
 
 		project_obj = proj_soundclub2.sn2_song()

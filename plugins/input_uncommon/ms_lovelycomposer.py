@@ -156,10 +156,7 @@ class input_lc(plugins.base):
 		return 0
 	
 	def get_prop(self, in_dict): 
-		in_dict['file_ext'] = ['jsonl']
-		in_dict['track_lanes'] = True
 		in_dict['plugin_included'] = ['universal:synth-osc']
-		in_dict['auto_types'] = ['pl_points']
 		in_dict['projtype'] = 'ms'
 
 	def parse(self, convproj_obj, dawvert_intent):
@@ -167,6 +164,10 @@ class input_lc(plugins.base):
 
 		convproj_obj.type = 'ms'
 		convproj_obj.set_timings(4, False)
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['pl_points']
+		traits_obj.track_lanes = True
 
 		project_obj = proj_lovelycomposer.LCMusic()
 		if dawvert_intent.input_mode == 'file':

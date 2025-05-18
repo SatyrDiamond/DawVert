@@ -442,7 +442,8 @@ class core:
 		isconverted = False
 		for sampleref_id, sampleref_obj in self.convproj_obj.samplerefs.items():
 			if sampleref_obj.get_exists():
-				if sampleref_obj.fileformat not in out_dawinfo.audio_filetypes:
+				fileformat = sampleref_obj.get_fileformat()
+				if fileformat not in out_dawinfo.audio_filetypes:
 					isconverted = sampleref_obj.convert(out_dawinfo.audio_filetypes, dawvert_intent.path_samples['converted'])
 
 	def convert_plugins(self, dawvert_intent): 

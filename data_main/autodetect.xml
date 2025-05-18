@@ -271,6 +271,10 @@
 		<file fileext=".mmm;.vip"/>
 	</plugin>
 
+	<plugin pluginset="y2k" name="korg_m1_nds">
+		<bytes_header pos="4" data="4D303157"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

@@ -394,11 +394,12 @@ class output_soundation(plugins.base):
 					soundation_region.file = {"url": zipfilename, "name": ""}
 					soundation_region.reversed = audiopl_obj.sample.reverse
 
-					soundation_region.stretchRate = audiopl_obj.sample.stretch.calc_real_speed
-					soundation_region.stretchMode = 3 if audiopl_obj.sample.stretch.preserve_pitch else 2
+					stretch_obj = audiopl_obj.sample.stretch
+					soundation_region.stretchRate = stretch_obj.calc_real_speed
+					soundation_region.stretchMode = 3 if stretch_obj.preserve_pitch else 2
 
-					if audiopl_obj.sample.stretch.uses_tempo == False:
-						soundation_region.stretchRate = audiopl_obj.sample.stretch.calc_real_speed
+					if stretch_obj.uses_tempo == False:
+						soundation_region.stretchRate = stretch_obj.calc_real_speed
 						soundation_region.isAutoStretched = False
 					else:
 						soundation_region.autoStretchBpm = bpm

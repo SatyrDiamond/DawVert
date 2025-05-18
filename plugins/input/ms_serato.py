@@ -186,11 +186,13 @@ class input_serato(plugins.base):
 							else:
 								samplepart_obj.start = 0
 								samplepart_obj.end = 1
-							samplepart_obj.stretch.preserve_pitch = True
+
 							samplepart_obj.pitch = drumsamp.pitch_shift
-							samplepart_obj.stretch.set_rate_speed(project_obj.bpm, drumsamp.playback_speed, False)
 							samplepart_obj.trigger = 'oneshot'
 
+							stretch_obj = samplepart_obj.stretch
+							stretch_obj.set_rate_speed(project_obj.bpm, drumsamp.playback_speed, False)
+							stretch_obj.preserve_pitch = True
 
 			if scene_deck.type == 'plugin':
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'instruments', 1, False)
@@ -244,7 +246,8 @@ class input_serato(plugins.base):
 						convproj_obj.sampleref__add(samplepath, samplepath)
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = samplepath
-						samplepart_obj.stretch.set_rate_speed(project_obj.bpm, scene_deck.playback_speed, False)
+						stretch_obj = samplepart_obj.stretch
+						stretch_obj.set_rate_speed(project_obj.bpm, scene_deck.playback_speed, False)
 	
 					plugin_obj.datavals.add('type', scene_deck.type)
 					plugin_obj.datavals.add('name', scene_deck.name)
@@ -279,8 +282,10 @@ class input_serato(plugins.base):
 						samplepart_obj = sample_entry.cvpj_sample_entry()
 						samplepart_obj.sampleref = samplepath
 						samplepart_obj.pitch = scene_deck.key_shift
-						samplepart_obj.stretch.set_rate_tempo(project_obj.bpm, playspeed, False)
-						samplepart_obj.stretch.preserve_pitch = True
+
+						stretch_obj = samplepart_obj.stretch
+						stretch_obj.set_rate_tempo(project_obj.bpm, playspeed, False)
+						stretch_obj.preserve_pitch = True
 
 						s_sample_entry['part'] = samplepart_obj
 						s_sample_entry['sampleref'] = sampleref_obj
@@ -498,7 +503,9 @@ class input_serato(plugins.base):
 											samplepart_copy.vol *= vol
 
 											playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, playback_speed)
-											samplepart_copy.stretch.set_rate_tempo(project_obj.bpm, playspeed, False)
+
+											stretch_obj = samplepart_copy.stretch
+											stretch_obj.set_rate_tempo(project_obj.bpm, playspeed, False)
 
 											samplepart_copy.pitch += project_obj.transpose
 											if 'pitch_shift' in cuedata: samplepart_copy.pitch += cuedata['pitch_shift']

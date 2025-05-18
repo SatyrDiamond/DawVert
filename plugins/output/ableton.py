@@ -179,27 +179,29 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 	
 		stretch_obj = cvpj_samplepart.stretch
 	
+		stretch_algo = stretch_obj.algorithm
+
 		if not stretch_obj.preserve_pitch and not ignoreresample: 
 			warp_obj.WarpMode = 3
 		else:
-			if stretch_obj.algorithm == 'beats':
+			if stretch_algo.type == 'beats':
 				warp_obj.WarpMode = 0
-				if 'resolution' in stretch_obj.params: warp_obj.TransientResolution = stretch_obj.params['resolution']
-				if 'loopmode' in stretch_obj.params: warp_obj.TransientLoopMode = stretch_obj.params['loopmode']
-				if 'envelope' in stretch_obj.params: warp_obj.TransientEnvelope = stretch_obj.params['envelope']
-			elif stretch_obj.algorithm == 'tones':
+				if 'resolution' in stretch_algo.params: warp_obj.TransientResolution = stretch_algo.params['resolution']
+				if 'loopmode' in stretch_algo.params: warp_obj.TransientLoopMode = stretch_algo.params['loopmode']
+				if 'envelope' in stretch_algo.params: warp_obj.TransientEnvelope = stretch_algo.params['envelope']
+			elif stretch_algo.type == 'tones':
 				warp_obj.WarpMode = 1
-				if 'GranularityTones' in stretch_obj.params: warp_obj.GranularityTones = stretch_obj.params['GranularityTones']
-			elif stretch_obj.algorithm == 'ableton_texture':
+				if 'GranularityTones' in stretch_algo.params: warp_obj.GranularityTones = stretch_algo.params['GranularityTones']
+			elif stretch_algo.type == 'ableton_texture':
 				warp_obj.WarpMode = 2
-				if 'GranularityTexture' in stretch_obj.params: warp_obj.GranularityTexture = stretch_obj.params['GranularityTexture']
-				if 'FluctuationTexture' in stretch_obj.params: warp_obj.FluctuationTexture = stretch_obj.params['FluctuationTexture']
-			elif stretch_obj.algorithm == 'ableton_complex':
+				if 'GranularityTexture' in stretch_algo.params: warp_obj.GranularityTexture = stretch_algo.params['GranularityTexture']
+				if 'FluctuationTexture' in stretch_algo.params: warp_obj.FluctuationTexture = stretch_algo.params['FluctuationTexture']
+			elif stretch_algo.type == 'ableton_complex':
 				warp_obj.WarpMode = 4
-			elif stretch_obj.algorithm == 'stretch_complexpro':
+			elif stretch_algo.type == 'stretch_complexpro':
 				warp_obj.WarpMode = 6
-				if 'formants' in stretch_obj.params: warp_obj.ComplexProFormants = stretch_obj.params['formants']
-				if 'envelope' in stretch_obj.params: warp_obj.ComplexProEnvelope = stretch_obj.params['envelope']
+				warp_obj.ComplexProFormants = stretch_algo.formant
+				if 'envelope' in stretch_algo.params: warp_obj.ComplexProEnvelope = stretch_algo.params['envelope']
 			else:
 				warp_obj.WarpMode = 4
 
@@ -559,27 +561,27 @@ def do_audio_stretch(als_audioclip, stretch_obj):
 	if not stretch_obj.preserve_pitch: 
 		als_audioclip.WarpMode = 3
 	else:
-		if stretch_obj.algorithm == 'transient':
+		if stretch_algo.type == 'transient':
 			als_audioclip.WarpMode = 0
-			if 'TransientResolution' in stretch_obj.params: als_audioclip.TransientResolution = stretch_obj.params['TransientResolution']
-			if 'TransientLoopMode' in stretch_obj.params: als_audioclip.TransientLoopMode = stretch_obj.params['TransientLoopMode']
-			if 'TransientEnvelope' in stretch_obj.params: als_audioclip.TransientEnvelope = stretch_obj.params['TransientEnvelope']
-		elif stretch_obj.algorithm == 'tones':
+			if 'TransientResolution' in stretch_algo.params: als_audioclip.TransientResolution = stretch_algo.params['TransientResolution']
+			if 'TransientLoopMode' in stretch_algo.params: als_audioclip.TransientLoopMode = stretch_algo.params['TransientLoopMode']
+			if 'TransientEnvelope' in stretch_algo.params: als_audioclip.TransientEnvelope = stretch_algo.params['TransientEnvelope']
+		elif stretch_algo.type == 'tones':
 			als_audioclip.WarpMode = 1
-			if 'GranularityTones' in stretch_obj.params: als_audioclip.GranularityTones = stretch_obj.params['GranularityTones']
-		elif stretch_obj.algorithm == 'ableton_texture':
+			if 'GranularityTones' in stretch_algo.params: als_audioclip.GranularityTones = stretch_algo.params['GranularityTones']
+		elif stretch_algo.type == 'ableton_texture':
 			als_audioclip.WarpMode = 2
-			if 'GranularityTexture' in stretch_obj.params: als_audioclip.GranularityTexture = stretch_obj.params['GranularityTexture']
-			if 'FluctuationTexture' in stretch_obj.params: als_audioclip.FluctuationTexture = stretch_obj.params['FluctuationTexture']
-		elif stretch_obj.algorithm == 'ableton_complex':
+			if 'GranularityTexture' in stretch_algo.params: als_audioclip.GranularityTexture = stretch_algo.params['GranularityTexture']
+			if 'FluctuationTexture' in stretch_algo.params: als_audioclip.FluctuationTexture = stretch_algo.params['FluctuationTexture']
+		elif stretch_algo.type == 'ableton_complex':
 			als_audioclip.WarpMode = 4
-		elif stretch_obj.algorithm == 'ableton_complexpro':
+		elif stretch_algo.type == 'ableton_complexpro':
 			als_audioclip.WarpMode = 6
-			if 'ComplexProFormants' in stretch_obj.params: als_audioclip.ComplexProFormants = stretch_obj.params['ComplexProFormants']
-			if 'ComplexProEnvelope' in stretch_obj.params: als_audioclip.ComplexProEnvelope = stretch_obj.params['ComplexProEnvelope']
-		elif stretch_obj.algorithm == 'soundtouch':
+			if 'ComplexProFormants' in stretch_algo.params: als_audioclip.ComplexProFormants = stretch_algo.params['ComplexProFormants']
+			if 'ComplexProEnvelope' in stretch_algo.params: als_audioclip.ComplexProEnvelope = stretch_algo.params['ComplexProEnvelope']
+		elif stretch_algo.type == 'soundtouch':
 			stmode = None
-			if 'mode' in stretch_obj.params: stmode = stretch_obj.params['mode']
+			if 'mode' in stretch_algo.params: stmode = stretch_algo.params['mode']
 			if stmode == 'hq':
 				als_audioclip.WarpMode = 2
 				als_audioclip.GranularityTexture = 50

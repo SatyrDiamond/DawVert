@@ -29,10 +29,13 @@ def soundlayer_samplepart(sp_obj, soundlayer, layerparams):
 	sp_obj.trigger = 'normal' if (layerparams['envModeParam'] if 'envModeParam' in layerparams else 1) else 'normal'
 	sp_obj.vol = layerparams['gainParam'] if 'gainParam' in layerparams else 1
 	sp_obj.pan = layerparams['panParam'] if 'panParam' in layerparams else 0
-	sp_obj.stretch.set_rate_speed(120, soundlayer.offlineTimeStretch, True)
-	if soundlayer.pitchShift or soundlayer.offlineTimeStretch != 1: sp_obj.stretch.preserve_pitch = True
 	sp_obj.pitch = soundlayer.offlinePitchShift
 	sp_obj.no_pitch = soundlayer.fixedPitch
+
+	stretch_obj = sp_obj.stretch
+	stretch_obj.set_rate_speed(120, soundlayer.offlineTimeStretch, True)
+	if soundlayer.pitchShift or soundlayer.offlineTimeStretch != 1:
+		stretch_obj.preserve_pitch = True
 
 	if 'sensParam' in layerparams:
 		if layerparams['sensParam'] is not None: sp_obj.data['vel_sens'] = layerparams['sensParam']

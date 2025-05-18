@@ -112,7 +112,10 @@ class input_fruitytracks(plugins.base):
 				sampleref_obj = convproj_obj.sampleref__add(ftr_clip.file, ftr_clip.file, 'win')
 				sampleref_obj.find_relative('projectfile')
 				sampleref_obj.find_relative('fruitytracks')
-				placement_obj.sample.sampleref = ftr_clip.file
+
+				sp_obj = placement_obj.sample
+
+				sp_obj.sampleref = ftr_clip.file
 				placement_obj.muted = bool(ftr_clip.muted)
 
 				plpos = calc_tick_val(bpmdiv, ftr_clip.pos)
@@ -128,23 +131,25 @@ class input_fruitytracks(plugins.base):
 						0, 
 						calc_tick_val(bpmdiv, ftr_clip.repeatlen)
 						)
-					placement_obj.sample.stretch.algorithm = 'resample'
+
+					stretch_obj = sp_obj.stretch
+					stretch_obj.preserve_pitch = False
 					dur_sec = sampleref_obj.get_dur_sec()
 					if dur_sec:
 						audduration = dur_sec*8
-						placement_obj.sample.stretch.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
+						stretch_obj.set_rate_tempo(project_obj.bpm, audduration/ftr_clip.stretch, False)
 				placement_obj.time.set_posdur(plpos, pldur)
 
 				envpoints = ftr_clip.vol_env
 
 				if (ftr_clip.vol_start == ftr_clip.vol_end) and not envpoints:
-					placement_obj.sample.vol = ftr_clip.vol_start/128
+					sp_obj.vol = ftr_clip.vol_start/128
 				else:
 					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'vol'], plpos, pldur, ftr_clip.vol_start/128, ftr_clip.vol_end/128, envpoints, ftr_track.vol/128, True, bpmdiv)
 					autopl_obj.visual.name = ftr_clip.name
 
 				if (ftr_clip.pan_start == ftr_clip.pan_end):
-					placement_obj.sample.pan = (ftr_clip.pan_start-64)/64
+					sp_obj.pan = (ftr_clip.pan_start-64)/64
 				else:
 					autopl_obj = make_auto(convproj_obj, ['track', trackid, 'pan'], plpos, pldur, (ftr_clip.pan_start-64)/64, (ftr_clip.pan_end-64)/64, None, (ftr_track.pan-64)/64, False, bpmdiv)
 					autopl_obj.visual.name = ftr_clip.name

@@ -572,43 +572,45 @@ class input_reaper(plugins.base):
 					startoffset = (cvpj_offset_bpm/cvpj_audio_rate) + (startpos/cvpj_audio_rate)*8
 
 					stretch_obj = placement_obj.sample.stretch
+					stretch_obj.preserve_pitch = cvpj_audio_preserve_pitch
 
+					stretch_algo = stretch_obj.algorithm
 					if rppart_audio_stretch == 9:
-						stretch_obj.algorithm = 'elastique_v3'
-						stretch_obj.algorithm_mode = 'pro'
+						stretch_algo.type = 'elastique_v3'
+						stretch_algo.subtype = 'pro'
 
 					if rppart_audio_stretch == 10:
-						stretch_obj.algorithm = 'elastique_v3'
-						stretch_obj.algorithm_mode = 'efficient'
+						stretch_algo.type = 'elastique_v3'
+						stretch_algo.subtype = 'efficient'
 
 					if rppart_audio_stretch == 11:
-						stretch_obj.algorithm = 'elastique_v3'
-						stretch_obj.algorithm_mode = 'mono'
-						if rppart_audio_params&2: stretch_obj.algorithm_mode = 'speech'
+						stretch_algo.type = 'elastique_v3'
+						stretch_algo.subtype = 'mono'
+						if rppart_audio_params&2: stretch_algo.subtype = 'speech'
 
 					if rppart_audio_stretch == 6:
-						stretch_obj.algorithm = 'elastique_v2'
-						stretch_obj.algorithm_mode = 'pro'
+						stretch_algo.type = 'elastique_v2'
+						stretch_algo.subtype = 'pro'
 
 					if rppart_audio_stretch == 7:
-						stretch_obj.algorithm = 'elastique_v2'
-						stretch_obj.algorithm_mode = 'efficient'
+						stretch_algo.type = 'elastique_v2'
+						stretch_algo.subtype = 'efficient'
 
 					if rppart_audio_stretch == 8:
-						stretch_obj.algorithm = 'elastique_v2'
-						stretch_obj.algorithm_mode = 'mono'
-						if rppart_audio_params&2: stretch_obj.algorithm_mode = 'speech'
+						stretch_algo.type = 'elastique_v2'
+						stretch_algo.subtype = 'mono'
+						if rppart_audio_params&2: stretch_algo.subtype = 'speech'
 
 					if rppart_audio_stretch == 13:
-						stretch_obj.algorithm = 'rubberband'
+						stretch_algo.type = 'rubberband'
 
 					if rppart_audio_stretch == 0:
-						stretch_obj.algorithm = 'soundtouch'
+						stretch_algo.type = 'soundtouch'
 						if rppart_audio_params == 1: stretch_obj.params['mode'] = 'hq'
 						if rppart_audio_params == 2: stretch_obj.params['mode'] = 'fast'
 
 					if rppart_audio_stretch == 2:
-						stretch_obj.algorithm = 'simple_windowing'
+						stretch_algo.type = 'simple_windowing'
 
 					dur_sec = sampleref_obj.get_dur_sec()
 
@@ -634,7 +636,6 @@ class input_reaper(plugins.base):
 					else: 
 						stretch_obj.set_rate_tempo(bpm, (1/cvpj_audio_rate)*tempomul, True)
 
-					stretch_obj.preserve_pitch = cvpj_audio_preserve_pitch
 					if not cvpj_loop:
 						placement_obj.time.set_offset(startoffset)
 					elif dur_sec:

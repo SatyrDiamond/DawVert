@@ -298,30 +298,35 @@ def do_audioclip(convproj_obj, npa_obj, inclip):
 		sampleref_obj = do_audio(convproj_obj, npa_obj, inclip.audio)
 	if inclip.warps:
 		if inclip.warps.audio:
-			stretch_algo = inclip.warps.audio.algorithm
+			dp_stretch_algo = inclip.warps.audio.algorithm
 
 			sampleref_obj = do_audio(convproj_obj, npa_obj, inclip.warps.audio)
 			sample_obj = npa_obj.sample
 			stretch_obj = sample_obj.stretch
+			stretch_obj.preserve_pitch = dp_stretch_algo != 'repitch'
+			stretch_algo = stretch_obj.algorithm
 
-			if stretch_algo == 'stretch_subbands': stretch_obj.algorithm = 'stretch_subbands'
-			if stretch_algo == 'slice': stretch_obj.algorithm = 'slice'
-			if stretch_algo == 'elastique_solo':
-				stretch_obj.algorithm = 'elastique_v3'
-				stretch_obj.algorithm_mode = 'mono'
+			if dp_stretch_algo == 'stretch_subbands':
+				stretch_algo.type = 'stretch_subbands'
 
-			if stretch_algo == 'elastique':
-				stretch_obj.algorithm = 'elastique_v3'
+			if dp_stretch_algo == 'slice':
+				stretch_algo.type = 'slice'
 
-			if stretch_algo == 'elastique_eco':
-				stretch_obj.algorithm = 'elastique_v3'
-				stretch_obj.algorithm_mode = 'efficient'
+			if dp_stretch_algo == 'elastique_solo':
+				stretch_algo.type = 'elastique_v3'
+				stretch_algo.subtype = 'mono'
 
-			if stretch_algo == 'elastique_pro':
-				stretch_obj.algorithm = 'elastique_v3'
-				stretch_obj.algorithm_mode = 'pro'
+			if dp_stretch_algo == 'elastique':
+				stretch_algo.type = 'elastique_v3'
 
-			stretch_obj.preserve_pitch = stretch_algo != 'repitch'
+			if dp_stretch_algo == 'elastique_eco':
+				stretch_algo.type = 'elastique_v3'
+				stretch_algo.subtype = 'efficient'
+
+			if dp_stretch_algo == 'elastique_pro':
+				stretch_algo.type = 'elastique_v3'
+				stretch_algo.subtype = 'pro'
+
 			stretch_obj.is_warped = True
 			warp_obj = stretch_obj.warp
 			dur_sec = sampleref_obj.get_dur_sec()

@@ -194,48 +194,57 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 		t_stretchingpitch += (fl_channel_obj.middlenote-60)*-1
 		t_stretchingpitch += fl_channel_obj.basicparams.pitch/100
 
-	sre_obj.pitch = t_stretchingpitch
-	
 	t_stretchingtime = fl_channel_obj.params.stretchingtime/384
 	t_stretchingmode = fl_channel_obj.params.stretchingmode
-	t_stretchingmultiplier = pow(2, fl_channel_obj.params.stretchingmultiplier/10000)
 
-	sre_obj.stretch.preserve_pitch = t_stretchingmode != 0
-	if t_stretchingmode == 1: 
-		sre_obj.stretch.algorithm = 'elastique_v3'
-		sre_obj.stretch.algorithm_mode = 'generic'
-	if t_stretchingmode == 2: 
-		sre_obj.stretch.algorithm = 'elastique_v3'
-		sre_obj.stretch.algorithm_mode = 'mono'
-	if t_stretchingmode == 3: sre_obj.stretch.algorithm = 'slice_stretch'
-	if t_stretchingmode == 4: sre_obj.stretch.algorithm = 'auto'
-	if t_stretchingmode == 5: sre_obj.stretch.algorithm = 'slice_map'
-	if t_stretchingmode == 6: 
-		sre_obj.stretch.algorithm = 'elastique_v2'
-		sre_obj.stretch.algorithm_mode = 'generic'
-	if t_stretchingmode == 7: 
-		sre_obj.stretch.algorithm = 'elastique_v2'
-		sre_obj.stretch.algorithm_mode = 'transient'
-	if t_stretchingmode == 8: 
-		sre_obj.stretch.algorithm = 'elastique_v2'
-		sre_obj.stretch.algorithm_mode = 'mono'
-	if t_stretchingmode == 9: 
-		sre_obj.stretch.algorithm = 'elastique_v2'
-		sre_obj.stretch.algorithm_mode = 'speech'
-	if t_stretchingmode == -2: 
-		sre_obj.stretch.algorithm = 'elastique_v3'
-		sre_obj.stretch.algorithm_mode = 'pro'
-		sre_obj.stretch.params['formant'] = fl_channel_obj.params.stretchingformant
-
+	stretch_obj = sre_obj.stretch
 	if sampleref_obj.found:
 		if t_stretchingtime != 0:
+			t_stretchingmultiplier = pow(2, fl_channel_obj.params.stretchingmultiplier/10000)
 			dur_sec = sampleref_obj.get_dur_sec()
+			sre_obj.pitch = t_stretchingpitch
 			if dur_sec is not None:
-				sre_obj.stretch.set_rate_tempo(flp_obj.tempo, (dur_sec/t_stretchingtime)/t_stretchingmultiplier, False)
+				stretch_obj.set_rate_tempo(flp_obj.tempo, (dur_sec/t_stretchingtime)/t_stretchingmultiplier, False)
 
 		elif t_stretchingtime == 0:
-			sre_obj.stretch.set_rate_speed(flp_obj.tempo, 1/t_stretchingmultiplier, False)
+			modpitch = (fl_channel_obj.params.stretchingmultiplier/10000)*12
+			if t_stretchingmode == 0:
+				modpitch += t_stretchingpitch
+			stretch_obj.set_rate_speed_pitch(flp_obj.tempo, modpitch)
 
+	stretch_obj.preserve_pitch = t_stretchingmode != 0
+	
+	stretch_algo = stretch_obj.algorithm
+	if t_stretchingmode == 1: 
+		stretch_algo.type = 'elastique_v3'
+		stretch_algo.subtype = 'generic'
+	if t_stretchingmode == 2: 
+		stretch_algo.type = 'elastique_v3'
+		stretch_algo.subtype = 'mono'
+	if t_stretchingmode == 3: 
+		stretch_algo.type = 'slice'
+		stretch_algo.subtype = 'stretch'
+	if t_stretchingmode == 4: 
+		stretch_algo.type = 'auto'
+	if t_stretchingmode == 5: 
+		stretch_algo.type = 'slice'
+		stretch_algo.subtype = 'map'
+	if t_stretchingmode == 6: 
+		stretch_algo.type = 'elastique_v2'
+		stretch_algo.subtype = 'generic'
+	if t_stretchingmode == 7: 
+		stretch_algo.type = 'elastique_v2'
+		stretch_algo.subtype = 'transient'
+	if t_stretchingmode == 8: 
+		stretch_algo.type = 'elastique_v2'
+		stretch_algo.subtype = 'mono'
+	if t_stretchingmode == 9: 
+		stretch_algo.type = 'elastique_v2'
+		stretch_algo.subtype = 'speech'
+	if t_stretchingmode == -2: 
+		stretch_algo.type = 'elastique_v3'
+		stretch_algo.subtype = 'pro'
+		stretch_algo.formant = fl_channel_obj.params.stretchingformant
 
 	return sre_obj, sampleref_obj
 

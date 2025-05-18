@@ -337,8 +337,9 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 							if 'timestretch' in attribvals:
 								timestretch = float(attribvals['timestretch'])
 								if timestretch:
-									sp_obj.stretch.set_rate_speed(120, timestretch, True)
-									sp_obj.stretch.preserve_pitch = True
+									stretch_obj = sp_obj.stretch
+									stretch_obj.set_rate_speed(120, timestretch, True)
+									stretch_obj.preserve_pitch = True
 							if 'reverse' in attribvals:
 								sp_obj.reverse = bool(int(attribvals['reverse']))
 

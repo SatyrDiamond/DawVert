@@ -52,32 +52,33 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 		fl_channel_obj.params.start = sre_obj.start
 		fl_channel_obj.params.length = min((sre_obj.end-sre_obj.start)/(1-sre_obj.start), 1)
 
-	if not sre_obj.stretch.preserve_pitch:
+	stretch_obj = sre_obj.stretch
+	stretch_algo = stretch_obj.algorithm
+
+	if not stretch_obj.preserve_pitch:
 		fl_channel_obj.params.stretchingmode = 0
-	elif sre_obj.stretch.algorithm == 'elastique_v3':
-		if sre_obj.stretch.algorithm_mode == 'mono': fl_channel_obj.params.stretchingmode = 2
-		elif sre_obj.stretch.algorithm_mode == 'speech': fl_channel_obj.params.stretchingmode = 9
-		elif sre_obj.stretch.algorithm_mode == 'pro':
+	elif stretch_algo.type == 'elastique_v3':
+		if stretch_algo.subtype == 'mono': fl_channel_obj.params.stretchingmode = 2
+		elif stretch_algo.subtype == 'speech': fl_channel_obj.params.stretchingmode = 9
+		elif stretch_algo.subtype == 'pro':
 			fl_channel_obj.params.stretchingmode = -2
-			if 'formant' in sre_obj.stretch.params:
-				fl_channel_obj.params.stretchingformant = sre_obj.stretch.params['formant']
+			fl_channel_obj.params.stretchingformant = stretch_algo.formant
 		else: fl_channel_obj.params.stretchingmode = 1
-	elif sre_obj.stretch.algorithm == 'slice_stretch':
+	elif stretch_algo.type == 'slice':
 		fl_channel_obj.params.stretchingmode = 3
-	elif sre_obj.stretch.algorithm == 'auto':
+		if stretch_algo.subtype == 'stretch': fl_channel_obj.params.stretchingmode = 3
+		elif stretch_algo.subtype == 'map': fl_channel_obj.params.stretchingmode = 5
+	elif stretch_algo.type == 'auto':
 		fl_channel_obj.params.stretchingmode = 4
-	elif sre_obj.stretch.algorithm == 'slice_map':
-		fl_channel_obj.params.stretchingmode = 5
-	elif sre_obj.stretch.algorithm == 'elastique_v2':
-		if sre_obj.stretch.algorithm_mode == 'transient': fl_channel_obj.params.stretchingmode = 7
-		elif sre_obj.stretch.algorithm_mode == 'mono': fl_channel_obj.params.stretchingmode = 8
-		elif sre_obj.stretch.algorithm_mode == 'speech': fl_channel_obj.params.stretchingmode = 9
-		elif sre_obj.stretch.algorithm_mode == 'pro':
+	elif stretch_algo.type == 'elastique_v2':
+		if stretch_algo.subtype == 'transient': fl_channel_obj.params.stretchingmode = 7
+		elif stretch_algo.subtype == 'mono': fl_channel_obj.params.stretchingmode = 8
+		elif stretch_algo.subtype == 'speech': fl_channel_obj.params.stretchingmode = 9
+		elif stretch_algo.subtype == 'pro':
 			fl_channel_obj.params.stretchingmode = -2
-			if 'formant' in sre_obj.stretch.params:
-				fl_channel_obj.params.stretchingformant = sre_obj.stretch.params['formant']
+			fl_channel_obj.params.stretchingformant = stretch_algo.formant
 		else: fl_channel_obj.params.stretchingmode = 6
-	elif sre_obj.stretch.algorithm == 'stretch':
+	elif stretch_algo.type == 'stretch':
 		fl_channel_obj.params.stretchingmode = -1
 	else:
 		fl_channel_obj.params.stretchingmode = 0 if not isaudioclip else -1
@@ -87,14 +88,14 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 	if ref_found:
 		dur_sec = sampleref_obj.get_dur_sec()
 	
-		if not sre_obj.stretch.uses_tempo: 
-			fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
+		if not stretch_obj.uses_tempo: 
+			fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/stretch_obj.calc_real_speed)*10000)
 		else:
 			if dur_sec:
-				fl_channel_obj.params.stretchingtime = int((dur_sec*384)/sre_obj.stretch.calc_tempo_speed) if sampleref_obj else 1
+				fl_channel_obj.params.stretchingtime = int((dur_sec*384)/stretch_obj.calc_tempo_speed) if sampleref_obj else 1
 				if fl_channel_obj.params.stretchingtime < 0: fl_channel_obj.params.stretchingtime = 384
 
-	return sre_obj.stretch.calc_tempo_speed
+	return stretch_obj.calc_tempo_speed
 
 DEBUG_IGNORE_PLACEMENTS = False
 DEBUG_IGNORE_PATTERNS = False

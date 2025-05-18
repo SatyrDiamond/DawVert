@@ -100,7 +100,9 @@ def soundlayer_samplepart(plugin_obj, gpitch, programdata, lowNote, highNote, ro
 		soundlayer.highNote = int(highNote)
 		soundlayer.looped = bool(sp_obj.loop_active)
 		soundlayer.fixedPitch = bool(sp_obj.no_pitch)
+
 		if sp_obj.stretch.preserve_pitch: soundlayer.pitchShift = True
+
 		soundparameters = soundlayer.soundparameters
 		soundparameters['attackParam'] = float(adsr_obj.attack)
 		soundparameters['decayParam'] = float(adsr_obj.decay)
@@ -142,7 +144,9 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 
 				sp_obj = plugin_obj.samplepart_get('sample')
 
-				if sp_obj.pitch or sp_obj.stretch.calc_real_size!=1 or plugin_obj.filter.on:
+				stretch_obj = sp_obj.stretch
+
+				if sp_obj.pitch or stretch_obj.calc_real_size!=1 or plugin_obj.filter.on:
 					programdata = sampler_obj.set_prosampler()
 					wf_plugin.params['filename'] = 'Multi Sampler'
 					wf_plugin.params['name'] = 'Multi Sampler'
@@ -154,7 +158,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				soundlayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
 				if soundlayer:
 					soundlayer.offlinePitchShift = sp_obj.pitch
-					soundlayer.offlineTimeStretch = sp_obj.stretch.calc_real_size
+					soundlayer.offlineTimeStretch = stretch_obj.calc_real_size
 					sampler_do_filter(soundlayer, plugin_obj.filter)
 
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
@@ -225,12 +229,15 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
 					sp_obj = plugin_obj.samplepart_get(samplerefid)
+
+					stretch_obj = sp_obj.stretch
+
 					soundlayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
 					if soundlayer:
 						soundlayer.lowVelocity = int(sp_obj.vel_min*127)
 						soundlayer.highVelocity = int(sp_obj.vel_max*127)
 						soundlayer.offlinePitchShift = sp_obj.pitch
-						soundlayer.offlineTimeStretch = sp_obj.stretch.calc_real_size
+						soundlayer.offlineTimeStretch = stretch_obj.calc_real_size
 						filt_exists, filt_obj = plugin_obj.named_filter_get_exists(sp_obj.filter_assoc)
 						if filt_exists: sampler_do_filter(soundlayer, filt_obj)
 

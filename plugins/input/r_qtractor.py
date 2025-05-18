@@ -144,10 +144,11 @@ class input_midi(plugins.base):
 					placement_obj.fade_out.set_dur(calcsec(clip.properties.fade_out, ppq), 'seconds')
 					sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, None)
 					sampleref_obj.search_local(os.path.dirname(dawvert_intent.input_file))
+					
 					stretch_obj = placement_obj.sample.stretch
-					stretch_obj.preserve_pitch = True
 					if clip.audioclip.time_stretch:
 						stretch_obj.set_rate_tempo(tempo, (clip.audioclip.time_stretch)*tempomul, True)
+					stretch_obj.preserve_pitch = True
 
 			if qtrack.type == 'midi':
 				for clip in qtrack.clips:

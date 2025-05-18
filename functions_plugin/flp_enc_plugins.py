@@ -41,20 +41,24 @@ def setparams(convproj_obj, plugin_obj):
 		sre_obj = plugin_obj.samplepart_get('sample')
 		ref_found, sampleref_obj = convproj_obj.sampleref__get(sre_obj.sampleref)
 
+		stretch_obj = sre_obj.stretch
+
 		slicer_beats = plugin_obj.datavals.get('beats', 4)
 		slicer_bpm = plugin_obj.datavals.get('bpm', 4)
 		slicer_pitch = int(sre_obj.pitch*100)
-		slicer_fitlen = int(math.log2(1/sre_obj.stretch.calc_real_speed)*10000)
+		slicer_fitlen = int(math.log2(1/stretch_obj.calc_real_speed)*10000)
 		slicer_att = int(plugin_obj.datavals.get('fade_in', 4))
 		slicer_dec = int(plugin_obj.datavals.get('fade_out', 4))
 		
-		if sre_obj.stretch.algorithm == 'elastique_pro': 
-			if sre_obj.stretch.algorithm_mode == 'transient': slicer_stretchtype = 3
+		stretch_algo = stretch_obj.algorithm
+
+		if stretch_algo.type == 'elastique_pro': 
+			if stretch_algo.subtype == 'transient': slicer_stretchtype = 3
 			else: slicer_stretchtype = 2
-		elif sre_obj.stretch.algorithm == 'elastique_v2': 
-			if sre_obj.stretch.algorithm_mode == 'tonal': slicer_stretchtype = 5
-			elif sre_obj.stretch.algorithm_mode == 'mono': slicer_stretchtype = 6
-			elif sre_obj.stretch.algorithm_mode == 'speech': slicer_stretchtype = 7
+		elif stretch_algo.type == 'elastique_v2': 
+			if stretch_algo.subtype == 'tonal': slicer_stretchtype = 5
+			elif stretch_algo.subtype == 'mono': slicer_stretchtype = 6
+			elif stretch_algo.subtype == 'speech': slicer_stretchtype = 7
 			else: slicer_stretchtype = 4
 		else:
 			slicer_stretchtype = 0

@@ -182,7 +182,7 @@ class output_bandlab(plugins.base):
 
 						blx_region.pitchShift = sp_obj.pitch
 						blx_region.gain = sp_obj.vol
-						blx_region.playbackRate = sp_obj.stretch.calc_tempo_speed/tempomul
+						blx_region.playbackRate = sp_obj.stretch.calc_bpm_speed
 
 						blx_region.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
 						blx_region.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)

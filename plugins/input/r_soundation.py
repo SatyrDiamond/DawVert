@@ -193,16 +193,14 @@ class input_soundation(plugins.base):
 							sp_obj.sampleref = orgname
 
 						sp_obj.reverse = soundation_region.reversed
-						if soundation_region.stretchMode != 3: 
-							sp_obj.stretch.preserve_pitch = False
-						else: 
-							sp_obj.stretch.preserve_pitch = True
-							sp_obj.stretch.algorithm = 'stretch'
+
+						stretch_obj = sp_obj.stretch
+						stretch_obj.preserve_pitch = not (soundation_region.stretchMode != 3)
 
 						if soundation_region.autoStretchBpm:
 							sampspeed = soundation_region.autoStretchBpm/soundation_obj.bpm
-							sp_obj.stretch.set_rate_speed(soundation_obj.bpm, sampspeed, True)
-							sp_obj.stretch.uses_tempo = True
+							stretch_obj.set_rate_speed(soundation_obj.bpm, sampspeed, True)
+							stretch_obj.uses_tempo = True
 
 				if sound_chan_type == 'instrument':
 					soundation_inst = soundation_channel.instrument

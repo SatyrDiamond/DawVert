@@ -205,12 +205,14 @@ class input_zmaestro(plugins.base):
 						placement_obj.time.set_posdur(part.start, part.length)
 
 					sp_obj = placement_obj.sample
+
+					stretch_obj = sp_obj.stretch
+
 					if not part.oneshot:
-						sp_obj.stretch.set_rate_tempo(project_obj.tempo, (part.recordedtempo/part.currenttempo)*tempodiv, True)
-						sp_obj.stretch.preserve_pitch = True
+						stretch_obj.set_rate_tempo(project_obj.tempo, (part.recordedtempo/part.currenttempo)*tempodiv, True)
+						stretch_obj.preserve_pitch = True
 					else:
-						sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
-					sp_obj.stretch.algorithm = 'stretch'
+						stretch_obj.set_rate_speed(project_obj.tempo, 1, True)
 
 					audio_obj = audio_data.audio_obj()
 

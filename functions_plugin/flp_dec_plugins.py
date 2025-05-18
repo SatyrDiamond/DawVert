@@ -308,7 +308,9 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			#slicechannels = sampleref_obj.channels
 			sre_obj.from_sampleref(convproj_obj, slicer_filename)
 
-		if slicer_bpm: sre_obj.stretch.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
+		stretch_obj = sre_obj.stretch
+
+		if slicer_bpm: stretch_obj.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
 		sre_obj.pitch = slicer_pitch/100
 
 		slicer_numslices = fl_plugstr.uint32()
@@ -329,28 +331,29 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		plugin_obj.datavals.add('fade_in', slicer_att)
 		plugin_obj.datavals.add('fade_out', slicer_dec)
 		
+		stretch_algo = stretch_obj.algorithm
 		if slicer_stretchtype == 2: 
-			sre_obj.stretch.algorithm = 'elastique_pro'
+			stretch_algo.type = 'elastique_pro'
 
 		if slicer_stretchtype == 3: 
-			sre_obj.stretch.algorithm = 'elastique_pro'
-			sre_obj.stretch.algorithm_mode = 'transient'
+			stretch_algo.type = 'elastique_pro'
+			stretch_algo.subtype = 'transient'
 
 		if slicer_stretchtype == 4: 
-			sre_obj.stretch.algorithm = 'elastique_v2'
-			sre_obj.stretch.algorithm_mode = 'transient'
+			stretch_algo.type = 'elastique_v2'
+			stretch_algo.subtype = 'transient'
 
 		if slicer_stretchtype == 5: 
-			sre_obj.stretch.algorithm = 'elastique_v2'
-			sre_obj.stretch.algorithm_mode = 'tonal'
+			stretch_algo.type = 'elastique_v2'
+			stretch_algo.subtype = 'tonal'
 
 		if slicer_stretchtype == 6: 
-			sre_obj.stretch.algorithm = 'elastique_v2'
-			sre_obj.stretch.algorithm_mode = 'mono'
+			stretch_algo.type = 'elastique_v2'
+			stretch_algo.subtype = 'mono'
 
 		if slicer_stretchtype == 7: 
-			sre_obj.stretch.algorithm = 'elastique_v2'
-			sre_obj.stretch.algorithm_mode = 'speech'
+			stretch_algo.type = 'elastique_v2'
+			stretch_algo.subtype = 'speech'
 
 		slicer_animate = fl_plugstr.bool8()
 		slicer_starting_key = fl_plugstr.uint32()

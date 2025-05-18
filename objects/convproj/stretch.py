@@ -303,14 +303,19 @@ class cvpj_stretch_warp:
 		self.points = sorted(self.points, key=lambda x: x.beat)
 
 @dataclass
-class cvpj_stretch:
-	algorithm: str = 'stretch'
-	algorithm_mode: str = ''
-	preserve_pitch: bool = False
+class cvpj_stretch_algo:
+	type: str = 'stretch'
+	subtype: str = ''
 	params: dict = field(default_factory=dict)
+	formant: float = 0
+
+@dataclass
+class cvpj_stretch:
+	algorithm: cvpj_stretch_algo = field(default_factory=cvpj_stretch_algo)
 	is_warped: bool = False
 	warppoints: list = field(default_factory=list)
 	warp: cvpj_stretch_warp = field(default_factory=cvpj_stretch_warp)
+	preserve_pitch: bool = False
 
 	uses_tempo: bool = False
 
@@ -344,6 +349,9 @@ class cvpj_stretch:
 
 		return s_algorithm and s_params and s_is_warped and s_warp and uses_tempo and s_bpm and s_org_speed and s_calc_bpm_speed and s_calc_bpm_size and (s_calc_tempo_speed or s_calc_tempo_size or s_calc_real_speed or s_calc_real_size)
 
+	def set_rate_speed_pitch(self, bpm, pitch):
+		self.set_rate_speed(bpm, pow(2, pitch/12), False)
+
 	def set_rate_speed(self, bpm, rate, is_size):
 		self.uses_tempo = False
 		self.bpm = bpm
@@ -354,6 +362,10 @@ class cvpj_stretch:
 		self.calc_real_size = 1/rate if not is_size else rate
 		self.calc_tempo_speed = self.calc_real_speed*self.calc_bpm_speed
 		self.calc_tempo_size = self.calc_real_size*self.calc_bpm_size
+
+	def set_rate_tempo_sync(self, projbpm, bpm, rate, is_size):
+		outstr = bpm/projbpm if is_size else projbpm/bpm
+		self.set_rate_tempo(bpm, rate/outstr, is_size)
 
 	def set_rate_tempo(self, bpm, rate, is_size):
 		self.uses_tempo = True
@@ -449,16 +461,35 @@ class cvpj_stretch:
 		return pos_offset, cut_offset*finalspeed, finalspeed
 
 	def debugtxt(self):
-		print('- main')
-		print('uses tempo:', self.uses_tempo)
-		print('bpm:', self.bpm)
-		print('speed:', self.org_speed)
-		print('- bpm calc')
-		print('speed:', self.calc_bpm_speed)
-		print('size:', self.calc_bpm_size)
-		print('- with tempo')
-		print('speed:', self.calc_tempo_speed)
-		print('size:', self.calc_tempo_size)
-		print('- no tempo')
-		print('speed:', self.calc_real_speed)
-		print('size:', self.calc_real_size)
+		headersize = 12
+		debugsize = 20
+		print('-'*headersize, end='')
+		print('+' + '-'*debugsize, end='')
+		print('+' + '-'*debugsize, end='')
+		print('+', end='')
+		print()
+		print('bpm/speed'.ljust(headersize), end='')
+		print('|' + str(self.bpm).ljust(debugsize), end='')
+		print('|' + str(self.org_speed).ljust(debugsize), end='')
+		print('|', end='')
+		print()
+		print('calc_bpm'.ljust(headersize), end='')
+		print('|' + str(self.calc_bpm_speed).ljust(debugsize), end='')
+		print('|' + str(self.calc_bpm_size).ljust(debugsize), end='')
+		print('|', end='')
+		print()
+		print('calc_tempo'.ljust(headersize), end='')
+		print('|' + str(self.calc_tempo_speed).ljust(debugsize), end='')
+		print('|' + str(self.calc_tempo_size).ljust(debugsize), end='')
+		print('|', end='')
+		print()
+		print('calc_real'.ljust(headersize), end='')
+		print('|' + str(self.calc_real_speed).ljust(debugsize), end='')
+		print('|' + str(self.calc_real_size).ljust(debugsize), end='')
+		print('|', end='')
+		print()
+		print('-'*headersize, end='')
+		print('+' + '-'*debugsize, end='')
+		print('+' + '-'*debugsize, end='')
+		print('+', end='')
+		print()

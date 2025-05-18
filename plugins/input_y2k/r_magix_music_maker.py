@@ -129,10 +129,12 @@ class input_old_magix_maker(plugins.base):
 							sample_obj.vol = data_objc.vol/65535
 							sample_obj.pitch = data_objc.pitch
 							if data_objc.speed:
-								sample_obj.stretch.set_rate_speed(tempo, data_objc.speed/hzspeed, False)
-								sample_obj.stretch.uses_tempo = True
-								sample_obj.stretch.algorithm = 'stretch'
-								sample_obj.stretch.preserve_pitch = True
+								stretch_obj = sp_obj.stretch
+								stretch_algo = stretch_obj.algorithm
+
+								stretch_obj.set_rate_speed(tempo, data_objc.speed/hzspeed, False)
+								stretch_obj.uses_tempo = True
+								stretch_obj.preserve_pitch = True
 
 						if data_objc.fileid in videoref_objs:
 							placement_obj = track_obj.placements.add_video()

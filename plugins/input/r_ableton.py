@@ -594,27 +594,29 @@ class input_ableton(plugins.base):
 
 						if clipobj.IsWarped:
 							stretch_obj.is_warped = True
-							stretch_obj.params = {}
 							stretch_obj.preserve_pitch = clipobj.WarpMode != 3
 
+							stretch_algo = stretch_obj.algorithm
+							stretch_algo.params = {}
+
 							if clipobj.WarpMode == 0:
-								stretch_obj.algorithm = 'transient'
-								stretch_obj.params['resolution'] = clipobj.TransientResolution
-								stretch_obj.params['loopmode'] = clipobj.TransientLoopMode
-								stretch_obj.params['envelope'] = clipobj.TransientEnvelope
+								stretch_algo.type = 'transient'
+								stretch_algo.params['resolution'] = clipobj.TransientResolution
+								stretch_algo.params['loopmode'] = clipobj.TransientLoopMode
+								stretch_algo.params['envelope'] = clipobj.TransientEnvelope
 							if clipobj.WarpMode == 1:
-								stretch_obj.algorithm = 'tones'
-								stretch_obj.params['GranularityTones'] = clipobj.GranularityTones
+								stretch_algo.type = 'tones'
+								stretch_algo.params['GranularityTones'] = clipobj.GranularityTones
 							if clipobj.WarpMode == 2:
-								stretch_obj.algorithm = 'ableton_texture'
-								stretch_obj.params['GranularityTexture'] = clipobj.GranularityTexture
-								stretch_obj.params['FluctuationTexture'] = clipobj.FluctuationTexture
+								stretch_algo.type = 'ableton_texture'
+								stretch_algo.params['GranularityTexture'] = clipobj.GranularityTexture
+								stretch_algo.params['FluctuationTexture'] = clipobj.FluctuationTexture
 							if clipobj.WarpMode == 4:
-								stretch_obj.algorithm = 'ableton_complex'
+								stretch_algo.type = 'ableton_complex'
 							if clipobj.WarpMode == 6:
-								stretch_obj.algorithm = 'ableton_complexpro'
-								stretch_obj.params['formants'] = clipobj.ComplexProFormants
-								stretch_obj.params['envelope'] = clipobj.ComplexProEnvelope
+								stretch_algo.type = 'ableton_complexpro'
+								stretch_algo.params['envelope'] = clipobj.ComplexProEnvelope
+								stretch_algo.formant = clipobj.ComplexProFormants
 
 							if AUDWARPVERBOSE: print('i')
 

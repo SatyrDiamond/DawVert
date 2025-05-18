@@ -78,14 +78,20 @@ class input_kristal(plugins.base):
 
 		sp_obj = placement_obj.sample
 		sp_obj.vol = part.volume
-		sp_obj.stretch.set_rate_tempo(120, 120/bpm, False)
-		sp_obj.stretch.preserve_pitch = True
-		sp_obj.stretch.algorithm = 'stretch'
+
+		#sp_obj.stretch.debugtxt()
+
 		if part.path:
 			if part.path[0] == 'CPath':
 				filepath = part.path[1].path
 				sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, 'win')
 				sp_obj.sampleref = filepath
+
+		stretch_obj = sp_obj.stretch
+		stretch_algo = stretch_obj.algorithm
+
+		stretch_obj.set_rate_tempo(bpm, 120/bpm, False)
+		stretch_obj.preserve_pitch = True
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_past import kristal as proj_kristal

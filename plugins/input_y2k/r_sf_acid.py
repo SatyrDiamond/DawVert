@@ -315,10 +315,26 @@ class input_acid_old(plugins.base):
 			if stretch_type not in [1, 3]:
 				track_obj.placements.pl_audio.remove_overlaps()
 
+		send_fx = {}
+		for fx in project_obj.fx_dx:
+			if fx.fx_num not in send_fx: send_fx[fx.fx_num] = []
+			if fx.fx_num not in used_sends: used_sends.append(fx.fx_num)
+			send_fx[fx.fx_num].append(fx)
+
 		for x in used_sends:
 			returnid = 'return__'+str(x)
 			track_obj = convproj_obj.track_master.fx__return__add(returnid)
 			track_obj.visual.name = 'FX '+str(x+1)
+			if x in send_fx:
+				for fx in send_fx[x]:
+					plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'directx', None)
+					plugin_obj.role = 'fx'
+					track_obj.plugin_autoplace(plugin_obj, pluginid)
+					external_info = plugin_obj.external_info
+					external_info.name = fx.name
+					preset_obj = fx.preset_obj
+					extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+					extmanu_obj.dx__replace_data(preset_obj.id, preset_obj.data)
 
 		convproj_obj.automation.set_persist_all(False)
 

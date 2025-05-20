@@ -210,6 +210,67 @@ class sdml_marker:
 		self.id = byr_stream.uint32()
 		self.text = byr_stream.string16(byr_stream.uint32())
 
+class sdml_fxdx:
+	def __init__(self):
+		from objects.file import preset_dx
+		self.preset_obj = preset_dx.dx_preset()
+		self.level_l = 1
+		self.level_r = 1
+		self.fx_num = 0
+		self.name = ''
+		self.id = None
+		self.name2 = ''
+		self.preset_name = ''
+
+	def read(self, byr_stream):
+		try:
+			byr_stream.magic_check(b'fxdx')
+			byr_stream.skip(8)
+			self.unknowndata = []
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.level_l = byr_stream.float()
+			self.level_r = byr_stream.float()
+			self.audio_device = byr_stream.uint32()
+			self.unknowndata.append( byr_stream.uint32() )
+			self.fx_num = byr_stream.uint32()
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.raw(16) )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.name = byr_stream.string16(byr_stream.uint32()//2)
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint16() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+
+			self.id = byr_stream.raw(16).hex()
+			self.name2 = byr_stream.string16(byr_stream.uint32()//2)
+
+			self.preset_obj.parse(byr_stream)
+
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.preset_name = byr_stream.string16(byr_stream.uint32()//2)
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+			self.unknowndata.append( byr_stream.uint32() )
+		except:
+			pass
+
 tempmap_dtype = np.dtype([
 	('unk1', 'int32'),
 	('unk2', 'int32'),
@@ -237,6 +298,7 @@ class sony_acid_file:
 		self.loop_enable = 0
 		self.loop_start = 0
 		self.loop_end = 0
+		self.fx_dx = []
 
 	def load_from_file(self, input_file):
 		acidchunks = riff_chunks.riff_chunk()
@@ -297,4 +359,12 @@ class sony_acid_file:
 							marker_obj = sdml_marker()
 							marker_obj.read(bye_stream)
 							self.markers.append(marker_obj)
+			elif x.name == b'xlst':
+				for i in x.iter_wseek(byr_stream):
+					if i.name == b'fxdx':
+						with byr_stream.isolate_size(i.size, False) as bye_stream:
+							fxdx_obj = sdml_fxdx()
+							fxdx_obj.read(bye_stream)
+							self.fx_dx.append(fxdx_obj)
+
 		return True

@@ -396,6 +396,28 @@ class input_reaper(plugins.base):
 							if v != '-': plugin_obj.datavals.add(str(n), v)
 						track_obj.plugin_autoplace(plugin_obj, pluginid)
 
+					if rpp_plugin.type == 'DX':
+						plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'directx', None)
+						plugin_obj.role = 'fx'
+						external_info = plugin_obj.external_info
+						dx_name = rpp_extplug.dx_name
+						try:
+							if dx_name.startswith('DX: '):
+								plugin_obj.role = 'fx'
+								external_info.name = dx_name[4:]
+							if dx_name.startswith('DXi: '):
+								plugin_obj.role = 'synth'
+								external_info.name = dx_name[5:]
+						except:
+							external_info.name = dx_name
+
+						track_obj.plugin_autoplace(plugin_obj, pluginid)
+						extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+						try:
+							extmanu_obj.dx__import_presetdata('raw', rpp_extplug.data_chunk)
+						except:
+							pass
+
 			if samplers:
 				outsamplers = []
 				for f, x in samplers:

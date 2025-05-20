@@ -196,6 +196,47 @@ class extplug_manu:
 
 		return outdata
 
+# --------------------------------------------------- DIRECTX ---------------------------------------------------
+
+	def dx__import_presetdata(self, datatype, indata):
+		from objects.file import preset_dx
+		byr_stream = bytereader.bytereader()
+		preset_obj = preset_dx.dx_preset()
+		if datatype == 'raw': 
+			byr_stream.load_raw(indata)
+			preset_obj.parse(byr_stream)
+		if datatype == 'file': 
+			byr_stream.load_file(indata)
+			preset_obj.parse(byr_stream)
+		if datatype == 'byr': 
+			preset_obj.parse(indata)
+		self.dx__replace_data(preset_obj.id, preset_obj.data)
+
+	def dx__replace_data(self, inid, chunk):
+		external_info = self.plugin_obj.external_info
+		external_info.plugtype = 'directx'
+		external_info.id = inid
+		self.external__set_chunk(chunk)
+
+	def dx__export_presetdata(self):
+		from objects.file import preset_dx
+		plugin_obj = self.plugin_obj
+		external_info = plugin_obj.external_info
+
+		byw_stream = bytewriter.bytewriter()
+		preset_obj = preset_dx.dx_preset()
+		vstid = external_info.id
+		outdata = b''
+		if vstid != None:
+			preset_obj.id = vstid
+			preset_obj.data = plugin_obj.rawdata_get('chunk')
+			preset_obj.write(byw_stream)
+			outdata = byw_stream.getvalue()
+		else:
+			logger_plugins.warning('dx: id is missing')
+
+		return outdata
+
 # --------------------------------------------------- CLAP ---------------------------------------------------
 
 	def clap__replace_data(self, bycat, in_val, data, platformtxt):

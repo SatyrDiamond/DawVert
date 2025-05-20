@@ -322,8 +322,6 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 						add_auto_curves(convproj_obj, ['plugin', cvpj_fxid, param_id], wf_plugin, param_id)
 			return wf_plugin
 
-			
-
 	elif isinstrument:
 		wf_plugin = proj_tracktion_edit.tracktion_plugin()
 		wf_plugin.plugtype = '4osc'

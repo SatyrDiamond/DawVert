@@ -439,6 +439,7 @@ def process(convproj_obj, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 			oi = 'RETURN_'+returnid
 			track_obj = convproj_obj.track__add(oi, 'fx', 1, 0)
 			track_obj.visual = return_obj.visual.copy()
+			track_obj.plugslots.slots_audio = return_obj.plugslots.slots_audio.copy()
 			if track_obj.visual.name: track_obj.visual.name = '[Return] '+track_obj.visual.name
 			else: track_obj.visual.name = '[Return]'
 

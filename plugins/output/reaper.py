@@ -312,7 +312,14 @@ def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 			rpp_plug_obj.wet['wet'] = fx_wet
 			if fx_wet != 1: rpp_plug_obj.wet.used = True
 
-
+		if plugin_obj.check_wildmatch('external', 'directx', None):
+			rpp_plug_obj, rpp_dx_obj, rpp_guid = rpp_fxchain.add_dx()
+			external_info = plugin_obj.external_info
+			if external_info.name:
+				if plugin_obj.role == 'fx': rpp_dx_obj.dx_name = 'DXi: '+external_info.name
+				if plugin_obj.role == 'synth': rpp_dx_obj.dx_name = 'DX: '+external_info.name
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			rpp_dx_obj.data_chunk = extmanu_obj.dx__export_presetdata()
 
 def cvpj_color_to_reaper_color(i_color): 
 	cvpj_trackcolor = bytes(i_color.get_int())+b'\x01'

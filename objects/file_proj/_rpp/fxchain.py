@@ -97,6 +97,40 @@ class rpp_js:
 		rpp_jsdata.children.append(self.data)
 		rpp_data.children.append(rpp_jsdata)
 
+class rpp_js:
+	def __init__(self):
+		self.data = []
+		self.js_id = ''
+		self.js_unk = ''
+
+	def load(self, values, inside_dat):
+		if inside_dat: self.data = inside_dat[0]
+		for n, v in enumerate(values):
+			if n == 0: self.js_id = v
+			if n == 1: self.js_unk = v
+
+	def write(self, rpp_data):
+		rpp_jsdata = robj('JS',[self.js_id, self.js_unk])
+		rpp_jsdata.children.append(self.data)
+		rpp_data.children.append(rpp_jsdata)
+
+class rpp_dx:
+	def __init__(self):
+		self.data_chunk = b''
+		self.dx_name = ''
+
+	def load(self, values, inside_dat):
+		if inside_dat: 
+			for x in inside_dat:
+				self.data_chunk += reaper_func.getbin(x)
+		for n, v in enumerate(values):
+			if n == 0: self.dx_name = v
+
+	def write(self, rpp_data):
+		rpp_dxdata = robj('DX',[self.dx_name])
+		reaper_func.writebin(rpp_dxdata, self.data_chunk)
+		rpp_data.children.append(rpp_dxdata)
+
 class rpp_rewire:
 	def __init__(self):
 		self.data_chunk = b''
@@ -174,6 +208,16 @@ class rpp_fxchain:
 		self.plugins.append(plug_obj)
 		return plug_obj, js_obj, guid
 
+	def add_dx(self):
+		guid = '{'+str(uuid.uuid4())+'}'
+		dx_obj = rpp_dx()
+		plug_obj = rpp_plugin()
+		plug_obj.type = 'DX'
+		plug_obj.plugin = dx_obj
+		plug_obj.fxid.set(guid)
+		self.plugins.append(plug_obj)
+		return plug_obj, dx_obj, guid
+
 	def load(self, rpp_data):
 		bypassval = [0,0,0]
 		for name, is_dir, values, inside_dat in reaper_func.iter_rpp(rpp_data):
@@ -220,6 +264,14 @@ class rpp_fxchain:
 					plug_obj = rpp_plugin()
 					plug_obj.type = name
 					plug_obj.plugin = rewire_obj
+					plug_obj.bypass.read(bypassval)
+					self.plugins.append(plug_obj)
+				elif name in 'DX': 
+					js_obj = rpp_dx()
+					js_obj.load(values, inside_dat)
+					plug_obj = rpp_plugin()
+					plug_obj.type = name
+					plug_obj.plugin = js_obj
 					plug_obj.bypass.read(bypassval)
 					self.plugins.append(plug_obj)
 				if name == 'PARMENV': 

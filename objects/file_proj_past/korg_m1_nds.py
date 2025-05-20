@@ -24,15 +24,24 @@ class korg_m1_block:
 		self.offset = 0
 		self.notes = []
 
+class korg_m1_channel_drumsettings:
+	def __init__(self):
+		self.level = 0
+		self.pan = 0
+		self.tune = 0
+
 class korg_m1_channel:
 	def __init__(self):
 		self.attack = 0
 		self.release = 0
 		self.volume = 0
+		self.pan = 0
+		self.flags = 0
 		self.blocks = []
 		self.set = 0
 		self.bank = 0
 		self.patch = 0
+		self.drumparams = [korg_m1_channel_drumsettings() for _ in range(12)]
 		self.unk1 = 0
 		self.unk2 = 0
 
@@ -55,20 +64,25 @@ class korg_m1_proj:
 		for i, song_obj in enumerate(self.songs):
 			byr_stream.seek(0x1000 + 0xC000 * i)
 			if self.songs[i].modified:
-				byr_stream.skip(13)
+				byr_stream.skip(8)
 				for channel_obj in song_obj.channels:
+					channel_obj.mode = byr_stream.uint8()
+					channel_obj.cat = byr_stream.uint8()
+					channel_obj.patch = byr_stream.uint8()
+					channel_obj.unk1 = byr_stream.uint8()
+					channel_obj.unk2 = byr_stream.uint8()
 					channel_obj.attack = byr_stream.uint8()
 					channel_obj.release = byr_stream.uint8()
 					channel_obj.volume = byr_stream.uint8()
 					channel_obj.pan = byr_stream.int8()
-					byr_stream.skip(47)
-					channel_obj.set = byr_stream.uint8()
-					channel_obj.bank = byr_stream.uint8()
-					channel_obj.patch = byr_stream.uint8()
-					channel_obj.unk1 = byr_stream.uint8()
-					channel_obj.unk2 = byr_stream.uint8()
+					channel_obj.flags = byr_stream.flags8()
+					byr_stream.skip(5)
+					for drumset_obj in channel_obj.drumparams:
+						drumset_obj.pan, drumset_obj.level = byr_stream.bytesplit()
+						drumset_obj.tune = byr_stream.int8()
+					byr_stream.skip(17)
 
-				byr_stream.skip(57)
+				byr_stream.skip(62)
 				song_obj.tempo = byr_stream.uint16()
 				song_obj.swing = byr_stream.uint8()
 				song_obj.steps = byr_stream.uint8()

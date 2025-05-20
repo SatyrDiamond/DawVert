@@ -1,0 +1,353 @@
+<dataset>
+    <category id="m1">
+        <data numstarts="0|16|29|38|41|51|60|73|79|82"/>
+        <object id="0"><data group="KEYBOARD"/><visual name="Piano"/></object>
+        <object id="1"><data group="KEYBOARD"/><visual name="E.Piano1"/></object>
+        <object id="2"><data group="KEYBOARD"/><visual name="E.Piano2"/></object>
+        <object id="3"><data group="KEYBOARD"/><visual name="E.Piano3"/></object>
+        <object id="4"><data group="KEYBOARD"/><visual name="Clav"/></object>
+        <object id="5"><data group="KEYBOARD"/><visual name="Harpsicord"/></object>
+        <object id="6"><data group="KEYBOARD"/><visual name="Organ1"/></object>
+        <object id="7"><data group="KEYBOARD"/><visual name="Organ2"/></object>
+        <object id="8"><data group="KEYBOARD"/><visual name="MagicOrgan"/></object>
+        <object id="9"><data group="KEYBOARD"/><visual name="DW-Piano"/></object>
+        <object id="10"><data group="KEYBOARD"/><visual name="DW-EP1"/></object>
+        <object id="11"><data group="KEYBOARD"/><visual name="DW-EP2"/></object>
+        <object id="12"><data group="KEYBOARD"/><visual name="DW-EP3"/></object>
+        <object id="13"><data group="KEYBOARD"/><visual name="DW-Clav"/></object>
+        <object id="14"><data group="KEYBOARD"/><visual name="DW-Organ1"/></object>
+        <object id="15"><data group="KEYBOARD"/><visual name="DW-Organ2"/></object>
+        <object id="16"><data group="GUITAR/MALLET"/><visual name="Guitar1"/></object>
+        <object id="17"><data group="GUITAR/MALLET"/><visual name="Guitar2"/></object>
+        <object id="18"><data group="GUITAR/MALLET"/><visual name="E.Guitar"/></object>
+        <object id="19"><data group="GUITAR/MALLET"/><visual name="Sitar1"/></object>
+        <object id="20"><data group="GUITAR/MALLET"/><visual name="Sitar2"/></object>
+        <object id="21"><data group="GUITAR/MALLET"/><visual name="Vibes"/></object>
+        <object id="22"><data group="GUITAR/MALLET"/><visual name="Bell"/></object>
+        <object id="23"><data group="GUITAR/MALLET"/><visual name="Tubular"/></object>
+        <object id="24"><data group="GUITAR/MALLET"/><visual name="BellRing"/></object>
+        <object id="25"><data group="GUITAR/MALLET"/><visual name="Karimba"/></object>
+        <object id="26"><data group="GUITAR/MALLET"/><visual name="SynMallet"/></object>
+        <object id="27"><data group="GUITAR/MALLET"/><visual name="DW-Vibe"/></object>
+        <object id="28"><data group="GUITAR/MALLET"/><visual name="DW-Bell"/></object>
+        <object id="29"><data group="BASS"/><visual name="A.Bass"/></object>
+        <object id="30"><data group="BASS"/><visual name="PickBass"/></object>
+        <object id="31"><data group="BASS"/><visual name="E.Bass"/></object>
+        <object id="32"><data group="BASS"/><visual name="Fretless"/></object>
+        <object id="33"><data group="BASS"/><visual name="SynBass1"/></object>
+        <object id="34"><data group="BASS"/><visual name="SynBass2"/></object>
+        <object id="35"><data group="BASS"/><visual name="SynBass3"/></object>
+        <object id="36"><data group="BASS"/><visual name="DW-Bass1"/></object>
+        <object id="37"><data group="BASS"/><visual name="DW-Bass2"/></object>
+        <object id="38"><data group="STRINGS/PAD"/><visual name="Strings"/></object>
+        <object id="39"><data group="STRINGS/PAD"/><visual name="Voices"/></object>
+        <object id="40"><data group="STRINGS/PAD"/><visual name="Choir"/></object>
+        <object id="41"><data group="BRASS/REED"/><visual name="Flute"/></object>
+        <object id="42"><data group="BRASS/REED"/><visual name="PanFlute"/></object>
+        <object id="43"><data group="BRASS/REED"/><visual name="Bottles"/></object>
+        <object id="44"><data group="BRASS/REED"/><visual name="TenorSax"/></object>
+        <object id="45"><data group="BRASS/REED"/><visual name="Trumpet"/></object>
+        <object id="46"><data group="BRASS/REED"/><visual name="MuteTp"/></object>
+        <object id="47"><data group="BRASS/REED"/><visual name="TubaFlugel"/></object>
+        <object id="48"><data group="BRASS/REED"/><visual name="DoubleReed"/></object>
+        <object id="49"><data group="BRASS/REED"/><visual name="Brass1"/></object>
+        <object id="50"><data group="BRASS/REED"/><visual name="Brass2"/></object>
+        <object id="51"><data group="LEAD SYNTH"/><visual name="Wire"/></object>
+        <object id="52"><data group="LEAD SYNTH"/><visual name="SawWave"/></object>
+        <object id="53"><data group="LEAD SYNTH"/><visual name="SquareWave"/></object>
+        <object id="54"><data group="LEAD SYNTH"/><visual name="25%Pulse"/></object>
+        <object id="55"><data group="LEAD SYNTH"/><visual name="10%Pulse"/></object>
+        <object id="56"><data group="LEAD SYNTH"/><visual name="DW-Tri"/></object>
+        <object id="57"><data group="LEAD SYNTH"/><visual name="DW-Sine"/></object>
+        <object id="58"><data group="LEAD SYNTH"/><visual name="VoiceWave"/></object>
+        <object id="59"><data group="LEAD SYNTH"/><visual name="DW-Voice"/></object>
+        <object id="60"><data group="POLY SYNTH"/><visual name="Universe"/></object>
+        <object id="61"><data group="POLY SYNTH"/><visual name="SoftHorn"/></object>
+        <object id="62"><data group="POLY SYNTH"/><visual name="SynBrass"/></object>
+        <object id="63"><data group="POLY SYNTH"/><visual name="FvWave"/></object>
+        <object id="64"><data group="POLY SYNTH"/><visual name="MvWave"/></object>
+        <object id="65"><data group="POLY SYNTH"/><visual name="PanWave"/></object>
+        <object id="66"><data group="POLY SYNTH"/><visual name="PingWave"/></object>
+        <object id="67"><data group="POLY SYNTH"/><visual name="Digital1"/></object>
+        <object id="68"><data group="POLY SYNTH"/><visual name="Digital2"/></object>
+        <object id="69"><data group="POLY SYNTH"/><visual name="Digital3"/></object>
+        <object id="70"><data group="POLY SYNTH"/><visual name="Digital4"/></object>
+        <object id="71"><data group="POLY SYNTH"/><visual name="Digital5"/></object>
+        <object id="72"><data group="POLY SYNTH"/><visual name="Digital6"/></object>
+        <object id="73"><data group="SE/OTHER"/><visual name="KotoTrem"/></object>
+        <object id="74"><data group="SE/OTHER"/><visual name="BambooTrem"/></object>
+        <object id="75"><data group="SE/OTHER"/><visual name="Rhythm"/></object>
+        <object id="76"><data group="SE/OTHER"/><visual name="Lore"/></object>
+        <object id="77"><data group="SE/OTHER"/><visual name="FlexaTone"/></object>
+        <object id="78"><data group="SE/OTHER"/><visual name="WindBells"/></object>
+        <object id="79"><data group="HIT/CHORD"/><visual name="Pole"/></object>
+        <object id="80"><data group="HIT/CHORD"/><visual name="Pop"/></object>
+        <object id="81"><data group="HIT/CHORD"/><visual name="MetalHit"/></object>
+        <object id="82"><data group="DRUM KIT"/><visual name="DrumKit1"/></object>
+        <object id="83"><data group="DRUM KIT"/><visual name="DrumKit2"/></object>
+        <object id="84"><data group="DRUM KIT"/><visual name="DrumKit3"/></object>
+        <object id="85"><data group="DRUM KIT"/><visual name="PercKit"/></object>
+        <object id="86"><data group="DRUM KIT"/><visual name="NoiseKit"/></object>
+    </category>
+    <category id="m1w">
+        <data numstarts="0|16|32|45|55|69|75|86|97|110"/>
+        <object id="0"><data group="KEYBOARD"/><visual name="A.Piano"/></object>
+        <object id="1"><data group="KEYBOARD"/><visual name="SoftEP"/></object>
+        <object id="2"><data group="KEYBOARD"/><visual name="E.Piano"/></object>
+        <object id="3"><data group="KEYBOARD"/><visual name="PianoPad1"/></object>
+        <object id="4"><data group="KEYBOARD"/><visual name="PianoPad2"/></object>
+        <object id="5"><data group="KEYBOARD"/><visual name="SynPiano"/></object>
+        <object id="6"><data group="KEYBOARD"/><visual name="Clav"/></object>
+        <object id="7"><data group="KEYBOARD"/><visual name="Harpsicord"/></object>
+        <object id="8"><data group="KEYBOARD"/><visual name="PercOrgan"/></object>
+        <object id="9"><data group="KEYBOARD"/><visual name="Organ1"/></object>
+        <object id="10"><data group="KEYBOARD"/><visual name="Organ2"/></object>
+        <object id="11"><data group="KEYBOARD"/><visual name="Rotary"/></object>
+        <object id="12"><data group="KEYBOARD"/><visual name="GospelOrg"/></object>
+        <object id="13"><data group="KEYBOARD"/><visual name="PipeOrgan1"/></object>
+        <object id="14"><data group="KEYBOARD"/><visual name="PipeOrgan2"/></object>
+        <object id="15"><data group="KEYBOARD"/><visual name="Accordion"/></object>
+        <object id="16"><data group="GUITAR/MALLET"/><visual name="G.Guitar"/></object>
+        <object id="17"><data group="GUITAR/MALLET"/><visual name="F.Guitar"/></object>
+        <object id="18"><data group="GUITAR/MALLET"/><visual name="HardPick"/></object>
+        <object id="19"><data group="GUITAR/MALLET"/><visual name="E.Guitar"/></object>
+        <object id="20"><data group="GUITAR/MALLET"/><visual name="MuteGuitar"/></object>
+        <object id="21"><data group="GUITAR/MALLET"/><visual name="DistGuitar"/></object>
+        <object id="22"><data group="GUITAR/MALLET"/><visual name="FeedBacker"/></object>
+        <object id="23"><data group="GUITAR/MALLET"/><visual name="Banjo"/></object>
+        <object id="24"><data group="GUITAR/MALLET"/><visual name="Harp"/></object>
+        <object id="25"><data group="GUITAR/MALLET"/><visual name="Marimba"/></object>
+        <object id="26"><data group="GUITAR/MALLET"/><visual name="Vibe"/></object>
+        <object id="27"><data group="GUITAR/MALLET"/><visual name="MusicBox"/></object>
+        <object id="28"><data group="GUITAR/MALLET"/><visual name="Gamelan"/></object>
+        <object id="29"><data group="GUITAR/MALLET"/><visual name="DigiBell"/></object>
+        <object id="30"><data group="GUITAR/MALLET"/><visual name="MetalBell"/></object>
+        <object id="31"><data group="GUITAR/MALLET"/><visual name="VS Bell"/></object>
+        <object id="32"><data group="BASS"/><visual name="A.Bass1"/></object>
+        <object id="33"><data group="BASS"/><visual name="A.Bass2"/></object>
+        <object id="34"><data group="BASS"/><visual name="Fretless"/></object>
+        <object id="35"><data group="BASS"/><visual name="E.Bass1"/></object>
+        <object id="36"><data group="BASS"/><visual name="E.Bass2"/></object>
+        <object id="37"><data group="BASS"/><visual name="E.Bass3"/></object>
+        <object id="38"><data group="BASS"/><visual name="SlapBass"/></object>
+        <object id="39"><data group="BASS"/><visual name="SynthBass1"/></object>
+        <object id="40"><data group="BASS"/><visual name="SynthBass2"/></object>
+        <object id="41"><data group="BASS"/><visual name="TechBass"/></object>
+        <object id="42"><data group="BASS"/><visual name="BowBowBass"/></object>
+        <object id="43"><data group="BASS"/><visual name="RezzzzBass"/></object>
+        <object id="44"><data group="BASS"/><visual name="Residrops"/></object>
+        <object id="45"><data group="STRINGS/PAD"/><visual name="Violin"/></object>
+        <object id="46"><data group="STRINGS/PAD"/><visual name="Cello"/></object>
+        <object id="47"><data group="STRINGS/PAD"/><visual name="Pizzicato"/></object>
+        <object id="48"><data group="STRINGS/PAD"/><visual name="StringEns"/></object>
+        <object id="49"><data group="STRINGS/PAD"/><visual name="AnaStrings"/></object>
+        <object id="50"><data group="STRINGS/PAD"/><visual name="Choir"/></object>
+        <object id="51"><data group="STRINGS/PAD"/><visual name="SoftChoir"/></object>
+        <object id="52"><data group="STRINGS/PAD"/><visual name="Ahhs"/></object>
+        <object id="53"><data group="STRINGS/PAD"/><visual name="AirVox"/></object>
+        <object id="54"><data group="STRINGS/PAD"/><visual name="SynVox"/></object>
+        <object id="55"><data group="BRASS/REED"/><visual name="Trumpet"/></object>
+        <object id="56"><data group="BRASS/REED"/><visual name="Trombone"/></object>
+        <object id="57"><data group="BRASS/REED"/><visual name="MuteTp"/></object>
+        <object id="58"><data group="BRASS/REED"/><visual name="HardFlute"/></object>
+        <object id="59"><data group="BRASS/REED"/><visual name="TinFlute"/></object>
+        <object id="60"><data group="BRASS/REED"/><visual name="BassonOboe"/></object>
+        <object id="61"><data group="BRASS/REED"/><visual name="Clarinet"/></object>
+        <object id="62"><data group="BRASS/REED"/><visual name="SopranoSax"/></object>
+        <object id="63"><data group="BRASS/REED"/><visual name="AltoSax"/></object>
+        <object id="64"><data group="BRASS/REED"/><visual name="BariSax"/></object>
+        <object id="65"><data group="BRASS/REED"/><visual name="Tuba/FrH"/></object>
+        <object id="66"><data group="BRASS/REED"/><visual name="Harmonica"/></object>
+        <object id="67"><data group="BRASS/REED"/><visual name="BrassEns1"/></object>
+        <object id="68"><data group="BRASS/REED"/><visual name="BrassEns2"/></object>
+        <object id="69"><data group="LEAD SYNTH"/><visual name="MonoLead"/></object>
+        <object id="70"><data group="LEAD SYNTH"/><visual name="MiniLead"/></object>
+        <object id="71"><data group="LEAD SYNTH"/><visual name="VS 89"/></object>
+        <object id="72"><data group="LEAD SYNTH"/><visual name="4%Pulse"/></object>
+        <object id="73"><data group="LEAD SYNTH"/><visual name="SynSine"/></object>
+        <object id="74"><data group="LEAD SYNTH"/><visual name="Sine"/></object>
+        <object id="75"><data group="POLY SYNTH"/><visual name="RawDeal"/></object>
+        <object id="76"><data group="POLY SYNTH"/><visual name="Detune"/></object>
+        <object id="77"><data group="POLY SYNTH"/><visual name="EtherBell"/></object>
+        <object id="78"><data group="POLY SYNTH"/><visual name="FreshAir"/></object>
+        <object id="79"><data group="POLY SYNTH"/><visual name="Ghostly"/></object>
+        <object id="80"><data group="POLY SYNTH"/><visual name="Ephemerals"/></object>
+        <object id="81"><data group="POLY SYNTH"/><visual name="AliaBass"/></object>
+        <object id="82"><data group="POLY SYNTH"/><visual name="UnderWater"/></object>
+        <object id="83"><data group="POLY SYNTH"/><visual name="Spectrum1"/></object>
+        <object id="84"><data group="POLY SYNTH"/><visual name="Spectrum2"/></object>
+        <object id="85"><data group="POLY SYNTH"/><visual name="Spectrum3"/></object>
+        <object id="86"><data group="SE/OTHER"/><visual name="Stadium"/></object>
+        <object id="87"><data group="SE/OTHER"/><visual name="Thing"/></object>
+        <object id="88"><data group="SE/OTHER"/><visual name="TriRoll"/></object>
+        <object id="89"><data group="SE/OTHER"/><visual name="Clicker"/></object>
+        <object id="90"><data group="SE/OTHER"/><visual name="Crickets1"/></object>
+        <object id="91"><data group="SE/OTHER"/><visual name="Crickets2"/></object>
+        <object id="92"><data group="SE/OTHER"/><visual name="MagicBell"/></object>
+        <object id="93"><data group="SE/OTHER"/><visual name="TronUp"/></object>
+        <object id="94"><data group="SE/OTHER"/><visual name="Tooter"/></object>
+        <object id="95"><data group="SE/OTHER"/><visual name="FluteFX"/></object>
+        <object id="96"><data group="SE/OTHER"/><visual name="Flutter"/></object>
+        <object id="97"><data group="HIT/CHORD"/><visual name="OrchHit"/></object>
+        <object id="98"><data group="HIT/CHORD"/><visual name="VibeHit"/></object>
+        <object id="99"><data group="HIT/CHORD"/><visual name="Gong"/></object>
+        <object id="100"><data group="HIT/CHORD"/><visual name="Timpani"/></object>
+        <object id="101"><data group="HIT/CHORD"/><visual name="OrchPerc"/></object>
+        <object id="102"><data group="HIT/CHORD"/><visual name="SynClaves"/></object>
+        <object id="103"><data group="HIT/CHORD"/><visual name="SynTom1"/></object>
+        <object id="104"><data group="HIT/CHORD"/><visual name="SynTom2"/></object>
+        <object id="105"><data group="HIT/CHORD"/><visual name="Zap1"/></object>
+        <object id="106"><data group="HIT/CHORD"/><visual name="Zap2"/></object>
+        <object id="107"><data group="HIT/CHORD"/><visual name="Industry1"/></object>
+        <object id="108"><data group="HIT/CHORD"/><visual name="Industry2"/></object>
+        <object id="109"><data group="HIT/CHORD"/><visual name="RevThing"/></object>
+        <object id="110"><data group="DRUM KIT"/><visual name="TotalKit"/></object>
+        <object id="111"><data group="DRUM KIT"/><visual name="RockKit"/></object>
+        <object id="112"><data group="DRUM KIT"/><visual name="DanceKit"/></object>
+        <object id="113"><data group="DRUM KIT"/><visual name="AnalogKit"/></object>
+        <object id="114"><data group="DRUM KIT"/><visual name="HipHopKit"/></object>
+        <object id="115"><data group="DRUM KIT"/><visual name="R&amp;BKit"/></object>
+        <object id="116"><data group="DRUM KIT"/><visual name="BD&amp;SDKit1"/></object>
+        <object id="117"><data group="DRUM KIT"/><visual name="BD&amp;SDKit2"/></object>
+        <object id="118"><data group="DRUM KIT"/><visual name="TomKit"/></object>
+        <object id="119"><data group="DRUM KIT"/><visual name="CymbalKit"/></object>
+        <object id="120"><data group="DRUM KIT"/><visual name="PercKit1"/></object>
+        <object id="121"><data group="DRUM KIT"/><visual name="PercKit2"/></object>
+        <object id="122"><data group="DRUM KIT"/><visual name="SEKit"/></object>
+    </category>
+    <category id="ex">
+        <data numstarts="0|7|16|32|46|54|69|85|101|116"/>
+        <object id="0"><data group="KEYBOARD"/><visual name="ElecGrand"/></object>
+        <object id="1"><data group="KEYBOARD"/><visual name="E.Piano1"/></object>
+        <object id="2"><data group="KEYBOARD"/><visual name="E.Piano2"/></object>
+        <object id="3"><data group="KEYBOARD"/><visual name="ToyPiano"/></object>
+        <object id="4"><data group="KEYBOARD"/><visual name="Organ"/></object>
+        <object id="5"><data group="KEYBOARD"/><visual name="VoxOrgan"/></object>
+        <object id="6"><data group="KEYBOARD"/><visual name="Musette"/></object>
+        <object id="7"><data group="GUITAR/MALLET"/><visual name="ChorusGtr"/></object>
+        <object id="8"><data group="GUITAR/MALLET"/><visual name="JazzGuitar"/></object>
+        <object id="9"><data group="GUITAR/MALLET"/><visual name="DistGuitar"/></object>
+        <object id="10"><data group="GUITAR/MALLET"/><visual name="SitarTambr"/></object>
+        <object id="11"><data group="GUITAR/MALLET"/><visual name="Shamisen"/></object>
+        <object id="12"><data group="GUITAR/MALLET"/><visual name="Koto"/></object>
+        <object id="13"><data group="GUITAR/MALLET"/><visual name="Glocken"/></object>
+        <object id="14"><data group="GUITAR/MALLET"/><visual name="SteelDrum"/></object>
+        <object id="15"><data group="GUITAR/MALLET"/><visual name="BottlePop"/></object>
+        <object id="16"><data group="BASS"/><visual name="E.Bass"/></object>
+        <object id="17"><data group="BASS"/><visual name="SlapBass"/></object>
+        <object id="18"><data group="BASS"/><visual name="BoostSaw"/></object>
+        <object id="19"><data group="BASS"/><visual name="ElectroBs"/></object>
+        <object id="20"><data group="BASS"/><visual name="DarkBass"/></object>
+        <object id="21"><data group="BASS"/><visual name="FilterBass"/></object>
+        <object id="22"><data group="BASS"/><visual name="FatBass"/></object>
+        <object id="23"><data group="BASS"/><visual name="SawRezBass"/></object>
+        <object id="24"><data group="BASS"/><visual name="SquRezBass"/></object>
+        <object id="25"><data group="BASS"/><visual name="DiscoBass"/></object>
+        <object id="26"><data group="BASS"/><visual name="VPMBass1"/></object>
+        <object id="27"><data group="BASS"/><visual name="VPMBass2"/></object>
+        <object id="28"><data group="BASS"/><visual name="AttackBass"/></object>
+        <object id="29"><data group="BASS"/><visual name="AcidDistBs"/></object>
+        <object id="30"><data group="BASS"/><visual name="DetuneBass"/></object>
+        <object id="31"><data group="BASS"/><visual name="WobbleBass"/></object>
+        <object id="32"><data group="STRINGS/PAD"/><visual name="Strings"/></object>
+        <object id="33"><data group="STRINGS/PAD"/><visual name="StrQuartet"/></object>
+        <object id="34"><data group="STRINGS/PAD"/><visual name="TapeString"/></object>
+        <object id="35"><data group="STRINGS/PAD"/><visual name="AahChoir"/></object>
+        <object id="36"><data group="STRINGS/PAD"/><visual name="OohChoir"/></object>
+        <object id="37"><data group="STRINGS/PAD"/><visual name="VocoderPad"/></object>
+        <object id="38"><data group="STRINGS/PAD"/><visual name="AnalogStr1"/></object>
+        <object id="39"><data group="STRINGS/PAD"/><visual name="AnalogStr2"/></object>
+        <object id="40"><data group="STRINGS/PAD"/><visual name="DarkPad"/></object>
+        <object id="41"><data group="STRINGS/PAD"/><visual name="NoisePad"/></object>
+        <object id="42"><data group="STRINGS/PAD"/><visual name="AnalogPad"/></object>
+        <object id="43"><data group="STRINGS/PAD"/><visual name="SquarePad"/></object>
+        <object id="44"><data group="STRINGS/PAD"/><visual name="5thPad"/></object>
+        <object id="45"><data group="STRINGS/PAD"/><visual name="OctavePad"/></object>
+        <object id="46"><data group="BRASS/REED"/><visual name="Trumpet"/></object>
+        <object id="47"><data group="BRASS/REED"/><visual name="TinWhistle"/></object>
+        <object id="48"><data group="BRASS/REED"/><visual name="TapeFlute"/></object>
+        <object id="49"><data group="BRASS/REED"/><visual name="Shakuhachi"/></object>
+        <object id="50"><data group="BRASS/REED"/><visual name="AltoSax"/></object>
+        <object id="51"><data group="BRASS/REED"/><visual name="TenorSax"/></object>
+        <object id="52"><data group="BRASS/REED"/><visual name="Bagpipe"/></object>
+        <object id="53"><data group="BRASS/REED"/><visual name="BrassEns"/></object>
+        <object id="54"><data group="LEAD SYNTH"/><visual name="SoftLead"/></object>
+        <object id="55"><data group="LEAD SYNTH"/><visual name="UrbanLead"/></object>
+        <object id="56"><data group="LEAD SYNTH"/><visual name="HiResoLead"/></object>
+        <object id="57"><data group="LEAD SYNTH"/><visual name="MS20Lead"/></object>
+        <object id="58"><data group="LEAD SYNTH"/><visual name="OctaveLead"/></object>
+        <object id="59"><data group="LEAD SYNTH"/><visual name="DriveLead"/></object>
+        <object id="60"><data group="LEAD SYNTH"/><visual name="RaveLead"/></object>
+        <object id="61"><data group="LEAD SYNTH"/><visual name="DualSquare"/></object>
+        <object id="62"><data group="LEAD SYNTH"/><visual name="SynWire1"/></object>
+        <object id="63"><data group="LEAD SYNTH"/><visual name="SynWire2"/></object>
+        <object id="64"><data group="LEAD SYNTH"/><visual name="SyncLoop"/></object>
+        <object id="65"><data group="LEAD SYNTH"/><visual name="5thSine"/></object>
+        <object id="66"><data group="LEAD SYNTH"/><visual name="5thSaw"/></object>
+        <object id="67"><data group="LEAD SYNTH"/><visual name="5thSquare"/></object>
+        <object id="68"><data group="LEAD SYNTH"/><visual name="ShortArp"/></object>
+        <object id="69"><data group="POLY SYNTH"/><visual name="DetuneStab"/></object>
+        <object id="70"><data group="POLY SYNTH"/><visual name="UnisonStab"/></object>
+        <object id="71"><data group="POLY SYNTH"/><visual name="5thStab"/></object>
+        <object id="72"><data group="POLY SYNTH"/><visual name="PolyComp"/></object>
+        <object id="73"><data group="POLY SYNTH"/><visual name="SquDetune"/></object>
+        <object id="74"><data group="POLY SYNTH"/><visual name="VPMBrass"/></object>
+        <object id="75"><data group="POLY SYNTH"/><visual name="SynthHorn"/></object>
+        <object id="76"><data group="POLY SYNTH"/><visual name="DarkSynth"/></object>
+        <object id="77"><data group="POLY SYNTH"/><visual name="NoisyComp"/></object>
+        <object id="78"><data group="POLY SYNTH"/><visual name="RisingPad"/></object>
+        <object id="79"><data group="POLY SYNTH"/><visual name="TremoloSin"/></object>
+        <object id="80"><data group="POLY SYNTH"/><visual name="TrillPad"/></object>
+        <object id="81"><data group="POLY SYNTH"/><visual name="LPFSweep"/></object>
+        <object id="82"><data group="POLY SYNTH"/><visual name="HPFSweep"/></object>
+        <object id="83"><data group="POLY SYNTH"/><visual name="WaveSweep"/></object>
+        <object id="84"><data group="POLY SYNTH"/><visual name="Palawan"/></object>
+        <object id="85"><data group="SE/OTHER"/><visual name="Applause"/></object>
+        <object id="86"><data group="SE/OTHER"/><visual name="HeartBeat"/></object>
+        <object id="87"><data group="SE/OTHER"/><visual name="GunShot"/></object>
+        <object id="88"><data group="SE/OTHER"/><visual name="CarSFX"/></object>
+        <object id="89"><data group="SE/OTHER"/><visual name="Stream"/></object>
+        <object id="90"><data group="SE/OTHER"/><visual name="Forest"/></object>
+        <object id="91"><data group="SE/OTHER"/><visual name="ShakerLoop"/></object>
+        <object id="92"><data group="SE/OTHER"/><visual name="Noise"/></object>
+        <object id="93"><data group="SE/OTHER"/><visual name="8bitNoise"/></object>
+        <object id="94"><data group="SE/OTHER"/><visual name="NoiseShot"/></object>
+        <object id="95"><data group="SE/OTHER"/><visual name="NoiseSplit"/></object>
+        <object id="96"><data group="SE/OTHER"/><visual name="SweepSplit"/></object>
+        <object id="97"><data group="SE/OTHER"/><visual name="SirenUp"/></object>
+        <object id="98"><data group="SE/OTHER"/><visual name="SirenDown"/></object>
+        <object id="99"><data group="SE/OTHER"/><visual name="Modulation"/></object>
+        <object id="100"><data group="SE/OTHER"/><visual name="Signal"/></object>
+        <object id="101"><data group="HIT/CHORD"/><visual name="M1PfChord"/></object>
+        <object id="102"><data group="HIT/CHORD"/><visual name="EPChord"/></object>
+        <object id="103"><data group="HIT/CHORD"/><visual name="min7Organ"/></object>
+        <object id="104"><data group="HIT/CHORD"/><visual name="GtrChord1"/></object>
+        <object id="105"><data group="HIT/CHORD"/><visual name="GtrChord2"/></object>
+        <object id="106"><data group="HIT/CHORD"/><visual name="PowerChord"/></object>
+        <object id="107"><data group="HIT/CHORD"/><visual name="StrChord"/></object>
+        <object id="108"><data group="HIT/CHORD"/><visual name="Maj7Pad"/></object>
+        <object id="109"><data group="HIT/CHORD"/><visual name="SynChord1"/></object>
+        <object id="110"><data group="HIT/CHORD"/><visual name="SynChord2"/></object>
+        <object id="111"><data group="HIT/CHORD"/><visual name="SynChord3"/></object>
+        <object id="112"><data group="HIT/CHORD"/><visual name="SynChord4"/></object>
+        <object id="113"><data group="HIT/CHORD"/><visual name="Glissando"/></object>
+        <object id="114"><data group="HIT/CHORD"/><visual name="OrchHits"/></object>
+        <object id="115"><data group="HIT/CHORD"/><visual name="DanceHits"/></object>
+        <object id="116"><data group="DRUM KIT"/><visual name="DDD1Kit"/></object>
+        <object id="117"><data group="DRUM KIT"/><visual name="DDM110Kit"/></object>
+        <object id="118"><data group="DRUM KIT"/><visual name="S3Kit"/></object>
+        <object id="119"><data group="DRUM KIT"/><visual name="LynKit"/></object>
+        <object id="120"><data group="DRUM KIT"/><visual name="StandrdKit"/></object>
+        <object id="121"><data group="DRUM KIT"/><visual name="HouseKit"/></object>
+        <object id="122"><data group="DRUM KIT"/><visual name="ElectroKit"/></object>
+        <object id="123"><data group="DRUM KIT"/><visual name="MinimalKit"/></object>
+        <object id="124"><data group="DRUM KIT"/><visual name="TronicaKit"/></object>
+        <object id="125"><data group="DRUM KIT"/><visual name="D&amp;BKit"/></object>
+        <object id="126"><data group="DRUM KIT"/><visual name="R&amp;BKit"/></object>
+        <object id="127"><data group="DRUM KIT"/><visual name="HipHopKit"/></object>
+        <object id="128"><data group="DRUM KIT"/><visual name="EthnicKit"/></object>
+        <object id="129"><data group="DRUM KIT"/><visual name="SEKit"/></object>
+        <object id="130"><data group="DRUM KIT"/><visual name="CartoonKit"/></object>
+        <object id="131"><data group="DRUM KIT"/><visual name="GtrElement"/></object>
+    </category>
+</dataset>

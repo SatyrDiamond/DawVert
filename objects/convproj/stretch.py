@@ -28,7 +28,6 @@ class cvpj_warp_point:
 	def sec_from_beat(self, speed):
 		return (self.beat/2)/speed
 
-
 @dataclass
 class cvpj_stretch_warp:
 	points: list = field(default_factory=list)
@@ -310,12 +309,109 @@ class cvpj_stretch_algo:
 	formant: float = 0
 
 @dataclass
+class cvpj_stretch_timing:
+	time_type: str = 'speed'
+	original_bpm: float = 0
+	tempo_based: bool = False
+
+	beats__num: float = 0
+	speed__rate: float = 1
+
+	def set__speed(self, speed):
+		self.time_type = 'speed'
+		self.speed__rate = speed
+		self.tempo_based = False
+
+	def set__orgtempo(self, org_tempo):
+		self.time_type = 'tempo'
+		self.original_bpm = org_tempo
+		self.tempo_based = True
+
+	def set__real_rate(self, tempo, rate):
+		self.time_type = 'real_rate'
+		self.original_bpm = tempo
+		self.speed__rate = rate
+		self.tempo_based = True
+
+	def set__beats(self, num_beats):
+		self.time_type = 'beats'
+		self.beats__num = num_beats
+		self.tempo_based = True
+
+	def get__speed(self, sampleref_obj):
+		if self.time_type == 'beats':
+			if sampleref_obj:
+				dur_sec = sampleref_obj.get_dur_sec()
+				if dur_sec:
+					outval = ( self.beats__num/(dur_sec*2) )
+					return outval
+			return 1
+
+		if self.time_type == 'tempo':
+			return (self.original_bpm/120)
+
+		if self.time_type == 'real_rate':
+			return (self.original_bpm/120)/self.speed__rate
+
+		if self.time_type == 'speed':
+			return self.speed__rate
+ 
+	def get__speed_real(self, sampleref_obj, tempo):
+		tempom = tempo/120 if not self.tempo_based else 1
+		return self.get__speed(sampleref_obj)*tempom
+
+	def get__tempo(self, sampleref_obj):
+		return self.get__speed(sampleref_obj)*120
+
+	def get__tempo_real(self, sampleref_obj, tempo):
+		return self.get__speed_real(sampleref_obj, tempo)*120
+
+	def get__real_rate(self, sampleref_obj, tempo):
+		if self.time_type == 'real_rate':
+			return self.speed__rate
+
+		if self.time_type == 'speed':
+			return 1/self.speed__rate
+
+		tempom = tempo/120
+		if self.time_type == 'beats':
+			outrate = 1
+			if sampleref_obj:
+				dur_sec = sampleref_obj.get_dur_sec()
+				if dur_sec:
+					outval = ( self.beats__num/(dur_sec*2) )
+					outrate = (1/outval)
+			return outrate*tempom
+
+		if self.time_type == 'tempo':
+			sized = 120/self.original_bpm
+			return sized*tempom
+		return 1
+
+	def get__beats(self, sampleref_obj):
+		if self.time_type == 'beats':
+			return self.beats__num
+		if self.time_type == 'tempo':
+			sized = 120/self.original_bpm
+			if sampleref_obj:
+				dur_sec = sampleref_obj.get_dur_sec()
+				if dur_sec: return (dur_sec*2)/sized
+			return 1
+		if self.time_type == 'real_rate':
+			sized = 120/self.original_bpm
+			if sampleref_obj:
+				dur_sec = sampleref_obj.get_dur_sec()
+				if dur_sec: return (dur_sec*2)/(self.speed__rate*sized)
+			return 1
+
+@dataclass
 class cvpj_stretch:
 	algorithm: cvpj_stretch_algo = field(default_factory=cvpj_stretch_algo)
 	is_warped: bool = False
-	warppoints: list = field(default_factory=list)
 	warp: cvpj_stretch_warp = field(default_factory=cvpj_stretch_warp)
 	preserve_pitch: bool = False
+
+	timing: cvpj_stretch_timing = field(default_factory=cvpj_stretch_timing)
 
 	uses_tempo: bool = False
 
@@ -333,7 +429,6 @@ class cvpj_stretch:
 
 	def __eq__(self, x):
 		s_algorithm = self.algorithm == x.algorithm
-		s_params = self.params == x.params
 		s_is_warped = self.is_warped == x.is_warped
 		s_warp = self.warp == x.warp
 		uses_tempo = self.uses_tempo == x.uses_tempo
@@ -347,7 +442,7 @@ class cvpj_stretch:
 		s_calc_real_speed = self.calc_real_speed == x.calc_real_speed
 		s_calc_real_size = self.calc_real_size == x.calc_real_size
 
-		return s_algorithm and s_params and s_is_warped and s_warp and uses_tempo and s_bpm and s_org_speed and s_calc_bpm_speed and s_calc_bpm_size and (s_calc_tempo_speed or s_calc_tempo_size or s_calc_real_speed or s_calc_real_size)
+		return s_algorithm and s_is_warped and s_warp and uses_tempo and s_bpm and s_org_speed and s_calc_bpm_speed and s_calc_bpm_size and (s_calc_tempo_speed or s_calc_tempo_size or s_calc_real_speed or s_calc_real_size)
 
 	def set_rate_speed_pitch(self, bpm, pitch):
 		self.set_rate_speed(bpm, pow(2, pitch/12), False)
@@ -404,9 +499,13 @@ class cvpj_stretch:
 
 				dur_sec = sampleref_obj.get_dur_sec()
 
-				if self.uses_tempo:
+				timing_obj = self.timing
+
+				if timing_obj.tempo_based:
 					if dur_sec:
-						pos_real = sampleref_obj.dur_sec*self.calc_tempo_size
+						calc_tempo_size = timing_obj.get__speed(sampleref_obj)
+
+						pos_real = sampleref_obj.dur_sec*calc_tempo_size
 		
 						warp_point_obj = warp_obj.points__add()
 						warp_point_obj.beat = 0
@@ -419,16 +518,17 @@ class cvpj_stretch:
 						warp_point_obj.speed = self.calc_tempo_size
 				else:
 					if dur_sec:
-						pos_real = sampleref_obj.dur_sec*self.calc_real_size
+						calc_tempo_size = timing_obj.get__speed(sampleref_obj)
+						calc_real_size = (tempo/120)
+
+						pos_real = sampleref_obj.dur_sec*self.calc_real_size*calc_real_size
 		
-						pitch = pow(2, -pitch/12)
-	
 						warp_point_obj = warp_obj.points__add()
 						warp_point_obj.beat = 0
 						warp_point_obj.second = 0
 		
 						warp_point_obj = warp_obj.points__add()
-						warp_point_obj.beat = pos_real*2*self.calc_bpm_size*pitch
+						warp_point_obj.beat = pos_real*2*self.calc_bpm_size*timing_obj.speed__rate
 						warp_point_obj.second = sampleref_obj.dur_sec
 
 				warp_obj.calcpoints__speed()
@@ -453,7 +553,8 @@ class cvpj_stretch:
 				else:
 					finalspeed = warp_obj.points[0].speed
 
-				self.set_rate_tempo(tempo, finalspeed, True)
+				if finalspeed>0:
+					self.timing.set__orgtempo(finalspeed*120)
 
 				pos_offset = fw_p*4
 				cut_offset = (fw_s*8)

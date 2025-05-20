@@ -199,6 +199,9 @@ class input_soundation(plugins.base):
 
 						if soundation_region.autoStretchBpm:
 							sampspeed = soundation_region.autoStretchBpm/soundation_obj.bpm
+
+							stretch_obj.timing.set__orgtempo(soundation_region.autoStretchBpm)
+							
 							stretch_obj.set_rate_speed(soundation_obj.bpm, sampspeed, True)
 							stretch_obj.uses_tempo = True
 

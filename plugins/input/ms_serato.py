@@ -191,7 +191,7 @@ class input_serato(plugins.base):
 							samplepart_obj.trigger = 'oneshot'
 
 							stretch_obj = samplepart_obj.stretch
-							stretch_obj.set_rate_speed(project_obj.bpm, drumsamp.playback_speed, False)
+							stretch_obj.timing.set__speed(drumsamp.playback_speed)
 							stretch_obj.preserve_pitch = True
 
 			if scene_deck.type == 'plugin':
@@ -247,7 +247,7 @@ class input_serato(plugins.base):
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = samplepath
 						stretch_obj = samplepart_obj.stretch
-						stretch_obj.set_rate_speed(project_obj.bpm, scene_deck.playback_speed, False)
+						stretch_obj.timing.set__speed(scene_deck.playback_speed)
 	
 					plugin_obj.datavals.add('type', scene_deck.type)
 					plugin_obj.datavals.add('name', scene_deck.name)
@@ -285,6 +285,9 @@ class input_serato(plugins.base):
 
 						stretch_obj = samplepart_obj.stretch
 						stretch_obj.set_rate_tempo(project_obj.bpm, playspeed, False)
+
+						stretch_obj.timing.set__orgtempo(120/playspeed)
+
 						stretch_obj.preserve_pitch = True
 
 						s_sample_entry['part'] = samplepart_obj

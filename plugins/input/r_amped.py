@@ -472,6 +472,9 @@ class input_amped(plugins.base):
 						sample_obj.sampleref = str(amped_clip.contentGuid.id)
 
 						stretch_obj = sample_obj.stretch
+
+						stretch_obj.timing.set__real_rate(amped_obj.tempo, amped_clip.stretch)
+						
 						stretch_obj.set_rate_speed(amped_obj.tempo, amped_clip.stretch, True)
 						stretch_obj.uses_tempo = True
 						stretch_obj.preserve_pitch = True

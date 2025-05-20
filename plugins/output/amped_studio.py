@@ -31,7 +31,7 @@ def convauto(autopoints, minv, maxv):
 		ampedauto.append({"pos": autopoint.pos/4, "value": value})
 	return ampedauto
 
-def createclip(audiopl_obj, audio_id):
+def createclip(audiopl_obj, audio_id, audio_sampleref, tempo):
 	from objects.file_proj import amped as proj_amped
 	amped_audclip = proj_amped.amped_clip(None)
 	amped_audclip.contentGuid.is_custom = True
@@ -40,7 +40,11 @@ def createclip(audiopl_obj, audio_id):
 	amped_audclip.gain = audiopl_obj.sample.vol
 	amped_audclip.length = audiopl_obj.time.duration*4
 	amped_audclip.offset = 0
-	amped_audclip.stretch = audiopl_obj.sample.stretch.calc_real_size
+	stretch_obj = audiopl_obj.sample.stretch
+	if audiopl_obj.sample.sampleref in audio_sampleref:
+		sampleref_obj = audio_sampleref[audiopl_obj.sample.sampleref]
+		stretch_obj = audiopl_obj.sample.stretch
+		amped_audclip.stretch = stretch_obj.timing.get__speed_real(sampleref_obj, tempo)*2
 	amped_audclip.pitchShift = audiopl_obj.sample.pitch
 	amped_audclip.reversed = audiopl_obj.sample.reverse
 	return amped_audclip
@@ -177,6 +181,7 @@ class output_amped(plugins.base):
 		#amped_obj.masterTrack.devices = amped_parse_effects(None, convproj_obj, convproj_obj.track_master.plugslots.slots_audio, None)
 
 		audio_id = {}
+		audio_sampleref = {}
 		amped_filenames = {}
 		audioidnum = 0
 
@@ -188,6 +193,7 @@ class output_amped(plugins.base):
 
 			if os.path.exists(filepath): zip_amped.write(filepath, str(audioidnum))
 			amped_filenames[audioidnum] = sampleref_obj.fileref.file.basename
+			audio_sampleref[sampleref_id] = sampleref_obj
 			audioidnum += 1
 
 		for trackid, track_obj in convproj_obj.track__iter():
@@ -339,7 +345,7 @@ class output_amped(plugins.base):
 				amped_offset = 0
 				if audiopl_obj.time.cut_type == 'cut': amped_offset = audiopl_obj.time.cut_start
 				amped_region = amped_track.add_region(audiopl_obj.time.position, audiopl_obj.time.duration, amped_offset, counter_id.get())
-				amped_audclip = createclip(audiopl_obj, audio_id)
+				amped_audclip = createclip(audiopl_obj, audio_id, audio_sampleref, amped_obj.tempo)
 				amped_audclip.fadeIn = audiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
 				amped_audclip.length = (audiopl_obj.time.duration/4) + (audiopl_obj.time.cut_start/4)
 				amped_region.clips = [amped_audclip]
@@ -350,7 +356,7 @@ class output_amped(plugins.base):
 					amped_region = amped_track.add_region(nestedaudiopl_obj.time.position, nestedaudiopl_obj.time.duration, 0, counter_id.get())
 					amped_region.mute = int(nestedaudiopl_obj.muted)
 					for insideaudiopl_obj in nestedaudiopl_obj.events: 
-						amped_audclip = createclip(insideaudiopl_obj, audio_id)
+						amped_audclip = createclip(insideaudiopl_obj, audio_id, audio_sampleref, amped_obj.tempo)
 						amped_audclip.position = insideaudiopl_obj.time.position/4
 						amped_audclip.length = insideaudiopl_obj.time.duration/4
 						amped_audclip.fadeIn = insideaudiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)

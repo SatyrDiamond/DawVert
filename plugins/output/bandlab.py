@@ -173,6 +173,7 @@ class output_bandlab(plugins.base):
 						blx_region = proj_bandlab.bandlab_region(None)
 
 						sp_obj = audiopl_obj.sample
+						ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
 						pmod = 1
 						if not sp_obj.stretch.uses_tempo:
@@ -182,7 +183,7 @@ class output_bandlab(plugins.base):
 
 						blx_region.pitchShift = sp_obj.pitch
 						blx_region.gain = sp_obj.vol
-						blx_region.playbackRate = sp_obj.stretch.calc_bpm_speed
+						blx_region.playbackRate = sp_obj.stretch.timing.get__real_rate(sampleref_obj, bpm)
 
 						blx_region.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
 						blx_region.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)

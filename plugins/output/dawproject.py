@@ -257,11 +257,12 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 		mpetype, dp_points = do_mpe_val(cvpj_audioclip.sample.vol, 'gain')
 		autodata[mpetype] = dp_points
 
-	stretchparams = cvpj_audioclip.sample.stretch.params
-	if 'formant' in stretchparams:
-		if stretchparams['formant'] != 0:
-			mpetype, dp_points = do_mpe_val(stretchparams['formant'], 'formant')
-			autodata[mpetype] = dp_points
+	stretch_algo = cvpj_audioclip.sample.stretch.algorithm
+
+	stretchparams = stretch_algo.params
+	if stretch_algo.formant != 0:
+		mpetype, dp_points = do_mpe_val(stretch_algo.formant, 'formant')
+		autodata[mpetype] = dp_points
 
 	for n, x in cvpj_audioclip.auto.items():
 		dp_points = points.dawproject_points()

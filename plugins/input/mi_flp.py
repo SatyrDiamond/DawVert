@@ -203,15 +203,16 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 			t_stretchingmultiplier = pow(2, fl_channel_obj.params.stretchingmultiplier/10000)
 			dur_sec = sampleref_obj.get_dur_sec()
 			sre_obj.pitch = t_stretchingpitch
-			if dur_sec is not None:
-				stretch_obj.set_rate_tempo(flp_obj.tempo, (dur_sec/t_stretchingtime)/t_stretchingmultiplier, False)
+
+			stretch_obj.timing.set__beats(t_stretchingtime*2)
 
 		elif t_stretchingtime == 0:
 			modpitch = (fl_channel_obj.params.stretchingmultiplier/10000)*12
 			if t_stretchingmode == 0:
 				modpitch += t_stretchingpitch
-			stretch_obj.set_rate_speed_pitch(flp_obj.tempo, modpitch)
 
+			stretch_obj.timing.set__speed(pow(2, modpitch/12))
+			
 	stretch_obj.preserve_pitch = t_stretchingmode != 0
 	
 	stretch_algo = stretch_obj.algorithm
@@ -526,7 +527,7 @@ class input_flp(plugins.base):
 				sre_obj.usemasterpitch = bool(fl_channel_obj.params.main_pitch)
 				
 				if sampleref_obj.found:
-					samplestretch[instrument] = sre_obj.stretch
+					samplestretch[instrument] = [sre_obj.stretch, sampleref_obj]
 
 			if fl_channel_obj.type == 5:
 				id_auto[channelnum] = fl_channel_obj.autopoints 
@@ -732,13 +733,16 @@ class input_flp(plugins.base):
 
 						placement_obj.vol = item.vol
 
-						stretch_obj = samplestretch[item.itemindex] if item.itemindex in samplestretch else None
-	
-						out_rate = stretch_obj.calc_tempo_speed if stretch_obj else 1
-	
-						if item.startoffset not in [4294967295, 3212836864]:  
-							posdata = item.startoffset/4
-							placement_obj.time.set_offset((posdata/out_rate)*flp_obj.ppq)
+						if item.itemindex in samplestretch:
+							stretch_obj, sampleref_obj = samplestretch[item.itemindex]
+
+							out_rate = 1/stretch_obj.timing.get__speed_real(sampleref_obj, flp_obj.tempo)
+
+							startoffset = max(0, item.startoffset)
+
+							if startoffset not in [4294967295, 3212836864]:  
+								posdata = startoffset/4
+								placement_obj.time.set_offset((posdata/out_rate)*flp_obj.ppq)
 
 			for fl_timemark in fl_arrangement.timemarkers:
 				if fl_timemark.type == 8:

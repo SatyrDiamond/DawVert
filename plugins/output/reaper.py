@@ -594,8 +594,10 @@ class output_reaper(plugins.base):
 
 				rpp_item_obj.playrate['stretch_mode'] = (rppart_audio_stretch<<16) + rppart_audio_params
 
+				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
+
 				if not stretch_obj.is_warped:
-					audiorate = stretch_obj.calc_real_speed
+					audiorate = stretch_obj.timing.get__real_rate(sampleref_obj, reaper_tempo)
 					rpp_item_obj.playrate['rate'] = audiorate
 					clip_startat *= audiorate
 				else:
@@ -624,7 +626,6 @@ class output_reaper(plugins.base):
 				rpp_item_obj.playrate['preserve_pitch'] = int(stretch_obj.preserve_pitch)
 				rpp_item_obj.playrate['pitch'] = audiopl_obj.sample.pitch
 
-				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 				if ref_found:
 					fileref_obj = sampleref_obj.fileref
 					filename = fileref_obj.get_path(None, False)

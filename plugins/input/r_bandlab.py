@@ -124,6 +124,8 @@ class input_bandlab(plugins.base):
 					sp_obj.vol = blx_region.gain
 
 					stretch_obj = sp_obj.stretch
+					stretch_obj.timing.set__real_rate(bpm, blx_region.playbackRate)
+
 					stretch_obj.set_rate_speed(bpm, (1/speed), True)
 					stretch_obj.uses_tempo = True
 					stretch_obj.preserve_pitch = True

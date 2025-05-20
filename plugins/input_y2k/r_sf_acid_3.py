@@ -96,7 +96,7 @@ def add_audio_regions(
 
 				sp_obj = placement_obj.sample 
 				sp_obj.sampleref = filename
-				sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
+				sp_obj.stretch.timing.set__beats(num_beats)
 				sp_obj.stretch.preserve_pitch = True
 				if 1 in region.flags: placement_obj.muted = True
 				if 3 in region.flags: placement_obj.locked = True
@@ -118,7 +118,7 @@ def add_audio_regions(
 			time_obj.set_loop_data(offset, 0, ppq_beats)
 			sp_obj = placement_obj.sample 
 			sp_obj.sampleref = filename
-			sp_obj.stretch.set_rate_tempo(tempo, samplemul, True)
+			sp_obj.stretch.timing.set__beats(num_beats)
 			sp_obj.stretch.preserve_pitch = True
 			sp_obj.usemasterpitch = False
 			sp_obj.pitch = region.pitch+pitch
@@ -140,7 +140,7 @@ def add_audio_regions(
 		sp_obj.sampleref = filename
 		sampmul = pow(2, (region.pitch+pitch)/-12)
 		time_obj.set_offset(calc_offset*sampmul)
-		sp_obj.stretch.set_rate_speed(120, sampmul, True)
+		sp_obj.stretch.timing.set__speed(sampmul)
 		if 1 in region.flags: placement_obj.muted = True
 		if 3 in region.flags: placement_obj.locked = True
 		if 5 in region.flags: sp_obj.reverse = True
@@ -157,7 +157,7 @@ def add_audio_regions(
 		time_obj.set_offset(calc_offset)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
-		sp_obj.stretch.set_rate_tempo(tempo, mul1, True)
+		sp_obj.stretch.timing.set__orgtempo(audiotempo)
 		sp_obj.pitch = region.pitch+pitch
 		sp_obj.stretch.preserve_pitch = True
 		if 1 in region.flags: sp_obj.muted = True
@@ -176,7 +176,7 @@ def add_audio_regions(
 		time_obj.set_offset(calc_offset)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
-		sp_obj.stretch.set_rate_tempo(tempo, mul1, True)
+		sp_obj.stretch.timing.set__orgtempo(audiotempo)
 		sp_obj.pitch = region.pitch+pitch
 		sp_obj.stretch.preserve_pitch = True
 		if 1 in region.flags: sp_obj.muted = True
@@ -184,6 +184,8 @@ def add_audio_regions(
 		if 5 in region.flags: sp_obj.reverse = True
 		if version>volumeversion: sp_obj.vol = region.vol
 		pls.append(placement_obj)
+
+	print(stretch_type)
 
 	return pls
 

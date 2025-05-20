@@ -561,6 +561,7 @@ def do_audio_stretch(als_audioclip, stretch_obj):
 	if not stretch_obj.preserve_pitch: 
 		als_audioclip.WarpMode = 3
 	else:
+		stretch_algo = stretch_obj.algorithm
 		if stretch_algo.type == 'transient':
 			als_audioclip.WarpMode = 0
 			if 'TransientResolution' in stretch_algo.params: als_audioclip.TransientResolution = stretch_algo.params['TransientResolution']

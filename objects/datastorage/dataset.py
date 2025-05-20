@@ -614,6 +614,7 @@ class dataset_category:
 		self.cache_ids_vst2 = {}
 		self.cache_ids_vst3 = {}
 		self.cache_ids_clap = {}
+		self.data = {}
 		self.colorset = dataset_objectset(dataset_colorset)
 		self.groups = dataset_objectset(dataset_group)
 		self.objects = dataset_objectset(dataset_object)
@@ -647,18 +648,22 @@ class dataset_category:
 			if x_part.tag == 'group':
 				object_obj = self.groups.create(cat_id)
 				object_obj.read_xml(x_part)
-			if x_part.tag == 'object':
+			elif x_part.tag == 'object':
 				object_obj = self.objects.create(cat_id)
 				object_obj.read_xml(x_part)
 				extassoc = object_obj.extplug_assoc
 				if extassoc.vst2_id: self.cache_ids_vst2[extassoc.vst2_id] = cat_id
 				if extassoc.vst3_id: self.cache_ids_vst3[extassoc.vst3_id] = cat_id
 				if extassoc.clap_id: self.cache_ids_clap[extassoc.clap_id] = cat_id
-			if x_part.tag == 'colorset':
+			elif x_part.tag == 'colorset':
 				object_obj = self.colorset.create(cat_id)
 				object_obj.read_xml(x_part)
-			if x_part.tag == 'external_path':
+			elif x_part.tag == 'external_path':
 				self.ext_dataset_ids[x_part.get('id')] = x_part.text
+			elif x_part.tag == 'data':
+				partattrib = x_part.attrib
+				for k, v in partattrib.items():
+					self.data[k] = v
 
 	def write(self):
 		outdata = {}

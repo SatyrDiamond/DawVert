@@ -649,14 +649,17 @@ class input_zenbeats(plugins.base):
 							sp_obj.sampleref = zb_pattern.audio_file
 							speedrate = zb_pattern.preserve_pitch if zb_pattern.preserve_pitch is not None else 1
 							if zb_pattern.preserve_pitch: speedrate *= 120/zb_pattern.audio_file_original_bpm
-							sp_obj.stretch.set_rate_tempo(project_obj.bpm, speedrate, False)
-							sp_obj.stretch.algorithm = 'stretch'
-							sp_obj.stretch.preserve_pitch = True
+
+							stretch_obj = sp_obj.stretch
+							stretch_obj.timing.set__orgtempo(zb_pattern.audio_file_original_bpm)
+
+							stretch_obj.set_rate_tempo(project_obj.bpm, speedrate, False)
+							stretch_obj.preserve_pitch = True
 							if zb_pattern.audio_pitch is not None: sp_obj.pitch += math.log2(1/zb_pattern.audio_pitch)*-12
 							if zb_pattern.audio_gain is not None: sp_obj.vol = zb_pattern.audio_gain
 							if zb_pattern.audio_pan is not None: sp_obj.pan = zb_pattern.audio_pan
 							if zb_pattern.reverse_audio is not None: sp_obj.reverse = zb_pattern.reverse_audio
-							if zb_pattern.preserve_pitch is not None: sp_obj.stretch.preserve_pitch = bool(zb_pattern.preserve_pitch)
+							if zb_pattern.preserve_pitch is not None: stretch_obj.preserve_pitch = bool(zb_pattern.preserve_pitch)
 
 				#else:
 				#	print(zb_track.type, zb_track.visual.name)

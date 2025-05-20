@@ -85,17 +85,23 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 
 	fl_channel_obj.params.stretchingpitch = int(sre_obj.pitch*100)
 
+	outspeed = 1
+
+	out_rate = 1/stretch_obj.timing.get__speed_real(sampleref_obj, flp_obj.tempo)
+
 	if ref_found:
 		dur_sec = sampleref_obj.get_dur_sec()
-	
-		if not stretch_obj.uses_tempo: 
-			fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/stretch_obj.calc_real_speed)*10000)
+
+		if not stretch_obj.timing.tempo_based: 
+			calcspeed = 1/stretch_obj.timing.get__speed(sampleref_obj)
+			fl_channel_obj.params.stretchingmultiplier = int(  math.log2(1/calcspeed)*10000)
 		else:
-			if dur_sec:
-				fl_channel_obj.params.stretchingtime = int((dur_sec*384)/stretch_obj.calc_tempo_speed) if sampleref_obj else 1
+			num_beats = stretch_obj.timing.get__beats(sampleref_obj)
+			if num_beats:
+				fl_channel_obj.params.stretchingtime = int((num_beats/2)*384)
 				if fl_channel_obj.params.stretchingtime < 0: fl_channel_obj.params.stretchingtime = 384
 
-	return stretch_obj.calc_tempo_speed
+	return out_rate
 
 DEBUG_IGNORE_PLACEMENTS = False
 DEBUG_IGNORE_PATTERNS = False

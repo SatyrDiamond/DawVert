@@ -145,8 +145,9 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				sp_obj = plugin_obj.samplepart_get('sample')
 
 				stretch_obj = sp_obj.stretch
+				time_speed = stretch_obj.timing.get__speed(sampleref_obj_assoc[sp_obj.sampleref] if sp_obj.sampleref in sampleref_obj_assoc else None)
 
-				if sp_obj.pitch or stretch_obj.calc_real_size!=1 or plugin_obj.filter.on:
+				if sp_obj.pitch or time_speed!=1 or plugin_obj.filter.on:
 					programdata = sampler_obj.set_prosampler()
 					wf_plugin.params['filename'] = 'Multi Sampler'
 					wf_plugin.params['name'] = 'Multi Sampler'
@@ -158,7 +159,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				soundlayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, 0, 127, 60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
 				if soundlayer:
 					soundlayer.offlinePitchShift = sp_obj.pitch
-					soundlayer.offlineTimeStretch = stretch_obj.calc_real_size
+					soundlayer.offlineTimeStretch = time_speed
 					sampler_do_filter(soundlayer, plugin_obj.filter)
 
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
@@ -234,10 +235,13 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 
 					soundlayer = soundlayer_samplepart(plugin_obj, gpitch, programdata, key_l+60, key_h+60, key_r+60, sp_obj, sampleref_assoc, sampleref_obj_assoc)
 					if soundlayer:
+						stretch_obj = sp_obj.stretch
+						time_speed = stretch_obj.timing.get__speed(sampleref_obj_assoc[sp_obj.sampleref] if sp_obj.sampleref in sampleref_obj_assoc else None)
+
 						soundlayer.lowVelocity = int(sp_obj.vel_min*127)
 						soundlayer.highVelocity = int(sp_obj.vel_max*127)
 						soundlayer.offlinePitchShift = sp_obj.pitch
-						soundlayer.offlineTimeStretch = stretch_obj.calc_real_size
+						soundlayer.offlineTimeStretch = time_speed
 						filt_exists, filt_obj = plugin_obj.named_filter_get_exists(sp_obj.filter_assoc)
 						if filt_exists: sampler_do_filter(soundlayer, filt_obj)
 
@@ -621,11 +625,14 @@ class output_tracktion_edit(plugins.base):
 
 						wf_audioclip.effects.append(afx)
 					else:
-						dur_sec = sampleref_obj.get_dur_sec()
-						if dur_sec:
-							dur_sec = dur_sec*2
-							numBeats = stretch_obj.calc_tempo_size*dur_sec
-							wf_audioclip.loopinfo.numBeats = numBeats
+						timing_obj = stretch_obj.timing
+						if timing_obj.tempo_based:
+							wf_audioclip.loopinfo.numBeats = timing_obj.get__beats(sampleref_obj)
+						else:
+							dur_sec = sampleref_obj.get_dur_sec()*2
+							if dur_sec:
+								speed = timing_obj.get__speed_real(sampleref_obj, bpm)
+								wf_audioclip.loopinfo.numBeats = dur_sec*speed
 
 				offset, loopstart, loopend = audiopl_obj.time.get_loop_data()
 

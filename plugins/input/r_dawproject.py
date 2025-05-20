@@ -352,7 +352,7 @@ def do_audioauto(npa_obj, mpepoints):
 			if mpetype == 'gain': 
 				npa_obj.sample.vol = outval
 			if mpetype == 'formant': 
-				npa_obj.sample.stretch.params['formant'] = outval
+				npa_obj.sample.algorithm.formant = outval
 
 		elif len(mpepoints.points)>1:
 			autopoints_obj = npa_obj.add_autopoints(mpetype, 1, True)

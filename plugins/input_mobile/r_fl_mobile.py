@@ -248,12 +248,14 @@ class input_fl_mobile(plugins.base):
 									sp_obj = placement_obj.sample
 									sp_obj.sampleref = sample_path
 
+									stretch_obj = sp_obj.stretch
+
 									if flm_sample.stretch_on: 
+										stretch_obj.timing.set__real_rate(project_obj.tempo, 1/flm_sample.stretch_size)
+										stretch_obj.preserve_pitch = True
 										sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
-										sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
-										sp_obj.stretch.preserve_pitch = True
 									else:
-										sp_obj.stretch.set_rate_speed(project_obj.tempo, flm_sample.pitch, True)
+										stretch_obj.timing.set__speed(1/flm_sample.pitch)
 										sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
 
 									sp_obj.reverse = bool(flm_sample.main_unk_4)

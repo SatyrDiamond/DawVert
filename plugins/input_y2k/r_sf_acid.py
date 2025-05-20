@@ -213,7 +213,7 @@ class input_acid_old(plugins.base):
 								time_obj.set_loop_data((offset*ppq)+((start-region.start)%ppq_beats), 0, ppq_beats)
 								sp_obj = placement_obj.sample
 								sp_obj.sampleref = sample_path
-								sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
+								sp_obj.stretch.timing.set__beats(sample_beats)
 								sp_obj.stretch.preserve_pitch = True
 								if cur_root != 127:
 									notetrack = calc_root(cur_root, track_root_note)
@@ -229,7 +229,7 @@ class input_acid_old(plugins.base):
 							time_obj.set_loop_data(offset, 0, ppq_beats)
 							sp_obj = placement_obj.sample
 							sp_obj.sampleref = sample_path
-							sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
+							sp_obj.stretch.timing.set__beats(sample_beats)
 							sp_obj.stretch.preserve_pitch = True
 							sp_obj.usemasterpitch = False
 							sp_obj.pitch = region.pitch
@@ -242,7 +242,7 @@ class input_acid_old(plugins.base):
 						time_obj.set_loop_data(offset*ppq, 0, sample_beats*ppq)
 						sp_obj = placement_obj.sample
 						sp_obj.sampleref = sample_path
-						sp_obj.stretch.set_rate_tempo(project_obj.tempo, samplemul, True)
+						sp_obj.stretch.timing.set__beats(sample_beats)
 						sp_obj.stretch.preserve_pitch = True
 
 						if songroot != 127 and 1 in track.flags:
@@ -262,7 +262,7 @@ class input_acid_old(plugins.base):
 					time_obj.set_offset(offsamp*(ppq*2))
 					sampmul = pow(2, region.pitch/-12)
 					sp_obj.usemasterpitch = False
-					sp_obj.stretch.set_rate_speed(project_obj.tempo, sampmul, True)
+					sp_obj.stretch.timing.set__speed(sampmul)
 					pls.append(placement_obj)
 
 				if stretch_type == 3:
@@ -273,10 +273,10 @@ class input_acid_old(plugins.base):
 					time_obj.set_startend(region.start, region.end)
 					sp_obj.usemasterpitch = False
 					if 2 not in track.flags:
-						sp_obj.stretch.set_rate_speed(project_obj.tempo, pow(2, region.pitch/-12), True)
+						sp_obj.stretch.timing.set__speed(pow(2, region.pitch/-12))
 						time_obj.set_offset(offsamp*(ppq*2))
 					else:
-						sp_obj.stretch.set_rate_speed(project_obj.tempo, sample_tempo/120, True)
+						sp_obj.stretch.timing.set__speed(sample_tempo/120)
 						time_obj.set_offset(offsamp*(ppq*2)*sample_tempo/120)
 					sp_obj.stretch.preserve_pitch = True
 

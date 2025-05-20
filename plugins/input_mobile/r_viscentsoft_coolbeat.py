@@ -98,6 +98,10 @@ class output_coolbeat(plugins.base):
 				track_obj.params.add('enabled', not track.muteState, 'bool')
 				track_obj.params.add('solo', track.solo, 'bool')
 
+				if tracktype == 0:
+					if track.fileName:
+						track_obj.visual_inst.name = track.fileName
+
 				if tracktype == 1:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
 					plugin_obj.role = 'synth'
@@ -116,6 +120,8 @@ class output_coolbeat(plugins.base):
 					fileref_obj = convproj_obj.fileref__add(trackid, track.filePath, None)
 					fileref_obj.search_local(dawvert_intent.input_folder)
 					plugin_obj.fileref__set('file', trackid)
+					if track.fileName:
+						track_obj.visual_inst.name = track.fileName
 
 				for section in track.sections:
 					placement_obj = track_obj.placements.add_notes()

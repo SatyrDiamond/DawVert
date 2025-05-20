@@ -129,10 +129,8 @@ class input_old_magix_maker(plugins.base):
 							sample_obj.vol = data_objc.vol/65535
 							sample_obj.pitch = data_objc.pitch
 							if data_objc.speed:
-								stretch_obj = sp_obj.stretch
-								stretch_algo = stretch_obj.algorithm
-
-								stretch_obj.set_rate_speed(tempo, data_objc.speed/hzspeed, False)
+								stretch_obj = sample_obj.stretch
+								stretch_obj.timing.set__real_rate(tempo, data_objc.speed/hzspeed)
 								stretch_obj.uses_tempo = True
 								stretch_obj.preserve_pitch = True
 

@@ -254,9 +254,7 @@ pluginsets_input = {
 }
 
 pluginsets_output = {
-'main': ['', 'Main'],
-'wip': ['wip', 'WIP'],
-'old': ['old', 'Old/Broken']
+'main': ['', 'Main']
 }
 
 filedetector_obj = format_detect.file_detector()

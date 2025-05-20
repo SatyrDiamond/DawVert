@@ -565,6 +565,7 @@ class input_reaper(plugins.base):
 
 					sampleref_obj = convproj_obj.sampleref__add(cvpj_audio_file, cvpj_audio_file, None)
 					sampleref_obj.find_relative('projectfile')
+					sampleref_obj.search_local(dawvert_intent.input_folder)
 
 					placement_obj.sample.sampleref = cvpj_audio_file
 					if samplemode == 3: placement_obj.sample.reverse = True
@@ -634,7 +635,7 @@ class input_reaper(plugins.base):
 						warp_obj.calcpoints__speed()
 						warp_obj.manp__speed_mul(1/rate)
 					else: 
-						stretch_obj.set_rate_tempo(bpm, (1/cvpj_audio_rate)*tempomul, True)
+						stretch_obj.timing.set__real_rate(bpm, cvpj_audio_rate)
 
 					if not cvpj_loop:
 						placement_obj.time.set_offset(startoffset)

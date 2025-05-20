@@ -140,6 +140,6 @@ class cvpj_sample_entry:
 
 	def stretch_get_pitch_nonsync(self):
 		if not self.stretch.is_warped:
-			if not self.stretch.uses_tempo:
+			if not self.stretch.timing.tempo_based:
 				return pow(2, -self.pitch/12)
 		return 1

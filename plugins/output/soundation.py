@@ -395,14 +395,16 @@ class output_soundation(plugins.base):
 					soundation_region.reversed = audiopl_obj.sample.reverse
 
 					stretch_obj = audiopl_obj.sample.stretch
-					soundation_region.stretchRate = stretch_obj.calc_real_speed
+
 					soundation_region.stretchMode = 3 if stretch_obj.preserve_pitch else 2
 
-					if stretch_obj.uses_tempo == False:
-						soundation_region.stretchRate = stretch_obj.calc_real_speed
+					timing_obj = stretch_obj.timing
+
+					if timing_obj.tempo_based == False:
+						soundation_region.stretchRate = timing_obj.get__speed(sampleref_obj)
 						soundation_region.isAutoStretched = False
 					else:
-						soundation_region.autoStretchBpm = bpm
+						soundation_region.autoStretchBpm = timing_obj.get__tempo(sampleref_obj)
 						soundation_region.isAutoStretched = True
 
 					soundation_channel.regions.append(soundation_region)

@@ -33,7 +33,7 @@ def soundlayer_samplepart(sp_obj, soundlayer, layerparams):
 	sp_obj.no_pitch = soundlayer.fixedPitch
 
 	stretch_obj = sp_obj.stretch
-	stretch_obj.set_rate_speed(120, soundlayer.offlineTimeStretch, True)
+	stretch_obj.timing.set__speed(soundlayer.offlineTimeStretch)
 	if soundlayer.pitchShift or soundlayer.offlineTimeStretch != 1:
 		stretch_obj.preserve_pitch = True
 
@@ -436,6 +436,8 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 			if not stretch_obj.is_warped:
 				stretch_amt = 1
 				if sampleref_exists:
+					stretch_obj.timing.set__beats(audioclip.loopinfo.numBeats)
+					
 					dur_sec = sampleref_obj.get_dur_sec()
 					if dur_sec is not None:
 						stretch_amt = (dur_sec*2)/audioclip.loopinfo.numBeats

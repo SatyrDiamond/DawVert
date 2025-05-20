@@ -1,0 +1,24 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity blood overdrive">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__param from="2" type="float" />
+  <in__param from="3" type="float" />
+  <in__param from="4" type="float" />
+  <in__param from="5" type="float" />
+  
+  <calc name="0" type="mul">10000</calc>
+  <calc name="1" type="mul">10000</calc>
+  <calc name="2" type="mul">10000</calc>
+  <tobool name="3" cond="x>=0.5"/>
+  <calc name="4" type="mul">10000</calc>
+  <calc name="5" type="mul">10000</calc>
+
+  <replace plugtype="native:flstudio:fruity blood overdrive" />
+
+  <out__param to="preband" from="0" type="int"/>
+  <out__param to="color" from="1" type="int"/>
+  <out__param to="preamp" from="2" type="int"/>
+  <out__param to="x100" from="3" type="int"/>
+  <out__param to="postfilter" from="4" type="int"/>
+  <out__param to="postgain" from="5" type="int"/>
+</plugstatetransform>

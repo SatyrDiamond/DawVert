@@ -1,0 +1,27 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity 7 band eq">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__param from="2" type="float" />
+  <in__param from="3" type="float" />
+  <in__param from="4" type="float" />
+  <in__param from="5" type="float" />
+  <in__param from="6" type="float" />
+  
+  <calc name="0" type="from_one">-1800;1800</calc>
+  <calc name="1" type="from_one">-1800;1800</calc>
+  <calc name="2" type="from_one">-1800;1800</calc>
+  <calc name="3" type="from_one">-1800;1800</calc>
+  <calc name="4" type="from_one">-1800;1800</calc>
+  <calc name="5" type="from_one">-1800;1800</calc>
+  <calc name="6" type="from_one">-1800;1800</calc>
+
+  <replace plugtype="native:flstudio:fruity 7 band eq" />
+
+  <out__param to="band_1" from="0" type="int"/>
+  <out__param to="band_2" from="1" type="int"/>
+  <out__param to="band_3" from="2" type="int"/>
+  <out__param to="band_4" from="3" type="int"/>
+  <out__param to="band_5" from="4" type="int"/>
+  <out__param to="band_6" from="5" type="int"/>
+  <out__param to="band_7" from="6" type="int"/>
+</plugstatetransform>

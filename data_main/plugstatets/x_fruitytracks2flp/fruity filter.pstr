@@ -1,0 +1,24 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity filter">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__param from="2" type="float" />
+  <in__param from="3" type="float" />
+  <in__param from="4" type="float" />
+  <in__param from="5" type="float" />
+  
+  <calc name="0" type="mul">1024</calc>
+  <calc name="1" type="mul">1024</calc>
+  <calc name="2" type="mul">1024</calc>
+  <calc name="3" type="mul">1024</calc>
+  <calc name="4" type="mul">1024</calc>
+  <tobool name="5" cond="x>=0.5"/>
+
+  <replace plugtype="native:flstudio:fruity filter" />
+
+  <out__param to="cutoff" from="0" type="int"/>
+  <out__param to="reso" from="1" type="int"/>
+  <out__param to="lowpass" from="2" type="int"/>
+  <out__param to="bandpass" from="3" type="int"/>
+  <out__param to="hipass" from="4" type="int"/>
+  <out__param to="x2" from="5" type="int"/>
+</plugstatetransform>

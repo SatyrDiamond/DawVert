@@ -1,0 +1,18 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity free filter">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__param from="2" type="float" />
+  <in__param from="3" type="float" />
+  
+  <calc name="0" type="mul">2</calc>
+  <calc name="1" type="mul">700</calc>
+  <calc name="2" type="mul">1024</calc>
+  <calc name="3" type="mul">1024</calc>
+
+  <replace plugtype="native:flstudio:fruity free filter" />
+
+  <out__param to="type" from="0" type="int"/>
+  <out__param to="freq" from="1" type="int"/>
+  <out__param to="q" from="2" type="int"/>
+  <out__param to="gain" from="3" type="int"/>
+</plugstatetransform>

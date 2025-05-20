@@ -1,0 +1,36 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity reeverb">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__param from="2" type="float" />
+  <in__param from="3" type="float" />
+  <in__param from="4" type="float" />
+  <in__param from="5" type="float" />
+  <in__param from="6" type="float" />
+  <in__param from="7" type="float" />
+  <in__param from="8" type="float" />
+  <in__param from="9" type="float" />
+  
+  <calc name="0" type="mul">65536</calc>
+  <calc name="1" type="mul">65536</calc>
+  <calc name="2" type="mul">250</calc>
+  <calc name="3" type="mul">65536</calc>
+  <calc name="4" type="mul">65536</calc>
+  <calc name="5" type="mul">40</calc>
+  <calc name="6" type="mul">65536</calc>
+  <calc name="7" type="mul">65536</calc>
+  <calc name="8" type="mul">65536</calc>
+  <calc name="9" type="mul">65536</calc>
+
+  <replace plugtype="native:flstudio:fruity reeverb" />
+
+  <out__param to="lowcut" from="0" type="int"/>
+  <out__param to="highcut" from="1" type="int"/>
+  <out__param to="predelay" from="2" type="int"/>
+  <out__param to="room_size" from="3" type="int"/>
+  <out__param to="diffusion" from="4" type="int"/>
+  <out__param to="color" from="5" type="int"/>
+  <out__param to="decay" from="6" type="int"/>
+  <out__param to="hidamping" from="7" type="int"/>
+  <out__param to="dry" from="8" type="int"/>
+  <out__param to="reverb" from="9" type="int"/>
+</plugstatetransform>

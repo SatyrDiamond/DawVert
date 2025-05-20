@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity balance">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  
+  <calc name="0" type="from_one">-128;128</calc>
+  <calc name="1" type="from_one">0;320</calc>
+
+  <replace plugtype="native:flstudio:fruity balance" />
+
+  <out__param to="pan" from="0" type="int"/>
+  <out__param to="vol" from="1" type="int"/>
+</plugstatetransform>

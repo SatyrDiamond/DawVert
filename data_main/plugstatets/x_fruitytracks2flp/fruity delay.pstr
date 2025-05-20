@@ -1,0 +1,24 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity delay">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__param from="2" type="float" />
+  <in__param from="3" type="float" />
+  <in__param from="4" type="float" />
+  <in__param from="5" type="float" />
+  
+  <calc name="0" type="mul">1024</calc>
+  <calc name="1" type="mul">1024</calc>
+  <calc name="2" type="mul">1024</calc>
+  <calc name="3" type="mul">1024</calc>
+  <calc name="4" type="mul">16</calc>
+  <calc name="5" type="mul">1024</calc>
+
+  <replace plugtype="native:flstudio:fruity delay" />
+
+  <out__param to="input" from="0" type="int"/>
+  <out__param to="fb" from="1" type="int"/>
+  <out__param to="cutoff" from="2" type="int"/>
+  <out__param to="tempo" from="3" type="int"/>
+  <out__param to="steps" from="4" type="int"/>
+  <out__param to="mode" from="5" type="int"/>
+</plugstatetransform>

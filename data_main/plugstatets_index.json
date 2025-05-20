@@ -909,6 +909,174 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity 7 band eq.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity 7 band eq.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity 7 band eq",
+    "plugtype_out": [
+      "native:flstudio:fruity 7 band eq"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity balance.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity balance.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity balance",
+    "plugtype_out": [
+      "native:flstudio:fruity balance"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity bass boost.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity bass boost.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity bass boost",
+    "plugtype_out": [
+      "native:flstudio:fruity bass boost"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity blood overdrive.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity blood overdrive.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity blood overdrive",
+    "plugtype_out": [
+      "native:flstudio:fruity blood overdrive"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity center.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity center.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity center",
+    "plugtype_out": [
+      "native:flstudio:fruity center"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity delay.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity delay.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity delay",
+    "plugtype_out": [
+      "native:flstudio:fruity delay"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity fast lp.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity fast lp.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity fast lp",
+    "plugtype_out": [
+      "native:flstudio:fruity fast lp"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity filter.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity filter.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity filter",
+    "plugtype_out": [
+      "native:flstudio:fruity filter"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity free filter.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity free filter.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity free filter",
+    "plugtype_out": [
+      "native:flstudio:fruity free filter"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity mute 2.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity mute 2.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity mute 2",
+    "plugtype_out": [
+      "native:flstudio:fruity mute 2"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity phase inverter.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity phase inverter.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity phase inverter",
+    "plugtype_out": [
+      "native:flstudio:fruity phase inverter"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_fruitytracks2flp\\fruity reeverb.pstr": {
+    "file": "data_main\\plugstatets\\x_fruitytracks2flp\\fruity reeverb.pstr",
+    "daw_in": [
+      "fruitytracks"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:fruitytracks:fruity reeverb",
+    "plugtype_out": [
+      "native:flstudio:fruity reeverb"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr",
     "daw_out": [

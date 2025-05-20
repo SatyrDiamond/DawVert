@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity mute 2">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  
+  <calc name="0" type="mul">1024</calc>
+  <calc name="1" type="mul">1024</calc>
+
+  <replace plugtype="native:flstudio:fruity mute 2" />
+
+  <out__param to="mute" from="0" type="int"/>
+  <out__param to="channel" from="1" type="int"/>
+</plugstatetransform>

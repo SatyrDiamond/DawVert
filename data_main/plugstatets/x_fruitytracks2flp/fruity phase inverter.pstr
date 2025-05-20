@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity phase inverter">
+  <in__param from="0" type="float" />
+  
+  <calc name="0" type="mul">1024</calc>
+
+  <replace plugtype="native:flstudio:fruity phase inverter" />
+
+  <out__param to="state" from="0" type="int"/>
+</plugstatetransform>

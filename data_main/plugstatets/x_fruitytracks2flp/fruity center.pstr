@@ -1,0 +1,9 @@
+<plugstatetransform daw_in="fruitytracks" daw_out="flp" plugtype="native:fruitytracks:fruity center">
+  <in__param from="0" type="float" />
+  
+  <tobool name="0" cond="x>=0.5"/>
+
+  <replace plugtype="native:flstudio:fruity center" />
+
+  <out__param to="on" from="0" type="int"/>
+</plugstatetransform>

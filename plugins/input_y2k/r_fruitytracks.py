@@ -97,7 +97,7 @@ class input_fruitytracks(plugins.base):
 
 				fxid = trackid+'_'+str(pid)
 				splitfile = flplug.name.split('.')
-				plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'fruitytracks', splitfile[0])
+				plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'fruitytracks', splitfile[0].lower())
 				plugin_obj.visual.name = splitfile[0]
 				plugin_obj.datavals.add('file', flplug.name)
 				for n, v in enumerate(flplug.params): plugin_obj.params.add(str(n), v, 'float')

@@ -42,7 +42,9 @@ class cvpj_timemarkers:
 
 	def change_timings(self, time_ppq, time_float):
 		if not self.is_seconds:
-			for m in self.data: m.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.position)
+			for m in self.data: 
+				m.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.position)
+				m.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.duration)
 			self.time_ppq = time_ppq
 			self.time_float = time_float
 		
@@ -50,10 +52,12 @@ class cvpj_timemarkers:
 		if is_seconds and not self.is_seconds:
 			for x in self.data: 
 				x.position = xtramath.step2sec(x.position, bpm)/(ppq/4)
+				x.duration = xtramath.step2sec(x.duration, bpm)/(ppq/4)
 				self.is_seconds = True
 		elif self.is_seconds:
 			for x in self.data: 
 				x.position = xtramath.sec2step(x.position, bpm)
+				x.duration = xtramath.sec2step(x.duration, bpm)
 				self.is_seconds = False
 		
 	def add_key(self, key):

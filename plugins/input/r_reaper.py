@@ -225,11 +225,35 @@ class input_reaper(plugins.base):
 
 		used_trackids = []
 
+		markerdatas = {}
+		regiondatas = {}
+
 		for marker in rpp_project.markers:
-			timemarker_obj = convproj_obj.timemarker__add()
-			timemarker_obj.position = marker[1]
-			if marker[2]: timemarker_obj.visual.name = marker[2]
-			if marker[4]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[4], True))
+			if not marker[3]:
+				timemarker_obj = convproj_obj.timemarker__add()
+				timemarker_obj.position = marker[1]
+				if marker[2]: timemarker_obj.visual.name = marker[2]
+				if marker[4]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[4], True))
+			else:
+				if marker[0] not in regiondatas: regiondatas[marker[0]] = []
+				regiondatas[marker[0]].append(marker[1:])
+
+		for num, markerdata in regiondatas.items():
+			if len(markerdata)>1:
+				marker = markerdata[0]
+				marker_end = markerdata[1]
+				timemarker_obj = convproj_obj.timemarker__add()
+				timemarker_obj.type = 'region'
+				timemarker_obj.position = marker[0]
+				timemarker_obj.duration = marker_end[0]-marker[0]
+				if marker[1]: timemarker_obj.visual.name = marker[1]
+				if marker[3]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[3], True))
+
+			#timemarker_obj = convproj_obj.timemarker__add()
+			#timemarker_obj.position = marker[1]
+			#print(marker[0])
+			#if marker[2]: timemarker_obj.visual.name = marker[2]
+			#if marker[4]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[4], True))
 
 		for tracknum, rpp_track in enumerate(rpp_project.tracks):
 			cvpj_trackid = rpp_track.trackid.get()

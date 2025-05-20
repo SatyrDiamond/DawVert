@@ -429,8 +429,11 @@ class output_reaper(plugins.base):
 		for num, timemarker_obj in enumerate(convproj_obj.timemarkers):
 			name = timemarker_obj.visual.name if timemarker_obj.visual.name else ''
 			color = cvpj_color_to_reaper_color(timemarker_obj.visual.color) if timemarker_obj.visual.color else 0
-			outmarker = [num+1, timemarker_obj.position, name, 0, color, 1, 'R', '{'+str(uuid.uuid4()).upper()+'}', 0]
+			outmarker = [num+1, timemarker_obj.position, name, int(timemarker_obj.type == 'region'), color, 1, 'R', '{'+str(uuid.uuid4()).upper()+'}', 0]
 			rpp_project.markers.append(outmarker)
+			if timemarker_obj.type == 'region':
+				outmarker = [num+1, timemarker_obj.position+timemarker_obj.duration, '', 1]
+				rpp_project.markers.append(outmarker)
 
 		trackdata = []
 

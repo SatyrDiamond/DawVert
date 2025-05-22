@@ -104,7 +104,6 @@ class input_korg_m1_nds(plugins.base):
 								plugin_obj.params.add(starttxt+'level', drumparam.level/15, 'float')
 								plugin_obj.params.add(starttxt+'pan', (drumparam.pan-5)/5, 'float')
 								plugin_obj.params.add(starttxt+'tune', drumparam.tune, 'float')
-
 						except:
 							pass
 

@@ -249,12 +249,6 @@ class input_reaper(plugins.base):
 				if marker[1]: timemarker_obj.visual.name = marker[1]
 				if marker[3]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[3], True))
 
-			#timemarker_obj = convproj_obj.timemarker__add()
-			#timemarker_obj.position = marker[1]
-			#print(marker[0])
-			#if marker[2]: timemarker_obj.visual.name = marker[2]
-			#if marker[4]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[4], True))
-
 		for tracknum, rpp_track in enumerate(rpp_project.tracks):
 			cvpj_trackid = rpp_track.trackid.get()
 			used_trackids.append(cvpj_trackid)

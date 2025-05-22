@@ -102,7 +102,7 @@ class input_pxtone(plugins.base):
 			cvpj_instid = 'ptcop_'+str(voicenum)
 			inst_obj = convproj_obj.instrument__add(cvpj_instid)
 			inst_obj.visual.name = voice_obj.name
-			inst_obj.visual.color.set_int([0.14, 0.00, 0.29])
+			#inst_obj.visual.color.set_int([0.14, 0.00, 0.29])
 			inst_obj.visual.color.priority = -1
 
 			cvpj_instvol = 1.0

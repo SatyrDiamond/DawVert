@@ -415,34 +415,17 @@ class cvpj_stretch:
 
 	uses_tempo: bool = False
 
-	bpm: float = 120
-	org_speed: float = 1
-	calc_bpm_speed: float = 1
-	calc_bpm_size: float = 1
-	calc_tempo_speed: float = 1
-	calc_tempo_size: float = 1
-	calc_real_speed: float = 1
-	calc_real_size: float = 1
-
 	def __bool__(self):
 		return self.is_warped or (self.calc_tempo_speed != 1) or self.uses_tempo
 
 	def __eq__(self, x):
 		s_algorithm = self.algorithm == x.algorithm
+		s_timing = self.timing == x.timing
 		s_is_warped = self.is_warped == x.is_warped
 		s_warp = self.warp == x.warp
 		uses_tempo = self.uses_tempo == x.uses_tempo
 
-		s_bpm = self.bpm == x.bpm
-		s_org_speed = self.org_speed == x.org_speed
-		s_calc_bpm_speed = self.calc_bpm_speed == x.calc_bpm_speed
-		s_calc_bpm_size = self.calc_bpm_size == x.calc_bpm_size
-		s_calc_tempo_speed = self.calc_tempo_speed == x.calc_tempo_speed
-		s_calc_tempo_size = self.calc_tempo_size == x.calc_tempo_size
-		s_calc_real_speed = self.calc_real_speed == x.calc_real_speed
-		s_calc_real_size = self.calc_real_size == x.calc_real_size
-
-		return s_algorithm and s_is_warped and s_warp and uses_tempo and s_bpm and s_org_speed and s_calc_bpm_speed and s_calc_bpm_size and (s_calc_tempo_speed or s_calc_tempo_size or s_calc_real_speed or s_calc_real_size)
+		return s_algorithm and s_is_warped and s_warp and uses_tempo and s_timing
 
 	def set_rate_speed_pitch(self, bpm, pitch):
 		self.set_rate_speed(bpm, pow(2, pitch/12), False)

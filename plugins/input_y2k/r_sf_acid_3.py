@@ -185,8 +185,6 @@ def add_audio_regions(
 		if version>volumeversion: sp_obj.vol = region.vol
 		pls.append(placement_obj)
 
-	print(stretch_type)
-
 	return pls
 
 

@@ -543,7 +543,8 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			for lmms_pattern in lmms_track.patterns:
 				placement_obj = track_obj.placements.add_notes() if not isbb else placements_notes.cvpj_placement_notes(track_obj.time_ppq, track_obj.time_float)
-				placement_obj.time.position = lmms_pattern.pos
+				time_obj = placement_obj.time
+				time_obj.position = lmms_pattern.pos
 				placement_obj.visual.name = lmms_pattern.name
 				if lmms_pattern.color: 
 					placement_obj.visual.color.set_hex(lmms_pattern.color)
@@ -661,8 +662,9 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 
 			for lmms_sampletco in lmms_track.sampletcos:
 				placement_obj = track_obj.placements.add_audio() if not isbb else placements_audio.cvpj_placement_audio(48, False)
-				placement_obj.time.set_posdur(lmms_sampletco.pos, lmms_sampletco.len)
-				placement_obj.time.set_offset(lmms_sampletco.off*-1 if lmms_sampletco.off != -1 else 0)
+				time_obj = placement_obj.time
+				time_obj.set_posdur(lmms_sampletco.pos, lmms_sampletco.len)
+				time_obj.set_offset(lmms_sampletco.off*-1 if lmms_sampletco.off != -1 else 0)
 				placement_obj.muted = bool(lmms_sampletco.muted)
 				filepath = get_sample(lmms_sampletco.src)
 				sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, None)

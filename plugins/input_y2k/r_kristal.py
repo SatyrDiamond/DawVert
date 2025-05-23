@@ -69,8 +69,9 @@ class input_kristal(plugins.base):
 	def do_audiopart(self, convproj_obj, placement_obj, part, minpos, bpm):
 		tempomul = 120/bpm
 
-		placement_obj.time.set_posdur(part.position-minpos, part.duration)
-		placement_obj.time.set_offset(part.offset)
+		time_obj = placement_obj.time
+		time_obj.set_posdur(part.position-minpos, part.duration)
+		time_obj.set_offset(part.offset)
 		placement_obj.visual.name = part.name
 		placement_obj.visual.color.set_int(part.color[0:3])
 		placement_obj.fade_in.set_dur((part.fade_in/44100)*tempomul, 'seconds')
@@ -140,7 +141,8 @@ class input_kristal(plugins.base):
 									for cid, part in ch_data.parts:
 										if cid == 'CAudioPart': 
 											placement_obj = track_obj.placements.add_nested_audio()
-											placement_obj.time.set_posdur(part.position, part.duration)
+											time_obj = placement_obj.time
+											time_obj.set_posdur(part.position, part.duration)
 											placement_obj.visual.name = part.name
 											placement_obj.visual.color.set_int(part.color[0:3])
 											placement_obj = placement_obj.add()
@@ -149,8 +151,9 @@ class input_kristal(plugins.base):
 											self.do_audiopart(convproj_obj, placement_obj, part, part.position, bpm)
 										if cid == 'CFolderPart': 
 											placement_obj = track_obj.placements.add_nested_audio()
-											placement_obj.time.set_posdur(part.position, part.duration)
-											placement_obj.time.set_offset(part.offset)
+											time_obj = placement_obj.time
+											time_obj.set_posdur(part.position, part.duration)
+											time_obj.set_offset(part.offset)
 											placement_obj.visual.name = part.name
 											placement_obj.visual.color.set_int(part.color[0:3])
 											placement_obj.muted = 0 in part.flags

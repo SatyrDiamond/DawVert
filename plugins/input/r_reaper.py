@@ -49,8 +49,9 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 		if idnum in pooledenvs:
 			reappo = pooledenvs[idnum]
 			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
-			autopl_obj.time.position_real = x['position']
-			autopl_obj.time.duration_real = x['length']
+			time_obj = autopl_obj.time
+			time_obj.position_real = x['position']
+			time_obj.duration_real = x['length']
 			autopl_obj.muted = bool(x['enabled'])
 			autopl_obj.visual.name = reappo.name.get()
 			autopoints_obj = autopl_obj.data
@@ -530,10 +531,11 @@ class input_reaper(plugins.base):
 
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
-					placement_obj.time.position_real = cvpj_position
-					placement_obj.time.duration_real = cvpj_duration
 
-					placement_obj.time.cut_type = 'loop' if cvpj_loop else 'cut'
+					time_obj = placement_obj.time
+					time_obj.position_real = cvpj_position
+					time_obj.duration_real = cvpj_duration
+					time_obj.cut_type = 'loop' if cvpj_loop else 'cut'
 
 					placement_obj.muted = bool(cvpj_muted)
 
@@ -570,7 +572,7 @@ class input_reaper(plugins.base):
 
 							if maxdur and cvpj_loop:
 								cvpj_end_bpm = ((maxdur/midievents_obj.ppq)*4)
-								placement_obj.time.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
+								time_obj.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
 
 					do_auto_clip_notes(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
 					do_auto_clip_notes(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)
@@ -587,8 +589,9 @@ class input_reaper(plugins.base):
 					placement_obj = track_obj.placements.add_audio()
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
-					placement_obj.time.position_real = cvpj_position
-					placement_obj.time.duration_real = cvpj_duration
+					time_obj = placement_obj.time
+					time_obj.position_real = cvpj_position
+					time_obj.duration_real = cvpj_duration
 					placement_obj.sample.pan = cvpj_pan
 					placement_obj.sample.pitch = cvpj_audio_pitch
 					placement_obj.sample.vol = cvpj_vol
@@ -678,10 +681,10 @@ class input_reaper(plugins.base):
 						stretch_obj.timing.set__real_rate(bpm, cvpj_audio_rate)
 
 					if not cvpj_loop:
-						placement_obj.time.set_offset(startoffset)
+						time_obj.set_offset(startoffset)
 					elif dur_sec:
 						maxdur = ((dur_sec*8)/cvpj_audio_rate)*tempomul if dur_sec else cvpj_duration
-						placement_obj.time.set_loop_data(startoffset, 0, maxdur)
+						time_obj.set_loop_data(startoffset, 0, maxdur)
 
 					if rpp_trackitem.lock.used: placement_obj.locked = bool(rpp_trackitem.lock.get())
 
@@ -694,12 +697,14 @@ class input_reaper(plugins.base):
 
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
-					placement_obj.time.position_real = cvpj_position
-					placement_obj.time.duration_real = cvpj_duration
+					
+					time_obj = placement_obj.time
+					time_obj.position_real = cvpj_position
+					time_obj.duration_real = cvpj_duration
 
 					startoffset = (cvpj_offset_bpm) + (startpos)*8
 
-					placement_obj.time.set_offset(startoffset)
+					time_obj.set_offset(startoffset)
 
 					placement_obj.vol = cvpj_vol
 					placement_obj.muted = bool(cvpj_muted)

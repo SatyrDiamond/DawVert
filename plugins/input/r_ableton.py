@@ -551,7 +551,8 @@ class input_ableton(plugins.base):
 					
 					for clipid, cliptype, clipobj in mainseq.ClipTimeable.Events:
 						placement_obj = track_obj.placements.add_audio()
-						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
+						time_obj = placement_obj.time
+						time_obj.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
 						placement_obj.visual.comment = clipobj.Annotation
 						placement_obj.visual.color.from_colorset_num(colordata, int(clipobj.Color))
@@ -574,9 +575,9 @@ class input_ableton(plugins.base):
 										autopoints_obj.points__add_normal(mobj.Time, mobj.Value, 0, None)
 
 						if clipobj.Loop.LoopOn:
-							placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+							time_obj.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 						else:
-							placement_obj.time.set_offset(clipobj.Loop.LoopStart)
+							time_obj.set_offset(clipobj.Loop.LoopStart)
 
 						audio_placement_PitchCoarse = clipobj.PitchCoarse
 						audio_placement_PitchFine = clipobj.PitchFine
@@ -641,21 +642,21 @@ class input_ableton(plugins.base):
 
 						if not clipobj.IsWarped:
 							if clipobj.Loop.LoopOn == 0:
-								placement_obj.time.cut_type = 'cut'
+								time_obj.cut_type = 'cut'
 								pitchcalc = 2**(placement_obj.sample.pitch/12)
-								placement_obj.time.cut_start = (clipobj.Loop.LoopStart*8/pitchcalc)*tempomul
-								placement_obj.time.duration *= pitchcalc
-								placement_obj.time.duration /= tempomul
-								placement_obj.time.duration /= stretch_obj.calc_tempo_speed
+								time_obj.cut_start = (clipobj.Loop.LoopStart*8/pitchcalc)*tempomul
+								time_obj.duration *= pitchcalc
+								time_obj.duration /= tempomul
+								time_obj.duration /= stretch_obj.calc_tempo_speed
 						else:
 							if clipobj.Loop.LoopOn == 0:
-								placement_obj.time.set_offset(clipobj.Loop.LoopStart*4)
+								time_obj.set_offset(clipobj.Loop.LoopStart*4)
 							else:
-								placement_obj.time.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
+								time_obj.set_loop_data((clipobj.Loop.StartRelative+clipobj.Loop.LoopStart)*4, clipobj.Loop.LoopStart*4, clipobj.Loop.LoopEnd*4)
 
 						if AUDCLIPVERBOSE:
 							for x in [
-								placement_obj.time.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'], placement_obj.time.cut_type, clipobj.IsWarped,
+								time_obj.cut_type in ['loop', 'loop_off', 'loop_adv', 'loop_adv_off'], time_obj.cut_type, clipobj.IsWarped,
 								clipobj.CurrentEnd-clipobj.CurrentStart,
 								clipobj.Loop.StartRelative, clipobj.Loop.LoopStart,
 								clipobj.Loop.LoopEnd, clipobj.Loop.LoopOn,
@@ -746,7 +747,8 @@ class input_ableton(plugins.base):
 					
 					for clipid, cliptype, clipobj in als_track.DeviceChain.MainSequencer.ClipTimeable.Events:
 						placement_obj = track_obj.placements.add_notes()
-						placement_obj.time.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
+						time_obj = placement_obj.time
+						time_obj.set_startend(clipobj.CurrentStart*4, clipobj.CurrentEnd*4)
 						placement_obj.visual.name = clipobj.Name
 						placement_obj.visual.comment = clipobj.Annotation
 						placement_obj.visual.color.from_colorset_num(colordata, int(clipobj.Color))
@@ -774,9 +776,9 @@ class input_ableton(plugins.base):
 							loop_start = clipobj.Loop.LoopStart*4
 							loop_end = clipobj.Loop.LoopEnd*4
 
-							placement_obj.time.set_loop_data(cut_start, loop_start, loop_end)
+							time_obj.set_loop_data(cut_start, loop_start, loop_end)
 						else:
-							placement_obj.time.set_offset(clipobj.Loop.LoopStart*4)
+							time_obj.set_offset(clipobj.Loop.LoopStart*4)
 
 						t_notes_auto = {}
 						for nid, nes in clipobj.Notes.PerNoteEventStore.items():

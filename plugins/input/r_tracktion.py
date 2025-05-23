@@ -354,13 +354,13 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 
 	for midiclip in wf_track.midiclips:
 		placement_obj = track_obj.placements.add_notes()
-
-		placement_obj.time.position_real = midiclip.start
-		placement_obj.time.duration_real = midiclip.length
+		time_obj = placement_obj.time
+		time_obj.position_real = midiclip.start
+		time_obj.duration_real = midiclip.length
 		if midiclip.loopStartBeats == 0 and midiclip.loopLengthBeats == 0:
-			placement_obj.time.set_offset(midiclip.offset*4)
+			time_obj.set_offset(midiclip.offset*4)
 		else:
-			placement_obj.time.set_loop_data(midiclip.offset*4, midiclip.loopStartBeats*4, (midiclip.loopStartBeats+midiclip.loopLengthBeats)*4)
+			time_obj.set_loop_data(midiclip.offset*4, midiclip.loopStartBeats*4, (midiclip.loopStartBeats+midiclip.loopLengthBeats)*4)
 	
 		placement_obj.group = str(midiclip.groupID) if midiclip.groupID!=-1 else None
 
@@ -377,12 +377,13 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 
 		if not audioclip.srcVideo:
 			placement_obj = track_obj.placements.add_audio()
+			time_obj = placement_obj.time
 	
 			placement_obj.sample.sampleref = audioclip.source
 			sampleref_exists, sampleref_obj = convproj_obj.sampleref__get(audioclip.source)
 	
-			placement_obj.time.position_real = audioclip.start
-			placement_obj.time.duration_real = audioclip.length
+			time_obj.position_real = audioclip.start
+			time_obj.duration_real = audioclip.length
 	
 			placement_obj.fade_in.set_dur(audioclip.fadeIn, 'seconds')
 			placement_obj.fade_out.set_dur(audioclip.fadeOut, 'seconds')
@@ -391,7 +392,7 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 	
 			bpmdiv = (bpm/120)
 			if audioclip.loopStartBeats == 0 and audioclip.loopLengthBeats == 0:
-				placement_obj.time.set_offset(audioclip.offset*8*bpmdiv)
+				time_obj.set_offset(audioclip.offset*8*bpmdiv)
 			else:
 				#print(
 				#	audioclip.offset*8*bpmdiv,
@@ -399,7 +400,7 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 				#	audioclip.loopStartBeats+audioclip.loopLengthBeats*4
 				#	)
 	
-				placement_obj.time.set_loop_data(
+				time_obj.set_loop_data(
 					audioclip.offset*8*bpmdiv, 
 					audioclip.loopStartBeats*4, 
 					(audioclip.loopStartBeats+audioclip.loopLengthBeats)*4
@@ -446,9 +447,10 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 
 		else:
 			placement_obj = track_obj.placements.add_video()
+			time_obj = placement_obj.time
 	
-			placement_obj.time.position_real = audioclip.start
-			placement_obj.time.duration_real = audioclip.length
+			time_obj.position_real = audioclip.start
+			time_obj.duration_real = audioclip.length
 
 			placement_obj.videoref = audioclip.srcVideo
 	

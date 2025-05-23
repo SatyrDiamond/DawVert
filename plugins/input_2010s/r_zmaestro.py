@@ -127,11 +127,12 @@ class input_zmaestro(plugins.base):
 				for part in zm_track.parts:
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.visual.name = part.name
+					time_obj = placement_obj.time
 					if part.repeats:
-						placement_obj.time.set_loop_data(0, 0, part.length)
-						placement_obj.time.set_posdur(part.start, part.length+part.repeats)
+						time_obj.set_loop_data(0, 0, part.length)
+						time_obj.set_posdur(part.start, part.length+part.repeats)
 					else:
-						placement_obj.time.set_posdur(part.start, part.length)
+						time_obj.set_posdur(part.start, part.length)
 
 					cvpj_notelist = placement_obj.notelist
 					for note in part.notes:
@@ -198,11 +199,12 @@ class input_zmaestro(plugins.base):
 				for num, part in enumerate(zm_track.parts):
 					placement_obj = track_obj.placements.add_audio()
 					placement_obj.visual.name = part.name
+					time_obj = placement_obj.time
 					if part.repeats:
-						placement_obj.time.set_loop_data(0, 0, part.length)
-						placement_obj.time.set_posdur(part.start, part.length+part.repeats)
+						time_obj.set_loop_data(0, 0, part.length)
+						time_obj.set_posdur(part.start, part.length+part.repeats)
 					else:
-						placement_obj.time.set_posdur(part.start, part.length)
+						time_obj.set_posdur(part.start, part.length)
 
 					sp_obj = placement_obj.sample
 

@@ -139,8 +139,9 @@ class input_nanostudio_v1(plugins.base):
 						else:
 							placement_obj.visual.color.set_float([0.25, 0.59, 0.73])
 
-						placement_obj.time.set_posdur(clip['position']*256, clip['duration']*256)
-						if clip['duration']>clipsize: placement_obj.time.set_loop_data(0, 0, clipsize*256)
+						time_obj = placement_obj.time
+						time_obj.set_posdur(clip['position']*256, clip['duration']*256)
+						if clip['duration']>clipsize: time_obj.set_loop_data(0, 0, clipsize*256)
 
 						cvpj_notelist = placement_obj.notelist
 				

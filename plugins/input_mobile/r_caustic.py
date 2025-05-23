@@ -430,8 +430,9 @@ class input_cvpj_r(plugins.base):
 			patid = patids[x['key']]
 
 			placement_obj = cvpj_tracks[x['mach']].placements.add_notes_indexed()
-			placement_obj.time.set_posdur(x['pos'], x['dur'])
-			placement_obj.time.set_loop_data(0, 0, patmeasures/4)
+			time_obj = placement_obj.time
+			time_obj.set_posdur(x['pos'], x['dur'])
+			time_obj.set_loop_data(0, 0, patmeasures/4)
 			placement_obj.fromindex = patid
 
 			if autodata:

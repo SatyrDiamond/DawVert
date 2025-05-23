@@ -127,8 +127,9 @@ class input_midi(plugins.base):
 			if qtrack.type == 'audio':
 				for clip in qtrack.clips:
 					placement_obj = track_obj.placements.add_audio()
-					placement_obj.time.position_real = calcsec(clip.properties.start, ppq)
-					placement_obj.time.duration_real = calcsec(clip.properties.length, ppq)
+					time_obj = placement_obj.time
+					time_obj.position_real = calcsec(clip.properties.start, ppq)
+					time_obj.duration_real = calcsec(clip.properties.length, ppq)
 					placement_obj.visual.name = clip.name
 
 					if clipcolor: placement_obj.visual.color.set_hex(clipcolor)
@@ -155,8 +156,9 @@ class input_midi(plugins.base):
 			if qtrack.type == 'midi':
 				for clip in qtrack.clips:
 					placement_obj = track_obj.placements.add_midi()
-					placement_obj.time.position_real = calcsec(clip.properties.start, ppq)
-					placement_obj.time.duration_real = calcsec(clip.properties.length, ppq)
+					time_obj = placement_obj.time
+					time_obj.position_real = calcsec(clip.properties.start, ppq)
+					time_obj.duration_real = calcsec(clip.properties.length, ppq)
 					placement_obj.visual.name = clip.name
 
 					if clipcolor: placement_obj.visual.color.set_hex(clipcolor)

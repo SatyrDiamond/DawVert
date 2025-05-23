@@ -171,9 +171,9 @@ class input_soundation(plugins.base):
 					clip_length = round(soundation_region.length/timing, 3)*timing
 					clip_contentPosition = soundation_region.contentPosition
 					clip_loopcount = round(soundation_region.loopcount, 3)
-
-					placement_obj.time.set_posdur(soundation_region.position, clip_length*clip_loopcount)
-					placement_obj.time.set_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length-clip_contentPosition)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(soundation_region.position, clip_length*clip_loopcount)
+					time_obj.set_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length-clip_contentPosition)
 					placement_obj.muted = soundation_region.muted
 
 					if sound_chan_type == 'instrument':

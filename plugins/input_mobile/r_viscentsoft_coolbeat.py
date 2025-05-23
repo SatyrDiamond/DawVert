@@ -125,16 +125,17 @@ class output_coolbeat(plugins.base):
 
 				for section in track.sections:
 					placement_obj = track_obj.placements.add_notes()
-					placement_obj.time.set_posdur(section.startTick, section.length)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(section.startTick, section.length)
 					cvpj_notelist = placement_obj.notelist
 					noteoffset = 0 if tracktype == 1 else 60
 					for note in section.notes:
 						cvpj_notelist.add_r(note.startTick, note.length, note.key-noteoffset, note.volume, {})
 					if cvpj_notelist:
 						placement_obj.auto_dur(1920, 1920)
-						loop_data = placement_obj.time.duration
-						placement_obj.time.set_loop_data(0, 0, placement_obj.time.duration)
-						placement_obj.time.duration *= (section.length)/loop_data
+						loop_data = time_obj.duration
+						time_obj.set_loop_data(0, 0, time_obj.duration)
+						time_obj.duration *= (section.length)/loop_data
 
 			if tracktype == 2:
 				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
@@ -146,7 +147,8 @@ class output_coolbeat(plugins.base):
 				sampleid = do_sample(convproj_obj, track.soundPack, track.fileName, dawvert_intent)
 				for section in track.sections:
 					placement_obj = track_obj.placements.add_audio()
-					placement_obj.time.set_posdur(section.startTick, section.length)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(section.startTick, section.length)
 
 					sp_obj = placement_obj.sample
 					sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)

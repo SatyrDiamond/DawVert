@@ -237,13 +237,13 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 
 		if dp_track.id: trackdata[dp_track.id] = track_obj
 
-def docliptime(pl_time, clip):
-	pl_time.set_posdur(clip.time, clip.duration)
+def docliptime(time_obj, clip):
+	time_obj.set_posdur(clip.time, clip.duration)
 	offset = clip.playStart if clip.playStart else 0
 	if clip.loopStart != None and clip.loopEnd != None: 
-		pl_time.set_loop_data(offset, clip.loopStart if clip.loopStart else 0, clip.loopEnd if clip.loopEnd else clip.duration)
+		time_obj.set_loop_data(offset, clip.loopStart if clip.loopStart else 0, clip.loopEnd if clip.loopEnd else clip.duration)
 	elif offset:
-		pl_time.set_offset(offset)
+		time_obj.set_offset(offset)
 
 def do_mpe(cvpj_notelist, mpepoints):
 	target_obj = mpepoints.target

@@ -110,12 +110,9 @@ class input_korg_m1_nds(plugins.base):
 			curpos = 0
 			for n, block_obj in enumerate(channel_obj.blocks):
 				stepcur = stepsizes[n]
-
 				placement_obj = track_obj.placements.add_notes()
 				placement_obj.time.set_posdur(poslist[block_obj.offset], stepsizes[block_obj.offset])
-
 				cvpj_notelist = placement_obj.notelist
-
 				for note in block_obj.notes:
 					oswing = ((swing-50)/50) if (note.offset%2) else 0
 					cvpj_notelist.add_r(note.offset+oswing, note.length, (note.pitch-128)-60, note.velocity/15, None)

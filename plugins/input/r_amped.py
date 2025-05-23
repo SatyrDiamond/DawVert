@@ -440,8 +440,9 @@ class input_amped(plugins.base):
 
 				if amped_region.midi_notes: 
 					placement_obj = track_obj.placements.add_notes()
-					placement_obj.time.set_posdur(amped_region.position, amped_region.length)
-					placement_obj.time.set_offset(amped_region.offset)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(amped_region.position, amped_region.length)
+					time_obj.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
 					placement_obj.visual.color.fx_allowed = ['saturate', 'brighter']
@@ -453,8 +454,9 @@ class input_amped(plugins.base):
 
 				if amped_region.clips != []: 
 					placement_obj = track_obj.placements.add_nested_audio()
-					placement_obj.time.set_posdur(amped_region.position, amped_region.length+amped_region.offset)
-					placement_obj.time.set_offset(amped_region.offset)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(amped_region.position, amped_region.length+amped_region.offset)
+					time_obj.set_offset(amped_region.offset)
 					placement_obj.visual.name = amped_region.name
 					placement_obj.visual.color.set_float(amped_reg_color)
 					placement_obj.visual.color.fx_allowed = ['saturate', 'brighter']
@@ -462,9 +464,10 @@ class input_amped(plugins.base):
 
 					for amped_clip in amped_region.clips:
 						npa_obj = placement_obj.add()
-						npa_obj.time.position = amped_clip.position
-						npa_obj.time.duration = amped_clip.length
-						npa_obj.time.set_offset(amped_clip.offset)
+						time_obj = npa_obj.time
+						time_obj.position = amped_clip.position
+						time_obj.duration = amped_clip.length
+						time_obj.set_offset(amped_clip.offset)
 						sample_obj = npa_obj.sample
 						sample_obj.vol = amped_clip.gain
 						sample_obj.pitch = amped_clip.pitchShift

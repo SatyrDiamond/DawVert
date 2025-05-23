@@ -642,16 +642,17 @@ class input_flp(plugins.base):
 
 				if item.itemindex > item.patternbase and playlistline in temp_pl_track:
 					placement_obj = temp_pl_track[playlistline].placements.add_notes_indexed()
-					placement_obj.time.set_posdur(item.position, item.length)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(item.position, item.length)
 					placement_obj.muted = bool(item.flags & 0b0001000000000000)
 					patnum = item.itemindex - item.patternbase
 					placement_obj.fromindex = 'FLPat' + str(patnum)
 					if item.startoffset not in [4294967295, 3212836864]: 
-						placement_obj.time.set_offset(item.startoffset)
+						time_obj.set_offset(item.startoffset)
 
 					if patnum in autoticks_pat:
 						tickdata = autoticks_pat[patnum]
-						autodata = [placement_obj.time.position, placement_obj.time.duration, item.startoffset]
+						autodata = [time_obj.position, time_obj.duration, item.startoffset]
 						autod = autoticks_pat
 
 						for autoid, autodata in tickdata.items():
@@ -664,7 +665,7 @@ class input_flp(plugins.base):
 								if DEBUGAUTOTICKS: t = []
 
 								autopl_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
-								autopl_obj.time = placement_obj.time.copy()
+								autopl_obj.time = time_obj.copy()
 								if pattern in flp_obj.patterns:
 									pat_obj = flp_obj.patterns[pattern]
 									if pat_obj.color:
@@ -723,7 +724,8 @@ class input_flp(plugins.base):
 
 					if playlistline in temp_pl_track:
 						placement_obj = temp_pl_track[playlistline].placements.add_audio_indexed()
-						placement_obj.time.set_posdur(item.position, item.length)
+						time_obj = placement_obj.time
+						time_obj.set_posdur(item.position, item.length)
 
 						placement_obj.fade_in.set_dur(item.f_in_dur/1000, 'seconds')
 						placement_obj.fade_out.set_dur(item.f_out_dur/1000, 'seconds')
@@ -742,7 +744,7 @@ class input_flp(plugins.base):
 
 							if startoffset not in [4294967295, 3212836864]:  
 								posdata = startoffset/4
-								placement_obj.time.set_offset((posdata/out_rate)*flp_obj.ppq)
+								time_obj.set_offset((posdata/out_rate)*flp_obj.ppq)
 
 			for fl_timemark in fl_arrangement.timemarkers:
 				if fl_timemark.type == 8:

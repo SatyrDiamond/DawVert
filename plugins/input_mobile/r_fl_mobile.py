@@ -146,8 +146,9 @@ class input_fl_mobile(plugins.base):
 							for flm_clip in lanedata.clips:
 								pos = flm_clip.position/128
 								placement_obj = lane_obj.placements.add_notes()
-								placement_obj.time.set_posdur(pos, flm_clip.duration)
-								placement_obj.time.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
+								time_obj = placement_obj.time
+								time_obj.set_posdur(pos, flm_clip.duration)
+								time_obj.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
 								placement_obj.muted = bool(flm_clip.mute)
 
 								if not flm_clip.duration: 
@@ -176,8 +177,9 @@ class input_fl_mobile(plugins.base):
 							for flm_clip in lanedata.clips:
 								pos = flm_clip.position/128
 								placement_obj = lane_obj.placements.add_notes()
-								placement_obj.time.set_posdur(pos, flm_clip.duration)
-								placement_obj.time.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
+								time_obj = placement_obj.time
+								time_obj.set_posdur(pos, flm_clip.duration)
+								time_obj.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
 								if not flm_clip.duration: 
 									placement_obj.auto_dur(1, flm_clip.loop_end)
 

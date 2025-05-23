@@ -126,8 +126,9 @@ class input_audiosanua(plugins.base):
 					pat_notes = []
 
 				placement_obj = track_obj.placements.add_notes()
-				placement_obj.time.set_startend(as_pattern.startTick, as_pattern.endTick)
-				placement_obj.time.set_loop_data(0, 0, as_pattern.patternLength)
+				time_obj = placement_obj.time
+				time_obj.set_startend(as_pattern.startTick, as_pattern.endTick)
+				time_obj.set_loop_data(0, 0, as_pattern.patternLength)
 				placement_obj.visual.color.set_int(colordata.getcolornum(as_pattern.patternColor))
 				placement_obj.visual.color.fx_allowed = ['saturate']
 

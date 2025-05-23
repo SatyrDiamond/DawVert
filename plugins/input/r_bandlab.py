@@ -109,14 +109,15 @@ class input_bandlab(plugins.base):
 				do_track_common(convproj_obj, track_obj, blx_track, tempomul)
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_audio()
-					placement_obj.time.position = tempo_calc(tempomul, blx_region.startPosition)
-					placement_obj.time.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
+					time_obj = placement_obj.time
+					time_obj.position = tempo_calc(tempomul, blx_region.startPosition)
+					time_obj.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
 					if blx_region.name: placement_obj.visual.name = blx_region.name
 
 					reverse = blx_region.playbackRate<0
 					speed = abs(blx_region.playbackRate)
 
-					do_loop(placement_obj.time, blx_region, tempomul, speed)
+					do_loop(time_obj, blx_region, tempomul, speed)
 
 					sp_obj = placement_obj.sample
 					sp_obj.pitch = blx_region.pitchShift
@@ -164,11 +165,12 @@ class input_bandlab(plugins.base):
 
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_midi()
-					placement_obj.time.position = tempo_calc(tempomul, blx_region.startPosition)
-					placement_obj.time.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
+					time_obj = placement_obj.time
+					time_obj.position = tempo_calc(tempomul, blx_region.startPosition)
+					time_obj.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
 					if blx_region.name: placement_obj.visual.name = blx_region.name
 					midipath = os.path.join(dawvert_intent.input_folder, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
-					do_loop(placement_obj.time, blx_region, tempomul, 1)
+					do_loop(time_obj, blx_region, tempomul, 1)
 					placement_obj.midi_from(midipath)
 
 def add_sample(convproj_obj, dawvert_intent, blx_sample):

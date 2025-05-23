@@ -493,8 +493,9 @@ class input_serato(plugins.base):
 
 											placement_obj = trscene_obj.add_audio()
 											samplepart_copy = placement_obj.sample = copy.deepcopy(samplepart)
-											placement_obj.time.set_posdur(nstart, duration)
-											placement_obj.time.set_offset(startoffset/playback_speed)
+											time_obj = placement_obj.time
+											time_obj.set_posdur(nstart, duration)
+											time_obj.set_offset(startoffset/playback_speed)
 											placement_obj.visual.color.set_hex(color)
 
 											if 'channel_strip' in cuedata:

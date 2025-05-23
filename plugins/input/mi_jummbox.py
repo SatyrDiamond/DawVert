@@ -509,8 +509,7 @@ class input_jummbox(plugins.base):
 
 							if autoloc:
 								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-								autopl_obj.time.position = placement_pos+pos
-								autopl_obj.time.duration = ap[-1][0]
+								autopl_obj.time.set_posdur(placement_pos+pos, ap[-1][0])
 
 								autopoints_obj = autopl_obj.data
 								for s_ap in ap: 

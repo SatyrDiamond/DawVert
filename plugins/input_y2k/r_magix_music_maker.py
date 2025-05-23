@@ -103,22 +103,23 @@ class input_old_magix_maker(plugins.base):
 
 						if data_objc.fileid in sampleref_objs:
 							placement_obj = track_obj.placements.add_audio()
+							time_obj = placement_obj.time
+
 							color = list(data_objc.bg_color[0:3])
 							placement_obj.visual.name = data_objc.name
 							placement_obj.visual.color.set_int(color)
-							placement_obj.time.set_startend(data_objc.start, data_objc.end)
 							placement_obj.fade_in.set_dur((data_objc.fade_in/sample_time), 'beats')
 							placement_obj.fade_out.set_dur((data_objc.fade_out/sample_time), 'beats')
 							placement_obj.group = str(data_objc.group) if data_objc.group else None
-	
+
+							time_obj.set_startend(data_objc.start, data_objc.end)
+							if data_objc.loop_end: time_obj.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
+
 							if color not in totalcolors: 
 								uniquecolors[len(totalcolors)] = 0
 								totalcolors.append(color)
 							uniquecolors[totalcolors.index(color)] += 1
 	
-							if data_objc.loop_end: 
-								placement_obj.time.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
-
 							sampleref_obj = sampleref_objs[data_objc.fileid]
 	
 							samp_hz = sampleref_obj.get_hz()
@@ -136,10 +137,15 @@ class input_old_magix_maker(plugins.base):
 
 						if data_objc.fileid in videoref_objs:
 							placement_obj = track_obj.placements.add_video()
+							time_obj = placement_obj.time
+							
 							color = list(data_objc.bg_color[0:3])
 							placement_obj.visual.name = data_objc.name
 							placement_obj.visual.color.set_int(color)
-							placement_obj.time.set_startend(data_objc.start, data_objc.end)
+
+							time_obj.set_startend(data_objc.start, data_objc.end)
+							if data_objc.loop_end: time_obj.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
+
 							placement_obj.fade_in.set_dur((data_objc.fade_in/sample_time), 'beats')
 							placement_obj.fade_out.set_dur((data_objc.fade_out/sample_time), 'beats')
 							placement_obj.videoref = 'sample_'+str(data_objc.fileid)

@@ -118,14 +118,16 @@ class input_fruitytracks(plugins.base):
 				sp_obj.sampleref = ftr_clip.file
 				placement_obj.muted = bool(ftr_clip.muted)
 
+				time_obj = placement_obj.time
+				
 				plpos = calc_tick_val(bpmdiv, ftr_clip.pos)
 				if ftr_clip.stretch == 0:
 					pldur = (ftr_clip.dur/bpmticks)
-					placement_obj.time.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks))
+					time_obj.set_loop_data(0, 0, (ftr_clip.repeatlen/bpmticks))
 				else:
 					pldur = calc_tick_val(bpmdiv, ftr_clip.dur)
 					repeatlen = calc_tick_val(bpmdiv, ftr_clip.repeatlen)
-					placement_obj.time.set_loop_data(
+					time_obj.set_loop_data(
 						0 if not ftr_clip.dontstart else calc_tick_val(bpmdiv, ftr_clip.pos%ftr_clip.repeatlen), 
 						0, 
 						calc_tick_val(bpmdiv, ftr_clip.repeatlen)
@@ -134,7 +136,7 @@ class input_fruitytracks(plugins.base):
 					stretch_obj = sp_obj.stretch
 					stretch_obj.preserve_pitch = True
 					stretch_obj.timing.set__beats(ftr_clip.stretch/4)
-				placement_obj.time.set_posdur(plpos, pldur)
+				time_obj.set_posdur(plpos, pldur)
 
 				envpoints = ftr_clip.vol_env
 

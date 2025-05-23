@@ -454,8 +454,9 @@ class input_wavtool(plugins.base):
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.visual.color.set_hex(wavtool_clip.color)
 					placement_obj.visual.name = wavtool_clip.name
-					placement_obj.time.set_startend(wavtool_clip.timelineStart, wavtool_clip.timelineEnd)
-					placement_obj.time.set_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
+					time_obj = placement_obj.time
+					time_obj.set_startend(wavtool_clip.timelineStart, wavtool_clip.timelineEnd)
+					time_obj.set_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
 					cvpj_notelist = placement_obj.notelist
 					for note in wavtool_clip.notes:
 						cvpj_notelist.add_r(note['start'], note['end']-note['start'], note['pitch']-60, note['velocity'], None)

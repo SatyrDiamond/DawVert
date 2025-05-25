@@ -11,7 +11,7 @@ def eq2q_calc(filter_obj):
 	if filter_type in ['low_shelf', 'high_shelf']: 
 		eq_band_q = 1-(eq_band_q/1.2)
 	elif filter_type in ['low_pass', 'high_pass']:
-		eq_band_q = (eq_band_q**-2)/2
+		eq_band_q = ((eq_band_q if eq_band_q else 1)**-2)/2
 	else: 
 		eq_band_q = eq_band_q**-1
 		eq_band_q = (eq_band_q-0.01)/3

@@ -30,8 +30,8 @@ def calc_pan(i): return (i-0.5)*2
 def do_auto(convproj_obj, autoloc, imin, imax, sections, defval):
 	for section in sections:
 		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-		autopl_obj.time.position = section.startTick
-		autopl_obj.time.duration = section.length
+		time_obj = autopl_obj.time
+		time_obj.set_posdur(section.startTick, section.length)
 		autopoints_obj = autopl_obj.data
 		for node in section.nodes: 
 			autopoints_obj.points__add_normal(node.position, xtramath.between_from_one(imin, imax, node.value), 0, None)

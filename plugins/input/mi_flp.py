@@ -693,7 +693,8 @@ class input_flp(plugins.base):
 	
 							if autoloc: 
 								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-								autopl_obj.time.set_posdur(item.position, item.length)
+								time_obj = autopl_obj.time
+								time_obj.set_posdur(item.position, item.length)
 								if item.itemindex in flp_obj.channels:
 									fl_channel_obj = flp_obj.channels[item.itemindex]
 									autopl_obj.visual.name = fl_channel_obj.name if fl_channel_obj.name else ''
@@ -704,7 +705,7 @@ class input_flp(plugins.base):
 									if item.startoffset > 0:
 										posdata = item.startoffset
 										posdata = posdata/0.008
-										autopl_obj.time.set_offset(posdata*flp_obj.ppq)
+										time_obj.set_offset(posdata*flp_obj.ppq)
 
 								curpos = 0
 								for point, tension in fl_autopoints:

@@ -202,7 +202,8 @@ class input_ceol(plugins.base):
 				if plpatnum != -1:
 					cvpj_placement = convproj_obj.playlist[plnum].placements.add_notes_indexed()
 					cvpj_placement.fromindex = 'ceol_'+str(plpatnum).zfill(3)
-					cvpj_placement.time.set_block_posdur(plpos, project_obj.pattern_length)
+					time_obj = cvpj_placement.time
+					time_obj.set_block_posdur(plpos, project_obj.pattern_length)
 
 					ceol_pat_obj = project_obj.patterns[plpatnum]
 					recordfilter = ceol_pat_obj.recordfilter

@@ -157,7 +157,8 @@ class input_soundclub2(plugins.base):
 
 				placement_obj.visual.name = sn2_pat_obj.name
 
-				placement_obj.time.set_block_dur(curpos, 32)
+				time_obj = placement_obj.time
+				time_obj.set_block_dur(curpos, 32)
 
 				if panpoints:
 					autopoints_obj = placement_obj.add_autopoints('pan')
@@ -179,7 +180,8 @@ class input_soundclub2(plugins.base):
 			pat_tempos = project_obj.patterns[pat_num].tempos
 
 			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-			autopl_obj.time.set_posdur(curpos, size)
+			time_obj = autopl_obj.time
+			time_obj.set_posdur(curpos, size)
 			autopoints_obj = autopl_obj.data
 			for pat_tempo in pat_tempos:
 				autopoints_obj.points__add_instant(pat_tempo[0], decode_tempopl(pat_tempo[1], globaltempo))

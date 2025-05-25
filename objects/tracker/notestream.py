@@ -37,12 +37,13 @@ class autostream:
 	def to_cvpj(self, convproj_obj, autoloc):
 		for tpl in self.placements:
 			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-			autopl_obj.time.set_posdur((tpl[0])+tpl[1][0][0], tpl[2])
 			for tap in tpl[1]: 
 				autopoint_obj = autopl_obj.data.add_point()
 				autopoint_obj.pos = tap[0]-tpl[1][0][0]
 				autopoint_obj.value = tap[1]
 				autopoint_obj.type = 'instant'
+			time_obj = autopl_obj.time
+			time_obj.set_posdur((tpl[0])+tpl[1][0][0], tpl[2])
 
 class notestream:
 	def __init__(self, text_inst_start):

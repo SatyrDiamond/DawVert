@@ -215,8 +215,7 @@ class cvpj_s_automation:
 			self.u_nopl_ticks = True
 			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, self.valtype)
 			for x in self.pl_ticks:
-				pos = x.time.position
-				dur = x.time.duration
+				pos, dur = x.time.get_posdur()
 				offset = x.time.cut_start if x.time.cut_type == 'cut' else 0
 				for p, v in x.data.points.items():
 					if dur>p>=offset:
@@ -234,8 +233,7 @@ class cvpj_s_automation:
 				pl_dur = max(v.get_dur(), ppq)
 				pl = self.add_pl_ticks()
 				pl.data = v
-				pl.time.position = x
-				pl.time.duration = pl_dur
+				pl.time.set_posdur(x, pl_dur)
 
 		self.nopl_ticks = None
 		self.u_nopl_ticks = False
@@ -300,9 +298,7 @@ class cvpj_s_automation:
 
 			for ppl in areas:
 				pl = self.add_pl_points()
-				pl.time.position = ppl[0]
-				pl.time.duration = ppl[1]-pl.time.position
-
+				pl.time.set_posdur(ppl[0], ppl[1]-pl.time.position)
 				pl.data.inject(self.nopl_points, 0, pl.time.duration, ppl[0])
 
 

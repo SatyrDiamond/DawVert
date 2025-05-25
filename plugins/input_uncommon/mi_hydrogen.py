@@ -76,7 +76,9 @@ class input_hydrogen(plugins.base):
 			cvpj_placement = playlist_obj.placements.add_audio_indexed()
 			cvpj_placement.fromindex = 'playbackTrack'
 			dur_sec = sampleref_obj.get_dur_sec()
-			if dur_sec: cvpj_placement.time.set_posdur(0, dur_sec*48*2*(bpm/120))
+			if dur_sec: 
+				time_obj = placement_obj.time
+				time_obj.set_posdur(0, dur_sec*48*2*(bpm/120))
 			plnum += 1
 
 		for tag in project_obj.timeLineTag:
@@ -157,7 +159,8 @@ class input_hydrogen(plugins.base):
 					if x:
 						cvpj_placement = playlist_obj.placements.add_notes_indexed()
 						cvpj_placement.fromindex = pattern.name
-						cvpj_placement.time.set_posdur(p*48*4, pattern.size)
+						time_obj = cvpj_placement.time
+						time_obj.set_posdur(p*48*4, pattern.size)
 				plnum += 1
 		else:
 			playlist_obj = convproj_obj.playlist__add(plnum, 1, True)
@@ -166,7 +169,8 @@ class input_hydrogen(plugins.base):
 			for p, x in enumerate(project_obj.patternSequence):
 				cvpj_placement = playlist_obj.placements.add_notes_indexed()
 				cvpj_placement.fromindex = x[0]
-				cvpj_placement.time.set_posdur(p*48*4, pattern.size)
+				time_obj = cvpj_placement.time
+				time_obj.set_posdur(p*48*4, pattern.size)
 
 		convproj_obj.do_actions.append('do_sorttracks')
 		convproj_obj.do_actions.append('do_addloop')

@@ -288,14 +288,16 @@ class input_notessimo_v3(plugins.base):
 				for pos, dur, sid, tempo, denum, numer in durposdata:
 					if firstlayer:
 						autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-						autopl_obj.time.set_posdur(pos*2, dur*2)
+						time_obj = autopl_obj.time
+						time_obj.set_posdur(pos*2, dur*2)
 						autopoints_obj = autopl_obj.data
 						autopoints_obj.points__add_normal(0, tempo, 0, None)
 						convproj_obj.timesig_auto.add_point(pos*2, [numer, denum])
 
 					cvpj_placement = playlist_obj.placements.add_notes_indexed()
 					cvpj_placement.fromindex = sid
-					cvpj_placement.time.set_posdur(pos*2, dur*2)
+					time_obj = cvpj_placement.time
+					time_obj.set_posdur(pos*2, dur*2)
 
 				firstlayer = False
 

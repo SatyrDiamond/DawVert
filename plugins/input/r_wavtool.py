@@ -473,7 +473,8 @@ class input_wavtool(plugins.base):
 					placement_obj = track_obj.placements.add_audio()
 					placement_obj.visual.color.set_hex(wavtool_clip.color)
 					placement_obj.visual.name = wavtool_clip.name
-					placement_obj.time.set_startend(wavtool_clip.timelineStart, wavtool_clip.timelineEnd)
+					time_obj = placement_obj.time
+					time_obj.set_startend(wavtool_clip.timelineStart, wavtool_clip.timelineEnd)
 
 					sp_obj = placement_obj.sample
 
@@ -526,9 +527,9 @@ class input_wavtool(plugins.base):
 					sp_obj.vol = wavtool_clip.gain
 
 					if loopon:
-						placement_obj.time.set_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
+						time_obj.set_loop_data(wavtool_clip.readStart, wavtool_clip.loopStart, wavtool_clip.loopEnd)
 					else:
-						placement_obj.time.set_offset(wavtool_clip.readStart)
+						time_obj.set_offset(wavtool_clip.readStart)
 
 				add_devices(convproj_obj, track_obj, trackid, wavtool_obj.devices)
 

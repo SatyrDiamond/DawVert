@@ -88,10 +88,13 @@ def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
 	muse_track.transposition = -track_obj.datavals.get('middlenote', 0)
 
 	for notespl_obj in placements_obj.pl_notes:
+		time_obj = notespl_obj.time
+
 		muse_part = proj_muse.muse_midi_part()
 		if notespl_obj.visual.name: muse_part.name = notespl_obj.visual.name
-		muse_part.poslen.len = int(notespl_obj.time.duration)
-		muse_part.poslen.tick = int(notespl_obj.time.position)
+		position, duration = time_obj.get_posdur()
+		muse_part.poslen.len = int(duration)
+		muse_part.poslen.tick = int(position)
 
 		notespl_obj.notelist.sort()
 		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
@@ -127,14 +130,17 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 	bpmcalc = (120/muse_bpm)
 
 	for audiopl_obj in placements_obj.pl_audio:
+		time_obj = audiopl_obj.time
+		
+		position, duration = time_obj.get_posdur()
 		muse_part = proj_muse.muse_audio_part()
 
 		if audiopl_obj.visual.name: muse_part.name = audiopl_obj.visual.name
 
-		muse_part.poslen.len = (int(audiopl_obj.time.duration)*wavetime)*bpmcalc
-		muse_part.poslen.sample = (int(audiopl_obj.time.position)*wavetime)*bpmcalc
+		muse_part.poslen.len = (int(duration)*wavetime)*bpmcalc
+		muse_part.poslen.sample = (int(position)*wavetime)*bpmcalc
 
-		offset = audiopl_obj.time.cut_start
+		offset = time_obj.cut_start
 		frameval = int((offset*(wavetime))*(120/muse_bpm))
 
 		ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
@@ -146,8 +152,8 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 				event_obj = muse_part.new_event()
 				event_obj.file = sampleref_obj.fileref.get_path('unix', False)
 				event_obj.frame = int(frameval)
-				event_obj.poslen.len = (int(audiopl_obj.time.duration)*wavetime)*bpmcalc
-				event_obj.poslen.sample = (int(audiopl_obj.time.position)*wavetime)*bpmcalc
+				event_obj.poslen.len = (int(duration)*wavetime)*bpmcalc
+				event_obj.poslen.sample = (int(position)*wavetime)*bpmcalc
 	
 				sample_obj = audiopl_obj.sample
 	

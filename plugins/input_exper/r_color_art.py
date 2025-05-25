@@ -50,8 +50,8 @@ class input_color_art(plugins.base):
 				pixel_color = im.getpixel(coordinate)
 				placement_obj = track_obj.placements.add_notes()
 				placement_obj.visual.color.set_int([pixel_color[0],pixel_color[1],pixel_color[2]])
-				placement_obj.time.position = width*16
-				placement_obj.time.duration = 16
+				time_obj = placement_obj.time
+				time_obj.set_block_posdur(width, 16)
 				placement_obj.notelist.add_r(0, 0.2, 0, 1, None)
 
 

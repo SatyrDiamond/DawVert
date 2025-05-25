@@ -44,15 +44,16 @@ def internal_removeloops(pldata, out__placement_loop):
 	new_data = []
 
 	for oldpl_obj in pldata: 
-		if oldpl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'] and oldpl_obj.time.cut_type not in out__placement_loop:
-			loop_start, loop_loopstart, loop_loopend = oldpl_obj.time.get_loop_data()
-			if oldpl_obj.time.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
-				dur = oldpl_obj.time.duration
-				offset = oldpl_obj.time.cut_start
+		oldtime_obj = oldpl_obj.time
+		if oldtime_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'] and oldtime_obj.cut_type not in out__placement_loop:
+			loop_start, loop_loopstart, loop_loopend = oldtime_obj.get_loop_data()
+			if oldtime_obj.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
+				dur = oldtime_obj.duration
+				offset = oldtime_obj.cut_start
 
 				cutplpl_obj = copy.deepcopy(oldpl_obj)
 				cutplpl_obj.time.duration = min(loop_loopend-offset, dur)
-				cutplpl_obj.time.set_offset(oldpl_obj.time.cut_start)
+				cutplpl_obj.time.set_offset(oldtime_obj.cut_start)
 				new_data.append(cutplpl_obj)
 
 				if dur>loop_loopend:
@@ -63,16 +64,16 @@ def internal_removeloops(pldata, out__placement_loop):
 					new_data.append(cutplpl_obj)
 
 			else:
-				outeq = oldpl_obj.time.duration
-				if oldpl_obj.time.cut_type == 'loop_eq': 
-					dur = outeq+oldpl_obj.time.cut_start
-				elif oldpl_obj.time.cut_type == 'loop_adv_off': 
-					durr = oldpl_obj.time.cut_start-(loop_loopend-loop_loopstart)
-					dur = outeq+oldpl_obj.time.cut_start-durr
+				outeq = oldtime_obj.duration
+				if oldtime_obj.cut_type == 'loop_eq': 
+					dur = outeq+oldtime_obj.cut_start
+				elif oldtime_obj.cut_type == 'loop_adv_off': 
+					durr = oldtime_obj.cut_start-(loop_loopend-loop_loopstart)
+					dur = outeq+oldtime_obj.cut_start-durr
 				else: 
 					dur = outeq
 
-				for cutpoint in xtramath.cutloop(oldpl_obj.time.position, dur, loop_start, loop_loopstart, loop_loopend):
+				for cutpoint in xtramath.cutloop(oldtime_obj.position, dur, loop_start, loop_loopstart, loop_loopend):
 					cutplpl_obj = copy.deepcopy(oldpl_obj)
 					cutplpl_obj.time.position = cutpoint[0]
 					cutplpl_obj.time.duration = cutpoint[1] 
@@ -146,10 +147,6 @@ class cvpj_placement_timing:
 		#self.cut_loopstart = time.cvpj_time_size()
 		#self.cut_loopend = time.cvpj_time_size()
 
-	def set_block_dur(self, durval, blksize):
-		self.duration = (durval/blksize).__ceil__()*blksize
-		self.duration_real = None
-
 	def set_posdur(self, pos, dur):
 		self.position = pos
 		self.duration = dur
@@ -159,6 +156,15 @@ class cvpj_placement_timing:
 	def set_startend(self, start, end):
 		self.set_posdur(start, end-start)
 
+	def set_posdur_real(self, pos, dur):
+		self.position = None
+		self.duration = None
+		self.position_real = pos
+		self.duration_real = dur
+ 
+	def set_startend_real(self, start, end):
+		self.set_posdur_real(start, end-start)
+
 	def set_block_posdur(self, pos, blocksize):
 		self.set_posdur(pos*blocksize, blocksize)
 
@@ -166,6 +172,29 @@ class cvpj_placement_timing:
 		if offset:
 			self.cut_type = 'cut'
 			self.cut_start = offset
+
+	def set_block_dur(self, durval, blksize):
+		self.duration = (durval/blksize).__ceil__()*blksize
+		self.duration_real = None
+
+	def get_posdur(self):
+		return self.position, self.duration
+
+	def get_startend(self):
+		return self.position, self.position+self.duration
+
+	def get_posdur_real(self):
+		return self.position_real, self.duration_real
+
+	def get_startend_real(self):
+		return self.position_real, self.position_real+self.duration_real
+
+	def get_end(self):
+		return self.position+self.duration
+
+	def get_loopcount(self):
+		outcount = 1
+		return self.position_real, self.position_real+self.duration_real
 
 	def copy(self):
 		return copy.deepcopy(self)
@@ -204,12 +233,6 @@ class cvpj_placement_timing:
 		self.cut_start += v
 		self.cut_loopstart += v
 		self.cut_loopend += v
-
-	def get_end(self):
-		return self.position+self.duration
-
-	def get_startend(self):
-		return self.position, self.position+self.duration
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if is_seconds:

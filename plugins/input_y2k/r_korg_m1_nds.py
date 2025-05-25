@@ -63,7 +63,8 @@ class input_korg_m1_nds(plugins.base):
 		for n, tempo in enumerate(tempopos):
 			stepcur = stepsizes[n]
 			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-			autopl_obj.time.set_posdur(curpos, stepcur)
+			time_obj = autopl_obj.time
+			time_obj.time.set_posdur(curpos, stepcur)
 
 			autopoints_obj = autopl_obj.data
 			autopoints_obj.points__add_normal(0, tempo, 0, None)
@@ -111,7 +112,8 @@ class input_korg_m1_nds(plugins.base):
 			for n, block_obj in enumerate(channel_obj.blocks):
 				stepcur = stepsizes[n]
 				placement_obj = track_obj.placements.add_notes()
-				placement_obj.time.set_posdur(poslist[block_obj.offset], stepsizes[block_obj.offset])
+				time_obj = placement_obj.time
+				time_obj.set_posdur(poslist[block_obj.offset], stepsizes[block_obj.offset])
 				cvpj_notelist = placement_obj.notelist
 				for note in block_obj.notes:
 					oswing = ((swing-50)/50) if (note.offset%2) else 0

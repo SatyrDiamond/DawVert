@@ -69,7 +69,8 @@ class input_cvpj_f(plugins.base):
 					curpos += phrase.td
 					phraseauto = {}
 					placement_obj = track_obj.placements.add_midi()
-					placement_obj.time.set_posdur(curpos, phrase.d)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(curpos, phrase.d)
 
 					midievents_obj = placement_obj.midievents
 					midievents_obj.has_duration = True
@@ -96,7 +97,8 @@ class input_cvpj_f(plugins.base):
 				for audio in tmp_track.audios:
 					curpos += audio.td
 					placement_obj = track_obj.placements.add_audio()
-					placement_obj.time.set_posdur(curpos, audio.end)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(curpos, audio.end)
 					convproj_obj.sampleref__add(audio.file, audio.file)
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = audio.file

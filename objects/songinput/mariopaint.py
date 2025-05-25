@@ -35,8 +35,9 @@ class mariopaint_chord():
 
 def add_tempo_point(convproj_obj, position, value, notelen): 
 	autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-	autopl_obj.time.set_posdur(position, notelen)
 	autopl_obj.data.points__add_normal(0, value/notelen, 0, None)
+	time_obj = autopl_obj.time
+	time_obj.set_posdur(position, notelen)
 
 class mariopaint_song():
 	def __init__(self):

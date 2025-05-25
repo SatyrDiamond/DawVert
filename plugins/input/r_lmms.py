@@ -625,8 +625,9 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 									pl_copy = copy.deepcopy(pl_data)
 									pl_copy.muted = bbtco.muted
 									pl_copy.visual.name = bbtco.name
-									pl_copy.time.set_posdur(bbtco.pos, bbtco.len)
-									pl_copy.time.set_loop_data(0, 0, steps*12)
+									time_obj = pl_copy.time
+									time_obj.set_posdur(bbtco.pos, bbtco.len)
+									time_obj.set_loop_data(0, 0, steps*12)
 
 									if lmms_track.color: pl_copy.visual.color.set_hex(track_color)
 									lane_pl.placements.pl_notes.data.append(pl_copy)
@@ -680,7 +681,8 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 				if not isbb:
 					for id_num in lmms_automationpattern.auto_target:
 						autopl_obj = convproj_obj.automation.add_pl_points(['id',str(id_num)], 'float')
-						autopl_obj.time.set_posdur(lmms_automationpattern.pos, lmms_automationpattern.len)
+						time_obj = autopl_obj.time
+						time_obj.set_posdur(lmms_automationpattern.pos, lmms_automationpattern.len)
 						autopl_obj.muted = bool(int(lmms_automationpattern.mute))
 						if lmms_automationpattern.name: autopl_obj.visual.name = lmms_automationpattern.name
 						if lmms_automationpattern.color: autopl_obj.visual.color.set_hex(lmms_automationpattern.color)

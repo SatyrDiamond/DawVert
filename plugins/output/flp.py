@@ -375,39 +375,47 @@ class output_cvpjs(plugins.base):
 				for pl_obj in playlist_obj.placements.pl_notes_indexed:
 	
 					if pl_obj.fromindex in pat_id:
+						time_obj = pl_obj.time
+
+						position, duration = time_obj.get_posdur()
+						
 						fl_clip_obj = arrangement.flp_arrangement_clip()
-						fl_clip_obj.position = int(pl_obj.time.position)
+						fl_clip_obj.position = int(position)
 						fl_clip_obj.itemindex = int(pat_id[pl_obj.fromindex] + fl_clip_obj.patternbase)
-						fl_clip_obj.length = int(pl_obj.time.duration)
+						fl_clip_obj.length = int(duration)
 						fl_clip_obj.startoffset = 0
-						fl_clip_obj.endoffset = int(pl_obj.time.duration)
+						fl_clip_obj.endoffset = int(duration)
 						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
 						if pl_obj.muted == True: fl_clip_obj.flags = 12352
 	
-						if pl_obj.time.cut_type == 'cut':
-							fl_clip_obj.startoffset = int(pl_obj.time.cut_start)
+						if time_obj.cut_type == 'cut':
+							fl_clip_obj.startoffset = int(time_obj.cut_start)
 							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0
-							fl_clip_obj.endoffset += int(pl_obj.time.cut_start)
+							fl_clip_obj.endoffset += int(time_obj.cut_start)
 						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
 						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
 	
 	
 				for pl_obj in playlist_obj.placements.pl_audio_indexed:
 					if pl_obj.fromindex in samples_id:
+						time_obj = pl_obj.time
+						
+						position, duration = time_obj.get_posdur()
+						
 						fl_clip_obj = arrangement.flp_arrangement_clip()
-						fl_clip_obj.position = int(pl_obj.time.position)
+						fl_clip_obj.position = int(position)
 						fl_clip_obj.itemindex = samples_id[pl_obj.fromindex]
-						fl_clip_obj.length = max(0, int(pl_obj.time.duration))
-						fl_clip_obj.endoffset = int(pl_obj.time.duration)/ppq
+						fl_clip_obj.length = max(0, int(duration))
+						fl_clip_obj.endoffset = int(duration)/ppq
 						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
 						if pl_obj.muted == True: fl_clip_obj.flags = 12352
 	
 						startat = 0
-						if pl_obj.time.cut_type == 'cut': startat = pl_obj.time.cut_start
+						if time_obj.cut_type == 'cut': startat = time_obj.cut_start
 	
 						if pl_obj.fromindex in samplestretch:
 							startat = startat/ppq
-							endat = startat+(pl_obj.time.duration/ppq)
+							endat = startat+(duration/ppq)
 	
 							stretchrate = samplestretch[pl_obj.fromindex]
 							fl_clip_obj.startoffset = (startat*stretchrate)*4

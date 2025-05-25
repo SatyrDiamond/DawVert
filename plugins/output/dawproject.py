@@ -82,13 +82,15 @@ def do_params(convproj_obj, lane_obj, paramset_obj, dp_channel, starttxt, autolo
 	from_cvpj_auto(convproj_obj, lane_obj.points, autoloc+['pan'], 'float', dp_channel.pan.id, [1, 0.5])
 	from_cvpj_auto(convproj_obj, lane_obj.points, autoloc+['vol'], 'float', dp_channel.volume.id, None)
 
-def make_time(clip_obj, cvpjtime_obj):
-	clip_obj.time = round(cvpjtime_obj.position, 7)
-	clip_obj.duration = round(cvpjtime_obj.duration, 7)
-	clip_obj.playStart = round(cvpjtime_obj.cut_start, 7)
-	if cvpjtime_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off','loop_eq']:
-		clip_obj.loopStart = round(cvpjtime_obj.cut_loopstart, 7)
-		clip_obj.loopEnd = round(cvpjtime_obj.cut_loopend, 7)
+def make_time(clip_obj, time_obj):
+	position, duration = time_obj.get_posdur()
+
+	clip_obj.time = round(position, 7)
+	clip_obj.duration = round(duration, 7)
+	clip_obj.playStart = round(time_obj.cut_start, 7)
+	if time_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off','loop_eq']:
+		clip_obj.loopStart = round(time_obj.cut_loopstart, 7)
+		clip_obj.loopEnd = round(time_obj.cut_loopend, 7)
 
 def do_mpe_val(value, mpetype):
 	dppoints_obj = points.dawproject_points()

@@ -232,7 +232,8 @@ def make_auto(convproj_obj, fs_pattern, NoteLength, timemul, patpos, patdur, cha
 
 	if vol_auto:
 		autopl_obj = convproj_obj.automation.add_pl_points(['fxmixer', str(channum), 'vol'], 'float')
-		autopl_obj.time.set_posdur(patpos, patdur)
+		time_obj = autopl_obj.time
+		time_obj.set_posdur(patpos, patdur)
 		if fs_pattern.Color: autopl_obj.visual.color.set_hex(fs_pattern.Color)
 
 		autopoints_obj = autopl_obj.data

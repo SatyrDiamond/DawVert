@@ -300,7 +300,8 @@ class input_acid_old(plugins.base):
 							if env.type-2 not in used_sends: used_sends.append(env.type-2)
 						if autoloc:
 							autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-							autopl_obj.time.set_startend(region.start, region.end)
+							time_obj = autopl_obj.time
+							time_obj.set_startend(region.start, region.end)
 							for point in env.points:
 								tension = 0
 								if point[0] == 2: tension = 1

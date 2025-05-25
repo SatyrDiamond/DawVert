@@ -80,11 +80,14 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					rpp_env.points.append([0, autodata.defualt_val, 0])
 
 				for n, p in enumerate(autodata.pl_points):
+					time_obj = p.time
+					position, duration = time_obj.get_posdur_real()
+
 					poolid = len(rpp_project.pooledenvs)+1
 					pooledenv = rpp_project.add_pooledenv()
 					pooledenv.id.set(poolid)
 					if p.visual.name: pooledenv.name.set(p.visual.name)
-					pooledenv.srclen.set(p.time.duration_real*2)
+					pooledenv.srclen.set(duration*2)
 
 					for pn, x in enumerate(p.data):
 						out = float(x.value)
@@ -95,8 +98,8 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 					init_pooledenvinst = rpp_env.init_pooledenvinst()
 					init_pooledenvinst['id'] = poolid
 					init_pooledenvinst['unk1'] = poolid
-					init_pooledenvinst['position'] = p.time.position_real
-					init_pooledenvinst['length'] = p.time.duration_real
+					init_pooledenvinst['position'] = position
+					init_pooledenvinst['length'] = duration
 					init_pooledenvinst['enabled'] = int(bool(p.muted))
 
 		elif autodata.u_nopl_points:
@@ -498,11 +501,14 @@ class output_reaper(plugins.base):
 				rpp_vst_obj.vst_uuid = '56535472636D64726561636F6E74726F'
 
 			for midipl_obj in track_obj.placements.pl_midi:
+				time_obj = midipl_obj.time
 
+				position, duration = time_obj.get_posdur_real()
+				
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
-				if midipl_obj.time.cut_type == 'cut': rpp_item_obj.soffs.set(midipl_obj.time.cut_start/8/tempomul)
-				rpp_item_obj.position.set(midipl_obj.time.position_real)
-				rpp_item_obj.length.set(midipl_obj.time.duration_real)
+				if time_obj.cut_type == 'cut': rpp_item_obj.soffs.set(time_obj.cut_start/8/tempomul)
+				rpp_item_obj.position.set(position)
+				rpp_item_obj.length.set(duration)
 				rpp_item_obj.mute['mute'] = int(midipl_obj.muted)
 				if midipl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(midipl_obj.visual.color))
 				if midipl_obj.visual.name: rpp_item_obj.name.set(midipl_obj.visual.name)
@@ -547,13 +553,16 @@ class output_reaper(plugins.base):
 					rpp_item_obj.group.set(groupassoc[groupidtr])
 
 			for audiopl_obj in track_obj.placements.pl_audio:
+				time_obj = audiopl_obj.time
+				position, duration = time_obj.get_posdur_real()
+				
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
-
+				
 				clip_startat = 0
-				if audiopl_obj.time.cut_type == 'cut': clip_startat = (audiopl_obj.time.cut_start/8)/tempomul
+				if time_obj.cut_type == 'cut': clip_startat = (time_obj.cut_start/8)/tempomul
 
-				rpp_item_obj.position.set(audiopl_obj.time.position_real)
-				rpp_item_obj.length.set(audiopl_obj.time.duration_real)
+				rpp_item_obj.position.set(position)
+				rpp_item_obj.length.set(duration)
 				rpp_item_obj.mute['mute'] = int(audiopl_obj.muted)
 				if audiopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(audiopl_obj.visual.color))
 				if audiopl_obj.visual.name: rpp_item_obj.name.set(audiopl_obj.visual.name)
@@ -657,20 +666,20 @@ class output_reaper(plugins.base):
 					rpp_item_obj.group.set(groupassoc[groupidtr])
 
 			for videopl_obj in track_obj.placements.pl_video:
+				time_obj = videopl_obj.time
+				position, duration = time_obj.get_posdur_real()
+
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 
-				clip_startat = 0
-				if videopl_obj.time.cut_type == 'cut': clip_startat = (videopl_obj.time.cut_start/8)/tempomul
-
-				rpp_item_obj.position.set(videopl_obj.time.position_real)
-				rpp_item_obj.length.set(videopl_obj.time.duration_real)
+				rpp_item_obj.position.set(position)
+				rpp_item_obj.length.set(duration)
 				rpp_item_obj.mute['mute'] = int(videopl_obj.muted)
 				if videopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(videopl_obj.visual.color))
 				if videopl_obj.visual.name: rpp_item_obj.name.set(videopl_obj.visual.name)
 				rpp_item_obj.volpan['vol'] = videopl_obj.vol
 
 				clip_startat = 0
-				if videopl_obj.time.cut_type == 'cut': clip_startat = (videopl_obj.time.cut_start/8)/tempomul
+				if time_obj.cut_type == 'cut': clip_startat = (time_obj.cut_start/8)/tempomul
 				rpp_item_obj.soffs.set(clip_startat)
 
 				ref_found, videoref_obj = convproj_obj.videoref__get(videopl_obj.videoref)

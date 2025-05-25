@@ -392,7 +392,8 @@ class input_serato(plugins.base):
 								for kf in sauto.keyframes:
 									autopoints_obj.points__add_normal(kf.time, kf.value, kf.curvature*-2, None)
 
-								pl_points.time.set_posdur(0, max(960*4, pl_points.data.get_dur()))
+								time_obj = pl_points.time
+								time_obj.set_posdur(0, max(960*4, pl_points.data.get_dur()))
 
 							except:
 								pass
@@ -403,7 +404,8 @@ class input_serato(plugins.base):
 					if scene_deck.type == 'drums':
 						placement_obj = trscene_obj.add_notes()
 						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
-						placement_obj.time.set_posdur(0, scenedur)
+						time_obj = placement_obj.time
+						time_obj.set_posdur(0, scenedur)
 						cvpj_notelist = placement_obj.notelist
 						for note in deck_sequence.notes:
 							valid = False
@@ -420,7 +422,8 @@ class input_serato(plugins.base):
 					if scene_deck.type in ['instrument', 'plugin']:
 						placement_obj = trscene_obj.add_notes()
 						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
-						placement_obj.time.set_posdur(0, scenedur)
+						time_obj = placement_obj.time
+						time_obj.set_posdur(0, scenedur)
 						for note in deck_sequence.notes:
 							if note.start < scenedur:
 								key = note.number-60
@@ -430,7 +433,8 @@ class input_serato(plugins.base):
 						scenedur = scene.length if scene.length else max([note.start+note.duration for note in deck_sequence.notes])
 						if useaudioclips == False:
 							placement_obj = trscene_obj.add_notes()
-							placement_obj.time.set_posdur(0, scene.length)
+							time_obj = placement_obj.time
+							time_obj.set_posdur(0, scene.length)
 							for note in deck_sequence.notes:
 								if note.start < scenedur:
 									key = note.number

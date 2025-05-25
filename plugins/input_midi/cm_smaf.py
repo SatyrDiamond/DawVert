@@ -145,10 +145,11 @@ class input_mmf(plugins.base):
 	
 						for start, end, _, _, vol in drumnotes:
 							placement_obj = track_obj.placements.add_audio()
-							placement_obj.time.set_posdur(int(start), int(end))
 							placement_obj.sample.sampleref = sampleid
 							placement_obj.sample.vol = int(vol)/127
 							placement_obj.visual.name = 'Stream #%i' % (used_drumnum)
+							time_obj = placement_obj.time
+							time_obj.set_posdur(int(start), int(end))
 							sp_obj = placement_obj.sample
 							sp_obj.stretch.set_rate_tempo(120, 1, False)
 							sp_obj.stretch.preserve_pitch = True

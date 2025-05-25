@@ -95,7 +95,8 @@ class multi_patsong:
 						tpl[1].stretch(4/(1/e_notelen), True)
 						tpl[1].notemod_conv()
 						placement_obj = playlist_obj.placements.add_notes()
-						placement_obj.time.set_posdur(cur_pl_pos, tpl[0])
+						time_obj = placement_obj.time
+						time_obj.set_posdur(cur_pl_pos, tpl[0])
 						placement_obj.notelist = tpl[1]
 				cur_pl_pos += tpl[0]
 

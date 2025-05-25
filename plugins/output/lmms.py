@@ -131,9 +131,10 @@ def make_auto_track(autoidnum, autodata, visualname, automode):
 
 	for autopl_obj in autodata:
 		autopl_obj.remove_cut()
+		position, duration = autopl_obj.time.get_posdur()
 		lmms_autopat = proj_lmms.lmms_automationpattern()
-		lmms_autopat.pos = autopl_obj.time.position
-		lmms_autopat.len = autopl_obj.time.duration
+		lmms_autopat.pos = position
+		lmms_autopat.len = duration
 		lmms_autopat.prog = automode
 		lmms_autopat.name = autopl_obj.visual.name if autopl_obj.visual.name else visualname
 		lmms_autopat.mute = int(autopl_obj.muted)
@@ -555,8 +556,10 @@ class output_lmms(plugins.base):
 
 					track_obj.placements.pl_notes.sort()
 					for notespl_obj in track_obj.placements.pl_notes:
+						time_obj = notespl_obj.time
+						position, duration = time_obj.get_posdur()
 						lmms_pattern = proj_lmms.lmms_pattern()
-						lmms_pattern.pos = int(notespl_obj.time.position)
+						lmms_pattern.pos = int(position)
 						lmms_pattern.muted = int(notespl_obj.muted)
 						lmms_pattern.name = notespl_obj.visual.name if notespl_obj.visual.name else ""
 						if notespl_obj.visual.color: lmms_pattern.color = '#' + notespl_obj.visual.color.get_hex()
@@ -604,14 +607,16 @@ class output_lmms(plugins.base):
 
 					track_obj.placements.pl_audio.sort()
 					for audiopl_obj in track_obj.placements.pl_audio:
+						time_obj = notespl_obj.time
+						position, duration = time_obj.get_posdur()
 						lmms_sampletco = proj_lmms.lmms_sampletco()
-						lmms_sampletco.pos = int(audiopl_obj.time.position)
-						lmms_sampletco.len = int(audiopl_obj.time.duration)
+						lmms_sampletco.pos = int(position)
+						lmms_sampletco.len = int(duration)
 						ref_found, sampleref_obj = cvpj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 						if ref_found: lmms_sampletco.src = sampleref_obj.fileref.get_path(None, False)
 						lmms_sampletco.muted = int(audiopl_obj.muted)
 						if audiopl_obj.visual.color: lmms_sampletco.color = '#' + audiopl_obj.visual.color.get_hex()
-						if audiopl_obj.time.cut_type == 'cut': lmms_sampletco.off = int(audiopl_obj.time.cut_start*-1)
+						if time_obj.cut_type == 'cut': lmms_sampletco.off = int(time_obj.cut_start*-1)
 						lmms_track.sampletcos.append(lmms_sampletco)
 
 					encode_fxchain(samptrack_obj.fxchain, track_obj, trackname, autoloc)

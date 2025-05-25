@@ -94,9 +94,13 @@ class output_bandlab(plugins.base):
 				if track_obj.type == 'audio':
 					qt_track.type = 'audio'
 					for audiopl_obj in track_obj.placements.pl_audio:
+						time_obj = audiopl_obj.time
+
+						position, duration = time_obj.get_posdur_real()
+
 						qt_clip = proj_qtractor.qtractor_clip(None)
-						qt_clip.properties.start = calcsec(audiopl_obj.time.position_real, ppq)
-						qt_clip.properties.length = calcsec(audiopl_obj.time.duration_real, ppq)
+						qt_clip.properties.start = calcsec(position, ppq)
+						qt_clip.properties.length = calcsec(duration, ppq)
 						qt_clip.properties.fade_in_type = 'InQuad'
 						qt_clip.properties.fade_out_type = 'OutQuad'
 						qt_clip.properties.fade_in = calcsec(audiopl_obj.fade_in.get_dur_seconds(bpm), ppq)
@@ -119,9 +123,13 @@ class output_bandlab(plugins.base):
 				if track_obj.type == 'instrument':
 					qt_track.type = 'midi'
 					for notespl_obj in track_obj.placements.pl_notes:
+						time_obj = notespl_obj.time
+						
+						position, duration = time_obj.get_posdur_real()
+						
 						qt_clip = proj_qtractor.qtractor_clip(None)
-						qt_clip.properties.start = calcsec(notespl_obj.time.position_real, ppq)
-						qt_clip.properties.length = calcsec(notespl_obj.time.duration_real, ppq)
+						qt_clip.properties.start = calcsec(position, ppq)
+						qt_clip.properties.length = calcsec(duration, ppq)
 						qt_clip.properties.name = notespl_obj.visual.name
 						qt_clip.midiclip = proj_qtractor.qtractor_clip_midiclip(None)
 

@@ -117,7 +117,8 @@ class input_1bitdragon(plugins.base):
 					trscene_obj = convproj_obj.track__add_scene(str(instnum), str(blocknum), 'main')
 					placement_obj = trscene_obj.add_notes()
 					placement_obj.visual.name = block_obj.instruments[3-instnum].preset
-					placement_obj.time.set_posdur(0, 128)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(0, 128)
 					cvpj_notelist = placement_obj.notelist
 					for notenum, notesdata in enumerate(instdata):
 						for pos, notedata in notesdata:
@@ -135,7 +136,8 @@ class input_1bitdragon(plugins.base):
 					trscene_obj = convproj_obj.track__add_scene(str(8-drumnum), str(blocknum), 'main')
 					placement_obj = trscene_obj.add_notes()
 					placement_obj.visual.name = block_obj.drums[4-drumnum].preset
-					placement_obj.time.set_posdur(0, 128)
+					time_obj = placement_obj.time
+					time_obj.set_posdur(0, 128)
 					for pos, notedata in drumdata:
 						dur = notedata['duration'] if 'duration' in notedata else 1
 						vol = notedata['velocity'] if 'velocity' in notedata else 1

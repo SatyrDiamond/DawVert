@@ -297,8 +297,9 @@ class input_fl_mobile(plugins.base):
 								autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
 								duration = do_auto(flm_clip.evn2.events, autopl_obj.data, startpos, v_add, v_mul, v_bool)
 								maxdur = max(duration, flm_clip.duration)
-								autopl_obj.time.set_posdur(startpos, maxdur)
-								autopl_obj.time.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
+								time_obj = autopl_obj.time
+								time_obj.set_posdur(startpos, maxdur)
+								time_obj.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
 
 		convproj_obj.metadata.name = project_obj.meta_title
 		convproj_obj.metadata.author = project_obj.meta_artist

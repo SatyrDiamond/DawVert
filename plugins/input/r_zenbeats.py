@@ -634,8 +634,9 @@ class input_zenbeats(plugins.base):
 					for zb_pattern in zb_track.patterns:
 						placement_obj = track_obj.placements.add_audio()
 						do_visual(placement_obj.visual, zb_pattern.visual, zb_pattern.color_index, colordata)
-						placement_obj.time.set_startend(zb_pattern.start_beat, zb_pattern.end_beat)
-						placement_obj.time.set_loop_data(zb_pattern.loop_play_start, zb_pattern.loop_start_beat, zb_pattern.loop_end_beat)
+						time_obj = placement_obj.time
+						time_obj.set_startend(zb_pattern.start_beat, zb_pattern.end_beat)
+						time_obj.set_loop_data(zb_pattern.loop_play_start, zb_pattern.loop_start_beat, zb_pattern.loop_end_beat)
 
 						placement_obj.muted = not zb_pattern.active
 						placement_obj.locked = zb_pattern.locked

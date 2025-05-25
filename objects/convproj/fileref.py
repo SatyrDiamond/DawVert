@@ -706,7 +706,7 @@ class cvpj_sampleref:
 
 		if os.path.exists(wav_realpath):
 
-			logger_project.warning('fileref: Getting Info from "%s"' % str(self.fileref.file) + (' because of '+args[0] if args else ''))
+			# logger_project.warning('fileref: Getting Info from "%s"' % str(self.fileref.file) + (' because of '+args[0] if args else ''))
 
 			self.file_size = os.path.getsize(wav_realpath)
 			self.file_date = int(os.path.getmtime(wav_realpath))

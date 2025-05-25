@@ -233,7 +233,8 @@ class input_lc(plugins.base):
 					if t_notelist:
 						trscene_obj = convproj_obj.track__add_scene(cvpj_instid, str(patnum), 'main')
 						placement_obj = trscene_obj.add_notes()
-						placement_obj.time.set_posdur(0, voi_note.play_notes)
+						time_obj = placement_obj.time
+						time_obj.set_posdur(0, voi_note.play_notes)
 						cvpj_notelist = placement_obj.notelist
 
 						for nnn in t_notelist:

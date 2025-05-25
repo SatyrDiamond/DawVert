@@ -339,17 +339,21 @@ def make_plugins_fx(convproj_obj, autoPitch, effects, fxslots_audio, tempomul):
 				effects.append(blx_effect)
 
 def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi, pmod):
+	time_obj = audiopl_obj.time
+
+	position, duration = time_obj.get_posdur()
+
 	blx_region.trackId = blx_track.id
 	blx_region.id = str(uuid.uuid4())
-	blx_region.startPosition = (audiopl_obj.time.position/2)*tempomul
-	blx_region.endPosition = ((audiopl_obj.time.position+audiopl_obj.time.duration)/2)*tempomul
+	blx_region.startPosition = (position/2)*tempomul
+	blx_region.endPosition = ((position+duration)/2)*tempomul
 	blx_region.name = audiopl_obj.visual.name
 
-	cut_type = audiopl_obj.time.cut_type
+	cut_type = time_obj.cut_type
 
 	blx_region.sampleStartPosition += blx_region.startPosition
 
-	cut_start = audiopl_obj.time.cut_start
+	cut_start = time_obj.cut_start
 
 	if cut_type == 'cut':
 		blx_region.sampleOffset += ((cut_start/2)*tempomul)*pmod

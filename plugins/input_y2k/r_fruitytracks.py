@@ -12,7 +12,8 @@ def calc_tick_val(bpmdiv, inpos):
 
 def make_auto(convproj_obj, autoloc, plpos, pldur, startval, endval, envpoints, defval, iseff, bpmdiv):
 	autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-	autopl_obj.time.set_posdur(plpos, pldur)
+	time_obj = autopl_obj.time
+	time_obj.set_posdur(plpos, pldur)
 
 	autopoints_obj = autopl_obj.data
 

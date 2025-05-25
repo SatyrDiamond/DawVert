@@ -599,12 +599,11 @@ def do_audio_stretch(als_audioclip, stretch_obj):
 			als_audioclip.WarpMode = 4
 
 class timestate():
-	def __init__(self, audiopl_obj):
-		self.position = audiopl_obj.time.position
-		self.duration = audiopl_obj.time.duration
+	def __init__(self, time_obj):
+		self.position, self.duration = time_obj.get_posdur()
 		self.startrel = 0
 		self.loop_start = 0
-		self.loop_end = audiopl_obj.time.duration
+		self.loop_end = self.duration
 		self.loop_on = False
 
 AUDCLIPVERBOSE = False
@@ -650,16 +649,12 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		warp_obj.points__add__based_beat(0)
 		warp_obj.calcpoints__speed()
 
-		warp_obj.fixpl__offset(audiopl_obj.time, 1)
+		time_obj = audiopl_obj.time
+		
+		warp_obj.fixpl__offset(time_obj, 1)
 		warp_obj.fix__sort()
 
-		ats = timestate(audiopl_obj)
-		ats.position = audiopl_obj.time.position
-		ats.duration = audiopl_obj.time.duration
-		ats.startrel = 0
-		ats.loop_start = 0
-		ats.loop_end = audiopl_obj.time.duration
-		ats.loop_on = False
+		ats = timestate(time_obj)
 	
 		dur_sec = sampleref_obj.get_dur_sec()
 
@@ -670,20 +665,19 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 
 		warp_obj = stretch_obj.warp
 
-		if audiopl_obj.time.cut_type == 'cut':
-			ats.startrel = audiopl_obj.time.cut_start
-			ats.loop_start = audiopl_obj.time.cut_start
-			ats.loop_end = ats.duration+(audiopl_obj.time.cut_start*1.5)
+		if time_obj.cut_type == 'cut':
+			ats.startrel = time_obj.cut_start
+			ats.loop_start = time_obj.cut_start
+			ats.loop_end = ats.duration+(time_obj.cut_start*1.5)
 			als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
-		elif audiopl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
+		elif time_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
 			ats.loop_on = True
-			ats.startrel, ats.loop_start, ats.loop_end = audiopl_obj.time.get_loop_data()
+			ats.startrel, ats.loop_start, ats.loop_end = time_obj.get_loop_data()
 			als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.loop_end
 		else:
 			ats.loop_start = 0
-			ats.loop_end = audiopl_obj.time.duration
 			if stretch_obj.is_warped:
 				s = second_dur*2
 				s *= warp_obj.speed
@@ -765,17 +759,17 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		als_audioclip.Loop.LoopEnd = ats.loop_end
 		als_audioclip.Loop.LoopOn = ats.loop_on
 
-		if audiopl_obj.time.cut_type == 'cut':
+		if time_obj.cut_type == 'cut':
 			als_audioclip.Loop.LoopEnd -= ats.loop_start/2
 			pass
-		elif audiopl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
+		elif time_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
 			pass
 		else:
 			pass
 
 		if AUDCLIPVERBOSE:
 			for x in [
-				audiopl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'], audiopl_obj.time.cut_type, int(als_audioclip.IsWarped),
+				time_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'], time_obj.cut_type, int(als_audioclip.IsWarped),
 				als_audioclip.CurrentEnd-als_audioclip.CurrentStart,
 				als_audioclip.Loop.StartRelative, als_audioclip.Loop.LoopStart,
 				als_audioclip.Loop.LoopEnd, int(als_audioclip.Loop.LoopOn),
@@ -839,14 +833,16 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 		if not DEBUG_IGNORE_PLACEMENTS:
 			track_obj.placements.pl_notes.remove_overlaps()
 			for clipid, notespl_obj in enumerate(track_obj.placements.pl_notes):
+				time_obj = notespl_obj.time
+				position, duration = time_obj.get_posdur()
 				als_midiclip = als_track.add_midiclip(clipid)
 				als_midiclip.Color = notespl_obj.visual.color.closest_color_index_int(colordata, track_color)
 				if notespl_obj.visual.name: als_midiclip.Name = fixtxt(notespl_obj.visual.name)
 				if notespl_obj.visual.comment: als_midiclip.Annotation = fixtxt(notespl_obj.visual.comment)
-				als_midiclip.Time = notespl_obj.time.position
+				als_midiclip.Time = position
 				als_midiclip.Disabled = notespl_obj.muted
-				als_midiclip.CurrentStart = notespl_obj.time.position
-				als_midiclip.CurrentEnd = notespl_obj.time.position+notespl_obj.time.duration
+				als_midiclip.CurrentStart = position
+				als_midiclip.CurrentEnd = position+duration
 
 				if 0 in notespl_obj.timesig_auto.points:
 					timesigc = als_midiclip.TimeSignatures[0]
@@ -855,18 +851,18 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 				notespl_obj.notelist.mod_limit(-60, 67)
 				notespl_obj.notelist.remove_overlap()
 
-				if notespl_obj.time.cut_type == 'cut':
+				if time_obj.cut_type == 'cut':
 					als_midiclip.Loop.LoopOn = False
-					als_midiclip.Loop.LoopStart = notespl_obj.time.cut_start
-					als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+notespl_obj.time.duration
-				elif notespl_obj.time.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
+					als_midiclip.Loop.LoopStart = time_obj.cut_start
+					als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+duration
+				elif time_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
 					als_midiclip.Loop.LoopOn = True
-					als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = notespl_obj.time.get_loop_data()
+					als_midiclip.Loop.StartRelative, als_midiclip.Loop.LoopStart, als_midiclip.Loop.LoopEnd = time_obj.get_loop_data()
 					als_midiclip.Loop.StartRelative -= als_midiclip.Loop.LoopStart
 				else:
 					als_midiclip.Loop.LoopOn = False
 					als_midiclip.Loop.LoopStart = 0
-					als_midiclip.Loop.LoopEnd = notespl_obj.time.duration
+					als_midiclip.Loop.LoopEnd = duration
 	
 				t_keydata = {}
 				

@@ -113,8 +113,8 @@ class soundation_region:
 	def write(self):
 		sng_region = {}
 		if self.color != None: sng_region['color'] = self.color
-		sng_region['position'] = self.position
-		sng_region['length'] = self.length
+		sng_region['position'] = int(self.position)
+		sng_region['length'] = int(self.length)
 		if self.loopcount != None: sng_region['loopcount'] = self.loopcount
 		sng_region['contentPosition'] = self.contentPosition
 		sng_region['muted'] = self.muted

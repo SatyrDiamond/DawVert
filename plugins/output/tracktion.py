@@ -504,24 +504,25 @@ class output_tracktion_edit(plugins.base):
 			get_plugins(convproj_obj, track_obj.params, sampleref_assoc, sampleref_obj_assoc, wf_track.plugins, track_obj.plugslots.slots_audio)
 
 			for notespl_obj in track_obj.placements.pl_notes:
+				time_obj = notespl_obj.time
+
 				wf_midiclip = proj_tracktion_edit.tracktion_midiclip()
 				wf_midiclip.id_num = counter_id.get()
 
-				offset, loopstart, loopend = notespl_obj.time.get_loop_data()
+				offset, loopstart, loopend = time_obj.get_loop_data()
 
-				wf_midiclip.start = notespl_obj.time.position_real
-				wf_midiclip.length = notespl_obj.time.duration_real
+				wf_midiclip.start, wf_midiclip.length = time_obj.get_posdur_real()
 
 				boffset = (offset/8)*tempomul
 				toffset = (offset/4)*tempomul
 
-				if notespl_obj.time.cut_type == 'cut':
+				if time_obj.cut_type == 'cut':
 					wf_midiclip.offset = boffset
-				elif notespl_obj.time.cut_type == 'loop_eq':
+				elif time_obj.cut_type == 'loop_eq':
 					wf_midiclip.offset = 0
 					wf_midiclip.loopStartBeats = toffset
 					wf_midiclip.loopLengthBeats = (loopend/4)-toffset
-				elif notespl_obj.time.cut_type in ['loop', 'loop_off']:
+				elif time_obj.cut_type in ['loop', 'loop_off']:
 					wf_midiclip.offset = boffset
 					wf_midiclip.loopStartBeats = (loopstart/4)
 					wf_midiclip.loopLengthBeats = (loopend/4)
@@ -557,11 +558,12 @@ class output_tracktion_edit(plugins.base):
 				wf_track.midiclips.append(wf_midiclip)
 
 			for audiopl_obj in track_obj.placements.pl_audio:
+				time_obj = audiopl_obj.time
+
 				wf_audioclip = proj_tracktion_edit.tracktion_audioclip()
 				wf_audioclip.id_num = counter_id.get()
 
-				wf_audioclip.start = audiopl_obj.time.position_real
-				wf_audioclip.length = audiopl_obj.time.duration_real
+				wf_audioclip.start, wf_audioclip.length = time_obj.get_posdur_real()
 
 				wf_audioclip.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
 				wf_audioclip.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
@@ -594,9 +596,9 @@ class output_tracktion_edit(plugins.base):
 						loffset = warp_obj.get__offset()
 						warpmove = max(0, loffset)
 
-						audiopl_obj.time.cut_start += warpmove*4
-						if audiopl_obj.time.cut_type == 'none':
-							audiopl_obj.time.cut_type = 'cut'
+						time_obj.cut_start += warpmove*4
+						if time_obj.cut_type == 'none':
+							time_obj.cut_type = 'cut'
 
 						warp_obj.points__add__based_beat(0)
 						warp_obj.fix__last()
@@ -632,18 +634,18 @@ class output_tracktion_edit(plugins.base):
 								speed = timing_obj.get__speed_real(sampleref_obj, bpm)
 								wf_audioclip.loopinfo.numBeats = dur_sec*speed
 
-				offset, loopstart, loopend = audiopl_obj.time.get_loop_data()
+				offset, loopstart, loopend = time_obj.get_loop_data()
 
 				boffset = (offset/8)*tempomul
 				toffset = (offset/4)*tempomul
 
-				if audiopl_obj.time.cut_type == 'cut':
+				if time_obj.cut_type == 'cut':
 					wf_audioclip.offset = boffset
-				elif audiopl_obj.time.cut_type == 'loop_eq':
+				elif time_obj.cut_type == 'loop_eq':
 					wf_audioclip.offset = 0
 					wf_audioclip.loopStartBeats = toffset
 					wf_audioclip.loopLengthBeats = (loopend/4)-toffset
-				elif audiopl_obj.time.cut_type in ['loop', 'loop_off']:
+				elif time_obj.cut_type in ['loop', 'loop_off']:
 					wf_audioclip.offset = boffset
 					wf_audioclip.loopStartBeats = (loopstart/4)
 					wf_audioclip.loopLengthBeats = (loopend/4)
@@ -671,11 +673,11 @@ class output_tracktion_edit(plugins.base):
 			wf_tracks.append(wf_track)
 
 			#for videopl_obj in track_obj.placements.pl_video:
+			#	time_obj = audiopl_obj.time
 			#	wf_videoclip = proj_tracktion_edit.tracktion_audioclip()
 			#	wf_videoclip.id_num = counter_id.get()
 #
-			#	wf_videoclip.start = videopl_obj.time.position_real
-			#	wf_videoclip.length = videopl_obj.time.duration_real
+			#	wf_videoclip.start, wf_videoclip.length = time_obj.get_posdur_real()
 #
 			#	wf_videoclip.fadeIn = videopl_obj.fade_in.get_dur_seconds(bpm)
 			#	wf_videoclip.fadeOut = videopl_obj.fade_out.get_dur_seconds(bpm)

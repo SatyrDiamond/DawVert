@@ -87,7 +87,8 @@ class input_notessimo_v2(plugins.base):
 
 						placement_obj = trscene_obj.add_notes()
 						placement_obj.visual.name = 'Pat #'+str(pat_num+1)+', Layer #'+str(l_num+1)
-						placement_obj.time.set_posdur(0, x.size)
+						time_obj = placement_obj.time
+						time_obj.set_posdur(0, x.size)
 						cvpj_notelist = placement_obj.notelist
 						for nnn in layer: cvpj_notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, None)
 

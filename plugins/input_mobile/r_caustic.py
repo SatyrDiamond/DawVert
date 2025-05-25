@@ -441,8 +441,9 @@ class input_cvpj_r(plugins.base):
 				for position, duration, loopstart, loopend in cutpoints:
 					for autoid, sauto in autodata.items():
 						autopl_obj = convproj_obj.automation.add_pl_points(['plugin', 'machine'+str(x['mach']+1), str(autoid)], 'float')
-						autopl_obj.time.set_posdur(position, duration)
 						autopl_obj.data.from_steps(sauto.data, sauto.smooth, 1)
+						time_obj = autopl_obj.time
+						time_obj.set_posdur(position, duration)
 
 		for pos, val in project_obj.seqn.tempoauto: 
 			convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', pos, val, 'normal')

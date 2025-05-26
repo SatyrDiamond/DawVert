@@ -198,5 +198,5 @@ class input_cvpj_f(plugins.base):
 							time_obj.set_posdur(firstpos, events_obj.get_dur())
 
 
-					else:
-						print(chunk)
+					#else:
+					#	print(chunk)

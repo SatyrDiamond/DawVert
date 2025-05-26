@@ -3,27 +3,28 @@
 
 import json
 
-chorddata = []
-basechorddata = []
-with open("./data_main/json/chords.json") as f: 
-	j = json.load(f)
-	for n,v in j.items():
-		chorddata.append([n,v])
-		if len(v) == 2: basechorddata.append([n,v])
 
 class cvpj_chord:
+	chorddata = []
+	basechorddata = []
+
 	def __init__(self):
 		self.keys = []
 		self.base_key = 0
 		self.chord_type = 'octave'
 
+		with open("./data_main/json/chords.json") as f: 
+			j = json.load(f)
+			for n,v in j.items():
+				cvpj_chord.chorddata.append([n,v])
+				if len(v) == 2: cvpj_chord.basechorddata.append([n,v])
+
 	def find_by_key(self, i_keys):
-		global chorddata
 		self.keys = i_keys
 		self.base_key = min(i_keys)
 		rest_keys = [x-self.base_key for x in i_keys[1:]]
 		self.chord_type = None
-		for m,v in chorddata:
+		for m,v in cvpj_chord.chorddata:
 			leftovers = v.copy()
 			unused = []
 			for x in rest_keys:
@@ -31,7 +32,7 @@ class cvpj_chord:
 				else: unused.append(x)
 			if not leftovers and not unused: self.chord_type = m
 		if self.chord_type == None and len(rest_keys) > 1:
-			for m,v in basechorddata:
+			for m,v in cvpj_chord.basechorddata:
 				if rest_keys[0:2] == v: 
 					self.chord_type = m
 					break
@@ -39,7 +40,7 @@ class cvpj_chord:
 	def find_by_id(self, base_key, i_id):
 		self.chord_type = None
 		self.base_key = base_key
-		for m,v in chorddata:
+		for m,v in cvpj_chord.chorddata:
 			if m == i_id: 
 				self.chord_type = m
 				self.keys = v

@@ -15,6 +15,13 @@ visname = {
 	'pitch': 'Pitch'
 }
 
+def fixval(p_type, p_value):
+	if p_type == 'float': return float(p_value)
+	elif p_type == 'int': return int(float(p_value))
+	elif p_type == 'bool': return bool(p_value)
+	elif p_type == 'string': return str(p_value)
+	else: return p_value
+
 class cvpj_datavals:
 	__slots__ = ['data']
 	def __init__(self): self.data = {}
@@ -68,29 +75,23 @@ class cvpj_paramset:
 	def __contains__(self, x):
 		return self.list().__contains__(x)
 
-	def move(self, other_paramset, p_id):
+	def move(self, dest_paramset, p_id):
 		if p_id in self.paramset: 
-			other_paramset.paramset[p_id] = copy.deepcopy(self.paramset[p_id])
+			dest_paramset.paramset[p_id] = copy.deepcopy(self.paramset[p_id])
 			del self.paramset[p_id]
 
-	def copy(self, other_paramset, p_id):
+	def copy(self, dest_paramset, p_id):
 		if p_id in self.paramset: 
-			other_paramset.paramset[p_id] = copy.deepcopy(self.paramset[p_id])
+			dest_paramset.paramset[p_id] = copy.deepcopy(self.paramset[p_id])
 
 	def add(self, p_id, p_value, p_type):
-		if p_type == 'float': p_value = float(p_value)
-		if p_type == 'int': p_value = int(float(p_value))
-		if p_type == 'bool': p_value = bool(p_value)
-		if p_type == 'string': p_value = p_value
+		p_value = fixval(p_type, p_value)
 		self.paramset[p_id] = cvpj_param(p_value, p_type)
 		self.paramset[p_id].visual.name = visname[p_id] if p_id in visname else p_id
 		return self.paramset[p_id]
 
 	def add_named(self, p_id, p_value, p_type, p_name):
-		if p_type == 'float': p_value = float(p_value)
-		if p_type == 'int': p_value = int(float(p_value))
-		if p_type == 'bool': p_value = bool(p_value)
-		if p_type == 'string': p_value = p_value
+		p_value = fixval(p_type, p_value)
 		self.paramset[p_id] = cvpj_param(p_value, p_type)
 		self.paramset[p_id].visual.name = p_name if p_name else p_id
 		return self.paramset[p_id]
@@ -131,10 +132,7 @@ class cvpj_paramset:
 	def get_auto(self, p_id, fallbackval, cvpj_obj, autopath):
 		param_obj = self.get(p_id, fallbackval)
 		autopath = automation.cvpj_autoloc(autopath+[p_id])
-		if autopath in cvpj_obj.automation: 
-			return param_obj, cvpj_obj.automation[autopath]
-		else: 
-			return param_obj, None
+		return param_obj, (cvpj_obj.automation[autopath] if autopath in cvpj_obj.automation else None)
 
 	def debugtxt(self):
 		for x in self.paramset:

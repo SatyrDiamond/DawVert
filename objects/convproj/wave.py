@@ -95,10 +95,10 @@ class cvpj_wave:
 		return outwavesplit
 
 def calc_val(inval, shape, pw):
-	if shape == 'sine':				  return wave_sine(inval)
-	if shape == 'saw':				   return wave_saw(inval)
-	if shape == 'triangle':			  return wave_tri(inval)
-	if shape == 'square':				return wave_squ(inval, pw)
+	if shape == 'sine': return wave_sine(inval)
+	if shape == 'saw': return wave_saw(inval)
+	if shape == 'triangle': return wave_tri(inval)
+	if shape == 'square': return wave_squ(inval, pw)
 	return 0
 
 def resizewave(inputwave, new_size, smooth):

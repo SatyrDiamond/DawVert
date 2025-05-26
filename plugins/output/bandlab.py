@@ -136,7 +136,7 @@ class output_bandlab(plugins.base):
 		tracknum = 0
 		for trackid, track_obj in convproj_obj.track__iter():
 
-			if track_obj.type in ['instrument', 'audio']:
+			if track_obj.type in ['instrument', 'midi', 'audio']:
 				blx_track = proj_bandlab.bandlab_track(None) 
 				blx_track.automation = proj_bandlab.bandlab_track_automation(None)
 				blx_track.automation.id = str(uuid.uuid4())
@@ -195,7 +195,7 @@ class output_bandlab(plugins.base):
 						blx_region.sampleId = sampleref_assoc[sp_obj.sampleref]
 						blx_track.regions.append(blx_region)
 
-				if track_obj.type == 'instrument':
+				if track_obj.type in ['instrument', 'midi']:
 					blx_track.type = 'piano'
 					blx_track.soundbank = 'studio-grand-v2-v4'
 

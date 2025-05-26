@@ -380,7 +380,12 @@ class midievents:
 
 	def get_dur(self):
 		used_data = self.data.get_used()
-		return max(used_data['pos'].astype(np.int64)) if len(used_data) else -1
+		maxv = max(used_data['pos'].astype(np.int64)) if len(used_data) else -1
+		if self.has_duration:
+			durnotes = used_data[used_data['type']==EVENTID__NOTE_DUR]
+			durs = durnotes['uhival']+durnotes['pos']
+			maxv = max(maxv, max(durs))
+		return maxv
 
 	def clean(self):
 		self.data.clean()

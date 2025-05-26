@@ -27,21 +27,6 @@ class cvpj_placements_audio:
 	def __bool__(self):
 		return bool(self.data)
 
-	def merge_crop(self, apl_obj, pos, dur, visualfill, groupid):
-		for n in apl_obj.data:
-			if n.time.position < dur:
-				copy_apl_obj = copy.deepcopy(n)
-				plend = copy_apl_obj.time.get_end()
-				numval = copy_apl_obj.time.duration+min(0, dur-plend)
-				copy_apl_obj.time.position += pos
-				copy_apl_obj.time.duration = numval
-				if visualfill.name and not copy_apl_obj.visual.name:
-					copy_apl_obj.visual.name = visualfill.name
-				if visualfill.color and not copy_apl_obj.visual.color:
-					copy_apl_obj.visual.color = visualfill.color
-				copy_apl_obj.group = groupid
-				self.data.append(copy_apl_obj)
-
 	def add(self):
 		pl_obj = cvpj_placement_audio(self.time_ppq, self.time_float)
 		self.data.append(pl_obj)
@@ -50,19 +35,11 @@ class cvpj_placements_audio:
 	def sort(self):
 		self.data = placements.internal_sort(self.data)
 
-	def get_start(self):
-		start_final = 100000000000000000
-		for pl in self.data:
-			pl_start = pl.time.position
-			if pl_start < start_final: start_final = pl_start
-		return start_final
-
 	def get_dur(self):
-		duration_final = 0
-		for pl in self.data:
-			pl_end = pl.time.get_end()
-			if duration_final < pl_end: duration_final = pl_end
-		return duration_final
+		return placements.internal_get_dur(self.data)
+
+	def get_start(self):
+		return placements.internal_get_start(self.data)
 
 	def change_timings(self, time_ppq, time_float):
 		for pl in self.data:
@@ -123,25 +100,17 @@ class cvpj_placements_audio:
 	def eq_content(self, pl, prev):
 		if prev:
 			isvalid_a = pl.sample==prev.sample
-			isvalid_b = pl.cut_type==prev.cut_type
-			isvalid_c = pl.cut_start==prev.cut_start
-			isvalid_d = pl.cut_loopstart==prev.cut_loopstart
-			isvalid_e = pl.cut_loopend==prev.cut_loopend
-			isvalid_f = pl.muted==prev.muted
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
+			isvalid_b = placements.internal_eq_content(pl, prev)
+			return isvalid_a & isvalid_b
 		else:
 			return False
 
 	def eq_connect(self, pl, prev, loopcompat):
 		if prev:
 			isvalid_a = self.eq_content(pl, prev)
-			isvalid_b = pl.cut_type in ['none', 'cut']
-			isvalid_c = ((prev.position+prev.duration)-pl.position)==0
-			isvalid_d = prev.cut_type in ['none', 'cut']
-			isvalid_e = ('loop_adv' in loopcompat) if pl.cut_type == 'cut' else True
-			isvalid_f = pl.duration==prev.duration
-			isvalid_g = not (bool(pl.fade_in) or bool(pl.fade_out))
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f & isvalid_g
+			isvalid_b = placements.internal_eq_connect(pl, prev, loopcompat)
+			isvalid_c = not (bool(pl.fade_in) or bool(pl.fade_out))
+			return isvalid_a & isvalid_b & isvalid_c
 		else:
 			return False
 
@@ -169,6 +138,21 @@ class cvpj_placements_audio:
 			new_data_audio.append(pl)
 
 		self.data = new_data_audio
+
+	def merge_crop(self, apl_obj, pos, dur, visualfill, groupid):
+		for n in apl_obj.data:
+			if n.time.position < dur:
+				copy_apl_obj = copy.deepcopy(n)
+				plend = copy_apl_obj.time.get_end()
+				numval = copy_apl_obj.time.duration+min(0, dur-plend)
+				copy_apl_obj.time.position += pos
+				copy_apl_obj.time.duration = numval
+				if visualfill.name and not copy_apl_obj.visual.name:
+					copy_apl_obj.visual.name = visualfill.name
+				if visualfill.color and not copy_apl_obj.visual.color:
+					copy_apl_obj.visual.color = visualfill.color
+				copy_apl_obj.group = groupid
+				self.data.append(copy_apl_obj)
 
 
 class cvpj_placement_audio:

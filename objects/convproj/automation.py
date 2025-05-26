@@ -215,8 +215,9 @@ class cvpj_s_automation:
 			self.u_nopl_ticks = True
 			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, self.valtype)
 			for x in self.pl_ticks:
-				pos, dur = x.time.get_posdur()
-				offset = x.time.cut_start if x.time.cut_type == 'cut' else 0
+				time_obj = x.time
+				pos, dur = time_obj.get_posdur()
+				offset = time_obj.cut_start if time_obj.cut_type == 'cut' else 0
 				for p, v in x.data.points.items():
 					if dur>p>=offset:
 						self.nopl_ticks.points[p+pos] = v
@@ -366,6 +367,7 @@ class cvpj_autoloc:
 
 	def change_start(self, startlen, listin):
 		self.autoloc = listin+self.autoloc[startlen:]
+
 
 class cvpj_automation:
 	__slots__ = ['data','time_ppq','time_float','auto_num','movenotfound','calcnotfound']

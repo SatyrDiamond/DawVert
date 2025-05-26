@@ -34,13 +34,13 @@ class lanefit:
 				self.mergeddata_audio.append(placements_audio.cvpj_placements_audio(pl_data.time_ppq, pl_data.time_float))
 
 			if not is_audio:
-				overlapped = self.mergeddata_notes[-1].check_overlap(pl_data.time.position, pl_data.time.duration)
+				overlapped = self.mergeddata_notes[-1].check_overlap_timeobj(pl_data.time)
 				if not overlapped: 
 					self.mergeddata_notes[-1].append(pl_data)
 					isplaced = True
 				else: nummlane += 1
 			else:
-				overlapped = self.mergeddata_audio[-1].check_overlap(pl_data.time.position, pl_data.time.duration)
+				overlapped = self.mergeddata_audio[-1].check_overlap_timeobj(pl_data.time)
 				if not overlapped: 
 					self.mergeddata_audio[-1].append(pl_data)
 					isplaced = True

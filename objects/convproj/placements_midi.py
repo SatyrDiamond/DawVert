@@ -42,7 +42,8 @@ class cvpj_placements_midi:
 
 	def check_overlap(self, start, end):
 		for npl in self.data:
-			if xtramath.overlap(start, start+end, npl.time.position, npl.time.position+npl.time.duration): return True
+			npl_time = npl.time
+			if xtramath.overlap(start, start+end, npl_time.get_pos(), npl_time.get_end()): return True
 		return False
 
 	def clear(self):
@@ -57,18 +58,10 @@ class cvpj_placements_midi:
 		self.data = placements.internal_sort(self.data)
 
 	def get_dur(self):
-		duration_final = 0
-		for pl in self.data:
-			pl_end = pl.time.get_end()
-			if duration_final < pl_end: duration_final = pl_end
-		return duration_final
+		return placements.internal_get_dur(self.data)
 
 	def get_start(self):
-		start_final = 100000000000000000
-		for pl in self.data:
-			pl_start = pl.time.position
-			if pl_start < start_final: start_final = pl_start
-		return start_final
+		return placements.internal_get_start(self.data)
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		for pl in self.data: 
@@ -78,24 +71,17 @@ class cvpj_placements_midi:
 	def eq_content(self, pl, prev):
 		if prev:
 			isvalid_a = pl.events==prev.events
-			isvalid_b = pl.time.cut_type==prev.time.cut_type
-			isvalid_c = pl.time.cut_start==prev.time.cut_start
-			isvalid_d = pl.time.cut_loopstart==prev.time.cut_loopstart
-			isvalid_e = pl.time.cut_loopend==prev.time.cut_loopend
-			isvalid_f = pl.muted==prev.muted
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
+			isvalid_b = placements.internal_eq_content(pl, prev)
+			return isvalid_a & isvalid_b
 		else:
 			return False
 
 	def eq_connect(self, pl, prev, loopcompat):
 		if prev:
+			prevtime = prev.time
 			isvalid_a = self.eq_content(pl, prev)
-			isvalid_b = pl.time.cut_type in ['none', 'cut']
-			isvalid_c = ((prev.time.position+prev.time.duration)-pl.time.position)==0
-			isvalid_d = prev.time.cut_type in ['none', 'cut']
-			isvalid_e = ('loop_adv' in loopcompat) if pl.time.cut_type == 'cut' else True
-			isvalid_f = pl.time.duration==prev.time.duration
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
+			isvalid_b = placements.internal_eq_connect(pl, prev, loopcompat)
+			return isvalid_a & isvalid_b
 		else:
 			return False
 
@@ -110,11 +96,12 @@ class cvpj_placements_midi:
 		new_data_midi = []
 
 		prev = None
-		for pl in old_data_midi:
-			endpos = pl.time.duration+pl.time.position
-			if prev:
-				poevendpos = prev.time.duration+prev.time.position
-				prev.time.duration = min(prev.time.duration, pl.time.position-prev.time.position)
+		for pl in old_data_notes:
+			time_obj = pl.time
+			position, duration = time_obj.get_posdur_real()
+			if prev: 
+				prev_time_obj = prev.time
+				prev_time_obj.set_dur( min(prev_time_obj.get_dur(), position-prev_time_obj.get_pos()) )
 			prev = pl
 			new_data_midi.append(pl)
 

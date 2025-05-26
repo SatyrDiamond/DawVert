@@ -27,15 +27,17 @@ def internal_addloops(pldata, eq_connect, loopcompat):
 			new_data.append(pl)
 		else:
 			prevreal = new_data[-1]
-			prevreal.time.duration += pl.time.duration
-			if prevreal.time.cut_type == 'none': 
-				prevreal.time.cut_type = 'loop'
-				prevreal.time.cut_loopend = pl.time.duration
+			cur_time_obj = curpl_time
+			pr_time_obj = prevreal.time
+			pr_time_obj.duration += cur_time_obj.duration
+			if pr_time_obj.cut_type == 'none': 
+				pr_time_obj.cut_type = 'loop'
+				pr_time_obj.cut_loopend = cur_time_obj.duration
 			if 'loop_adv' in loopcompat:
-				if prevreal.time.cut_type == 'cut': 
-					prevreal.time.cut_type = 'loop_off'
-					prevreal.time.cut_loopstart = pl.time.cut_start
-					prevreal.time.cut_loopend = pl.time.duration+pl.time.cut_start
+				if pr_time_obj.cut_type == 'cut': 
+					pr_time_obj.cut_type = 'loop_off'
+					pr_time_obj.cut_loopstart = cur_time_obj.cut_start
+					pr_time_obj.cut_loopend = cur_time_obj.duration+cur_time_obj.cut_start
 		prev = pl
 
 	return new_data
@@ -58,9 +60,10 @@ def internal_removeloops(pldata, out__placement_loop):
 
 				if dur>loop_loopend:
 					cutplpl_obj = copy.deepcopy(oldpl_obj)
-					cutplpl_obj.time.position += loop_loopend-offset
-					cutplpl_obj.time.duration = (dur-loop_loopend)+offset
-					cutplpl_obj.time.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
+					cpl_time_obj = cutplpl_obj.time
+					cpl_time_obj.position += loop_loopend-offset
+					cpl_time_obj.duration = (dur-loop_loopend)+offset
+					cpl_time_obj.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
 					new_data.append(cutplpl_obj)
 
 			else:
@@ -75,10 +78,11 @@ def internal_removeloops(pldata, out__placement_loop):
 
 				for cutpoint in xtramath.cutloop(oldtime_obj.position, dur, loop_start, loop_loopstart, loop_loopend):
 					cutplpl_obj = copy.deepcopy(oldpl_obj)
-					cutplpl_obj.time.position = cutpoint[0]
-					cutplpl_obj.time.duration = cutpoint[1] 
-					cutplpl_obj.time.cut_type = 'cut'
-					cutplpl_obj.time.cut_start = cutpoint[2]
+					cpl_time_obj = cutplpl_obj.time
+					cpl_time_obj.position = cutpoint[0]
+					cpl_time_obj.duration = cutpoint[1] 
+					cpl_time_obj.cut_type = 'cut'
+					cpl_time_obj.cut_start = cutpoint[2]
 					new_data.append(cutplpl_obj)
 		else: new_data.append(oldpl_obj)
 	return new_data
@@ -88,13 +92,47 @@ def internal_sort(pldata):
 	ta_sorted = {}
 	new_a = []
 	for n in pldata:
-		if n.time.position not in ta_bsort: ta_bsort[n.time.position] = []
-		ta_bsort[n.time.position].append(n)
+		n_time = n.time
+		if n_time.position not in ta_bsort: ta_bsort[n_time.position] = []
+		ta_bsort[n_time.position].append(n)
 	ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))
 	for p in ta_sorted:
 		for note in ta_sorted[p]: new_a.append(note)
 	return new_a
 
+def internal_get_dur(pldata):
+	duration_final = 0
+	for pl in pldata:
+		pl_end = pl.time.get_end()
+		if duration_final < pl_end: duration_final = pl_end
+	return duration_final
+
+def internal_get_start(pldata):
+	start_final = 100000000000000000
+	for pl in self.data:
+		pl_start = curpl_time.get_pos()
+		if pl_start < start_final: start_final = pl_start
+	return start_final
+
+def internal_eq_content(pl, prev):
+	curpl_time = pl.time
+	prevpl_time = prev.time
+	isvalid_b = curpl_time.cut_type==prevpl_time.cut_type
+	isvalid_c = curpl_time.cut_start==prevpl_time.cut_start
+	isvalid_d = curpl_time.cut_loopstart==prevpl_time.cut_loopstart
+	isvalid_e = curpl_time.cut_loopend==prevpl_time.cut_loopend
+	isvalid_f = pl.muted==prev.muted
+	return isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
+
+def internal_eq_connect(pl, prev, loopcompat):
+	curpl_time = pl.time
+	prevpl_time = prevpl_time
+	isvalid_b = curpl_time.cut_type in ['none', 'cut']
+	isvalid_c = (prevpl_time.get_end()-curpl_time.get_pos())==0
+	isvalid_d = prevpl_time.cut_type in ['none', 'cut']
+	isvalid_e = ('loop_adv' in loopcompat) if curpl_time.cut_type == 'cut' else True
+	isvalid_f = curpl_time.get_dur()==prevpl_time.get_dur()
+	return isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
 
 class cvpj_placement_fade:
 	__slots__ = ['dur','time_type','skew','slope']
@@ -131,12 +169,16 @@ class cvpj_placement_fade:
 #	loop_adv_off	        Start                   LoopStart                       LoopEnd
 
 class cvpj_placement_timing:
-	__slots__ = ['position','duration','position_real','duration_real','cut_type','cut_start','cut_loopstart','cut_loopend','time_ppq','time_float']
+	__slots__ = ['position','duration','position_real','duration_real',
+	'cut_type','cut_start','cut_loopstart','cut_loopend',
+	'time_ppq','time_float','mode_position','mode_duration']
 	def __init__(self, time_ppq, time_float):
 		self.position = 0
 		self.duration = 0
 		self.position_real = None
 		self.duration_real = None
+		self.mode_position = 'beats'
+		self.mode_duration = 'beats'
 		self.cut_type = 'none'
 		self.cut_start = 0
 		self.cut_loopstart = 0
@@ -152,6 +194,18 @@ class cvpj_placement_timing:
 		self.duration = dur
 		self.position_real = None
 		self.duration_real = None
+		self.mode_position = 'beats'
+		self.mode_duration = 'beats'
+ 
+	def set_pos(self, pos):
+		self.position = pos
+		self.position_real = None
+		self.mode_position = 'beats'
+ 
+	def set_dur(self, dur):
+		self.duration = dur
+		self.duration_real = None
+		self.mode_duration = 'beats'
  
 	def set_startend(self, start, end):
 		self.set_posdur(start, end-start)
@@ -161,6 +215,8 @@ class cvpj_placement_timing:
 		self.duration = None
 		self.position_real = pos
 		self.duration_real = dur
+		self.mode_position = 'seconds'
+		self.mode_duration = 'seconds'
  
 	def set_startend_real(self, start, end):
 		self.set_posdur_real(start, end-start)
@@ -176,9 +232,21 @@ class cvpj_placement_timing:
 	def set_block_dur(self, durval, blksize):
 		self.duration = (durval/blksize).__ceil__()*blksize
 		self.duration_real = None
+		self.mode_duration = 'beats'
+
+
+	def add_pos(self, pos):
+		if self.mode_position == 'beats': self.position += pos
+ 
 
 	def get_posdur(self):
 		return self.position, self.duration
+
+	def get_pos(self):
+		return self.position
+
+	def get_dur(self):
+		return self.duration
 
 	def get_startend(self):
 		return self.position, self.position+self.duration
@@ -190,7 +258,7 @@ class cvpj_placement_timing:
 		return self.position_real, self.position_real+self.duration_real
 
 	def get_end(self):
-		return self.position+self.duration
+		return self.get_pos()+self.get_dur()
 
 	def get_loopcount(self):
 		outcount = 1
@@ -451,7 +519,6 @@ class cvpj_placements:
 				dupepatternfound = patid
 				pattern_number += 1
 
-
 			new_index_obj = placements_index.cvpj_placement_index(self.time_ppq, self.time_float)
 			new_index_obj.time = notepl_obj.time.copy()
 			new_index_obj.fromindex = dupepatternfound
@@ -507,9 +574,10 @@ class cvpj_placements:
 
 		self.pl_audio_nested.remove_loops([])
 		for nestedpl_obj in self.pl_audio_nested:
-			main_s = nestedpl_obj.time.cut_start
-			main_e = nestedpl_obj.time.duration+main_s
-			basepos = nestedpl_obj.time.position
+			nest_time_obj = nestedpl_obj.time
+			main_s = nest_time_obj.cut_start
+			main_e = nest_time_obj.duration+main_s
+			basepos = nest_time_obj.position
 
 			#print('PL', end=' ')
 			#for x in [main_s, main_e]:
@@ -517,10 +585,11 @@ class cvpj_placements:
 			#print()
 
 			for e in nestedpl_obj.events:
-				event_s = e.time.position
-				event_et = e.time.duration
-				event_e = e.time.position+event_et
-				event_o = e.time.cut_start
+				e_time_obj = e.time
+				event_s = e_time_obj.position
+				event_et = e_time_obj.duration
+				event_e = e_time_obj.position+event_et
+				event_o = e_time_obj.cut_start
 
 				if main_e>=event_s and main_s<=event_e:
 					out_start = max(main_s, event_s)
@@ -540,14 +609,15 @@ class cvpj_placements:
 						print()
 
 					cutplpl_obj = copy.deepcopy(e)
-					cutplpl_obj.time.position = (out_start+basepos)-main_s
 
+					cpl_time_obj = cutplpl_obj.time
+					cpl_time_obj.position = (out_start+basepos)-main_s
 					sco = out_start-event_o
 					offset_d = (main_e-main_s)-sco
+					cpl_time_obj.duration = min(max(out_end-out_start, offset_d), event_et)
+					cpl_time_obj.cut_type = 'cut'
+					cpl_time_obj.cut_start += scs
 
-					cutplpl_obj.time.duration = min(max(out_end-out_start, offset_d), event_et)
-					cutplpl_obj.time.cut_type = 'cut'
-					cutplpl_obj.time.cut_start += scs
 					cutplpl_obj.muted = cutplpl_obj.muted or nestedpl_obj.muted
 					if not cutplpl_obj.visual.name: 
 						cutplpl_obj.visual.name = nestedpl_obj.visual.name

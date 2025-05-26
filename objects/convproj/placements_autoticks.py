@@ -29,6 +29,15 @@ class cvpj_placements_autoticks:
 		self.data.append(placement_obj)
 		return placement_obj
 
+	def sort(self):
+		self.data = placements.internal_sort(self.data)
+
+	def get_dur(self):
+		return placements.internal_get_dur(self.data)
+
+	def get_start(self):
+		return placements.internal_get_start(self.data)
+
 	def change_timings(self, time_ppq, time_float):
 		for pl in self.data:
 			pl.time.change_timing(self.time_ppq, time_ppq, time_float)

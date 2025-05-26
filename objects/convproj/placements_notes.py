@@ -45,14 +45,15 @@ class cvpj_placements_notes:
 
 	def merge_crop(self, npl_obj, pos, dur, visualfill):
 		for n in npl_obj.data:
-			if n.time.position < dur:
+			if n.time.get_pos() < dur:
 				copy_npl_obj = copy.deepcopy(n)
-				plend = copy_npl_obj.time.get_end()
-				numval = copy_npl_obj.time.duration+min(0, dur-plend)
-				if copy_npl_obj.time.duration > numval:
+				copytime_obj = copy_npl_obj.time
+				plend = copytime_obj.get_end()
+				numval = copytime_obj.get_dur()+min(0, dur-plend)
+				if copytime_obj.get_dur() > numval:
 					copy_npl_obj.notelist.edit_trimmove(0, numval)
-				copy_npl_obj.time.position += pos
-				copy_npl_obj.time.duration = numval
+				copytime_obj.add_pos(pos)
+				copytime_obj.set_dur(numval)
 				if visualfill.name and not copy_npl_obj.visual.name:
 					copy_npl_obj.visual.name = visualfill.name
 				if visualfill.color and not copy_npl_obj.visual.color:
@@ -62,9 +63,15 @@ class cvpj_placements_notes:
 	def append(self, value):
 		self.data.append(value)
 
+	def check_overlap_timeobj(self, time_obj):
+		start, end = time_obj.get_startend()
+		return self.check_overlap(start, end)
+
 	def check_overlap(self, start, end):
 		for npl in self.data:
-			if xtramath.overlap(start, start+end, npl.time.position, npl.time.position+npl.time.duration): return True
+			istart, iend = npl.time.get_startend()
+			if xtramath.overlap(start, start+end, istart, iend):
+				return True
 		return False
 
 	def clear(self):
@@ -79,18 +86,13 @@ class cvpj_placements_notes:
 		self.data = placements.internal_sort(self.data)
 
 	def get_dur(self):
-		duration_final = 0
-		for pl in self.data:
-			if pl.time.duration == 0: pl.time.duration = pl.notelist.get_dur()
-			pl_end = pl.time.get_end()
-			if duration_final < pl_end: duration_final = pl_end
-		return duration_final
+		return placements.internal_get_dur(self.data)
 
 	def get_start(self):
 		start_final = 100000000000000000
 		for pl in self.data:
 			if pl.notelist.count():
-				pl_start = pl.time.position
+				pl_start = pl.time.get_pos()
 				if pl_start < start_final: start_final = pl_start
 		return start_final
 
@@ -102,31 +104,24 @@ class cvpj_placements_notes:
 	def remove_cut(self):
 		for x in self.data: 
 			if x.time.cut_type == 'cut':
-				x.notelist.edit_trimmove(x.time.cut_start, round(x.time.cut_start+x.time.duration, 8))
+				x.notelist.edit_trimmove(x.time.cut_start, round(x.time.cut_start+x.time.get_dur(), 8))
 				x.time.cut_start = 0
 				x.time.cut_type = None
 
 	def eq_content(self, pl, prev):
 		if prev:
 			isvalid_a = pl.notelist==prev.notelist
-			isvalid_b = pl.time.cut_type==prev.time.cut_type
-			isvalid_c = pl.time.cut_start==prev.time.cut_start
-			isvalid_d = pl.time.cut_loopstart==prev.time.cut_loopstart
-			isvalid_e = pl.time.cut_loopend==prev.time.cut_loopend
-			isvalid_f = pl.muted==prev.muted
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
+			isvalid_b = placements.internal_eq_content(pl, prev)
+			return isvalid_a & isvalid_b
 		else:
 			return False
 
 	def eq_connect(self, pl, prev, loopcompat):
 		if prev:
+			prevtime = prev.time
 			isvalid_a = self.eq_content(pl, prev)
-			isvalid_b = pl.time.cut_type in ['none', 'cut']
-			isvalid_c = ((prev.time.position+prev.time.duration)-pl.time.position)==0
-			isvalid_d = prev.time.cut_type in ['none', 'cut']
-			isvalid_e = ('loop_adv' in loopcompat) if pl.time.cut_type == 'cut' else True
-			isvalid_f = pl.time.duration==prev.time.duration
-			return isvalid_a & isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
+			isvalid_b = placements.internal_eq_connect(pl, prev, loopcompat)
+			return isvalid_a & isvalid_b
 		else:
 			return False
 
@@ -142,10 +137,11 @@ class cvpj_placements_notes:
 
 		prev = None
 		for pl in old_data_notes:
-			endpos = pl.time.duration+pl.time.position
-			if prev:
-				poevendpos = prev.time.duration+prev.time.position
-				prev.time.duration = min(prev.time.duration, pl.time.position-prev.time.position)
+			time_obj = pl.time
+			position, duration = time_obj.get_posdur_real()
+			if prev: 
+				prev_time_obj = prev.time
+				prev_time_obj.set_dur( min(prev_time_obj.get_dur(), position-prev_time_obj.get_pos()) )
 			prev = pl
 			new_data_notes.append(pl)
 
@@ -200,9 +196,10 @@ class cvpj_placement_notes:
 			splitted_pl[inst_id].append(plb_obj)
 
 	def auto_dur(self, dur_p, dur_e):
-		self.time.duration = self.notelist.get_dur()
-		if self.time.duration != 0: self.time.duration = (self.time.duration/dur_p).__ceil__()*dur_p
-		else: self.time.duration = dur_e
+		nl_dur = self.notelist.get_dur()
+		time_obj = self.time
+		if nl_dur != 0: time_obj.set_dur( (nl_dur/dur_p).__ceil__()*dur_p )
+		else: time_obj.set_dur(dur_e)
 
 	def antiminus(self):
 		loop_start, loop_loopstart, loop_loopend = self.time.get_loop_data()
@@ -215,7 +212,7 @@ class cvpj_placement_notes:
 			self.time.set_loop_data(loop_start, loop_loopstart, loop_loopend)
 
 	def get_logdur(self):
-		durp = math.log2(self.duration/self.time_ppq)
+		durp = math.log2(self.get_dur()/self.time_ppq)
 		return (durp==int(durp)), durp
 		
 	def add_autopoints(self, a_type):

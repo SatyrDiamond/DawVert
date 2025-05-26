@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-from objects.data_bytes import structalloc
+from objects.data_bytes import dynbytearr
 from objects.exceptions import ProjectFileParserException
 import numpy as np
 import struct
@@ -44,7 +44,7 @@ class ptcop_unit:
 	def __init__(self):
 		self.name = None
 
-event_premake = structalloc.dynarray_premake([
+event_premake = dynbytearr.dynbytearr_premake([
 	('position', np.uint32),
 	('unitnum', np.uint8),
 	('eventnum', np.uint8),
@@ -84,12 +84,13 @@ class ptcop_song:
 				self.repeat = song_file.uint32()
 				self.last = song_file.uint32()
 			elif chunk_id == b'Event V5':
+				ev_cur = self.events.create_cursor()
 				for _ in range(song_file.uint32()):
-					self.events.add()
-					self.events['position'] = song_file.varint()
-					self.events['unitnum'] = song_file.uint8()
-					self.events['eventnum'] = song_file.uint8()
-					self.events['value'] = song_file.varint()
+					ev_cur.add()
+					ev_cur['position'] = song_file.varint()
+					ev_cur['unitnum'] = song_file.uint8()
+					ev_cur['eventnum'] = song_file.uint8()
+					ev_cur['value'] = song_file.varint()
 			elif chunk_id == b'effeDELA':
 				song_file.skip(2)
 				delay_obj = ptcop_delay()

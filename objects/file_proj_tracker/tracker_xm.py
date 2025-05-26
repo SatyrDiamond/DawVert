@@ -3,63 +3,12 @@
 
 from objects.data_bytes import bytereader
 #from objects import openmpt_plugin
-
 import logging
-logger_projparse = logging.getLogger('projparse')
 from objects.exceptions import ProjectFileParserException
 
-class xm_pattern:
-	def __init__(self, song_file, num, num_channels):
-		#logger_projparse.info("xm: Pattern " + str(num))
-		self.data = []
-		self.used = False
+logger_projparse = logging.getLogger('projparse')
 
-		basepos = song_file.tell()
-		header_length = song_file.uint32()
-		self.pak_type = song_file.uint8()
-		self.rows = song_file.uint16()
-		patterndata_size = song_file.uint16()
-		basepos_end = song_file.tell()
-		self.extra_data = song_file.raw(header_length - (basepos_end-basepos))
-		end_pos = patterndata_size+song_file.tell()
-
-		if patterndata_size != 0:
-			self.used = True
-			for rownum in range(self.rows):
-				rowdata = []
-				for channel in range(num_channels):
-					cell_note = None
-					cell_inst = None
-					cell_vol = None
-					cell_effect = None
-					cell_param = None
-
-					packed_first = song_file.uint8()
-
-					packed_note = bool(packed_first&1)
-					packed_inst = bool(packed_first&2)
-					packed_vol = bool(packed_first&4)
-					packed_effect = bool(packed_first&8)
-					packed_param = bool(packed_first&16)
-					packed_msb = bool(packed_first&128)
-
-					if packed_msb == 1:
-						if packed_note == 1: cell_note = song_file.uint8()
-						if packed_inst == 1: cell_inst = song_file.uint8()
-						if packed_vol == 1: cell_vol = song_file.uint8()
-						if packed_effect == 1: cell_effect = song_file.uint8()
-						if packed_param == 1: cell_param = song_file.uint8()
-					else:
-						cell_note = packed_first
-						cell_inst = song_file.uint8()
-						cell_vol = song_file.uint8()
-						cell_effect = song_file.uint8()
-						cell_param = song_file.uint8()
-
-					if not (cell_note == cell_inst == cell_vol == cell_effect == cell_param == None):
-						rowdata.append([channel, cell_note, cell_inst, cell_vol, cell_effect, cell_param])
-
-				self.data.append(rowdata)
+# ============================================= instrument ============================================= 
 
 class xm_env:
 	def __init__(self): 
@@ -172,6 +121,61 @@ class xm_instrument:
 
 	def vibrato_lfo(self): 
 		return self.vibrato_rate, (self.vibrato_depth/15)*0.23, ['sine','square','ramp_up','ramp_down'][self.vibrato_type&3], self.vibrato_sweep/50
+
+# ============================================= song ============================================= 
+
+class xm_pattern:
+	def __init__(self, song_file, num, num_channels):
+		#logger_projparse.info("xm: Pattern " + str(num))
+		self.data = []
+		self.used = False
+
+		basepos = song_file.tell()
+		header_length = song_file.uint32()
+		self.pak_type = song_file.uint8()
+		self.rows = song_file.uint16()
+		patterndata_size = song_file.uint16()
+		basepos_end = song_file.tell()
+		self.extra_data = song_file.raw(header_length - (basepos_end-basepos))
+		end_pos = patterndata_size+song_file.tell()
+
+		if patterndata_size != 0:
+			self.used = True
+			for rownum in range(self.rows):
+				rowdata = []
+				for channel in range(num_channels):
+					cell_note = None
+					cell_inst = None
+					cell_vol = None
+					cell_effect = None
+					cell_param = None
+
+					packed_first = song_file.uint8()
+
+					packed_note = bool(packed_first&1)
+					packed_inst = bool(packed_first&2)
+					packed_vol = bool(packed_first&4)
+					packed_effect = bool(packed_first&8)
+					packed_param = bool(packed_first&16)
+					packed_msb = bool(packed_first&128)
+
+					if packed_msb == 1:
+						if packed_note == 1: cell_note = song_file.uint8()
+						if packed_inst == 1: cell_inst = song_file.uint8()
+						if packed_vol == 1: cell_vol = song_file.uint8()
+						if packed_effect == 1: cell_effect = song_file.uint8()
+						if packed_param == 1: cell_param = song_file.uint8()
+					else:
+						cell_note = packed_first
+						cell_inst = song_file.uint8()
+						cell_vol = song_file.uint8()
+						cell_effect = song_file.uint8()
+						cell_param = song_file.uint8()
+
+					if not (cell_note == cell_inst == cell_vol == cell_effect == cell_param == None):
+						rowdata.append([channel, cell_note, cell_inst, cell_vol, cell_effect, cell_param])
+
+				self.data.append(rowdata)
 
 class xm_song:
 	def __init__(self):

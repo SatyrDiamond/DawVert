@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-import logging
 from objects.exceptions import ProjectFileParserException
+import logging
 logger_projparse = logging.getLogger('projparse')
 
 class piximod_pattern:

@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-#from objects.data_bytes import bytewriter
 from objects.file_proj_past._cakewalk_wrk import chunks
 
 class cakewalk_wrk_file:

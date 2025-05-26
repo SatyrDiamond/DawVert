@@ -1,13 +1,15 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects.data_bytes import bytereader
-from io import BytesIO
-import json
-import base64
-import zlib
 from functions import data_values
+from io import BytesIO
+from objects.data_bytes import bytereader
 from objects.exceptions import ProjectFileParserException
+import base64
+import json
+import zlib
+
+# ============================================= instrument ============================================= 
 
 class onebitd_instrument:
 	def __init__(self, i_dict):
@@ -40,6 +42,8 @@ class onebitd_drum:
 
 	def get_instid(self):
 		return 'drum'+'_'.join([str(int(self.on)), str(self.audioClipId), str(self.volume)])
+
+# ============================================= song ============================================= 
 
 class onebitd_block:
 	def __init__(self, i_dict):

@@ -7,6 +7,8 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
+# ============================================= metaevent ============================================= 
+
 class metaevent_key:
 	def __init__(self):
 		self.td = 0
@@ -56,6 +58,8 @@ class metaevent_meter:
 		if "beats" in xmldata.attrib: cls.beats = int(xmldata.attrib['beats'])
 		if "beat-value" in xmldata.attrib: cls.beat_value = int(xmldata.attrib['beat-value'])
 		return cls
+
+# ============================================= event ============================================= 
 
 class event_note:
 	def __init__(self):
@@ -131,6 +135,8 @@ class event_control:
 		if "ct" in xmldata.attrib: cls.ct = int(xmldata.attrib['ct'])
 		return cls
 
+# ============================================= clips ============================================= 
+
 class temper_phrase:
 	def __init__(self):
 		self.td = 0
@@ -171,6 +177,8 @@ class event_audio:
 		if "flags" in xmldata.attrib: cls.flags = int(xmldata.attrib['flags'])
 		return cls
 
+# ============================================= project ============================================= 
+
 class temper_track:
 	def __init__(self):
 		self.name = ''
@@ -197,7 +205,6 @@ class temper_track:
 				cls.audios.append(event_audio.fromxml(xmlpart))
 
 		return cls
-
 
 class temper_song:
 	def __init__(self):

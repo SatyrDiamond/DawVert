@@ -12,6 +12,8 @@ dtype_patdata = np.dtype([
 	('fx', [('fx_type', np.int8), ('fx_param', np.int8)], 3),
 	]) 
 
+# ============================================= instrument ============================================= 
+
 class trackerboy_instrument:
 	def __init__(self, song_data):
 		self.id = 0
@@ -46,6 +48,15 @@ class trackerboy_env:
 	def __bool__(self):
 		return bool(len(self.values))
 
+class trackerboy_wave:
+	def __init__(self, song_data):
+		if song_data:
+			self.id = song_data.uint8()+1
+			self.name = song_data.c_raw__int16(False)
+			self.wave = song_data.l_int4(16)
+
+# ============================================= song ============================================= 
+
 class trackerboy_song:
 	def __init__(self, song_data):
 		self.patterns = {}
@@ -71,13 +82,6 @@ class trackerboy_song:
 
 				if pate_ch not in self.patterns: self.patterns[pate_ch] = {}
 				self.patterns[pate_ch][pate_trkid] = pate_data
-
-class trackerboy_wave:
-	def __init__(self, song_data):
-		if song_data:
-			self.id = song_data.uint8()+1
-			self.name = song_data.c_raw__int16(False)
-			self.wave = song_data.l_int4(16)
 
 class trackerboy_project:
 	def __init__(self):

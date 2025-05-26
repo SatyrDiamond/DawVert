@@ -1,6 +1,8 @@
 
 from objects.data_bytes import bytereader
 
+# ============================================= pattern ============================================= 
+
 class korg_m1_note:
 	def __init__(self):
 		self.length = 0
@@ -8,21 +10,12 @@ class korg_m1_note:
 		self.pitch = 0
 		self.offset = 0
 
-class korg_m1_song:
-	def __init__(self):
-		self.modified = False
-		self.name = ''
-		self.channels = [korg_m1_channel() for _ in range(8)]
-		self.blockTempos = []
-		self.blockSteps = []
-		self.tempo = 120
-		self.swing = 0
-		self.steps = 32
-
 class korg_m1_block:
 	def __init__(self):
 		self.offset = 0
 		self.notes = []
+
+# ============================================= channel ============================================= 
 
 class korg_m1_channel_drumsettings:
 	def __init__(self):
@@ -44,6 +37,19 @@ class korg_m1_channel:
 		self.drumparams = [korg_m1_channel_drumsettings() for _ in range(12)]
 		self.unk1 = 0
 		self.unk2 = 0
+
+# ============================================= savefile ============================================= 
+
+class korg_m1_song:
+	def __init__(self):
+		self.modified = False
+		self.name = ''
+		self.channels = [korg_m1_channel() for _ in range(8)]
+		self.blockTempos = []
+		self.blockSteps = []
+		self.tempo = 120
+		self.swing = 0
+		self.steps = 32
 
 class korg_m1_proj:
 	def __init__(self):
@@ -116,7 +122,3 @@ class korg_m1_proj:
 							block_obj.notes.append(note_obj)
 						song_obj.channels[j].blocks.append(block_obj)
 		return True
-
-input_file = "G:\\RandomMusicFiles\\old\\korg_dsi\\Korg M01 Music Workstation (Japan) (En).sav"
-test_obj = korg_m1_proj()
-test_obj.load_from_file(input_file)

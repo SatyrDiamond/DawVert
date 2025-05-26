@@ -9,6 +9,8 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
+# ============================================= instrument ============================================= 
+
 class it_env:
 	def __init__(self, song_file): 
 		self.flags = song_file.flags8()
@@ -69,6 +71,51 @@ class it_sample:
 			vibrato_speed = 1
 			vibrato_sweep = 0
 		return vibrato_on, vibrato_sweep, vibrato_wave, vibrato_speed, vibrato_depth
+
+class it_instrument:
+	def __init__(self, song_file, ptr, num): 
+		logger_projparse.info("IT: Instrument " + str(num) + ": at offset " + str(ptr))
+		song_file.seek(ptr)
+		song_file.magic_check(b'IMPI')
+
+		self.dosfilename = song_file.string(12, encoding="cp437")
+		song_file.skip(1)
+		self.new_note_action = song_file.uint8()
+		self.duplicate_check_type = song_file.uint8()
+		self.duplicate_check_action = song_file.uint8()
+		self.fadeout = song_file.uint16()
+		self.pitch_pan_separation = song_file.uint8()
+		self.pitch_pan_center = song_file.uint8()
+		self.global_vol = song_file.uint8()
+		self.default_pan = song_file.uint8()
+		self.randomvariation_volume = song_file.uint8()
+		self.randomvariation_pan = song_file.uint8()
+		self.cwtv = song_file.uint16()
+		self.num_samples = song_file.uint8()
+
+		song_file.skip(1)
+		self.name = song_file.string(26, encoding="cp437")
+		self.filtercutoff = song_file.uint8()
+		self.filterresonance = song_file.uint8()
+		self.midi_chan = song_file.uint8()
+		self.midi_inst = song_file.uint8()
+		self.midi_bank = song_file.uint16()
+
+		self.notesampletable = [song_file.l_uint8(2) for _ in range(120)]
+
+		self.env_vol = it_env(song_file)
+		self.env_pan = it_env(song_file)
+		self.env_pitch = it_env(song_file)
+
+		self.ramping = 0
+		self.resampling = -1
+
+		self.randomvariation_cutoff = 0
+		self.randomvariation_reso = 0
+		self.filtermode = 255
+		self.pluginnum = 0
+
+# ============================================= song ============================================= 
 
 class it_pattern:
 	def __init__(self, song_file, ptr, num):
@@ -137,49 +184,6 @@ class it_pattern:
 	
 						rowdata.append([cell_channel, cell_note, cell_instrument, cell_volpan, cell_commandtype, cell_commandval])
 				self.data.append(rowdata)
-
-class it_instrument:
-	def __init__(self, song_file, ptr, num): 
-		logger_projparse.info("IT: Instrument " + str(num) + ": at offset " + str(ptr))
-		song_file.seek(ptr)
-		song_file.magic_check(b'IMPI')
-
-		self.dosfilename = song_file.string(12, encoding="cp437")
-		song_file.skip(1)
-		self.new_note_action = song_file.uint8()
-		self.duplicate_check_type = song_file.uint8()
-		self.duplicate_check_action = song_file.uint8()
-		self.fadeout = song_file.uint16()
-		self.pitch_pan_separation = song_file.uint8()
-		self.pitch_pan_center = song_file.uint8()
-		self.global_vol = song_file.uint8()
-		self.default_pan = song_file.uint8()
-		self.randomvariation_volume = song_file.uint8()
-		self.randomvariation_pan = song_file.uint8()
-		self.cwtv = song_file.uint16()
-		self.num_samples = song_file.uint8()
-
-		song_file.skip(1)
-		self.name = song_file.string(26, encoding="cp437")
-		self.filtercutoff = song_file.uint8()
-		self.filterresonance = song_file.uint8()
-		self.midi_chan = song_file.uint8()
-		self.midi_inst = song_file.uint8()
-		self.midi_bank = song_file.uint16()
-
-		self.notesampletable = [song_file.l_uint8(2) for _ in range(120)]
-
-		self.env_vol = it_env(song_file)
-		self.env_pan = it_env(song_file)
-		self.env_pitch = it_env(song_file)
-
-		self.ramping = 0
-		self.resampling = -1
-
-		self.randomvariation_cutoff = 0
-		self.randomvariation_reso = 0
-		self.filtermode = 255
-		self.pluginnum = 0
 
 class it_song:
 	def __init__(self):

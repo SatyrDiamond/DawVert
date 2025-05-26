@@ -12,6 +12,8 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
+# ============================================= instrument ============================================= 
+
 class deflemask_envelope:
 	def __init__(self):
 		self.values = []
@@ -92,6 +94,18 @@ class deflemask_instrument:
 				self.gb_env_direction = bio_dmf.uint8()
 				self.gb_env_length = bio_dmf.uint8()
 				self.sound_length = bio_dmf.uint8()
+
+class deflemask_sample:
+	def __init__(self):
+		self.size = 0
+		self.name = 0
+		self.rate = 0
+		self.pitch = 0
+		self.amp = 0
+		self.bits = 0
+		self.data = []
+
+# ============================================= project ============================================= 
 
 class deflemask_channel:
 	def __init__(self, i_type):
@@ -245,13 +259,3 @@ class deflemask_project:
 			self.samples.append(sample_obj)
 
 		return True
-
-class deflemask_sample:
-	def __init__(self):
-		self.size = 0
-		self.name = 0
-		self.rate = 0
-		self.pitch = 0
-		self.amp = 0
-		self.bits = 0
-		self.data = []

@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-import numpy as np
 from objects.exceptions import ProjectFileParserException
+import numpy as np
 
 import logging
 logger_projparse = logging.getLogger('projparse')

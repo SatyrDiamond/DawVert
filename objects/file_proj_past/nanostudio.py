@@ -14,25 +14,7 @@ def list_fixnat(ind):
 		else: out[k] = v
 	return out
 
-dt_event = np.dtype([
-	('type', '<B'), 
-	('key', '<B'), 
-	('vol_val', '<B'), 
-	('ctrl_param', '<B'), 
-	('position', '<I'), 
-	('duration', '<I'), 
-	])
-
-dt_ev2 = np.dtype([
-	('event_assoc', '<I'), 
-	('_unk1', '<B'), 
-	('_unk2', '<B'), 
-	('_unk3', '<B'), 
-	('_unk4', '<H'), 
-	('position', '<I'), 
-	('duration', '<H'), 
-	('_unk7', '<B'), 
-	])
+# ============================================= fx ============================================= 
 
 class nanostudio_fxslot:
 	def __init__(self, xmldata):
@@ -87,6 +69,8 @@ def parse_mixerchannels(xmldata, startswith):
 			out[int(x_part.tag[len(startswith):])] = mixchan_obj
 	return out
 
+# ============================================= instrument ============================================= 
+
 class nanostudio_instrument:
 	def __init__(self, xmldata):
 		self.type = None
@@ -116,6 +100,28 @@ class nanostudio_instrument:
 				for x_inpart in x_part:
 					if not x_inpart.tag.startswith('Send0'):
 						self.am[x_inpart.tag] = list_fixnat(x_inpart.attrib)
+
+# ============================================= main ============================================= 
+
+dt_event = np.dtype([
+	('type', '<B'), 
+	('key', '<B'), 
+	('vol_val', '<B'), 
+	('ctrl_param', '<B'), 
+	('position', '<I'), 
+	('duration', '<I'), 
+	])
+
+dt_ev2 = np.dtype([
+	('event_assoc', '<I'), 
+	('_unk1', '<B'), 
+	('_unk2', '<B'), 
+	('_unk3', '<B'), 
+	('_unk4', '<H'), 
+	('position', '<I'), 
+	('duration', '<H'), 
+	('_unk7', '<B'), 
+	])
 
 class nanostudio_song:
 	def __init__(self):

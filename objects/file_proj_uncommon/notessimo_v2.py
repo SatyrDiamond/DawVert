@@ -44,8 +44,6 @@ class note_note:
 		self.dur = song_data.uint16_b()
 		song_data.skip(1)
 
-# ============================== V2 ==============================
-
 class notev2_pattern:
 	def __init__(self, song_data, tempo):
 		self.tempo = tempo

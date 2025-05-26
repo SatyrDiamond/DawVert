@@ -13,54 +13,6 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
-class note_note:
-	__slots__ = ['pos','note','layer','inst','sharp','flat','vol','pan','dur','vars']
-	def __init__(self):
-		self.pos = 0
-		self.note = 0
-		self.inst = None
-		self.sharp = False
-		self.flat = False
-		self.vol = None
-		self.pan = 0
-		self.dur = 0
-		self.vars = {}
-
-	def get_key_nooffs(self):
-		n_key = (self.note-42)*-1
-		out_oct = int(n_key/7)
-		out_key = n_key - out_oct*7
-		out_note = note_data.keynum_to_note(out_key, out_oct-5)
-		return out_note, out_key, out_oct
-
-	def get_note(self):
-		n_key = (self.note-42)*-1
-		out_oct = int(n_key/7)
-		out_key = n_key - out_oct*7
-		out_note = note_data.keynum_to_note(out_key, out_oct-5)
-		out_offset = 0
-		if self.sharp: out_offset = 1
-		if self.flat: out_offset = -1
-		return out_note+out_offset
-
-# ============================== V3 ==============================
-
-def parse_items(xmldata, i_list):
-	for item in xmldata:
-		entry_data = notev3_entry(item)
-		i_list[entry_data.id] = entry_data
-		if entry_data.isBranch:
-			parse_items(item.findall('item'), i_list)
-
-def parse_xmlitems(zip_data, filename, i_list):
-	try:
-		if filename in zip_data.namelist():
-			p_items = ET.fromstring(zip_data.read(filename))
-			items = p_items.findall('items')[0]
-			parse_items(items, i_list)
-	except:
-		pass
-
 def var_in(xml_data):
 	for i in xml_data.findall('var'): 
 		t = i.get('type')
@@ -83,15 +35,7 @@ def var_get(xml_data):
 			sets_o.append([i.get('id'), [x for x in var_in(i)]])
 	return vars_o, sets_o
 
-class notev3_entry:
-	def __init__(self, xml_data):
-		self.isBranch = xml_data.get('isBranch') == 'true'
-		self.isOpen = xml_data.get('isOpen') == 'true'
-		self.name = xml_data.get('name')
-		self.id = xml_data.get('id')
-		self.date = xml_data.get('date')
-		self.order = xml_data.get('order')
-		self.parent = xml_data.get('parent')
+# ============================================= instrument ============================================= 
 
 class notev3_sample:
 	def __init__(self):
@@ -306,6 +250,38 @@ class notev3_instrument:
 			except: return False
 		else: return False
 
+# ============================================= sheet ============================================= 
+
+class note_note:
+	__slots__ = ['pos','note','layer','inst','sharp','flat','vol','pan','dur','vars']
+	def __init__(self):
+		self.pos = 0
+		self.note = 0
+		self.inst = None
+		self.sharp = False
+		self.flat = False
+		self.vol = None
+		self.pan = 0
+		self.dur = 0
+		self.vars = {}
+
+	def get_key_nooffs(self):
+		n_key = (self.note-42)*-1
+		out_oct = int(n_key/7)
+		out_key = n_key - out_oct*7
+		out_note = note_data.keynum_to_note(out_key, out_oct-5)
+		return out_note, out_key, out_oct
+
+	def get_note(self):
+		n_key = (self.note-42)*-1
+		out_oct = int(n_key/7)
+		out_key = n_key - out_oct*7
+		out_note = note_data.keynum_to_note(out_key, out_oct-5)
+		out_offset = 0
+		if self.sharp: out_offset = 1
+		if self.flat: out_offset = -1
+		return out_note+out_offset
+
 class notev3_sheet_layer:
 	def __init__(self):
 		self.name = ''
@@ -426,6 +402,7 @@ class notev3_sheet:
 			for x in layer.notes: outnotes.append(x)
 		return outnotes
 
+# ============================================= song ============================================= 
 
 class note_placement:
 	def __init__(self):
@@ -548,6 +525,34 @@ class notev3_song:
 
 			return True
 		else: return False
+
+# ============================================= file ============================================= 
+
+def parse_items(xmldata, i_list):
+	for item in xmldata:
+		entry_data = notev3_entry(item)
+		i_list[entry_data.id] = entry_data
+		if entry_data.isBranch:
+			parse_items(item.findall('item'), i_list)
+
+def parse_xmlitems(zip_data, filename, i_list):
+	try:
+		if filename in zip_data.namelist():
+			p_items = ET.fromstring(zip_data.read(filename))
+			items = p_items.findall('items')[0]
+			parse_items(items, i_list)
+	except:
+		pass
+
+class notev3_entry:
+	def __init__(self, xml_data):
+		self.isBranch = xml_data.get('isBranch') == 'true'
+		self.isOpen = xml_data.get('isOpen') == 'true'
+		self.name = xml_data.get('name')
+		self.id = xml_data.get('id')
+		self.date = xml_data.get('date')
+		self.order = xml_data.get('order')
+		self.parent = xml_data.get('parent')
 
 class notev3_file:
 	def __init__(self):

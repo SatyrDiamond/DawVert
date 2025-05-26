@@ -3,6 +3,8 @@
 
 import uuid
 
+# =================================================== DEVICES ===================================================
+
 class wavtool_device:
 	def __init__(self):
 		self.type = ''
@@ -43,6 +45,8 @@ class wavtool_connections:
 		cable_obj.output_id = output_id
 		self.cables.append(cable_obj)
 		return cable_obj
+
+# =================================================== PROJECT ===================================================
 
 class wavtool_clip:
 	def __init__(self, pd):
@@ -187,7 +191,6 @@ class wavtool_track:
 		wt_track['input'] = self.input
 		if self.setting: wt_track['setting'] = self.setting
 		return wt_track
-
 
 class wavtool_project:
 	def __init__(self, pd):

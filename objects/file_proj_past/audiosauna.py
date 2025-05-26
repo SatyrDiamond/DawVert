@@ -10,6 +10,10 @@ def getvalue(xmltag, xmlname, fallbackval):
 	if xmltag.findall(xmlname) != []: return xmltag.findall(xmlname)[0].text.strip()
 	else: return fallbackval
 
+def getbool(val): return val=='true'
+
+# ============================================= device ============================================= 
+
 class audiosauna_sample_cell:
 	def __init__(self, xt_device):
 		self.name = getvalue(xt_device, 'name', '') 
@@ -31,7 +35,7 @@ class audiosauna_sample_cell:
 class audiosauna_device:
 	def __init__(self, xt_device):
 		self.deviceType = int(xt_device.get('deviceType'))
-		self.visible = xt_device.get('visible') == 'true'
+		self.visible = getbool(xt_device.get('visible'))
 		self.xpos = int(xt_device.get('xpos'))
 		self.ypos = int(xt_device.get('ypos'))
 		self.childIndex = int(xt_device.get('childIndex'))
@@ -50,6 +54,8 @@ class audiosauna_device:
 						cell_id = int(x_cell.get('id'))
 						self.samples[cell_id] = audiosauna_sample_cell(x_cell)
 
+# ============================================= pattern ============================================= 
+
 class audiosauna_note:
 	__slots__ = ['startTick', 'endTick', 'noteLength', 'pitch', 'selected', 'patternId', 'noteVolume', 'noteCutoff']
 	def __init__(self, xt_note):
@@ -57,7 +63,7 @@ class audiosauna_note:
 		self.endTick = int(xt_note.get('endTick'))
 		self.noteLength = int(xt_note.get('noteLength'))
 		self.pitch = int(xt_note.get('pitch'))
-		self.selected = xt_note.get('selected') == 'true'
+		self.selected = getbool(xt_note.get('selected'))
 		self.patternId = int(xt_note.get('patternId'))
 		self.noteVolume = int(xt_note.get('noteVolume'))
 		self.noteCutoff = int(xt_note.get('noteCutoff'))
@@ -71,7 +77,9 @@ class audiosauna_pattern:
 		self.startTick = int(xt_pattern.get('startTick'))
 		self.endTick = int(xt_pattern.get('endTick'))
 		self.patternLength = int(xt_pattern.get('patternLength'))
-		self.selected = xt_pattern.get('selected') == 'true'
+		self.selected = getbool(xt_pattern.get('selected'))
+
+# ============================================= track ============================================= 
 
 class audiosauna_track:
 	def __init__(self, xt_track):
@@ -92,12 +100,14 @@ class audiosauna_channel:
 		self.pan = int(xt_channel.get('pan'))
 		self.delay = int(xt_channel.get('delay'))
 		self.reverb = int(xt_channel.get('reverb'))
-		self.mute = xt_channel.get('mute') == 'true'
-		self.solo = xt_channel.get('solo') == 'true'
+		self.mute = getbool(xt_channel.get('mute'))
+		self.solo = getbool(xt_channel.get('solo'))
 		self.name = xt_channel.get('name')
 		self.track = None
 		self.device = None
 		self.patterns = []
+
+# ============================================= song ============================================= 
 
 class audiosauna_song:
 	def __init__(self):
@@ -117,7 +127,7 @@ class audiosauna_song:
 		x_proj_songPatterns = x_proj.findall('songPatterns')[0]
 		x_proj_devices = x_proj.findall('devices')[0]
 
-		self.mixerVisible = getvalue(x_proj, 'mixerVisible', 'true') == 'true'
+		self.mixerVisible = getbool(getvalue(x_proj, 'mixerVisible', 'true'))
 		self.appArrangeToolMode = int(getvalue(x_proj, 'appArrangeToolMode', '1'))
 		self.appPianoRollToolMode = int(getvalue(x_proj, 'appPianoRollToolMode', '1'))
 		self.appFocusMode = int(getvalue(x_proj, 'appFocusMode', '0'))
@@ -135,7 +145,7 @@ class audiosauna_song:
 		self.appHOffsetArrange = int(getvalue(x_proj, 'appHOffsetArrange', '0'))
 		self.appLoopStart = int(getvalue(x_proj, 'appLoopStart', '0'))
 		self.appLoopEnd = int(getvalue(x_proj, 'appLoopEnd', '32'))
-		self.appUseLoop = getvalue(x_proj, 'appUseLoop', 'true') == 'true'
+		self.appUseLoop = getbool(getvalue(x_proj, 'appUseLoop', 'true'))
 		self.appCurrentEnd = int(getvalue(x_proj, 'appCurrentEnd', '32'))
 		self.appFmSynthCount = int(getvalue(x_proj, 'appFmSynthCount', '1'))
 		self.appVaSynthCount = int(getvalue(x_proj, 'appVaSynthCount', '1'))
@@ -149,7 +159,7 @@ class audiosauna_song:
 		self.dlyDamage = int(getvalue(x_proj, 'dlyDamage', '0'))
 		self.dlyFeed = int(getvalue(x_proj, 'dlyFeed', '70'))
 		self.dlyLevel = int(getvalue(x_proj, 'dlyLevel', '100'))
-		self.dlySync = getvalue(x_proj, 'dlySync', 'true') == 'true'
+		self.dlySync = getbool(getvalue(x_proj, 'dlySync', 'true'))
 		self.rvbTime = float(getvalue(x_proj, 'rvbTime', '0'))
 		self.rvbFeed = int(getvalue(x_proj, 'rvbFeed', '90'))
 		self.rvbLevel = int(getvalue(x_proj, 'rvbLevel', '100'))

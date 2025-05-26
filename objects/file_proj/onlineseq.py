@@ -38,6 +38,8 @@ class onlineseq_marker:
 		if self.type != 0: outjson['5'] = self.type
 		return outjson
 
+# ============================================= inst ============================================= 
+
 class onlineseq_synth_env:
 	def __init__(self, pd):
 		self.enabled = 0
@@ -179,6 +181,8 @@ class onlineseq_inst_param:
 		if self.synth != None: outjson['14'] = self.synth.write()
 
 		return outjson
+
+# ============================================= sopng ============================================= 
 
 class onlineseq_project:
 	def __init__(self):

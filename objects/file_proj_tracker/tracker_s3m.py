@@ -139,7 +139,6 @@ class s3m_pattern:
 						rowdata.append([packed_what_channel, packed_note, packed_inst, packed_vol, packed_command, packed_info])
 				self.data.append(rowdata)
 
-
 class s3m_song:
 	def __init__(self):
 		pass

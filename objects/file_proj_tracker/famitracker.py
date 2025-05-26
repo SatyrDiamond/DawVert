@@ -8,6 +8,8 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
+# ============================================= instrument ============================================= 
+
 class famitracker_dpcm:
 	def __init__(self):
 		self.name = ''
@@ -129,6 +131,8 @@ class famitracker_inst:
 				self.vrc7_patch = int(i_list[1])
 				self.vrc7_regs = [int(x, 16) for x in i_list[2:10]]
 				self.name = i_list[10]
+
+# ============================================= song ============================================= 
 
 class famitracker_song:
 	def __init__(self):

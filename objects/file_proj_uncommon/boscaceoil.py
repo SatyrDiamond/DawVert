@@ -5,6 +5,8 @@ from objects.data_bytes import bytereader
 from objects.exceptions import ProjectFileParserException
 import numpy as np
 
+# ============================================= instrument ============================================= 
+
 class ceol_instrument:
 	def __init__(self, song_file):
 		self.inst = 0
@@ -20,6 +22,8 @@ class ceol_instrument:
 			self.cutoff = song_file.uint16()
 			self.resonance = song_file.uint16()
 			self.volume = song_file.uint16()
+
+# ============================================= pattern ============================================= 
 
 class ceol_note:
 	__slots__ = ['key','len','pos']
@@ -48,6 +52,8 @@ class ceol_pattern:
 			if song_file.uint16():
 				self.recordfilter = song_file.table16([16, 3])
 
+# ============================================= song ============================================= 
+
 class ceol_song:
 	def __init__(self):
 		self.swing = 0
@@ -64,7 +70,6 @@ class ceol_song:
 		self.loopend = 0
 		self.spots = 0
 
-
 	def load_from_file(self, input_file):
 		ceol_file = open(input_file, 'r')
 
@@ -73,8 +78,7 @@ class ceol_song:
 
 		ceol_array = np.asarray([int(x) for x in ceolnums], dtype=np.int16)
 
-		if not len(ceol_array):
-			raise ProjectFileParserException('boscaceoil: array is empty')
+		if not len(ceol_array): raise ProjectFileParserException('boscaceoil: array is empty')
 		
 		song_file = bytereader.bytereader()
 		song_file.load_raw(ceol_array.tobytes())

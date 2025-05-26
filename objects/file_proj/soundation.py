@@ -1,6 +1,8 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+# ============================================= device ============================================= 
+
 class soundation_param:
 	def __init__(self, pd):
 		self.value = 0
@@ -72,6 +74,8 @@ class soundation_device:
 		self.params.write(sng_device)
 		for name, param in self.data.items(): sng_device[name] = param
 		return sng_device
+
+# ============================================= track ============================================= 
 
 class soundation_region:
 	def __init__(self, pd):
@@ -178,6 +182,8 @@ class soundation_channel:
 		if self.userSetName != None: sng_channel['userSetName'] = self.userSetName
 		sng_channel['regions'] = [x.write() for x in self.regions]
 		return sng_channel
+
+# ============================================= song ============================================= 
 
 class soundation_project:
 	def __init__(self, pd):

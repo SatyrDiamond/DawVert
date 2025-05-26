@@ -5,7 +5,6 @@ from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 import xml.etree.ElementTree as ET
 import struct
-import varint
 import traceback
 
 class DataDefException(Exception):

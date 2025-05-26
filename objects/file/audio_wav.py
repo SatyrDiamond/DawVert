@@ -2,7 +2,6 @@
 
 import numpy
 import struct
-import collections
 import sys
 import pathlib
 import os

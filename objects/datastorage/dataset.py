@@ -1,6 +1,5 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
-import json
 import os
 import importlib.util
 
@@ -8,7 +7,8 @@ from functions import data_values
 from functions import xtramath
 import xml.etree.ElementTree as ET
 
-rapidjson_usable = importlib.util.find_spec('rapidjson')
+#import json
+#rapidjson_usable = importlib.util.find_spec('rapidjson')
 
 def make_color_text(color):
 	return '|'.join([("%g" % round((x*255), 7)) for x in color])
@@ -691,19 +691,19 @@ class dataset:
 		if in_dataset != None:
 			if os.path.exists(in_dataset): self.load_file(in_dataset)
 
-	def load_file_json(self, in_dataset):
-		self.categorys = {}
-		self.category_list = []
-		f = open(in_dataset, "r")
-		if rapidjson_usable:
-			import rapidjson
-			dataset = rapidjson.load(f)
-		else:
-			dataset = json.load(f)
-
-		for x, d in dataset.items():
-			self.categorys[x] = dataset_category(d)
-			self.category_list.append(x)
+	#def load_file_json(self, in_dataset):
+	#	self.categorys = {}
+	#	self.category_list = []
+	#	f = open(in_dataset, "r")
+	#	if rapidjson_usable:
+	#		import rapidjson
+	#		dataset = rapidjson.load(f)
+	#	else:
+	#		dataset = json.load(f)
+#
+	#	for x, d in dataset.items():
+	#		self.categorys[x] = dataset_category(d)
+	#		self.category_list.append(x)
 
 	def load_file(self, input_file):
 		self.categorys = {}
@@ -729,18 +729,18 @@ class dataset:
 				cat_obj = self.categorys[cat_id]
 				cat_obj.read_xml(x_part)
 
-	def write(self, filename):
-		f = open(filename, "w")
-		outjson = {}
-
-		for n, c in self.categorys.items():
-			outjson[n] = c.write()
-
-		if rapidjson_usable:
-			import rapidjson
-			f.write(rapidjson.dumps(outjson, indent=4))
-		else:
-			f.write(json.dumps(outjson, indent=4))
+	#def write(self, filename):
+	#	f = open(filename, "w")
+	#	outjson = {}
+#
+	#	for n, c in self.categorys.items():
+	#		outjson[n] = c.write()
+#
+	#	if rapidjson_usable:
+	#		import rapidjson
+	#		f.write(rapidjson.dumps(outjson, indent=4))
+	#	else:
+	#		f.write(json.dumps(outjson, indent=4))
 		
 	def write_xml(self, filename):
 		xml_proj = ET.Element("dataset")

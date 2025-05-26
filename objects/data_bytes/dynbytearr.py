@@ -3,7 +3,6 @@
 
 import numpy as np
 import numpy.lib.recfunctions as recfc
-import math
 
 class cursor:
 	__slots__ = ['pos', 'baseobj']

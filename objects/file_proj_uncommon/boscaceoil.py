@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+from objects.data_bytes import bytereader
 from objects.exceptions import ProjectFileParserException
 import numpy as np
-from objects.data_bytes import bytereader
 
 class ceol_instrument:
 	def __init__(self, song_file):

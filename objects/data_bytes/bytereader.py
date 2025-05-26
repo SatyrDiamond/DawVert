@@ -1,7 +1,6 @@
 import struct
 import varint
 import os
-import zlib
 import numpy as np
 import mmap
 from io import BytesIO

@@ -4,11 +4,6 @@ from objects import globalstore
 
 from objects.data_bytes import bytereader
 
-from objects.midi_modernize.vendors import universal
-from objects.midi_modernize.vendors import roland
-from objects.midi_modernize.vendors import yamaha
-from objects.midi_modernize.vendors import sony
-
 def decode_anvil_color(anvilcolordata):
 	red_p1 = anvilcolordata[3] & 0x3f 
 	red_p2 = anvilcolordata[2] & 0xe0
@@ -155,16 +150,21 @@ class sysex_obj:
 
 		if self.vendor.ext == False:
 			if self.vendor == '#41': 
+				from objects.midi_modernize.vendors import roland
 				roland.decode(self, bstream)
 
 			elif self.vendor in ['#7e', '#7f']: 
+				from objects.midi_modernize.vendors import universal
 				universal.decode(self, bstream)
 
 			elif self.vendor == '#4c': 
+				from objects.midi_modernize.vendors import sony
 				sony.decode(self, bstream)
 
 			elif self.vendor == '#43': 
+				from objects.midi_modernize.vendors import yamaha
 				yamaha.decode(self, bstream)
+
 
 		#self.print()
 

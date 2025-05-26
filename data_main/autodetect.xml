@@ -275,6 +275,10 @@
 		<bytes_header pos="4" data="4D303157"/>
 	</plugin>
 
+	<plugin pluginset="midi" name="cakewalk_wrk">
+		<file fileext=".wrk"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

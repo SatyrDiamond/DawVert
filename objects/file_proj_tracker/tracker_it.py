@@ -3,7 +3,7 @@
 
 import struct
 from objects.data_bytes import bytereader
-from objects import openmpt_plugin
+from objects.inst_params import openmpt_plugin
 from objects.exceptions import ProjectFileParserException
 
 import logging

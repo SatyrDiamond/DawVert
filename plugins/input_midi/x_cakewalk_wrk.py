@@ -22,7 +22,7 @@ class input_cvpj_f(plugins.base):
 	
 	def get_prop(self, in_dict): 
 		in_dict['plugin_included'] = ['universal:midi']
-		in_dict['projtype'] = 'cm'
+		in_dict['projtype'] = 'multi'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_past import cakewalk_wrk as proj_cakewalk_wrk

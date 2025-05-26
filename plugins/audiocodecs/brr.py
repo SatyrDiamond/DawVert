@@ -13,12 +13,6 @@ class input_codec(plugins.base):
 	def get_name(self):
 		return 'SNES BRR'
 	
-	def get_priority(self):
-		return 0
-	
-	def supported_autodetect(self):
-		return False
-
 	def get_prop(self, in_dict): 
 		in_dict['encode_supported'] = True
 		in_dict['decode_supported'] = True

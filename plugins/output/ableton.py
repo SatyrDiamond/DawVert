@@ -119,7 +119,7 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, dur_sec, pitch):
 	warpenabled = False
 
-	ratespeed = stretch_obj.calc_tempo_size
+	ratespeed = stretch_obj.timing.get__tempo(sampleref_obj)/120
 
 	if ratespeed != 1: warpenabled = True
 
@@ -205,7 +205,9 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 			else:
 				warp_obj.WarpMode = 4
 
-		if not warpprop and stretch_obj.calc_real_size != 1:
+		calc_real_size = stretch_obj.timing.get__speed(sampleref_obj)
+
+		if not warpprop and calc_real_size != 1:
 			warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, dur_sec, 0)
 		else:
 			do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, dur_sec, 0)
@@ -1077,7 +1079,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 				loop_active = samplepart_obj.loop_active
 
-				if (samplepart_obj.stretch.calc_real_speed == 1 and samplepart_obj.trigger != 'oneshot' and pitchin == 0) or loop_active:
+				if (samplepart_obj.stretch.timing.speed__rate == 1 and samplepart_obj.trigger != 'oneshot' and pitchin == 0) or loop_active:
 					als_device = als_track.DeviceChain.add_device('MultiSampler')
 					spd = paramkeys['Player/MultiSampleMap/SampleParts'] = ableton_parampart.as_sampleparts('SampleParts')
 					paramkeys['Player/Reverse'] = ableton_parampart.as_param('Reverse', 'bool', samplepart_obj.reverse)

@@ -13,9 +13,6 @@ class input_soundfile(plugins.base):
 	def get_name(self):
 		return 'pydub'
 	
-	def get_priority(self):
-		return 0
-	
 	def get_prop(self, in_dict): 
 		in_dict['in_file_formats'] = ['m4a']
 		in_dict['out_file_formats'] = ['wav']

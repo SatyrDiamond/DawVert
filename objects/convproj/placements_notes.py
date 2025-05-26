@@ -138,7 +138,7 @@ class cvpj_placements_notes:
 		prev = None
 		for pl in old_data_notes:
 			time_obj = pl.time
-			position, duration = time_obj.get_posdur_real()
+			position, duration = time_obj.get_posdur()
 			if prev: 
 				prev_time_obj = prev.time
 				prev_time_obj.set_dur( min(prev_time_obj.get_dur(), position-prev_time_obj.get_pos()) )

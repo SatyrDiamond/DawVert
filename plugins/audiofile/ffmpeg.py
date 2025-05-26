@@ -13,9 +13,6 @@ class input_pyav(plugins.base):
 	def get_name(self):
 		return 'FFmpeg'
 	
-	def get_priority(self):
-		return 0
-	
 	def usable(self): 
 		import importlib.util
 		usable = importlib.util.find_spec('av')

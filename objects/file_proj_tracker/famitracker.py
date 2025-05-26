@@ -132,16 +132,7 @@ class famitracker_inst:
 				self.vrc7_regs = [int(x, 16) for x in i_list[2:10]]
 				self.name = i_list[10]
 
-# ============================================= song ============================================= 
-
-class famitracker_song:
-	def __init__(self):
-		self.name = ''
-		self.patlen = 128
-		self.speed = 1
-		self.tempo = 120
-		self.orders = {}
-		self.patterns = {}
+# ============================================= pattern ============================================= 
 
 keytable_vals = [0,2,4,5,7,9,11]
 keytable = ['C','D','E','F','G','A','B']
@@ -180,6 +171,17 @@ class famitracker_pattern:
 			if channum not in self.patdata: self.patdata[channum] = {}
 			if rownum not in self.patdata[channum]: self.patdata[channum][rownum] = {}
 			self.patdata[channum][rownum] = outdata
+
+# ============================================= song ============================================= 
+
+class famitracker_song:
+	def __init__(self):
+		self.name = ''
+		self.patlen = 128
+		self.speed = 1
+		self.tempo = 120
+		self.orders = {}
+		self.patterns = {}
 
 class famitracker_project:
 	def __init__(self):

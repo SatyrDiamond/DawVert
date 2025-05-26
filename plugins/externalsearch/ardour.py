@@ -4,7 +4,7 @@
 import os
 import plugins
 from objects import globalstore
-from os.path import exists
+from os.path import exists as file_exists
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
@@ -28,7 +28,7 @@ class plugsearch(plugins.base):
 		if searchpath:
 			vst2count = 0
 			vst3count = 0
-			if os.path.exists(searchpath):
+			if file_exists(searchpath):
 				vstcachelist = os.listdir(searchpath)
 				for vstcache in vstcachelist:
 					vstxmlfile = vstcache
@@ -42,7 +42,7 @@ class plugsearch(plugins.base):
 						vst_arch = vstxmlroot.get('arch')
 						vst_category = x_pluginfo.get('category')
 
-						if vst_arch == 'x86_64' and exists(vstxmlroot.get('binary')):
+						if vst_arch == 'x86_64' and file_exists(vstxmlroot.get('binary')):
 							vst2data_fourid = int(x_pluginfo.get('id'))
 							if vst2data_fourid < 0: vst2data_fourid = int(x_pluginfo.get('id')) + 2**32
 
@@ -67,7 +67,7 @@ class plugsearch(plugins.base):
 					if vstxmlext == '.v3i':
 						VST3Info = vstxmlroot.findall('VST3Info')[0]
 						vst3data_id = VST3Info.get('uid')
-						if exists(vstxmlroot.get('bundle')):
+						if file_exists(vstxmlroot.get('bundle')):
 							with globalstore.extplug.add('vst3', globalstore.os_platform) as pluginfo_obj: 
 								pluginfo_obj.id = vst3data_id
 								pluginfo_obj.path_64bit = vstxmlroot.get('bundle')

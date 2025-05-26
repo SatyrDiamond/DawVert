@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import importlib.util
 
 class input_pyav(plugins.base):
 	def is_dawvert_plugin(self):
@@ -18,6 +17,7 @@ class input_pyav(plugins.base):
 		return 0
 	
 	def usable(self): 
+		import importlib.util
 		usable = importlib.util.find_spec('av')
 		usable_meg = '"av" package is not installed.' if not usable else ''
 		return usable, usable_meg

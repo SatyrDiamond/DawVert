@@ -9,8 +9,7 @@ in_dtype = np.dtype([
 	('used', np.uint8),
 
 	('pos', np.uint64),
-	('proc_end', np.uint64),
-	('proc_complete', np.uint8),
+	('uflags', np.uint8),
 
 	('type', np.uint8),
 	('chan', np.uint8),
@@ -37,6 +36,15 @@ EVENTID__MARKER = 104
 EVENTID__LYRIC = 105
 EVENTID__SEQSPEC = 106
 EVENTID__TRACKEND = 255
+
+FLAGS__CHAN = 1
+FLAGS__NOTE = 2
+FLAGS__DUR = 4
+FLAGS__NONNOTE = 8
+
+PBFLAGVAL__NONNOTE = FLAGS__CHAN | FLAGS__NONNOTE
+PBFLAGVAL__NOTE = FLAGS__CHAN | FLAGS__NOTE
+PBFLAGVAL__NOTE_DUR = FLAGS__CHAN | FLAGS__NOTE | FLAGS__DUR
 
 state_dtype = np.dtype([
 	('pos', np.uint64),
@@ -156,8 +164,9 @@ class midievents:
 		self.ppq = inppq
 
 	def get_channums(self):
-		used_chan = np.unique(self.data.get_used()['chan'])
-		used_chan = used_chan[used_chan!=255]
+		used_data = self.data.get_used()
+		used_flag = (used_data['uflags']&FLAGS__CHAN).astype(np.bool_)
+		used_chan = np.unique(used_data['chan'][used_flag])
 		return used_chan
 
 	def add_note_durs(self):
@@ -173,9 +182,9 @@ class midievents:
 					if nd:
 						notenum = nd.pop()
 						non = self.data.data[notenum]
-						non['proc_complete'] = 1
 						non['uhival'] = d['pos']-non['pos']
 						non['type'] = EVENTID__NOTE_DUR
+						non['uflags'] = PBFLAGVAL__NOTE_DUR
 			self.has_duration = True
 
 	def del_note_durs(self):
@@ -183,7 +192,9 @@ class midievents:
 			notedata = self.data.data
 			wherebools = notedata['type']==EVENTID__NOTE_DUR
 			self.data.data['type'][wherebools] = EVENTID__NOTE_ON
+			self.data.data['uflags'][wherebools] = PBFLAGVAL__NOTE
 			wb = self.data.data[wherebools]
+			self.data.data['uhival'][wherebools] = 0
 			self.data.extend(len(wb))
 			for n in wb:
 				self.add_note_off(n['pos']+n['uhival'], n['chan'], n['value'], n['value2'])
@@ -195,8 +206,10 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__NOTE_OFF
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NOTE
 		cursor['value'] = key
 		cursor['value2'] = vol
+		cursor['uhival'] = 0
 
 	def add_note_on(self, curpos, channel, key, vol):
 		self.cursor.add()
@@ -204,9 +217,10 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__NOTE_ON if vol else EVENTID__NOTE_OFF
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NOTE
 		cursor['value'] = key
 		cursor['value2'] = vol
-		cursor['proc_complete'] = 1
+		cursor['uhival'] = 0
 
 	def add_note_dur(self, curpos, channel, key, vol, dur):
 		self.cursor.add()
@@ -214,10 +228,10 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__NOTE_DUR
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NOTE_DUR
 		cursor['value'] = key
 		cursor['value2'] = vol
 		cursor['uhival'] = dur
-		cursor['proc_complete'] = 1
 
 	def add_note_pressure(self, curpos, channel, note, pressure):
 		self.cursor.add()
@@ -225,6 +239,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__NOTE_PRESSURE
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NONNOTE
 		cursor['uhival'] = pressure
 		cursor['value'] = note
 
@@ -234,6 +249,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__CONTROL
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NONNOTE
 		cursor['value'] = control
 		cursor['uhival'] = value
 
@@ -243,6 +259,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__PROGRAM
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NONNOTE
 		cursor['value'] = program
 
 	def add_chan_pressure(self, curpos, channel, pressure):
@@ -251,6 +268,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__PRESSURE
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NONNOTE
 		cursor['uhival'] = pressure
 
 	def add_pitch(self, curpos, channel, value):
@@ -259,6 +277,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__PITCH
 		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NONNOTE
 		cursor['shival'] = value
 
 
@@ -278,7 +297,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__TEMPO
 		cursor['uhival'] = struct.unpack('I', struct.pack('f', value))[0]
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 
 	def add_timesig(self, curpos, numerator, denominator):
 		self.cursor.add()
@@ -287,14 +306,14 @@ class midievents:
 		cursor['type'] = EVENTID__TIMESIG
 		cursor['value'] = numerator
 		cursor['value2'] = denominator
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 
 	def add_end_of_track(self, curpos):
 		self.cursor.add()
 		cursor = self.cursor
 		cursor['pos'] = curpos
 		cursor['type'] = 255
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 
 	def add_sysex(self, curpos, sysexdata):
 		sysexnum = 0
@@ -307,7 +326,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__SYSEX
 		cursor['uhival'] = sysexnum
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 		self.sysex[sysexnum] = bytes(sysexdata)
 
 	def add_text(self, curpos, txtdata):
@@ -321,7 +340,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__TEXT
 		cursor['uhival'] = textnum
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 		self.texts[textnum] = txtdata
 
 	def add_marker(self, curpos, txtdata):
@@ -335,7 +354,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__MARKER
 		cursor['uhival'] = markernum
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 		self.markers[markernum] = txtdata
 
 	def add_lyric(self, curpos, txtdata):
@@ -349,7 +368,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__LYRIC
 		cursor['uhival'] = lyricnum
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 		self.lyrics[lyricnum] = txtdata
 
 	def add_seq_spec(self, curpos, data):
@@ -363,7 +382,7 @@ class midievents:
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__SEQSPEC
 		cursor['uhival'] = seqspecnum
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 		self.seq_spec[seqspecnum] = data
 
 	def add_end_track(self, curpos):
@@ -371,7 +390,7 @@ class midievents:
 		cursor = self.cursor
 		cursor['pos'] = curpos
 		cursor['type'] = EVENTID__TRACKEND
-		cursor['chan'] = 255
+		cursor['uflags'] = FLAGS__NONNOTE
 
 	def sort(self):
 		is_sorted = np.all(np.diff(self.data.get_used()['pos'].astype(np.int64)) >= 0)
@@ -380,12 +399,16 @@ class midievents:
 
 	def get_dur(self):
 		used_data = self.data.get_used()
-		maxv = max(used_data['pos'].astype(np.int64)) if len(used_data) else -1
-		if self.has_duration:
-			durnotes = used_data[used_data['type']==EVENTID__NOTE_DUR]
-			durs = durnotes['uhival']+durnotes['pos']
-			maxv = max(maxv, max(durs))
-		return maxv
+
+		n_out = used_data[(used_data['uflags']&FLAGS__NOTE).astype(np.bool_)]
+		n_dur = n_out['uhival']+n_out['pos']
+		maxn = max(n_dur) if len(n_dur) else 0
+
+		c_out = used_data[(used_data['uflags']&FLAGS__NONNOTE).astype(np.bool_)]
+		c_dur = n_out['pos']
+		maxc = max(c_dur) if len(c_dur) else 0
+
+		return max(maxn, maxc)
 
 	def clean(self):
 		self.data.clean()
@@ -396,7 +419,7 @@ class midievents:
 	def get_used_notes(self):
 		self.add_note_durs()
 		used_data = self.data.get_used()
-		used_data = used_data[used_data['proc_complete']==1]
+		used_data = used_data[used_data['uflags']|FLAGS__NOTE]
 		return used_data[['pos','uhival','chan','value','value2']]
 
 	def getvalue(self):
@@ -437,13 +460,11 @@ class midievents:
 
 			if etype == 'NOTE_OFF':
 				outnote = int(x[3])
-				if 127>outnote>=0:
-					miditrack.append(rmsg('note_off', channel=int(x[2]), note=outnote, time=etime))
+				if 127>outnote>=0: miditrack.append(rmsg('note_off', channel=int(x[2]), note=outnote, time=etime))
 
 			elif etype == 'NOTE_ON':
 				outnote = int(x[3])
-				if 127>outnote>=0:
-					miditrack.append(rmsg('note_on', channel=int(x[2]), note=outnote, velocity=int(x[4]), time=etime))
+				if 127>outnote>=0: miditrack.append(rmsg('note_on', channel=int(x[2]), note=outnote, velocity=int(x[4]), time=etime))
 
 			elif etype == 'PROGRAM':
 				miditrack.append(rmsg('program_change', channel=int(x[2]), program=int(x[3]), time=etime))

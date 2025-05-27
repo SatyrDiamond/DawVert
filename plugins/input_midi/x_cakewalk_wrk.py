@@ -34,6 +34,8 @@ class input_cvpj_f(plugins.base):
 		convproj_obj.set_timings(96, False)
 		trackchannel = 0
 
+		metadata_obj = convproj_obj.metadata
+
 		traits_obj = convproj_obj.traits
 		traits_obj.fxrack_params = ['vol','pan','pitch']
 		traits_obj.auto_types = ['nopl_ticks']
@@ -47,10 +49,6 @@ class input_cvpj_f(plugins.base):
 			convproj_obj.do_actions.append('do_addloop')
 			convproj_obj.do_actions.append('do_singlenotelistcut')
 
-			controltrack_obj = convproj_obj.track__add('control', 'midi', 1, False)
-			controltrack_obj.visual.name = 'Control'
-			controlevents_obj = controltrack_obj.placements.midievents
-
 			sysex_data = {}
 			sysex_points = []
 			sysex_num = 0
@@ -63,7 +61,8 @@ class input_cvpj_f(plugins.base):
 						convproj_obj.set_timings(parseddata.timebase, False)
 
 					elif chunk.id == 15: #Gen1:Global:Auto:Tempo_V3
-						for x in parseddata.points: controlevents_obj.add_tempo(x[0], x[1]/100)
+						for x in parseddata.points:
+							convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', x[0], x[1]/100)
 
 					elif chunk.id == 1: #Gen1:Track:Header
 						cvpj_trackid = str(parseddata.trackno)
@@ -100,18 +99,28 @@ class input_cvpj_f(plugins.base):
 						sysex_num += 1
 						sysex_data[sysex_num] = parseddata.data[1:-1]
 
+					elif chunk.id == 26: #Gen1:Global:VariablePart
+						vname = parseddata.name
+						vvalue = parseddata.value
+
+						if vname=="Title": metadata_obj.name = vvalue.decode("windows-1252")
+						if vname=="Subtitle": metadata_obj.subname = vvalue.decode("windows-1252")
+						if vname=="Instructions": metadata_obj.data['instructions'] = vvalue.decode("windows-1252")
+						if vname=="Author": metadata_obj.author = vvalue.decode("windows-1252")
+						if vname=="Copyright": metadata_obj.copyright = vvalue.decode("windows-1252")
+
+					elif chunk.id == 8: #Gen1:Global:Comment
+						if len(parseddata.data)>1:
+							metadata_obj.comment_text = parseddata.data[1:].decode("windows-1252")
+
 			for sysex_point in sysex_points:
 				sysex_point[0].add_sysex(sysex_point[1], sysex_data[sysex_point[2]])
 
 		if project_obj.version == 3:
-			convproj_obj.type = 'r'
-			traits_obj.notes_midi = True
+			convproj_obj.fxtype = 'rack'
+			convproj_obj.type = 'cm'
 
 			convproj_obj.do_actions.append('do_addloop')
-
-			controltrack_obj = convproj_obj.track__add('control', 'midi', 1, False)
-			controltrack_obj.visual.name = 'Control'
-			controlevents_obj = controltrack_obj.placements.midievents
 
 			segment_data_store = {}
 
@@ -119,11 +128,23 @@ class input_cvpj_f(plugins.base):
 				if chunk.is_parsed:
 					parseddata = chunk.content
 	
-					if chunk.id == 10: #Gen1:Global:Timebase
+					if chunk.id == 3: #Gen1:Global:Settings
+						print(dir(parseddata))
+						#print(parseddata.TempoOfs1)
+						#print(parseddata.TempoOfs2)
+						#print(parseddata.TempoOfs3)
+						#convproj_obj.set_timings(parseddata.timebase, False)
+
+					elif chunk.id == 10: #Gen1:Global:Timebase
 						convproj_obj.set_timings(parseddata.timebase, False)
 
 					elif chunk.id == 15: #Gen1:Global:Auto:Tempo_V3
-						for x in parseddata.points: controlevents_obj.add_tempo(x[0], x[1]/100)
+						points = parseddata.points
+						if points:
+							firstpoint = points[0]
+							if firstpoint[0]==0: convproj_obj.params.add('bpm', firstpoint[1]/100, 'float')
+							for x in points:
+								convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', x[0], x[1]/100)
 
 					elif chunk.id == 36: #Gen2:Track:Header
 						cvpj_trackid = str(parseddata.trackno)
@@ -134,8 +155,10 @@ class input_cvpj_f(plugins.base):
 							track_obj.midi.out_enabled = True
 							track_obj.midi.out_chanport.chan = trackchannel
 							track_obj.midi.out_chanport.port = parseddata.port
+							track_obj.midi.out_inst.patch = parseddata.patch
 						else:
 							trackchannel = 0
+
 						events_obj = track_obj.placements.midievents
 						events_obj.has_duration = True
 						
@@ -197,6 +220,26 @@ class input_cvpj_f(plugins.base):
 							time_obj = placement_obj.time
 							time_obj.set_posdur(firstpos, events_obj.get_dur())
 
+					elif chunk.id == 21: #Gen1:Global:Markers
+						for realtime, pos, text in parseddata.markers:
+							if not realtime:
+								timemarker_obj = convproj_obj.timemarker__add()
+								timemarker_obj.position = pos
+								timemarker_obj.visual.name = text.decode()
+
+					elif chunk.id == 26: #Gen1:Global:VariablePart
+						vname = parseddata.name
+						vvalue = parseddata.value
+
+						if vname=="Title": metadata_obj.name = vvalue.decode("windows-1252")
+						if vname=="Subtitle": metadata_obj.subname = vvalue.decode("windows-1252")
+						if vname=="Instructions": metadata_obj.data['instructions'] = vvalue.decode("windows-1252")
+						if vname=="Author": metadata_obj.author = vvalue.decode("windows-1252")
+						if vname=="Copyright": metadata_obj.copyright = vvalue.decode("windows-1252")
+
+					elif chunk.id == 8: #Gen1:Global:Comment
+						if len(parseddata.data)>1:
+							metadata_obj.comment_text = parseddata.data[1:].decode("windows-1252")
 
 					#else:
-					#	print(chunk)
+					#	print(chunk, dir(parseddata))

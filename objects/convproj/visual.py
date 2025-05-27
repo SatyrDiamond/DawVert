@@ -374,6 +374,7 @@ class cvpj_visual:
 class cvpj_metadata:
 	def __init__(self):
 		self.name = ''
+		self.subname = ''
 		self.author = ''
 		self.original_author = ''
 		self.comment_text = ''
@@ -391,6 +392,7 @@ class cvpj_metadata:
 		self.songwriter = ''
 		self.producer = ''
 		self.copyright = ''
+		self.data = {}
 		self.show = -1
 
 class cvpj_window_data:

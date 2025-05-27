@@ -95,6 +95,11 @@ class midi_modernize:
 		if len(usedchans)==1:
 			self.visstore_data.set_track_chan(tracknum, portnum, usedchans[0])
 
+	def init_patchchan(self, track_midi):
+		if track_midi.out_enabled:
+			out_chanport = track_midi.out_chanport
+			self.instchange_data.add_program(0, gfunc.calc_channum(out_chanport.chan, out_chanport.port, self.num_channels), track_midi.out_inst.patch)
+
 	def do_notes(self, convproj_obj, midievents_obj, inpos, dur, offset, in_section, portnum, tracknum):
 		for x in midievents_obj:
 			pos = (x['pos']-offset)+inpos

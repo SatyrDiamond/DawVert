@@ -36,6 +36,8 @@ def convert(convproj_obj):
 			portnum = midievents_obj.port
 			usedchans = list(midievents_obj.get_channums())
 
+			modernize_obj.init_patchchan(track_obj.midi)
+
 			for pn, pl_midi in enumerate(track_obj.placements.pl_midi):
 				for x in pl_midi.midievents.get_channums():
 					if x not in usedchans: usedchans.append(x)

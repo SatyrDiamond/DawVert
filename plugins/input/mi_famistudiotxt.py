@@ -227,7 +227,6 @@ def make_auto(convproj_obj, fs_pattern, NoteLength, timemul, patpos, patdur, cha
 	for notedata in fs_notes:
 		if notedata.Volume:
 			notepos = notedata.Time*timemul/NoteLength
-			#print(notepos, notedata.Volume, notedata.VolumeSlideTarget)
 			vol_auto.append([notepos, notedata.Volume, notedata.VolumeSlideTarget])
 
 	if vol_auto:
@@ -309,7 +308,6 @@ class input_famistudio(plugins.base):
 		traits_obj = convproj_obj.traits
 		traits_obj.audio_filetypes = ['wav']
 		traits_obj.auto_types = ['nopl_points', 'pl_points']
-		traits_obj.track_lanes = True
 
 		convproj_obj.set_timings(4, True)
 

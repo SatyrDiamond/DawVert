@@ -32,7 +32,6 @@ class input_cvpj_f(plugins.base):
 		from objects.file_proj_uncommon import piximod as proj_piximod
 
 		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
 		traits_obj.audio_filetypes = ['wav']
 
 		convproj_obj.type = 'rs'

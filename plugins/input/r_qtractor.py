@@ -149,8 +149,6 @@ class input_midi(plugins.base):
 					stretch_obj = placement_obj.sample.stretch
 					if clip.audioclip.time_stretch:
 						stretch_obj.timing.set__real_rate(tempo, 1/clip.audioclip.time_stretch)
-
-						stretch_obj.set_rate_tempo(tempo, (clip.audioclip.time_stretch)*tempomul, True)
 					stretch_obj.preserve_pitch = True
 
 			if qtrack.type == 'midi':

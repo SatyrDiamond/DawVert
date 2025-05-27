@@ -288,7 +288,6 @@ class input_flp(plugins.base):
 		traits_obj.plugin_ext = ['vst2', 'vst3', 'clap']
 		traits_obj.plugin_ext_arch = [32, 64]
 		traits_obj.plugin_ext_platforms = ['win']
-		traits_obj.track_lanes = True
 
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 2024\\", 'win')

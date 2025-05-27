@@ -250,7 +250,6 @@ class input_jummbox(plugins.base):
 		traits_obj = convproj_obj.traits
 		traits_obj.audio_filetypes = ['wav']
 		traits_obj.auto_types = ['pl_points']
-		traits_obj.track_lanes = True
 
 		globalstore.dataset.load('beepbox', './data_main/dataset/beepbox.dset')
 

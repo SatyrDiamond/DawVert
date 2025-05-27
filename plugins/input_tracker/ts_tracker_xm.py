@@ -55,7 +55,6 @@ class input_xm(plugins.base):
 		globalstore.dataset.load('tracker_various', './data_main/dataset/tracker_various.dset')
 		
 		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
 		traits_obj.audio_filetypes = ['wav']
 		traits_obj.auto_types = ['pl_points', 'pl_ticks']
 

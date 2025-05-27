@@ -65,9 +65,6 @@ class input_trackerboy(plugins.base):
 
 		convproj_obj.fxtype = 'rack'
 		
-		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
-
 		samplefolder = dawvert_intent.path_samples['extracted']
 
 		globalstore.dataset.load('trackerboy', './data_main/dataset/trackerboy.dset')

@@ -37,7 +37,6 @@ class input_mariopaint_smp(plugins.base):
 		convproj_obj.type = 'rm'
 
 		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
 		traits_obj.track_nopl = True
 
 		mariopaint_obj = mariopaint.mariopaint_song()

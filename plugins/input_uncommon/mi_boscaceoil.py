@@ -99,7 +99,6 @@ class input_ceol(plugins.base):
 		convproj_obj.set_timings(4, False)
 
 		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
 		traits_obj.auto_types = ['pl_points']
 
 		globalstore.dataset.load('boscaceoil', './data_main/dataset/boscaceoil.dset')

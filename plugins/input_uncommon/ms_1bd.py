@@ -62,9 +62,6 @@ class input_1bitdragon(plugins.base):
 		convproj_obj.set_timings(4, True)
 		convproj_obj.type = 'ms'
 
-		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
-
 		project_obj = proj_1bitdragon.onebitd_song()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()

@@ -36,9 +36,6 @@ class input_openmpt(plugins.base):
 		if dawvert_intent.input_mode == 'bytes':
 			moduledata = dawvert_intent.input_data
 
-		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
-
 		openmpt_obj = openmpt.openmpt()
 		openmpt_obj.load_lib()
 		openmpt_obj.openmpt_module_create_from_memory2(moduledata)

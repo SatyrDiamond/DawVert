@@ -37,7 +37,6 @@ class input_notessimo_v2(plugins.base):
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['pl_points']
-		traits_obj.track_lanes = True
 
 		convproj_obj.set_timings(4, True)
 

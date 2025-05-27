@@ -338,7 +338,7 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 								timestretch = float(attribvals['timestretch'])
 								if timestretch:
 									stretch_obj = sp_obj.stretch
-									stretch_obj.set_rate_speed(120, timestretch, True)
+									stretch_obj.timing.set__speed(120, timestretch)
 									stretch_obj.preserve_pitch = True
 							if 'reverse' in attribvals:
 								sp_obj.reverse = bool(int(attribvals['reverse']))
@@ -655,7 +655,6 @@ class input_zenbeats(plugins.base):
 							stretch_obj = sp_obj.stretch
 							stretch_obj.timing.set__orgtempo(zb_pattern.audio_file_original_bpm)
 
-							stretch_obj.set_rate_tempo(project_obj.bpm, speedrate, False)
 							stretch_obj.preserve_pitch = True
 							if zb_pattern.audio_pitch is not None: sp_obj.pitch += math.log2(1/zb_pattern.audio_pitch)*-12
 							if zb_pattern.audio_gain is not None: sp_obj.vol = zb_pattern.audio_gain

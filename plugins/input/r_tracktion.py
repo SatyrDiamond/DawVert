@@ -202,6 +202,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 								if paddata.name: sp_obj.visual.name = paddata.name
 								colorint = colordata.getcolornum(paddata.colour)
 								sp_obj.visual.color.set_int(colorint)
+								sp_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 		elif software_mode == 'soundbug':
 
@@ -293,7 +294,9 @@ def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode):
 	groupid = str(wf_track.id_num)
 	track_obj = convproj_obj.fx__group__add(groupid)
 	track_obj.visual.name = str(wf_track.name)
-	if wf_track.colour != '0': track_obj.visual.color.set_hex(wf_track.colour)
+	if wf_track.colour != '0': 
+		track_obj.visual.color.set_hex(wf_track.colour)
+		track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
 	vol = 1
@@ -324,8 +327,12 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 	track_obj.visual.name = str(wf_track.name)
 	colour = str(wf_track.colour)
 	if colour != '0': 
-		if len(colour)==8: track_obj.visual.color.set_hex(colour[2:])
-		if len(colour)==6: track_obj.visual.color.set_hex(colour)
+		if len(colour)==8:
+			track_obj.visual.color.set_hex(colour[2:])
+			track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
+		if len(colour)==6:
+			track_obj.visual.color.set_hex(colour)
+			track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 	track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
@@ -443,7 +450,8 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 					if dur_sec is not None:
 						stretch_amt = (dur_sec*2)/audioclip.loopinfo.numBeats
 	
-				stretch_obj.set_rate_tempo(bpm, stretch_amt, False)
+				else:
+					stretch_obj.timing.set__real_rate(bpm, stretch_amt)
 
 		else:
 			placement_obj = track_obj.placements.add_video()

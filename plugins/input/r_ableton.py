@@ -634,12 +634,8 @@ class input_ableton(plugins.base):
 						else:
 							pitchcalc = 2**(placement_obj.sample.pitch/12)
 							stretch_obj.is_warped = False
-							
 							stretch_obj.timing.set__speed(pitchcalc)
 							
-							stretch_obj.set_rate_speed(tempo, pitchcalc, False)
-							stretch_obj.uses_tempo = False
-
 						if not clipobj.IsWarped:
 							if clipobj.Loop.LoopOn == 0:
 								time_obj.cut_type = 'cut'

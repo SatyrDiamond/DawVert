@@ -151,7 +151,7 @@ class input_mmf(plugins.base):
 							time_obj = placement_obj.time
 							time_obj.set_posdur(int(start), int(end))
 							sp_obj = placement_obj.sample
-							sp_obj.stretch.set_rate_tempo(120, 1, False)
+							sp_obj.stretch.timing.set__speed(1)
 							sp_obj.stretch.preserve_pitch = True
 							sp_obj.interpolation = "none"
 

@@ -77,7 +77,8 @@ def convert(convproj_obj, change_instnames):
 
 	for plugid in used_plugins:
 		if plugid:
-			convproj_obj.plugins[plugid] = useable_plugins[plugid]
+			for plugid in useable_plugins:
+				convproj_obj.plugins[plugid] = useable_plugins[plugid]
 
 	convproj_obj.track_data = {}
 	convproj_obj.track_order = []

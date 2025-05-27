@@ -167,7 +167,6 @@ class input_lc(plugins.base):
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['pl_points']
-		traits_obj.track_lanes = True
 
 		project_obj = proj_lovelycomposer.LCMusic()
 		if dawvert_intent.input_mode == 'file':

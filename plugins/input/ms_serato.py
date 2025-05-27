@@ -115,7 +115,6 @@ class input_serato(plugins.base):
 		traits_obj.audio_filetypes = ['wav']
 		traits_obj.audio_stretch = ['rate']
 		traits_obj.auto_types = ['pl_points']
-		traits_obj.track_lanes = True
 
 		convproj_obj.set_timings(960, True)
 
@@ -284,9 +283,7 @@ class input_serato(plugins.base):
 						samplepart_obj.pitch = scene_deck.key_shift
 
 						stretch_obj = samplepart_obj.stretch
-						stretch_obj.set_rate_tempo(project_obj.bpm, playspeed, False)
-
-						stretch_obj.timing.set__orgtempo(120/playspeed)
+						stretch_obj.timing.set__size(playspeed)
 
 						stretch_obj.preserve_pitch = True
 
@@ -513,7 +510,7 @@ class input_serato(plugins.base):
 											playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, playback_speed)
 
 											stretch_obj = samplepart_copy.stretch
-											stretch_obj.set_rate_tempo(project_obj.bpm, playspeed, False)
+											stretch_obj.timing.set__size(playspeed)
 
 											samplepart_copy.pitch += project_obj.transpose
 											if 'pitch_shift' in cuedata: samplepart_copy.pitch += cuedata['pitch_shift']

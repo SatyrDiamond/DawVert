@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.exceptions import ProjectFileParserException
-from functions import data_xml
 import plugins
 import json
 import os
@@ -507,7 +506,7 @@ class input_wavtool(plugins.base):
 						stretch_obj.preserve_pitch = True
 						sp_obj.pitch = wt_clip_transpose
 						if wt_warp_numanchors<2: 
-							stretch_obj.set_rate_tempo(wavtool_obj.bpm, sourcebpmmod, True)
+							stretch_obj.timing.set__orgtempo(wt_warp_sourceBPM)
 						else:
 							dur_sec = sampleref_obj.get_dur_sec()
 							if dur_sec is not None:
@@ -521,7 +520,7 @@ class input_wavtool(plugins.base):
 								warp_obj.calcpoints__speed()
 
 					else: 
-						stretch_obj.set_rate_speed(wavtool_obj.bpm, pow(2, wavtool_clip.transpose/12), False)
+						stretch_obj.timing.set__speed(pow(2, wavtool_clip.transpose/12))
 						stretch_obj.preserve_pitch = False
 
 					sp_obj.vol = wavtool_clip.gain

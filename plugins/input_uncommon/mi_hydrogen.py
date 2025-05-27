@@ -35,7 +35,6 @@ class input_hydrogen(plugins.base):
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['nopl_points']
-		traits_obj.track_lanes = True
 
 		project_obj = proj_hydrogen.hydrogen_song()
 		if dawvert_intent.input_mode == 'file':
@@ -71,7 +70,7 @@ class input_hydrogen(plugins.base):
 			sre_obj = convproj_obj.sampleindex__add('playbackTrack')
 			sre_obj.from_sampleref_obj(sampleref_obj)
 			sre_obj.sampleref = 'playbackTrack'
-			sre_obj.stretch.set_rate_speed(bpm, 1, True)
+			sre_obj.stretch.timing.set__speed(bpm, 1)
 			sre_obj.visual.from_dset('hydrogen', 'track', 'playback', False)
 			cvpj_placement = playlist_obj.placements.add_audio_indexed()
 			cvpj_placement.fromindex = 'playbackTrack'

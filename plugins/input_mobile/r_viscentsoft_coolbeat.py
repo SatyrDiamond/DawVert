@@ -151,7 +151,7 @@ class output_coolbeat(plugins.base):
 					time_obj.set_posdur(section.startTick, section.length)
 
 					sp_obj = placement_obj.sample
-					sp_obj.stretch.set_rate_speed(project_obj.tempo, 1, True)
+					sp_obj.stretch.timing.set__speed(project_obj.tempo, 1)
 					sp_obj.stretch.preserve_pitch = True
 					sp_obj.stretch.uses_tempo = True
 					sp_obj.sampleref = sampleid

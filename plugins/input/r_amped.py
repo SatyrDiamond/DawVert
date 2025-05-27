@@ -478,7 +478,5 @@ class input_amped(plugins.base):
 
 						stretch_obj.timing.set__real_rate(amped_obj.tempo, amped_clip.stretch)
 						
-						stretch_obj.set_rate_speed(amped_obj.tempo, amped_clip.stretch, True)
-						stretch_obj.uses_tempo = True
 						stretch_obj.preserve_pitch = True
 						stretch_algo = stretch_obj.algorithm

@@ -327,6 +327,16 @@ class cvpj_stretch_timing:
 		self.original_bpm = org_tempo
 		self.tempo_based = True
 
+	def set__rate(self, rate):
+		self.time_type = 'tempo'
+		self.original_bpm = rate*120
+		self.tempo_based = True
+
+	def set__size(self, rate):
+		self.time_type = 'tempo'
+		self.original_bpm = 120/rate
+		self.tempo_based = True
+
 	def set__real_rate(self, tempo, rate):
 		self.time_type = 'real_rate'
 		self.original_bpm = tempo
@@ -337,6 +347,8 @@ class cvpj_stretch_timing:
 		self.time_type = 'beats'
 		self.beats__num = num_beats
 		self.tempo_based = True
+
+
 
 	def get__speed(self, sampleref_obj):
 		if self.time_type == 'beats':
@@ -362,9 +374,6 @@ class cvpj_stretch_timing:
 
 	def get__tempo(self, sampleref_obj):
 		return self.get__speed(sampleref_obj)*120
-
-	def get__tempo_real(self, sampleref_obj, tempo):
-		return self.get__speed_real(sampleref_obj, tempo)*120
 
 	def get__real_rate(self, sampleref_obj, tempo):
 		if self.time_type == 'real_rate':
@@ -427,34 +436,34 @@ class cvpj_stretch:
 
 		return s_algorithm and s_is_warped and s_warp and uses_tempo and s_timing
 
-	def set_rate_speed_pitch(self, bpm, pitch):
-		self.set_rate_speed(bpm, pow(2, pitch/12), False)
-
-	def set_rate_speed(self, bpm, rate, is_size):
-		self.uses_tempo = False
-		self.bpm = bpm
-		self.calc_bpm_speed = 120/self.bpm
-		self.calc_bpm_size = self.bpm/120
-		self.org_speed = rate
-		self.calc_real_speed = rate if not is_size else 1/rate
-		self.calc_real_size = 1/rate if not is_size else rate
-		self.calc_tempo_speed = self.calc_real_speed*self.calc_bpm_speed
-		self.calc_tempo_size = self.calc_real_size*self.calc_bpm_size
-
-	def set_rate_tempo_sync(self, projbpm, bpm, rate, is_size):
-		outstr = bpm/projbpm if is_size else projbpm/bpm
-		self.set_rate_tempo(bpm, rate/outstr, is_size)
-
-	def set_rate_tempo(self, bpm, rate, is_size):
-		self.uses_tempo = True
-		self.bpm = bpm
-		self.calc_bpm_speed = 120/self.bpm
-		self.calc_bpm_size = self.bpm/120
-		self.org_speed = rate
-		self.calc_tempo_speed = (rate if not is_size else 1/rate) if rate else 1
-		self.calc_tempo_size = (1/rate if not is_size else rate) if rate else 1
-		self.calc_real_speed = self.calc_tempo_speed/self.calc_bpm_speed
-		self.calc_real_size = self.calc_tempo_size/self.calc_bpm_size
+	#def set_rate_speed_pitch(self, bpm, pitch):
+	#	self.set_rate_speed(bpm, pow(2, pitch/12), False)
+#
+	#def set_rate_speed(self, bpm, rate, is_size):
+	#	self.uses_tempo = False
+	#	self.bpm = bpm
+	#	self.calc_bpm_speed = 120/self.bpm
+	#	self.calc_bpm_size = self.bpm/120
+	#	self.org_speed = rate
+	#	self.calc_real_speed = rate if not is_size else 1/rate
+	#	self.calc_real_size = 1/rate if not is_size else rate
+	#	self.calc_tempo_speed = self.calc_real_speed*self.calc_bpm_speed
+	#	self.calc_tempo_size = self.calc_real_size*self.calc_bpm_size
+#
+	#def set_rate_tempo_sync(self, projbpm, bpm, rate, is_size):
+	#	outstr = bpm/projbpm if is_size else projbpm/bpm
+	#	self.set_rate_tempo(bpm, rate/outstr, is_size)
+#
+	#def set_rate_tempo(self, bpm, rate, is_size):
+	#	self.uses_tempo = True
+	#	self.bpm = bpm
+	#	self.calc_bpm_speed = 120/self.bpm
+	#	self.calc_bpm_size = self.bpm/120
+	#	self.org_speed = rate
+	#	self.calc_tempo_speed = (rate if not is_size else 1/rate) if rate else 1
+	#	self.calc_tempo_size = (1/rate if not is_size else rate) if rate else 1
+	#	self.calc_real_speed = self.calc_tempo_speed/self.calc_bpm_speed
+	#	self.calc_real_size = self.calc_tempo_size/self.calc_bpm_size
 
 	@contextmanager
 	def setup_warp(self):
@@ -537,7 +546,7 @@ class cvpj_stretch:
 					finalspeed = warp_obj.points[0].speed
 
 				if finalspeed>0:
-					self.timing.set__orgtempo(finalspeed*120)
+					self.timing.set__rate(finalspeed)
 
 				pos_offset = fw_p*4
 				cut_offset = (fw_s*8)

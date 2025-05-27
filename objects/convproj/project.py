@@ -267,6 +267,10 @@ class cvpj_project:
 	def main__change_type(self, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		compactclass = song_compat.song_compat()
 
+		traits_obj = self.traits
+		if self.type in ['m', 'mi', 'rm', 'ms', 'ts', 'cs', 'cm', 'rs']:
+			traits_obj.track_lanes = True
+
 		compactclass.makecompat(self, self.type, in_dawinfo, out_dawinfo, out_type, dawvert_intent)
 
 		if self.type == 'ri' and out_type == 'mi': convert_ri2mi.convert(self)

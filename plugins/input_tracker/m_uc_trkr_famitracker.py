@@ -31,9 +31,6 @@ class input_famitracker_txt(plugins.base):
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.fxtype = 'rack'
-		
-		traits_obj = convproj_obj.traits
-		traits_obj.track_lanes = True
 
 		if project_obj.title: convproj_obj.metadata.name = project_obj.title
 		if project_obj.author: convproj_obj.metadata.author = project_obj.author

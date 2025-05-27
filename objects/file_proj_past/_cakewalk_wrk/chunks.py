@@ -155,7 +155,7 @@ chunkids[45] = "Gen2:Track:Events"
 chunkobjects[45] = chunks_gen2.chunk_gen2_track_events
 
 chunkids[89] = "Gen2:Track:AudioStretch"
-chunkobjects[89] = chunks_gen2.chunk_gen2_track_audiostretch
+#chunkobjects[89] = chunks_gen2.chunk_gen2_track_audiostretch
 
 chunkids[63] = "Gen2:Track:Effects"
 chunkobjects[63] = chunks_gen2.chunk_gen2_track_effects

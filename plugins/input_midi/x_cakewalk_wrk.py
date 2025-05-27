@@ -61,8 +61,12 @@ class input_cvpj_f(plugins.base):
 						convproj_obj.set_timings(parseddata.timebase, False)
 
 					elif chunk.id == 15: #Gen1:Global:Auto:Tempo_V3
-						for x in parseddata.points:
-							convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', x[0], x[1]/100)
+						points = parseddata.points
+						if points:
+							firstpoint = points[0]
+							if firstpoint[0]==0: convproj_obj.params.add('bpm', firstpoint[1]/100, 'float')
+							for x in points:
+								convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', x[0], x[1]/100)
 
 					elif chunk.id == 1: #Gen1:Track:Header
 						cvpj_trackid = str(parseddata.trackno)
@@ -128,14 +132,14 @@ class input_cvpj_f(plugins.base):
 				if chunk.is_parsed:
 					parseddata = chunk.content
 	
-					if chunk.id == 3: #Gen1:Global:Settings
-						print(dir(parseddata))
+					#if chunk.id == 3: #Gen1:Global:Settings
+					#	print(dir(parseddata))
 						#print(parseddata.TempoOfs1)
 						#print(parseddata.TempoOfs2)
 						#print(parseddata.TempoOfs3)
 						#convproj_obj.set_timings(parseddata.timebase, False)
 
-					elif chunk.id == 10: #Gen1:Global:Timebase
+					if chunk.id == 10: #Gen1:Global:Timebase
 						convproj_obj.set_timings(parseddata.timebase, False)
 
 					elif chunk.id == 15: #Gen1:Global:Auto:Tempo_V3

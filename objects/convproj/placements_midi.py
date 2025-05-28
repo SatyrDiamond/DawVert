@@ -149,8 +149,8 @@ class cvpj_placement_midi:
 		return self.auto[a_type]
 
 	def midi_from(self, input_file):
-		from objects_midi.parser import MidiFile
-		from objects_midi import events as MidiEvents
+		from objects.midi_file.parser import MidiFile
+		from objects.midi_file import events as MidiEvents
 
 		if os.path.exists(input_file):
 			midifile = MidiFile.fromFile(input_file)

@@ -114,7 +114,7 @@ class apeescape_bd:
 
 class reader_midifile_class():
 	def do_song(self, input_file, convproj_obj):
-		from objects_midi.parser import MidiFile
+		from objects.midi_file.parser import MidiFile
 		midifile = MidiFile.fromFile(input_file)
 		ppq = midifile.ppqn
 		convproj_obj.set_timings(ppq, False)
@@ -125,7 +125,7 @@ class reader_midifile_class():
 		return ppq
 
 	def do_track(self, eventlist, track_obj):
-		from objects_midi import events as MidiEvents
+		from objects.midi_file import events as MidiEvents
 		events_obj = track_obj.placements.midievents
 		events_obj.data.alloc(len(eventlist))
 

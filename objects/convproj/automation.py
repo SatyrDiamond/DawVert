@@ -25,8 +25,8 @@ class midifile_to_automation:
 		self.defined[channel][controller] = [autoloc, imin, imax, isbool]
 
 	def do_midi_file(self, input_file, ppq, real, tempomul):
-		from objects_midi.parser import MidiFile
-		from objects_midi import events as MidiEvents
+		from objects.midi_file.parser import MidiFile
+		from objects.midi_file import events as MidiEvents
 
 		if os.path.exists(input_file):
 			if os.path.isfile(input_file):

@@ -1297,6 +1297,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\bandlab__reverb.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__reverb.pstr",
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "universal:reverb",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\flp__fruity_balance.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\flp__fruity_balance.pstr",
     "daw_out": [

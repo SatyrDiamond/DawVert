@@ -1,0 +1,11 @@
+<plugstatetransform daw_out="bandlab" plugtype="universal:reverb">
+  <in__wet to="wet" type="float" />
+  <in__param to="room_size" from="size" type="float" />
+  <calc name="room_size" type="div">10</calc>
+  <calc name="room_size" type="pow">0.4</calc>
+  <calc name="room_size" type="mul">10</calc>
+  <replace plugtype="native:bandlab:reverbHybrid" />
+  <out__param to="dryWetMix" from="wet" type="float" />
+  <out__param to="roomSize" from="room_size" type="float" />
+  <out__dataval_val to="irType" type="string">chamberShort</out__dataval_val>
+</plugstatetransform> 

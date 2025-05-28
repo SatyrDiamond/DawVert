@@ -502,12 +502,12 @@ class cvpj_stretch:
 						warp_point_obj = warp_obj.points__add()
 						warp_point_obj.beat = 0
 						warp_point_obj.second = 0
-						warp_point_obj.speed = self.calc_tempo_size
+						warp_point_obj.speed = 1/calc_tempo_size
 		
 						warp_point_obj = warp_obj.points__add()
 						warp_point_obj.beat = pos_real*2
 						warp_point_obj.second = sampleref_obj.dur_sec
-						warp_point_obj.speed = self.calc_tempo_size
+						warp_point_obj.speed = 1/calc_tempo_size
 				else:
 					if dur_sec:
 						calc_tempo_size = timing_obj.get__speed(sampleref_obj)

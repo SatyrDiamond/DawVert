@@ -177,30 +177,30 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('postgain', comp_gain, 'float')
 			return True
 
-		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.delay'):
-			feedback = plugin_obj.params.get('feedback', 0).value
-			feedback_filter = plugin_obj.params.get('feedback_filter', 0).value
-			timeBpmSync = plugin_obj.params.get('timeBpmSync', 0).value
-			timeL = plugin_obj.params.get('timeL', 0).value
-			timeLSynced = plugin_obj.params.get('timeLSynced', 0).value
-			timeR = plugin_obj.params.get('timeR', 0).value
-			timeRSynced = plugin_obj.params.get('timeRSynced', 0).value
-			wet = plugin_obj.params.get('wet', 0).value
-			dry = plugin_obj.params.get('dry', 0).value
-
-			delay_obj = fx_delay.fx_delay()
-			delay_obj.feedback_first = True
-			delay_obj.feedback[0] = feedback
-
-			for n in range(2):
-				timing_obj = delay_obj.timing_add(n)
-				if timeBpmSync: timing_obj.set_steps(16/(1/(timeLSynced if not n else timeRSynced)), convproj_obj)
-				else: timing_obj.set_seconds(timeL if not n else timeR)
-
-			delay_obj.cut_high = get_freq(feedback_filter**0.5)
-			plugin_obj, pluginid = delay_obj.to_cvpj(convproj_obj, pluginid)
-			plugin_obj.params_slot.add('wet', xtramath.wetdry(wet, dry), 'float')
-			return True
+		#if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.delay'):
+		#	feedback = plugin_obj.params.get('feedback', 0).value
+		#	feedback_filter = plugin_obj.params.get('feedback_filter', 0).value
+		#	timeBpmSync = plugin_obj.params.get('timeBpmSync', 0).value
+		#	timeL = plugin_obj.params.get('timeL', 0).value
+		#	timeLSynced = plugin_obj.params.get('timeLSynced', 0).value
+		#	timeR = plugin_obj.params.get('timeR', 0).value
+		#	timeRSynced = plugin_obj.params.get('timeRSynced', 0).value
+		#	wet = plugin_obj.params.get('wet', 0).value
+		#	dry = plugin_obj.params.get('dry', 0).value
+#
+		#	delay_obj = fx_delay.fx_delay()
+		#	delay_obj.feedback_first = True
+		#	delay_obj.feedback[0] = feedback
+#
+		#	for n in range(2):
+		#		timing_obj = delay_obj.timing_add(n)
+		#		if timeBpmSync: timing_obj.set_steps(16/(1/(timeLSynced if not n else timeRSynced)), convproj_obj)
+		#		else: timing_obj.set_seconds(timeL if not n else timeR)
+#
+		#	delay_obj.cut_high = get_freq(feedback_filter**0.5)
+		#	plugin_obj, pluginid = delay_obj.to_cvpj(convproj_obj, pluginid)
+		#	plugin_obj.params_slot.add('wet', xtramath.wetdry(wet, dry), 'float')
+		#	return True
 			
 		if plugin_obj.type.check_wildmatch('native', 'soundation', 'com.soundation.limiter'):
 			comp_attack = plugin_obj.params.get('attack', 0).value

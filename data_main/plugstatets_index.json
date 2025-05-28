@@ -587,6 +587,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\waveform2ableton\\djeq.pstr": {
+    "file": "data_main\\plugstatets\\waveform2ableton\\djeq.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:tracktion:djeq",
+    "plugtype_out": [
+      "native:ableton:FilterEQ3"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr": {
     "file": "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr",
     "daw_in": [
@@ -1570,17 +1584,6 @@
     "plugtype_in": "native:ableton:Chorus2",
     "plugtype_out": [
       "universal:vibrato"
-    ],
-    "priority": -100
-  },
-  "data_main\\plugstatets\\_to_univ\\amped__autopan.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\amped__autopan.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "plugtype_in": "native:amped:Tremolo",
-    "plugtype_out": [
-      "universal:autopan"
     ],
     "priority": -100
   },

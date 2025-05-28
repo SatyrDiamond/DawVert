@@ -22,38 +22,38 @@ class plugconv(plugins.base):
 		in_dict['out_daws'] = ['ableton']
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		if plugin_obj.type.check_wildmatch('universal', 'delay', None):
-			fx_on, fx_wet = plugin_obj.fxdata_get()
-			seperated = plugin_obj.datavals.get('seperated', [])
-
-			timing_left = plugin_obj.timing_get('left') if 'time' in seperated else plugin_obj.timing_get('center')
-			timing_right = plugin_obj.timing_get('right') if 'time' in seperated else plugin_obj.timing_get('center')
-
-			feedback = (plugin_obj.datavals.get('l_feedback', 0)*plugin_obj.datavals.get('r_feedback', 0)) if 'feedback' in seperated else plugin_obj.datavals.get('c_feedback', 0)
-
-			plugin_obj.replace('native', 'ableton', 'Delay')
-
-			plugin_obj.fxdata_add(fx_on, 1)
-
-			plugin_obj.params.add('Feedback', feedback/2, 'float')
-			plugin_obj.params.add('DryWet', feedback/2, 'float')
-
-			for endtxt, timing_obj in [['L', timing_left],['R', timing_right]]:
-				use_seconds = True
-
-				if timing_obj.type == 'steps':
-					if not timing_obj.speed_steps%1 and 1<=timing_obj.speed_steps<=16:
-						delidx, offset = timing_obj.get_step_offset([1,2,3,4,5,6,8,16])
-						if abs(offset)<0.33:
-							use_seconds = False
-							plugin_obj.params.add('DelayLine_SyncedSixteenth'+endtxt, delidx, 'float')
-							plugin_obj.params.add('DelayLine_Offset'+endtxt, offset, 'float')
-
-				if use_seconds:
-					plugin_obj.params.add('DelayLine_Sync'+endtxt, use_seconds, 'float')
-					plugin_obj.params.add('DelayLine_Time'+endtxt, timing_obj.speed_seconds, 'float')
- 
-			return True
+		#if plugin_obj.type.check_wildmatch('universal', 'delay', None):
+		#	fx_on, fx_wet = plugin_obj.fxdata_get()
+		#	seperated = plugin_obj.datavals.get('seperated', [])
+#
+		#	timing_left = plugin_obj.timing_get('left') if 'time' in seperated else plugin_obj.timing_get('center')
+		#	timing_right = plugin_obj.timing_get('right') if 'time' in seperated else plugin_obj.timing_get('center')
+#
+		#	feedback = (plugin_obj.datavals.get('l_feedback', 0)*plugin_obj.datavals.get('r_feedback', 0)) if 'feedback' in seperated else plugin_obj.datavals.get('c_feedback', 0)
+#
+		#	plugin_obj.replace('native', 'ableton', 'Delay')
+#
+		#	plugin_obj.fxdata_add(fx_on, 1)
+#
+		#	plugin_obj.params.add('Feedback', feedback/2, 'float')
+		#	plugin_obj.params.add('DryWet', feedback/2, 'float')
+#
+		#	for endtxt, timing_obj in [['L', timing_left],['R', timing_right]]:
+		#		use_seconds = True
+#
+		#		if timing_obj.type == 'steps':
+		#			if not timing_obj.speed_steps%1 and 1<=timing_obj.speed_steps<=16:
+		#				delidx, offset = timing_obj.get_step_offset([1,2,3,4,5,6,8,16])
+		#				if abs(offset)<0.33:
+		#					use_seconds = False
+		#					plugin_obj.params.add('DelayLine_SyncedSixteenth'+endtxt, delidx, 'float')
+		#					plugin_obj.params.add('DelayLine_Offset'+endtxt, offset, 'float')
+#
+		#		if use_seconds:
+		#			plugin_obj.params.add('DelayLine_Sync'+endtxt, use_seconds, 'float')
+		#			plugin_obj.params.add('DelayLine_Time'+endtxt, timing_obj.speed_seconds, 'float')
+ #
+		#	return True
 
 		if plugin_obj.type.check_wildmatch('universal', 'filter', None):
 			abe_starttxt = "Bands.0/ParameterA/"

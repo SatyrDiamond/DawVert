@@ -47,11 +47,11 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['plugin', pluginid, 'high'], ['n_filter', pluginid, filter_id, 'gain'])
 			return True
 
-		if plugin_obj.type.check_wildmatch('native', 'caustic', 'master_delay'):
-			delay_obj = fx_delay.fx_delay()
-			delay_obj.feedback_first = False
-			timing_obj = delay_obj.timing_add(0)
-			timing_obj.set_steps(4, convproj_obj)
-			delay_obj.feedback[0] = plugin_obj.params.get('2', 0).value
-			delay_obj.to_cvpj(convproj_obj, pluginid)
-			return True
+		#if plugin_obj.type.check_wildmatch('native', 'caustic', 'master_delay'):
+		#	delay_obj = fx_delay.fx_delay()
+		#	delay_obj.feedback_first = False
+		#	timing_obj = delay_obj.timing_add(0)
+		#	timing_obj.set_steps(4, convproj_obj)
+		#	delay_obj.feedback[0] = plugin_obj.params.get('2', 0).value
+		#	delay_obj.to_cvpj(convproj_obj, pluginid)
+		#	return True

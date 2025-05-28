@@ -156,13 +156,6 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('midhigh_freq', note_data.note_to_freq(freq2-72), 'float')
 			return True
 
-		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'pitchShifter'):
-			# extpluglog.convinternal('Waveform', 'Pitch Shifter', 'Universal', 'Pitch Shifter')
-			pitchmod = plugin_obj.params.get('semitonesUp', 0).value
-			plugin_obj.replace('universal', 'pitchshift', None)
-			plugin_obj.params.add('pitch', pitchmod, 'float')
-			return True
-
 		#if plugin_obj.type.check_wildmatch('native', 'tracktion', 'stereoDelay'):
 		#	# extpluglog.convinternal('Waveform', 'Stereo Delay', 'Universal', 'Delay')
 		#	crossL = plugin_obj.params.get('crossL', 0).value

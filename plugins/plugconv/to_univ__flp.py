@@ -202,26 +202,26 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('formant_on', p_formant, 'bool')
 			return True
 		
-		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity delay'):
-			#extpluglog.convinternal('FL Studio', 'Fruity Delay', 'Universal', 'Delay')
-			d_fb = plugin_obj.params.get('fb', 0).value/1024
-			d_input = plugin_obj.params.get('input', 0).value/1024
-			d_tempo = plugin_obj.params.get('tempo', 0).value/1024
-			d_steps = plugin_obj.params.get('steps', 1).value
-			d_mode = plugin_obj.params.get('mode', 0).value
-
-			delay_obj = fx_delay.fx_delay()
-			delay_obj.feedback_first = False
-			delay_obj.feedback[0] = d_fb**2
-			delay_obj.feedback_invert = d_mode==1
-			if d_mode==2: 
-				delay_obj.mode = 'pingpong'
-				delay_obj.submode = 'normal'
-			timing_obj = delay_obj.timing_add(0)
-			if not d_tempo: timing_obj.set_steps(d_steps, convproj_obj)
-			else: timing_obj.set_steps_nonsync(d_steps, (d_tempo*220)+60)
-			delay_obj.to_cvpj(convproj_obj, pluginid)
-			return True
+		#if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity delay'):
+		#	#extpluglog.convinternal('FL Studio', 'Fruity Delay', 'Universal', 'Delay')
+		#	d_fb = plugin_obj.params.get('fb', 0).value/1024
+		#	d_input = plugin_obj.params.get('input', 0).value/1024
+		#	d_tempo = plugin_obj.params.get('tempo', 0).value/1024
+		#	d_steps = plugin_obj.params.get('steps', 1).value
+		#	d_mode = plugin_obj.params.get('mode', 0).value
+#
+		#	delay_obj = fx_delay.fx_delay()
+		#	delay_obj.feedback_first = False
+		#	delay_obj.feedback[0] = d_fb**2
+		#	delay_obj.feedback_invert = d_mode==1
+		#	if d_mode==2: 
+		#		delay_obj.mode = 'pingpong'
+		#		delay_obj.submode = 'normal'
+		#	timing_obj = delay_obj.timing_add(0)
+		#	if not d_tempo: timing_obj.set_steps(d_steps, convproj_obj)
+		#	else: timing_obj.set_steps_nonsync(d_steps, (d_tempo*220)+60)
+		#	delay_obj.to_cvpj(convproj_obj, pluginid)
+		#	return True
 
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity fast lp'):
 			#extpluglog.convinternal('FL Studio', 'Fruity Fast LP', 'Universal', 'Filter')
@@ -250,29 +250,29 @@ class plugconv(plugins.base):
 			plugin_obj.filter.q = (filter_resonance*6)+1
 			return True
 
-		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity flanger'):
-			#extpluglog.convinternal('FL Studio', 'Fruity Flanger', 'Universal', 'Flanger')
-
-			p_rate = plugin_obj.params.get('rate', 0).value/5000
-			p_depth = plugin_obj.params.get('depth', 0).value/5000
-			p_delay = plugin_obj.params.get('delay', 0).value/5000
-			p_feed = plugin_obj.params.get('feed', 0).value/100
-			p_inv_feedback = plugin_obj.params.get('inv_feedback', 0).value>512
-
-			p_rate = (p_rate**7)*5
-			p_delay = p_delay**2.58495
-
-			plugin_obj.replace('universal', 'flanger', None)
-			plugin_obj.params.add('delay', p_delay*0.020, 'float')
-			plugin_obj.params.add('rate', p_rate, 'float')
-			plugin_obj.params.add('depth', p_depth, 'float')
-			plugin_obj.params.add('feedback', p_feed, 'float')
-			plugin_obj.params.add('feedback_invert', p_inv_feedback, 'bool')
-
-			lfo_obj = plugin_obj.lfo_add('flanger')
-			lfo_obj.time.set_hz(p_rate)
-			lfo_obj.amount = p_depth
-			return True
+		#if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity flanger'):
+		#	#extpluglog.convinternal('FL Studio', 'Fruity Flanger', 'Universal', 'Flanger')
+#
+		#	p_rate = plugin_obj.params.get('rate', 0).value/5000
+		#	p_depth = plugin_obj.params.get('depth', 0).value/5000
+		#	p_delay = plugin_obj.params.get('delay', 0).value/5000
+		#	p_feed = plugin_obj.params.get('feed', 0).value/100
+		#	p_inv_feedback = plugin_obj.params.get('inv_feedback', 0).value>512
+#
+		#	p_rate = (p_rate**7)*5
+		#	p_delay = p_delay**2.58495
+#
+		#	plugin_obj.replace('universal', 'flanger', None)
+		#	plugin_obj.params.add('delay', p_delay*0.020, 'float')
+		#	plugin_obj.params.add('rate', p_rate, 'float')
+		#	plugin_obj.params.add('depth', p_depth, 'float')
+		#	plugin_obj.params.add('feedback', p_feed, 'float')
+		#	plugin_obj.params.add('feedback_invert', p_inv_feedback, 'bool')
+#
+		#	lfo_obj = plugin_obj.lfo_add('flanger')
+		#	lfo_obj.time.set_hz(p_rate)
+		#	lfo_obj.amount = p_depth
+		#	return True
 
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity free filter'):
 			#extpluglog.convinternal('FL Studio', 'Fruity Free Filter', 'Universal', 'Filter')
@@ -302,30 +302,30 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('pitch', p_frequency, 'float')
 			return True
 
-		if 'shareware' not in dawvert_intent.extplug_cat:
-			if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity delay 2'):
-				#extpluglog.convinternal('FL Studio', 'Fruity Delay 2', 'Universal', 'Delay')
-				d_dry = plugin_obj.params.get('dry', 0).value/128
-				d_fb_cut = plugin_obj.params.get('fb_cut', 0).value/128
-				d_fb_mode = plugin_obj.params.get('fb_mode', 0).value
-				d_fb_vol = plugin_obj.params.get('fb_vol', 0).value/128
-				d_input_pan = plugin_obj.params.get('input_pan', 0).value/128
-				d_input_vol = plugin_obj.params.get('input_vol', 0).value/160
-				d_time = plugin_obj.params.get('time', 0).value/48
-				d_time_stereo_offset = plugin_obj.params.get('time_stereo_offset', 1).value/512
-
-				delay_obj = fx_delay.fx_delay()
-				delay_obj.feedback_first = False
-				delay_obj.input = d_input_vol
-				delay_obj.input_pan = d_input_pan
-				delay_obj.dry = d_dry
-				delay_obj.stereo_offset = d_time_stereo_offset
-				delay_obj.feedback[0] = d_fb_vol**2
-				delay_obj.feedback_invert = d_fb_mode==1
-				if d_fb_mode==2: 
-					delay_obj.mode = 'pingpong'
-					delay_obj.submode = 'normal'
-				timing_obj = delay_obj.timing_add(0)
-				timing_obj.set_steps(d_time, convproj_obj)
-				plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
-				return True
+		#if 'shareware' not in dawvert_intent.extplug_cat:
+		#	if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity delay 2'):
+		#		#extpluglog.convinternal('FL Studio', 'Fruity Delay 2', 'Universal', 'Delay')
+		#		d_dry = plugin_obj.params.get('dry', 0).value/128
+		#		d_fb_cut = plugin_obj.params.get('fb_cut', 0).value/128
+		#		d_fb_mode = plugin_obj.params.get('fb_mode', 0).value
+		#		d_fb_vol = plugin_obj.params.get('fb_vol', 0).value/128
+		#		d_input_pan = plugin_obj.params.get('input_pan', 0).value/128
+		#		d_input_vol = plugin_obj.params.get('input_vol', 0).value/160
+		#		d_time = plugin_obj.params.get('time', 0).value/48
+		#		d_time_stereo_offset = plugin_obj.params.get('time_stereo_offset', 1).value/512
+#
+		#		delay_obj = fx_delay.fx_delay()
+		#		delay_obj.feedback_first = False
+		#		delay_obj.input = d_input_vol
+		#		delay_obj.input_pan = d_input_pan
+		#		delay_obj.dry = d_dry
+		#		delay_obj.stereo_offset = d_time_stereo_offset
+		#		delay_obj.feedback[0] = d_fb_vol**2
+		#		delay_obj.feedback_invert = d_fb_mode==1
+		#		if d_fb_mode==2: 
+		#			delay_obj.mode = 'pingpong'
+		#			delay_obj.submode = 'normal'
+		#		timing_obj = delay_obj.timing_add(0)
+		#		timing_obj.set_steps(d_time, convproj_obj)
+		#		plugin_obj = delay_obj.to_cvpj(convproj_obj, pluginid)
+		#		return True

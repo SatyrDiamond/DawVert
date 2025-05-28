@@ -271,7 +271,7 @@ class input_flp(plugins.base):
 		in_dict['projtype'] = 'mi'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from functions_plugin import flp_dec_plugins
+		from functions.dawspecific import flp_dec_plugins
 		from objects.file_proj import flp as proj_flp
 		from objects.inst_params import fx_delay
 

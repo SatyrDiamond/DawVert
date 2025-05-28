@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects.data_bytes import bytereader
-from functions_plugin import format_flp_tlv
+from functions.dawspecific import format_flp_tlv
 from objects.exceptions import ProjectFileParserException
 
 import logging

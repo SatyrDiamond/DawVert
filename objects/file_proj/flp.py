@@ -6,7 +6,7 @@ import zipfile
 import logging
 from io import BytesIO
 from functions import data_bytes
-from functions_plugin import format_flp_tlv
+from functions.dawspecific import format_flp_tlv
 from objects.data_bytes import bytereader
 from objects.data_bytes import bytewriter
 

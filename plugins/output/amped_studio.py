@@ -11,7 +11,7 @@ import lxml.etree as ET
 from functions import data_values
 from functions import xtramath
 from objects import counter
-from functions_plugin import synth_nonfree_values
+from functions.dawspecific import synth_nonfree_values
 
 audioidnum = 0
 

@@ -180,7 +180,8 @@ class input_ceol(plugins.base):
 			nle_obj = convproj_obj.notelistindex__add(cvpj_pat_id)
 			cvpj_notelist = nle_obj.notelist
 			for ceol_note_obj in ceol_pat_obj.notes: 
-				cvpj_notelist.add_m(patinstid, ceol_note_obj.pos, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, None)
+				oswing = (project_obj.swing/10) if not (ceol_note_obj.pos%2) else 0
+				cvpj_notelist.add_m(patinstid, ceol_note_obj.pos+oswing, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, None)
 			nle_obj.visual.name = str(patnum+1)
 			nle_obj.visual.color.set_int(cvpj_patcolor)
 			nle_obj.visual.color.fx_allowed = ['saturate', 'brighter']

@@ -155,14 +155,13 @@ class input_1bitdragon(plugins.base):
 			inst_obj.params.add('enabled', instdata.on, 'int')
 			inst_obj.params.add('vol', instdata.volume, 'float')
 
-			inst_obj.datavals.add('middlenote', -3)
-
 			#audiofilepath = os.path.join(dawvert_intent.path_samples['extracted'], str(instname)+'.wav')
 			#if instname not in instnames:
 			#	onebit_ext.save_audio(instname, audiofilepath)
 			#	plugin_obj, inst_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
 			#	plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			#	instnames.append(instname)
+			#inst_obj.datavals.add('middlenote', -3)
 
 		for drumid, drumdata in used_drums.items():
 			instname = drumdata.preset
@@ -173,14 +172,13 @@ class input_1bitdragon(plugins.base):
 			inst_obj.params.add('vol', drumdata.volume, 'float')
 			inst_obj.is_drum = True
 
-			inst_obj.datavals.add('middlenote', -3)
-
 			#audiofilepath = os.path.join(dawvert_intent.path_samples['extracted'], str(instname)+'.wav')
 			#if instname not in instnames:
 			#	onebit_ext.save_audio(instname, audiofilepath)
 			#	plugin_obj, inst_obj.plugslots.synth, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler__genid(audiofilepath, None)
 			#	plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			#	instnames.append(instname)
+			#inst_obj.datavals.add('middlenote', -3)
 
 		convproj_obj.do_actions.append('do_lanefit')
 

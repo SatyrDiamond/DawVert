@@ -6,7 +6,7 @@ import plugins
 import math
 from functions import xtramath
 from functions import note_data
-from functions import extpluglog
+#from functions import extpluglog
 
 class plugconv(plugins.base):
 	def is_dawvert_plugin(self):
@@ -23,7 +23,7 @@ class plugconv(plugins.base):
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'AutoFilter'):
-			extpluglog.convinternal('Ableton', 'AutoFilter', 'Universal', 'Filter')
+			#extpluglog.convinternal('Ableton', 'AutoFilter', 'Universal', 'Filter')
 			
 			p_Cutoff = plugin_obj.params.get('Cutoff', 60).value-72
 			p_Resonance = plugin_obj.params.get('Resonance', 1).value
@@ -52,7 +52,7 @@ class plugconv(plugins.base):
 			return True
 
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'ChannelEq'):
-			extpluglog.convinternal('Ableton', 'Channel EQ', 'Universal', 'EQ Bands')
+			#extpluglog.convinternal('Ableton', 'Channel EQ', 'Universal', 'EQ Bands')
 			p_HighpassOn = plugin_obj.params.get("HighpassOn", 0).value
 			p_HighShelfGain = plugin_obj.params.get("HighShelfGain", 0).value
 			p_LowShelfGain = plugin_obj.params.get("LowShelfGain", 0).value
@@ -99,7 +99,7 @@ class plugconv(plugins.base):
 			return True
 
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'AutoPan'):
-			extpluglog.convinternal('Ableton', 'AutoPan', 'Universal', 'Auto Pan')
+			#extpluglog.convinternal('Ableton', 'AutoPan', 'Universal', 'Auto Pan')
 			p_LfoAmount = plugin_obj.params.get('Lfo/LfoAmount', 1).value
 			p_Frequency = plugin_obj.params.get('Lfo/Frequency', 1).value
 			p_Type = plugin_obj.params.get('Lfo/Type', 0).value
@@ -119,14 +119,14 @@ class plugconv(plugins.base):
 			p_RingModCoarse = plugin_obj.params.get("RingModCoarse", 0).value
 
 			if p_ModulationMode == 0:
-				extpluglog.convinternal('Ableton', 'Frequency Shifter', 'Universal', 'Frequency Shifter')
+				#extpluglog.convinternal('Ableton', 'Frequency Shifter', 'Universal', 'Frequency Shifter')
 				f = p_Coarse+p_Fine
 				plugin_obj.replace('universal', 'frequency_shifter', None)
 				plugin_obj.params.add('pitch', f, 'float')
 				return True
 
 			if p_ModulationMode == 1:
-				extpluglog.convinternal('Ableton', 'Ringmod', 'Universal', 'Ringmod')
+				#extpluglog.convinternal('Ableton', 'Ringmod', 'Universal', 'Ringmod')
 				f = abs(p_RingModCoarse+p_Fine)
 				plugin_obj.replace('universal', 'ringmod', None)
 				plugin_obj.params.add('rate', f, 'float')
@@ -136,7 +136,7 @@ class plugconv(plugins.base):
 				return True
 
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'Eq8'):
-			extpluglog.convinternal('Ableton', 'EQ8', 'Universal', 'EQ Bands')
+			#extpluglog.convinternal('Ableton', 'EQ8', 'Universal', 'EQ Bands')
 			for band_num in range(8):
 				groupname = ['main', 'b']
 				abe_starttxt = "Bands."+str(band_num)+"/ParameterA/"

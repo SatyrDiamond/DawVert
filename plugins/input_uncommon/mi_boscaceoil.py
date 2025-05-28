@@ -1,7 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_values
 from functions import xtramath
 from objects import globalstore
 import plugins

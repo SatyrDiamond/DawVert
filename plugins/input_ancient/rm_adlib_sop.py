@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import os.path
 
 endtxt = ['', '4OP', '2OP']
 panvals = [1, 0, -1]

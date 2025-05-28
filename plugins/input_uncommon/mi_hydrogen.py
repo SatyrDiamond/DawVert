@@ -49,6 +49,7 @@ class input_hydrogen(plugins.base):
 		convproj_obj.metadata.name = project_obj.name
 		convproj_obj.metadata.author = project_obj.author
 		convproj_obj.metadata.comment_text = project_obj.notes
+		convproj_obj.metadata.data['license'] = project_obj.license
 
 		bpm = project_obj.bpm
 
@@ -60,6 +61,7 @@ class input_hydrogen(plugins.base):
 
 		convproj_obj.params.add('bpm', bpm , 'float')
 		convproj_obj.track_master.params.add('vol', project_obj.volume, 'float')
+		convproj_obj.track_master.params.add('enabled', not project_obj.isMuted, 'float')
 
 		plnum = 0
 
@@ -106,6 +108,8 @@ class input_hydrogen(plugins.base):
 			inst_obj.plugslots.set_synth(synthid)
 
 			inst_obj.datavals.add('middlenote', -int(instrument.pitchOffset))
+			inst_obj.datavals.add('random_pitch', instrument.randomPitchFactor)
+			inst_obj.datavals.add('random_pitch', instrument.randomPitchFactor)
 
 			if instrument.filterActive:
 				filter_id = str(instrument.id)+'_filter'
@@ -166,10 +170,11 @@ class input_hydrogen(plugins.base):
 			playlist_obj.visual.name = 'Main'
 			playlist_obj.visual.color.set_int(color_track.getcolornum(n))
 			for p, x in enumerate(project_obj.patternSequence):
-				cvpj_placement = playlist_obj.placements.add_notes_indexed()
-				cvpj_placement.fromindex = x[0]
-				time_obj = cvpj_placement.time
-				time_obj.set_posdur(p*48*4, pattern.size)
+				for fromindex in x:
+					cvpj_placement = playlist_obj.placements.add_notes_indexed()
+					cvpj_placement.fromindex = fromindex
+					time_obj = cvpj_placement.time
+					time_obj.set_posdur(p*48*4, pattern.size)
 
 		convproj_obj.do_actions.append('do_sorttracks')
 		convproj_obj.do_actions.append('do_addloop')

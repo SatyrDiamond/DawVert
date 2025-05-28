@@ -488,9 +488,9 @@ class cvpj_plugin:
 		return converted_val
 
 	def convert_external(self, convproj_obj, pluginid, target_extplugs, dawvert_intent):
-		from functions import extpluglog
+		#from functions import extpluglog
 		plugconv_ext_selector = dv_plugins.create_selector('plugconv_ext')
-		extpluglog.extpluglist.clear()
+		#extpluglog.extpluglist.clear()
 		ext_conv_val = False
 		for shortname, dvplug_obj, prop_obj in plugconv_ext_selector.iter():
 			ismatch = self.check_wildmatch(prop_obj.in_plugin[0], prop_obj.in_plugin[1], prop_obj.in_plugin[2])

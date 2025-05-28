@@ -5,7 +5,7 @@ import plugins
 
 import math
 from functions import xtramath
-from functions import extpluglog
+#from functions import extpluglog
 
 slope_vals = [12,24,48]
 
@@ -24,7 +24,7 @@ class plugconv(plugins.base):
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 		if plugin_obj.type.check_wildmatch('native', 'lmms', 'eq'):
-			extpluglog.convinternal('LMMS', 'EQ', 'Universal', 'EQ 8-Limited')
+			#extpluglog.convinternal('LMMS', 'EQ', 'Universal', 'EQ 8-Limited')
 			eq_Outputgain = plugin_obj.params.get('Outputgain', 0).value
 			eq_Inputgain = plugin_obj.params.get('Inputgain', 0).value
 

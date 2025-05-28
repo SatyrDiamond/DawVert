@@ -1,5 +1,0 @@
-<plugstatetransform plugtype="test:test:test">
-
-  <replace plugtype="test:test:test2" />
-
-</plugstatetransform>

@@ -34,8 +34,6 @@ def write_number(byw_stream, val):
 	else:
 		byw_stream.uint8(0)
 
-
-
 class juce_binaryxml_object:
 	__slots__ = ['type', 'data']
 	def __init__(self):

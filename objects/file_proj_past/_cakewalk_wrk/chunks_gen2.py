@@ -174,10 +174,10 @@ class chunk_gen2_midichans:
 	#def write(self, byw_stream):
 	#	byr_stream.l_uint32(self.data)
 
-class chunk_gen2_track_audiostretch:
-	def __init__(self, byr_stream):
-		self.data = []
-		if byr_stream: self.read(byr_stream)
+#class chunk_gen2_track_audiostretch:
+#	def __init__(self, byr_stream):
+#		self.data = []
+#		if byr_stream: self.read(byr_stream)
 
 	#def read(self, byr_stream):
 	#	self.unkdata = []

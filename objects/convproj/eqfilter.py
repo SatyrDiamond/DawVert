@@ -46,8 +46,8 @@ class cvpj_eq:
 		self.bands = ['high_pass', 'low_shelf', 'peak_1', 'peak_2', 'peak_3', 'peak_4', 'high_shelf', 'low_pass']
 
 	def to_8limited(self, convproj_obj, pluginid):
-		fnames = [f for f in self.plugin_obj.named_filter]
-		ftypes = [self.plugin_obj.named_filter[f].type.type for f in fnames]
+		fnames = [f for f in self.plugin_obj.state.named_filter]
+		ftypes = [self.plugin_obj.state.named_filter[f].type.type for f in fnames]
 
 		iseqlimited = False
 		if ftypes.count('high_pass')<2 and ftypes.count('low_shelf')<2 and ftypes.count('peak')<5 and ftypes.count('high_shelf')<2 and ftypes.count('low_pass')<2:

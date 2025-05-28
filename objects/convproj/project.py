@@ -7,9 +7,6 @@ from functions import data_values
 from objects import globalstore
 from collections import Counter
 
-import glob
-import base64
-import bisect
 import os
 import logging
 
@@ -57,7 +54,6 @@ typelist['cm'] = 'ClassicalMultiple'
 typelist['cs'] = 'ClassicalSingle'
 
 logger_project = logging.getLogger('project')
-logger_filesearch = logging.getLogger('filesearch')
 
 def autopath_encode(autol):
 	return ';'.join(autol)

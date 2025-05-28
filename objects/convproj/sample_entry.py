@@ -11,15 +11,6 @@ cvpj_visual = visual.cvpj_visual
 cvpj_stretch = stretch.cvpj_stretch
 
 @dataclass
-class cvpj_sample_region:
-	start: int = 0
-	end: int = -1
-	name: str = ''
-	custom_key: int = -1
-	is_custom_key: bool = False
-	reverse: bool = False
-
-@dataclass
 class cvpj_sample_slice:
 	start: int = 0
 	end: int = -1
@@ -69,14 +60,6 @@ class cvpj_sample_entry:
 
 	usemasterpitch: bool = True
 	
-	#def __eq__(self, other):
-	#	from dataclasses import asdict
-	#	dictdata_a = asdict(self.stretch)
-	#	dictdata_b = asdict(other.stretch)
-	#	diffrence = []
-	#	for n, x in dictdata_a.items():
-	#		if dictdata_a[n] != dictdata_b[n]: diffrence.append(n)
-
 	def get_data(self, name, fallback): 
 		return self.data[name] if name in self.data else fallback
 

@@ -372,14 +372,6 @@ class cvpj_envelope_adsr:
 				#for x in t_dif:
 				#	if x<=0: outv += 1
 				#	else: break
-#
-				#if outv:
-				#	if VERBOSE: print("env_asdr_from_points | 7 | █▄▁▄")
-				#	self.release = env_pointsdata['pos'][outv]
-				#	self.amount = 1
-
-
-
 
 	def from_envpoints(self, env_pointsdata, a_type, plugin_obj):
 		self.reset()

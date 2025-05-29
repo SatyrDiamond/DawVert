@@ -44,9 +44,6 @@ class input_mod(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'ts'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'\xc1\x83\x2a\x9e'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import umx as proj_umx
 

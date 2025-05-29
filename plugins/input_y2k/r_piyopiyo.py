@@ -35,9 +35,6 @@ class input_piyopiyo(plugins.base):
 		in_dict['plugin_included'] = ['universal:synth-osc','universal:sampler:multi']
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'PMD'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj_past import piyopiyo as proj_piyopiyo

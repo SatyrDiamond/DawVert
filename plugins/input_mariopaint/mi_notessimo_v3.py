@@ -214,10 +214,6 @@ class input_notessimo_v3(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['projtype'] = 'mi'
 		
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.container_only = True
-		detectdef_obj.containers.append(['zip', 'sheets.xml'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_uncommon import notessimo_v3 as proj_notessimo_v3
 

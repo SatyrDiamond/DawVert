@@ -91,9 +91,6 @@ class input_it(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single', 'universal:sampler:multi']
 		in_dict['projtype'] = 'ts'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'IMPM'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import tracker_it as proj_it
 		global samplefolder

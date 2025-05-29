@@ -27,10 +27,6 @@ class input_fl_mobile(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'10LF'])
-		detectdef_obj.containers.append(['zip', '*.flm'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		global samplefolder
 

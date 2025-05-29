@@ -41,9 +41,6 @@ class input_audiosanua(plugins.base):
 		in_dict['plugin_included'] = ['native:audiosauna', 'universal:sampler:multi', 'universal:bitcrush']
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.containers.append(['zip', 'songdata.xml'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_past import audiosauna as proj_audiosauna
 

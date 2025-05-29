@@ -31,9 +31,6 @@ class input_mmf(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['projtype'] = 'cm'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'MMMD'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.file_proj_past import mmf as proj_mmf

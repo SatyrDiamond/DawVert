@@ -67,10 +67,6 @@ class input_pxtone(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'rm'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'PTCOLLAGE-071119'])
-		detectdef_obj.headers.append([0, b'PTTUNE--20071119'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects import audio_data

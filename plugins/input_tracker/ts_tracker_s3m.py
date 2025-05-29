@@ -25,9 +25,6 @@ class input_s3m(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'ts'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([44, b'SCRM'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import tracker_s3m as proj_s3m
 		from objects import globalstore

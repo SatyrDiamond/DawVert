@@ -42,9 +42,6 @@ class input_soundclub2(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single']
 		in_dict['projtype'] = 'rs'
 		
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'SN2'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.file_proj_past import soundclub2 as proj_soundclub2

@@ -53,9 +53,6 @@ class input_trackerboy(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'm'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'\x00TRACKERBOY\x00'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import trackerboy as proj_trackerboy
 		from objects.tracker import pat_multi

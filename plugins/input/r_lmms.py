@@ -717,11 +717,6 @@ class input_lmms(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single','chip:fm:opl2','universal:soundfont2','native:lmms','universal:arpeggiator','universal:chord_creator','universal:delay']
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.type = 'xml'
-		detectdef_obj.headers.append(['lmms-project'])
-		detectdef_obj.containers.append(['zlib', 4])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import lmms as proj_lmms
 

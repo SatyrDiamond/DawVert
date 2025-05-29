@@ -332,9 +332,6 @@ class input_amped(plugins.base):
 		in_dict['plugin_included'] = ['native:amped', 'universal:midi', 'user:reasonstudios:europa', 'universal:sampler:multi']
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.containers.append(['zip', 'amped-studio-project.json'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import amped as proj_amped
 

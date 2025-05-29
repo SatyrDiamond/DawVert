@@ -48,10 +48,6 @@ class input_mariopaint_mss(plugins.base):
 		in_dict['plugin_included'] = ['universal:midi']
 		in_dict['projtype'] = 'rm'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.type = 'xml'
-		detectdef_obj.headers.append(['MarioSequencerSong'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.songinput import mariopaint
 

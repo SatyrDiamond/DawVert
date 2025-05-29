@@ -63,9 +63,6 @@ class input_kristal(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'Crys'])
-
 	def do_audiopart(self, convproj_obj, placement_obj, part, minpos, bpm):
 		tempomul = 120/bpm
 

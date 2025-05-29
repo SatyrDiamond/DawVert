@@ -28,9 +28,6 @@ class input_midi(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'MThd'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import qtractor as proj_qtractor
 		convproj_obj.fxtype = 'groupreturn'

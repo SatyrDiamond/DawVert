@@ -397,9 +397,6 @@ class input_dawproject(plugins.base):
 		in_dict['plugin_included'] = ['universal:compressor', 'universal:limiter', 'universal:noise_gate', 'universal:eq:bands']
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.containers.append(['zip', 'project.xml'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import dawproject as proj_dawproject
 		from objects import auto_id

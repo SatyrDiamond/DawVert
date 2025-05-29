@@ -111,9 +111,6 @@ class input_cvpj_r(plugins.base):
 		in_dict['plugin_included'] = ['native:caustic','universal:sampler:single','universal:sampler:multi']
 		in_dict['projtype'] = 'ri'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'RACK'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import audio_data
 		from objects.file_proj_past import caustic as proj_caustic

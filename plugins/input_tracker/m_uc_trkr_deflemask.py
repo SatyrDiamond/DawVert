@@ -20,10 +20,6 @@ class input_deflemask(plugins.base):
 	def get_prop(self, in_dict): 
 		in_dict['projtype'] = 'm'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.headers.append([0, b'.DelekDefleMask.'])
-		detectdef_obj.containers.append(['zlib'])
-
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_tracker import deflemask as proj_deflemask
 		from objects.tracker import pat_multi

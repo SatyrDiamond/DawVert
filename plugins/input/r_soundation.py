@@ -60,9 +60,6 @@ class input_soundation(plugins.base):
 		in_dict['plugin_included'] = ['universal:sampler:single','user:reasonstudios:europa','native:soundation']
 		in_dict['projtype'] = 'r'
 
-	def get_detect_info(self, detectdef_obj):
-		detectdef_obj.containers.append(['zip', '*.sng'])
-
 	def internal_extract_audio(self, url, zip_data, samplefolder):
 		if zip_data and url:
 			if url in zip_data.namelist():

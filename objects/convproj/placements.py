@@ -27,7 +27,7 @@ def internal_addloops(pldata, eq_connect, loopcompat):
 			new_data.append(pl)
 		else:
 			prevreal = new_data[-1]
-			cur_time_obj = curpl_time
+			cur_time_obj = pl.time
 			pr_time_obj = prevreal.time
 			pr_time_obj.duration += cur_time_obj.duration
 			if pr_time_obj.cut_type == 'none': 
@@ -126,7 +126,7 @@ def internal_eq_content(pl, prev):
 
 def internal_eq_connect(pl, prev, loopcompat):
 	curpl_time = pl.time
-	prevpl_time = prevpl_time
+	prevpl_time = prev.time
 	isvalid_b = curpl_time.cut_type in ['none', 'cut']
 	isvalid_c = (prevpl_time.get_end()-curpl_time.get_pos())==0
 	isvalid_d = prevpl_time.cut_type in ['none', 'cut']

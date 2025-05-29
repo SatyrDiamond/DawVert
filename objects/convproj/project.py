@@ -25,6 +25,8 @@ from objects.convproj import autopoints
 from objects.convproj import notelist
 from objects.convproj import stretch
 from objects.convproj import timemarker
+from objects.convproj import videoref
+from objects.convproj import sampleref
 
 from functions.convproj_types import convert_r2m
 from functions.convproj_types import convert_ri2mi
@@ -607,7 +609,7 @@ class cvpj_project:
 
 	def sampleref__add(self, fileid, filepath, os_type):
 		if fileid not in self.samplerefs: 
-			self.samplerefs[fileid] = fileref.cvpj_sampleref()
+			self.samplerefs[fileid] = sampleref.cvpj_sampleref()
 			self.samplerefs[fileid].set_path(os_type, filepath)
 			logger_project.info('SampleRef - '+fileid+' - '+filepath)
 		return self.samplerefs[fileid]
@@ -889,7 +891,7 @@ class cvpj_project:
 
 	def videoref__add(self, fileid, filepath, os_type):
 		if fileid not in self.videorefs: 
-			self.videorefs[fileid] = fileref.cvpj_videoref()
+			self.videorefs[fileid] = videoref.cvpj_videoref()
 			self.videorefs[fileid].set_path(os_type, filepath)
 			logger_project.info('VideoRef - '+fileid+' - '+filepath)
 		return self.videorefs[fileid]

@@ -69,6 +69,8 @@ class plugconv(plugins.base):
 			osc2_freq = (fl_osc2_coarse)/12
 			osc3_freq = (fl_osc3_coarse)/12
 
+			adsr_obj = plugin_obj.env_asdr_get('vol')
+			
 			plugin_obj.replace('native', 'ableton', 'Operator')
 
 			plugin_obj.params.add('Operator.0/IsOn', True, 'bool')
@@ -103,7 +105,6 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('Operator.1/VelScale', 100, 'float')
 			plugin_obj.params.add('Operator.2/VelScale', 100, 'float')
 
-			adsr_obj = plugin_obj.env_asdr_get('vol')
 			for n in range(3):
 				starttxt = 'Operator.'+str(n)
 				plugin_obj.params.add(starttxt+'/Envelope/AttackTime', adsr_obj.attack*1000, 'float')

@@ -116,7 +116,7 @@ def do_param(convproj_obj, cvpj_params, cvpj_name, cvpj_fallback, cvpj_type, cvp
 						alsevent.Value = not autopoint.value
 						AutomationEnvelope_obj.Automation.Events.append([num+1, 'BoolEvent', alsevent])
 
-def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, dur_sec, pitch):
+def do_warpmarkers(convproj_obj, WarpMarkers, stretch_obj, sampleref_obj, dur_sec, pitch):
 	warpenabled = False
 
 	ratespeed = stretch_obj.timing.get__tempo(sampleref_obj)/120
@@ -208,9 +208,9 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 		calc_real_size = stretch_obj.timing.get__speed(sampleref_obj)
 
 		if not warpprop and calc_real_size != 1:
-			warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, dur_sec, 0)
+			warp_obj.IsWarped, ratespeed = do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj, dur_sec, 0)
 		else:
-			do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, dur_sec, 0)
+			do_warpmarkers(convproj_obj, warp_obj.WarpMarkers, stretch_obj, sampleref_obj, dur_sec, 0)
 
 		for sample_slice in cvpj_samplepart.slicer_slices:
 			als_slice = als_samplepart.add_slice()
@@ -710,7 +710,7 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 
 			if AUDWARPVERBOSE: print(str(warpmarker_obj.BeatTime).ljust(18), warpmarker_obj.SecTime)
 		else:
-			do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, second_dur if second_dur else 1, sample_obj.pitch)
+			do_warpmarkers(convproj_obj, als_audioclip.WarpMarkers, stretch_obj, sampleref_obj, second_dur if second_dur else 1, sample_obj.pitch)
 
 		#if not stretch_obj.is_warped:
 		#	if ref_found: 

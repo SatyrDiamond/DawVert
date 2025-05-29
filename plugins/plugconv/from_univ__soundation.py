@@ -27,7 +27,13 @@ class plugconv(plugins.base):
 		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
 
 		if is_eq_bands or is_eq_8limited:
-			if is_eq_bands: plugin_obj.state.eq.to_8limited(convproj_obj, pluginid)
+			if is_eq_8limited: plugin_obj.state.eq.to_8limited(convproj_obj, pluginid)
+			
+			eq_obj = plugin_obj.state.eq
+			named_filter = plugin_obj.state.named_filter
+			plugin_obj.replace('native', 'soundation', 'com.soundation.parametric-eq')
+			plugin_obj.state.named_filter = named_filter
+			plugin_obj.state.eq = eq_obj
 				
 			fil_hp = plugin_obj.named_filter_get('high_pass')
 			fil_ls = plugin_obj.named_filter_get('low_shelf')
@@ -36,8 +42,6 @@ class plugconv(plugins.base):
 			fil_lp = plugin_obj.named_filter_get('low_pass')
 
 			gain_out = plugin_obj.params.get('gain_out', 0).value
-
-			plugin_obj.replace('native', 'soundation', 'com.soundation.parametric-eq')
 
 			plugin_obj.params.add('hpf_enable', int(fil_hp.on), 'float')
 			plugin_obj.params.add('hpf_freq', eq_freq(fil_hp), 'float')

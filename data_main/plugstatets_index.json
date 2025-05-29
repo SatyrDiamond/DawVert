@@ -587,20 +587,6 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2ableton\\djeq.pstr": {
-    "file": "data_main\\plugstatets\\waveform2ableton\\djeq.pstr",
-    "daw_in": [
-      "tracktion_edit"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:tracktion:djeq",
-    "plugtype_out": [
-      "native:ableton:FilterEQ3"
-    ],
-    "priority": 0
-  },
   "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr": {
     "file": "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr",
     "daw_in": [
@@ -1110,6 +1096,17 @@
     "plugtype_in": "universal:compressor",
     "plugtype_out": [
       "native:ableton:Compressor2"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\ableton__eq3band.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__eq3band.pstr",
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "universal:eq:3band",
+    "plugtype_out": [
+      "native:ableton:FilterEQ3"
     ],
     "priority": 100
   },
@@ -1892,6 +1889,17 @@
     "plugtype_in": "native:tracktion:comp",
     "plugtype_out": [
       "universal:compressor"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\waveform__djeq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__djeq.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "plugtype_in": "native:tracktion:djeq",
+    "plugtype_out": [
+      "universal:eq:3band"
     ],
     "priority": -100
   },

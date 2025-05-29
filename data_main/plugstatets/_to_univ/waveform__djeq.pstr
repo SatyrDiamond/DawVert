@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="tracktion_edit" daw_out="ableton" plugtype="native:tracktion:djeq">
+<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:djeq">
   <in__param from="freq1" type="float" />
   <in__param from="freq2" type="float" />
   <in__param from="bass" type="float" />
@@ -16,11 +16,15 @@
   <calc name="mid" type="pow">2.3</calc>
   <calc name="treble" type="pow">2.3</calc>
 
-  <replace plugtype="native:ableton:FilterEQ3" />
+  <calc name="low_gain" type="to_db"/>
+  <calc name="mid_gain" type="to_db"/>
+  <calc name="high_gain" type="to_db"/>
 
-  <out__param to="FreqLo" from="freq1" type="float" />
-  <out__param to="FreqHi" from="freq2" type="float" />
-  <out__param to="GainLo" from="bass" type="float" />
-  <out__param to="GainMid" from="mid" type="float" />
-  <out__param to="GainHi" from="treble" type="float" />
+  <replace plugtype="universal:eq:3band" />
+
+  <out__param to="lowmid_freq" from="freq1" type="float" />
+  <out__param to="midhigh_freq" from="freq2" type="float" />
+  <out__param to="low_gain" from="bass" type="float" />
+  <out__param to="mid_gain" from="mid" type="float" />
+  <out__param to="high_gain" from="treble" type="float" />
 </plugstatetransform> 

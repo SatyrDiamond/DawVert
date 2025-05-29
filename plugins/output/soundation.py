@@ -229,7 +229,7 @@ class output_soundation(plugins.base):
 						else:
 							soundation_instrument.params.add('loop_mode', 0, [])
 
-					if plugin_obj.check_match('user', 'reasonstudios', 'europa'):
+					elif plugin_obj.check_match('user', 'reasonstudios', 'europa'):
 						inst_supported = True
 						soundation_instrument.identifier = 'com.soundation.europa'
 						europaparamlist = dataset_synth_nonfree.params_list('plugin', 'europa')
@@ -242,7 +242,7 @@ class output_soundation(plugins.base):
 							soundation_instrument.params.add("/custom_properties/"+dset_param.name, eur_value_value, [])
 						soundation_instrument.params.add("/soundation/sample/", None, [])
 
-					if plugin_obj.check_wildmatch('native', 'soundation', None):
+					elif plugin_obj.check_wildmatch('native', 'soundation', None):
 						inst_supported = True
 						soundation_instrument.identifier = plugin_obj.type.subtype
 
@@ -298,28 +298,45 @@ class output_soundation(plugins.base):
 							for snd_param in snd_params:
 								param_cvpj2sng(snd_param, soundation_instrument, plugin_obj, pluginid)
 
+					elif len(plugin_obj.state.oscs) == 1:
+						s_osc = plugin_obj.state.oscs[0]
+						if s_osc.prop.shape == 'sine': 
+							gm2_samplepack = '81_8_Sine_Wave.smplpck'
+							inst_supported = True
+						if s_osc.prop.shape == 'square': 
+							gm2_samplepack = '81_0_Square_Lead.smplpck'
+							inst_supported = True
+						if s_osc.prop.shape == 'triangle': 
+							gm2_samplepack = '85_0_Charang.smplpck'
+							inst_supported = True
+						if s_osc.prop.shape == 'saw': 
+							gm2_samplepack = '82_0_Saw_Wave.smplpck'
+							inst_supported = True
+
+						if inst_supported:
+							soundation_instrument.identifier = 'com.soundation.GM-2'
+							set_asdr(soundation_instrument, plugin_obj)
+							soundation_instrument.data['sample_pack'] = {'value': gm2_samplepack}
+
 				if not inst_supported:
 					soundation_instrument.identifier = 'com.soundation.GM-2'
 					gm2_samplepack = '2_0_Bright_Yamaha_Grand.smplpck'
 
-					midi_found, midi_inst = track_obj.get_midi(convproj_obj)
-					bank, patch = midi_inst.to_sf2()
+					midi_inst = track_obj.get_midi(convproj_obj)
+					if midi_inst:
+						bank, patch = midi_inst.to_sf2()
 
-					soundation_instrument.params.add('sustain', 1, [])
-					soundation_instrument.params.add('release', 0, [])
-					soundation_instrument.params.add('decay', 0, [])
-					soundation_instrument.params.add('attack', 0, [])
+						soundation_instrument.params.add('sustain', 1, [])
+						soundation_instrument.params.add('release', 0, [])
+						soundation_instrument.params.add('decay', 0, [])
+						soundation_instrument.params.add('attack', 0, [])
 
-					if plugin_obj:
-						if len(plugin_obj.state.oscs) == 1:
-							s_osc = plugin_obj.state.oscs[0]
-							if s_osc.prop.shape == 'sine': gm2_samplepack = '81_8_Sine_Wave.smplpck'
-							if s_osc.prop.shape == 'square': gm2_samplepack = '81_0_Square_Lead.smplpck'
-							if s_osc.prop.shape == 'triangle': gm2_samplepack = '85_0_Charang.smplpck'
-							if s_osc.prop.shape == 'saw': gm2_samplepack = '82_0_Saw_Wave.smplpck'
-							set_asdr(soundation_instrument, plugin_obj)
+						idvalv = '%s_%s' % (patch+1, bank)
 
-					soundation_instrument.data['sample_pack'] = {'value': gm2_samplepack}
+						idval_get = idvals_inst_gm2.get_idval(idvalv, 'url')
+						if idval_get: gm2_samplepack = idval_get
+
+						soundation_instrument.data['sample_pack'] = {'value': gm2_samplepack}
 
 				soundation_channel.instrument = soundation_instrument
 
@@ -370,7 +387,7 @@ class output_soundation(plugins.base):
 
 			if track_obj.type == 'audio':
 				for audiopl_obj in track_obj.placements.pl_audio:
-					time_obj = notespl_obj.time
+					time_obj = audiopl_obj.time
 					position, duration = time_obj.get_posdur()
 					
 					soundation_region = proj_soundation.soundation_region(None)

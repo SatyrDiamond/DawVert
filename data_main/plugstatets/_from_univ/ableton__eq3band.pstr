@@ -1,0 +1,15 @@
+<plugstatetransform daw_out="ableton" plugtype="universal:eq:3band">
+  <in__param from="lowmid_freq" type="float">0</in__param>
+  <in__param from="midhigh_freq" type="float">0</in__param>
+  <in__param from="low_gain" type="float">0</in__param>
+  <in__param from="mid_gain" type="float">0</in__param>
+  <in__param from="high_gain" type="float">0</in__param>
+  
+  <replace plugtype="native:ableton:FilterEQ3" />
+  
+  <out__param to="FreqLo" from="lowmid_freq" type="float">0</out__param>
+  <out__param to="FreqHi" from="midhigh_freq" type="float">0</out__param>
+  <out__param to="GainLo" from="low_gain" type="float">0</out__param>
+  <out__param to="GainMid" from="mid_gain" type="float">0</out__param>
+  <out__param to="GainHi" from="high_gain" type="float">0</out__param>
+</plugstatetransform>

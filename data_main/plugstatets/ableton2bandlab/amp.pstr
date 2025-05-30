@@ -1,0 +1,41 @@
+<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Amp">
+  <in__param from="AmpType" type="int" />
+
+  <replace plugtype="native:bandlab:genericAmp" />
+
+  <cond__single in="AmpType" data="x == 0">
+    <out__dataval_val to="staticModel" type="string">jcm800</out__dataval_val>
+    <out__param to="drive" only_value="1" type="float">1</out__param>
+  </cond__single>
+
+  <cond__single in="AmpType" data="x == 1">
+    <out__dataval_val to="staticModel" type="string">rolandJC120</out__dataval_val>
+    <out__param to="drive" only_value="1" type="float">7</out__param>
+  </cond__single>
+
+  <cond__single in="AmpType" data="x == 2">
+    <out__dataval_val to="staticModel" type="string">fireballClean</out__dataval_val>
+    <out__param to="drive" only_value="1" type="float">7</out__param>
+  </cond__single>
+
+  <cond__single in="AmpType" data="x == 3">
+    <out__dataval_val to="staticModel" type="string">jcm800</out__dataval_val>
+    <out__param to="drive" only_value="1" type="float">4.2</out__param>
+  </cond__single>
+
+  <cond__single in="AmpType" data="x == 4">
+    <out__dataval_val to="staticModel" type="string">jcm900B</out__dataval_val>
+    <out__param to="drive" only_value="1" type="float">4</out__param>
+  </cond__single>
+
+  <cond__single in="AmpType" data="x == 5">
+    <out__dataval_val to="staticModel" type="string">peavy5150</out__dataval_val>
+    <out__param to="drive" only_value="1" type="float">3.5</out__param>
+  </cond__single>
+
+  <cond__single in="AmpType" data="x == 6">
+    <out__dataval_val to="staticModel" type="string">fenderBassman</out__dataval_val>
+    <out__param to="drive" only_value="1" type="float">2.2</out__param>
+  </cond__single>
+
+</plugstatetransform>

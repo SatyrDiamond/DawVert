@@ -1,4 +1,18 @@
 {
+  "data_main\\plugstatets\\ableton2bandlab\\amp.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\amp.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Amp",
+    "plugtype_out": [
+      "native:bandlab:genericAmp"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\ableton2bandlab\\autofilter.pstr": {
     "file": "data_main\\plugstatets\\ableton2bandlab\\autofilter.pstr",
     "daw_in": [

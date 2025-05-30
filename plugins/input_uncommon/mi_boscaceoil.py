@@ -118,29 +118,22 @@ class input_ceol(plugins.base):
 
 		for instnum, ceol_inst_obj in enumerate(project_obj.instruments):
 			cvpj_instid = 'ceol_'+str(instnum).zfill(2)
-
-			cvpj_instcolor = color_main.getcolornum(ceol_inst_obj.palette)
+			inst_obj = convproj_obj.instrument__add(cvpj_instid)
+			inst_obj.visual.color.set_int(color_main.getcolornum(ceol_inst_obj.palette))
+			inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
+			inst_obj.params.add('vol', ceol_inst_obj.volume/256, 'float')
 
 			if ceol_inst_obj.inst <= 127:
-				inst_obj = convproj_obj.instrument__add(cvpj_instid)
-				inst_obj.visual.color.set_int(cvpj_instcolor)
-				inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 				inst_obj.midi.out_inst.patch = ceol_inst_obj.inst
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
 			elif ceol_inst_obj.inst == 365: 
-				inst_obj = convproj_obj.instrument__add(cvpj_instid)
 				inst_obj.visual.name = 'MIDI Drums'
-				inst_obj.visual.color.set_int(cvpj_instcolor)
-				inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 				inst_obj.midi.out_inst.drum = True
 				inst_obj.to_midi(convproj_obj, cvpj_instid, True)
 
 			else: 
 				strinst = str(ceol_inst_obj.inst)
-				inst_obj = convproj_obj.instrument__add(cvpj_instid)
-				inst_obj.visual.color.set_int(cvpj_instcolor)
-				inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 				inst_obj.from_dataset("boscaceoil", 'inst', strinst, False)
 				inst_ds_obj = globalstore.dataset.get_obj('boscaceoil', 'inst', strinst)
 				if inst_ds_obj:
@@ -156,8 +149,6 @@ class input_ceol(plugins.base):
 			elif ceol_inst_obj.inst == 364: t_key_offset.append(48)
 			elif ceol_inst_obj.inst == 365: t_key_offset.append(24)
 			else: t_key_offset.append(0)
-
-			inst_obj.params.add('vol', ceol_inst_obj.volume/256, 'float')
 
 			if ceol_inst_obj.cutoff < 110:
 				inst_filters[instnum] = add_filter(convproj_obj, instnum, ceol_inst_obj.cutoff, ceol_inst_obj.resonance)
@@ -177,13 +168,13 @@ class input_ceol(plugins.base):
 			cvpj_patcolor = color_main.getcolornum(ceol_pat_obj.palette)
 
 			nle_obj = convproj_obj.notelistindex__add(cvpj_pat_id)
+			nle_obj.visual.name = str(patnum+1)
+			nle_obj.visual.color.set_int(cvpj_patcolor)
+			nle_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 			cvpj_notelist = nle_obj.notelist
 			for ceol_note_obj in ceol_pat_obj.notes: 
 				oswing = (project_obj.swing/10) if not (ceol_note_obj.pos%2) else 0
 				cvpj_notelist.add_m(patinstid, ceol_note_obj.pos+oswing, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, None)
-			nle_obj.visual.name = str(patnum+1)
-			nle_obj.visual.color.set_int(cvpj_patcolor)
-			nle_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 		for num in range(8):
 			playlist_obj = convproj_obj.playlist__add(num, 1, True)

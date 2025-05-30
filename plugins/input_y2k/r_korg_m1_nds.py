@@ -30,7 +30,7 @@ class input_korg_m1_nds(plugins.base):
 		convproj_obj.set_timings(4, True)
 
 		traits_obj = convproj_obj.traits
-		traits_obj.auto_types = ['pl_points']
+		traits_obj.auto_types = ['pl_ticks']
 
 		project_obj = proj_korg_m1_nds.korg_m1_proj()
 		if dawvert_intent.input_mode == 'file':
@@ -62,13 +62,9 @@ class input_korg_m1_nds(plugins.base):
 		curpos = 0
 		for n, tempo in enumerate(tempopos):
 			stepcur = stepsizes[n]
-			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-			time_obj = autopl_obj.time
-			time_obj.time.set_posdur(curpos, stepcur)
-
-			autopoints_obj = autopl_obj.data
-			autopoints_obj.points__add_normal(0, tempo, 0, None)
-
+			autopl_obj = convproj_obj.automation.add_pl_ticks(['main','bpm'], 'float')
+			autopl_obj.time.set_posdur(curpos, stepcur)
+			autopl_obj.data.add_point(curpos, tempo)
 			curpos += stepcur
 
 		for num, channel_obj in enumerate(projsong_obj.channels):

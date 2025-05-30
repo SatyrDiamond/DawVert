@@ -7,6 +7,9 @@ import plugins
 import zipfile
 import os
 
+def getvalue(i_dict, i_id):
+	return i_dict[i_id] if i_id in i_dict else 0
+
 def setasdr(plugin_obj, asdr_name, i_dict, sustain_hundred, n_attack, n_decay, n_release, n_sustain):
 	out_attack = float(getvalue(i_dict, n_attack)) if n_attack else -1
 	out_decay = float(getvalue(i_dict, n_decay)) if n_decay else -1
@@ -16,9 +19,6 @@ def setasdr(plugin_obj, asdr_name, i_dict, sustain_hundred, n_attack, n_decay, n
 	if sustain_hundred: out_sustain = out_sustain/100
 	plugin_obj.env_asdr_add(asdr_name, 0, out_attack, 0, out_decay, out_sustain, out_release, 1)
 	return out_attack, out_decay, out_release, out_sustain
-
-def getvalue(i_dict, i_id):
-	return i_dict[i_id] if i_id in i_dict else 0
 
 audiosanua_device_id = ['fm', 'analog']
 delay_sync = [[1, 64, ''],[1, 64, 't'],[1, 64, 'd'],[1, 32, ''],[1, 32, 't'],[1, 32, 'd'],[1, 16, ''],[1, 16, 't'],[1, 16, 'd'],[1, 8, ''],[1, 8, 't'],[1, 8, 'd'],[1, 4, ''],[1, 4, 't'],[1, 4, 'd'],[1, 2, ''],[1, 2, 't'],[1, 2, 'd'],[1, 1, '']]
@@ -185,6 +185,7 @@ class input_audiosanua(plugins.base):
 				if as_device.deviceType == 2:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 					plugin_obj.role = 'synth'
+					track_obj.plugslots.set_synth(pluginid)
 
 					for num, as_cell in as_device.samples.items():
 						sp_obj = plugin_obj.sampleregion_add(as_cell.loKey-60, as_cell.hiKey-60, as_cell.rootKey-60, None)
@@ -206,6 +207,7 @@ class input_audiosanua(plugins.base):
 						sp_obj.pan = as_cell.pan/100
 						sp_obj.start = as_cell.smpStart/100
 						sp_obj.end = as_cell.smpEnd/100
+						sp_obj.pitch = as_cell.semitone + as_cell.finetone/100
 
 						sp_obj.loop_active = as_cell.loopMode != 'off'
 						sp_obj.loop_start = as_cell.loopStart/100

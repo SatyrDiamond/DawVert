@@ -166,7 +166,8 @@ class action__cond__single:
 		self.expr = xmldata.get('data')
 		for i in xmldata:
 			if i.tag == 'cond__true': self.actions_true = [get_action(x) for x in i]
-			if i.tag == 'cond__false': self.actions_false = [get_action(x) for x in i]
+			elif i.tag == 'cond__false': self.actions_false = [get_action(x) for x in i]
+			else: self.actions_true.append(get_action(i))
 
 	def do_action(self, manu_obj):
 		if self.storename in manu_obj.cur_params:

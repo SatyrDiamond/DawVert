@@ -9,6 +9,7 @@ from objects.file import audio_wav
 from objects.convproj import visual
 import os
 import logging
+import shutil
 logger_project = logging.getLogger('project')
 
 VERBOSE = False

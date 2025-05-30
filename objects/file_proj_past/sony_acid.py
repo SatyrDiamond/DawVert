@@ -62,7 +62,7 @@ class sdml_region:
 
 warp_dtype = np.dtype([
 	('1', '<I'),
-	('2', '>f'),
+	('2', '<I'),
 	('3', 'int64'),
 	('5', 'int64'),
 	('7', '<f'),
@@ -107,13 +107,13 @@ class sdml_track:
 			if x.name == b'strc':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:
 					unk1 = bye_stream.uint32()
-					size = bye_stream.uint32()
+					total = bye_stream.uint32()
 					unk2 = bye_stream.uint32()
 					unk3 = bye_stream.uint32()
 					self.stretch__method = bye_stream.uint32()
 					self.stretch__trans_detect = bye_stream.uint32()
 					self.stretch__force_divisions = bye_stream.uint32()
-					self.warpp = np.frombuffer(byr_stream.raw(32*size), dtype=warp_dtype)
+					self.warpp = np.frombuffer(byr_stream.raw(32*total), dtype=warp_dtype)
 
 			elif x.name == b'trkh':
 				with byr_stream.isolate_size(x.size, False) as bye_stream:

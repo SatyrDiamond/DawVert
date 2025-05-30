@@ -106,18 +106,17 @@ class input_fruitytracks(plugins.base):
 			for ftr_clip in ftr_track.clips:
 				placement_obj = track_obj.placements.add_audio()
 				placement_obj.visual.name = ftr_clip.name
+				placement_obj.muted = bool(ftr_clip.muted)
+				time_obj = placement_obj.time
 
 				sampleref_obj = convproj_obj.sampleref__add(ftr_clip.file, ftr_clip.file, 'win')
+				sampleref_obj.search_local(dawvert_intent.input_folder)
 				sampleref_obj.find_relative('projectfile')
 				sampleref_obj.find_relative('fruitytracks')
 
 				sp_obj = placement_obj.sample
-
 				sp_obj.sampleref = ftr_clip.file
-				placement_obj.muted = bool(ftr_clip.muted)
 
-				time_obj = placement_obj.time
-				
 				plpos = calc_tick_val(bpmdiv, ftr_clip.pos)
 				if ftr_clip.stretch == 0:
 					pldur = (ftr_clip.dur/bpmticks)
@@ -125,12 +124,8 @@ class input_fruitytracks(plugins.base):
 				else:
 					pldur = calc_tick_val(bpmdiv, ftr_clip.dur)
 					repeatlen = calc_tick_val(bpmdiv, ftr_clip.repeatlen)
-					time_obj.set_loop_data(
-						0 if not ftr_clip.dontstart else calc_tick_val(bpmdiv, ftr_clip.pos%ftr_clip.repeatlen), 
-						0, 
-						calc_tick_val(bpmdiv, ftr_clip.repeatlen)
-						)
-
+					offset = 0 if not ftr_clip.dontstart else calc_tick_val(bpmdiv, ftr_clip.pos%ftr_clip.repeatlen)
+					time_obj.set_loop_data(offset, 0, calc_tick_val(bpmdiv, ftr_clip.repeatlen))
 					stretch_obj = sp_obj.stretch
 					stretch_obj.preserve_pitch = True
 					stretch_obj.timing.set__beats(ftr_clip.stretch/4)

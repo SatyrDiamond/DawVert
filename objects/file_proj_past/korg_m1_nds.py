@@ -29,7 +29,7 @@ class korg_m1_channel:
 		self.release = 0
 		self.volume = 0
 		self.pan = 0
-		self.flags = 0
+		self.flags = []
 		self.blocks = []
 		self.set = 0
 		self.bank = 0
@@ -37,6 +37,7 @@ class korg_m1_channel:
 		self.drumparams = [korg_m1_channel_drumsettings() for _ in range(12)]
 		self.unk1 = 0
 		self.unk2 = 0
+		self.mode = 0
 
 # ============================================= savefile ============================================= 
 

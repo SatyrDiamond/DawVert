@@ -1,0 +1,126 @@
+<plugstatetransform daw_in="amped" plugtype="native:amped:EqualizerPro">
+  <define_remap name="filter_types" in_type="int" out_type="filter_type">
+    <val in_val="0" out_val="peak"/>
+    <val in_val="1" out_val="high_pass"/>
+    <val in_val="2" out_val="low_pass"/>
+    <val in_val="3" out_val="low_shelf"/>
+    <val in_val="4" out_val="high_shelf"/>
+    <fallback out_val="peak"/>
+  </define_remap>
+
+  <in__param from="postGain" type="float">0</in__param>
+
+  <in__param from="filter/1/active" type="int">0</in__param>
+  <in__param from="filter/2/active" type="int">0</in__param>
+  <in__param from="filter/3/active" type="int">0</in__param>
+  <in__param from="filter/4/active" type="int">0</in__param>
+  <in__param from="filter/5/active" type="int">0</in__param>
+  <in__param from="filter/6/active" type="int">0</in__param>
+  <in__param from="filter/7/active" type="int">0</in__param>
+  <in__param from="filter/8/active" type="int">0</in__param>
+
+  <in__param from="filter/1/freq" type="float">20</in__param>
+  <in__param from="filter/2/freq" type="float">20</in__param>
+  <in__param from="filter/3/freq" type="float">20</in__param>
+  <in__param from="filter/4/freq" type="float">20</in__param>
+  <in__param from="filter/5/freq" type="float">20</in__param>
+  <in__param from="filter/6/freq" type="float">20</in__param>
+  <in__param from="filter/7/freq" type="float">20</in__param>
+  <in__param from="filter/8/freq" type="float">20</in__param>
+
+  <in__param from="filter/1/q" type="float">0.5</in__param>
+  <in__param from="filter/2/q" type="float">0.5</in__param>
+  <in__param from="filter/3/q" type="float">0.5</in__param>
+  <in__param from="filter/4/q" type="float">0.5</in__param>
+  <in__param from="filter/5/q" type="float">0.5</in__param>
+  <in__param from="filter/6/q" type="float">0.5</in__param>
+  <in__param from="filter/7/q" type="float">0.5</in__param>
+  <in__param from="filter/8/q" type="float">0.5</in__param>
+
+  <in__param from="filter/1/gain" type="float">0</in__param>
+  <in__param from="filter/2/gain" type="float">0</in__param>
+  <in__param from="filter/3/gain" type="float">0</in__param>
+  <in__param from="filter/4/gain" type="float">0</in__param>
+  <in__param from="filter/5/gain" type="float">0</in__param>
+  <in__param from="filter/6/gain" type="float">0</in__param>
+  <in__param from="filter/7/gain" type="float">0</in__param>
+  <in__param from="filter/8/gain" type="float">0</in__param>
+
+  <in__param from="filter/1/type" type="int">0</in__param>
+  <in__param from="filter/2/type" type="int">0</in__param>
+  <in__param from="filter/3/type" type="int">0</in__param>
+  <in__param from="filter/4/type" type="int">0</in__param>
+  <in__param from="filter/5/type" type="int">0</in__param>
+  <in__param from="filter/6/type" type="int">0</in__param>
+  <in__param from="filter/7/type" type="int">0</in__param>
+  <in__param from="filter/8/type" type="int">0</in__param>
+
+  <remap name="filter/1/type" remapdef="filter_types"/>
+  <remap name="filter/2/type" remapdef="filter_types"/>
+  <remap name="filter/3/type" remapdef="filter_types"/>
+  <remap name="filter/4/type" remapdef="filter_types"/>
+  <remap name="filter/5/type" remapdef="filter_types"/>
+  <remap name="filter/6/type" remapdef="filter_types"/>
+  <remap name="filter/7/type" remapdef="filter_types"/>
+  <remap name="filter/8/type" remapdef="filter_types"/>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/1/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/1/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/1/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/1/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/1/gain" to="gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/2/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/2/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/2/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/2/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/2/gain" to="gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/3/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/3/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/3/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/3/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/3/gain" to="gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/4/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/4/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/4/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/4/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/4/gain" to="gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/5/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/5/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/5/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/5/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/5/gain" to="gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/6/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/6/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/6/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/6/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/6/gain" to="gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/7/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/7/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/7/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/7/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/7/gain" to="gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam from="filter/8/active" to="on" type="bool"/>
+  <out__named_filterparam from="filter/8/type" to="type" type="filter_type"/>
+  <out__named_filterparam from="filter/8/freq" to="freq" type="float"/>
+  <out__named_filterparam from="filter/8/q" to="q" type="float"/>
+  <out__named_filterparam from="filter/8/gain" to="gain" type="float"/>
+
+  <out__param to="gain_out" from="postGain" type="float">0</out__param>
+</plugstatetransform>

@@ -1,0 +1,120 @@
+<plugstatetransform daw_in="lmms" plugtype="native:lmms:eq">
+  <in__param from="Inputgain" type="float"/>
+  <in__param from="Outputgain" type="float"/>
+
+  <in__param from="HP" type="float"/>
+  <in__param from="HPactive" type="float"/>
+  <in__param from="HPfreq" type="float"/>
+  <in__param from="HPres" type="float"/>
+
+  <in__param from="LowShelffreq" type="float"/>
+  <in__param from="LowShelfres" type="float"/>
+  <in__param from="Lowshelfactive" type="float"/>
+  <in__param from="Lowshelfgain" type="float"/>
+
+  <in__param from="Peak1active" type="float"/>
+  <in__param from="Peak1bw" type="float"/>
+  <in__param from="Peak1freq" type="float"/>
+  <in__param from="Peak1gain" type="float"/>
+
+  <in__param from="Peak2active" type="float"/>
+  <in__param from="Peak2bw" type="float"/>
+  <in__param from="Peak2freq" type="float"/>
+  <in__param from="Peak2gain" type="float"/>
+
+  <in__param from="Peak3active" type="float"/>
+  <in__param from="Peak3bw" type="float"/>
+  <in__param from="Peak3freq" type="float"/>
+  <in__param from="Peak3gain" type="float"/>
+
+  <in__param from="Peak4active" type="float"/>
+  <in__param from="Peak4bw" type="float"/>
+  <in__param from="Peak4freq" type="float"/>
+  <in__param from="Peak4gain" type="float"/>
+
+  <in__param from="HighShelfgain" type="float"/>
+  <in__param from="HighShelfres" type="float"/>
+  <in__param from="Highshelfactive" type="float"/>
+  <in__param from="Highshelffreq" type="float"/>
+
+  <in__param from="LP" type="float"/>
+  <in__param from="LPactive" type="float"/>
+  <in__param from="LPfreq" type="float"/>
+  <in__param from="LPres" type="float"/>
+
+  <define_remap name="slope_vals" in_type="int" out_type="int">
+    <val in_val="0" out_val="12"/>
+    <val in_val="1" out_val="24"/>
+    <val in_val="2" out_val="48"/>
+    <fallback out_val="12"/>
+  </define_remap>
+
+  <remap name="LP" remapdef="slope_vals"/>
+  <remap name="HP" remapdef="slope_vals"/>
+
+  <calc name="Peak1bw" type="pow">-1</calc>
+  <calc name="Peak2bw" type="pow">-1</calc>
+  <calc name="Peak3bw" type="pow">-1</calc>
+  <calc name="Peak4bw" type="pow">-1</calc>
+
+  <replace plugtype="universal:eq:8limited" />
+
+  <out__named_filter_add name="high_pass"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">high_pass</out__named_filterparam>
+  <out__named_filterparam to="on" from="HPactive" type="bool"/>
+  <out__named_filterparam to="freq" from="HPfreq" type="float"/>
+  <out__named_filterparam to="q" from="HPres" type="float"/>
+  <out__named_filterparam to="slope" from="HP" type="float"/>
+
+  <out__named_filter_add name="low_shelf"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">low_shelf</out__named_filterparam>
+  <out__named_filterparam to="on" from="Lowshelfactive" type="bool"/>
+  <out__named_filterparam to="freq" from="LowShelffreq" type="float"/>
+  <out__named_filterparam to="q" from="LowShelfres" type="float"/>
+  <out__named_filterparam to="gain" from="Lowshelfgain" type="float"/>
+
+  <out__named_filter_add name="peak_1"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="on" from="Peak1active" type="bool"/>
+  <out__named_filterparam to="freq" from="Peak1freq" type="float"/>
+  <out__named_filterparam to="q" from="Peak1bw" type="float"/>
+  <out__named_filterparam to="gain" from="Peak1gain" type="float"/>
+
+  <out__named_filter_add name="peak_2"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="on" from="Peak2active" type="bool"/>
+  <out__named_filterparam to="freq" from="Peak2freq" type="float"/>
+  <out__named_filterparam to="q" from="Peak2bw" type="float"/>
+  <out__named_filterparam to="gain" from="Peak2gain" type="float"/>
+
+  <out__named_filter_add name="peak_3"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="on" from="Peak3active" type="bool"/>
+  <out__named_filterparam to="freq" from="Peak3freq" type="float"/>
+  <out__named_filterparam to="q" from="Peak3bw" type="float"/>
+  <out__named_filterparam to="gain" from="Peak3gain" type="float"/>
+
+  <out__named_filter_add name="peak_4"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="on" from="Peak4active" type="bool"/>
+  <out__named_filterparam to="freq" from="Peak4freq" type="float"/>
+  <out__named_filterparam to="q" from="Peak4bw" type="float"/>
+  <out__named_filterparam to="gain" from="Peak4gain" type="float"/>
+
+  <out__named_filter_add name="high_shelf"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">high_shelf</out__named_filterparam>
+  <out__named_filterparam to="on" from="Highshelfactive" type="bool"/>
+  <out__named_filterparam to="freq" from="Highshelffreq" type="float"/>
+  <out__named_filterparam to="q" from="HighShelfres" type="float"/>
+  <out__named_filterparam to="gain" from="HighShelfgain" type="float"/>
+
+  <out__named_filter_add name="low_pass"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">low_pass</out__named_filterparam>
+  <out__named_filterparam to="on" from="LPactive" type="bool"/>
+  <out__named_filterparam to="freq" from="LPfreq" type="float"/>
+  <out__named_filterparam to="q" from="LPres" type="float"/>
+  <out__named_filterparam to="slope" from="LP" type="float"/>
+
+  <out__param to="gain_out" from="Outputgain" type="float" />
+  <out__param to="gain_in" from="Inputgain" type="float" />
+</plugstatetransform>

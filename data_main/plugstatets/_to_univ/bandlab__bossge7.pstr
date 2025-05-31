@@ -1,0 +1,56 @@
+<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:bossGE7">
+  <in__param from="gainAt100Hz" type="float">0</in__param>
+  <in__param from="gainAt200Hz" type="float">0</in__param>
+  <in__param from="gainAt400Hz" type="float">0</in__param>
+  <in__param from="gainAt800Hz" type="float">0</in__param>
+  <in__param from="gainAt1600Hz" type="float">0</in__param>
+  <in__param from="gainAt3200Hz" type="float">0</in__param>
+  <in__param from="gainAt6400Hz" type="float">0</in__param>
+  <in__param from="level" type="float">0</in__param>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">100</out__named_filterparam>
+  <out__named_filterparam to="gain" from="gainAt100Hz" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">200</out__named_filterparam>
+  <out__named_filterparam to="gain" from="gainAt200Hz" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">400</out__named_filterparam>
+  <out__named_filterparam to="gain" from="gainAt400Hz" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">800</out__named_filterparam>
+  <out__named_filterparam to="gain" from="gainAt800Hz" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">1600</out__named_filterparam>
+  <out__named_filterparam to="gain" from="gainAt1600Hz" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">3200</out__named_filterparam>
+  <out__named_filterparam to="gain" from="gainAt3200Hz" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">6400</out__named_filterparam>
+  <out__named_filterparam to="gain" from="gainAt6400Hz" type="float"/>
+  
+  <out__param to="level" from="level" type="float">0</out__param>
+</plugstatetransform>

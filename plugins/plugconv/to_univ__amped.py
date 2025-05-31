@@ -18,31 +18,6 @@ class plugconv(plugins.base):
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
 
-		if plugin_obj.type.check_wildmatch('native', 'amped', 'Equalizer'):
-			filter_obj, filter_id = plugin_obj.eq_add()
-			filter_obj.type.set('high_pass', None)
-			filter_obj.freq = plugin_obj.params.get("hpfreq", 20).value
-			convproj_obj.automation.move(['plugin', pluginid, "hpfreq"], ['n_filter', pluginid, filter_id, 'freq'])
-
-			filter_obj, filter_id = plugin_obj.eq_add()
-			filter_obj.type.set('peak', None)
-			filter_obj.freq = plugin_obj.params.get("peakfreq", 2000).value
-			filter_obj.gain = plugin_obj.params.get("peakgain", 0).value
-			filter_obj.q = plugin_obj.params.get("peakq", 1).value
-			convproj_obj.automation.move(['plugin', pluginid, "peakfreq"], ['n_filter', pluginid, filter_id, 'freq'])
-			convproj_obj.automation.move(['plugin', pluginid, "peakgain"], ['n_filter', pluginid, filter_id, 'gain'])
-			convproj_obj.automation.move(['plugin', pluginid, "peakq"], ['n_filter', pluginid, filter_id, 'q'])
-
-			filter_obj, filter_id = plugin_obj.eq_add()
-			filter_obj.type.set('low_pass', None)
-			filter_obj.freq = plugin_obj.params.get("lpfreq", 10000).value
-			convproj_obj.automation.move(['plugin', pluginid, "lpfreq"], ['n_filter', pluginid, filter_id, 'freq'])
-
-			eq_obj = plugin_obj.state.eq
-			plugin_obj.replace('universal', 'eq', 'bands')
-			plugin_obj.state.eq = eq_obj
-			return True
-
 		if plugin_obj.type.check_wildmatch('native', 'amped', 'EqualizerPro'):
 			master_gain = plugin_obj.params.get("postGain", 0).value
 

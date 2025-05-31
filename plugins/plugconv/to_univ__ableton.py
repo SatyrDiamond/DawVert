@@ -51,53 +51,6 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['plugin', pluginid, 'Cutoff'], ['filter', pluginid, 'freq'])
 			return True
 
-		if plugin_obj.type.check_wildmatch('native', 'ableton', 'ChannelEq'):
-			#extpluglog.convinternal('Ableton', 'Channel EQ', 'Universal', 'EQ Bands')
-			p_HighpassOn = plugin_obj.params.get("HighpassOn", 0).value
-			p_HighShelfGain = plugin_obj.params.get("HighShelfGain", 0).value
-			p_LowShelfGain = plugin_obj.params.get("LowShelfGain", 0).value
-			p_MidFrequency = plugin_obj.params.get("MidFrequency", 0).value
-			p_MidGain = plugin_obj.params.get("MidGain", 0).value
-			p_Gain = plugin_obj.params.get("Gain", 0).value
-
-			plugin_obj.replace('universal', 'eq', 'bands')
-			
-			filter_obj, filter_id = plugin_obj.eq_add()
-			filter_obj.on = p_HighpassOn
-			filter_obj.type.set('high_pass', None)
-			filter_obj.freq = 80
-
-			filter_obj, filter_id = plugin_obj.eq_add()
-			filter_obj.on = True
-			filter_obj.type.set('low_shelf', None)
-			filter_obj.freq = 100
-			filter_obj.gain = xtramath.to_db(p_LowShelfGain)
-			convproj_obj.automation.calc(['plugin', pluginid, 'LowShelfGain'], 'to_db', 0, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, "LowShelfGain"], ['n_filter', pluginid, filter_id, 'gain'])
-
-			filter_obj, filter_id = plugin_obj.eq_add()
-			filter_obj.on = True
-			filter_obj.type.set('peak', None)
-			filter_obj.freq = p_MidFrequency
-			filter_obj.q = 1
-			filter_obj.gain = xtramath.to_db(p_MidGain)
-			convproj_obj.automation.calc(['plugin', pluginid, 'MidGain'], 'to_db', 0, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, "MidGain"], ['n_filter', pluginid, filter_id, 'gain'])
-			convproj_obj.automation.move(['plugin', pluginid, "MidFrequency"], ['n_filter', pluginid, filter_id, 'freq'])
-
-			filter_obj, filter_id = plugin_obj.eq_add()
-			filter_obj.on = True
-			filter_obj.type.set('high_shelf', None)
-			filter_obj.freq = 5000
-			filter_obj.gain = xtramath.to_db(p_HighShelfGain)
-			convproj_obj.automation.calc(['plugin', pluginid, 'HighShelfGain'], 'to_db', 0, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, "HighShelfGain"], ['n_filter', pluginid, filter_id, 'gain'])
-
-			plugin_obj.params.add('gain_out', xtramath.to_db(p_Gain), 'float')
-			convproj_obj.automation.calc(['plugin', pluginid, 'Gain'], 'to_db', 0, 0, 0, 0)
-			convproj_obj.automation.move_group(['plugin', pluginid], 'Gain', 'gain_out')
-			return True
-
 		if plugin_obj.type.check_wildmatch('native', 'ableton', 'AutoPan'):
 			#extpluglog.convinternal('Ableton', 'AutoPan', 'Universal', 'Auto Pan')
 			p_LfoAmount = plugin_obj.params.get('Lfo/LfoAmount', 1).value

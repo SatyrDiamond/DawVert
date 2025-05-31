@@ -1,0 +1,32 @@
+<plugstatetransform daw_in="waveform_edit" plugtype="native:tracktion:3bandEq">
+  <in__param from="freq1" type="float">0</in__param>
+  <in__param from="freq2" type="float">0</in__param>
+  <in__param from="freq3" type="float">0</in__param>
+  <in__param from="gain1" type="float">0</in__param>
+  <in__param from="gain2" type="float">0</in__param>
+  <in__param from="gain3" type="float">0</in__param>
+
+  <calc name="freq1" type="midi2freq"/>
+  <calc name="freq2" type="midi2freq"/>
+  <calc name="freq3" type="midi2freq"/>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">low_shelf</out__named_filterparam>
+  <out__named_filterparam to="freq" from="freq1" type="float"/>
+  <out__named_filterparam to="gain" from="gain1" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" from="freq2" type="float"/>
+  <out__named_filterparam to="gain" from="gain2" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">high_shelf</out__named_filterparam>
+  <out__named_filterparam to="freq" from="freq3" type="float"/>
+  <out__named_filterparam to="gain" from="gain3" type="float"/>
+</plugstatetransform>

@@ -1,0 +1,40 @@
+<plugstatetransform daw_in="ableton" plugtype="native:ableton:ChannelEq">
+  <in__param from="HighpassOn" type="float">0</in__param>
+  <in__param from="HighShelfGain" type="float">0</in__param>
+  <in__param from="LowShelfGain" type="float">0</in__param>
+  <in__param from="MidFrequency" type="float">0</in__param>
+  <in__param from="MidGain" type="float">0</in__param>
+  <in__param from="Gain" type="float">0</in__param>
+
+  <calc name="LowShelfGain" type="to_db"/>
+  <calc name="MidGain" type="to_db"/>
+  <calc name="HighShelfGain" type="to_db"/>
+  <calc name="Gain" type="to_db"/>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">low_shelf</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">100</out__named_filterparam>
+  <out__named_filterparam to="gain" from="LowShelfGain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" from="MidFrequency" type="float"/>
+  <out__named_filterparam to="gain" from="MidGain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">high_shelf</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">5000</out__named_filterparam>
+  <out__named_filterparam to="gain" from="HighShelfGain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" from="HighpassOn" type="bool"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">high_pass</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">80</out__named_filterparam>
+
+  <out__param to="gain_out" from="Gain" type="float"/>
+</plugstatetransform>

@@ -1523,6 +1523,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_to_univ\\ableton__channeleq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\ableton__channeleq.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "plugtype_in": "native:ableton:ChannelEq",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\ableton__compressor2.pstr",
     "daw_in": [

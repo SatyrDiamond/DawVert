@@ -244,7 +244,7 @@ class plug_manu:
 		if val is not None:
 			if filterparam == 'on': 
 				if valuetype == 'numeric': filter_obj.on = float(val)
-				if valuetype == 'bool': filter_obj.on = bool(val)
+				elif valuetype == 'bool': filter_obj.on = bool(val)
 				else:
 					logger_plugconv.warning('plugmanu: filter_param "on" type mismatch. should be "numeric" or "bool". not "%s".' % (valuetype))
 			if filterparam in ["freq", "q", "gain", "slope"]: 

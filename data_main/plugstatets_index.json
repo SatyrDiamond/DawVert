@@ -1645,6 +1645,28 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\amped__equalizer.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__equalizer.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:Equalizer",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\amped__equalizerpro.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\amped__equalizerpro.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "plugtype_in": "native:amped:EqualizerPro",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\amped__expander.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\amped__expander.pstr",
     "daw_in": [

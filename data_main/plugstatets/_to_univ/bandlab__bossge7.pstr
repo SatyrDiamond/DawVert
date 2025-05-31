@@ -52,5 +52,5 @@
   <out__named_filterparam to="freq" type="float" only_value="1">6400</out__named_filterparam>
   <out__named_filterparam to="gain" from="gainAt6400Hz" type="float"/>
   
-  <out__param to="level" from="level" type="float">0</out__param>
+  <out__param to="gain_out" from="level" type="float">0</out__param>
 </plugstatetransform>

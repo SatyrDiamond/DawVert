@@ -1,7 +1,7 @@
 <plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:bandlab:threeBandEq">
-  <in__param from="highGain" type="float" />
   <in__param from="lowGain" type="float" />
   <in__param from="midGain" type="float" />
+  <in__param from="highGain" type="float" />
   <in__param from="midFreq" type="float" />
 
   <calc name="highGain" type="from_db" />

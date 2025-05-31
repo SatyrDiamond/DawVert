@@ -265,6 +265,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\amped2bandlab\\equalizer.pstr": {
+    "file": "data_main\\plugstatets\\amped2bandlab\\equalizer.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:amped:Equalizer",
+    "plugtype_out": [
+      "native:bandlab:threeBandEq2"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\amped2bandlab\\phaser.pstr": {
     "file": "data_main\\plugstatets\\amped2bandlab\\phaser.pstr",
     "daw_in": [
@@ -1530,7 +1544,7 @@
     ],
     "plugtype_in": "native:ableton:ChannelEq",
     "plugtype_out": [
-      "universal:eq:bands"
+      "universal:eq:8limited"
     ],
     "priority": -100
   },
@@ -1810,6 +1824,28 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:threeBandEq",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq2.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq2.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:threeBandEq2",
+    "plugtype_out": [
+      "universal:eq:8limited"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\flp__fruity_balance.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\flp__fruity_balance.pstr",
     "daw_in": [
@@ -1971,7 +2007,7 @@
     ],
     "plugtype_in": "native:tracktion:3bandEq",
     "plugtype_out": [
-      "universal:eq:bands"
+      "universal:eq:8limited"
     ],
     "priority": -100
   },

@@ -10,21 +10,21 @@
   <calc name="freq2" type="midi2freq"/>
   <calc name="freq3" type="midi2freq"/>
 
-  <replace plugtype="universal:eq:bands" />
+  <replace plugtype="universal:eq:8limited" />
 
-  <out__eq_add/>
+  <out__named_filter_add name="low_shelf"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">low_shelf</out__named_filterparam>
   <out__named_filterparam to="freq" from="freq1" type="float"/>
   <out__named_filterparam to="gain" from="gain1" type="float"/>
 
-  <out__eq_add/>
+  <out__named_filter_add name="peak_1"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
   <out__named_filterparam to="freq" from="freq2" type="float"/>
   <out__named_filterparam to="gain" from="gain2" type="float"/>
 
-  <out__eq_add/>
+  <out__named_filter_add name="high_shelf"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">high_shelf</out__named_filterparam>
   <out__named_filterparam to="freq" from="freq3" type="float"/>

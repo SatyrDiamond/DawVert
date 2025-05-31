@@ -1920,6 +1920,17 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\waveform__3bandEq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__3bandEq.pstr",
+    "daw_in": [
+      "waveform_edit"
+    ],
+    "plugtype_in": "native:tracktion:3bandEq",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\waveform__comp.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\waveform__comp.pstr",
     "daw_in": [

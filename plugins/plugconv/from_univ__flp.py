@@ -62,12 +62,9 @@ class plugconv(plugins.base):
 			bands_obj = plugin_obj.state.eq
 			if is_eq_8limited: bands_obj.from_8limited(pluginid)
 			gain_out = plugin_obj.params.get("gain_out", 0).value
-
-			named_filter = plugin_obj.state.named_filter
+			eqbands = [x for x in bands_obj]
 			plugin_obj.replace('native', 'flstudio', 'fruity parametric eq 2')
-			plugin_obj.state.named_filter = named_filter
-			plugin_obj.state.eq = bands_obj
-			for n, f in enumerate(bands_obj):
+			for n, f in enumerate(eqbands):
 				filter_id, filter_obj = f
 				starttxt = str(n+1)+'_'
 				plugin_obj.params.add(starttxt+'type', eq2q_filtype(filter_obj), 'int')

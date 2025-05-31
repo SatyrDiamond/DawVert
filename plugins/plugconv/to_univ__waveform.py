@@ -52,46 +52,6 @@ class plugconv(plugins.base):
 #
 		#	plugin_obj.fxdata_add(None, p_mix/2)
 
-		if plugin_obj.type.check_wildmatch('native', 'tracktion', '3bandEq'):
-			# extpluglog.convinternal('Waveform', '3bandEq', 'Universal', 'EQ Bands')
-			freq1 = plugin_obj.params.get('freq1', 43.34996032714844).value
-			freq2 = plugin_obj.params.get('freq2', 90.23263549804688).value
-			freq3 = plugin_obj.params.get('freq3', 119.2130889892578).value
-			gain1 = plugin_obj.params.get('gain1', 0).value
-			gain2 = plugin_obj.params.get('gain2', 0).value
-			gain3 = plugin_obj.params.get('gain3', 0).value
-
-			plugin_obj.replace('universal', 'eq', 'bands')
-
-			filter_obj, filterid = plugin_obj.eq_add()
-			filter_obj.type.set('low_shelf', None)
-			filter_obj.freq = note_data.note_to_freq(freq1-72)
-			filter_obj.gain = gain1
-			convproj_obj.automation.calc(['plugin', pluginid, 'freq1'], 'add', -72, 0, 0, 0)
-			convproj_obj.automation.calc(['plugin', pluginid, 'freq1'], 'note2freq', 0, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, 'freq1'], ['n_filter', pluginid, filterid, 'freq'])
-			convproj_obj.automation.move(['plugin', pluginid, "gain1"], ['n_filter', pluginid, filterid, 'gain'])
-
-			filter_obj, filterid = plugin_obj.eq_add()
-			filter_obj.type.set('peak', None)
-			filter_obj.freq = note_data.note_to_freq(freq2-72)
-			filter_obj.gain = gain2
-			convproj_obj.automation.calc(['plugin', pluginid, 'freq2'], 'add', -72, 0, 0, 0)
-			convproj_obj.automation.calc(['plugin', pluginid, 'freq2'], 'note2freq', 0, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, 'freq2'], ['n_filter', pluginid, filterid, 'freq'])
-			convproj_obj.automation.move(['plugin', pluginid, "gain2"], ['n_filter', pluginid, filterid, 'gain'])
-
-			filter_obj, filterid = plugin_obj.eq_add()
-			filter_obj.type.set('high_shelf', None)
-			filter_obj.freq = note_data.note_to_freq(freq3-72)
-			filter_obj.gain = gain3
-			convproj_obj.automation.calc(['plugin', pluginid, 'freq3'], 'add', -72, 0, 0, 0)
-			convproj_obj.automation.calc(['plugin', pluginid, 'freq3'], 'note2freq', 0, 0, 0, 0)
-			convproj_obj.automation.move(['plugin', pluginid, 'freq3'], ['n_filter', pluginid, filterid, 'freq'])
-			convproj_obj.automation.move(['plugin', pluginid, "gain3"], ['n_filter', pluginid, filterid, 'gain'])
-
-			return True
-
 		if plugin_obj.type.check_wildmatch('native', 'tracktion', '8bandEq'):
 			# extpluglog.convinternal('Waveform', '8bandEq', 'Universal', 'EQ Bands')
 
@@ -138,22 +98,6 @@ class plugconv(plugins.base):
 			plugin_obj.replace('universal', 'eq', 'bands')
 			plugin_obj.datavals.add('mode', cvpj_eq_mode)
 			plugin_obj.state.eq = bands_obj
-			return True
-
-		if plugin_obj.type.check_wildmatch('native', 'tracktion', 'djeq'):
-			# extpluglog.convinternal('Waveform', 'DJ EQ', 'Universal', '3-Band EQ')
-			freq1 = plugin_obj.params.get('freq1', 59.213096618652344).value
-			freq2 = plugin_obj.params.get('freq2', 99.07624816894531).value
-			bass = plugin_obj.params.get('bass', 1).value/1.5
-			mid = plugin_obj.params.get('mid', 1).value/1.5
-			treble = plugin_obj.params.get('treble', 1).value/1.5
-
-			plugin_obj.replace('universal', 'eq', '3band')
-			plugin_obj.params.add('low_gain', djeq_calc_gain(bass), 'float')
-			plugin_obj.params.add('mid_gain', djeq_calc_gain(mid), 'float')
-			plugin_obj.params.add('high_gain', djeq_calc_gain(treble), 'float')
-			plugin_obj.params.add('lowmid_freq', note_data.note_to_freq(freq1-72), 'float')
-			plugin_obj.params.add('midhigh_freq', note_data.note_to_freq(freq2-72), 'float')
 			return True
 
 		#if plugin_obj.type.check_wildmatch('native', 'tracktion', 'stereoDelay'):

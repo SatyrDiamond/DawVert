@@ -85,10 +85,9 @@ class plugconv(plugins.base):
 		if is_eq_bands or is_eq_8limited:
 			eq_obj = plugin_obj.state.eq
 			if is_eq_8limited: eq_obj.from_8limited(pluginid)
-
+			eqbands = [x for x in eq_obj]
 			plugin_obj.replace('native', 'ableton', 'Eq8')
-
-			for band_num, f in enumerate(eq_obj):
+			for band_num, f in enumerate(eqbands):
 				filter_id, filter_obj = f
 
 				abe_starttxt = "Bands."+str(band_num)+"/ParameterA/"
@@ -107,5 +106,4 @@ class plugconv(plugins.base):
 				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'on'], ['plugin', pluginid, abe_starttxt+'IsOn'])
 				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'freq'], ['plugin', pluginid, abe_starttxt+'Freq'])
 				convproj_obj.automation.move(['n_filter', pluginid, filter_id, 'gain'], ['plugin', pluginid, abe_starttxt+'Gain'])
-
 			return True

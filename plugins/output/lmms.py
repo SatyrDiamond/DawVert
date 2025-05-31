@@ -607,7 +607,7 @@ class output_lmms(plugins.base):
 
 					track_obj.placements.pl_audio.sort()
 					for audiopl_obj in track_obj.placements.pl_audio:
-						time_obj = notespl_obj.time
+						time_obj = audiopl_obj.time
 						position, duration = time_obj.get_posdur()
 						lmms_sampletco = proj_lmms.lmms_sampletco()
 						lmms_sampletco.pos = int(position)

@@ -349,15 +349,15 @@ class action__out__filter_param:
 	def do_action(self, manu_obj):
 		manu_obj.out__filter_param(self.storename, self.value, self.out_name)
 
-#class action__out__named_filter_add:
-#	def __init__(self):
-#		self.filt_name = None
-#
-#	def from_xml(self, xmldata):
-#		self.filt_name = xmldata.get('name')
-#
-#	def do_action(self, manu_obj):
-#		manu_obj.out__named_filter_add(self.filt_name)
+class action__out__named_filter_add:
+	def __init__(self):
+		self.filt_name = None
+
+	def from_xml(self, xmldata):
+		self.filt_name = xmldata.get('name')
+
+	def do_action(self, manu_obj):
+		manu_obj.out__named_filter_add(self.filt_name)
 
 class action__out__eq_add:
 	def from_xml(self, xmldata):
@@ -465,6 +465,7 @@ actionclasses['out__param'] = action__out__param
 actionclasses['out__wet'] = action__out__wet
 actionclasses['out__filterparam'] = action__out__filter_param
 actionclasses['out__named_filterparam'] = action__out__named_filter_param
+actionclasses['out__named_filter_add'] = action__out__named_filter_add
 actionclasses['out__dataval'] = action__out__dataval
 actionclasses['out__dataval_val'] = action__out__dataval_val
 actionclasses['out__eq_add'] = action__out__eq_add

@@ -209,15 +209,19 @@ class plug_manu:
 		if DEBUG__TXT: print('DEBUG: out__filter_param:', storename.__repr__(), fallbackval.__repr__(), filterparam.__repr__())
 		self.internal__out__filter_param(storename, fallbackval, filterparam, plugin_obj.filter, ['filter', self.pluginid])
 
-	#def out__named_filter_add(self, filt_name):
-	#	if DEBUG__TXT: print('DEBUG: out__named_filter_add:', filt_name)
-	#	self.plugin_obj.named_filter_add(filt_name)
+	def out__named_filter_add(self, filt_name):
+		if DEBUG__TXT: print('DEBUG: out__named_filter_add:', filt_name)
+		self.plugin_obj.named_filter_add(filt_name)
+		self.cur_eq_name = filt_name
 
 	def out__named_filter_param(self, storename, fallbackval, filterparam, filt_name):
 		if DEBUG__TXT: print('DEBUG: out__named_filter_param:', storename.__repr__(), fallbackval.__repr__(), filterparam.__repr__(), name)
 		filterid = filt_name if filt_name else self.cur_eq_name
-		f_exists, f_obj = self.plugin_obj.named_filter_get_exists(filterid)
-		if f_exists: self.internal__out__filter_param(storename, fallbackval, filterparam, f_obj, ['n_filter', self.pluginid, filterid])
+		if filterid:
+			f_exists, f_obj = self.plugin_obj.named_filter_get_exists(filterid)
+			if f_exists: self.internal__out__filter_param(storename, fallbackval, filterparam, f_obj, ['n_filter', self.pluginid, filterid])
+		else:
+			logger_plugconv.warning('plugmanu: named_filter name not defined')
 
 	def internal__out__filter_param(self, storename, fallbackval, filterparam, filter_obj, autolocstart):
 		#if DEBUG__TXT: print('	> filter |'+paramid+'%'+str(value))

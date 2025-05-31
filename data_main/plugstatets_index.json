@@ -1898,6 +1898,17 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\lmms__eq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\lmms__eq.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "plugtype_in": "native:lmms:eq",
+    "plugtype_out": [
+      "universal:eq:8limited"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\lmms__spectrum_analyzer.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\lmms__spectrum_analyzer.pstr",
     "daw_in": [

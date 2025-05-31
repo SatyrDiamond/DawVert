@@ -1,0 +1,92 @@
+<plugstatetransform daw_out="lmms" plugtype="universal:filter:single">
+
+  <define_remap name="filter_types" in_type="filter_type" out_type="int">
+    <val in_val="all_pass" out_val="5"/>
+
+    <val in_val="band_pass:csg" out_val="2"/>
+    <val in_val="band_pass:czpg" out_val="3"/>
+    <val in_val="band_pass:rc12" out_val="9"/>
+    <val in_val="band_pass:rc24" out_val="12"/>
+    <val in_val="band_pass:sv" out_val="17"/>
+    <val in_val="band_pass" out_val="2"/>
+
+    <val in_val="formant:fast" out_val="20"/>
+    <val in_val="formant" out_val="14"/>
+
+    <val in_val="high_pass:rc12" out_val="10"/>
+    <val in_val="high_pass:rc24" out_val="13"/>
+    <val in_val="high_pass:sv" out_val="18"/>
+    <val in_val="high_pass" out_val="1"/>
+
+    <val in_val="low_pass:double" out_val="7"/>
+    <val in_val="low_pass:rc12" out_val="8"/>
+    <val in_val="low_pass:rc24" out_val="11"/>
+    <val in_val="low_pass:sv" out_val="16"/>
+    <val in_val="low_pass" out_val="0"/>
+    
+    <val in_val="moog:double" out_val="15"/>
+    <val in_val="moog" out_val="6"/>
+
+    <val in_val="notch:sv" out_val="19"/>
+    <val in_val="notch" out_val="4"/>
+
+    <val in_val="tripole" out_val="21"/>
+
+    <val in_val="low_shelf" out_val="-1"/>
+    <val in_val="high_shelf" out_val="-2"/>
+    <val in_val="peak" out_val="-3"/>
+
+    <fallback out_val="0"/>
+  </define_remap>
+
+  <in__filterparam from="on" type="bool"/>
+  <in__filterparam from="type"/>
+  <in__filterparam from="freq" type="float"/>
+  <in__filterparam from="q" type="float"/>
+  <in__filterparam from="gain" type="float"/>
+
+  <remap name="type" remapdef="filter_types"/>
+  <toint name="on"/>
+
+  <cond__single in="type" data="x >= 0">
+    <replace_hard plugtype="native:lmms:dualfilter" />
+    <out__param to="cut1" from="freq" type="int"/>
+    <out__param to="res1" from="q" type="int"/>
+    <out__param to="enabled1" from="on" type="int"/>
+    <out__param to="filter1" from="type" type="int"/>
+    <out__param to="wet" only_value="1" type="float">1</out__param>
+    <out__param to="cut2" only_value="1" type="float">7000</out__param>
+    <out__param to="enabled2" only_value="1" type="float">0</out__param>
+    <out__param to="filter2" only_value="1" type="float">0</out__param>
+    <out__param to="gain1" only_value="1" type="float">100</out__param>
+    <out__param to="gain2" only_value="1" type="float">100</out__param>
+    <out__param to="mix" only_value="1" type="float">-1</out__param>
+    <out__param to="res2" only_value="1" type="float">0.5</out__param>
+  </cond__single>
+
+  <cond__single in="type" data="x == -1">
+    <replace_hard plugtype="native:lmms:eq" />
+    <out__param to="Lowshelfactive" from="on" type="int"/>
+    <out__param to="LowShelffreq" from="freq" type="int"/>
+    <out__param to="Lowshelfgain" from="gain" type="int"/>
+    <out__param to="LowShelfres" from="q" type="int"/>
+  </cond__single>
+
+  <cond__single in="type" data="x == -2">
+    <replace_hard plugtype="native:lmms:eq" />
+    <out__param to="Highshelfactive" from="on" type="int"/>
+    <out__param to="Highshelffreq" from="freq" type="int"/>
+    <out__param to="HighShelfgain" from="gain" type="int"/>
+    <out__param to="HighShelfres" from="q" type="int"/>
+  </cond__single>
+
+  <cond__single in="type" data="x == -3">
+    <replace_hard plugtype="native:lmms:eq" />
+    <calc name="q" type="pow">-1</calc>
+    <out__param to="Peak1active" from="on" type="int"/>
+    <out__param to="Peak1freq" from="freq" type="int"/>
+    <out__param to="Peak1gain" from="gain" type="int"/>
+    <out__param to="Peak1bw" from="q" type="int"/>
+  </cond__single>
+
+</plugstatetransform>

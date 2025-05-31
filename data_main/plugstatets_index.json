@@ -1416,6 +1416,20 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\lmms__filter.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\lmms__filter.pstr",
+    "daw_out": [
+      "lmms"
+    ],
+    "plugtype_in": "universal:filter:single",
+    "plugtype_out": [
+      "native:lmms:dualfilter",
+      "native:lmms:eq",
+      "native:lmms:eq",
+      "native:lmms:eq"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\lmms__spectrum_analyzer.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\lmms__spectrum_analyzer.pstr",
     "daw_out": [

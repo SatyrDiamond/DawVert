@@ -207,7 +207,7 @@ class plug_manu:
 
 	def out__filter_param(self, storename, fallbackval, filterparam):
 		if DEBUG__TXT: print('DEBUG: out__filter_param:', storename.__repr__(), fallbackval.__repr__(), filterparam.__repr__())
-		self.internal__out__filter_param(storename, fallbackval, filterparam, plugin_obj.filter, ['filter', self.pluginid])
+		self.internal__out__filter_param(storename, fallbackval, filterparam, self.plugin_obj.filter, ['filter', self.pluginid])
 
 	def out__named_filter_add(self, filt_name):
 		if DEBUG__TXT: print('DEBUG: out__named_filter_add:', filt_name)

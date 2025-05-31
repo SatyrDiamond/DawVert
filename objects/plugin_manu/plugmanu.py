@@ -92,6 +92,8 @@ class plug_manu:
 		self.pluginid = pluginid
 		self.cur_params = {}
 		self.remaps = {}
+		self.cur_eq = None
+		self.cur_eq_name = None
 
 # --------------------------------------------------------- INPUT ---------------------------------------------------------
 
@@ -199,8 +201,25 @@ class plug_manu:
 		elif fallbackval is not None:
 			self.plugin_obj.params_slot.add('wet', fallbackval, 'float')
 
+	def out__eq_add(self):
+		if DEBUG__TXT: print('DEBUG: out__eq_add')
+		self.cur_eq, self.cur_eq_name = self.plugin_obj.eq_add()
+
 	def out__filter_param(self, storename, fallbackval, filterparam):
 		if DEBUG__TXT: print('DEBUG: out__filter_param:', storename.__repr__(), fallbackval.__repr__(), filterparam.__repr__())
+		self.internal__out__filter_param(storename, fallbackval, filterparam, plugin_obj.filter, ['filter', self.pluginid])
+
+	#def out__named_filter_add(self, filt_name):
+	#	if DEBUG__TXT: print('DEBUG: out__named_filter_add:', filt_name)
+	#	self.plugin_obj.named_filter_add(filt_name)
+
+	def out__named_filter_param(self, storename, fallbackval, filterparam, filt_name):
+		if DEBUG__TXT: print('DEBUG: out__named_filter_param:', storename.__repr__(), fallbackval.__repr__(), filterparam.__repr__(), name)
+		filterid = filt_name if filt_name else self.cur_eq_name
+		f_exists, f_obj = self.plugin_obj.named_filter_get_exists(filterid)
+		if f_exists: self.internal__out__filter_param(storename, fallbackval, filterparam, f_obj, ['n_filter', self.pluginid, filterid])
+
+	def internal__out__filter_param(self, storename, fallbackval, filterparam, filter_obj, autolocstart):
 		#if DEBUG__TXT: print('	> filter |'+paramid+'%'+str(value))
 
 		plugin_obj = self.plugin_obj
@@ -214,7 +233,7 @@ class plug_manu:
 			valuetype = valstored.valuetype
 
 			if valauto and (valuetype in ['numeric', 'bool']): 
-				autoloc = ['filter', self.pluginid, filterparam]
+				autoloc = autolocstart+[filterparam]
 				autopath = automation.cvpj_autoloc(autoloc)
 				self.convproj_obj.automation.data[autopath] = valauto
 
@@ -224,22 +243,24 @@ class plug_manu:
 
 		if val is not None:
 			if filterparam == 'on': 
-				if valuetype == 'numeric': plugin_obj.filter.on = float(val)
-				if valuetype == 'bool': plugin_obj.filter.on = bool(val)
+				if valuetype == 'numeric': filter_obj.on = float(val)
+				if valuetype == 'bool': filter_obj.on = bool(val)
 				else:
 					logger_plugconv.warning('plugmanu: filter_param "on" type mismatch. should be "numeric" or "bool". not "%s".' % (valuetype))
 			if filterparam in ["freq", "q", "gain", "slope"]: 
 				if valuetype == 'numeric':
-					if filterparam == 'freq': plugin_obj.filter.freq = float(val)
-					if filterparam == 'q': plugin_obj.filter.q = float(val)
-					if filterparam == 'gain': plugin_obj.filter.gain = float(val)
-					if filterparam == 'slope': plugin_obj.filter.slope = float(val)
+					if filterparam == 'freq': filter_obj.freq = float(val)
+					if filterparam == 'q': filter_obj.q = float(val)
+					if filterparam == 'gain': filter_obj.gain = float(val)
+					if filterparam == 'slope': filter_obj.slope = float(val)
 				else:
 					logger_plugconv.warning('plugmanu: filter_param "%s" type mismatch. should be "numeric". not "%s".' % (filterparam, valuetype))
 	
 			if filterparam == 'type': 
 				if valuetype == 'filter_type':
-					plugin_obj.filter.type = val
+					filter_obj.type = val
+				elif valuetype == 'string':
+					filter_obj.type.set_str(val)
 				else:
 					logger_plugconv.warning('plugmanu: filter_param "type" type mismatch. should be "filter_type". not "%s".' % (valuetype))
 

@@ -1700,6 +1700,17 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\bandlab__bossge7.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__bossge7.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:bossGE7",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr",
     "daw_in": [

@@ -349,6 +349,81 @@ class action__out__filter_param:
 	def do_action(self, manu_obj):
 		manu_obj.out__filter_param(self.storename, self.value, self.out_name)
 
+#class action__out__named_filter_add:
+#	def __init__(self):
+#		self.filt_name = None
+#
+#	def from_xml(self, xmldata):
+#		self.filt_name = xmldata.get('name')
+#
+#	def do_action(self, manu_obj):
+#		manu_obj.out__named_filter_add(self.filt_name)
+
+class action__out__eq_add:
+	def from_xml(self, xmldata):
+		pass
+
+	def do_action(self, manu_obj):
+		manu_obj.out__eq_add()
+
+class action__out__named_filter_param:
+	def __init__(self):
+		self.in_name = None
+		self.storename = None
+		self.valtype = None
+		self.value = 0
+		self.only_value = False
+		self.filt_name = None
+
+	def from_xml(self, xmldata):
+		v_from = xmldata.get('from')
+		v_to = xmldata.get('to')
+		if v_from and not v_to: 
+			self.storename = v_from
+			self.out_name = v_from
+		elif not v_from and v_to: 
+			self.storename = v_to
+			self.out_name = v_to
+		elif v_from and v_to:
+			self.storename = v_from
+			self.out_name = v_to
+		self.valtype = xmldata.get('type')
+		only_value = xmldata.get('only_value')
+		self.filt_name = xmldata.get('name')
+		if only_value: self.only_value = bool(int(only_value))
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
+
+	def do_action(self, manu_obj):
+		manu_obj.out__named_filter_param(self.storename, self.value, self.out_name, self.filt_name)
+
+class action__out__filter_param:
+	def __init__(self):
+		self.in_name = None
+		self.storename = None
+		self.valtype = None
+		self.value = 0
+		self.only_value = False
+
+	def from_xml(self, xmldata):
+		v_from = xmldata.get('from')
+		v_to = xmldata.get('to')
+		if v_from and not v_to: 
+			self.storename = v_from
+			self.out_name = v_from
+		elif not v_from and v_to: 
+			self.storename = v_to
+			self.out_name = v_to
+		elif v_from and v_to:
+			self.storename = v_from
+			self.out_name = v_to
+		self.valtype = xmldata.get('type')
+		only_value = xmldata.get('only_value')
+		if only_value: self.only_value = bool(int(only_value))
+		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
+
+	def do_action(self, manu_obj):
+		manu_obj.out__filter_param(self.storename, self.value, self.out_name)
+
 class action__out__dataval_val:
 	def __init__(self):
 		self.out_name = None
@@ -389,8 +464,10 @@ actionclasses['in__dataval'] = action__in__dataval
 actionclasses['out__param'] = action__out__param
 actionclasses['out__wet'] = action__out__wet
 actionclasses['out__filterparam'] = action__out__filter_param
+actionclasses['out__named_filterparam'] = action__out__named_filter_param
 actionclasses['out__dataval'] = action__out__dataval
 actionclasses['out__dataval_val'] = action__out__dataval_val
+actionclasses['out__eq_add'] = action__out__eq_add
 actionclasses['cond__single'] = action__cond__single
 actionclasses['calc'] = action__calc
 actionclasses['remap'] = action__remap

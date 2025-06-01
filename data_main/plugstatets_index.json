@@ -1885,6 +1885,17 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\bandlab__gain.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__gain.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:gain",
+    "plugtype_out": [
+      "universal:volpan"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\bandlab__limiter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__limiter.pstr",
     "daw_in": [

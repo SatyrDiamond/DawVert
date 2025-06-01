@@ -1,0 +1,71 @@
+<plugstatetransform daw_in="bandlab" daw_out="ableton" plugtype="native:bandlab:beatSyncDelay2">
+  <in__dataval from="delayUnitSelection" type="string" />
+  <in__dataval from="syncDelay" type="string" />
+  <in__param from="cutoff" type="float" />
+  <in__param from="delayTime" type="float" />
+  <in__param from="dryWetMix" type="float" />
+  <in__param from="feedback" type="float" />
+
+  <define_remap name="delay_type" in_type="string" out_type="int">
+    <val in_val="delayTime" out_val="0"/>
+    <val in_val="syncDelay" out_val="1"/>
+    <fallback out_val="0"/>
+  </define_remap>
+
+  <remap name="delayUnitSelection" remapdef="delay_type"/>
+
+  <replace plugtype="native:ableton:Echo" />
+
+  <out__param to="DryWet" from="dryWetMix" type="float" />
+  <out__param to="Feedback" from="feedback" type="float" />
+  <out__param to="Filter_LowPassFrequency" from="cutoff" type="float" />
+  <out__param to="Delay_SyncL" from="delayUnitSelection" type="float" />
+  <out__param to="Delay_TimeL" from="delayTime" type="float" />
+  <out__param to="Delay_SyncModeL" only_value="1" type="int">0</out__param>
+  <out__param to="Delay_SyncModeR" only_value="1" type="int">0</out__param>
+
+  <cond__string_eq in="syncDelay" data="sixteenthNoteTriplet">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-4</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">1</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="sixteenthNote">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-4</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">0</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="dottedSixteenthNote">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-4</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">2</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="eighthNoteTriplet">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-3</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">1</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="eighthNote">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-3</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">0</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="dottedEighthNote">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-3</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">2</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="quarterNoteTriplet">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-2</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">1</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="quarterNote">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-2</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">0</out__param>
+  </cond__string_eq>
+
+  <cond__string_eq in="syncDelay" data="halfNote">
+    <out__param to="Delay_SyncedDivisionL" only_value="1" type="int">-1</out__param>
+    <out__param to="Delay_SyncModeL" only_value="1" type="int">0</out__param>
+  </cond__string_eq>
+</plugstatetransform> 

@@ -178,6 +178,29 @@ class action__cond__single:
 			else: 
 				for action in self.actions_false: action.do_action(manu_obj)
 
+class action__cond__string_eq:
+	def __init__(self):
+		self.actions_true = []
+		self.actions_false = []
+		self.storename = None
+		self.expr = None
+
+	def from_xml(self, xmldata):
+		self.storename = xmldata.get('in')
+		self.data = xmldata.get('data')
+		for i in xmldata:
+			if i.tag == 'cond__true': self.actions_true = [get_action(x) for x in i]
+			elif i.tag == 'cond__false': self.actions_false = [get_action(x) for x in i]
+			else: self.actions_true.append(get_action(i))
+
+	def do_action(self, manu_obj):
+		if self.storename in manu_obj.cur_params:
+			valpack = manu_obj.cur_params[self.storename]
+			if self.data==valpack.value: 
+				for action in self.actions_true: action.do_action(manu_obj)
+			else: 
+				for action in self.actions_false: action.do_action(manu_obj)
+
 class action__out__param:
 	def __init__(self):
 		self.storename = None
@@ -470,6 +493,7 @@ actionclasses['out__dataval'] = action__out__dataval
 actionclasses['out__dataval_val'] = action__out__dataval_val
 actionclasses['out__eq_add'] = action__out__eq_add
 actionclasses['cond__single'] = action__cond__single
+actionclasses['cond__string_eq'] = action__cond__string_eq
 actionclasses['calc'] = action__calc
 actionclasses['remap'] = action__remap
 actionclasses['replace'] = action__replace

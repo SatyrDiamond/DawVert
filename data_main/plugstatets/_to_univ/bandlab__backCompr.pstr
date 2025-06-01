@@ -1,0 +1,15 @@
+<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:backCompr">
+  <in__param from="attack" type="float" />
+  <in__param from="ratio" type="float" />
+  <in__param from="release" type="float" />
+  <in__param from="threshold" type="float" />
+  <in__param from="makeupGain" type="float" />
+
+  <replace plugtype="universal:compressor" />
+
+  <out__param to="attack" type="float" />
+  <out__param to="ratio" type="float" />
+  <out__param to="release" type="float" />
+  <out__param to="threshold" type="float" />
+  <out__param to="postgain" from="makeupGain" type="float" />
+</plugstatetransform>

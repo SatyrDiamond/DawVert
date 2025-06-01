@@ -454,8 +454,8 @@
         </object>
         <object id="Echo">
             <data group="fx" />
-            <param id="ChannelMode" name="ChannelMode" type="int" def="2" />
-            <param id="Clipper_Dry" name="Clipper_Dry" type="bool" />
+            <param id="ChannelMode" name="ChannelMode" type="int" def="0" />
+            <param id="Clipper_Dry" name="Clipper_Dry" type="bool" /> 
             <param id="CurrentTab" name="CurrentTab" type="int" noauto="1" />
             <param id="Delay_OffsetL" name="Delay_OffsetL" type="float" max="0.33" min="-0.33" />
             <param id="Delay_OffsetR" name="Delay_OffsetR" type="float" max="0.33" min="-0.33" />
@@ -478,7 +478,7 @@
             <param id="Ducking_Threshold" name="Ducking_Threshold" type="float" max="0" min="-60" />
             <param id="Feedback" name="Feedback" type="float" def="0.5" max="1.5" />
             <param id="FeedbackInvert" name="FeedbackInvert" type="bool" />
-            <param id="Filter_HighPassFrequency" name="Filter_HighPassFrequency" type="float" def="50" max="20000" min="20" />
+            <param id="Filter_HighPassFrequency" name="Filter_HighPassFrequency" type="float" def="20" max="20000" min="20" />
             <param id="Filter_HighPassResonance" name="Filter_HighPassResonance" type="float" max="0.3" />
             <param id="Filter_LowPassFrequency" name="Filter_LowPassFrequency" type="float" def="5000" max="20000" min="20" />
             <param id="Filter_LowPassResonance" name="Filter_LowPassResonance" type="float" max="0.3" />

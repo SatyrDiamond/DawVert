@@ -125,6 +125,22 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\ableton2bandlab\\pedal.pstr": {
+    "file": "data_main\\plugstatets\\ableton2bandlab\\pedal.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:ableton:Pedal",
+    "plugtype_out": [
+      "native:bandlab:overdrive",
+      "native:bandlab:bossBD2",
+      "native:bandlab:fuzzFace"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\ableton2bandlab\\phaser.pstr": {
     "file": "data_main\\plugstatets\\ableton2bandlab\\phaser.pstr",
     "daw_in": [
@@ -920,6 +936,20 @@
     "plugtype_in": "native:caustic:vibrato",
     "plugtype_out": [
       "native:ableton:Chorus2"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_caustic2bandlab\\octaver.pstr": {
+    "file": "data_main\\plugstatets\\x_caustic2bandlab\\octaver.pstr",
+    "daw_in": [
+      "caustic"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:caustic:octaver",
+    "plugtype_out": [
+      "native:bandlab:octaver"
     ],
     "priority": 0
   },

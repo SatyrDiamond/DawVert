@@ -1,0 +1,23 @@
+<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Pedal">
+  <in__param from="Type" type="int" />
+
+  <cond__single in="Type" data="x == 0">
+    <replace plugtype="native:bandlab:overdrive" />
+    <out__param to="amount" only_value="1" type="float">1.7</out__param>
+    <out__param to="outputGain" only_value="1" type="float">4.5</out__param>
+    <out__param to="tone" only_value="1" type="float">3453</out__param>
+  </cond__single>
+
+  <cond__single in="Type" data="x == 1">
+    <replace plugtype="native:bandlab:bossBD2" />
+    <out__param to="drive" only_value="1" type="float">5.2</out__param>
+    <out__param to="level" only_value="1" type="float">10</out__param>
+    <out__param to="mid" only_value="1" type="float">4.5</out__param>
+  </cond__single>
+
+  <cond__single in="Type" data="x == 2">
+    <replace plugtype="native:bandlab:fuzzFace" />
+    <out__param to="drive" only_value="1" type="float">10</out__param>
+    <out__param to="level" only_value="1" type="float">8.1</out__param>
+  </cond__single>
+</plugstatetransform>

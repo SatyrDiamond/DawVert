@@ -1,0 +1,3 @@
+<plugstatetransform daw_in="caustic" daw_out="bandlab" plugtype="native:caustic:octaver">
+  <replace plugtype="native:bandlab:octaver" />
+</plugstatetransform>

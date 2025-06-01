@@ -485,23 +485,18 @@ def do_device(convproj_obj, dp_channel, lane_obj, pluginid, role):
 
 			dp_device.bands.append(band)
 
-		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
-		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
-		if is_eq_bands or is_eq_8limited:
-			plugin_eq = plugin_obj.state.eq
-
-			if is_eq_8limited: plugin_eq.from_8limited(pluginid)
+		if plugin_obj.eq_to_bands(convproj_obj, pluginid):
+			eqbands = [x for x in plugin_obj.state.eq]
 			dp_device = device.dawproject_device('Equalizer')
 			dp_device.deviceID = 'e4815188-ba6f-4d14-bcfc-2dcb8f778ccb'
 			dp_device.deviceName = plugin_obj.external_info.name
 			dp_device.name = 'EQ+'
 			dp_device.deviceRole = 'audioFX'
 
-			for filter_id, filter_obj in plugin_eq:
+			for filter_id, filter_obj in eqbands:
 				band = device.dawproject_band()
 
 				cvpjbandtype = filter_obj.type.type
-
 				if cvpjbandtype == 'notch': band.type = 'notch'
 				if cvpjbandtype == 'high_shelf': band.type = 'highShelf'
 				if cvpjbandtype == 'low_pass': band.type = 'lowPass'

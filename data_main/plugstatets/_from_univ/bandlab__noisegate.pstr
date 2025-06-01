@@ -1,0 +1,11 @@
+<plugstatetransform daw_out="bandlab" plugtype="universal:noise_gate">
+  <in__param from="attack" type="float"/>
+  <in__param from="release" type="float"/>
+  <in__param from="threshold" type="float"/>
+  
+  <replace plugtype="native:bandlab:expGate"/>
+
+  <out__param to="attack" type="float"/>
+  <out__param to="release" type="float"/>
+  <out__param to="threshold" type="float"/>
+</plugstatetransform>

@@ -1,0 +1,6 @@
+<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:gain">
+  <in__param from="gain" type="float">0</in__param>
+  <calc name="gain" type="from_db" />
+  <replace plugtype="universal:volpan" />
+  <out__param to="vol" from="gain" type="float">0</out__param>
+</plugstatetransform>

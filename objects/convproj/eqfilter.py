@@ -42,9 +42,20 @@ class cvpj_eq:
 
 		return self.plugstate_obj.named_filter_add(filter_id), filter_id
 
+	def from_3band_channel(self, pluginid):
+		bands = ['high_pass', 'low_shelf', 'peak', 'high_shelf', 'low_pass']
+		self.bands = [x for x in bands if x in self.plugstate_obj.named_filter]
+		return True
+
+	def from_3band_type2(self, pluginid):
+		bands = ['high_pass', 'low_shelf', 'peak', 'high_shelf', 'low_pass']
+		self.bands = [x for x in bands if x in self.plugstate_obj.named_filter]
+		return True
+
 	def from_8limited(self, pluginid):
 		bands = ['high_pass', 'low_shelf', 'peak_1', 'peak_2', 'peak_3', 'peak_4', 'high_shelf', 'low_pass']
 		self.bands = [x for x in bands if x in self.plugstate_obj.named_filter]
+		return True
 
 	def to_8limited(self, convproj_obj, pluginid):
 		fnames = [f for f in self.plugstate_obj.named_filter]

@@ -1,0 +1,94 @@
+<plugstatetransform daw_in="fl_mobile" plugtype="native:fl_mobile:3">
+  <define_remap name="filter_types" in_type="int" out_type="filter_type">
+    <val in_val="0" out_val="low_shelf"/>
+    <val in_val="1" out_val="peak"/>
+    <val in_val="2" out_val="high_shelf"/>
+    <fallback out_val="peak"/>
+  </define_remap>
+
+  <in__param to="1_frequency" from="param_2" type="float" />
+  <in__param to="2_frequency" from="param_6" type="float" />
+  <in__param to="3_frequency" from="param_10" type="float" />
+  <in__param to="4_frequency" from="param_14" type="float" />
+  <calc name="1_frequency" type="pow_r">605.5</calc>
+  <calc name="1_frequency" type="mul">32</calc>
+  <calc name="2_frequency" type="pow_r">605.5</calc>
+  <calc name="2_frequency" type="mul">32</calc>
+  <calc name="3_frequency" type="pow_r">605.5</calc>
+  <calc name="3_frequency" type="mul">32</calc>
+  <calc name="4_frequency" type="pow_r">605.5</calc>
+  <calc name="4_frequency" type="mul">32</calc>
+
+  <in__param to="1_gain" from="param_1" type="float" />
+  <in__param to="2_gain" from="param_5" type="float" />
+  <in__param to="3_gain" from="param_9" type="float" />
+  <in__param to="4_gain" from="param_13" type="float" />
+  <calc name="1_gain" type="from_one">-12;12</calc>
+  <calc name="2_gain" type="from_one">-12;12</calc>
+  <calc name="3_gain" type="from_one">-12;12</calc>
+  <calc name="4_gain" type="from_one">-12;12</calc>
+
+  <in__param to="1_bandwidth" from="param_3" type="float" />
+  <in__param to="2_bandwidth" from="param_7" type="float" />
+  <in__param to="3_bandwidth" from="param_11" type="float" />
+  <in__param to="4_bandwidth" from="param_15" type="float" />
+  <calc name="1_bandwidth" type="sub">0.5</calc>
+  <calc name="2_bandwidth" type="sub">0.5</calc>
+  <calc name="3_bandwidth" type="sub">0.5</calc>
+  <calc name="4_bandwidth" type="sub">0.5</calc>
+  <calc name="2_bandwidth" type="mul">-2.5</calc>
+  <calc name="3_bandwidth" type="mul">-2.5</calc>
+  <calc name="4_bandwidth" type="mul">-2.5</calc>
+  <calc name="4_bandwidth" type="mul">-2.5</calc>
+  <calc name="1_bandwidth" type="pow_r">2</calc>
+  <calc name="2_bandwidth" type="pow_r">2</calc>
+  <calc name="3_bandwidth" type="pow_r">2</calc>
+  <calc name="4_bandwidth" type="pow_r">2</calc>
+
+  <in__param to="1_kind" from="param_4" type="float" />
+  <in__param to="2_kind" from="param_8" type="float" />
+  <in__param to="3_kind" from="param_12" type="float" />
+  <in__param to="4_kind" from="param_16" type="float" />
+  <calc name="1_kind" type="mul">2</calc>
+  <calc name="2_kind" type="mul">2</calc>
+  <calc name="3_kind" type="mul">2</calc>
+  <calc name="4_kind" type="mul">2</calc>
+  <toint name="1_kind"/>
+  <toint name="2_kind"/>
+  <toint name="3_kind"/>
+  <toint name="4_kind"/>
+  <remap name="1_kind" remapdef="filter_types"/>
+  <remap name="2_kind" remapdef="filter_types"/>
+  <remap name="3_kind" remapdef="filter_types"/>
+  <remap name="4_kind" remapdef="filter_types"/>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" from="1_kind" type="filter_type"/>
+  <out__named_filterparam to="freq" from="1_frequency" type="float"/>
+  <out__named_filterparam to="q" from="1_bandwidth" type="float"/>
+  <out__named_filterparam to="gain" from="1_gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" from="2_kind" type="filter_type"/>
+  <out__named_filterparam to="freq" from="2_frequency" type="float"/>
+  <out__named_filterparam to="q" from="2_bandwidth" type="float"/>
+  <out__named_filterparam to="gain" from="2_gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" from="3_kind" type="filter_type"/>
+  <out__named_filterparam to="freq" from="3_frequency" type="float"/>
+  <out__named_filterparam to="q" from="3_bandwidth" type="float"/>
+  <out__named_filterparam to="gain" from="3_gain" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" from="4_kind" type="filter_type"/>
+  <out__named_filterparam to="freq" from="4_frequency" type="float"/>
+  <out__named_filterparam to="q" from="4_bandwidth" type="float"/>
+  <out__named_filterparam to="gain" from="4_gain" type="float"/>
+</plugstatetransform>

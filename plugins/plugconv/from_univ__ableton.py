@@ -79,13 +79,8 @@ class plugconv(plugins.base):
 			convproj_obj.automation.move(['filter', pluginid, 'q'], ['plugin', pluginid, abe_starttxt+'Q'])
 			return True
 
-		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
-		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
-
-		if is_eq_bands or is_eq_8limited:
-			eq_obj = plugin_obj.state.eq
-			if is_eq_8limited: eq_obj.from_8limited(pluginid)
-			eqbands = [x for x in eq_obj]
+		if plugin_obj.eq_to_bands(convproj_obj, pluginid):
+			eqbands = [x for x in plugin_obj.state.eq]
 			plugin_obj.replace('native', 'ableton', 'Eq8')
 			for band_num, f in enumerate(eqbands):
 				filter_id, filter_obj = f

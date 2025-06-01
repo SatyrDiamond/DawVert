@@ -4,7 +4,7 @@
   <in__param from="highGain" type="float">0</in__param>
   <in__param from="MidFrequency" type="float">0</in__param>
 
-  <replace plugtype="universal:eq:8limited" />
+  <replace plugtype="universal:eq:3band_channel" />
 
   <out__named_filter_add name="low_shelf"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
@@ -12,7 +12,7 @@
   <out__named_filterparam to="freq" type="float" only_value="1">300</out__named_filterparam>
   <out__named_filterparam to="gain" from="lowGain" type="float"/>
 
-  <out__named_filter_add name="peak_1"/>
+  <out__named_filter_add name="peak"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
   <out__named_filterparam to="freq" from="midFreq" type="float"/>

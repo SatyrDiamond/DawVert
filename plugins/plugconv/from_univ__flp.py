@@ -55,14 +55,9 @@ class plugconv(plugins.base):
 			plugin_obj.params.add('4_freq', int(eq2q_freq(filter_obj)*65536), 'int')
 			return True
 
-		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
-		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
-
-		if is_eq_bands or is_eq_8limited:
-			bands_obj = plugin_obj.state.eq
-			if is_eq_8limited: bands_obj.from_8limited(pluginid)
+		if plugin_obj.eq_to_bands(convproj_obj, pluginid):
+			eqbands = [x for x in plugin_obj.state.eq]
 			gain_out = plugin_obj.params.get("gain_out", 0).value
-			eqbands = [x for x in bands_obj]
 			plugin_obj.replace('native', 'flstudio', 'fruity parametric eq 2')
 			for n, f in enumerate(eqbands):
 				filter_id, filter_obj = f

@@ -1,6 +1,328 @@
 {
-  "data_main\\plugstatets\\ableton2bandlab\\amp.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\amp.pstr",
+  "data_main\\plugstatets\\to_ableton\\amped__chorus.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\amped__chorus.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:amped:Chorus",
+    "plugtype_out": [
+      "native:ableton:Chorus2"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\amped__delay.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\amped__delay.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:amped:Delay",
+    "plugtype_out": [
+      "native:ableton:Delay"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\amped__flanger.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\amped__flanger.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:amped:Flanger",
+    "plugtype_out": [
+      "native:ableton:PhaserNew"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\amped__phaser.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\amped__phaser.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:amped:Phaser",
+    "plugtype_out": [
+      "native:ableton:PhaserNew"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\amped__tremolo.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\amped__tremolo.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:amped:Tremolo",
+    "plugtype_out": [
+      "native:ableton:AutoPan"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\amped__vibrato.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\amped__vibrato.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:amped:Vibrato",
+    "plugtype_out": [
+      "native:ableton:Chorus2"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\bandlab__autofilter.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\bandlab__autofilter.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:bandlab:autoFilter",
+    "plugtype_out": [
+      "native:ableton:AutoFilter"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\bandlab__autoPan.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\bandlab__autoPan.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:bandlab:autoPan",
+    "plugtype_out": [
+      "native:ableton:AutoPan"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\bandlab__beatSyncDelay2.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\bandlab__beatSyncDelay2.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:bandlab:beatSyncDelay2",
+    "plugtype_out": [
+      "native:ableton:Echo"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\bandlab__bossBD2.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\bandlab__bossBD2.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:bandlab:bossBD2",
+    "plugtype_out": [
+      "native:ableton:Overdrive"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\bandlab__pingpongDelay.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\bandlab__pingpongDelay.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:bandlab:pingpongDelay",
+    "plugtype_out": [
+      "native:ableton:Echo"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\bandlab__threeBandEq.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\bandlab__threeBandEq.pstr",
+    "daw_in": [
+      "ableton"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:threeBandEq",
+    "plugtype_out": [
+      "native:ableton:ChannelEq"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\flp__fruity_balance.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\flp__fruity_balance.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:flstudio:fruity balance",
+    "plugtype_out": [
+      "native:ableton:StereoGain"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\flp__fruity_center.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\flp__fruity_center.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:flstudio:fruity center",
+    "plugtype_out": [
+      "native:ableton:StereoGain"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\flp__plucked.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\flp__plucked.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:flstudio:plucked!",
+    "plugtype_out": [
+      "native:ableton:StringStudio"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_ableton\\lmms__delay.pstr": {
+    "file": "data_main\\plugstatets\\to_ableton\\lmms__delay.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:lmms:delay",
+    "plugtype_out": [
+      "native:ableton:Delay"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_amped\\bandlab__rossCompr.pstr": {
+    "file": "data_main\\plugstatets\\to_amped\\bandlab__rossCompr.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:bandlab:rossCompr",
+    "plugtype_out": [
+      "native:amped:CompressorMini"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_amped\\lmms__reverb.pstr": {
+    "file": "data_main\\plugstatets\\to_amped\\lmms__reverb.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:lmms:reverbsc",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_amped\\waveform__chorusEffect.pstr": {
+    "file": "data_main\\plugstatets\\to_amped\\waveform__chorusEffect.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:chorusEffect",
+    "plugtype_out": [
+      "native:amped:Chorus"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_amped\\waveform__naturalReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_amped\\waveform__naturalReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:naturalReverb",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_amped\\waveform__nonLinearReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_amped\\waveform__nonLinearReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:nonLinearReverb",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_amped\\waveform__phaser2.pstr": {
+    "file": "data_main\\plugstatets\\to_amped\\waveform__phaser2.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:phaser2",
+    "plugtype_out": [
+      "native:amped:Phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_amped\\waveform__plateReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_amped\\waveform__plateReverb.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "native:tracktion:plateReverb",
+    "plugtype_out": [
+      "native:amped:Reverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_bandlab\\ableton__amp.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__amp.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -13,8 +335,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\autofilter.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\autofilter.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__autofilter.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__autofilter.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -27,8 +349,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\autopan.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\autopan.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__autopan.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__autopan.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -41,8 +363,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\cabinet.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\cabinet.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__cabinet.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__cabinet.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -55,8 +377,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\channeleq.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\channeleq.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__channeleq.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__channeleq.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -69,8 +391,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\chorus.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\chorus.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__chorus.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__chorus.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -83,8 +405,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\corpus.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\corpus.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__corpus.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__corpus.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -97,8 +419,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\hybrid.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\hybrid.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__hybrid.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__hybrid.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -111,8 +433,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\overdrive.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\overdrive.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__overdrive.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__overdrive.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -125,8 +447,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\pedal.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\pedal.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__pedal.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__pedal.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -141,8 +463,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\phaser.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\phaser.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__phaser.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__phaser.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -155,8 +477,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\ableton2bandlab\\reverb.pstr": {
-    "file": "data_main\\plugstatets\\ableton2bandlab\\reverb.pstr",
+  "data_main\\plugstatets\\to_bandlab\\ableton__reverb.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\ableton__reverb.pstr",
     "daw_in": [
       "ableton"
     ],
@@ -169,92 +491,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\amped2ableton\\chorus.pstr": {
-    "file": "data_main\\plugstatets\\amped2ableton\\chorus.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:amped:Chorus",
-    "plugtype_out": [
-      "native:ableton:Chorus2"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2ableton\\delay.pstr": {
-    "file": "data_main\\plugstatets\\amped2ableton\\delay.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:amped:Delay",
-    "plugtype_out": [
-      "native:ableton:Delay"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2ableton\\flanger.pstr": {
-    "file": "data_main\\plugstatets\\amped2ableton\\flanger.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:amped:Flanger",
-    "plugtype_out": [
-      "native:ableton:PhaserNew"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2ableton\\phaser.pstr": {
-    "file": "data_main\\plugstatets\\amped2ableton\\phaser.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:amped:Phaser",
-    "plugtype_out": [
-      "native:ableton:PhaserNew"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2ableton\\tremolo.pstr": {
-    "file": "data_main\\plugstatets\\amped2ableton\\tremolo.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:amped:Tremolo",
-    "plugtype_out": [
-      "native:ableton:AutoPan"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2ableton\\vibrato.pstr": {
-    "file": "data_main\\plugstatets\\amped2ableton\\vibrato.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:amped:Vibrato",
-    "plugtype_out": [
-      "native:ableton:Chorus2"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2bandlab\\chorus.pstr": {
-    "file": "data_main\\plugstatets\\amped2bandlab\\chorus.pstr",
+  "data_main\\plugstatets\\to_bandlab\\amped__chorus.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\amped__chorus.pstr",
     "daw_in": [
       "amped"
     ],
@@ -267,8 +505,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\amped2bandlab\\compressormini.pstr": {
-    "file": "data_main\\plugstatets\\amped2bandlab\\compressormini.pstr",
+  "data_main\\plugstatets\\to_bandlab\\amped__compressormini.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\amped__compressormini.pstr",
     "daw_in": [
       "amped"
     ],
@@ -281,8 +519,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\amped2bandlab\\equalizer.pstr": {
-    "file": "data_main\\plugstatets\\amped2bandlab\\equalizer.pstr",
+  "data_main\\plugstatets\\to_bandlab\\amped__equalizer.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\amped__equalizer.pstr",
     "daw_in": [
       "amped"
     ],
@@ -295,8 +533,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\amped2bandlab\\phaser.pstr": {
-    "file": "data_main\\plugstatets\\amped2bandlab\\phaser.pstr",
+  "data_main\\plugstatets\\to_bandlab\\amped__phaser.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\amped__phaser.pstr",
     "daw_in": [
       "amped"
     ],
@@ -309,8 +547,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\amped2bandlab\\reverb.pstr": {
-    "file": "data_main\\plugstatets\\amped2bandlab\\reverb.pstr",
+  "data_main\\plugstatets\\to_bandlab\\amped__reverb.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\amped__reverb.pstr",
     "daw_in": [
       "amped"
     ],
@@ -323,8 +561,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\amped2bandlab\\tremolo.pstr": {
-    "file": "data_main\\plugstatets\\amped2bandlab\\tremolo.pstr",
+  "data_main\\plugstatets\\to_bandlab\\amped__tremolo.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\amped__tremolo.pstr",
     "daw_in": [
       "amped"
     ],
@@ -337,190 +575,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\amped2flp\\delay.pstr": {
-    "file": "data_main\\plugstatets\\amped2flp\\delay.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "native:amped:Delay",
-    "plugtype_out": [
-      "native:flstudio:fruity delay 3"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2flp\\flanger.pstr": {
-    "file": "data_main\\plugstatets\\amped2flp\\flanger.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "native:amped:Flanger",
-    "plugtype_out": [
-      "native:flstudio:fruity flanger"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2flp\\phaser.pstr": {
-    "file": "data_main\\plugstatets\\amped2flp\\phaser.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "native:amped:Phaser",
-    "plugtype_out": [
-      "native:flstudio:fruity phaser"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\amped2lmms\\reverb.pstr": {
-    "file": "data_main\\plugstatets\\amped2lmms\\reverb.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "daw_out": [
-      "lmms"
-    ],
-    "plugtype_in": "native:amped:Reverb",
-    "plugtype_out": [
-      "native:lmms:reverbsc"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\bandlab2ableton\\autofilter.pstr": {
-    "file": "data_main\\plugstatets\\bandlab2ableton\\autofilter.pstr",
-    "daw_in": [
-      "bandlab"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:bandlab:autoFilter",
-    "plugtype_out": [
-      "native:ableton:AutoFilter"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\bandlab2ableton\\autoPan.pstr": {
-    "file": "data_main\\plugstatets\\bandlab2ableton\\autoPan.pstr",
-    "daw_in": [
-      "bandlab"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:bandlab:autoPan",
-    "plugtype_out": [
-      "native:ableton:AutoPan"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\bandlab2ableton\\beatSyncDelay2.pstr": {
-    "file": "data_main\\plugstatets\\bandlab2ableton\\beatSyncDelay2.pstr",
-    "daw_in": [
-      "bandlab"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:bandlab:beatSyncDelay2",
-    "plugtype_out": [
-      "native:ableton:Echo"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\bandlab2ableton\\bossBD2.pstr": {
-    "file": "data_main\\plugstatets\\bandlab2ableton\\bossBD2.pstr",
-    "daw_in": [
-      "bandlab"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:bandlab:bossBD2",
-    "plugtype_out": [
-      "native:ableton:Overdrive"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\bandlab2ableton\\pingpongDelay.pstr": {
-    "file": "data_main\\plugstatets\\bandlab2ableton\\pingpongDelay.pstr",
-    "daw_in": [
-      "bandlab"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:bandlab:pingpongDelay",
-    "plugtype_out": [
-      "native:ableton:Echo"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\bandlab2ableton\\threeBandEq.pstr": {
-    "file": "data_main\\plugstatets\\bandlab2ableton\\threeBandEq.pstr",
-    "daw_in": [
-      "ableton"
-    ],
-    "daw_out": [
-      "bandlab"
-    ],
-    "plugtype_in": "native:bandlab:threeBandEq",
-    "plugtype_out": [
-      "native:ableton:ChannelEq"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\flp2ableton\\fruity_balance.pstr": {
-    "file": "data_main\\plugstatets\\flp2ableton\\fruity_balance.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:flstudio:fruity balance",
-    "plugtype_out": [
-      "native:ableton:StereoGain"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\flp2ableton\\fruity_center.pstr": {
-    "file": "data_main\\plugstatets\\flp2ableton\\fruity_center.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:flstudio:fruity center",
-    "plugtype_out": [
-      "native:ableton:StereoGain"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\flp2ableton\\plucked.pstr": {
-    "file": "data_main\\plugstatets\\flp2ableton\\plucked.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:flstudio:plucked!",
-    "plugtype_out": [
-      "native:ableton:StringStudio"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\flp2bandlab\\fruity phaser.pstr": {
-    "file": "data_main\\plugstatets\\flp2bandlab\\fruity phaser.pstr",
+  "data_main\\plugstatets\\to_bandlab\\flp__fruity phaser.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\flp__fruity phaser.pstr",
     "daw_in": [
       "flp"
     ],
@@ -533,64 +589,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\flp2lmms\\fruity_stereo_shaper.pstr": {
-    "file": "data_main\\plugstatets\\flp2lmms\\fruity_stereo_shaper.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "daw_out": [
-      "lmms"
-    ],
-    "plugtype_in": "native:flstudio:fruity stereo shaper",
-    "plugtype_out": [
-      "native:lmms:stereomatrix"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\flp2waveform\\fruity chorus.pstr": {
-    "file": "data_main\\plugstatets\\flp2waveform\\fruity chorus.pstr",
-    "daw_in": [
-      "flp"
-    ],
-    "daw_out": [
-      "waveform"
-    ],
-    "plugtype_in": "native:flstudio:fruity chorus",
-    "plugtype_out": [
-      "native:tracktion:chorusEffect"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\lmms2ableton\\delay.pstr": {
-    "file": "data_main\\plugstatets\\lmms2ableton\\delay.pstr",
-    "daw_in": [
-      "lmms"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:lmms:delay",
-    "plugtype_out": [
-      "native:ableton:Delay"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\lmms2amped\\reverb.pstr": {
-    "file": "data_main\\plugstatets\\lmms2amped\\reverb.pstr",
-    "daw_in": [
-      "lmms"
-    ],
-    "daw_out": [
-      "amped"
-    ],
-    "plugtype_in": "native:lmms:reverbsc",
-    "plugtype_out": [
-      "native:amped:Reverb"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\lmms2bandlab\\bassbooster.pstr": {
-    "file": "data_main\\plugstatets\\lmms2bandlab\\bassbooster.pstr",
+  "data_main\\plugstatets\\to_bandlab\\lmms__bassbooster.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\lmms__bassbooster.pstr",
     "daw_in": [
       "lmms"
     ],
@@ -603,8 +603,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\lmms2bandlab\\reverbsc.pstr": {
-    "file": "data_main\\plugstatets\\lmms2bandlab\\reverbsc.pstr",
+  "data_main\\plugstatets\\to_bandlab\\lmms__reverbsc.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\lmms__reverbsc.pstr",
     "daw_in": [
       "lmms"
     ],
@@ -617,8 +617,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\lmms2bandlab\\stereoenhancer.pstr": {
-    "file": "data_main\\plugstatets\\lmms2bandlab\\stereoenhancer.pstr",
+  "data_main\\plugstatets\\to_bandlab\\lmms__stereoenhancer.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\lmms__stereoenhancer.pstr",
     "daw_in": [
       "lmms"
     ],
@@ -631,120 +631,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\lmms2flp\\spectrumanalyzer.pstr": {
-    "file": "data_main\\plugstatets\\lmms2flp\\spectrumanalyzer.pstr",
-    "daw_in": [
-      "lmms"
-    ],
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "native:lmms:spectrumanalyzer",
-    "plugtype_out": [
-      "native:flstudio:fruity spectroman"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\lmms2flp\\stereoenhancer.pstr": {
-    "file": "data_main\\plugstatets\\lmms2flp\\stereoenhancer.pstr",
-    "daw_in": [
-      "lmms"
-    ],
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "native:lmms:stereoenhancer",
-    "plugtype_out": [
-      "native:flstudio:fruity stereo enhancer"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\lmms2flp\\stereomatrix.pstr": {
-    "file": "data_main\\plugstatets\\lmms2flp\\stereomatrix.pstr",
-    "daw_in": [
-      "lmms"
-    ],
-    "daw_out": [
-      "flp"
-    ],
-    "plugtype_in": "native:lmms:stereomatrix",
-    "plugtype_out": [
-      "native:flstudio:fruity stereo shaper"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr": {
-    "file": "data_main\\plugstatets\\waveform2amped\\chorusEffect.pstr",
-    "daw_in": [
-      "tracktion_edit"
-    ],
-    "daw_out": [
-      "amped"
-    ],
-    "plugtype_in": "native:tracktion:chorusEffect",
-    "plugtype_out": [
-      "native:amped:Chorus"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\waveform2amped\\naturalReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2amped\\naturalReverb.pstr",
-    "daw_in": [
-      "tracktion_edit"
-    ],
-    "daw_out": [
-      "amped"
-    ],
-    "plugtype_in": "native:tracktion:naturalReverb",
-    "plugtype_out": [
-      "native:amped:Reverb"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\waveform2amped\\nonLinearReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2amped\\nonLinearReverb.pstr",
-    "daw_in": [
-      "tracktion_edit"
-    ],
-    "daw_out": [
-      "amped"
-    ],
-    "plugtype_in": "native:tracktion:nonLinearReverb",
-    "plugtype_out": [
-      "native:amped:Reverb"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\waveform2amped\\phaser2.pstr": {
-    "file": "data_main\\plugstatets\\waveform2amped\\phaser2.pstr",
-    "daw_in": [
-      "tracktion_edit"
-    ],
-    "daw_out": [
-      "amped"
-    ],
-    "plugtype_in": "native:tracktion:phaser2",
-    "plugtype_out": [
-      "native:amped:Phaser"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\waveform2amped\\plateReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2amped\\plateReverb.pstr",
-    "daw_in": [
-      "tracktion_edit"
-    ],
-    "daw_out": [
-      "amped"
-    ],
-    "plugtype_in": "native:tracktion:plateReverb",
-    "plugtype_out": [
-      "native:amped:Reverb"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\waveform2bandlab\\chorusEffect.pstr": {
-    "file": "data_main\\plugstatets\\waveform2bandlab\\chorusEffect.pstr",
+  "data_main\\plugstatets\\to_bandlab\\waveform__chorusEffect.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\waveform__chorusEffect.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -757,8 +645,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2bandlab\\distortion.pstr": {
-    "file": "data_main\\plugstatets\\waveform2bandlab\\distortion.pstr",
+  "data_main\\plugstatets\\to_bandlab\\waveform__distortion.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\waveform__distortion.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -771,8 +659,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2bandlab\\naturalReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2bandlab\\naturalReverb.pstr",
+  "data_main\\plugstatets\\to_bandlab\\waveform__naturalReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\waveform__naturalReverb.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -785,8 +673,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2bandlab\\nonLinearReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2bandlab\\nonLinearReverb.pstr",
+  "data_main\\plugstatets\\to_bandlab\\waveform__nonLinearReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\waveform__nonLinearReverb.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -799,8 +687,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2bandlab\\phaser2.pstr": {
-    "file": "data_main\\plugstatets\\waveform2bandlab\\phaser2.pstr",
+  "data_main\\plugstatets\\to_bandlab\\waveform__phaser2.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\waveform__phaser2.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -813,8 +701,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2bandlab\\plateReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2bandlab\\plateReverb.pstr",
+  "data_main\\plugstatets\\to_bandlab\\waveform__plateReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\waveform__plateReverb.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -827,8 +715,92 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2flp\\phaser2.pstr": {
-    "file": "data_main\\plugstatets\\waveform2flp\\phaser2.pstr",
+  "data_main\\plugstatets\\to_flp\\amped__delay.pstr": {
+    "file": "data_main\\plugstatets\\to_flp\\amped__delay.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:amped:Delay",
+    "plugtype_out": [
+      "native:flstudio:fruity delay 3"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_flp\\amped__flanger.pstr": {
+    "file": "data_main\\plugstatets\\to_flp\\amped__flanger.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:amped:Flanger",
+    "plugtype_out": [
+      "native:flstudio:fruity flanger"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_flp\\amped__phaser.pstr": {
+    "file": "data_main\\plugstatets\\to_flp\\amped__phaser.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:amped:Phaser",
+    "plugtype_out": [
+      "native:flstudio:fruity phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_flp\\lmms__spectrumanalyzer.pstr": {
+    "file": "data_main\\plugstatets\\to_flp\\lmms__spectrumanalyzer.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:lmms:spectrumanalyzer",
+    "plugtype_out": [
+      "native:flstudio:fruity spectroman"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_flp\\lmms__stereoenhancer.pstr": {
+    "file": "data_main\\plugstatets\\to_flp\\lmms__stereoenhancer.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:lmms:stereoenhancer",
+    "plugtype_out": [
+      "native:flstudio:fruity stereo enhancer"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_flp\\lmms__stereomatrix.pstr": {
+    "file": "data_main\\plugstatets\\to_flp\\lmms__stereomatrix.pstr",
+    "daw_in": [
+      "lmms"
+    ],
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "native:lmms:stereomatrix",
+    "plugtype_out": [
+      "native:flstudio:fruity stereo shaper"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_flp\\waveform__phaser2.pstr": {
+    "file": "data_main\\plugstatets\\to_flp\\waveform__phaser2.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -841,8 +813,36 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2soundation\\distortion.pstr": {
-    "file": "data_main\\plugstatets\\waveform2soundation\\distortion.pstr",
+  "data_main\\plugstatets\\to_lmms\\amped__reverb.pstr": {
+    "file": "data_main\\plugstatets\\to_lmms\\amped__reverb.pstr",
+    "daw_in": [
+      "amped"
+    ],
+    "daw_out": [
+      "lmms"
+    ],
+    "plugtype_in": "native:amped:Reverb",
+    "plugtype_out": [
+      "native:lmms:reverbsc"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_lmms\\flp__fruity_stereo_shaper.pstr": {
+    "file": "data_main\\plugstatets\\to_lmms\\flp__fruity_stereo_shaper.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "daw_out": [
+      "lmms"
+    ],
+    "plugtype_in": "native:flstudio:fruity stereo shaper",
+    "plugtype_out": [
+      "native:lmms:stereomatrix"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\to_soundation\\waveform__distortion.pstr": {
+    "file": "data_main\\plugstatets\\to_soundation\\waveform__distortion.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -855,8 +855,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2soundation\\naturalReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2soundation\\naturalReverb.pstr",
+  "data_main\\plugstatets\\to_soundation\\waveform__naturalReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_soundation\\waveform__naturalReverb.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -869,8 +869,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2soundation\\nonLinearReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2soundation\\nonLinearReverb.pstr",
+  "data_main\\plugstatets\\to_soundation\\waveform__nonLinearReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_soundation\\waveform__nonLinearReverb.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -883,8 +883,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2soundation\\phaser2.pstr": {
-    "file": "data_main\\plugstatets\\waveform2soundation\\phaser2.pstr",
+  "data_main\\plugstatets\\to_soundation\\waveform__phaser2.pstr": {
+    "file": "data_main\\plugstatets\\to_soundation\\waveform__phaser2.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -897,8 +897,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2soundation\\plateReverb.pstr": {
-    "file": "data_main\\plugstatets\\waveform2soundation\\plateReverb.pstr",
+  "data_main\\plugstatets\\to_soundation\\waveform__plateReverb.pstr": {
+    "file": "data_main\\plugstatets\\to_soundation\\waveform__plateReverb.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -911,8 +911,8 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\waveform2soundation\\stereoDelay.pstr": {
-    "file": "data_main\\plugstatets\\waveform2soundation\\stereoDelay.pstr",
+  "data_main\\plugstatets\\to_soundation\\waveform__stereoDelay.pstr": {
+    "file": "data_main\\plugstatets\\to_soundation\\waveform__stereoDelay.pstr",
     "daw_in": [
       "tracktion_edit"
     ],
@@ -925,87 +925,17 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\x_caustic2ableton\\vibrato.pstr": {
-    "file": "data_main\\plugstatets\\x_caustic2ableton\\vibrato.pstr",
+  "data_main\\plugstatets\\to_waveform\\flp__fruity chorus.pstr": {
+    "file": "data_main\\plugstatets\\to_waveform\\flp__fruity chorus.pstr",
     "daw_in": [
-      "caustic"
-    ],
-    "daw_out": [
-      "ableton"
-    ],
-    "plugtype_in": "native:caustic:vibrato",
-    "plugtype_out": [
-      "native:ableton:Chorus2"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\x_caustic2bandlab\\octaver.pstr": {
-    "file": "data_main\\plugstatets\\x_caustic2bandlab\\octaver.pstr",
-    "daw_in": [
-      "caustic"
-    ],
-    "daw_out": [
-      "bandlab"
-    ],
-    "plugtype_in": "native:caustic:octaver",
-    "plugtype_out": [
-      "native:bandlab:octaver"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\x_flm2bandlab\\chorus.pstr": {
-    "file": "data_main\\plugstatets\\x_flm2bandlab\\chorus.pstr",
-    "daw_in": [
-      "fl_mobile"
-    ],
-    "daw_out": [
-      "bandlab"
-    ],
-    "plugtype_in": "native:fl_mobile:11",
-    "plugtype_out": [
-      "native:bandlab:bossCE5"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\x_flm2bandlab\\phaser.pstr": {
-    "file": "data_main\\plugstatets\\x_flm2bandlab\\phaser.pstr",
-    "daw_in": [
-      "fl_mobile"
-    ],
-    "daw_out": [
-      "bandlab"
-    ],
-    "plugtype_in": "native:fl_mobile:14",
-    "plugtype_out": [
-      "native:bandlab:phaser"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\x_flm2bandlab\\stereorizer.pstr": {
-    "file": "data_main\\plugstatets\\x_flm2bandlab\\stereorizer.pstr",
-    "daw_in": [
-      "fl_mobile"
-    ],
-    "daw_out": [
-      "bandlab"
-    ],
-    "plugtype_in": "native:fl_mobile:15",
-    "plugtype_out": [
-      "native:bandlab:stereoSpreader"
-    ],
-    "priority": 0
-  },
-  "data_main\\plugstatets\\x_flm2waveform\\distortion.pstr": {
-    "file": "data_main\\plugstatets\\x_flm2waveform\\distortion.pstr",
-    "daw_in": [
-      "fl_mobile"
+      "flp"
     ],
     "daw_out": [
       "waveform"
     ],
-    "plugtype_in": "native:fl_mobile:6",
+    "plugtype_in": "native:flstudio:fruity chorus",
     "plugtype_out": [
-      "native:tracktion:distortion"
+      "native:tracktion:chorusEffect"
     ],
     "priority": 0
   },
@@ -1174,6 +1104,90 @@
     "plugtype_in": "native:fruitytracks:fruity reeverb",
     "plugtype_out": [
       "native:flstudio:fruity reeverb"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_to_ableton\\caustic__vibrato.pstr": {
+    "file": "data_main\\plugstatets\\x_to_ableton\\caustic__vibrato.pstr",
+    "daw_in": [
+      "caustic"
+    ],
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "native:caustic:vibrato",
+    "plugtype_out": [
+      "native:ableton:Chorus2"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_to_bandlab\\caustic__octaver.pstr": {
+    "file": "data_main\\plugstatets\\x_to_bandlab\\caustic__octaver.pstr",
+    "daw_in": [
+      "caustic"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:caustic:octaver",
+    "plugtype_out": [
+      "native:bandlab:octaver"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_to_bandlab\\flm__chorus.pstr": {
+    "file": "data_main\\plugstatets\\x_to_bandlab\\flm__chorus.pstr",
+    "daw_in": [
+      "fl_mobile"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:fl_mobile:11",
+    "plugtype_out": [
+      "native:bandlab:bossCE5"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_to_bandlab\\flm__phaser.pstr": {
+    "file": "data_main\\plugstatets\\x_to_bandlab\\flm__phaser.pstr",
+    "daw_in": [
+      "fl_mobile"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:fl_mobile:14",
+    "plugtype_out": [
+      "native:bandlab:phaser"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_to_bandlab\\flm__stereorizer.pstr": {
+    "file": "data_main\\plugstatets\\x_to_bandlab\\flm__stereorizer.pstr",
+    "daw_in": [
+      "fl_mobile"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:fl_mobile:15",
+    "plugtype_out": [
+      "native:bandlab:stereoSpreader"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\x_to_waveform\\flm__distortion.pstr": {
+    "file": "data_main\\plugstatets\\x_to_waveform\\flm__distortion.pstr",
+    "daw_in": [
+      "fl_mobile"
+    ],
+    "daw_out": [
+      "waveform"
+    ],
+    "plugtype_in": "native:fl_mobile:6",
+    "plugtype_out": [
+      "native:tracktion:distortion"
     ],
     "priority": 0
   },
@@ -1397,6 +1411,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\bandlab__noisegate.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__noisegate.pstr",
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "universal:noise_gate",
+    "plugtype_out": [
+      "native:bandlab:expGate"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr",
     "daw_out": [
@@ -1616,7 +1641,7 @@
     ],
     "plugtype_in": "native:ableton:ChannelEq",
     "plugtype_out": [
-      "universal:eq:8limited"
+      "universal:eq:3band_channel"
     ],
     "priority": -100
   },
@@ -1738,7 +1763,7 @@
     ],
     "plugtype_in": "native:amped:Equalizer",
     "plugtype_out": [
-      "universal:eq:bands"
+      "universal:eq:8limited"
     ],
     "priority": -100
   },
@@ -1874,6 +1899,17 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ\\bandlab__expGate.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__expGate.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:expGate",
+    "plugtype_out": [
+      "universal:noise_gate"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ\\bandlab__filter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__filter.pstr",
     "daw_in": [
@@ -1925,7 +1961,7 @@
     ],
     "plugtype_in": "native:bandlab:threeBandEq",
     "plugtype_out": [
-      "universal:eq:8limited"
+      "universal:eq:3band_channel"
     ],
     "priority": -100
   },
@@ -1936,7 +1972,7 @@
     ],
     "plugtype_in": "native:bandlab:threeBandEq2",
     "plugtype_out": [
-      "universal:eq:8limited"
+      "universal:eq:3band_type2"
     ],
     "priority": -100
   },
@@ -2248,6 +2284,17 @@
     ],
     "priority": -100
   },
+  "data_main\\plugstatets\\_to_univ_ex\\fl_mobile__eq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_ex\\fl_mobile__eq.pstr",
+    "daw_in": [
+      "fl_mobile"
+    ],
+    "plugtype_in": "native:fl_mobile:3",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
+  },
   "data_main\\plugstatets\\_to_univ_ex\\fl_mobile__filter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ_ex\\fl_mobile__filter.pstr",
     "daw_in": [
@@ -2267,6 +2314,17 @@
     "plugtype_in": "native:fl_mobile:27",
     "plugtype_out": [
       "universal:gate"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_ex\\fl_mobile__graf_eq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_ex\\fl_mobile__graf_eq.pstr",
+    "daw_in": [
+      "fl_mobile"
+    ],
+    "plugtype_in": "native:fl_mobile:7",
+    "plugtype_out": [
+      "universal:eq:bands"
     ],
     "priority": -100
   },

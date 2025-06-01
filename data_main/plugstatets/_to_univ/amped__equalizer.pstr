@@ -5,21 +5,21 @@
   <in__param from="peakq" type="float">1</in__param>
   <in__param from="lpfreq" type="float">10000</in__param>
 
-  <replace plugtype="universal:eq:bands" />
+  <replace plugtype="universal:eq:8limited" />
 
-  <out__eq_add/>
+  <out__named_filter_add name="high_pass"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">high_pass</out__named_filterparam>
   <out__named_filterparam to="freq" from="hpfreq" type="float"/>
 
-  <out__eq_add/>
+  <out__named_filter_add name="peak_1"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
   <out__named_filterparam to="freq" from="peakfreq" type="float"/>
   <out__named_filterparam to="gain" from="peakgain" type="float"/>
   <out__named_filterparam to="q" from="peakq" type="float"/>
 
-  <out__eq_add/>
+  <out__named_filter_add name="low_pass"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">low_pass</out__named_filterparam>
   <out__named_filterparam to="freq" from="lpfreq" type="float"/>

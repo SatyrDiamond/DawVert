@@ -18,12 +18,8 @@ class plugconv(plugins.base):
 		in_dict['out_daws'] = ['waveform']
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
-		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
-		if is_eq_bands or is_eq_8limited:
-			eq_obj = plugin_obj.state.eq
-			if is_eq_8limited: eq_obj.from_8limited(pluginid)
-			eqbands = [x for x in eq_obj]
+		if plugin_obj.eq_to_bands(convproj_obj, pluginid):
+			eqbands = [x for x in plugin_obj.state.eq]
 			plugin_obj.replace('native', 'tracktion', '8bandEq')
 			for n, f in enumerate(eqbands):
 				filter_id, filter_obj = f

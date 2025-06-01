@@ -1,0 +1,69 @@
+<plugstatetransform daw_in="fl_mobile" plugtype="native:fl_mobile:7">
+  <in__param from="param_1" type="float"/>
+  <in__param from="param_2" type="float"/>
+  <in__param from="param_3" type="float"/>
+  <in__param from="param_4" type="float"/>
+  <in__param from="param_5" type="float"/>
+  <in__param from="param_6" type="float"/>
+  <in__param from="param_7" type="float"/>
+  <in__param from="param_8" type="float"/>
+
+  <calc name="param_1" type="from_one">-10;10</calc>
+  <calc name="param_2" type="from_one">-10;10</calc>
+  <calc name="param_3" type="from_one">-10;10</calc>
+  <calc name="param_4" type="from_one">-10;10</calc>
+  <calc name="param_5" type="from_one">-10;10</calc>
+  <calc name="param_6" type="from_one">-10;10</calc>
+  <calc name="param_7" type="from_one">-10;10</calc>
+  <calc name="param_8" type="from_one">-10;10</calc>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">80</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_1" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">160</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_2" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">375</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_3" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">750</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_4" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">1500</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_5" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">3000</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_6" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">6000</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_7" type="float"/>
+  
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" type="float" only_value="1">12000</out__named_filterparam>
+  <out__named_filterparam to="gain" from="param_8" type="float"/>
+</plugstatetransform>

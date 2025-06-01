@@ -56,8 +56,8 @@
             <param id="2" name="Fdbk" type="float" def="0.4" />
             <param id="3" name="Mix" type="float" def="1" />
             <param id="4" name="Filter" type="float" def="0.5" />
-            <param id="5" type="float" />
-            <param id="6" type="float" def="0.5" />
+            <param id="5" name="Mode" type="float" />
+            <param id="6" name="Input Pan" type="float" def="0.5" />
         </object>
         <object id="29">
             <visual name="FX Autoduck" />
@@ -146,36 +146,36 @@
         <object id="36">
             <visual name="FX Multiband Compressor" />
             <param id="0" name="Enable" type="float" def="1" />
-            <param id="1" type="float" def="0.5" />
-            <param id="2" type="float" def="0.3" />
-            <param id="3" type="float" def="0.7" />
-            <param id="4" type="float" />
-            <param id="5" type="float" />
-            <param id="6" type="float" def="0.5" />
-            <param id="7" type="float" def="1" />
-            <param id="8" type="float" />
-            <param id="9" type="float" def="0.3" />
-            <param id="10" type="float" def="0.3" />
-            <param id="11" type="float" def="0.5" />
-            <param id="12" type="float" />
-            <param id="13" type="float" def="0.5" />
-            <param id="14" type="float" def="1" />
-            <param id="15" type="float" />
-            <param id="16" type="float" def="0.3" />
-            <param id="17" type="float" def="0.3" />
-            <param id="18" type="float" def="0.5" />
-            <param id="19" type="float" />
-            <param id="20" type="float" def="0.5" />
-            <param id="21" type="float" def="1" />
-            <param id="22" type="float" />
-            <param id="23" type="float" def="0.3" />
-            <param id="24" type="float" def="0.3" />
-            <param id="25" type="float" def="0.5" />
-            <param id="26" type="float" />
-            <param id="27" type="float" def="0.5" />
-            <param id="28" type="float" def="0.5" />
-            <param id="29" type="float" def="0.5" />
-            <param id="30" type="float" />
+            <param id="1" name="Gain" type="float" def="0.5" />
+            <param id="2" name="HighFreq" type="float" def="0.3" />
+            <param id="3" name="LowFreq" type="float" def="0.7" />
+            <param id="4" name="Solo" type="float" />
+            <param id="5" name="Dry" type="float" />
+            <param id="6" name="Low: Input Gain" type="float" def="0.5" />
+            <param id="7" name="Low: Tres" type="float" def="1" />
+            <param id="8" name="Low: Ratio" type="float" />
+            <param id="9" name="Low: Attack" type="float" def="0.3" />
+            <param id="10" name="Low: Release" type="float" def="0.3" />
+            <param id="11" name="Low: Gain" type="float" def="0.5" />
+            <param id="12" name="Low: Mute Mode" type="float" />
+            <param id="13" name="Mid: Input Gain" type="float" def="0.5" />
+            <param id="14" name="Mid: Tres" type="float" def="1" />
+            <param id="15" name="Mid: Ratio" type="float" />
+            <param id="16" name="Mid: Attack" type="float" def="0.3" />
+            <param id="17" name="Mid: Release" type="float" def="0.3" />
+            <param id="18" name="Mid: Gain" type="float" def="0.5" />
+            <param id="19" name="Mid: Mute Mode" type="float" />
+            <param id="20" name="High: Input Gain" type="float" def="0.5" />
+            <param id="21" name="High: Tres" type="float" def="1" />
+            <param id="22" name="High: Ratio" type="float" />
+            <param id="23" name="High: Attack" type="float" def="0.3" />
+            <param id="24" name="High: Release" type="float" def="0.3" />
+            <param id="25" name="High: Gain" type="float" def="0.5" />
+            <param id="26" name="High: Mute Mode" type="float" />
+            <param id="27" name="Low: Width" type="float" def="0.5" />
+            <param id="28" name="Mid: Width" type="float" def="0.5" />
+            <param id="29" name="High: Width" type="float" def="0.5" />
+            <param id="30" name="Full/Safe" type="float" />
         </object>
         <object id="9">
             <visual name="FX Filter" />

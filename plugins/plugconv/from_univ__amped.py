@@ -25,20 +25,11 @@ class plugconv(plugins.base):
 		in_dict['out_daws'] = ['amped']
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		is_eq_bands = plugin_obj.type.check_wildmatch('universal', 'eq', 'bands')
-		is_eq_8limited = plugin_obj.type.check_wildmatch('universal', 'eq', '8limited')
-
-		if is_eq_bands or is_eq_8limited:
-			if is_eq_8limited: plugin_obj.state.eq.from_8limited(pluginid)
-				
-			eq_obj = plugin_obj.state.eq
-			named_filter = plugin_obj.state.named_filter
-			plugin_obj.replace('native', 'amped', 'EqualizerPro')
-			plugin_obj.state.named_filter = named_filter
-			plugin_obj.state.eq = eq_obj
+		if plugin_obj.eq_to_bands(convproj_obj, pluginid):
+			eqbands = [x for x in plugin_obj.state.eq]
 			gain_out = plugin_obj.params.get("gain_out", 0).value
-
-			for n, f in enumerate(plugin_obj.state.eq):
+			plugin_obj.replace('native', 'amped', 'EqualizerPro')
+			for n, f in enumerate(eqbands):
 				filter_id, filter_obj = f
 				starttxt = 'filter/'+str(n+1)+'/'
 

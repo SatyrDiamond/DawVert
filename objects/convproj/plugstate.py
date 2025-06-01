@@ -460,6 +460,16 @@ class cvpj_plugin_state:
 	def eq_add(self): 
 		return self.eq.add()
 
+	def eq_to_bands(self, convproj_obj, pluginid, type_obj):
+		if type_obj.check_match('universal', 'eq', '8limited'):
+			return self.eq.from_8limited(pluginid)
+		if type_obj.check_match('universal', 'eq', '3band_channel'):
+			return self.eq.from_3band_channel(pluginid)
+		if type_obj.check_match('universal', 'eq', '3band_type2'):
+			return self.eq.from_3band_type2(pluginid)
+		if type_obj.check_match('universal', 'eq', 'bands'):
+			return True
+
 	# -------------------------------------------------- named_eq
 	def named_eq_add(self, eq_name): 
 		if eq_name not in self.named_eq: self.named_eq[eq_name] = eqfilter.cvpj_eq(self, eq_name)

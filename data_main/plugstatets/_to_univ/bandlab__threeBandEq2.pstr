@@ -5,14 +5,14 @@
   <in__param from="peakQ" type="float">1</in__param>
   <in__param from="lpfFreq" type="float">10000</in__param>
 
-  <replace plugtype="universal:eq:8limited" />
+  <replace plugtype="universal:eq:3band_type2" />
 
   <out__named_filter_add name="high_pass"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">high_pass</out__named_filterparam>
   <out__named_filterparam to="freq" from="hpfFreq" type="float"/>
 
-  <out__named_filter_add name="peak_1"/>
+  <out__named_filter_add name="peak"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
   <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
   <out__named_filterparam to="freq" from="peakFreq" type="float"/>

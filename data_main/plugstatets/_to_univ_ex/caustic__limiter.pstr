@@ -1,0 +1,19 @@
+<plugstatetransform daw_in="caustic" plugtype="native:caustic:limiter">
+  <in__param from="0" type="float" />
+  <in__param from="1" type="float" />
+  <in__param from="2" type="float" />
+  <in__param from="3" type="float" />
+  
+  <calc name="0" type="div">2</calc>
+  <calc name="0" type="to_db"/>
+
+  <calc name="1" type="div">0.5</calc>
+  <calc name="1" type="to_db"/>
+
+  <replace plugtype="universal:limiter" />
+
+  <out__param to="pregain" from="0" type="float" />
+  <out__param to="gain" from="1" type="float" />
+  <out__param to="attack" from="2" type="float" />
+  <out__param to="release" from="3" type="float" />
+</plugstatetransform>

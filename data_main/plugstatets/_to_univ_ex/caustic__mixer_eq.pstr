@@ -1,0 +1,21 @@
+<plugstatetransform daw_in="caustic" plugtype="native:caustic:mixer_eq">
+  <in__param from="bass" type="float" />
+  <in__param from="mid" type="float" />
+  <in__param from="high" type="float" />
+  
+  <calc name="bass" type="sub">1</calc>
+  <calc name="mid" type="sub">1</calc>
+  <calc name="high" type="sub">1</calc>
+
+  <calc name="bass" type="mul">6</calc>
+  <calc name="mid" type="mul">6</calc>
+  <calc name="high" type="mul">6</calc>
+
+  <replace plugtype="universal:3band" />
+
+  <out__param to="low_gain" from="bass" type="float" />
+  <out__param to="mid_gain" from="mid" type="float" />
+  <out__param to="high_gain" from="high" type="float" />
+  <out__param to="lowmid_freq" only_value="1" type="float">1000</out__param>
+  <out__param to="midhigh_freq" only_value="1" type="float">6000</out__param>
+</plugstatetransform>

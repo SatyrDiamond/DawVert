@@ -1,0 +1,7 @@
+<plugstatetransform daw_in="caustic" daw_out="bandlab" plugtype="native:caustic:phaser">
+  <in__param from="1" type="float" />
+  <calc name="1" type="valrange">0;50;0;20</calc>
+  <debug__storeview />
+  <replace plugtype="native:bandlab:mxrPhase90" />
+  <out__param to="speed" from="1" type="float" />
+</plugstatetransform>

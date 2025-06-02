@@ -1,0 +1,12 @@
+<plugstatetransform daw_in="caustic" daw_out="bandlab" plugtype="native:caustic:reverb">
+  <in__param to="room" from="0" type="float">0</in__param>
+  <in__param to="damp" from="1" type="float">0</in__param>
+  <in__param to="mix" from="4" type="float">0</in__param>
+  <calc name="room" type="mul">5</calc>
+  <calc name="damp" type="from_one">10;0</calc>
+  <calc name="mix" type="mul">10</calc>
+  <replace plugtype="native:bandlab:simpleStudioReverb" />
+  <out__param to="size" from="room" type="float" />
+  <out__param to="color" from="damp" type="float" />
+  <out__param to="mix" from="mix" type="float" />
+</plugstatetransform>

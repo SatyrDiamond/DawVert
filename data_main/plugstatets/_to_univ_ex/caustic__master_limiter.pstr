@@ -4,10 +4,13 @@
   <in__param from="37" type="float" />
   <in__param from="38" type="float" />
   
+  <calc name="35" type="to_db"/>
+  <calc name="38" type="to_db"/>
+
   <replace plugtype="universal:limiter" />
 
-  <out__param to="gain" from="35" type="float" />
+  <out__param to="pregain" from="35" type="float" />
   <out__param to="attack" from="36" type="float" />
   <out__param to="release" from="37" type="float" />
-  <out__param to="postgain" from="38" type="float" />
+  <out__param to="gain" from="38" type="float" />
 </plugstatetransform>

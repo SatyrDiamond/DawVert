@@ -1,0 +1,32 @@
+<plugstatetransform daw_out="bandlab" plugtype="universal:eq:3band_channel_adjust">
+
+  <in__named_filter_name name="low_shelf"/>
+  <in__named_filter_param to="filter0Freq" from="freq" type="float"/>
+  <in__named_filter_param to="filter0Gain" from="gain" type="float"/>
+
+  <in__named_filter_name name="peak"/>
+  <in__named_filter_param to="filter1Freq" from="freq" type="float"/>
+  <in__named_filter_param to="filter1Gain" from="gain" type="float"/>
+
+  <in__named_filter_name name="high_shelf"/>
+  <in__named_filter_param to="filter2Freq" from="freq" type="float"/>
+  <in__named_filter_param to="filter2Gain" from="gain" type="bool"/>
+
+  <replace plugtype="native:bandlab:visualEq" />
+  
+  <out__param to="filter0Freq" type="float"/>
+  <out__param to="filter0Gain" type="float"/>
+  <out__param to="filter1Freq" type="float"/>
+  <out__param to="filter1Gain" type="float"/>
+  <out__param to="filter2Freq" type="float"/>
+  <out__param to="filter2Gain" type="float"/>
+  <out__dataval_val to="filter0Active" type="string">true</out__dataval_val>
+  <out__dataval_val to="filter1Active" type="string">true</out__dataval_val>
+  <out__dataval_val to="filter2Active" type="string">true</out__dataval_val>
+  <out__dataval_val to="filter0Type" type="string">lowshelf</out__dataval_val>
+  <out__dataval_val to="filter1Type" type="string">peaking</out__dataval_val>
+  <out__dataval_val to="filter2Type" type="string">highshelf</out__dataval_val>
+  <out__param to="filter0Bandwidth" only_value="1" type="float">0.17</out__param>
+  <out__param to="filter1Bandwidth" only_value="1" type="float">0.17</out__param>
+  <out__param to="filter2Bandwidth" only_value="1" type="float">0.17</out__param>
+</plugstatetransform>

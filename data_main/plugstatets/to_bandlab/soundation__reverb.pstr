@@ -1,0 +1,3 @@
+<plugstatetransform daw_in="soundation" daw_out="bandlab" plugtype="native:soundation:com.soundation.reverb">
+  <replace plugtype="native:bandlab:simpleStudioReverb" />
+</plugstatetransform> 

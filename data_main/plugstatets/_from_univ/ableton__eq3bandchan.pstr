@@ -1,0 +1,30 @@
+<plugstatetransform daw_out="ableton" plugtype="universal:eq:3band_channel">
+  <in__param to="Gain" from="gain_out" type="float"/>
+
+  <in__named_filter_name name="high_pass"/>
+  <in__named_filter_param to="HighpassOn" from="on" type="float"/>
+
+  <in__named_filter_name name="low_shelf"/>
+  <in__named_filter_param to="LowShelfGain" from="gain" type="float"/>
+
+  <in__named_filter_name name="peak"/>
+  <in__named_filter_param to="MidGain" from="gain" type="float"/>
+  <in__named_filter_param to="MidFrequency" from="freq" type="float"/>
+
+  <in__named_filter_name name="high_shelf"/>
+  <in__named_filter_param to="HighShelfGain" from="gain" type="bool"/>
+
+  <calc name="LowShelfGain" type="from_db"/>
+  <calc name="MidGain" type="from_db"/>
+  <calc name="HighShelfGain" type="from_db"/>
+  <calc name="Gain" type="from_db"/>
+
+  <replace plugtype="native:ableton:ChannelEq" />
+  
+  <out__param to="Gain" type="float"/>
+  <out__param to="HighpassOn" type="int"/>
+  <out__param to="LowShelfGain" type="float"/>
+  <out__param to="MidGain" type="float"/>
+  <out__param to="MidFrequency" type="float"/>
+  <out__param to="HighShelfGain" type="float"/>
+</plugstatetransform>

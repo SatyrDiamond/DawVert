@@ -1,0 +1,21 @@
+<plugstatetransform daw_out="amped" plugtype="universal:eq:3band_type2">
+
+  <in__named_filter_name name="high_pass"/>
+  <in__named_filter_param to="hpfreq" from="freq" type="float"/>
+
+  <in__named_filter_name name="peak"/>
+  <in__named_filter_param to="peakgain" from="gain" type="float"/>
+  <in__named_filter_param to="peakfreq" from="freq" type="float"/>
+  <in__named_filter_param to="peakq" from="q" type="float"/>
+
+  <in__named_filter_name name="low_pass"/>
+  <in__named_filter_param to="lpfreq" from="freq" type="float"/>
+
+  <replace plugtype="native:amped:Equalizer" />
+  
+  <out__param to="hpfreq" type="float"/>
+  <out__param to="peakgain" type="float"/>
+  <out__param to="peakfreq" type="float"/>
+  <out__param to="peakq" type="float"/>
+  <out__param to="lpfreq" type="float"/>
+</plugstatetransform>

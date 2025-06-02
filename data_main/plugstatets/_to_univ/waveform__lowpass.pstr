@@ -1,0 +1,19 @@
+<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:lowpass">
+
+  <define_remap name="filter_types" in_type="string" out_type="filter_type">
+    <val in_val="lowpass" out_val="low_pass"/>
+    <val in_val="highpass" out_val="high_pass"/>
+    <fallback out_val="low_pass"/>
+  </define_remap>
+
+  <in__dataval from="mode" type="string" />
+  <in__param to="frequency" type="float">7000</in__param>
+
+  <remap name="mode" remapdef="filter_types"/>
+
+  <replace_hard plugtype="universal:filter:single" />
+
+  <out__filterparam to="on" type="bool" only_value="1">1</out__filterparam>
+  <out__filterparam to="type" from="mode"/>
+  <out__filterparam to="freq" from="frequency" type="float"/>
+</plugstatetransform>

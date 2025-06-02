@@ -1,0 +1,46 @@
+<plugstatetransform daw_in="waveform" plugtype="native:tracktion:4bandEq">
+  <in__param from="loFreq" type="float"/>
+  <in__param from="loGain" type="float"/>
+  <in__param from="loQ" type="float"/>
+  <in__param from="midFreq1" type="float"/>
+  <in__param from="midFreq2" type="float"/>
+  <in__param from="midGain1" type="float"/>
+  <in__param from="midGain2" type="float"/>
+  <in__param from="midQ1" type="float"/>
+  <in__param from="midQ2" type="float"/>
+  <in__param from="hiFreq" type="float"/>
+  <in__param from="hiGain" type="float"/>
+  <in__param from="hiQ" type="float"/>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">low_shelf</out__named_filterparam>
+  <out__named_filterparam to="freq" from="loFreq" type="float"/>
+  <out__named_filterparam to="gain" from="loGain" type="float"/>
+  <out__named_filterparam to="q" from="loQ" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" from="midFreq1" type="float"/>
+  <out__named_filterparam to="gain" from="midGain1" type="float"/>
+  <out__named_filterparam to="q" from="midQ1" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+  <out__named_filterparam to="freq" from="midFreq2" type="float"/>
+  <out__named_filterparam to="gain" from="midGain2" type="float"/>
+  <out__named_filterparam to="q" from="midQ2" type="float"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">high_shelf</out__named_filterparam>
+  <out__named_filterparam to="freq" from="hiFreq" type="float"/>
+  <out__named_filterparam to="gain" from="hiGain" type="float"/>
+  <out__named_filterparam to="q" from="hiQ" type="float"/>
+
+  <out__param to="gain_out" from="level" type="float">0</out__param>
+</plugstatetransform>

@@ -1,0 +1,19 @@
+<plugstatetransform daw_out="bandlab" plugtype="universal:eq:3band_channel">
+
+  <in__named_filter_name name="low_shelf"/>
+  <in__named_filter_param to="lowGain" from="gain" type="float"/>
+
+  <in__named_filter_name name="peak"/>
+  <in__named_filter_param to="midGain" from="gain" type="float"/>
+  <in__named_filter_param to="midFreq" from="freq" type="float"/>
+
+  <in__named_filter_name name="high_shelf"/>
+  <in__named_filter_param to="highGain" from="gain" type="bool"/>
+
+  <replace plugtype="native:bandlab:threeBandEq" />
+  
+  <out__param to="lowGain" type="float"/>
+  <out__param to="midGain" type="float"/>
+  <out__param to="midFreq" type="float"/>
+  <out__param to="highGain" type="float"/>
+</plugstatetransform>

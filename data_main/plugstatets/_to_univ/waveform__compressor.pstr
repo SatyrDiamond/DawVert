@@ -1,0 +1,23 @@
+<plugstatetransform daw_in="tracktion_edit" plugtype="native:tracktion:compressor">
+  <in__param from="ratio" type="float" />
+  <in__param from="attack" type="float" />
+  <in__param from="release" type="float" />
+  <in__param from="outputDb" type="float" />
+  <in__param from="threshold" type="float" />
+  
+  <calc name="attack" type="div">1000</calc>
+  <calc name="release" type="div">1000</calc>
+  <calc name="threshold" type="to_db"/>
+  <calc name="ratio" type="pow">0.21</calc>
+  <calc name="ratio" type="to_db"/>
+  <calc name="ratio" type="mul">-1</calc>
+  <calc name="ratio" type="add">1</calc>
+
+  <replace plugtype="universal:compressor" />
+
+  <out__param to="attack" type="float" />
+  <out__param to="postgain" from="outputDb" type="float" />
+  <out__param to="ratio" type="float" />
+  <out__param to="release" type="float" />
+  <out__param to="threshold" type="float" />
+</plugstatetransform>

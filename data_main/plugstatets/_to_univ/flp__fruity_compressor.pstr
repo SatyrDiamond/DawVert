@@ -1,5 +1,4 @@
 <plugstatetransform daw_in="flp" plugtype="native:flstudio:fruity compressor">
-
   <in__param from="threshold" type="int" />
   <in__param from="ratio" type="int" />
   <in__param from="gain" type="int" />

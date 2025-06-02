@@ -25,7 +25,7 @@ class plugconv(plugins.base):
 		in_dict['out_daws'] = ['amped']
 
 	def convert(self, convproj_obj, plugin_obj, pluginid, dawvert_intent):
-		if plugin_obj.eq_to_bands(convproj_obj, pluginid):
+		if plugin_obj.eq_to_bands_only(convproj_obj, pluginid, ['8limited', '3band_channel']):
 			eqbands = [x for x in plugin_obj.state.eq]
 			gain_out = plugin_obj.params.get("gain_out", 0).value
 			plugin_obj.replace('native', 'amped', 'EqualizerPro')

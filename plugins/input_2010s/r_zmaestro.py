@@ -211,7 +211,7 @@ class input_zmaestro(plugins.base):
 					stretch_obj = sp_obj.stretch
 
 					if not part.oneshot:
-						stretch_obj.timing.set__real_rate(project_obj.tempo, (part.recordedtempo/part.currenttempo)*tempodiv)
+						stretch_obj.timing.set__orgtempo(part.recordedtempo)
 						stretch_obj.preserve_pitch = True
 					else:
 						stretch_obj.timing.set__speed(1)

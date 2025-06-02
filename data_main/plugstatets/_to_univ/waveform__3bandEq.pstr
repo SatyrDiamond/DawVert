@@ -10,7 +10,7 @@
   <calc name="freq2" type="midi2freq"/>
   <calc name="freq3" type="midi2freq"/>
 
-  <replace plugtype="universal:eq:3band_channel" />
+  <replace plugtype="universal:eq:3band_channel_adjust" />
 
   <out__named_filter_add name="low_shelf"/>
   <out__named_filterparam to="on" type="bool" only_value="1">1</out__named_filterparam>

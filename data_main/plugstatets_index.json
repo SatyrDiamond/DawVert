@@ -377,20 +377,6 @@
     ],
     "priority": 0
   },
-  "data_main\\plugstatets\\to_bandlab\\ableton__channeleq.pstr": {
-    "file": "data_main\\plugstatets\\to_bandlab\\ableton__channeleq.pstr",
-    "daw_in": [
-      "ableton"
-    ],
-    "daw_out": [
-      "bandlab"
-    ],
-    "plugtype_in": "native:ableton:ChannelEq",
-    "plugtype_out": [
-      "native:bandlab:threeBandEq"
-    ],
-    "priority": 0
-  },
   "data_main\\plugstatets\\to_bandlab\\ableton__chorus.pstr": {
     "file": "data_main\\plugstatets\\to_bandlab\\ableton__chorus.pstr",
     "daw_in": [
@@ -1224,6 +1210,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\ableton__eq3bandchan.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\ableton__eq3bandchan.pstr",
+    "daw_out": [
+      "ableton"
+    ],
+    "plugtype_in": "universal:eq:3band_channel",
+    "plugtype_out": [
+      "native:ableton:ChannelEq"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\ableton__expander.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\ableton__expander.pstr",
     "daw_out": [
@@ -1312,6 +1309,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\amped__3band_type2.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\amped__3band_type2.pstr",
+    "daw_out": [
+      "amped"
+    ],
+    "plugtype_in": "universal:eq:3band_type2",
+    "plugtype_out": [
+      "native:amped:Equalizer"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\amped__compressor.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\amped__compressor.pstr",
     "daw_out": [
@@ -1389,6 +1397,17 @@
     ],
     "priority": 100
   },
+  "data_main\\plugstatets\\_from_univ\\bandlab__eq3bandchan.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\bandlab__eq3bandchan.pstr",
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "universal:eq:3band_channel",
+    "plugtype_out": [
+      "native:bandlab:threeBandEq"
+    ],
+    "priority": 100
+  },
   "data_main\\plugstatets\\_from_univ\\bandlab__filter.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__filter.pstr",
     "daw_out": [
@@ -1441,6 +1460,17 @@
     "plugtype_in": "universal:reverb",
     "plugtype_out": [
       "native:bandlab:reverbHybrid"
+    ],
+    "priority": 100
+  },
+  "data_main\\plugstatets\\_from_univ\\flp__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_from_univ\\flp__compressor.pstr",
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "universal:compressor",
+    "plugtype_out": [
+      "native:flstudio:fruity compressor"
     ],
     "priority": 100
   },
@@ -2137,7 +2167,18 @@
     ],
     "plugtype_in": "native:tracktion:3bandEq",
     "plugtype_out": [
-      "universal:eq:3band_channel"
+      "universal:eq:3band_channel_adjust"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\waveform__4bandEq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__4bandEq.pstr",
+    "daw_in": [
+      "waveform"
+    ],
+    "plugtype_in": "native:tracktion:4bandEq",
+    "plugtype_out": [
+      "universal:eq:bands"
     ],
     "priority": -100
   },
@@ -2147,6 +2188,17 @@
       "tracktion_edit"
     ],
     "plugtype_in": "native:tracktion:comp",
+    "plugtype_out": [
+      "universal:compressor"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\waveform__compressor.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__compressor.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "plugtype_in": "native:tracktion:compressor",
     "plugtype_out": [
       "universal:compressor"
     ],
@@ -2193,6 +2245,17 @@
     "plugtype_in": "native:tracktion:limiter",
     "plugtype_out": [
       "universal:limiter"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\waveform__lowpass.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\waveform__lowpass.pstr",
+    "daw_in": [
+      "tracktion_edit"
+    ],
+    "plugtype_in": "native:tracktion:lowpass",
+    "plugtype_out": [
+      "universal:filter:single"
     ],
     "priority": -100
   },

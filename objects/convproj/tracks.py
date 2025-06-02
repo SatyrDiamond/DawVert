@@ -155,13 +155,12 @@ class cvpj_instrument:
 		m_inst = midi_obj.patch
 		m_drum = midi_obj.drum
 		m_dev = midi_obj.device
-
-		midib = {}
-		midib['bank_hi'] = m_bank_hi
-		midib['bank'] = m_bank
-		midib['patch'] = m_inst
-		midib['drum'] = m_drum
-		midib['dev'] = m_dev
+		indict = {}
+		indict['bank_hi'] = midi_obj.bank_hi
+		indict['bank'] = midi_obj.bank
+		indict['patch'] = midi_obj.patch
+		indict['drum'] = midi_obj.drum
+		indict['device'] = midi_obj.device
 
 		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, midib)
 		plugin_obj.role = 'synth'
@@ -252,7 +251,13 @@ class cvpj_track:
 		m_inst = midi_obj.patch
 		m_drum = midi_obj.drum
 		m_dev = midi_obj.device
-		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, m_bank_hi, m_bank, m_inst, m_drum, m_dev)
+		indict = {}
+		indict['bank_hi'] = midi_obj.bank_hi
+		indict['bank'] = midi_obj.bank
+		indict['patch'] = midi_obj.patch
+		indict['drum'] = midi_obj.drum
+		indict['device'] = midi_obj.device
+		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, indict)
 		plugin_obj.role = 'synth'
 		self.plugslots.synth = plug_id
 		self.params.add('usemasterpitch', not m_drum, 'bool')

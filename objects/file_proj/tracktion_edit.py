@@ -113,7 +113,7 @@ class tracktion_plugin:
 		for n, v in xmldata.attrib.items():
 			if n == 'type': self.plugtype = v
 			elif n == 'windowLocked': self.windowLocked = int(v)
-			elif n == 'id': self.id_num = int(v)
+			elif n == 'id': self.id_num = v
 			elif n == 'enabled': self.enabled = int(v)
 			elif n == 'presetDirty': self.presetDirty = int(v)
 			elif n == 'windowX': self.windowX = int(v)
@@ -255,7 +255,7 @@ class tracktion_midiclip:
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
-			if n == 'id': self.id_num = int(v)
+			if n == 'id': self.id_num = v
 			elif n == 'name': self.name = v
 			elif n == 'start': self.start = float(v)
 			elif n == 'length': self.length = float(v)
@@ -380,7 +380,8 @@ class tracktion_audioclip_fx:
 		fx_type = xmldata.get('type')
 		if fx_type: self.fx_type = fx_type
 		for subxml in xmldata:
-			if subxml.tag == 'PLUGIN': self.plugin.load(subxml)
+			if subxml.tag in ['PLUGIN', 'FILTER']:
+				self.plugin.load(subxml)
 			if subxml.tag == 'WARPTIME': 
 				self.warptime = tracktion_warptime()
 				self.warptime.load(subxml)
@@ -447,12 +448,13 @@ class tracktion_audioclip:
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
-			if n == 'id': self.id_num = int(v)
+			if n == 'id': self.id_num = v
 			elif n == 'name': self.name = str(v)
 			elif n == 'start': self.start = float(v)
 			elif n == 'length': self.length = float(v)
 			elif n == 'offset': self.offset = float(v)
 			elif n == 'source': self.source = str(v)
+			elif n == 'mediaId': self.source = str(v)
 			elif n == 'sync': self.sync = int(v)
 			elif n == 'elastiqueMode': self.elastiqueMode = int(v)
 			elif n == 'pan': self.pan = float(v)
@@ -637,7 +639,7 @@ class tracktion_stepclip:
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
-			if n == 'id': self.id_num = int(v)
+			if n == 'id': self.id_num = v
 			elif n == 'name': self.name = str(v)
 			elif n == 'start': self.start = float(v)
 			elif n == 'length': self.length = float(v)
@@ -723,7 +725,7 @@ class tracktion_foldertrack:
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
-			if n == 'id': self.id_num = int(v)
+			if n == 'id': self.id_num = v
 			elif n == 'height': self.height = float(v)
 			elif n == 'expanded': self.expanded = int(v)
 			elif n == 'name': self.name = v
@@ -735,7 +737,7 @@ class tracktion_foldertrack:
 				track_obj = tracktion_track()
 				track_obj.load(subxml)
 				self.tracks.append(track_obj)
-			if subxml.tag == 'PLUGIN':
+			if subxml.tag in ['PLUGIN', 'FILTER']:
 				plugin_obj = tracktion_plugin()
 				plugin_obj.load(subxml)
 				self.plugins.append(plugin_obj)
@@ -772,7 +774,7 @@ class tracktion_track:
 
 	def load(self, xmldata):
 		for n, v in xmldata.attrib.items():
-			if n == 'id': self.id_num = int(v)
+			if n == 'id': self.id_num = v
 			elif n == 'midiVProp': self.midiVProp = float(v)
 			elif n == 'midiVOffset': self.midiVOffset = float(v)
 			elif n == 'colour': self.colour = v
@@ -783,7 +785,7 @@ class tracktion_track:
 
 		for subxml in xmldata:
 			if subxml.tag == 'MACROPARAMETERS': self.macroparameters.load(subxml)
-			if subxml.tag == 'PLUGIN':
+			if subxml.tag in ['PLUGIN', 'FILTER']:
 				plugin_obj = tracktion_plugin()
 				plugin_obj.load(subxml)
 				self.plugins.append(plugin_obj)
@@ -801,6 +803,13 @@ class tracktion_track:
 				stepclip_obj = tracktion_stepclip()
 				stepclip_obj.load(subxml)
 				self.stepclips.append(stepclip_obj)
+			if subxml.tag == 'CLIP':
+				if 'type' in subxml.attrib:
+					cliptype = subxml.attrib['type']
+					if cliptype == 'wave': 
+						audioclip_obj = tracktion_audioclip()
+						audioclip_obj.load(subxml)
+						self.audioclips.append(audioclip_obj)
 
 	def write(self, xmldata):
 		tempxml = ET.SubElement(xmldata, "TRACK")
@@ -903,10 +912,11 @@ class tracktion_edit:
 			elif xmlpart.tag == 'ID3VORBISMETADATA': self.id3vorbismetadata = xmlpart.attrib
 			elif xmlpart.tag == 'MASTERVOLUME':
 				for subxml in xmlpart:
-					if subxml.tag == 'PLUGIN': self.mastervolume.load(subxml)
+					if subxml.tag in ['PLUGIN', 'FILTER']:
+						self.mastervolume.load(subxml)
 			elif xmlpart.tag == 'MASTERPLUGINS':
 				for subxml in xmlpart:
-					if subxml.tag == 'PLUGIN':
+					if subxml.tag in ['PLUGIN', 'FILTER']:
 						t_plug = tracktion_plugin()
 						t_plug.load(subxml)
 						self.masterplugins.append(t_plug)

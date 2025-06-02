@@ -16,16 +16,13 @@
   <in__param to="gain" type="float" />
   <in__dataval to="filterType" type="float" />
 
+  <remap name="filterType" remapdef="filter_types"/>
+
   <replace plugtype="universal:filter:single" />
 
-  <out__filterparam to="on" type="bool">1</out__filterparam>
-  
+  <out__filterparam to="on" type="bool" only_value="1">1</out__filterparam>
   <out__filterparam to="freq" from="frequency" type="float"/>
-
   <out__filterparam to="q" from="q" type="float"/>
-
   <out__filterparam to="gain" from="gain" type="float"/>
-
-  <remap name="filterType" remapdef="filter_types"/>
   <out__filterparam to="type" from="filterType" type="float"/>
 </plugstatetransform>

@@ -1,0 +1,6 @@
+<plugstatetransform daw_in="flp" daw_out="bandlab" plugtype="native:flstudio:Fruity Convolver">
+  <in__param from="DryWet" type="float" />
+  <replace plugtype="native:bandlab:reverbHybrid" />
+  <out__param to="dryWetMix" from="DryWet" type="float" />
+  <out__dataval_val to="irType" type="string">chamberShort</out__dataval_val>
+</plugstatetransform> 

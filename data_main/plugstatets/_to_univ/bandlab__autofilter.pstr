@@ -1,0 +1,22 @@
+<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:autoFilter">
+  <define_remap name="filter_types" in_type="string" out_type="filter_type">
+    <val in_val="lpf" out_val="low_pass"/>
+    <val in_val="hpf" out_val="high_pass"/>
+    <val in_val="bpf" out_val="band_pass"/>
+    <val in_val="brf" out_val="notch"/>
+    <fallback out_val="low_pass"/>
+  </define_remap>
+
+  <in__param from="frequency" type="float"/>
+  <in__param from="resonance" type="float"/>
+  <in__dataval from="filterType" type="string"/>
+
+  <remap name="filterType" remapdef="filter_types"/>
+
+  <replace_hard plugtype="universal:filter:single" />
+
+  <out__filterparam to="on" type="bool" only_value="1">1</out__filterparam>
+  <out__filterparam to="freq" from="frequency" type="float"/>
+  <out__filterparam to="q" from="resonance" type="float"/>
+  <out__filterparam to="type" from="filterType" type="float"/>
+</plugstatetransform>

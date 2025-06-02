@@ -561,6 +561,20 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\to_bandlab\\flp__fruity convolver.pstr": {
+    "file": "data_main\\plugstatets\\to_bandlab\\flp__fruity convolver.pstr",
+    "daw_in": [
+      "flp"
+    ],
+    "daw_out": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:flstudio:Fruity Convolver",
+    "plugtype_out": [
+      "native:bandlab:reverbHybrid"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\to_bandlab\\flp__fruity phaser.pstr": {
     "file": "data_main\\plugstatets\\to_bandlab\\flp__fruity phaser.pstr",
     "daw_in": [
@@ -1871,6 +1885,17 @@
     "plugtype_in": "native:amped:Vibrato",
     "plugtype_out": [
       "universal:vibrato"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ\\bandlab__autofilter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ\\bandlab__autofilter.pstr",
+    "daw_in": [
+      "bandlab"
+    ],
+    "plugtype_in": "native:bandlab:autoFilter",
+    "plugtype_out": [
+      "universal:filter:single"
     ],
     "priority": -100
   },

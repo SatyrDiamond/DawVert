@@ -71,7 +71,7 @@ class info_plugconv:
 
 class info_plugconv_ext:
 	def __init__(self):
-		self.in_plugin = []
+		self.in_plugin = ''
 		self.ext_formats = []
 		self.direction = 'to'
 		self.plugincat = []

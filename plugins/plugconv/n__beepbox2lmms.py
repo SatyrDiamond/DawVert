@@ -12,7 +12,7 @@ class plugconv(plugins.base):
 		return -100
 	
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = 'native:jummbox'
+		in_dict['in_plugin'] = 'native:jummbox'
 		in_dict['in_daws'] = ['jummbox']
 		in_dict['out_plugins'] = ['native:lmms']
 		in_dict['out_daws'] = ['lmms']

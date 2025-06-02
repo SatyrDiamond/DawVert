@@ -22,7 +22,7 @@ class plugconv(plugins.base):
 		return -100
 	
 	def get_prop(self, in_dict):
-		in_dict['in_plugins'] = 'native:flstudio'
+		in_dict['in_plugin'] = 'native:flstudio'
 		in_dict['in_daws'] = ['flp']
 		in_dict['out_plugins'] = ['native:lmms']
 		in_dict['out_daws'] = ['lmms']

@@ -112,6 +112,41 @@ class action__in__filter_param:
 	def do_action(self, manu_obj):
 		manu_obj.in__filter_param(self.storename, self.in_name)
 
+class action__in__named_filter_name:
+	def __init__(self):
+		self.filt_name = None
+
+	def from_xml(self, xmldata):
+		self.filt_name = xmldata.get('name')
+
+	def do_action(self, manu_obj):
+		manu_obj.in__named_filter_name(self.filt_name)
+
+class action__in__named_filter_param:
+	def __init__(self):
+		self.in_name = None
+		self.storename = None
+		self.valtype = None
+		self.filt_name = None
+
+	def from_xml(self, xmldata):
+		v_from = xmldata.get('from')
+		v_to = xmldata.get('to')
+		if v_from and not v_to: 
+			self.in_name = v_from
+			self.storename = v_from
+		elif not v_from and v_to: 
+			self.in_name = v_to
+			self.storename = v_to
+		elif v_from and v_to:
+			self.in_name = v_from
+			self.storename = v_to
+		self.valtype = xmldata.get('type')
+		self.filt_name = xmldata.get('name')
+
+	def do_action(self, manu_obj):
+		manu_obj.in__named_filter_param(self.storename, self.in_name, self.filt_name)
+
 class action__replace:
 	def __init__(self):
 		self.plugtype = []
@@ -484,6 +519,9 @@ actionclasses['in__wet'] = action__in__wet
 actionclasses['in__filterparam'] = action__in__filter_param
 actionclasses['in__value'] = action__in__value
 actionclasses['in__dataval'] = action__in__dataval
+actionclasses['in__named_filter_name'] = action__in__named_filter_name
+actionclasses['in__named_filter_param'] = action__in__named_filter_param
+
 actionclasses['out__param'] = action__out__param
 actionclasses['out__wet'] = action__out__wet
 actionclasses['out__filterparam'] = action__out__filter_param
@@ -492,6 +530,7 @@ actionclasses['out__named_filter_add'] = action__out__named_filter_add
 actionclasses['out__dataval'] = action__out__dataval
 actionclasses['out__dataval_val'] = action__out__dataval_val
 actionclasses['out__eq_add'] = action__out__eq_add
+
 actionclasses['cond__single'] = action__cond__single
 actionclasses['cond__string_eq'] = action__cond__string_eq
 actionclasses['calc'] = action__calc

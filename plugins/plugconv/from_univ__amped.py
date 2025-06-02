@@ -19,7 +19,7 @@ class plugconv(plugins.base):
 		return 'plugconv'
 	
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = 'universal:eq'
+		in_dict['in_plugin'] = 'universal:eq'
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = ['native:amped:EqualizerPro']
 		in_dict['out_daws'] = ['amped']

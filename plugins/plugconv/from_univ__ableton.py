@@ -16,7 +16,7 @@ class plugconv(plugins.base):
 		return 100
 	
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = ['universal']
+		in_dict['in_plugin'] = 'universal'
 		in_dict['in_daws'] = []
 		in_dict['out_plugins'] = ['native:ableton']
 		in_dict['out_daws'] = ['ableton']

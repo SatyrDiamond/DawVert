@@ -421,6 +421,8 @@ class cvpj_plugin:
 		return self.state.eq.to_8limited(convproj_obj, pluginid)
 	def eq_to_bands(self, convproj_obj, pluginid): 
 		return self.state.eq_to_bands(convproj_obj, pluginid, self.type)
+	def eq_to_bands_only(self, convproj_obj, pluginid, onlyvals): 
+		return self.state.eq_to_bands_only(convproj_obj, pluginid, self.type, onlyvals)
 
 	# -------------------------------------------------- named_eq
 	def named_eq_add(self, eq_name): return self.state.named_eq_add(eq_name)

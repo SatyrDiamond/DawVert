@@ -125,20 +125,34 @@ class plug_manu:
 		self.cur_params[storename] = valuepack(value, None, valtype_from_obj(value))
 		return self.cur_params[storename]
 
-	def in__filter_param(self, storename, filterparam):
-		if DEBUG__TXT: print('DEBUG: in__filter_param:', storename.__repr__(), filterparam.__repr__())
-		auto_obj = self.convproj_obj.automation.pop_f(['filter', self.pluginid, filterparam])
+	def internal__in__filter_param(self, storename, filterparam, autolocstart, filter_obj):
+		auto_obj = self.convproj_obj.automation.pop_f(autolocstart+[filterparam])
 		outv = None
-		plugin_obj = self.plugin_obj
-		if filterparam == 'on': outv = valuepack(plugin_obj.filter.on, auto_obj, 'bool')
-		if filterparam == 'freq': outv = valuepack(plugin_obj.filter.freq, auto_obj, 'numeric')
-		if filterparam == 'q': outv = valuepack(plugin_obj.filter.q, auto_obj, 'numeric')
-		if filterparam == 'gain': outv = valuepack(plugin_obj.filter.gain, auto_obj, 'numeric')
-		if filterparam == 'slope': outv = valuepack(plugin_obj.filter.slope, auto_obj, 'numeric')
-		if filterparam == 'type': outv = valuepack(plugin_obj.filter.type, auto_obj, 'filter_type')
+		if filterparam == 'on': outv = valuepack(filter_obj.on, auto_obj, 'bool')
+		if filterparam == 'freq': outv = valuepack(filter_obj.freq, auto_obj, 'numeric')
+		if filterparam == 'q': outv = valuepack(filter_obj.q, auto_obj, 'numeric')
+		if filterparam == 'gain': outv = valuepack(filter_obj.gain, auto_obj, 'numeric')
+		if filterparam == 'slope': outv = valuepack(filter_obj.slope, auto_obj, 'numeric')
+		if filterparam == 'type': outv = valuepack(filter_obj.type, auto_obj, 'filter_type')
 		if outv is not None: 
 			self.cur_params[storename] = outv
 			return self.cur_params[storename]
+
+	def in__filter_param(self, storename, filterparam):
+		if DEBUG__TXT: print('DEBUG: in__filter_param:', storename.__repr__(), filterparam.__repr__())
+		self.internal__in__filter_param(storename, filterparam, ['filter', self.pluginid], self.plugin_obj.filter)
+
+	def in__named_filter_name(self, filt_name):
+		if DEBUG__TXT: print('DEBUG: in__named_filter_name:', filt_name)
+		self.cur_eq_name = filt_name
+
+	def in__named_filter_param(self, storename, filterparam, filt_name):
+		if DEBUG__TXT: print('DEBUG: in__named_filter_name:', storename, filterparam, filt_name)
+		filterid = filt_name if filt_name else self.cur_eq_name
+		if filterid:
+			f_exists, f_obj = self.plugin_obj.named_filter_get_exists(filterid)
+			if f_exists:
+				self.internal__in__filter_param(storename, filterparam, ['n_filter', self.pluginid, filterid], f_obj)
 
 # --------------------------------------------------------- OUTPUT ---------------------------------------------------------
 

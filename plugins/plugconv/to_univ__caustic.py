@@ -13,7 +13,7 @@ class plugconv(plugins.base):
 		return 0
 
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = 'native:caustic'
+		in_dict['in_plugin'] = 'native:caustic'
 		in_dict['in_daws'] = ['caustic']
 		in_dict['out_plugins'] = ['universal']
 		in_dict['out_daws'] = []

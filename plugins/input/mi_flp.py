@@ -850,7 +850,7 @@ class input_flp(plugins.base):
 			if mixer_eq != [[0, 0], [0, 0], [0, 0]]: eq_used = False
 
 			if eq_used:
-				plugin_obj = convproj_obj.plugin__add(eq_fxid, 'universal', 'eq', 'bands')
+				plugin_obj = convproj_obj.plugin__add(eq_fxid, 'universal', 'eq', '3band_channel')
 				for n, e in enumerate(mixer_eq):
 					eq_freq, eq_level = e
 					eq_level /= 65536
@@ -858,9 +858,10 @@ class input_flp(plugins.base):
 					eq_freq **= 0.5
 					eq_freq = 10 * 1600**eq_freq
 
-					filter_obj, filterid = plugin_obj.eq_add()
+					filter_name = ['low_shelf','peak','high_shelf'][n]
+					filter_obj = plugin_obj.named_filter_add(filter_name)
 					filter_obj.freq = eq_freq
-					filter_obj.type.set(['low_shelf','peak','high_shelf'][n], None)
+					filter_obj.type.set(filter_name, None)
 					filter_obj.gain = eq_level
 				fxchannel_obj.plugslots.slots_mixer.append(eq_fxid)
 

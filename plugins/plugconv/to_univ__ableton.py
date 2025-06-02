@@ -16,7 +16,7 @@ class plugconv(plugins.base):
 		return 0
 
 	def get_prop(self, in_dict): 
-		in_dict['in_plugins'] = 'native:ableton'
+		in_dict['in_plugin'] = 'native:ableton'
 		in_dict['in_daws'] = ['ableton']
 		in_dict['out_plugins'] = ['universal']
 		in_dict['out_daws'] = []
@@ -30,7 +30,7 @@ class plugconv(plugins.base):
 			p_FilterType = plugin_obj.params.get('FilterType', 1).value
 			p_Slope = plugin_obj.params.get('Slope', 0).value
 
-			plugin_obj.replace('universal', 'filter', None)
+			plugin_obj.replace('universal', 'filter', 'single')
 
 			filter_obj = plugin_obj.filter
 			filter_obj.on = True

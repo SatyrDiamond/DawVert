@@ -1763,7 +1763,7 @@
     ],
     "plugtype_in": "native:amped:Equalizer",
     "plugtype_out": [
-      "universal:eq:8limited"
+      "universal:eq:3band_type2"
     ],
     "priority": -100
   },
@@ -2137,7 +2137,7 @@
     ],
     "plugtype_in": "native:tracktion:3bandEq",
     "plugtype_out": [
-      "universal:eq:8limited"
+      "universal:eq:3band_channel"
     ],
     "priority": -100
   },

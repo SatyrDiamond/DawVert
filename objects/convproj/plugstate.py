@@ -470,6 +470,16 @@ class cvpj_plugin_state:
 		if type_obj.check_match('universal', 'eq', 'bands'):
 			return True
 
+	def eq_to_bands_only(self, convproj_obj, pluginid, type_obj, onlyvals):
+		if type_obj.check_match('universal', 'eq', '8limited') and '8limited' in onlyvals:
+			return self.eq.from_8limited(pluginid)
+		if type_obj.check_match('universal', 'eq', '3band_channel') and '3band_channel' in onlyvals:
+			return self.eq.from_3band_channel(pluginid)
+		if type_obj.check_match('universal', 'eq', '3band_type2') and '3band_type2' in onlyvals:
+			return self.eq.from_3band_type2(pluginid)
+		if type_obj.check_match('universal', 'eq', 'bands'):
+			return True
+
 	# -------------------------------------------------- named_eq
 	def named_eq_add(self, eq_name): 
 		if eq_name not in self.named_eq: self.named_eq[eq_name] = eqfilter.cvpj_eq(self, eq_name)

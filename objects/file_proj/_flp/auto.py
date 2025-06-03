@@ -308,7 +308,6 @@ class flp_autopoint:
 		self.selected = event_bio.uint8()
 		self.t_sign = event_bio.uint8()
 
-
 class flp_autopoints:
 	def __init__(self):
 		pass

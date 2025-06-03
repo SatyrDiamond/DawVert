@@ -177,18 +177,22 @@ def encode_devices(convproj_obj, amped_tr_devices, track_obj, amped_autodata):
 			if 'pad' in drumplerdata:
 				for num, data in drumplerdata['pad'].items():
 					keynum = int(num)-1
-					sp_obj = plugin_obj.sampledrum_add(keynum, None)
+
+					drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+					drumpad_obj.key = keynum
+					drumpad_obj.vol = data['level']
+					drumpad_obj.pan = data['pan']
+
+					layer_obj.samplepartid = 'drum_%i' % keynum
+					sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 					sp_obj.start = data['start']
 					sp_obj.end = data['end']
 					sp_obj.pitch = data['pitch']
-					sp_obj.vol = data['level']
-					sp_obj.pan = data['pan']
 					sp_obj.point_value_type = 'percent'
-					sp_obj.trigger = 'oneshot'
 					if paddata: 
 						padpart = paddata[keynum-1]
 						if 'url' in padpart: sp_obj.sampleref = padpart['url']
-						if 'name' in padpart: sp_obj.visual.name = padpart['name']
+						if 'name' in padpart: drumpad_obj.visual.name = padpart['name']
 
 		elif devicetype == ['SF2', 'GM Player']:
 			track_obj.plugslots.set_synth(pluginid)

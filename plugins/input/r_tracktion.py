@@ -181,7 +181,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 			elif vstname == 'Micro Drum Sampler':
 				from objects import colors
 	
-				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
 				track_obj.plugslots.set_synth(pluginid)
 	
 				if "state" in wf_plugin.params:

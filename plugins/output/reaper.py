@@ -143,6 +143,31 @@ def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 
 			make_sampler(rpp_fxchain, sampler_params)
 
+		if plugin_obj.check_match('universal', 'sampler', 'drums'):
+			for drumpad in plugin_obj.drumpad_getall():
+				keys = [drumpad.key]+drumpad.key_copy
+				for key in keys:
+					for layer_obj in drumpad.layers:
+						sp_obj = plugin_obj.samplepart_get(layer_obj.samplepartid)
+		
+						sampler_params = base_sampler.copy()
+						sampler_params['mode'] = 2
+						sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
+						sampler_params['key_start'] = (key+60)/127
+						sampler_params['key_end'] = (key+60)/127
+						sampler_params['obey_note_offs'] = 0
+
+						pitch = -60 + key+60 - key
+						sampler_params['pitch_start'] = (pitch/80)/2 + 0.5
+
+						_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+
+						do_sample_part(sampler_params, sampleref_obj, sp_obj)
+						if sampleref_obj:
+							adsr_obj = plugin_obj.env_asdr_get(sp_obj.envs['vol'] if 'vol' in sp_obj.envs else 'vol')
+							do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
+						make_sampler(rpp_fxchain, sampler_params)
+
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'multi'):
 			adsr_obj = plugin_obj.env_asdr_get('vol')
 			for sampleregion in plugin_obj.sampleregion_getall():

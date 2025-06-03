@@ -355,19 +355,23 @@ def do_device(convproj_obj, device_obj, projfilepath, zipfile, pluginid, numberi
 			plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'drums')
 			plugin_obj.role = 'synth'
 
-			for n, flm_sample in enumerate(device_obj.drumsamples):
-				keynum = n
+			for keynum, flm_sample in enumerate(device_obj.drumsamples):
 				sample_path = get_path(flm_sample.sample_path)
 				sampleref_obj = do_sample(convproj_obj, sample_path, zipfile, projfilepath)
-				sp_obj = plugin_obj.sampledrum_add(keynum, None)
+
+				drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+				drumpad_obj.key = keynum
+				if flm_sample.sample_name: 
+					drumpad_obj.visual.name = flm_sample.sample_name
+				if flm_sample.prms:
+					drumpad_obj.vol = flm_sample.prms[0]
+					drumpad_obj.pan = (flm_sample.prms[1]-0.5)*2
+
+				layer_obj.samplepartid = 'drum_%i' % keynum
+				sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 				sp_obj.sampleref = sample_path
 				sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
 				sp_obj.reverse = bool(flm_sample.main_unk_4)
-				sp_obj.trigger = 'oneshot'
-				if flm_sample.prms:
-					sp_obj.reverse = bool(flm_sample.main_unk_4)
-					sp_obj.vol = flm_sample.prms[0]
-					sp_obj.pan = (flm_sample.prms[1]-0.5)*2
 
 	elif device_obj.type == 1:
 		if device_obj.cstm:

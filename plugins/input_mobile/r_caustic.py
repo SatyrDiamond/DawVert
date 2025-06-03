@@ -251,7 +251,8 @@ class input_cvpj_r(plugins.base):
 				track_obj.params.add('usemasterpitch', False, 'bool')
 				track_obj.is_drum = True
 
-				samplecount = 0
+				drumdata = []
+
 				for samplecount, bbox_sample in enumerate(machdata.samples):
 					region = bbox_sample
 					sampleref = machid + '_BeatBox_'+str(samplecount)
@@ -264,20 +265,36 @@ class input_cvpj_r(plugins.base):
 						audio_obj.pcm_from_bytes(region.data)
 						audio_obj.to_file_wav(wave_path)
 
-					midkey = samplecount-12
-
 					sampleref_obj = convproj_obj.sampleref__add(wave_path, wave_path, None)
 					sampleref_obj.set_fileformat('wav')
 					audio_obj.to_sampleref_obj(sampleref_obj)
 
-					sp_obj = plugin_obj.sampledrum_add(midkey, None)
-					sp_obj.visual.name = region.name
+					drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+					drumpad_obj.key = samplecount-12
+					drumpad_obj.visual.name = region.name
+					drumpad_obj.enabled = not bool(region.mute)
+
+					layer_obj.samplepartid = 'drum_%i' % samplecount
+					sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 					sp_obj.start = 0
 					sp_obj.end = region.len
-					sp_obj.trigger = 'oneshot'
-					sp_obj.sampleref = wave_path
 					sp_obj.point_value_type = "samples"
-					sp_obj.vol = int(not bool(region.mute))
+					sp_obj.sampleref = wave_path
+					drumdata.append([drumpad_obj, sp_obj])
+
+				controlsdata = machdata.controls.data
+				
+				try:
+					for n, cd in enumerate(drumdata):
+						drumpad_obj, sp_obj = cd
+						vol = controlsdata[3+n]
+						pan = controlsdata[35+n]
+						tune = controlsdata[11+n]
+						drumpad_obj.vol = vol
+						drumpad_obj.pan = (pan-0.5)*2
+						sp_obj.pitch = tune
+				except:
+					pass
 
 				if 'Select Kit' not in machdata.presetname: track_obj.visual.name = machdata.presetname
 
@@ -432,15 +449,15 @@ class input_cvpj_r(plugins.base):
 			time_obj.set_loop_data(0, 0, patmeasures/4)
 			placement_obj.fromindex = patid
 
-			if autodata:
-				cutpoints = xtramath.cutloop(x['pos'], x['dur'], 0, 0, patmeasures/4)
-
-				for position, duration, loopstart, loopend in cutpoints:
-					for autoid, sauto in autodata.items():
-						autopl_obj = convproj_obj.automation.add_pl_points(['plugin', 'machine'+str(x['mach']+1), str(autoid)], 'float')
-						autopl_obj.data.from_steps(sauto.data, sauto.smooth, 1)
-						time_obj = autopl_obj.time
-						time_obj.set_posdur(position, duration)
+			#if autodata:
+			#	cutpoints = xtramath.cutloop(x['pos'], x['dur'], 0, 0, patmeasures/4)
+#
+			#	for position, duration, loopstart, loopend in cutpoints:
+			#		for autoid, sauto in autodata.items():
+			#			autopl_obj = convproj_obj.automation.add_pl_points(['plugin', 'machine'+str(x['mach']+1), str(autoid)], 'float')
+			#			autopl_obj.data.from_steps(sauto.data, sauto.smooth, 1)
+			#			time_obj = autopl_obj.time
+			#			time_obj.set_posdur(position, duration)
 
 		for pos, val in project_obj.seqn.tempoauto: 
 			convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', pos, val, 'normal')

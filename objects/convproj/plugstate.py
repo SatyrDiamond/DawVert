@@ -21,6 +21,7 @@ from objects.convproj import oscillator
 from objects.convproj import harmonics
 from objects.convproj import time
 from objects.convproj import chord
+from objects.convproj import visual
 from objects.convproj import midi_inst
 from objects.plugin_manu import plugmanu as plugdatamanu
 from objects.plugin_manu import extplug as extplugmanu
@@ -105,6 +106,7 @@ class cvpj_plugin_state:
 		self.chord = {}
 		self.arrays = {}
 		self.modulations = []
+		self.drumpads = []
 		self.midi = midi_inst.cvpj_midi_inst()
 		self.preset = cvpj_preset()
 
@@ -236,6 +238,20 @@ class cvpj_plugin_state:
 		samplepart_obj = self.samplepart_add(samplepartid)
 		self.sampleregions.add(i_key, i_key, i_key, samplepartid, i_data)
 		return samplepart_obj
+
+	def drumpad_add(self):
+		drumpad_obj = sample_entry.cvpj_drumpad()
+		self.drumpads.append(drumpad_obj)
+		return drumpad_obj
+
+	def drumpad_add_singlelayer(self):
+		drumpad_obj = sample_entry.cvpj_drumpad()
+		layer_obj = drumpad_obj.add_layer()
+		self.drumpads.append(drumpad_obj)
+		return drumpad_obj, layer_obj
+
+	def drumpad_getall(self):
+		return self.drumpads
 
 	# -------------------------------------------------- regions
 	def region_add(self, i_name, i_min, i_max, i_value):

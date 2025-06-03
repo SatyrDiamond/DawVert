@@ -83,48 +83,78 @@ class input_piyopiyo(plugins.base):
 		track_obj.is_drum = True
 		track_obj.plugslots.set_synth(pluginid)
 
-		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_BASS1', os.path.join(extpath_path,'BASS1.wav'), None)
-		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_BASS2', os.path.join(extpath_path,'BASS2.wav'), None)
-		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_SNARE1', os.path.join(extpath_path,'SNARE1.wav'), None)
-		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_HAT1', os.path.join(extpath_path,'HAT1.wav'), None)
-		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_HAT2', os.path.join(extpath_path,'HAT2.wav'), None)
-		sampleref_obj.find_relative('external_data')
-		sampleref_obj = convproj_obj.sampleref__add('PIYOPIYO_SYMBAL1', os.path.join(extpath_path,'SYMBAL1.wav'), None)
-		sampleref_obj.find_relative('external_data')
+		for sampname in ['BASS1', 'BASS2', 'SNARE1', 'HAT1', 'HAT2', 'SYMBAL1']:
+			sampid = 'PIYOPIYO_%s' % sampname
+			sampleref_obj = convproj_obj.sampleref__add(sampname, os.path.join(extpath_path,sampname+'.wav'), None)
+			sampleref_obj.find_relative('external_data')
+			sp_obj = plugin_obj.samplepart_add(sampid)
+			sp_obj.sampleref = sampname
 
-		sp_obj = plugin_obj.sampledrum_add(-12, None)
-		sp_obj.sampleref = 'PIYOPIYO_BASS1'
-		sp_obj = plugin_obj.sampledrum_add(-11, None)
-		sp_obj.sampleref = 'PIYOPIYO_BASS1'
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -12
+		drumpad_obj.visual.name = 'Bass 1'
+		layer_obj.samplepartid = 'PIYOPIYO_BASS1'
 
-		sp_obj = plugin_obj.sampledrum_add(-10, None)
-		sp_obj.sampleref = 'PIYOPIYO_BASS2'
-		sp_obj = plugin_obj.sampledrum_add(-9, None)
-		sp_obj.sampleref = 'PIYOPIYO_BASS2'
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -11
+		drumpad_obj.vol = 0.6
+		drumpad_obj.visual.name = 'Bass 1'
+		layer_obj.samplepartid = 'PIYOPIYO_BASS1'
 
-		sp_obj = plugin_obj.sampledrum_add(-8, None)
-		sp_obj.sampleref = 'PIYOPIYO_SNARE1'
-		sp_obj = plugin_obj.sampledrum_add(-7, None)
-		sp_obj.sampleref = 'PIYOPIYO_SNARE1'
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -10
+		drumpad_obj.visual.name = 'Bass 2'
+		layer_obj.samplepartid = 'PIYOPIYO_BASS2'
 
-		sp_obj = plugin_obj.sampledrum_add(-4, None)
-		sp_obj.sampleref = 'PIYOPIYO_HAT1'
-		sp_obj = plugin_obj.sampledrum_add(-3, None)
-		sp_obj.sampleref = 'PIYOPIYO_HAT1'
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -9
+		drumpad_obj.vol = 0.6
+		drumpad_obj.visual.name = 'Bass 2'
+		layer_obj.samplepartid = 'PIYOPIYO_BASS2'
 
-		sp_obj = plugin_obj.sampledrum_add(-2, None)
-		sp_obj.sampleref = 'PIYOPIYO_HAT2'
-		sp_obj = plugin_obj.sampledrum_add(-1, None)
-		sp_obj.sampleref = 'PIYOPIYO_HAT2'
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -8
+		drumpad_obj.visual.name = 'Snare'
+		layer_obj.samplepartid = 'PIYOPIYO_SNARE1'
 
-		sp_obj = plugin_obj.sampledrum_add(0, None)
-		sp_obj.sampleref = 'PIYOPIYO_SYMBAL1'
-		sp_obj = plugin_obj.sampledrum_add(1, None)
-		sp_obj.sampleref = 'PIYOPIYO_SYMBAL1'
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -7
+		drumpad_obj.vol = 0.6
+		drumpad_obj.visual.name = 'Snare'
+		layer_obj.samplepartid = 'PIYOPIYO_SNARE1'
+
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -4
+		drumpad_obj.visual.name = 'Hat 1'
+		layer_obj.samplepartid = 'PIYOPIYO_HAT1'
+
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -3
+		drumpad_obj.vol = 0.6
+		drumpad_obj.visual.name = 'Hat 1'
+		layer_obj.samplepartid = 'PIYOPIYO_HAT1'
+
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -2
+		drumpad_obj.visual.name = 'Hat 2'
+		layer_obj.samplepartid = 'PIYOPIYO_HAT2'
+
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = -1
+		drumpad_obj.vol = 0.6
+		drumpad_obj.visual.name = 'Hat 2'
+		layer_obj.samplepartid = 'PIYOPIYO_HAT2'
+
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = 0
+		drumpad_obj.visual.name = 'Symbal'
+		layer_obj.samplepartid = 'PIYOPIYO_SYMBAL1'
+
+		drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+		drumpad_obj.key = 1
+		drumpad_obj.vol = 0.6
+		drumpad_obj.visual.name = 'Symbal'
+		layer_obj.samplepartid = 'PIYOPIYO_SYMBAL1'
 
 		parse_notes(convproj_obj, '3', project_obj.notes_data[3], track_obj, 0)
 

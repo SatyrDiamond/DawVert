@@ -126,3 +126,33 @@ class cvpj_sample_entry:
 			if not self.stretch.timing.tempo_based:
 				return pow(2, -self.pitch/12)
 		return 1
+
+@dataclass
+class cvpj_drumpad_layer:
+	samplepartid: str = ''
+	vel_min: float = 0
+	vel_max: float = 1
+	envs: dict = field(default_factory=dict)
+
+@dataclass
+class cvpj_drumpad:
+	visual: cvpj_visual = field(default_factory=cvpj_visual)
+	vol: float = 1
+	pan: float = 0
+	pitch: float = 0
+	enabled: bool = True
+	key: int = 0
+	key_copy: list = field(default_factory=list)
+	cut: bool = False
+	cut_by: bool = False
+	envs: dict = field(default_factory=dict)
+	layers: list = field(default_factory=list)
+
+	def add_layer(self):
+		drumpad_layer_obj = cvpj_drumpad_layer()
+		self.layers.append(drumpad_layer_obj)
+		return drumpad_layer_obj
+
+	def __iter__(self):
+		for x in self.layers:
+			yield x

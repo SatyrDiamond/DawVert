@@ -107,10 +107,16 @@ class output_coolbeat(plugins.base):
 					plugin_obj.role = 'synth'
 					for cn, channel in enumerate(track.channels):
 						sampleid = do_sample(convproj_obj, channel.soundPack, channel.fileName, dawvert_intent)
-						sp_obj = plugin_obj.sampledrum_add(cn, None)
+
+						drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+						drumpad_obj.key = cn
+						drumpad_obj.vol = channel.volume
+						drumpad_obj.pan = calc_pan(channel.pan)
+						
+						layer_obj.samplepartid = 'drum_%i' % cn
+						sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 						sp_obj.sampleref = sampleid
-						sp_obj.vol = channel.volume
-						sp_obj.pan = calc_pan(channel.pan)
+						
 					track_obj.plugslots.set_synth(pluginid)
 
 				if tracktype == 3:
@@ -151,7 +157,7 @@ class output_coolbeat(plugins.base):
 					time_obj.set_posdur(section.startTick, section.length)
 
 					sp_obj = placement_obj.sample
-					sp_obj.stretch.timing.set__speed(project_obj.tempo, 1)
+					sp_obj.stretch.timing.set__orgtempo(project_obj.tempo)
 					sp_obj.stretch.preserve_pitch = True
 					sp_obj.stretch.uses_tempo = True
 					sp_obj.sampleref = sampleid

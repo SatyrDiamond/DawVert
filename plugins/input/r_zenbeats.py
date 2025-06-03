@@ -322,14 +322,19 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 					for x in xmlparams:
 						if x.tag == 'sound':
 							attribvals = x.attrib
-							sp_obj = plugin_obj.sampledrum_add(soundnum-24, None)
 
+							drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+
+							drumpad_obj.key = soundnum-24
 							if 'name' in attribvals:
-								sp_obj.visual.name = attribvals['name']
+								drumpad_obj.visual.name = attribvals['name']
 							if 'gain' in attribvals:
-								sp_obj.vol = float(attribvals['gain'])
+								drumpad_obj.vol = float(attribvals['gain'])
 							if 'mute' in attribvals:
-								sp_obj.enabled = not bool(int(attribvals['mute']))
+								drumpad_obj.enabled = not bool(int(attribvals['mute']))
+
+							layer_obj.samplepartid = 'drum_%i' % soundnum
+							sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 							if 'pitch' in attribvals:
 								sp_obj.pitch = (float(attribvals['pitch'])-0.5)*24
 							if 'fine_pitch_offset' in attribvals:
@@ -338,7 +343,7 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 								timestretch = float(attribvals['timestretch'])
 								if timestretch:
 									stretch_obj = sp_obj.stretch
-									stretch_obj.timing.set__speed(120, timestretch)
+									stretch_obj.timing.set__speed(timestretch)
 									stretch_obj.preserve_pitch = True
 							if 'reverse' in attribvals:
 								sp_obj.reverse = bool(int(attribvals['reverse']))

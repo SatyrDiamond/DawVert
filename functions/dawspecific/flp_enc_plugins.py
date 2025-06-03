@@ -9,6 +9,7 @@ import base64
 from functions import data_bytes
 from functions import data_values
 from objects.data_bytes import bytewriter
+from objects.dawspecific import flp_plugins
 
 import logging
 logger_output = logging.getLogger('output')
@@ -34,6 +35,11 @@ def setparams(convproj_obj, plugin_obj):
 	plug_type = plugin_obj.type_get()
 
 	bytesout = bytewriter.bytewriter()
+
+	#if plugin_obj.check_wildmatch('universal', 'sampler', 'drums'):
+	#	fl_plugin = 'fpc'
+	#	fpc_plugin = flp_plugins.fpc_plugin()
+	#	fl_pluginparams = fpc_plugin.dump()
 
 	if plugin_obj.check_wildmatch('universal', 'sampler', 'slicer'):
 		fl_plugin = 'fruity slicer'

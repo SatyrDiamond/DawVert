@@ -187,9 +187,12 @@ def create_dpcm_inst(DPCMMappings, DPCMSamples, fx_num, fst_instrument):
 			sampleref_obj.set_fileformat('wav')
 			audio_obj.to_sampleref_obj(sampleref_obj)
 
-			correct_key = key+24
-			sp_obj = plugin_obj.sampledrum_add(correct_key, None)
-			sp_obj.visual.name = dpcm_sample
+			drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+			drumpad_obj.key = key+24
+			drumpad_obj.visual.name = dpcm_sample
+
+			layer_obj.samplepartid = 'drum_%i' % key
+			sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 			sp_obj.sampleref = filename
 
 def NoteToMidi(keytext):

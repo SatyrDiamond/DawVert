@@ -303,6 +303,15 @@ class cvpj_plugin:
 	def sampledrum_add(self, i_key, i_data, **kwargs):
 		return self.state.sampledrum_add(i_key, i_data, **kwargs)
 
+	def drumpad_add(self):
+		return self.state.drumpad_add()
+
+	def drumpad_add_singlelayer(self):
+		return self.state.drumpad_add_singlelayer()
+
+	def drumpad_getall(self):
+		return self.state.drumpad_getall()
+
 	# -------------------------------------------------- regions
 	def region_add(self, i_name, i_min, i_max, i_value):
 		return self.state.region_add(i_name, i_min, i_max, i_value)

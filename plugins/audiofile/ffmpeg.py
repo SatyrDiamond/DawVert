@@ -24,6 +24,7 @@ class input_pyav(plugins.base):
 
 	def getinfo(self, input_file, sampleref_obj, fileextlow):
 		import av
+		av.logging.set_level(None)
 		valid = False
 		if self.usable:
 			avdata = av.open(input_file)

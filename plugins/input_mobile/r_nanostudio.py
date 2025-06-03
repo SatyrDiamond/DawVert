@@ -70,7 +70,6 @@ class input_nanostudio_v1(plugins.base):
 								if 'Nam' in val:
 									sampname = val['Nam']
 									if sampname:
-										notenum = padnum-12
 										if dawvert_intent.input_mode == 'file':
 											audiopath = os.path.join(dawvert_intent.input_file, sampname)
 
@@ -78,10 +77,13 @@ class input_nanostudio_v1(plugins.base):
 											sampleref_obj.find_relative('projectfile')
 											sampleref_obj.find_relative('nanostudio_v1')
 
-											sp_obj = plugin_obj.sampledrum_add(notenum, None)
-											sp_obj.visual.name = sampname.split('.')[0]
+											drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+											drumpad_obj.key = padnum-12
+											drumpad_obj.visual.name = sampname.split('.')[0]
+
+											layer_obj.samplepartid = 'drum_%i' % padnum
+											sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 											sp_obj.sampleref = sampname
-											sp_obj.trigger = 'oneshot'
 				else:
 					plugin_obj = convproj_obj.plugin__add(cvpj_trackid, 'native', 'nanostudio_v1', ns_inst.type)
 

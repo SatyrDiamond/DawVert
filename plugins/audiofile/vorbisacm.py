@@ -57,7 +57,7 @@ class input_soundfile(plugins.base):
 					data_pos = riff_part.start
 					data_end = riff_part.end
 
-			if fmt_format == 26447:
+			if fmt_format in [26447, 26448]:
 				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream:
 					audiodata = bye_stream.raw(data_end-data_pos)
 

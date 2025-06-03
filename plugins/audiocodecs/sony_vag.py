@@ -20,6 +20,7 @@ class input_codec(plugins.base):
 		import av
 		import numpy as np
 		from io import BytesIO
+		av.logging.set_level(None)
 		vag_audio = BytesIO(in_bytes)
 
 		try:

@@ -279,11 +279,16 @@ class input_soundation(plugins.base):
 						for sampfile, gain, pan, pitch, env, pbmode, cuts, num in sampdata:
 							if sampfile:
 								endstr = str(num+24)
-								sp_obj = plugin_obj.sampledrum_add(num, None)
-								sp_obj.gain = gain*2
-								sp_obj.pan = (pan-0.5)*2
+
+								drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+								drumpad_obj.key = num
+								drumpad_obj.vol = gain*2
+								drumpad_obj.pan = (pan-0.5)*2
+								if 'name' in sampfile: drumpad_obj.visual.name = sampfile['name']
+
+								layer_obj.samplepartid = 'drum_%i' % num
+								sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 								sp_obj.pitch = (pitch-0.5)*24
-								sp_obj.trigger = 'oneshot'
 								sampleref_obj = None
 								if 'url' in sampfile: 
 									orgname = sampfile['url']
@@ -291,7 +296,6 @@ class input_soundation(plugins.base):
 									self.internal_extract_audio(orgname, zip_data, samplefolder)
 									sampleref_obj = convproj_obj.sampleref__add(orgname, filename, None)
 									sp_obj.sampleref = orgname
-								if 'name' in sampfile: sp_obj.visual.name = sampfile['name']
 								if env is not None:
 									if sampleref_obj:
 										dur_sec = sampleref_obj.get_dur_sec()
@@ -300,7 +304,7 @@ class input_soundation(plugins.base):
 											release = 1-env['p3'] if 'p3' in env else 0
 											sustain = env['sustain'] if 'sustain' in env else 1
 											plugin_obj.env_asdr_add('vol_'+endstr, 0, attack*dur_sec, 0, 0, sustain, release*dur_sec, 1)
-											sp_obj.envs['vol'] = 'vol_'+endstr
+											drumpad_obj.envs['vol'] = 'vol_'+endstr
 
 					elif instpluginname == 'com.soundation.drummachine':
 						plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundation', instpluginname)

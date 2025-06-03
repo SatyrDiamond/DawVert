@@ -8,10 +8,12 @@ import math
 import varint
 import uuid
 from functions import data_values
+from functions.dawspecific import flp_plugchunks
 from objects import globalstore
 from io import BytesIO
 from objects.file import audio_wav
 from objects.data_bytes import bytereader
+from objects.dawspecific import flp_plugins
 
 DEBUGSTUFF = False
 
@@ -213,6 +215,36 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					extmanu_obj.clap__replace_data('name', wrapperdata['name'], wrapper_vstdata, None)
 
 	# ------------------------------------------------------------------------------------------- Inst
+
+	elif flplugin.name == 'fpc':
+		#try:
+			plugin_obj.type_set('universal', 'sampler', 'drums')
+
+			fpc_plugin = flp_plugins.fpc_plugin()
+			fpc_plugin.read(fl_plugstr)
+			for padnum, pad_obj in enumerate(fpc_plugin.pads):
+				drumpad_obj = plugin_obj.drumpad_add()
+				drumpad_obj.key = pad_obj.key
+				for layernum, layer in enumerate(pad_obj.layers):
+					pad_filename = flp_plugins.utf16decode(layer.filename)
+					pad_sfilename = get_sample(pad_filename)
+
+					if pad_sfilename:
+						sampleref_obj = convproj_obj.sampleref__add(pad_sfilename, pad_sfilename, 'win')
+						if zipfile: sampleref_obj.find_relative('extracted')
+						sampleref_obj.find_relative('projectfile')
+						sampleref_obj.find_relative('factorysamples')
+						layer_obj = drumpad_obj.add_layer()
+						layer_obj.samplepartid = 'drum_%i_%i' % (padnum, layernum)
+						layer_obj.vel_min = layer.vel_min/127
+						layer_obj.vel_max = layer.vel_max/127
+						sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
+						sp_obj.sampleref = pad_sfilename
+
+
+
+		#except:
+		#	pass
 
 	elif flplugin.name in ['fruity soundfont player', 'soundfont player']:
 		flsf_vers = fl_plugstr.uint32()

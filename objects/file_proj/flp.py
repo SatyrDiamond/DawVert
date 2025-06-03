@@ -19,12 +19,10 @@ from objects.exceptions import ProjectFileParserException
 logger_projparse = logging.getLogger('projparse')
 
 def decodetext(version_split, event_data):
-	if event_data not in [b'\x00\x00', b'\x00']:
-		try:
-			if version_split[0] > 12: return event_data.decode('utf-16le').rstrip('\x00\x00')
-			else: return event_data.decode('utf-8').rstrip('\x00')
-		except:
-			return event_data.decode('utf-8').rstrip('\x00')
+	if event_data.endswith(b'\x00\x00'):
+		return event_data.decode('utf-16le').rstrip('\x00\x00')
+	elif event_data.endswith(b'\x00'):
+		return event_data.decode('utf-8').rstrip('\x00')
 	else:
 		return ''
 

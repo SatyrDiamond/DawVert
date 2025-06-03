@@ -142,19 +142,17 @@ def add_devices(convproj_obj, track_obj, trackid, devices_obj):
 
 							samp_key = samplenum-1
 
-							sp_obj = plugin_obj.sampledrum_add(samp_key, None)
-							sp_obj.sampleref = bufferid
-							sp_obj.envs['vol'] = 'vol_'+endstr
-							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0
-							sp_obj.vol = inputdata["gain"+endstr] if "gain"+endstr in inputdata else 1
-							sp_obj.pitch = inputdata["pitch"+endstr] if "pitch"+endstr in inputdata else 0
+							drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+							drumpad_obj.key = samp_key
+							drumpad_obj.key_copy = [samp_key-12]
+							drumpad_obj.envs['vol'] = 'vol_'+endstr
+							drumpad_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0
+							drumpad_obj.vol = inputdata["gain"+endstr] if "gain"+endstr in inputdata else 1
 
-							sp_obj = plugin_obj.sampledrum_add(samp_key-12, None)
-							sp_obj.sampleref = bufferid
-							sp_obj.envs['vol'] = 'vol_'+endstr
-							sp_obj.pan = inputdata["pan"+endstr] if "pan"+endstr in inputdata else 0
-							sp_obj.vol = inputdata["gain"+endstr] if "gain"+endstr in inputdata else 1
+							layer_obj.samplepartid = 'drum_%i' % samp_key
+							sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 							sp_obj.pitch = inputdata["pitch"+endstr] if "pitch"+endstr in inputdata else 0
+							sp_obj.sampleref = bufferid
 
 				elif devicedata.sourceId == 'c4888b49-3a72-4b0a-bd4a-a06e9937000a':
 					inst_fallback = deviceid

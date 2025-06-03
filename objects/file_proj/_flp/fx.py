@@ -5,11 +5,20 @@ from io import BytesIO
 import struct
 from objects.file_proj._flp import plugin
 
+class flp_fxslot:
+	def __init__(self, fxnum):
+		self.plugin = plugin.flp_plugin()
+		self.plugin.fxnum = fxnum
+		self.icon = None
+		self.color = None
+		self.name = None
+		self.used = False
+
 class flp_fxchan:
-	def __init__(self):
+	def __init__(self, fxnum):
 		self.color = None
 		self.icon = None
-		self.slots = [None,None,None,None,None,None,None,None,None,None]
+		self.slots = [flp_fxslot(fxnum) for x in range(10)]
 		self.data = None
 		self.name = None
 		self.routing = []
@@ -27,19 +36,20 @@ class flp_fxchan:
 		self.solo = False
 
 	def read(self, event_data):
-		event_bio = BytesIO(event_data)
-		self.latency, flags = struct.unpack('fI', event_bio.read(8))
-
-		#print( bool(flags&1), bool(flags&2), bool(flags&4), bool(flags&8), bool(flags&16), bool(flags&32), bool(flags&64), bool(flags&128) )
-		self.reversepolarity = bool(flags&1)
-		self.swap_lr = bool(flags&2)
-		self.fx_enabled = bool(flags&4)
-		self.enabled = bool(flags&8)
-		self.disable_threaded_proc = bool(flags&16)
-		self.docked_center = bool(flags&64)
-		self.docked_pos = bool(flags&128)
-		self.seperator = bool(flags&1024)
-		self.solo = bool(flags&4096)
+		if 8<=len(event_data):
+			event_bio = BytesIO(event_data)
+			self.latency, flags = struct.unpack('fI', event_bio.read(8))
+	
+			#print( bool(flags&1), bool(flags&2), bool(flags&4), bool(flags&8), bool(flags&16), bool(flags&32), bool(flags&64), bool(flags&128) )
+			self.reversepolarity = bool(flags&1)
+			self.swap_lr = bool(flags&2)
+			self.fx_enabled = bool(flags&4)
+			self.enabled = bool(flags&8)
+			self.disable_threaded_proc = bool(flags&16)
+			self.docked_center = bool(flags&64)
+			self.docked_pos = bool(flags&128)
+			self.seperator = bool(flags&1024)
+			self.solo = bool(flags&4096)
 
 	def write(self):
 		outflags = 0
@@ -53,12 +63,3 @@ class flp_fxchan:
 		outflags += int(self.seperator)*1024
 		outflags += int(self.solo)*4096
 		return struct.pack('fI', self.latency, outflags)+b'\x00\x00\x00\x00'
-
-class flp_fxslot:
-	def __init__(self, fxnum):
-		self.plugin = plugin.flp_plugin()
-		self.plugin.fxnum = fxnum
-		self.icon = None
-		self.color = None
-		self.name = None
-		self.used = False

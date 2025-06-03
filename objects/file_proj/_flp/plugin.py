@@ -30,7 +30,7 @@ class flp_plugin:
 
 	def read(self, event_data):
 		event_bio = BytesIO(event_data)
-		self.fxnum, self.slotnum, self.unk1, self.unk2, flags = struct.unpack('IIIII', event_bio.read(20))
+		self.fxnum, self.slotnum, self.unk1, self.unk2, flags = struct.unpack('IIiII', event_bio.read(20))
 		self.unk3, self.unk4, self.unk5, self.unk6 = struct.unpack('IIII', event_bio.read(16))
 		self.window_p_x, self.window_p_y, self.window_s_x, self.window_s_y = struct.unpack('IIII', event_bio.read(16))
 

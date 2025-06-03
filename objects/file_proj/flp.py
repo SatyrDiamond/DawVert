@@ -21,7 +21,7 @@ logger_projparse = logging.getLogger('projparse')
 def decodetext(version_split, event_data):
 	if event_data not in [b'\x00\x00', b'\x00']:
 		try:
-			if version_split[0] > 10: return event_data.decode('utf-16le').rstrip('\x00\x00')
+			if version_split[0] > 12: return event_data.decode('utf-16le').rstrip('\x00\x00')
 			else: return event_data.decode('utf-8').rstrip('\x00')
 		except:
 			return event_data.decode('utf-8').rstrip('\x00')
@@ -98,7 +98,7 @@ class flp_project:
 		self.patterns = {}
 		self.patterns[0] = flp_pattern()
 		self.mixer = {}
-		for fxnum in range(127): self.mixer[fxnum] = fx.flp_fxchan()
+		for fxnum in range(127): self.mixer[fxnum] = fx.flp_fxchan(fxnum)
 		self.initfxvals = auto.flp_initvals()
 		self.startvals = auto.flp_initvals()
 		self.arrangements = {}
@@ -163,10 +163,11 @@ class flp_project:
 			FLVersion = event_data.decode('utf-8').rstrip('\x00')
 			logger_projparse.info('FL: Version: ' + FLVersion)
 			self.version_split = [int(x) for x in FLVersion.split('.')]
-			if self.version_split[0] < 12 and self.version_split[0] != 24:
+			if self.version_split[0] < 10 and self.version_split[0] != 24:
 				raise ProjectFileParserException('FL: Version '+str(self.version_split[0])+' is not supported.') 
 			self.version = FLVersion
 		elif event_id == 156: self.tempo = event_data/1000
+		elif event_id == 66:  self.tempo = event_data
 		elif event_id == 80:  self.mainpitch = struct.unpack('h', struct.pack('H', event_data))[0]
 		elif event_id == 17:  self.numerator = event_data
 		elif event_id == 18:  self.denominator = event_data
@@ -407,15 +408,17 @@ class flp_project:
 				self.slotstore = fx.flp_fxslot(self.fx_num)
 				self.slotstore.plugin.name = self.def_pluginname
 				self.slotstore.plugin.read(event_data)
+				slotnum = self.slotstore.plugin.slotnum
+				if slotnum < 10: self.mixer[self.fx_num].slots[slotnum] = self.slotstore
 			elif event_id == 155: self.slotstore.icon = event_data
 			elif event_id == 128: self.slotstore.color = event_data
 			elif event_id == 203: self.slotstore.name = decodetext(self.version_split, event_data)
-			elif event_id == 98:  
-				if event_data < 10: 
-					if self.slotstore:
-						self.slotstore.plugin.slotnum = event_data
-						self.mixer[self.fx_num].slots[event_data] = self.slotstore
-				self.slotstore = None
+			#elif event_id == 98:  
+			#	if event_data < 10: 
+			#		if self.slotstore:
+			#			self.slotstore.plugin.slotnum = event_data
+			#			self.mixer[self.fx_num].slots[event_data] = self.slotstore
+			#	self.slotstore = None
 			elif event_id == 213: self.slotstore.plugin.params = event_data
 			elif event_id == 235: 
 				for num, on in enumerate(event_data):

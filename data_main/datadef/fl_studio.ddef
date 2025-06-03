@@ -439,7 +439,7 @@
   </struct>
 
   <struct name="fruity_limiter">
-    <part type="int"/>
+    <part type="int" name="version"/>
     <part type="int" name="gain"/>
     <part type="int" name="sat"/>
     <part type="int" name="limiter_ceil"/>
@@ -496,7 +496,6 @@
     <part type="byte" name="unknown_17"/>
     <part type="byte" name="unknown_18"/>
     <part type="byte" name="unknown_19"/>
-    <part type="byte" name="0.2_limiter_safety"/>
   </struct>
 
   <struct name="fruity_mute_2">

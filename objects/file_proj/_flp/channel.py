@@ -151,8 +151,7 @@ class flp_channel_params:
 		self.stretchingmultiplier = event_bio.int32()
 		self.stretchingmode = event_bio.int32()
 
-		self.midi_chan_thru = event_bio.uint32()
-
+		if event_bio.remaining(): self.midi_chan_thru = event_bio.uint32()
 		if event_bio.remaining(): event_bio.skip(4)
 		if event_bio.remaining(): event_bio.skip(4)
 		if event_bio.remaining(): event_bio.skip(4)

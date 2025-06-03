@@ -144,19 +144,12 @@ class plugconv(plugins.base):
 			return True
 
 		#if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity compressor'):
-		#	#extpluglog.convinternal('FL Studio', 'Fruity Compressor', 'Universal', 'Compressor')
-		#	v_threshold = plugin_obj.params.get('threshold', 0).value/10
-		#	v_ratio = plugin_obj.params.get('ratio', 0).value/10
-		#	v_gain = plugin_obj.params.get('gain', 0).value/10
-		#	v_attack = plugin_obj.params.get('attack', 0).value/10000
-		#	v_release = plugin_obj.params.get('release', 0).value/1000
-#
 		#	manu_obj = plugin_obj.create_manu_obj(convproj_obj, pluginid)
-		#	manu_obj.from_param('threshold', 'threshold', 0)
-		#	manu_obj.from_param('ratio', 'ratio', 0)
-		#	manu_obj.from_param('gain', 'gain', 0)
-		#	manu_obj.from_param('attack', 'attack', 0)
-		#	manu_obj.from_param('release', 'release', 0)
+		#	manu_obj.in__param('threshold', 'threshold', 0)
+		#	manu_obj.in__param('ratio', 'ratio', 0)
+		#	manu_obj.in__param('gain', 'gain', 0)
+		#	manu_obj.in__param('attack', 'attack', 0)
+		#	manu_obj.in__param('release', 'release', 0)
 		#	manu_obj.calc('threshold', 'div', 10, 0, 0, 0)
 		#	manu_obj.calc('ratio', 'div', 10, 0, 0, 0)
 		#	manu_obj.calc('gain', 'div', 10, 0, 0, 0)
@@ -175,13 +168,37 @@ class plugconv(plugins.base):
 #
 		#	plugin_obj.replace('universal', 'compressor', None)
 		#	plugin_obj.datavals.add('tcr', bool(v_tcr) )
-		#	manu_obj.to_param('gain', 'pregain', None)
-		#	manu_obj.to_param('ratio', 'ratio', None)
-		#	manu_obj.to_param('threshold', 'threshold', None)
-		#	manu_obj.to_param('attack', 'attack', None)
-		#	manu_obj.to_param('release', 'release', None)
+		#	manu_obj.out__param('gain', 0, 'pregain', None)
+		#	manu_obj.out__param('ratio', 0, 'ratio', None)
+		#	manu_obj.out__param('threshold', 0, 'threshold', None)
+		#	manu_obj.out__param('attack', 0, 'attack', None)
+		#	manu_obj.out__param('release', 0, 'release', None)
 		#	plugin_obj.params.add('knee', v_knee, 'float')
-		#	return 1
+		#	return True
+
+		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'fruity limiter'):
+			mode = plugin_obj.params.get('mode', 0).value
+			if mode == 0:
+				limiter_gain = plugin_obj.params.get('gain', 0).value/1000
+				limiter_att = plugin_obj.params.get('limiter_att', 0).value/10000
+				limiter_rel = plugin_obj.params.get('limiter_rel', 0).value/10000
+				limiter_ceil = plugin_obj.params.get('limiter_ceil', 0).value/1000
+				limiter_att **= 5.5
+				limiter_rel **= 5.5
+	
+				limiter_ceil **= 2
+				limiter_ceil = xtramath.to_db(limiter_ceil)
+	
+				limiter_gain **= 3
+				limiter_gain = xtramath.to_db(limiter_gain)
+	
+				plugin_obj.replace('universal', 'limiter', None)
+				
+				plugin_obj.params.add('gain', limiter_gain, 'float')
+				plugin_obj.params.add('attack', limiter_att, 'float')
+				plugin_obj.params.add('release', limiter_rel*2, 'float')
+				plugin_obj.params.add('ceiling', limiter_ceil, 'float')
+				return True
 
 		if plugin_obj.type.check_wildmatch('native', 'flstudio', 'pitcher'):
 			#extpluglog.convinternal('FL Studio', 'Pitcher', 'Universal', 'AutoTune')

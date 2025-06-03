@@ -2153,17 +2153,6 @@
     ],
     "priority": -100
   },
-  "data_main\\plugstatets\\_to_univ\\flp__limiter.pstr": {
-    "file": "data_main\\plugstatets\\_to_univ\\flp__limiter.pstr",
-    "daw_in": [
-      "amped"
-    ],
-    "plugtype_in": "native:flstudio:fruity limiter",
-    "plugtype_out": [
-      "universal:limiter"
-    ],
-    "priority": -100
-  },
   "data_main\\plugstatets\\_to_univ\\flp__tuner.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\flp__tuner.pstr",
     "daw_in": [

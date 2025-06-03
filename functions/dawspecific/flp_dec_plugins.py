@@ -310,7 +310,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 		stretch_obj = sre_obj.stretch
 
-		if slicer_bpm: stretch_obj.set_rate_speed(slicer_bpm, 1/stretch_multiplier, False)
+		if slicer_bpm: stretch_obj.timing.set__speed(1/stretch_multiplier)
 		sre_obj.pitch = slicer_pitch/100
 
 		slicer_numslices = fl_plugstr.uint32()

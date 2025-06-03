@@ -289,26 +289,27 @@ class input_flp(plugins.base):
 		traits_obj.plugin_ext_arch = [32, 64]
 		traits_obj.plugin_ext_platforms = ['win']
 
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 2024\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 21\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 20\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 12\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FLStudio4\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3.5\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 12\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 8\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 8\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 7\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 2024\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 7\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FLStudio5\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 8\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FLStudio5\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\FLStudio4\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FLStudio4\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\FruityLoops3.5\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3.5\\", 'win')
 		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\FruityLoops3\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line VST\\FL Studio 10\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 12\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 20\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 21\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 7\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 8\\", 'win')
+		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FLStudio5\\", 'win')
 
 		flp_obj = proj_flp.flp_project()
 
@@ -624,10 +625,9 @@ class input_flp(plugins.base):
 			#		playlist_obj.params.add('enabled', track_obj.enabled, 'bool')
 
 			tr_n = 500
-			if flp_obj.version_split[0] == 12: tr_n = 200
+			if flp_obj.version_split[0] < 12: tr_n = 200
 
 			for item in fl_arrangement.items:
-				
 				playlistline = (item.trackindex*-1)+tr_n
 				if playlistline not in used_tracks: used_tracks.append(playlistline)
 

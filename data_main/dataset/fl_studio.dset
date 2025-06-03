@@ -918,32 +918,32 @@
         <object id="fruity limiter">
             <data group="fx" />
             <datadef name="fl_studio" struct="fruity_limiter" />
-            <param id="0.2_limiter_safety" type="bool" />
-            <param id="comp_att" name="Comp Attack" type="int" max="10000" />
-            <param id="comp_att_curve" name="Comp Attack Curve" type="int" max="8" />
-            <param id="comp_knee" name="Comp Knee" type="int" max="1000" />
-            <param id="comp_ratio" name="Comp Ratio" type="int" max="1000" />
-            <param id="comp_rel" name="Comp Release" type="int" max="10000" />
-            <param id="comp_sus" name="Comp Sustain" type="int" max="10000" />
-            <param id="comp_thres" name="Comp Threshold" type="int" max="1000" />
-            <param id="gain" name="Gain" type="int" max="2000" />
-            <param id="limiter_att" name="Limiter Attack" type="int" max="10000" />
-            <param id="limiter_att_curve" name="Limiter Attack Curve" type="int" max="8" />
-            <param id="limiter_ceil" name="Limiter Ceil" type="int" max="2000" />
-            <param id="limiter_rel" name="Limiter Release" type="int" max="10000" />
-            <param id="limiter_rel_curve" name="Limiter Release Curve" type="int" max="8" />
-            <param id="limiter_sus" name="Limiter Sustain" type="int" max="10000" />
-            <param id="mode" type="bool" noauto="1" />
-            <param id="noise_gain" name="Noise Gain" type="int" max="1000" />
-            <param id="noise_rel" name="Noise Release" type="int" max="10000" />
-            <param id="noise_thres" name="Noise Threshold" type="int" max="1000" />
-            <param id="sat" name="Soft Saturation Threshold" type="int" max="1000" />
-            <param id="sidechain_number" type="bool" />
-            <param id="visual_analysis" type="bool" noauto="1" />
-            <param id="visual_input_peak" type="bool" noauto="1" />
-            <param id="visual_lvl_markers" type="bool" noauto="1" />
-            <param id="visual_output_peak" type="bool" noauto="1" />
-            <param id="visual_scroll_speed" type="bool" noauto="1" />
+            <param id="comp_att" name="Comp Attack" type="int" max="10000" def="0" />
+            <param id="comp_att_curve" name="Comp Attack Curve" type="int" max="8" def="1" />
+            <param id="comp_knee" name="Comp Knee" type="int" max="1000" def="0" />
+            <param id="comp_ratio" name="Comp Ratio" type="int" max="1000" def="0" />
+            <param id="comp_rel" name="Comp Release" type="int" max="10000" def="6666" />
+            <param id="comp_sus" name="Comp Sustain" type="int" max="10000" def="650" />
+            <param id="comp_thres" name="Comp Threshold" type="int" max="1000" def="1000" />
+            <param id="gain" name="Gain" type="int" max="2000" def="1000" />
+            <param id="limiter_att" name="Limiter Attack" type="int" max="10000" def="1115" />
+            <param id="limiter_att_curve" name="Limiter Attack Curve" type="int" max="8" def="3" />
+            <param id="limiter_ceil" name="Limiter Ceil" type="int" max="2000" def="1000" />
+            <param id="limiter_rel" name="Limiter Release" type="int" max="10000" def="5000" />
+            <param id="limiter_rel_curve" name="Limiter Release Curve" type="int" max="8" def="3" />
+            <param id="limiter_sus" name="Limiter Sustain" type="int" max="10000" def="2882" />
+            <param id="mode" type="bool" noauto="1" def="0" />
+            <param id="noise_gain" name="Noise Gain" type="int" max="1000" def="1000" />
+            <param id="noise_rel" name="Noise Release" type="int" max="10000" def="4187" />
+            <param id="noise_thres" name="Noise Threshold" type="int" max="1000" def="0" />
+            <param id="sat" name="Soft Saturation Threshold" type="int" max="1000" def="1000" />
+            <param id="sidechain_number" type="bool" def="0" />
+            <param id="version" type="int" max="6" def="6" />
+            <param id="visual_analysis" type="bool" noauto="1" def="1" />
+            <param id="visual_input_peak" type="bool" noauto="1" def="1" />
+            <param id="visual_lvl_markers" type="bool" noauto="1" def="1" />
+            <param id="visual_output_peak" type="bool" noauto="1" def="1" />
+            <param id="visual_scroll_speed" type="bool" noauto="1" def="50" />
         </object>
         <object id="fruity multiband compressor">
             <data group="fx" />

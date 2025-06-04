@@ -138,8 +138,8 @@ class plugconv(plugins.base):
 				convproj_obj.automation.calc(['plugin', pluginid, txt_gain], 'div', 100, 0, 0, 0)
 				convproj_obj.automation.move(['plugin', pluginid, txt_gain], ['n_filter', pluginid, filterid, 'gain'])
 
-			plugin_obj.state.eq = eq_obj
 			plugin_obj.replace('universal', 'eq', 'bands')
+			plugin_obj.state.eq = eq_obj
 			param_obj = plugin_obj.params.add('gain_out', main_lvl, 'float')
 			return True
 

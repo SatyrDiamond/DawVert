@@ -14,6 +14,7 @@ from io import BytesIO
 from objects.file import audio_wav
 from objects.data_bytes import bytereader
 from objects.dawspecific import flp_plugins
+from objects.dawspecific import flp_plugins_directwave
 
 DEBUGSTUFF = False
 
@@ -215,6 +216,40 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					extmanu_obj.clap__replace_data('name', wrapperdata['name'], wrapper_vstdata, None)
 
 	# ------------------------------------------------------------------------------------------- Inst
+
+	elif flplugin.name == 'directwave':
+		try:
+			fpc_plugin = flp_plugins_directwave.directwave_plugin()
+			fpc_plugin.read(fl_plugstr)
+			if fpc_plugin.programs:
+				plugin_obj.type_set('universal', 'sampler', 'multi')
+				firstprog = fpc_plugin.programs[0]
+				regions = firstprog.regions
+	
+				for region in regions:
+					region_main = region.main
+					region_sample = region.sample
+					region_pitch = region.pitch
+	
+					filename = region.path.decode()
+					filename = get_sample(filename)
+					sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+
+					sp_obj = plugin_obj.sampleregion_add(region_main.key_min-60, region_main.key_max-60, region_main.key_root-60, None)
+					sp_obj.sampleref = filename
+					sp_obj.vel_min = region_main.vel_min/127
+					sp_obj.vel_max = region_main.vel_max/127
+
+					sp_obj.point_value_type = "samples"
+					sp_obj.start = region_sample.start
+					sp_obj.end = region_sample.num_samples
+					sp_obj.loop_start = region_sample.loop_start
+					sp_obj.loop_end = region_sample.loop_end
+					sp_obj.loop_active = int(region_sample.loop_type)!=0
+
+		except:
+			pass
+
 
 	elif flplugin.name == 'fpc':
 		#try:

@@ -203,8 +203,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 			t_stretchingmultiplier = pow(2, fl_channel_obj.params.stretchingmultiplier/10000)
 			dur_sec = sampleref_obj.get_dur_sec()
 			sre_obj.pitch = t_stretchingpitch
-
-			stretch_obj.timing.set__beats(t_stretchingtime*2)
+			stretch_obj.timing.set__beats((t_stretchingtime*t_stretchingmultiplier)*2)
 
 		elif t_stretchingtime == 0:
 			modpitch = (fl_channel_obj.params.stretchingmultiplier/10000)*12

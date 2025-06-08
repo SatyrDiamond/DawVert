@@ -165,10 +165,6 @@ class input_reaper(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import reaper as proj_reaper
 
-		if dawvert_intent.input_mode == 'file':
-			bytestream = open(dawvert_intent.input_file, 'r')
-		rpp_data = rpp.load(bytestream)
-
 		project_obj = proj_reaper.rpp_song()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()

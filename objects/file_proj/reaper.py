@@ -99,7 +99,7 @@ class rpp_song:
 		self.project = rpp_project.rpp_project()
 
 	def load_from_file(self, input_file):
-		bytestream = open(input_file, 'r')
+		bytestream = open(input_file, 'r', encoding="utf-8")
 		rpp_data = rpp.load(bytestream)
 		self.project.load(rpp_data)
 		return True

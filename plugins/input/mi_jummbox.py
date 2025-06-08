@@ -29,16 +29,19 @@ class rawchipwaves():
 		wavefileobj = open(filename)
 		for x in wavefileobj.readlines():
 			splitv = x.strip().split('|')
-			if len(splitv) == 3:
-				chippart_obj = rawchipwaves_part()
-				name, chippart_obj.expression, chippart_obj.samples = splitv
-				chippart_obj.samples = chippart_obj.samples.split(',')
-				for n, x in enumerate(chippart_obj.samples):
-					if '/' in x:
-						num, dem = x.split('/')
-						chippart_obj.samples[n] = float(num)/float(dem)
-					else: chippart_obj.samples[n] = float(x)
-				self.waves[name] = chippart_obj
+			try:
+				if len(splitv) == 3:
+					chippart_obj = rawchipwaves_part()
+					name, chippart_obj.expression, chippart_obj.samples = splitv
+					chippart_obj.samples = chippart_obj.samples.split(',')
+					for n, x in enumerate(chippart_obj.samples):
+						if '/' in x:
+							num, dem = x.split('/')
+							chippart_obj.samples[n] = float(num)/float(dem)
+						else: chippart_obj.samples[n] = float(x)
+					self.waves[name] = chippart_obj
+			except:
+				pass
 
 	def apply_wave(self, plugin_obj, name, wave_id):
 		if name in self.waves:

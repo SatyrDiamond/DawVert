@@ -1,0 +1,24 @@
+<plugstatetransform daw_in="zenbeats" plugtype="native:zenbeats:autofilter">
+  <define_remap name="filter_types" in_type="int" out_type="filter_type">
+    <val in_val="1" out_val="low_pass"/>
+    <val in_val="2" out_val="high_pass"/>
+    <val in_val="3" out_val="band_pass"/>
+    <val in_val="4" out_val="notch"/>
+    <fallback out_val="low_pass"/>
+  </define_remap>
+
+  <in__param to="filtertype" type="int" />
+  <in__param to="lfo" type="float" />
+  <in__param to="freq" type="float" />
+  <in__param to="res" type="float" />
+  <in__param to="lfof" type="float" />
+
+  <remap name="filtertype" remapdef="filter_types"/>
+
+  <replace plugtype="universal:filter:single" />
+
+  <out__filterparam to="on" type="bool" only_value="1">1</out__filterparam>
+  <out__filterparam to="freq" from="freq" type="float"/>
+  <out__filterparam to="type" from="filtertype"/>
+
+</plugstatetransform>

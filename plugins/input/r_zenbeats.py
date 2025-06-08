@@ -41,7 +41,7 @@ def set_filter_type(filter_obj, num):
 	if num in filter_types: filter_obj.type.set(filter_types[num], None)
 
 def param_find(plugin_obj, cvpjname, xmldata, xmlname, add, mul):
-	paramdata = data_xml.find_first(xmldata, 'Gain')
+	paramdata = data_xml.find_first(xmldata, xmlname)
 	if paramdata is not None:
 		paramval = float(paramdata.get('value'))
 		if paramval is not None:
@@ -109,14 +109,8 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 				xmlparams = data_xml.find_first(plugin_xml_data, 'RolandChorus')
 				if xmlparams is not None:
 					attribvals = xmlparams.attrib
-					set_param_attrib(plugin_obj.params, 'sync', 'Sync', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'beatdiv', 'BeatDiv', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'beatmult', 'BeatMult', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'speed', 'Speed', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'depth', 'Depth', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'feedback', 'Feedback', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'spread', 'Spread', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'mix', 'Mix', attribvals, 0, 1)
+					for pname in ['Sync', 'BeatDiv', 'BeatMult', 'Speed', 'Depth', 'Feedback', 'Spread', 'Mix']:
+						set_param_attrib(plugin_obj.params, pname.lower(), pname, attribvals, 0, 1)
 
 			if strproc.plugin.name == 'Zenbeats MultiVerb':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'roland_reverb')
@@ -125,12 +119,8 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 				xmlparams = data_xml.find_first(plugin_xml_data, 'RolandReverb')
 				if xmlparams is not None:
 					attribvals = xmlparams.attrib
-					set_param_attrib(plugin_obj.params, 'type', 'Type', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'time', 'Time', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'predelay', 'PreDelay', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'hipass', 'HiPass', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'lopass', 'LoPass', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'density', 'Density', attribvals, 0, 1)
+					for pname in ['Type', 'Time', 'PreDelay', 'HiPass', 'LoPass', 'Density']:
+						set_param_attrib(plugin_obj.params, pname.lower(), pname, attribvals, 0, 1)
 
 			if strproc.plugin.name == 'Zenbeats SC-Comp':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'roland_sccomp')
@@ -139,23 +129,11 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 				xmlparams = data_xml.find_first(plugin_xml_data, 'RolandDynamics')
 				if xmlparams is not None:
 					attribvals = xmlparams.attrib
-					set_param_attrib(plugin_obj.params, 'rmsmode', 'RMSMode', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'cmpautogain', 'CmpAutoGain', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'cmpattack', 'CmpAttack', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'cmprelease', 'CmpRelease', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'cmpthreshold', 'CmpThreshold', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'cmpratio', 'CmpRatio', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'cmpknee', 'CmpKnee', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'cmpmakeupgain', 'CmpMakeupGain', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'expattack', 'ExpAttack', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'exprelease', 'ExpRelease', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'expthreshold', 'ExpThreshold', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'expratio', 'ExpRatio', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'expknee', 'ExpKnee', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'exphold', 'ExpHold', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'hipassfreq', 'HiPassFreq', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'sidechainmode', 'SidechainMode', attribvals, 0, 1)
-					set_param_attrib(plugin_obj.params, 'sidechain', 'Sidechain', attribvals, 0, 1)
+					for pname in ['RMSMode', 'CmpAutoGain', 'CmpAttack', 'CmpRelease', 
+						'CmpThreshold', 'CmpRatio', 'CmpKnee', 'CmpMakeupGain', 'ExpAttack', 
+						'ExpRelease', 'ExpThreshold', 'ExpRatio', 'ExpKnee', 
+						'ExpHold', 'HiPassFreq', 'SidechainMode', 'Sidechain']:
+						set_param_attrib(plugin_obj.params, pname.lower(), pname, attribvals, 0, 1)
 
 			if strproc.plugin.name == 'Zenbeats SC-Pump':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'roland_scpump')
@@ -169,29 +147,12 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 					add_dataval(plugin_obj.datavals, xmlparams, 'window_len', 'window_len', 'beats', float)
 					add_dataval(plugin_obj.datavals, xmlparams, 'random', 'random', 'seed', int)
 
-					attribvals = xmlparams.attrib
-					param_find(plugin_obj, 'crossfadetime', xmlparams, 'CrossfadeTime', 0, 1)
-					param_find(plugin_obj, 'inputtriggerlevel', xmlparams, 'InputTriggerLevel', 0, 1)
-					param_find(plugin_obj, 'randomfloor', xmlparams, 'RandomFloor', 0, 1)
-					param_find(plugin_obj, 'randomceiling', xmlparams, 'RandomCeiling', 0, 1)
-					param_find(plugin_obj, 'randomstartattack', xmlparams, 'RandomStartAttack', 0, 1)
-					param_find(plugin_obj, 'randomendattack', xmlparams, 'RandomEndAttack', 0, 1)
-					param_find(plugin_obj, 'randomstartrelease', xmlparams, 'RandomStartRelease', 0, 1)
-					param_find(plugin_obj, 'randomendrelease', xmlparams, 'RandomEndRelease', 0, 1)
-					param_find(plugin_obj, 'filterresonance', xmlparams, 'FilterResonance', 0, 1)
-					param_find(plugin_obj, 'randomresonance', xmlparams, 'RandomResonance', 0, 1)
-					param_find(plugin_obj, 'attackstartx', xmlparams, 'AttackStartX', 0, 1)
-					param_find(plugin_obj, 'attackstarty', xmlparams, 'AttackStartY', 0, 1)
-					param_find(plugin_obj, 'attackcontrolx1', xmlparams, 'AttackControlX1', 0, 1)
-					param_find(plugin_obj, 'attackcontroly', xmlparams, 'AttackControlY', 0, 1)
-					param_find(plugin_obj, 'attackendx', xmlparams, 'AttackEndX', 0, 1)
-					param_find(plugin_obj, 'attackendy', xmlparams, 'AttackEndY', 0, 1)
-					param_find(plugin_obj, 'releasestartx', xmlparams, 'ReleaseStartX', 0, 1)
-					param_find(plugin_obj, 'releasestarty', xmlparams, 'ReleaseStartY', 0, 1)
-					param_find(plugin_obj, 'releasecontrolx1', xmlparams, 'ReleaseControlX1', 0, 1)
-					param_find(plugin_obj, 'releasecontroly', xmlparams, 'ReleaseControlY', 0, 1)
-					param_find(plugin_obj, 'releaseendx', xmlparams, 'ReleaseEndX', 0, 1)
-					param_find(plugin_obj, 'releaseendy', xmlparams, 'ReleaseEndY', 0, 1)
+					for pname in ['CrossfadeTime', 'InputTriggerLevel', 'RandomFloor', 'RandomCeiling', 
+						'RandomStartAttack', 'RandomEndAttack', 'RandomStartRelease', 'RandomEndRelease', 
+						'FilterResonance', 'RandomResonance', 'AttackStartX', 'AttackStartY', 'AttackControlX1', 
+						'AttackControlY', 'AttackEndX', 'AttackEndY', 'ReleaseStartX', 'ReleaseStartY', 
+						'ReleaseControlX1', 'ReleaseControlY', 'ReleaseEndX', 'ReleaseEndY']:
+						param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
 
 			if strproc.plugin.name == 'Zenbeats SC-Envelope':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'zenbeats_scenvelope')
@@ -205,29 +166,12 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 					add_dataval(plugin_obj.datavals, xmlparams, 'window_len', 'window_len', 'beats', float)
 					add_dataval(plugin_obj.datavals, xmlparams, 'random', 'random', 'seed', int)
 
-					attribvals = xmlparams.attrib
-					param_find(plugin_obj, 'crossfadetime', xmlparams, 'CrossfadeTime', 0, 1)
-					param_find(plugin_obj, 'inputtriggerlevel', xmlparams, 'InputTriggerLevel', 0, 1)
-					param_find(plugin_obj, 'randomfloor', xmlparams, 'RandomFloor', 0, 1)
-					param_find(plugin_obj, 'randomceiling', xmlparams, 'RandomCeiling', 0, 1)
-					param_find(plugin_obj, 'randomstartattack', xmlparams, 'RandomStartAttack', 0, 1)
-					param_find(plugin_obj, 'randomendattack', xmlparams, 'RandomEndAttack', 0, 1)
-					param_find(plugin_obj, 'randomstartrelease', xmlparams, 'RandomStartRelease', 0, 1)
-					param_find(plugin_obj, 'randomendrelease', xmlparams, 'RandomEndRelease', 0, 1)
-					param_find(plugin_obj, 'filterresonance', xmlparams, 'FilterResonance', 0, 1)
-					param_find(plugin_obj, 'randomresonance', xmlparams, 'RandomResonance', 0, 1)
-					param_find(plugin_obj, 'attackstartx', xmlparams, 'AttackStartX', 0, 1)
-					param_find(plugin_obj, 'attackstarty', xmlparams, 'AttackStartY', 0, 1)
-					param_find(plugin_obj, 'attackcontrolx1', xmlparams, 'AttackControlX1', 0, 1)
-					param_find(plugin_obj, 'attackcontroly', xmlparams, 'AttackControlY', 0, 1)
-					param_find(plugin_obj, 'attackendx', xmlparams, 'AttackEndX', 0, 1)
-					param_find(plugin_obj, 'attackendy', xmlparams, 'AttackEndY', 0, 1)
-					param_find(plugin_obj, 'releasestartx', xmlparams, 'ReleaseStartX', 0, 1)
-					param_find(plugin_obj, 'releasestarty', xmlparams, 'ReleaseStartY', 0, 1)
-					param_find(plugin_obj, 'releasecontrolx1', xmlparams, 'ReleaseControlX1', 0, 1)
-					param_find(plugin_obj, 'releasecontroly', xmlparams, 'ReleaseControlY', 0, 1)
-					param_find(plugin_obj, 'releaseendx', xmlparams, 'ReleaseEndX', 0, 1)
-					param_find(plugin_obj, 'releaseendy', xmlparams, 'ReleaseEndY', 0, 1)
+					for pname in ['CrossfadeTime', 'InputTriggerLevel', 'RandomFloor', 'RandomCeiling', 
+						'RandomStartAttack', 'RandomEndAttack', 'RandomStartRelease', 'RandomEndRelease', 
+						'FilterResonance', 'RandomResonance', 'AttackStartX', 'AttackStartY', 'AttackControlX1', 
+						'AttackControlY', 'AttackEndX', 'AttackEndY', 'ReleaseStartX', 'ReleaseStartY', 
+						'ReleaseControlX1', 'ReleaseControlY', 'ReleaseEndX', 'ReleaseEndY']:
+						param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
 
 			if strproc.plugin.name == 'AutoWah':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'autowah')
@@ -245,11 +189,8 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 						if lfodata is not None:
 							lfo_obj = plugin_obj.lfo_add('cutoff')
 							lfo_obj.time.set_steps(get_value(lfodata, 'LFOF', 1)*4, convproj_obj)
-					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
-					param_find(plugin_obj, 'attack', xmlparams, 'Attack', 0, 1)
-					param_find(plugin_obj, 'release', xmlparams, 'Release', 0, 1)
-					param_find(plugin_obj, 'base', xmlparams, 'Base', 0, 1)
-					param_find(plugin_obj, 'strength', xmlparams, 'Strength', 0, 1)
+					for pname in ['Threshold', 'Attack', 'Release', 'Base', 'Strength']:
+						param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
 
 			if strproc.plugin.name == 'Chorus':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'chorus')
@@ -261,9 +202,8 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 					if lfodata is not None:
 						lfo_obj = plugin_obj.lfo_add('chorus')
 						lfo_obj.time.set_hz(get_value(lfodata, 'Speed', 1)*4)
-					param_find(plugin_obj, 'delay', xmlparams, 'Delay', 0, 1)
-					param_find(plugin_obj, 'depth', xmlparams, 'Depth', 0, 1)
-					param_find(plugin_obj, 'stereo', xmlparams, 'Stereo', 0, 1)
+					for pname in ['Delay', 'Depth', 'Stereo']:
+						param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
 
 			if strproc.plugin.name == 'BitCrusher':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'bitcrusher')
@@ -271,9 +211,8 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 				track_obj.plugslots.slots_audio.append(pluginid)
 				xmlparams = data_xml.find_first(plugin_xml_data, 'BitCrusher')
 				if xmlparams is not None:
-					param_find(plugin_obj, 'noise', xmlparams, 'Noise', 0, 1)
-					param_find(plugin_obj, 'bits', xmlparams, 'Bits', 0, 1)
-					param_find(plugin_obj, 'rate', xmlparams, 'Rate', 0, 1)
+					for pname in ['Noise', 'Bits', 'Rate']:
+						param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
 
 			if strproc.plugin.name == 'Delay':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'delay')
@@ -284,18 +223,10 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 				if 'linking' in attrib: plugin_obj.datavals.add('linking', float(attrib['linking']))
 				xmlparams = data_xml.find_first(plugin_xml_data, 'Delay')
 				if xmlparams is not None:
-					param_find(plugin_obj, 'gain1', xmlparams, 'Gain1', 0, 1)
-					param_find(plugin_obj, 'feedback1', xmlparams, 'Feedback1', 0, 1)
-					param_find(plugin_obj, 'rate1', xmlparams, 'Rate1', 0, 1)
-					param_find(plugin_obj, 'pan1', xmlparams, 'Pan1', 0, 1)
-					param_find(plugin_obj, 'lowcut1', xmlparams, 'LowCut1', 0, 1)
-					param_find(plugin_obj, 'highcut1', xmlparams, 'HighCut1', 0, 1)
-					param_find(plugin_obj, 'gain2', xmlparams, 'Gain2', 0, 1)
-					param_find(plugin_obj, 'feedback2', xmlparams, 'Feedback2', 0, 1)
-					param_find(plugin_obj, 'rate2', xmlparams, 'Rate2', 0, 1)
-					param_find(plugin_obj, 'pan2', xmlparams, 'Pan2', 0, 1)
-					param_find(plugin_obj, 'lowcut2', xmlparams, 'LowCut2', 0, 1)
-					param_find(plugin_obj, 'highcut2', xmlparams, 'HighCut2', 0, 1)
+					for txt_end in ['1', '2']:
+						for txt_start in ['Gain', 'Feedback', 'Rate', 'Pan', 'LowCut', 'HighCut']:
+							pname = txt_start+txt_end
+							param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
 
 			if strproc.plugin.name == 'Drive':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'drive')
@@ -303,10 +234,46 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 				track_obj.plugslots.slots_audio.append(pluginid)
 				xmlparams = data_xml.find_first(plugin_xml_data, 'Drive')
 				if xmlparams is not None:
-					param_find(plugin_obj, 'pregain', xmlparams, 'PreGain', 0, 1)
-					param_find(plugin_obj, 'hardness', xmlparams, 'Hardness', 0, 1)
-					param_find(plugin_obj, 'threshold', xmlparams, 'Threshold', 0, 1)
-					param_find(plugin_obj, 'overdrive', xmlparams, 'Overdrive', 0, 1)
+					for pname in ['PreGain', 'Hardness', 'Threshold', 'Overdrive']:
+						param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
+
+			if strproc.plugin.name == 'Reverb':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'reverb')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'Reverb')
+				if xmlparams is not None:
+					for pname in ['Size', 'Damping', 'Width', 'HighCut', 'LowCut', 'PreDelay']:
+						param_find(plugin_obj, pname.lower(), xmlparams, pname, 0, 1)
+
+			if strproc.plugin.name == 'Zenbeats EQ':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'zenbeats_eq')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'RolandEQ')
+				if xmlparams is not None:
+					attribvals = xmlparams.attrib
+					for eq_start in ['Hi', 'Lo']:
+						for eq_end in ['Enable', 'Freq', 'Gain', 'Q', 'Shelf']:
+							pname = eq_start+eq_end
+							set_param_attrib(plugin_obj.params, pname, pname, attribvals, 0, 1)
+					for eq_start in ['HiMid', 'Mid', 'LoMid']:
+						for eq_end in ['Enable', 'Freq', 'Gain', 'Q']:
+							pname = eq_start+eq_end
+							set_param_attrib(plugin_obj.params, pname, pname, attribvals, 0, 1)
+
+			if strproc.plugin.name == 'AutoFilter':
+				plugin_obj = convproj_obj.plugin__add(pluginid, 'native', 'zenbeats', 'autofilter')
+				plugin_obj.role = 'effect'
+				track_obj.plugslots.slots_audio.append(pluginid)
+				xmlparams = data_xml.find_first(plugin_xml_data, 'AutoFilter')
+				if xmlparams is not None:
+					attribvals = xmlparams.attrib
+					set_param_attrib(plugin_obj.params, 'filterType', 'filterType', attribvals, 0, 1)
+					param_find(plugin_obj, 'lfo', xmlparams, 'LFO', 0, 1)
+					param_find(plugin_obj, 'freq', xmlparams, 'Freq', 0, 1)
+					param_find(plugin_obj, 'res', xmlparams, 'Res', 0, 1)
+					param_find(plugin_obj, 'lfof', xmlparams, 'LFOF', 0, 1)
 
 			# ------------------------- Universal -------------------------
 
@@ -326,12 +293,9 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 							drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
 
 							drumpad_obj.key = soundnum-24
-							if 'name' in attribvals:
-								drumpad_obj.visual.name = attribvals['name']
-							if 'gain' in attribvals:
-								drumpad_obj.vol = float(attribvals['gain'])
-							if 'mute' in attribvals:
-								drumpad_obj.enabled = not bool(int(attribvals['mute']))
+							if 'name' in attribvals: drumpad_obj.visual.name = attribvals['name']
+							if 'gain' in attribvals: drumpad_obj.vol = float(attribvals['gain'])
+							if 'mute' in attribvals: drumpad_obj.enabled = not bool(int(attribvals['mute']))
 
 							layer_obj.samplepartid = 'drum_%i' % soundnum
 							sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
@@ -359,49 +323,6 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 									sp_obj.from_sampleref(convproj_obj, filepath)
 
 							soundnum += 1
-
-			if strproc.plugin.name == 'Zenbeats EQ':
-				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'eq', 'bands')
-				plugin_obj.role = 'effect'
-				track_obj.plugslots.slots_audio.append(pluginid)
-				xmlparams = data_xml.find_first(plugin_xml_data, 'RolandEQ')
-				if xmlparams is not None:
-					attribvals = xmlparams.attrib
-
-					filter_obj, filterid = plugin_obj.eq_add()
-					filter_obj.type.set('peak', None)
-					if 'LoEnable' in attribvals: filter_obj.on = bool(float(attribvals['LoEnable']))
-					if 'LoFreq' in attribvals: filter_obj.freq = float(attribvals['LoFreq'])
-					if 'LoGain' in attribvals: filter_obj.gain = float(attribvals['LoGain'])
-					if 'LoQ' in attribvals: filter_obj.q = float(attribvals['LoQ'])
-
-					filter_obj, filterid = plugin_obj.eq_add()
-					filter_obj.type.set('peak', None)
-					if 'LoMidEnable' in attribvals: filter_obj.on = bool(float(attribvals['LoMidEnable']))
-					if 'LoMidFreq' in attribvals: filter_obj.freq = float(attribvals['LoMidFreq'])
-					if 'LoMidGain' in attribvals: filter_obj.gain = float(attribvals['LoMidGain'])
-					if 'LoMidQ' in attribvals: filter_obj.q = float(attribvals['LoMidQ'])
-
-					filter_obj, filterid = plugin_obj.eq_add()
-					filter_obj.type.set('peak', None)
-					if 'MidEnable' in attribvals: filter_obj.on = bool(float(attribvals['MidEnable']))
-					if 'MidFreq' in attribvals: filter_obj.freq = float(attribvals['MidFreq'])
-					if 'MidGain' in attribvals: filter_obj.gain = float(attribvals['MidGain'])
-					if 'MidQ' in attribvals: filter_obj.q = float(attribvals['MidQ'])
-
-					filter_obj, filterid = plugin_obj.eq_add()
-					filter_obj.type.set('peak', None)
-					if 'HiMidEnable' in attribvals: filter_obj.on = bool(float(attribvals['HiMidEnable']))
-					if 'HiMidFreq' in attribvals: filter_obj.freq = float(attribvals['HiMidFreq'])
-					if 'HiMidGain' in attribvals: filter_obj.gain = float(attribvals['HiMidGain'])
-					if 'HiMidQ' in attribvals: filter_obj.q = float(attribvals['HiMidQ'])
-
-					filter_obj, filterid = plugin_obj.eq_add()
-					filter_obj.type.set('peak', None)
-					if 'HiEnable' in attribvals: filter_obj.on = bool(float(attribvals['HiEnable']))
-					if 'HiFreq' in attribvals: filter_obj.freq = float(attribvals['HiFreq'])
-					if 'HiGain' in attribvals: filter_obj.gain = float(attribvals['HiGain'])
-					if 'HiQ' in attribvals: filter_obj.q = float(attribvals['HiQ'])
 
 			if strproc.plugin.name == 'Zenbeats Limiter':
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'limiter', None)
@@ -476,21 +397,6 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 					set_filter_type(plugin_obj.filter, xmlparams.get('filterType'))
 					plugin_obj.filter.freq = get_value(xmlparams, 'Freq', 18007)
 					plugin_obj.filter.q = get_value(xmlparams, 'Res', 1)
-
-			if strproc.plugin.name == 'AutoFilter':
-				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'filter', None)
-				plugin_obj.role = 'effect'
-				track_obj.plugslots.slots_audio.append(pluginid)
-				xmlparams = data_xml.find_first(plugin_xml_data, 'AutoFilter')
-				if xmlparams is not None:
-					plugin_obj.filter.on = True
-					set_filter_type(plugin_obj.filter, xmlparams.get('filterType'))
-					plugin_obj.filter.freq = get_value(xmlparams, 'Freq', 18007)
-					plugin_obj.filter.q = get_value(xmlparams, 'Res', 1)
-					lfodata = data_xml.find_first(xmlparams, 'LFO')
-					if lfodata is not None:
-						lfo_obj = plugin_obj.lfo_add('cutoff')
-						lfo_obj.time.set_steps(get_value(lfodata, 'LFOF', 1)*4, convproj_obj)
 
 def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc, dawvert_intent):
 

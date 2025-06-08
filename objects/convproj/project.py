@@ -775,7 +775,6 @@ class cvpj_project:
 	def viswindow__get(self, windowpath):
 		windowpath = autopath_encode(windowpath)
 		if windowpath in self.window_data: return self.window_data[windowpath]
-		else: return visual.cvpj_window_data()
 
 # --------------------------------------------------------- PLAYLIST ---------------------------------------------------------
 

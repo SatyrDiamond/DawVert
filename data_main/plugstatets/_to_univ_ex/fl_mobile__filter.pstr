@@ -27,6 +27,7 @@
 
   <replace plugtype="universal:filter:single" />
 
+  <out__filterparam to="on" type="bool" only_value="1">1</out__filterparam>
   <out__filterparam to="freq" from="param_1" type="float"/>
   <out__filterparam to="q" from="param_2"/>
   <out__filterparam to="type" from="param_3"/>

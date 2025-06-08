@@ -424,7 +424,7 @@ class input_famistudio(plugins.base):
 
 			if TrebleRolloffHz != -1:
 				fx_id = str(channum)+'_filter'
-				plugin_obj = convproj_obj.plugin__add(fx_id, 'universal', 'filter', None)
+				plugin_obj = convproj_obj.plugin__add(fx_id, 'universal', 'filter', 'single')
 				plugin_obj.role = 'fx'
 				plugin_obj.filter.on = True
 				plugin_obj.filter.type.set('high_shelf', None)

@@ -217,6 +217,39 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 	# ------------------------------------------------------------------------------------------- Inst
 
+
+	#elif flplugin.name == 'frequency splitter':
+	#	version = fl_plugstr.uint32()
+	#	lowmid_freq = fl_plugstr.uint32()
+	#	midhigh_freq = fl_plugstr.uint32()
+	#	lowmid_slope = fl_plugstr.uint32()
+	#	midhigh_slope = fl_plugstr.uint32()
+	#	linear_phase = fl_plugstr.uint32()
+	#	num_bands = fl_plugstr.uint32()
+	#	linear_phase_quality = fl_plugstr.uint32()
+	#	mod_speed = fl_plugstr.uint32()
+	#	send_low = fl_plugstr.uint32()
+	#	send_mid = fl_plugstr.uint32()
+	#	send_high = fl_plugstr.uint32()
+	#	out_low = fl_plugstr.uint32()
+	#	out_mid = fl_plugstr.uint32()
+	#	out_high = fl_plugstr.uint32()
+	#	target_low = fl_plugstr.uint32()
+	#	target_mid = fl_plugstr.uint32()
+	#	target_high = fl_plugstr.uint32()
+	#	print(   fl_plugstr.uint32()   , end=' ')	
+	#	print(   fl_plugstr.uint32()   , end=' ')	
+	#	print(   fl_plugstr.uint32()   , end=' ')	
+	#	print(   fl_plugstr.uint32())	
+	#	flags = fl_plugstr.uint8()
+	#	vis_hist_range = fl_plugstr.uint32()
+	#	vis_hist_pivot_slope = fl_plugstr.uint32()
+	#	vis_hist_freq_pos = fl_plugstr.uint32()
+	#	vis_hist_time_smooth = fl_plugstr.uint32()
+	#	print(   fl_plugstr.uint32()   , end=' ')	
+	#	vis_heatmap_pos = fl_plugstr.uint32()
+	#	print( )
+
 	elif flplugin.name == 'directwave':
 		try:
 			fpc_plugin = flp_plugins_directwave.directwave_plugin()
@@ -252,16 +285,17 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 
 	elif flplugin.name == 'fpc':
-		#try:
+		try:
 			plugin_obj.type_set('universal', 'sampler', 'drums')
 
 			fpc_plugin = flp_plugins.fpc_plugin()
 			fpc_plugin.read(fl_plugstr)
 			for padnum, pad_obj in enumerate(fpc_plugin.pads):
 				drumpad_obj = plugin_obj.drumpad_add()
-				drumpad_obj.key = pad_obj.key
+				drumpad_obj.key = pad_obj.key-60
+				drumpad_obj.visual.name = pad_obj.name.decode()
 				for layernum, layer in enumerate(pad_obj.layers):
-					pad_filename = flp_plugins.utf16decode(layer.filename)
+					pad_filename = layer.filename.decode()
 					pad_sfilename = get_sample(pad_filename)
 
 					if pad_sfilename:
@@ -275,11 +309,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 						layer_obj.vel_max = layer.vel_max/127
 						sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 						sp_obj.sampleref = pad_sfilename
-
-
-
-		#except:
-		#	pass
+		except:
+			pass
 
 	elif flplugin.name in ['fruity soundfont player', 'soundfont player']:
 		flsf_vers = fl_plugstr.uint32()

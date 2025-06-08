@@ -2548,5 +2548,27 @@
       "universal:limiter"
     ],
     "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_ex\\zenbeats__autofilter.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_ex\\zenbeats__autofilter.pstr",
+    "daw_in": [
+      "zenbeats"
+    ],
+    "plugtype_in": "native:zenbeats:autofilter",
+    "plugtype_out": [
+      "universal:filter:single"
+    ],
+    "priority": -100
+  },
+  "data_main\\plugstatets\\_to_univ_ex\\zenbeats__zb_eq.pstr": {
+    "file": "data_main\\plugstatets\\_to_univ_ex\\zenbeats__zb_eq.pstr",
+    "daw_in": [
+      "zenbeats"
+    ],
+    "plugtype_in": "native:zenbeats:zenbeats_eq",
+    "plugtype_out": [
+      "universal:eq:bands"
+    ],
+    "priority": -100
   }
 }

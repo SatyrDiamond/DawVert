@@ -5,7 +5,9 @@
     <part type="short" name="stretch_algo"/>
   </struct>
 
-  <struct name="reacomp">
+  <struct name="reacomp"> 
+    <part type="int" name="unk1"/>
+    <part type="int" name="unk2"/>
     <part type="float" name="thresh"/>
     <part type="float" name="ratio"/>
     <part type="float" name="attack"/>
@@ -61,8 +63,8 @@
     <part type="int" name="on"/>
     <part type="double" name="hz"/>
     <part type="double" name="gain"/>
-    <part type="double" name="q"/>
-    <part type="byte" name="__unk"/>
+    <part type="double" name="oct"/>
+    <part type="byte" name="hz_log_auto"/>
   </struct>
 
   <struct name="reaeq">
@@ -410,6 +412,10 @@
     <part type="list" name="shifters" size_source="lengthval">
       <part type="struct" struct_name="__reapitch_shifter"/>
     </part>
+  </struct>
+
+  <struct name="reacast">
+    <part type="rest" name="test"/>
   </struct>
 
 </datadef>

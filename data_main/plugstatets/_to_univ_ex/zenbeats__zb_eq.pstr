@@ -1,0 +1,70 @@
+<plugstatetransform daw_in="zenbeats" plugtype="native:zenbeats:zenbeats_eq">
+  <define_remap name="shelf_lo" in_type="int" out_type="filter_type">
+    <val in_val="0" out_val="peak"/>
+    <val in_val="1" out_val="low_shelf"/>
+    <fallback out_val="peak"/>
+  </define_remap>
+
+  <define_remap name="shelf_hi" in_type="int" out_type="filter_type">
+    <val in_val="0" out_val="peak"/>
+    <val in_val="1" out_val="high_shelf"/>
+    <fallback out_val="peak"/>
+  </define_remap>
+
+  <in__param to="LoEnable" type="float" />
+  <in__param to="LoFreq" type="float" />
+  <in__param to="LoGain" type="float" />
+  <in__param to="LoShelf" type="float" />
+
+  <in__param to="LoMidEnable" type="float" />
+  <in__param to="LoMidFreq" type="float" />
+  <in__param to="LoMidGain" type="float" />
+
+  <in__param to="MidEnable" type="float" />
+  <in__param to="MidFreq" type="float" />
+  <in__param to="MidGain" type="float" />
+
+  <in__param to="HiMidEnable" type="float" />
+  <in__param to="HiMidFreq" type="float" />
+  <in__param to="HiMidGain" type="float" />
+
+  <in__param to="HiEnable" type="float" />
+  <in__param to="HiFreq" type="float" />
+  <in__param to="HiGain" type="float" />
+  <in__param to="HiShelf" type="float" />
+
+  <remap name="LoShelf" remapdef="shelf_lo"/>
+  <remap name="HiShelf" remapdef="shelf_hi"/>
+
+  <replace plugtype="universal:eq:bands" />
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" from="LoEnable" type="bool"/>
+  <out__named_filterparam to="freq" from="LoFreq" type="float"/>
+  <out__named_filterparam to="gain" from="LoGain" type="float"/>
+  <out__named_filterparam to="type" from="LoShelf" type="filter_type"/>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" from="LoMidEnable" type="bool"/>
+  <out__named_filterparam to="freq" from="LoMidFreq" type="float"/>
+  <out__named_filterparam to="gain" from="LoMidGain" type="float"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" from="MidEnable" type="bool"/>
+  <out__named_filterparam to="freq" from="MidFreq" type="float"/>
+  <out__named_filterparam to="gain" from="MidGain" type="float"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" from="HiMidEnable" type="bool"/>
+  <out__named_filterparam to="freq" from="HiMidFreq" type="float"/>
+  <out__named_filterparam to="gain" from="HiMidGain" type="float"/>
+  <out__named_filterparam to="type" type="filter_type" only_value="1">peak</out__named_filterparam>
+
+  <out__eq_add/>
+  <out__named_filterparam to="on" from="HiEnable" type="bool"/>
+  <out__named_filterparam to="freq" from="HiFreq" type="float"/>
+  <out__named_filterparam to="gain" from="HiGain" type="float"/>
+  <out__named_filterparam to="type" from="HiShelf" type="filter_type"/>
+</plugstatetransform>

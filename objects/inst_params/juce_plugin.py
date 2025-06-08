@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import os
-#from functions_plugin_ext import data_vc2xml
+from functions.juce import data_vc2xml
 from functions.juce import juce_memoryblock
 from functions import data_xml
 
@@ -67,18 +67,18 @@ class juce_plugin:
 				if self.program_num is not None:
 					plugin_obj.current_program = self.program_num
 
-			#if self.plugtype == 'vst3':
-			#	pluginstate_x = data_vc2xml.get(chunkdata)
-			#	IComponent = data_xml.find_first(pluginstate_x, 'IComponent')
-			#	if IComponent != None and self.name:
-			#		chunkdata = juce_memoryblock.fromJuceBase64Encoding(IComponent.text)
-			#		out_exists = extmanu_obj.vst3__replace_data('name', self.name, chunkdata, None)
-	#
-			#		if not out_exists: 
-			#			if self.filename:
-			#				if os.path.exists(self.filename):
-			#					vst3_pathid = pluginid+'_vstpath'
-			#					convproj_obj.fileref__add(vst3_pathid, self.filename)
-			#					plugin_obj.filerefs_global['plugin'] = vst3_pathid
+			if self.plugtype == 'vst3':
+				pluginstate_x = data_vc2xml.get(chunkdata)
+				IComponent = data_xml.find_first(pluginstate_x, 'IComponent')
+				if IComponent != None and self.name:
+					chunkdata = juce_memoryblock.fromJuceBase64Encoding(IComponent.text)
+					out_exists = extmanu_obj.vst3__replace_data('name', self.name, chunkdata, None)
+	
+					if not out_exists: 
+						if self.filename:
+							if os.path.exists(self.filename):
+								vst3_pathid = pluginid+'_vstpath'
+								convproj_obj.fileref__add(vst3_pathid, self.filename)
+								plugin_obj.filerefs_global['plugin'] = vst3_pathid
 
 		return plugin_obj, pluginid

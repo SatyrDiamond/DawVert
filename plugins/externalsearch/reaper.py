@@ -95,7 +95,7 @@ class plugsearch(plugins.base):
 						if not is_vst3:
 							with globalstore.extplug.add('vst2', globalstore.os_platform) as pluginfo_obj:
 								pluginfo_obj.id = int(vst_id)
-								pluginfo_obj.type = 'synth' if is_inst else 'effect'
+								pluginfo_obj.type = 'synth' if is_inst else 'fx'
 								pluginfo_obj.creator = vst_mani
 								pluginfo_obj.audio_num_inputs = audioinports
 								pluginfo_obj.audio_num_outputs = audiooutports
@@ -103,7 +103,7 @@ class plugsearch(plugins.base):
 						else:
 							with globalstore.extplug.add('vst3', globalstore.os_platform) as pluginfo_obj:
 								pluginfo_obj.id = vst_id
-								pluginfo_obj.type = 'synth' if is_inst else 'effect'
+								pluginfo_obj.type = 'synth' if is_inst else 'fx'
 								pluginfo_obj.creator = vst_mani
 								pluginfo_obj.audio_num_inputs = audioinports
 								pluginfo_obj.audio_num_outputs = audiooutports

@@ -36,25 +36,10 @@ def do_visual(track_obj, dp_track):
 	if dp_track.name: track_obj.visual.name = dp_track.name
 	if dp_track.color: track_obj.visual.color.set_hex(dp_track.color)
 
-def do_trackparams(convproj_obj, dp_channel, paramset, trackid):
-	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', ['track', trackid, 'enabled'])
-	do_param(convproj_obj, paramset, dp_channel.pan, 'pan', None, 'float', ['track', trackid, 'pan'])
-	do_param(convproj_obj, paramset, dp_channel.volume, 'vol', None, 'float', ['track', trackid, 'vol'])
-
-def do_groupparams(convproj_obj, dp_channel, paramset, trackid):
-	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', ['group', trackid, 'enabled'])
-	do_param(convproj_obj, paramset, dp_channel.pan, 'pan', None, 'float', ['group', trackid, 'pan'])
-	do_param(convproj_obj, paramset, dp_channel.volume, 'vol', None, 'float', ['group', trackid, 'vol'])
-
-def do_returnparams(convproj_obj, dp_channel, paramset, trackid):
-	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', ['return', trackid, 'enabled'])
-	do_param(convproj_obj, paramset, dp_channel.pan, 'pan', None, 'float', ['return', trackid, 'pan'])
-	do_param(convproj_obj, paramset, dp_channel.volume, 'vol', None, 'float', ['return', trackid, 'vol'])
-
-def do_masterparams(convproj_obj, dp_channel, paramset):
-	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', ['master', 'enabled'])
-	do_param(convproj_obj, paramset, dp_channel.pan, 'pan', None, 'float', ['master', 'pan'])
-	do_param(convproj_obj, paramset, dp_channel.volume, 'vol', None, 'float', ['master', 'vol'])
+def do_params(convproj_obj, dp_channel, paramset, autoloc_start):
+	do_param(convproj_obj, paramset, dp_channel.mute, 'enabled', [-1, -1], 'bool', autoloc_start+['enabled'])
+	do_param(convproj_obj, paramset, dp_channel.pan, 'pan', None, 'float', autoloc_start+['pan'])
+	do_param(convproj_obj, paramset, dp_channel.volume, 'vol', None, 'float', autoloc_start+['vol'])
 
 def do_sends(convproj_obj, track_obj, dp_channel):
 	for send in dp_channel.sends:
@@ -187,7 +172,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.contentType == 'notes' and dp_channel.role == 'regular': 
 			track_obj = convproj_obj.track__add(dp_track.id, 'instrument', 1, False)
 			do_visual(track_obj, dp_track)
-			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
+			do_params(convproj_obj, dp_channel, track_obj.params, ['track', dp_track.id])
 			do_sends(convproj_obj, track_obj, dp_channel)
 			do_devices(convproj_obj, track_obj, False, dp_channel.devices)
 			if groupid: track_obj.group = groupid
@@ -196,7 +181,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.contentType == 'audio' and dp_channel.role == 'regular': 
 			track_obj = convproj_obj.track__add(dp_track.id, 'audio', 1, False)
 			do_visual(track_obj, dp_track)
-			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
+			do_params(convproj_obj, dp_channel, track_obj.params, ['track', dp_track.id])
 			do_sends(convproj_obj, track_obj, dp_channel)
 			do_devices(convproj_obj, track_obj, False, dp_channel.devices)
 			if groupid: track_obj.group = groupid
@@ -205,7 +190,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.contentType == 'audio notes' and dp_channel.role == 'regular': 
 			track_obj = convproj_obj.track__add(dp_track.id, 'hybrid', 1, False)
 			do_visual(track_obj, dp_track)
-			do_trackparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
+			do_params(convproj_obj, dp_channel, track_obj.params, ['track', dp_track.id])
 			do_sends(convproj_obj, track_obj, dp_channel)
 			do_devices(convproj_obj, track_obj, False, dp_channel.devices)
 			if groupid: track_obj.group = groupid
@@ -214,7 +199,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.contentType == 'tracks' and dp_channel.role == 'master': 
 			track_obj = convproj_obj.fx__group__add(dp_track.id)
 			do_visual(track_obj, dp_track)
-			do_groupparams(convproj_obj, dp_channel, track_obj.params, dp_track.id)
+			do_params(convproj_obj, dp_channel, track_obj.params, ['group', dp_track.id])
 			do_tracks(convproj_obj, dp_track.tracks, dp_track.id)
 			do_sends(convproj_obj, track_obj, dp_channel)
 			do_devices(convproj_obj, track_obj, True, dp_channel.devices)
@@ -224,7 +209,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.contentType == 'audio' and dp_channel.role == 'effect': 
 			return_obj = convproj_obj.track_master.fx__return__add(dp_track.id)
 			do_visual(return_obj, dp_track)
-			do_returnparams(convproj_obj, dp_channel, return_obj.params, dp_track.id)
+			do_params(convproj_obj, dp_channel, return_obj.params, ['group', dp_track.id])
 			do_sends(convproj_obj, return_obj, dp_channel)
 			do_devices(convproj_obj, track_obj, True, dp_channel.devices)
 			if dp_channel.solo: return_obj.params.add('solo', dp_channel.solo=='true', 'bool')
@@ -232,7 +217,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.contentType == 'audio notes' and dp_channel.role == 'master': 
 			master_track_obj = convproj_obj.track_master
 			do_visual(master_track_obj, dp_track)
-			do_masterparams(convproj_obj, dp_channel, master_track_obj.params)
+			do_params(convproj_obj, dp_channel, master_track_obj.params, ['master'])
 			do_devices(convproj_obj, track_obj, True, dp_channel.devices)
 
 		if dp_track.id: trackdata[dp_track.id] = track_obj
@@ -352,7 +337,7 @@ def do_audioauto(npa_obj, mpepoints):
 			if mpetype == 'gain': 
 				npa_obj.sample.vol = outval
 			if mpetype == 'formant': 
-				npa_obj.sample.algorithm.formant = outval
+				npa_obj.sample.stretch.algorithm.formant = outval
 
 		elif len(mpepoints.points)>1:
 			autopoints_obj = npa_obj.add_autopoints(mpetype, 1, True)

@@ -12,10 +12,6 @@ import struct
 import rpp
 
 nativeids = {
-	1919247213: 'reacomp',
-	1919247468: 'readelay',
-	1919247729: 'reaeq',
-	1919247986: 'reafir',
 	1919248244: 'reagate',
 	1919708532: 'realimit',
 	1919250531: 'reapitch',
@@ -28,7 +24,15 @@ nativeids = {
 	1919250281: 'reainsert',
 	#1920168498: 'reasurroundpan',
 	#1919251566: 'reatune',
-	1919252067: 'reavoice'
+}
+
+nativeids_adv = {
+	1919247729: 'reaeq',
+	1919247213: 'reacomp', 
+	1919247468: 'readelay',
+	1919252067: 'reavoice',
+	#1919246691: 'reacast',
+	#1919247986: 'reafir',
 }
 
 def reaper_color_to_cvpj_color(i_color, isreversed): 
@@ -164,10 +168,7 @@ class input_reaper(plugins.base):
 
 		if dawvert_intent.input_mode == 'file':
 			bytestream = open(dawvert_intent.input_file, 'r')
-		try:
-			rpp_data = rpp.load(bytestream)
-		except UnicodeDecodeError:
-			raise ProjectFileParserException('reaper: File is not text')
+		rpp_data = rpp.load(bytestream)
 
 		project_obj = proj_reaper.rpp_song()
 		if dawvert_intent.input_mode == 'file':
@@ -320,6 +321,8 @@ class input_reaper(plugins.base):
 						if rpp_extplug.vst3_uuid == None:
 							fourid = rpp_extplug.vst_fourid
 
+							print(fourid)
+
 							if fourid == 1920167789:
 								if datadef_obj:
 									dfdict = datadef_obj.parse('reasamplomatic', rpp_extplug.data_chunk)
@@ -328,8 +331,39 @@ class input_reaper(plugins.base):
 										if 'filename' in dfdict: filenames = dfdict['filename'].split('>0 YOU NEED A NEWER REASAMPLOMATIC, HIT LEAVE OFFLINE!')[0].split('|')
 										samplers.append([filenames, dfdict])
 
-							else:
+							#elif fourid in nativeids:
+							#	plugname = nativeids[fourid]
+#
+							#	fldso = globalstore.dataset.get_obj('reaper', 'plugin', plugname)
+							#	data_chunk = rpp_extplug.data_chunk
+#
+							#	print(data_chunk)
+#
+							#	print(  datadef_obj.parse(plugname, data_chunk)  )
 
+							#elif fourid in nativeids_adv:
+							#	plugname = nativeids_adv[fourid]
+							#	plugdata = datadef_obj.parse(plugname, rpp_extplug.data_chunk)
+							#	fldso = globalstore.dataset.get_obj('reaper', 'plugin', plugname)
+							#	plugin_obj = None
+#
+							#	print(plugname)
+#
+							#	if plugname == 'reacomp':
+							#		plugin_obj = convproj_obj.plugin__add(pluginid, 'external', 'native', 'reacomp')
+							#		plugin_obj.role = 'fx'
+							#		for name, dset_param in fldso.params.iter():
+							#			if name in plugdata:
+							#				plugin_obj.dset_param__add(name, plugdata[name], dset_param)
+							#	if plugname == 'reaeq':
+							#		if 'bands' in plugdata:
+							#			for band in plugdata['bands']:
+							#				print(band)
+#
+#
+							#	if plugin_obj is not None: track_obj.plugin_autoplace(plugin_obj, pluginid)
+
+							else:
 								pluginfo_obj = globalstore.extplug.get('vst2', 'id', fourid, None, [64, 32])
 
 								try:

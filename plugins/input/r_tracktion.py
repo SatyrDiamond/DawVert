@@ -11,7 +11,41 @@ import os
 
 logger_input = logging.getLogger('input')
 
-def soundlayer_samplepart(sp_obj, soundlayer, layerparams): 
+sampler_filter_types = {
+	0: 'low_pass',
+	1: 'low_pass',
+	2: 'low_pass',
+	3: 'band_pass',
+	4: 'band_pass',
+	5: 'high_pass',
+	6: 'high_pass',
+	7: 'high_pass',
+	8: 'notch',
+	9: 'notch'
+}
+
+sampler_filter_slopes = {
+	0: 6,
+	1: 12,
+	2: 24,
+	3: 12,
+	4: 24,
+	5: 6,
+	6: 12,
+	7: 24,
+	8: 12,
+	9: 24
+}
+
+def get_dictval_fb(d, key, fb, checktype): 
+	if key in d:
+		if d[key] is not None: 
+			outv = d[key]
+			if checktype is None: return outv
+			elif isinstance(outv, checktype): return outv
+	return fb
+
+def sampler_soundlayer_samplepart(sp_obj, soundlayer, layerparams): 
 	sp_obj.visual.name = soundlayer.name
 	sp_obj.point_value_type = 'samples'
 	sp_obj.sampleref = soundlayer.sampleDataName
@@ -34,77 +68,30 @@ def soundlayer_samplepart(sp_obj, soundlayer, layerparams):
 
 	stretch_obj = sp_obj.stretch
 	stretch_obj.timing.set__speed(soundlayer.offlineTimeStretch)
-	if soundlayer.pitchShift or soundlayer.offlineTimeStretch != 1:
-		stretch_obj.preserve_pitch = True
+	if soundlayer.pitchShift or soundlayer.offlineTimeStretch != 1: stretch_obj.preserve_pitch = True
 
 	if 'sensParam' in layerparams:
 		if layerparams['sensParam'] is not None: sp_obj.data['vel_sens'] = layerparams['sensParam']
 
-def soundlayer_adsr(plugin_obj, layerparams, env_name): 
-	adsr = [0, 0, 1, 0]
-	if 'attackParam' in layerparams:
-		if layerparams['attackParam'] is not None: adsr[0] = layerparams['attackParam']
-	if 'decayParam' in layerparams:
-		if layerparams['decayParam'] is not None: adsr[1] = layerparams['decayParam']
-	if 'sustainParam' in layerparams:
-		if layerparams['sustainParam'] is not None: adsr[2] = layerparams['sustainParam']/100
-	if 'releaseParam' in layerparams:
-		if layerparams['releaseParam'] is not None: adsr[3] = layerparams['releaseParam']
-	plugin_obj.env_asdr_add(env_name, 0, adsr[0], 0, adsr[1], adsr[2], adsr[3], 1)
+def sampler_soundlayer_adsr(plugin_obj, layerparams, env_name): 
+	adsr_att = get_dictval_fb(layerparams, 'attackParam', 0, float)
+	adsr_dec = get_dictval_fb(layerparams, 'decayParam', 0, float)
+	adsr_sus = get_dictval_fb(layerparams, 'sustainParam', 100, float)/100
+	adsr_rel = get_dictval_fb(layerparams, 'releaseParam', 0, float)
+	plugin_obj.env_asdr_add(env_name, 0, adsr_att, 0, adsr_dec, adsr_sus, adsr_rel, 1)
 
-def sampler_do_filter(plugin_obj, soundlayer, filter_obj):
+def sampler_soundlayer_filter(plugin_obj, soundlayer, filter_obj):
 	layerparams = soundlayer.soundparameters
+	filter_obj.on = bool(get_dictval_fb(layerparams, 'filterEnableParam', 0, float))
+	filter_obj.freq = get_dictval_fb(layerparams, 'cuttoffParam', 20000, float)
+	filter_obj.q = get_dictval_fb(layerparams, 'qParam', 0, float)+1
+	filterModeParam = int(get_dictval_fb(layerparams, 'filterModeParam', 0, float))
+	if filterModeParam in sampler_filter_types: filter_obj.type.set(sampler_filter_types[filterModeParam], None)
+	if filterModeParam in sampler_filter_slopes: filter_obj.slope = sampler_filter_slopes[filterModeParam]
 
-	filterEnableParam = False
-	filterModeParam = 0
-	qParam = 0
-	cuttoffParam = 20000
-
-	if 'filterEnableParam' in layerparams:
-		if layerparams['filterEnableParam'] is not None: filterEnableParam = bool(layerparams['filterEnableParam'])
-	if 'filterModeParam' in layerparams:
-		if layerparams['filterModeParam'] is not None: filterModeParam = int(layerparams['filterModeParam'])
-	if 'qParam' in layerparams:
-		if layerparams['qParam'] is not None: qParam = layerparams['qParam']
-	if 'cuttoffParam' in layerparams:
-		if layerparams['cuttoffParam'] is not None: cuttoffParam = layerparams['cuttoffParam']
-
-	filter_obj.on = filterEnableParam
-	filter_obj.freq = cuttoffParam
-	filter_obj.q = qParam+1
-	if filterModeParam == 0: 
-		filter_obj.type.set('low_pass', None)
-		filter_obj.slope = 6
-	if filterModeParam == 1: 
-		filter_obj.type.set('low_pass', None)
-		filter_obj.slope = 12
-	if filterModeParam == 2: 
-		filter_obj.type.set('low_pass', None)
-		filter_obj.slope = 24
-
-	if filterModeParam == 3: 
-		filter_obj.type.set('band_pass', None)
-		filter_obj.slope = 12
-	if filterModeParam == 4: 
-		filter_obj.type.set('band_pass', None)
-		filter_obj.slope = 24
-
-	if filterModeParam == 5: 
-		filter_obj.type.set('high_pass', None)
-		filter_obj.slope = 6
-	if filterModeParam == 6: 
-		filter_obj.type.set('high_pass', None)
-		filter_obj.slope = 12
-	if filterModeParam == 7: 
-		filter_obj.type.set('high_pass', None)
-		filter_obj.slope = 24
-
-	if filterModeParam == 8: 
-		filter_obj.type.set('notch', None)
-		filter_obj.slope = 12
-	if filterModeParam == 9: 
-		filter_obj.type.set('notch', None)
-		filter_obj.slope = 24
+def do_auto(convproj_obj, autocurvespoints, autoloc):
+	for time, val, curve in autocurvespoints:
+		convproj_obj.automation.add_autopoint_real(autoloc, 'float', time, val, 'normal')
 
 def decodevst3_chunk(memoryblock): 
 	from functions.juce import juce_memoryblock
@@ -127,8 +114,11 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 	if plugtype == 'vst':
 		vstname = str(wf_plugin.params['name']) if "name" in wf_plugin.params else ''
 
+		internal_vst = False
+
 		if software_mode == 'waveform':
 			if vstname in ['Multi Sampler', 'Micro Sampler']:
+				internal_vst = True
 				if "state" in wf_plugin.params:
 					sampler_obj = sampler.waveform_sampler_main()
 					sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
@@ -144,9 +134,9 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 							track_obj.plugslots.set_synth(pluginid)
 							sp_obj = plugin_obj.samplepart_add('sample')
 							if sp_obj.visual.name: track_obj.visual_inst.name = sp_obj.visual.name
-							soundlayer_samplepart(sp_obj, firstlayer, layerparams)
-							soundlayer_adsr(plugin_obj, layerparams, 'vol')
-							sampler_do_filter(plugin_obj, firstlayer, plugin_obj.filter)
+							sampler_soundlayer_samplepart(sp_obj, firstlayer, layerparams)
+							sampler_soundlayer_adsr(plugin_obj, layerparams, 'vol')
+							sampler_soundlayer_filter(plugin_obj, firstlayer, plugin_obj.filter)
 	
 							pitch = 0
 							if 'pitchParam' in layerparams:
@@ -169,16 +159,17 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 								endstr = str(layernum)
 								sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
 								sp_obj.envs['vol'] = 'vol_'+endstr
-								soundlayer_samplepart(sp_obj, soundlayer, layerparams)
-								soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
+								sampler_soundlayer_samplepart(sp_obj, soundlayer, layerparams)
+								sampler_soundlayer_adsr(plugin_obj, layerparams, 'vol_'+endstr)
 								filter_obj = plugin_obj.named_filter_add(endstr)
-								sampler_do_filter(plugin_obj, soundlayer, filter_obj)
+								sampler_soundlayer_filter(plugin_obj, soundlayer, filter_obj)
 								sp_obj.filter_assoc = endstr
 								if 'pitchParam' in layerparams:
 									if layerparams['pitchParam'] is not None:
 										sp_obj.pitch = layerparams['pitchParam']
 	
 			elif vstname == 'Micro Drum Sampler':
+				internal_vst = True
 				from objects import colors
 	
 				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
@@ -195,7 +186,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 							layerparams = soundlayer.soundparameters
 							endstr = str(layernum)
 							sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
-							soundlayer_samplepart(sp_obj, soundlayer, layerparams)
+							sampler_soundlayer_samplepart(sp_obj, soundlayer, layerparams)
 							sp_obj.pitch = layerparams['pitchParam'] if 'pitchParam' in layerparams else 0
 							if soundlayer.rootNote in program.pads:
 								paddata = program.pads[soundlayer.rootNote]
@@ -205,24 +196,20 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 								sp_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 		elif software_mode == 'soundbug':
-
 			if vstname == 'SoundSynth':
-
 				try:
 					chunkdata = decodevst3_chunk(str(wf_plugin.params['state']))
-	
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst3', None)
 					plugin_obj.role = 'synth'
 					plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
-	
 					extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
 					extmanu_obj.vst3__replace_data('name', 'Surge XT', chunkdata, None)
-	
 					track_obj.plugin_autoplace(plugin_obj, pluginid)
+					internal_vst = True
 				except:
 					pass
 
-		else:
+		if not internal_vst:
 			try:
 				from objects.inst_params import juce_plugin
 				juceobj = juce_plugin.juce_plugin()
@@ -232,22 +219,17 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 				juceobj.manufacturer = wf_plugin.params['manufacturer'] if "manufacturer" in wf_plugin.params else ''
 				if "programNum" in wf_plugin.params: juceobj.program_num = int(wf_plugin.params['programNum'])
 				juceobj.memoryblock = wf_plugin.params['state']
-	
 				plugin_obj, pluginid = juceobj.to_cvpj(convproj_obj, None)
 				plugin_obj.fxdata_add(bool(wf_plugin.enabled), None)
-
 				track_obj.plugin_autoplace(plugin_obj, pluginid)
-	
 				if pluginid:
 					if wf_plugin.windowX and wf_plugin.windowY:
 						windata_obj = convproj_obj.viswindow__add(['plugin',pluginid])
 						windata_obj.pos_x = wf_plugin.windowX
 						windata_obj.pos_y = wf_plugin.windowY
-
 					for autocurves in wf_plugin.automationcurves:
-						if autocurves.paramid:
-							for time, val, curve in autocurves.points:
-								convproj_obj.automation.add_autopoint_real(['plugin',pluginid,'ext_param_'+autocurves.paramid], 'float', time, val, 'normal')
+						if autocurves.paramid: 
+							do_auto(convproj_obj, autocurves.points, ['plugin',pluginid,'ext_param_'+autocurves.paramid])
 
 			except:
 				#import traceback
@@ -255,7 +237,6 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 				pass
 
 	elif software_mode == 'waveform':
-
 		if plugtype not in ['volume', 'level'] and plugtype != '':
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'tracktion', plugtype)
 			plugin_obj.role = 'effect'
@@ -272,17 +253,11 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 	
 			for autocurves in wf_plugin.automationcurves:
 				if autocurves.paramid:
-					for time, val, curve in autocurves.points:
-						convproj_obj.automation.add_autopoint_real(['plugin',pluginid,autocurves.paramid], 'float', time, val, 'normal')
+					do_auto(convproj_obj, autocurves.points, ['plugin',pluginid,autocurves.paramid])
 	
 			plugin_obj.fxdata_add(wf_plugin.enabled, 1)
 			if plugtype not in ['4osc']: track_obj.plugslots.slots_audio.append(pluginid)
 			else: track_obj.plugslots.set_synth(pluginid)
-
-	#elif software_mode == 'soundbug':
-
-	#	print(wf_plugin.plugtype, wf_plugin.params)
-
 
 autonames = {
 	'PITCHBEND': 'pitch',
@@ -297,7 +272,7 @@ def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode):
 	if wf_track.colour != '0': 
 		track_obj.visual.color.set_hex(wf_track.colour)
 		track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
-	track_obj.visual_ui.height = wf_track.height/35.41053828354546
+	#track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
 	vol = 1
 	pan = 0
@@ -306,16 +281,9 @@ def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode):
 		if wf_plugin.plugtype == 'volume':
 			if 'volume' in wf_plugin.params: vol *= wf_plugin.params['volume']
 			if 'pan' in wf_plugin.params: pan = wf_plugin.params['pan']
-
 			for autocurves in wf_plugin.automationcurves:
-				if autocurves.paramid == 'volume':
-					for time, val, curve in autocurves.points:
-						convproj_obj.automation.add_autopoint_real(['group',groupid,'vol'], 'float', time, val, 'normal')
-
-				if autocurves.paramid == 'pan':
-					for time, val, curve in autocurves.points:
-						convproj_obj.automation.add_autopoint_real(['group',groupid,'pan'], 'float', time, val, 'normal')
-
+				if autocurves.paramid == 'volume': do_auto(convproj_obj, autocurves.points, ['group',groupid,'vol'])
+				if autocurves.paramid == 'pan': do_auto(convproj_obj, autocurves.points, ['group',groupid,'pan'])
 		else:
 			do_plugin(convproj_obj, wf_plugin, track_obj, software_mode)
 
@@ -326,15 +294,18 @@ def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode):
 def do_track(convproj_obj, wf_track, track_obj, software_mode): 
 	track_obj.visual.name = str(wf_track.name)
 	colour = str(wf_track.colour)
-	if colour != '0': 
-		if len(colour)==8:
-			track_obj.visual.color.set_hex(colour[2:])
-			track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
-		if len(colour)==6:
-			track_obj.visual.color.set_hex(colour)
-			track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
+	try:
+		if colour != '0': 
+			if len(colour)==8:
+				track_obj.visual.color.set_hex(colour[2:])
+				track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
+			if len(colour)==6:
+				track_obj.visual.color.set_hex(colour)
+				track_obj.visual.color.fx_allowed = ['saturate', 'brighter']
+	except:
+		pass
 
-	track_obj.visual_ui.height = wf_track.height/35.41053828354546
+	#track_obj.visual_ui.height = wf_track.height/35.41053828354546
 
 	bpm = convproj_obj.params.get('bpm', 120).value
 
@@ -362,8 +333,7 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 	for midiclip in wf_track.midiclips:
 		placement_obj = track_obj.placements.add_notes()
 		time_obj = placement_obj.time
-		time_obj.position_real = midiclip.start
-		time_obj.duration_real = midiclip.length
+		time_obj.set_posdur_real(midiclip.start, midiclip.length)
 		if midiclip.loopStartBeats == 0 and midiclip.loopLengthBeats == 0:
 			time_obj.set_offset(midiclip.offset*4)
 		else:
@@ -389,24 +359,15 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 			placement_obj.sample.sampleref = audioclip.source
 			sampleref_exists, sampleref_obj = convproj_obj.sampleref__get(audioclip.source)
 	
-			time_obj.position_real = audioclip.start
-			time_obj.duration_real = audioclip.length
-	
+			time_obj.set_posdur_real(audioclip.start, audioclip.length)
 			placement_obj.fade_in.set_dur(audioclip.fadeIn, 'seconds')
 			placement_obj.fade_out.set_dur(audioclip.fadeOut, 'seconds')
-	
 			placement_obj.group = str(audioclip.groupID) if audioclip.groupID!=-1 else None
 	
 			bpmdiv = (bpm/120)
 			if audioclip.loopStartBeats == 0 and audioclip.loopLengthBeats == 0:
 				time_obj.set_offset(audioclip.offset*8*bpmdiv)
 			else:
-				#print(
-				#	audioclip.offset*8*bpmdiv,
-				#	audioclip.loopStartBeats*4, 
-				#	audioclip.loopStartBeats+audioclip.loopLengthBeats*4
-				#	)
-	
 				time_obj.set_loop_data(
 					audioclip.offset*8*bpmdiv, 
 					audioclip.loopStartBeats*4, 
@@ -434,32 +395,24 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 						warp_obj = sp_obj.stretch.warp
 						warp_obj.seconds = warptime.warpEndMarkerTime
 						sampleref_obj.set_dur_sec(warptime.warpEndMarkerTime)
-	
+
+						secbeat = audioclip.loopinfo.numBeats/2
+						stretchrate = warptime.warpEndMarkerTime/secbeat
+
 						for warpmarker in warptime.warpmarkers:
 							warp_point_obj = warp_obj.points__add()
-							warp_point_obj.beat = (warpmarker.warpTime/stretch_amt)*2
+							warp_point_obj.beat = (warpmarker.warpTime*2)/stretchrate
 							warp_point_obj.second = warpmarker.sourceTime
+
 						warp_obj.calcpoints__speed()
 
 			if not stretch_obj.is_warped:
-				stretch_amt = 1
-				if sampleref_exists:
-					stretch_obj.timing.set__beats(audioclip.loopinfo.numBeats)
-					
-					dur_sec = sampleref_obj.get_dur_sec()
-					if dur_sec is not None:
-						stretch_amt = (dur_sec*2)/audioclip.loopinfo.numBeats
-	
-				else:
-					stretch_obj.timing.set__real_rate(bpm, stretch_amt)
+				stretch_obj.timing.set__beats(audioclip.loopinfo.numBeats)
 
 		else:
 			placement_obj = track_obj.placements.add_video()
 			time_obj = placement_obj.time
-	
-			time_obj.position_real = audioclip.start
-			time_obj.duration_real = audioclip.length
-
+			time_obj.set_posdur_real(audioclip.start, audioclip.length)
 			placement_obj.videoref = audioclip.srcVideo
 	
 	middlenote += track_obj.datavals.get('middlenote', 0)
@@ -562,7 +515,7 @@ class input_tracktion_edit(plugins.base):
 				main_obj = juce_binaryxml.juce_binaryxml_element()
 				main_obj.read_bytes(decompdata)
 				project_obj.load_from_elementdata(main_obj)
-				logger_input.info('Software Mode: Waveform')
+				logger_input.info('Software Mode: Soundbug')
 				software_mode = 'soundbug'
 			except:
 				pass

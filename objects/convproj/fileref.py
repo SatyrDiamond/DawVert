@@ -219,7 +219,6 @@ class cvpj_folderpath:
 		else: outpath = self.folderloc.copy()
 		return outpath
 
-
 class cvpj_fileref:
 	__slots__ = ['file','folder','is_file']
 

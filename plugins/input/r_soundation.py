@@ -152,7 +152,11 @@ class input_soundation(plugins.base):
 				if sound_chan_type == 'audio': track_type = 'audio'
 				track_obj = convproj_obj.track__add(cvpj_trackid, track_type, 1, False)
 				track_obj.visual.name = soundation_channel.userSetName if soundation_channel.userSetName else soundation_channel.name
-				#if soundation_channel.color: track_obj.visual.color.set_float([trackcolor[0], trackcolor[1], trackcolor[2]])
+				try:
+					if soundation_channel.color.startswith('#'):
+						track_obj.visual.color.set_hex(soundation_channel.color)
+				except:
+					pass
 
 				track_obj.params.add('vol', soundation_channel.volume, 'float')
 				track_obj.params.add('pan', (soundation_channel.pan-0.5)*2, 'float')

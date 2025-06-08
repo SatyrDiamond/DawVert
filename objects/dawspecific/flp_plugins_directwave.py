@@ -79,7 +79,7 @@ class directwave_region_sample:
 	num_samples: int = 1
 	channels: int = 0
 	bits: int = 0
-	Hz: float = 44100
+	hz: float = 44100
 	loop_type: int = 0
 	loop_start: int = 0
 	loop_end: int = 0
@@ -90,7 +90,7 @@ class directwave_region_sample:
 		byr_stream.skip(4)
 		self.channels = byr_stream.uint32()
 		self.bits = byr_stream.uint32()
-		self.Hz = byr_stream.float()
+		self.hz = byr_stream.float()
 		self.loop_type = byr_stream.uint32()
 		self.loop_start = byr_stream.uint32()
 		self.loop_end = byr_stream.uint32()

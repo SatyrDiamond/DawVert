@@ -135,12 +135,6 @@ class input_reaper(plugins.base):
 		from functions_plugin_ext import plugin_vst3
 		from functions_plugin_ext import plugin_clap
 
-		bytestream = open(input_file, 'r')
-		try:
-			rpp_data = rpp.load(bytestream)
-		except UnicodeDecodeError:
-			raise ProjectFileParserException('reaper: File is not text')
-
 		project_obj = proj_reaper.rpp_song()
 		if not project_obj.load_from_file(input_file): exit()
 

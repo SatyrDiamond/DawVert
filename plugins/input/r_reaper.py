@@ -54,8 +54,7 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 			reappo = pooledenvs[idnum]
 			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
 			time_obj = autopl_obj.time
-			time_obj.position_real = x['position']
-			time_obj.duration_real = x['length']
+			time_obj.set_posdur_real(x['position'], x['length'])
 			autopl_obj.muted = bool(x['enabled'])
 			autopl_obj.visual.name = reappo.name.get()
 			autopoints_obj = autopl_obj.data
@@ -567,8 +566,7 @@ class input_reaper(plugins.base):
 					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
 
 					time_obj = placement_obj.time
-					time_obj.position_real = cvpj_position
-					time_obj.duration_real = cvpj_duration
+					time_obj.set_posdur_real(cvpj_position, cvpj_duration)
 					time_obj.cut_type = 'loop' if cvpj_loop else 'cut'
 
 					placement_obj.muted = bool(cvpj_muted)
@@ -624,8 +622,7 @@ class input_reaper(plugins.base):
 					if cvpj_name: placement_obj.visual.name = cvpj_name
 					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
 					time_obj = placement_obj.time
-					time_obj.position_real = cvpj_position
-					time_obj.duration_real = cvpj_duration
+					time_obj.set_posdur_real(cvpj_position, cvpj_duration)
 					placement_obj.sample.pan = cvpj_pan
 					placement_obj.sample.pitch = cvpj_audio_pitch
 					placement_obj.sample.vol = cvpj_vol
@@ -733,8 +730,7 @@ class input_reaper(plugins.base):
 					if cvpj_color: placement_obj.visual.color.set_int(cvpj_color)
 					
 					time_obj = placement_obj.time
-					time_obj.position_real = cvpj_position
-					time_obj.duration_real = cvpj_duration
+					time_obj.set_posdur_real(cvpj_position, cvpj_duration)
 
 					startoffset = (cvpj_offset_bpm) + (startpos)*8
 

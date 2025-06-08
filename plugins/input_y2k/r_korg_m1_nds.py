@@ -48,9 +48,6 @@ class input_korg_m1_nds(plugins.base):
 		return_obj = convproj_obj.track_master.fx__return__add('trackfx')
 		return_obj.visual.name = 'FX'
 
-		#for n, tempo in enumerate(projsong_obj.blockTempos):
-		#	print(n, tempo, projsong_obj.blockSteps[n])
-
 		tempopos = [(x if x else projsong_obj.tempo) for x in projsong_obj.blockTempos]
 		stepsizes = [(x if x else projsong_obj.steps) for x in projsong_obj.blockSteps]
 		poslist = []

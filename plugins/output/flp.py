@@ -230,11 +230,12 @@ class output_cvpjs(plugins.base):
 					fl_channel_obj.params.unkflag1 = 1
 					fl_channel_obj.plugin.generator = True
 					windowdata_obj = convproj_obj.viswindow__get(['plugin', inst_obj.plugslots.synth])
-					if windowdata_obj.pos_x != -1: fl_channel_obj.plugin.window_p_x = windowdata_obj.pos_x
-					if windowdata_obj.pos_y != -1: fl_channel_obj.plugin.window_p_y = windowdata_obj.pos_y
-					if windowdata_obj.size_x != -1: fl_channel_obj.plugin.window_s_x = windowdata_obj.size_x
-					if windowdata_obj.size_y != -1: fl_channel_obj.plugin.window_s_y = windowdata_obj.size_y
-					if windowdata_obj.open != -1: fl_channel_obj.plugin.visible = windowdata_obj.open
+					if windowdata_obj:
+						if windowdata_obj.pos_x != -1: fl_channel_obj.plugin.window_p_x = windowdata_obj.pos_x
+						if windowdata_obj.pos_y != -1: fl_channel_obj.plugin.window_p_y = windowdata_obj.pos_y
+						if windowdata_obj.size_x != -1: fl_channel_obj.plugin.window_s_x = windowdata_obj.size_x
+						if windowdata_obj.size_y != -1: fl_channel_obj.plugin.window_s_y = windowdata_obj.size_y
+						if windowdata_obj.open != -1: fl_channel_obj.plugin.visible = windowdata_obj.open
 
 					poly_obj = plugin_obj.state.poly
 
@@ -565,6 +566,7 @@ class output_cvpjs(plugins.base):
 						fl_plugin, fl_pluginparams = flp_enc_plugins.setparams(convproj_obj, plugin_obj)
 						if fl_plugin != None:
 							slotdata = fx.flp_fxslot(fx_num)
+							slotdata.used = True
 							slotdata.plugin.name = fl_plugin
 							slotdata.plugin.params = fl_pluginparams
 							slotdata.plugin.slotnum = slotnum

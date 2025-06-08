@@ -314,16 +314,16 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 	elif flplugin.name in ['fruity soundfont player', 'soundfont player']:
 		flsf_vers = fl_plugstr.uint32()
-		flsf_patch = fl_plugstr.uint32()
+		flsf_patch = fl_plugstr.uint32()-1
 		flsf_bank = fl_plugstr.uint32()
 		flsf_reverb_sendlvl = fl_plugstr.uint32()
 		flsf_chorus_sendlvl = fl_plugstr.uint32()
 		flsf_mod = fl_plugstr.uint32()
 
-		flsf_asdf_A = fl_plugstr.uint32()
-		flsf_asdf_D = fl_plugstr.uint32()
-		flsf_asdf_S = fl_plugstr.uint32()
-		flsf_asdf_R = fl_plugstr.uint32()
+		flsf_asdf_A = fl_plugstr.int32()
+		flsf_asdf_D = fl_plugstr.int32()
+		flsf_asdf_S = fl_plugstr.int32()
+		flsf_asdf_R = fl_plugstr.int32()
 
 		flsf_lfo_predelay = fl_plugstr.int32()
 		flsf_lfo_amount = fl_plugstr.int32()

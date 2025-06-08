@@ -1247,6 +1247,28 @@
     ],
     "priority": 0
   },
+  "data_main\\plugstatets\\_from_simple\\flp__bassboost.pstr": {
+    "file": "data_main\\plugstatets\\_from_simple\\flp__bassboost.pstr",
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "simple:bassboost",
+    "plugtype_out": [
+      "native:flstudio:fruity bass boost"
+    ],
+    "priority": 0
+  },
+  "data_main\\plugstatets\\_from_simple\\flp__distortion.pstr": {
+    "file": "data_main\\plugstatets\\_from_simple\\flp__distortion.pstr",
+    "daw_out": [
+      "flp"
+    ],
+    "plugtype_in": "simple:distortion",
+    "plugtype_out": [
+      "native:flstudio:fruity fast dist"
+    ],
+    "priority": 0
+  },
   "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\ableton__bitcrush.pstr",
     "daw_out": [

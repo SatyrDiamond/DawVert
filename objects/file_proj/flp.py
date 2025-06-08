@@ -618,12 +618,13 @@ class flp_project:
 				if mixerdat.icon != None: format_flp_tlv.write_tlv(chunkdata, 95, mixerdat.icon)
 				for slotnum, slotdata in enumerate(mixerdat.slots):
 					if slotdata:
-						if slotdata.plugin.name != None: format_flp_tlv.write_tlv(chunkdata, 201, utf16encode(slotdata.plugin.name))
-						format_flp_tlv.write_tlv(chunkdata, 212, slotdata.plugin.write())
-						if slotdata.name != None: format_flp_tlv.write_tlv(chunkdata, 203, utf16encode(slotdata.name))
-						if slotdata.icon != None: format_flp_tlv.write_tlv(chunkdata, 155, slotdata.icon)
-						if slotdata.color != None: format_flp_tlv.write_tlv(chunkdata, 128, slotdata.color)
-						if slotdata.plugin.params != None: format_flp_tlv.write_tlv(chunkdata, 213, slotdata.plugin.params)
+						if slotdata.used:
+							if slotdata.plugin.name != None: format_flp_tlv.write_tlv(chunkdata, 201, utf16encode(slotdata.plugin.name))
+							format_flp_tlv.write_tlv(chunkdata, 212, slotdata.plugin.write())
+							if slotdata.name != None: format_flp_tlv.write_tlv(chunkdata, 203, utf16encode(slotdata.name))
+							if slotdata.icon != None: format_flp_tlv.write_tlv(chunkdata, 155, slotdata.icon)
+							if slotdata.color != None: format_flp_tlv.write_tlv(chunkdata, 128, slotdata.color)
+							if slotdata.plugin.params != None: format_flp_tlv.write_tlv(chunkdata, 213, slotdata.plugin.params)
 					format_flp_tlv.write_tlv(chunkdata, 98, slotnum)
 				fxrouting_fl = [0 for _ in range(127)]
 				for route in mixerdat.routing: fxrouting_fl[route] = 1

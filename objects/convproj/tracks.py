@@ -162,7 +162,7 @@ class cvpj_instrument:
 		indict['drum'] = midi_obj.drum
 		indict['device'] = midi_obj.device
 
-		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, midib)
+		plugin_obj = convproj_obj.plugin__addspec__midi(plug_id, indict)
 		plugin_obj.role = 'synth'
 		self.plugslots.synth = plug_id
 		self.params.add('usemasterpitch', not m_drum, 'bool')

@@ -179,7 +179,7 @@ class datadef_part:
 		if self.size_source == 2: 
 			lenv = len(value)
 
-		if self.vartype == 'skip': byw_stream.raw(b'\0', 1)
+		if self.vartype == 'skip': byw_stream.raw(b'\0')
 		elif self.vartype == 'skip_n': byw_stream.raw(b'\0'*self.p_num)
 
 		elif self.vartype == 'struct': 

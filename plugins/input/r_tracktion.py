@@ -60,9 +60,8 @@ def sampler_soundlayer_samplepart(sp_obj, soundlayer, layerparams):
 	sp_obj.loop_active = int(soundlayer.looped)
 	sp_obj.enabled = not soundlayer.mute
 
-	sp_obj.trigger = 'normal' if (layerparams['envModeParam'] if 'envModeParam' in layerparams else 1) else 'normal'
-	sp_obj.vol = layerparams['gainParam'] if 'gainParam' in layerparams else 1
-	sp_obj.pan = layerparams['panParam'] if 'panParam' in layerparams else 0
+	sp_obj.vol = get_dictval_fb(layerparams, 'gainParam', 1, float)
+	sp_obj.pan = get_dictval_fb(layerparams, 'gainParam', 0, float)
 	sp_obj.pitch = soundlayer.offlinePitchShift
 	sp_obj.no_pitch = soundlayer.fixedPitch
 
@@ -172,7 +171,7 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 				internal_vst = True
 				from objects import colors
 	
-				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+				plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
 				track_obj.plugslots.set_synth(pluginid)
 	
 				if "state" in wf_plugin.params:
@@ -180,19 +179,26 @@ def do_plugin(convproj_obj, wf_plugin, track_obj, software_mode):
 					sampler_obj = sampler.waveform_sampler_main()
 					sampler_obj.read( juce_memoryblock.fromJuceBase64Encoding(wf_plugin.params['state']) )
 					program = sampler_obj.program.programdata
+
 					if isinstance(program, sampler.microsampler):
 						soundlayers = program.soundlayers
 						for layernum, soundlayer in enumerate(soundlayers):
 							layerparams = soundlayer.soundparameters
-							endstr = str(layernum)
-							sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
-							sampler_soundlayer_samplepart(sp_obj, soundlayer, layerparams)
-							sp_obj.pitch = layerparams['pitchParam'] if 'pitchParam' in layerparams else 0
+							#endstr = str(layernum)
+
+							#sp_obj = plugin_obj.sampleregion_add(soundlayer.lowNote-60, soundlayer.highNote-60, soundlayer.rootNote-60, None)
 							if soundlayer.rootNote in program.pads:
+								drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+								layer_obj.samplepartid = 'drum_%i' % soundlayer.rootNote
+								sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
+								sp_obj.pitch = layerparams['pitchParam'] if 'pitchParam' in layerparams else 0
+								sampler_soundlayer_samplepart(sp_obj, soundlayer, layerparams)
+
 								paddata = program.pads[soundlayer.rootNote]
-								if paddata.name: sp_obj.visual.name = paddata.name
+								if paddata.name: drumpad_obj.visual.name = paddata.name
+
 								colorint = colordata.getcolornum(paddata.colour)
-								sp_obj.visual.color.set_int(colorint)
+								drumpad_obj.visual.color.set_int(colorint)
 								sp_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 		elif software_mode == 'soundbug':

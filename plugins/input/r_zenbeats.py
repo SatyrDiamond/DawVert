@@ -286,6 +286,7 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 
 				if xmlparams is not None:
 					soundnum = 0
+					colordrumdata = colors.colorset.from_dataset('zenbeats', 'global', 'drum')
 					for x in xmlparams:
 						if x.tag == 'sound':
 							attribvals = x.attrib
@@ -294,6 +295,7 @@ def do_plugin(convproj_obj, strproc, track_obj, dawvert_intent):
 
 							drumpad_obj.key = soundnum-24
 							if 'name' in attribvals: drumpad_obj.visual.name = attribvals['name']
+							drumpad_obj.visual.color.set_int(colordrumdata.getcolor())
 							if 'gain' in attribvals: drumpad_obj.vol = float(attribvals['gain'])
 							if 'mute' in attribvals: drumpad_obj.enabled = not bool(int(attribvals['mute']))
 

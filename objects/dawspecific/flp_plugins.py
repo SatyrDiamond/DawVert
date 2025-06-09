@@ -109,6 +109,14 @@ class fpc_plugin_pad:
 		self.auto_pan = []
 		self.layers = [fpc_plugin_layer()]
 
+	def layers_clear(self):
+		self.layers = []
+
+	def layer_add(self):
+		layer_obj = fpc_plugin_layer()
+		self.layers.append(layer_obj)
+		return layer_obj
+
 	def read(self, byr_stream):
 		self.layers = []
 		while byr_stream.remaining():

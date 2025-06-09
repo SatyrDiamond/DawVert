@@ -5,6 +5,7 @@ from functions import note_data
 from functions import value_midi
 from objects.convproj import fileref
 from objects import globalstore
+from objects import colors
 import xml.etree.ElementTree as ET
 import plugins
 import json
@@ -134,24 +135,51 @@ class input_bandlab(plugins.base):
 			else:
 				do_track_common(convproj_obj, track_obj, blx_track, tempomul)
 				if blx_track.type == 'creators-kit':
-					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
-					track_obj.plugslots.set_synth(pluginid)
 					track_obj.is_drum = True
 					samplerkit = blx_track.samplerKit
 					if samplerkit:
 						if 'kit' in samplerkit:
 							kitdata = samplerkit['kit']
 							if 'layers' in kitdata:
-								for layer in kitdata['layers']:
-									pitch = layer['pitch'] if 'pitch' in layer else 60
-									minKeyRange = layer['minKeyRange'] if 'minKeyRange' in layer else pitch
-									maxKeyRange = layer['maxKeyRange'] if 'maxKeyRange' in layer else pitch
+								layers_list = kitdata['layers']
+								layers_list.sort(key=lambda x: (x['minKeyRange'] if 'minKeyRange' in x else 60))
 
-									sp_obj = plugin_obj.sampleregion_add(minKeyRange-60, maxKeyRange-60, pitch-60, None)
-									sp_obj.vel_min = layer['maxVelRange']/127 if 'maxVelRange' in layer else 1
-									sp_obj.vel_max = layer['minVelRange']/127 if 'minVelRange' in layer else 0
-									sp_obj.vol = layer['volume'] if 'volume' in layer else 0
+								use_drum = True
 
+								colordrumdata = colors.colorset.from_dataset('bandlab', 'global', 'drum')
+
+								for layer in layers_list:
+									minKeyRange = layer['minKeyRange'] if 'minKeyRange' in layer else 60
+									maxKeyRange = layer['maxKeyRange'] if 'maxKeyRange' in layer else 60
+									if (minKeyRange-maxKeyRange): use_drum = False
+
+								if not use_drum:
+									plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+									for layer in layers_list:
+										pitch = layer['pitch'] if 'pitch' in layer else 60
+										minKeyRange = layer['minKeyRange'] if 'minKeyRange' in layer else pitch
+										maxKeyRange = layer['maxKeyRange'] if 'maxKeyRange' in layer else pitch
+	
+										colorint = colordrumdata.getcolornum(layer['color'] if 'color' in layer else 0)
+										sp_obj = plugin_obj.sampleregion_add(minKeyRange-60, maxKeyRange-60, pitch-60, None)
+										sp_obj.vel_min = layer['maxVelRange']/127 if 'maxVelRange' in layer else 1
+										sp_obj.vel_max = layer['minVelRange']/127 if 'minVelRange' in layer else 0
+										sp_obj.vol = layer['volume'] if 'volume' in layer else 1
+										sp_obj.visual.color.set_int(colorint)
+								else:
+									plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
+									for layer in layers_list:
+										minKeyRange = layer['minKeyRange'] if 'minKeyRange' in layer else pitch
+
+										drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+										drumpad_obj.vol = layer['volume'] if 'volume' in layer else 1
+										drumpad_obj.key = minKeyRange-60
+
+										colorint = colordrumdata.getcolornum(layer['color'] if 'color' in layer else 0)
+										drumpad_obj.visual.color.set_int(colorint)
+										layer_obj.samplepartid = 'drum_%i' % minKeyRange
+										sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
+								track_obj.plugslots.set_synth(pluginid)
 				else:
 					if blx_track.soundbank:
 						plugin_obj = convproj_obj.plugin__add(blx_track.id, 'native', 'bandlab', 'instrument')

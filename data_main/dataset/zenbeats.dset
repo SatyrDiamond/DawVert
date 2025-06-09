@@ -9,5 +9,15 @@
             <color>#FF6A37</color>
             <color>#FFA043</color>
         </colorset>
+        <colorset id="drum">
+            <color>#8F37D4</color>
+            <color>#8F37D4</color>
+            <color>#3D5DE4</color>
+            <color>#3D5DE4</color>
+            <color>#139ADE</color>
+            <color>#139ADE</color>
+            <color>#00E6E6</color>
+            <color>#00E6E6</color>
+        </colorset>
     </category>
 </dataset>

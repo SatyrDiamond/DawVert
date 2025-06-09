@@ -1,0 +1,73 @@
+# SPDX-FileCopyrightText: 2024 SatyrDiamond
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+import plugins
+
+class input_soundfile(plugins.base):
+	def is_dawvert_plugin(self):
+		return 'audiofile'
+	
+	def get_shortname(self):
+		return 'wave'
+	
+	def get_name(self):
+		return 'Wave'
+	
+	def get_priority(self):
+		return -100
+	
+	def get_prop(self, in_dict):
+		in_dict['file_formats'] = ['wav']
+	
+	def getinfo(self, input_file, sampleref_obj, fileextlow):
+		import soundfile
+		import io
+		from objects.data_bytes import riff_chunks
+
+		if fileextlow == 'wav':
+			riff_data = riff_chunks.riff_chunk()
+			byr_stream = riff_data.load_from_file(input_file, False)
+
+			data_pos = 0
+			data_size = 0
+
+			fmt_format = 0
+			fmt_channels = 0
+			fmt_rate = 0
+			fmt_bytessec = 0
+			fmt_datablocksize = 0
+			fmt_bits = 0
+
+			data_size = 0
+
+			for riff_part in riff_data.in_data:
+				if riff_part.name == b'fmt ': 
+					with byr_stream.isolate_range(riff_part.start, riff_part.end, False) as bye_stream: 
+						fmt_format = bye_stream.uint16()
+						fmt_channels = bye_stream.uint16()
+						fmt_rate = bye_stream.uint32()
+						fmt_bytessec = bye_stream.uint32()
+						fmt_datablocksize = bye_stream.uint16()
+						fmt_bits = bye_stream.uint16()
+				elif riff_part.name == b'data': 
+					data_pos = riff_part.start
+					data_end = riff_part.end
+					data_size = data_end-data_pos
+
+			#print(fmt_format, input_file)
+
+			if fmt_format == 1:
+				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream:
+					audiodata = bye_stream.raw(data_end-data_pos)
+
+				if fmt_channels and fmt_bits and data_size:
+					numsamples = data_size
+					numsamples //= fmt_channels
+					numsamples //= fmt_bits//8
+					sampleref_obj.set_dur_samples(len(samples))
+				sampleref_obj.set_hz(fmt_rate)
+				sampleref_obj.set_channels(fmt_channels)
+				sampleref_obj.set_fileformat('wav_ogg')
+				return True
+			return False
+		return False

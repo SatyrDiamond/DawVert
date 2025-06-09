@@ -36,10 +36,41 @@ def setparams(convproj_obj, plugin_obj):
 
 	bytesout = bytewriter.bytewriter()
 
-	#if plugin_obj.check_wildmatch('universal', 'sampler', 'drums'):
-	#	fl_plugin = 'fpc'
-	#	fpc_plugin = flp_plugins.fpc_plugin()
-	#	fl_pluginparams = fpc_plugin.dump()
+	if plugin_obj.check_wildmatch('universal', 'sampler', 'drums'):
+		fl_plugin = 'fpc'
+		fpc_plugin = flp_plugins.fpc_plugin()
+
+		drumpads = plugin_obj.drumpad_getall()
+		drumpads = drumpads[0:32]
+
+		for num, drumpad_obj in enumerate(drumpads):
+			fpc_pad = fpc_plugin.pads[num]
+			fpc_pad.key = drumpad_obj.key+60
+			fpc_pad.vol = min(127, int(drumpad_obj.vol*127))
+			fpc_pad.pan = int(drumpad_obj.pan*127)
+
+			if drumpad_obj.visual.name: fpc_pad.name = drumpad_obj.visual.name.encode()
+			drum_color = drumpad_obj.visual.color.get_int()
+			if drum_color: fpc_pad.color = int.from_bytes(bytes(drum_color), "little")
+
+			fpc_pad.tune = int((drumpad_obj.pitch/12)*128)
+
+			if drumpad_obj.layers: fpc_pad.layers_clear()
+			for layer_obj in drumpad_obj.layers:
+				fpc_layer = fpc_pad.layer_add()
+				fpc_layer.vel_min = int(layer_obj.vel_min*127)
+				fpc_layer.vel_max = int(layer_obj.vel_max*127)
+				sre_obj = plugin_obj.samplepart_get(layer_obj.samplepartid)
+				if sre_obj:
+					fpc_layer.vol = int(sre_obj.vol*127)
+					fpc_layer.pan = int(sre_obj.pan*127)
+					fpc_layer.tune = int((sre_obj.pitch/12)*128)
+					ref_found, sampleref_obj = convproj_obj.sampleref__get(sre_obj.sampleref)
+					if ref_found:
+						filepath = sampleref_obj.fileref.get_path('win', False)
+						fpc_layer.filename = filepath.encode()
+
+		fl_pluginparams = fpc_plugin.dump()
 
 	if plugin_obj.check_wildmatch('universal', 'sampler', 'slicer'):
 		fl_plugin = 'fruity slicer'

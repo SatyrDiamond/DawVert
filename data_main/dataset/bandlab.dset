@@ -2017,4 +2017,12 @@
             <param id="wet" type="float" def="20" max="100" />
         </object>
     </category>
+    <category id="global">
+        <colorset id="drum">
+            <color>#2B87E0</color>
+            <color>#E7610E</color>
+            <color>#A302E8</color>
+            <color>#01B273</color>
+        </colorset>
+    </category>
 </dataset>

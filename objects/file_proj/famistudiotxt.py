@@ -30,9 +30,10 @@ def NoteToMidi(keytext):
 
 class dpcm_sample:
 	def __init__(self, data):
-		self.data_txt = data
+		self.data_txt = data['Data']
 		self.data_bytes = b''
-		if data: self.data_bytes = bytes.fromhex(data)
+		self.color = data['Color'] if 'Color' in data else None
+		if data: self.data_bytes = bytes.fromhex(self.data_txt)
 
 class dpcm_mappings:
 	__slots__ = ['data']
@@ -230,7 +231,8 @@ class famistudiotxt_project:
 				if 'VRC7TrebleDb' in cmd_params: self.VRC7TrebleDb = float(cmd_params['VRC7TrebleDb'])
 				if 'VRC7TrebleRolloffHz' in cmd_params: self.VRC7TrebleRolloffHz = float(cmd_params['VRC7TrebleRolloffHz'])
 
-			elif cmd_name == 'DPCMSample' and tabs_num == 1: self.DPCMSamples[cmd_params['Name']] = dpcm_sample(cmd_params['Data'])
+			elif cmd_name == 'DPCMSample' and tabs_num == 1: 
+				self.DPCMSamples[cmd_params['Name']] = dpcm_sample(cmd_params)
 
 			elif cmd_name == 'Instrument' and tabs_num == 1:
 				cur_inst = fs_instrument()

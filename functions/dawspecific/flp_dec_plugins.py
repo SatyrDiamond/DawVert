@@ -312,8 +312,10 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				drumpad_obj = plugin_obj.drumpad_add()
 				drumpad_obj.key = pad_obj.key-60
 				drumpad_obj.visual.name = pad_obj.name.decode()
-				for layernum, layer in enumerate(pad_obj.layers):
-					pad_filename = layer.filename.decode()
+				drumpad_obj.vol = pad_obj.gain/127
+				
+				for layernum, fpc_layer in enumerate(pad_obj.layers):
+					pad_filename = fpc_layer.filename.decode()
 					pad_sfilename = get_sample(pad_filename)
 
 					if pad_sfilename:
@@ -323,10 +325,14 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 						sampleref_obj.find_relative('factorysamples')
 						layer_obj = drumpad_obj.add_layer()
 						layer_obj.samplepartid = 'drum_%i_%i' % (padnum, layernum)
-						layer_obj.vel_min = layer.vel_min/127
-						layer_obj.vel_max = layer.vel_max/127
+						layer_obj.vel_min = fpc_layer.vel_min/127
+						layer_obj.vel_max = fpc_layer.vel_max/127
 						sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
 						sp_obj.sampleref = pad_sfilename
+						sp_obj.vol = fpc_layer.vol/127
+						sp_obj.pan = fpc_layer.pan/127
+						sp_obj.pitch = (fpc_layer.tune/128)*12
+
 		except:
 			pass
 

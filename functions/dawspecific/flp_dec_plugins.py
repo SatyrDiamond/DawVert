@@ -9,12 +9,13 @@ import varint
 import uuid
 from functions import data_values
 from functions.dawspecific import flp_plugchunks
-from objects import globalstore
 from io import BytesIO
-from objects.file import audio_wav
+from objects import audio_data
+from objects import globalstore
 from objects.data_bytes import bytereader
 from objects.dawspecific import flp_plugins
 from objects.dawspecific import flp_plugins_directwave
+from objects.file import audio_wav
 
 DEBUGSTUFF = False
 
@@ -259,26 +260,43 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				firstprog = fpc_plugin.programs[0]
 				regions = firstprog.regions
 	
-				for region in regions:
+				for r_num, region in enumerate(regions):
 					region_main = region.main
 					region_sample = region.sample
 					region_pitch = region.pitch
 	
-					filename = region.path.decode()
-					filename = get_sample(filename)
-					sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
-
 					sp_obj = plugin_obj.sampleregion_add(region_main.key_min-60, region_main.key_max-60, region_main.key_root-60, None)
-					sp_obj.sampleref = filename
 					sp_obj.vel_min = region_main.vel_min/127
 					sp_obj.vel_max = region_main.vel_max/127
-
+	
 					sp_obj.point_value_type = "samples"
 					sp_obj.start = region_sample.start
 					sp_obj.end = region_sample.num_samples
 					sp_obj.loop_start = region_sample.loop_start
 					sp_obj.loop_end = region_sample.loop_end
-					sp_obj.loop_active = int(region_sample.loop_type)!=0
+					sp_obj.loop_active = int(region_sample.loop_type)>1
+
+					sp_obj.vol = region_main.gain
+					sp_obj.pan = (region_main.pan-0.5)*2
+
+					if not region.pcmdata:
+						filename = region.path.decode()
+						filename = get_sample(filename)
+						sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+						sp_obj.sampleref = filename
+					else:
+						filename = os.path.join(foldername, pluginid+'%i_%i_custom_audio.wav' % (0, r_num))
+						try:
+							pcmdata = region.pcmdata[1024:-1024]
+							audio_obj = audio_data.audio_obj()
+							audio_obj.rate = region_sample.hz
+							audio_obj.set_codec('float')
+							audio_obj.pcm_from_bytes(pcmdata)
+							audio_obj.to_file_wav(filename)
+							sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+							sp_obj.sampleref = filename
+						except:
+							pass
 
 		except:
 			pass

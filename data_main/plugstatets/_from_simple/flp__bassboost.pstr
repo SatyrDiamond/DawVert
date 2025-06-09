@@ -1,0 +1,5 @@
+<plugstatetransform daw_out="flp" plugtype="simple:bassboost">
+  <replace plugtype="native:flstudio:fruity bass boost" />
+  <out__param to="freq" only_value="1" type="float">1024</out__param>
+  <out__param to="amount" only_value="1" type="float">1024</out__param>
+</plugstatetransform>

@@ -223,6 +223,7 @@ class directwave_region:
 		self.sends_fx = [1,1,1,1]
 		self.name = b''
 		self.path = b''
+		self.pcmdata = None
 
 	def read(self, byr_stream):
 		self.modmatrix = []
@@ -261,6 +262,8 @@ class directwave_region:
 					mod_obj = directwave_region_mod()
 					mod_obj.from_byr(bye_stream)
 					self.modmatrix.append(mod_obj)
+				elif chunktype == 517:
+					self.pcmdata = bye_stream.raw(chunksize)
 
 # ============================================= Program ============================================= 
 

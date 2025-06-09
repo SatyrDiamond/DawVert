@@ -1,0 +1,8 @@
+<plugstatetransform daw_out="flp" plugtype="simple:distortion">
+  <replace plugtype="native:flstudio:fruity fast dist" />
+  <out__param to="mix" only_value="1" type="int">128</out__param>
+  <out__param to="post" only_value="1" type="int">128</out__param>
+  <out__param to="pre" only_value="1" type="int">128</out__param>
+  <out__param to="type" only_value="1" type="int">1</out__param>
+  <out__param to="threshold" only_value="1" type="int">10</out__param>
+</plugstatetransform> 

@@ -112,6 +112,7 @@ class output_coolbeat(plugins.base):
 						drumpad_obj.key = cn
 						drumpad_obj.vol = channel.volume
 						drumpad_obj.pan = calc_pan(channel.pan)
+						drumpad_obj.visual.name = channel.fileName
 						
 						layer_obj.samplepartid = 'drum_%i' % cn
 						sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)

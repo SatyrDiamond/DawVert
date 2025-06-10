@@ -48,12 +48,11 @@ def setparams(convproj_obj, plugin_obj):
 			fpc_pad.key = drumpad_obj.key+60
 			fpc_pad.vol = min(127, int(drumpad_obj.vol*127))
 			fpc_pad.pan = int(drumpad_obj.pan*127)
+			fpc_pad.tune = int((drumpad_obj.pitch/12)*128)
 
 			if drumpad_obj.visual.name: fpc_pad.name = drumpad_obj.visual.name.encode()
 			drum_color = drumpad_obj.visual.color.get_int()
 			if drum_color: fpc_pad.color = int.from_bytes(bytes(drum_color), "little")
-
-			fpc_pad.tune = int((drumpad_obj.pitch/12)*128)
 
 			if drumpad_obj.layers: fpc_pad.layers_clear()
 			for layer_obj in drumpad_obj.layers:

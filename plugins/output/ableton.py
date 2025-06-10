@@ -1055,6 +1055,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					als_samplepart.VelocityRange.Max = int(samplepart_obj.vel_max*127)
 					als_samplepart.VelocityRange.CrossfadeMin = als_samplepart.VelocityRange.Min
 					als_samplepart.VelocityRange.CrossfadeMax = als_samplepart.VelocityRange.Max
+					als_samplepart.TuneScale = int(samplepart_obj.scale*100) if not samplepart_obj.no_pitch else 0
 
 					als_samplepart.Volume = samplepart_obj.vol
 					als_samplepart.Panorama = samplepart_obj.pan
@@ -1112,6 +1113,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 					als_samplepart.RootKey = 60-TransposeKey
 					als_samplepart.Detune = TransposeFine
+					als_samplepart.TuneScale = int(samplepart_obj.scale*100) if not samplepart_obj.no_pitch else 0
 
 					adsr_obj = plugin_obj.env_asdr_get('vol')
 					paramkeys['VolumeAndPan/Envelope/AttackTime'] = ableton_parampart.as_param('AttackTime', 'float', adsr_obj.attack*1000)

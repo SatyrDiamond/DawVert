@@ -1,3 +1,4 @@
+#code from https://github.com/LameGrape/hamkorger
 
 from objects.data_bytes import bytereader
 

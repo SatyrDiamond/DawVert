@@ -54,20 +54,30 @@ class input_soundfile(plugins.base):
 					data_end = riff_part.end
 					data_size = data_end-data_pos
 
-			#print(fmt_format, input_file)
-
-			if fmt_format == 1:
+			if fmt_format == 1: # PCM
 				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream:
 					audiodata = bye_stream.raw(data_end-data_pos)
-
 				if fmt_channels and fmt_bits and data_size:
 					numsamples = data_size
 					numsamples //= fmt_channels
 					numsamples //= fmt_bits//8
-					sampleref_obj.set_dur_samples(len(samples))
+					sampleref_obj.set_dur_samples(numsamples)
 				sampleref_obj.set_hz(fmt_rate)
 				sampleref_obj.set_channels(fmt_channels)
-				sampleref_obj.set_fileformat('wav_ogg')
+				sampleref_obj.set_fileformat('wav')
+				return True
+
+			elif fmt_format == 3: # IEEE float
+				with byr_stream.isolate_range(data_pos, data_end, False) as bye_stream:
+					audiodata = bye_stream.raw(data_end-data_pos)
+				if fmt_channels and fmt_bits and data_size:
+					numsamples = data_size
+					numsamples //= fmt_channels
+					numsamples //= fmt_bits//8
+					sampleref_obj.set_dur_samples(numsamples)
+				sampleref_obj.set_hz(fmt_rate)
+				sampleref_obj.set_channels(fmt_channels)
+				sampleref_obj.set_fileformat('wav')
 				return True
 			return False
 		return False

@@ -7,6 +7,7 @@ import os
 import math
 import varint
 import uuid
+import numpy as np
 from functions import data_values
 from functions.dawspecific import flp_plugchunks
 from io import BytesIO
@@ -257,7 +258,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			fpc_plugin.read(fl_plugstr)
 			if fpc_plugin.programs:
 				plugin_obj.type_set('universal', 'sampler', 'multi')
-				firstprog = fpc_plugin.programs[0]
+				firstchan = fpc_plugin.channels[0]
+				firstprog = fpc_plugin.programs[firstchan.prognum]
 				regions = firstprog.regions
 	
 				for r_num, region in enumerate(regions):
@@ -269,6 +271,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					sp_obj.vel_min = region_main.vel_min/127
 					sp_obj.vel_max = region_main.vel_max/127
 	
+					sp_obj.visual.name = region.name.decode()
+
 					sp_obj.point_value_type = "samples"
 					sp_obj.start = region_sample.start
 					sp_obj.end = region_sample.num_samples
@@ -279,26 +283,57 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					sp_obj.vol = region_main.gain
 					sp_obj.pan = (region_main.pan-0.5)*2
 
-					if not region.pcmdata:
+					sp_obj.pitch += (region_pitch.tune-0.5)*24
+					sp_obj.pitch += region_pitch.fine/100
+					sp_obj.pitch += region_pitch.semi
+
+					sp_obj.scale = region_pitch.k_trk/100
+					sp_obj.no_pitch = region_pitch.k_trk==0
+
+					if not region.pcmdata and not region.flacdata:
 						filename = region.path.decode()
 						filename = get_sample(filename)
 						sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 						sp_obj.sampleref = filename
-					else:
+					elif region.pcmdata:
 						filename = os.path.join(foldername, pluginid+'%i_%i_custom_audio.wav' % (0, r_num))
 						try:
-							pcmdata = region.pcmdata[1024:-1024]
+							numchans = region.sample.channels&0x0f
+
+							pcmlist = np.frombuffer(region.pcmdata, dtype=np.float32)
+							outpcm = np.zeros([len(pcmlist)//numchans, numchans], dtype=np.float32)
+
+							halflen = len(outpcm)
+							for x in range(numchans):
+								outpcm[:,x] = pcmlist[(halflen*(x)):(halflen*(x+1))]
+
+							outpcm = outpcm[256:-256]
+							outpcm = outpcm.flatten()
+
 							audio_obj = audio_data.audio_obj()
 							audio_obj.rate = region_sample.hz
 							audio_obj.set_codec('float')
-							audio_obj.pcm_from_bytes(pcmdata)
+							audio_obj.channels = numchans
+							audio_obj.pcm_from_list(outpcm)
 							audio_obj.to_file_wav(filename)
 							sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 							sp_obj.sampleref = filename
 						except:
 							pass
+					elif region.flacdata:
+						filename = os.path.join(foldername, pluginid+'%i_%i_custom_audio.flac' % (0, r_num))
+						try:
+							with open(filename, "wb") as f:
+								f.write(region.flacdata[8:])
+							sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
+							sp_obj.sampleref = filename
+						except:
+							pass
+
 
 		except:
+			import traceback
+			print(traceback.format_exc())
 			pass
 
 
@@ -313,6 +348,8 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				drumpad_obj.key = pad_obj.key-60
 				drumpad_obj.visual.name = pad_obj.name.decode()
 				drumpad_obj.vol = pad_obj.gain/127
+				drumpad_obj.pan = pad_obj.pan/127
+				drumpad_obj.pitch = (pad_obj.tune/128)*12
 				
 				for layernum, fpc_layer in enumerate(pad_obj.layers):
 					pad_filename = fpc_layer.filename.decode()

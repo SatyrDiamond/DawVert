@@ -35,6 +35,7 @@ class cvpj_sample_entry:
 	interpolation: str = "linear"
 	trigger: str = "normal"
 	no_pitch: bool = False
+	scale: float = 1
 
 	length: float = -1
 

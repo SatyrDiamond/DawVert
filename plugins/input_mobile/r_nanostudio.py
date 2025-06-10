@@ -80,6 +80,8 @@ class input_nanostudio_v1(plugins.base):
 											drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
 											drumpad_obj.key = padnum-12
 											drumpad_obj.visual.name = sampname.split('.')[0]
+											if 'Vol' in val: drumpad_obj.vol = val['Vol']
+											if 'Pan' in val: drumpad_obj.pan = (val['Pan']-0.5)*2
 
 											layer_obj.samplepartid = 'drum_%i' % padnum
 											sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)

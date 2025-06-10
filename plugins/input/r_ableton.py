@@ -133,6 +133,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 					sp_obj.reverse = int(parampaths['Player/Reverse'])
 					sp_obj.vol = float(SamplePart.Volume)
 					sp_obj.pan = float(SamplePart.Panorama)
+					sp_obj.scale = float(SamplePart.TuneScale)/100
 	
 				elif numzones>1:
 					plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
@@ -152,6 +153,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 						sp_obj.vel_max = vel_r[1]/127
 						sp_obj.vol = float(SamplePart.Volume)
 						sp_obj.pan = float(SamplePart.Panorama)
+						sp_obj.scale = float(SamplePart.TuneScale)/100
 
 			if plugin_obj:
 				plugin_on = doparam(device.On, 'On', 'bool', 1, ['slot', pluginid, 'enabled'], None)

@@ -323,6 +323,7 @@ class directwave_region:
 		self.name = b''
 		self.path = b''
 		self.pcmdata = None
+		self.flacdata = None
 
 	def read(self, byr_stream):
 		self.modmatrix = []
@@ -332,7 +333,7 @@ class directwave_region:
 		while byr_stream.remaining():
 			chunktype, chunksize = flp_plugchunks.read_header(byr_stream)
 			with byr_stream.isolate_size(chunksize, True) as bye_stream: 
-				if VERBOSE: print('\t\t\t', getname(chunktype))
+				if VERBOSE: print('\t\t\t', getname(chunktype), chunksize)
 				if chunktype == 500: self.main.from_byr(bye_stream)
 				elif chunktype == 501: self.name = bye_stream.raw(chunksize)
 				elif chunktype == 502: self.path = bye_stream.raw(chunksize)
@@ -364,6 +365,10 @@ class directwave_region:
 					self.modmatrix.append(mod_obj)
 				elif chunktype == 517:
 					self.pcmdata = bye_stream.raw(chunksize)
+				elif chunktype == 518:
+					self.flacdata = bye_stream.raw(chunksize)
+
+
 
 	def dump(self):
 		byw_stream = bytewriter.bytewriter()
@@ -393,6 +398,8 @@ class directwave_region:
 			flp_plugchunks.write_chunk(byw_stream, 516, self.mod_obj.dump())
 		if self.pcmdata is not None:
 			flp_plugchunks.write_chunk(byw_stream, 517, self.pcmdata)
+		if self.flacdata is not None:
+			flp_plugchunks.write_chunk(byw_stream, 518, self.flacdata)
 
 		return byw_stream.getvalue()
 
@@ -535,8 +542,9 @@ class directwave_plugin:
 					program_obj.read(bye_stream)
 					self.programs.append(program_obj)
 				elif chunktype == 5:
+					if VERBOSE: print()
 					channel_obj = directwave_channel()
 					channel_obj.from_byr(bye_stream)
-					self.channels.append()
+					self.channels.append(channel_obj)
 				else:
 					if VERBOSE: print(bye_stream.raw(chunksize).hex())

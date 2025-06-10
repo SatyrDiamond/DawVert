@@ -41,60 +41,59 @@ def setparams(convproj_obj, plugin_obj):
 		fl_plugin = 'directwave'
 		fpc_plugin = flp_plugins_directwave.directwave_plugin()
 
-		sampleregions = [x for x in plugin_obj.sampleregion_getall()]
-
 		firstprogram = fpc_plugin.programs[0]
 		firstprogram.name = 'DawVert Converted'.encode()
-		firstprogram.main.used = len(sampleregions)
 
-		for sampleregion in sampleregions:
+		for sampleregion in plugin_obj.sampleregion_getall():
 			key_l, key_h, key_r, samplerefid, extradata = sampleregion
 
 			dw_region = firstprogram.add_region()
 
 			sp_obj = plugin_obj.samplepart_get(samplerefid)
-			_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
-			sp_obj.convpoints_samples(sampleref_obj)
+			sampleref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+			if sampleref_found: 
+				firstprogram.main.used += 1
+				sp_obj.convpoints_samples(sampleref_obj)
 
-			dw_reg_pitch = dw_region.pitch
-
-			dw_reg_main = dw_region.main
-			dw_reg_main.key_min = int(key_l+60)
-			dw_reg_main.key_max = int(key_h+60)
-			dw_reg_main.key_root = int(key_r+60)
-			dw_reg_main.vel_min = int(sp_obj.vel_min*127)
-			dw_reg_main.vel_max = int(sp_obj.vel_max*127)
-			dw_reg_main.unk_4 = 2
-
-			dw_reg_main.gain = sp_obj.vol
-			dw_reg_main.pan = (sp_obj.pan/2)+0.5
-			dw_reg_main.tune = (sp_obj.pitch/24)+0.5
-
-			dw_reg_pitch.k_trk = int(sp_obj.scale*100) if not sp_obj.no_pitch else 0
-
-			dw_reg_sample = dw_region.sample
-			dw_reg_sample.bits = 128
-			dw_reg_sample.channels = sampleref_obj.channels
-			dw_reg_sample.hz = sampleref_obj.hz
-			dw_reg_sample.loop_end = sp_obj.loop_end
-			dw_reg_sample.loop_start = sp_obj.loop_start
-			if sp_obj.loop_active:
-				dw_reg_sample.loop_type = 2
-			else:
-				dw_reg_sample.loop_type = 0 if sp_obj.trigger != 'oneshot' else 1
-
-			dw_reg_sample.num_samples = sampleref_obj.dur_samples
-			dw_reg_sample.start = sp_obj.start
-
-			if sp_obj.visual.name:
-				dw_region.name = sp_obj.visual.name.encode()
-			if not dw_region.name:
-				if sampleref_obj.fileref.file.filename:
-					dw_region.name = sampleref_obj.fileref.file.filename.encode()
-
-			filepath = sp_obj.get_filepath(convproj_obj, False)
-			filepath = filepath.replace('/', '\\')
-			dw_region.path = filepath.encode()
+				dw_reg_pitch = dw_region.pitch
+	
+				dw_reg_main = dw_region.main
+				dw_reg_main.key_min = int(key_l+60)
+				dw_reg_main.key_max = int(key_h+60)
+				dw_reg_main.key_root = int(key_r+60)
+				dw_reg_main.vel_min = int(sp_obj.vel_min*127)
+				dw_reg_main.vel_max = int(sp_obj.vel_max*127)
+				dw_reg_main.unk_4 = 2
+	
+				dw_reg_main.gain = sp_obj.vol
+				dw_reg_main.pan = (sp_obj.pan/2)+0.5
+				dw_reg_main.tune = (sp_obj.pitch/24)+0.5
+	
+				dw_reg_pitch.k_trk = int(sp_obj.scale*100) if not sp_obj.no_pitch else 0
+	
+				dw_reg_sample = dw_region.sample
+				dw_reg_sample.bits = 128
+				dw_reg_sample.channels = sampleref_obj.channels
+				dw_reg_sample.hz = sampleref_obj.hz
+				dw_reg_sample.loop_end = sp_obj.loop_end
+				dw_reg_sample.loop_start = sp_obj.loop_start
+				if sp_obj.loop_active:
+					dw_reg_sample.loop_type = 2
+				else:
+					dw_reg_sample.loop_type = 0 if sp_obj.trigger != 'oneshot' else 1
+	
+				dw_reg_sample.num_samples = sampleref_obj.dur_samples
+				dw_reg_sample.start = sp_obj.start
+	
+				if sp_obj.visual.name:
+					dw_region.name = sp_obj.visual.name.encode()
+				if not dw_region.name:
+					if sampleref_obj.fileref.file.filename:
+						dw_region.name = sampleref_obj.fileref.file.filename.encode()
+	
+				filepath = sp_obj.get_filepath(convproj_obj, False)
+				filepath = filepath.replace('/', '\\')
+				dw_region.path = filepath.encode()
 
 
 		import sys

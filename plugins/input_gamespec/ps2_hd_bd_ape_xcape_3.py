@@ -224,9 +224,9 @@ class input_petaporon(plugins.base):
 					audio_obj.to_file_wav(wav_path)
 					offset_points[vagsamp['offset']] = wav_path
 
-				sampleref_obj = convproj_obj.sampleref__add(sample_id, wav_path, None)
-				sampleref_obj.set_fileformat('wav')
-				audio_obj.to_sampleref_obj(sampleref_obj)
+					sampleref_obj = convproj_obj.sampleref__add(sample_id, wav_path, None)
+					sampleref_obj.set_fileformat('wav')
+					audio_obj.to_sampleref_obj(sampleref_obj)
 
 				sp_obj = plugin_obj.sampleregion_add(vagsamp['key_min']-60, vagsamp['key_max']-60, vagsamp['key_root']-60, None, samplepartid=sample_id)
 				sp_obj.sampleref = sample_id

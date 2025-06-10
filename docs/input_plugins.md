@@ -9,12 +9,9 @@
 | R | ```main``` | ```reaper``` | Reaper | ```.rpp``` | ✔️ | |
 | R | ```main``` | ```dawproject``` | DawProject | ```.dawproject``` | ✔️ | |
 | M-S | ```main``` | ```serato``` | Serato Studio | ```.ssp``` | ✔️ | |
-<<<<<<< HEAD
 | R | ```main``` | ```tracktion_edit``` | Waveform<br>SoundBug/音虫 | ```.tracktionedit``` | ✔️ | |
 | R | ```main``` | ```zenbeats``` | ZenBeats | ```.song``` | ✔️ | |
 | R | ```main``` | ```bandlab_blx``` | Bandlab BLX | ```.blx``` | ✔️ | |
-=======
->>>>>>> main
 
 ## Tracker
 | DataType | PluginSet | Short Name | Name | Ext | Autodetect | Info | 

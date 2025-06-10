@@ -255,7 +255,20 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 	elif flplugin.name == 'directwave':
 		try:
 			fpc_plugin = flp_plugins_directwave.directwave_plugin()
+
+			import sys
+			orig_stdout = sys.stdout
+			sys.stdout = open('dw_in.log', 'w')
 			fpc_plugin.read(fl_plugstr)
+			sys.stdout = orig_stdout
+
+			fl_plugstr.seek(0)
+			with open('dw_in.bin', 'wb') as f:
+				f.write(fl_plugstr.rest())
+
+			with open('dw_in_out.bin', 'wb') as f:
+				f.write(fpc_plugin.dump())
+
 			if fpc_plugin.programs:
 				plugin_obj.type_set('universal', 'sampler', 'multi')
 				firstchan = fpc_plugin.channels[0]
@@ -278,7 +291,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 					sp_obj.end = region_sample.num_samples
 					sp_obj.loop_start = region_sample.loop_start
 					sp_obj.loop_end = region_sample.loop_end
-					sp_obj.loop_active = int(region_sample.loop_type)>1
+					sp_obj.loop_active = int(region_sample.loop_type)>2
 
 					sp_obj.vol = region_main.gain
 					sp_obj.pan = (region_main.pan-0.5)*2
@@ -329,7 +342,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 							sp_obj.sampleref = filename
 						except:
 							pass
-
 
 		except:
 			import traceback

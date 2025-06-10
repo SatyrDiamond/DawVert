@@ -4,7 +4,7 @@
 def read_header(byr_stream):
 	chunktype = byr_stream.uint32()
 	chunksize = byr_stream.uint32()
-	byr_stream.skip(4)
+	assert byr_stream.uint32()==0
 	return chunktype, chunksize
 
 def write_chunk(byr_stream, chunkid, chunkdata):

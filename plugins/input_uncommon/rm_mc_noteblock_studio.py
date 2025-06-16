@@ -36,8 +36,6 @@ class input_gt_mnbs(plugins.base):
 		traits_obj.track_nopl = True
 		traits_obj.audio_filetypes = ['wav']
 
-		fileref.filesearcher.add_searchpath_partial('mnbs_sounds', '../Data/Sounds', 'projectfile')
-
 		project_obj = proj_nbs.nbs_song()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
@@ -85,7 +83,6 @@ class input_gt_mnbs(plugins.base):
 			plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(instid, custom_obj.file, None)
 			if sampleref_obj: 
 				sampleref_obj.search_local(dawvert_intent.input_folder)
-				sampleref_obj.find_relative('mnbs_sounds')
 			plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 10, 1)
 			inst_obj.plugslots.set_synth(instid)
 

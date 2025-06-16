@@ -24,6 +24,8 @@ from functions.convproj_compat import unhybrid
 from functions.convproj_compat import sep_nest_audio
 from functions.convproj_compat import midi_notes
 
+from objects.convproj import automation
+
 import json
 import math
 
@@ -36,6 +38,7 @@ class song_compat:
 		self.finished_processes = []
 		self.currenttime = None
 		self.current_dawcap = []
+		self.tempostore = None
 
 	def process_part(self, process_name, classname, convproj_obj, cvpj_type, in_compat, out_compat, out_type, dawvert_intent):
 		if process_name not in self.finished_processes:
@@ -45,6 +48,10 @@ class song_compat:
 
 	def makecompat(self, convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		traits_obj = convproj_obj.traits
+
+		#if traits_obj.time_seconds != out_dawinfo.time_seconds:
+		#	self.tempostore = automation.tempostore()
+		#	self.tempostore.proc_points(convproj_obj)
 		
 		if self.currenttime == None: self.currenttime = traits_obj.time_seconds
 		if 'time_seconds' in self.finished_processes: self.currenttime = out_dawinfo.time_seconds

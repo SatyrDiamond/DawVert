@@ -149,9 +149,10 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 		cvpj_samplepart.convpoints_samples(sampleref_obj)
 		do_sampleref(convproj_obj, als_samplepart.SampleRef, sampleref_obj)
 		
-		dur_sec = sampleref_obj.get_dur_sec()
-
-		if not dur_sec: dur_sec = 1
+		dur_sec = 1
+		if sampleref_obj:
+			sdur_sec = sampleref_obj.get_dur_sec()
+			if sdur_sec: dur_sec = sdur_sec
 
 		#print(cvpj_samplepart.start, cvpj_samplepart.end, cvpj_samplepart.loop_start, cvpj_samplepart.loop_end, sampleref_obj.fileref.get_path(convproj_obj, 'win'))
 		if cvpj_samplepart.visual.name: als_samplepart.Name = cvpj_samplepart.visual.name
@@ -658,9 +659,8 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 
 		ats = timestate(time_obj)
 	
-		dur_sec = sampleref_obj.get_dur_sec()
-
 		if sampleref_obj:
+			dur_sec = sampleref_obj.get_dur_sec()
 			second_dur = dur_sec if dur_sec else 1
 		else:
 			second_dur = 8

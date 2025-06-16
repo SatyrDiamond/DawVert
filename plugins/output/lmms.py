@@ -86,14 +86,15 @@ def filternum(i_filtertype):
 
 def add_window_data(lobj, w_group, w_name, w_pos, w_size, w_open, w_max):
 	wobj = cvpj_obj.viswindow__get([w_group, w_name])
-	if w_pos != None and wobj.pos_x == -1 and wobj.pos_y == -1: wobj.pos_x, wobj.pos_y = w_pos
-	if w_size != None and wobj.size_x == -1 and wobj.size_y == -1: wobj.size_x, wobj.size_y = w_size
-	lobj.visible = int(wobj.open if wobj.open != -1 else w_open)
-	lobj.maximized = int(wobj.maximized if wobj.maximized != -1 else w_max)
-	lobj.x = wobj.pos_x
-	lobj.y = wobj.pos_y
-	lobj.width = wobj.size_x
-	lobj.height = wobj.size_y
+	if wobj:
+		if w_pos != None and wobj.pos_x == -1 and wobj.pos_y == -1: wobj.pos_x, wobj.pos_y = w_pos
+		if w_size != None and wobj.size_x == -1 and wobj.size_y == -1: wobj.size_x, wobj.size_y = w_size
+		lobj.visible = int(wobj.open if wobj.open != -1 else w_open)
+		lobj.maximized = int(wobj.maximized if wobj.maximized != -1 else w_max)
+		lobj.x = wobj.pos_x
+		lobj.y = wobj.pos_y
+		lobj.width = wobj.size_x
+		lobj.height = wobj.size_y
 
 def fix_value(val_type, value):
 	if val_type == 'float': return float(value)
@@ -460,8 +461,8 @@ class output_lmms(plugins.base):
 							lmms_plug_obj.name = 'audiofileprocessor'
 
 							sp_obj = plugin_obj.samplepart_get('sample')
-							_, sampleref_obj = cvpj_obj.sampleref__get(sp_obj.sampleref)
-							sp_obj.convpoints_percent(sampleref_obj)
+							sf_found, sampleref_obj = cvpj_obj.sampleref__get(sp_obj.sampleref)
+							sf_found: sp_obj.convpoints_percent(sampleref_obj)
 
 							lmms_plug_obj.add_param('reversed', int(sp_obj.reverse))
 							lmms_plug_obj.add_param('amp', oneto100(sp_obj.vol))

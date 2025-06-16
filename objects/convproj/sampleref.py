@@ -7,10 +7,12 @@ from objects.convproj import fileref
 from plugins import base as dv_plugins
 from objects.file import audio_wav
 from objects.convproj import visual
+from objects import globalstore
 import os
 import logging
 import shutil
 logger_project = logging.getLogger('project')
+get_path_type = globalstore.os_info_target.get_path_type
 
 VERBOSE = False
 
@@ -136,16 +138,9 @@ class cvpj_sampleref:
 
 	def set_path(self, in_os_type, in_path):
 		self.fileref.set_path(in_os_type, in_path, 0)
-		#self.get_info()
 
-	def find_relative(self, searchseries):
-		if not self.found:
-			orgpath = self.fileref.get_path(None, False)
-			iffound = False
-			if not os.path.exists(orgpath):
-				iffound = self.fileref.search(searchseries)
-			return iffound
-		return False
+	def set_path_prefix(self, prefixname, in_path):
+		self.fileref.set_path_prefix(prefixname, in_path, 0)
 
 	def copy_file(self, os_type, outfilename):
 		filename = self.fileref.get_path(None, False)
@@ -179,7 +174,7 @@ class cvpj_sampleref:
 		return self.fileref.search_local(dirpath)
 
 	def get_info(self, *args):
-		wav_realpath = self.fileref.get_path(fileref.os_path, False)
+		wav_realpath = self.fileref.get_path(get_path_type(None), False)
 
 		if os.path.exists(wav_realpath):
 

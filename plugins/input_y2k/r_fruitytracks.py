@@ -58,8 +58,6 @@ class input_fruitytracks(plugins.base):
 		traits_obj.audio_stretch = ['rate']
 		traits_obj.auto_types = ['pl_points']
 
-		fileref.filesearcher.add_searchpath_partial('fruitytracks', '../Samples/', 'projectfile')
-
 		project_obj = proj_fruitytracks.ftr_song()
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
@@ -111,8 +109,6 @@ class input_fruitytracks(plugins.base):
 
 				sampleref_obj = convproj_obj.sampleref__add(ftr_clip.file, ftr_clip.file, 'win')
 				sampleref_obj.search_local(dawvert_intent.input_folder)
-				sampleref_obj.find_relative('projectfile')
-				sampleref_obj.find_relative('fruitytracks')
 
 				sp_obj = placement_obj.sample
 				sp_obj.sampleref = ftr_clip.file

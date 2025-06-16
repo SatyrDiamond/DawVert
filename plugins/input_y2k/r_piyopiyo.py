@@ -35,6 +35,8 @@ class input_piyopiyo(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects import colors
 		from objects.file_proj_past import piyopiyo as proj_piyopiyo
+		from objects.convproj import fileref
+		fileref.cvpj_fileref_global.add_prefix_extend('dawvert_external_data', 'piyopiyo_wav', ['piyopiyo'])
 
 		convproj_obj.type = 'r'
 		convproj_obj.set_timings(4, True)
@@ -85,8 +87,8 @@ class input_piyopiyo(plugins.base):
 
 		for sampname in ['BASS1', 'BASS2', 'SNARE1', 'HAT1', 'HAT2', 'SYMBAL1']:
 			sampid = 'PIYOPIYO_%s' % sampname
-			sampleref_obj = convproj_obj.sampleref__add(sampname, os.path.join(extpath_path,sampname+'.wav'), None)
-			sampleref_obj.find_relative('external_data')
+			sampleref_obj = convproj_obj.sampleref__add__prefix(sampname, 'piyopiyo_wav', sampname+'.wav')
+			sampleref_obj.fileref.resolve_prefix()
 			sp_obj = plugin_obj.samplepart_add(sampid)
 			sp_obj.sampleref = sampname
 

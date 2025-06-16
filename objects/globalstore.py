@@ -70,6 +70,7 @@ class os_type_info:
 	def __init__(self, *args):
 		self.os_type = None
 		self.dll_fileext = None
+		self.path_type = None
 		self.bits = 64 if sys.maxsize > 2**32 else 32
 		self.from_platformtxt(sys.platform)
 
@@ -92,6 +93,9 @@ class os_type_info:
 		elif platname == 'darwin': self.dll_fileext = '.dylib'
 		else: self.dll_fileext = '.so'
 
+		if platname == 'win32': self.path_type = 'win'
+		else: self.path_type = 'unix'
+
 	def from_ostype(self, os_type):
 		self.os_type = os_type
 
@@ -104,6 +108,9 @@ class os_type_info:
 		if self.os_type == 'win': platform_txt = 'win'
 		else: platform_txt = 'lin'
 		return platform_txt
+
+	def get_path_type(self, platform_txt):
+		return platform_txt if platform_txt else self.path_type
 
 os_info_native = os_type_info()
 os_info_target = os_type_info()

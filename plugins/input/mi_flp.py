@@ -106,63 +106,13 @@ def flpauto_to_cvpjauto_points(i_value):
 
 	return out
 
-
-def get_sample(i_value):
-	if i_value != None:
-		if i_value[0:21] == "%FLStudioFactoryData%":
-			restpath = i_value[21:]
-			return restpath
-		elif i_value[0:18] == "%FLStudioUserData%":
-			restpath = i_value[18:]
-			return restpath
-		elif i_value[0:14] == "%FLStudioData%":
-			restpath = 'Data\\'+i_value[14:]
-			return restpath
-		elif i_value[0:13] == "%USERPROFILE%":
-			restpath = i_value[13:]
-			return restpath
-		else:
-			return i_value
-	else:
-		return ''
-
-#def parse_envlfo(envlfo, pluginid, envtype):
-#	bio_envlfo = BytesIO(envlfo)
-
-#	envlfo_flags = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_enabled = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_predelay = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_attack = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_hold = calc_time(int.from_bytes(bio_envlfo.read(4), "little"))
-#	el_env_decay = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_sustain = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_release = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_aomunt = int.from_bytes(bio_envlfo.read(4), "little")
-#	envlfo_lfo_predelay = int.from_bytes(bio_envlfo.read(4), "little")
-#	envlfo_lfo_attack = int.from_bytes(bio_envlfo.read(4), "little")
-#	envlfo_lfo_amount = int.from_bytes(bio_envlfo.read(4), "little")
-#	envlfo_lfo_speed = int.from_bytes(bio_envlfo.read(4), "little")
-#	envlfo_lfo_shape = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_attack_tension = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_decay_tension = int.from_bytes(bio_envlfo.read(4), "little")
-#	el_env_release_tension = int.from_bytes(bio_envlfo.read(4), "little")
-
-	#plugins.add_asdr_env(cvpj_l, pluginid, envtype, el_env_predelay, el_env_attack, el_env_hold, el_env_decay, el_env_sustain, el_env_release, el_env_aomunt)
-	#plugins.add_asdr_env_tension(cvpj_l, pluginid, envtype, el_env_attack_tension, el_env_decay_tension, el_env_release_tension)
-
 def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, dawvert_intent):
-	filename_sample = get_sample(fl_channel_obj.samplefilename)
-	sampleref_obj = convproj_obj.sampleref__add(filename_sample, filename_sample, 'win')
-
-	if flp_obj.zipped: sampleref_obj.find_relative('extracted')
-	sampleref_obj.find_relative('projectfile')
-	sampleref_obj.find_relative('factorysamples')
-
-	#print(sampleref_obj.fileref.get_path('win', False))
+	from functions.dawspecific import flp_dec_plugins
+	smapleid, sampleref_obj = flp_dec_plugins.make_sample_ref(convproj_obj, fl_channel_obj.samplefilename, dawvert_intent, None)
 
 	sre_obj.visual.name = fl_channel_obj.name
 	sre_obj.visual.color.set_int(conv_color(fl_channel_obj.color))
-	sre_obj.sampleref = filename_sample
+	sre_obj.sampleref = smapleid
 
 	sre_obj.point_value_type = 'percent'
 	sre_obj.start = fl_channel_obj.params.start
@@ -246,7 +196,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 		stretch_algo.subtype = 'pro'
 		stretch_algo.formant = fl_channel_obj.params.stretchingformant
 
-	return sre_obj, sampleref_obj
+	return sampleref_obj
 
 
 DEBUGAUTOTICKS = False
@@ -288,27 +238,54 @@ class input_flp(plugins.base):
 		traits_obj.plugin_ext_arch = [32, 64]
 		traits_obj.plugin_ext_platforms = ['win']
 
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FLStudio4\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3.5\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\FruityLoops3\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 12\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 2024\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 7\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 8\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FLStudio5\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\FLStudio4\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\FruityLoops3.5\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\FruityLoops3\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line VST\\FL Studio 10\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 12\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 20\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 21\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 7\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 8\\", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FLStudio5\\", 'win')
+		fileref_global = fileref.cvpj_fileref_global
+
+
+		#:fl_20_32
+
+		fileref_global.add_prefix('flstudio_factory:fl_32_03', 'win', "C:\\Program Files (x86)\\FruityLoops3\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_035', 'win', "C:\\Program Files (x86)\\FruityLoops3.5\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_04', 'win', "C:\\Program Files (x86)\\FLStudio4\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_05', 'win', "C:\\Program Files (x86)\\Image-Line\\FLStudio5\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_07', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 7\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_08', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 8\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_12', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 12\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_20', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_21', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\")
+		fileref_global.add_prefix('flstudio_factory:fl_32_24', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 2024\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_03', 'win', "C:\\Program Files\\FruityLoops3\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_035', 'win', "C:\\Program Files\\FruityLoops3.5\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_04', 'win', "C:\\Program Files\\FLStudio4\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_05', 'win', "C:\\Program Files\\Image-Line\\FLStudio5\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_07', 'win', "C:\\Program Files\\Image-Line\\FL Studio 7\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_08', 'win', "C:\\Program Files\\Image-Line\\FL Studio 8\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_10', 'win', "C:\\Program Files\\Image-Line VST\\FL Studio 10\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_12', 'win', "C:\\Program Files\\Image-Line\\FL Studio 12\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_20', 'win', "C:\\Program Files\\Image-Line\\FL Studio 20\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_21', 'win', "C:\\Program Files\\Image-Line\\FL Studio 21\\")
+		fileref_global.add_prefix('flstudio_factory:fl_64_24', 'win', "C:\\Program Files\\Image-Line\\FL Studio 2024\\")
+
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_03', 'flstudio_data:fl_32_03', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_035', 'flstudio_data:fl_32_035', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_04', 'flstudio_data:fl_32_04', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_05', 'flstudio_data:fl_32_05', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_07', 'flstudio_data:fl_32_07', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_08', 'flstudio_data:fl_32_08', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_12', 'flstudio_data:fl_32_12', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_20', 'flstudio_data:fl_32_20', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_21', 'flstudio_data:fl_32_21', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_32_24', 'flstudio_data:fl_32_24', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_03', 'flstudio_data:fl_64_03', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_035', 'flstudio_data:fl_64_035', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_04', 'flstudio_data:fl_64_04', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_05', 'flstudio_data:fl_64_05', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_07', 'flstudio_data:fl_64_07', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_08', 'flstudio_data:fl_64_08', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_10', 'flstudio_data:fl_64_10', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_12', 'flstudio_data:fl_64_12', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_20', 'flstudio_data:fl_64_20', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_21', 'flstudio_data:fl_64_21', ['Data'])
+		fileref.cvpj_fileref_global.add_prefix_extend('flstudio_factory:fl_64_24', 'flstudio_data:fl_64_24', ['Data'])
 
 		flp_obj = proj_flp.flp_project()
 
@@ -382,31 +359,37 @@ class input_flp(plugins.base):
 				instplugid = 'FLPlug_G_'+str(channelnum)
 
 				plugin_obj = None
+				sampleref_obj = None
+
 				if fl_channel_obj.type == 0:
 					inst_obj.plugslots.set_synth(instplugid)
-					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(instplugid, get_sample(fl_channel_obj.samplefilename), 'win')
-					samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
+
+					smapleid, sampleref_obj = flp_dec_plugins.make_sample_ref(convproj_obj, fl_channel_obj.samplefilename, dawvert_intent, None)
+
+					plugin_obj = convproj_obj.plugin__add(instplugid, 'universal', 'sampler', 'single')
+					plugin_obj.role = 'synth'
+					sp_obj = plugin_obj.samplepart_add('sample')
+					sp_obj.from_sampleref(convproj_obj, smapleid)
+
+					sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
 					fl_asdr_obj_vol = fl_channel_obj.env_lfo[1]
 					sampleloop = bool(fl_channel_obj.sampleflags & 8)
-					samplepart_obj.trigger = 'normal' # if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
+					sp_obj.trigger = 'normal' # if (bool(fl_asdr_obj_vol.el_env_enabled) or sampleloop) else 'oneshot'
 
 					crossfade = fl_channel_obj.params.crossfade/1024
-
-					if not sampleref_obj.loop_found and not crossfade: 
-						sp_obj.loop_active = False
-					
+					if not sampleref_obj.loop_found and not crossfade: sp_obj.loop_active = False
 					spdata = sp_obj
 
 				if fl_channel_obj.type == 2:
 					if fl_channel_obj.plugin.name != None: 
 						inst_obj.plugslots.set_synth(instplugid)
-						plugin_obj = flp_dec_plugins.getparams(convproj_obj, instplugid, fl_channel_obj.plugin, samplefolder, flp_obj.zipfile)
+						plugin_obj = flp_dec_plugins.getparams(convproj_obj, instplugid, fl_channel_obj.plugin, samplefolder, flp_obj.zipfile, dawvert_intent)
 						if fl_channel_obj.plugin.name == 'fruity wrapper':
 							wrapper_plugids.append(instplugid)
 
 						if fl_channel_obj.samplefilename:
 							sp_obj = plugin_obj.samplepart_add('audiofile')
-							samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
+							sampleref_obj = to_samplepart(fl_channel_obj, sp_obj, convproj_obj, False, flp_obj, dawvert_intent)
 
 				if fl_channel_obj.type == 3:
 					layer_chans[channelnum] = fl_channel_obj.layer_chans
@@ -430,6 +413,10 @@ class input_flp(plugins.base):
 
 					vol_enabled = bool(fl_asdr_obj_vol.el_env_enabled)
 
+					loop_found = sampleref_obj.loop_found if sampleref_obj else False
+
+					chan_loop_enabled = bool(fl_channel_obj.sampleflags&8) and (loop_found or fl_channel_obj.params.crossfade)
+
 					if vol_enabled:
 						adsr_obj = plugin_obj.env_asdr_add('vol', 
 							calc_time(fl_asdr_obj_vol.el_env_predelay), 
@@ -445,8 +432,11 @@ class input_flp(plugins.base):
 						adsr_obj.decay_tension = fl_asdr_obj_vol.el_env_decay_tension
 						adsr_obj.release_tension = fl_asdr_obj_vol.el_env_release_tension
 
-					elif fl_channel_obj.type == 0 and (not fl_channel_obj.sampleflags&8 or sampleref_obj.fileref.file.extension.lower() == 'ds'):
-						plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 20, 1)
+					elif fl_channel_obj.type == 0:
+						if (chan_loop_enabled or sampleref_obj.fileref.file.extension.lower() == 'ds'):
+							sp_obj.trigger = 'normal'
+						else:
+							sp_obj.trigger = 'oneshot'
 
 					fcalc = 0
 					if fl_channel_obj.basicparams.mod_type == 0: fcalc = 1
@@ -521,7 +511,7 @@ class input_flp(plugins.base):
 
 			if fl_channel_obj.type == 4:
 				sre_obj = convproj_obj.sampleindex__add('FLSample' + str(instrument))
-				samplepart_obj, sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dawvert_intent)
+				sampleref_obj = to_samplepart(fl_channel_obj, sre_obj, convproj_obj, True, flp_obj, dawvert_intent)
 
 				sre_obj.usemasterpitch = bool(fl_channel_obj.params.main_pitch)
 				
@@ -817,7 +807,7 @@ class input_flp(plugins.base):
 				if slot_obj:
 					try:
 						pluginid = 'FLPlug_F_'+str(mixer_id)+'_'+str(slot_id)
-						plugin_obj = flp_dec_plugins.getparams(convproj_obj, pluginid, slot_obj.plugin, samplefolder, flp_obj.zipfile)
+						plugin_obj = flp_dec_plugins.getparams(convproj_obj, pluginid, slot_obj.plugin, samplefolder, flp_obj.zipfile, dawvert_intent)
 
 						plugin_obj.fxdata_add(bool(route_on), route_wet)
 						plugin_obj.role = 'effect'

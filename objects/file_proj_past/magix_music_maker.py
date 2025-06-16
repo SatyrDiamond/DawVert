@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-VERBOSE = False
+VERBOSE = True
 
 # ---------------------- ITEMS ----------------------
 class item_svip:
@@ -402,11 +402,47 @@ class group_trck:
 		return cls
 
 
+class item_3dau:
+	def __init__(self):
+		self.data = None
+		self.unknowns = []
+
+	@classmethod
+	def from_byr_stream(cls, byr_stream, size):
+		cls = cls()
+		with byr_stream.isolate_size(size, False) as bye_stream:
+			cls.unknowns.append( bye_stream.uint32() )
+			cls.unknowns.append( bye_stream.float() )
+			cls.unknowns.append( bye_stream.uint32() )
+		return cls
+
+class item_orup:
+	def __init__(self):
+		self.data = None
+		self.unknowns = []
+
+	@classmethod
+	def from_byr_stream(cls, byr_stream, size):
+		cls = cls()
+		with byr_stream.isolate_size(size, False) as bye_stream:
+			cls.unknowns.append( bye_stream.uint32() )
+			bye_stream.skip(4)
+			cls.unknowns.append( bye_stream.int32() )
+			bye_stream.skip(4)
+			cls.unknowns.append( bye_stream.uint32() )
+			bye_stream.skip(4)
+			cls.unknowns.append( bye_stream.double() )
+		return cls
+
+
+
 class group_objs:
 	def __init__(self):
 		self.data_objc = None
 		self.data_oeff = None
 		self.data_otrn = None
+		self.data_3dau = None
+		self.data_orup = []
 
 	@classmethod
 	def from_riffchunks(cls, riffchunks, byr_stream):
@@ -420,6 +456,12 @@ class group_objs:
 				elif VERBOSE: print(x.name, 'is not an item')
 			elif x.name == b'otrn':
 				if not x.is_list: cls.data_otrn = item_otrn.from_byr_stream(byr_stream, x.size)
+				elif VERBOSE: print(x.name, 'is not an item')
+			elif x.name == b'3dau':
+				if not x.is_list: cls.data_3dau = item_3dau.from_byr_stream(byr_stream, x.size)
+				elif VERBOSE: print(x.name, 'is not an item')
+			elif x.name == b'orup':
+				if not x.is_list: cls.data_orup.append(item_orup.from_byr_stream(byr_stream, x.size))
 				elif VERBOSE: print(x.name, 'is not an item')
 			elif VERBOSE: print('unknown chunk in objs: '+str(x.name))
 		return cls

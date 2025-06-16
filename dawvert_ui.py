@@ -20,7 +20,7 @@ import sys
 import traceback
 
 from objects.convproj import fileref
-filesearcher = fileref.filesearcher
+fileref_global = fileref.cvpj_fileref_global
 
 scriptfiledir = os.path.dirname(os.path.realpath(__file__))
 
@@ -101,18 +101,13 @@ class ConversionWorker(QtCore.QObject):
 			os.makedirs(dawvert_intent.path_samples['generated'], exist_ok=True)
 			os.makedirs(dawvert_intent.path_samples['converted'], exist_ok=True)
 
-			filesearcher.reset()
-			filesearcher.add_basepath('projectfile', os.path.dirname(dawvert_intent.input_file))
-			filesearcher.add_basepath('dawvert', scriptfiledir)
-
-			filesearcher.add_searchpath_partial('projectfile', '.', 'projectfile')
-			filesearcher.add_searchpath_full_append('projectfile', os.path.dirname(dawvert_intent.input_file), None)
-
-			filesearcher.add_searchpath_full_filereplace('extracted', dawvert_intent.path_samples['extracted'], None)
-			filesearcher.add_searchpath_full_filereplace('downloaded', dawvert_intent.path_samples['downloaded'], None)
-			filesearcher.add_searchpath_full_filereplace('generated', dawvert_intent.path_samples['generated'], None)
-			filesearcher.add_searchpath_full_filereplace('converted', dawvert_intent.path_samples['converted'], None)
-			filesearcher.add_searchpath_full_filereplace('external_data', os.path.join(scriptfiledir, '__external_data'), None)
+			fileref_global.reset()
+			fileref_global.add_prefix('project_root', None, os.path.dirname(dawvert_intent.input_file))
+			fileref_global.add_prefix('dawvert_extracted', None, dawvert_intent.path_samples['extracted'])
+			fileref_global.add_prefix('dawvert_downloaded', None, dawvert_intent.path_samples['downloaded'])
+			fileref_global.add_prefix('dawvert_generated', None, dawvert_intent.path_samples['generated'])
+			fileref_global.add_prefix('dawvert_converted', None, dawvert_intent.path_samples['converted'])
+			fileref_global.add_prefix('dawvert_external_data', None, os.path.join(scriptfiledir, '__external_data'))
 
 			self.update_ui.emit([1, 0])
 			self.update_ui.emit([0, 'Processing Input...'])

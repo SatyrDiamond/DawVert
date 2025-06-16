@@ -70,18 +70,17 @@ class input_nanostudio_v1(plugins.base):
 								if 'Nam' in val:
 									sampname = val['Nam']
 									if sampname:
+										drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+										drumpad_obj.key = padnum-12
+										drumpad_obj.visual.name = sampname.split('.')[0]
+										if 'Vol' in val: drumpad_obj.vol = val['Vol']
+										if 'Pan' in val: drumpad_obj.pan = (val['Pan']-0.5)*2
+
 										if dawvert_intent.input_mode == 'file':
 											audiopath = os.path.join(dawvert_intent.input_file, sampname)
 
 											sampleref_obj = convproj_obj.sampleref__add(sampname, audiopath, None)
-											sampleref_obj.find_relative('projectfile')
-											sampleref_obj.find_relative('nanostudio_v1')
-
-											drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
-											drumpad_obj.key = padnum-12
-											drumpad_obj.visual.name = sampname.split('.')[0]
-											if 'Vol' in val: drumpad_obj.vol = val['Vol']
-											if 'Pan' in val: drumpad_obj.pan = (val['Pan']-0.5)*2
+											sampleref_obj.search_local(dawvert_intent.input_folder)
 
 											layer_obj.samplepartid = 'drum_%i' % padnum
 											sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)

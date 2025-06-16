@@ -597,6 +597,13 @@ class cvpj_project:
 			logger_project.info('FileRef - '+fileid+' - '+filepath)
 		return self.filerefs[fileid]
 
+	def fileref__add__prefix(self, fileid, prefix, filepath):
+		if fileid not in self.filerefs: 
+			self.filerefs[fileid] = fileref.cvpj_fileref()
+			self.filerefs[fileid].set_path_prefix(prefix, filepath)
+			logger_project.info('FileRef - '+fileid+' - '+filepath)
+		return self.filerefs[fileid]
+
 	def fileref__get(self, fileid):
 		if fileid in self.filerefs: return True, self.filerefs[fileid]
 		else: return False, None
@@ -611,6 +618,13 @@ class cvpj_project:
 		if fileid not in self.samplerefs: 
 			self.samplerefs[fileid] = sampleref.cvpj_sampleref()
 			self.samplerefs[fileid].set_path(os_type, filepath)
+			logger_project.info('SampleRef - '+fileid+' - '+filepath)
+		return self.samplerefs[fileid]
+
+	def sampleref__add__prefix(self, fileid, prefix, filepath):
+		if fileid not in self.samplerefs: 
+			self.samplerefs[fileid] = sampleref.cvpj_sampleref()
+			self.samplerefs[fileid].set_path_prefix(prefix, filepath)
 			logger_project.info('SampleRef - '+fileid+' - '+filepath)
 		return self.samplerefs[fileid]
 

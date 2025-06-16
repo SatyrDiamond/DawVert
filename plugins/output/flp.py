@@ -251,7 +251,13 @@ class output_cvpjs(plugins.base):
 			for n in range(5):
 				t = channel.flp_env_lfo()
 
-				if n == 1: t.envlfo_flags = 4
+				if n == 1: 
+					t.envlfo_flags = 4
+					#t.el_env_attack = 0
+					#t.el_env_hold = 0
+					#t.el_env_decay = 0
+					#t.el_env_sustain = 256
+					#t.el_env_release = 0
 
 				fl_channel_obj.env_lfo.append(t)
 						

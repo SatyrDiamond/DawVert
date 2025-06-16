@@ -369,6 +369,60 @@ class cvpj_autoloc:
 		self.autoloc = listin+self.autoloc[startlen:]
 
 
+tempotickblocks_premake = dynbytearr.dynbytearr_premake([
+	('type', np.uint8), 
+	('pos_start', np.float64), 
+	('pos_end', np.float64), 
+	('dur', np.float64), 
+	('tempo', np.float64),  
+	('area_start', np.float64), 
+	('area_end', np.float64), 
+	])
+
+class tempoticks_store:
+	def __init__(self):
+		self.store = None
+
+	def proc_points(self, convproj_obj):
+
+		tempo_auto = convproj_obj.automation.get_opt(['main', 'bpm'])
+
+		tempoblocks = tempotickblocks_premake.create()
+		tb_cur = tempoblocks.create_cursor()
+
+		tempo_param = convproj_obj.params.get('bpm', 120).value
+		tb_cur.add()
+		tb_cur['pos_start'] = 0
+		tb_cur['pos_end'] = -1
+		tb_cur['tempo'] = tempo_param
+
+		if tempo_auto is not None:
+			if not self.store:
+				if tempo_auto.u_pl_ticks or tempo_auto.u_nopl_ticks:
+					if not tempo_auto.u_nopl_points: tempo_auto.convert____pl_ticks___nopl_ticks()
+					firstpart = True
+					for p, v in tempo_auto.nopl_ticks:
+						if not (firstpart and p==0): tb_cur.add()
+						tb_cur['pos_start'] = p
+						tb_cur['pos_end'] = -1
+						tb_cur['tempo'] = v
+						firstpart = False
+
+		prevt = [x['pos_start'] for x in tempoblocks][1:]
+		for n, x in enumerate(prevt):
+			tempoblocks.data[n]['pos_end'] = x
+			tempoblocks.data[n]['dur'] = x-tempoblocks.data[n]['pos_start']
+
+		curpos = 0
+		for x in tempoblocks:
+			x['area_start'] = curpos
+			curpos += (x['dur']/convproj_obj.time_ppq)*(120/tb_cur['tempo'])
+			x['area_end'] = curpos
+
+		print(  tempoblocks.get_used()  )
+
+		exit()
+
 class cvpj_automation:
 	__slots__ = ['data','time_ppq','time_float','auto_num','movenotfound','calcnotfound']
 	def __init__(self, time_ppq, time_float):

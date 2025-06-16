@@ -94,7 +94,7 @@ def do_auto(convproj_obj, autocurvespoints, autoloc):
 
 def decodevst3_chunk(memoryblock): 
 	from functions.juce import juce_memoryblock
-	from functions_plugin_ext import data_vc2xml
+	from functions.juce import data_vc2xml
 	from functions import data_xml
 	chunkdata = juce_memoryblock.fromJuceBase64Encoding(memoryblock)
 	pluginstate_x = data_vc2xml.get(chunkdata)
@@ -533,7 +533,6 @@ class input_tracktion_edit(plugins.base):
 
 		for sid, spath in samples.items(): 
 			sampleref_obj = convproj_obj.sampleref__add(sid, spath, None)
-			sampleref_obj.find_relative('projectfile')
 
 		for sid, spath in videos.items(): 
 			videoref_obj = convproj_obj.videoref__add(sid, spath, None)

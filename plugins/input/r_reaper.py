@@ -634,7 +634,6 @@ class input_reaper(plugins.base):
 					do_fade(placement_obj.fade_out, rpp_trackitem.fadeout, tempomul)
 
 					sampleref_obj = convproj_obj.sampleref__add(cvpj_audio_file, cvpj_audio_file, None)
-					sampleref_obj.find_relative('projectfile')
 					sampleref_obj.search_local(dawvert_intent.input_folder)
 
 					placement_obj.sample.sampleref = cvpj_audio_file
@@ -738,7 +737,7 @@ class input_reaper(plugins.base):
 					convproj_obj.fileref__add(cvpj_audio_file, cvpj_audio_file, None)
 
 					videoref_obj = convproj_obj.videoref__add(cvpj_audio_file, cvpj_audio_file, None)
-					videoref_obj.find_relative('projectfile')
+					videoref_obj.search_local(dawvert_intent.input_folder)
 					placement_obj.videoref = cvpj_audio_file
 
 			track_obj.placements.sort()

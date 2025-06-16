@@ -32,6 +32,8 @@ class input_fl_mobile(plugins.base):
 
 		from objects.file_proj import fl_mobile as proj_fl_mobile
 		from objects.file import adlib_bnk
+		from objects.convproj import fileref
+		fileref_global = fileref.cvpj_fileref_global
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'route'
@@ -45,11 +47,11 @@ class input_fl_mobile(plugins.base):
 
 		convproj_obj.set_timings(1, True)
 
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 20\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 21\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')
-		fileref.filesearcher.add_searchpath_full_append('factorysamples', "C:\\Program Files\\Image-Line\\FL Studio 2024\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed", 'win')
+		fileref_global.add_prefix('flmobile_factory:fl_24_64', 'win', "C:\\Program Files\\Image-Line\\FL Studio 2024\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
+		fileref_global.add_prefix('flmobile_factory:fl_21_32', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
+		fileref_global.add_prefix('flmobile_factory:fl_21_64', 'win', "C:\\Program Files\\Image-Line\\FL Studio 21\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
+		fileref_global.add_prefix('flmobile_factory:fl_20_32', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 20\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
+		fileref_global.add_prefix('flmobile_factory:fl_20_64', 'win', "C:\\Program Files\\Image-Line\\FL Studio 20\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 
@@ -329,10 +331,14 @@ def do_sample(convproj_obj, sample_path, zipfile, projfile):
 				o_sample_path = extract_audio(t_sample_path, zipfile)
 				fromzip = True
 
-		sampleref_obj = convproj_obj.sampleref__add(sample_path, o_sample_path, None)
+		sampleref_obj = convproj_obj.sampleref__add__prefix(sample_path, 'flmobile_factory', o_sample_path)
 		if not fromzip:
-			sampleref_obj.find_relative('factorysamples')
-			sampleref_obj.search_local(os.path.dirname(projfile))
+		#	sampleref_obj.fileref.resolve_prefix()
+			#print(sampleref_obj.fileref.get_path(None, 0))
+		#	sampleref_obj.find_relative('factorysamples')
+		#	sampleref_obj = convproj_obj.sampleref__add__prefix(sampname, 'hydrogen_drumkits', '.\\GMRockKit\\'+filename)
+		#	sampleref_obj.fileref.resolve_prefix()
+		#	sampleref_obj.search_local(os.path.dirname(projfile))
 
 		return sampleref_obj
 
@@ -388,13 +394,14 @@ def do_device(convproj_obj, device_obj, projfilepath, zipfile, pluginid, numberi
 
 					if sampleref_obj.fileref.file.extension == 'wav':
 						filepath = sampleref_obj.fileref.get_path(None, False)
+
 						try:
 							wav_obj = audio_wav.wav_main()
 							wav_obj.readinfo(filepath)
 							wav_inst = wav_obj.inst
-							sp_obj = plugin_obj.sampleregion_add(wav_inst.note_low-60, wav_inst.note_high-60, (wav_inst.rootnote-60)-middlenote, None)
 							sp_obj.vel_min = wav_inst.vel_low/127
 							sp_obj.vel_max = wav_inst.vel_high/127
+							sp_obj = plugin_obj.sampleregion_add(wav_inst.note_low-60, wav_inst.note_high-60, (wav_inst.rootnote-60)-middlenote, None)
 							sp_obj.sampleref = sample_path
 							sp_obj.from_sampleref_obj(sampleref_obj)
 						except:

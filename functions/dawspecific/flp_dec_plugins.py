@@ -36,6 +36,42 @@ def get_sample(i_value):
 	else:
 		return ''
 
+def get_sample_prefix(i_value):
+	if i_value != None:
+		if i_value[0:21] == "%FLStudioFactoryData%":
+			restpath = i_value[22:]
+			return 'flstudio_factory', restpath
+		elif i_value[0:18] == "%FLStudioUserData%":
+			restpath = i_value[19:]
+			return 'flstudio_data', restpath
+		elif i_value[0:14] == "%FLStudioData%":
+			restpath = i_value[14:]
+			return 'flstudio_data', restpath
+		elif i_value[0:13] == "%USERPROFILE%":
+			restpath = i_value[13:]
+			return None, restpath
+		elif i_value[0:6] == "\\Data\\":
+			restpath = i_value[6:]
+			return 'flstudio_data', restpath
+		else:
+			return None, i_value
+	else:
+		return None, ''
+
+def make_sample_ref(convproj_obj, samplefilename, dawvert_intent, os_type):
+	samp_prefix, samp_filename = get_sample_prefix(samplefilename)
+	smapleid = (samp_prefix+':::'+samp_filename) if samp_prefix else samp_filename
+
+	if samp_prefix:
+		sampleref_obj = convproj_obj.sampleref__add__prefix(smapleid, samp_prefix, samp_filename)
+		sampleref_obj.fileref.resolve_prefix()
+	else:
+		sampleref_obj = convproj_obj.sampleref__add(smapleid, samp_filename, os_type)
+	sampleref_obj.fileref.optional_prefixes = ['dawvert_extracted']
+	outd = sampleref_obj.search_local(dawvert_intent.input_folder)
+	#print(outd, samplefilename)
+	return smapleid, sampleref_obj
+
 def decode_sslf(fl_plugstr):
 	header = fl_plugstr.read(4)
 	out = b''
@@ -81,7 +117,28 @@ envshapes = {
 	12: 'doublecurve3',
 }
 
-def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
+def directwave_audio_obj(pcmdata, samplerate, channels):
+	numchans = channels&0x0f
+	
+	pcmlist = np.frombuffer(pcmdata, dtype=np.float32)
+	outpcm = np.zeros([len(pcmlist)//channels, channels], dtype=np.float32)
+	
+	halflen = len(outpcm)
+	for x in range(channels):
+		outpcm[:,x] = pcmlist[(halflen*(x)):(halflen*(x+1))]
+	
+	outpcm = outpcm[256:-256]
+	outpcm = outpcm.flatten()
+	
+	audio_obj = audio_data.audio_obj()
+	audio_obj.rate = samplerate
+	audio_obj.set_codec('float')
+	audio_obj.channels = channels
+	audio_obj.pcm_from_list(outpcm)
+	audio_obj.to_file_wav(filename)
+	return audio_obj
+
+def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile, dawvert_intent):
 	fl_plugstr = bytereader.bytereader()
 	fl_plugstr.load_raw(flplugin.params if flplugin.params else b'')
 	flplugin.name = flplugin.name.lower()
@@ -270,71 +327,54 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 				f.write(fpc_plugin.dump())
 
 			if fpc_plugin.programs:
-				plugin_obj.type_set('universal', 'sampler', 'multi')
 				firstchan = fpc_plugin.channels[0]
 				firstprog = fpc_plugin.programs[firstchan.prognum]
 				regions = firstprog.regions
-	
+
+				plugin_obj.type_set('universal', 'sampler', 'multi')
 				for r_num, region in enumerate(regions):
 					region_main = region.main
 					region_sample = region.sample
 					region_pitch = region.pitch
-	
+		
 					sp_obj = plugin_obj.sampleregion_add(region_main.key_min-60, region_main.key_max-60, region_main.key_root-60, None)
 					sp_obj.vel_min = region_main.vel_min/127
 					sp_obj.vel_max = region_main.vel_max/127
-	
+		
 					sp_obj.visual.name = region.name.decode()
-
+	
 					sp_obj.point_value_type = "samples"
 					sp_obj.start = region_sample.start
 					sp_obj.end = region_sample.num_samples
 					sp_obj.loop_start = region_sample.loop_start
 					sp_obj.loop_end = region_sample.loop_end
 					sp_obj.loop_active = int(region_sample.loop_type)>2
-
+	
 					sp_obj.vol = region_main.gain
 					sp_obj.pan = (region_main.pan-0.5)*2
-
+	
 					sp_obj.pitch += (region_pitch.tune-0.5)*24
 					sp_obj.pitch += region_pitch.fine/100
 					sp_obj.pitch += region_pitch.semi
-
+	
 					sp_obj.scale = region_pitch.k_trk/100
 					sp_obj.no_pitch = region_pitch.k_trk==0
-
+	
 					if not region.pcmdata and not region.flacdata:
 						filename = region.path.decode()
-						filename = get_sample(filename)
-						sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
-						sp_obj.sampleref = filename
+						smapleid, sampleref_obj = make_sample_ref(convproj_obj, filename, dawvert_intent, None)
+						sp_obj.sampleref = smapleid
 					elif region.pcmdata:
-						filename = os.path.join(foldername, pluginid+'%i_%i_custom_audio.wav' % (0, r_num))
+						filename = os.path.join(foldername, pluginid+'_dw_%i_%i_custom_audio.wav' % (0, r_num))
 						try:
 							numchans = region.sample.channels&0x0f
-
-							pcmlist = np.frombuffer(region.pcmdata, dtype=np.float32)
-							outpcm = np.zeros([len(pcmlist)//numchans, numchans], dtype=np.float32)
-
-							halflen = len(outpcm)
-							for x in range(numchans):
-								outpcm[:,x] = pcmlist[(halflen*(x)):(halflen*(x+1))]
-
-							outpcm = outpcm[256:-256]
-							outpcm = outpcm.flatten()
-
-							audio_obj = audio_data.audio_obj()
-							audio_obj.rate = region_sample.hz
-							audio_obj.set_codec('float')
-							audio_obj.channels = numchans
-							audio_obj.pcm_from_list(outpcm)
-							audio_obj.to_file_wav(filename)
+							audio_obj = directwave_audio_obj(region.pcmdata, region_sample.hz, numchans, filename)
 							sampleref_obj = convproj_obj.sampleref__add(filename, filename, None)
 							sp_obj.sampleref = filename
 						except:
 							pass
 					elif region.flacdata:
-						filename = os.path.join(foldername, pluginid+'%i_%i_custom_audio.flac' % (0, r_num))
+						filename = os.path.join(foldername, pluginid+'_dw_%i_%i_custom_audio.flac' % (0, r_num))
 						try:
 							with open(filename, "wb") as f:
 								f.write(region.flacdata[8:])
@@ -369,9 +409,9 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 
 					if pad_sfilename:
 						sampleref_obj = convproj_obj.sampleref__add(pad_sfilename, pad_sfilename, 'win')
-						if zipfile: sampleref_obj.find_relative('extracted')
-						sampleref_obj.find_relative('projectfile')
-						sampleref_obj.find_relative('factorysamples')
+						#if zipfile: sampleref_obj.find_relative('extracted')
+						#sampleref_obj.find_relative('projectfile')
+						#sampleref_obj.find_relative('factorysamples')
 						layer_obj = drumpad_obj.add_layer()
 						layer_obj.samplepartid = 'drum_%i_%i' % (padnum, layernum)
 						layer_obj.vel_min = fpc_layer.vel_min/127
@@ -421,22 +461,24 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		asdflfo_sus = flsf_asdf_S/127 if flsf_asdf_S != -1 else 1
 		asdflfo_rel = flsf_asdf_R/1024 if flsf_asdf_R != -1 else 0
 		asdflfo_amt = int( (flsf_asdf_A == flsf_asdf_D == flsf_asdf_S == flsf_asdf_R == -1) == False )
+#
+		samp_prefix, samp_filename = get_sample_prefix(flsf_filename)
+		smapleid = (samp_prefix+':::'+samp_filename) if samp_prefix else samp_filename
+	
+		if samp_prefix:
+			fileref_obj = convproj_obj.fileref__add__prefix(smapleid, samp_prefix, samp_filename)
+			fileref_obj.resolve_prefix()
+		else:
+			fileref_obj = convproj_obj.fileref__add(smapleid, samp_filename, None)
+			fileref_obj.optional_prefixes = ['dawvert_extracted']
+			fileref_obj.search_local(dawvert_intent.input_folder)
 
-		fileref_obj = convproj_obj.fileref__add(flsf_filename, flsf_filename, 'win')
-		
 		if zipfile:
 			foundnames = [x for x in zipfile.namelist() if fileref_obj.file.basename in x]
 			if foundnames:
 				zipfile.extract(foundnames[0], path=foldername, pwd=None)
-				fileref_obj.set_folder(None, os.path.join(foldername, foundnames[0]), False)
 
-		fileref_obj.search('extracted')
-		fileref_obj.search('projectfile')
-		fileref_obj.search('factorysamples')
-
-		#print(fileref_obj.get_path('win', False))
-
-		plugin_obj.fileref__set('file', flsf_filename)
+		plugin_obj.fileref__set('file', smapleid)
 
 		plugin_obj.env_asdr_add('vol', 0, asdflfo_att, 0, asdflfo_dec, asdflfo_sus, asdflfo_rel, asdflfo_amt)
 		plugin_obj.midi.from_sf2(flsf_bank, flsf_patch)
@@ -472,12 +514,9 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		sre_obj = plugin_obj.samplepart_add('sample')
 
 		if slicer_filename != "": 
-			sampleref_obj = convproj_obj.sampleref__add(slicer_filename, slicer_filename, 'win')
-			if zipfile: sampleref_obj.find_relative('extracted')
-			sampleref_obj.find_relative('projectfile')
-			sampleref_obj.find_relative('factorysamples')
+			smapleid, sampleref_obj = make_sample_ref(convproj_obj, slicer_filename, dawvert_intent, None)
 			#slicechannels = sampleref_obj.channels
-			sre_obj.from_sampleref(convproj_obj, slicer_filename)
+			sre_obj.from_sampleref(convproj_obj, smapleid)
 
 		stretch_obj = sre_obj.stretch
 
@@ -683,7 +722,7 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 		sre_obj = plugin_obj.samplepart_add('sample')
 
 		if not os.path.exists(slicex_filename):
-			outfilename = os.path.join(foldername, pluginid+'_custom_audio.wav')
+			outfilename = os.path.join(foldername, pluginid+'_slicer_custom_audio.wav')
 			try:
 				with open(outfilename, "wb") as slicexfile: slicexfile.write(wavedata)
 			except PermissionError: pass
@@ -693,9 +732,9 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile):
 			sampleref_obj = convproj_obj.sampleref__add(slicex_filename, slicex_filename, 'win')
 			sre_obj.from_sampleref(convproj_obj, slicex_filename)
 
-		sampleref_obj.find_relative('extracted')
-		sampleref_obj.find_relative('projectfile')
-		sampleref_obj.find_relative('factorysamples')
+		#sampleref_obj.find_relative('extracted')
+		#sampleref_obj.find_relative('projectfile')
+		#sampleref_obj.find_relative('factorysamples')
 
 		if not wavedata: 
 			if sampleref_obj.fileref.exists(None):

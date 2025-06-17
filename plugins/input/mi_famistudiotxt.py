@@ -314,7 +314,7 @@ class input_famistudio(plugins.base):
 		traits_obj.audio_filetypes = ['wav']
 		traits_obj.auto_types = ['nopl_points', 'pl_points']
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		globalstore.dataset.load('famistudio', './data_main/dataset/famistudio.dset')
 		samplefolder = dawvert_intent.path_samples['extracted']

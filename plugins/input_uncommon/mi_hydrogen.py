@@ -31,7 +31,7 @@ class input_hydrogen(plugins.base):
 
 		convproj_obj.type = 'mi'
 		convproj_obj.fxtype = 'none'
-		convproj_obj.set_timings(48, True)
+		convproj_obj.set_timings(48)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['nopl_points']

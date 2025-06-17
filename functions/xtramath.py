@@ -39,9 +39,9 @@ def sep_pan_to_vol(i_left, i_right):
 	pan_val = (i_left*-1)+i_right
 	return pan_val, val_vol
 
-def change_timing(o_ppq, n_ppq, n_float, value):
+def change_timing(o_ppq, n_ppq, value):
 	modval = float(value)*(n_ppq/o_ppq)
-	return modval if n_float else int(modval)
+	return modval if isinstance(n_ppq, float) else int(modval)
 
 def from_db(value): return pow(10, value / 20)
 

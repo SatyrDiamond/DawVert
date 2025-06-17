@@ -24,6 +24,30 @@ class cvpj_wave:
 		self.author = ''
 		self.data = {}
 
+	def json__make(self):
+		outjson = {}
+		outjson['range_min'] = self.range_min
+		outjson['range_max'] = self.range_max
+		outjson['points'] = self.points
+		outjson['numpoints'] = self.numpoints
+		outjson['smooth'] = self.smooth
+		self.visname = outjson['visname'] = self.visname
+		self.author = outjson['author'] = self.author
+		outjson['data'] = self.data
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'range_min' in injson: cls.range_min = injson['range_min']
+		if 'range_max' in injson: cls.range_max = injson['range_max']
+		if 'points' in injson: cls.points = injson['points']
+		if 'numpoints' in injson: cls.numpoints = injson['numpoints']
+		if 'smooth' in injson: cls.smooth = injson['smooth']
+		if 'visname' in injson: cls.visname = injson['visname']
+		if 'author' in injson: cls.author = injson['author']
+		if 'data' in injson: cls.data = injson['data']
+		return cls
+
 	def set_numpoints(self, numpoints):
 		self.points = [0 for x in range(numpoints)]
 		self.numpoints = numpoints

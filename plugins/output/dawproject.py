@@ -707,7 +707,7 @@ class output_dawproject(plugins.base):
 		global dawproject_zip
 		global bpm
 
-		convproj_obj.change_timings(1, True)
+		convproj_obj.change_timings(1.0)
 
 		project_obj = proj_dawproject.dawproject_song()
 		project_obj.application.name = 'DawVert'

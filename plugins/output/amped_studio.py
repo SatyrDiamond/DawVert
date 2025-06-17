@@ -158,7 +158,7 @@ class output_amped(plugins.base):
 		global amped_obj
 		global europa_vals
 
-		convproj_obj.change_timings(4, True)
+		convproj_obj.change_timings(4.0)
 
 		counter_id = counter.counter(10000, '')
 		counter_devid = counter.counter(30000, '')

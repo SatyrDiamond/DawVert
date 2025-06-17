@@ -54,7 +54,7 @@ class input_audiosanua(plugins.base):
 		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv', 'loop_adv_off']
 		traits_obj.audio_filetypes = ['wav', 'mp3']
 
-		convproj_obj.set_timings(128, False)
+		convproj_obj.set_timings(128)
 
 		# ------------------------------------------ Start ------------------------------------------
 		globalstore.dataset.load('audiosauna', './data_main/dataset/audiosauna.dset')

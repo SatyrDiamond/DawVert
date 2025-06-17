@@ -36,6 +36,23 @@ class cvpj_color:
 	fx_allowed: list = field(default_factory=list)
 	priority: int = 0
 
+	def json__make(self):
+		outjson = {}
+		if used: outjson['color'] = [self.r_i, self.g_i, self.b_i]
+		outjson['fx_allowed'] = self.fx_allowed
+		outjson['priority'] = self.priority
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'color' in injson: 
+			self.r_i, self.g_i, self.b_i = injson['color']
+			self.internal_tofloat()
+		if 'fx_allowed' in injson: cls.fx_allowed = injson['fx_allowed']
+		if 'priority' in injson: cls.priority = injson['priority']
+		return cls
+
 	@classmethod
 	def from_float(self, indata):
 		color_obj = cvpj_color()
@@ -321,6 +338,23 @@ class cvpj_visual:
 		self.color = cvpj_color()
 		self.comment = None
 
+	def json__make(self):
+		outjson = {}
+		if self.name: outjson['name'] = self.name
+		if self.color.used: outjson['color'] = self.color.json__make()
+		if self.comment: outjson['comment'] = self.comment
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'color' in injson: 
+			self.r_i, self.g_i, self.b_i = injson['color']
+			self.internal_tofloat()
+		if 'fx_allowed' in injson: cls.fx_allowed = injson['fx_allowed']
+		if 'priority' in injson: cls.priority = injson['priority']
+		return cls
+
 	def __bool__(self):
 		return bool(self.name) and bool(self.color)
 
@@ -395,6 +429,57 @@ class cvpj_metadata:
 		self.data = {}
 		self.show = -1
 
+	def json__make(self):
+		outjson = {}
+		if self.name: outjson['name'] = self.name
+		if self.subname: outjson['subname'] = self.subname
+		if self.author: outjson['author'] = self.author
+		if self.original_author: outjson['original_author'] = self.original_author
+		if self.comment_text: outjson['comment_text'] = self.comment_text
+		if self.comment_datatype != 'text': outjson['comment_datatype'] = self.comment_datatype
+		if self.url: outjson['url'] = self.url
+		if self.genre: outjson['genre'] = self.genre
+		if self.t_seconds != -1: outjson['t_seconds'] = self.t_seconds
+		if self.t_minutes != -1: outjson['t_minutes'] = self.t_minutes
+		if self.t_hours != -1: outjson['t_hours'] = self.t_hours
+		if self.t_day != -1: outjson['t_day'] = self.t_day
+		if self.t_month != -1: outjson['t_month'] = self.t_month
+		if self.t_year != -1: outjson['t_year'] = self.t_year
+		if self.email: outjson['email'] = self.email
+		if self.album: outjson['album'] = self.album
+		if self.songwriter: outjson['songwriter'] = self.songwriter
+		if self.producer: outjson['producer'] = self.producer
+		if self.copyright: outjson['copyright'] = self.copyright
+		if self.data: outjson['data'] = self.data
+		if self.show: outjson['show'] = self.show
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'name' in injson: cls.name = injson['name']
+		if 'subname' in injson: cls.subname = injson['subname']
+		if 'author' in injson: cls.author = injson['author']
+		if 'original_author' in injson: cls.original_author = injson['original_author']
+		if 'comment_text' in injson: cls.comment_text = injson['comment_text']
+		if 'comment_datatype' in injson: cls.comment_datatype = injson['comment_datatype']
+		if 'url' in injson: cls.url = injson['url']
+		if 'genre' in injson: cls.genre = injson['genre']
+		if 't_seconds' in injson: cls.t_seconds = injson['t_seconds']
+		if 't_minutes' in injson: cls.t_minutes = injson['t_minutes']
+		if 't_hours' in injson: cls.t_hours = injson['t_hours']
+		if 't_day' in injson: cls.t_day = injson['t_day']
+		if 't_month' in injson: cls.t_month = injson['t_month']
+		if 't_year' in injson: cls.t_year = injson['t_year']
+		if 'email' in injson: cls.email = injson['email']
+		if 'album' in injson: cls.album = injson['album']
+		if 'songwriter' in injson: cls.songwriter = injson['songwriter']
+		if 'producer' in injson: cls.producer = injson['producer']
+		if 'copyright' in injson: cls.copyright = injson['copyright']
+		if 'data' in injson: cls.data = injson['data']
+		if 'show' in injson: cls.show = injson['show']
+		return cls
+
 class cvpj_window_data:
 	__slots__ = ['pos_x','pos_y','size_x','size_y','open','detatched','maximized','minimized']
 	def __init__(self):
@@ -407,9 +492,51 @@ class cvpj_window_data:
 		self.minimized = -1
 		self.detatched = -1
 
+	def json__make(self):
+		outjson = {}
+		if self.pos_x != -1: outjson['pos_x'] = self.pos_x
+		if self.pos_y != -1: outjson['pos_y'] = self.pos_y
+		if self.size_x != -1: outjson['size_x'] = self.size_x
+		if self.size_y != -1: outjson['size_y'] = self.size_y
+		if self.open != -1: outjson['open'] = self.open
+		if self.maximized != -1: outjson['maximized'] = self.maximized
+		if self.minimized != -1: outjson['minimized'] = self.minimized
+		if self.detatched != -1: outjson['detatched'] = self.detatched
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'pos_x' in injson: cls.pos_x = injson['pos_x']
+		if 'pos_y' in injson: cls.pos_y = injson['pos_y']
+		if 'size_x' in injson: cls.size_x = injson['size_x']
+		if 'size_y' in injson: cls.size_y = injson['size_y']
+		if 'open' in injson: cls.open = injson['open']
+		if 'maximized' in injson: cls.maximized = injson['maximized']
+		if 'minimized' in injson: cls.minimized = injson['minimized']
+		if 'detatched' in injson: cls.detatched = injson['detatched']
+		return cls
+
 class cvpj_visual_keynote:
 	def __init__(self):
 		self.data = {}
+
+	def json__make(self):
+		outjson = []
+		for k, v in self.data.items:
+			partjson = {}
+			partjson['key'] = k
+			partjson['visual'] = v.json__make()
+			outjson.append(partjson)
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		for x in injson:
+			if 'key' in x and 'visual' in x:
+				self.data[x['key']] = cvpj_visual.json__parse(x['visual'])
+		return cls
 
 	def __bool__(self):
 		return bool(self.data)

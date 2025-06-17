@@ -8,12 +8,11 @@ import math
 import copy
 
 class cvpj_autoticks:
-	__slots__ = ['val_type','time_ppq','time_float','points']
+	__slots__ = ['val_type','time_ppq','points']
 
-	def __init__(self, time_ppq, time_float, val_type):
+	def __init__(self, time_ppq, val_type):
 		self.val_type = val_type
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.points = {}
 
 	def __getitem__(self, num):
@@ -34,14 +33,13 @@ class cvpj_autoticks:
 	def add_point(self, p_pos, p_val):
 		self.points[p_pos] = p_val
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		r = []
 		for p, v in self.points.items(): r.append([p, v])
-		for t in r: t[0] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, t[0])
+		for t in r: t[0] = xtramath.change_timing(self.time_ppq, time_ppq, t[0])
 		self.points = {}
 		for t in r: self.points[t[0]] = t[1]
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def get_dur(self):
 		out_dur = 0
@@ -66,7 +64,7 @@ class cvpj_autoticks:
 
 	def merge(self, other):
 		other = copy.deepcopy(other)
-		other.change_timings(self.time_ppq, self.time_float)
+		other.change_timings(self.time_ppq)
 		for p, x in other.points.items(): self.points[p] = x
 
 	def calc(self, mathtype, val1, val2, val3, val4):
@@ -123,7 +121,7 @@ class cvpj_autoticks:
 			normlvl = (p-prev_val)/self.time_ppq
 			if normlvl>=2: 
 				lastsplit = p
-				autotspl.append([p, cvpj_autoticks(self.time_ppq, self.time_float, self.val_type)])
+				autotspl.append([p, cvpj_autoticks(self.time_ppq, self.val_type)])
 			splittedpos = p-lastsplit
 			autotspl[-1][1].add_point(splittedpos, v)
 			prev_val = p

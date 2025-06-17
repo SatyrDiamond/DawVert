@@ -27,7 +27,7 @@ class input_petaporon(plugins.base):
 		traits_obj.track_nopl = True
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(1, True)
+		convproj_obj.set_timings(1.0)
 
 		project_obj = proj_flipperzero.fmf_song()
 

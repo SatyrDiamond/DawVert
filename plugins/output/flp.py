@@ -143,7 +143,7 @@ class output_cvpjs(plugins.base):
 		from objects.file_proj._flp import fx
 
 		ppq = 96
-		convproj_obj.change_timings(ppq, False)
+		convproj_obj.change_timings(ppq)
 
 		globalstore.datadef.load('fl_studio', './data_main/datadef/fl_studio.ddef')
 		globalstore.dataset.load('fl_studio', './data_main/dataset/fl_studio.dset')

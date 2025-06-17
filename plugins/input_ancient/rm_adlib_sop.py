@@ -37,7 +37,7 @@ class input_sop(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
-		convproj_obj.set_timings(project_obj.tickBeat, False)
+		convproj_obj.set_timings(project_obj.tickBeat)
 		convproj_obj.metadata.name = project_obj.title
 		convproj_obj.metadata.comment_text = project_obj.comment
 		convproj_obj.params.add('bpm', project_obj.basicTempo, 'float')

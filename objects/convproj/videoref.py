@@ -15,6 +15,27 @@ class cvpj_videoref:
 		self.hz = 44100
 		self.defined_meta = []
 
+	def json__make(self):
+		outjson = {}
+		outjson['fileref'] = self.fileref.json__make()
+		outjson['found'] = self.found
+		outjson['dur_samples'] = self.dur_samples
+		outjson['dur_sec'] = self.dur_sec
+		outjson['hz'] = self.hz
+		outjson['defined_meta'] = self.defined_meta
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'fileref' in injson: cls.fileref = fileref.cvpj_fileref.json__parse(injson['fileref'])
+		if 'found' in injson: cls.found = injson['found']
+		if 'dur_samples' in injson: cls.dur_samples = injson['dur_samples']
+		if 'dur_sec' in injson: cls.dur_sec = injson['dur_sec']
+		if 'hz' in injson: cls.hz = injson['hz']
+		if 'defined_meta' in injson: cls.defined_meta = injson['defined_meta']
+		return cls
+
 	def set_hz(self, val):
 		if 'hz' not in self.defined_meta:
 			self.defined_meta.append('hz')

@@ -407,7 +407,7 @@ class input_ableton(plugins.base):
 		traits_obj.plugin_ext_arch = [32, 64]
 		traits_obj.plugin_ext_platforms = ['win', 'unix']
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 		autoid_assoc = auto_id.convproj2autoid(4, True)
 
 		globalstore.dataset.load('ableton', './data_main/dataset/ableton.dset')

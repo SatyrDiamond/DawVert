@@ -11,6 +11,8 @@ from objects.convproj import autoticks
 from objects.convproj import autopoints
 from objects.convproj import placements_autopoints
 from objects.convproj import placements_autoticks
+from objects.data_bytes import dynbytearr
+import numpy as np
 
 import logging
 logger_automation = logging.getLogger('automation')
@@ -62,8 +64,8 @@ class midifile_to_automation:
 
 
 class cvpj_s_automation:
-	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','time_float','valtype','time_ppq','time_float','valtype','conv_tres','persist','defualt_val']
-	def __init__(self, time_ppq, time_float, valtype):
+	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','valtype','time_ppq','valtype','conv_tres','persist','defualt_val']
+	def __init__(self, time_ppq, valtype):
 		self.pl_points = None
 		self.pl_ticks = None
 		self.nopl_points = None
@@ -77,14 +79,13 @@ class cvpj_s_automation:
 		self.u_nopl_ticks = False
 
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.valtype = valtype
 
 		self.persist = True
 		self.defualt_val = 0
 
 	def make_base(self):
-		outv = cvpj_s_automation(self.time_ppq, self.time_float, self.valtype)
+		outv = cvpj_s_automation(self.time_ppq, self.valtype)
 		return outv
 
 	def __repr__(self):
@@ -97,7 +98,7 @@ class cvpj_s_automation:
 
 	def merge(self, other):
 		other = copy.deepcopy(other)
-		other.change_timings(self.time_ppq, self.time_float)
+		other.change_timings(self.time_ppq)
 
 		if not self.u_pl_points:
 			self.u_pl_points = other.u_pl_points
@@ -127,22 +128,22 @@ class cvpj_s_automation:
 
 	def make_nopl_ticks(self):
 		if not self.u_nopl_ticks: 
-			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, self.valtype)
+			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.valtype)
 			self.u_nopl_ticks = True
 
 	def make_nopl_points(self):
 		if not self.u_nopl_points: 
-			self.nopl_points = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, self.valtype)
+			self.nopl_points = autopoints.cvpj_autopoints(self.time_ppq, self.valtype)
 			self.u_nopl_points = True
 
 	def make_pl_ticks(self):
 		if not self.u_pl_ticks: 
-			self.pl_ticks = placements_autoticks.cvpj_placements_autoticks(self.time_ppq, self.time_float, self.valtype)
+			self.pl_ticks = placements_autoticks.cvpj_placements_autoticks(self.time_ppq, self.valtype)
 			self.u_pl_ticks = True
 
 	def make_pl_points(self):
 		if not self.u_pl_points: 
-			self.pl_points = placements_autopoints.cvpj_placements_autopoints(self.time_ppq, self.time_float, self.valtype)
+			self.pl_points = placements_autopoints.cvpj_placements_autopoints(self.time_ppq, self.valtype)
 			self.u_pl_points = True
 
 	def calc(self, mathtype, val1, val2, val3, val4):
@@ -185,13 +186,12 @@ class cvpj_s_automation:
 		if self.u_nopl_ticks: out_val = self.nopl_ticks.get_paramval(firstnote, out_val)
 		return out_val
 
-	def change_timings(self, time_ppq, time_float):
-		if self.u_nopl_points: self.nopl_points.change_timings(time_ppq, time_float)
-		if self.u_nopl_ticks: self.nopl_ticks.change_timings(time_ppq, time_float)
-		if self.u_pl_points: self.pl_points.change_timings(time_ppq, time_float)
-		if self.u_pl_ticks: self.pl_ticks.change_timings(time_ppq, time_float)
+	def change_timings(self, time_ppq):
+		if self.u_nopl_points: self.nopl_points.change_timings(time_ppq)
+		if self.u_nopl_ticks: self.nopl_ticks.change_timings(time_ppq)
+		if self.u_pl_points: self.pl_points.change_timings(time_ppq)
+		if self.u_pl_ticks: self.pl_ticks.change_timings(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if self.u_pl_points: self.pl_points.change_seconds(is_seconds, bpm, ppq)
@@ -213,7 +213,7 @@ class cvpj_s_automation:
 	def convert____pl_ticks___nopl_ticks(self):
 		if self.u_pl_ticks and not self.u_nopl_ticks:
 			self.u_nopl_ticks = True
-			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, self.valtype)
+			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.valtype)
 			for x in self.pl_ticks:
 				time_obj = x.time
 				pos, dur = time_obj.get_posdur()
@@ -370,65 +370,71 @@ class cvpj_autoloc:
 
 
 tempotickblocks_premake = dynbytearr.dynbytearr_premake([
-	('type', np.uint8), 
 	('pos_start', np.float64), 
 	('pos_end', np.float64), 
 	('dur', np.float64), 
-	('tempo', np.float64),  
-	('area_start', np.float64), 
-	('area_end', np.float64), 
+	('tempo_start', np.float64),  
+	('tempo_end', np.float64),  
+	('diff', np.float64),  
 	])
 
-class tempoticks_store:
+class tempodata_store:
 	def __init__(self):
 		self.store = None
 
 	def proc_points(self, convproj_obj):
-
 		tempo_auto = convproj_obj.automation.get_opt(['main', 'bpm'])
-
-		tempoblocks = tempotickblocks_premake.create()
-		tb_cur = tempoblocks.create_cursor()
-
-		tempo_param = convproj_obj.params.get('bpm', 120).value
-		tb_cur.add()
-		tb_cur['pos_start'] = 0
-		tb_cur['pos_end'] = -1
-		tb_cur['tempo'] = tempo_param
+		self.store = tempotickblocks_premake.create()
+		tb_cur = self.store.create_cursor()
 
 		if tempo_auto is not None:
 			if not self.store:
 				if tempo_auto.u_pl_ticks or tempo_auto.u_nopl_ticks:
-					if not tempo_auto.u_nopl_points: tempo_auto.convert____pl_ticks___nopl_ticks()
-					firstpart = True
-					for p, v in tempo_auto.nopl_ticks:
-						if not (firstpart and p==0): tb_cur.add()
-						tb_cur['pos_start'] = p
-						tb_cur['pos_end'] = -1
-						tb_cur['tempo'] = v
-						firstpart = False
+					if not tempo_auto.u_nopl_ticks: tempo_auto.convert____pl_ticks___nopl_ticks()
 
-		prevt = [x['pos_start'] for x in tempoblocks][1:]
-		for n, x in enumerate(prevt):
-			tempoblocks.data[n]['pos_end'] = x
-			tempoblocks.data[n]['dur'] = x-tempoblocks.data[n]['pos_start']
+					ticksdata = [x for x in tempo_auto.nopl_ticks]
+					for n in range(len(ticksdata)-1):
+						d_cur = ticksdata[n]
+						d_next = ticksdata[n+1]
+						tb_cur.add()
+						tb_cur['pos_start'] = d_cur[0]
+						tb_cur['pos_end'] = d_next[0]
+						tb_cur['dur'] = d_next[0]-d_cur[0]
+						tb_cur['tempo_start'] = d_cur[1]
+						tb_cur['tempo_end'] = d_next[1]
+						tb_cur['diff'] = d_next[1]-d_cur[1]
 
-		curpos = 0
-		for x in tempoblocks:
-			x['area_start'] = curpos
-			curpos += (x['dur']/convproj_obj.time_ppq)*(120/tb_cur['tempo'])
-			x['area_end'] = curpos
+				elif tempo_auto.u_pl_points or tempo_auto.u_nopl_points:
+					if not tempo_auto.u_nopl_points: tempo_auto.convert____pl_points__nopl_points()
+					temporegions = tempo_auto.nopl_points.to_regions()
+					for temporegion in temporegions:
+						tb_cur.add()
+						tb_cur['pos_start'] = temporegion['pos_start']
+						tb_cur['pos_end'] = temporegion['pos_end']
+						tb_cur['dur'] = temporegion['dur']
+						tb_cur['tempo_start'] = temporegion['value_start']
+						tb_cur['tempo_end'] = temporegion['value_end']
+						tb_cur['diff'] = temporegion['value_end']-temporegion['value_start']
 
-		print(  tempoblocks.get_used()  )
+		if len(self.store):
+			useddata = self.store.get_used()
+			if 0 not in useddata['pos_start']:
+				tb_cur.add()
+				tb_cur['pos_start'] = 0
+				tb_cur['pos_end'] = useddata[0]['pos_start']
+				tb_cur['dur'] = tb_cur['pos_end']
+				tb_cur['tempo_start'] = useddata[0]['tempo_start']
+				tb_cur['tempo_end'] = tb_cur['tempo_start']
 
-		exit()
+		self.store.sort(['pos_start'])
+
+		print(  self.store.get_used()  )
 
 class cvpj_automation:
-	__slots__ = ['data','time_ppq','time_float','auto_num','movenotfound','calcnotfound']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data','time_ppq','auto_num','movenotfound','calcnotfound']
+	def __init__(self, time_ppq):
 		self.data = {}
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.auto_num = counter.counter(200000, 'auto_')
 		self.movenotfound = []
 		self.calcnotfound = []
@@ -490,11 +496,10 @@ class cvpj_automation:
 				print(x, '- nopl_ticks')
 				for d in v.nopl_ticks: print(d)
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		for autopath, autodata in self.data.items():
-			autodata.change_timings(time_ppq, time_float)
+			autodata.change_timings(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		for autopath, autodata in self.data.items():
@@ -507,7 +512,7 @@ class cvpj_automation:
 	def create(self, autopath, valtype, replace):
 		autopath = cvpj_autoloc(autopath)
 		if (autopath not in self.data) or (replace):
-			self.data[autopath] = cvpj_s_automation(self.time_ppq, self.time_float, valtype)
+			self.data[autopath] = cvpj_s_automation(self.time_ppq, valtype)
 			self.data[autopath].id = self.auto_num.get()
 			if autopath == ['main', 'bpm']:
 				self.data[autopath].conv_tres = 8
@@ -519,7 +524,7 @@ class cvpj_automation:
 	def get(self, autopath, valtype):
 		autopath = cvpj_autoloc(autopath)
 		if autopath in self.data: return True, self.data[autopath]
-		else: return False, cvpj_s_automation(self.time_ppq, self.time_float, valtype)
+		else: return False, cvpj_s_automation(self.time_ppq, valtype)
 
 	def get_opt(self, autopath):
 		autopath = cvpj_autoloc(autopath)

@@ -48,7 +48,7 @@ class multi_patsong:
 
 		e_tempo, e_notelen = xtramath.get_lower_tempo(initbpm, 1, 190)
 
-		convproj_obj.set_timings(4*(1/e_notelen), True)
+		convproj_obj.set_timings(4*(1/e_notelen))
 
 		maxorder = max([len(x) for x in self.orders])
 

@@ -103,7 +103,7 @@ class input_mmf(plugins.base):
 				realtime = int(timebase*(math.pi*10000))
 
 				midippq = 960
-				convproj_obj.set_timings(midippq*realtime, False)
+				convproj_obj.set_timings(int(midippq*realtime))
 				track_obj = convproj_obj.track__add(str(n), 'midi', 1, False)
 
 				curpos = 0

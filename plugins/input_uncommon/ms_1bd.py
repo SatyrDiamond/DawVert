@@ -59,7 +59,7 @@ class input_1bitdragon(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_uncommon import onebitdragon as proj_1bitdragon
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4)
 		convproj_obj.type = 'ms'
 
 		project_obj = proj_1bitdragon.onebitd_song()

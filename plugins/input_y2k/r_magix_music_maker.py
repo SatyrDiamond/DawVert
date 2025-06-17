@@ -40,7 +40,7 @@ class input_old_magix_maker(plugins.base):
 		sample_time = 44100//2
 		sample_rate = 44100
 
-		tempomul = 1
+		tempomul = 1.0
 
 		tempo = 120
 		data_proi = project_obj.data_proi
@@ -52,7 +52,7 @@ class input_old_magix_maker(plugins.base):
 			sample_rate = data_proi.sample_rate
 			tempomul = 120/data_proi.tempo
 
-		convproj_obj.set_timings(sample_time*tempomul, True)
+		convproj_obj.set_timings(sample_time*tempomul)
 
 		sampleref_objs = {}
 		videoref_objs = {}

@@ -374,7 +374,7 @@ class output_lmms(plugins.base):
 
 		globalstore.dataset.load('lmms', './data_main/dataset/lmms.dset')
 
-		i_cvpj_obj.change_timings(48, False)
+		i_cvpj_obj.change_timings(48)
 
 		project_obj = proj_lmms.lmms_project()
 		song_obj = project_obj.song

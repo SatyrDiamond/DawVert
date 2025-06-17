@@ -52,7 +52,7 @@ class input_soundclub2(plugins.base):
 		traits_obj.track_lanes = True
 		traits_obj.audio_filetypes = ['wav']
 
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4)
 
 		project_obj = proj_soundclub2.sn2_song()
 

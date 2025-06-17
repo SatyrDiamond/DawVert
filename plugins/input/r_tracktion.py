@@ -471,7 +471,7 @@ class input_tracktion_edit(plugins.base):
 		traits_obj.time_seconds = True
 		traits_obj.track_hybrid = True
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		globalstore.dataset.load('waveform', './data_main/dataset/waveform.dset')
 

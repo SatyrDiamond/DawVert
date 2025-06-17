@@ -38,7 +38,7 @@ class output_bandlab(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import qtractor as proj_qtractor
 
-		convproj_obj.change_timings(1, True)
+		convproj_obj.change_timings(1.0)
 		
 		project_obj = proj_qtractor.qtractor_project()
 

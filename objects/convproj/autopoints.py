@@ -119,7 +119,7 @@ class debug_display:
 class output_autopoint:
 	def __init__(self, maindata, point):
 		val_type = maindata.val_type
-		self.pos = float(point['pos']) if maindata.time_float else int(point['pos'])
+		self.pos = float(point['pos']) if type(maindata.time_ppq)==float else int(point['pos'])
 		if val_type == 'float':
 			self.value = float(point['value'])
 			self.value_end = float(point['value_end'])
@@ -146,9 +146,8 @@ autoblocks_premake = dynbytearr.dynbytearr_premake([
 	])
 
 class cvpj_autopoints:
-	def __init__(self, time_ppq, time_float, val_type):
+	def __init__(self, time_ppq, val_type):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.val_type = val_type
 		self.is_seconds = False
 
@@ -247,12 +246,11 @@ class cvpj_autopoints:
 			self.points.data['pos'] = xtramath.sec2step(self.points.data['pos'], bpm)*(ppq)
 			self.is_seconds = False
 		
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		if not self.is_seconds:
 			for n, x in enumerate(self.points.data):
-				self.points.data[n]['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, x['pos'])
+				self.points.data[n]['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, x['pos'])
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def sort(self):
 		diffv = self.points.get_used()['pos']
@@ -617,7 +615,7 @@ class cvpj_autopoints:
 			main_points_end.edit_trim_left(main_end, True)
 	
 			in_points = other.copy()
-			in_points.change_timings(self.time_ppq, self.time_float)
+			in_points.change_timings(self.time_ppq)
 
 			if in_offset>=0: in_points.edit_move(main_start-in_offset)
 

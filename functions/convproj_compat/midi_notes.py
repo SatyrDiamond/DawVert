@@ -13,7 +13,6 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 					notes_pl = track_obj.placements.pl_notes.make_base_from_midi(midpl)
 					notelist_obj = notes_pl.notelist
 					notelist_obj.time_ppq = midievents_obj.ppq
-					notelist_obj.time_float = False
 					for x in midievents_obj.iter_events():
 						etype = x[1]
 						if etype == 'NOTE_DUR':
@@ -34,7 +33,7 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 				for tpl in pll:
 					for notespl_obj in tpl.pl_notes:
 						notespl_obj.notelist.mod_limit(-60, 67)
-						notespl_obj.notelist.change_timings(960, False)
+						notespl_obj.notelist.change_timings(960)
 						midi_pl = tpl.pl_midi.make_base_from_notes(notespl_obj)
 						midievents_obj = midi_pl.midievents
 						midievents_obj.ppq = 960

@@ -45,7 +45,7 @@ class output_bandlab(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import bandlab as proj_bandlab
 
-		convproj_obj.change_timings(1, True)
+		convproj_obj.change_timings(1.0)
 		
 		project_obj = proj_bandlab.bandlab_project()
 

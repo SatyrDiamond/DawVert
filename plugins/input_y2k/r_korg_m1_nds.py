@@ -27,7 +27,7 @@ class input_korg_m1_nds(plugins.base):
 
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['pl_ticks']

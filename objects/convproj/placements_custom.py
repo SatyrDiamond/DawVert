@@ -7,10 +7,9 @@ from objects.convproj import time
 import copy
 
 class cvpj_placements_custom:
-	__slots__ = ['data','custom','time_ppq','time_float']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data','custom','time_ppq']
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.custom = {}
 		self.data = []
 
@@ -24,7 +23,7 @@ class cvpj_placements_custom:
 		return bool(self.data)
 
 	def add(self):
-		pl_obj = cvpj_placement_custom(self.time_ppq, self.time_float)
+		pl_obj = cvpj_placement_custom(self.time_ppq)
 		self.data.append(pl_obj)
 		return pl_obj
 		
@@ -60,22 +59,20 @@ class cvpj_placements_custom:
 		for pl in self.data: 
 			pl.time.change_seconds(is_seconds, bpm, ppq)
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		for pl in self.data:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			pl.time.change_timing(self.time_ppq, time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def add_loops(self, loopcompat):
 		self.data = placements.internal_addloops(self.data, self.eq_connect, loopcompat)
 
 class cvpj_placement_custom:
-	__slots__ = ['time','muted','visual','custom','fade_in','fade_out','time_ppq','time_float','vol']
+	__slots__ = ['time','muted','visual','custom','fade_in','fade_out','time_ppq','vol']
 
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
+		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.custom = {}
 		self.muted = False
 		self.fade_in = placements.cvpj_placement_fade()

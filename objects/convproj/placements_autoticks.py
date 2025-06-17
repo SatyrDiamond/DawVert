@@ -8,10 +8,9 @@ from objects.convproj import visual
 from objects.convproj import time
 
 class cvpj_placements_autoticks:
-	__slots__ = ['data','type','time_ppq','time_float','val_type']
-	def __init__(self, time_ppq, time_float, val_type):
+	__slots__ = ['data','type','time_ppq','val_type']
+	def __init__(self, time_ppq, val_type):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.val_type = val_type
 		self.data = []
 
@@ -25,7 +24,7 @@ class cvpj_placements_autoticks:
 		return bool(self.data)
 
 	def add(self, val_type):
-		placement_obj = cvpj_placement_autoticks(self.time_ppq, self.time_float, self.val_type)
+		placement_obj = cvpj_placement_autoticks(self.time_ppq, self.val_type)
 		self.data.append(placement_obj)
 		return placement_obj
 
@@ -38,13 +37,12 @@ class cvpj_placements_autoticks:
 	def get_start(self):
 		return placements.internal_get_start(self.data)
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		for pl in self.data:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-			pl.data.change_timings(time_ppq, time_float)
+			pl.time.change_timing(self.time_ppq, time_ppq)
+			pl.data.change_timings(time_ppq)
 
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def calc(self, mathtype, val1, val2, val3, val4):
 		for pl in self.data: pl.data.calc(mathtype, val1, val2, val3, val4)
@@ -65,8 +63,8 @@ class cvpj_placements_autoticks:
 class cvpj_placement_autoticks:
 	__slots__ = ['time','muted','visual','data']
 
-	def __init__(self, time_ppq, time_float, val_type):
-		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
-		self.data = autoticks.cvpj_autoticks(time_ppq, time_float, val_type)
+	def __init__(self, time_ppq, val_type):
+		self.time = placements.cvpj_placement_timing(time_ppq)
+		self.data = autoticks.cvpj_autoticks(time_ppq, val_type)
 		self.muted = False
 		self.visual = visual.cvpj_visual()

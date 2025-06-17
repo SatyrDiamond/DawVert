@@ -7,10 +7,9 @@ from objects.convproj import automation
 from objects import counter
 
 class convproj2autoid:
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.in_data = {}
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def define(self, i_id, i_loc, i_type, i_addmul):
 		#print('[auto id] Define - '+str(i_id)+' - '+i_loc)

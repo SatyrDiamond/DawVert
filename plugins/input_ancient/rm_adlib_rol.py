@@ -48,7 +48,7 @@ class input_adlib_rol(plugins.base):
 					instname = adlibbnk_obj.names[instnum].replace(" ", "").upper()
 					native_insts[instname] = adlibbnk_obj.get_inst_index(instnum)
 
-		convproj_obj.set_timings(project_obj.tickBeat, False)
+		convproj_obj.set_timings(project_obj.tickBeat)
 
 		bpm = project_obj.track_tempo.tempo
 		convproj_obj.params.add('bpm', bpm, 'float')

@@ -97,9 +97,8 @@ class pitchmod:
 			notelist_obj.last_add_auto('pitch', spoint[0], spoint[1])
 
 class notelist_note_auto:
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 		self.u_notemod = False
 		self.mod_pitch = 0
@@ -111,16 +110,15 @@ class notelist_note_auto:
 		self.u_auto = False
 		self.auto = {}
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		for sn in self.slide:
-			sn[0] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, sn[0])
-			sn[1] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, sn[1])
+			sn[0] = xtramath.change_timing(self.time_ppq, time_ppq, sn[0])
+			sn[1] = xtramath.change_timing(self.time_ppq, time_ppq, sn[1])
 
 		for t in self.auto: 
-			self.auto[t].change_timings(time_ppq, time_float)
+			self.auto[t].change_timings(time_ppq)
 
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 # ------------------------------------------ Points ------------------------------------------
 
@@ -130,13 +128,13 @@ class notelist_note_auto:
 
 	def auto__add_point(self, mpetype, pos, val):
 		autodata = self.auto
-		if mpetype not in autodata: autodata[mpetype] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+		if mpetype not in autodata: autodata[mpetype] = autopoints.cvpj_autopoints(self.time_ppq, 'float')
 		autodata[mpetype].points__add_normal(pos, val, 0, None)
 		self.u_auto = True
 
 	def auto__add_point_instant(self, mpetype, pos, val):
 		autodata = self.auto
-		if mpetype not in autodata: autodata[mpetype] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+		if mpetype not in autodata: autodata[mpetype] = autopoints.cvpj_autopoints(self.time_ppq, 'float')
 		autodata[mpetype].points__add_instant(pos, val)
 		self.u_auto = True
 
@@ -172,10 +170,10 @@ class notelist_note_auto:
 	def auto__from_notemod(self, overwrite):
 		if self.u_notemod:
 			if 'pitch' not in self.auto:
-				self.auto['pitch'] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+				self.auto['pitch'] = autopoints.cvpj_autopoints(self.time_ppq, 'float')
 				self.auto['pitch'].points__add_normal(0, self.mod_pitch/100, 0, None)
 			if 'pan' not in self.auto:
-				self.auto['pan'] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+				self.auto['pan'] = autopoints.cvpj_autopoints(self.time_ppq, 'float')
 				self.auto['pan'].points__add_normal(0, self.mod_pan, 0, None)
 			self.u_auto = True
 			return True
@@ -186,7 +184,7 @@ class notelist_note_auto:
 			pointsdata = pitchmod(key)
 			for slidenote in self.slide: pointsdata.slide_note(slidenote[0], slidenote[2], slidenote[1])
 			nmp = pointsdata.to_pointdata()
-			self.auto['pitch'] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+			self.auto['pitch'] = autopoints.cvpj_autopoints(self.time_ppq, 'float')
 			for nmps in nmp:
 				self.auto['pitch'].points__add_normal(nmps[0], nmps[1], 0, None)
 			self.u_auto = True

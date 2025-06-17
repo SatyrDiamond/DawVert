@@ -32,7 +32,7 @@ class input_orgyana(plugins.base):
 		from objects import audio_data
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['nopl_points']

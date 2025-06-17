@@ -189,7 +189,7 @@ class input_reaper(plugins.base):
 		traits_obj.time_seconds = True
 		traits_obj.track_hybrid = True
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		rpp_project = project_obj.project
 

@@ -31,7 +31,7 @@ class input_cvpj_f(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
-		convproj_obj.set_timings(96, False)
+		convproj_obj.set_timings(96)
 		trackchannel = 0
 
 		metadata_obj = convproj_obj.metadata

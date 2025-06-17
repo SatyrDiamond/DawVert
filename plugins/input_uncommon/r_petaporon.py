@@ -49,7 +49,7 @@ class input_petaporon(plugins.base):
 			raise ProjectFileParserException('petaporon: JSON parsing error: '+str(t))
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.track_nopl = True

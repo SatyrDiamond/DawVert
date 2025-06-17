@@ -46,7 +46,7 @@ class output_onlineseq(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import onlineseq as proj_onlineseq
 
-		convproj_obj.change_timings(4, True)
+		convproj_obj.change_timings(4.0)
 
 		project_obj = proj_onlineseq.onlineseq_project()
 		project_obj.bpm = int(convproj_obj.params.get('bpm', 120).value)

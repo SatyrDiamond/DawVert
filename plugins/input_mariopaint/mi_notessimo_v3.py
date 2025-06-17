@@ -228,7 +228,7 @@ class input_notessimo_v3(plugins.base):
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['pl_points']
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		globalstore.dataset.load('notessimo_v3', './data_main/dataset/notessimo_v3.dset')
 		

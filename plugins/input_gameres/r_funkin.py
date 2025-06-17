@@ -25,7 +25,7 @@ class input_ex_basic_pitch(plugins.base):
 		traits_obj = convproj_obj.traits
 		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']
 
-		convproj_obj.set_timings(600, False)
+		convproj_obj.set_timings(600)
 		convproj_obj.params.add('bpm', 120, 'float')
 
 		if dawvert_intent.input_mode == 'file':

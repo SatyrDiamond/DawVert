@@ -125,7 +125,7 @@ class output_soundation(plugins.base):
 		soundation_obj.bpm = int(bpm)
 		timing = 22050*(120/soundation_obj.bpm)
 
-		convproj_obj.change_timings(timing*notelen, False)
+		convproj_obj.change_timings(int(timing*notelen))
 
 		soundation_obj.version = 2.3
 		soundation_obj.studio = "3.10.7"

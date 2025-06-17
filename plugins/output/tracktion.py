@@ -384,7 +384,7 @@ class output_tracktion_edit(plugins.base):
 		from objects.file_proj import tracktion_project as proj_tracktion_project
 		global dataset
 
-		convproj_obj.change_timings(4, True)
+		convproj_obj.change_timings(4.0)
 
 		tr_projectid = gen_hexid('1')
 		tr_editid = gen_hexid('2')

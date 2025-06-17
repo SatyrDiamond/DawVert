@@ -422,7 +422,7 @@ class output_reaper(plugins.base):
 		globalstore.datadef.load('reaper', './data_main/datadef/reaper.ddef')
 		datadef_obj = globalstore.datadef.get('reaper')
 
-		convproj_obj.change_timings(4, True)
+		convproj_obj.change_timings(4.0)
 
 		reaper_numerator, reaper_denominator = convproj_obj.timesig
 		reaper_tempo = convproj_obj.params.get('bpm', 120).value
@@ -531,7 +531,11 @@ class output_reaper(plugins.base):
 				position, duration = time_obj.get_posdur_real()
 				
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
-				if time_obj.cut_type == 'cut': rpp_item_obj.soffs.set(time_obj.cut_start/8/tempomul)
+				if time_obj.cut_type == 'cut': 
+					if time_obj.cut_start_timemode == 'beats':
+						rpp_item_obj.soffs.set(time_obj.cut_start/8/tempomul)
+					if time_obj.cut_start_timemode == 'seconds':
+						rpp_item_obj.soffs.set(time_obj.cut_start)
 				rpp_item_obj.position.set(position)
 				rpp_item_obj.length.set(duration)
 				rpp_item_obj.mute['mute'] = int(midipl_obj.muted)
@@ -584,7 +588,6 @@ class output_reaper(plugins.base):
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 				
 				clip_startat = 0
-				if time_obj.cut_type == 'cut': clip_startat = (time_obj.cut_start/8)/tempomul
 
 				rpp_item_obj.position.set(position)
 				rpp_item_obj.length.set(duration)
@@ -640,6 +643,8 @@ class output_reaper(plugins.base):
 
 				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 
+				if time_obj.cut_type == 'cut': clip_startat = (time_obj.cut_start/8)/tempomul
+
 				if not stretch_obj.is_warped:
 					audiorate = stretch_obj.timing.get__real_rate(sampleref_obj, reaper_tempo)
 					rpp_item_obj.playrate['rate'] = audiorate
@@ -665,7 +670,11 @@ class output_reaper(plugins.base):
 						m_beat -= offmod
 						rpp_item_obj.stretchmarks.append([m_beat, m_second])
 
-				rpp_item_obj.soffs.set(clip_startat)
+				if time_obj.cut_type == 'cut': 
+					if time_obj.cut_start_timemode == 'beats':
+						rpp_item_obj.soffs.set(clip_startat)
+					if time_obj.cut_start_timemode == 'seconds':
+						rpp_item_obj.soffs.set(time_obj.cut_start)
 
 				rpp_item_obj.playrate['preserve_pitch'] = int(stretch_obj.preserve_pitch)
 				rpp_item_obj.playrate['pitch'] = audiopl_obj.sample.pitch

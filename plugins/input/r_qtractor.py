@@ -39,7 +39,7 @@ class input_midi(plugins.base):
 		traits_obj.notes_midi = True
 		traits_obj.time_seconds = True
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		project_obj = proj_qtractor.qtractor_project()
 		if dawvert_intent.input_mode == 'file':

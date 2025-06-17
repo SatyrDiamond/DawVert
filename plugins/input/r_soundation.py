@@ -119,7 +119,7 @@ class input_soundation(plugins.base):
 		timeSignaturesplit = soundation_obj.timeSignature.split('/')
 
 		timing = 22050*(120/soundation_obj.bpm)
-		convproj_obj.set_timings(timing, False)
+		convproj_obj.set_timings(timing)
 
 		convproj_obj.timesig = [int(timeSignaturesplit[0]), int(timeSignaturesplit[1])]
 		convproj_obj.params.add('bpm', soundation_obj.bpm, 'float')

@@ -18,7 +18,7 @@ def get_unused_chan():
 def convert(convproj_obj):
 	logger_project.info('ProjType Convert: Regular > ClassicalSingle')
 
-	convproj_obj.change_timings(960, False)
+	convproj_obj.change_timings(960)
 
 	for trackid, track_obj in convproj_obj.track__iter():
 

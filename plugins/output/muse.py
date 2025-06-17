@@ -211,7 +211,7 @@ class output_cvpj(plugins.base):
 		synthidnum = 4
 
 		midiDivision = 384
-		convproj_obj.change_timings(midiDivision, False)
+		convproj_obj.change_timings(midiDivision)
 		muse_bpm = convproj_obj.params.get('bpm', 120).value
 
 		project_obj = proj_muse.muse_song()

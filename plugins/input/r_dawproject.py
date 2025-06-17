@@ -401,7 +401,7 @@ class input_dawproject(plugins.base):
 		traits_obj.plugin_ext_platforms = ['win', 'unix']
 		traits_obj.track_hybrid = True
 
-		convproj_obj.set_timings(1, True)
+		convproj_obj.set_timings(1.0)
 
 		global autoid_assoc
 		global samplefolder

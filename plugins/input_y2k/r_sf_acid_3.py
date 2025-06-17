@@ -268,7 +268,7 @@ class input_acid_3(plugins.base):
 			if root_name == 'MainData':
 				def_data = root_chunk.content
 				ppq = def_data.ppq
-				convproj_obj.set_timings(ppq, False)
+				convproj_obj.set_timings(ppq)
 				version = def_data.version
 
 				if not starttempo: tempo = def_data.tempo

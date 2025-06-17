@@ -334,7 +334,7 @@ class cvpj_plugin:
 	def env_blocks_list(self): return self.state.env_blocks_list()
 
 	# -------------------------------------------------- env_points
-	def env_points_add(self, a_type, time_ppq, time_float, val_type): return self.state.env_points_add(a_type, time_ppq, time_float, val_type)
+	def env_points_add(self, a_type, time_ppq, val_type): return self.state.env_points_add(a_type, time_ppq, val_type)
 	def env_points_get(self, a_type): return self.state.env_points_get(a_type)
 	def env_points_get_exists(self, a_type): return self.state.env_points_get_exists(a_type)
 	def env_points_addvar(self, a_type, p_name, p_value): return self.state.env_points_addvar(a_type, p_name, p_value)

@@ -120,16 +120,14 @@ class cvpj_fxchannel:
 		self.latency_offset = 0
 
 class cvpj_scene:
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.visual = visual.cvpj_visual()
-		self.automation = automation.cvpj_automation(time_ppq, time_float)
+		self.automation = automation.cvpj_automation(time_ppq)
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.automation.change_timings(time_ppq, time_float)
+		self.automation.change_timings(time_ppq)
 
 class cvpj_scenepl:
 	def __init__(self):
@@ -138,9 +136,8 @@ class cvpj_scenepl:
 		self.id = ''
 
 class cvpj_transport:
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 		self.is_seconds = False
 
@@ -151,12 +148,12 @@ class cvpj_transport:
 
 		self.current_pos = 0
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		if not self.is_seconds:
-			self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_start)
-			self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.loop_end)
-			self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.start_pos)
-			self.current_pos = xtramath.change_timing(self.time_ppq, time_ppq, time_float, self.current_pos)
+			self.loop_start = xtramath.change_timing(self.time_ppq, time_ppq, self.loop_start)
+			self.loop_end = xtramath.change_timing(self.time_ppq, time_ppq, self.loop_end)
+			self.start_pos = xtramath.change_timing(self.time_ppq, time_ppq, self.start_pos)
+			self.current_pos = xtramath.change_timing(self.time_ppq, time_ppq, self.current_pos)
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if is_seconds and not self.is_seconds:
@@ -203,10 +200,9 @@ class cvpj_project:
 		self.traits = project_traits.cvpj_project_traits()
 
 		self.time_ppq = 96
-		self.time_float = False
 		self.track_data = {}
 		self.track_order = []
-		self.track_master = tracks.cvpj_track('master', self.time_ppq, self.time_float, False, False)
+		self.track_master = tracks.cvpj_track('master', self.time_ppq, False, False)
 		self.track_returns = {}
 		self.plugins = {}
 		self.instruments = {}
@@ -219,15 +215,15 @@ class cvpj_project:
 		self.playlist = {}
 		self.timesig = [4,4]
 		self.do_actions = []
-		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
+		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq)
 		self.metadata = visual.cvpj_metadata()
-		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
-		self.transport = cvpj_transport(self.time_ppq, self.time_float)
+		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, 'timesig')
+		self.transport = cvpj_transport(self.time_ppq)
 		self.filerefs = {}
 		self.samplerefs = {}
 		self.videorefs = {}
 		self.window_data = {}
-		self.automation = automation.cvpj_automation(self.time_ppq, self.time_float)
+		self.automation = automation.cvpj_automation(self.time_ppq)
 		self.groups = {}
 		self.sample_folders = []
 		self.scenes = {}
@@ -418,33 +414,30 @@ class cvpj_project:
 		self.midi_cust_inst.append(cust_inst)
 		return cust_inst
 
-	def set_timings(self, time_ppq, time_float):
+	def set_timings(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
+		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, 'timesig')
 		self.automation.time_ppq = self.time_ppq
-		self.automation.time_float = self.time_float
-		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
-		self.transport = cvpj_transport(self.time_ppq, self.time_float)
+		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq)
+		self.transport = cvpj_transport(self.time_ppq)
 
-	def change_timings(self, time_ppq, time_float):
-		logger_project.info('Changing Timings from '+str(self.time_ppq)+':'+str(self.time_float)+' to '+str(time_ppq)+':'+str(time_float))
+	def change_timings(self, time_ppq):
+		logger_project.info('Changing Timings from '+str(self.time_ppq)+' to '+str(time_ppq))
 		for p in self.track_data: 
 			track_data = self.track_data[p]
-			track_data.change_timings(time_ppq, time_float)
+			track_data.change_timings(time_ppq)
 			for e in track_data.notelist_index: 
-				track_data.notelist_index[e].notelist.change_timings(time_ppq, time_float)
-		for p in self.playlist: self.playlist[p].change_timings(time_ppq, time_float)
+				track_data.notelist_index[e].notelist.change_timings(time_ppq)
+		for p in self.playlist: self.playlist[p].change_timings(time_ppq)
 		for _, n in self.notelist_index.items(): 
-			n.notelist.change_timings(time_ppq, time_float)
-			n.timesig_auto.change_timings(time_ppq, time_float)
-		self.timemarkers.change_timings(time_ppq, time_float)
-		self.timesig_auto.change_timings(time_ppq, time_float)
-		self.transport.change_timings(time_ppq, time_float)
+			n.notelist.change_timings(time_ppq)
+			n.timesig_auto.change_timings(time_ppq)
+		self.timemarkers.change_timings(time_ppq)
+		self.timesig_auto.change_timings(time_ppq)
+		self.transport.change_timings(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.automation.change_timings(time_ppq, time_float)
-		for _, scene in self.scenes.items(): scene.change_timings(time_ppq, time_float)
+		self.automation.change_timings(time_ppq)
+		for _, scene in self.scenes.items(): scene.change_timings(time_ppq)
 
 	def get_dur(self):
 		duration_final = 0
@@ -498,7 +491,7 @@ class cvpj_project:
 # --------------------------------------------------------- SCENE ---------------------------------------------------------
 
 	def scene__add(self, i_sceneid):
-		scene_obj = cvpj_scene(self.time_ppq, self.time_float)
+		scene_obj = cvpj_scene(self.time_ppq)
 		#cpr_int('[project] Scene - '+str(i_sceneid), 'magenta')
 		logger_project.info('Scene - '+str(i_sceneid))
 		self.scenes[i_sceneid] = scene_obj
@@ -566,7 +559,7 @@ class cvpj_project:
 
 	def track__add(self, track_id, tracktype, uses_placements, is_indexed):
 		logger_project.info('Track '+('NoPl' if not uses_placements else 'w/Pl')+(' + Indexed' if is_indexed else '')+' - '+track_id)
-		self.track_data[track_id] = tracks.cvpj_track(tracktype, self.time_ppq, self.time_float, uses_placements, is_indexed)
+		self.track_data[track_id] = tracks.cvpj_track(tracktype, self.time_ppq, uses_placements, is_indexed)
 		self.track_order.append(track_id)
 		return self.track_data[track_id]
 
@@ -730,7 +723,7 @@ class cvpj_project:
 
 	def fx__group__add(self, groupid):
 		logger_project.info('Group - '+groupid)
-		self.groups[groupid] = tracks.cvpj_track('group', self.time_ppq, self.time_float, False, False)
+		self.groups[groupid] = tracks.cvpj_track('group', self.time_ppq, False, False)
 		return self.groups[groupid]
 
 	def fx__group__get(self, groupid):
@@ -755,7 +748,7 @@ class cvpj_project:
 
 
 	def fx__return__add(self, track_id):
-		self.track_returns[track_id] = tracks.cvpj_track('return', self.time_ppq, self.time_float, False, False)
+		self.track_returns[track_id] = tracks.cvpj_track('return', self.time_ppq, False, False)
 		return self.track_returns[track_id]
 
 	def fx__return__clear(self):
@@ -764,7 +757,7 @@ class cvpj_project:
 # --------------------------------------------------------- NOTELIST INDEX ---------------------------------------------------------
 
 	def notelistindex__add(self, i_id):
-		self.notelist_index[i_id] = tracks.cvpj_nle(self.time_ppq, self.time_float)
+		self.notelist_index[i_id] = tracks.cvpj_nle(self.time_ppq)
 		return self.notelist_index[i_id]
 
 	def notelistindex__iter(self):
@@ -795,7 +788,7 @@ class cvpj_project:
 	def playlist__add(self, idnum, uses_placements, is_indexed):
 		if idnum not in self.playlist:
 			logger_project.info('Playlist '+('NoPl' if not uses_placements else 'w/Pl')+(' + Indexed' if is_indexed else '')+' - '+str(idnum))
-			self.playlist[idnum] = tracks.cvpj_track('hybrid', self.time_ppq, self.time_float, uses_placements, is_indexed)
+			self.playlist[idnum] = tracks.cvpj_track('hybrid', self.time_ppq, uses_placements, is_indexed)
 		return self.playlist[idnum]
 
 	def playlist__iter(self):

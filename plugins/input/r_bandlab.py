@@ -47,7 +47,7 @@ class input_bandlab(plugins.base):
 		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		traits_obj.time_seconds = False
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		project_obj = proj_bandlab.bandlab_project()
 

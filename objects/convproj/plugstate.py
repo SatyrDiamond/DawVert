@@ -319,8 +319,8 @@ class cvpj_plugin_state:
 		return [x for x in self.env_blocks]
 
 	# -------------------------------------------------- env_points
-	def env_points_add(self, a_type, time_ppq, time_float, val_type):
-		self.env_points[a_type] = autopoints.cvpj_autopoints(time_ppq, time_float, val_type)
+	def env_points_add(self, a_type, time_ppq, val_type):
+		self.env_points[a_type] = autopoints.cvpj_autopoints(time_ppq, val_type)
 		return self.env_points[a_type]
 
 	def env_points_get(self, a_type): 
@@ -346,7 +346,7 @@ class cvpj_plugin_state:
 
 	def env_asdr_from_points(self, a_type):
 		env_pointsdata = self.env_points_get(a_type)
-		env_pointsdata.change_timings(1, True)
+		env_pointsdata.change_timings(1.0)
 		adsr_obj = self.env_asdr_add(a_type, 0, 0, 0, 0, 1, 0, 1)
 		adsr_obj.from_envpoints(env_pointsdata, a_type, self)
 

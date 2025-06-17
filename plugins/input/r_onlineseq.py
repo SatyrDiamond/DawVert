@@ -38,7 +38,7 @@ class input_onlinesequencer(plugins.base):
 		traits_obj.auto_types = ['nopl_points']
 		traits_obj.track_nopl = True
 
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		globalstore.dataset.load('onlineseq', './data_main/dataset/onlineseq.dset')
 

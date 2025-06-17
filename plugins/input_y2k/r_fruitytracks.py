@@ -49,7 +49,7 @@ class input_fruitytracks(plugins.base):
 		from objects.file_proj_past import fruitytracks as proj_fruitytracks
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4.0)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.placement_cut = True

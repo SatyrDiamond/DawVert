@@ -70,7 +70,7 @@ class input_zmaestro(plugins.base):
 		traits_obj.auto_types = ['nopl_points']
 		traits_obj.placement_loop = ['loop']
 
-		convproj_obj.set_timings(0.25, True)
+		convproj_obj.set_timings(0.25)
 
 		project_obj = proj_z_maestro.zmaestro_song()
 		if dawvert_intent.input_mode == 'file':

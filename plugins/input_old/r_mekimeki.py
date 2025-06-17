@@ -40,7 +40,7 @@ class input_cvpj_f(plugins.base):
 		traits_obj.auto_types = ['nopl_points']
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4)
 
 		if dawvert_intent.input_mode == 'file':
 			bytestream = open(dawvert_intent.input_file, 'r')

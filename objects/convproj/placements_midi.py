@@ -14,10 +14,9 @@ from objects.convproj import midievents
 from objects.convproj import time
 
 class cvpj_placements_midi:
-	__slots__ = ['data','time_ppq','time_float']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data','time_ppq']
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.data = []
 
 	def __iter__(self):
@@ -29,13 +28,12 @@ class cvpj_placements_midi:
 	def __bool__(self):
 		return bool(self.data)
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		for pl in self.data:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			pl.time.change_timing(self.time_ppq, time_ppq)
 			for mpename, autodata in pl.auto.items():
-				autodata.change_timings(time_ppq, time_float)
+				autodata.change_timings(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def append(self, value):
 		self.data.append(value)
@@ -49,8 +47,8 @@ class cvpj_placements_midi:
 	def clear(self):
 		self.data = []
 		
-	def add(self, time_ppq, time_float):
-		pl_obj = cvpj_placement_midi(time_ppq, time_float)
+	def add(self, time_ppq):
+		pl_obj = cvpj_placement_midi(time_ppq)
 		self.data.append(pl_obj)
 		return pl_obj
 
@@ -108,10 +106,9 @@ class cvpj_placements_midi:
 		self.data = new_data_midi
 
 	def make_base_from_notes(self, notesp):
-		plb_obj = cvpj_placement_midi(self.time_ppq, self.time_float)
+		plb_obj = cvpj_placement_midi(self.time_ppq)
 		plb_obj.time = notesp.time.copy()
 		plb_obj.time_ppq = notesp.time_ppq
-		plb_obj.time_float = notesp.time_float
 		plb_obj.muted = notesp.muted
 		plb_obj.visual = notesp.visual
 		plb_obj.group = notesp.group
@@ -120,11 +117,10 @@ class cvpj_placements_midi:
 		return plb_obj
 
 class cvpj_placement_midi:
-	__slots__ = ['time','muted','visual','midievents','time_ppq','time_float','auto','group','locked','pitch']
-	def __init__(self, time_ppq, time_float):
-		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
+	__slots__ = ['time','muted','visual','midievents','time_ppq','auto','group','locked','pitch']
+	def __init__(self, time_ppq):
+		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.midievents = midievents.midievents()
 		self.muted = False
 		self.visual = visual.cvpj_visual()
@@ -134,10 +130,9 @@ class cvpj_placement_midi:
 		self.pitch = 0
 
 	def make_base(self):
-		plb_obj = cvpj_placement_midi(self.time_ppq, self.time_float)
+		plb_obj = cvpj_placement_midi(self.time_ppq)
 		plb_obj.time = self.time.copy()
 		plb_obj.time_ppq = self.time_ppq
-		plb_obj.time_float = self.time_float
 		plb_obj.muted = self.muted
 		plb_obj.visual = self.visual
 		plb_obj.group = self.group
@@ -145,7 +140,7 @@ class cvpj_placement_midi:
 		return plb_obj
 
 	def add_autopoints(self, a_type):
-		self.auto[a_type] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+		self.auto[a_type] = autopoints.cvpj_autopoints(self.time_ppq, 'float')
 		return self.auto[a_type]
 
 	def midi_from(self, input_file):

@@ -16,10 +16,9 @@ from objects.convproj import timemarker
 from objects import notelist_splitter
 
 class cvpj_placements_notes:
-	__slots__ = ['data','time_ppq','time_float']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data','time_ppq']
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.data = []
 
 	def __iter__(self):
@@ -31,17 +30,16 @@ class cvpj_placements_notes:
 	def __bool__(self):
 		return bool(self.data)
 
-	def change_timings(self, time_ppq, time_float, is_indexed):
+	def change_timings(self, time_ppq, is_indexed):
 		for pl in self.data:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			pl.time.change_timing(self.time_ppq, time_ppq)
 			if not is_indexed: 
-				pl.notelist.change_timings(time_ppq, time_float)
-				pl.timesig_auto.change_timings(time_ppq, time_float)
-				pl.timemarkers.change_timings(time_ppq, time_float)
+				pl.notelist.change_timings(time_ppq)
+				pl.timesig_auto.change_timings(time_ppq)
+				pl.timemarkers.change_timings(time_ppq)
 				for mpename, autodata in pl.auto.items():
-					autodata.change_timings(time_ppq, time_float)
+					autodata.change_timings(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def merge_crop(self, npl_obj, pos, dur, visualfill):
 		for n in npl_obj.data:
@@ -77,8 +75,8 @@ class cvpj_placements_notes:
 	def clear(self):
 		self.data = []
 		
-	def add(self, time_ppq, time_float):
-		pl_obj = cvpj_placement_notes(time_ppq, time_float)
+	def add(self, time_ppq):
+		pl_obj = cvpj_placement_notes(time_ppq)
 		self.data.append(pl_obj)
 		return pl_obj
 
@@ -148,10 +146,9 @@ class cvpj_placements_notes:
 		self.data = new_data_notes
 
 	def make_base_from_midi(self, midip):
-		plb_obj = cvpj_placement_notes(self.time_ppq, self.time_float)
+		plb_obj = cvpj_placement_notes(self.time_ppq)
 		plb_obj.time = midip.time.copy()
 		plb_obj.time_ppq = midip.time_ppq
-		plb_obj.time_float = midip.time_float
 		plb_obj.muted = midip.muted
 		plb_obj.visual = midip.visual
 		plb_obj.group = midip.group
@@ -160,25 +157,23 @@ class cvpj_placements_notes:
 		return plb_obj
 
 class cvpj_placement_notes:
-	__slots__ = ['time','muted','visual','notelist','time_ppq','time_float','auto','timesig_auto','timemarkers','group','locked']
-	def __init__(self, time_ppq, time_float):
-		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
+	__slots__ = ['time','muted','visual','notelist','time_ppq','auto','timesig_auto','timemarkers','group','locked']
+	def __init__(self, time_ppq):
+		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.notelist = notelist.cvpj_notelist(time_ppq, time_float)
+		self.notelist = notelist.cvpj_notelist(time_ppq)
 		self.muted = False
 		self.visual = visual.cvpj_visual()
 		self.auto = {}
-		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, self.time_float, 'timesig')
-		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq, self.time_float)
+		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, 'timesig')
+		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq)
 		self.group = None
 		self.locked = False
 
 	def make_base(self):
-		plb_obj = cvpj_placement_notes(self.time_ppq, self.time_float)
+		plb_obj = cvpj_placement_notes(self.time_ppq)
 		plb_obj.time = self.time.copy()
 		plb_obj.time_ppq = self.time_ppq
-		plb_obj.time_float = self.time_float
 		plb_obj.muted = self.muted
 		plb_obj.visual = self.visual
 		plb_obj.timesig_auto = self.timesig_auto.copy()
@@ -216,5 +211,5 @@ class cvpj_placement_notes:
 		return (durp==int(durp)), durp
 		
 	def add_autopoints(self, a_type):
-		self.auto[a_type] = autopoints.cvpj_autopoints(self.time_ppq, self.time_float, 'float')
+		self.auto[a_type] = autopoints.cvpj_autopoints(self.time_ppq, 'float')
 		return self.auto[a_type]

@@ -87,7 +87,7 @@ class input_acid_old(plugins.base):
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		ppq = project_obj.ppq
-		convproj_obj.set_timings(ppq, False)
+		convproj_obj.set_timings(ppq)
 
 		globalstore.dataset.load('sony_acid', './data_main/dataset/sony_acid.dset')
 		colordata = colors.colorset.from_dataset('sony_acid', 'track', 'acid_1')

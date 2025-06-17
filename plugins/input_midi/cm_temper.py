@@ -34,7 +34,7 @@ class input_cvpj_f(plugins.base):
 		traits_obj.auto_types = ['nopl_ticks']
 		traits_obj.audio_filetypes = ['wav']
 
-		convproj_obj.set_timings(6716, False)
+		convproj_obj.set_timings(6716)
 
 		project_obj = proj_temper.temper_song()
 		if dawvert_intent.input_mode == 'file':

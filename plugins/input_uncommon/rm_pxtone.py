@@ -92,7 +92,7 @@ class input_pxtone(plugins.base):
 		timebase = 480
 		if project_obj.header == b'PTCOLLAGE-071119': timebase = 480
 		if project_obj.header == b'PTTUNE--20071119': timebase = 48
-		convproj_obj.set_timings(timebase, True)
+		convproj_obj.set_timings(timebase)
 
 		for voicenum, voice_obj in project_obj.voices.items():
 			cvpj_instid = 'ptcop_'+str(voicenum)

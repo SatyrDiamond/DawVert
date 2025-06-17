@@ -28,7 +28,7 @@ class input_ex_basic_pitch(plugins.base):
 		from basic_pitch import ICASSP_2022_MODEL_PATH
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4.0)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.track_nopl = True

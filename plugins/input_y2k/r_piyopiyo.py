@@ -39,7 +39,7 @@ class input_piyopiyo(plugins.base):
 		fileref.cvpj_fileref_global.add_prefix_extend('dawvert_external_data', 'piyopiyo_wav', ['piyopiyo'])
 
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, True)
+		convproj_obj.set_timings(4)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['nopl_ticks']

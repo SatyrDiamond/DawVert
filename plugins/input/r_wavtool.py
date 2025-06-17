@@ -418,7 +418,7 @@ class input_wavtool(plugins.base):
 		traits_obj.plugin_ext_arch = [64]
 		traits_obj.plugin_ext_platforms = ['win']
 
-		convproj_obj.set_timings(1, True)
+		convproj_obj.set_timings(1.0)
 
 		try:
 			if dawvert_intent.input_mode == 'file':

@@ -542,7 +542,7 @@ def lmms_decode_tracks(convproj_obj, lmms_tracks, isbb, startstr):
 			track_obj.datavals.add('middlenote', middlenote)
 
 			for lmms_pattern in lmms_track.patterns:
-				placement_obj = track_obj.placements.add_notes() if not isbb else placements_notes.cvpj_placement_notes(track_obj.time_ppq, track_obj.time_float)
+				placement_obj = track_obj.placements.add_notes() if not isbb else placements_notes.cvpj_placement_notes(track_obj.time_ppq)
 				time_obj = placement_obj.time
 				time_obj.position = lmms_pattern.pos
 				placement_obj.visual.name = lmms_pattern.name
@@ -743,7 +743,7 @@ class input_lmms(plugins.base):
 		traits_obj.plugin_ext_platforms = ['win', 'unix']
 		traits_obj.track_lanes = True
 
-		convproj_obj.set_timings(48, False)
+		convproj_obj.set_timings(48)
 
 		project_obj = proj_lmms.lmms_project()
 		if dawvert_intent.input_mode == 'file':

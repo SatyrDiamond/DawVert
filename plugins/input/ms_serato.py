@@ -116,7 +116,7 @@ class input_serato(plugins.base):
 		traits_obj.audio_stretch = ['rate']
 		traits_obj.auto_types = ['pl_points']
 
-		convproj_obj.set_timings(960, True)
+		convproj_obj.set_timings(960)
 
 		useaudioclips = True
 

@@ -163,7 +163,7 @@ class input_lc(plugins.base):
 		from objects.file_proj_uncommon import lovelycomposer as proj_lovelycomposer
 
 		convproj_obj.type = 'ms'
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['pl_points']

@@ -131,13 +131,13 @@ class notelist_cursor:
 		note = self.getcur()
 		return v_assoc_extra[note['assoc_extra']] if note['is_extra'] else None
 
-	def assoc_auto_set(self, time_ppq, time_float):
+	def assoc_auto_set(self, time_ppq):
 		v_assoc_auto = self.base_nl.v_assoc_auto
 		note = self.getcur()
 		if not note['is_auto']:
 			note['is_auto'] = 1
 			note['assoc_auto'] = len(v_assoc_auto)
-			v_assoc_auto.append(notelist_auto.notelist_note_auto(time_ppq, time_float))
+			v_assoc_auto.append(notelist_auto.notelist_note_auto(time_ppq))
 		return v_assoc_auto[note['assoc_auto']]
 
 	def assoc_auto_get(self):
@@ -306,13 +306,12 @@ verbose = False
 
 class cvpj_notelist:
 
-	__slots__ = ['data', 'cursor', 'time_ppq', 'time_float']
+	__slots__ = ['data', 'cursor', 'time_ppq']
 
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.data = notelist_data()
 		self.cursor = notelist_cursor(self.data)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def create_cursor(self):
 		cursor_obj = notelist_cursor(self.data)
@@ -321,7 +320,7 @@ class cvpj_notelist:
 
 	def __copy__(self):
 		if verbose_copy: print(len(self.data),'cvpj_notelist, verbose_copy')
-		new_obj = cvpj_notelist(self.time_ppq, self.time_float)
+		new_obj = cvpj_notelist(self.time_ppq)
 		new_obj.data = self.data.__copy__()
 		new_obj.cursor = notelist_cursor(new_obj.data)
 		new_obj.cursor.goto_last()
@@ -330,8 +329,8 @@ class cvpj_notelist:
 	def __eq__(self, nlo):
 		nl_same = self.data == nlo.data
 		time_ppq_same = self.time_ppq == nlo.time_ppq
-		time_float_same = self.time_float == nlo.time_float
-		return nl_same and time_ppq_same and time_float_same
+		time_type_same = type(self.time_ppq) == type(nlo.time_ppq)
+		return nl_same and time_ppq_same and time_type_same
 
 	def __len__(self):
 		return self.data.count()
@@ -346,7 +345,7 @@ class cvpj_notelist:
 		w_used = np.where(nldata['used'] == 1)
 		for num, inst in enumerate(self.data.v_assoc_inst):
 			w_inst = np.where(nldata['assoc_inst'] == num)
-			splitnl = cvpj_notelist(self.time_ppq, self.time_float)
+			splitnl = cvpj_notelist(self.time_ppq)
 			splitnld = splitnl.data
 			splitnld.nl = nldata[np.intersect1d(w_used, w_inst)]
 			if len(splitnld.nl):
@@ -363,21 +362,20 @@ class cvpj_notelist:
 		if verbose: print(len(self.data),'inst_all', instid)
 		self.data.inst_all(instid)
 
-	def stretch(self, time_ppq, time_float):
-		if verbose: print(len(self.data),'stretch', time_ppq, time_float)
+	def stretch(self, time_ppq):
+		if verbose: print(len(self.data),'stretch', time_ppq)
 		for note in self.data:
-			note['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['pos'])
-			note['dur'] = xtramath.change_timing(self.time_ppq, time_ppq, time_float, note['dur'])
+			note['pos'] = xtramath.change_timing(self.time_ppq, time_ppq, note['pos'])
+			note['dur'] = xtramath.change_timing(self.time_ppq, time_ppq, note['dur'])
 
-	def change_timings(self, time_ppq, time_float):
-		if verbose: print(len(self.data),'change_timings', time_ppq, time_float)
-		self.stretch(time_ppq, time_float)
+	def change_timings(self, time_ppq):
+		if verbose: print(len(self.data),'change_timings', time_ppq)
+		self.stretch(time_ppq)
 
 		for autos in self.data.v_assoc_auto:
-			autos.change_timings(time_ppq, time_float)
+			autos.change_timings(time_ppq)
 
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def add_r(self, t_pos, t_dur, t_key, t_vol, t_extra):
 		self.cursor.add_r(t_pos, t_dur, t_key, t_vol, t_extra)
@@ -393,17 +391,17 @@ class cvpj_notelist:
 
 	def last_add_auto(self, a_type, pos, val):
 		if self.__len__():
-			autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+			autodata = self.cursor.assoc_auto_set(self.time_ppq)
 			autodata.auto__add_point(a_type, pos, val)
 
 	def last_add_auto_instant(self, a_type, pos, val):
 		if self.__len__():
-			autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+			autodata = self.cursor.assoc_auto_set(self.time_ppq)
 			autodata.last_add_auto_instant(a_type, pos, val)
 
 	def last_add_slide(self, t_pos, t_dur, t_key, t_vol, t_extra):
 		if self.__len__():
-			autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+			autodata = self.cursor.assoc_auto_set(self.time_ppq)
 			autodata.slide__add_point(t_pos, t_dur, t_key, t_vol, t_extra)
 
 	def last_add_vol(self, i_val):
@@ -413,13 +411,13 @@ class cvpj_notelist:
 	def last_add_pan(self, pan):
 		if pan!=0:
 			if self.__len__():
-				autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+				autodata = self.cursor.assoc_auto_set(self.time_ppq)
 				autodata.notemod__add_pan(pan)
 
 	def last_add_finepitch(self, finepitch):
 		if finepitch!=0:
 			if self.__len__():
-				autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+				autodata = self.cursor.assoc_auto_set(self.time_ppq)
 				autodata.notemod__add_finepitch(finepitch)
 
 	def last_add_extra(self, i_name, i_val):
@@ -447,7 +445,7 @@ class cvpj_notelist:
 				sn_pos = t_pos - note['pos']
 				sn_key = t_key
 
-				autodata = self.cursor.assoc_auto_set(self.time_ppq, self.time_float)
+				autodata = self.cursor.assoc_auto_set(self.time_ppq)
 				autodata.slide__add_point(sn_pos, t_dur, sn_key, t_vol, t_extra)
 
 	def notesfound(self):
@@ -503,7 +501,7 @@ class cvpj_notelist:
 		if verbose_copy: print(len(self.data),'new_nl_start_end', startat, endat)
 		used = [n for n, x in enumerate(self.data.nl['pos']) if endat>x>=startat]
 
-		new_nl = cvpj_notelist(self.time_ppq, self.time_float)
+		new_nl = cvpj_notelist(self.time_ppq)
 		new_data = new_nl.data
 		new_data.v_assoc_inst = copy.deepcopy(self.data.v_assoc_inst)
 		new_data.v_assoc_extra = copy.deepcopy(self.data.v_assoc_extra)
@@ -651,7 +649,7 @@ class cvpj_notelist:
 		cursor_obj = self.create_cursor()
 		for note in cursor_obj:
 			if note['used']:
-				cursor_obj.extra_to_noteenv(self.time_ppq, self.time_float)
+				cursor_obj.extra_to_noteenv(self.time_ppq)
 
 	def merge(self, i_nl, offset):
 		if verbose: print(len(self.data),'merge')
@@ -684,7 +682,7 @@ class cvpj_notelist:
 		import mido
 
 		outnl = self.__copy__()
-		outnl.change_timings(480, False)
+		outnl.change_timings(480)
 		
 		midiobj = mido.MidiFile()
 		midiobj.ticks_per_beat = 480

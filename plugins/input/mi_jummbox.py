@@ -274,7 +274,7 @@ class input_jummbox(plugins.base):
 
 		jummbox_obj = proj_jummbox.jummbox_project(jummbox_json)
 
-		convproj_obj.set_timings(8*(jummbox_obj.beatsPerBar/8), True)
+		convproj_obj.set_timings(8*(jummbox_obj.beatsPerBar/8))
 
 		convproj_obj.params.add('bpm', jummbox_obj.beatsPerMinute, 'float')
 		convproj_obj.track_master.params.add('vol', jummbox_obj.masterGain, 'float')

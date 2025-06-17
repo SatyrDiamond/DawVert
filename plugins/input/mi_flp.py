@@ -158,8 +158,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 		elif t_stretchingtime == 0:
 			modpitch = (fl_channel_obj.params.stretchingmultiplier/10000)*12
 			if t_stretchingmode == 0:
-				modpitch += t_stretchingpitch
-
+				modpitch -= t_stretchingpitch
 			stretch_obj.timing.set__speed(pow(2, modpitch/12))
 			
 	stretch_obj.preserve_pitch = t_stretchingmode != 0
@@ -305,7 +304,7 @@ class input_flp(plugins.base):
 
 		wrapper_plugids = []
 
-		convproj_obj.set_timings(flp_obj.ppq, False)
+		convproj_obj.set_timings(flp_obj.ppq)
 		convproj_obj.timesig[0] = flp_obj.numerator
 		convproj_obj.timesig[1] = int(((flp_obj.denominator/4)**-1)*4)
 
@@ -516,7 +515,7 @@ class input_flp(plugins.base):
 				sre_obj.usemasterpitch = bool(fl_channel_obj.params.main_pitch)
 				
 				if sampleref_obj.found:
-					samplestretch[instrument] = [sre_obj.stretch, sampleref_obj]
+					samplestretch[instrument] = [sre_obj.stretch, sampleref_obj, fl_channel_obj.params.stretchingtime/384]
 
 			if fl_channel_obj.type == 5:
 				id_auto[channelnum] = fl_channel_obj.autopoints 
@@ -725,7 +724,7 @@ class input_flp(plugins.base):
 						placement_obj.vol = item.vol
 
 						if item.itemindex in samplestretch:
-							stretch_obj, sampleref_obj = samplestretch[item.itemindex]
+							stretch_obj, sampleref_obj, stretchbeats = samplestretch[item.itemindex]
 
 							out_rate = 1/stretch_obj.timing.get__speed_real(sampleref_obj, flp_obj.tempo)
 
@@ -733,7 +732,10 @@ class input_flp(plugins.base):
 
 							if startoffset not in [4294967295, 3212836864]:  
 								posdata = startoffset/4
-								time_obj.set_offset((posdata/out_rate)*flp_obj.ppq)
+								if stretchbeats:
+									time_obj.set_offset((posdata/out_rate)*flp_obj.ppq)
+								else:
+									time_obj.set_offset_real(posdata/2)
 
 			for fl_timemark in fl_arrangement.timemarkers:
 				if fl_timemark.type == 8:

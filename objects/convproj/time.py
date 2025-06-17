@@ -17,6 +17,31 @@ class cvpj_time:
 		self.keytrack_transpose = 0
 		self.keytrack_tune = 0
 
+	def json__make(self):
+		outjson = {}
+		outjson['type'] = self.type
+		outjson['org_bpm'] = self.org_bpm
+		outjson['speed_seconds'] = self.speed_seconds
+		outjson['speed_steps'] = self.speed_steps
+		outjson['from_bpm'] = self.from_bpm
+		if self.frozen: outjson['frozen'] = self.frozen
+		if self.keytrack_transpose: outjson['keytrack_transpose'] = self.keytrack_transpose
+		if self.keytrack_tune: outjson['keytrack_tune'] = self.keytrack_tune
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'type' in injson: cls.type = injson['type']
+		if 'org_bpm' in injson: cls.org_bpm = injson['org_bpm']
+		if 'speed_seconds' in injson: cls.speed_seconds = injson['speed_seconds']
+		if 'speed_steps' in injson: cls.speed_steps = injson['speed_steps']
+		if 'from_bpm' in injson: cls.from_bpm = injson['from_bpm']
+		if 'frozen' in injson: cls.frozen = injson['frozen']
+		if 'keytrack_transpose' in injson: cls.keytrack_transpose = injson['keytrack_transpose']
+		if 'keytrack_tune' in injson: cls.keytrack_tune = injson['keytrack_tune']
+		return cls
+
 	def set_seconds(self, seconds):
 		self.type = 'seconds'
 		self.org_bpm = 120

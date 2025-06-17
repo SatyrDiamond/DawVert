@@ -8,10 +8,9 @@ from objects.convproj import visual
 import copy
 
 class cvpj_placements_video:
-	__slots__ = ['data','videoref','time_ppq','time_float']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data','videoref','time_ppq']
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.videoref = ''
 		self.data = []
 
@@ -25,7 +24,7 @@ class cvpj_placements_video:
 		return bool(self.data) or bool(self.videoref)
 
 	def add(self):
-		pl_obj = cvpj_placement_video(self.time_ppq, self.time_float)
+		pl_obj = cvpj_placement_video(self.time_ppq)
 		self.data.append(pl_obj)
 		return pl_obj
 		
@@ -58,10 +57,9 @@ class cvpj_placements_video:
 		else:
 			return False
 
-	def change_timings(self, time_ppq, time_float):
-		for pl in self.data: pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+	def change_timings(self, time_ppq):
+		for pl in self.data: pl.time.change_timing(self.time_ppq, time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		for pl in self.data: pl.time.change_seconds(is_seconds, bpm, ppq)
@@ -70,13 +68,12 @@ class cvpj_placements_video:
 		self.data = placements.internal_addloops(self.data, self.eq_connect, loopcompat)
 
 class cvpj_placement_video:
-	__slots__ = ['time','muted','visual','videoref','fade_in','fade_out','time_ppq','time_float','vol','looped']
+	__slots__ = ['time','muted','visual','videoref','fade_in','fade_out','time_ppq','vol','looped']
 
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.visual = visual.cvpj_visual()
-		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
+		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.videoref = ''
 		self.muted = False
 		self.fade_in = placements.cvpj_placement_fade()

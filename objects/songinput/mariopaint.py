@@ -54,7 +54,7 @@ class mariopaint_song():
 		return self.chords[pos]
 
 	def to_cvpj(self, convproj_obj):
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4)
 		track_obj = convproj_obj.track__add('main', 'instruments', 0, False)
 		globalstore.dataset.load('mariopaint', './data_main/dataset/mariopaint.dset')
 

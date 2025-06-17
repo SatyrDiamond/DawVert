@@ -25,7 +25,7 @@ class input_color_art(plugins.base):
 	def parse(self, convproj_obj, dawvert_intent):
 		from PIL import Image
 		convproj_obj.type = 'r'
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.placement_loop = ['loop', 'loop_off', 'loop_adv']

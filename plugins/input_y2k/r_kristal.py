@@ -116,7 +116,7 @@ class input_kristal(plugins.base):
 					bpm = inpart.bpm
 					bpmmul = 120/inpart.bpm
 
-		convproj_obj.set_timings((44100/2)*bpmmul, True)
+		convproj_obj.set_timings((44100/2)*bpmmul)
 
 		if project_obj.audio_input:
 			inum, indata = project_obj.audio_input

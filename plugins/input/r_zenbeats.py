@@ -460,7 +460,7 @@ class input_zenbeats(plugins.base):
 		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		traits_obj.plugin_ext_platforms = ['win']
 
-		convproj_obj.set_timings(1, True)
+		convproj_obj.set_timings(1.0)
 
 		globalstore.dataset.load('zenbeats', './data_main/dataset/zenbeats.dset')
 		colordata = colors.colorset.from_dataset('zenbeats', 'global', 'main')

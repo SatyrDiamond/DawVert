@@ -15,12 +15,32 @@ class cvpj_timemarker:
 		self.data = None
 		self.special = False
 
+	def json__make(self):
+		outjson = {}
+		outjson['visual'] = self.visual.json__make()
+		if self.type: outjson['type'] = self.type
+		outjson['position'] = self.position
+		outjson['duration'] = self.duration
+		if self.data: outjson['data'] = self.data
+		if self.special: outjson['special'] = self.special
+		return outjson
+
+	@classmethod
+	def json__parse(cls, injson):
+		cls = cls()
+		if 'visual' in injson: cls.visual = visual.cvpj_visual.json__parse(injson['visual'])
+		if 'type' in injson: cls.type = injson['type']
+		if 'position' in injson: cls.position = injson['position']
+		if 'duration' in injson: cls.duration = injson['duration']
+		if 'data' in injson: cls.data = injson['data']
+		if 'special' in injson: cls.special = injson['special']
+		return cls
+
 class cvpj_timemarkers:
-	__slots__ = ['data', 'time_ppq', 'time_float', 'is_seconds']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data', 'time_ppq', 'is_seconds']
+	def __init__(self, time_ppq):
 		self.data = []
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.is_seconds = False
 
 	def __getitem__(self, v):
@@ -40,13 +60,12 @@ class cvpj_timemarkers:
 		self.data.append(timemarker_obj)
 		return timemarker_obj
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		if not self.is_seconds:
 			for m in self.data: 
-				m.position = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.position)
-				m.duration = xtramath.change_timing(self.time_ppq, time_ppq, time_float, m.duration)
+				m.position = xtramath.change_timing(self.time_ppq, time_ppq, m.position)
+				m.duration = xtramath.change_timing(self.time_ppq, time_ppq, m.duration)
 			self.time_ppq = time_ppq
-			self.time_float = time_float
 		
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if is_seconds and not self.is_seconds:

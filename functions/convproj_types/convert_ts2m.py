@@ -13,7 +13,7 @@ def convert(convproj_obj):
 	tracker_obj = convproj_obj.tracker_single
 
 	convproj_obj.type = 'm'
-	convproj_obj.set_timings(4, True)
+	convproj_obj.set_timings(4.0)
 
 	convproj_obj.do_actions.append('do_addloop')
 	convproj_obj.do_actions.append('do_lanefit')

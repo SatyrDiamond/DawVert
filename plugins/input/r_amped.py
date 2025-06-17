@@ -358,7 +358,7 @@ class input_amped(plugins.base):
 		traits_obj.track_hybrid = True
 		traits_obj.track_lanes = True
 
-		convproj_obj.set_timings(1, True)
+		convproj_obj.set_timings(1.0)
 
 		globalstore.dataset.load('amped', './data_main/dataset/amped.dset')
 		globalstore.dataset.load('synth_nonfree', './data_main/dataset/synth_nonfree.dset')

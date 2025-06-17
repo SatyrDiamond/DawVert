@@ -12,10 +12,9 @@ from objects.convproj import time
 from objects.convproj import sample_entry
 
 class cvpj_placements_audio:
-	__slots__ = ['data','time_ppq','time_float']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data','time_ppq']
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.data = []
 
 	def __iter__(self):
@@ -28,7 +27,7 @@ class cvpj_placements_audio:
 		return bool(self.data)
 
 	def add(self):
-		pl_obj = cvpj_placement_audio(self.time_ppq, self.time_float)
+		pl_obj = cvpj_placement_audio(self.time_ppq)
 		self.data.append(pl_obj)
 		return pl_obj
 
@@ -41,14 +40,13 @@ class cvpj_placements_audio:
 	def get_start(self):
 		return placements.internal_get_start(self.data)
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		for pl in self.data:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
+			pl.time.change_timing(self.time_ppq, time_ppq)
 			if pl.auto:
 				for mpename, autodata in pl.auto.items():
-					autodata.change_timings(time_ppq, time_float)
+					autodata.change_timings(time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		for pl in self.data: 
@@ -117,8 +115,8 @@ class cvpj_placements_audio:
 	def add_loops(self, loopcompat):
 		self.data = placements.internal_addloops(self.data, self.eq_connect, loopcompat)
 
-	def all_stretch_set_pitch_nonsync(self):
-		for x in self.data: x.all_stretch_set_pitch_nonsync()
+	#def all_stretch_set_pitch_nonsync(self):
+	#	for x in self.data: x.all_stretch_set_pitch_nonsync()
 
 	def changestretch(self, convproj_obj, target, tempo):
 		for x in self.data:
@@ -156,12 +154,11 @@ class cvpj_placements_audio:
 
 
 class cvpj_placement_audio:
-	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto','time_ppq','time_float','group','locked']
+	__slots__ = ['time','muted','sample','visual','sample','fade_in','fade_out','auto','time_ppq','group','locked']
 
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
+		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.muted = False
 		self.sample = sample_entry.cvpj_sample_entry()
 		self.visual = self.sample.visual
@@ -182,6 +179,9 @@ class cvpj_placement_audio:
 			self.time.cut_loopend += cut_offset
 			self.time.cut_loopstart += cut_offset
 
+		#if not stretch_obj.is_warped and target == 'warp' and not stretch_obj.timing.tempo_based:
+		#	print('s')
+
 		self.time.cut_start += abs(min(0, pos_offset))
 		self.time.duration -= max(0, pos_offset)
 		self.time.position += max(pos_offset, 0)
@@ -195,10 +195,9 @@ class cvpj_placement_audio:
 		self.time.loop_scale(pitch)
 
 class cvpj_placements_nested_audio:
-	__slots__ = ['data','time_ppq','time_float']
-	def __init__(self, time_ppq, time_float):
+	__slots__ = ['data','time_ppq']
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 		self.data = []
 
 	def __iter__(self):
@@ -208,7 +207,7 @@ class cvpj_placements_nested_audio:
 		return bool(self.data)
 
 	def add(self):
-		pl_obj = cvpj_placement_nested_audio(self.time_ppq, self.time_float)
+		pl_obj = cvpj_placement_nested_audio(self.time_ppq)
 		self.data.append(pl_obj)
 		return pl_obj
 
@@ -222,23 +221,21 @@ class cvpj_placements_nested_audio:
 	def remove_loops(self, out__placement_loop):
 		self.data = placements.internal_removeloops(self.data, out__placement_loop)
 
-	def change_timings(self, time_ppq, time_float):
+	def change_timings(self, time_ppq):
 		for pl in self.data:
-			pl.time.change_timing(self.time_ppq, time_ppq, time_float)
-			for x in pl.events: x.time.change_timing(self.time_ppq, time_ppq, time_float)
+			pl.time.change_timing(self.time_ppq, time_ppq)
+			for x in pl.events: x.time.change_timing(self.time_ppq, time_ppq)
 		self.time_ppq = time_ppq
-		self.time_float = time_float
 
 	def change_seconds(self, is_seconds, bpm):
 		for pl in self.data: pl.change_seconds(is_seconds, bpm)
 
 class cvpj_placement_nested_audio:
-	__slots__ = ['time','visual','events','fade_in','fade_out','muted','time_ppq','time_float','locked']
+	__slots__ = ['time','visual','events','fade_in','fade_out','muted','time_ppq','locked']
 
-	def __init__(self, time_ppq, time_float):
+	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
-		self.time_float = time_float
-		self.time = placements.cvpj_placement_timing(time_ppq, time_float)
+		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.visual = visual.cvpj_visual()
 		self.events = []
 		self.muted = False
@@ -247,7 +244,7 @@ class cvpj_placement_nested_audio:
 		self.locked = False
 
 	def add(self):
-		apl_obj = cvpj_placement_audio(self.time_ppq, self.time_float)
+		apl_obj = cvpj_placement_audio(self.time_ppq)
 		self.events.append(apl_obj)
 		return apl_obj
 

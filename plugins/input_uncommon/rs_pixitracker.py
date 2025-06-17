@@ -35,7 +35,7 @@ class input_cvpj_f(plugins.base):
 		traits_obj.audio_filetypes = ['wav']
 
 		convproj_obj.type = 'rs'
-		convproj_obj.set_timings(4, True) 
+		convproj_obj.set_timings(4) 
 
 		globalstore.dataset.load('pixitracker', './data_main/dataset/pixitracker.dset')
 		colordata = colors.colorset.from_dataset('pixitracker', 'inst', 'main')

@@ -95,7 +95,7 @@ class input_ceol(plugins.base):
 
 		# ---------- CVPJ Start ----------
 		convproj_obj.type = 'mi'
-		convproj_obj.set_timings(4, False)
+		convproj_obj.set_timings(4)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['pl_points']

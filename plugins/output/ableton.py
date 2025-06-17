@@ -1333,7 +1333,7 @@ class output_ableton(plugins.base):
 				print(  str(x)[0:11].ljust(12), end=' ' )
 			print()
 
-		convproj_obj.change_timings(1, True)
+		convproj_obj.change_timings(1.0)
 		project_obj = proj_ableton.ableton_liveset()
 		project_obj.make_from_scratch()
 

@@ -23,12 +23,13 @@ def do_auto(convproj_obj, autoloc, curve, parammode):
 	valtype = 'float'
 	if parammode == 1: valtype = 'bool'
 	if parammode == 2: valtype = 'bool'
+	auto_obj = convproj_obj.automation.create(autoloc, valtype, True)
 	for p in curve.points:
 		if parammode == 0: val = p.value
 		if parammode == 1: val = p.value>0.5
 		if parammode == 2: val = p.value<0.5
 		if parammode == 3: val = (p.value-0.5)*2
-		convproj_obj.automation.add_autopoint(autoloc, valtype, p.position, val, 'normal')
+		auto_obj.add_autopoint(p.position, val, None)
 
 filter_types = {
 	'1': 'low_pass',

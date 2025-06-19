@@ -28,8 +28,9 @@ def do_sample(convproj_obj, soundPack, filename, dawvert_intent):
 def calc_pan(i): return (i-0.5)*2
 
 def do_auto(convproj_obj, autoloc, imin, imax, sections, defval):
+	auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
 	for section in sections:
-		autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
+		autopl_obj = auto_obj.add_pl_points(autoloc, 'float')
 		time_obj = autopl_obj.time
 		time_obj.set_posdur(section.startTick, section.length)
 		autopoints_obj = autopl_obj.data

@@ -449,11 +449,9 @@ class input_dawproject(plugins.base):
 				for points in lane.points:
 					target_obj = points.target
 					if target_obj.parameter:
-						autoloc = ['id',target_obj.parameter]
-						for point in points.points: 
-							convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, None)
-						for point in points.points_bool: 
-							convproj_obj.automation.add_autopoint(autoloc, 'bool', point.time, point.value, 'instant')
+						auto_obj = convproj_obj.automation.create(['id',target_obj.parameter], 'bool' if points.points_bool else 'float', True)
+						for point in points.points: auto_obj.add_autopoint(point.time, point.value, None)
+						for point in points.points_bool: auto_obj.add_autopoint(point.time, point.value, 'instant')
 
 		timesigauto = project_obj.arrangement.timesignatureautomation
 		if timesigauto:
@@ -464,9 +462,8 @@ class input_dawproject(plugins.base):
 		if tempoauto:
 			target_obj = tempoauto.target
 			if target_obj.parameter:
-				autoloc = ['id',target_obj.parameter]
-				for point in tempoauto.points: 
-					convproj_obj.automation.add_autopoint(autoloc, 'float', point.time, point.value, None)
+				auto_obj = convproj_obj.automation.create(['id',target_obj.parameter], 'float', True)
+				for point in tempoauto.points: auto_obj.add_autopoint(point.time, point.value, None)
 
 		if project_obj.arrangement.markers:
 			markers = project_obj.arrangement.markers.markers

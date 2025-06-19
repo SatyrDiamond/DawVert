@@ -348,6 +348,9 @@ class input_lc(plugins.base):
 	
 		patternlen = []
 		voi_notes, voi_chord = project_obj.get_channel(tracknum)
+
+		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
+
 		curpos = 0
 		for pat_num, voi_note in enumerate(voi_notes):
 			patlen = voi_note.play_notes
@@ -356,11 +359,7 @@ class input_lc(plugins.base):
 			scenepl_obj.position = curpos
 			scenepl_obj.duration = patlen
 			scenepl_obj.id = str(pat_num)
-
-			autopl_obj = convproj_obj.automation.add_pl_points(['main', 'bpm'], 'float')
-			autopl_obj.time.set_posdur(curpos, patlen)
-			autopl_obj.data.points__add_normal(0, decode_tempo(voi_note.play_speed), 0, None)
-
+			auto_bpm_obj.add_all(curpos, decode_tempo(voi_note.play_speed), patlen)
 			curpos += patlen
 
 		convproj_obj.do_actions.append('do_addloop')

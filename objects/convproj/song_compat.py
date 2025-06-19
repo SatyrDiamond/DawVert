@@ -24,14 +24,11 @@ from functions.convproj_compat import unhybrid
 from functions.convproj_compat import sep_nest_audio
 from functions.convproj_compat import midi_notes
 
-from objects.convproj import automation
-
 import json
 import math
 
 import logging
 logger_compat = logging.getLogger('compat')
-
 
 class song_compat:
 	def __init__(self):
@@ -48,6 +45,8 @@ class song_compat:
 
 	def makecompat(self, convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		traits_obj = convproj_obj.traits
+
+		convproj_obj.time_tempocalc.proc_points()
 
 		if self.currenttime == None: self.currenttime = traits_obj.time_seconds
 		if 'time_seconds' in self.finished_processes: self.currenttime = out_dawinfo.time_seconds

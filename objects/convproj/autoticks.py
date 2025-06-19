@@ -8,11 +8,12 @@ import math
 import copy
 
 class cvpj_autoticks:
-	__slots__ = ['val_type','time_ppq','points']
+	#__slots__ = ['val_type','time_ppq','points']
 
 	def __init__(self, time_ppq, val_type):
 		self.val_type = val_type
 		self.time_ppq = time_ppq
+		self.is_seconds = False
 		self.points = {}
 
 	def __getitem__(self, num):
@@ -33,12 +34,21 @@ class cvpj_autoticks:
 	def add_point(self, p_pos, p_val):
 		self.points[p_pos] = p_val
 
+	def change_seconds(self, is_seconds, bpm, ppq):
+		if is_seconds and not self.is_seconds:
+			self.points = dict([(xtramath.step2sec(p/(ppq), bpm), v) for p, v in self.points.items()])
+			self.is_seconds = True
+		elif not is_seconds and self.is_seconds:
+			self.points = dict([(xtramath.sec2step(p, bpm)*(ppq), v) for p, v in self.points.items()])
+			self.is_seconds = False
+		
 	def change_timings(self, time_ppq):
-		r = []
-		for p, v in self.points.items(): r.append([p, v])
-		for t in r: t[0] = xtramath.change_timing(self.time_ppq, time_ppq, t[0])
-		self.points = {}
-		for t in r: self.points[t[0]] = t[1]
+		if not self.is_seconds:
+			r = []
+			for p, v in self.points.items(): r.append([p, v])
+			for t in r: t[0] = xtramath.change_timing(self.time_ppq, time_ppq, t[0])
+			self.points = {}
+			for t in r: self.points[t[0]] = t[1]
 		self.time_ppq = time_ppq
 
 	def get_dur(self):

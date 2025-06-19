@@ -40,8 +40,8 @@ def autoall_sng_to_cvpj(convproj_obj, pluginid, soundation_device, plugin_obj, f
 		plugin_obj.dset_param__add(param_id, sndparam_obj.value, dset_param)
 
 def autopoints_set(autoloc, points, add, mul):
-	for point in points:
-		convproj_obj.automation.add_autopoint(autoloc, 'float', point['pos'], (point['value']+add)*mul, 'normal')
+	auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
+	for point in points: auto_obj.add_autopoint(point['pos'], (point['value']+add)*mul, None)
 
 class input_soundation(plugins.base):
 	def is_dawvert_plugin(self):

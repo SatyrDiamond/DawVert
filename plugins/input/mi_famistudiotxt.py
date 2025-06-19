@@ -241,7 +241,6 @@ def make_auto(convproj_obj, fs_pattern, NoteLength, timemul, patpos, patdur, cha
 		if fs_pattern.Color: autopl_obj.visual.color.set_hex(fs_pattern.Color)
 
 		autopoints_obj = autopl_obj.data
-
 		prev_slidetarg = None
 		for c_pos, c_val, slitarget in vol_auto:
 			if prev_slidetarg != None:
@@ -358,10 +357,11 @@ class input_famistudio(plugins.base):
 			PointsPos.append(PointsAdd)
 			PointsAdd += length
 
+		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
 		prevtempo = fst_currentsong.PatternSettings.bpm
 		for n, p in enumerate(PatternLengthList):
 			cur_tempo = BPMList[n]
-			convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', PointsPos[n], BPMList[n]*(fst_currentsong.PatternSettings.BeatLength/4), 'instant')
+			auto_bpm_obj.add_all(PointsPos[n], BPMList[n]*(fst_currentsong.PatternSettings.BeatLength/4), p)
 			prevtempo = cur_tempo
 
 		for channum, fst_channel in enumerate(fst_currentsong.Channels):

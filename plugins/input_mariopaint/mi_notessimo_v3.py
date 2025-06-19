@@ -274,6 +274,7 @@ class input_notessimo_v3(plugins.base):
 
 			sheetrealsize[sheet_id] = cvpj_notelist.get_dur()
 
+		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
 		firstlayer = True
 		for layer_id, layer_data in notet_cursong_data.layers.items():
 			if layer_data.spots:
@@ -282,11 +283,7 @@ class input_notessimo_v3(plugins.base):
 
 				for pos, dur, sid, tempo, denum, numer in durposdata:
 					if firstlayer:
-						autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-						time_obj = autopl_obj.time
-						time_obj.set_posdur(pos*2, dur*2)
-						autopoints_obj = autopl_obj.data
-						autopoints_obj.points__add_normal(0, tempo, 0, None)
+						auto_bpm_obj.add_all(pos*2, tempo, dur*2)
 						convproj_obj.timesig_auto.add_point(pos*2, [numer, denum])
 
 					cvpj_placement = playlist_obj.placements.add_notes_indexed()

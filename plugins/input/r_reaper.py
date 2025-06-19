@@ -46,37 +46,37 @@ def reaper_color_to_cvpj_color(i_color, isreversed):
 def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype, invert): 
 	bpm = convproj_obj.params.get('bpm', 120).value
 	tempomul = bpm/120
-
 	isbool = paramtype=='bool'
+
+	auto_obj = convproj_obj.automation.create(autoloc, paramtype, True)
+	auto_obj.is_seconds = True
+
 	for x in rpp_autodata.pooledenvinst:
 		idnum = x['id']
 		if idnum in pooledenvs:
 			reappo = pooledenvs[idnum]
-			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, paramtype)
+			autopl_obj = auto_obj.add_pl_points()
 			time_obj = autopl_obj.time
 			time_obj.set_posdur_real(x['position'], x['length'])
 			autopl_obj.muted = bool(x['enabled'])
 			autopl_obj.visual.name = reappo.name.get()
-			autopoints_obj = autopl_obj.data
 
+			autopoints_obj = autopl_obj.data
 			for point in reappo.points:
 				val = point[1] if not invert else 1-point[1]
 				if isbool: val = bool(val)
-
 				tension = 0
 				if len(point)>3:
 					if point[2]: tension = -point[3]
-
 				autopoints_obj.points__add_normal((point[0]/2)/tempomul, val, tension, None)
 
 	if rpp_autodata.used:
 		for point in rpp_autodata.points:
 			val = point[1] if not invert else 1-point[1]
 			if isbool: val = bool(val)
-			autopoint_obj = convproj_obj.automation.add_autopoint_real(autoloc, paramtype, point[0], val, 'normal' if not instant else 'instant')
+			autopoint_obj = auto_obj.add_autopoint(point[0], val, 'normal' if not instant else 'instant')
 			if len(point)>6:
-				if point[2]:
-					autopoint_obj.tension = -point[6]
+				if point[2]: autopoint_obj.tension = -point[6]
 
 def do_samplepart_loop(samplerj, sp_obj, sampleref_obj):
 	dur = sampleref_obj.get_dur_samples()
@@ -208,6 +208,8 @@ class input_reaper(plugins.base):
 
 		pooledenvs = dict([[x.id.get(), x] for x in rpp_project.pooledenvs])
 
+		do_auto(pooledenvs, convproj_obj, rpp_project.tempoenvex, ['main', 'bpm'], True, 'float', False)
+
 		convproj_obj.transport.is_seconds = True
 		convproj_obj.timemarkers.is_seconds = True
 
@@ -316,7 +318,7 @@ class input_reaper(plugins.base):
 						if rpp_extplug.vst3_uuid == None:
 							fourid = rpp_extplug.vst_fourid
 
-							print(fourid)
+							#print(fourid)
 
 							if fourid == 1920167789:
 								if datadef_obj:

@@ -89,8 +89,10 @@ def sampler_soundlayer_filter(plugin_obj, soundlayer, filter_obj):
 	if filterModeParam in sampler_filter_slopes: filter_obj.slope = sampler_filter_slopes[filterModeParam]
 
 def do_auto(convproj_obj, autocurvespoints, autoloc):
+	auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
+	auto_obj.is_seconds = True
 	for time, val, curve in autocurvespoints:
-		convproj_obj.automation.add_autopoint_real(autoloc, 'float', time, val, 'normal')
+		auto_obj.add_autopoint(time, val, 'normal')
 
 def decodevst3_chunk(memoryblock): 
 	from functions.juce import juce_memoryblock
@@ -541,8 +543,10 @@ class input_tracktion_edit(plugins.base):
 		if project_obj.temposequence.tempo:
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))
 			convproj_obj.params.add('bpm', tempo[0], 'float')
+			auto_obj = convproj_obj.automation.create(['main', 'bpm'], 'float', True)
+			auto_obj.is_seconds = True
 			for pos, tempo in project_obj.temposequence.tempo.items():
-				convproj_obj.automation.add_autopoint_real(['main', 'bpm'], 'float', pos, tempo[0], 'normal')
+				auto_obj.add_autopoint(pos, tempo[0], 'normal')
 
 		if project_obj.temposequence.timesig:
 			pos, timesig = next(iter(project_obj.temposequence.timesig.items()))

@@ -56,12 +56,11 @@ class input_korg_m1_nds(plugins.base):
 			poslist.append(curnum)
 			curnum += stepsize
 
+		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
 		curpos = 0
 		for n, tempo in enumerate(tempopos):
 			stepcur = stepsizes[n]
-			autopl_obj = convproj_obj.automation.add_pl_ticks(['main','bpm'], 'float')
-			autopl_obj.time.set_posdur(curpos, stepcur)
-			autopl_obj.data.add_point(curpos, tempo)
+			auto_bpm_obj.add_all(curpos, tempo, stepcur)
 			curpos += stepcur
 
 		for num, channel_obj in enumerate(projsong_obj.channels):

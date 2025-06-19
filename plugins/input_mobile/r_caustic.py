@@ -459,8 +459,8 @@ class input_cvpj_r(plugins.base):
 			#			time_obj = autopl_obj.time
 			#			time_obj.set_posdur(position, duration)
 
-		for pos, val in project_obj.seqn.tempoauto: 
-			convproj_obj.automation.add_autopoint(['main', 'bpm'], 'float', pos, val, 'normal')
+		bpm_auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
+		for pos, val in project_obj.seqn.tempoauto: bpm_auto_obj.add_autopoint(pos, val, None)
 
 		for machnum, machauto in enumerate(project_obj.seqn.auto_mach):
 			for ctrlid, s_machauto in machauto.data.items():

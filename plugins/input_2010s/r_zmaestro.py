@@ -12,11 +12,13 @@ def do_automation(convproj_obj, trackid, atype, timelineobj, usetimeline):
 	if usetimeline:
 		nextinstant = False
 		autoloc = ['track', trackid, atype] if trackid else ['master', atype]
+		auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
 		for event in timelineobj:
 			value = 0
 			if atype == 'vol': value = event.value/100
 			if atype == 'pan': value = (event.value-50)/50
-			autopoint_obj = convproj_obj.automation.add_autopoint(autoloc, 'float', event.position, value, 'normal' if not nextinstant else 'instant')
+
+			autopoint_obj = auto_obj.add_autopoint(event.position, value, 'normal' if not nextinstant else 'instant')
 			if nextinstant: nextinstant = False
 			if event.fade == 'Exponential': autopoint_obj['tension'] = -1
 			if event.fade == 'Logarithmic': autopoint_obj['tension'] = 1

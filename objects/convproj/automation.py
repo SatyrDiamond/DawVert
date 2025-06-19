@@ -11,8 +11,6 @@ from objects.convproj import autoticks
 from objects.convproj import autopoints
 from objects.convproj import placements_autopoints
 from objects.convproj import placements_autoticks
-from objects.data_bytes import dynbytearr
-import numpy as np
 
 import logging
 logger_automation = logging.getLogger('automation')
@@ -64,8 +62,12 @@ class midifile_to_automation:
 
 
 class cvpj_s_automation:
-	__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','valtype','time_ppq','valtype','conv_tres','persist','defualt_val']
+	#__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','valtype','time_ppq','valtype','conv_tres','persist','defualt_val']
 	def __init__(self, time_ppq, valtype):
+		self.time_ppq = time_ppq
+
+		self.is_seconds = False
+
 		self.pl_points = None
 		self.pl_ticks = None
 		self.nopl_points = None
@@ -78,11 +80,12 @@ class cvpj_s_automation:
 		self.u_nopl_points = False
 		self.u_nopl_ticks = False
 
-		self.time_ppq = time_ppq
 		self.valtype = valtype
 
 		self.persist = True
 		self.defualt_val = 0
+
+		self.simul = False
 
 	def make_base(self):
 		outv = cvpj_s_automation(self.time_ppq, self.valtype)
@@ -129,11 +132,13 @@ class cvpj_s_automation:
 	def make_nopl_ticks(self):
 		if not self.u_nopl_ticks: 
 			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.valtype)
+			self.nopl_ticks.is_seconds = self.is_seconds
 			self.u_nopl_ticks = True
 
 	def make_nopl_points(self):
 		if not self.u_nopl_points: 
 			self.nopl_points = autopoints.cvpj_autopoints(self.time_ppq, self.valtype)
+			self.nopl_points.is_seconds = self.is_seconds
 			self.u_nopl_points = True
 
 	def make_pl_ticks(self):
@@ -153,18 +158,31 @@ class cvpj_s_automation:
 		if self.u_pl_ticks: self.pl_ticks.calc(mathtype, val1, val2, val3, val4)
 		self.defualt_val = xtramath.do_math(self.defualt_val, mathtype, val1, val2, val3, val4)
 
+	def add_all(self, p_pos, p_val, p_dur):
+		self.make_nopl_ticks()
+		self.nopl_ticks.add_point(p_pos, p_val)
+
+		self.make_nopl_points()
+		self.nopl_points.points__add_point(p_pos, p_val, 'instant')
+
+		self.make_pl_points()
+		autopl_obj = self.pl_points.add(self.valtype)
+		autopl_obj.data.points__add_normal(0, p_val, 0, None)
+		autopl_obj.time.set_posdur(p_pos, p_dur)
+
+		self.make_pl_ticks()
+		autopl_obj = self.pl_ticks.add(self.valtype)
+		autopl_obj.data.add_point(0, p_val)
+		autopl_obj.time.set_posdur(p_pos, p_dur)
+
+		self.simul = True
+
 	def add_autotick(self, p_pos, p_val):
 		self.make_nopl_ticks()
 		self.nopl_ticks.add_point(p_pos, p_val)
 
 	def add_autopoint(self, p_pos, p_val, p_type):
 		self.make_nopl_points()
-		autopoint_obj = self.nopl_points.points__add_point(p_pos, p_val, p_type)
-		return autopoint_obj
-
-	def add_autopoint_real(self, p_pos, p_val, p_type):
-		self.make_nopl_points()
-		self.nopl_points.is_seconds = True
 		autopoint_obj = self.nopl_points.points__add_point(p_pos, p_val, p_type)
 		return autopoint_obj
 
@@ -196,6 +214,7 @@ class cvpj_s_automation:
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if self.u_pl_points: self.pl_points.change_seconds(is_seconds, bpm, ppq)
 		if self.u_nopl_points: self.nopl_points.change_seconds(is_seconds, bpm, ppq)
+		if self.u_nopl_ticks: self.nopl_ticks.change_seconds(is_seconds, bpm, ppq)
 		
 	# | Ticks       | Points      |
 	# | NoPL | -PL- | NoPL | -PL- |
@@ -211,125 +230,133 @@ class cvpj_s_automation:
 	# | OOOO | iiii |      |      | S | convert____pl_ticks___nopl_ticks
 
 	def convert____pl_ticks___nopl_ticks(self):
-		if self.u_pl_ticks and not self.u_nopl_ticks:
-			self.u_nopl_ticks = True
-			self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.valtype)
-			for x in self.pl_ticks:
-				time_obj = x.time
-				pos, dur = time_obj.get_posdur()
-				offset = time_obj.cut_start if time_obj.cut_type == 'cut' else 0
-				for p, v in x.data.points.items():
-					if dur>p>=offset:
-						self.nopl_ticks.points[p+pos] = v
+		if not self.simul:
+			if self.u_pl_ticks and not self.u_nopl_ticks:
+				self.u_nopl_ticks = True
+				self.nopl_ticks = autoticks.cvpj_autoticks(self.time_ppq, self.valtype)
+				for x in self.pl_ticks:
+					time_obj = x.time
+					pos, dur = time_obj.get_posdur()
+					offset = time_obj.cut_start if time_obj.cut_type == 'cut' else 0
+					for p, v in x.data.points.items():
+						if dur>p>=offset:
+							self.nopl_ticks.points[p+pos] = v
+	
+				self.pl_ticks = None
+				self.u_pl_ticks = False
 
+	def convert__nopl_ticks_____pl_ticks(self):
+		if not self.simul:
+			if self.u_nopl_ticks:
+				self.make_pl_ticks()
+				splitpl, ppq = self.nopl_ticks.split()
+				for x, v in splitpl:
+					pl_pos = x
+					pl_dur = max(v.get_dur(), ppq)
+					pl = self.add_pl_ticks()
+					pl.data = v
+					pl.time.set_posdur(x, pl_dur)
+	
+			self.nopl_ticks = None
+			self.u_nopl_ticks = False
+
+	def convert__nopl_ticks___nopl_points(self):
+		if not self.simul:
+			if self.u_nopl_ticks:
+				points_out = self.nopl_ticks.to_points(8*self.conv_tres)
+	
+				for x in points_out:
+					self.add_autopoint(x[0], x[1], 'normal' if x[2] else 'instant')
+	
+			self.nopl_ticks = None
+			self.u_nopl_ticks = False
+
+	def convert____pl_ticks_____pl_points(self):
+		if not self.simul:
+			if self.u_pl_ticks:
+				for x in self.pl_ticks:
+					pl = self.add_pl_points()
+					pl.time = x.time.copy()
+					pl.muted = x.muted
+					pl.visual = x.visual
+					points_out = x.data.to_points(8*self.conv_tres)
+					for x in points_out:
+						pl.data.points__add_point(x[0], x[1], None if x[2] else 'instant')
+	
 			self.pl_ticks = None
 			self.u_pl_ticks = False
 
-	def convert__nopl_ticks_____pl_ticks(self):
-		if self.u_nopl_ticks:
-			self.make_pl_ticks()
-			splitpl, ppq = self.nopl_ticks.split()
-			for x, v in splitpl:
-				pl_pos = x
-				pl_dur = max(v.get_dur(), ppq)
-				pl = self.add_pl_ticks()
-				pl.data = v
-				pl.time.set_posdur(x, pl_dur)
-
-		self.nopl_ticks = None
-		self.u_nopl_ticks = False
-
-	def convert__nopl_ticks___nopl_points(self):
-		if self.u_nopl_ticks:
-			points_out = self.nopl_ticks.to_points(8*self.conv_tres)
-
-			for x in points_out:
-				self.add_autopoint(x[0], x[1], 'normal' if x[2] else 'instant')
-
-		self.nopl_ticks = None
-		self.u_nopl_ticks = False
-
-	def convert____pl_ticks_____pl_points(self):
-		if self.u_pl_ticks:
-			for x in self.pl_ticks:
-				pl = self.add_pl_points()
-				pl.time = x.time.copy()
-				pl.muted = x.muted
-				pl.visual = x.visual
-				points_out = x.data.to_points(8*self.conv_tres)
-				for x in points_out:
-					pl.data.points__add_point(x[0], x[1], None if x[2] else 'instant')
-
-		self.pl_ticks = None
-		self.u_pl_ticks = False
-
 	def convert__nopl_ticks_____pl_points(self):
-		self.convert__nopl_ticks_____pl_ticks()
-		self.convert____pl_ticks_____pl_points()
+		if not self.simul:
+			self.convert__nopl_ticks_____pl_ticks()
+			self.convert____pl_ticks_____pl_points()
 
 	def convert____pl_points__nopl_points(self):
-		if self.u_pl_points:
-			self.pl_points.remove_loops([])
-
-			if self.persist: 
-				self.make_nopl_points()
-				for x in self.pl_points:
-					start, end = x.time.get_startend()
-					self.nopl_points.inject(x.data, start, end, x.time.cut_start)
-			else:
-				self.make_nopl_points()
-				for x in self.pl_points:
-					start, end = x.time.get_startend()
-					self.nopl_points.inject(x.data, start, end, x.time.cut_start, self.defualt_val)
-
-		self.pl_points = None
-		self.u_pl_points = False
+		if not self.simul:
+			if self.u_pl_points:
+				self.pl_points.remove_loops([])
+	
+				if self.persist: 
+					self.make_nopl_points()
+					for x in self.pl_points:
+						start, end = x.time.get_startend()
+						self.nopl_points.inject(x.data, start, end, x.time.cut_start)
+				else:
+					self.make_nopl_points()
+					for x in self.pl_points:
+						start, end = x.time.get_startend()
+						self.nopl_points.inject(x.data, start, end, x.time.cut_start, self.defualt_val)
+	
+			self.pl_points = None
+			self.u_pl_points = False
 
 	def convert____pl_ticks___nopl_points(self):
-		self.convert____pl_ticks_____pl_points()
-		self.convert____pl_points__nopl_points()
+		if not self.simul:
+			self.convert____pl_ticks_____pl_points()
+			self.convert____pl_points__nopl_points()
 
 	def convert__nopl_points____pl_points(self):
-		#print('--------------')
-
-		if self.u_nopl_points and self.nopl_points:
-
-			tres = self.nopl_points.time_ppq
-			areas = self.nopl_points.find_areas(tres)
-
-			for ppl in areas:
-				pl = self.add_pl_points()
-				pl.time.set_posdur(ppl[0], ppl[1]-pl.time.position)
-				pl.data.inject(self.nopl_points, 0, pl.time.duration, ppl[0])
-
-
-		self.u_nopl_points = False
-		self.nopl_points = None
+		if not self.simul:
+			#print('--------------')
+	
+			if self.u_nopl_points and self.nopl_points:
+	
+				tres = self.nopl_points.time_ppq
+				areas = self.nopl_points.find_areas(tres)
+	
+				for ppl in areas:
+					pl = self.add_pl_points()
+					pl.time.set_posdur(ppl[0], ppl[1]-pl.time.position)
+					pl.data.inject(self.nopl_points, 0, pl.time.duration, ppl[0])
+	
+			self.u_nopl_points = False
+			self.nopl_points = None
 
 	def convert(self, pl_points, nopl_points, pl_ticks, nopl_ticks):
+		if not self.simul:
 
-		if_ticks = True in [nopl_ticks, pl_ticks]
-		if_points = True in [nopl_points, pl_points]
-
-		if not if_ticks and if_points:
-			if (not nopl_ticks):
-				if nopl_points:
-					self.convert__nopl_ticks___nopl_points()
-				elif pl_points:
-					self.convert__nopl_ticks_____pl_points()
-
-			if (not pl_ticks):
-				if (pl_points, nopl_points) == (True, False):
-					self.convert__nopl_points____pl_points()
-					self.convert____pl_ticks_____pl_points()
-				elif (pl_points, nopl_points) == (True, True):
-					self.convert____pl_ticks_____pl_points()
-				elif (pl_points, nopl_points) == (False, True):
-					self.convert____pl_ticks___nopl_points()
-
-		if if_ticks and not if_points:
-			if not (pl_ticks) and nopl_ticks:
-					self.convert____pl_ticks___nopl_ticks()
+			if_ticks = True in [nopl_ticks, pl_ticks]
+			if_points = True in [nopl_points, pl_points]
+	
+			if not if_ticks and if_points:
+				if (not nopl_ticks):
+					if nopl_points:
+						self.convert__nopl_ticks___nopl_points()
+					elif pl_points:
+						self.convert__nopl_ticks_____pl_points()
+	
+				if (not pl_ticks):
+					if (pl_points, nopl_points) == (True, False):
+						self.convert__nopl_points____pl_points()
+						self.convert____pl_ticks_____pl_points()
+					elif (pl_points, nopl_points) == (True, True):
+						self.convert____pl_ticks_____pl_points()
+					elif (pl_points, nopl_points) == (False, True):
+						self.convert____pl_ticks___nopl_points()
+	
+			if if_ticks and not if_points:
+				if not (pl_ticks) and nopl_ticks:
+						self.convert____pl_ticks___nopl_ticks()
 
 
 class cvpj_autoloc:
@@ -368,76 +395,15 @@ class cvpj_autoloc:
 	def change_start(self, startlen, listin):
 		self.autoloc = listin+self.autoloc[startlen:]
 
-
-tempotickblocks_premake = dynbytearr.dynbytearr_premake([
-	('pos_start', np.float64), 
-	('pos_end', np.float64), 
-	('dur', np.float64), 
-	('tempo_start', np.float64),  
-	('tempo_end', np.float64),  
-	('diff', np.float64),  
-	])
-
-class tempodata_store:
-	def __init__(self):
-		self.store = None
-
-	def proc_points(self, convproj_obj):
-		tempo_auto = convproj_obj.automation.get_opt(['main', 'bpm'])
-		self.store = tempotickblocks_premake.create()
-		tb_cur = self.store.create_cursor()
-
-		if tempo_auto is not None:
-			if not self.store:
-				if tempo_auto.u_pl_ticks or tempo_auto.u_nopl_ticks:
-					if not tempo_auto.u_nopl_ticks: tempo_auto.convert____pl_ticks___nopl_ticks()
-
-					ticksdata = [x for x in tempo_auto.nopl_ticks]
-					for n in range(len(ticksdata)-1):
-						d_cur = ticksdata[n]
-						d_next = ticksdata[n+1]
-						tb_cur.add()
-						tb_cur['pos_start'] = d_cur[0]
-						tb_cur['pos_end'] = d_next[0]
-						tb_cur['dur'] = d_next[0]-d_cur[0]
-						tb_cur['tempo_start'] = d_cur[1]
-						tb_cur['tempo_end'] = d_next[1]
-						tb_cur['diff'] = d_next[1]-d_cur[1]
-
-				elif tempo_auto.u_pl_points or tempo_auto.u_nopl_points:
-					if not tempo_auto.u_nopl_points: tempo_auto.convert____pl_points__nopl_points()
-					temporegions = tempo_auto.nopl_points.to_regions()
-					for temporegion in temporegions:
-						tb_cur.add()
-						tb_cur['pos_start'] = temporegion['pos_start']
-						tb_cur['pos_end'] = temporegion['pos_end']
-						tb_cur['dur'] = temporegion['dur']
-						tb_cur['tempo_start'] = temporegion['value_start']
-						tb_cur['tempo_end'] = temporegion['value_end']
-						tb_cur['diff'] = temporegion['value_end']-temporegion['value_start']
-
-		if len(self.store):
-			useddata = self.store.get_used()
-			if 0 not in useddata['pos_start']:
-				tb_cur.add()
-				tb_cur['pos_start'] = 0
-				tb_cur['pos_end'] = useddata[0]['pos_start']
-				tb_cur['dur'] = tb_cur['pos_end']
-				tb_cur['tempo_start'] = useddata[0]['tempo_start']
-				tb_cur['tempo_end'] = tb_cur['tempo_start']
-
-		self.store.sort(['pos_start'])
-
-		print(  self.store.get_used()  )
-
 class cvpj_automation:
-	__slots__ = ['data','time_ppq','auto_num','movenotfound','calcnotfound']
+	__slots__ = ['data','time_ppq','auto_num','movenotfound','calcnotfound','is_seconds']
 	def __init__(self, time_ppq):
 		self.data = {}
 		self.time_ppq = time_ppq
 		self.auto_num = counter.counter(200000, 'auto_')
 		self.movenotfound = []
 		self.calcnotfound = []
+		self.is_seconds = False
 
 	def __setitem__(self, p, v):
 		autoloc = cvpj_autoloc(p)
@@ -513,6 +479,7 @@ class cvpj_automation:
 		autopath = cvpj_autoloc(autopath)
 		if (autopath not in self.data) or (replace):
 			self.data[autopath] = cvpj_s_automation(self.time_ppq, valtype)
+			self.data[autopath].is_seconds = self.is_seconds
 			self.data[autopath].id = self.auto_num.get()
 			if autopath == ['main', 'bpm']:
 				self.data[autopath].conv_tres = 8
@@ -609,11 +576,6 @@ class cvpj_automation:
 		self.create(autopath, valtype, False)
 		autopath = cvpj_autoloc(autopath)
 		return self.data[autopath].add_autopoint(p_pos, p_val, p_type)
-
-	def add_autopoint_real(self, autopath, valtype, p_pos, p_val, p_type):
-		self.create(autopath, valtype, False)
-		autopath = cvpj_autoloc(autopath)
-		return self.data[autopath].add_autopoint_real(p_pos, p_val, p_type)
 
 	def add_autopoints_twopoints(self, autopath, valtype, twopoints):
 		self.create(autopath, valtype, False)

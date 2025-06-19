@@ -43,6 +43,8 @@ from functions.convproj_types import convert_cm2rm
 from functions.convproj_types import convert_cs2cm
 from functions.convproj_types import convert_r2cm
 
+from objects import tempocalc
+
 typelist = {}
 typelist['r'] = 'Regular'
 typelist['ri'] = 'RegularIndexed'
@@ -200,6 +202,8 @@ class cvpj_project:
 		self.traits = project_traits.cvpj_project_traits()
 
 		self.time_ppq = 96
+		self.time_tempocalc = tempocalc.tempocalc_store(self)
+
 		self.track_data = {}
 		self.track_order = []
 		self.track_master = tracks.cvpj_track('master', self.time_ppq, False, False)

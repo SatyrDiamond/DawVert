@@ -89,7 +89,8 @@ class input_onlinesequencer(plugins.base):
 					if paramid == 26: autoloc = ['plugin', trackid+'_bitcrush', 'bits']
 
 				if autoloc:
-					for marker in markers: convproj_obj.automation.add_autopoint(autoloc, 'float', marker.pos, marker.value/div, 'normal' if marker.type else 'instant')
+					auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
+					for marker in markers: auto_obj.add_autopoint(marker.pos, marker.value/div, 'normal' if marker.type else 'instant')
 
 		multig = {}
 

@@ -221,8 +221,9 @@ def do_loop(time_obj, blx_region, tempomul, speed):
 		time_obj.set_loop_data(sampleOffset, sampleOffset, loopLength)
 
 def do_automation(convproj_obj, blx_auto, autoloc, tempomul):
+	auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
 	for p in blx_auto.points:
-		convproj_obj.automation.add_autopoint(autoloc, 'float', p.position, p.value, 'normal')
+		auto_obj.add_autopoint(p.position, p.value, None)
 
 def do_track_common(convproj_obj, track_obj, blx_track, tempomul):
 	track_obj.visual.name = blx_track.name

@@ -107,6 +107,8 @@ class input_notessimo_v2(plugins.base):
 				fxchan_data.visual.color = inst_obj.visual.color.copy()
 				fxnum += 1
 
+		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
+		
 		curpos = 0
 		for pat_num in project_obj.order:
 			tempo, notelen = tempo_len[pat_num]
@@ -115,13 +117,7 @@ class input_notessimo_v2(plugins.base):
 			scenepl_obj.position = curpos
 			scenepl_obj.duration = size
 			scenepl_obj.id = str(pat_num)
-
-			autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-			autopl_obj.time.set_posdur(curpos, size)
-
-			autopoints_obj = autopl_obj.data
-			autopoints_obj.points__add_normal(0, tempo_len[pat_num][0], 0, None)
-
+			auto_bpm_obj.add_all(curpos, tempo_len[pat_num][0], size)
 			curpos += size
 
 		convproj_obj.do_actions.append('do_lanefit')

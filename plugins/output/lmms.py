@@ -617,7 +617,7 @@ class output_lmms(plugins.base):
 						if ref_found: lmms_sampletco.src = sampleref_obj.fileref.get_path(None, False)
 						lmms_sampletco.muted = int(audiopl_obj.muted)
 						if audiopl_obj.visual.color: lmms_sampletco.color = '#' + audiopl_obj.visual.color.get_hex()
-						if time_obj.cut_type == 'cut': lmms_sampletco.off = int(time_obj.cut_start*-1)
+						if time_obj.cut_type == 'cut': lmms_sampletco.off = int(time_obj.get_offset()*-1)
 						lmms_track.sampletcos.append(lmms_sampletco)
 
 					encode_fxchain(samptrack_obj.fxchain, track_obj, trackname, autoloc)

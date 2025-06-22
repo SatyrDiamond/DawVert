@@ -9,6 +9,7 @@ from objects import valobjs
 import math
 import numpy as np
 import copy
+from objects import tempocalc
 
 autopoints_premake = dynbytearr.dynbytearr_premake([
 	('pos', np.float64), 
@@ -246,6 +247,20 @@ class cvpj_autopoints:
 			self.points.data['pos'] = xtramath.sec2step(self.points.data['pos'], bpm)*(ppq)
 			self.is_seconds = False
 		
+	def change_seconds_global(self, is_seconds, projid, ppq):
+		if projid in tempocalc.global_stores:
+			tempostore = tempocalc.global_stores[projid]
+		else:
+			print('id not found in tempocalc_store')
+			exit()
+
+		if is_seconds and not self.is_seconds:
+			for x in self.points.data: x['pos'] = tempostore.get_pos(x['pos']/ppq, True)
+			self.is_seconds = True
+		elif not is_seconds and self.is_seconds:
+			for x in self.points.data: x['pos'] = tempostore.get_pos(x['pos'], False)*ppq
+			self.is_seconds = False
+		
 	def change_timings(self, time_ppq):
 		if not self.is_seconds:
 			for n, x in enumerate(self.points.data):
@@ -314,6 +329,12 @@ class cvpj_autopoints:
 			return min(useddata), max(useddata)
 		else: 
 			return -1, -1
+
+	def get_last(self):
+		if self: 
+			return self.points.get_used()[-1]
+		else: 
+			return None
 
 	def remove_instant(self):
 		useddata = self.points.get_used()

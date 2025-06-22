@@ -65,16 +65,16 @@ class cvpj_placements_autopoints:
 	def remove_cut(self):
 		for x in self.data: 
 			if x.cut_type == 'cut':
-				x.data.edit_trimmove(x.time.cut_start, x.time.duration)
+				x.data.edit_trimmove(x.time.get_offset(), x.time.get_dur())
 				x.cut_start = 0
 				x.cut_type = None
 
 	def remove_unused(self):
 		for x in self.data: 
 			if x.cut_type == 'cut':
-				x.data.edit_trimmove(x.time.cut_start, x.time.duration)
+				x.data.edit_trimmove(x.time.get_offset(), x.time.get_dur())
 			else:
-				x.data.edit_trimmove(0, x.time.duration)
+				x.data.edit_trimmove(0, x.time.get_dur())
 
 	def remove_loops(self, out__placement_loop):
 		self.data = placements.internal_removeloops(self.data, out__placement_loop)

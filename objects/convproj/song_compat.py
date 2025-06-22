@@ -46,8 +46,6 @@ class song_compat:
 	def makecompat(self, convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		traits_obj = convproj_obj.traits
 
-		convproj_obj.time_tempocalc.proc_points()
-
 		if self.currenttime == None: self.currenttime = traits_obj.time_seconds
 		if 'time_seconds' in self.finished_processes: self.currenttime = out_dawinfo.time_seconds
 

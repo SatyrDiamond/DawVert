@@ -26,18 +26,21 @@ def internal_addloops(pldata, eq_connect, loopcompat):
 		if not eq_connect(pl, prev, loopcompat):
 			new_data.append(pl)
 		else:
-			prevreal = new_data[-1]
 			cur_time_obj = pl.time
+			cur_duration = cur_time_obj.get_dur()
+			cur_cut_start = cur_time_obj.get_offset()
+
+			prevreal = new_data[-1]
 			pr_time_obj = prevreal.time
-			pr_time_obj.duration += cur_time_obj.duration
+			pr_time_obj.calc_dur_add(cur_duration)
 			if pr_time_obj.cut_type == 'none': 
 				pr_time_obj.cut_type = 'loop'
-				pr_time_obj.cut_loopend = cur_time_obj.duration
+				pr_time_obj.calc_loopend_add(cur_duration)
 			if 'loop_adv' in loopcompat:
 				if pr_time_obj.cut_type == 'cut': 
 					pr_time_obj.cut_type = 'loop_off'
-					pr_time_obj.cut_loopstart = cur_time_obj.cut_start
-					pr_time_obj.cut_loopend = cur_time_obj.duration+cur_time_obj.cut_start
+					pr_time_obj.cut_loopstart.set(cur_cut_start, 'ppq')
+					pr_time_obj.calc_loopend_add(cur_duration+cur_cut_start)
 		prev = pl
 
 	return new_data
@@ -50,39 +53,42 @@ def internal_removeloops(pldata, out__placement_loop):
 		if oldtime_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'] and oldtime_obj.cut_type not in out__placement_loop:
 			loop_start, loop_loopstart, loop_loopend = oldtime_obj.get_loop_data()
 			if oldtime_obj.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
-				dur = oldtime_obj.duration
-				offset = oldtime_obj.cut_start
+				dur = oldtime_obj.get_dur()
+				offset = oldtime_obj.get_offset()
 
 				cutplpl_obj = copy.deepcopy(oldpl_obj)
-				cutplpl_obj.time.duration = min(loop_loopend-offset, dur)
-				cutplpl_obj.time.set_offset(oldtime_obj.cut_start)
+				cutplpl_obj.time.set_dur(min(loop_loopend-offset, dur))
+				cutplpl_obj.time.set_offset(offset)
 				new_data.append(cutplpl_obj)
 
 				if dur>loop_loopend:
 					cutplpl_obj = copy.deepcopy(oldpl_obj)
 					cpl_time_obj = cutplpl_obj.time
-					cpl_time_obj.position += loop_loopend-offset
-					cpl_time_obj.duration = (dur-loop_loopend)+offset
+					cpl_time_obj.calc_pos_add(loop_loopend-offset)
+					cpl_time_obj.set_dur((dur-loop_loopend)+offset)
 					cpl_time_obj.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
 					new_data.append(cutplpl_obj)
 
 			else:
-				outeq = oldtime_obj.duration
+				position = oldtime_obj.get_pos()
+				outeq = oldtime_obj.get_dur()
+				cut_start = oldtime_obj.get_offset()
+
 				if oldtime_obj.cut_type == 'loop_eq': 
-					dur = outeq+oldtime_obj.cut_start
+					dur = outeq+cut_start
 				elif oldtime_obj.cut_type == 'loop_adv_off': 
-					durr = oldtime_obj.cut_start-(loop_loopend-loop_loopstart)
-					dur = outeq+oldtime_obj.cut_start-durr
+					durr = cut_start-(loop_loopend-loop_loopstart)
+					dur = outeq+cut_start-durr
 				else: 
 					dur = outeq
 
-				for cutpoint in xtramath.cutloop(oldtime_obj.position, dur, loop_start, loop_loopstart, loop_loopend):
+				for cutpoint in xtramath.cutloop(oldtime_obj.get_pos(), dur, loop_start, loop_loopstart, loop_loopend):
 					cutplpl_obj = copy.deepcopy(oldpl_obj)
 					cpl_time_obj = cutplpl_obj.time
-					cpl_time_obj.position = cutpoint[0]
-					cpl_time_obj.duration = cutpoint[1] 
 					cpl_time_obj.cut_type = 'cut'
-					cpl_time_obj.cut_start = cutpoint[2]
+					cpl_time_obj.set_pos(cutpoint[0])
+					cpl_time_obj.set_dur(cutpoint[1])
+					cpl_time_obj.set_offset(cutpoint[2])
 					new_data.append(cutplpl_obj)
 		else: new_data.append(oldpl_obj)
 	return new_data
@@ -93,8 +99,9 @@ def internal_sort(pldata):
 	new_a = []
 	for n in pldata:
 		n_time = n.time
-		if n_time.position not in ta_bsort: ta_bsort[n_time.position] = []
-		ta_bsort[n_time.position].append(n)
+		pos = n_time.get_pos()
+		if pos not in ta_bsort: ta_bsort[pos] = []
+		ta_bsort[pos].append(n)
 	ta_sorted = dict(sorted(ta_bsort.items(), key=lambda item: item[0]))
 	for p in ta_sorted:
 		for note in ta_sorted[p]: new_a.append(note)
@@ -118,9 +125,9 @@ def internal_eq_content(pl, prev):
 	curpl_time = pl.time
 	prevpl_time = prev.time
 	isvalid_b = curpl_time.cut_type==prevpl_time.cut_type
-	isvalid_c = curpl_time.cut_start==prevpl_time.cut_start
-	isvalid_d = curpl_time.cut_loopstart==prevpl_time.cut_loopstart
-	isvalid_e = curpl_time.cut_loopend==prevpl_time.cut_loopend
+	isvalid_c = curpl_time.get_offset()==prevpl_time.get_offset()
+	isvalid_d = curpl_time.get_loopstart()==prevpl_time.get_loopstart()
+	isvalid_e = curpl_time.get_loopend()==prevpl_time.get_loopend()
 	isvalid_f = pl.muted==prev.muted
 	return isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
 
@@ -134,10 +141,19 @@ def internal_eq_connect(pl, prev, loopcompat):
 	isvalid_f = curpl_time.get_dur()==prevpl_time.get_dur()
 	return isvalid_b & isvalid_c & isvalid_d & isvalid_e & isvalid_f
 
-def internal_tempo_calc(pl, placements):
+def internal_tempo_calc(placements):
 	for pl_obj in placements:
+		time_obj = pl_obj.time
+		time_obj.realtime_tempo = time_obj.position.get_tempo(time_obj.time_ppq)
 
-		pl_obj.time.realtime_tempo = -1
+def internal_tempo_calc_audio(placements):
+	for pl_obj in placements:
+		time_obj = pl_obj.time
+		time_obj.realtime_tempo = time_obj.position.get_tempo(time_obj.time_ppq)
+		stretch_obj = pl_obj.sample.stretch
+		stretch_timing = stretch_obj.timing
+		if stretch_timing.time_type == 'real_rate': 
+			stretch_timing.original_bpm = time_obj.realtime_tempo
 
 class cvpj_placement_fade:
 	__slots__ = ['dur','time_type','skew','slope']
@@ -180,112 +196,106 @@ class cvpj_placement_timing:
 	def __init__(self, time_ppq):
 		self.time_ppq = time_ppq
 
-		self.position = 0
-		self.duration = 0
-		self.position_real = None
-		self.duration_real = None
-		self.position_timemode = 'beats'
-		self.duration_timemode = 'beats'
+		self.position = time.time_position()
+		self.duration = time.time_duration()
 
 		self.cut_type = 'none'
-		self.cut_start = 0
-		self.cut_start_timemode = 'beats'
-		self.cut_loopstart = 0
-		self.cut_loopend = -1
+		self.cut_start = time.time_duration()
+		self.cut_loopstart = time.time_duration()
+		self.cut_loopend = time.time_duration()
 
-		self.realtime_tempo = -1
+		self.realtime_tempo = 120
 
-	def set_posdur(self, pos, dur):
-		self.position = pos
-		self.duration = dur
-		self.position_real = None
-		self.duration_real = None
-		self.position_timemode = 'beats'
-		self.duration_timemode = 'beats'
- 
+	# ---------------- Position ----------------
+
 	def set_pos(self, pos):
-		self.position = pos
-		self.position_real = None
-		self.position_timemode = 'beats'
+		self.position.set(pos, 'ppq')
  
+	def get_pos(self):
+		return self.position.get('ppq', self.time_ppq)
+
+	def calc_pos_add(self, val):
+		self.position.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)
+
+	# ---------------- Duration ----------------
+
 	def set_dur(self, dur):
-		self.duration = dur
-		self.duration_real = None
-		self.duration_timemode = 'beats'
+		self.duration.set(dur, 'ppq')
  
-	def set_startend(self, start, end):
-		self.set_posdur(start, end-start)
+	def get_dur(self):
+		return self.duration.get('ppq', self.time_ppq, self.realtime_tempo)
 
-	def set_posdur_real(self, pos, dur):
-		self.position = None
-		self.duration = None
-		self.position_real = pos
-		self.duration_real = dur
-		self.position_timemode = 'seconds'
-		self.duration_timemode = 'seconds'
- 
-	def set_startend_real(self, start, end):
-		self.set_posdur_real(start, end-start)
+	def set_block_dur(self, durval, blksize):
+		dur = (durval/blksize).__ceil__()*blksize
+		self.duration.set(dur, 'ppq')
 
-	def set_block_posdur(self, pos, blocksize):
-		self.set_posdur(pos*blocksize, blocksize)
+	def calc_dur_add(self, val):
+		self.duration.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)
+
+	# ---------------- Offset ----------------
 
 	def set_offset(self, offset):
 		if offset:
 			self.cut_type = 'cut'
-			self.cut_start = offset
-			self.cut_start_timemode = 'beats'
+			self.cut_start.set(offset, 'ppq')
 
 	def set_offset_real(self, offset):
 		if offset:
 			self.cut_type = 'cut'
-			self.cut_start = offset
-			self.cut_start_timemode = 'seconds'
+			self.cut_start.set(offset, 'seconds')
 
-	def set_block_dur(self, durval, blksize):
-		self.duration = (durval/blksize).__ceil__()*blksize
-		self.duration_real = None
-		self.duration_timemode = 'beats'
+	def get_offset(self):
+		return self.cut_start.get('ppq', self.time_ppq, self.realtime_tempo)
 
-	def add_pos(self, pos):
-		if self.position_timemode == 'beats': self.position += pos
+	def get_offset_real(self):
+		return self.cut_start.get('seconds', self.time_ppq, self.realtime_tempo)
+
+	def calc_offset_add(self, val):
+		self.cut_start.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)
+
+	# ---------------- Both ----------------
+
+	def set_posdur(self, pos, dur):
+		self.position.set(pos, 'ppq')
+		self.duration.set(dur, 'ppq')
+ 
+	def set_posdur_real(self, pos, dur):
+		self.position.set(pos, 'seconds')
+		self.duration.set(dur, 'seconds')
  
 	def get_posdur(self):
-		return self.position, self.duration
-
-	def get_pos(self):
-		return self.position
-
-	def get_dur(self):
-		return self.duration
-
-	def get_startend(self):
-		return self.position, self.position+self.duration
+		return self.position.get('ppq', self.time_ppq), self.duration.get('ppq', self.time_ppq, self.realtime_tempo)
 
 	def get_posdur_real(self):
-		return self.position_real, self.duration_real
+		posstart = self.position.get('seconds', self.time_ppq)
+		durstart = self.duration.get('seconds', self.time_ppq, self.realtime_tempo)
+		return posstart, durstart
 
-	def get_startend_real(self):
-		return self.position_real, self.position_real+self.duration_real
+	def set_block_posdur(self, pos, blocksize):
+		self.set_posdur(pos*blocksize, blocksize)
+
+	# ---- startend
+
+	def set_startend(self, start, end):
+		self.set_posdur(start, end-start)
+
+	def get_startend(self):
+		posstart = self.position.get('ppq', self.time_ppq)
+		durstart = self.duration.get('ppq', self.time_ppq, self.realtime_tempo)
+		return posstart, posstart+durstart
 
 	def get_end(self):
 		return self.get_pos()+self.get_dur()
 
-	def get_loopcount(self):
-		outcount = 1
-		return self.position_real, self.position_real+self.duration_real
+	def set_startend_real(self, start, end):
+		self.set_posdur_real(start, end-start)
 
-	def copy(self):
-		return copy.deepcopy(self)
+	def get_startend_real(self):
+		posstart = self.position.get('seconds', self.time_ppq)
+		durstart = self.duration.get('seconds', self.time_ppq, self.realtime_tempo)
+		return posstart, posstart+durstart
 
-	def change_timing(self, old_ppq, new_ppq):
-		self.position = xtramath.change_timing(old_ppq, new_ppq, self.position)
-		self.duration = xtramath.change_timing(old_ppq, new_ppq, self.duration)
-		if self.cut_start_timemode == 'beats':
-			self.cut_start = xtramath.change_timing(old_ppq, new_ppq, self.cut_start)
-		self.cut_loopstart = xtramath.change_timing(old_ppq, new_ppq, self.cut_loopstart)
-		self.cut_loopend = xtramath.change_timing(old_ppq, new_ppq, self.cut_loopend)
-		self.time_ppq = new_ppq
+	# ---------------- Loop ----------------
 
 	def set_loop_data(self, start, loopstart, loopend):
 		if start and start==loopstart: self.cut_type = 'loop_eq'
@@ -293,33 +303,64 @@ class cvpj_placement_timing:
 		elif loopstart: self.cut_type = 'loop_adv'
 		elif start: self.cut_type = 'loop_off'
 		elif loopend: self.cut_type = 'loop'
-		self.cut_start = start
-		self.cut_loopstart = loopstart
-		self.cut_loopend = loopend
+		self.cut_start.set(start, 'ppq')
+		self.cut_loopstart.set(loopstart, 'ppq')
+		self.cut_loopend.set(loopend, 'ppq')
 
 	def get_loop_data(self):
-		loop_start = self.cut_start
-		loop_loopstart = self.cut_loopstart
-		loop_loopend = self.cut_loopend if self.cut_loopend>0 else self.duration
+		loop_start = self.cut_start.get('ppq', self.time_ppq, self.realtime_tempo)
+		loop_loopstart = self.cut_loopstart.get('ppq', self.time_ppq, self.realtime_tempo)
+		loop_loopend = self.cut_loopend.get('ppq', self.time_ppq, self.realtime_tempo)
+		if loop_loopend==0: loop_loopend = self.duration.get('ppq', self.time_ppq, self.realtime_tempo)
 		return loop_start, loop_loopstart, loop_loopend
 
+	def get_loopstart(self):
+		return self.cut_loopstart.get('ppq', self.time_ppq, self.realtime_tempo)
+
+	def get_loopend(self):
+		return self.cut_loopend.get('ppq', self.time_ppq, self.realtime_tempo)
+
 	def loop_scale(self, v):
-		self.cut_start *= v
-		self.cut_loopstart *= v
-		self.cut_loopend *= v
+		self.cut_start.calc_mul('ppq', v, self.time_ppq, self.realtime_tempo)
+		self.cut_loopstart.calc_mul('ppq', v, self.time_ppq, self.realtime_tempo)
+		self.cut_loopend.calc_mul('ppq', v, self.time_ppq, self.realtime_tempo)
 
 	def loop_shift(self, v):
-		self.cut_start += v
-		self.cut_loopstart += v
-		self.cut_loopend += v
+		self.cut_start.calc_add('ppq', v, self.time_ppq, self.realtime_tempo)
+		self.cut_loopstart.calc_add('ppq', v, self.time_ppq, self.realtime_tempo)
+		self.cut_loopend.calc_add('ppq', v, self.time_ppq, self.realtime_tempo)
+
+	def get_loopcount(self):
+		pos = self.position.get('seconds', self.time_ppq)
+		dur = self.duration.get('seconds', self.time_ppq, self.realtime_tempo)
+		return pos, pos+dur
+
+	def calc_loopstart_add(self, val):
+		self.cut_loopstart.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)
+
+	def calc_loopend_add(self, val):
+		self.cut_loopend.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)
+
+	# ---------------- Other ----------------
+
+	def copy(self):
+		return copy.deepcopy(self)
+
+	def change_timing(self, old_ppq, new_ppq):
+		self.position.change_ppq(old_ppq, new_ppq)
+		self.duration.change_ppq(old_ppq, new_ppq)
+		self.cut_start.change_ppq(old_ppq, new_ppq)
+		self.cut_loopstart.change_ppq(old_ppq, new_ppq)
+		self.cut_loopend.change_ppq(old_ppq, new_ppq)
+		self.time_ppq = new_ppq
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if is_seconds:
-			self.position_real = xtramath.step2sec(self.position, bpm)/(ppq/4)
-			self.duration_real = xtramath.step2sec(self.duration, bpm)/(ppq/4)
+			self.position.convert('seconds', ppq)
+			self.duration.convert('seconds', ppq, self.realtime_tempo)
 		else:
-			self.position = xtramath.sec2step(self.position_real, bpm)
-			self.duration = xtramath.sec2step(self.duration_real, bpm)
+			self.position.convert('ppq', ppq)
+			self.duration.convert('ppq', ppq, self.realtime_tempo)
 		
 class cvpj_placements:
 	__slots__ = ['pl_midi','pl_notes','pl_audio','pl_notes_indexed','pl_audio_indexed','pl_audio_nested','pl_video','pl_custom','notelist','midievents','time_ppq','uses_placements','is_indexed']
@@ -344,15 +385,15 @@ class cvpj_placements:
 		self.pl_video = placements_video.cvpj_placements_video(self.time_ppq)
 		self.pl_custom = placements_custom.cvpj_placements_custom(self.time_ppq)
 
-	def do_tempo(self, tempoblockdata):
-		for x in self.pl_midi.data: x.realtime_tempo
-		for x in self.pl_notes.data: x.realtime_tempo
-		for x in self.pl_audio.data: x.realtime_tempo
-		for x in self.pl_notes_indexed.data: x.realtime_tempo
-		for x in self.pl_audio_indexed.data: x.realtime_tempo
-		for x in self.pl_audio_nested.data: x.realtime_tempo
-		for x in self.pl_video.data: x.realtime_tempo
-		for x in self.pl_custom.data: x.realtime_tempo
+	def do_tempo(self, get_pos_temp):
+		internal_tempo_calc(self.pl_midi.data)
+		internal_tempo_calc(self.pl_notes.data)
+		internal_tempo_calc_audio(self.pl_audio.data)
+		internal_tempo_calc(self.pl_notes_indexed.data)
+		internal_tempo_calc(self.pl_audio_indexed.data)
+		internal_tempo_calc(self.pl_audio_nested.data)
+		internal_tempo_calc(self.pl_video.data)
+		internal_tempo_calc(self.pl_custom.data)
 
 	def sort(self):
 		self.pl_notes.sort()

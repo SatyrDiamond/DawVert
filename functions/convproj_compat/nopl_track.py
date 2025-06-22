@@ -23,7 +23,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_int
 				for cvpj_trackid, track_obj in convproj_obj.track__iter(): 
 					placement_obj = track_obj.placements.add_notes()
 					placement_obj.notelist = track_obj.placements.notelist.__copy__()
-					placement_obj.time.duration = track_obj.placements.notelist.get_dur()
+					placement_obj.time.set_dur(track_obj.placements.notelist.get_dur())
 					track_obj.placements.notelist.clear()
 				return True
 		else: 

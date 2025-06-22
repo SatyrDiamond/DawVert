@@ -253,7 +253,7 @@ class cvpj_stretch_warp:
 
 	def fixpl__offset(self, pltime_obj, ppq):
 		offset = self.get__offset()
-		cut_start = pltime_obj.cut_start/ppq
+		cut_start = pltime_obj.get_offset()
 		cus = -(offset+cut_start)
 		actmove = max(0, cus)
 
@@ -261,12 +261,12 @@ class cvpj_stretch_warp:
 
 		if pltime_obj.cut_type in ['none', 'cut']:
 			pltime_obj.cut_type = 'cut'
-			pltime_obj.position += (actmove)*ppq
-			pltime_obj.duration += -(actmove)*ppq
-			pltime_obj.cut_start += (actmove)*ppq
+			pltime_obj.calc_pos_add((actmove)*ppq)
+			pltime_obj.calc_dur_add(-(actmove)*ppq)
+			pltime_obj.calc_offset_add((actmove)*ppq)
 
 			self.manp__shift_beats(warpmove)
-			pltime_obj.cut_start += (warpmove)*ppq
+			pltime_obj.calc_offset_add((warpmove)*ppq)
 
 		#if offset != 0:
 		#	if pltime_obj.cut_type == 'none':

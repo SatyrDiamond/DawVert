@@ -102,8 +102,9 @@ class cvpj_placements_notes:
 	def remove_cut(self):
 		for x in self.data: 
 			if x.time.cut_type == 'cut':
-				x.notelist.edit_trimmove(x.time.cut_start, round(x.time.cut_start+x.time.get_dur(), 8))
-				x.time.cut_start = 0
+				ooffset = x.time.get_offset()
+				x.notelist.edit_trimmove(ooffset, round(ooffset+x.time.get_dur(), 8))
+				x.time.set_offset(0)
 				x.time.cut_type = None
 
 	def eq_content(self, pl, prev):

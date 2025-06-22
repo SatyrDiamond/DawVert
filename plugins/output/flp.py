@@ -396,9 +396,9 @@ class output_cvpjs(plugins.base):
 						if pl_obj.muted == True: fl_clip_obj.flags = 12352
 	
 						if time_obj.cut_type == 'cut':
-							fl_clip_obj.startoffset = int(time_obj.cut_start)
+							fl_clip_obj.startoffset = int(time_obj.get_offset())
 							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0
-							fl_clip_obj.endoffset += int(time_obj.cut_start)
+							fl_clip_obj.endoffset += int(time_obj.get_offset())
 						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
 						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
 	
@@ -418,7 +418,7 @@ class output_cvpjs(plugins.base):
 						if pl_obj.muted == True: fl_clip_obj.flags = 12352
 	
 						startat = 0
-						if time_obj.cut_type == 'cut': startat = time_obj.cut_start
+						if time_obj.cut_type == 'cut': startat = time_obj.get_offset()
 	
 						if pl_obj.fromindex in samplestretch:
 							startat = startat/ppq

@@ -63,8 +63,9 @@ class midifile_to_automation:
 
 class cvpj_s_automation:
 	#__slots__ = ['pl_points','pl_ticks','nopl_points','nopl_ticks','id','u_pl_points','u_pl_ticks','u_nopl_points','u_nopl_ticks','valtype','time_ppq','valtype','conv_tres','persist','defualt_val']
-	def __init__(self, time_ppq, valtype):
+	def __init__(self, time_ppq, projid, valtype):
 		self.time_ppq = time_ppq
+		self.projid = projid
 
 		self.is_seconds = False
 
@@ -88,7 +89,7 @@ class cvpj_s_automation:
 		self.simul = False
 
 	def make_base(self):
-		outv = cvpj_s_automation(self.time_ppq, self.valtype)
+		outv = cvpj_s_automation(self.time_ppq, self.projid, self.valtype)
 		return outv
 
 	def __repr__(self):
@@ -213,7 +214,8 @@ class cvpj_s_automation:
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if self.u_pl_points: self.pl_points.change_seconds(is_seconds, bpm, ppq)
-		if self.u_nopl_points: self.nopl_points.change_seconds(is_seconds, bpm, ppq)
+		if self.u_pl_ticks: self.pl_ticks.change_seconds(is_seconds, bpm, ppq)
+		if self.u_nopl_points: self.nopl_points.change_seconds_global(is_seconds, self.projid, ppq)
 		if self.u_nopl_ticks: self.nopl_ticks.change_seconds(is_seconds, bpm, ppq)
 		
 	# | Ticks       | Points      |
@@ -300,12 +302,12 @@ class cvpj_s_automation:
 					self.make_nopl_points()
 					for x in self.pl_points:
 						start, end = x.time.get_startend()
-						self.nopl_points.inject(x.data, start, end, x.time.cut_start)
+						self.nopl_points.inject(x.data, start, end, x.time.cut_start.value)
 				else:
 					self.make_nopl_points()
 					for x in self.pl_points:
 						start, end = x.time.get_startend()
-						self.nopl_points.inject(x.data, start, end, x.time.cut_start, self.defualt_val)
+						self.nopl_points.inject(x.data, start, end, x.time.cut_start.value, self.defualt_val)
 	
 			self.pl_points = None
 			self.u_pl_points = False
@@ -396,14 +398,15 @@ class cvpj_autoloc:
 		self.autoloc = listin+self.autoloc[startlen:]
 
 class cvpj_automation:
-	__slots__ = ['data','time_ppq','auto_num','movenotfound','calcnotfound','is_seconds']
-	def __init__(self, time_ppq):
+	__slots__ = ['data','time_ppq','auto_num','movenotfound','calcnotfound','is_seconds','projid']
+	def __init__(self, time_ppq, projid):
 		self.data = {}
 		self.time_ppq = time_ppq
 		self.auto_num = counter.counter(200000, 'auto_')
 		self.movenotfound = []
 		self.calcnotfound = []
 		self.is_seconds = False
+		self.projid = projid
 
 	def __setitem__(self, p, v):
 		autoloc = cvpj_autoloc(p)
@@ -478,7 +481,7 @@ class cvpj_automation:
 	def create(self, autopath, valtype, replace):
 		autopath = cvpj_autoloc(autopath)
 		if (autopath not in self.data) or (replace):
-			self.data[autopath] = cvpj_s_automation(self.time_ppq, valtype)
+			self.data[autopath] = cvpj_s_automation(self.time_ppq, self.projid, valtype)
 			self.data[autopath].is_seconds = self.is_seconds
 			self.data[autopath].id = self.auto_num.get()
 			if autopath == ['main', 'bpm']:
@@ -491,7 +494,7 @@ class cvpj_automation:
 	def get(self, autopath, valtype):
 		autopath = cvpj_autoloc(autopath)
 		if autopath in self.data: return True, self.data[autopath]
-		else: return False, cvpj_s_automation(self.time_ppq, valtype)
+		else: return False, cvpj_s_automation(self.time_ppq, self.projid, valtype)
 
 	def get_opt(self, autopath):
 		autopath = cvpj_autoloc(autopath)

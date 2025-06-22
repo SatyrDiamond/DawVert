@@ -197,12 +197,15 @@ class cvpj_project_midi:
 
 class cvpj_project:
 	def __init__(self):
+		self.id = 'global'
+
 		self.type = None
 		self.fxtype = 'none'
 		self.traits = project_traits.cvpj_project_traits()
 
 		self.time_ppq = 96
 		self.time_tempocalc = tempocalc.tempocalc_store(self)
+		tempocalc.global_stores[self.id] = self.time_tempocalc
 
 		self.track_data = {}
 		self.track_order = []
@@ -227,7 +230,7 @@ class cvpj_project:
 		self.samplerefs = {}
 		self.videorefs = {}
 		self.window_data = {}
-		self.automation = automation.cvpj_automation(self.time_ppq)
+		self.automation = automation.cvpj_automation(self.time_ppq, self.id)
 		self.groups = {}
 		self.sample_folders = []
 		self.scenes = {}
@@ -922,3 +925,13 @@ class cvpj_project:
 			if not videoref_obj.found:
 				fileref.filesearcher.scan_local_files(dirpath)
 				videoref_obj.search_local(dirpath)
+
+# --------------------------------------------------------- ITER ---------------------------------------------------------
+
+	def iter__placements_obj(self):
+		for _, track_obj in self.track_data.items():
+			yield track_obj.placements
+			for _, lane_obj in track_obj.lanes.items():
+				yield lane_obj.placements
+		for _, track_obj in self.playlist.items():
+			yield track_obj.placements

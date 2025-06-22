@@ -208,7 +208,13 @@ class input_reaper(plugins.base):
 
 		pooledenvs = dict([[x.id.get(), x] for x in rpp_project.pooledenvs])
 
-		do_auto(pooledenvs, convproj_obj, rpp_project.tempoenvex, ['main', 'bpm'], True, 'float', False)
+		tempoenvex = rpp_project.tempoenvex
+		if tempoenvex.used:
+			auto_obj = convproj_obj.automation.create(['main', 'bpm'], 'float', True)
+			for point in tempoenvex.points:
+				autopoint_obj = auto_obj.add_autopoint(point[0], point[1], 'normal' if not point[2] else 'instant')
+				if len(point)>6:
+					if point[2]: autopoint_obj.tension = -point[6]
 
 		convproj_obj.transport.is_seconds = True
 		convproj_obj.timemarkers.is_seconds = True
@@ -708,11 +714,11 @@ class input_reaper(plugins.base):
 					else: 
 						stretch_obj.timing.set__real_rate(bpm, cvpj_audio_rate)
 
-					if not cvpj_loop:
-						time_obj.set_offset(startoffset)
-					elif dur_sec:
-						maxdur = ((dur_sec*8)/cvpj_audio_rate)*tempomul if dur_sec else cvpj_duration
-						time_obj.set_loop_data(startoffset, 0, maxdur)
+					#if not cvpj_loop:
+					#	time_obj.set_offset(startoffset)
+					#elif dur_sec:
+					#	maxdur = ((dur_sec*8)/cvpj_audio_rate)*tempomul if dur_sec else cvpj_duration
+					#	time_obj.set_loop_data(startoffset, 0, maxdur)
 
 					if rpp_trackitem.lock.used: placement_obj.locked = bool(rpp_trackitem.lock.get())
 

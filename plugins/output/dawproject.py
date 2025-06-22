@@ -87,10 +87,13 @@ def make_time(clip_obj, time_obj):
 
 	clip_obj.time = round(position, 7)
 	clip_obj.duration = round(duration, 7)
-	clip_obj.playStart = round(time_obj.cut_start, 7)
+
+	cut_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
+
+	clip_obj.playStart = round(cut_start, 7)
 	if time_obj.cut_type in ['loop','loop_off','loop_adv','loop_adv_off','loop_eq']:
-		clip_obj.loopStart = round(time_obj.cut_loopstart, 7)
-		clip_obj.loopEnd = round(time_obj.cut_loopend, 7)
+		clip_obj.loopStart = round(loop_loopstart, 7)
+		clip_obj.loopEnd = round(loop_loopend, 7)
 
 def do_mpe_val(value, mpetype):
 	dppoints_obj = points.dawproject_points()

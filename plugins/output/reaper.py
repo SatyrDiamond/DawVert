@@ -63,7 +63,7 @@ def do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj):
 			sampler_params['env_sustain'] = adsr_obj.sustain
 			sampler_params['env_release'] = adsr_obj.release/2
 
-def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted,):
+def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted):
 	if_found, autodata = convproj_obj.automation.get(autopath, valtype)
 
 	if if_found:
@@ -401,7 +401,8 @@ class output_reaper(plugins.base):
 		in_dict['time_seconds'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['notes_midi'] = True
-		in_dict['auto_types'] = ['nopl_points', 'pl_points']
+		in_dict['auto_types'] = ['nopl_points']
+		#in_dict['auto_types'] = ['nopl_points', 'pl_points']
 		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['audio_filetypes'] = ['wav','flac','ogg','mp3']
 		in_dict['plugin_ext'] = ['vst2', 'vst3', 'clap']
@@ -446,6 +447,21 @@ class output_reaper(plugins.base):
 			rpp_project.notes_data.append(t)
 		if convproj_obj.metadata.show == 1:
 			rpp_project.notes_vals.read([3,3])
+
+		#tempo env
+		tempoenvex = rpp_project.tempoenvex
+
+		if_found, autodata = convproj_obj.automation.get(['main', 'bpm'], 'float')
+		if if_found:
+			if autodata.u_nopl_points:
+				tempoenvex.used = 1
+				nextinstant = True
+				for x in autodata.nopl_points:
+					tempoenvex.points.append([x.pos, x.value, int(nextinstant)])
+					nextinstant = x.instant_mode
+
+		#tempo env end
+
 
 		rpp_project.loop.set(int(convproj_obj.transport.loop_active))
 		rpp_project.selection['start'] = convproj_obj.transport.loop_start
@@ -532,12 +548,18 @@ class output_reaper(plugins.base):
 				
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 				if time_obj.cut_type == 'cut': 
-					if time_obj.cut_start_timemode == 'beats':
-						rpp_item_obj.soffs.set(time_obj.cut_start/8/tempomul)
-					if time_obj.cut_start_timemode == 'seconds':
-						rpp_item_obj.soffs.set(time_obj.cut_start)
+					if time_obj.cut_start.timemode == 'ppq':
+						rpp_item_obj.soffs.set(time_obj.cut_start.value/8/tempomul)
+					if time_obj.cut_start.timemode == 'seconds':
+						rpp_item_obj.soffs.set(time_obj.cut_start.value)
+
+				if time_obj.duration.timemode == 'ppq':
+					rpp_item_obj.length.set(time_obj.duration.value/8/tempomul)
+				if time_obj.duration.timemode == 'seconds':
+					rpp_item_obj.length.set(time_obj.duration.value)
+
 				rpp_item_obj.position.set(position)
-				rpp_item_obj.length.set(duration)
+				#rpp_item_obj.length.set(duration)
 				rpp_item_obj.mute['mute'] = int(midipl_obj.muted)
 				if midipl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(midipl_obj.visual.color))
 				if midipl_obj.visual.name: rpp_item_obj.name.set(midipl_obj.visual.name)
@@ -643,7 +665,7 @@ class output_reaper(plugins.base):
 
 				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 
-				if time_obj.cut_type == 'cut': clip_startat = (time_obj.cut_start/8)/tempomul
+				if time_obj.cut_type == 'cut': clip_startat = time_obj.get_offset_real()
 
 				if not stretch_obj.is_warped:
 					audiorate = stretch_obj.timing.get__real_rate(sampleref_obj, reaper_tempo)
@@ -657,7 +679,7 @@ class output_reaper(plugins.base):
 					rpp_item_obj.playrate['rate'] = round(audiorate, 14) 
 					rpp_item_obj.stretchmarks = []
 
-					offmod = clip_startat
+					offmod = clip_startat*audiorate
 					offmod *= warprate
 					offmod *= tempomul
 					offmod = round(offmod, 7)
@@ -671,10 +693,10 @@ class output_reaper(plugins.base):
 						rpp_item_obj.stretchmarks.append([m_beat, m_second])
 
 				if time_obj.cut_type == 'cut': 
-					if time_obj.cut_start_timemode == 'beats':
+					if time_obj.cut_start.timemode == 'ppq':
 						rpp_item_obj.soffs.set(clip_startat)
-					if time_obj.cut_start_timemode == 'seconds':
-						rpp_item_obj.soffs.set(time_obj.cut_start)
+					if time_obj.cut_start.timemode == 'seconds':
+						rpp_item_obj.soffs.set(time_obj.get_offset_real())
 
 				rpp_item_obj.playrate['preserve_pitch'] = int(stretch_obj.preserve_pitch)
 				rpp_item_obj.playrate['pitch'] = audiopl_obj.sample.pitch

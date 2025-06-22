@@ -353,7 +353,7 @@ def add_region_common(blx_region, audiopl_obj, blx_track, tempomul, ismidi, pmod
 
 	blx_region.sampleStartPosition += blx_region.startPosition
 
-	cut_start = time_obj.cut_start
+	cut_start = time_obj.get_offset()
 
 	if cut_type == 'cut':
 		blx_region.sampleOffset += ((cut_start/2)*tempomul)*pmod

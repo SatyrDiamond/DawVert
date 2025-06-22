@@ -3,6 +3,8 @@
 
 from fractions import Fraction
 import math
+from objects import tempocalc
+from functions import xtramath
 
 outletters = ['','d','t']
 
@@ -130,3 +132,104 @@ class cvpj_time:
 		denominator = max(1, 2**(oidx))
 
 		return numerator, denominator, outletters[minidx]
+
+class time_duration:
+	__slots__ = ['value','timemode']
+	def __init__(self):
+		self.value = 0
+		self.timemode = 'ppq'
+
+	def calc_add(self, timemode, val, ppq, src_tempo):
+		org_timemode = self.timemode
+		self.convert(timemode, ppq, src_tempo)
+		self.value += val
+		self.convert(org_timemode, ppq, src_tempo)
+
+	def calc_mul(self, timemode, val, ppq, src_tempo):
+		org_timemode = self.timemode
+		self.convert(timemode, ppq, src_tempo)
+		self.value *= val
+		self.convert(org_timemode, ppq, src_tempo)
+
+	def change_ppq(self, old_ppq, new_ppq):
+		if self.timemode == 'ppq':
+			self.value = xtramath.change_timing(old_ppq, new_ppq, self.value)
+
+	def get(self, timemode, ppq, src_tempo):
+		if self.timemode == 'ppq':
+			if timemode == 'beats': return self.value/ppq
+			elif timemode == 'ppq': return self.value
+			elif timemode == 'seconds': return xtramath.step2sec((self.value/ppq)*4, src_tempo)
+
+		elif self.timemode == 'beats':
+			if timemode == 'beats': return self.value
+			elif timemode == 'ppq': return self.value*ppq
+			elif timemode == 'seconds': return xtramath.step2sec(self.value*4, src_tempo)
+
+		elif self.timemode == 'seconds':
+			if timemode == 'seconds': return self.value
+			elif timemode == 'beats': return xtramath.sec2step(self.value, src_tempo)/4
+			elif timemode == 'ppq': return (xtramath.sec2step(self.value, src_tempo)/4)*ppq
+
+	def convert(self, timemode, ppq, src_tempo):
+		#print(self.timemode, self.value, end=' > ')
+		self.value = self.get(timemode, ppq, src_tempo)
+		self.timemode = timemode
+		#print(self.timemode, self.value)
+
+	def set(self, value, timemode):
+		self.value = value
+		self.timemode = timemode
+
+class time_position:
+	__slots__ = ['value','timemode','timeid']
+	def __init__(self):
+		self.value = 0
+		self.timemode = 'ppq'
+		self.timeid = 'global'
+
+	def set(self, value, timemode):
+		self.value = value
+		self.timemode = timemode
+
+	def change_ppq(self, old_ppq, new_ppq):
+		if self.timemode == 'ppq':
+			self.value = xtramath.change_timing(old_ppq, new_ppq, self.value)
+
+	def get_timed(self):
+		if self.timeid in tempocalc.global_stores:
+			return tempocalc.global_stores[self.timeid]
+		else:
+			print('id not found in tempocalc_store')
+			exit()
+
+	def convert(self, timemode, ppq):
+		self.value = self.get(timemode, ppq)
+		self.timemode = timemode
+
+	def calc_add(self, timemode, val, ppq, src_tempo):
+		org_timemode = self.timemode
+		self.convert(timemode, ppq)
+		self.value += val
+		self.convert(org_timemode, ppq)
+
+	def get_tempo(self, ppq):
+		if self.timemode == 'ppq': return self.get_timed().get_tempo(self.value/ppq, False)
+		elif self.timemode == 'beats': return self.get_timed().get_tempo(self.value, False)
+		elif self.timemode == 'seconds': return self.get_timed().get_tempo(self.value, True)
+
+	def get(self, timemode, ppq):
+		if self.timemode == 'ppq':
+			if timemode == 'beats': return self.value/ppq
+			elif timemode == 'ppq': return self.value
+			elif timemode == 'seconds': return self.get_timed().get_pos(self.value/ppq, True)
+
+		elif self.timemode == 'beats':
+			if timemode == 'beats': return self.value
+			elif timemode == 'ppq': return self.value*ppq
+			elif timemode == 'seconds': return self.get_timed().get_pos(self.value, True)
+
+		elif self.timemode == 'seconds':
+			if timemode == 'seconds': return self.value
+			elif timemode == 'beats': return self.get_timed().get_pos(self.value, False)
+			elif timemode == 'ppq': return self.get_timed().get_pos(self.value, False)*ppq

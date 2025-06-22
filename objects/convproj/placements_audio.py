@@ -56,35 +56,38 @@ class cvpj_placements_audio:
 	def remove_loops(self, out__placement_loop):
 		new_data = []
 		for audiopl_obj in self.data: 
-			if audiopl_obj.time.cut_type in ['loop', 'loop_off', 'loop_eq', 'loop_adv', 'loop_adv_off'] and audiopl_obj.time.cut_type not in out__placement_loop:
+			time_obj = audiopl_obj.time
+			if time_obj.cut_type in ['loop', 'loop_off', 'loop_eq', 'loop_adv', 'loop_adv_off'] and time_obj.cut_type not in out__placement_loop:
 
-				loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
-				if audiopl_obj.time.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
-					dur = audiopl_obj.time.duration
-					offset = audiopl_obj.time.cut_start
+				loop_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
+				if time_obj.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
+					dur = time_obj.get_dur()
+					offset = time_obj.cut_start
 	
 					cutplpl_obj = copy.deepcopy(audiopl_obj)
-					cutplpl_obj.time.duration = min(loop_loopend-offset, dur)
-					cutplpl_obj.time.set_offset(audiopl_obj.time.cut_start)
+					cutplpl_obj.time.set_dur(min(loop_loopend-offset, dur))
+					cutplpl_obj.time.set_offset(time_obj.cut_start)
 					new_data.append(cutplpl_obj)
 	
 					if dur>loop_loopend:
 						cutplpl_obj = copy.deepcopy(audiopl_obj)
-						cutplpl_obj.time.position += loop_loopend-offset
-						cutplpl_obj.time.duration = (dur-loop_loopend)+offset
+						cutplpl_obj.time.calc_pos_add(loop_loopend-offset)
+						cutplpl_obj.time.set_dur((dur-loop_loopend)+offset)
 						cutplpl_obj.time.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
 						new_data.append(cutplpl_obj)
 
 				else:
-					loop_start, loop_loopstart, loop_loopend = audiopl_obj.time.get_loop_data()
-					duration = audiopl_obj.time.duration
-					duration = duration+audiopl_obj.time.cut_start if audiopl_obj.time.cut_type == 'loop_eq' else duration
-					for cutpoint in xtramath.cutloop(audiopl_obj.time.position, duration, loop_start, loop_loopstart, loop_loopend):
+					loop_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
+					position = time_obj.get_pos()
+					duration = time_obj.get_dur()
+					cut_start = time_obj.get_offset()
+					duration = duration+cut_start if time_obj.cut_type == 'loop_eq' else duration
+					for cutpoint in xtramath.cutloop(position, duration, loop_start, loop_loopstart, loop_loopend):
 						cutplpl_obj = copy.deepcopy(audiopl_obj)
-						cutplpl_obj.time.position = cutpoint[0]
-						cutplpl_obj.time.duration = cutpoint[1]
 						cutplpl_obj.time.cut_type = 'cut'
-						cutplpl_obj.time.cut_start = cutpoint[2]
+						cutplpl_obj.time.set_pos(cutpoint[0])
+						cutplpl_obj.time.set_dur(cutpoint[1])
+						cutplpl_obj.time.set_offset(cutpoint[2])
 						new_data.append(cutplpl_obj)
 			else: new_data.append(audiopl_obj)
 
@@ -128,10 +131,10 @@ class cvpj_placements_audio:
 
 		prev = None
 		for pl in old_data_audio:
-			endpos = pl.time.duration+pl.time.position
+			endpos = pl.time.get_dur()+pl.time.position
 			if prev:
-				poevendpos = prev.time.duration+prev.time.position
-				prev.time.duration = min(prev.time.duration, pl.time.position-prev.time.position)
+				poevendpos = prev.time.get_dur()+prev.time.get_pos()
+				prev.time.set_dur( min(prev.time.get_dur(), pl.time.get_pos()-prev.time.get_pos()) )
 			prev = pl
 			new_data_audio.append(pl)
 
@@ -142,9 +145,9 @@ class cvpj_placements_audio:
 			if n.time.position < dur:
 				copy_apl_obj = copy.deepcopy(n)
 				plend = copy_apl_obj.time.get_end()
-				numval = copy_apl_obj.time.duration+min(0, dur-plend)
-				copy_apl_obj.time.position += pos
-				copy_apl_obj.time.duration = numval
+				numval = copy_apl_obj.time.get_dur()+min(0, dur-plend)
+				copy_apl_obj.time.calc_pos_add(pos)
+				copy_apl_obj.time.set_dur(numval)
 				if visualfill.name and not copy_apl_obj.visual.name:
 					copy_apl_obj.visual.name = visualfill.name
 				if visualfill.color and not copy_apl_obj.visual.color:
@@ -172,19 +175,19 @@ class cvpj_placement_audio:
 		stretch_obj = self.sample.stretch
 		pos_offset, cut_offset, finalspeed = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
 
+		ppq = self.time_ppq
+		src_tempo = self.time.realtime_tempo
+
 		if self.time.cut_type in ['cut', 'none']:
-			self.time.cut_start += cut_offset
+			self.time.calc_offset_add(cut_offset)
 			self.time.cut_type = 'cut'
 		if self.time.cut_type == 'loop':
-			self.time.cut_loopend += cut_offset
-			self.time.cut_loopstart += cut_offset
+			self.time.calc_loopstart_add(cut_offset)
+			self.time.calc_loopend_add(cut_offset)
 
-		#if not stretch_obj.is_warped and target == 'warp' and not stretch_obj.timing.tempo_based:
-		#	print('s')
-
-		self.time.cut_start += abs(min(0, pos_offset))
-		self.time.duration -= max(0, pos_offset)
-		self.time.position += max(pos_offset, 0)
+		self.time.calc_offset_add( abs(min(0, pos_offset)) )
+		self.time.calc_dur_add( -max(0, pos_offset) )
+		self.time.calc_pos_add( max(pos_offset, 0) )
 
 	def add_autopoints(self, a_type, ppq_time, ppq_float):
 		self.auto[a_type] = autopoints.cvpj_autopoints(ppq_time, ppq_float, 'float')

@@ -668,9 +668,9 @@ def do_audioclips(convproj_obj, pls_audio, track_color, als_track):
 		warp_obj = stretch_obj.warp
 
 		if time_obj.cut_type == 'cut':
-			ats.startrel = time_obj.cut_start
-			ats.loop_start = time_obj.cut_start
-			ats.loop_end = ats.duration+(time_obj.cut_start*1.5)
+			ats.startrel = time_obj.get_offset()
+			ats.loop_start = time_obj.get_offset()
+			ats.loop_end = ats.duration+(time_obj.get_offset()*1.5)
 			als_audioclip.Loop.HiddenLoopStart = 0
 			als_audioclip.Loop.HiddenLoopEnd = ats.duration+ats.loop_start
 		elif time_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
@@ -855,7 +855,7 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 
 				if time_obj.cut_type == 'cut':
 					als_midiclip.Loop.LoopOn = False
-					als_midiclip.Loop.LoopStart = time_obj.cut_start
+					als_midiclip.Loop.LoopStart = time_obj.get_offset()
 					als_midiclip.Loop.LoopEnd = als_midiclip.Loop.LoopStart+duration
 				elif time_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']:
 					als_midiclip.Loop.LoopOn = True

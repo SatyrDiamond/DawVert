@@ -354,17 +354,19 @@ class output_soundation(plugins.base):
 					soundation_region.contentPosition = 0
 					soundation_region.muted = notespl_obj.muted
 
+					cut_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
+
 					if time_obj.cut_type == 'loop':
-						soundation_region.length = time_obj.cut_loopend
-						soundation_region.loopcount = duration/time_obj.cut_loopend
+						soundation_region.length = loop_loopend
+						soundation_region.loopcount = duration/loop_loopend
 
 					if time_obj.cut_type == 'loop_eq':
-						soundation_region.contentPosition = -(time_obj.cut_start)
-						soundation_region.length = time_obj.cut_loopend-time_obj.cut_start
+						soundation_region.contentPosition = -(cut_start)
+						soundation_region.length = loop_loopend-cut_start
 						soundation_region.loopcount = duration/soundation_region.length
 
 					if time_obj.cut_type == 'cut': 
-						soundation_region.contentPosition = -(time_obj.cut_start)
+						soundation_region.contentPosition = -(cut_start)
 
 					soundation_region.type = 2
 
@@ -399,12 +401,14 @@ class output_soundation(plugins.base):
 					soundation_region.contentPosition = 0
 					soundation_region.muted = audiopl_obj.muted
 
+					cut_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
+
 					if time_obj.cut_type in ['loop', 'loop_off']:
-						soundation_region.length = time_obj.cut_loopend
-						soundation_region.loopcount = time_obj.duration/time_obj.cut_loopend
+						soundation_region.length = loop_loopend
+						soundation_region.loopcount = time_obj.duration/loop_loopend
 
 					if time_obj.cut_type == 'cut': 
-						soundation_region.contentPosition = -(time_obj.cut_start)
+						soundation_region.contentPosition = -(cut_start)
 
 					soundation_region.type = 1
 

@@ -56,7 +56,7 @@ class cvpj_placements_autoticks:
 	def remove_cut(self):
 		for x in self.data: 
 			if x.cut_type == 'cut':
-				x.data.edit_trimmove(x.time.cut_start, x.time.duration)
+				x.data.edit_trimmove(x.time.get_offset(), x.time.get_dur())
 				x.cut_start = 0
 				x.cut_type = None
 

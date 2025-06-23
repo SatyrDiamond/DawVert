@@ -225,6 +225,9 @@ class cvpj_placement_timing:
 	def get_dur(self):
 		return self.duration.get('ppq', self.time_ppq, self.realtime_tempo)
 
+	def set_dur_real(self, dur):
+		self.duration.set(dur, 'seconds')
+ 
 	def set_block_dur(self, durval, blksize):
 		dur = (durval/blksize).__ceil__()*blksize
 		self.duration.set(dur, 'ppq')

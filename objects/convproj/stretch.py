@@ -473,6 +473,73 @@ class cvpj_stretch:
 			self.warp.calcpoints__speed()
 			self.warp.post__speed()
 
+	def changestretch_warp2rate(self):
+		finalspeed = 1
+		warp_obj = self.warp
+		warplen = len(warp_obj.points)-1
+		firstwarp = warp_obj.points[0]
+		fw_p = firstwarp.beat
+		fw_s = firstwarp.second
+
+		if len(warp_obj.points)>1:
+			for wn, warpd in enumerate(warp_obj.points):
+				pos = warpd.beat
+				pos_real = warpd.second/4
+				pos -= fw_p
+				pos_real -= fw_s
+				timecalc = (pos_real*8)
+				speedchange = (pos/timecalc if timecalc else 1)
+				finalspeed = speedchange
+		else:
+			finalspeed = warp_obj.points[0].speed
+
+		if finalspeed>0:
+			self.timing.set__rate(finalspeed)
+
+		pos_offset = fw_p*4
+		cut_offset = (fw_s*8)
+
+		return pos_offset, cut_offset, finalspeed
+
+	def changestretch_rate2warp(self, sampleref_obj, tempo):
+		self.is_warped = True
+
+		warp_obj = self.warp
+		warp_obj.points = []
+
+		dur_sec = sampleref_obj.get_dur_sec()
+
+		timing_obj = self.timing
+		if timing_obj.tempo_based:
+			calc_tempo_size = timing_obj.get__speed(sampleref_obj)
+
+			pos_real = sampleref_obj.dur_sec*calc_tempo_size
+		
+			warp_point_obj = warp_obj.points__add()
+			warp_point_obj.beat = 0
+			warp_point_obj.second = 0
+			warp_point_obj.speed = 1/calc_tempo_size
+		
+			warp_point_obj = warp_obj.points__add()
+			warp_point_obj.beat = pos_real*2
+			warp_point_obj.second = sampleref_obj.dur_sec
+			warp_point_obj.speed = 1/calc_tempo_size
+		else:
+			calc_speed_size = timing_obj.get__speed(sampleref_obj)
+			calc_bpm_size = (tempo/120)
+
+			pos_real = sampleref_obj.dur_sec*calc_speed_size*calc_bpm_size
+		
+			warp_point_obj = warp_obj.points__add()
+			warp_point_obj.beat = 0
+			warp_point_obj.second = 0
+		
+			warp_point_obj = warp_obj.points__add()
+			warp_point_obj.beat = pos_real*2
+			warp_point_obj.second = sampleref_obj.dur_sec
+
+		warp_obj.calcpoints__speed()
+
 	def changestretch(self, samplereflist, sampleref, target, tempo, ppq, pitch):
 		iffound = sampleref in samplereflist
 		pos_offset = 0
@@ -487,69 +554,13 @@ class cvpj_stretch:
 
 			if not self.is_warped and target == 'warp':
 				self.is_warped = True
-				warp_obj.points = []
 
 				dur_sec = sampleref_obj.get_dur_sec()
+				if dur_sec:
+					self.changestretch_rate2warp(sampleref_obj, tempo)
 
-				timing_obj = self.timing
-
-				if timing_obj.tempo_based:
-					if dur_sec:
-						calc_tempo_size = timing_obj.get__speed(sampleref_obj)
-
-						pos_real = sampleref_obj.dur_sec*calc_tempo_size
-		
-						warp_point_obj = warp_obj.points__add()
-						warp_point_obj.beat = 0
-						warp_point_obj.second = 0
-						warp_point_obj.speed = 1/calc_tempo_size
-		
-						warp_point_obj = warp_obj.points__add()
-						warp_point_obj.beat = pos_real*2
-						warp_point_obj.second = sampleref_obj.dur_sec
-						warp_point_obj.speed = 1/calc_tempo_size
-				else:
-					if dur_sec:
-						calc_speed_size = timing_obj.get__speed(sampleref_obj)
-						calc_bpm_size = (tempo/120)
-
-						pos_real = sampleref_obj.dur_sec*calc_speed_size*calc_bpm_size
-		
-						warp_point_obj = warp_obj.points__add()
-						warp_point_obj.beat = 0
-						warp_point_obj.second = 0
-		
-						warp_point_obj = warp_obj.points__add()
-						warp_point_obj.beat = pos_real*2
-						warp_point_obj.second = sampleref_obj.dur_sec
-
-				warp_obj.calcpoints__speed()
-
-			finalspeed = 1
 			if self.is_warped and target == 'rate':
-				warp_obj = self.warp
-				warplen = len(warp_obj.points)-1
-				firstwarp = warp_obj.points[0]
-				fw_p = firstwarp.beat
-				fw_s = firstwarp.second
-
-				if len(warp_obj.points)>1:
-					for wn, warpd in enumerate(warp_obj.points):
-						pos = warpd.beat
-						pos_real = warpd.second/4
-						pos -= fw_p
-						pos_real -= fw_s
-						timecalc = (pos_real*8)
-						speedchange = (pos/timecalc if timecalc else 1)
-						finalspeed = speedchange
-				else:
-					finalspeed = warp_obj.points[0].speed
-
-				if finalspeed>0:
-					self.timing.set__rate(finalspeed)
-
-				pos_offset = fw_p*4
-				cut_offset = (fw_s*8)
+				pos_offset, cut_offset, finalspeed = self.changestretch_warp2rate()
 
 		return pos_offset, cut_offset*finalspeed, finalspeed
 

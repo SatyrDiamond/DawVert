@@ -417,7 +417,6 @@ class output_reaper(plugins.base):
 		from objects.file_proj._rpp import source as rpp_source
 
 		global reaper_tempo
-		global tempomul
 		global datadef_obj
 
 		globalstore.datadef.load('reaper', './data_main/datadef/reaper.ddef')
@@ -428,7 +427,6 @@ class output_reaper(plugins.base):
 		reaper_numerator, reaper_denominator = convproj_obj.timesig
 		reaper_tempo = convproj_obj.params.get('bpm', 120).value
 
-		tempomul = reaper_tempo/120
 		project_obj = proj_reaper.rpp_song()
 
 		rpp_project = project_obj.project
@@ -546,6 +544,8 @@ class output_reaper(plugins.base):
 
 				position, duration = time_obj.get_posdur_real()
 				
+				tempomul = (time_obj.realtime_tempo/120)
+
 				rpp_item_obj, clip_guid, clip_iguid = rpp_track_obj.add_item()
 				if time_obj.cut_type == 'cut': 
 					if time_obj.cut_start.timemode == 'ppq':
@@ -665,6 +665,8 @@ class output_reaper(plugins.base):
 
 				ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
 
+				tempomul = (time_obj.realtime_tempo/120)
+
 				if time_obj.cut_type == 'cut': clip_startat = time_obj.get_offset_real()
 
 				if not stretch_obj.is_warped:
@@ -733,6 +735,8 @@ class output_reaper(plugins.base):
 				if videopl_obj.visual.color: rpp_item_obj.color.set(cvpj_color_to_reaper_color(videopl_obj.visual.color))
 				if videopl_obj.visual.name: rpp_item_obj.name.set(videopl_obj.visual.name)
 				rpp_item_obj.volpan['vol'] = videopl_obj.vol
+
+				tempomul = (time_obj.realtime_tempo/120)
 
 				clip_startat = 0
 				if time_obj.cut_type == 'cut': clip_startat = (time_obj.cut_start/8)/tempomul

@@ -96,11 +96,13 @@ def maketrack_midi(project_obj, placements_obj, trackname, portnum, track_obj):
 		muse_part.poslen.len = int(duration)
 		muse_part.poslen.tick = int(position)
 
+		offset = time_obj.get_offset()
+		
 		notespl_obj.notelist.sort()
 		for t_pos, t_dur, t_keys, t_vol, t_inst, t_extra, t_autopack in notespl_obj.notelist.iter():
 			for t_key in t_keys:
 				muse_event = proj_muse.muse_midi_event()
-				muse_event.tick = int(t_pos+muse_part.poslen.tick)
+				muse_event.tick = int(t_pos+muse_part.poslen.tick-offset)
 				muse_event.len = int(t_dur)
 				muse_event.a = int(t_key+60)
 				muse_event.b = int(t_vol*100)
@@ -140,7 +142,7 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 		muse_part.poslen.len = (int(duration)*wavetime)*bpmcalc
 		muse_part.poslen.sample = (int(position)*wavetime)*bpmcalc
 
-		offset = time_obj.cut_start
+		offset = time_obj.get_offset()
 		frameval = int((offset*(wavetime))*(120/muse_bpm))
 
 		ref_found, sampleref_obj = convproj_obj.sampleref__get(audiopl_obj.sample.sampleref)
@@ -161,10 +163,17 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 					stretch_speed = 1
 					stretch_pitch = 1
 					muse_pitch = pow(2, sample_obj.pitch/12)
-					if sample_obj.stretch.preserve_pitch:
-						stretch_speed = sample_obj.stretch.calc_real_size*muse_pitch
+					stretch_obj = sample_obj.stretch
+
+					calc_real_size = 1/stretch_obj.timing.get__real_rate(sampleref_obj, time_obj.realtime_tempo)
+
+					event_obj.frame = int(event_obj.frame/calc_real_size)
+
+					if stretch_obj.preserve_pitch:
+						stretch_speed = calc_real_size*muse_pitch
 						stretch_pitch = muse_pitch
-					else: stretch_pitch = sample_obj.stretch.calc_real_speed
+					else: 
+						stretch_pitch = calc_real_size
 					stretchlist = [1, stretch_speed, stretch_pitch, 1, 7]
 					event_obj.stretchlist.append(stretchlist)
 

@@ -259,7 +259,7 @@ class input_acid_old(plugins.base):
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = sample_path
 					time_obj.set_startend(region.start, region.end)
-					time_obj.set_offset(offsamp*(ppq*2))
+					time_obj.set_offset_real(offsamp)
 					sampmul = pow(2, region.pitch/-12)
 					sp_obj.usemasterpitch = False
 					sp_obj.stretch.timing.set__speed(sampmul)
@@ -274,10 +274,10 @@ class input_acid_old(plugins.base):
 					sp_obj.usemasterpitch = False
 					if 2 not in track.flags:
 						sp_obj.stretch.timing.set__speed(pow(2, region.pitch/-12))
-						time_obj.set_offset(offsamp*(ppq*2))
+						time_obj.set_offset_real(offsamp)
 					else:
 						sp_obj.stretch.timing.set__speed(sample_tempo/120)
-						time_obj.set_offset(offsamp*(ppq*2)*sample_tempo/120)
+						time_obj.set_offset_real(offsamp)
 					sp_obj.stretch.preserve_pitch = True
 
 				for p in pls:

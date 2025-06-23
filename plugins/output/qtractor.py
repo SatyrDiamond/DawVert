@@ -107,12 +107,15 @@ class output_bandlab(plugins.base):
 						qt_clip.properties.fade_out = calcsec(audiopl_obj.fade_out.get_dur_seconds(bpm), ppq)
 						qt_clip.audioclip = proj_qtractor.qtractor_clip_audioclip(None)
 
+
 						sp_obj = audiopl_obj.sample
 						qt_clip.audioclip.filename = sampleref_filepath[sp_obj.sampleref]
 						qt_clip.audioclip.pitch_shift = pow(2, sp_obj.pitch/12)
-						qt_clip.audioclip.time_stretch = sp_obj.stretch.calc_real_size
 						qt_clip.properties.gain = sp_obj.vol
 						qt_clip.properties.panning = sp_obj.pan
+
+						_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+						qt_clip.audioclip.time_stretch = 1/sp_obj.stretch.timing.get__real_rate(sampleref_obj, time_obj.realtime_tempo)
 
 						name = audiopl_obj.visual.name if audiopl_obj.visual.name else ''
 						qt_clip.properties.name = name

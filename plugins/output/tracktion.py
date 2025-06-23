@@ -442,7 +442,6 @@ class output_tracktion_edit(plugins.base):
 		project_obj.projectID = tr_projectid+'/'+tr_editid
 
 		bpm = convproj_obj.params.get('bpm', 140).value
-		tempomul = 120/bpm
 
 		project_obj.temposequence.tempo[0] = [bpm, 1]
 		project_obj.temposequence.timesig[0] = convproj_obj.timesig
@@ -509,23 +508,22 @@ class output_tracktion_edit(plugins.base):
 				wf_midiclip = proj_tracktion_edit.tracktion_midiclip()
 				wf_midiclip.id_num = counter_id.get()
 
-				offset, loopstart, loopend = time_obj.get_loop_data()
-
 				wf_midiclip.start, wf_midiclip.length = time_obj.get_posdur_real()
 
-				boffset = (offset/8)*tempomul
-				toffset = (offset/4)*tempomul
+				tempomul = (120/time_obj.realtime_tempo)
 
 				if time_obj.cut_type == 'cut':
-					wf_midiclip.offset = boffset
+					wf_midiclip.offset = time_obj.get_offset_real()
 				elif time_obj.cut_type == 'loop_eq':
+					offset, loopstart, loopend = time_obj.get_loop_data()
+					toffset = (offset/4)*tempomul
 					wf_midiclip.offset = 0
 					wf_midiclip.loopStartBeats = toffset
-					wf_midiclip.loopLengthBeats = (loopend/4)-toffset
+					wf_midiclip.loopLengthBeats = (time_obj.get_loopend()/4)-toffset
 				elif time_obj.cut_type in ['loop', 'loop_off']:
-					wf_midiclip.offset = boffset
-					wf_midiclip.loopStartBeats = (loopstart/4)
-					wf_midiclip.loopLengthBeats = (loopend/4)
+					wf_midiclip.offset = time_obj.get_offset_real()
+					wf_midiclip.loopStartBeats = (time_obj.get_loopstart()/4)
+					wf_midiclip.loopLengthBeats = (time_obj.get_loopend()/4)
 
 				if notespl_obj.visual.name: wf_midiclip.name = notespl_obj.visual.name
 				if notespl_obj.visual.color: wf_midiclip.colour = 'ff'+notespl_obj.visual.color.get_hex()
@@ -634,21 +632,20 @@ class output_tracktion_edit(plugins.base):
 								speed = timing_obj.get__speed_real(sampleref_obj, bpm)
 								wf_audioclip.loopinfo.numBeats = dur_sec*speed
 
-				offset, loopstart, loopend = time_obj.get_loop_data()
-
-				boffset = (offset/8)*tempomul
-				toffset = (offset/4)*tempomul
-
+				tempomul = (120/time_obj.realtime_tempo)
+				
 				if time_obj.cut_type == 'cut':
-					wf_audioclip.offset = boffset
+					wf_audioclip.offset = time_obj.get_offset_real()
 				elif time_obj.cut_type == 'loop_eq':
+					offset, loopstart, loopend = time_obj.get_loop_data()
+					toffset = (offset/4)*tempomul
 					wf_audioclip.offset = 0
 					wf_audioclip.loopStartBeats = toffset
-					wf_audioclip.loopLengthBeats = (loopend/4)-toffset
+					wf_audioclip.loopLengthBeats = (time_obj.get_loopend()/4)-toffset
 				elif time_obj.cut_type in ['loop', 'loop_off']:
-					wf_audioclip.offset = boffset
-					wf_audioclip.loopStartBeats = (loopstart/4)
-					wf_audioclip.loopLengthBeats = (loopend/4)
+					wf_audioclip.offset = time_obj.get_offset_real()
+					wf_audioclip.loopStartBeats = (time_obj.get_loopstart()/4)
+					wf_audioclip.loopLengthBeats = (time_obj.get_loopend()/4)
 
 				wf_audioclip.gain = xtramath.to_db(sp_obj.vol)
 				wf_audioclip.pan = sp_obj.pan

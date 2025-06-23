@@ -129,17 +129,18 @@ def add_audio_regions(
 			pls.append(placement_obj)
 
 	if stretch_type == 1:
-		calc_offset = region.offset/5000000
-		calc_offset = calc_offset*ppq
+		real_offset = region.offset/10000000
+		real_size = region.size/10000000
 
 		placement_obj = placements_obj.add_audio()
-		ssize = (int(region.size)/5000000)*ppq
+		ssize = (real_size)*ppq
 		time_obj = placement_obj.time
-		time_obj.set_posdur(region.pos, ssize)
+		time_obj.set_pos(region.pos)
+		time_obj.set_dur_real(real_size)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
 		sampmul = pow(2, (region.pitch+pitch)/-12)
-		time_obj.set_offset(calc_offset*sampmul)
+		time_obj.set_offset_real(real_offset)
 		sp_obj.stretch.timing.set__speed(sampmul)
 		if 1 in region.flags: placement_obj.muted = True
 		if 3 in region.flags: placement_obj.locked = True

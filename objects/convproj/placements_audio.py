@@ -131,7 +131,7 @@ class cvpj_placements_audio:
 
 		prev = None
 		for pl in old_data_audio:
-			endpos = pl.time.get_dur()+pl.time.position
+			#endpos = pl.time.get_end()
 			if prev:
 				poevendpos = prev.time.get_dur()+prev.time.get_pos()
 				prev.time.set_dur( min(prev.time.get_dur(), pl.time.get_pos()-prev.time.get_pos()) )
@@ -173,10 +173,16 @@ class cvpj_placement_audio:
 
 	def changestretch(self, convproj_obj, target, tempo):
 		stretch_obj = self.sample.stretch
+
+		muloffset = 1
+		if stretch_obj.timing.time_type == 'speed':
+			src_tempo = self.time.realtime_tempo
+			muloffset
+			print(120/src_tempo)
+
 		pos_offset, cut_offset, finalspeed = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
 
-		ppq = self.time_ppq
-		src_tempo = self.time.realtime_tempo
+		#ppq = self.time_ppq
 
 		if self.time.cut_type in ['cut', 'none']:
 			self.time.calc_offset_add(cut_offset)

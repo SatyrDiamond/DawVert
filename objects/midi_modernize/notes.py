@@ -9,7 +9,7 @@ import objects.midi_modernize.gfunc as gfunc
 midinote_premake = dynbytearr.dynbytearr_premake([
 	('complete', np.uint8),
 	('track', np.uint64),
-	('chanport', np.int32),
+	('chanport', np.uint32),
 	('start', np.uint64),
 	('end', np.uint64),
 	('key', np.uint8),

@@ -333,7 +333,7 @@ class midi_modernize:
 					for plnum, pl_midi in enumerate(track_obj.placements.pl_midi):
 						pl_notes = track_obj.placements.pl_notes.make_base_from_midi(pl_midi)
 						pl_tracknotes = self.notes_data.filter_track_section(n, plnum+1)
-						self.midinotes_to_cvpjnotes(pl_tracknotes, pl_notes.notelist, pl_notes.time.position)
+						self.midinotes_to_cvpjnotes(pl_tracknotes, pl_notes.notelist, pl_notes.time.get_pos())
 						
 					tracknotes = self.notes_data.filter_track_section(n, 0)
 	

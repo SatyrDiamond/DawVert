@@ -28,6 +28,8 @@ def convert(convproj_obj):
 
 		if track_obj.type == 'midi':
 			logger_project.debug('cm2rm: Track '+trackid)
+			modernize_obj.init_patchchan(track_obj.midi)
+
 			midievents_obj = track_obj.placements.midievents
 			midievents_obj.add_note_durs()
 	
@@ -36,14 +38,13 @@ def convert(convproj_obj):
 			portnum = midievents_obj.port
 			usedchans = list(midievents_obj.get_channums())
 
-			modernize_obj.init_patchchan(track_obj.midi)
-
 			for pn, pl_midi in enumerate(track_obj.placements.pl_midi):
 				for x in pl_midi.midievents.get_channums():
 					if x not in usedchans: usedchans.append(x)
-				startpos = pl_midi.time.position
-				durpos = pl_midi.time.duration
-				offset = pl_midi.time.cut_start
+				startpos = pl_midi.time.get_pos()
+				durpos = pl_midi.time.get_dur()
+				offset = pl_midi.time.get_offset()
+
 				modernize_obj.do_notes(convproj_obj, pl_midi.midievents, startpos, durpos, offset, pn+1, portnum, n)
 
 			modernize_obj.visual_chan(n, portnum, usedchans)

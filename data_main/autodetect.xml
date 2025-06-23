@@ -279,6 +279,10 @@
 		<file fileext=".wrk"/>
 	</plugin>
 
+	<plugin pluginset="midi" name="evolution_midi">
+		<bytes_header data="736E673201"/>
+	</plugin>
+
 	<plugin pluginset="exper" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

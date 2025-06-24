@@ -110,7 +110,7 @@ class output_bandlab(plugins.base):
 
 						sp_obj = audiopl_obj.sample
 						qt_clip.audioclip.filename = sampleref_filepath[sp_obj.sampleref]
-						qt_clip.audioclip.pitch_shift = pow(2, sp_obj.pitch/12)
+						qt_clip.audioclip.pitch_shift = xtramath.pitch_to_speed(sp_obj.pitch)
 						qt_clip.properties.gain = sp_obj.vol
 						qt_clip.properties.panning = sp_obj.pan
 

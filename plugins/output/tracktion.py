@@ -633,7 +633,7 @@ class output_tracktion_edit(plugins.base):
 								wf_audioclip.loopinfo.numBeats = dur_sec*speed
 
 				tempomul = (120/time_obj.realtime_tempo)
-				
+
 				if time_obj.cut_type == 'cut':
 					wf_audioclip.offset = time_obj.get_offset_real()
 				elif time_obj.cut_type == 'loop_eq':

@@ -47,6 +47,8 @@ def from_db(value): return pow(10, value / 20)
 
 def to_db(value): return 20 * math.log10(value)
 
+def pitch_to_speed(value): return pow(2, value/12)
+
 def do_math(inputv, mathtype, val1, val2, val3, val4):
 	if mathtype == 'add': return inputv+val1
 	elif mathtype == 'sub': return inputv-val1

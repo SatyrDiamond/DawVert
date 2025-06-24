@@ -160,7 +160,7 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 			if t_stretchingmode == 0:
 				modpitch -= t_stretchingpitch
 			stretch_obj.timing.set__speed(pow(2, modpitch/12))
-			
+
 	stretch_obj.preserve_pitch = t_stretchingmode != 0
 	
 	stretch_algo = stretch_obj.algorithm

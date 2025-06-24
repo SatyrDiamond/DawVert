@@ -139,7 +139,7 @@ def add_audio_regions(
 		time_obj.set_dur_real(real_size)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
-		sampmul = pow(2, (region.pitch+pitch)/-12)
+		sampmul = xtramath.pitch_to_speed(-(region.pitch+pitch))
 		time_obj.set_offset_real(real_offset)
 		sp_obj.stretch.timing.set__speed(sampmul)
 		if 1 in region.flags: placement_obj.muted = True

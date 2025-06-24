@@ -54,49 +54,50 @@ class cvpj_placements_audio:
 			for _, a in pl.auto.items(): a.change_seconds(is_seconds, bpm, ppq)
 
 	def remove_loops(self, out__placement_loop):
-		new_data = []
-		for audiopl_obj in self.data: 
-			time_obj = audiopl_obj.time
-			if time_obj.cut_type in ['loop', 'loop_off', 'loop_eq', 'loop_adv', 'loop_adv_off'] and time_obj.cut_type not in out__placement_loop:
-
-				loop_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
-				if time_obj.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
-					dur = time_obj.get_dur()
-					offset = time_obj.cut_start
-	
-					cutplpl_obj = copy.deepcopy(audiopl_obj)
-					cutplpl_obj.time.set_dur(min(loop_loopend-offset, dur))
-					cutplpl_obj.time.set_offset(time_obj.cut_start)
-					new_data.append(cutplpl_obj)
-	
-					if dur>loop_loopend:
-						cutplpl_obj = copy.deepcopy(audiopl_obj)
-						cutplpl_obj.time.calc_pos_add(loop_loopend-offset)
-						cutplpl_obj.time.set_dur((dur-loop_loopend)+offset)
-						cutplpl_obj.time.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
-						new_data.append(cutplpl_obj)
-
-				else:
-					loop_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
-					position = time_obj.get_pos()
-					duration = time_obj.get_dur()
-					cut_start = time_obj.get_offset()
-					duration = duration+cut_start if time_obj.cut_type == 'loop_eq' else duration
-					for cutpoint in xtramath.cutloop(position, duration, loop_start, loop_loopstart, loop_loopend):
-						cutplpl_obj = copy.deepcopy(audiopl_obj)
-						cutplpl_obj.time.cut_type = 'cut'
-						cutplpl_obj.time.set_pos(cutpoint[0])
-						cutplpl_obj.time.set_dur(cutpoint[1])
-						cutplpl_obj.time.set_offset(cutpoint[2])
-						new_data.append(cutplpl_obj)
-			else: new_data.append(audiopl_obj)
-
-			for n, x in enumerate(new_data):
-				#print(len(new_data)-1, n, x)
-				if not n==len(new_data)-1: x.fade_out.clear()
-				if not n==0: x.fade_in.clear()
-
-		self.data = new_data
+		self.data = placements.internal_removeloops(self.data, out__placement_loop)
+		#new_data = []
+		#for audiopl_obj in self.data: 
+		#	time_obj = audiopl_obj.time
+		#	if time_obj.cut_type in ['loop', 'loop_off', 'loop_eq', 'loop_adv', 'loop_adv_off'] and time_obj.cut_type not in out__placement_loop:
+#
+		#		loop_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
+		#		if time_obj.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
+		#			dur = time_obj.get_dur()
+		#			offset = time_obj.cut_start
+	#
+		#			cutplpl_obj = copy.deepcopy(audiopl_obj)
+		#			cutplpl_obj.time.set_dur(min(loop_loopend-offset, dur))
+		#			cutplpl_obj.time.set_offset(time_obj.cut_start)
+		#			new_data.append(cutplpl_obj)
+	#
+		#			if dur>loop_loopend:
+		#				cutplpl_obj = copy.deepcopy(audiopl_obj)
+		#				cutplpl_obj.time.calc_pos_add(loop_loopend-offset)
+		#				cutplpl_obj.time.set_dur((dur-loop_loopend)+offset)
+		#				cutplpl_obj.time.set_loop_data(loop_loopstart, loop_loopstart, loop_loopend)
+		#				new_data.append(cutplpl_obj)
+#
+		#		else:
+		#			loop_start, loop_loopstart, loop_loopend = time_obj.get_loop_data()
+		#			position = time_obj.get_pos()
+		#			duration = time_obj.get_dur()
+		#			cut_start = time_obj.get_offset()
+		#			duration = duration+cut_start if time_obj.cut_type == 'loop_eq' else duration
+		#			for cutpoint in xtramath.cutloop(position, duration, loop_start, loop_loopstart, loop_loopend):
+		#				cutplpl_obj = copy.deepcopy(audiopl_obj)
+		#				cutplpl_obj.time.cut_type = 'cut'
+		#				cutplpl_obj.time.set_pos(cutpoint[0])
+		#				cutplpl_obj.time.set_dur(cutpoint[1])
+		#				cutplpl_obj.time.set_offset(cutpoint[2])
+		#				new_data.append(cutplpl_obj)
+		#	else: new_data.append(audiopl_obj)
+#
+		#	for n, x in enumerate(new_data):
+		#		#print(len(new_data)-1, n, x)
+		#		if not n==len(new_data)-1: x.fade_out.clear()
+		#		if not n==0: x.fade_in.clear()
+#
+		#self.data = new_data
 
 	def eq_content(self, pl, prev):
 		if prev:
@@ -177,8 +178,8 @@ class cvpj_placement_audio:
 		muloffset = 1
 		if stretch_obj.timing.time_type == 'speed':
 			src_tempo = self.time.realtime_tempo
-			muloffset
-			print(120/src_tempo)
+			#muloffset
+			#print(120/src_tempo)
 
 		pos_offset, cut_offset, finalspeed = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
 

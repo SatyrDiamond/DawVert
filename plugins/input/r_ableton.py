@@ -637,16 +637,23 @@ class input_ableton(plugins.base):
 						else:
 							pitchcalc = 2**(placement_obj.sample.pitch/12)
 							stretch_obj.is_warped = False
-							stretch_obj.timing.set__speed(pitchcalc)
+							stretch_obj.timing.set__speed(1/pitchcalc)
 							
 						if not clipobj.IsWarped:
 							if clipobj.Loop.LoopOn == 0:
 								time_obj.cut_type = 'cut'
 								pitchcalc = 2**(placement_obj.sample.pitch/12)
-								time_obj.cut_start = (clipobj.Loop.LoopStart*8/pitchcalc)*tempomul
-								time_obj.duration *= pitchcalc
-								time_obj.duration /= tempomul
-								time_obj.duration /= stretch_obj.calc_tempo_speed
+								time_obj.set_offset_real(clipobj.Loop.LoopStart)
+
+								calc_tempo_speed = 1/stretch_obj.timing.get__real_rate(sampleref_obj, time_obj.realtime_tempo)
+
+								#print(calc_tempo_speed)
+#
+								#duration = time_obj.get_dur()
+								#duration *= pitchcalc
+								#duration /= tempomul
+								#duration /= calc_tempo_speed
+								#time_obj.set_dur(duration)
 						else:
 							if clipobj.Loop.LoopOn == 0:
 								time_obj.set_offset(clipobj.Loop.LoopStart*4)

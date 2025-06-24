@@ -5,6 +5,7 @@ import plugins
 import os.path
 import bisect
 from objects import globalstore
+from functions import xtramath
 
 class rootnote_stor():
 	def __init__(self):
@@ -175,7 +176,7 @@ class input_acid_old(plugins.base):
 				sampleref_obj = convproj_obj.sampleref__add(sample_path, sample_path, 'win')
 				sampleref_obj.search_local(dawvert_intent.input_folder)
 
-			sampleref_obj.set_dur_samples(track.num_samples)
+			#sampleref_obj.set_dur_samples(track.num_samples)
 			
 			trackpitch = track.pitch
 			track_root_note = track.root_note
@@ -260,7 +261,7 @@ class input_acid_old(plugins.base):
 					sp_obj.sampleref = sample_path
 					time_obj.set_startend(region.start, region.end)
 					time_obj.set_offset_real(offsamp)
-					sampmul = pow(2, region.pitch/-12)
+					sampmul = xtramath.pitch_to_speed(region.pitch)
 					sp_obj.usemasterpitch = False
 					sp_obj.stretch.timing.set__speed(sampmul)
 					pls.append(placement_obj)
@@ -273,11 +274,11 @@ class input_acid_old(plugins.base):
 					time_obj.set_startend(region.start, region.end)
 					sp_obj.usemasterpitch = False
 					if 2 not in track.flags:
-						sp_obj.stretch.timing.set__speed(pow(2, region.pitch/-12))
+						sp_obj.stretch.timing.set__speed(xtramath.pitch_to_speed(-region.pitch))
 						time_obj.set_offset_real(offsamp)
 					else:
-						sp_obj.stretch.timing.set__speed(sample_tempo/120)
-						time_obj.set_offset_real(offsamp)
+						sp_obj.stretch.timing.set__orgtempo(sample_tempo)
+						time_obj.set_offset_real(offsamp/2)
 					sp_obj.stretch.preserve_pitch = True
 
 				for p in pls:

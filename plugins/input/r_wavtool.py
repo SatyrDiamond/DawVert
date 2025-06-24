@@ -9,6 +9,7 @@ import zipfile
 import base64
 import logging
 import numpy as np
+from functions import xtramath
 
 logger_input = logging.getLogger('input')
 
@@ -518,7 +519,7 @@ class input_wavtool(plugins.base):
 								warp_obj.calcpoints__speed()
 
 					else: 
-						stretch_obj.timing.set__speed(pow(2, wavtool_clip.transpose/12))
+						stretch_obj.timing.set__speed(xtramath.pitch_to_speed(wavtool_clip.transpose))
 						stretch_obj.preserve_pitch = False
 
 					sp_obj.vol = wavtool_clip.gain

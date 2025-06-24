@@ -8,6 +8,7 @@ import mido
 import zlib
 import base64
 import math
+from functions import xtramath
 
 import logging
 logger_output = logging.getLogger('output')
@@ -162,7 +163,7 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 				if not sample_obj.stretch.is_warped:
 					stretch_speed = 1
 					stretch_pitch = 1
-					muse_pitch = pow(2, sample_obj.pitch/12)
+					muse_pitch = xtramath.pitch_to_speed(sample_obj.pitch)
 					stretch_obj = sample_obj.stretch
 
 					calc_real_size = 1/stretch_obj.timing.get__real_rate(sampleref_obj, time_obj.realtime_tempo)

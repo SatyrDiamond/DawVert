@@ -50,8 +50,15 @@ def internal_removeloops(pldata, out__placement_loop):
 
 	for oldpl_obj in pldata: 
 		oldtime_obj = oldpl_obj.time
+
+		##print(oldtime_obj.cut_type, cut_start, loop_loopstart, loop_loopend)
+
 		if oldtime_obj.cut_type in ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off'] and oldtime_obj.cut_type not in out__placement_loop:
-			loop_start, loop_loopstart, loop_loopend = oldtime_obj.get_loop_data()
+
+			cut_start, loop_loopstart, loop_loopend = oldtime_obj.get_loop_data()
+
+			#print(oldtime_obj.cut_type, cut_start, loop_loopstart, loop_loopend)
+
 			if oldtime_obj.cut_type in ['loop_adv', 'loop_adv_off'] and 'loop_eq' in out__placement_loop:
 				dur = oldtime_obj.get_dur()
 				offset = oldtime_obj.get_offset()
@@ -72,7 +79,6 @@ def internal_removeloops(pldata, out__placement_loop):
 			else:
 				position = oldtime_obj.get_pos()
 				outeq = oldtime_obj.get_dur()
-				cut_start = oldtime_obj.get_offset()
 
 				if oldtime_obj.cut_type == 'loop_eq': 
 					dur = outeq+cut_start
@@ -82,15 +88,19 @@ def internal_removeloops(pldata, out__placement_loop):
 				else: 
 					dur = outeq
 
-				for cutpoint in xtramath.cutloop(oldtime_obj.get_pos(), dur, loop_start, loop_loopstart, loop_loopend):
+				for cutpoint in xtramath.cutloop(oldtime_obj.get_pos(), dur, cut_start, loop_loopstart, loop_loopend):
 					cutplpl_obj = copy.deepcopy(oldpl_obj)
+
 					cpl_time_obj = cutplpl_obj.time
 					cpl_time_obj.cut_type = 'cut'
 					cpl_time_obj.set_pos(cutpoint[0])
 					cpl_time_obj.set_dur(cutpoint[1])
-					cpl_time_obj.set_offset(cutpoint[2])
+					cpl_time_obj.set_m_offset(cutpoint[2])
+
 					new_data.append(cutplpl_obj)
 		else: new_data.append(oldpl_obj)
+
+		#print('tttttttttttt',   [x.time.get_offset() for x in new_data ]  )
 	return new_data
 
 def internal_sort(pldata):
@@ -246,6 +256,12 @@ class cvpj_placement_timing:
 		if offset:
 			self.cut_type = 'cut'
 			self.cut_start.set(offset, 'seconds')
+
+	def set_m_offset(self, offset):
+		self.cut_start.set(offset, 'ppq')
+
+	def set_m_offset_real(self, offset):
+		self.cut_start.set(offset, 'seconds')
 
 	def get_offset(self):
 		return self.cut_start.get('ppq', self.time_ppq, self.realtime_tempo)

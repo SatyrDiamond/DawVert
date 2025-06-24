@@ -101,7 +101,7 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 				fl_channel_obj.params.stretchingtime = int((num_beats/2)*384)
 				if fl_channel_obj.params.stretchingtime < 0: fl_channel_obj.params.stretchingtime = 384
 
-	return out_rate
+	return out_rate, stretch_obj.timing.time_type=='speed', sre_obj.pitch
 
 DEBUG_IGNORE_PLACEMENTS = False
 DEBUG_IGNORE_PATTERNS = False
@@ -417,16 +417,32 @@ class output_cvpjs(plugins.base):
 						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
 						if pl_obj.muted == True: fl_clip_obj.flags = 12352
 	
+						samplepart_obj = g_inst_id[pl_obj.fromindex]
+
 						startat = 0
-						if time_obj.cut_type == 'cut': startat = time_obj.get_offset()
 	
 						if pl_obj.fromindex in samplestretch:
-							startat = startat/ppq
-							endat = startat+(duration/ppq)
+							stretchrate, isspeed, pitch = samplestretch[pl_obj.fromindex]
+
+							if isspeed:
+								if time_obj.cut_type == 'cut': startat = time_obj.get_offset()
+								pitchmod = xtramath.pitch_to_speed(-pitch)
+
+								startat = (startat/ppq)*pitchmod
+								endat = startat+(duration/ppq)
 	
-							stretchrate = samplestretch[pl_obj.fromindex]
-							fl_clip_obj.startoffset = (startat*stretchrate)*4
-							fl_clip_obj.endoffset = (endat*stretchrate)*4
+								fl_clip_obj.startoffset = (startat*stretchrate)*4
+								fl_clip_obj.endoffset = (endat*stretchrate)*4
+							else:
+								if time_obj.cut_type == 'cut': startat = time_obj.get_offset()
+
+								startat = startat/ppq
+								endat = startat+(duration/ppq)
+	
+								fl_clip_obj.startoffset = (startat*stretchrate)*4
+								fl_clip_obj.endoffset = (endat*stretchrate)*4
+
+
 							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0
 	
 						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []

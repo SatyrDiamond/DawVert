@@ -177,7 +177,7 @@ class output_bandlab(plugins.base):
 
 						pmod = 1
 						if not sp_obj.stretch.uses_tempo:
-							pmod = pow(2, (-sp_obj.pitch)/12)
+							pmod = xtramath.pitch_to_speed(-sp_obj.pitch)
 
 						add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False, pmod)
 

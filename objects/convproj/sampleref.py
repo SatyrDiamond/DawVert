@@ -42,6 +42,14 @@ class cvpj_sampleref:
 
 
 
+	def to_dict(self):
+		out = {}
+		if 'dur_samples' in self.defined_meta: out['dur_samples'] = self.dur_samples
+		if 'dur_sec' in self.defined_meta: out['dur_sec'] = self.dur_sec
+		if 'channels' in self.defined_meta: out['channels'] = self.channels
+		if 'fileformat' in self.defined_meta: out['fileformat'] = self.fileformat
+		if 'hz' in self.defined_meta: out['hz'] = self.hz
+		return out
 
 	def set_hz(self, val):
 		if 'hz' not in self.defined_meta:

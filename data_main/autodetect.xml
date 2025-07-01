@@ -222,7 +222,7 @@
 		<bytes_header data="534e32"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="color_art">
+	<plugin pluginset="extlib" name="color_art">
 		<file fileext=".png"/>
 	</plugin>
 
@@ -283,155 +283,155 @@
 		<bytes_header data="736E673201"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".amf"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".ams"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".c67"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".dbm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".digi"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".dmf"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".dsm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".dtm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".far"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".imf"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".ice"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".j2b"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".m15"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".mdl"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".med"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".mms"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".mt2"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".mtm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".nst"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".okt"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".plm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".psm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".pt36"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".ptm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".sfx"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".sfx2"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".st26"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".stk"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".stm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".stp"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".ult"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".wow"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".gdm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".mo3"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".xpk"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".ppm"/>
 	</plugin>
 
-	<plugin pluginset="exper" name="libopenmpt">
+	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".mmcmp"/>
 	</plugin>
 

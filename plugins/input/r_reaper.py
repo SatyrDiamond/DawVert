@@ -76,7 +76,7 @@ def do_auto(pooledenvs, convproj_obj, rpp_autodata, autoloc, instant, paramtype,
 			if isbool: val = bool(val)
 			autopoint_obj = auto_obj.add_autopoint(point[0], val, 'normal' if not instant else 'instant')
 			if len(point)>6:
-				if point[2]: autopoint_obj.tension = -point[6]
+				if point[2]: autopoint_obj['tension'] = -point[6]
 
 def do_samplepart_loop(samplerj, sp_obj, sampleref_obj):
 	dur = sampleref_obj.get_dur_samples()
@@ -212,9 +212,10 @@ class input_reaper(plugins.base):
 		if tempoenvex.used:
 			auto_obj = convproj_obj.automation.create(['main', 'bpm'], 'float', True)
 			for point in tempoenvex.points:
-				autopoint_obj = auto_obj.add_autopoint(point[0], point[1], 'normal' if not point[2] else 'instant')
+				print(point)
+				autopoint_obj = auto_obj.add_autopoint(point[0], point[1], 'instant')
 				if len(point)>6:
-					if point[2]: autopoint_obj.tension = -point[6]
+					if point[2]: autopoint_obj['tension'] = -point[6]
 
 		convproj_obj.transport.is_seconds = True
 		convproj_obj.timemarkers.is_seconds = True
@@ -692,27 +693,22 @@ class input_reaper(plugins.base):
 
 					dur_sec = sampleref_obj.get_dur_sec()
 
+					s_timing_obj = stretch_obj.timing
 					if rpp_trackitem.stretchmarks:
-						#print('I', cvpj_audio_rate)
 						rate = cvpj_audio_rate/tempomul
-						stretch_obj.is_warped = True
 
-						warp_obj = stretch_obj.warp
-
-						if dur_sec: warp_obj.seconds = dur_sec
-
-						for data in rpp_trackitem.stretchmarks:
-							#for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
-							warp_point_obj = warp_obj.points__add()
-							warp_point_obj.beat = (data[0]*2)
-							warp_point_obj.beat += (startoffset*rate)/4
-							warp_point_obj.second = data[1]
-						#	print('|', end='')
-						#print()
-						warp_obj.calcpoints__speed()
-						warp_obj.manp__speed_mul(1/rate)
+						with s_timing_obj.setup_warp(True) as warp_obj:
+							dur_sec = sampleref_obj.get_dur_sec()
+							if dur_sec: warp_obj.seconds = dur_sec
+							for data in rpp_trackitem.stretchmarks:
+								#for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
+								warp_point_obj = warp_obj.points__add()
+								warp_point_obj.beat = (data[0]*2)
+								warp_point_obj.beat += (startoffset*rate)/4
+								warp_point_obj.second = data[1]
+						s_timing_obj.warp.manp__speed_mul(1/rate)
 					else: 
-						stretch_obj.timing.set__real_rate(bpm, cvpj_audio_rate)
+						s_timing_obj.set__real_rate(bpm, cvpj_audio_rate)
 
 					#if not cvpj_loop:
 					#	time_obj.set_offset(startoffset)

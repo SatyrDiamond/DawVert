@@ -96,6 +96,7 @@ class input_cvpj_f(plugins.base):
 			for num in range(numtracks):
 				c_track = (numtracks-1)-num
 				s_data = pat_data[[c_track]][0]
+
 				vol_where = np.where(s_data[:, 0]!=0)[0]
 
 				track_data = np.zeros((len(vol_where), 6), dtype=np.uint8)

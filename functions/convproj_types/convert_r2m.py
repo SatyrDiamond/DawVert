@@ -27,6 +27,7 @@ def convert(convproj_obj):
 			playlist_obj.visual_ui = copy.deepcopy(track_obj.visual_ui)
 			playlist_obj.placements = copy.deepcopy(track_obj.placements)
 			playlist_obj.placements.add_inst_to_notes(trackid)
+
 		else:
 			logger_project.info('r2m: laned: '+trackid)
 			for lane_id, lane_obj in track_obj.lanes.items():

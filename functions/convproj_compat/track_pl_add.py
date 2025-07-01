@@ -18,6 +18,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_int
 				for cvpj_trackid, track_obj in convproj_obj.track__iter():
 					npsplit.add_plnl(track_obj.placements)
 				npsplit.process()
+				convproj_obj.calc_pl_tempo()
 				return True
 			else:
 				for cvpj_trackid, track_obj in convproj_obj.track__iter(): 
@@ -26,6 +27,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_int
 						placement_obj.notelist = track_obj.placements.notelist.__copy__()
 						placement_obj.time.set_dur(track_obj.placements.notelist.get_dur())
 						track_obj.placements.notelist.clear()
+				convproj_obj.calc_pl_tempo()
 				return True
 		else: 
 			return False

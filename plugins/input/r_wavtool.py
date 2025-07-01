@@ -500,26 +500,25 @@ class input_wavtool(plugins.base):
 					sourcebpmmod = wt_warp_sourceBPM/120
 
 					stretch_obj = sp_obj.stretch
+					s_timing_obj = stretch_obj.timing
 
 					if wt_warp_enabled:
 						stretch_obj.preserve_pitch = True
 						sp_obj.pitch = wt_clip_transpose
 						if wt_warp_numanchors<2: 
-							stretch_obj.timing.set__orgtempo(wt_warp_sourceBPM)
+							s_timing_obj.set__orgtempo(wt_warp_sourceBPM)
 						else:
 							dur_sec = sampleref_obj.get_dur_sec()
 							if dur_sec is not None:
-								stretch_obj.is_warped = True
-								warp_obj = stretch_obj.warp
-								warp_obj.seconds = dur_sec
-								for anchor in wt_warp_anchors: 
-									warp_point_obj = warp_obj.points__add()
-									warp_point_obj.beat = (float(anchor))
-									warp_point_obj.second = (wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
-								warp_obj.calcpoints__speed()
+								with s_timing_obj.setup_warp(True) as warp_obj:
+									warp_obj.seconds = dur_sec
+									for anchor in wt_warp_anchors: 
+										warp_point_obj = warp_obj.points__add()
+										warp_point_obj.beat = (float(anchor))
+										warp_point_obj.second = (wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
 
 					else: 
-						stretch_obj.timing.set__speed(xtramath.pitch_to_speed(wavtool_clip.transpose))
+						s_timing_obj.set__speed(xtramath.pitch_to_speed(wavtool_clip.transpose))
 						stretch_obj.preserve_pitch = False
 
 					sp_obj.vol = wavtool_clip.gain

@@ -143,7 +143,7 @@ class cvpj_placements_audio:
 
 	def merge_crop(self, apl_obj, pos, dur, visualfill, groupid):
 		for n in apl_obj.data:
-			if n.time.position < dur:
+			if n.time.get_pos() < dur:
 				copy_apl_obj = copy.deepcopy(n)
 				plend = copy_apl_obj.time.get_end()
 				numval = copy_apl_obj.time.get_dur()+min(0, dur-plend)
@@ -172,29 +172,33 @@ class cvpj_placement_audio:
 		self.group = None
 		self.locked = False
 
+	def debugtxt(self):
+		stretch_obj = self.sample.stretch
+		timing_obj = stretch_obj.timing
+
+		ttype = 0
+		ttype = timing_obj.original_bpm if timing_obj.tempo_based else timing_obj.speed__rate
+
+		print(timing_obj.time_type.ljust(14) , end='| ')
+		print(str(round(ttype, 5)).rjust(8), end=' | ')
+		self.time.debugtxt()
+
 	def changestretch(self, convproj_obj, target, tempo):
 		stretch_obj = self.sample.stretch
 
-		muloffset = 1
-		if stretch_obj.timing.time_type == 'speed':
-			src_tempo = self.time.realtime_tempo
-			#muloffset
-			#print(120/src_tempo)
-
-		pos_offset, cut_offset, finalspeed = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
-
-		#ppq = self.time_ppq
+		pl_timemul = stretch_obj.changestretch(convproj_obj.samplerefs, self.sample.sampleref, target, tempo, convproj_obj.time_ppq, self.sample.pitch)
 
 		if self.time.cut_type in ['cut', 'none']:
-			self.time.calc_offset_add(cut_offset)
+			self.time.calc_offset_add(pl_timemul.cut_offset)
+			self.time.calc_offset_mul(pl_timemul.cut_mul)
 			self.time.cut_type = 'cut'
 		if self.time.cut_type == 'loop':
-			self.time.calc_loopstart_add(cut_offset)
-			self.time.calc_loopend_add(cut_offset)
+			self.time.calc_loopstart_add(pl_timemul.cut_offset)
+			self.time.calc_loopend_add(pl_timemul.cut_offset)
 
-		self.time.calc_offset_add( abs(min(0, pos_offset)) )
-		self.time.calc_dur_add( -max(0, pos_offset) )
-		self.time.calc_pos_add( max(pos_offset, 0) )
+		self.time.calc_offset_add( abs(min(0, pl_timemul.pos_offset)) )
+		self.time.calc_dur_add( -max(0, pl_timemul.pos_offset) )
+		self.time.calc_pos_add( max(pl_timemul.pos_offset, 0) )
 
 	def add_autopoints(self, a_type, ppq_time, ppq_float):
 		self.auto[a_type] = autopoints.cvpj_autopoints(ppq_time, ppq_float, 'float')

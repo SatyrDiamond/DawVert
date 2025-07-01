@@ -38,7 +38,7 @@ class cakewalk_wrk_file:
 
 				name = ('# ' if self.id in chunks.chunkobjects else '  ') + name
 				data = byr_stream.raw(csize)
-				print(str(self.id).rjust(4), '|', name.ljust(32), data)
+				print(str(self.id).rjust(4), '|', name.ljust(32), data.hex())
 
 
 	#def write_to_file(self, output_file):

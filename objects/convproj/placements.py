@@ -98,7 +98,10 @@ def internal_removeloops(pldata, out__placement_loop):
 					cpl_time_obj.set_m_offset(cutpoint[2])
 
 					new_data.append(cutplpl_obj)
-		else: new_data.append(oldpl_obj)
+		else: 
+			new_data.append(oldpl_obj)
+
+	#for x in new_data: print(oldpl_obj.time.get_offset())
 
 		#print('tttttttttttt',   [x.time.get_offset() for x in new_data ]  )
 	return new_data
@@ -126,7 +129,7 @@ def internal_get_dur(pldata):
 
 def internal_get_start(pldata):
 	start_final = 100000000000000000
-	for pl in self.data:
+	for pl in pldata:
 		pl_start = curpl_time.get_pos()
 		if pl_start < start_final: start_final = pl_start
 	return start_final
@@ -216,6 +219,20 @@ class cvpj_placement_timing:
 
 		self.realtime_tempo = 120
 
+	def debugtxt(self):
+		print(self.cut_type.ljust(10), end=' | ')
+		print(self.position.__repr__(), end=' ')
+		print(self.duration.__repr__(), end=' | ')
+		if self.cut_type == 'none':
+			pass
+		elif self.cut_type == 'cut':
+			print(self.cut_start.__repr__(), end=' ')
+		elif 'loop' in self.cut_type:
+			print(self.cut_start.__repr__(), end=' ')
+			print(self.cut_loopstart.__repr__(), end=' ')
+			print(self.cut_loopend.__repr__(), end=' ')
+		print()
+
 	# ---------------- Position ----------------
 
 	def set_pos(self, pos):
@@ -242,8 +259,14 @@ class cvpj_placement_timing:
 		dur = (durval/blksize).__ceil__()*blksize
 		self.duration.set(dur, 'ppq')
 
+	def get_dur_real(self):
+		return self.duration.get('seconds', self.time_ppq, self.realtime_tempo)
+
 	def calc_dur_add(self, val):
 		self.duration.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)
+
+	def calc_dur_mul(self, val):
+		self.duration.calc_mul('ppq', val, self.time_ppq, self.realtime_tempo)
 
 	# ---------------- Offset ----------------
 
@@ -271,6 +294,9 @@ class cvpj_placement_timing:
 
 	def calc_offset_add(self, val):
 		self.cut_start.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)
+
+	def calc_offset_mul(self, val):
+		self.cut_start.calc_mul('ppq', val, self.time_ppq, self.realtime_tempo)
 
 	# ---------------- Both ----------------
 
@@ -654,9 +680,9 @@ class cvpj_placements:
 		self.pl_audio_nested.remove_loops([])
 		for nestedpl_obj in self.pl_audio_nested:
 			nest_time_obj = nestedpl_obj.time
-			main_s = nest_time_obj.cut_start
-			main_e = nest_time_obj.duration+main_s
-			basepos = nest_time_obj.position
+			main_s = nest_time_obj.get_offset()
+			main_e = nest_time_obj.get_dur()+main_s
+			basepos = nest_time_obj.get_pos()
 
 			#print('PL', end=' ')
 			#for x in [main_s, main_e]:
@@ -665,10 +691,11 @@ class cvpj_placements:
 
 			for e in nestedpl_obj.events:
 				e_time_obj = e.time
-				event_s = e_time_obj.position
-				event_et = e_time_obj.duration
-				event_e = e_time_obj.position+event_et
-				event_o = e_time_obj.cut_start
+				event_s = e_time_obj.get_pos()
+				event_et = e_time_obj.get_dur()
+				event_o = e_time_obj.get_offset()
+
+				event_e = event_s+event_et
 
 				if main_e>=event_s and main_s<=event_e:
 					out_start = max(main_s, event_s)
@@ -690,12 +717,12 @@ class cvpj_placements:
 					cutplpl_obj = copy.deepcopy(e)
 
 					cpl_time_obj = cutplpl_obj.time
-					cpl_time_obj.position = (out_start+basepos)-main_s
+					cpl_time_obj.set_pos((out_start+basepos)-main_s)
 					sco = out_start-event_o
 					offset_d = (main_e-main_s)-sco
-					cpl_time_obj.duration = min(max(out_end-out_start, offset_d), event_et)
+					cpl_time_obj.set_dur(min(max(out_end-out_start, offset_d), event_et))
 					cpl_time_obj.cut_type = 'cut'
-					cpl_time_obj.cut_start += scs
+					cpl_time_obj.calc_offset_add(scs)
 
 					cutplpl_obj.muted = cutplpl_obj.muted or nestedpl_obj.muted
 					if not cutplpl_obj.visual.name: 

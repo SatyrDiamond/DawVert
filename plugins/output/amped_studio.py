@@ -46,7 +46,7 @@ def createclip(audiopl_obj, audio_id, audio_sampleref, tempo):
 		sampleref_obj = audio_sampleref[audiopl_obj.sample.sampleref]
 		stretch_obj = audiopl_obj.sample.stretch
 		amped_audclip.stretch = 1/stretch_obj.timing.get__real_rate(sampleref_obj, tempo)
-		print(amped_audclip.stretch)
+		#print(amped_audclip.stretch)
 	amped_audclip.pitchShift = audiopl_obj.sample.pitch
 	amped_audclip.reversed = audiopl_obj.sample.reverse
 	return amped_audclip
@@ -348,12 +348,16 @@ class output_amped(plugins.base):
 			for audiopl_obj in track_obj.placements.pl_audio:
 				time_obj = audiopl_obj.time
 				amped_offset = 0
-				if time_obj.cut_type == 'cut': amped_offset = time_obj.get_offset()
 				position, duration = time_obj.get_posdur()
-				amped_region = amped_track.add_region(position, duration, amped_offset, counter_id.get())
+				stretch_timing = audiopl_obj.sample.stretch.timing
+				offmod = 1
+				if time_obj.cut_type == 'cut': 
+					amped_offset = time_obj.get_offset()
+					if stretch_timing.time_type == 'speed': offmod *= stretch_timing.get__speed(sampleref_obj)
+				amped_region = amped_track.add_region(position, duration, amped_offset*offmod, counter_id.get())
 				amped_audclip = createclip(audiopl_obj, audio_id, audio_sampleref, amped_obj.tempo)
 				amped_audclip.fadeIn = audiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
-				amped_audclip.length = (duration/4) + (time_obj.get_offset()/4)
+				amped_audclip.length = (duration/4) + (time_obj.get_offset()/4)*offmod
 				amped_region.clips = [amped_audclip]
 				amped_region.mute = int(audiopl_obj.muted)
 

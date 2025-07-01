@@ -6,6 +6,7 @@ import os.path
 import bisect
 from objects import globalstore
 from objects.convproj import fileref
+from functions import xtramath
 
 class rootnote_stor():
 	def __init__(self):
@@ -168,13 +169,12 @@ def add_audio_regions(
 		pls.append(placement_obj)
 
 	if stretch_type == 3:
-		calc_offset = region.offset/5000000
-		calc_offset = calc_offset*ppq
+		calc_offset = region.offset/10000000
 
 		placement_obj = placements_obj.add_audio()
 		time_obj = placement_obj.time
 		time_obj.set_posdur(region.pos, region.size)
-		time_obj.set_offset(calc_offset)
+		time_obj.set_offset_real(calc_offset)
 		sp_obj = placement_obj.sample 
 		sp_obj.sampleref = filename
 		sp_obj.stretch.timing.set__orgtempo(audiotempo)

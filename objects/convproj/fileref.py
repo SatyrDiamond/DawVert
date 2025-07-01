@@ -301,6 +301,8 @@ class cvpj_fileref:
 						self.optional_prefixes = []
 						break
 
+
+
 		return is_found
 		#if not is_found:
 		#	print( self.prefix, self.get_path(None, False) )
@@ -378,7 +380,7 @@ class cvpj_fileref:
 		outpath = self.folder.getpath(in_os_type)
 		if self.is_file and not nofile: outpath.append(str(self.file))
 		if in_os_type == 'win': return '\\'.join(outpath)
-		else: return '/'.join(outpath)
+		else: return ('/' if not self.folder.os_type == 'win' else '\\').join(outpath)
 
 	def exists(self, os_type):
 		os_type = get_path_type(os_type)

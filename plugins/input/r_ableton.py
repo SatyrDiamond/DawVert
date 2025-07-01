@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from functions import data_bytes
+from functions import xtramath
 from objects import globalstore
 
 from io import BytesIO
@@ -400,7 +401,7 @@ class input_ableton(plugins.base):
 
 		traits_obj = convproj_obj.traits
 		traits_obj.audio_filetypes = ['wav','flac','ogg','mp3']
-		traits_obj.audio_stretch = ['warp']
+		traits_obj.audio_stretch = ['warp', 'rate']
 		traits_obj.auto_types = ['nopl_points']
 		traits_obj.placement_cut = True
 		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
@@ -584,7 +585,7 @@ class input_ableton(plugins.base):
 
 						audio_placement_PitchCoarse = clipobj.PitchCoarse
 						audio_placement_PitchFine = clipobj.PitchFine
-						placement_obj.sample.pitch = audio_placement_PitchCoarse + audio_placement_PitchFine/100
+						outpitch = audio_placement_PitchCoarse + audio_placement_PitchFine/100
 
 						if clipobj.Fade:
 							placement_obj.fade_in.set_dur(clipobj.Fades.FadeInLength, 'beats')
@@ -595,9 +596,10 @@ class input_ableton(plugins.base):
 							placement_obj.fade_out.slope = clipobj.Fades.FadeOutCurveSlope
 
 						stretch_obj = placement_obj.sample.stretch
+						s_timing_obj = stretch_obj.timing
 
 						if clipobj.IsWarped:
-							stretch_obj.is_warped = True
+							placement_obj.sample.pitch = outpitch
 							stretch_obj.preserve_pitch = clipobj.WarpMode != 3
 
 							stretch_algo = stretch_obj.algorithm
@@ -624,7 +626,7 @@ class input_ableton(plugins.base):
 
 							if AUDWARPVERBOSE: print('i')
 
-							with stretch_obj.setup_warp() as warp_obj:
+							with s_timing_obj.setup_warp(True) as warp_obj:
 								dur_sec = sampleref_obj.get_dur_sec()
 								if dur_sec: warp_obj.seconds = dur_sec
 								for _, WarpMarker in clipobj.WarpMarkers.items():
@@ -632,28 +634,17 @@ class input_ableton(plugins.base):
 									warp_point_obj.beat = WarpMarker.BeatTime
 									warp_point_obj.second = WarpMarker.SecTime
 									if AUDWARPVERBOSE: print(str(WarpMarker.BeatTime).ljust(18), WarpMarker.SecTime)
-							stretch_obj.warp.points__del_last()
+							s_timing_obj.warp.points__del_last()
 
 						else:
-							pitchcalc = 2**(placement_obj.sample.pitch/12)
-							stretch_obj.is_warped = False
-							stretch_obj.timing.set__speed(1/pitchcalc)
+							s_timing_obj.set__speed(1/xtramath.pitch_to_speed(outpitch))
 							
 						if not clipobj.IsWarped:
 							if clipobj.Loop.LoopOn == 0:
 								time_obj.cut_type = 'cut'
-								pitchcalc = 2**(placement_obj.sample.pitch/12)
+								pitchcalc = xtramath.pitch_to_speed(outpitch)
+
 								time_obj.set_offset_real(clipobj.Loop.LoopStart)
-
-								calc_tempo_speed = 1/stretch_obj.timing.get__real_rate(sampleref_obj, time_obj.realtime_tempo)
-
-								#print(calc_tempo_speed)
-#
-								#duration = time_obj.get_dur()
-								#duration *= pitchcalc
-								#duration /= tempomul
-								#duration /= calc_tempo_speed
-								#time_obj.set_dur(duration)
 						else:
 							if clipobj.Loop.LoopOn == 0:
 								time_obj.set_offset(clipobj.Loop.LoopStart*4)

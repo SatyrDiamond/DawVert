@@ -135,6 +135,12 @@ class cvpj_time:
 
 class time_duration:
 	__slots__ = ['value','timemode']
+	def __repr__(self):
+		shorttime = '...'
+		if self.timemode == 'seconds': shorttime = 'sec'
+		if self.timemode == 'ppq': shorttime = 'ppq'
+		return '[%s, %s]' % (str(round(self.value, 5)).rjust(8)[0:8], shorttime)
+
 	def __init__(self):
 		self.value = 0
 		self.timemode = 'ppq'
@@ -160,16 +166,27 @@ class time_duration:
 			if timemode == 'beats': return self.value/ppq
 			elif timemode == 'ppq': return self.value
 			elif timemode == 'seconds': return xtramath.step2sec((self.value/ppq)*4, src_tempo)
+			elif timemode == 'seconds_playback': 
+				return xtramath.step2sec((self.value/ppq)*4, (120/src_tempo)*120)
 
 		elif self.timemode == 'beats':
 			if timemode == 'beats': return self.value
 			elif timemode == 'ppq': return self.value*ppq
 			elif timemode == 'seconds': return xtramath.step2sec(self.value*4, src_tempo)
+			elif timemode == 'seconds_playback': 
+				return xtramath.step2sec(self.value*4, (120/src_tempo)*120)
 
 		elif self.timemode == 'seconds':
 			if timemode == 'seconds': return self.value
 			elif timemode == 'beats': return xtramath.sec2step(self.value, src_tempo)/4
 			elif timemode == 'ppq': return (xtramath.sec2step(self.value, src_tempo)/4)*ppq
+
+		elif self.timemode == 'seconds_playback':
+			if timemode == 'seconds_playback': return self.value
+			elif timemode == 'beats':
+				return xtramath.sec2step(self.value, (120/src_tempo)*120)/4
+			elif timemode == 'ppq':
+				return (xtramath.sec2step(self.value, (120/src_tempo)*120)/4)*ppq
 
 	def convert(self, timemode, ppq, src_tempo):
 		#print(self.timemode, self.value, end=' > ')
@@ -183,6 +200,12 @@ class time_duration:
 
 class time_position:
 	__slots__ = ['value','timemode','timeid']
+	def __repr__(self):
+		shorttime = '...'
+		if self.timemode == 'seconds': shorttime = 'sec'
+		if self.timemode == 'ppq': shorttime = 'ppq'
+		return '[%s, %s]' % (str(round(self.value, 5)).rjust(8)[0:8], shorttime)
+
 	def __init__(self):
 		self.value = 0
 		self.timemode = 'ppq'

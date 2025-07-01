@@ -10,7 +10,7 @@ from objects import colors
 from functions import xtramath
 from objects import globalstore
 
-#                  Name,             Type,        FadeIn, FadeOut, PitchMod, Slide, Vib, Color
+#                  Name,             Type,        FadeIn, FadeOut, PitchMod, Slide, Vib
 
 lc_instlist = {}
 lc_instlist[ 2] = ['Square Wave'     ,'Square'    ,0  ,0  ,0  ,False ,False]
@@ -67,7 +67,7 @@ lc_instlist[50] = ['Glide L-Triangle','LowResoTri',0  ,0  ,0  ,True  ,False]
 lc_instlist[51] = ['Low-Reso Flute'  ,'LowResoTri',1  ,0  ,0  ,True  ,False]
 lc_instlist[52] = ['Tilted Sawtooth' ,'TiltedSaw' ,1  ,0  ,0  ,False ,False]
 
-#                  Name,             Type,        FadeIn, FadeOut, PitchMod, Slide, Vib, Color
+#                  Name,             Type,        FadeIn, FadeOut, PitchMod, Slide, Vib
 
 lc_instlist[53] = ['Organ Like Wave' ,'Organ'     ,0  ,0  ,0  ,False ,False]
 lc_instlist[54] = ['Phaser Triangle' ,'PhaserTri' ,0  ,0  ,0  ,False ,False]
@@ -101,7 +101,7 @@ lc_instlist[123] = ['Tone D'         ,'ToneD'     ,0  ,1  ,0  ,False ,False]
 lc_instlist[128]= ['_EXT'            ,'_EXT'      ,0  ,0  ,0  ,False ,False]
 lc_instlist[129]= ['_EXT_E'          ,'_EXT'      ,0  ,1  ,0  ,False ,False]
 
-def decode_tempo(inpit_val): return (3614.75409836/inpit_val)/2
+def decode_tempo(v): return (3614.75409836/v)/2
 
 def decode_pan(panbyte):
 	if panbyte == 8: return 0

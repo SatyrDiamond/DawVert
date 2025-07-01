@@ -91,7 +91,7 @@ dawvert_intent.plugin_input = args.it
 dawvert_intent.plugin_output = args.ot
 dawvert_intent.plugset_input = args.ips
 dawvert_intent.plugset_output = args.ops
-dawvert_intent.path_external_data = os.path.join(os.path.abspath(os.getcwd()), '_external_data')
+dawvert_intent.path_external_data = os.path.join(os.path.abspath(os.getcwd()), '__external_data')
 
 if args.y == True: dawvert_intent.flag_overwrite = True
 if args.soundfont != None: dawvert_intent.path_soundfonts['global'] = args.soundfont

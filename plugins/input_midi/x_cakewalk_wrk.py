@@ -140,7 +140,7 @@ class input_cvpj_f(plugins.base):
 						#convproj_obj.set_timings(parseddata.timebase, False)
 
 					if chunk.id == 10: #Gen1:Global:Timebase
-						convproj_obj.set_timings(parseddata.timebase, False)
+						convproj_obj.set_timings(parseddata.timebase)
 
 					elif chunk.id == 15: #Gen1:Global:Auto:Tempo_V3
 						points = parseddata.points

@@ -14,6 +14,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_int
 					track_obj.placements.notelist.merge(notespl_obj.notelist, notespl_obj.time.get_pos())
 
 				track_obj.placements.pl_notes.clear()
+			convproj_obj.calc_pl_tempo()
 			return True
 
 		elif convproj_obj.type in ['cs', 'cm']: 
@@ -24,6 +25,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_int
 					track_obj.placements.midievents.merge(midipl_obj.midievents, midipl_obj.time.get_pos(), midipl_obj.time.get_dur(), 0)
 
 				track_obj.placements.pl_notes.clear()
+			convproj_obj.calc_pl_tempo()
 			return True
 
 		else: 

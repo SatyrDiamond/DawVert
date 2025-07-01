@@ -389,6 +389,9 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 			stretch_obj = sp_obj.stretch
 			stretch_obj.preserve_pitch = True
 		
+			s_timing_obj = stretch_obj.timing
+
+			is_warped = False
 			for fx in audioclip.effects:
 				params = fx.plugin.params
 				if fx.fx_type == 'pitchShift':
@@ -397,25 +400,25 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 					sp_obj.reverse = True
 				if fx.fx_type == 'warpTime':
 					if fx.warptime:
+						is_warped = True
 						bpmmul = (1/bpmdiv)
 						warptime = fx.warptime
-						stretch_obj.is_warped = True
+
 						warp_obj = sp_obj.stretch.warp
-						warp_obj.seconds = warptime.warpEndMarkerTime
 						sampleref_obj.set_dur_sec(warptime.warpEndMarkerTime)
 
 						secbeat = audioclip.loopinfo.numBeats/2
 						stretchrate = warptime.warpEndMarkerTime/secbeat
 
-						for warpmarker in warptime.warpmarkers:
-							warp_point_obj = warp_obj.points__add()
-							warp_point_obj.beat = (warpmarker.warpTime*2)/stretchrate
-							warp_point_obj.second = warpmarker.sourceTime
+						with s_timing_obj.setup_warp(True) as warp_obj:
+							warp_obj.seconds = warptime.warpEndMarkerTime
+							for warpmarker in warptime.warpmarkers:
+								warp_point_obj = warp_obj.points__add()
+								warp_point_obj.beat = (warpmarker.warpTime*2)/stretchrate
+								warp_point_obj.second = warpmarker.sourceTime
 
-						warp_obj.calcpoints__speed()
-
-			if not stretch_obj.is_warped:
-				stretch_obj.timing.set__beats(audioclip.loopinfo.numBeats)
+			if not is_warped:
+				s_timing_obj.set__beats(audioclip.loopinfo.numBeats)
 
 		else:
 			placement_obj = track_obj.placements.add_video()

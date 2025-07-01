@@ -175,11 +175,11 @@ class output_bandlab(plugins.base):
 						sp_obj = audiopl_obj.sample
 						ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
 
-						pmod = 1
-						if not sp_obj.stretch.uses_tempo:
-							pmod = xtramath.pitch_to_speed(-sp_obj.pitch)
+						offmod = 1
+						if sp_obj.stretch.timing.time_type == 'speed': 
+							offmod *= sp_obj.stretch.timing.get__speed(sampleref_obj)
 
-						add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False, pmod)
+						add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False, offmod)
 
 						blx_region.pitchShift = sp_obj.pitch
 						blx_region.gain = sp_obj.vol

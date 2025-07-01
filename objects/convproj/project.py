@@ -122,10 +122,10 @@ class cvpj_fxchannel:
 		self.latency_offset = 0
 
 class cvpj_scene:
-	def __init__(self, time_ppq):
+	def __init__(self, time_ppq, projid):
 		self.time_ppq = time_ppq
 		self.visual = visual.cvpj_visual()
-		self.automation = automation.cvpj_automation(time_ppq)
+		self.automation = automation.cvpj_automation(time_ppq, projid)
 
 	def change_timings(self, time_ppq):
 		self.time_ppq = time_ppq
@@ -464,6 +464,11 @@ class cvpj_project:
 	def add_autopoints_twopoints(self, autopath, v_type, twopoints):
 		for x in twopoints: self.add_autopoint(autopath, v_type, x[0], x[1], 'normal')
 
+	def calc_pl_tempo(self): 
+		if self.time_tempocalc.auto_found>=0:
+			for x in self.iter__placements_obj():
+				x.do_tempo(self.time_tempocalc)
+
 # --------------------------------------------------------- GROUPS ---------------------------------------------------------
 
 	def group__iter_inside(self):
@@ -498,7 +503,7 @@ class cvpj_project:
 # --------------------------------------------------------- SCENE ---------------------------------------------------------
 
 	def scene__add(self, i_sceneid):
-		scene_obj = cvpj_scene(self.time_ppq)
+		scene_obj = cvpj_scene(self.time_ppq, self.id)
 		#cpr_int('[project] Scene - '+str(i_sceneid), 'magenta')
 		logger_project.info('Scene - '+str(i_sceneid))
 		self.scenes[i_sceneid] = scene_obj

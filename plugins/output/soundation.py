@@ -98,6 +98,7 @@ class output_soundation(plugins.base):
 		in_dict['auto_types'] = ['nopl_points']
 		in_dict['placement_loop'] = ['loop', 'loop_eq']
 		in_dict['projtype'] = 'r'
+		in_dict['audio_stretch'] = ['rate']
 
 	def parse(self, i_convproj_obj, dawvert_intent):
 		from objects.file_proj import soundation as proj_soundation
@@ -405,7 +406,7 @@ class output_soundation(plugins.base):
 
 					if time_obj.cut_type in ['loop', 'loop_off']:
 						soundation_region.length = loop_loopend
-						soundation_region.loopcount = time_obj.duration/loop_loopend
+						soundation_region.loopcount = time_obj.get_dur()/loop_loopend
 
 					if time_obj.cut_type == 'cut': 
 						soundation_region.contentPosition = -(cut_start)
@@ -427,9 +428,10 @@ class output_soundation(plugins.base):
 
 					timing_obj = stretch_obj.timing
 
-					if timing_obj.tempo_based == False:
-						soundation_region.stretchRate = timing_obj.get__speed(sampleref_obj)
+					if timing_obj.time_type == 'speed':
+						soundation_region.stretchRate = 1/timing_obj.get__speed(sampleref_obj)
 						soundation_region.isAutoStretched = False
+						soundation_region.contentPosition /= soundation_region.stretchRate
 					else:
 						soundation_region.autoStretchBpm = timing_obj.get__tempo(sampleref_obj)
 						soundation_region.isAutoStretched = True

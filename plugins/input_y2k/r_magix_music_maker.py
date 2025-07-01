@@ -132,7 +132,6 @@ class input_old_magix_maker(plugins.base):
 							if data_objc.speed:
 								stretch_obj = sample_obj.stretch
 								stretch_obj.timing.set__real_rate(tempo, data_objc.speed/hzspeed)
-								stretch_obj.uses_tempo = True
 								stretch_obj.preserve_pitch = True
 
 						if data_objc.fileid in videoref_objs:

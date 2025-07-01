@@ -248,6 +248,7 @@ pluginsets_input = {
 'vgm': ['vgm', 'VGM'],
 'gameres': ['gameres', 'Game Mod'],
 'gamespec': ['gamespec', 'Game Specific'],
+'extlib': ['extlib', 'External Lib'],
 'nn': ['nn', 'NeuralNet'],
 'mobile': ['mobile', 'Mobile'],
 'old': ['old', 'Old/Broken']
@@ -423,9 +424,7 @@ class core:
 			logger_core.error(self.currentplug_input.selected_shortname+' is not usable: '+selected_plugin.usable_meg)
 			exit()
 		self.convproj_obj.time_tempocalc.proc_points()
-		if self.convproj_obj.time_tempocalc.auto_found>=0:
-			for x in self.convproj_obj.iter__placements_obj():
-				x.do_tempo(self.convproj_obj.time_tempocalc)
+		self.convproj_obj.calc_pl_tempo()
 
 	def convert_type_output(self, dawvert_intent): 
 		global in_dawinfo

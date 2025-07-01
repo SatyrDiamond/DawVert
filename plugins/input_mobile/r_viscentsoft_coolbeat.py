@@ -8,7 +8,7 @@ from objects.convproj import fileref
 def do_sample(convproj_obj, soundPack, filename, dawvert_intent):
 	from objects import audio_data
 	samplefolder = dawvert_intent.path_samples['extracted']
-	sampleid = str(soundPack)+'>>'+str(filename)
+	sampleid = str(soundPack)+'__________'+str(filename)
 	fileref_obj = fileref.cvpj_fileref()
 	fileref_obj.set_path(None, filename, 1)
 	fileref_obj.search_local(dawvert_intent.input_folder)
@@ -71,7 +71,7 @@ class output_coolbeat(plugins.base):
 		traits_obj.placement_loop = ['loop']
 		traits_obj.audio_stretch = ['rate']
 
-		convproj_obj.set_timings(480, False)
+		convproj_obj.set_timings(480)
 
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
@@ -141,9 +141,9 @@ class output_coolbeat(plugins.base):
 						cvpj_notelist.add_r(note.startTick, note.length, note.key-noteoffset, note.volume, {})
 					if cvpj_notelist:
 						placement_obj.auto_dur(1920, 1920)
-						loop_data = time_obj.duration
-						time_obj.set_loop_data(0, 0, time_obj.duration)
-						time_obj.duration *= (section.length)/loop_data
+						loop_data = time_obj.get_dur()
+						time_obj.set_loop_data(0, 0, time_obj.get_dur())
+						time_obj.calc_dur_mul((section.length)/loop_data)
 
 			if tracktype == 2:
 				track_obj = convproj_obj.track__add(trackid, 'audio', 1, False)
@@ -161,7 +161,6 @@ class output_coolbeat(plugins.base):
 					sp_obj = placement_obj.sample
 					sp_obj.stretch.timing.set__orgtempo(project_obj.tempo)
 					sp_obj.stretch.preserve_pitch = True
-					sp_obj.stretch.uses_tempo = True
 					sp_obj.sampleref = sampleid
 
 			for an, ta in enumerate(track.autos):

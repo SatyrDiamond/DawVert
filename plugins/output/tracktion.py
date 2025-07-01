@@ -578,25 +578,25 @@ class output_tracktion_edit(plugins.base):
 					wf_audioclip.groupID = groupassoc[groupidtr]
 
 				sp_obj = audiopl_obj.sample
-				stretch_obj = audiopl_obj.sample.stretch
 				if sp_obj.sampleref in sampleref_assoc:
 					wf_audioclip.source = sampleref_assoc[sp_obj.sampleref]
 					sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
 
-					if stretch_obj.is_warped:
-						warp_obj = stretch_obj.warp
+					stretch_obj = audiopl_obj.sample.stretch
+					s_timing_obj = stretch_obj.timing
+
+					if s_timing_obj.time_type == 'warp':
+						warp_obj = s_timing_obj.warp
 
 						stretch_amt = warp_obj.speed
-
 						numBeats = stretch_amt*warp_obj.seconds*2
 						wf_audioclip.loopinfo.numBeats = numBeats
 
 						loffset = warp_obj.get__offset()
 						warpmove = max(0, loffset)
 
-						time_obj.cut_start += warpmove*4
-						if time_obj.cut_type == 'none':
-							time_obj.cut_type = 'cut'
+						time_obj.calc_offset_add(warpmove*4)
+						if time_obj.cut_type == 'none': time_obj.cut_type = 'cut'
 
 						warp_obj.points__add__based_beat(0)
 						warp_obj.fix__last()
@@ -623,13 +623,17 @@ class output_tracktion_edit(plugins.base):
 
 						wf_audioclip.effects.append(afx)
 					else:
-						timing_obj = stretch_obj.timing
-						if timing_obj.tempo_based:
-							wf_audioclip.loopinfo.numBeats = timing_obj.get__beats(sampleref_obj)
+						if s_timing_obj.tempo_based:
+							wf_audioclip.loopinfo.numBeats = s_timing_obj.get__beats(sampleref_obj)
 						else:
 							dur_sec = sampleref_obj.get_dur_sec()*2
 							if dur_sec:
-								speed = timing_obj.get__speed_real(sampleref_obj, bpm)
+								speed = s_timing_obj.get__speed_real(sampleref_obj, bpm)
+
+								if s_timing_obj.time_type == 'speed':
+									stretchrate = s_timing_obj.get__speed(sampleref_obj)
+									time_obj.calc_offset_mul(stretchrate)
+
 								wf_audioclip.loopinfo.numBeats = dur_sec*speed
 
 				tempomul = (120/time_obj.realtime_tempo)

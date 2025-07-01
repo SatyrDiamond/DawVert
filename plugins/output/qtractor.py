@@ -107,7 +107,6 @@ class output_bandlab(plugins.base):
 						qt_clip.properties.fade_out = calcsec(audiopl_obj.fade_out.get_dur_seconds(bpm), ppq)
 						qt_clip.audioclip = proj_qtractor.qtractor_clip_audioclip(None)
 
-
 						sp_obj = audiopl_obj.sample
 						qt_clip.audioclip.filename = sampleref_filepath[sp_obj.sampleref]
 						qt_clip.audioclip.pitch_shift = xtramath.pitch_to_speed(sp_obj.pitch)

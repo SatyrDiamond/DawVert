@@ -24,11 +24,11 @@ class pxtone_cmdstream():
 
 	def note_pitch(self, i_pos, i_value):
 		if self.noteend>i_pos:
-			slide_pitch = (i_value//256)-87
+			slide_pitch = (int(i_value)//256)-87
 			slidepos = int(i_pos-self.notestart)
 			self.cvpj_notelist.last_add_slide(slidepos, float(self.cur_porta), float(slide_pitch), 1, None)
 		else:
-			self.cur_pitch = (i_value//256)-87
+			self.cur_pitch = (int(i_value)//256)-87
 
 	def porta(self, i_value):
 		self.cur_porta = i_value
@@ -109,9 +109,7 @@ class input_pxtone(plugins.base):
 				if not os.path.exists(samplefolder): os.makedirs(samplefolder)
 				ogg_fileobj = open(ogg_path, 'wb')
 				ogg_fileobj.write(voice_obj.data)
-
 				plugin_obj, pluginid, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler__genid(ogg_path, None)
-
 				plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				samplepart_obj.interpolation = "linear" if 1 in voice_obj.sps2 else "none"
 				inst_obj.plugslots.set_synth(pluginid)

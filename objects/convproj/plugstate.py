@@ -341,7 +341,7 @@ class cvpj_plugin_state:
 
 	def env_points_from_blocks(self, a_type):
 		blocks_obj = self.env_blocks_get(a_type)
-		points_obj = self.env_points_add(a_type, 4, True, 'float')
+		points_obj = self.env_points_add(a_type, 4, 'float')
 		points_obj.from_blocks_obj(blocks_obj)
 
 	def env_asdr_from_points(self, a_type):

@@ -44,6 +44,11 @@ class cvpj_placements_autoticks:
 
 		self.time_ppq = time_ppq
 
+	def change_seconds(self, is_seconds, bpm, ppq):
+		for pl in self.data: 
+			pl.time.change_seconds(is_seconds, bpm, ppq)
+			pl.data.change_seconds(is_seconds, bpm, ppq)
+
 	def calc(self, mathtype, val1, val2, val3, val4):
 		for pl in self.data: pl.data.calc(mathtype, val1, val2, val3, val4)
 

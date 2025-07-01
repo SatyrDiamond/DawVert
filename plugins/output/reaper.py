@@ -668,13 +668,16 @@ class output_reaper(plugins.base):
 				tempomul = (time_obj.realtime_tempo/120)
 
 				if time_obj.cut_type == 'cut': clip_startat = time_obj.get_offset_real()
+				#print(clip_startat)
 
-				if not stretch_obj.is_warped:
-					audiorate = stretch_obj.timing.get__real_rate(sampleref_obj, reaper_tempo)
+				s_timing_obj = stretch_obj.timing
+
+				if s_timing_obj.time_type != 'warp':
+					audiorate = s_timing_obj.get__real_rate(sampleref_obj, reaper_tempo)
 					rpp_item_obj.playrate['rate'] = audiorate
 					clip_startat *= audiorate
 				else:
-					warp_obj = stretch_obj.warp
+					warp_obj = s_timing_obj.warp
 					warprate = warp_obj.speed
 					audiorate = warprate*tempomul
 
@@ -682,8 +685,6 @@ class output_reaper(plugins.base):
 					rpp_item_obj.stretchmarks = []
 
 					offmod = clip_startat*audiorate
-					offmod *= warprate
-					offmod *= tempomul
 					offmod = round(offmod, 7)
 
 					warp_obj.fix__onlyone()

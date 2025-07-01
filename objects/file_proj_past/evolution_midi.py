@@ -129,11 +129,14 @@ class evo_midi_song:
 		byr_stream.seek(0x400)
 		self.songinfo = byr_stream.string_t(encoding='windows-1252')
 
-		byr_stream.skip(15)
+		assert num_unk>1
+		print(   byr_stream.raw((num_unk*6)-3).hex()  )
+
 		self.unk1 = byr_stream.uint16()
 
 		self.unklist2 = byr_stream.l_uint16(num_tracks)
 		self.unklist3 = byr_stream.l_uint16(num_clips)
+
 
 		for x in range(num_tracks):
 			self.tracks.append( evo_midi_track(byr_stream) )

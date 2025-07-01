@@ -17,7 +17,6 @@ from functions.convproj_compat import removecut
 from functions.convproj_compat import removelanes
 from functions.convproj_compat import time_seconds
 from functions.convproj_compat import timesigblocks
-from functions.convproj_compat import nopl_track
 from functions.convproj_compat import track_pl_add
 from functions.convproj_compat import track_pl_del
 from functions.convproj_compat import unhybrid

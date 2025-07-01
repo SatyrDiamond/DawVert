@@ -84,6 +84,17 @@ class cvpj_placements_autopoints:
 			pl.time.change_seconds(is_seconds, bpm, ppq)
 			pl.data.change_seconds(is_seconds, bpm, ppq)
 
+	def merge_crop(self, npl_obj, pos, dur):
+		for n in npl_obj.data:
+			if n.time.get_pos() < dur:
+				copy_npl_obj = copy.deepcopy(n)
+				copytime_obj = copy_npl_obj.time
+				plend = copytime_obj.get_end()
+				numval = copytime_obj.get_dur()+min(0, dur-plend)
+				copytime_obj.calc_pos_add(pos)
+				copytime_obj.set_dur(numval)
+				self.data.append(copy_npl_obj)
+
 class cvpj_placement_autopoints:
 	__slots__ = ['time','muted','visual','data']
 

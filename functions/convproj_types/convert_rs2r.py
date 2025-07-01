@@ -35,5 +35,6 @@ def convert(convproj_obj):
 					track_obj.lanes[laneid].placements.merge_crop(scene_pl, scenepl.position, scenepl.duration, convproj_obj.scenes[scenepl.id].visual, groupid)
 					groupnum += 1
 
+	convproj_obj.calc_pl_tempo()
 	convproj_obj.type = 'r'
 	#exit()

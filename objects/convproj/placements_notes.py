@@ -50,7 +50,7 @@ class cvpj_placements_notes:
 				numval = copytime_obj.get_dur()+min(0, dur-plend)
 				if copytime_obj.get_dur() > numval:
 					copy_npl_obj.notelist.edit_trimmove(0, numval)
-				copytime_obj.add_pos(pos)
+				copytime_obj.calc_pos_add(pos)
 				copytime_obj.set_dur(numval)
 				if visualfill.name and not copy_npl_obj.visual.name:
 					copy_npl_obj.visual.name = visualfill.name

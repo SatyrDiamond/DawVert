@@ -45,7 +45,7 @@ class input_fl_mobile(plugins.base):
 		traits_obj.audio_filetypes = ['wav','mp3']
 		traits_obj.audio_stretch = ['rate']
 
-		convproj_obj.set_timings(1, True)
+		convproj_obj.set_timings(1)
 
 		fileref_global.add_prefix('flmobile_factory:fl_24_64', 'win', "C:\\Program Files\\Image-Line\\FL Studio 2024\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
 		fileref_global.add_prefix('flmobile_factory:fl_21_32', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
@@ -192,10 +192,10 @@ class input_fl_mobile(plugins.base):
 
 								pos = flm_clip.position/128
 								placement_obj = lane_obj.placements.add_audio()
+								placement_obj.muted = bool(flm_clip.mute)
 								time_obj = placement_obj.time
 								time_obj.set_posdur(pos, flm_clip.duration)
 								time_obj.set_loop_data(flm_clip.cut_start%flm_clip.loop_end, 0, flm_clip.loop_end)
-								placement_obj.muted = bool(flm_clip.mute)
 
 								if flm_clip.evn2:
 									env_vol = []
@@ -232,16 +232,11 @@ class input_fl_mobile(plugins.base):
 										dur_sec = sampleref_obj.get_dur_sec()
 
 										if dur_sec:
-											if not time_obj.duration:
+											if not flm_clip.duration:
 												if flm_sample.stretch_on: 
-													outdur = (dur_sec*2)
-													outdur /= flm_sample.stretch_size
-													outdur /= tempomul
+													time_obj.set_dur_real(outdur/flm_sample.stretch_size)
 												else:
-													outdur = (dur_sec*2)
-													outdur *= tempomul
-													
-												time_obj.duration = outdur
+													time_obj.set_dur_real(dur_sec)
 
 									placement_obj.visual.name = flm_clip.sample.sample_name
 
@@ -333,12 +328,10 @@ def do_sample(convproj_obj, sample_path, zipfile, projfile):
 
 		sampleref_obj = convproj_obj.sampleref__add__prefix(sample_path, 'flmobile_factory', o_sample_path)
 		if not fromzip:
-		#	sampleref_obj.fileref.resolve_prefix()
+			sampleref_obj.fileref.resolve_prefix()
 			#print(sampleref_obj.fileref.get_path(None, 0))
-		#	sampleref_obj.find_relative('factorysamples')
-		#	sampleref_obj = convproj_obj.sampleref__add__prefix(sampname, 'hydrogen_drumkits', '.\\GMRockKit\\'+filename)
-		#	sampleref_obj.fileref.resolve_prefix()
-		#	sampleref_obj.search_local(os.path.dirname(projfile))
+			sampleref_obj.fileref.resolve_prefix()
+			sampleref_obj.search_local(os.path.dirname(projfile))
 
 		return sampleref_obj
 

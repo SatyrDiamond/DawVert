@@ -160,13 +160,14 @@ def maketrack_wave(project_obj, placements_obj, convproj_obj, track_obj, muse_bp
 	
 				sample_obj = audiopl_obj.sample
 	
-				if not sample_obj.stretch.is_warped:
+				s_timing_obj = sample_obj.stretch.timing
+				if s_timing_obj.time_type != 'warp':
 					stretch_speed = 1
 					stretch_pitch = 1
 					muse_pitch = xtramath.pitch_to_speed(sample_obj.pitch)
 					stretch_obj = sample_obj.stretch
 
-					calc_real_size = 1/stretch_obj.timing.get__real_rate(sampleref_obj, time_obj.realtime_tempo)
+					calc_real_size = 1/s_timing_obj.get__real_rate(sampleref_obj, time_obj.realtime_tempo)
 
 					event_obj.frame = int(event_obj.frame/calc_real_size)
 

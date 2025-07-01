@@ -87,8 +87,6 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 
 	outspeed = 1
 
-	out_rate = 1/stretch_obj.timing.get__speed_real(sampleref_obj, flp_obj.tempo)
-
 	if ref_found:
 		dur_sec = sampleref_obj.get_dur_sec()
 
@@ -101,7 +99,7 @@ def from_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj)
 				fl_channel_obj.params.stretchingtime = int((num_beats/2)*384)
 				if fl_channel_obj.params.stretchingtime < 0: fl_channel_obj.params.stretchingtime = 384
 
-	return out_rate, stretch_obj.timing.time_type=='speed', sre_obj.pitch
+	return stretch_obj, sampleref_obj, sre_obj.pitch
 
 DEBUG_IGNORE_PLACEMENTS = False
 DEBUG_IGNORE_PATTERNS = False
@@ -421,26 +419,35 @@ class output_cvpjs(plugins.base):
 
 						startat = 0
 	
+						realtime_speed = pl_obj.time.realtime_tempo/120
+
 						if pl_obj.fromindex in samplestretch:
-							stretchrate, isspeed, pitch = samplestretch[pl_obj.fromindex]
+							stretch_obj, sampleref_obj, pitch = samplestretch[pl_obj.fromindex]
+							stretch_timing = stretch_obj.timing
 
-							if isspeed:
-								if time_obj.cut_type == 'cut': startat = time_obj.get_offset()
-								pitchmod = xtramath.pitch_to_speed(-pitch)
+							#print(pl_obj.fromindex)
 
-								startat = (startat/ppq)*pitchmod
-								endat = startat+(duration/ppq)
+							if stretch_timing.time_type == 'speed':
+								stretchrate = 1/stretch_timing.get__speed(sampleref_obj)
+
+								if time_obj.cut_type == 'cut': startat = time_obj.get_offset_real()*2
+								duration = time_obj.get_dur_real()*2*stretchrate
+
+								startat = (startat)
+								endat = (startat)+(duration)
 	
-								fl_clip_obj.startoffset = (startat*stretchrate)*4
-								fl_clip_obj.endoffset = (endat*stretchrate)*4
 							else:
+								stretchrate = 1/stretch_timing.get__real_rate(sampleref_obj, pl_obj.time.realtime_tempo)
+
 								if time_obj.cut_type == 'cut': startat = time_obj.get_offset()
+
+								#print(time_obj.cut_type, time_obj.cut_start.get('seconds', time_obj.time_ppq, time_obj.realtime_tempo) )
 
 								startat = startat/ppq
 								endat = startat+(duration/ppq)
 	
-								fl_clip_obj.startoffset = (startat*stretchrate)*4
-								fl_clip_obj.endoffset = (endat*stretchrate)*4
+							fl_clip_obj.startoffset = (startat)*4
+							fl_clip_obj.endoffset = (endat)*4
 
 
 							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0

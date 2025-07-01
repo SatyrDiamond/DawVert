@@ -278,10 +278,13 @@ class input_acid_old(plugins.base):
 						time_obj.set_offset_real(offsamp)
 					else:
 						sp_obj.stretch.timing.set__orgtempo(sample_tempo)
-						time_obj.set_offset_real(offsamp/2)
+						time_obj.set_offset( (offsamp*ppq*(sample_tempo/120))*2 )
 					sp_obj.stretch.preserve_pitch = True
+					pls.append(placement_obj)
 
 				for p in pls:
+					#p.debugtxt()
+
 					p.visual.name = track.name
 					p.visual.color.set_int(color)
 					p.visual.color.fx_allowed = ['saturate', 'brighter']

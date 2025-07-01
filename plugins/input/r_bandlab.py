@@ -111,8 +111,8 @@ class input_bandlab(plugins.base):
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_audio()
 					time_obj = placement_obj.time
-					time_obj.position = tempo_calc(tempomul, blx_region.startPosition)
-					time_obj.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
+					time_obj.set_pos(tempo_calc(tempomul, blx_region.startPosition))
+					time_obj.set_dur(tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition))
 					if blx_region.name: placement_obj.visual.name = blx_region.name
 
 					reverse = blx_region.playbackRate<0
@@ -191,8 +191,8 @@ class input_bandlab(plugins.base):
 				for blx_region in blx_track.regions:
 					placement_obj = track_obj.placements.add_midi()
 					time_obj = placement_obj.time
-					time_obj.position = tempo_calc(tempomul, blx_region.startPosition)
-					time_obj.duration = tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition)
+					time_obj.set_pos(tempo_calc(tempomul, blx_region.startPosition))
+					time_obj.set_dur(tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition))
 					if blx_region.name: placement_obj.visual.name = blx_region.name
 					midipath = os.path.join(dawvert_intent.input_folder, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
 					do_loop(time_obj, blx_region, tempomul, 1)

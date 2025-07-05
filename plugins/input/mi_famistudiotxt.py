@@ -469,7 +469,7 @@ class input_famistudio(plugins.base):
 				time_obj.set_posdur(PointsPos[pattime], PatternLengthList[pattime])
 
 				if patid in fst_channel.Patterns:
-					make_auto(convproj_obj, fst_channel.Patterns[patid], NoteLength, BPMNoteMul[pattime], time_obj.position, time_obj.duration, fxchan)
+					make_auto(convproj_obj, fst_channel.Patterns[patid], NoteLength, BPMNoteMul[pattime], time_obj.get_pos(), time_obj.get_dur(), fxchan)
 
 		convproj_obj.add_timesig_lengthbeat(fst_currentsong.PatternLength, fst_currentsong.PatternSettings.BeatLength)
 		convproj_obj.timemarker__from_patlenlist(PatternLengthList, fst_currentsong.LoopPoint)

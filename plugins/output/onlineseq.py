@@ -51,8 +51,8 @@ class output_onlineseq(plugins.base):
 		project_obj = proj_onlineseq.onlineseq_project()
 		project_obj.bpm = int(convproj_obj.params.get('bpm', 120).value)
 
-		globalstore.idvals.load('midi_map', './data_main/idvals/onlineseq_map_midi.csv')
-		idvals_onlineseq_inst = globalstore.idvals.get('midi_map')
+		globalstore.idvals.load('onlineseq_midi_map', './data_main/idvals/onlineseq_map_midi.csv')
+		idvals_onlineseq_inst = globalstore.idvals.get('onlineseq_midi_map')
 
 		repeatedolinst = {}
 
@@ -64,26 +64,31 @@ class output_onlineseq(plugins.base):
 
 			plugin_found, plugin_obj = convproj_obj.plugin__get(track_obj.plugslots.synth)
 
-			midi_found, midi_inst = track_obj.get_midi(convproj_obj)
+			midi_inst = track_obj.get_midi(convproj_obj)
+			if midi_inst:
 			
-			if not midi_inst.drum: midiinst = midi_inst.patch
+				if not midi_inst.drum: midiinst = midi_inst.patch
 
 			if plugin_found: 
+				osc_data = plugin_obj.state.oscs
 				if plugin_obj.check_wildmatch('universal', 'synth-osc', None):
-					if len(plugin_obj.oscs) == 1:
-						s_osc = plugin_obj.oscs[0]
+					if len(osc_data) == 1:
+						s_osc = osc_data[0]
 						if s_osc.prop.shape == 'sine': onlineseqinst = 13
 						if s_osc.prop.shape == 'square': onlineseqinst = 14
 						if s_osc.prop.shape == 'triangle': onlineseqinst = 16
 						if s_osc.prop.shape == 'saw': onlineseqinst = 15
 				
-				if not midi_inst.drum:
-					if idvals_onlineseq_inst: 
-						t_instid = idvals_onlineseq_inst.get_idval(str(midiinst), 'outid')
-					else: 
-						t_instid = None
+				if midi_inst:
+					if not midi_inst.drum:
+						if idvals_onlineseq_inst: 
+							t_instid = idvals_onlineseq_inst.get_idval(str(midiinst), 'outid')
+						else: 
+							t_instid = None
+					else:
+						t_instid = 2
 				else:
-					t_instid = 2
+					t_instid = None
 
 				if t_instid not in ['null', None]: onlineseqinst = int(t_instid)
 

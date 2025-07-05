@@ -183,11 +183,12 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				sp_obj = plugin_obj.samplepart_get('sample')
 				programdata = sampler_obj.set_tinysampler()
 				if sp_obj.sampleref in sampleref_assoc and sp_obj.sampleref in sampleref_obj_assoc:
+					sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
+					
 					sp_obj.add_slice_endpoints()
 
 					samp_hz = sampleref_obj.get_hz()
 
-					sampleref_obj = sampleref_obj_assoc[sp_obj.sampleref]
 					hzmod = samp_hz/44100 if samp_hz else 1
 
 					for n, slice_obj in enumerate(sp_obj.slicer_slices):

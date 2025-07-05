@@ -325,11 +325,11 @@ class cvpj_plugin_state:
 
 	def env_points_get(self, a_type): 
 		if a_type in self.env_points: return self.env_points[a_type]
-		return autopoints.cvpj_autopoints(1, True, 'float')
+		return autopoints.cvpj_autopoints(1, 'float')
 
 	def env_points_get_exists(self, a_type): 
 		if a_type in self.env_points: return True, self.env_points[a_type]
-		return False, autopoints.cvpj_autopoints(1, True, 'float')
+		return False, autopoints.cvpj_autopoints(1, 'float')
 
 	def env_points_addvar(self, a_type, p_name, p_value):
 		if a_type in self.env_points_vars: self.env_points_vars[a_type] = {}

@@ -341,7 +341,7 @@ class output_amped(plugins.base):
 								"position": float(t_pos)/4, 
 								"length": float(t_dur)/4, 
 								"key": int(t_key+60),
-								"velocity": t_vol*100, 
+								"velocity": float(t_vol)*100, 
 								"channel": 0
 								})
 
@@ -374,7 +374,7 @@ class output_amped(plugins.base):
 						amped_audclip.position = position/4
 						amped_audclip.length = duration/4
 						amped_audclip.fadeIn = insideaudiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
-						if time_obj.cut_type == 'cut': amped_audclip.offset = (time_obj.cut_start/4)
+						if time_obj.cut_type == 'cut': amped_audclip.offset = (time_obj.get_offset()/4)
 						amped_region.clips.append(amped_audclip)
 
 			amped_parse_effects(amped_track, convproj_obj, track_obj.plugslots.slots_audio, amped_track.automations)

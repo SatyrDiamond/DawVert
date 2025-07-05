@@ -41,6 +41,7 @@ parser.add_argument("-y", action='store_true')
 parser.add_argument("-q", action='store_true')
 parser.add_argument("-pq", action='store_true')
 parser.add_argument("--list", action='store_true')
+parser.add_argument("--debug_multioutplugs", action='store_true')
 args = parser.parse_args()
 
 dawvert_core = core.core()
@@ -78,19 +79,17 @@ elif not os.path.exists(args.i):
 	logger_core.error('Input File Not Found.')
 	exit()
 
-if not args.o:
-	logger_core.error('Output File Not Specified.')
-	exit()
+if not args.debug_multioutplugs:
+	if not args.o:
+		logger_core.error('Output File Not Specified.')
+		exit()
 
 dawvert_intent = core.dawvert_intent()
 dawvert_intent.config_load('./__config/config.ini')
 dawvert_intent.plugin_set = True
 dawvert_intent.set_file_input(args.i)
-dawvert_intent.set_file_output(args.o)
 dawvert_intent.plugin_input = args.it
-dawvert_intent.plugin_output = args.ot
 dawvert_intent.plugset_input = args.ips
-dawvert_intent.plugset_output = args.ops
 dawvert_intent.path_external_data = os.path.join(os.path.abspath(os.getcwd()), '__external_data')
 
 if args.y == True: dawvert_intent.flag_overwrite = True
@@ -103,17 +102,7 @@ if args.splitter_detect_start != None: dawvert_intent.splitter_detect_start = bo
 
 plug_conv.load_plugins()
 
-if not dawvert_core.intent_setplugins(dawvert_intent): exit()
-
-# -------------------------------------------------------------- Output Format --------------------------------------------------------------
-
 dawvert_intent.input_visname = os.path.splitext(os.path.basename(dawvert_intent.input_file))[0]
-out_in_file_pathext = os.path.splitext(os.path.basename(dawvert_intent.output_file))
-out_file_path = os.path.dirname(dawvert_intent.output_file)
-dawvert_intent.set_projname_path()
-
-out_plug_ext = dawvert_core.output_get_extension()
-if out_in_file_pathext[1] == '': dawvert_intent.output_file = os.path.join(out_file_path, out_in_file_pathext[0]+'.'+out_plug_ext)
 
 dawvert_intent.create_folder_paths()
 
@@ -124,17 +113,54 @@ fileref_global.add_prefix('dawvert_generated', None, dawvert_intent.path_samples
 fileref_global.add_prefix('dawvert_converted', None, dawvert_intent.path_samples['converted'])
 fileref_global.add_prefix('dawvert_external_data', None, os.path.join(scriptfiledir, '__external_data'))
 
-if os.path.isfile(dawvert_intent.output_file) and not dawvert_intent.flag_overwrite:
-	user_input = input("File '"+dawvert_intent.output_file+"' already exists. Overwrite? [y/n]")
-	if user_input.lower() == 'y': pass
-	elif user_input.lower() == 'n': exit()
-	else: 
-		logger_core.error('Not overwriting - exiting')
-		exit()
+if not args.debug_multioutplugs:
+	dawvert_intent.set_file_output(args.o)
+	dawvert_intent.plugin_output = args.ot
+	dawvert_intent.plugset_output = args.ops
 
-try: dawvert_core.parse_input(dawvert_intent)
-except ProjectFileParserException: exit()
+	if not dawvert_core.intent_setplugins(dawvert_intent): exit()
 
-dawvert_core.convert_type_output(dawvert_intent)
-dawvert_core.convert_plugins(dawvert_intent)
-dawvert_core.parse_output(dawvert_intent)
+	out_in_file_pathext = os.path.splitext(os.path.basename(dawvert_intent.output_file))
+	out_file_path = os.path.dirname(dawvert_intent.output_file)
+	dawvert_intent.set_projname_path()
+
+	out_plug_ext = dawvert_core.output_get_extension()
+	if out_in_file_pathext[1] == '': dawvert_intent.output_file = os.path.join(out_file_path, out_in_file_pathext[0]+'.'+out_plug_ext)
+	
+	if os.path.isfile(dawvert_intent.output_file) and not dawvert_intent.flag_overwrite:
+		user_input = input("File '"+dawvert_intent.output_file+"' already exists. Overwrite? [y/n]")
+		if user_input.lower() == 'y': pass
+		elif user_input.lower() == 'n': exit()
+		else: 
+			logger_core.error('Not overwriting - exiting')
+			exit()
+
+	try: dawvert_core.parse_input(dawvert_intent)
+	except ProjectFileParserException: exit()
+	
+	dawvert_core.convert_type_output(dawvert_intent)
+	dawvert_core.convert_plugins(dawvert_intent)
+	dawvert_core.parse_output(dawvert_intent)
+else:
+	dawvert_core.output_load_plugins(None)
+	plugins_names = dawvert_core.output_get_plugins()
+
+	test_out_name = '__test_out'
+
+	os.makedirs(test_out_name, exist_ok=True)
+	logging.disable(logging.INFO)
+
+	for plugin_name in plugins_names:
+		print(plugin_name)
+
+		dawvert_intent.plugin_output = plugin_name
+		dawvert_core.intent_setplugins(dawvert_intent)
+		out_plug_ext = dawvert_core.output_get_extension()
+
+		test_out_path = os.path.join(test_out_name, 'out.'+out_plug_ext)
+		dawvert_intent.set_file_output(test_out_path)
+
+		dawvert_core.parse_input(dawvert_intent)
+		dawvert_core.convert_type_output(dawvert_intent)
+		dawvert_core.convert_plugins(dawvert_intent)
+		dawvert_core.parse_output(dawvert_intent)

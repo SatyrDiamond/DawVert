@@ -272,11 +272,15 @@ class core:
 		dv_plugins.load_plugindir('audiofile', '')
 		dv_plugins.load_plugindir('audiocodecs', '')
 		dv_plugins.load_plugindir('audioconv', '')
+		self.cur_plugset_input = ''
+		self.cur_plugset_output = ''
 
 	def intent_setplugins(self, dawvert_intent):
 		if dawvert_intent.plugin_set:
 
-			self.output_load_plugins(dawvert_intent.plugset_output if dawvert_intent.plugset_output else 'main')
+			if self.cur_plugset_output != dawvert_intent.plugset_output:
+				self.output_load_plugins(dawvert_intent.plugset_output if dawvert_intent.plugset_output else 'main')
+				self.cur_plugset_output = dawvert_intent.plugset_output
 
 			if dawvert_intent.plugin_input == None:
 				if dawvert_intent.input_mode == 'file':
@@ -284,7 +288,9 @@ class core:
 					if outdetected:
 						plugset, plugname = outdetected
 						dawvert_intent.plugin_input = plugname
-						self.input_load_plugins(plugset)
+						if self.cur_plugset_input != plugset:
+							self.input_load_plugins(plugset)
+							self.cur_plugset_input = plugset
 						det = self.input_set(dawvert_intent.plugin_input)
 						if not det:
 							logger_core.error('plugin, "'+str(dawvert_intent.plugin_input)+'" is defined in autodetect.xml, but the plugin is not loaded.')
@@ -293,7 +299,10 @@ class core:
 						logger_core.error('Could not identify the input format')
 						return False
 			else:
-				self.input_load_plugins(dawvert_intent.plugset_input if dawvert_intent.plugset_input else 'main')
+				plugset = dawvert_intent.plugset_input if dawvert_intent.plugset_input else 'main'
+				if self.cur_plugset_input != dawvert_intent.plugset_input:
+					self.input_load_plugins(plugset)
+					self.cur_plugset_input = plugset
 				if dawvert_intent.plugin_input in self.input_get_plugins():
 					self.input_set(dawvert_intent.plugin_input)
 				else:

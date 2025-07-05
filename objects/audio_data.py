@@ -115,9 +115,18 @@ class audio_obj:
 		codec_obj = self.codec
 		if codec_obj.pcm_signed and codec_obj.is_pcm:
 			codec_obj.pcm_signed = False
-			if codec_obj.pcm_bits == 8: self.data = (self.data+128).astype('uint8')
-			if codec_obj.pcm_bits == 16: self.data = (self.data+32768).astype('uint16')
-			if codec_obj.pcm_bits == 32: self.data = (self.data+2147483648).astype('uint32')
+			if codec_obj.pcm_bits == 8:
+				self.data = self.data.astype('int16')
+				self.data += 128
+				self.data = self.data.astype('uint8')
+			if codec_obj.pcm_bits == 16:
+				self.data = self.data.astype('int32')
+				self.data += 32768
+				self.data = self.data.astype('uint16')
+			if codec_obj.pcm_bits == 32:
+				self.data = self.data.astype('int64')
+				self.data += 2147483648
+				self.data = self.data.astype('uint32')
 
 # -------------------------------- bits --------------------------------
 

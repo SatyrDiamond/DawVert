@@ -51,8 +51,8 @@ class output_bandlab(plugins.base):
 
 		globalstore.dataset.load('bandlab', './data_main/dataset/bandlab.dset')
 
-		globalstore.idvals.load('midi_map', './data_main/idvals/bandlab_map_midi.csv')
-		idvals_bandlab_inst = globalstore.idvals.get('midi_map')
+		globalstore.idvals.load('bandlab_midi_map', './data_main/idvals/bandlab_map_midi.csv')
+		idvals_bandlab_inst = globalstore.idvals.get('bandlab_midi_map')
 
 		#auxchannel_obj = proj_bandlab.bandlab_auxChannel(None)
 		#auxchannel_obj.id = 'aux1'

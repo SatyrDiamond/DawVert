@@ -8,7 +8,7 @@ import plugins
 import tempfile
 
 def env_to_cvpj(it_env, plugin_obj, t_type, i_div): 
-	autopoints_obj = plugin_obj.env_points_add(t_type, 48, False, 'float')
+	autopoints_obj = plugin_obj.env_points_add(t_type, 48, 'float')
 	autopoints_obj.sustain_on = bool(2 in it_env.flags)
 	autopoints_obj.sustain_point = it_env.susloop_start
 	autopoints_obj.sustain_end = it_env.susloop_end
@@ -207,7 +207,7 @@ class input_it(plugins.base):
 
 				basenoteadd = 60
 				for n_s_te in n_s_t:
-					bn_s_t.append([n_s_te[0]+basenoteadd, n_s_te[1]])
+					bn_s_t.append([int(n_s_te[0])+basenoteadd, n_s_te[1]])
 					basenoteadd -= 1
 
 				bn_s_t_ifsame = data_values.list__ifallsame(bn_s_t)
@@ -222,9 +222,9 @@ class input_it(plugins.base):
 				if bn_s_t_ifsame:
 					if (not ''.join(list(map(lambda x: x.strip(), cvpj_instname.split())))):
 						if bn_s_t_f[1] <= len(project_obj.samples):
-							inst_obj.visual.name = project_obj.samples[bn_s_t_f[1]-1].name
+							inst_obj.visual.name = project_obj.samples[int(bn_s_t_f[1])-1].name
 							if not inst_obj.visual.name: 
-								inst_obj.visual.name = project_obj.samples[bn_s_t_f[1]-1].dosfilename
+								inst_obj.visual.name = project_obj.samples[int(bn_s_t_f[1])-1].dosfilename
 
 				if it_inst.pitch_pan_separation:
 					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'pitch_pan_separation', None)

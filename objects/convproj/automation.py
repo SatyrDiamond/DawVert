@@ -239,7 +239,7 @@ class cvpj_s_automation:
 				for x in self.pl_ticks:
 					time_obj = x.time
 					pos, dur = time_obj.get_posdur()
-					offset = time_obj.cut_start if time_obj.cut_type == 'cut' else 0
+					offset = time_obj.get_offset() if time_obj.cut_type == 'cut' else 0
 					for p, v in x.data.points.items():
 						if dur>p>=offset:
 							self.nopl_ticks.points[p+pos] = v
@@ -328,8 +328,8 @@ class cvpj_s_automation:
 	
 				for ppl in areas:
 					pl = self.add_pl_points()
-					pl.time.set_posdur(ppl[0], ppl[1]-pl.time.position)
-					pl.data.inject(self.nopl_points, 0, pl.time.duration, ppl[0])
+					pl.time.set_posdur(ppl[0], ppl[1]-pl.time.get_pos())
+					pl.data.inject(self.nopl_points, 0, pl.time.get_dur(), ppl[0])
 	
 			self.u_nopl_points = False
 			self.nopl_points = None

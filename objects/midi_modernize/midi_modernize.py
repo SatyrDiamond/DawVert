@@ -260,7 +260,7 @@ class midi_modernize:
 		inittimesig = self.timesig_data.get_inital(self.start_pos)
 		if inittimesig is not None: convproj_obj.timesig = inittimesig
 		for pos, num, denom in self.timesig_data.get_points():
-			convproj_obj.timesig_auto.add_point(pos, [num, denom])
+			convproj_obj.timesig_auto.add_point(pos, [int(num), int(denom)])
 
 	def to_cvpj_inst_visual(self, convproj_obj):
 		self.used_inst = self.notes_data.get_used_inst()

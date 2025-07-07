@@ -772,7 +772,7 @@ class output_dawproject(plugins.base):
 		for returnid, return_obj in master_returns.items():
 			dp_track = maketrack_return(convproj_obj, return_obj, returnid)
 			for ireturnid, x in master_returns.items():
-				lane_obj = make_lane('return__'+trackid)
+				lane_obj = make_lane('return__'+ireturnid)
 				if ireturnid in return_obj.sends.data:
 					send_obj = return_obj.sends.data[ireturnid]
 					dp_send = make_send(send_obj, returnid, convproj_obj, dp_track, lane_obj)

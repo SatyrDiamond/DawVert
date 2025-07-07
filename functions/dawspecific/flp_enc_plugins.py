@@ -158,7 +158,7 @@ def setparams(convproj_obj, plugin_obj):
 		slicer_beats = plugin_obj.datavals.get('beats', 4)
 		slicer_bpm = plugin_obj.datavals.get('bpm', 4)
 		slicer_pitch = int(sre_obj.pitch*100)
-		slicer_fitlen = int(math.log2(1/stretch_obj.calc_real_speed)*10000)
+		slicer_fitlen = int(math.log2(1/stretch_obj.timing.get__speed(sampleref_obj))*10000)
 		slicer_att = int(plugin_obj.datavals.get('fade_in', 4))
 		slicer_dec = int(plugin_obj.datavals.get('fade_out', 4))
 		

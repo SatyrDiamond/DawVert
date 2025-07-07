@@ -410,7 +410,7 @@ class input_dawproject(plugins.base):
 
 		trackdata = {}
 
-		autoid_assoc = auto_id.convproj2autoid(48, False)
+		autoid_assoc = auto_id.convproj2autoid(48)
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 

@@ -9,7 +9,7 @@ import objects.midi_modernize.devices_types as devices_types
 
 midi_instrument = np.dtype([
 	('track', np.uint32),
-	('chanport', np.uint32),
+	('chanport', np.int32),
 	('chan', np.uint8),
 	('port', np.uint8),
 	('drum', np.uint8),
@@ -29,7 +29,7 @@ CHANGE__DEVICE = 5
 
 instchange_premake = dynbytearr.dynbytearr_premake([
 	('pos', np.uint64),
-	('chanport', np.uint32),
+	('chanport', np.int32),
 	('type', np.uint8),
 	('val', np.uint8),
 	])

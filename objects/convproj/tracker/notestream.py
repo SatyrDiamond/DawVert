@@ -159,7 +159,7 @@ class notestream:
 
 	def add_pl(self, patnum):
 		if self.note_active: self.slide_pitch.to_points(self.placements[-1][1])
-		self.placements.append([0, notelist.cvpj_notelist(4, True), patnum, self.used_inst])
+		self.placements.append([0, notelist.cvpj_notelist(4.0), patnum, self.used_inst])
 		self.cur_pos = 0
 		self.note_pos = 0
 		self.note_active = False

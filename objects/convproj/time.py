@@ -195,6 +195,8 @@ class time_duration:
 		#print(self.timemode, self.value)
 
 	def set(self, value, timemode):
+		if type(value) not in [float, int]:
+			raise ValueError('time_duration: numeric only')
 		self.value = value
 		self.timemode = timemode
 
@@ -212,6 +214,8 @@ class time_position:
 		self.timeid = 'global'
 
 	def set(self, value, timemode):
+		if type(value) not in [float, int]:
+			raise ValueError('time_position: numeric only')
 		self.value = value
 		self.timemode = timemode
 

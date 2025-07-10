@@ -235,5 +235,5 @@ class cvpj_notelist_splitter:
 					placement_obj = pldata.add_notes()
 					placement_obj.notelist = pldata.notelist.new_nl_start_end(x['start'], x['end'])
 					time_obj = placement_obj.time
-					time_obj.set_startend(x['start'], x['end'])
+					time_obj.set_startend(int(x['start']), int(x['end']))
 			pldata.notelist.clear()

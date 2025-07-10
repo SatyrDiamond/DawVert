@@ -283,6 +283,10 @@
 		<bytes_header data="736E673201"/>
 	</plugin>
 
+	<plugin pluginset="midi" name="v2m">
+		<file fileext=".v2m"/>
+	</plugin>
+
 	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

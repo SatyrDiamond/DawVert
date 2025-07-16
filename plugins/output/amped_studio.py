@@ -278,7 +278,8 @@ class output_amped(plugins.base):
 						else:
 							eur_value_value = plugin_obj.datavals.get(cvpj_val_name, '')
 							if eur_value_name in ['Curve1','Curve2','Curve3','Curve4','Curve']: 
-								eur_value_value = bytes(eur_value_value).hex().upper()
+								if eur_value_value:
+									eur_value_value = bytes(eur_value_value).hex().upper()
 
 						europa_value_obj = ET.SubElement(europa_obj, "Value")
 						europa_value_obj.set('property',eur_value_name)

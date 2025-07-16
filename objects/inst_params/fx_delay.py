@@ -84,5 +84,5 @@ class fx_delay:
 		return plugin_obj, pluginid
 
 	def timing_add(self, num): 
-		self.timings[num] = time.cvpj_time()
+		self.timings[num] = time.time_lfo()
 		return self.timings[num]

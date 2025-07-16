@@ -726,7 +726,7 @@ class input_lmms(plugins.base):
 
 		bbpld = {}
 
-		autoid_assoc = auto_id.convproj2autoid(48, False)
+		autoid_assoc = auto_id.convproj2autoid(48)
 
 		globalstore.dataset.load('lmms', './data_main/dataset/lmms.dset')
 

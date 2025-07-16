@@ -151,7 +151,6 @@ def to_samplepart(fl_channel_obj, sre_obj, convproj_obj, isaudioclip, flp_obj, d
 	if sampleref_obj.found:
 		if t_stretchingtime != 0:
 			t_stretchingmultiplier = pow(2, fl_channel_obj.params.stretchingmultiplier/10000)
-			dur_sec = sampleref_obj.get_dur_sec()
 			sre_obj.pitch = t_stretchingpitch
 			stretch_obj.timing.set__beats((t_stretchingtime*t_stretchingmultiplier)*2)
 
@@ -615,6 +614,8 @@ class input_flp(plugins.base):
 			tr_n = 500
 			if flp_obj.version_split[0] < 12: tr_n = 200
 
+			#print('INPUT')
+
 			for item in fl_arrangement.items:
 				playlistline = (item.trackindex*-1)+tr_n
 				if playlistline not in used_tracks: used_tracks.append(playlistline)
@@ -722,6 +723,10 @@ class input_flp(plugins.base):
 						placement_obj.fromindex = 'FLSample' + str(item.itemindex)
 
 						placement_obj.vol = item.vol
+
+						#print(''.join([str(max(0, x))[0:12].ljust(14) for x in 
+						#	[item.position, item.position, item.position, item.length, item.startoffset, item.endoffset]
+						#	]))
 
 						if item.itemindex in samplestretch:
 							stretch_obj, sampleref_obj, stretchbeats = samplestretch[item.itemindex]

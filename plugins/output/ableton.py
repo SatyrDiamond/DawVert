@@ -1180,7 +1180,8 @@ def add_track(convproj_obj, project_obj, trackid, track_obj):
 					alslfo = paramkeys['AuxLfos.1/Slot/Value']['0/SimplerAuxLfo'] = {}
 					if lfo_pitch_obj.prop.shape in LFO_SHAPE:
 						alslfo['Type'] = ableton_parampart.as_param('Type', 'int', LFO_SHAPE[lfo_pitch_obj.prop.shape])
-					alslfo['Frequency'] = ableton_parampart.as_param('Frequency', 'float', 1/lfo_pitch_obj.time.speed_seconds)
+					if lfo_pitch_obj.time.speed_seconds:
+						alslfo['Frequency'] = ableton_parampart.as_param('Frequency', 'float', 1/lfo_pitch_obj.time.speed_seconds)
 					alslfo['Attack'] = ableton_parampart.as_param('Attack', 'float', lfo_pitch_obj.attack*1000)
 					alslfo['ModDst/ModConnections.0/Amount'] = ableton_parampart.as_value('Amount', (lfo_pitch_obj.amount/24)*100)
 					alslfo['ModDst/ModConnections.0/Connection'] = ableton_parampart.as_value('Connection', 6)

@@ -132,7 +132,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				wf_plugin = proj_tracktion_edit.tracktion_plugin()
 				wf_plugin.plugtype = plugin_obj.type.subtype
 				wf_plugin.presetDirty = 1
-				wf_plugin.enabled = fx_on
+				wf_plugin.enabled = int(fx_on)
 				wf_plugin.params['type'] = 'vst'
 				wf_plugin.params['uniqueId'] = '0'
 				wf_plugin.params['uid'] = '0'
@@ -169,7 +169,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				wf_plugin = proj_tracktion_edit.tracktion_plugin()
 				wf_plugin.plugtype = plugin_obj.type.subtype
 				wf_plugin.presetDirty = 1
-				wf_plugin.enabled = fx_on
+				wf_plugin.enabled = int(fx_on)
 				wf_plugin.params['type'] = 'vst'
 				wf_plugin.params['uniqueId'] = '0'
 				wf_plugin.params['uid'] = '0'
@@ -210,7 +210,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				wf_plugin = proj_tracktion_edit.tracktion_plugin()
 				wf_plugin.plugtype = plugin_obj.type.subtype
 				wf_plugin.presetDirty = 1
-				wf_plugin.enabled = fx_on
+				wf_plugin.enabled = int(fx_on)
 				wf_plugin.params['type'] = 'vst'
 				wf_plugin.params['uniqueId'] = '0'
 				wf_plugin.params['uid'] = '0'
@@ -226,7 +226,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				multi_mode = plugin_obj.datavals.get('multi_mode', 'all')
 				if multi_mode == 'round_robin': programdata.playMode = 1
 				if multi_mode == 'random': programdata.playMode = 2
-				programdata.mono = plugin_obj.poly.mono
+				programdata.mono = plugin_obj.state.poly.mono
 
 				for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
 					key_l, key_h, key_r, samplerefid, extradata = sampleregion
@@ -253,7 +253,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				wf_plugin = proj_tracktion_edit.tracktion_plugin()
 				wf_plugin.plugtype = plugin_obj.type.subtype
 				wf_plugin.presetDirty = 1
-				wf_plugin.enabled = fx_on
+				wf_plugin.enabled = int(fx_on)
 				wf_plugin.params['type'] = 'vst'
 				wf_plugin.params['uniqueId'] = '0'
 				wf_plugin.params['uid'] = '0'
@@ -308,7 +308,7 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 			wf_plugin = proj_tracktion_edit.tracktion_plugin()
 			wf_plugin.plugtype = plugin_obj.type.subtype
 			wf_plugin.presetDirty = 1
-			wf_plugin.enabled = fx_on
+			wf_plugin.enabled = int(fx_on)
 			dsetfound = False
 			for param_id, dset_param in globalstore.dataset.get_params('waveform', 'plugin', wf_plugin.plugtype):
 				wf_plugin.params[param_id] = plugin_obj.params.get(param_id, dset_param.defv).value

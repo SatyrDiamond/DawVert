@@ -414,8 +414,7 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 							warp_obj.seconds = warptime.warpEndMarkerTime
 							for warpmarker in warptime.warpmarkers:
 								warp_point_obj = warp_obj.points__add()
-								warp_point_obj.beat = (warpmarker.warpTime*2)/stretchrate
-								warp_point_obj.second = warpmarker.sourceTime
+								warp_obj.points__add_beatsec((warpmarker.warpTime*2)/stretchrate, warpmarker.sourceTime)
 
 			if not is_warped:
 				s_timing_obj.set__beats(audioclip.loopinfo.numBeats)
@@ -487,7 +486,7 @@ class input_tracktion_edit(plugins.base):
 		software_mode = ''
 
 		if dawvert_intent.input_mode == 'file':
-			try:
+			if True:
 				project_obj.load_from_file(dawvert_intent.input_file)
 
 				logger_input.info('Software Mode: Waveform')
@@ -508,8 +507,8 @@ class input_tracktion_edit(plugins.base):
 								videos |= dict([(tproj.projectId+'/'+i, o.path) for i, o in tproj.objects.items() if (o.type == 'video')])
 							except:
 								pass
-			except:
-				pass
+			#except:
+			#	pass
 
 			try:
 				from objects.data_bytes import bytereader

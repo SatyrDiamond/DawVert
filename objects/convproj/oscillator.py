@@ -28,7 +28,7 @@ class cvpj_lfo:
 		self.prop = cvpj_osc_prop()
 		self.phase = 0
 		self.stereo = 0
-		self.time = time.cvpj_time()
+		self.time = time.time_lfo()
 		self.data = {}
 
 		self.loop_on = True

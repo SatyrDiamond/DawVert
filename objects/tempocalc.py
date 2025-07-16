@@ -220,6 +220,4 @@ class tempocalc_store:
 				else:
 					self.use_stored = 1
 
-			#print(self.store.get_used())
-
 			self.store = self.store.get_used()

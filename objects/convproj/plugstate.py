@@ -72,7 +72,7 @@ class cvpj_poly:
 		self.mono = False
 		self.max = 32
 		self.porta = False
-		self.porta_time = time.cvpj_time()
+		self.porta_time = time.time_lfo()
 		self.slide_always = False
 		self.porta_octive_scale = False
 		self.slide_slope = 0
@@ -392,9 +392,9 @@ class cvpj_plugin_state:
 
 	# -------------------------------------------------- timing
 	def timing_add(self, i_name): 
-		self.timing[i_name] = time.cvpj_time()
+		self.timing[i_name] = time.time_lfo()
 		return self.timing[i_name]
-	def timing_get(self, i_name): return self.timing[i_name] if i_name in self.timing else time.cvpj_time()
+	def timing_get(self, i_name): return self.timing[i_name] if i_name in self.timing else time.time_lfo()
 	def timing_list(self):  return [x for x in self.timing]
 
 	# -------------------------------------------------- chord

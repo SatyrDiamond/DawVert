@@ -371,6 +371,8 @@ class output_cvpjs(plugins.base):
 
 		arrangement_obj = arrangement.flp_arrangement()
 
+		#print('OUTPUT')
+
 		if not DEBUG_IGNORE_PLACEMENTS:
 
 			for idnum, playlist_obj in convproj_obj.playlist__iter():
@@ -384,22 +386,21 @@ class output_cvpjs(plugins.base):
 
 						position, duration = time_obj.get_posdur()
 						
-						fl_clip_obj = arrangement.flp_arrangement_clip()
-						fl_clip_obj.position = int(position)
-						fl_clip_obj.itemindex = int(pat_id[pl_obj.fromindex] + fl_clip_obj.patternbase)
-						fl_clip_obj.length = int(duration)
-						fl_clip_obj.startoffset = 0
-						fl_clip_obj.endoffset = int(duration)
-						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
-						if pl_obj.muted == True: fl_clip_obj.flags = 12352
+						item = arrangement.flp_arrangement_clip()
+						item.position = int(position)
+						item.itemindex = int(pat_id[pl_obj.fromindex] + item.patternbase)
+						item.length = int(duration)
+						item.startoffset = 0
+						item.endoffset = int(duration)
+						item.trackindex = (-500 + int(idnum))*-1
+						if pl_obj.muted == True: item.flags = 12352
 	
 						if time_obj.cut_type == 'cut':
-							fl_clip_obj.startoffset = int(time_obj.get_offset())
-							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0
-							fl_clip_obj.endoffset += int(time_obj.get_offset())
-						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
-						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
-	
+							item.startoffset = int(time_obj.get_offset())
+							if item.startoffset < 0: item.startoffset = 0
+							item.endoffset += int(time_obj.get_offset())
+						if item.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[item.position] = []
+						FL_Playlist_BeforeSort[item.position].append(item)
 	
 				for pl_obj in playlist_obj.placements.pl_audio_indexed:
 					if pl_obj.fromindex in samples_id:
@@ -407,13 +408,13 @@ class output_cvpjs(plugins.base):
 						
 						position, duration = time_obj.get_posdur()
 						
-						fl_clip_obj = arrangement.flp_arrangement_clip()
-						fl_clip_obj.position = int(position)
-						fl_clip_obj.itemindex = samples_id[pl_obj.fromindex]
-						fl_clip_obj.length = max(0, int(duration))
-						fl_clip_obj.endoffset = int(duration)/ppq
-						fl_clip_obj.trackindex = (-500 + int(idnum))*-1
-						if pl_obj.muted == True: fl_clip_obj.flags = 12352
+						item = arrangement.flp_arrangement_clip()
+						item.position = int(position)
+						item.itemindex = samples_id[pl_obj.fromindex]
+						item.length = max(0, int(duration))
+						item.endoffset = int(duration)/ppq
+						item.trackindex = (-500 + int(idnum))*-1
+						if pl_obj.muted == True: item.flags = 12352
 	
 						samplepart_obj = g_inst_id[pl_obj.fromindex]
 
@@ -425,9 +426,20 @@ class output_cvpjs(plugins.base):
 							stretch_obj, sampleref_obj, pitch = samplestretch[pl_obj.fromindex]
 							stretch_timing = stretch_obj.timing
 
-							#print(pl_obj.fromindex)
+							durtimetype = time_obj.duration.timemode
+							cuttimetype = time_obj.cut_start.timemode
 
-							if stretch_timing.time_type == 'speed':
+							#print(stretch_timing.time_type, durtimetype, cuttimetype, pl_obj.time.realtime_tempo)
+
+							if stretch_timing.time_type in ['beats', 'tempo', 'real_rate']:
+								stretchrate = 1/stretch_timing.get__real_rate(sampleref_obj, pl_obj.time.realtime_tempo)
+								if time_obj.cut_type == 'cut': startat = time_obj.get_offset_real()*2
+								startat = startat/stretchrate
+								endat = startat*realtime_speed
+								endat += (duration/ppq)/stretchrate
+								endat /= realtime_speed
+	
+							elif stretch_timing.time_type == 'speed':
 								stretchrate = 1/stretch_timing.get__speed(sampleref_obj)
 
 								if time_obj.cut_type == 'cut': startat = time_obj.get_offset_real()*2
@@ -446,14 +458,17 @@ class output_cvpjs(plugins.base):
 								startat = startat/ppq
 								endat = startat+(duration/ppq)
 	
-							fl_clip_obj.startoffset = (startat)*4
-							fl_clip_obj.endoffset = (endat)*4
+							item.startoffset = (startat)*4
+							item.endoffset = (endat)*4
 
+							#print(''.join([str(x)[0:12].ljust(14) for x in 
+							#	[item.position, item.length, item.startoffset, item.endoffset]
+							#	]))
 
-							if fl_clip_obj.startoffset < 0: fl_clip_obj.startoffset = 0
+							if item.startoffset < 0: item.startoffset = 0
 	
-						if fl_clip_obj.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[fl_clip_obj.position] = []
-						FL_Playlist_BeforeSort[fl_clip_obj.position].append(fl_clip_obj)
+						if item.position not in FL_Playlist_BeforeSort: FL_Playlist_BeforeSort[item.position] = []
+						FL_Playlist_BeforeSort[item.position].append(item)
 	
 				if idnum not in arrangement_obj.tracks: 
 					arrangement_obj.tracks[idnum] = arrangement.flp_track()

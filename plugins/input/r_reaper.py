@@ -702,10 +702,7 @@ class input_reaper(plugins.base):
 							if dur_sec: warp_obj.seconds = dur_sec
 							for data in rpp_trackitem.stretchmarks:
 								#for n, x in enumerate(data): print( str(round(x, 7)).ljust(11), end=(':' if not n else ''))
-								warp_point_obj = warp_obj.points__add()
-								warp_point_obj.beat = (data[0]*2)
-								warp_point_obj.beat += (startoffset*rate)/4
-								warp_point_obj.second = data[1]
+								warp_obj.points__add_beatsec( (data[0]*2)+((startoffset*rate)/4), data[1])
 						s_timing_obj.warp.manp__speed_mul(1/rate)
 					else: 
 						s_timing_obj.set__real_rate(bpm, cvpj_audio_rate)

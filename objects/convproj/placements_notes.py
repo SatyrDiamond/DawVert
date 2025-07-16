@@ -158,7 +158,7 @@ class cvpj_placements_notes:
 		return plb_obj
 
 class cvpj_placement_notes:
-	__slots__ = ['time','muted','visual','notelist','time_ppq','auto','timesig_auto','timemarkers','group','locked']
+	__slots__ = ['time','muted','visual','notelist','time_ppq','auto','timesig_auto','timemarkers','group','locked','pitch']
 	def __init__(self, time_ppq):
 		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.time_ppq = time_ppq
@@ -170,6 +170,7 @@ class cvpj_placement_notes:
 		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq)
 		self.group = None
 		self.locked = False
+		self.pitch = 0
 
 	def make_base(self):
 		plb_obj = cvpj_placement_notes(self.time_ppq)

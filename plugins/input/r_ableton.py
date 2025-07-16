@@ -132,7 +132,7 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 					middlenote += smiddlenote
 					plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(pluginid, None, None)
 					do_samplepart(convproj_obj, sp_obj, SamplePart, dawvert_intent)
-					sp_obj.reverse = int(parampaths['Player/Reverse'])
+					if 'Player/Reverse' in parampaths: sp_obj.reverse = int(parampaths['Player/Reverse'])
 					sp_obj.vol = float(SamplePart.Volume)
 					sp_obj.pan = float(SamplePart.Panorama)
 					sp_obj.scale = float(SamplePart.TuneScale)/100
@@ -630,10 +630,9 @@ class input_ableton(plugins.base):
 								dur_sec = sampleref_obj.get_dur_sec()
 								if dur_sec: warp_obj.seconds = dur_sec
 								for _, WarpMarker in clipobj.WarpMarkers.items():
-									warp_point_obj = warp_obj.points__add()
-									warp_point_obj.beat = WarpMarker.BeatTime
-									warp_point_obj.second = WarpMarker.SecTime
+									warp_obj.points__add_beatsec(WarpMarker.BeatTime, WarpMarker.SecTime)
 									if AUDWARPVERBOSE: print(str(WarpMarker.BeatTime).ljust(18), WarpMarker.SecTime)
+
 							s_timing_obj.warp.points__del_last()
 
 						else:

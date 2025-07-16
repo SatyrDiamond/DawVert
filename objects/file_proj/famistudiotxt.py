@@ -83,7 +83,7 @@ class fs_instrument:
 		self.N163WaveCount = 0
 
 class fs_patternsettings:
-	__slots__ = ['Length','BeatLength','NoteLength','Groove','GroovePaddingMode','bpm']
+	__slots__ = ['Length','BeatLength','NoteLength','BeatLength','NoteLength','Groove','GroovePaddingMode','bpm']
 	def __init__(self, cmd_params):
 		self.Length = int(cmd_params['Length']) if 'Length' in cmd_params else 32
 		self.BeatLength = int(cmd_params['BeatLength']) if 'BeatLength' in cmd_params else 4

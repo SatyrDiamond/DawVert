@@ -16,6 +16,7 @@ from objects.convproj import placements_index
 from objects.convproj import placements_video
 from objects.convproj import placements_custom
 from objects.convproj import time
+from objects.convproj import stretch
 
 def internal_addloops(pldata, eq_connect, loopcompat):
 	old_data = copy.deepcopy(pldata)
@@ -167,6 +168,13 @@ def internal_tempo_calc_audio(placements):
 		stretch_timing = stretch_obj.timing
 		if stretch_timing.time_type == 'real_rate': 
 			stretch_timing.original_bpm = time_obj.realtime_tempo
+
+def internal_tempo_calc_nested(placements):
+	for pl_obj in placements:
+		time_obj = pl_obj.time
+		time_obj.realtime_tempo = time_obj.position.get_tempo(time_obj.time_ppq)
+		for x in pl_obj.events:
+			x.time.realtime_tempo = time_obj.realtime_tempo
 
 class cvpj_placement_fade:
 	__slots__ = ['dur','time_type','skew','slope']
@@ -436,7 +444,7 @@ class cvpj_placements:
 		internal_tempo_calc_audio(self.pl_audio.data)
 		internal_tempo_calc(self.pl_notes_indexed.data)
 		internal_tempo_calc(self.pl_audio_indexed.data)
-		internal_tempo_calc(self.pl_audio_nested.data)
+		internal_tempo_calc_nested(self.pl_audio_nested.data)
 		internal_tempo_calc(self.pl_video.data)
 		internal_tempo_calc(self.pl_custom.data)
 

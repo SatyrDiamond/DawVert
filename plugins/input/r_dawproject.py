@@ -318,9 +318,7 @@ def do_audioclip(convproj_obj, npa_obj, inclip):
 				dur_sec = sampleref_obj.get_dur_sec()
 				if dur_sec: warp_obj.seconds = dur_sec
 				for x in inclip.warps.points:
-					warp_point_obj = warp_obj.points__add()
-					warp_point_obj.beat = x.time
-					warp_point_obj.second = x.contentTime
+					warp_obj.points__add_beatsec(x.time, x.contentTime)
 
 def do_audioauto(npa_obj, mpepoints):
 	target_obj = mpepoints.target

@@ -513,9 +513,10 @@ class input_wavtool(plugins.base):
 								with s_timing_obj.setup_warp(True) as warp_obj:
 									warp_obj.seconds = dur_sec
 									for anchor in wt_warp_anchors: 
-										warp_point_obj = warp_obj.points__add()
-										warp_point_obj.beat = (float(anchor))
-										warp_point_obj.second = (wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
+										warp_obj.points__add_beatsec(
+											(float(anchor)), 
+											(wt_warp_anchors[anchor]['destination']/2)/sourcebpmmod
+											)
 
 					else: 
 						s_timing_obj.set__speed(xtramath.pitch_to_speed(wavtool_clip.transpose))

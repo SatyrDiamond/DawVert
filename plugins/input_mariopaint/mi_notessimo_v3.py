@@ -119,6 +119,8 @@ class inst_manager():
 				sp_obj.loop_end = notet_sample.end
 				sp_obj.start = notet_sample.sample_start
 				sp_obj.end = dur_samples
+				sp_obj.pan = notet_sample.pan
+				sp_obj.vol = xtramath.from_db(notet_sample.volume/3)
 
 	def add_inst(convproj_obj, instid, project_obj, maindata_obj):
 		inst_obj = convproj_obj.instrument__add(instid)
@@ -181,6 +183,7 @@ class inst_manager():
 					
 						outvol = xtramath.from_db(notet_sample.volume/3)
 						inst_obj.params.add('vol', outvol, 'float')
+						inst_obj.params.add('pan', notet_sample.pan, 'float')
 
 			else:
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'midi', None)

@@ -16,6 +16,9 @@ def splitpath_txt(in_path):
 
 def folderfile(in_path, isfile):
 	pathd = splitpath_txt(in_path)
+	while pathd:
+		if pathd[0] == '.': pathd = pathd[1:]
+		else: break
 	if pathd:
 		if isfile>=0:
 			if '.' in pathd[-1]: return pathd[0:-1], pathd[-1]

@@ -24,6 +24,21 @@ audiosanua_device_id = ['fm', 'analog']
 delay_sync = [[1, 64, ''],[1, 64, 't'],[1, 64, 'd'],[1, 32, ''],[1, 32, 't'],[1, 32, 'd'],[1, 16, ''],[1, 16, 't'],[1, 16, 'd'],[1, 8, ''],[1, 8, 't'],[1, 8, 'd'],[1, 4, ''],[1, 4, 't'],[1, 4, 'd'],[1, 2, ''],[1, 2, 't'],[1, 2, 'd'],[1, 1, '']]
 op_lfo_shapes = ['saw','square','triangle','random','sine']
 
+def add_sample(convproj_obj, as_cell, as_channum, num, samplefolder):
+	if as_cell.url != 'undefined':
+		if as_cell.url.startswith('./sounds/'):
+			sampleref_obj = convproj_obj.sampleref__add__prefix(as_cell.url, 'audiosauna', as_cell.url)
+			sampleref_obj.fileref.resolve_prefix()
+		else:
+			sampleref_obj = convproj_obj.sampleref__add(as_cell.url, as_cell.url, None)
+		return as_cell.url
+	else:
+		samp_filename = 'sample_'+str(as_channum)+'_'+str(num)+'.wav'
+		full_filename = os.path.join(samplefolder,samp_filename)
+		zip_data.extract(samp_filename, path=samplefolder, pwd=None)
+		sampleref_obj = convproj_obj.sampleref__add(full_filename, full_filename, None)
+		return full_filename
+
 class input_audiosanua(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -43,6 +58,7 @@ class input_audiosanua(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_past import audiosauna as proj_audiosauna
+		from objects.convproj import fileref
 
 		global cvpj_l
 
@@ -55,6 +71,8 @@ class input_audiosanua(plugins.base):
 		traits_obj.audio_filetypes = ['wav', 'mp3']
 
 		convproj_obj.set_timings(128)
+
+		fileref.cvpj_fileref_global.add_prefix_extend('dawvert_external_data', 'audiosauna', ['audiosauna'])
 
 		# ------------------------------------------ Start ------------------------------------------
 		globalstore.dataset.load('audiosauna', './data_main/dataset/audiosauna.dset')
@@ -124,7 +142,7 @@ class input_audiosanua(plugins.base):
 
 				placement_obj = track_obj.placements.add_notes()
 				time_obj = placement_obj.time
-				time_obj.set_startend(as_pattern.startTick, as_pattern.endTick)
+				time_obj.set_startend(max(as_pattern.startTick, 0), as_pattern.endTick)
 				time_obj.set_loop_data(0, 0, as_pattern.patternLength)
 				placement_obj.visual.color.set_int(colordata.getcolornum(as_pattern.patternColor))
 				placement_obj.visual.color.fx_allowed = ['saturate']
@@ -160,6 +178,8 @@ class input_audiosanua(plugins.base):
 
 					setasdr(plugin_obj, 'vol', as_device.params, False, 'attack', 'decay', 'release', 'sustain')
 
+					print(as_device.params)
+
 					if as_device.deviceType == 1: oprange = 2
 					if as_device.deviceType == 0: oprange = 4
 
@@ -183,41 +203,56 @@ class input_audiosanua(plugins.base):
 							osc_data.params['vol'] = as_vol
 
 				if as_device.deviceType == 2:
-					plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
-					plugin_obj.role = 'synth'
-					track_obj.plugslots.set_synth(pluginid)
 
-					for num, as_cell in as_device.samples.items():
-						sp_obj = plugin_obj.sampleregion_add(as_cell.loKey-60, as_cell.hiKey-60, as_cell.rootKey-60, None)
-						sp_obj.visual.name = as_cell.name
+					itemdata = [y for x, y in as_device.samples.items()]
 
-						if as_cell.url != 'undefined':
-							sampleref_obj = convproj_obj.sampleref__add(as_cell.url, as_cell.url, None)
-							sp_obj.sampleref = as_cell.url
-						else:
-							samp_filename = 'sample_'+str(as_channum)+'_'+str(num)+'.wav'
-							full_filename = os.path.join(samplefolder,samp_filename)
-							zip_data.extract(samp_filename, path=samplefolder, pwd=None)
-							sampleref_obj = convproj_obj.sampleref__add(full_filename, full_filename, None)
-							sp_obj.sampleref = full_filename
+					cond1 = all([x.loopMode=='off' for x in itemdata])
+					cond2 = all([(x.loKey-x.hiKey)==0 for x in itemdata])
+					cond3 = as_device.params['masterSustain']==0 if 'masterSustain' in as_device.params else False
 
-						sp_obj.point_value_type = "percent"
-						sp_obj.reverse = as_cell.playMode != 'forward'
-						sp_obj.vol = as_cell.volume/100
-						sp_obj.pan = as_cell.pan/100
-						sp_obj.start = as_cell.smpStart/100
-						sp_obj.end = as_cell.smpEnd/100
-						sp_obj.pitch = as_cell.semitone + as_cell.finetone/100
+					if cond1 and cond2 and cond3:
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+						plugin_obj.role = 'synth'
+						track_obj.plugslots.set_synth(pluginid)
+	
+						for num, as_cell in as_device.samples.items():
+							sp_obj = plugin_obj.sampleregion_add(as_cell.loKey-60, as_cell.hiKey-60, as_cell.rootKey-60, None)
+							sp_obj.visual.name = as_cell.name
+	
+							sp_obj.sampleref = add_sample(convproj_obj, as_cell, as_channum, num, samplefolder)
+	
+							sp_obj.point_value_type = "percent"
+							sp_obj.reverse = as_cell.playMode != 'forward'
+							sp_obj.vol = as_cell.volume/100
+							sp_obj.pan = as_cell.pan/100
+							sp_obj.start = as_cell.smpStart/100
+							sp_obj.end = as_cell.smpEnd/100
+							sp_obj.pitch = as_cell.semitone + as_cell.finetone/100
+	
+							sp_obj.loop_active = as_cell.loopMode != 'off'
+							sp_obj.loop_start = as_cell.loopStart/100
+							sp_obj.loop_end = as_cell.loopEnd/100
+							if as_cell.loopMode == 'ping-pong': sp_obj.loop_mode = 'pingpong'
+	
+							sp_obj.data['tone'] = as_cell.semitone
+							sp_obj.data['fine'] = as_cell.finetone
 
-						sp_obj.loop_active = as_cell.loopMode != 'off'
-						sp_obj.loop_start = as_cell.loopStart/100
-						sp_obj.loop_end = as_cell.loopEnd/100
-						if as_cell.loopMode == 'ping-pong': sp_obj.loop_mode = 'pingpong'
+						setasdr(plugin_obj, 'vol', as_device.params, False, 'masterAttack', 'masterDecay', 'masterRelease', 'masterSustain')
+					else:
+						plugin_obj, pluginid = convproj_obj.plugin__add__genid('universal', 'sampler', 'drums')
+						plugin_obj.role = 'synth'
+						track_obj.is_drum = True
+						track_obj.plugslots.set_synth(pluginid)
 
-						sp_obj.data['tone'] = as_cell.semitone
-						sp_obj.data['fine'] = as_cell.finetone
-
-					setasdr(plugin_obj, 'vol', as_device.params, False, 'masterAttack', 'masterDecay', 'masterRelease', 'masterSustain')
+						for num, as_cell in as_device.samples.items():
+							drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
+							drumpad_obj.key = as_cell.loKey-60
+							drumpad_obj.visual.name = as_cell.name
+							pitch = (as_cell.rootKey-as_cell.loKey) + as_cell.semitone + as_cell.finetone/100
+							layer_obj.samplepartid = 'drum_%i' % num
+							sp_obj = plugin_obj.samplepart_add(layer_obj.samplepartid)
+							sp_obj.pitch = pitch
+							sp_obj.sampleref = add_sample(convproj_obj, as_cell, as_channum, num, samplefolder)
 
 				# distortion
 				modulate = float(getvalue(as_device.params, 'driveModul' if as_device.deviceType in [0,1] else 'modulate'))/100

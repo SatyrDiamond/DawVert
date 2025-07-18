@@ -187,8 +187,6 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile, dawvert_int
 
 			wrapper_vsttype = wrapperdata['plugin_info'][0]
 
-			#print(wrapper_vsttype, wrapperdata['name'])
-
 			if wrapper_vsttype in [4,0]:
 				if wrapper_vsttype == 0: plugin_obj.role == 'fx'
 				if wrapper_vsttype == 4: plugin_obj.role == 'synth'
@@ -237,6 +235,22 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile, dawvert_int
 								for paramnum in range(numparamseach): extmanu_obj.vst2__set_param(paramnum, bankparams[num][paramnum])
 							extmanu_obj.vst2__set_program(wrapper_vstprogram)
 							extmanu_obj.vst2__params_output()
+
+			try:
+				if wrapper_vsttype in [1,5]:
+					plugin_obj.type_set('external', 'directx', None)
+					if wrapper_vsttype == 1: plugin_obj.role == 'fx'
+					if wrapper_vsttype == 5: plugin_obj.role == 'synth'
+					external_info = plugin_obj.external_info
+					if '16id' in wrapperdata:
+						pluguuid = wrapperdata['16id'].hex().upper()
+						extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+						extmanu_obj.dx__replace_data(pluguuid, wrapperdata['state'])
+					if 'name' in wrapperdata: 
+						plugin_obj.external_info.name = wrapperdata['name']
+			except:
+				import traceback
+				print(traceback.format_exc())
 
 			if wrapper_vsttype in [8,7] and 'state' in wrapperdata:
 				plugin_obj.type_set('external', 'vst3', 'win')
@@ -748,6 +762,29 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile, dawvert_int
 				_, marker_obj = enudata
 				slice_obj = sre_obj.add_slice()
 				slice_obj.start = marker_obj.sampleoffset
+
+	elif flplugin.name == 'buzz generator adapter':
+		filename = fl_plugstr.string_t()
+		if filename:
+			plugin_obj.type_set('external', 'buzz', 'win')
+
+			buzz_pathid = pluginid+'_buzzpath'
+			convproj_obj.fileref__add(buzz_pathid, filename, 'win')
+			plugin_obj.filerefs_global['plugin'] = buzz_pathid
+
+			plugin_obj.state.poly.max = fl_plugstr.int32()
+			plugin_obj.datavals_global.add('note_param', fl_plugstr.int32())
+			plugin_obj.datavals_global.add('no_note_off', bool(fl_plugstr.int8()))
+			plugin_obj.datavals_global.add('use_midinote', bool(fl_plugstr.int8()))
+			fl_plugstr.skip(4)
+			numparams = fl_plugstr.int32()
+
+			parammods = []
+			for x in range(numparams): parammods.append(fl_plugstr.l_int16(3))
+			params = fl_plugstr.l_int32(numparams)
+			attrib = fl_plugstr.l_int32(fl_plugstr.int32())
+			for n, x in enumerate(params): plugin_obj.params.add('ext_param_%i' % n, x, 'int')
+			for n, x in enumerate(attrib): plugin_obj.datavals.add('attrib_%i' % n, x)
 
 	else:
 		plugin_obj.type_set('native', 'flstudio', flplugin.name)

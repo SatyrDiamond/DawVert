@@ -33,12 +33,6 @@ class mariopaint_chord():
 		self.notes.append(note_obj)
 		return note_obj
 
-def add_tempo_point(convproj_obj, position, value, notelen): 
-	autopl_obj = convproj_obj.automation.add_pl_points(['main','bpm'], 'float')
-	autopl_obj.data.points__add_normal(0, value/notelen, 0, None)
-	time_obj = autopl_obj.time
-	time_obj.set_posdur(position, notelen)
-
 class mariopaint_song():
 	def __init__(self):
 		self.data = {}
@@ -58,27 +52,47 @@ class mariopaint_song():
 		track_obj = convproj_obj.track__add('main', 'instruments', 0, False)
 		globalstore.dataset.load('mariopaint', './data_main/dataset/mariopaint.dset')
 
-		outtempo, notelen = xtramath.get_lower_tempo(self.tempo, 1, 180)
+
+		#print(outtempo, notelen, self.tempo)
 
 		cvpj_notelist = track_obj.placements.notelist
 
-		for pos, chord_obj in self.chords.items():
-			if chord_obj.bookmark:
-				timemarker_obj = convproj_obj.timemarker__add()
-				timemarker_obj.visual.name = 'Bookmark'
-				timemarker_obj.type = 'text'
-				timemarker_obj.position = (pos/notelen)
-			if chord_obj.speedmark != -1:
-				add_tempo_point(convproj_obj, (pos/notelen), chord_obj.speedmark, notelen)
-			for n in chord_obj.notes:
-				cvpj_notelist.add_m(n.inst, (pos/notelen), (1/notelen), n.get(), chord_obj.volume, None)
+		songsize = max(list(self.chords))
+
+		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
+
+		notepos = 0
+		outtempo, notelen = xtramath.get_lower_tempo(self.tempo, 1, 180)
+		tempo_changed = True
+		for pos in range(songsize):
+			chord_obj = self.chords[pos] if pos in self.chords else None
+
+			if chord_obj:
+				if chord_obj.speedmark>0:
+					tempo_changed = True
+					outtempo, notelen = xtramath.get_lower_tempo(chord_obj.speedmark, 1, 180)
+
+				if chord_obj.bookmark:
+					timemarker_obj = convproj_obj.timemarker__add()
+					timemarker_obj.visual.name = 'Bookmark'
+					timemarker_obj.type = 'text'
+					timemarker_obj.position = (pos/notelen)
+				for n in chord_obj.notes:
+					cvpj_notelist.add_m(n.inst, notepos, notelen*2, n.get(), chord_obj.volume, None)
+
+			if tempo_changed: 
+				tempo = outtempo
+				auto_bpm_obj.add_all(notepos, (outtempo)/2, notelen)
+				tempo_changed = False
+
+			notepos += notelen*2
 
 		used_inst = cvpj_notelist.get_used_inst()
 
 		for instnum, instname in enumerate(used_inst): 
 			inst_obj = convproj_obj.instrument__add(instname)
 			inst_obj.visual.from_dset('mariopaint', 'inst', instname, True)
-			plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'mariopaint', None)
+			plugin_obj = convproj_obj.plugin__add(instname, 'universal', 'mariopaint', None)
 			plugin_obj.midi_fallback__add_from_dset('mariopaint', 'inst', instname)
 			fxchan_data = convproj_obj.fx__chan__add(instnum+1)
 			fxchan_data.visual = copy.deepcopy(inst_obj.visual)
@@ -87,4 +101,4 @@ class mariopaint_song():
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')
 		convproj_obj.timesig = [self.measure, self.measure_o]
-		convproj_obj.params.add('bpm', outtempo/notelen, 'float')
+		convproj_obj.params.add('bpm', outtempo, 'float')

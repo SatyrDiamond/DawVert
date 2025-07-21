@@ -16,6 +16,7 @@
   <out__param to="Filter_Bandwidth" from="damp" type="float">0</out__param>
   <out__param to="DelayLine_SyncL" type="bool">0</out__param>
   <out__param to="DelayLine_SmoothingMode" type="int">1</out__param>
+  <out__param to="Filter_On" only_value="1" type="bool">0</out__param>
   <tobool name="cross" cond="x>=0.5"/>
   <out__param to="DelayLine_PingPong" from="cross" type="bool">0</out__param>
 </plugstatetransform>

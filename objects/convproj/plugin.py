@@ -101,7 +101,7 @@ class cvpj_plugin_external:
 				self.version_bytes = int.from_bytes(versionbytes, "little")
 		else: self.id = pluginfo_obj.id
 		
-
+DEBUG_REP_TXT = False
 
 class cvpj_plugin:
 
@@ -225,16 +225,19 @@ class cvpj_plugin:
 		return str(self.type)
 
 	def replace_hard(self, i_category, i_type, i_subtype):
+		if DEBUG_REP_TXT: print('replace_hard', self.type)
 		self.type.set(i_category, i_type, i_subtype)
 		self.program__reset()
 		self.external_info = cvpj_plugin_external()
 		self.data = {}
 
 	def replace_keepprog(self, i_category, i_type, i_subtype):
+		if DEBUG_REP_TXT: print('replace_keepprog', self.type)
 		self.type.set(i_category, i_type, i_subtype)
 		self.data = {}
 
 	def replace(self, i_category, i_type, i_subtype):
+		if DEBUG_REP_TXT: print('replace', self.type)
 		self.type.set(i_category, i_type, i_subtype)
 		self.program__reset()
 		self.data = {}

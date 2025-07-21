@@ -20,6 +20,7 @@ class cvpj_project_traits:
 		self.track_hybrid = False
 		self.track_lanes = False
 		self.track_nopl = False
+		self.notespl_features = []
 		
 	def from_dict(self, indict):
 		if 'audio_filetypes' in indict: self.audio_filetypes = indict['audio_filetypes']

@@ -337,6 +337,11 @@ class cvpj_placement_timing:
 		durstart = self.duration.get('ppq', self.time_ppq, self.realtime_tempo)
 		return posstart, posstart+durstart
 
+	def get_startend_beats(self):
+		posstart = self.position.get('beats', self.time_ppq)
+		durstart = self.duration.get('beats', self.time_ppq, self.realtime_tempo)
+		return posstart, posstart+durstart
+
 	def get_end(self):
 		return self.get_pos()+self.get_dur()
 
@@ -409,8 +414,11 @@ class cvpj_placement_timing:
 
 	def change_seconds(self, is_seconds, bpm, ppq):
 		if is_seconds:
+			start, end = self.get_startend_beats()
+			start_sec = time.pos_get_pos(self.position.timeid, start, True)
+			end_sec = time.pos_get_pos(self.position.timeid, end, True)
 			self.position.convert('seconds', ppq)
-			self.duration.convert('seconds', ppq, self.realtime_tempo)
+			self.duration.set((end_sec-start_sec), 'seconds')
 		else:
 			self.position.convert('ppq', ppq)
 			self.duration.convert('ppq', ppq, self.realtime_tempo)

@@ -573,7 +573,7 @@ class input_ableton(plugins.base):
 							if int(e.PointeeId) == int(mainseq.TranspositionModulationTarget.id): mpetype = 'pitch'
 
 							if mpetype:
-								autopoints_obj = placement_obj.add_autopoints(mpetype, 4, True)
+								autopoints_obj = placement_obj.add_autopoints(mpetype, 4.0)
 								for mid, mtype, mobj in e.Automation.Events:
 									if mtype == 'FloatEvent':
 										autopoints_obj.points__add_normal(mobj.Time, mobj.Value, 0, None)
@@ -792,7 +792,7 @@ class input_ableton(plugins.base):
 								t_note_extra['off_vol'] = event.OffVelocity/100
 								t_note_extra['probability'] = event.Probability
 								t_note_extra['velocity_range'] = event.VelocityDeviation
-								t_note_extra['enabled'] = event.IsEnabled
+								if not event.IsEnabled: t_note_extra['disabled'] = not event.IsEnabled
 								notevol = (event.Velocity/100)
 								#if issampler: notevol = notevol**3
 								cvpj_notelist.add_r(event.Time*4, event.Duration*4, kt.MidiKey-60, notevol, t_note_extra)

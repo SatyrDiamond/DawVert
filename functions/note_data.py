@@ -18,6 +18,7 @@ def keyletter_to_note(i_keyletter, i_oct):
     return keytable_vals[keytable.index(i_keyletter)] + (i_oct)*12
 
 def freq_to_note(freq):
+    if freq == 0: freq = 1
     return 12*math.log2(freq/(440*pow(2, -4.75)))-60
 
 def freq_to_note_round(freq):

@@ -31,6 +31,18 @@ def do_auto(convproj_obj, autoloc, curve, parammode):
 		if parammode == 3: val = (p.value-0.5)*2
 		auto_obj.add_autopoint(p.position, val, None)
 
+def do_auto_placement(convproj_obj, mpetype, curve, parammode):
+	valtype = 'float'
+	if parammode == 1: valtype = 'bool'
+	if parammode == 2: valtype = 'bool'
+	autopoints_obj = placement_obj.add_autopoints(mpetype, 1.0, True)
+	for p in curve.points:
+		if parammode == 0: val = p.value
+		if parammode == 1: val = p.value>0.5
+		if parammode == 2: val = p.value<0.5
+		if parammode == 3: val = (p.value-0.5)*2
+		autopoints_obj.points__add_normal(p.position, val, 0, None)
+
 filter_types = {
 	'1': 'low_pass',
 	'2': 'high_pass',
@@ -410,6 +422,16 @@ def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc, dawvert_int
 			track_obj.params.add('solo', bool(rack.solo), 'bool')
 			track_obj.params.add('mute', bool(rack.mute), 'bool')
 
+			if bool(rack.phase_invert_audio_output):
+				inverse_fxid = rack.uid+'_inverse'
+				plugin_obj = convproj_obj.plugin__add(inverse_fxid, 'universal', 'invert', None)
+				track_obj.plugslots.slots_mixer.append(inverse_fxid)
+
+			if bool(rack.force_mono):
+				inverse_fxid = rack.uid+'_force_mono'
+				plugin_obj = convproj_obj.plugin__add(inverse_fxid, 'universal', 'force_mono', None)
+				track_obj.plugslots.slots_mixer.append(inverse_fxid)
+
 			for send_track in rack.send_tracks:
 				track_obj.sends.add(send_track.send_track_uid, None, send_track.send_amount)
 
@@ -430,6 +452,17 @@ def do_rack(convproj_obj, project_obj, track_obj, zb_track, autoloc, dawvert_int
 	
 			break
 
+def do_fade(pattern_envelope, placement_obj):
+	e_attack = 0
+	e_sustain = 0
+	e_release = 0
+	for x in pattern_envelope:
+		if x.name == 'attack': e_attack = x.x
+		elif x.name == 'sustain': e_sustain = x.x
+		elif x.name == 'release': e_release = x.x
+	if (e_sustain and e_release):
+		placement_obj.fade_in.set_dur(e_attack, 'beats')
+		placement_obj.fade_out.set_dur(e_release-e_sustain, 'beats')
 
 class input_zenbeats(plugins.base):
 	def is_dawvert_plugin(self):
@@ -460,6 +493,7 @@ class input_zenbeats(plugins.base):
 		traits_obj.placement_cut = True
 		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv', 'loop_adv_off']
 		traits_obj.plugin_ext_platforms = ['win']
+		traits_obj.notespl_features.append('fade')
 
 		convproj_obj.set_timings(1.0)
 
@@ -523,15 +557,25 @@ class input_zenbeats(plugins.base):
 						time_obj.set_startend(zb_pattern.start_beat, zb_pattern.end_beat)
 						time_obj.set_loop_data(zb_pattern.loop_play_start, zb_pattern.loop_start_beat, zb_pattern.loop_end_beat)
 
+						do_fade(zb_pattern.pattern_envelope, placement_obj)
+
 						placement_obj.muted = not zb_pattern.active
 						placement_obj.locked = zb_pattern.locked
+
+						placement_obj.timesig_auto.add_point(0, [zb_pattern.time_signature_numerator, zb_pattern.time_signature_denominator])
 
 						cvpj_notelist = placement_obj.notelist
 
 						for zb_note in zb_pattern.notes:
 							note_dur = max(zb_note.end-zb_note.start, 0)
+
 							extradata = {}
+							if zb_note.velocity_jitter is not None: extradata['velocity_jitter'] = zb_note.velocity_jitter
+							if zb_note.pan_jitter is not None: extradata['pan_jitter'] = zb_note.pan_jitter
+							if zb_note.reverse: extradata['reverse'] = bool(zb_note.reverse)
 							if zb_note.probability != 1: extradata['probability'] = zb_note.probability
+							if not zb_note.active: t_note_extra['disabled'] = not event.active
+
 							cvpj_notelist.add_r(zb_note.start, note_dur, zb_note.semitone-60, zb_note.velocity/127, extradata if extradata else None)
 							cvpj_notelist.last_add_pan((zb_note.pan_linear-0.5)*2)
 							cvpj_notelist.last_add_finepitch(zb_note.pitch_offset)
@@ -551,6 +595,8 @@ class input_zenbeats(plugins.base):
 						time_obj = placement_obj.time
 						time_obj.set_startend(zb_pattern.start_beat, zb_pattern.end_beat)
 						time_obj.set_loop_data(zb_pattern.loop_play_start, zb_pattern.loop_start_beat, zb_pattern.loop_end_beat)
+
+						do_fade(zb_pattern.pattern_envelope, placement_obj)
 
 						placement_obj.muted = not zb_pattern.active
 						placement_obj.locked = zb_pattern.locked

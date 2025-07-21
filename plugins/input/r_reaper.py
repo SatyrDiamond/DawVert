@@ -212,7 +212,6 @@ class input_reaper(plugins.base):
 		if tempoenvex.used:
 			auto_obj = convproj_obj.automation.create(['main', 'bpm'], 'float', True)
 			for point in tempoenvex.points:
-				print(point)
 				autopoint_obj = auto_obj.add_autopoint(point[0], point[1], 'instant')
 				if len(point)>6:
 					if point[2]: autopoint_obj['tension'] = -point[6]
@@ -605,7 +604,7 @@ class input_reaper(plugins.base):
 								midifile = os.path.join(dawvert_intent.input_folder, midifile)
 								placement_obj.midi_from(midifile)
 
-							maxdur = midievents_obj.get_dur()
+							maxdur = int(midievents_obj.get_dur())
 
 							if maxdur and cvpj_loop:
 								cvpj_end_bpm = ((maxdur/midievents_obj.ppq)*4)

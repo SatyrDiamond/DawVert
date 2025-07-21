@@ -786,6 +786,23 @@ def getparams(convproj_obj, pluginid, flplugin, foldername, zipfile, dawvert_int
 			for n, x in enumerate(params): plugin_obj.params.add('ext_param_%i' % n, x, 'int')
 			for n, x in enumerate(attrib): plugin_obj.datavals.add('attrib_%i' % n, x)
 
+	elif flplugin.name == 'buzz effect adapter':
+		filename = fl_plugstr.string_t()
+		if filename:
+			plugin_obj.type_set('external', 'buzz', 'win')
+
+			buzz_pathid = pluginid+'_buzzpath'
+			convproj_obj.fileref__add(buzz_pathid, filename, 'win')
+			plugin_obj.filerefs_global['plugin'] = buzz_pathid
+
+			fl_plugstr.skip(4)
+			numparams = fl_plugstr.int32()
+
+			params = fl_plugstr.l_int32(numparams)
+			attrib = fl_plugstr.l_int32(fl_plugstr.int32())
+			for n, x in enumerate(params): plugin_obj.params.add('ext_param_%i' % n, x, 'int')
+			for n, x in enumerate(attrib): plugin_obj.datavals.add('attrib_%i' % n, x)
+
 	else:
 		plugin_obj.type_set('native', 'flstudio', flplugin.name)
 		if flplugin.name == 'sawer': plugin_obj.midi_fallback__add_inst(81)

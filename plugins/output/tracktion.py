@@ -266,15 +266,22 @@ def get_plugin(convproj_obj, tparams_obj, sampleref_assoc, sampleref_obj_assoc, 
 				sampler_obj.program.presetDirty = True
 				programdata = sampler_obj.set_microsampler()
 				useddrums = []
-				for spn, sampleregion in enumerate(plugin_obj.sampleregion_getall()):
-					key_l, key_h, key_r, samplerefid, extradata = sampleregion
-					drumkey = key_r+60
+				drumpads = plugin_obj.drumpad_getall()
+
+				for num, drumpad_obj in enumerate(drumpads):
+					drumkey = drumpad_obj.key+60
+
 					if drumkey not in useddrums:
-						sp_obj = plugin_obj.samplepart_get(samplerefid)
-						soundlayer_samplepart(plugin_obj, gpitch, programdata, drumkey, drumkey, drumkey, sp_obj, sampleref_assoc, sampleref_obj_assoc)
 						pad_obj = programdata.add_pad(drumkey)
-						if sp_obj.visual.name: pad_obj.name = sp_obj.visual.name
+						if drumpad_obj.visual.name: pad_obj.name = drumpad_obj.visual.name
+
+						for layer_obj in drumpad_obj.layers:
+							sp_obj = plugin_obj.samplepart_get(layer_obj.samplepartid)
+							if sp_obj:
+								soundlayer_samplepart(plugin_obj, 0, programdata, drumkey, drumkey, drumkey, sp_obj, sampleref_assoc, sampleref_obj_assoc)
+
 						useddrums.append(drumkey)
+
 				wf_plugin.params['state'] = juce_memoryblock.toJuceBase64Encoding(sampler_obj.write())
 				return wf_plugin
 

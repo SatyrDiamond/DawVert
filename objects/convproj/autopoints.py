@@ -3,13 +3,14 @@
 
 from functions import xtramath
 from objects import debug
+from objects import tempocalc
+from objects import valobjs
+from objects.convproj import time
 from objects.convproj import time
 from objects.data_bytes import dynbytearr
-from objects import valobjs
+import copy
 import math
 import numpy as np
-import copy
-from objects import tempocalc
 
 autopoints_premake = dynbytearr.dynbytearr_premake([
 	('pos', np.float64), 

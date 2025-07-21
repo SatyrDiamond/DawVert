@@ -128,7 +128,7 @@ class input_cvpj_r(plugins.base):
 		traits_obj.fxchain_mixer = True
 		traits_obj.audio_filetypes = ['wav']
 
-		convproj_obj.set_timings(1, True)
+		convproj_obj.set_timings(1.0)
 
 		globalstore.dataset.load('caustic', './data_main/dataset/caustic.dset')
 
@@ -459,7 +459,7 @@ class input_cvpj_r(plugins.base):
 			#			time_obj = autopl_obj.time
 			#			time_obj.set_posdur(position, duration)
 
-		bpm_auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
+		bpm_auto_obj = convproj_obj.automation.create(['main', 'bpm'], 'float', True)
 		for pos, val in project_obj.seqn.tempoauto: bpm_auto_obj.add_autopoint(pos, val, None)
 
 		for machnum, machauto in enumerate(project_obj.seqn.auto_mach):

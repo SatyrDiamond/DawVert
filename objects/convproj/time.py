@@ -10,6 +10,20 @@ from dataclasses import field
 from contextlib import contextmanager
 import bisect
 
+def pos_get_tempo(timeid, pos, is_seconds):
+	if timeid in tempocalc.global_stores:
+		return float(tempocalc.global_stores[timeid].get_tempo(pos, is_seconds))
+	else:
+		print('id not found in tempocalc_store')
+		exit()
+
+def pos_get_pos(timeid, pos, is_seconds):
+	if timeid in tempocalc.global_stores:
+		return float(tempocalc.global_stores[timeid].get_pos(pos, is_seconds))
+	else:
+		print('id not found in tempocalc_store')
+		exit()
+
 # --------------------------------------------- PLACEMENTS ---------------------------------------------
 
 class time_duration:
@@ -120,25 +134,25 @@ class time_position:
 		self.convert(org_timemode, ppq)
 
 	def get_tempo(self, ppq):
-		if self.timemode == 'ppq': return self.get_timed().get_tempo(self.value/ppq, False)
-		elif self.timemode == 'beats': return self.get_timed().get_tempo(self.value, False)
-		elif self.timemode == 'seconds': return self.get_timed().get_tempo(self.value, True)
+		if self.timemode == 'ppq': return pos_get_tempo(self.timeid, self.value/ppq, False)
+		elif self.timemode == 'beats': return pos_get_tempo(self.timeid, self.value, False)
+		elif self.timemode == 'seconds': return pos_get_tempo(self.timeid, self.value, True)
 
 	def get(self, timemode, ppq):
 		if self.timemode == 'ppq':
 			if timemode == 'beats': return self.value/ppq
 			elif timemode == 'ppq': return self.value
-			elif timemode == 'seconds': return self.get_timed().get_pos(self.value/ppq, True)
+			elif timemode == 'seconds': return pos_get_pos(self.timeid, self.value/ppq, True)
 
 		elif self.timemode == 'beats':
 			if timemode == 'beats': return self.value
 			elif timemode == 'ppq': return self.value*ppq
-			elif timemode == 'seconds': return self.get_timed().get_pos(self.value, True)
+			elif timemode == 'seconds': return pos_get_pos(self.timeid, self.value, True)
 
 		elif self.timemode == 'seconds':
 			if timemode == 'seconds': return self.value
-			elif timemode == 'beats': return self.get_timed().get_pos(self.value, False)
-			elif timemode == 'ppq': return self.get_timed().get_pos(self.value, False)*ppq
+			elif timemode == 'beats': return pos_get_pos(self.timeid, self.value, False)
+			elif timemode == 'ppq': return pos_get_pos(self.timeid, self.value, False)*ppq
 
 # --------------------------------------------- CONTENT ---------------------------------------------
 
@@ -610,23 +624,31 @@ class time_content:
 		fw_p = firstwarp.beat
 		fw_s = firstwarp.second
 
-		if len(warp_obj.points)>1:
-			for wn, warpd in enumerate(warp_obj.points):
-				pos = warpd.beat
-				pos_real = warpd.second/4
-				pos -= fw_p
-				pos_real -= fw_s
-				timecalc = (pos_real*8)
-				speedchange = (pos/timecalc if timecalc else 1)
-				finalspeed = speedchange
-		else:
-			finalspeed = warp_obj.points[0].speed
+		warp_obj.calcpoints__speed()
+		warp_obj.post__speed()
+
+		offs = warp_obj.get__offset()*4
+
+		pl_timemul.cut_offset = max(offs, 0)
+		#pl_timemul.pos_offset = -min(offs, 0)
+
+		#if len(warp_obj.points)>1:
+		#	for wn, warpd in enumerate(warp_obj.points):
+		#		pos = warpd.beat
+		#		pos_real = warpd.second/4
+		#		pos -= fw_p
+		#		pos_real -= fw_s
+		#		timecalc = (pos_real*8)
+		#		speedchange = (pos/timecalc if timecalc else 1)
+		#		finalspeed = speedchange
+		#else:
+		#	finalspeed = warp_obj.points[0].speed
 
 		if finalspeed>0:
-			self.set__rate(finalspeed)
+			self.set__rate(warp_obj.speed)
 
-		pl_timemul.pos_offset = fw_p*4
-		pl_timemul.cut_offset = (fw_s*8)
+		#pl_timemul.pos_offset = fw_p*4
+		#pl_timemul.cut_offset = (fw_s*8)
 
 
 

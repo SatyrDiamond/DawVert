@@ -29,45 +29,6 @@ class cvpj_stretch:
 	timing: time_content = field(default_factory=time_content)
 	preserve_pitch: bool = False
 
-
-	def changestretch_rate2warp(self, pl_timemul, sampleref_obj, tempo, pitch):
-		s_timing_obj = self.timing
-
-		dur_sec = sampleref_obj.get_dur_sec()
-
-		muloffset = 1
-
-		if s_timing_obj.tempo_based:
-			calc_tempo_size = s_timing_obj.get__speed(sampleref_obj)
-			pos_real = sampleref_obj.dur_sec*calc_tempo_size
-		
-			with s_timing_obj.setup_warp(False) as warp_obj:
-				warp_point_obj = warp_obj.points__add()
-				warp_point_obj.speed = 1/calc_tempo_size
-		
-				warp_point_obj = warp_obj.points__add()
-				warp_point_obj.beat = pos_real*2
-				warp_point_obj.second = sampleref_obj.dur_sec
-				warp_point_obj.speed = 1/calc_tempo_size
-		else:
-			calc_speed_size = s_timing_obj.get__speed(sampleref_obj)
-			calc_bpm_size = (tempo/120)
-			pos_real = sampleref_obj.dur_sec*calc_speed_size*calc_bpm_size
-		
-			if self.timing.time_type == 'speed':
-				pl_timemul.cut_mul = calc_speed_size
-
-			with s_timing_obj.setup_warp(True) as warp_obj:
-				warp_point_obj = warp_obj.points__add()
-		
-				warp_point_obj = warp_obj.points__add()
-				warp_point_obj.beat = pos_real*2
-				warp_point_obj.second = sampleref_obj.dur_sec
-
-			muloffset = calc_speed_size
-
-		warp_obj.calcpoints__speed()
-
 	def changestretch(self, samplereflist, sampleref, target, tempo, ppq, pitch):
 		iffound = sampleref in samplereflist
 		pl_timemul = pl_manip()
@@ -80,7 +41,7 @@ class cvpj_stretch:
 
 			if not is_warped and target == 'warp':
 				dur_sec = sampleref_obj.get_dur_sec()
-				if dur_sec: self.changestretch_rate2warp(pl_timemul, sampleref_obj, tempo, pitch)
+				if dur_sec: self.timing.changestretch_rate2warp(pl_timemul, sampleref_obj, tempo, pitch)
 
 			if is_warped and target == 'rate':
 				self.timing.changestretch_warp2rate(pl_timemul)

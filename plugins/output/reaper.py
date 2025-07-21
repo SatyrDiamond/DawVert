@@ -110,9 +110,9 @@ def add_auto_all(rpp_project, convproj_obj, rpp_env, autopath, valtype, inverted
 				if inverted: out = 1-out
 
 				if x.tension == 0:
-					rpp_env.points.append([x.pos*4, out, 0])
+					rpp_env.points.append([x.pos, out, 0])
 				else:
-					rpp_env.points.append([x.pos*4, out, 5, 1, 0, 0, -x.tension])
+					rpp_env.points.append([x.pos, out, 5, 1, 0, 0, -x.tension])
 
 def add_auto(rpp_env, autopoints_obj):
 	for x in autopoints_obj:

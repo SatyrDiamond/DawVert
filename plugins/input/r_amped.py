@@ -467,8 +467,7 @@ class input_amped(plugins.base):
 					for amped_clip in amped_region.clips:
 						npa_obj = placement_obj.add()
 						time_obj = npa_obj.time
-						time_obj.position = amped_clip.position
-						time_obj.duration = amped_clip.length
+						time_obj.set_posdur(amped_clip.position, amped_clip.length)
 						time_obj.set_offset(amped_clip.offset)
 						sample_obj = npa_obj.sample
 						sample_obj.vol = amped_clip.gain

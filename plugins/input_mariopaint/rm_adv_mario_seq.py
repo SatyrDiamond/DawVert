@@ -67,7 +67,7 @@ class input_mariopaint_mss(plugins.base):
 
 		root = tree.getroot()
 
-		if 'tempo' in root.attrib: mariopaint_obj.tempo = int(root.attrib['tempo'])/4
+		if 'tempo' in root.attrib: mariopaint_obj.tempo = int(root.attrib['tempo'])
 		if 'soundfont' in root.attrib: mariopaint_obj.soundfont = root.attrib['soundfont']
 		if 'measure' in root.attrib: mariopaint_obj.measure = int(root.attrib['measure'])
 
@@ -80,7 +80,8 @@ class input_mariopaint_mss(plugins.base):
 
 				for rnote in rpart:
 					if rnote.tag == 'bookmark': mp_chord.bookmark = True
-					elif rnote.tag == 'speedmark': mp_chord.speedmark = int(rnote.get('tempo'))
+					elif rnote.tag == 'speedmark': 
+						mp_chord.speedmark = int(rnote.get('tempo'))
 					else:
 						instname = rnote.tag if rnote.tag[0] != 'x' else rnote.tag[1:]
 						muted = rnote.tag[0] == 'x'

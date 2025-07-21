@@ -151,8 +151,13 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 	filepath = None
 	ref_found, sampleref_obj = convproj_obj.sampleref__get(samplepart_obj.sampleref)
 	if ref_found: 
-		filepath = sampleref_obj.fileref.get_path(None, False)
-		basename = sampleref_obj.fileref.file.basename
+		fileref_obj = sampleref_obj.fileref
+
+		filepath = fileref_obj.get_path(None, False)
+		basename = fileref_obj.file.basename
+
+		#print(samplepart_obj.sampleref, filepath)
+
 		dp_audio = clips.dawproject_audio()
 
 		dur_sec = sampleref_obj.get_dur_sec()

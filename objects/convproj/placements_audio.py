@@ -200,8 +200,8 @@ class cvpj_placement_audio:
 		self.time.calc_dur_add( -max(0, pl_timemul.pos_offset) )
 		self.time.calc_pos_add( max(pl_timemul.pos_offset, 0) )
 
-	def add_autopoints(self, a_type, ppq_time, ppq_float):
-		self.auto[a_type] = autopoints.cvpj_autopoints(ppq_time, ppq_float, 'float')
+	def add_autopoints(self, a_type, ppq_time):
+		self.auto[a_type] = autopoints.cvpj_autopoints(ppq_time, 'float')
 		return self.auto[a_type]
 
 	def all_stretch_set_pitch_nonsync(self):
@@ -259,6 +259,7 @@ class cvpj_placement_nested_audio:
 
 	def add(self):
 		apl_obj = cvpj_placement_audio(self.time_ppq)
+		apl_obj.time.position.timeid = None
 		self.events.append(apl_obj)
 		return apl_obj
 

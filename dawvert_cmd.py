@@ -148,12 +148,16 @@ else:
 	test_out_name = '__test_out'
 
 	os.makedirs(test_out_name, exist_ok=True)
-	logging.disable(logging.INFO)
+	dawvert_core.logger_only_plugconv()
 
 	outdetected = core.filedetector_obj.detect_file(dawvert_intent.input_file)
 
-	if outdetected:
-		psname, pname = outdetected
+	if outdetected or dawvert_intent.plugin_input:
+		if outdetected: psname, pname = outdetected
+		if dawvert_intent.plugin_input: 
+			pname = args.it
+			psname = args.ips
+
 		dawvert_intent.plugset_input = psname
 	
 		for plugin_name in plugins_names:
@@ -166,6 +170,14 @@ else:
 			test_out_path = os.path.join(test_out_name, 'out.'+out_plug_ext)
 			dawvert_intent.set_file_output(test_out_path)
 	
+			fileref_global.reset()
+			fileref_global.add_prefix('project_root', None, os.path.dirname(dawvert_intent.input_file))
+			fileref_global.add_prefix('dawvert_extracted', None, dawvert_intent.path_samples['extracted'])
+			fileref_global.add_prefix('dawvert_downloaded', None, dawvert_intent.path_samples['downloaded'])
+			fileref_global.add_prefix('dawvert_generated', None, dawvert_intent.path_samples['generated'])
+			fileref_global.add_prefix('dawvert_converted', None, dawvert_intent.path_samples['converted'])
+			fileref_global.add_prefix('dawvert_external_data', None, os.path.join(scriptfiledir, '__external_data'))
+
 			dawvert_core.parse_input(dawvert_intent)
 			dawvert_core.convert_type_output(dawvert_intent)
 			dawvert_core.convert_plugins(dawvert_intent)

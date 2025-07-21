@@ -173,6 +173,11 @@ class filesearcher:
 	searchcache = None
 	sampleref__searchmissing_limit = 1000
 
+	def reset():
+		filesearcher.basepaths = {}
+		filesearcher.searchparts = {}
+		filesearcher.searchcache = None
+
 	def scan_local_files(dirpath):
 		filesearcher.searchcache = filesearcher.searchcache
 		if filesearcher.searchcache == None:
@@ -207,6 +212,7 @@ class cvpj_fileref_global:
 	def reset():
 		cvpj_fileref_global.prefixes = {}
 		cvpj_fileref_global.prefix_groups = {}
+		filesearcher.reset()
 
 	def internal_addgroup(name):
 		prefix_groups = cvpj_fileref_global.prefix_groups
@@ -310,6 +316,13 @@ class cvpj_fileref:
 		#if not is_found:
 		#	print( self.prefix, self.get_path(None, False) )
 
+	#def search_local(self, dirpath):
+	#	if not self.exists(None):
+	#		print(self.get_path(None,0))
+	#		outdata = self.search_local_debug(dirpath)
+	#		print( outdata )
+
+	#def search_local_debug(self, dirpath):
 	def search_local(self, dirpath):
 		prefixes = cvpj_fileref_global.prefixes
 
@@ -324,8 +337,20 @@ class cvpj_fileref:
 					else: return 'in_prefix'
 
 		# partial current dir
+		if not self.folder.full and dirpath:
+			if not self.exists(None):
+				filder_fr = cvpj_fileref()
+				filder_fr.set_path(None, dirpath, -1)
+				state = cvpj_fileref_state(self)
+				xfolderloc = self.folder.folderloc
+				self.folder = copy.deepcopy(filder_fr.folder)
+				self.folder.folderloc = self.folder.folderloc+xfolderloc
+				if not self.exists(None): state.restore(self)
+				else: return 'dirpath'
+
+		# partial current dir
 		if not self.folder.full:
-			if self.exists(None):
+			if not self.exists(None):
 				is_file = self.is_file
 				orgpath = self.get_path(None, False)
 				outpath = os.path.abspath(orgpath)

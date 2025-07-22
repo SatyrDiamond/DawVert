@@ -34,11 +34,20 @@ class cakewalk_wrk_file:
 				csize = byr_stream.uint32()
 				name = '?? Unknown ?? '
 				if self.id in chunks.chunkids: name = chunks.chunkids[self.id]
-				if self.id in chunks.chunkobjects: name = chunks.chunkids[self.id]
 
 				name = ('# ' if self.id in chunks.chunkobjects else '  ') + name
-				data = byr_stream.raw(csize)
-				print(str(self.id).rjust(4), '|', name.ljust(32), data.hex())
+				f = False
+				if self.id in chunks.chunkobjects:
+					if 'viewchunks' in dir(chunks.chunkobjects[self.id]):
+						f = True
+						with byr_stream.isolate_size(csize, True) as bye_stream:
+							chunks.chunkobjects[self.id].viewchunks(bye_stream)
+				if not f:
+					data = byr_stream.raw(csize)
+					print(str(self.id).rjust(4), '|', name.ljust(32), data.hex())
+
+
+
 
 
 	#def write_to_file(self, output_file):

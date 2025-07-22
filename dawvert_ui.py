@@ -96,18 +96,12 @@ class ConversionWorker(QtCore.QObject):
 			else:
 				dawvert_intent.set_projname_path(file_name)
 
-			os.makedirs(dawvert_intent.path_samples['extracted'], exist_ok=True)
-			os.makedirs(dawvert_intent.path_samples['downloaded'], exist_ok=True)
-			os.makedirs(dawvert_intent.path_samples['generated'], exist_ok=True)
-			os.makedirs(dawvert_intent.path_samples['converted'], exist_ok=True)
+			dawvert_intent.create_folder_paths()
 
 			fileref_global.reset()
 			fileref_global.add_prefix('project_root', None, os.path.dirname(dawvert_intent.input_file))
-			fileref_global.add_prefix('dawvert_extracted', None, dawvert_intent.path_samples['extracted'])
-			fileref_global.add_prefix('dawvert_downloaded', None, dawvert_intent.path_samples['downloaded'])
-			fileref_global.add_prefix('dawvert_generated', None, dawvert_intent.path_samples['generated'])
-			fileref_global.add_prefix('dawvert_converted', None, dawvert_intent.path_samples['converted'])
 			fileref_global.add_prefix('dawvert_external_data', None, os.path.join(scriptfiledir, '__external_data'))
+			dawvert_intent.do_fileref_global()
 
 			self.update_ui.emit([1, 0])
 			self.update_ui.emit([0, 'Processing Input...'])

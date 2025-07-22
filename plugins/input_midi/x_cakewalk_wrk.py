@@ -7,6 +7,13 @@ import xml.etree.ElementTree as ET
 import plugins
 import json
 
+class clipinfo():
+	def __init__(self):
+		self.track_obj = None
+		self.regioninfo = None
+		self.clipstretch = None
+		self.clipsize = None
+
 class input_cvpj_f(plugins.base):
 	def is_dawvert_plugin(self):
 		return 'input'
@@ -29,6 +36,11 @@ class input_cvpj_f(plugins.base):
 
 		project_obj = proj_cakewalk_wrk.cakewalk_wrk_file()
 		if dawvert_intent.input_mode == 'file':
+			if 'dataview_in' in dawvert_intent.debug_flags:
+				import sys
+				sys.stdout = open('out.log', 'w')
+				project_obj.viewchunks(dawvert_intent.input_file)
+				exit()
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
 		convproj_obj.set_timings(96)
@@ -40,6 +52,7 @@ class input_cvpj_f(plugins.base):
 		traits_obj.fxrack_params = ['vol','pan','pitch']
 		traits_obj.auto_types = ['nopl_ticks']
 		traits_obj.audio_filetypes = ['wav']
+		traits_obj.track_hybrid = True
 
 		if project_obj.version == 2:
 			convproj_obj.fxtype = 'rack'
@@ -128,6 +141,8 @@ class input_cvpj_f(plugins.base):
 
 			segment_data_store = {}
 
+			#clipsdata = []
+
 			for chunk in project_obj.chunks:
 				if chunk.is_parsed:
 					parseddata = chunk.content
@@ -152,14 +167,14 @@ class input_cvpj_f(plugins.base):
 
 					elif chunk.id == 36: #Gen2:Track:Header
 						cvpj_trackid = str(parseddata.trackno)
-						track_obj = convproj_obj.track__add(cvpj_trackid, 'midi', 1, False)
+						track_obj = convproj_obj.track__add(cvpj_trackid, 'hybrid', 1, False)
 						track_obj.visual.name = parseddata.name.decode()
 						if parseddata.channel != 255:
 							trackchannel = max(0, parseddata.channel)
 							track_obj.midi.out_enabled = True
 							track_obj.midi.out_chanport.chan = trackchannel
 							track_obj.midi.out_chanport.port = parseddata.port
-							track_obj.midi.out_inst.patch = parseddata.patch
+							track_obj.midi.out_inst.patch = max(parseddata.patch, 0)
 						else:
 							trackchannel = 0
 
@@ -199,6 +214,11 @@ class input_cvpj_f(plugins.base):
 					elif chunk.id == 45: #Gen2:Track:Events
 						cw_events = parseddata.events
 						
+						clipinfop = clipinfo()
+						clipinfop.track_obj = track_obj
+
+						isallaudio = False
+
 						if cw_events:
 							firstpos = cw_events[0].time
 
@@ -213,7 +233,7 @@ class input_cvpj_f(plugins.base):
 								event_type = event.type
 								event_data = event.data
 								event_time = event.time-firstpos
-	
+
 								if event_type == 0x90: events_obj.add_note_dur(event_time, trackchannel, event_data.data1, event_data.data2, event_data.dur)
 								elif event_type == 0xA0: events_obj.add_note_pressure(event_time, trackchannel, event_data.data1, event_data.data2)
 								elif event_type == 0xB0: events_obj.add_control(event_time, trackchannel, event_data.data1, event_data.data2)
@@ -222,7 +242,11 @@ class input_cvpj_f(plugins.base):
 								elif event_type == 0xE0: events_obj.add_pitch(event_time, trackchannel, event_data.data1+(event_data.data2<<8)-16384)
 
 							time_obj = placement_obj.time
-							time_obj.set_posdur(firstpos, events_obj.get_dur())
+							time_obj.set_posdur(firstpos, int(events_obj.get_dur()))
+
+						#isallaudio = all([(x.type == 4) for x in cw_events])
+
+						#clipsdata.append(clipinfop)
 
 					elif chunk.id == 21: #Gen1:Global:Markers
 						for realtime, pos, text in parseddata.markers:
@@ -245,5 +269,26 @@ class input_cvpj_f(plugins.base):
 						if len(parseddata.data)>1:
 							metadata_obj.comment_text = parseddata.data[1:].decode("windows-1252")
 
+					#elif chunk.id == 89: #Gen3:Track:RegionInfo
+					#	isallaudio = all([(x.cmdnum == 0 and x.channum == 4) for x in parseddata.parts])
+						#if isallaudio:
+							#audioclips.append([track_obj, parseddata, None, None])
+						#	print(len(audioclips))
+
+					#elif chunk.id == 98: #Gen2:AudioClipStretch
+					#	for n, x in enumerate(clipsdata_audio):
+					#		print(parseddata.data)
+						#for n, i in enumerate(parseddata.data):
+						#	audioclips[n][2] = i
+
+					#elif chunk.id == 99: #Gen2:AudioClipSize
+						#print(len(parseddata.data))
+						#for n, x in enumerate(parseddata.data):
+						#	audioclips[n][3] = x
+
 					#else:
 					#	print(chunk, dir(parseddata))
+
+			#for x in clipsdata:
+			#	print(x.track_obj, x.regioninfo, x.clipstretch, x.clipsize)
+			#print(clipsdata_audio)

@@ -14,15 +14,13 @@ def pos_get_tempo(timeid, pos, is_seconds):
 	if timeid in tempocalc.global_stores:
 		return float(tempocalc.global_stores[timeid].get_tempo(pos, is_seconds))
 	else:
-		print('id not found in tempocalc_store')
-		exit()
+		raise ValueError('id "%s" not found in tempocalc_store' % str(timeid))
 
 def pos_get_pos(timeid, pos, is_seconds):
 	if timeid in tempocalc.global_stores:
 		return float(tempocalc.global_stores[timeid].get_pos(pos, is_seconds))
 	else:
-		print('id not found in tempocalc_store')
-		exit()
+		raise ValueError('id "%s" not found in tempocalc_store' % str(timeid))
 
 # --------------------------------------------- PLACEMENTS ---------------------------------------------
 

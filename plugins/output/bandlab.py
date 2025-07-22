@@ -170,30 +170,32 @@ class output_bandlab(plugins.base):
 					blx_track.autoPitch = proj_bandlab.bandlab_autoPitch(None)
 					track_obj.placements.pl_audio.sort()
 					for audiopl_obj in track_obj.placements.pl_audio:
-						blx_region = proj_bandlab.bandlab_region(None)
-
 						sp_obj = audiopl_obj.sample
-						ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
-
-						offmod = 1
-						if sp_obj.stretch.timing.time_type == 'speed': 
-							offmod *= sp_obj.stretch.timing.get__speed(sampleref_obj)
-
-						add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False, offmod)
-
-						blx_region.pitchShift = sp_obj.pitch
-						blx_region.gain = sp_obj.vol
-						blx_region.playbackRate = sp_obj.stretch.timing.get__real_rate(sampleref_obj, bpm)
-
-						blx_region.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
-						blx_region.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
-
-						if sp_obj.sampleref not in used_samples: 
-							used_samples.append(sp_obj.sampleref)
-
-						blx_region.file = sampleref_assoc[sp_obj.sampleref]+'.'+sampleref_ext[sp_obj.sampleref]
-						blx_region.sampleId = sampleref_assoc[sp_obj.sampleref]
-						blx_track.regions.append(blx_region)
+						
+						if sp_obj.sampleref in sampleref_assoc:
+							blx_region = proj_bandlab.bandlab_region(None)
+	
+							ref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+	
+							offmod = 1
+							if sp_obj.stretch.timing.time_type == 'speed': 
+								offmod *= sp_obj.stretch.timing.get__speed(sampleref_obj)
+	
+							add_region_common(blx_region, audiopl_obj, blx_track, tempomul, False, offmod)
+	
+							blx_region.pitchShift = sp_obj.pitch
+							blx_region.gain = sp_obj.vol
+							blx_region.playbackRate = sp_obj.stretch.timing.get__real_rate(sampleref_obj, bpm)
+	
+							blx_region.fadeIn = audiopl_obj.fade_in.get_dur_seconds(bpm)
+							blx_region.fadeOut = audiopl_obj.fade_out.get_dur_seconds(bpm)
+	
+							if sp_obj.sampleref not in used_samples: 
+								used_samples.append(sp_obj.sampleref)
+	
+							blx_region.file = sampleref_assoc[sp_obj.sampleref]+'.'+sampleref_ext[sp_obj.sampleref]
+							blx_region.sampleId = sampleref_assoc[sp_obj.sampleref]
+							blx_track.regions.append(blx_region)
 
 				if track_obj.type in ['instrument', 'midi']:
 					blx_track.type = 'piano'

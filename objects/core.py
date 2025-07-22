@@ -11,6 +11,8 @@ import pathlib
 from objects.convproj import project as convproj
 from objects.convproj import fileref
 
+fileref_global = fileref.cvpj_fileref_global
+
 import os
 import configparser
 import platform
@@ -156,7 +158,11 @@ class dawvert_intent:
 
 		self.custom_config = {}
 
+		self.download_enabled = True
+
 		self.set_defualt_path()
+
+		self.debug_flags = []
 
 	def copy(self):
 		return copy.deepcopy(self)
@@ -182,6 +188,7 @@ class dawvert_intent:
 		self.path_samples['downloaded'] = os.getcwd() + '/__samples_downloaded/'
 		self.path_samples['generated'] = os.getcwd() + '/__samples_generated/'
 		self.path_samples['converted'] = os.getcwd() + '/__samples_converted/'
+		self.path_samples['global_downloaded'] = os.getcwd() + '/__downloaded/'
 
 	def set_projname_path(self):
 		file_name = self.input_visname
@@ -196,6 +203,14 @@ class dawvert_intent:
 		os.makedirs(self.path_samples['downloaded'], exist_ok=True)
 		os.makedirs(self.path_samples['generated'], exist_ok=True)
 		os.makedirs(self.path_samples['converted'], exist_ok=True)
+		os.makedirs(self.path_samples['global_downloaded'], exist_ok=True)
+
+	def do_fileref_global(self):
+		fileref_global.add_prefix('dawvert_extracted', None, self.path_samples['extracted'])
+		fileref_global.add_prefix('dawvert_downloaded', None, self.path_samples['downloaded'])
+		fileref_global.add_prefix('dawvert_generated', None, self.path_samples['generated'])
+		fileref_global.add_prefix('dawvert_converted', None, self.path_samples['converted'])
+		fileref_global.add_prefix('dawvert_global_downloaded', None, self.path_samples['global_downloaded'])
 
 	def config_load(self, filepath):
 		config = configparser.ConfigParser()

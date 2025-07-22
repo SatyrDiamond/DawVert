@@ -331,19 +331,17 @@ def do_devices(x_trackdevices, track_id, track_obj, convproj_obj, dawvert_intent
 
 				track_obj.plugin_autoplace(plugin_obj, pluginid)
 
-			#if device.name == 'InstrumentVector':
-			#	modcons = []
-			#	for n, x in parampaths['ModulationConnections'].items():
-			#		paramnum, paramtype = n.split('/')
-			#		print(paramnum, paramtype, findlists(x))
-			#		modcon = {}
-			#		modcon['target'] = x
-			#		modcon['name'] = x['TargetName'].value
-			#		modcon['amounts'] = findlists(x)['ModulationAmounts']
-#
-			#		print(x)
+			if device.name == 'InstrumentVector':
+				modcons = []
+				for n, x in parampaths['ModulationConnections'].items():
+					paramnum, paramtype = n.split('/')
+					print(paramnum, paramtype, findlists(x))
+					modcon = {}
+					modcon['target'] = x
+					modcon['name'] = x['TargetName'].value
+					modcon['amounts'] = findlists(x)['ModulationAmounts']
 
-				#	modcons.append(modcon)
+					modcons.append(modcon)
 				#	plugin_obj.datavals.add('ModulationConnections', modcons)
 				#	SpriteName1 = parampaths['SpriteName1']
 				#	SpriteName2 = parampaths['SpriteName2']

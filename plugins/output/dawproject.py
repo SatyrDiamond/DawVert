@@ -150,6 +150,9 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 	zip_filepath = None
 	filepath = None
 	ref_found, sampleref_obj = convproj_obj.sampleref__get(samplepart_obj.sampleref)
+
+	maxlen = 0
+
 	if ref_found: 
 		fileref_obj = sampleref_obj.fileref
 
@@ -200,8 +203,6 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 		else:
 			dp_audio.algorithm = 'raw'
 
-		maxlen = 0
-
 		s_timing_obj = stretch_obj.timing
 
 		if s_timing_obj.time_type == 'warp':
@@ -250,8 +251,9 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 
 	#print(dp_clip_obj.time, dp_clip_obj.duration, dp_clip_obj.playStart, dp_clip_obj.loopStart, dp_clip_obj.loopEnd)
 
-	if os.path.exists(real_filepath) and zip_filepath not in dawproject_zip.namelist(): 
-		dawproject_zip.write(real_filepath, zip_filepath)
+	if real_filepath:
+		if os.path.exists(real_filepath) and zip_filepath not in dawproject_zip.namelist(): 
+			dawproject_zip.write(real_filepath, zip_filepath)
 
 	autodata = {}
 

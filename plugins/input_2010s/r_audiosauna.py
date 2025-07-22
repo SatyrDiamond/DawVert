@@ -178,7 +178,7 @@ class input_audiosanua(plugins.base):
 
 					setasdr(plugin_obj, 'vol', as_device.params, False, 'attack', 'decay', 'release', 'sustain')
 
-					print(as_device.params)
+					#print(as_device.params)
 
 					if as_device.deviceType == 1: oprange = 2
 					if as_device.deviceType == 0: oprange = 4

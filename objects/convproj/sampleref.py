@@ -232,6 +232,8 @@ class cvpj_sampleref:
 
 	def convert(self, dawaudiofiles, outpath):
 
+		os.makedirs(outpath, exist_ok=True)
+
 		for shortname, plug_obj, prop_obj in cvpj_sampleref.audioconv_selector.iter():
 			usable, usable_meg = plug_obj.usable()
 			fileformat = self.get_fileformat()

@@ -42,6 +42,7 @@ parser.add_argument("-q", action='store_true')
 parser.add_argument("-pq", action='store_true')
 parser.add_argument("--list", action='store_true')
 parser.add_argument("--debug_multioutplugs", action='store_true')
+parser.add_argument("--debug_dataview_in", action='store_true')
 args = parser.parse_args()
 
 dawvert_core = core.core()
@@ -91,6 +92,7 @@ dawvert_intent.set_file_input(args.i)
 dawvert_intent.plugin_input = args.it
 dawvert_intent.plugset_input = args.ips
 dawvert_intent.path_external_data = os.path.join(os.path.abspath(os.getcwd()), '__external_data')
+if args.debug_dataview_in: dawvert_intent.debug_flags.append('dataview_in')
 
 if args.y == True: dawvert_intent.flag_overwrite = True
 if args.soundfont != None: dawvert_intent.path_soundfonts['global'] = args.soundfont
@@ -107,11 +109,8 @@ dawvert_intent.input_visname = os.path.splitext(os.path.basename(dawvert_intent.
 dawvert_intent.create_folder_paths()
 
 fileref_global.add_prefix('project_root', None, os.path.dirname(dawvert_intent.input_file))
-fileref_global.add_prefix('dawvert_extracted', None, dawvert_intent.path_samples['extracted'])
-fileref_global.add_prefix('dawvert_downloaded', None, dawvert_intent.path_samples['downloaded'])
-fileref_global.add_prefix('dawvert_generated', None, dawvert_intent.path_samples['generated'])
-fileref_global.add_prefix('dawvert_converted', None, dawvert_intent.path_samples['converted'])
 fileref_global.add_prefix('dawvert_external_data', None, os.path.join(scriptfiledir, '__external_data'))
+dawvert_intent.do_fileref_global()
 
 if not args.debug_multioutplugs:
 	dawvert_intent.set_file_output(args.o)
@@ -172,11 +171,8 @@ else:
 	
 			fileref_global.reset()
 			fileref_global.add_prefix('project_root', None, os.path.dirname(dawvert_intent.input_file))
-			fileref_global.add_prefix('dawvert_extracted', None, dawvert_intent.path_samples['extracted'])
-			fileref_global.add_prefix('dawvert_downloaded', None, dawvert_intent.path_samples['downloaded'])
-			fileref_global.add_prefix('dawvert_generated', None, dawvert_intent.path_samples['generated'])
-			fileref_global.add_prefix('dawvert_converted', None, dawvert_intent.path_samples['converted'])
 			fileref_global.add_prefix('dawvert_external_data', None, os.path.join(scriptfiledir, '__external_data'))
+			dawvert_intent.do_fileref_global()
 
 			dawvert_core.parse_input(dawvert_intent)
 			dawvert_core.convert_type_output(dawvert_intent)

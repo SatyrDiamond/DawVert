@@ -740,6 +740,8 @@ class cvpj_placements:
 					cpl_time_obj.cut_type = 'cut'
 					cpl_time_obj.calc_offset_add(scs)
 
+					cpl_time_obj.position.timeid = nest_time_obj.position.timeid
+
 					cutplpl_obj.muted = cutplpl_obj.muted or nestedpl_obj.muted
 					if not cutplpl_obj.visual.name: 
 						cutplpl_obj.visual.name = nestedpl_obj.visual.name

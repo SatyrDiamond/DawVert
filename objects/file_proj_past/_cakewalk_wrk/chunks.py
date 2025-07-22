@@ -12,6 +12,8 @@ def make_chunk(intype):
 	chunk_obj.set_type(intype)
 	return chunk_obj
 
+VIEW_T = False
+
 class cakewalk_wrk_chunk:
 	def __init__(self, byr_stream):
 		self.id = -1
@@ -40,7 +42,10 @@ class cakewalk_wrk_chunk:
 				if self.id in chunkobjects: 
 					self.content = chunkobjects[self.id](bye_stream)
 					self.is_parsed = True
-				else: self.content = bye_stream.raw(csize)
+					if VIEW_T: print(self)
+				else: 
+					self.content = bye_stream.raw(csize)
+					if VIEW_T: print('unknown chunk ',self.id)
 
 	def write(self, byw_stream):
 		byw_instream = bytewriter.bytewriter()
@@ -154,9 +159,6 @@ chunkobjects[36] = chunks_gen2.chunk_gen2_track_header
 chunkids[45] = "Gen2:Track:Events"
 chunkobjects[45] = chunks_gen2.chunk_gen2_track_events
 
-chunkids[89] = "Gen2:Track:AudioStretch"
-#chunkobjects[89] = chunks_gen2.chunk_gen2_track_audiostretch
-
 chunkids[63] = "Gen2:Track:Effects"
 chunkobjects[63] = chunks_gen2.chunk_gen2_track_effects
 
@@ -174,8 +176,17 @@ chunkobjects[58] = chunks_gen2.chunk_gen2_midichans
 chunkids[59] = "Gen2:ConsoleParams"
 #chunkobjects[59] = chunks_gen2.chunk_gen2_consoleparams
 
+chunkids[98] = "Gen2:AudioClipStretch"
+chunkobjects[98] = chunks_gen2.chunk_gen2_audiostretch
+
+chunkids[99] = "Gen2:AudioClipSize"
+chunkobjects[99] = chunks_gen2.chunk_gen2_audiosize
 
 
+
+from objects.file_proj_past._cakewalk_wrk import chunks_gen3
+chunkids[89] = "Gen3:Track:RegionInfo"
+chunkobjects[89] = chunks_gen3.chunk_gen3_track_events
 
 
 

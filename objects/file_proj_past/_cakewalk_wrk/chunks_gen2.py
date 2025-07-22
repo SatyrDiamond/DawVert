@@ -51,7 +51,7 @@ class chunk_gen2_track_header:
 		self.trackno = byr_stream.uint16()
 		self.name = byr_stream.c_raw__int8()
 		self.bank = byr_stream.int16()
-		self.patch = byr_stream.uint16()
+		self.patch = byr_stream.int16()
 		self.vol = byr_stream.uint16()
 		self.pan = byr_stream.int16()
 		self.key = byr_stream.int8()
@@ -174,89 +174,6 @@ class chunk_gen2_midichans:
 	#def write(self, byw_stream):
 	#	byr_stream.l_uint32(self.data)
 
-#class chunk_gen2_track_audiostretch:
-#	def __init__(self, byr_stream):
-#		self.data = []
-#		if byr_stream: self.read(byr_stream)
-
-	#def read(self, byr_stream):
-	#	self.unkdata = []
-	#	self.tracknum = byr_stream.uint32()
-	#	self.unkdata.append( byr_stream.uint32() )
-	#	self.unkdata.append( byr_stream.uint32() )
-	#	self.unkdata.append( byr_stream.uint8() )
-	#	self.unkdata.append( byr_stream.uint8() )
-	#	self.pos = byr_stream.uint32()
-	#	self.unkdata.append( byr_stream.uint16() )
-	#	self.unkdata.append( byr_stream.uint32() )
-	#	self.offset = byr_stream.double()
-	#	self.unkdata.append( byr_stream.uint32() )
-	#	self.seconds = byr_stream.double()
-	#	self.id = byr_stream.raw(16).hex()
-	#	self.unkdata.append( byr_stream.raw(4).hex() )
-	#	self.name = byr_stream.c_raw__int8()
-	#	self.unkdata.append( byr_stream.raw(4).hex() )
-	#	self.unkdata.append( byr_stream.uint32() )
-	#	self.unkdata.append( byr_stream.raw(8).hex() )
-	#	self.unkdata.append( byr_stream.raw(8).hex() )
-	#	self.unkdata.append( byr_stream.raw(16).hex() )
-	#	self.unkdata = []
-	#	typesomething = byr_stream.uint16()
-
-
-
-
-
-		#somethingdata = []
-		#self.unkdata.append( byr_stream.uint16() )
-#
-#
-		#if typesomething == 1:
-		#	somethingdata.append( list(byr_stream.l_uint8(4)) )
-#
-		#	somethingdata.append( byr_stream.uint32() )
-		#	somethingdata.append( byr_stream.uint32() )
-		#	somethingdata.append( byr_stream.uint32() )
-		#	somethingdata.append( byr_stream.uint32() )
-		#	numsomething = byr_stream.uint16()
-		#	somethingdata.append( numsomething )
-		#	remainingest = byr_stream.remaining()/38
-		#	somethingdata.append( remainingest )
-#
-#
-		#self.unkdata.append( somethingdata )
-
-
-
-
-
-
-
-
-
-		#self.color = byr_stream.l_uint8(4)
-
-
-
-		#self.unkdata.append( byr_stream.uint32() )
-		#self.unkdata.append( byr_stream.c_raw__int8() )
-		#print(self.id, self.unkdata)
-
-		#self.unkdata.append( byr_stream.raw(32) )
-		#if byr_stream.remaining(): self.unkdata.append( byr_stream.raw(32) )
-#
-		#self.unkdata.append(['REMAIGINING', byr_stream.remaining()] )
-		#self.unkdata.append( byr_stream.raw(32).hex() )
-		#print( byr_stream.raw(byr_stream.remaining()).hex() )
-
-		#self.data = byr_stream.raw(byr_stream.remaining())
-		#print(self.unkdata)
-		#print()
-		#print()
-
-	#def write(self, byw_stream):
-	#	byr_stream.l_uint32(self.data)
-
 #class chunk_gen2_consoleparams:
 #	def __init__(self, byr_stream):
 #		self.data = []
@@ -272,3 +189,79 @@ class chunk_gen2_midichans:
 
 	#def write(self, byw_stream):
 	#	byr_stream.l_uint32(self.data)
+
+class chunk_gen2_audiostretch_part:
+	def __init__(self, byr_stream):
+		self.data = []
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		self.unk1 = byr_stream.uint32()
+		self.looping = byr_stream.uint32()
+		self.stretch_enabled = byr_stream.uint32()
+		self.followpitch = byr_stream.uint32()
+		self.unk2 = byr_stream.uint32()
+		self.unk3 = byr_stream.uint32()
+		self.beats = byr_stream.uint32()
+		self.key = byr_stream.uint32()
+		self.tempo = byr_stream.double()
+		self.pitch = byr_stream.double()
+		self.unk4 = byr_stream.uint32()
+		self.unk5 = byr_stream.uint32()
+
+		num_something = byr_stream.uint32()
+		self.unk6 = []
+		for x in range(num_something): 
+			self.unk6.append( [byr_stream.uint32(), byr_stream.float()] )
+
+		try:
+			num_something = byr_stream.uint32()
+			self.unk7 = []
+			for x in range(num_something): 
+				self.unk7.append([ 
+					byr_stream.uint32(),
+					byr_stream.uint32(),
+					byr_stream.uint32(),
+					byr_stream.uint32(),
+					byr_stream.uint16(),
+					byr_stream.uint16(),
+					byr_stream.uint16(),
+					byr_stream.uint16(),
+					])
+				byr_stream.skip(8)
+		except:
+			pass
+
+class chunk_gen2_audiostretch:
+	def __init__(self, byr_stream):
+		self.data = []
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		while byr_stream.remaining():
+			self.data.append(chunk_gen2_audiostretch_part(byr_stream))
+
+class chunk_gen2_audiosize_part:
+	def __init__(self, byr_stream):
+		self.data = []
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		self.id = byr_stream.raw(16).hex()
+		self.unk1 = byr_stream.uint32()
+		self.unk2 = byr_stream.uint32()
+		self.sec_start = byr_stream.uint32()
+		self.sec_end = byr_stream.uint32()
+		self.unk5 = byr_stream.uint32()
+		self.unk6 = byr_stream.uint32()
+		self.unk7 = byr_stream.uint32()
+		self.unk8 = byr_stream.uint32()
+
+class chunk_gen2_audiosize:
+	def __init__(self, byr_stream):
+		self.data = []
+		if byr_stream: self.read(byr_stream)
+
+	def read(self, byr_stream):
+		while byr_stream.remaining():
+			self.data.append(chunk_gen2_audiosize_part(byr_stream))

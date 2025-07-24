@@ -57,7 +57,7 @@ def env_from_txt(i_env):
 	return [[int(x[0]),int(x[1])] for x in parsed_env]
 
 def env_to_cvpj_env(plugin_obj, env_name, dsenv):
-	autopoints_obj = plugin_obj.env_points_add(env_name, 44100, False, 'int')
+	autopoints_obj = plugin_obj.env_points_add(env_name, 44100, 'int')
 	for pp, pv in dsenv:
 		autopoints_obj.points__add_normal(pp, pv, 0, None)
 

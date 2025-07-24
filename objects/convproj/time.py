@@ -598,7 +598,7 @@ class time_content:
 			calc_bpm_size = (tempo/120)
 			pos_real = sampleref_obj.dur_sec*calc_speed_size*calc_bpm_size
 		
-			if self.timing.time_type == 'speed':
+			if self.time_type == 'speed':
 				pl_timemul.cut_mul = calc_speed_size
 
 			with self.setup_warp(True) as warp_obj:

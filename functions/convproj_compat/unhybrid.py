@@ -12,6 +12,9 @@ def process_r(convproj_obj):
 	convproj_obj.track_data = {}
 	convproj_obj.trackroute = {}
 
+	#for i, x in org_track_data.items():
+	#	x.debugtxt_placements(i)
+
 	for trackid in org_track_order:
 		if trackid in org_track_data:
 			track_obj = org_track_data[trackid]
@@ -60,6 +63,9 @@ def process_r(convproj_obj):
 				#	convproj_obj.track_order.append(trackid)
 				#	convproj_obj.track_data[trackid] = n_track_obj
 				#	if trackroute_sendobj != None: convproj_obj.trackroute[trackid] = trackroute_sendobj
+			else:
+				convproj_obj.track_order.append(trackid)
+				convproj_obj.track_data[trackid] = track_obj
 
 	return True
 

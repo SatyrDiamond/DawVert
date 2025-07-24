@@ -41,7 +41,7 @@ class input_nanostudio_v1(plugins.base):
 		traits_obj.placement_loop = ['loop']
 		traits_obj.track_lanes = True
 
-		convproj_obj.set_timings(256, True)
+		convproj_obj.set_timings(256.0)
 
 		project_obj = proj_nanostudio.nanostudio_song()
 		if dawvert_intent.input_mode == 'file':
@@ -143,11 +143,16 @@ class input_nanostudio_v1(plugins.base):
 							placement_obj.visual.color.set_float([0.25, 0.59, 0.73])
 
 						time_obj = placement_obj.time
-						time_obj.set_posdur(clip['position']*256, clip['duration']*256)
-						if clip['duration']>clipsize: time_obj.set_loop_data(0, 0, clipsize*256)
+						time_obj.set_posdur(int(clip['position'])*256, int(clip['duration'])*256)
+						if clip['duration']>clipsize: time_obj.set_loop_data(0, 0, int(clipsize)*256)
 
 						cvpj_notelist = placement_obj.notelist
 				
 						for event in events:
 							if event['type'] == 0:
-								cvpj_notelist.add_r(event['position'], event['duration'], event['key']-60, event['vol_val']/127, None)
+								cvpj_notelist.add_r(
+									int(event['position']), 
+									int(event['duration']), 
+									int(event['key'])-60, 
+									int(event['vol_val'])/127, 
+									None)

@@ -607,3 +607,6 @@ class cvpj_track:
 
 	def plugin_autoplace(self, plugin_obj, pluginid):
 		self.plugslots.plugin_autoplace(plugin_obj, pluginid)
+
+	def debugtxt_placements(self, starttxt):
+		self.placements.debugtxt(starttxt)

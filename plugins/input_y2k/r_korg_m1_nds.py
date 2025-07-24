@@ -5,6 +5,7 @@ import plugins
 import json
 import os
 from objects import globalstore
+from objects import regions
 
 class input_korg_m1_nds(plugins.base):
 	def is_dawvert_plugin(self):
@@ -39,29 +40,26 @@ class input_korg_m1_nds(plugins.base):
 		globalstore.dataset.load('korg_m1d', './data_main/dataset/korg_m1d.dset')
 
 		projsong_obj = project_obj.songs[dawvert_intent.songnum]
-		steps = projsong_obj.steps
-		swing = projsong_obj.swing
-
+		
 		convproj_obj.params.add('bpm', projsong_obj.tempo, 'float')
 		convproj_obj.metadata.name = projsong_obj.name
 
+		# ------------------------------------------ tempoblocks ------------------------------------------
+
+		tempoblocks = regions.posdurblocks(99, projsong_obj.steps, projsong_obj.tempo)
+		for n, x in enumerate(projsong_obj.blockTempos):
+			if x: tempoblocks.set_tempo(n, x)
+		for n, x in enumerate(projsong_obj.blockSteps):
+			if x: tempoblocks.set_steps(n, x)
+		tempoblocks.proc()
+		tempoblocks.to_cvpj(convproj_obj)
+
+		# ------------------------------------------ song ------------------------------------------
+
+		swing = projsong_obj.swing
+
 		return_obj = convproj_obj.track_master.fx__return__add('trackfx')
 		return_obj.visual.name = 'FX'
-
-		tempopos = [(x if x else projsong_obj.tempo) for x in projsong_obj.blockTempos]
-		stepsizes = [(x if x else projsong_obj.steps) for x in projsong_obj.blockSteps]
-		poslist = []
-		curnum = 0
-		for stepsize in stepsizes:
-			poslist.append(curnum)
-			curnum += stepsize
-
-		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
-		curpos = 0
-		for n, tempo in enumerate(tempopos):
-			stepcur = stepsizes[n]
-			auto_bpm_obj.add_all(curpos, tempo, stepcur)
-			curpos += stepcur
 
 		for num, channel_obj in enumerate(projsong_obj.channels):
 			cvpj_trackid = str(num)
@@ -102,14 +100,13 @@ class input_korg_m1_nds(plugins.base):
 
 			curpos = 0
 			for n, block_obj in enumerate(channel_obj.blocks):
-				stepcur = stepsizes[n]
 				placement_obj = track_obj.placements.add_notes()
+
+				p_start, p_steps = tempoblocks.get_posdur(block_obj.offset)
+
 				time_obj = placement_obj.time
-				time_obj.set_posdur(poslist[block_obj.offset], stepsizes[block_obj.offset])
+				time_obj.set_posdur(p_start, p_steps)
 				cvpj_notelist = placement_obj.notelist
 				for note in block_obj.notes:
 					oswing = ((swing-50)/50) if (note.offset%2) else 0
 					cvpj_notelist.add_r(note.offset+oswing, note.length, (note.pitch-128)-60, note.velocity/15, None)
-				curpos += stepcur
-
-		convproj_obj.timemarker__from_patlenlist(stepsizes, 0)

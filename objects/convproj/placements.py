@@ -749,7 +749,21 @@ class cvpj_placements:
 
 		self.pl_audio_nested = placements_audio.cvpj_placements_nested_audio(self.time_ppq)
 
-	def debugtxt(self):
-		print(len(self.notelist.nl), end='|')
-		print(str(len(self.pl_notes.data))+'-'+str(len(self.pl_audio.data)), end='|')
-		print(str(len(self.pl_notes_indexed.data))+'-'+str(len(self.pl_audio_indexed.data)))
+	def debugtxt(self, starttxt):
+		outtxt = starttxt+' | '
+		if self.notelist.count(): outtxt += 'Notes: %i |' % self.notelist.count()
+
+		if len(self.pl_midi): outtxt += 'Midi: %i |' % len(self.pl_midi)
+		if len(self.pl_notes): outtxt += 'Notes: %i |' % len(self.pl_notes)
+		if len(self.pl_audio): outtxt += 'Audio: %i |' % len(self.pl_audio)
+		if len(self.pl_notes_indexed): outtxt += 'Indexed Notes: %i |' % len(self.pl_notes_indexed)
+		if len(self.pl_audio_indexed): outtxt += 'Indexed Audio: %i |' % len(self.pl_audio_indexed)
+		if len(self.pl_audio_nested): outtxt += 'Nested Audio: %i |' % len(self.pl_audio_nested)
+		if len(self.pl_video): outtxt += 'Video: %i |' % len(self.pl_video)
+		if len(self.pl_custom): outtxt += 'Custom: %i |' % len(self.pl_custom)
+
+		print(outtxt)
+		#outtxt += []
+		#print(len(self.notelist.nl), end='|')
+		#print(str(len(self.pl_notes.data))+'-'+str(len(self.pl_audio.data)), end='|')
+		#print(str(len(self.pl_notes_indexed.data))+'-'+str(len(self.pl_audio_indexed.data)))

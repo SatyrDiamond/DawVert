@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-VERBOSE = True
+VERBOSE = False
 
 # ---------------------- ITEMS ----------------------
 class item_svip:

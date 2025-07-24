@@ -25,7 +25,7 @@ def process(convproj_obj, in__track_nopl, out__track_nopl, out_type, dawvert_int
 					if track_obj.placements.notelist.count():
 						placement_obj = track_obj.placements.add_notes()
 						placement_obj.notelist = track_obj.placements.notelist.__copy__()
-						placement_obj.time.set_dur(track_obj.placements.notelist.get_dur())
+						placement_obj.time.set_dur(int(track_obj.placements.notelist.get_dur()))
 						track_obj.placements.notelist.clear()
 				convproj_obj.calc_pl_tempo()
 				return True

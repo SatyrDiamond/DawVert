@@ -245,8 +245,8 @@ class input_it(plugins.base):
 				inst_used = False
 				if bn_s_t_ifsame == True:
 
-					if bn_s_t_f[1]-1 < len(project_obj.samples):
-						it_samp = project_obj.samples[bn_s_t_f[1]-1]
+					if int(bn_s_t_f[1])-1 < len(project_obj.samples):
+						it_samp = project_obj.samples[int(bn_s_t_f[1])-1]
 						global_vol = it_inst.global_vol/128
 						track_volume = 0.3*global_vol*calc_samp_vol(it_samp)
 						plugin_obj, synthid, sampleref_obj = add_single_sampler(convproj_obj, it_samp, bn_s_t_f[1])

@@ -92,8 +92,8 @@ class multi_patsong:
 							used_inst[chan_obj.insttype].append(chinst)
 
 					if tpl[1].notesfound():
-						tpl[1].stretch(4/(1/e_notelen), True)
-						tpl[1].notemod_conv()
+						tpl[1].stretch(float(4/(1/e_notelen)))
+						#tpl[1].notemod_conv()
 						placement_obj = playlist_obj.placements.add_notes()
 						time_obj = placement_obj.time
 						time_obj.set_posdur(cur_pl_pos, tpl[0])

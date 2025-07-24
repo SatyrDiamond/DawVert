@@ -9,6 +9,7 @@ import numpy as np
 from objects import colors
 from functions import xtramath
 from objects import globalstore
+from objects import regions
 
 #                  Name,             Type,        FadeIn, FadeOut, PitchMod, Slide, Vib
 
@@ -157,13 +158,13 @@ class input_lc(plugins.base):
 	
 	def get_prop(self, in_dict): 
 		in_dict['plugin_included'] = ['universal:synth-osc']
-		in_dict['projtype'] = 'ms'
+		in_dict['projtype'] = 'rm'
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj_uncommon import lovelycomposer as proj_lovelycomposer
 
-		convproj_obj.type = 'ms'
-		convproj_obj.set_timings(4)
+		convproj_obj.type = 'rm'
+		convproj_obj.set_timings(4.0)
 
 		traits_obj = convproj_obj.traits
 		traits_obj.auto_types = ['pl_points']
@@ -172,15 +173,23 @@ class input_lc(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
-		if project_obj.title: convproj_obj.metadata.name = project_obj.title
-		if project_obj.editor: convproj_obj.metadata.author = project_obj.editor
-
 		globalstore.dataset.load('lovelycomposer', './data_main/dataset/lovelycomposer.dset')
 		colordata = colors.colorset.from_dataset('lovelycomposer', 'track', 'main')
 
-		for pat_num in range(len(project_obj.rhythms.ry)):
-			sceneid = str(pat_num)
-			convproj_obj.scene__add(sceneid)
+		# ------------------------------------------ tempoblocks ------------------------------------------
+
+		voi_notes, voi_chord = project_obj.get_channel(0)
+		tempoblocks = regions.posdurblocks(len(voi_notes), 32, decode_tempo(project_obj.speed))
+		for n, voi_note in enumerate(voi_notes):
+			tempoblocks.set_steps(n, voi_note.play_notes)
+			tempoblocks.set_tempo(n, decode_tempo(voi_note.play_speed))
+		tempoblocks.proc()
+		tempoblocks.to_cvpj(convproj_obj)
+
+		# ------------------------------------------ song ------------------------------------------
+
+		if project_obj.title: convproj_obj.metadata.name = project_obj.title
+		if project_obj.editor: convproj_obj.metadata.author = project_obj.editor
 
 		for tracknum in range(5):
 			cvpj_instid = str(tracknum+1)
@@ -230,10 +239,9 @@ class input_lc(plugins.base):
 						if instid<128: prev_inst = instid
 
 					if t_notelist:
-						trscene_obj = convproj_obj.track__add_scene(cvpj_instid, str(patnum), 'main')
-						placement_obj = trscene_obj.add_notes()
-						time_obj = placement_obj.time
-						time_obj.set_posdur(0, voi_note.play_notes)
+						p_start, p_steps = tempoblocks.get_posdur(patnum)
+						placement_obj = track_obj.placements.add_notes()
+						placement_obj.time.set_posdur(p_start, p_steps)
 						cvpj_notelist = placement_obj.notelist
 
 						for nnn in t_notelist:
@@ -268,12 +276,10 @@ class input_lc(plugins.base):
 							lastchord[1] += 1
 							lastchord[4].append(vlp['x']/15)
 
-
-
 					if t_chordlist:
-						trscene_obj = convproj_obj.track__add_scene(cvpj_instid, str(patnum), 'main')
-						placement_obj = trscene_obj.add_notes()
-						placement_obj.time.set_posdur(0, voi_note.play_notes)
+						p_start, p_steps = tempoblocks.get_posdur(patnum)
+						placement_obj = track_obj.placements.add_notes()
+						placement_obj.time.set_posdur(p_start, p_steps)
 						cvpj_notelist = placement_obj.notelist
 						for nnn in t_chordlist:
 							if nnn[2] and nnn[1]:
@@ -351,18 +357,6 @@ class input_lc(plugins.base):
 
 		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
 
-		curpos = 0
-		for pat_num, voi_note in enumerate(voi_notes):
-			patlen = voi_note.play_notes
-			patternlen.append(patlen)
-			scenepl_obj = convproj_obj.scene__add_pl()
-			scenepl_obj.position = curpos
-			scenepl_obj.duration = patlen
-			scenepl_obj.id = str(pat_num)
-			auto_bpm_obj.add_all(curpos, decode_tempo(voi_note.play_speed), patlen)
-			curpos += patlen
-
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_sorttracks')
 		convproj_obj.params.add('pitch', float(project_obj.mixer_transpose), 'float')
-		convproj_obj.params.add('bpm', decode_tempo(project_obj.speed), 'float')

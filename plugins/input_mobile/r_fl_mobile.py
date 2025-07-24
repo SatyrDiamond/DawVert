@@ -45,7 +45,7 @@ class input_fl_mobile(plugins.base):
 		traits_obj.audio_filetypes = ['wav','mp3']
 		traits_obj.audio_stretch = ['rate']
 
-		convproj_obj.set_timings(1)
+		convproj_obj.set_timings(1.0)
 
 		fileref_global.add_prefix('flmobile_factory:fl_24_64', 'win', "C:\\Program Files\\Image-Line\\FL Studio 2024\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
 		fileref_global.add_prefix('flmobile_factory:fl_21_32', 'win', "C:\\Program Files (x86)\\Image-Line\\FL Studio 21\\Plugins\\Fruity\\Generators\\FL Studio Mobile\\Installed")
@@ -224,27 +224,28 @@ class input_fl_mobile(plugins.base):
 
 								if flm_clip.sample:
 									flm_sample = flm_clip.sample
-									sample_path = get_path(flm_sample.sample_path)
+									sample_prefix, sample_path = get_path(flm_sample.sample_path)
 
-									sampleref_obj = do_sample(convproj_obj, sample_path, project_obj.zipfile, dawvert_intent.input_file)
-
-									if sampleref_obj:
-										dur_sec = sampleref_obj.get_dur_sec()
-
-										if dur_sec:
-											if not flm_clip.duration:
-												if flm_sample.stretch_on: 
-													time_obj.set_dur_real(outdur/flm_sample.stretch_size)
-												else:
-													time_obj.set_dur_real(dur_sec)
-
+									if sample_path:
+										sampleref_obj = do_sample(convproj_obj, sample_prefix, sample_path, project_obj.zipfile, dawvert_intent.input_file)
+	
+										if sampleref_obj:
+											dur_sec = sampleref_obj.get_dur_sec()
+	
+											if dur_sec:
+												if not flm_clip.duration:
+													if flm_sample.stretch_on: 
+														time_obj.set_dur_real(flm_clip.duration/flm_sample.stretch_size)
+													else:
+														time_obj.set_dur_real(dur_sec)
+	
 									placement_obj.visual.name = flm_clip.sample.sample_name
-
+	
 									sp_obj = placement_obj.sample
 									sp_obj.sampleref = sample_path
-
+	
 									stretch_obj = sp_obj.stretch
-
+	
 									if flm_sample.stretch_on: 
 										stretch_obj.timing.set__real_rate(project_obj.tempo, 1/flm_sample.stretch_size)
 										stretch_obj.preserve_pitch = True
@@ -252,13 +253,12 @@ class input_fl_mobile(plugins.base):
 									else:
 										stretch_obj.timing.set__speed(1/flm_sample.pitch)
 										sp_obj.pitch = math.log2(1/flm_sample.pitch)*-12
-
+	
 									sp_obj.reverse = bool(flm_sample.main_unk_4)
 									if flm_sample.prms:
 										sp_obj.vol = flm_sample.prms[0]
 										sp_obj.pan = (flm_sample.prms[1]-0.5)*2
 										
-
 					if lanedata.auto_on == 1:
 						v_add = 0
 						v_mul = 1
@@ -316,23 +316,24 @@ def extract_audio(audioname, zip_data):
 				break
 	return audio_filename
 
-def do_sample(convproj_obj, sample_path, zipfile, projfile):
-	if sample_path:
-		fromzip = False
-		o_sample_path = sample_path
-		if zipfile:
-			t_sample_path = sample_path.replace('\\', '/')
-			if t_sample_path in zipfile.namelist():
-				o_sample_path = extract_audio(t_sample_path, zipfile)
-				fromzip = True
+def do_sample(convproj_obj, sample_prefix, sample_path, zipfile, projfile):
+	t_sample_path = sample_path.replace('\\', '/')
 
-		sampleref_obj = convproj_obj.sampleref__add__prefix(sample_path, 'flmobile_factory', o_sample_path)
-		if not fromzip:
-			sampleref_obj.fileref.resolve_prefix()
-			#print(sampleref_obj.fileref.get_path(None, 0))
-			sampleref_obj.fileref.resolve_prefix()
-			sampleref_obj.search_local(os.path.dirname(projfile))
+	if sample_prefix == 'zip' and zipfile:
+		if t_sample_path in zipfile.namelist(): o_sample_path = extract_audio(t_sample_path, zipfile)
+		sampleref_obj = convproj_obj.sampleref__add__prefix(sample_path, 'dawvert_extracted', t_sample_path)
+		sampleref_obj.fileref.resolve_prefix()
+		sampleref_obj.search_local(os.path.dirname(projfile))
+		return sampleref_obj
 
+	elif sample_prefix == 'factory':
+		sampleref_obj = convproj_obj.sampleref__add__prefix(sample_path, 'flmobile_factory', t_sample_path)
+		sampleref_obj.fileref.resolve_prefix()
+		return sampleref_obj
+
+	else:
+		sampleref_obj = convproj_obj.sampleref__add(sample_path, t_sample_path, None)
+		sampleref_obj.search_local(os.path.dirname(projfile))
 		return sampleref_obj
 
 def do_devices(devices_order, convproj_obj, devices, plugslots, projfilepath, zipfile, trackid):
@@ -355,8 +356,8 @@ def do_device(convproj_obj, device_obj, projfilepath, zipfile, pluginid, numberi
 			plugin_obj.role = 'synth'
 
 			for keynum, flm_sample in enumerate(device_obj.drumsamples):
-				sample_path = get_path(flm_sample.sample_path)
-				sampleref_obj = do_sample(convproj_obj, sample_path, zipfile, projfilepath)
+				sample_prefix, sample_path = get_path(flm_sample.sample_path)
+				sampleref_obj = do_sample(convproj_obj, sample_prefix, sample_path, zipfile, projfilepath)
 
 				drumpad_obj, layer_obj = plugin_obj.drumpad_add_singlelayer()
 				drumpad_obj.key = keynum
@@ -380,8 +381,8 @@ def do_device(convproj_obj, device_obj, projfilepath, zipfile, pluginid, numberi
 				plugin_obj = convproj_obj.plugin__add(pluginid, 'universal', 'sampler', 'multi')
 				plugin_obj.role = 'synth'
 				for x in zones:
-					sample_path = get_path(x.name)
-					sampleref_obj = do_sample(convproj_obj, sample_path, zipfile, projfilepath)
+					sample_prefix, sample_path = get_path(x.name)
+					sampleref_obj = do_sample(convproj_obj, sample_prefix, sample_path, zipfile, projfilepath)
 	
 					middlenote = int((device_obj.prms[3]-0.5)*48) if device_obj.prms else 0
 
@@ -419,17 +420,20 @@ def do_device(convproj_obj, device_obj, projfilepath, zipfile, pluginid, numberi
 	return pluginid, plugin_obj
 
 def get_path(sample_path):
+	prefix = ''
 	out = sample_path
 	if sample_path[0:4] == b'@L@\x00':
 		out = sample_path[4:].split(b'\0')[0].decode()
+		prefix = 'zip'
 	elif sample_path[0:4] == b'@R@\x00':
 		out = sample_path[4:].split(b'\0')[0].decode()
+		prefix = 'factory'
 	elif sample_path[0:3] == b'@R@':
 		out = sample_path[3:].split(b'\0')[0].decode()
 	else:
 		out = sample_path.split(b'\0')[0].decode()
-	if out:
-		return out
+
+	return prefix, out
 
 def add_params(params_obj, flm_rack):
 	params_obj.add('vol', flm_rack.volume, 'float')

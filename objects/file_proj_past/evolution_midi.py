@@ -130,7 +130,7 @@ class evo_midi_song:
 		self.songinfo = byr_stream.string_t(encoding='windows-1252')
 
 		assert num_unk>1
-		print(   byr_stream.raw((num_unk*6)-3).hex()  )
+		byr_stream.skip((num_unk*6)-3)
 
 		self.unk1 = byr_stream.uint16()
 

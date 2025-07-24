@@ -110,7 +110,6 @@ dawvert_intent.create_folder_paths()
 
 fileref_global.add_prefix('project_root', None, os.path.dirname(dawvert_intent.input_file))
 fileref_global.add_prefix('dawvert_external_data', None, os.path.join(scriptfiledir, '__external_data'))
-dawvert_intent.do_fileref_global()
 
 if not args.debug_multioutplugs:
 	dawvert_intent.set_file_output(args.o)
@@ -122,6 +121,7 @@ if not args.debug_multioutplugs:
 	out_in_file_pathext = os.path.splitext(os.path.basename(dawvert_intent.output_file))
 	out_file_path = os.path.dirname(dawvert_intent.output_file)
 	dawvert_intent.set_projname_path()
+	dawvert_intent.do_fileref_global()
 
 	out_plug_ext = dawvert_core.output_get_extension()
 	if out_in_file_pathext[1] == '': dawvert_intent.output_file = os.path.join(out_file_path, out_in_file_pathext[0]+'.'+out_plug_ext)

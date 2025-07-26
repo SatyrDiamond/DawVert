@@ -95,6 +95,9 @@ class soundation_region:
 		self.stretchMode = None
 		self.stretchRate = None
 		self.type = None
+		self.pitchShiftSemitones = 0
+		self.pitchShiftCents = 0
+		self.formantCorrection = 0
 
 		if pd != None:
 			if 'color' in pd: self.color = pd['color']
@@ -113,6 +116,9 @@ class soundation_region:
 			if 'stretchMode' in pd: self.stretchMode = pd['stretchMode']
 			if 'stretchRate' in pd: self.stretchRate = pd['stretchRate']
 			if 'type' in pd: self.type = pd['type']
+			if 'pitchShiftSemitones' in pd: self.pitchShiftSemitones = pd['pitchShiftSemitones']
+			if 'pitchShiftCents' in pd: self.pitchShiftCents = pd['pitchShiftCents']
+			if 'formantCorrection' in pd: self.formantCorrection = pd['formantCorrection']
 
 	def write(self):
 		sng_region = {}
@@ -132,6 +138,9 @@ class soundation_region:
 		if self.stretchMode != None: sng_region['stretchMode'] = self.stretchMode
 		if self.stretchRate != None: sng_region['stretchRate'] = self.stretchRate
 		if self.isPattern != None: sng_region['isPattern'] = self.isPattern
+		sng_region['pitchShiftSemitones'] = self.pitchShiftSemitones
+		sng_region['pitchShiftCents'] = self.pitchShiftCents
+		sng_region['formantCorrection'] = self.formantCorrection
 		return sng_region
 
 class soundation_channel:

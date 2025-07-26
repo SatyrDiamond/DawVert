@@ -6,15 +6,28 @@ import urllib.parse
 import os
 import copy
 import json
+from objects.convproj import fileref
 
 contentpath = os.path.join(os.path.expanduser('~'), 'Music\\Serato Studio\\Content\\')
 
+def parse_sampleref_path(i_file):
+	filename = urllib.parse.unquote(i_file)
+	if filename.startswith('content:///'): 
+		return 'serato_content', filename[11:]
+	elif filename.startswith('file:///'): 
+		return None, filename[9:]
+	else: 
+		return None, filename
+
 def parse_filepath(i_file):
 	filename = urllib.parse.unquote(i_file)
-	if filename.startswith('content://'): filepath = contentpath+filename[10:]
-	elif filename.startswith('file://'): filepath = filename[8:]
-	else: filepath = filename
-	return filepath.replace("\\","/").replace("//","/")
+	if filename.startswith('content:///'): 
+		return contentpath+filename[11:]
+	elif filename.startswith('file:///'): 
+		return filename[9:]
+	else: 
+		filepath = filename
+		return filepath.replace("\\","/").replace("//","/")
 
 def calcpos_stretch(orgpoint, original_bpm, bpm, playback_speed, printd):
 	outpos = orgpoint
@@ -59,7 +72,7 @@ def do_chan_strip(eq_defined, convproj_obj, trackid, channel_strip, fxslots_audi
 
 	if not (channel_strip.low_eq == channel_strip.mid_eq == channel_strip.high_eq == 0):
 		fxplugid = trackid+'_fx_eq'
-		fxplugin_obj = convproj_obj.plugin__add(fxplugid, 'universal', 'eq', '3band')
+		fxplugin_obj = convproj_obj.plugin__add(fxplugid, 'native', 'serato', '3band')
 		fxplugin_obj.params.add('low_gain', channel_strip.low_eq, 'float')
 		fxplugin_obj.params.add('mid_gain', channel_strip.mid_eq, 'float')
 		fxplugin_obj.params.add('high_gain', channel_strip.high_eq, 'float')
@@ -124,6 +137,9 @@ class input_serato(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
+		fileref_global = fileref.cvpj_fileref_global
+		fileref_global.add_prefix('serato_content', 'win', contentpath)
+
 		sample_data = {}
 
 		eq_track = {}
@@ -168,9 +184,9 @@ class input_serato(plugins.base):
 							inst_obj.params.add('enabled', scene_strip.mute!=1, 'bool')
 							do_chan_strip(eq_defined, convproj_obj, cvpj_instid_p, channel_strip, inst_obj.plugslots.slots_audio)
 
-							samplepath = parse_filepath(drumsamp.file)
+							sampleprefix, samplepath = parse_sampleref_path(drumsamp.file)
 
-							plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(cvpj_instid_p, samplepath, 'win')
+							plugin_obj, sampleref_obj, samplepart_obj = convproj_obj.plugin__addspec__sampler(cvpj_instid_p, samplepath, 'win', prefix=sampleprefix)
 
 							inst_obj.visual.name = urllib.parse.unquote(samplefile).split('/')[-1]
 
@@ -241,8 +257,12 @@ class input_serato(plugins.base):
 
 					if scene_deck.sample_file:
 						inst_obj.visual.name = urllib.parse.unquote(scene_deck.sample_file).split('/')[-1]
-						samplepath = parse_filepath(scene_deck.sample_file)
-						convproj_obj.sampleref__add(samplepath, samplepath)
+						sampleprefix, samplepath = parse_sampleref_path(scene_deck.sample_file)
+						if not sampleprefix:
+							convproj_obj.sampleref__add(samplepath, samplepath)
+						else:
+							sampleref_obj = convproj_obj.sampleref__add__prefix(samplepath, sampleprefix, samplepath)
+							sampleref_obj.fileref.resolve_prefix()
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = samplepath
 						stretch_obj = samplepart_obj.stretch
@@ -275,8 +295,13 @@ class input_serato(plugins.base):
 					if scene_deck.sample_file:
 						playspeed = calcspeed(scene_deck.playback_speed, project_obj.bpm, scene_deck.original_bpm, 1)
 
-						samplepath = parse_filepath(scene_deck.sample_file)
-						sampleref_obj = convproj_obj.sampleref__add(samplepath, samplepath, 'win')
+						sampleprefix, samplepath = parse_sampleref_path(scene_deck.sample_file)
+
+						if not sampleprefix:
+							sampleref_obj = convproj_obj.sampleref__add(samplepath, samplepath)
+						else:
+							sampleref_obj = convproj_obj.sampleref__add__prefix(samplepath, sampleprefix, samplepath)
+							sampleref_obj.fileref.resolve_prefix()
 						sampleref_obj.visual.name = urllib.parse.unquote(scene_deck.sample_file).split('/')[-1]
 						samplepart_obj = sample_entry.cvpj_sample_entry()
 						samplepart_obj.sampleref = samplepath

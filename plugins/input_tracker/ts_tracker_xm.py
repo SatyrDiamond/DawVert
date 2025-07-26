@@ -12,7 +12,7 @@ else: xmodits_exists = True
 
 def env_to_cvpj(xm_env, plugin_obj, ispan, fadeout):
 	envtype = 'pan' if ispan else 'vol'
-	autopoints_obj = plugin_obj.env_points_add(envtype, 48, False, 'float')
+	autopoints_obj = plugin_obj.env_points_add(envtype, 48, 'float')
 	autopoints_obj.enabled = xm_env.enabled
 	autopoints_obj.sustain_on = xm_env.sustain_on
 	autopoints_obj.sustain_point = xm_env.sustain+1

@@ -291,7 +291,6 @@ class cvpj_fileref:
 			if len(s_prefixes)==1:
 				state = cvpj_fileref_state(self)
 				self.prefix_apply_folder_obj(prefixes[s_prefixes[0]])
-
 				if not self.exists(None): 
 					state.restore(self)
 				else: 

@@ -199,7 +199,7 @@ def do_samplepart(convproj_obj, als_samplepart, cvpj_samplepart, ignoreresample,
 				if 'FluctuationTexture' in stretch_algo.params: warp_obj.FluctuationTexture = stretch_algo.params['FluctuationTexture']
 			elif stretch_algo.type == 'ableton_complex':
 				warp_obj.WarpMode = 4
-			elif stretch_algo.type == 'stretch_complexpro':
+			elif stretch_algo.type == 'ableton_complexpro':
 				warp_obj.WarpMode = 6
 				warp_obj.ComplexProFormants = stretch_algo.formant
 				if 'envelope' in stretch_algo.params: warp_obj.ComplexProEnvelope = stretch_algo.params['envelope']
@@ -599,7 +599,11 @@ def do_audio_stretch(als_audioclip, stretch_obj):
 			else:
 				als_audioclip.WarpMode = 1
 				als_audioclip.GranularityTones = 70
-
+		elif stretch_algo.type == 'elastique_v3' and stretch_algo.subtype == 'pro':
+			als_audioclip.WarpMode = 6
+			pitch = stretch_algo.formant
+			als_audioclip.PitchCoarse = round(pitch)
+			als_audioclip.PitchFine = (pitch-round(pitch))*100
 		else:
 			als_audioclip.WarpMode = 4
 

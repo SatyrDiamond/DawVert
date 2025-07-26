@@ -129,7 +129,7 @@ class input_cvpj_f(plugins.base):
 						else:
 							dur += swing
 
-						if nnn[2]: cvpj_notelist.add_r(pos, dur, nnn[0]-78, nnn[2]/100, None)
+						if nnn[2]: cvpj_notelist.add_r(pos, dur, int(nnn[0])-78, int(nnn[2])/100, None)
 
 		curpos = 0
 		for pat_num in project_obj.order:

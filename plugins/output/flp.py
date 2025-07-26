@@ -389,7 +389,7 @@ class output_cvpjs(plugins.base):
 						item = arrangement.flp_arrangement_clip()
 						item.position = int(position)
 						item.itemindex = int(pat_id[pl_obj.fromindex] + item.patternbase)
-						item.length = int(duration)
+						item.length = int(max(duration, 0))
 						item.startoffset = 0
 						item.endoffset = int(duration)
 						item.trackindex = (-500 + int(idnum))*-1

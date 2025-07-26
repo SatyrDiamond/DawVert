@@ -32,6 +32,7 @@ class cvpj_autoticks:
 		return copy.deepcopy(self)
 
 	def add_point(self, p_pos, p_val):
+		if not isinstance(p_pos, (float, int)): raise ValueError('cvpj_autoticks: numeric only')
 		self.points[p_pos] = p_val
 
 	def change_seconds(self, is_seconds, bpm, ppq):

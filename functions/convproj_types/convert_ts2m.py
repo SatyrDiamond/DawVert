@@ -17,7 +17,7 @@ def convert(convproj_obj):
 
 	convproj_obj.do_actions.append('do_addloop')
 	convproj_obj.do_actions.append('do_lanefit')
-	convproj_obj.params.add('bpm', tracker_obj.tempo/(tracker_obj.speed/6), 'float')
+	convproj_obj.params.add('bpm', tracker_obj.tempo/(max(tracker_obj.speed, 1)/6), 'float')
 
 	playstr = pat_data.playstream()
 	playstr.init_tempo(tracker_obj.tempo, tracker_obj.speed)

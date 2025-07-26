@@ -128,21 +128,21 @@ def add_plugin(rpp_project, rpp_fxchain, pluginid, convproj_obj, track_obj):
 
 		if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
 			sp_obj = plugin_obj.samplepart_get('sample')
-			_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
-			if sampleref_obj:
+			iffound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+			if iffound:
 				sp_obj.convpoints_samples(sampleref_obj)
-	
+		
 				sampler_params = base_sampler.copy()
 				sampler_params['filename'] = sp_obj.get_filepath(convproj_obj, False)
 				sampler_params['pitch_start'] = (-60/80)/2 + 0.5
 				#sampler_params['obey_note_offs'] = int(sp_obj.trigger != 'oneshot')
 				sampler_params['pitch_offset'] = (pitch/80)/2 + 0.5
 				sampler_params['obey_note_offs'] = 1
-	
+		
 				adsr_obj = plugin_obj.env_asdr_get('vol')
 				do_sample_part(sampler_params, sampleref_obj, sp_obj)
 				do_adsr(sampler_params, adsr_obj, sampleref_obj, sp_obj)
-	
+		
 				make_sampler(rpp_fxchain, sampler_params)
 
 		if plugin_obj.check_match('universal', 'sampler', 'drums'):
@@ -459,7 +459,8 @@ class output_reaper(plugins.base):
 				tempoenvex.used = 1
 				nextinstant = True
 				for x in autodata.nopl_points:
-					tempoenvex.points.append([x.pos, x.value, int(nextinstant)])
+					tempopoint = [x.pos, x.value, int(nextinstant)]
+					tempoenvex.points.append(tempopoint)
 					nextinstant = x.instant_mode
 
 		#tempo env end

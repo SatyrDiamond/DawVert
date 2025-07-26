@@ -194,11 +194,23 @@ class input_soundation(plugins.base):
 							sp_obj.sampleref = orgname
 
 						sp_obj.reverse = soundation_region.reversed
+						pitch = (soundation_region.pitchShiftSemitones+soundation_region.pitchShiftCents)/100
 
 						stretch_obj = sp_obj.stretch
 						stretch_obj.preserve_pitch = not (soundation_region.stretchMode != 3)
+						if sp_obj.pitch: stretch_obj.preserve_pitch = True
 						if soundation_region.autoStretchBpm:
 							stretch_obj.timing.set__orgtempo(soundation_region.autoStretchBpm)
+						else:
+							stretch_obj.timing.set__orgtempo(soundation_obj.bpm)
+						if soundation_region.formantCorrection:
+							stretch_algo = stretch_obj.algorithm
+							stretch_algo.type = 'elastique_v3'
+							stretch_algo.subtype = 'pro'
+							stretch_algo.formant = pitch
+						else:
+							sp_obj.pitch = pitch
+
 
 				if sound_chan_type == 'instrument':
 					soundation_inst = soundation_channel.instrument

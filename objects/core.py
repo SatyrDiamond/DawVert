@@ -447,8 +447,6 @@ class core:
 		else:
 			logger_core.error(self.currentplug_input.selected_shortname+' is not usable: '+selected_plugin.usable_meg)
 			exit()
-		self.convproj_obj.time_tempocalc.proc_points()
-		self.convproj_obj.calc_pl_tempo()
 
 	def convert_type_output(self, dawvert_intent): 
 		global in_dawinfo

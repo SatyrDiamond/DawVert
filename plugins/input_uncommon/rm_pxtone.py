@@ -37,13 +37,13 @@ class pxtone_cmdstream():
 		self.cur_voice = i_value
 
 	def vol(self, i_pos, i_value):
-		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'vol'], 'float', i_pos, i_value/128)
+		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'vol'], 'float', int(i_pos), i_value/128)
 
 	def pan(self, i_pos, i_value):
-		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'pan'], 'float', i_pos, ((i_value/128)-0.5)*2)
+		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'pan'], 'float', int(i_pos), ((i_value/128)-0.5)*2)
 
 	def pitch(self, i_pos, i_value):
-		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'pitch'], 'float', i_pos, math.log2(get_float(i_value))*12)
+		self.cvpj_auto.add_autotick(['track', self.cvpj_trackid, 'pitch'], 'float', int(i_pos), math.log2(get_float(i_value))*12)
 
 	def note(self, i_pos, i_value):
 		self.cvpj_notelist.add_m('ptcop_'+str(self.cur_voice), i_pos, i_value, self.cur_pitch, 1, None)

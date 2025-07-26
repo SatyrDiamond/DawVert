@@ -487,11 +487,33 @@ class qtractor_proj_files:
 			xmlfile.set('name', name)
 			xmlfile.text = filename
 
+class qtractor_tempo_map:
+	def __init__(self, xmldata):
+		self.bar = 0
+		self.frame = 0
+		self.tempo = 120
+		self.beat_type = 0
+		self.beats_per_bar = 0
+		self.beat_divisor = 0
+		if xmldata is not None: self.read(xmldata)
+
+	def read(self, xml_proj):
+		trackattrib = xml_proj.attrib
+		if 'bar' in trackattrib: self.bar = int(trackattrib['bar'])
+		if 'frame' in trackattrib: self.frame = int(trackattrib['frame'])
+
+		for xmlpart in xml_proj:
+			if xmlpart.tag == 'tempo': self.tempo = int(xmlpart.text)
+			if xmlpart.tag == 'beat-type': self.beat_type = int(xmlpart.text)
+			if xmlpart.tag == 'beats-per-bar': self.beats_per_bar = int(xmlpart.text)
+			if xmlpart.tag == 'beat-divisor': self.beat_divisor = int(xmlpart.text)
+
 class qtractor_project:
 	def __init__(self):
 		self.properties = qtractor_proj_properties(None)
 		self.state = qtractor_proj_state(None)
 		self.files = qtractor_proj_files(None)
+		self.tempo_map = []
 		self.tracks = []
 		self.name = ''
 		self.version = ''
@@ -511,6 +533,12 @@ class qtractor_project:
 			if xmlpart.tag == 'properties': self.properties.read(xmlpart)
 			if xmlpart.tag == 'state': self.state.read(xmlpart)
 			if xmlpart.tag == 'files': self.files.read(xmlpart)
+			if xmlpart.tag == 'tempo-map': 
+				for xmlinpart in xmlpart:
+					if xmlinpart.tag == 'tempo-node':
+						self.tempo_map.append(qtractor_tempo_map(xmlinpart))
+
+				#self.tempo_map.read(xmlpart)
 			if xmlpart.tag == 'tracks':
 				for xmlinpart in xmlpart:
 					if xmlinpart.tag == 'track':

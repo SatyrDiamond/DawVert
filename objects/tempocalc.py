@@ -44,7 +44,7 @@ class tempocalc_store:
 		self.store = None
 		self.auto_found = -1
 		self.tempo = 120
-		self.use_stored = -1
+		self.use_stored = -2
 		self.source_seconds = False
 		self.convproj_obj = convproj_obj
 

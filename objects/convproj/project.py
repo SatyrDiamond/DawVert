@@ -837,7 +837,13 @@ class cvpj_project:
 	def plugin__addspec__sampler(self, plug_id, file_path, os_type, **kwargs):
 		if file_path:
 			sampleref = kwargs['sampleid'] if 'sampleid' in kwargs else file_path
-			sampleref_obj = self.sampleref__add(sampleref, file_path, os_type)
+			prefix = kwargs['prefix'] if 'prefix' in kwargs else None
+			if not prefix:
+				sampleref_obj = self.sampleref__add(sampleref, file_path, os_type)
+			else:
+				sampleref_obj = self.sampleref__add__prefix(sampleref, kwargs['prefix'], file_path)
+				sampleref_obj.fileref.resolve_prefix()
+
 			is_drumsynth = sampleref_obj.fileref.file.extension.lower() == 'ds'
 		else:
 			sampleref_obj = None

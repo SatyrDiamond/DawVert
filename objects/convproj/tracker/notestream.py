@@ -36,16 +36,32 @@ class autostream:
 		self.cur_pos = 0
 
 	def to_cvpj(self, convproj_obj, autoloc):
+		auto_all_obj = convproj_obj.automation.create(autoloc, 'float', True)
+		auto_all_obj.simul = True
+
 		for tpl in self.placements:
-			autopl_obj = convproj_obj.automation.add_pl_points(autoloc, 'float')
-			autopl_obj.time.set_posdur((tpl[0])+tpl[1][0][0], tpl[2])
-			autodata = autopl_obj.data
+			pl_pos = (tpl[0])+tpl[1][0][0]
+			pl_dur = tpl[2]
+
+			autopl_obj = auto_all_obj.add_pl_points()
+			autopl_obj.time.set_posdur(pl_pos, pl_dur)
+
+			autoti_obj = auto_all_obj.add_pl_ticks()
+			autoti_obj.time.set_posdur(pl_pos, pl_dur)
+
+			autopoints_obj = autopl_obj.data
+			autoticks_obj = autoti_obj.data
+
 			for tap in tpl[1]: 
-				autodata.points__add_instant(tap[0]-tpl[1][0][0], tap[1])
-			autoti_obj = convproj_obj.automation.add_pl_ticks(autoloc, 'float')
-			autoti_obj.time.set_posdur((tpl[0])+tpl[1][0][0], tpl[2])
-			for tap in tpl[1]: 
-				autoti_obj.data.add_point(tap[0]-tpl[1][0][0], tap[1])
+				pos = int(tap[0]-tpl[1][0][0])
+				value = tap[1]
+
+				autopoints_obj.points__add_instant(pos, value)
+				autoticks_obj.add_point(pos, value)
+
+				if pl_dur>pos:
+					auto_all_obj.add_autotick(pl_pos+pos, value)
+					auto_all_obj.add_autopoint(pl_pos+pos, value, 'instant')
 
 class notestream:
 	def __init__(self, assoc_instid):

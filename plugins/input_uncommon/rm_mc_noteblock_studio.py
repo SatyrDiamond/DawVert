@@ -70,8 +70,8 @@ class input_gt_mnbs(plugins.base):
 
 			for note_obj in layer_obj.notes: 
 				cvpj_notelist.add_m('NoteBlock'+str(note_obj.inst), note_obj.pos*notelen, 2*notelen, note_obj.key-39, note_obj.vel/100, None)
-				cvpj_notelist.last_add_pan((note_obj.pan/100)-1)
-				cvpj_notelist.last_add_finepitch(note_obj.pitch)
+				if note_obj.pan!=100: cvpj_notelist.last_add_pan((note_obj.pan/100)-1)
+				if note_obj.pitch: cvpj_notelist.last_add_finepitch(note_obj.pitch)
 
 		custominstid = 16
 		for custominstid, custom_obj in enumerate(project_obj.custom):

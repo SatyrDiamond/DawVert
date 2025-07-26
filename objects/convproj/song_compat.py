@@ -22,6 +22,7 @@ from functions.convproj_compat import track_pl_del
 from functions.convproj_compat import unhybrid
 from functions.convproj_compat import sep_nest_audio
 from functions.convproj_compat import midi_notes
+from functions.convproj_compat import setup_tempocalc
 
 import json
 import math
@@ -48,6 +49,7 @@ class song_compat:
 		if self.currenttime == None: self.currenttime = traits_obj.time_seconds
 		if 'time_seconds' in self.finished_processes: self.currenttime = out_dawinfo.time_seconds
 
+		self.process_part('setup_tempocalc', setup_tempocalc,		convproj_obj, cvpj_type, traits_obj, out_dawinfo, out_type, dawvert_intent)
 		self.process_part('fxchange', fxchange,						convproj_obj, cvpj_type, traits_obj, out_dawinfo, out_type, dawvert_intent)
 
 		self.process_part('unhybrid', unhybrid,					   convproj_obj, cvpj_type, traits_obj.track_hybrid, out_dawinfo.track_hybrid, out_type, dawvert_intent)

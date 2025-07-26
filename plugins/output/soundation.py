@@ -210,8 +210,8 @@ class output_soundation(plugins.base):
 						soundation_instrument.params.add('portamento_time', 0.1, [])
 
 						sp_obj = plugin_obj.samplepart_get('sample')
-						_, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
-						sp_obj.convpoints_percent(sampleref_obj)
+						reffound, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+						if reffound: sp_obj.convpoints_percent(sampleref_obj)
 
 						filename = sp_obj.get_filepath(convproj_obj, None)
 						zipfilename = addsample(zip_sngz, filename, False)
@@ -421,6 +421,11 @@ class output_soundation(plugins.base):
 
 					soundation_region.file = {"url": zipfilename, "name": ""}
 					soundation_region.reversed = audiopl_obj.sample.reverse
+					sp_obj = audiopl_obj.sample
+					pitch = sp_obj.pitch
+
+					#soundation_region.pitchShiftSemitones = int(round(sp_obj.pitch)*100)
+					#soundation_region.pitchShiftCents = int(sp_obj.pitch*100)-soundation_region.pitchShiftSemitones
 
 					stretch_obj = audiopl_obj.sample.stretch
 

@@ -51,6 +51,10 @@ class input_midi(plugins.base):
 
 		convproj_obj.params.add('bpm', tempo, 'float')
 		
+		#for temponode in project_obj.tempo_map:
+		#	tempopos = calcsec(temponode.frame, ppq)
+		#	convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', tempopos, temponode.tempo)
+
 		#for audioid, filename in project_obj.files.audio_list.items():
 		#	sampleref_obj = convproj_obj.sampleref__add(audioid, filename, None)
 

@@ -278,6 +278,7 @@ class cvpj_autopoints:
 		self.points_cur.clean()
 
 	def points__add_point(self, pos, val, ptype):
+		if not isinstance(pos, (float, int)): raise ValueError('cvpj_autopoints: numeric only')
 		points_cur = self.points_cur
 		points_cur.add()
 		points_cur['pos'] = pos
@@ -289,6 +290,7 @@ class cvpj_autopoints:
 		return points_cur
 
 	def points__add_normal(self, pos, val, tension, ptype):
+		if not isinstance(pos, (float, int)): raise ValueError('cvpj_autopoints: numeric only')
 		points_cur = self.points_cur
 		points_cur.add()
 		points_cur['pos'] = pos
@@ -298,6 +300,7 @@ class cvpj_autopoints:
 		return points_cur
 
 	def points__add_instant(self, pos, val):
+		if not isinstance(pos, (float, int)): raise ValueError('cvpj_autopoints: numeric only')
 		points_cur = self.points_cur
 		points_cur.add()
 		points_cur['pos'] = pos
@@ -306,6 +309,7 @@ class cvpj_autopoints:
 		return points_cur
 
 	def points__add_instant_cha(self, pos, val, end):
+		if not isinstance(pos, (float, int)): raise ValueError('cvpj_autopoints: numeric only')
 		points_cur = self.points_cur
 		points_cur.add()
 		points_cur['pos'] = pos

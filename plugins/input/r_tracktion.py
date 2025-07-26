@@ -273,7 +273,7 @@ autonames = {
 	'PRESSURE': 'pressure',
 }
 
-def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode): 
+def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode, dawvert_intent): 
 	groupid = str(wf_track.id_num)
 	track_obj = convproj_obj.fx__group__add(groupid)
 	track_obj.visual.name = str(wf_track.name)
@@ -297,9 +297,9 @@ def do_foldertrack(convproj_obj, wf_track, counter_track, software_mode):
 
 	track_obj.params.add('vol', vol, 'float')
 	track_obj.params.add('pan', pan, 'float')
-	do_tracks(convproj_obj, wf_track.tracks, counter_track, groupid, software_mode)
+	do_tracks(convproj_obj, wf_track.tracks, counter_track, groupid, software_mode, dawvert_intent)
 
-def do_track(convproj_obj, wf_track, track_obj, software_mode): 
+def do_track(convproj_obj, wf_track, track_obj, software_mode, dawvert_intent): 
 	track_obj.visual.name = str(wf_track.name)
 	colour = str(wf_track.colour)
 	try:
@@ -366,6 +366,8 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 	
 			placement_obj.sample.sampleref = audioclip.source
 			sampleref_exists, sampleref_obj = convproj_obj.sampleref__get(audioclip.source)
+			if not sampleref_obj.fileref.exists(None):
+				sampleref_obj.search_local(dawvert_intent.input_folder)
 	
 			time_obj.set_posdur_real(audioclip.start, audioclip.length)
 			placement_obj.fade_in.set_dur(audioclip.fadeIn, 'seconds')
@@ -428,16 +430,16 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode):
 	middlenote += track_obj.datavals.get('middlenote', 0)
 	track_obj.datavals.add('middlenote', middlenote)
 
-def do_tracks(convproj_obj, in_tracks, counter_track, groupid, software_mode):
+def do_tracks(convproj_obj, in_tracks, counter_track, groupid, software_mode, dawvert_intent):
 	from objects.file_proj import tracktion_edit as proj_tracktion_edit
 	for wf_track in in_tracks:
 		tracknum = counter_track.get()
 		if isinstance(wf_track, proj_tracktion_edit.tracktion_track):
 			track_obj = convproj_obj.track__add(str(tracknum), 'hybrid', 1, False)
 			if groupid: track_obj.group = groupid
-			do_track(convproj_obj, wf_track, track_obj, software_mode)
+			do_track(convproj_obj, wf_track, track_obj, software_mode, dawvert_intent)
 		if isinstance(wf_track, proj_tracktion_edit.tracktion_foldertrack):
-			do_foldertrack(convproj_obj, wf_track, counter_track, software_mode)
+			do_foldertrack(convproj_obj, wf_track, counter_track, software_mode, dawvert_intent)
 
 class input_tracktion_edit(plugins.base):
 	def is_dawvert_plugin(self):
@@ -572,4 +574,4 @@ class input_tracktion_edit(plugins.base):
 		tracknum = 0
 		counter_track = counter.counter(1000, '')
 
-		do_tracks(convproj_obj, project_obj.tracks, counter_track, None, software_mode)
+		do_tracks(convproj_obj, project_obj.tracks, counter_track, None, software_mode, dawvert_intent)

@@ -219,7 +219,7 @@ class input_it(plugins.base):
 
 				if bn_s_t_ifsame:
 					if (not ''.join(list(map(lambda x: x.strip(), cvpj_instname.split())))):
-						if bn_s_t_f[1] <= len(project_obj.samples):
+						if 0 < bn_s_t_f[1] <= len(project_obj.samples):
 							inst_obj.visual.name = project_obj.samples[bn_s_t_f[1]-1].name
 							if not inst_obj.visual.name: 
 								inst_obj.visual.name = project_obj.samples[bn_s_t_f[1]-1].dosfilename

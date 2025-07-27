@@ -141,6 +141,9 @@ class midievents:
 				state[7] = x['pos']
 				yield state
 
+	def __len__(self):
+		return self.data.count()
+
 	def __iter__(self):
 		for x in self.data:
 			if x['used']:
@@ -161,6 +164,8 @@ class midievents:
 	def change_ppq(self, inppq):
 		ppqcalc = self.ppq/inppq
 		self.data.data['pos'] = self.data.data['pos']/ppqcalc
+		durloc = self.data.data['type']==EVENTID__NOTE_DUR
+		self.data.data['uhival'][durloc] = self.data.data['uhival'][durloc]/ppqcalc
 		self.ppq = inppq
 
 	def get_channums(self):
@@ -199,6 +204,12 @@ class midievents:
 			for n in wb:
 				self.add_note_off(n['pos']+n['uhival'], n['chan'], n['value'], n['value2'])
 			self.has_duration = False
+
+	def detect_duration(self):
+		used_data = self.data.get_used()
+		durc = np.count_nonzero(used_data['type']==EVENTID__NOTE_DUR)
+		durn = np.count_nonzero(used_data['type']==EVENTID__NOTE_ON)
+		print(durc, durn)
 
 	def add_note_off(self, curpos, channel, key, vol):
 		self.cursor.add()
@@ -409,6 +420,16 @@ class midievents:
 		maxc = max(c_dur) if len(c_dur) else 0
 
 		return max(maxn, maxc)
+
+	def get_start(self):
+		used_data = self.data.get_used()
+		tab = used_data['pos']
+		return min(tab) if tab.any() else 0
+
+	def get_start_end(self):
+		used_data = self.data.get_used()
+		tab = used_data['pos']
+		return (min(tab), max(tab)) if tab.any() else (0, 0)
 
 	def clean(self):
 		self.data.clean()

@@ -103,7 +103,8 @@ class cvpj_placements_notes:
 		for x in self.data: 
 			if x.time.cut_type == 'cut':
 				ooffset = x.time.get_offset()
-				x.notelist.edit_trimmove(ooffset, round(ooffset+x.time.get_dur(), 8))
+				enddur = round(ooffset+x.time.get_dur())
+				x.notelist.edit_trimmove(ooffset, enddur, 8)
 				x.time.set_offset(0)
 				x.time.cut_type = None
 

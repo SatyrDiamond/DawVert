@@ -4,6 +4,7 @@
 from functions import xtramath
 from functions import data_values
 from objects.convproj import time
+from objects import tempocalc
 import math
 import copy
 
@@ -43,6 +44,20 @@ class cvpj_autoticks:
 			self.points = dict([(xtramath.sec2step(p, bpm)*(ppq), v) for p, v in self.points.items()])
 			self.is_seconds = False
 		
+	def change_seconds_global(self, is_seconds, projid, ppq):
+		if projid in tempocalc.global_stores:
+			tempostore = tempocalc.global_stores[projid]
+		else:
+			print('id not found in tempocalc_store')
+			exit()
+
+		if is_seconds and not self.is_seconds:
+			self.points = dict([(tempostore.get_pos(p/ppq, True), v) for p, v in self.points.items()])
+			self.is_seconds = True
+		elif not is_seconds and self.is_seconds:
+			self.points = dict([(tempostore.get_pos(p, False)*ppq, v) for p, v in self.points.items()])
+			self.is_seconds = False
+
 	def change_timings(self, time_ppq):
 		if not self.is_seconds:
 			r = []

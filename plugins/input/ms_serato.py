@@ -6,7 +6,9 @@ import urllib.parse
 import os
 import copy
 import json
+import base64
 from objects.convproj import fileref
+from objects.data_bytes import bytereader
 
 contentpath = os.path.join(os.path.expanduser('~'), 'Music\\Serato Studio\\Content\\')
 
@@ -206,7 +208,7 @@ class input_serato(plugins.base):
 							samplepart_obj.trigger = 'oneshot'
 
 							stretch_obj = samplepart_obj.stretch
-							stretch_obj.timing.set__speed(drumsamp.playback_speed)
+							stretch_obj.timing.set__speed(1/drumsamp.playback_speed)
 							stretch_obj.preserve_pitch = True
 
 			if scene_deck.type == 'plugin':

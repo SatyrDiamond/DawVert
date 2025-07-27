@@ -376,6 +376,8 @@ class output_tracktion_edit(plugins.base):
 		in_dict['placement_cut'] = True
 		in_dict['placement_loop'] = ['loop', 'loop_off', 'loop_eq']
 		in_dict['time_seconds'] = True
+		in_dict['time_seconds_tempo'] = False
+		in_dict['time_seconds_timesig'] = False
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate', 'warp']
 		in_dict['auto_types'] = ['nopl_points']
@@ -452,7 +454,15 @@ class output_tracktion_edit(plugins.base):
 		bpm = convproj_obj.params.get('bpm', 140).value
 
 		project_obj.temposequence.tempo[0] = [bpm, 1]
-		project_obj.temposequence.timesig[0] = convproj_obj.timesig
+		if_found, autodata = convproj_obj.automation.get(['main', 'bpm'], 'float')
+		if if_found:
+			if autodata.u_nopl_points:
+				for x in autodata.nopl_points:
+					project_obj.temposequence.tempo[x.pos/4] = [x.value, 1 if x.instant_mode else 0]
+
+		#project_obj.temposequence.timesig[0] = convproj_obj.timesig
+		#for pos, timesig in convproj_obj.timesig_auto:
+		#	project_obj.temposequence.timesig[float(pos)] = timesig
 
 		transport_obj = project_obj.transport
 

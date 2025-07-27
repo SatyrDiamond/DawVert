@@ -28,9 +28,16 @@ class info_daw:
 		self.auto_types = []
 		self.fxchain_mixer = False
 		self.fxtype = 'none'
-		self.time_seconds = False
 		self.notes_midi = False
 		self.projtype = '?'
+
+		self.time_seconds = False
+		self.time_seconds_tracks = False
+		self.time_seconds_auto = False
+		self.time_seconds_tempo = False
+		self.time_seconds_timesig = False
+		self.time_seconds_transport = False
+		self.time_seconds_timemarkers = False
 
 	def from_dict(self, indict):
 		if 'file_ext' in indict: self.file_ext = indict['file_ext']
@@ -52,9 +59,24 @@ class info_daw:
 		if 'auto_types' in indict: self.auto_types = indict['auto_types']
 		if 'fxchain_mixer' in indict: self.fxchain_mixer = indict['fxchain_mixer']
 		if 'fxtype' in indict: self.fxtype = indict['fxtype']
-		if 'time_seconds' in indict: self.time_seconds = indict['time_seconds']
 		if 'projtype' in indict: self.projtype = indict['projtype']
 		if 'notes_midi' in indict: self.notes_midi = indict['notes_midi']
+
+		if 'time_seconds' in indict: 
+			self.time_seconds = indict['time_seconds']
+			self.time_seconds_tracks = self.time_seconds
+			self.time_seconds_auto = self.time_seconds
+			self.time_seconds_tempo = self.time_seconds
+			self.time_seconds_timesig = self.time_seconds
+			self.time_seconds_transport = self.time_seconds
+			self.time_seconds_timemarkers = self.time_seconds
+
+		if 'time_seconds_tracks' in indict: self.time_seconds_tracks = indict['time_seconds_tracks']
+		if 'time_seconds_auto' in indict: self.time_seconds_auto = indict['time_seconds_auto']
+		if 'time_seconds_tempo' in indict: self.time_seconds_tempo = indict['time_seconds_tempo']
+		if 'time_seconds_timesig' in indict: self.time_seconds_timesig = indict['time_seconds_timesig']
+		if 'time_seconds_transport' in indict: self.time_seconds_transport = indict['time_seconds_transport']
+		if 'time_seconds_timemarkers' in indict: self.time_seconds_timemarkers = indict['time_seconds_timemarkers']
 
 class info_plugconv:
 	def __init__(self):

@@ -244,7 +244,6 @@ class input_it(plugins.base):
 
 				inst_used = False
 				if bn_s_t_ifsame == True:
-
 					if int(bn_s_t_f[1])-1 < len(project_obj.samples):
 						it_samp = project_obj.samples[int(bn_s_t_f[1])-1]
 						global_vol = it_inst.global_vol/128
@@ -257,6 +256,7 @@ class input_it(plugins.base):
 					sampleregions = data_values.list__to_reigons(bn_s_t, 60)
 
 					plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'multi')
+					inst_obj.visual.color *= 1.25
 					plugin_obj.datavals.add('point_value_type', "samples")
 					inst_obj.plugslots.set_synth(synthid)
 

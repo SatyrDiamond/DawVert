@@ -187,7 +187,7 @@ class chunk__startingparam:
 
 class chunk__track_automation:
 	def __init__(self, byr_stream):
-		size = byr_stream.uint32()
+		version = byr_stream.uint32()
 
 		self.points = []
 		self.unknowndata = []
@@ -199,13 +199,25 @@ class chunk__track_automation:
 		self.numpoints = byr_stream.uint32()
 		self.unknowndata.append( byr_stream.uint32() )
 
-		for _ in range(self.numpoints):
-			pointdata = []
-			pointdata.append( byr_stream.uint32() )
-			pointdata.append( byr_stream.uint32() )
-			pointdata.append( byr_stream.float() )
-			pointdata.append( byr_stream.uint32() )
-			self.points.append(pointdata)
+		if version == 80:
+			for _ in range(self.numpoints):
+				pointdata = []
+				pointdata.append( byr_stream.uint32() )
+				pointdata.append( byr_stream.int32() )
+				pointdata.append( byr_stream.float() )
+				pointdata.append( byr_stream.uint32() )
+				pointdata.append( byr_stream.uint32() )
+				pointdata.append( byr_stream.uint32() )
+				print(pointdata)
+				self.points.append(pointdata)
+		else:
+			for _ in range(self.numpoints):
+				pointdata = []
+				pointdata.append( byr_stream.uint32() )
+				pointdata.append( byr_stream.int32() )
+				pointdata.append( byr_stream.float() )
+				pointdata.append( byr_stream.uint32() )
+				self.points.append(pointdata)
 
 class chunk__audiodefinfo:
 	def __init__(self, byr_stream):

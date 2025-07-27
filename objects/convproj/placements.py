@@ -751,7 +751,8 @@ class cvpj_placements:
 
 	def debugtxt(self, starttxt):
 		outtxt = starttxt+' | '
-		if self.notelist.count(): outtxt += 'Notes: %i |' % self.notelist.count()
+		if self.notelist.count(): outtxt += 'Npl Notes: %i |' % self.notelist.count()
+		if len(self.midievents): outtxt += 'Npl Midi: %i |' % len(self.midievents)
 
 		if len(self.pl_midi): outtxt += 'Midi: %i |' % len(self.pl_midi)
 		if len(self.pl_notes): outtxt += 'Notes: %i |' % len(self.pl_notes)

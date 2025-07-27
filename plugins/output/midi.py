@@ -3,6 +3,7 @@
 
 import plugins
 import json
+import re
 from functions import xtramath
 
 class output_midi(plugins.base):
@@ -79,6 +80,7 @@ class output_midi(plugins.base):
 			middlenote = track_obj.datavals.get('middlenote', 0)
 
 			if midi_trackname != '': 
+				midi_trackname = midi_trackname.encode("ascii", errors="ignore").decode()
 				miditrack.append(metamsg('track_name', name=midi_trackname, time=0))
 			if midi_trackcolor: 
 				midi_trackcolor = midi_trackcolor.get_int()

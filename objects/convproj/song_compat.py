@@ -30,6 +30,8 @@ import math
 import logging
 logger_compat = logging.getLogger('compat')
 
+DEBUG_BEF_AFT_TRACKS = False
+
 class song_compat:
 	def __init__(self):
 		self.finished_processes = []
@@ -39,9 +41,20 @@ class song_compat:
 
 	def process_part(self, process_name, classname, convproj_obj, cvpj_type, in_compat, out_compat, out_type, dawvert_intent):
 		if process_name not in self.finished_processes:
+
+			if DEBUG_BEF_AFT_TRACKS:
+				print(process_name)
+				for n, x in convproj_obj.track_data.items():
+					x.debugtxt_placements(n)
+
 			if classname.process(convproj_obj, in_compat, out_compat, out_type, dawvert_intent):
 				logger_compat.info(process_name+' Done.')
 				self.finished_processes.append(process_name)
+
+			if DEBUG_BEF_AFT_TRACKS:
+				print(process_name, 'after')
+				for n, x in convproj_obj.track_data.items():
+					x.debugtxt_placements(n)
 
 	def makecompat(self, convproj_obj, cvpj_type, in_dawinfo, out_dawinfo, out_type, dawvert_intent):
 		traits_obj = convproj_obj.traits
@@ -70,4 +83,4 @@ class song_compat:
 			self.process_part('track_pl_del', track_pl_del,			   convproj_obj, cvpj_type, traits_obj.track_nopl, out_dawinfo.track_nopl, out_type, dawvert_intent)
 
 		if cvpj_type in ['r']:
-			self.process_part('time_seconds', time_seconds,			   convproj_obj, cvpj_type, traits_obj.time_seconds, out_dawinfo.time_seconds, out_type, dawvert_intent)
+			self.process_part('time_seconds', time_seconds,			   convproj_obj, cvpj_type, traits_obj, out_dawinfo, out_type, dawvert_intent)

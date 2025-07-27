@@ -209,7 +209,7 @@ class input_cvpj_f(plugins.base):
 							elif event_type == 0xE0: events_obj.add_pitch(event_time, trackchannel, event_data.data1+(event_data.data2<<8)-16384)
 
 						time_obj = placement_obj.time
-						time_obj.set_posdur(parseddata.offset, events_obj.get_dur())
+						time_obj.set_posdur(parseddata.offset, int(events_obj.get_dur()))
 
 					elif chunk.id == 45: #Gen2:Track:Events
 						cw_events = parseddata.events

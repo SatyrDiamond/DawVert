@@ -43,7 +43,7 @@ def process(convproj_obj, in__midi_notes, out__midi_notes, out_type, dawvert_int
 									channel = t_extra['channel'] if 'channel' in t_extra else 0
 								else:
 									channel = 0
-								midievents_obj.add_note_dur(t_pos, channel, t_key+60, min(127, t_vol+127), t_dur)
+								midievents_obj.add_note_dur(t_pos, channel, t_key+60, min(127, t_vol*127), t_dur)
 						midievents_obj.has_duration = True
 						midievents_obj.del_note_durs()
 					tpl.pl_notes.data = []

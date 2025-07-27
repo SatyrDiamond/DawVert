@@ -37,6 +37,44 @@ def setparams(convproj_obj, plugin_obj):
 
 	bytesout = bytewriter.bytewriter()
 
+	if plugin_obj.check_wildmatch('universal', 'sampler', 'single'):
+		sp_obj = plugin_obj.samplepart_get('sample')
+		sampleref_found, sampleref_obj = convproj_obj.sampleref__get(sp_obj.sampleref)
+		if sp_obj.loop_active and sampleref_found:
+			sp_obj.convpoints_samples(sampleref_obj)
+
+			fl_plugin = 'directwave'
+			fpc_plugin = flp_plugins_directwave.directwave_plugin()
+			firstprogram = fpc_plugin.programs[0]
+			firstprogram.name = 'DawVert Converted'.encode()
+			firstprogram.main.used = 1
+			dw_region = firstprogram.add_region()
+			dw_reg_main = dw_region.main
+			dw_reg_main.key_min = 0
+			dw_reg_main.key_max = 127
+			dw_reg_main.key_root = 60
+			dw_reg_main.unk_4 = 2
+
+			dw_reg_sample = dw_region.sample
+			dw_reg_sample.bits = 128
+			dw_reg_sample.channels = sampleref_obj.channels
+			dw_reg_sample.hz = sampleref_obj.hz
+			dw_reg_sample.loop_end = sp_obj.loop_end
+			dw_reg_sample.loop_start = sp_obj.loop_start
+			if sp_obj.loop_active:
+				dw_reg_sample.loop_type = 2
+			else:
+				dw_reg_sample.loop_type = 0 if sp_obj.trigger != 'oneshot' else 1
+
+			dw_reg_sample.num_samples = sampleref_obj.dur_samples
+			dw_reg_sample.start = sp_obj.start
+
+			filepath = sp_obj.get_filepath(convproj_obj, False)
+			filepath = filepath.replace('/', '\\')
+			dw_region.path = filepath.encode()
+
+			fl_pluginparams = fpc_plugin.dump()
+
 	if plugin_obj.check_wildmatch('universal', 'sampler', 'multi'):
 		fl_plugin = 'directwave'
 		fpc_plugin = flp_plugins_directwave.directwave_plugin()
@@ -96,18 +134,18 @@ def setparams(convproj_obj, plugin_obj):
 				dw_region.path = filepath.encode()
 
 
-		import sys
-		from objects.data_bytes import bytereader
-		fl_plugstr_test = bytereader.bytereader()
-		fl_plugstr_test.load_raw(fpc_plugin.dump())
-		fpc_plugin_test = flp_plugins_directwave.directwave_plugin()
-		orig_stdout = sys.stdout
-		sys.stdout = open('dw_out.log', 'w')
-		fpc_plugin_test.read(fl_plugstr_test)
-		sys.stdout = orig_stdout
+		#import sys
+		#from objects.data_bytes import bytereader
+		#fl_plugstr_test = bytereader.bytereader()
+		#fl_plugstr_test.load_raw(fpc_plugin.dump())
+		#fpc_plugin_test = flp_plugins_directwave.directwave_plugin()
+		#orig_stdout = sys.stdout
+		#sys.stdout = open('dw_out.log', 'w')
+		#fpc_plugin_test.read(fl_plugstr_test)
+		#sys.stdout = orig_stdout
 
-		with open('dw_out.bin', 'wb') as f:
-			f.write(fpc_plugin.dump())
+		#with open('dw_out.bin', 'wb') as f:
+		#	f.write(fpc_plugin.dump())
 
 		fl_pluginparams = fpc_plugin.dump()
 		#print(fl_pluginparams)

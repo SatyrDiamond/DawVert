@@ -462,7 +462,7 @@ class output_lmms(plugins.base):
 
 							sp_obj = plugin_obj.samplepart_get('sample')
 							sf_found, sampleref_obj = cvpj_obj.sampleref__get(sp_obj.sampleref)
-							sf_found: sp_obj.convpoints_percent(sampleref_obj)
+							if sf_found: sp_obj.convpoints_percent(sampleref_obj)
 
 							lmms_plug_obj.add_param('reversed', int(sp_obj.reverse))
 							lmms_plug_obj.add_param('amp', oneto100(sp_obj.vol))

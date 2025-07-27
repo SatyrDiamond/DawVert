@@ -475,6 +475,8 @@ class input_tracktion_edit(plugins.base):
 		traits_obj.plugin_ext_arch = [64]
 		traits_obj.plugin_ext_platforms = ['win', 'unix']
 		traits_obj.time_seconds = True
+		traits_obj.time_seconds_tempo = False
+		traits_obj.time_seconds_timesig = False
 		traits_obj.track_hybrid = True
 
 		convproj_obj.set_timings(4.0)
@@ -548,15 +550,16 @@ class input_tracktion_edit(plugins.base):
 			pos, tempo = next(iter(project_obj.temposequence.tempo.items()))
 			convproj_obj.params.add('bpm', tempo[0], 'float')
 			auto_obj = convproj_obj.automation.create(['main', 'bpm'], 'float', True)
-			auto_obj.is_seconds = True
+			auto_obj.is_seconds = False
 			for pos, tempo in project_obj.temposequence.tempo.items():
-				auto_obj.add_autopoint(pos, tempo[0], 'normal')
+				auto_obj.add_autopoint(pos*4, tempo[0], 'instant' if tempo[1] not in [None, 1] else 'normal')
 
-		if project_obj.temposequence.timesig:
-			pos, timesig = next(iter(project_obj.temposequence.timesig.items()))
-			convproj_obj.timesig = timesig
-			for pos, timesig in project_obj.temposequence.timesig.items():
-				convproj_obj.timesig_auto.add_point(pos, timesig)
+		#if project_obj.temposequence.timesig:
+		#	pos, timesig = next(iter(project_obj.temposequence.timesig.items()))
+		#	convproj_obj.timesig = timesig
+		#	convproj_obj.timesig_auto.is_seconds = False
+		#	for pos, timesig in project_obj.temposequence.timesig.items():
+		#		convproj_obj.timesig_auto.add_point(pos*4, timesig)
 
 		for wf_plugin in project_obj.masterplugins:
 			do_plugin(convproj_obj, wf_plugin, convproj_obj.track_master, software_mode)

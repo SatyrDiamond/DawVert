@@ -24,15 +24,17 @@ def convert(convproj_obj):
 	modernize_obj.memory__alloc()
 	modernize_obj.from_cvpj__add_tracks(convproj_obj)
 
+	nonmidi_tracks = []
+
 	for n, trackid, track_obj in convproj_obj.track__iter_num():
 
-		if track_obj.type == 'midi':
+		if track_obj.type in ['midi', 'hybrid']:
 			logger_project.debug('cm2rm: Track '+trackid)
 			modernize_obj.init_patchchan(track_obj.midi)
 
 			midievents_obj = track_obj.placements.midievents
 			midievents_obj.add_note_durs()
-	
+
 			modernize_obj.add_track_visual(n, track_obj.visual)
 
 			portnum = midievents_obj.port

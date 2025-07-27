@@ -474,6 +474,16 @@ class cvpj_automation:
 		for autopath, autodata in self.data.items():
 			autodata.change_seconds(is_seconds, bpm, ppq)
 
+	def change_seconds_notempo(self, is_seconds, bpm, ppq):
+		for autopath, autodata in self.data.items():
+			if autopath != ['main', 'bpm']:
+				autodata.change_seconds(is_seconds, bpm, ppq)
+
+	def change_seconds_tempo(self, is_seconds, bpm, ppq):
+		for autopath, autodata in self.data.items():
+			if autopath == ['main', 'bpm']:
+				autodata.change_seconds(is_seconds, bpm, ppq)
+
 	def convert(self, pl_points, nopl_points, pl_ticks, nopl_ticks):
 		for autopath, autodata in self.data.items(): 
 			autodata.convert(pl_points, nopl_points, pl_ticks, nopl_ticks)

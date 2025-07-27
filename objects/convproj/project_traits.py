@@ -16,11 +16,18 @@ class cvpj_project_traits:
 		self.plugin_ext = []
 		self.plugin_ext_arch = [32, 64]
 		self.plugin_ext_platforms = ['win', 'unix']
-		self.time_seconds = False
 		self.track_hybrid = False
 		self.track_lanes = False
 		self.track_nopl = False
 		self.notespl_features = []
+
+		self.time_seconds = False
+		self.time_seconds_tracks = False
+		self.time_seconds_auto = False
+		self.time_seconds_tempo = False
+		self.time_seconds_timesig = False
+		self.time_seconds_transport = False
+		self.time_seconds_timemarkers = False
 		
 	def from_dict(self, indict):
 		if 'audio_filetypes' in indict: self.audio_filetypes = indict['audio_filetypes']
@@ -36,8 +43,22 @@ class cvpj_project_traits:
 		if 'plugin_ext' in indict: self.plugin_ext = indict['plugin_ext']
 		if 'plugin_ext_arch' in indict: self.plugin_ext_arch = indict['plugin_ext_arch']
 		if 'plugin_ext_platforms' in indict: self.plugin_ext_platforms = indict['plugin_ext_platforms']
-		if 'time_seconds' in indict: self.time_seconds = indict['time_seconds']
 		if 'track_hybrid' in indict: self.track_hybrid = indict['track_hybrid']
 		if 'track_lanes' in indict: self.track_lanes = indict['track_lanes']
 		if 'track_nopl' in indict: self.track_nopl = indict['track_nopl']
 
+		if 'time_seconds' in indict: 
+			self.time_seconds = indict['time_seconds']
+			self.time_seconds_tracks = self.time_seconds
+			self.time_seconds_auto = self.time_seconds
+			self.time_seconds_tempo = self.time_seconds
+			self.time_seconds_timesig = self.time_seconds
+			self.time_seconds_transport = self.time_seconds
+			self.time_seconds_timemarkers = self.time_seconds
+
+		if 'time_seconds_tracks' in indict: self.time_seconds_tracks = indict['time_seconds_tracks']
+		if 'time_seconds_auto' in indict: self.time_seconds_auto = indict['time_seconds_auto']
+		if 'time_seconds_tempo' in indict: self.time_seconds_tempo = indict['time_seconds_tempo']
+		if 'time_seconds_timesig' in indict: self.time_seconds_timesig = indict['time_seconds_timesig']
+		if 'time_seconds_transport' in indict: self.time_seconds_transport = indict['time_seconds_transport']
+		if 'time_seconds_timemarkers' in indict: self.time_seconds_timemarkers = indict['time_seconds_timemarkers']

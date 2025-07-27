@@ -85,6 +85,7 @@ class input_soundation(plugins.base):
 		traits_obj.auto_types = ['nopl_points']
 		traits_obj.placement_cut = True
 		traits_obj.placement_loop = ['loop', 'loop_eq', 'loop_off', 'loop_adv']
+		traits_obj.audio_stretch = ['rate']
 
 		soundation_obj = None
 

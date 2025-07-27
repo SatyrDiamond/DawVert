@@ -223,7 +223,7 @@ def do_tracks(convproj_obj, dp_tracks, groupid):
 		if dp_track.id: trackdata[dp_track.id] = track_obj
 
 def docliptime(time_obj, clip):
-	time_obj.set_posdur(clip.time, clip.duration)
+	time_obj.set_posdur(clip.time, clip.duration if clip.duration is not None else 1)
 	offset = clip.playStart if clip.playStart else 0
 	if clip.loopStart != None and clip.loopEnd != None: 
 		time_obj.set_loop_data(offset, clip.loopStart if clip.loopStart else 0, clip.loopEnd if clip.loopEnd else clip.duration)
@@ -261,10 +261,14 @@ def do_audio(convproj_obj, npa_obj, audio_obj):
 	global zip_data
 
 	filepath = str(audio_obj.file)
-	extfilepath = os.path.join(samplefolder, filepath)
-	try: zip_data.extract(filepath, path=samplefolder, pwd=None)
-	except: pass
-	sampleref_obj = convproj_obj.sampleref__add(filepath, extfilepath, None)
+
+	if not audio_obj.file.external:
+		extfilepath = os.path.join(samplefolder, filepath)
+		try: zip_data.extract(filepath, path=samplefolder, pwd=None)
+		except: pass
+		sampleref_obj = convproj_obj.sampleref__add(filepath, extfilepath, None)
+	else:
+		sampleref_obj = convproj_obj.sampleref__add(filepath, filepath, None)
 	sampleref_obj.convert__path__fileformat()
 
 	if audio_obj.channels: sampleref_obj.set_channels(audio_obj.channels)

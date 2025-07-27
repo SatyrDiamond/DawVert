@@ -21,6 +21,8 @@ from objects.file_proj._dawproject import track
 from objects.file_proj._dawproject import device
 from objects.file_proj._dawproject import param
 
+EXTERNAL_FILE_PATH = True
+
 def do_visual(visual_obj, dp_track):
 	if visual_obj.name: dp_track.name = visual_obj.name
 	if visual_obj.color: dp_track.color = '#'+visual_obj.color.get_hex()
@@ -220,8 +222,11 @@ def make_dp_audio(convproj_obj, samplepart_obj):
 				dp_warps.points.append(dp_warppoint)
 				maxlen = warppoint.beat
 
-		zip_filepath = 'audio/'+basename
-		dp_audio.file.set(zip_filepath)
+		if not EXTERNAL_FILE_PATH:
+			zip_filepath = 'audio/'+basename
+			dp_audio.file.set(zip_filepath)
+		else: 
+			dp_audio.file.set_external(filepath)
 
 	return dp_audio, dp_warps, zip_filepath, filepath, maxlen
 
@@ -251,7 +256,7 @@ def make_audioclip(convproj_obj, cvpj_audioclip, dp_clips_obj, dotime):
 
 	#print(dp_clip_obj.time, dp_clip_obj.duration, dp_clip_obj.playStart, dp_clip_obj.loopStart, dp_clip_obj.loopEnd)
 
-	if real_filepath:
+	if real_filepath and not EXTERNAL_FILE_PATH:
 		if os.path.exists(real_filepath) and zip_filepath not in dawproject_zip.namelist(): 
 			dawproject_zip.write(real_filepath, zip_filepath)
 

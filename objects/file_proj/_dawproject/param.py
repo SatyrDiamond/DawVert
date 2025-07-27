@@ -6,7 +6,7 @@ class dawproject_param_path:
 		self.xmlname = name
 		self.used = False
 		self.path = None
-		self.external = None
+		self.external = False
 
 	def __str__(self):
 		return self.path if self.path else ''
@@ -15,15 +15,20 @@ class dawproject_param_path:
 		self.used = True
 		self.path = path
 
+	def set_external(self, path):
+		self.used = True
+		self.path = path
+		self.external = True
+
 	def read(self, xml_data):
 		self.used = True
 		if 'path' in xml_data.attrib: self.path = xml_data.attrib['path']
-		if 'external' in xml_data.attrib: self.external = xml_data.attrib['external']
+		if 'external' in xml_data.attrib: self.external = xml_data.attrib['external']=='true'
 
 	def write(self, xmltag):
 		if self.used:
 			tempxml = ET.SubElement(xmltag, self.xmlname)
-			if self.external != None: tempxml.set('external', str(self.external))
+			if self.external != None: tempxml.set('external', 'true' if self.external else 'false')
 			if self.path != None: tempxml.set('path', str(self.path))
 
 class dawproject_param_numeric:

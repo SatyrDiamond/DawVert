@@ -16,7 +16,7 @@ class input_sequel3(plugins.base):
 		return 'sequel3'
 	
 	def get_name(self):
-		return 'Sequel 3'
+		return 'Sequel 3 (WIP)'
 	
 	def get_priority(self):
 		return 0
@@ -55,7 +55,7 @@ class input_sequel3(plugins.base):
 		if tempoid in func.globalids:
 			tempo_track = classobj.get_object(func.globalids[tempoid])
 			convproj_obj.params.add('bpm', tempo_track.rehearsaltempo, 'float')
-			#print(tempo_track)
+			print(tempo_track)
 			#for tempoevent in tempo_track.tempoevent:
 			#	convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', 0, tempoevent.bpm)
 

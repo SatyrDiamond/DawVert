@@ -328,7 +328,7 @@ class cvpj_s_automation:
 	
 				for ppl in areas:
 					pl = self.add_pl_points()
-					pl.time.set_posdur(ppl[0], ppl[1]-pl.time.get_pos())
+					pl.time.set_posdur(ppl[0], ppl[1]-ppl[0])
 					pl.data.inject(self.nopl_points, 0, pl.time.get_dur(), ppl[0])
 	
 			self.u_nopl_points = False

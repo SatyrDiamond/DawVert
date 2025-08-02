@@ -68,9 +68,10 @@ class song_compat:
 		self.process_part('unhybrid', unhybrid,					   convproj_obj, cvpj_type, traits_obj.track_hybrid, out_dawinfo.track_hybrid, out_type, dawvert_intent)
 		self.process_part('removelanes', removelanes,				 convproj_obj, cvpj_type, traits_obj.track_lanes, out_dawinfo, out_type, dawvert_intent)
 
+		self.process_part('loops_remove', loops_remove,		   convproj_obj, cvpj_type, traits_obj.placement_loop, out_dawinfo.placement_loop, out_type, dawvert_intent)
+
 		if self.currenttime == False:
 			self.process_part('autopl_addrem', autopl_addrem,		 convproj_obj, cvpj_type, traits_obj.auto_types, out_dawinfo.auto_types, out_type, dawvert_intent)
-			self.process_part('loops_remove', loops_remove,		   convproj_obj, cvpj_type, traits_obj.placement_loop, out_dawinfo.placement_loop, out_type, dawvert_intent)
 			self.process_part('sep_nest_audio', sep_nest_audio,	   convproj_obj, cvpj_type, traits_obj.audio_nested, out_dawinfo.audio_nested, out_type, dawvert_intent)
 			self.process_part('changestretch', changestretch,		 convproj_obj, cvpj_type, traits_obj.audio_stretch, out_dawinfo.audio_stretch, out_type, dawvert_intent)
 			self.process_part('removecut', removecut,				 convproj_obj, cvpj_type, traits_obj.placement_cut, out_dawinfo.placement_cut, out_type, dawvert_intent)

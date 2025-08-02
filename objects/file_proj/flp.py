@@ -597,7 +597,7 @@ class flp_project:
 					if track_obj.name: format_flp_tlv.write_tlv(chunkdata, 239, utf16encode(track_obj.name))
 
 				for timem_obj in arrdat.timemarkers:
-					format_flp_tlv.write_tlv(chunkdata, 148, (timem_obj.type << 24)+timem_obj.pos)
+					format_flp_tlv.write_tlv(chunkdata, 148, (timem_obj.type << 24)+int(timem_obj.pos))
 					format_flp_tlv.write_tlv(chunkdata, 33, timem_obj.numerator)
 					format_flp_tlv.write_tlv(chunkdata, 34, timem_obj.denominator)
 					if timem_obj.name != None: format_flp_tlv.write_tlv(chunkdata, 205, utf16encode(timem_obj.name))

@@ -55,6 +55,7 @@ class amped_clip:
 		self.pitchShift = 0
 		self.reversed = False
 		self.fadeIn = 0
+		self.fadeOut = 0
 
 		if pd != None:
 			if 'position' in pd: self.position = pd['position']
@@ -65,6 +66,7 @@ class amped_clip:
 			if 'pitchShift' in pd: self.pitchShift = pd['pitchShift']
 			if 'reversed' in pd: self.reversed = pd['reversed']
 			if 'fadeIn' in pd: self.fadeIn = pd['fadeIn']
+			if 'fadeOut' in pd: self.fadeOut = pd['fadeOut']
 			if 'contentGuid' in pd: self.contentGuid = amped_contentGuid(pd['contentGuid'])
 
 	def write(self):
@@ -78,6 +80,7 @@ class amped_clip:
 		if self.pitchShift: amped_clip['pitchShift'] = self.pitchShift
 		amped_clip['reversed'] = self.reversed
 		amped_clip['fadeIn'] = self.fadeIn
+		amped_clip['fadeOut'] = self.fadeOut
 		return amped_clip
 
 class amped_region:

@@ -125,7 +125,7 @@ class posdurblocks:
 
 		for n, x in enumerate(self.data):
 			new_tempo = float(x['tempo'])
-			cur_tempo = new_tempo if new_tempo else tempo
+			cur_tempo = new_tempo if new_tempo else self.tempo
 			if cur_tempo != prevtempo:
 				pos = (float(x['start'])/4) * ppq
 				dur = (float(x['steps'])/4) * ppq

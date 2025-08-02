@@ -12,10 +12,10 @@
 
   <replace plugtype="native:amped:Gate" />
 
-  <out__param to="attackTimeMS" from="attack" type="float" />
-  <out__param to="postGainDB" from="gain" type="float" />
-  <out__param to="preGainDB" from="pregain" type="float" />
-  <out__param to="releaseTimeMS" from="release" type="float" />
-  <out__param to="thresholdDB" from="threshold" type="float" />
-  <out__param to="lookaheadTimeMS" from="lookahead" type="float" />
+  <out__param to="attackTimeMS" from="attack" type="float" max="300" min="0" />
+  <out__param to="postGainDB" from="gain" type="float" max="24" min="0" />
+  <out__param to="preGainDB" from="pregain" type="float" max="24" min="-12" />
+  <out__param to="releaseTimeMS" from="release" type="float" max="5000" min="0"/>
+  <out__param to="thresholdDB" from="threshold" type="float" max="0" min="-90" />
+  <out__param to="lookaheadTimeMS" from="lookahead" type="float" max="10" min="0"/>
 </plugstatetransform>

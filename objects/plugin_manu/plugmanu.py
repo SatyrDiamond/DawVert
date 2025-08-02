@@ -174,13 +174,11 @@ class plug_manu:
 				if valstored.valuetype == 'bool':
 					param_obj = self.plugin_obj.params.add(paramname, valstored.value, 'bool')
 				param_obj.visual.name = valuename
-				return True
+				return param_obj
 			else:
 				logger_plugconv.warning('plugmanu: "%s" is not compatable for param, "%s"' % (valstored.valuetype, storename))
-			return False
 		else:
 			logger_plugconv.warning('plugmanu: val "%s" is not found for OUT_PARAM' % storename)
-		return False
 
 	def out__dataval_val(self, valuename, value):
 		self.plugin_obj.datavals.add(valuename, value)

@@ -131,9 +131,9 @@ class input_kristal(plugins.base):
 									tracknums[tracknum] = track_obj
 									track_obj.visual.name = ch_data.name
 									self.audio_channels = 2 if 0 in ch_data.flags else 1
-									if 8 in ch_data.flags:
-										track_obj.armed.on = True
-										track_obj.armed.in_audio = True
+									#if 8 in ch_data.flags:
+									#	track_obj.armed.on = True
+									#	track_obj.armed.in_audio = True
 										
 									for cid, part in ch_data.parts:
 										if cid == 'CAudioPart': 

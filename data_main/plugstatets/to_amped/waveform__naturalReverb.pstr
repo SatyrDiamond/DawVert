@@ -3,6 +3,6 @@
   <in__param from="size" type="float" />
   <calc name="size" type="mul">0.88</calc>
   <replace plugtype="native:amped:Reverb" />
-  <out__param to="fb" from="size" type="float" />
+  <out__param to="fb" from="size" type="float" max="20000" min="12" />
   <out__param to="mix" type="float" />
 </plugstatetransform> 

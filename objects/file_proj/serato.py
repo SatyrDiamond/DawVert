@@ -39,12 +39,12 @@ class serato_channel_strip:
 			self.mute = int(json_data['mute'] if 'mute' in json_data else -1)
 		else:
 			self.post_fader_effects = None
-			self.volume = 0
+			self.volume = 1
 			self.high_eq = 0
 			self.mid_eq = 0
 			self.low_eq = 0
 			self.pan = 0
-			self.gain = 0
+			self.gain = 1
 			self.filter = 0
 			self.mute = -1
 
@@ -104,6 +104,7 @@ class serato_automation_curve:
 class serato_deck_sequence:
 	def __init__(self, json_data):
 		self.notes = [serato_note(x) for x in json_data['notes']] if 'notes' in json_data else []
+		self.secondary_notes = [serato_note(x) for x in json_data['secondary_notes']] if 'secondary_notes' in json_data else []
 		self.automation_curves = [serato_automation_curve(x) for x in json_data['automation_curves']] if 'automation_curves' in json_data else []
 
 class serato_scene:

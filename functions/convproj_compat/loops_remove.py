@@ -3,7 +3,14 @@
 
 def process(convproj_obj, in__placement_loop, out__placement_loop, out_type, dawvert_intent):
 	remainingplloop = [e for e in in__placement_loop if e not in out__placement_loop]
+
 	if (in__placement_loop != [] and remainingplloop != []):
+
+		traits_obj = convproj_obj.traits
+		if traits_obj.time_seconds:
+			ppq = convproj_obj.time_ppq
+			tempo = convproj_obj.params.get('bpm', 120).value
+			convproj_obj.transport.change_seconds(False, tempo, ppq)
 
 		if convproj_obj.type in ['r', 'ri', 'rm', 'cm', 'cs']: 
 			for trackid, track_obj in convproj_obj.track__iter(): 
@@ -16,5 +23,8 @@ def process(convproj_obj, in__placement_loop, out__placement_loop, out_type, daw
 			for pl_id, playlist_obj in convproj_obj.playlist.items(): 
 				playlist_obj.placements.remove_loops(out__placement_loop)
 			return True
+
+		if traits_obj.time_seconds:
+			convproj_obj.transport.change_seconds(True, tempo, ppq)
 
 	else: return False

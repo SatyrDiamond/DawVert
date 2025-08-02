@@ -347,7 +347,8 @@ class output_soundation(plugins.base):
 
 					soundation_region = proj_soundation.soundation_region(None)
 
-					if notespl_obj.visual.color: soundation_region.color =  '#'+notespl_obj.visual.color.get_hex_fb(128,128,128)
+					if notespl_obj.visual.color: soundation_region.color = '#'+notespl_obj.visual.color.get_hex_fb(128,128,128)
+					if notespl_obj.visual.name: soundation_region.name = notespl_obj.visual.name
 
 					soundation_region.position = position
 					soundation_region.length = duration
@@ -396,6 +397,8 @@ class output_soundation(plugins.base):
 					soundation_region = proj_soundation.soundation_region(None)
 
 					if audiopl_obj.visual.color: soundation_region.color = '#'+audiopl_obj.visual.color.get_hex_fb(128,128,128)
+					if audiopl_obj.visual.name: soundation_region.name = audiopl_obj.visual.name
+
 					soundation_region.position = position
 					soundation_region.length = duration
 					soundation_region.loopcount = 1
@@ -424,8 +427,8 @@ class output_soundation(plugins.base):
 					sp_obj = audiopl_obj.sample
 					pitch = sp_obj.pitch
 
-					#soundation_region.pitchShiftSemitones = int(round(sp_obj.pitch)*100)
-					#soundation_region.pitchShiftCents = int(sp_obj.pitch*100)-soundation_region.pitchShiftSemitones
+					soundation_region.pitchShiftSemitones = int(round(sp_obj.pitch)*100)
+					soundation_region.pitchShiftCents = int(sp_obj.pitch*100)-soundation_region.pitchShiftSemitones
 
 					stretch_obj = audiopl_obj.sample.stretch
 

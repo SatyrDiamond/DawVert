@@ -10,10 +10,33 @@ class cursor:
 		self.pos = -1
 		self.baseobj = baseobj
 
+	def is_used(self):
+		return self.baseobj.data[self.pos]['used']
+
+	def move_to_last(self):
+		used = self.baseobj.data['used']
+		if len(used)-np.count_nonzero(used):
+			firstzero = np.argwhere(self.baseobj.data['used']==0)[0]
+			self.pos = firstzero[-1]-1
+			return True
+		else:
+			return False
+
+	def move_to_unused(self):
+		used = self.baseobj.data['used']
+		if len(used)-np.count_nonzero(used):
+			firstzero = np.argwhere(self.baseobj.data['used']==0)[0]
+			self.pos = firstzero[0]
+
+	def delete(self):
+		self.move_to_last()
+		self.baseobj.data[self.pos]['used'] = 0
+
 	def add(self):
 		self.baseobj.alloc_auto(1)
 		self.baseobj.num_parts += 1
 		self.pos += 1
+		if self.is_used(): self.move_to_unused()
 		self.baseobj.data[self.pos]['used'] = 1
 
 	def skip(self, num):

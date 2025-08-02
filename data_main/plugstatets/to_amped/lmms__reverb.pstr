@@ -8,6 +8,6 @@
   <replace plugtype="native:amped:Reverb" />
 
   <out__param from="fb" type="float">0</out__param>
-  <out__param from="lpf" type="float">0</out__param>
+  <out__param from="lpf" type="float" max="20000" min="12">0</out__param>
   <out__param from="mix" type="float">0</out__param>
 </plugstatetransform>

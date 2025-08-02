@@ -208,7 +208,7 @@ class chunk__track_automation:
 				pointdata.append( byr_stream.uint32() )
 				pointdata.append( byr_stream.uint32() )
 				pointdata.append( byr_stream.uint32() )
-				print(pointdata)
+				#print(pointdata)
 				self.points.append(pointdata)
 		else:
 			for _ in range(self.numpoints):

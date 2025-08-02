@@ -364,6 +364,7 @@ class output_amped(plugins.base):
 				amped_region = amped_track.add_region(position, duration, amped_offset*offmod, counter_id.get())
 				amped_audclip = createclip(audiopl_obj, audio_id, audio_sampleref, amped_obj.tempo)
 				amped_audclip.fadeIn = audiopl_obj.fade_in.get_dur_beat(amped_obj.tempo)
+				amped_audclip.fadeOut = audiopl_obj.fade_out.get_dur_beat(amped_obj.tempo)
 				amped_audclip.length = (duration/4) + (time_obj.get_offset()/4)*offmod
 				amped_region.clips = [amped_audclip]
 				amped_region.mute = int(audiopl_obj.muted)

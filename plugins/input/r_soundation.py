@@ -178,6 +178,9 @@ class input_soundation(plugins.base):
 					time_obj.set_loop_data(-clip_contentPosition, -clip_contentPosition, clip_length-clip_contentPosition)
 					placement_obj.muted = soundation_region.muted
 
+					if soundation_region.name:
+						placement_obj.visual.name = soundation_region.name
+
 					if sound_chan_type == 'instrument':
 						cvpj_notelist = placement_obj.notelist
 						for sndstat_note in soundation_region.notes: 

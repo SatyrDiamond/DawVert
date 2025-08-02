@@ -5,6 +5,7 @@ import plugins
 import uuid
 import os
 import shutil
+import logging
 from objects import globalstore
 from functions import data_values
 from functions import xtramath
@@ -44,6 +45,8 @@ class output_bandlab(plugins.base):
 
 	def parse(self, convproj_obj, dawvert_intent):
 		from objects.file_proj import bandlab as proj_bandlab
+
+		logger_output = logging.getLogger('output')
 
 		convproj_obj.change_timings(1.0)
 		
@@ -235,7 +238,9 @@ class output_bandlab(plugins.base):
 						else:
 							inst_supported = -1
 
-					if inst_supported == -1: blx_track.isMuted = True
+					if inst_supported == -1: 
+						logger_output.info('track "%s" is muted because the instrument is not supported.' % trackid)
+						blx_track.isMuted = True
 
 					track_obj.placements.pl_midi.sort()
 

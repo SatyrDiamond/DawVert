@@ -19,9 +19,9 @@
 
   <replace_hard plugtype="native:amped:EqualizerPro" />
 
-  <out__param to="filter/1/freq" from="freq" type="float" />
-  <out__param to="filter/1/q" from="q" type="float" />
-  <out__param to="filter/1/gain" from="gain" type="float" />
-  <out__param to="filter/1/type" from="type" type="float" />
+  <out__param to="filter/1/freq" from="freq" type="float" min="20" max="20000" />
+  <out__param to="filter/1/q" from="q" type="float" min="0.1" max="40" />
+  <out__param to="filter/1/gain" from="gain" type="float" min="-24" max="24" />
+  <out__param to="filter/1/type" from="type" type="float" min="0" max="4" />
   <out__param to="filter/1/active" only_value="1" type="bool">1</out__param>
 </plugstatetransform>

@@ -13,9 +13,9 @@
 
   <replace plugtype="native:amped:Equalizer" />
   
-  <out__param to="hpfreq" type="float"/>
-  <out__param to="peakgain" type="float"/>
-  <out__param to="peakfreq" type="float"/>
-  <out__param to="peakq" type="float"/>
-  <out__param to="lpfreq" type="float"/>
+  <out__param to="hpfreq" type="float" max="10000" min="20"/>
+  <out__param to="peakgain" type="float" max="48" min="-96"/>
+  <out__param to="peakfreq" type="float" max="10000" min="20"/>
+  <out__param to="peakq" type="float" max="10" min="0.5"/>
+  <out__param to="lpfreq" type="float" max="10000" min="20"/>
 </plugstatetransform>

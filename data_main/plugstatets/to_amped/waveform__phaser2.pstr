@@ -12,9 +12,9 @@
   <replace plugtype="native:amped:Phaser" />
 
   <out__param to="feedback" from="feedback" type="float" />
-  <out__param to="hzmin" from="floor" type="float" />
+  <out__param to="hzmin" from="floor" type="float" max="1000" min="100" />
   <out__param to="mix" type="float" />
-  <out__param to="rate" from="rateSyncOff" type="float" />
-  <out__param to="stages" from="stages" type="float" />
+  <out__param to="rate" from="rateSyncOff" type="float" max="5" min="0"/>
+  <out__param to="stages" from="stages" type="float" max="16" min="2"/>
 
 </plugstatetransform> 

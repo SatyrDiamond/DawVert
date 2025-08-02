@@ -287,6 +287,18 @@
 		<file fileext=".v2m"/>
 	</plugin>
 
+	<plugin pluginset="tracker" name="famitracker_txt">
+		<bytes_header data="232046616D69547261636B65722074657874206578706F7274"/>
+	</plugin>
+
+	<plugin pluginset="main" name="famistudio_txt">
+		<bytes_header data="50726F6A6563742056657273696F6E3D22"/>
+	</plugin>
+
+	<plugin pluginset="2010s" name="sequel3">
+		<file fileext=".steinberg-project"/>
+	</plugin>
+
 	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

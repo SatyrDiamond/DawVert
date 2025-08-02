@@ -9,7 +9,7 @@
   <replace plugtype="native:amped:Chorus" />
 
   <out__param to="delayLfoDepth" from="depth" type="float" />
-  <out__param to="delayLfoRateHz" from="rateSyncOff" type="float" />
+  <out__param to="delayLfoRateHz" from="rateSyncOff" type="float" max="5" min="0.01" />
   <out__param to="mix" from="mix" type="float" />
 
 </plugstatetransform> 

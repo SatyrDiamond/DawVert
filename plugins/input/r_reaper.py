@@ -609,6 +609,7 @@ class input_reaper(plugins.base):
 							if maxdur and cvpj_loop:
 								cvpj_end_bpm = ((maxdur/midievents_obj.ppq)*4)
 								time_obj.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
+								print(time_obj.cut_type)
 
 					do_auto_clip_notes(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
 					do_auto_clip_notes(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)
@@ -705,6 +706,8 @@ class input_reaper(plugins.base):
 						s_timing_obj.warp.manp__speed_mul(1/rate)
 					else: 
 						s_timing_obj.set__real_rate(bpm, cvpj_audio_rate)
+
+					time_obj.set_offset_real(cvpj_offset/cvpj_audio_rate)
 
 					#if not cvpj_loop:
 					#	time_obj.set_offset(startoffset)

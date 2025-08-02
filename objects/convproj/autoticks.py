@@ -16,6 +16,7 @@ class cvpj_autoticks:
 		self.time_ppq = time_ppq
 		self.is_seconds = False
 		self.points = {}
+		self.is_timesig = self.val_type=='timesig'
 
 	def __getitem__(self, num):
 		if num == 'pos': return list(self.points)
@@ -33,7 +34,8 @@ class cvpj_autoticks:
 		return copy.deepcopy(self)
 
 	def add_point(self, p_pos, p_val):
-		if not isinstance(p_pos, (float, int)): raise ValueError('cvpj_autoticks: numeric only')
+		if not isinstance(p_pos, (float, int)) and not self.is_timesig:
+			raise ValueError('cvpj_autoticks: numeric only')
 		self.points[p_pos] = p_val
 
 	def change_seconds(self, is_seconds, bpm, ppq):

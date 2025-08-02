@@ -383,7 +383,7 @@ def do_track(convproj_obj, wf_track, track_obj, software_mode, dawvert_intent):
 					audioclip.loopStartBeats*4, 
 					(audioclip.loopStartBeats+audioclip.loopLengthBeats)*4
 					)
-		
+
 			sp_obj = placement_obj.sample
 			sp_obj.vol = xtramath.from_db(audioclip.gain)
 			sp_obj.pan = audioclip.pan

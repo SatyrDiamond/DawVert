@@ -243,6 +243,8 @@ class action__out__param:
 		self.value = 0
 		self.valtype = None
 		self.only_value = False
+		self.v_min = None
+		self.v_max = None
 
 	def from_xml(self, xmldata):
 		v_from = xmldata.get('from')
@@ -262,9 +264,17 @@ class action__out__param:
 		self.valtype = xmldata.get('type')
 		self.value = fixval(xmldata.text, self.valtype) if xmldata.text else None
 
+		v_min = xmldata.get('min')
+		v_max = xmldata.get('max')
+		if v_min is not None: self.v_min = float(v_min)
+		if v_max is not None: self.v_max = float(v_max)
+
 	def do_action(self, manu_obj):
 		if not self.only_value:
-			manu_obj.out__param(self.storename, self.value, self.out_name, None)
+			param_obj = manu_obj.out__param(self.storename, self.value, self.out_name, None)
+			if param_obj:
+				if self.v_min is not None: param_obj.min = self.v_min
+				if self.v_max is not None: param_obj.max = self.v_max
 		else:
 			manu_obj.out__param_val(self.storename, self.value)
 

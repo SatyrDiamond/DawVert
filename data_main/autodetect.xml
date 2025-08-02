@@ -299,6 +299,10 @@
 		<file fileext=".steinberg-project"/>
 	</plugin>
 
+	<plugin pluginset="uncommon" name="eam2">
+		<file fileext=".eamixer"/>
+	</plugin>
+
 	<plugin pluginset="extlib" name="libopenmpt">
 		<file fileext=".669"/>
 	</plugin>

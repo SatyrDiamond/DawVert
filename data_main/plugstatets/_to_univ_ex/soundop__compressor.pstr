@@ -1,0 +1,40 @@
+<plugstatetransform daw_in="soundop" plugtype="native:soundop:Compressor">
+
+  <in__param from="threshold" type="float"/>
+  <in__param from="ratio" type="float"/>
+  <in__param from="knee" type="float"/>
+  <in__param from="attack" type="float"/>
+  <in__param from="release" type="float"/>
+  <in__param from="gain" type="float"/>
+  <in__param from="mix" type="float"/>
+
+  <!-- 
+  <in__param from="lookahead" type="float"/>
+  <in__param from="sustain" type="float"/>
+  <in__param from="link_channels" type="float"/>
+  <in__param from="sidechain" type="float"/>
+  <in__param from="vocal" type="float"/>
+  -->
+
+  <calc name="attack" type="pow">5.5</calc> <!-- VALUE_IMPERFECT -->
+  <calc name="release" type="pow">5.5</calc> <!-- VALUE_IMPERFECT -->
+
+  <calc name="threshold" type="from_one">-60;0</calc>
+  <calc name="ratio" type="from_one">1;20</calc>
+  <calc name="knee" type="from_one">0;20</calc>
+  <calc name="attack" type="from_one">0;400</calc>
+  <calc name="release" type="from_one">0;2000</calc>
+
+  <debug__storeview/>
+
+  <replace plugtype="universal:compressor" />
+
+  <out__param to="attack" type="float" />
+  <out__param to="gain" from="gain" type="float" />
+  <out__param to="ratio" type="float" />
+  <out__param to="knee" type="float" />
+  <out__param to="release" type="float" />
+  <out__param to="threshold" type="float" />
+  <out__wet from="mix" type="float">1</out__wet>
+
+</plugstatetransform>

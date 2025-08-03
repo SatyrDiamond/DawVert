@@ -1,0 +1,13 @@
+<plugstatetransform daw_in="soundop" plugtype="native:soundop:Balance">
+  <in__param from="vol" type="float">0.6666666666666666</in__param>
+  <in__param from="pan" type="float">0.5</in__param>
+
+  <calc name="vol" type="from_one">-96;48</calc>
+  <calc name="pan" type="from_one">-1;1</calc>
+  <calc name="vol" type="from_db"/>
+
+  <replace plugtype="universal:volpan" />
+
+  <out__param to="pan" type="float">0</out__param>
+  <out__param to="vol" type="float">0</out__param>
+</plugstatetransform>

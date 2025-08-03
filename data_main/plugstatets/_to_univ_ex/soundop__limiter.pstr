@@ -1,0 +1,17 @@
+<plugstatetransform daw_in="soundop" plugtype="native:soundop:Limiter">
+  <in__param to="in_gain" from="input" type="float" />
+  <in__param to="out_gain" from="output" type="float" />
+  <in__param to="ceiling" from="ceiling" type="float" />
+  <in__param to="mix" from="mix" type="float" />
+
+  <calc name="ceiling" type="from_one">-48;0</calc>
+  <calc name="in_gain" type="from_one">-48;18</calc>
+  <calc name="out_gain" type="from_one">-48;48</calc>
+
+  <replace plugtype="universal:limiter" />
+
+  <out__param to="ceiling" from="ceiling" type="float"/>
+  <out__param to="pregain" from="in_gain" type="float"/>
+  <out__param to="postgain" from="out_gain" type="float"/>
+  <out__wet from="mix" type="float">1</out__wet>
+</plugstatetransform>

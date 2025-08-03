@@ -49,7 +49,7 @@ def do_fx(convproj_obj, fxdata):
 			plugin_obj, pluginid = convproj_obj.plugin__add__genid('native', 'soundop', fxname)
 
 			for param_id, dset_param in globalstore.dataset.get_params('soundop', 'plugin', fxname):
-				paramval = fxparams[dset_param.num] if param_id in fxparams else None
+				paramval = fxparams[dset_param.num] if dset_param.num in fxparams else None
 				plugin_obj.dset_param__add(param_id, paramval, dset_param)
 	
 			return pluginid

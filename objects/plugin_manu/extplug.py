@@ -296,6 +296,7 @@ class extplug_manu:
 			external_info.datatype = 'param'
 			external_info.is_bank = isbank
 			external_info.numparams = nump
+			self.state_vst2_params.set_numprogs(1, nump)
 			return True
 		self.state_vst2_params.set_numprogs(1, nump)
 		return False

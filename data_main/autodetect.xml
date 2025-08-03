@@ -299,8 +299,12 @@
 		<file fileext=".steinberg-project"/>
 	</plugin>
 
-	<plugin pluginset="uncommon" name="eam2">
+	<plugin pluginset="audioedit" name="eam2">
 		<file fileext=".eamixer"/>
+	</plugin>
+
+	<plugin pluginset="audioedit" name="soundop">
+		<file fileext=".msf"/>
 	</plugin>
 
 	<plugin pluginset="extlib" name="libopenmpt">

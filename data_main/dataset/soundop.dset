@@ -1,0 +1,193 @@
+<dataset>
+    <category id="plugin">
+        <object id="ChannelMix">
+            <visual name="Channel Mixer"/>
+            <param num="0" id="l_to_l" type="float" def="1.0" />
+            <param num="1" id="r_to_l" type="float" def="0.5" />
+            <param num="2" id="l_to_r" type="float" def="0.5" />
+            <param num="3" id="r_to_r" type="float" def="1.0" />
+            <param num="4" id="_" type="float" def="0.0" />
+        </object>
+        <object id="Chorus">
+            <visual name="Chorus"/>
+            <param num="0" id="voices" type="float" def="0.07142857142857142" />
+            <param num="1" id="delay_range" type="float" def="0.5991983967935872" />
+            <param num="2" id="delay_rate" type="float" def="0.0" />
+            <param num="3" id="feedback" type="float" def="0.0" />
+            <param num="4" id="spread" type="float" def="0.15" />
+            <param num="5" id="gain_depth" type="float" def="0.0" />
+            <param num="6" id="gain_rate" type="float" def="0.0" />
+            <param num="7" id="stereo_field" type="float" def="1.0" />
+            <param num="8" id="add_binaural_cues" type="float" def="0.0" />
+            <param num="9" id="dry" type="float" def="0.35" />
+            <param num="10" id="wet" type="float" def="0.15" />
+            <param num="11" id="_" type="float" def="0.0" />
+        </object>
+        <object id="Compressor">
+            <visual name="Compressor"/>
+            <param num="0" id="threshold" type="float" def="0.75" />
+            <param num="1" id="ratio" type="float" def="0.05263157894736842" />
+            <param num="2" id="knee" type="float" def="0.3" />
+            <param num="3" id="attack" type="float" def="0.6041241024010339" />
+            <param num="4" id="release" type="float" def="0.629858331726371" />
+            <param num="10" id="lookahead" type="float" def="0.0" />
+            <param num="11" id="sustain" type="float" def="0.0" />
+            <param num="6" id="link_channels" type="float" def="1.0" />
+            <param num="9" id="sidechain" type="float" def="0.0" />
+            <param num="12" id="vocal" type="float" def="0.0" />
+            <param num="5" id="gain" type="float" def="0.0" />
+            <param num="8" id="mix" type="float" def="1.0" />
+            <param num="7" id="_" type="float" def="0.0" />
+        </object>
+        <object id="Delay">
+            <visual name="Delay"/>
+            <param num="0" id="l_delay" type="float" def="0.3" />
+            <param num="1" id="l_mix" type="float" def="0.6" />
+            <param num="2" id="l_invert" type="float" def="0.0" />
+            <param num="3" id="r_delay" type="float" def="0.36" />
+            <param num="4" id="r_mix" type="float" def="0.7" />
+            <param num="5" id="r_invert" type="float" def="0.0" />
+            <param num="6" id="sync_channels" type="float" def="0.0" />
+            <param num="7" id="_" type="float" def="0.0" />
+        </object>
+        <object id="Echo">
+            <visual name="Echo"/>
+            <param num="0" id="l_delay" type="float" def="0.14957478739369684" />
+            <param num="1" id="l_feedback" type="float" def="0.5" />
+            <param num="2" id="l_lvl" type="float" def="0.4" />
+            <param num="3" id="l_lowcut" type="float" def="0.0" />
+            <param num="4" id="l_highcut" type="float" def="1.0" />
+            <param num="5" id="r_delay" type="float" def="0.12456228114057029" />
+            <param num="6" id="r_feedback" type="float" def="0.5" />
+            <param num="7" id="r_lvl" type="float" def="0.4" />
+            <param num="8" id="r_lowcut" type="float" def="0.0" />
+            <param num="9" id="r_highcut" type="float" def="1.0" />
+            <param num="10" id="width" type="float" def="1.0" />
+            <param num="11" id="gain" type="float" def="0.5" />
+            <param num="12" id="sync_channels" type="float" def="0.0" />
+            <param num="13" id="_" type="float" def="0.0" />
+        </object>
+        <object id="Flanger">
+            <visual name="Flanger"/>
+            <param num="0" id="delay" type="float" def="0.0" />
+            <param num="1" id="depth" type="float" def="0.2" />
+            <param num="2" id="stereo_phasing" type="float" def="0.08333333333333333" />
+            <param num="3" id="feedback" type="float" def="0.8333333333333334" />
+            <param num="4" id="mod_rate" type="float" def="0.3700063644964152" />
+            <param num="5" id="dry" type="float" def="0.5" />
+            <param num="6" id="wet" type="float" def="0.75" />
+            <param num="7" id="_" type="float" def="0.0" />
+        </object>
+        <object id="Limiter">
+            <visual name="Limiter"/>
+            <param num="0" id="input" type="float" def="0.7272727272727273" />
+            <param num="1" id="ceiling" type="float" def="0.9979166666666667" />
+            <param num="2" id="saturation" type="float" def="1.0" />
+            <param num="3" id="lookahead" type="float" def="0.34708067508455476" />
+            <param num="4" id="sustain" type="float" def="0.34708067508455476" />
+            <param num="5" id="release" type="float" def="0.5691077130854597" />
+            <param num="6" id="link_channels" type="float" def="1.0" />
+            <param num="9" id="side_chain" type="float" def="0.0" />
+            <param num="11" id="true_peak" type="float" def="0.0" />
+            <param num="10" id="output" type="float" def="0.5" />
+            <param num="8" id="mix" type="float" def="1.0" />
+            <param num="7" id="7" type="float" def="0.0" />
+        </object>
+        <object id="EQ">
+            <visual name="EQ"/>
+            <param num="0" id="1_freq" type="float" def="40" max="18742.5" min="20.0"/>
+            <param num="1" id="1_q" type="float" def="0.4247425010840047" />
+            <param num="2" id="1_gain" type="float" def="0.5" />
+            <param num="3" id="1_active" type="float" def="1.0" />
+            <param num="4" id="2_freq" type="float" def="70" max="18742.5" min="20.0"/>
+            <param num="5" id="2_q" type="float" def="0.4247425010840047" />
+            <param num="6" id="2_gain" type="float" def="0.5" />
+            <param num="7" id="2_active" type="float" def="1.0" />
+            <param num="8" id="3_freq" type="float" def="200" max="18742.5" min="20.0"/>
+            <param num="9" id="3_q" type="float" def="0.4247425010840047" />
+            <param num="10" id="3_gain" type="float" def="0.5" />
+            <param num="11" id="3_active" type="float" def="1.0" />
+            <param num="12" id="4_freq" type="float" def="600" max="18742.5" min="20.0"/>
+            <param num="13" id="4_q" type="float" def="0.4247425010840047" />
+            <param num="14" id="4_gain" type="float" def="0.5" />
+            <param num="15" id="4_active" type="float" def="1.0" />
+            <param num="16" id="5_freq" type="float" def="1800" max="18742.5" min="20.0"/>
+            <param num="17" id="5_q" type="float" def="0.4247425010840047" />
+            <param num="18" id="5_gain" type="float" def="0.5" />
+            <param num="19" id="5_active" type="float" def="1.0" />
+            <param num="20" id="6_freq" type="float" def="5500" max="18742.5" min="20.0"/>
+            <param num="21" id="6_q" type="float" def="0.4247425010840047" />
+            <param num="22" id="6_gain" type="float" def="0.5" />
+            <param num="23" id="6_active" type="float" def="1.0" />
+            <param num="24" id="7_freq" type="float" def="10000.0" max="18742.5" min="20.0"/>
+            <param num="25" id="7_q" type="float" def="0.4247425010840047" />
+            <param num="26" id="7_gain" type="float" def="0.5" />
+            <param num="27" id="7_active" type="float" def="1.0" />
+            <param num="28" id="gain" type="float" def="0.5" />
+            <param num="29" id="_" type="float" def="0.0" max="0.0" />
+            <param num="30" id="1_type" type="float" def="0.16666666666666666" />
+            <param num="31" id="2_type" type="float" def="0.0" />
+            <param num="32" id="3_type" type="float" def="0.0" />
+            <param num="33" id="4_type" type="float" def="0.0" />
+            <param num="34" id="5_type" type="float" def="0.0" />
+            <param num="35" id="6_type" type="float" def="0.0" />
+            <param num="36" id="7_type" type="float" def="0.3333333333333333" />
+        </object>
+        <object id="Phaser">
+            <visual name="Phaser"/>
+            <param num="0" id="stages" type="float" def="0.2222222222222222" />
+            <param num="1" id="freq" type="float" def="0.6666666666666667" />
+            <param num="2" id="intensity" type="float" def="1.0" />
+            <param num="3" id="depth" type="float" def="0.7" />
+            <param num="4" id="feedback" type="float" def="0.5" />
+            <param num="5" id="mod_rate" type="float" def="0.05" />
+            <param num="6" id="phase_diff" type="float" def="0.5" />
+            <param num="7" id="mix" type="float" def="0.5" />
+            <param num="8" id="gain" type="float" def="0.75" />
+            <param num="9" id="_" type="float" def="0.0" />
+        </object>
+        <object id="PlateReverb">
+            <visual name="Reverb"/>
+            <param num="0" id="predelay" type="float" def="0.05" />
+            <param num="1" id="roomsize" type="float" def="0.75" />
+            <param num="2" id="width" type="float" def="1.0" />
+            <param num="3" id="decay" type="float" def="0.5333159078712726" />
+            <param num="4" id="damping" type="float" def="0.7997683545572292" />
+            <param num="5" id="lowcut" type="float" def="0.0" />
+            <param num="6" id="highcut" type="float" def="0.9037252330445482" />
+            <param num="7" id="wet" type="float" def="0.5" />
+            <param num="8" id="dry" type="float" def="0.5" />
+            <param num="9" id="_" type="float" def="0.0" />
+        </object>
+        <object id="RoomReverb">
+            <visual name="Richverb"/>
+            <param num="0" id="er_roomsize" type="float" def="0.15789473684210525" />
+            <param num="1" id="er_width" type="float" def="1.0" />
+            <param num="2" id="er_lowcut" type="float" def="0.0" />
+            <param num="3" id="er_highcut" type="float" def="1.0" />
+            <param num="4" id="roomsize" type="float" def="0.15789473684210525" />
+            <param num="5" id="width" type="float" def="1.0" />
+            <param num="6" id="decay" type="float" def="0.5040735348038954" />
+            <param num="7" id="diffusion" type="float" def="0.9" />
+            <param num="8" id="damp_lf_freq" type="float" def="0.47670391740874885" />
+            <param num="9" id="damp_lf_gain" type="float" def="0.5000000000000002" />
+            <param num="10" id="damp_hf_freq" type="float" def="0.9457031256247278" />
+            <param num="11" id="damp_hf_gain" type="float" def="0.2846617209633035" />
+            <param num="12" id="lowcut" type="float" def="0.0" />
+            <param num="13" id="highcut" type="float" def="0.948061208362004" />
+            <param num="14" id="predelay" type="float" def="0.05" />
+            <param num="15" id="out_er" type="float" def="0.35" />
+            <param num="16" id="out_wet" type="float" def="0.35" />
+            <param num="17" id="out_dry" type="float" def="0.35" />
+            <param num="18" id="_" type="float" def="0.0" />
+        </object>
+        <object id="Balance">
+            <visual name="Volume and Pan"/>
+            <param num="0" id="vol" type="float" def="0.6666666666666666" />
+            <param num="1" id="pan" type="float" def="0.5" />
+            <param num="3" id="panlaw" type="float" def="0.0" />
+            <param num="4" id="gaincomp" type="float" def="1.0" />
+            <param num="2" id="_" type="float" def="0.0" />
+        </object>
+    </category>
+</dataset>

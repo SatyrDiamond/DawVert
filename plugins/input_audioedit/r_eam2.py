@@ -26,7 +26,7 @@ class input_eam2(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj_uncommon import easy_audio_mixer as proj_easy_audio_mixer
+		from objects.file_proj_audioedit import easy_audio_mixer as proj_easy_audio_mixer
 		from objects import colors
 		from objects.convproj import fileref
 
@@ -81,7 +81,7 @@ class input_eam2(plugins.base):
 						auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
 						auto_obj.is_seconds = True
 						for p in autop.Points:
-							if p.BeatN>=0: auto_obj.add_autopoint(p.BeatN, p.Value, None)
+							if p.BeatN>=0: auto_obj.add_autopoint(p.BeatN, p.Value/0.71, None)
 
 				for event in track.EventsList:
 					startsample_sec = (event.StartSampleMS)/1000

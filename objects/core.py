@@ -257,6 +257,7 @@ pluginsets_input = {
 '2010s': ['2010s', "2010's"],
 'y2k': ['y2k', 'Y2K'],
 'ancient': ['ancient', 'Ancient'],
+'audioedit': ['audioedit', 'Audio Editors'],
 'midi': ['midi', 'MIDI'],
 'exper': ['exper', 'Experiments'],
 'mariopaint': ['mariopaint', 'Mario Paint'],

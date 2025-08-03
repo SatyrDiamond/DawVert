@@ -3,8 +3,8 @@
   <in__param from="pan" type="float">0.5</in__param>
 
   <calc name="vol" type="from_one">-96;48</calc>
-  <calc name="pan" type="from_one">-1;1</calc>
   <calc name="vol" type="from_db"/>
+  <calc name="pan" type="from_one">-1;1</calc>
 
   <replace plugtype="universal:volpan" />
 

@@ -303,6 +303,10 @@
 		<file fileext=".eamixer"/>
 	</plugin>
 
+	<plugin pluginset="main" name="cakewalk_cxf">
+		<file fileext=".cxf"/>
+	</plugin>
+
 	<plugin pluginset="audioedit" name="soundop">
 		<file fileext=".msf"/>
 	</plugin>

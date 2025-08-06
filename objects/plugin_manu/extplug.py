@@ -40,7 +40,7 @@ class extplug_vst2_params:
 		plugin_obj.program__reset()
 		for num, presetdata in enumerate(self.programs):
 			plugin_obj.program__set(num)
-			plugin_obj.preset.name = presetdata['name'].decode()
+			plugin_obj.state.preset.name = presetdata['name'].decode()
 			for paramnum, paramval in enumerate(presetdata['params']):
 				plugin_obj.params.add_named('ext_param_'+str(paramnum), paramval, 'float', self.param_names[paramnum])
 		plugin_obj.program__set(self.cur_program)

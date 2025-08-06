@@ -305,6 +305,7 @@
 
 	<plugin pluginset="main" name="cakewalk_cxf">
 		<file fileext=".cxf"/>
+		<archived type="zip" file="*.cxf" optional="1"/>
 	</plugin>
 
 	<plugin pluginset="audioedit" name="soundop">

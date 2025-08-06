@@ -145,27 +145,34 @@ class cvpj_placement_midi:
 
 	def midi_from(self, input_file):
 		from objects.midi_file.parser import MidiFile
-		from objects.midi_file import events as MidiEvents
-
 		if os.path.exists(input_file):
 			midifile = MidiFile.fromFile(input_file)
+			self.from_midiparser(midifile)
 
-			events_obj = self.midievents
-			events_obj.ppq = midifile.ppqn
+	def midi_from_bin(self, rawdata):
+		from objects.midi_file.parser import MidiFile
+		if rawdata is not None:
+			midifile = MidiFile.fromRaw(rawdata)
+			self.from_midiparser(midifile)
 
-			if midifile.tracks:
-				for eventlist in midifile.tracks:
-					curpos = 0
-					for msg in eventlist.events:
-						curpos += msg.deltaTime
-						if type(msg) == MidiEvents.NoteOnEvent: events_obj.add_note_on(curpos, msg.channel, msg.note, msg.velocity)
-						elif type(msg) == MidiEvents.NoteOffEvent: events_obj.add_note_off(curpos, msg.channel, msg.note, 0)
-						elif type(msg) == MidiEvents.CopyrightEvent: events_obj.add_copyright(msg.copyright)
-						elif type(msg) == MidiEvents.PitchBendEvent: events_obj.add_pitch(curpos, msg.channel, msg.pitch)
-						elif type(msg) == MidiEvents.ControllerEvent: events_obj.add_control(curpos, msg.channel, msg.controller, msg.value)
-						elif type(msg) == MidiEvents.ProgramEvent: events_obj.add_program(curpos, msg.channel, msg.program)
-						elif type(msg) == MidiEvents.EndOfTrackEvent: break
-						elif type(msg) == MidiEvents.TrackNameEvent:
-							if not events_obj.track_name:
-								events_obj.track_name = msg.name
+	def from_midiparser(self, midifile):
+		from objects.midi_file import events as MidiEvents
+		events_obj = self.midievents
+		events_obj.ppq = midifile.ppqn
+
+		if midifile.tracks:
+			for eventlist in midifile.tracks:
+				curpos = 0
+				for msg in eventlist.events:
+					curpos += msg.deltaTime
+					if type(msg) == MidiEvents.NoteOnEvent: events_obj.add_note_on(curpos, msg.channel, msg.note, msg.velocity)
+					elif type(msg) == MidiEvents.NoteOffEvent: events_obj.add_note_off(curpos, msg.channel, msg.note, 0)
+					elif type(msg) == MidiEvents.CopyrightEvent: events_obj.add_copyright(msg.copyright)
+					elif type(msg) == MidiEvents.PitchBendEvent: events_obj.add_pitch(curpos, msg.channel, msg.pitch)
+					elif type(msg) == MidiEvents.ControllerEvent: events_obj.add_control(curpos, msg.channel, msg.controller, msg.value)
+					elif type(msg) == MidiEvents.ProgramEvent: events_obj.add_program(curpos, msg.channel, msg.program)
+					elif type(msg) == MidiEvents.EndOfTrackEvent: break
+					elif type(msg) == MidiEvents.TrackNameEvent:
+						if not events_obj.track_name:
+							events_obj.track_name = msg.name
 

@@ -11,6 +11,8 @@ import plugins
 import json
 import os
 import glob
+import zipfile
+from objects.exceptions import ProjectFileParserException
 
 def tempo_calc(mul, seconds):
 	return ((seconds)/mul)*8
@@ -51,8 +53,39 @@ class input_bandlab(plugins.base):
 
 		project_obj = proj_cakewalk_cxf.cxf_project()
 
-		if dawvert_intent.input_mode == 'file':
-			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+		samplefolder = dawvert_intent.path_samples['extracted']
+
+		zip_data = None
+		success = False
+		zip_start_path = []
+		try:
+			if dawvert_intent.input_mode == 'file':
+				zip_data = zipfile.ZipFile(dawvert_intent.input_file, 'r')
+				zip_namelist = zip_data.namelist()
+				if True in [x.startswith('Sonar/') for x in zip_namelist]:
+					raise ProjectFileParserException('Sonar-Created CXF is not supported.')
+				else:
+
+					for jsonname in zip_data.namelist():
+						if '.cxf' in jsonname: 
+							json_filename = jsonname
+							zip_start_path = jsonname.split('/')
+							if zip_start_path: zip_start_path = zip_start_path[:-1]
+
+							cxf_project = zip_data.read(json_filename)
+							cxf_proj = json.loads(cxf_project)
+							success = project_obj.read(cxf_proj)
+							break
+
+		except:
+			pass
+
+		try:
+			success = project_obj.load_from_file(dawvert_intent.input_file)
+		except:
+			pass
+
+		if not success: exit()
 
 		globalstore.dataset.load('bandlab', './data_main/dataset/bandlab.dset')
 
@@ -62,119 +95,147 @@ class input_bandlab(plugins.base):
 
 		tempomul = 120/bpm
 
-		for blx_sample in project_obj.samples:
-			if not blx_sample.isMidi:
-				add_sample(convproj_obj, dawvert_intent, blx_sample)
+		for cxf_sample in project_obj.samples:
+			if not cxf_sample.isMidi:
+				add_sample(convproj_obj, dawvert_intent, cxf_sample, zip_data, zip_start_path, samplefolder)
 
 		groups = []
 
-		for blx_auxChannel in project_obj.auxChannels:
+		for cxf_auxChannel in project_obj.auxChannels:
 			track_obj = None
-			if blx_auxChannel.type == 'Bus': 
-				if blx_auxChannel.id == project_obj.mainBusId:
+			autoloc = None
+			if cxf_auxChannel.type == 'Bus': 
+				if cxf_auxChannel.id == project_obj.mainBusId:
 					track_obj = convproj_obj.track_master
+					autoloc = ['master']
 				else:
-					track_obj = convproj_obj.track_master.fx__return__add(blx_auxChannel.id)
-			if blx_auxChannel.type == 'AuxFolder': 
-				track_obj = convproj_obj.fx__group__add(blx_auxChannel.id)
-				if blx_auxChannel.id not in groups: groups.append(blx_auxChannel.id)
+					track_obj = convproj_obj.track_master.fx__return__add(cxf_auxChannel.id)
+					autoloc = ['return', cxf_auxChannel.id]
+			if cxf_auxChannel.type == 'AuxFolder': 
+				track_obj = convproj_obj.fx__group__add(cxf_auxChannel.id)
+				if cxf_auxChannel.id not in groups: groups.append(cxf_auxChannel.id)
+				autoloc = ['group', cxf_auxChannel.id]
 
-				#if blx_auxChannel.idOutput != project_obj.mainBusId:
-				#	track_obj.group = blx_auxChannel.idOutput
+				#if cxf_auxChannel.idOutput != project_obj.mainBusId:
+				#	track_obj.group = cxf_auxChannel.idOutput
 
 			if track_obj:
-				track_obj.visual.name = blx_auxChannel.name
-				if blx_auxChannel.color: track_obj.visual.color.set_hex(blx_auxChannel.color)
-				track_obj.params.add('vol', blx_auxChannel.volume, 'float')
-				track_obj.params.add('pan', blx_auxChannel.pan, 'float')
-				track_obj.params.add('enabled', not blx_auxChannel.isMuted, 'float')
+				track_obj.visual.name = cxf_auxChannel.name
+				if cxf_auxChannel.color: track_obj.visual.color.set_hex(cxf_auxChannel.color)
+				track_obj.params.add('vol', cxf_auxChannel.volume, 'float')
+				track_obj.params.add('pan', cxf_auxChannel.pan, 'float')
+				track_obj.params.add('enabled', not cxf_auxChannel.isMuted, 'float')
 
-		blx_tracks = sorted(project_obj.tracks, key=lambda x: x.order, reverse=False)
+				for k, a in cxf_auxChannel.automation.items():
+					if k == 'volume': do_automation(convproj_obj, a, autoloc+['vol'], tempomul)
+					if k == 'pan': do_automation(convproj_obj, a, autoloc+['pan'], tempomul)
+
+
+		cxf_tracks = sorted(project_obj.tracks, key=lambda x: x.order, reverse=False)
 		
-		for blx_track in blx_tracks:
+		for cxf_track in cxf_tracks:
 			track_obj = None
-			if blx_track.type == 'Audio':
-				track_obj = convproj_obj.track__add(blx_track.id, 'audio', 1, False)
-			elif blx_track.type == 'Instrument':
-				track_obj = convproj_obj.track__add(blx_track.id, 'instrument', 1, False)
+			if cxf_track.type == 'Audio':
+				track_obj = convproj_obj.track__add(cxf_track.id, 'audio', 1, False)
+			elif cxf_track.type == 'Instrument':
+				track_obj = convproj_obj.track__add(cxf_track.id, 'instrument', 1, False)
 
-			if blx_track.soundbank:
-				if not track_obj.visual_inst.from_dset('bandlab', 'inst', blx_track.soundbank, False):
-					track_obj.visual_inst.name = blx_track.soundbank
+			if cxf_track.soundbank:
+				if not track_obj.visual_inst.from_dset('bandlab', 'inst', cxf_track.soundbank, False):
+					track_obj.visual_inst.name = cxf_track.soundbank
 
 			if track_obj:
-				do_track_common(convproj_obj, track_obj, blx_track, tempomul, dawvert_intent)
+				do_track_common(convproj_obj, track_obj, cxf_track, tempomul, dawvert_intent, zip_data, zip_start_path)
 
-				if blx_track.type == 'Instrument':
-					if blx_track.parentId:
-						if blx_track.parentId in groups:
-							track_obj.group = blx_track.parentId
+				for cxf_auxSend in cxf_track.auxSends:
+					sendautoid = cxf_track.id+'__'+'return__'+str(cxf_auxSend.id)
+					track_obj.sends.add(cxf_auxSend.id, sendautoid, cxf_auxSend.sendLevel)
+					for k, a in cxf_auxSend.automation.items():
+						if k == 'sendLevel': do_automation(convproj_obj, a, ['send', sendautoid, 'amount'], tempomul)
+
+				if cxf_track.type == 'Instrument':
+					if cxf_track.parentId:
+						if cxf_track.parentId in groups:
+							track_obj.group = cxf_track.parentId
 
 					plugin_obj = None
-					if blx_track.synth:
-						startid = blx_track.id
+					if cxf_track.synth:
+						startid = cxf_track.id
 						fxid = startid+'_-1'
-						plugin_obj = do_plugin(convproj_obj, blx_track.id, blx_track.synth, -1, fxid, dawvert_intent, tempomul)
+						plugin_obj = do_plugin(convproj_obj, cxf_track.id, cxf_track.synth, -1, fxid, dawvert_intent, tempomul, zip_data, zip_start_path)
 						if plugin_obj: track_obj.plugslots.set_synth(fxid)
 
-					if (not plugin_obj) and blx_track.soundbank:
-						plugin_obj = convproj_obj.plugin__add(blx_track.id, 'native', 'bandlab', 'instrument')
-						plugin_obj.datavals.add('instrument', blx_track.soundbank)
+					if (not plugin_obj) and cxf_track.soundbank:
+						plugin_obj = convproj_obj.plugin__add(cxf_track.id, 'native', 'bandlab', 'instrument')
+						plugin_obj.datavals.add('instrument', cxf_track.soundbank)
 						plugin_obj.role = 'synth'
-						plugin_obj.midi_fallback__add_from_dset('bandlab', 'inst', blx_track.soundbank)
-						track_obj.plugslots.set_synth(blx_track.id)
+						plugin_obj.midi_fallback__add_from_dset('bandlab', 'inst', cxf_track.soundbank)
+						track_obj.plugslots.set_synth(cxf_track.id)
 
-					for blx_region in blx_track.regions:
+					for cxf_region in cxf_track.regions:
 						placement_obj = track_obj.placements.add_midi()
 						time_obj = placement_obj.time
-						time_obj.set_pos(tempo_calc(tempomul, blx_region.startPosition))
-						time_obj.set_dur(tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition))
-						if blx_region.name: placement_obj.visual.name = blx_region.name
-						midipath = os.path.join(dawvert_intent.input_folder, 'Assets', 'MIDI', blx_region.sampleId+'.mid')
-						do_loop(time_obj, blx_region, tempomul, 1)
-						placement_obj.midi_from(midipath)
+						time_obj.set_pos(tempo_calc(tempomul, cxf_region.startPosition))
+						time_obj.set_dur(tempo_calc(tempomul, cxf_region.endPosition-cxf_region.startPosition))
+						if cxf_region.name: placement_obj.visual.name = cxf_region.name
+						do_loop(time_obj, cxf_region, tempomul, 1)
+						if zip_data is None:
+							midipath = os.path.join(dawvert_intent.input_folder, 'Assets', 'MIDI', cxf_region.sampleId+'.mid')
+							placement_obj.midi_from(midipath)
+						else:
+							midipath = "/".join(zip_start_path+['Assets', 'MIDI', cxf_region.sampleId+'.mid'])
+							placement_obj.midi_from_bin(zip_data.read(midipath))
 
-				if blx_track.type == 'Audio':
-					if blx_track.parentId: track_obj.group = blx_track.parentId
-					for blx_region in blx_track.regions:
+				if cxf_track.type == 'Audio':
+					if cxf_track.parentId: track_obj.group = cxf_track.parentId
+					for cxf_region in cxf_track.regions:
 						placement_obj = track_obj.placements.add_audio()
 						time_obj = placement_obj.time
-						time_obj.set_pos(tempo_calc(tempomul, blx_region.startPosition))
-						time_obj.set_dur(tempo_calc(tempomul, blx_region.endPosition-blx_region.startPosition))
-						if blx_region.name: placement_obj.visual.name = blx_region.name
+						time_obj.set_pos(tempo_calc(tempomul, cxf_region.startPosition))
+						time_obj.set_dur(tempo_calc(tempomul, cxf_region.endPosition-cxf_region.startPosition))
+						if cxf_region.name: placement_obj.visual.name = cxf_region.name
 
-						reverse = blx_region.playbackRate<0
-						speed = abs(blx_region.playbackRate)
+						reverse = cxf_region.playbackRate<0
+						speed = abs(cxf_region.playbackRate)
 
-						do_loop(time_obj, blx_region, tempomul, speed)
+						do_loop(time_obj, cxf_region, tempomul, speed)
 
 						sp_obj = placement_obj.sample
-						sp_obj.sampleref = blx_region.sampleId
+						sp_obj.sampleref = cxf_region.sampleId
 						
 						stretch_obj = sp_obj.stretch
 						stretch_obj.timing.set__real_rate(bpm, speed)
 						stretch_obj.preserve_pitch = True
 
-def add_sample(convproj_obj, dawvert_intent, blx_sample):
-	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', blx_sample.file)
-	for file in glob.glob(filename):
-		sampleref_obj = convproj_obj.sampleref__add(blx_sample.id, file, None)
+def add_sample(convproj_obj, dawvert_intent, cxf_sample, zip_data, zip_start_path, samplefolder):
+	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', cxf_sample.file)
+	if zip_data is None:
+		sampleref_obj = convproj_obj.sampleref__add(cxf_sample.id, filename, None)
 		sampleref_obj.convert__path__fileformat()
-		break
+	else:
+		audiopath = "/".join(zip_start_path+['Assets', 'Audio', cxf_sample.file])
+		if audiopath in zip_data.namelist(): 
+			audio_filename = samplefolder+cxf_sample.file
+			try:
+				outpath = zip_data.extract(audiopath, path=samplefolder, pwd=None)
+				sampleref_obj = convproj_obj.sampleref__add(cxf_sample.id, outpath, None)
+				sampleref_obj.convert__path__fileformat()
+			except:
+				pass
 
-def do_loop(time_obj, blx_region, tempomul, speed):
-	loopLength = tempo_calc(tempomul, blx_region.loopLength)
-	sampleOffset = tempo_calc(tempomul, blx_region.sampleOffset)
-	duration = tempo_calc(tempomul, blx_region.startPosition-blx_region.endPosition)
+def do_loop(time_obj, cxf_region, tempomul, speed):
+	loopLength = tempo_calc(tempomul, cxf_region.loopLength)
+	sampleOffset = tempo_calc(tempomul, cxf_region.sampleOffset)
+	duration = tempo_calc(tempomul, cxf_region.startPosition-cxf_region.endPosition)
 
 	if loopLength == 0:
 		time_obj.set_offset(sampleOffset)
 	else:
 		time_obj.set_loop_data(sampleOffset, sampleOffset, loopLength)
 
-def do_automation(convproj_obj, blx_auto, autoloc, tempomul):
+def do_automation(convproj_obj, cxf_auto, autoloc, tempomul):
 	auto_obj = convproj_obj.automation.create(autoloc, 'float', True)
-	for p in blx_auto.points:
+	for p in cxf_auto.points:
 		pos = tempo_calc(tempomul, p.position)
 		auto_obj.add_autopoint(pos, p.value, None)
 
@@ -188,26 +249,26 @@ def get_pluginfile(startid, uniqueId, num, dawvert_intent):
 		binplug = open(filepath, 'rb')
 		return binplug.read()
 
-def do_plugin(convproj_obj, startid, blx_effect, num, fxid, dawvert_intent, tempomul):
+def do_plugin(convproj_obj, startid, cxf_effect, num, fxid, dawvert_intent, tempomul, zip_data, zip_start_path):
 	plugin_obj = None
 
-	uniqueId = blx_effect.uniqueId
+	uniqueId = cxf_effect.uniqueId
 
-	if blx_effect.format == 'BandLab':
-		plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'bandlab', blx_effect.slug)
+	if cxf_effect.format == 'BandLab':
+		plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'bandlab', cxf_effect.slug)
 		plugin_obj.role = 'fx'
 
-		plugparams = blx_effect.params
-	
-		dseto_obj = globalstore.dataset.get_obj('bandlab', 'fx', blx_effect.slug)
+		plugparams = cxf_effect.params
+
+		dseto_obj = globalstore.dataset.get_obj('bandlab', 'fx', cxf_effect.slug)
 		if dseto_obj:
 			dseto_obj.visual.apply_cvpj_visual(plugin_obj.visual)
 			for param_id, dset_param in dseto_obj.params.iter():
 				paramv = plugparams[param_id] if param_id in plugparams else dset_param.defv
 				if not dset_param.noauto:
 					plugin_obj.params.add(param_id, paramv, 'float')
-					if param_id in blx_effect.automation: 
-						do_automation(convproj_obj, blx_effect.automation[param_id], ['plugin', fxid, param_id], tempomul)
+					if param_id in cxf_effect.automation: 
+						do_automation(convproj_obj, cxf_effect.automation[param_id], ['plugin', fxid, param_id], tempomul)
 				else:
 					plugin_obj.datavals.add(param_id, paramv)
 	
@@ -215,17 +276,24 @@ def do_plugin(convproj_obj, startid, blx_effect, num, fxid, dawvert_intent, temp
 			for n, v in plugparams.items():
 				if not isinstance(v, str) and isinstance(v, dict):
 					plugparams.add(n, v, 'float')
-					if param_id in blx_effect.automation:
-						do_automation(convproj_obj, blx_effect.automation[param_id], ['plugin', fxid, param_id], tempomul)
+					if param_id in cxf_effect.automation:
+						do_automation(convproj_obj, cxf_effect.automation[param_id], ['plugin', fxid, param_id], tempomul)
 				else:
 					plugin_obj.datavals.add(n, v)
 
 	elif uniqueId:
+
+		plugdata = None
+		if zip_data is None: plugdata = get_pluginfile(startid, uniqueId, num, dawvert_intent)
+		else: 
+			plugpath = "/".join(zip_start_path+['Assets', 'Plugins', get_pluginid(startid, uniqueId, num)])
+			if plugpath in zip_data.namelist(): plugdata = zip_data.read(plugpath)
+
 		if uniqueId == -1273960264:
 			from functions.juce import data_vc2xml
-			if True:
-			#try:
-				plugdata = get_pluginfile(startid, uniqueId, num, dawvert_intent)
+			plugdata = None
+
+			if plugdata is not None:
 				xamplerdata = data_vc2xml.get(plugdata)
 				if xamplerdata.tag == 'XSamplerPersistData':
 					sampler_file = None
@@ -233,56 +301,59 @@ def do_plugin(convproj_obj, startid, blx_effect, num, fxid, dawvert_intent, temp
 					for x in xamplerdata:
 						if x.tag == 'SampleInformation': sampler_file = x.get('File')
 						if x.tag == 'xsmpparameters': sampler_params = dict([(i.get('id'), i.get('value')) for i in x if i.tag == 'PARAM'])
-
+	
 					if sampler_file:
 						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(fxid, sampler_file, 'win')
 						plugin_obj.role = 'synth'
-					#for sampler_param in sampler_params.items():
-					#	print(sampler_param)
-			#except:
-			#	pass
-	
+
+					for sampler_param, val in sampler_params.items():
+						plugin_obj.params.add(sampler_param, val, 'float')
+
 		else:
 			from objects.inst_params import juce_plugin
-			plugdata = get_pluginfile(startid, uniqueId, num, dawvert_intent)
+
 			if plugdata is not None:
-				try:
+				#try:
 					juceobj = juce_plugin.juce_plugin()
-					juceobj.name = blx_effect.name
+					juceobj.name = cxf_effect.name
 					if plugdata[0:4] == b'CcnK': juceobj.plugtype = 'vst2'
 					if plugdata[0:4] == b'VC2!': juceobj.plugtype = 'vst3'
 					juceobj.rawdata = plugdata
 					plugin_obj, _ = juceobj.to_cvpj(convproj_obj, fxid)
-				except:
-					pass
+
+					for param_id in cxf_effect.automation:
+						do_automation(convproj_obj, cxf_effect.automation[param_id], ['plugin', fxid, 'ext_param_'+param_id], tempomul)
+
+				#except:
+				#	pass
 
 	return plugin_obj
 
-def do_effects(convproj_obj, blx_effects, startid, plugslots, dawvert_intent, tempomul):
-	for n, blx_effect in enumerate(blx_effects):
+def do_effects(convproj_obj, cxf_effects, startid, plugslots, dawvert_intent, tempomul, zip_data, zip_start_path):
+	for n, cxf_effect in enumerate(cxf_effects):
 		fxid = startid+'_'+str(n)
 
-		plugin_obj = do_plugin(convproj_obj, startid, blx_effect, n, fxid, dawvert_intent, tempomul)
+		plugin_obj = do_plugin(convproj_obj, startid, cxf_effect, n, fxid, dawvert_intent, tempomul, zip_data, zip_start_path)
 
 		if plugin_obj:
-			plugin_obj.fxdata_add(not blx_effect.bypass, 1)
+			plugin_obj.fxdata_add(not cxf_effect.bypass, 1)
 			plugslots.plugin_autoplace(plugin_obj, fxid)
 
-def do_track_common(convproj_obj, track_obj, blx_track, tempomul, dawvert_intent):
-	track_obj.visual.name = blx_track.name
-	track_obj.visual.color.set_hex(blx_track.color)
-	track_obj.params.add('enabled', not blx_track.isMuted, 'bool')
-	track_obj.params.add('solo', blx_track.isSolo, 'bool')
-	track_obj.params.add('vol', blx_track.volume, 'float')
-	track_obj.params.add('pan', blx_track.pan, 'float')
+def do_track_common(convproj_obj, track_obj, cxf_track, tempomul, dawvert_intent, zip_data, zip_start_path):
+	track_obj.visual.name = cxf_track.name
+	track_obj.visual.color.set_hex(cxf_track.color)
+	track_obj.params.add('enabled', not cxf_track.isMuted, 'bool')
+	track_obj.params.add('solo', cxf_track.isSolo, 'bool')
+	track_obj.params.add('vol', cxf_track.volume, 'float')
+	track_obj.params.add('pan', cxf_track.pan, 'float')
 
-	for blx_auxSend in blx_track.auxSends:
-		sendautoid = blx_track.id+'__'+'return__'+str(blx_auxSend.id)
-		track_obj.sends.add(blx_auxSend.id, sendautoid, blx_auxSend.sendLevel)
-		#do_automation(convproj_obj, blx_auxSend.automation, ['send', sendautoid, 'amount'])
+	for cxf_auxSend in cxf_track.auxSends:
+		sendautoid = cxf_track.id+'__'+'return__'+str(cxf_auxSend.id)
+		track_obj.sends.add(cxf_auxSend.id, sendautoid, cxf_auxSend.sendLevel)
+		#do_automation(convproj_obj, cxf_auxSend.automation, ['send', sendautoid, 'amount'])
 
-	for name, blx_auto in blx_track.automation.items():
-		if name == 'volume': do_automation(convproj_obj, blx_auto, ['track', blx_track.id, 'vol'], tempomul)
-		if name == 'pan': do_automation(convproj_obj, blx_auto, ['track', blx_track.id, 'pan'], tempomul)
+	for name, cxf_auto in cxf_track.automation.items():
+		if name == 'volume': do_automation(convproj_obj, cxf_auto, ['track', cxf_track.id, 'vol'], tempomul)
+		if name == 'pan': do_automation(convproj_obj, cxf_auto, ['track', cxf_track.id, 'pan'], tempomul)
 		
-	do_effects(convproj_obj, blx_track.effects, blx_track.id, track_obj.plugslots, dawvert_intent, tempomul)
+	do_effects(convproj_obj, cxf_track.effects, cxf_track.id, track_obj.plugslots, dawvert_intent, tempomul, zip_data, zip_start_path)

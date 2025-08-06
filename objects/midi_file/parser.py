@@ -1,5 +1,6 @@
 import mmap
 import struct
+import io
 from . events import *
 from typing import List
 from os import SEEK_CUR
@@ -143,6 +144,15 @@ class MidiFile:
 	def fromFile(cls, filePath):
 		with open(filePath, "rb") as f:
 			memoryMap = mmap.mmap(f.fileno(), 0, access = mmap.ACCESS_READ)
+			midiFormat, tracksCount, ppqn = parseHeader(memoryMap)
+			tracks = parseTracks(memoryMap, tracksCount)
+			memoryMap.close()
+			return cls(midiFormat, ppqn, tracks)
+
+	@classmethod
+	def fromRaw(cls, bytedata):
+		if bytedata is not None:
+			memoryMap = io.BytesIO(bytedata)
 			midiFormat, tracksCount, ppqn = parseHeader(memoryMap)
 			tracks = parseTracks(memoryMap, tracksCount)
 			memoryMap.close()

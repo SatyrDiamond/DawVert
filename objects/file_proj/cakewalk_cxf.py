@@ -445,6 +445,7 @@ class cxf_project:
 		self.auxChannels = [cxf_auxChannel(x) for x in indata['auxChannels']]
 		self.tracks = [cxf_track(x) for x in indata['tracks']]
 		if 'arranger' in indata: self.arranger.read(indata['arranger'])
+		return True
 
 	def load_from_file(self, input_file):
 		f = open(input_file, 'rb')

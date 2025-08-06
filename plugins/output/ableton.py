@@ -248,7 +248,7 @@ def add_plugindevice_vst2(als_track, convproj_obj, plugin_obj, pluginid):
 		else: outflags = 67108869 if is_instrument else 67109120
 		
 		wobj = convproj_obj.viswindow__get(['plugin', pluginid])
-		if wobj:
+		if wobj is not None:
 			pluginfo['WinPosX'] = ableton_parampart.as_value('WinPosX', wobj.pos_x)
 			pluginfo['WinPosY'] = ableton_parampart.as_value('WinPosY', wobj.pos_y)
 
@@ -345,8 +345,9 @@ def add_plugindevice_vst3(als_track, convproj_obj, plugin_obj, pluginid):
 		devicetype = 1 if is_instrument else 2
 
 		pluginfo['Preset'] = ableton_parampart.as_numset('VstPreset')
-		pluginfo['WinPosX'] = ableton_parampart.as_value('WinPosX', wobj.pos_x)
-		pluginfo['WinPosY'] = ableton_parampart.as_value('WinPosY', wobj.pos_y)
+		if wobj is not None:
+			pluginfo['WinPosX'] = ableton_parampart.as_value('WinPosX', wobj.pos_x)
+			pluginfo['WinPosY'] = ableton_parampart.as_value('WinPosY', wobj.pos_y)
 
 		vstpreset = pluginfo['Preset']['0/Vst3Preset'] = {}
 		vstpreset['IsOn'] = ableton_parampart.as_bool('IsOn', True)

@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:filter">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" plugtype="native:bandlab:filter">
   <define_remap name="filter_types" in_type="string" out_type="filter_type">
     <val in_val="peaking" out_val="peak"/>
     <val in_val="lowpass" out_val="low_pass"/>

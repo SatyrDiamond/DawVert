@@ -3,6 +3,7 @@
 
 from functions import note_data
 from functions import value_midi
+from functions import xtramath
 from objects.convproj import fileref
 from objects import globalstore
 from objects import colors
@@ -12,6 +13,7 @@ import json
 import os
 import glob
 import zipfile
+from objects import debug
 from objects.exceptions import ProjectFileParserException
 
 def tempo_calc(mul, seconds):
@@ -93,7 +95,14 @@ class input_bandlab(plugins.base):
 
 		convproj_obj.params.add('bpm', bpm, 'float')
 
+		convproj_obj.metadata.name = project_obj.song.name
+		convproj_obj.metadata.comment_text = project_obj.description
+
 		tempomul = 120/bpm
+
+		debugvis_id_store = debug.id_visual_name()
+		debugvis_id_store.add(project_obj.song.id, 'Song ID')
+		debugvis_id_store.add(project_obj.mainBusId, 'mainBusId')
 
 		for cxf_sample in project_obj.samples:
 			if not cxf_sample.isMidi:
@@ -102,6 +111,7 @@ class input_bandlab(plugins.base):
 		groups = []
 
 		for cxf_auxChannel in project_obj.auxChannels:
+			debugvis_id_store.add(cxf_auxChannel.id, 'Aux %i: %s' % (cxf_auxChannel.order, cxf_auxChannel.name))
 			track_obj = None
 			autoloc = None
 			if cxf_auxChannel.type == 'Bus': 
@@ -134,6 +144,8 @@ class input_bandlab(plugins.base):
 		cxf_tracks = sorted(project_obj.tracks, key=lambda x: x.order, reverse=False)
 		
 		for cxf_track in cxf_tracks:
+			debugvis_id_store.add(cxf_track.id, 'Track %i: %s' % (cxf_track.order, cxf_track.name))
+
 			track_obj = None
 			if cxf_track.type == 'Audio':
 				track_obj = convproj_obj.track__add(cxf_track.id, 'audio', 1, False)
@@ -148,6 +160,7 @@ class input_bandlab(plugins.base):
 				do_track_common(convproj_obj, track_obj, cxf_track, tempomul, dawvert_intent, zip_data, zip_start_path)
 
 				for cxf_auxSend in cxf_track.auxSends:
+					debugvis_id_store.add(cxf_track.id, 'TrackSend: '+cxf_auxSend.id+' <<< '+cxf_auxChannel.name)
 					sendautoid = cxf_track.id+'__'+'return__'+str(cxf_auxSend.id)
 					track_obj.sends.add(cxf_auxSend.id, sendautoid, cxf_auxSend.sendLevel)
 					for k, a in cxf_auxSend.automation.items():
@@ -162,8 +175,11 @@ class input_bandlab(plugins.base):
 					if cxf_track.synth:
 						startid = cxf_track.id
 						fxid = startid+'_-1'
-						plugin_obj = do_plugin(convproj_obj, cxf_track.id, cxf_track.synth, -1, fxid, dawvert_intent, tempomul, zip_data, zip_start_path)
-						if plugin_obj: track_obj.plugslots.set_synth(fxid)
+						plugin_obj, middlenote, pitch = do_plugin(convproj_obj, cxf_track.id, cxf_track.synth, -1, fxid, dawvert_intent, tempomul, zip_data, zip_start_path)
+						if plugin_obj: 
+							track_obj.plugslots.set_synth(fxid)
+							track_obj.params.add('pitch', pitch/100, 'float')
+							track_obj.datavals.add('middlenote', middlenote)
 
 					if (not plugin_obj) and cxf_track.soundbank:
 						plugin_obj = convproj_obj.plugin__add(cxf_track.id, 'native', 'bandlab', 'instrument')
@@ -206,6 +222,20 @@ class input_bandlab(plugins.base):
 						stretch_obj = sp_obj.stretch
 						stretch_obj.timing.set__real_rate(bpm, speed)
 						stretch_obj.preserve_pitch = True
+
+
+		#for cxf_auxChannel in project_obj.auxChannels:
+		#	print('AUX_IN',
+		#		debugvis_id_store.get(cxf_auxChannel.id), 
+		#		debugvis_id_store.get(cxf_auxChannel.idOutput)
+		#		)
+#
+		#for cxf_track in cxf_tracks:
+		#	print('TRACK_IN',
+		#		debugvis_id_store.get(cxf_track.parentId), 
+		#		debugvis_id_store.get(cxf_track.idOutput)
+		#		)
+
 
 def add_sample(convproj_obj, dawvert_intent, cxf_sample, zip_data, zip_start_path, samplefolder):
 	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', cxf_sample.file)
@@ -254,6 +284,9 @@ def do_plugin(convproj_obj, startid, cxf_effect, num, fxid, dawvert_intent, temp
 
 	uniqueId = cxf_effect.uniqueId
 
+	pitch = 0
+	middlenote = 0
+
 	if cxf_effect.format == 'BandLab':
 		plugin_obj = convproj_obj.plugin__add(fxid, 'native', 'bandlab', cxf_effect.slug)
 		plugin_obj.role = 'fx'
@@ -291,8 +324,6 @@ def do_plugin(convproj_obj, startid, cxf_effect, num, fxid, dawvert_intent, temp
 
 		if uniqueId == -1273960264:
 			from functions.juce import data_vc2xml
-			plugdata = None
-
 			if plugdata is not None:
 				xamplerdata = data_vc2xml.get(plugdata)
 				if xamplerdata.tag == 'XSamplerPersistData':
@@ -302,12 +333,46 @@ def do_plugin(convproj_obj, startid, cxf_effect, num, fxid, dawvert_intent, temp
 						if x.tag == 'SampleInformation': sampler_file = x.get('File')
 						if x.tag == 'xsmpparameters': sampler_params = dict([(i.get('id'), i.get('value')) for i in x if i.tag == 'PARAM'])
 	
+					x_root = 60
+					x_shift = 0
+					x_fine = 0
+
 					if sampler_file:
 						plugin_obj, sampleref_obj, sp_obj = convproj_obj.plugin__addspec__sampler(fxid, sampler_file, 'win')
 						plugin_obj.role = 'synth'
+						sp_obj.point_value_type = "percent"
 
-					for sampler_param, val in sampler_params.items():
-						plugin_obj.params.add(sampler_param, val, 'float')
+						filter_obj = plugin_obj.filter
+						for paramid, val in sampler_params.items():
+							val = float(val)
+
+							if paramid == 'xsmpgain': sp_obj.vol = val/0.7876096963882446
+							elif paramid == 'xsmppan': sp_obj.pan = (val-0.5)*2
+							elif paramid == 'xsmpsamplestart': sp_obj.start = val
+							elif paramid == 'xsmploopstart': sp_obj.loop_start = val
+							elif paramid == 'xsmploopend': sp_obj.loop_end = val
+							elif paramid == 'xsmpsampleend': sp_obj.end = val
+							elif paramid == 'xsmproot': x_root = round(val*127)
+							elif paramid == 'xsmpstshift': x_shift = (val-0.5)*24
+							elif paramid == 'xsmpfineshift': x_fine = (val-0.5)*100
+							elif paramid == 'xsmpplaymode': 
+								sp_obj.loop_active = val==1.0
+								sp_obj.trigger = 'oneshot' if val==0.5 else 'normal'
+							elif paramid == 'xsmpfiltercutoff': 
+								filter_obj.freq = 20 * 1000**val
+							elif paramid == 'xsmpfilterres': 
+								filter_obj.q = xtramath.between_from_one(0.1, 10.0, val)
+							elif paramid == 'xsmpfiltertype': 
+								filttypenum = round(val*3)
+								filter_obj.on = filttypenum==0
+								if filttypenum==1: filter_obj.type.set_list(['low_pass', None])
+								if filttypenum==2: filter_obj.type.set_list(['band_pass', None])
+								if filttypenum==3: filter_obj.type.set_list(['high_pass', None])
+							else: 
+								plugin_obj.params.add(paramid, val, 'float')
+
+					pitch = x_shift+x_fine
+					middlenote = x_root-60
 
 		else:
 			from objects.inst_params import juce_plugin
@@ -327,13 +392,13 @@ def do_plugin(convproj_obj, startid, cxf_effect, num, fxid, dawvert_intent, temp
 				#except:
 				#	pass
 
-	return plugin_obj
+	return plugin_obj, middlenote, pitch
 
 def do_effects(convproj_obj, cxf_effects, startid, plugslots, dawvert_intent, tempomul, zip_data, zip_start_path):
 	for n, cxf_effect in enumerate(cxf_effects):
 		fxid = startid+'_'+str(n)
 
-		plugin_obj = do_plugin(convproj_obj, startid, cxf_effect, n, fxid, dawvert_intent, tempomul, zip_data, zip_start_path)
+		plugin_obj, _, _ = do_plugin(convproj_obj, startid, cxf_effect, n, fxid, dawvert_intent, tempomul, zip_data, zip_start_path)
 
 		if plugin_obj:
 			plugin_obj.fxdata_add(not cxf_effect.bypass, 1)

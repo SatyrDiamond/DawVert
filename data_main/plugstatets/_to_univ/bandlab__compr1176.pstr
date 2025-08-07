@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:compr1176">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" plugtype="native:bandlab:compr1176">
 
   <define_remap name="ratio_strings" in_type="string" out_type="float">
     <val in_val="4" out_val="4"/>

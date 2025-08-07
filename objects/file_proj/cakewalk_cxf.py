@@ -170,6 +170,11 @@ class cxf_auxChannel:
 		self.automation = {}
 		if indata: self.read(indata)
 
+	def add_effect(self):
+		o = cxf_plugin(None)
+		self.effects.append(o)
+		return o
+
 	def read(self, indata):
 		if 'type' in indata: self.type = indata['type']
 		if 'id' in indata: self.id = indata['id']
@@ -295,6 +300,21 @@ class cxf_track:
 		self.auxSends = []
 		if indata: self.read(indata)
 
+	def add_auxSend(self):
+		o = cxf_auxSend(None)
+		self.auxSends.append(o)
+		return o
+
+	def add_effect(self):
+		o = cxf_plugin(None)
+		self.effects.append(o)
+		return o
+
+	def add_synth(self, indata):
+		o = cxf_plugin(None)
+		self.synth = o
+		return o
+
 	def read(self, indata):
 		if 'type' in indata: self.type = indata['type']
 		if 'id' in indata: self.id = indata['id']
@@ -318,6 +338,12 @@ class cxf_track:
 				auto_obj = cxf_automation()
 				auto_obj.read(a)
 				self.automation[n] = auto_obj
+
+	def add_region(self):
+		if self.regions is None: self.regions = []
+		o = cxf_region(None)
+		self.regions.append(o)
+		return o
 
 	def write(self):
 		outdata = {}
@@ -428,10 +454,26 @@ class cxf_project:
 		self.metronome = cxf_metronome()
 		self.description = ""
 		self.tempoTrack = None
+		self.mainBusId = None
 		self.samples = []
 		self.auxChannels = []
 		self.tracks = []
 		self.arranger = cxf_arranger()
+
+	def add_sample(self):
+		o = cxf_sample(None)
+		self.samples.append(o)
+		return o
+
+	def add_auxChannel(self):
+		o = cxf_auxChannel(None)
+		self.auxChannels.append(o)
+		return o
+
+	def add_track(self):
+		o = cxf_track(None)
+		self.tracks.append(o)
+		return o
 
 	def read(self, indata):
 		if 'meta' in indata: self.meta.read(indata['meta'])

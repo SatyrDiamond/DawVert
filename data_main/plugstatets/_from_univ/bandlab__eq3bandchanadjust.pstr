@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="bandlab" plugtype="universal:eq:3band_channel_adjust">
+<plugstatetransform daw_out="bandlab;cakewalk_cxf" plugtype="universal:eq:3band_channel_adjust">
 
   <in__named_filter_name name="low_shelf"/>
   <in__named_filter_param to="filter0Freq" from="freq" type="float"/>

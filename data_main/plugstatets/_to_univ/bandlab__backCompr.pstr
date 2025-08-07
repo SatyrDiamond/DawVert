@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:backCompr">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" plugtype="native:bandlab:backCompr">
   <in__param from="attack" type="float" />
   <in__param from="ratio" type="float" />
   <in__param from="release" type="float" />

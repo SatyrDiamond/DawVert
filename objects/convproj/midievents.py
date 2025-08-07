@@ -3,6 +3,7 @@
 
 from objects.data_bytes import dynbytearr
 import numpy as np
+import io
 import struct
 
 in_dtype = np.dtype([
@@ -461,6 +462,16 @@ class midievents:
 				self.cursor.add_copied(t)
 
 	def midi_to(self, output_file):
+		midoobj = self.midi_to_midoobj()
+		midoobj.save(output_file)
+
+	def midi_to_raw(self):
+		midoobj = self.midi_to_midoobj()
+		f = io.BytesIO()
+		midoobj._save(f)
+		return f.getvalue()
+
+	def midi_to_midoobj(self):
 		import mido
 
 		metamsg = mido.MetaMessage
@@ -514,4 +525,4 @@ class midievents:
 				miditrack.append(metamsg('sequencer_specific', data=sysexdata, time=etime))
 
 		midiobj.tracks.append(miditrack)
-		midiobj.save(output_file)
+		return midiobj

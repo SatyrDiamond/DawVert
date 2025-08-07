@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:gain">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" plugtype="native:bandlab:gain">
   <in__param from="gain" type="float">0</in__param>
   <calc name="gain" type="from_db" />
   <replace plugtype="universal:volpan" />

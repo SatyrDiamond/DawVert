@@ -50,3 +50,15 @@ def blockpoint_gfx(points, txti, sustain, vsize=verbose_vsize, hsize=verbose_hsi
 		for n, x in enumerate(ft): gfxdata_txt[n] = verbose_blocks_gfx[int(x)]
 		for x in range(hsize): print(gfxdata_colors[x]+gfxdata_txt[x], end='')
 		print('\033[0;0m')
+
+
+class id_visual_name:
+	def __init__(self):
+		self.names = {}
+
+	def add(self, idnum, visualname):
+		self.names[idnum] = visualname
+
+	def get(self, idnum):
+		if idnum is None: return '[None]'
+		return '<%s>' % (self.names[idnum] if idnum in self.names else 'UNKNOWN')

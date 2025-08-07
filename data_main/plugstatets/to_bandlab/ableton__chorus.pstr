@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Chorus2">
+<plugstatetransform daw_in="ableton" daw_out="bandlab;cakewalk_cxf" plugtype="native:ableton:Chorus2">
   <in__param from="Amount" type="float" />
   <in__param from="Rate" type="float" />
   <in__param from="DryWet" type="float" />

@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:bandlab:threeBandEq">
+<plugstatetransform daw_in="ableton" daw_out="bandlab;cakewalk_cxf" plugtype="native:bandlab:threeBandEq">
   <in__param from="lowGain" type="float" />
   <in__param from="midGain" type="float" />
   <in__param from="highGain" type="float" />

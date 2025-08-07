@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" daw_out="ableton" plugtype="native:bandlab:pingpongDelay">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" daw_out="ableton" plugtype="native:bandlab:pingpongDelay">
   <define_remap name="delayUnitSelection" in_type="string" out_type="int">
     <val in_val="delayTimeSec" out_val="0"/>
     <val in_val="delayTimeBeats" out_val="1"/>

@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:Chorus">
+<plugstatetransform daw_in="amped" daw_out="bandlab;cakewalk_cxf" plugtype="native:amped:Chorus">
   <in__param from="delayLfoDepth" type="float" />
   <in__param from="delayLfoRateHz" type="float" />
   <in__param from="mix" type="float" />

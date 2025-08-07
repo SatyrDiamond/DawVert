@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Pedal">
+<plugstatetransform daw_in="ableton" daw_out="bandlab;cakewalk_cxf" plugtype="native:ableton:Pedal">
   <in__param from="Type" type="int" />
 
   <cond__single in="Type" data="x == 0">

@@ -86,7 +86,8 @@
   "data_main\\plugstatets\\to_ableton\\bandlab__autofilter.pstr": {
     "file": "data_main\\plugstatets\\to_ableton\\bandlab__autofilter.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "daw_out": [
       "ableton"
@@ -100,7 +101,8 @@
   "data_main\\plugstatets\\to_ableton\\bandlab__autoPan.pstr": {
     "file": "data_main\\plugstatets\\to_ableton\\bandlab__autoPan.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "daw_out": [
       "ableton"
@@ -114,7 +116,8 @@
   "data_main\\plugstatets\\to_ableton\\bandlab__beatSyncDelay2.pstr": {
     "file": "data_main\\plugstatets\\to_ableton\\bandlab__beatSyncDelay2.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "daw_out": [
       "ableton"
@@ -128,7 +131,8 @@
   "data_main\\plugstatets\\to_ableton\\bandlab__bossBD2.pstr": {
     "file": "data_main\\plugstatets\\to_ableton\\bandlab__bossBD2.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "daw_out": [
       "ableton"
@@ -142,7 +146,8 @@
   "data_main\\plugstatets\\to_ableton\\bandlab__pingpongDelay.pstr": {
     "file": "data_main\\plugstatets\\to_ableton\\bandlab__pingpongDelay.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "daw_out": [
       "ableton"
@@ -159,7 +164,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:threeBandEq",
     "plugtype_out": [
@@ -226,7 +232,8 @@
   "data_main\\plugstatets\\to_amped\\bandlab__rossCompr.pstr": {
     "file": "data_main\\plugstatets\\to_amped\\bandlab__rossCompr.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "daw_out": [
       "amped"
@@ -327,7 +334,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Amp",
     "plugtype_out": [
@@ -341,7 +349,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:AutoFilter",
     "plugtype_out": [
@@ -355,7 +364,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:AutoPan",
     "plugtype_out": [
@@ -369,7 +379,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Cabinet",
     "plugtype_out": [
@@ -383,7 +394,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Chorus2",
     "plugtype_out": [
@@ -397,7 +409,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Corpus",
     "plugtype_out": [
@@ -411,7 +424,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Hybrid",
     "plugtype_out": [
@@ -425,7 +439,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Overdrive",
     "plugtype_out": [
@@ -439,7 +454,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Pedal",
     "plugtype_out": [
@@ -455,7 +471,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:PhaserNew",
     "plugtype_out": [
@@ -469,7 +486,8 @@
       "ableton"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:ableton:Reverb",
     "plugtype_out": [
@@ -483,7 +501,8 @@
       "amped"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:amped:Chorus",
     "plugtype_out": [
@@ -497,7 +516,8 @@
       "amped"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:amped:CompressorMini",
     "plugtype_out": [
@@ -511,7 +531,8 @@
       "amped"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:amped:Equalizer",
     "plugtype_out": [
@@ -525,7 +546,8 @@
       "amped"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:amped:Phaser",
     "plugtype_out": [
@@ -539,7 +561,8 @@
       "amped"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:amped:Reverb",
     "plugtype_out": [
@@ -553,7 +576,8 @@
       "amped"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:amped:Tremolo",
     "plugtype_out": [
@@ -567,7 +591,8 @@
       "flp"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:flstudio:Fruity Convolver",
     "plugtype_out": [
@@ -581,7 +606,8 @@
       "flp"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:flstudio:fruity phaser",
     "plugtype_out": [
@@ -595,7 +621,8 @@
       "lmms"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:lmms:bassbooster",
     "plugtype_out": [
@@ -609,7 +636,8 @@
       "lmms"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:lmms:reverbsc",
     "plugtype_out": [
@@ -623,7 +651,8 @@
       "lmms"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:lmms:stereoenhancer",
     "plugtype_out": [
@@ -637,7 +666,8 @@
       "soundation"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:soundation:com.soundation.phaser",
     "plugtype_out": [
@@ -651,7 +681,8 @@
       "soundation"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:soundation:com.soundation.reverb",
     "plugtype_out": [
@@ -665,7 +696,8 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:tracktion:chorusEffect",
     "plugtype_out": [
@@ -679,7 +711,8 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:tracktion:distortion",
     "plugtype_out": [
@@ -693,7 +726,8 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:tracktion:naturalReverb",
     "plugtype_out": [
@@ -707,7 +741,8 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:tracktion:nonLinearReverb",
     "plugtype_out": [
@@ -721,7 +756,8 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:tracktion:phaser2",
     "plugtype_out": [
@@ -735,7 +771,8 @@
       "tracktion_edit"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:tracktion:plateReverb",
     "plugtype_out": [
@@ -1127,7 +1164,8 @@
       "caustic"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:caustic:octaver",
     "plugtype_out": [
@@ -1141,7 +1179,8 @@
       "caustic"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:caustic:phaser",
     "plugtype_out": [
@@ -1155,7 +1194,8 @@
       "caustic"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:caustic:reverb",
     "plugtype_out": [
@@ -1169,7 +1209,8 @@
       "fl_mobile"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:fl_mobile:11",
     "plugtype_out": [
@@ -1183,7 +1224,8 @@
       "fl_mobile"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:fl_mobile:14",
     "plugtype_out": [
@@ -1197,7 +1239,8 @@
       "fl_mobile"
     ],
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:fl_mobile:15",
     "plugtype_out": [
@@ -1431,7 +1474,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__bitcrush.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__bitcrush.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:bitcrush",
     "plugtype_out": [
@@ -1442,7 +1486,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__compressor.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:compressor",
     "plugtype_out": [
@@ -1453,7 +1498,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__deess.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__deess.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:de_ess",
     "plugtype_out": [
@@ -1464,7 +1510,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__eq3bandchan.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__eq3bandchan.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:eq:3band_channel",
     "plugtype_out": [
@@ -1475,7 +1522,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__eq3bandchanadjust.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__eq3bandchanadjust.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:eq:3band_channel_adjust",
     "plugtype_out": [
@@ -1486,7 +1534,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__filter.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__filter.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:filter:single",
     "plugtype_out": [
@@ -1497,7 +1546,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__limiter.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__limiter.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:limiter",
     "plugtype_out": [
@@ -1508,7 +1558,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__noisegate.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__noisegate.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:noise_gate",
     "plugtype_out": [
@@ -1519,7 +1570,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__pitchshift.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:pitchshift",
     "plugtype_out": [
@@ -1530,7 +1582,8 @@
   "data_main\\plugstatets\\_from_univ\\bandlab__reverb.pstr": {
     "file": "data_main\\plugstatets\\_from_univ\\bandlab__reverb.pstr",
     "daw_out": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "universal:reverb",
     "plugtype_out": [
@@ -1974,7 +2027,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__autofilter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__autofilter.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:autoFilter",
     "plugtype_out": [
@@ -1985,7 +2039,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__backCompr.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__backCompr.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:backCompr",
     "plugtype_out": [
@@ -1996,7 +2051,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__bossge7.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__bossge7.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:bossGE7",
     "plugtype_out": [
@@ -2007,7 +2063,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compr1176.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:compr1176",
     "plugtype_out": [
@@ -2018,7 +2075,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__compressor.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:compressor",
     "plugtype_out": [
@@ -2029,7 +2087,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__deess.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:deEsser",
     "plugtype_out": [
@@ -2040,7 +2099,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__expGate.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__expGate.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:expGate",
     "plugtype_out": [
@@ -2051,7 +2111,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__filter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__filter.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:filter",
     "plugtype_out": [
@@ -2062,7 +2123,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__gain.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__gain.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:gain",
     "plugtype_out": [
@@ -2073,7 +2135,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__limiter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__limiter.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:cleanLimiter",
     "plugtype_out": [
@@ -2084,7 +2147,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__pitchShifter.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:pitchShifter",
     "plugtype_out": [
@@ -2095,7 +2159,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:threeBandEq",
     "plugtype_out": [
@@ -2106,7 +2171,8 @@
   "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq2.pstr": {
     "file": "data_main\\plugstatets\\_to_univ\\bandlab__threeBandEq2.pstr",
     "daw_in": [
-      "bandlab"
+      "bandlab",
+      "cakewalk_cxf"
     ],
     "plugtype_in": "native:bandlab:threeBandEq2",
     "plugtype_out": [

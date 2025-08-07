@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="bandlab" plugtype="universal:noise_gate">
+<plugstatetransform daw_out="bandlab;cakewalk_cxf" plugtype="universal:noise_gate">
   <in__param from="attack" type="float"/>
   <in__param from="release" type="float"/>
   <in__param from="threshold" type="float"/>

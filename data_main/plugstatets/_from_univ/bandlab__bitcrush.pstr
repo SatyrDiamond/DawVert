@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="bandlab" plugtype="universal:bitcrush">
+<plugstatetransform daw_out="bandlab;cakewalk_cxf" plugtype="universal:bitcrush">
   <in__param from="bits" type="float" />
   <in__param from="freq" type="float" />
   <in__wet to="wet" type="float" />

@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="lmms" daw_out="bandlab" plugtype="native:lmms:bassbooster">
+<plugstatetransform daw_in="lmms" daw_out="bandlab;cakewalk_cxf" plugtype="native:lmms:bassbooster">
   <in__param from="freq" type="float" />
   <in__param from="gain" type="float" />
   <calc name="gain" type="mul">1.5</calc>

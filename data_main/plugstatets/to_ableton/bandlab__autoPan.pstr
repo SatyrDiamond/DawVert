@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" daw_out="ableton" plugtype="native:bandlab:autoPan">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" daw_out="ableton" plugtype="native:bandlab:autoPan">
   <in__param from="rateHz" type="float" />
   <in__param from="spread" type="float" />
   <replace plugtype="native:ableton:AutoPan" />

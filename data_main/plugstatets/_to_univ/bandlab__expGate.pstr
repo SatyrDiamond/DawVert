@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:expGate">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" plugtype="native:bandlab:expGate">
   <in__param from="attack" type="float"/>
   <in__param from="release" type="float"/>
   <in__param from="threshold" type="float"/>

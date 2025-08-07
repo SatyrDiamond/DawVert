@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:Tremolo">
+<plugstatetransform daw_in="amped" daw_out="bandlab;cakewalk_cxf" plugtype="native:amped:Tremolo">
   <in__param from="lfoADepth" type="float" />
   <in__param from="lfoARateHz" type="float" />
   <replace plugtype="native:bandlab:autoPan" />

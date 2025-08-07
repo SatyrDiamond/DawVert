@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:CompressorMini">
+<plugstatetransform daw_in="amped" daw_out="bandlab;cakewalk_cxf" plugtype="native:amped:CompressorMini">
   <in__param from="squash" type="float" />
   <calc name="squash" type="mul">24</calc>
   <replace plugtype="native:bandlab:rossCompr" />

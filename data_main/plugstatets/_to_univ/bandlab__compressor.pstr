@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" plugtype="native:bandlab:compressor">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" plugtype="native:bandlab:compressor">
   <in__param from="attack" type="float" />
   <in__param from="knee" type="float" />
   <in__param from="ratio" type="float" />

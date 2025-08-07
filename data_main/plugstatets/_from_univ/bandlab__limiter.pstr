@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="bandlab" plugtype="universal:limiter">
+<plugstatetransform daw_out="bandlab;cakewalk_cxf" plugtype="universal:limiter">
   <in__param from="ceiling" type="float" />
   <in__param from="pregain" type="float" />
   <replace plugtype="native:bandlab:cleanLimiter" />

@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" daw_out="ableton" plugtype="native:bandlab:beatSyncDelay2">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" daw_out="ableton" plugtype="native:bandlab:beatSyncDelay2">
   <in__dataval from="delayUnitSelection" type="string" />
   <in__dataval from="syncDelay" type="string" />
   <in__param from="cutoff" type="float" />

@@ -1,2028 +1,2108 @@
+<?xml version='1.0' encoding='utf-8'?>
 <dataset>
-    <category id="inst">
-        <object id="studio-grand-v2-v4">
-            <visual name="Studio Grand" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="808-bass-v2-v4">
-            <visual name="808 Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="808-kick-v2-v4">
-            <visual name="808 Kick" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="808-saturated-bass-v2-v4">
-            <visual name="808 Saturated Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="analog-desk-v2-v4">
-            <visual name="Analog Desk" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="car-stereo-v3-v4">
-            <visual name="Car Stereo" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="cheeky-boom-v4">
-            <visual name="Cheeky Boom" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="chonky-bass-v2-v4">
-            <visual name="Chonky Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="divebomb-v2-v4">
-            <visual name="Divebomb" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="fizzy-interrupt-v4">
-            <visual name="Fizzy Interrupt" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="nails-v2-v4">
-            <visual name="Nails" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="paper-v2-v4">
-            <visual name="Paper" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="rumble-bass-v4-v4">
-            <visual name="Rumble Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="space-wobble-v2-v4">
-            <visual name="Space Wobble" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="sub-rattle-v4">
-            <visual name="Sub Rattle" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="sub-shaker-v2-v4">
-            <visual name="Sub Shaker" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="sub-texture-v2-v4">
-            <visual name="Sub Texture" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="subtle-rattle-v2-v4">
-            <visual name="Subtle Rattle" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="flugelhorn-v2-v4">
-            <visual name="Flugelhorn" color="#66A0CC" />
-            <data slug="brass" />
-        </object>
-        <object id="french-horn-v2-v4">
-            <visual name="French Horn" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="full-brass-v2-v4">
-            <visual name="Full Brass" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="full-brass-staccato-v4">
-            <visual name="Full Brass Staccato" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trombone-v2-v4">
-            <visual name="Trombone Concert Hall" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trombone-hard-v4-v4">
-            <visual name="Trombone Hard" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trombone-soft-v4-v4">
-            <visual name="Trombone Soft" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trombone-staccato-v4">
-            <visual name="Trombone Staccato" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trumpet-clean-v3-v4">
-            <visual name="Trumpet" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trumpet-v2-v4">
-            <visual name="Trumpet Concert Hall" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trumpet-cup-mute-v4">
-            <visual name="Trumpet Cup Mute" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trumpet-harmon-mute-v4">
-            <visual name="Trumpet Harmon Mute" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="trumpet-staccato-v4">
-            <visual name="Trumpet Staccato" color="#6966CC" />
-            <data slug="brass" />
-        </object>
-        <object id="trumpet-straight-mute-v4">
-            <visual name="Trumpet Straight Mute" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="tuba-v3-v4">
-            <visual name="Tuba" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="tuba-legato-v4">
-            <visual name="Tuba Legato" color="#00B105" />
-            <data slug="brass" />
-        </object>
-        <object id="tuba-staccato-v2-v4">
-            <visual name="Tuba Staccato" color="#7466CC" />
-            <data slug="brass" />
-        </object>
-        <object id="afro-cuban-percussion">
-            <visual name="Afro Cuban Percussion" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="ballad-kit-v4">
-            <visual name="Ballad" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="blues-kit">
-            <visual name="Blues" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="brooklyn-kit-v4">
-            <visual name="Brooklyn" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="brush-kit">
-            <visual name="Brush" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="chill-wave-kit-v4">
-            <visual name="Chill Wave" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="cinematic-kit-v3-v4">
-            <visual name="Cinematic Classic" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="cinematic-vast-kit-v4">
-            <visual name="Cinematic Vast" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="classic-rock-kit-v2-v4">
-            <visual name="Classic Rock" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="compton-kit-v2-v4">
-            <visual name="Compton" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="country-kit">
-            <visual name="Country" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="drive-kit-v4">
-            <visual name="Drive" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="dry-kit">
-            <visual name="Dry" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="dumpy-kit-v4">
-            <visual name="Dumpy" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="empire-kit-v2-v4">
-            <visual name="Empire" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="funk-kit">
-            <visual name="Funk" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="fusion-kit">
-            <visual name="Fusion" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="groove-kit-v4">
-            <visual name="Groove" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="hard-rock-kit">
-            <visual name="Hard Rock" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="hip-hop-kit">
-            <visual name="Hip Hop" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="hot-pop-kit-v4">
-            <visual name="HOT Pop" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="indie-rock-kit">
-            <visual name="Indie Rock" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="jazz-kit">
-            <visual name="Jazz" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="latin-kit">
-            <visual name="Latin" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="live-kit-v4">
-            <visual name="Live" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="lo-fi-hop-kit-v2-v4">
-            <visual name="Lofi Hop" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="matt-kit-v4">
-            <visual name="Matt" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="modern-metal-kit-v2-v4">
-            <visual name="Modern Metal" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="motorcity-kit-v4">
-            <visual name="Motorcity" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="natty-kit-v4">
-            <visual name="Natty" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="nifty-kit-v4">
-            <visual name="Nifty" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="pop-rock-kit">
-            <visual name="Pop Rock" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="post-punk-kit-v4">
-            <visual name="Post Punk" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="lo-fi-kit-v2-v4">
-            <visual name="Psychedelic" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="punchy-kit-v4">
-            <visual name="Punchy" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="rnb-kit-v4">
-            <visual name="R&amp;B" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="raw-kit-v4">
-            <visual name="Raw" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="reggae-kit">
-            <visual name="Reggae" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="rock-kit-v2-v4">
-            <visual name="Rock" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="soul-kit-v4">
-            <visual name="Soul" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="steve-jackson-kit-v4">
-            <visual name="Steve Jackson" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="thump-kit-v4">
-            <visual name="Thump" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="trash-kit-v4">
-            <visual name="Trash" color="#FFC51C" />
-            <data slug="drum-kit" />
-        </object>
-        <object id="606-kit-v3-v4">
-            <visual name="606" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="8-bit-chiptune-kit-v3-v4">
-            <visual name="8 Bit Chiptune" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="808-kit">
-            <visual name="808" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="909-kit-v4">
-            <visual name="909" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="abstract-hip-hop-kit-v2-v4">
-            <visual name="Abstract Hip Hop" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="atlanta-hip-hop-kit-v3-v4">
-            <visual name="Atlanta Hip Hop" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="bedroom-kit-v4">
-            <visual name="Bedroom" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="boom-bap-kit-v4">
-            <visual name="Boom Bap" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="boom-bap-kit-2-v2-v4">
-            <visual name="Boom Bap Classic" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="classic-house-kit-v4">
-            <visual name="Classic House" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="dark-hip-hop-kit">
-            <visual name="Dark Hip Hop" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="dnb-kit-v2-v4">
-            <visual name="DNB" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="dubstep-kit">
-            <visual name="Dubstep" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="edm-kit">
-            <visual name="EDM" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="electro-pop-kit">
-            <visual name="Electro Pop" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="fat-90s-kit-v4">
-            <visual name="Fat 90's" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="freestyle-kit">
-            <visual name="Freestyle" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="future-trap-kit-v4">
-            <visual name="Future Trap" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="glitch-kit">
-            <visual name="Glitch" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="idm-kit-v4">
-            <visual name="IDM" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="industrial-kit">
-            <visual name="Industrial" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="james-alister-kit-v4">
-            <visual name="James Alister" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="lcd-kit-v2-v4">
-            <visual name="LCD" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="neptunian-kit-v4">
-            <visual name="Neptunian" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="new-wave-kit">
-            <visual name="New Wave" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="nu-house-kit">
-            <visual name="Nu House" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="percussion-plonk-v4">
-            <visual name="Percussion Plonk" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="pillow-kit-v4">
-            <visual name="Pillow" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="prince-kit">
-            <visual name="Prince" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="puppet-pad-v2-v4">
-            <visual name="Puppet" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="sfx-pad">
-            <visual name="SFX" color="#8C4EF9" />
-            <data slug="special-effects" />
-        </object>
-        <object id="sinister-trap-v2-v4">
-            <visual name="Sinister Trap" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="synth-kit">
-            <visual name="Synth" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="techno-brute-kit-v2-v4">
-            <visual name="Techno Brute" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="techno-throwback-kit">
-            <visual name="Techno Throwback" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="textures-kit-v2-v4">
-            <visual name="Textures" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="trap-kit">
-            <visual name="Trap" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="ultra-808-v4">
-            <visual name="Ultraphat 808" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="vintage-hip-hop-kit-v2-v4">
-            <visual name="Vintage Hip Hop" color="#FFC51C" />
-            <data slug="drum-pads" />
-        </object>
-        <object id="62-p-bass-v3-v4">
-            <visual name="'62 P-Bass" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="dub-bass-v3-v4">
-            <visual name="Dub Bass" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="electric-bass-legato-v3-v4">
-            <visual name="Electric Bass Legato" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="electric-bass-staccato-v4-v4">
-            <visual name="Electric Bass Staccato" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="funky-slap-v2-v4">
-            <visual name="Funky Slap" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="jazz-bass-v2-v4">
-            <visual name="Jazz Bass" color="#CC7D66" />
-            <data slug="bass" />
-        </object>
-        <object id="nu-disco-bass-v3-v4">
-            <visual name="Nu Disco Bass" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="pumped-up-bass-v2-v4">
-            <visual name="Pumped Up Bass" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="punchy-jazz-bass-v3-v4">
-            <visual name="Punchy Jazz Bass" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="retro-pick-bass-v2-v4">
-            <visual name="Retro Pick Bass" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="slap-bass-v2-v4">
-            <visual name="Slap Bass" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="12-string-guitar-v2-v4">
-            <visual name="12 String Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="sparkling-acoustic-v2-v4">
-            <visual name="Acoustic Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="banjo-v3-v4">
-            <visual name="Banjo" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="clean-guitar-v3-v4">
-            <visual name="Clean Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="clean-guitar-hard-v3-v4">
-            <visual name="Clean Guitar Hard" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="clean-guitar-muted-v2-v4">
-            <visual name="Clean Guitar Muted" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="clean-guitar-soft-v3-v4">
-            <visual name="Clean Guitar Soft" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="clean-power-chord-v2-v4">
-            <visual name="Clean Power Chord" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="daylight-guitar-v3-v4">
-            <visual name="Daylight Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="guitar-power-chord-v2-v4">
-            <visual name="Dirty Power Chord" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="djent-guitar-v2-v4">
-            <visual name="Djent Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="funk-guitar">
-            <visual name="Funk Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="jazz-guitar-v2-v4">
-            <visual name="Jazz Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="nylon-guitar-v2-v4">
-            <visual name="Nylon Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="overdriven-guitar-v2-v4">
-            <visual name="Overdriven Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="overdriven-power-chord-v2-v4">
-            <visual name="Overdriven Power Chord" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="twang-guitar-v3-v4">
-            <visual name="Twang Guitar" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="lil-ukelele-v3-v4">
-            <visual name="Ukulele" color="#E11764" />
-            <data slug="guitars" />
-        </object>
-        <object id="accordion-v3-v4">
-            <visual name="Accordion" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="bright-piano-v2-v4">
-            <visual name="Bright Piano" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="dark-grand-v4">
-            <visual name="Dark Grand" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="electric-piano-v2-v4">
-            <visual name="Electric Piano" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="felt-piano-v2-v4">
-            <visual name="Felt Piano" color="#CC7466" />
-            <data slug="piano" />
-        </object>
-        <object id="fm-keys-v2-v4">
-            <visual name="FM Keys" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="fm-tines-v2-v4">
-            <visual name="FM Tines" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="grand-piano-v4-v4">
-            <visual name="Grand Piano" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="studio-harpsichord-v3-v4">
-            <visual name="Harpsichord" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="honky-tonk-piano-v2-v4">
-            <visual name="Honky Tonk Piano" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="hyperbrite-piano-v4">
-            <visual name="Hyperbrite Piano" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="lofi-piano-v2-v4">
-            <visual name="Lofi Piano" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="rhodes-v2-v4">
-            <visual name="Mellow EP" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="upright-piano-v2-v4">
-            <visual name="Upright Piano" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="wurlitzer-v2-v4">
-            <visual name="Whirly" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="80s-square-lead-v4">
-            <visual name="80s Square Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="alien-lead-v4">
-            <visual name="Alien Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="ambient-lead-v2-v4">
-            <visual name="Ambient Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="arcade-lead-v2-v4">
-            <visual name="Arcade Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="beginning-lead-v2-v4">
-            <visual name="Beginning Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="berlin-lead-v2-v4">
-            <visual name="Berlin Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="big-synth-lead-v4">
-            <visual name="Big Synth Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="chip-hat-v2-v4">
-            <visual name="Chip Hat" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="dafunky-crunch-v2-v4">
-            <visual name="DaFunky Crunch" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="dance-lead-v2-v4">
-            <visual name="Dance Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="dirty-porto-5th-v2-v4">
-            <visual name="Dirty Porto 5th" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="dirty-legato-saw-v4">
-            <visual name="Dirty Legato Saw" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="dub-supersaw-v2-v4">
-            <visual name="Dub Supersaw" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="dubstep-lead-v3-v4">
-            <visual name="Dubstep Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="eyelash-synth-v2-v4">
-            <visual name="Eyelash Synth" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="fat-n-dirty-v2-v4">
-            <visual name="Fat 'n Dirty" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="fm-lead-v2-v4">
-            <visual name="FM Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="funky-tone-v4">
-            <visual name="Funky Clav" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="funky-phat-lead-v2-v4">
-            <visual name="Funky Phat Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="future-pop-stab-v2-v4">
-            <visual name="Future Pop Stab" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="gfunk-saw-v4">
-            <visual name="G-Funk Saw" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="g-funk-sine-v4">
-            <visual name="G-Funk Sine" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="glitch-lead-v3-v4">
-            <visual name="Glitch Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="halcyon-5th-v4">
-            <visual name="Halcyon 5th" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="hardcore-square-unison-v4">
-            <visual name="Hardcore Square Unison" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="heavy-lead-v3-v4">
-            <visual name="Heavy Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="hyper-pop-synth-v2-v4">
-            <visual name="Hyper Pop Synth" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="leadviathan-v4">
-            <visual name="Leadviathan" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="noir-chord-v4">
-            <visual name="Noir Chord" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="g-funk-lead-v4-v4">
-            <visual name="Retro Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="super-saw-v3-v4">
-            <visual name="Super Saw" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="tape-sawtooth-v2-v4">
-            <visual name="Tape Saw" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="two-saw-detune-v4">
-            <visual name="Two Saw Detune" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="uber-lead-v3-v4">
-            <visual name="Uber Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="vapor-lead-v4">
-            <visual name="Vapor Lead" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="vintagefour-v3-v4">
-            <visual name="Vintage Four" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="zoom-r2d2-v4">
-            <visual name="Zoom R2D2" color="#FD3E2B" />
-            <data slug="synth-leads" />
-        </object>
-        <object id="808-boom-v4">
-            <visual name="808 Boom" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="808-buzz-v4">
-            <visual name="808 Buzz" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="heavy-808-kick-v4">
-            <visual name="Heavy 808 Kick" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="nocturne-pad-v4">
-            <visual name="Nocturne Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="sora-keys-v4">
-            <visual name="Sora Keys" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="skyline-keys-v4">
-            <visual name="Skyline Keys" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="timaeus-pad-v4">
-            <visual name="Timaeus Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="vision-synth-v4">
-            <visual name="Vision Synth" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="b3-hammond-v4">
-            <visual name="B3 Hamm" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="chip-organ-v2-v4">
-            <visual name="Chip Organ" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="chorus-organ-v4">
-            <visual name="Chorus Organ" color="#BBCC66" />
-            <data slug="piano" />
-        </object>
-        <object id="church-organ-v3-v4">
-            <visual name="Church Organ" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="classic-rock-organ-v4">
-            <visual name="Classic Rock Organ" color="#BBCC66" />
-            <data slug="piano" />
-        </object>
-        <object id="clean-5th-sine-organ-v4">
-            <visual name="Clean 5th Sine Organ" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="dark-organ-v2-v4">
-            <visual name="Dark Organ" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="fanfare-organ-v3-v4">
-            <visual name="Fanfare Organ" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="house-organ-v2-v4">
-            <visual name="House Organ" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="rock-organ-v2-v4">
-            <visual name="Rock Organ" color="#FD3E2B" />
-            <data slug="piano" />
-        </object>
-        <object id="simple-organ-v4">
-            <visual name="Simple Organ" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="synth-organ-v3-v4">
-            <visual name="Synth Organ" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="atlantispad-v2-v4">
-            <visual name="Atlantis Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="atmosphere-pad-v2-v4">
-            <visual name="Atmosphere Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="borealis-pad-v2-v4">
-            <visual name="Borealis Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="chill-wave-synth-v4">
-            <visual name="Chill Wave Synth" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="cloud-fluff-v3-v4">
-            <visual name="Cloud Fluff" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="dream-pad-v4">
-            <visual name="Dream Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="dreamy-bells-v4">
-            <visual name="Dreamy Bells" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="duality-pad-v4">
-            <visual name="Duality Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="evolve-pad-v2-v4">
-            <visual name="Evolve Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="fm-pad-v2-v4">
-            <visual name="FM Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="copterorchestra-v4">
-            <visual name="Helicopter Orchestra" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="kaytran-pad-v4">
-            <visual name="Kaytran Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="movie-pad-v2-v4">
-            <visual name="Movie Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="neo-soul-pad-v3-v4">
-            <visual name="Neo Soul Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="new-age-synth-v2-v4">
-            <visual name="New Age Synth" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="ocean-pad-v4">
-            <visual name="Ocean Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="retro-juno-pad-v2-v4">
-            <visual name="Retro Juno Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="seamless-pad-v4">
-            <visual name="Seamless Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="shadow-bells-v5-v4">
-            <visual name="Shadow Bells" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="shadow-soft-v4">
-            <visual name="Shadow Soft" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="smooth-brass-pad-v2-v4">
-            <visual name="Smooth Brass Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="smooth-fuzzy-pad-v2-v4">
-            <visual name="Smooth Fuzzy Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="soft-pad-v4">
-            <visual name="Soft Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="stratosphere-pad-v3-v4">
-            <visual name="Stratosphere Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="string-pad-v2-v4">
-            <visual name="String Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="sun-pad-v4">
-            <visual name="Sun Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="swell-pad-v2-v4">
-            <visual name="Swell Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="tokyo-sunset-v4">
-            <visual name="Tokyo Sunset" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="vintage-pad-v2-v4">
-            <visual name="Vintage Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="wah-rnb-pad-v4">
-            <visual name="Wah RnB" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="warm-pad-v2-v4">
-            <visual name="Warm Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="welcome-pad-v2-v4">
-            <visual name="Welcome Pad" color="#FD3E2B" />
-            <data slug="synth-pads" />
-        </object>
-        <object id="bells-v2-v4">
-            <visual name="Bells" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="blip-perc-v4">
-            <visual name="Blip Perc" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="clap-slap-v4">
-            <visual name="Clap Slap" color="#FD3E2B" />
-            <data slug="percussion" />
-        </object>
-        <object id="electro-splat-v4">
-            <visual name="Electro Splat" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="fm-gamelan-v2-v4">
-            <visual name="FM Gamelan" color="#FD3E2B" />
-            <data slug="percussion" />
-        </object>
-        <object id="general-midi-drums-hiphop-v3-v4">
-            <visual name="General MIDI Drums" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="general-midi-drums-v2-v4">
-            <visual name="General MIDI Percussion" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="glockenspiel-v2-v4">
-            <visual name="Glockenspiel" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="kalimba-v3-v4">
-            <visual name="Kalimba" color="#FD3E2B" />
-            <data slug="percussion" />
-        </object>
-        <object id="log-drum-v4">
-            <visual name="Log Drum" color="#FD3E2B" />
-            <data slug="percussion" />
-        </object>
-        <object id="marimba-v2-v4">
-            <visual name="Marimba" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="steel-drum-v2-v4">
-            <visual name="Steel Drum" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="taiko-v4">
-            <visual name="Taiko" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="timpani-v3-v4">
-            <visual name="Timpani" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="tubular-bells-v2-v4">
-            <visual name="Tubular Bells" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="vibraphone-v3-v4">
-            <visual name="Vibraphone" color="#FD3E2B" />
-            <data slug="percussion" />
-        </object>
-        <object id="xylophone-v2-v4">
-            <visual name="Xylophone" color="#00B105" />
-            <data slug="percussion" />
-        </object>
-        <object id="acoustic-bass-legato-v2-v4">
-            <visual name="Acoustic Bass Legato" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="acoustic-bass-staccato-v3-v4">
-            <visual name="Acoustic Bass Staccato" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="basses-long-bows-v2-v4">
-            <visual name="Basses Long Bows" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="basses-pizzicato-v2-v4">
-            <visual name="Basses Pizzicato" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="basses-short-bows-v2-v4">
-            <visual name="Basses Short Bows" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="basses-tremolo-v2-v4">
-            <visual name="Basses Tremolo" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="bouzouki-hard-v2-v4">
-            <visual name="Bouzouki Hard" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="bouzouki-soft-v3-v4">
-            <visual name="Bouzouki Soft" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="cello-section-v2-v4">
-            <visual name="Cello Section" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="cellos-pizzicato-v2-v4">
-            <visual name="Cellos Pizzicato" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="cellos-short-bows-v2-v4">
-            <visual name="Cellos Short Bows" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="cellos-tremolo-v2-v4">
-            <visual name="Cellos Tremolo" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="double-bass-section-v2-v4">
-            <visual name="Double Bass Section" color="#009AF9" />
-            <data slug="bass" />
-        </object>
-        <object id="full-strings-long-bows-v2-v4">
-            <visual name="Full Strings Long Bows" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="full-strings-pizzicato-v3-v4">
-            <visual name="Full Strings Pizzicato" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="full-strings-short-bows-v2-v4">
-            <visual name="Full Strings Short Bows" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="full-strings-tremolo-v3-v4">
-            <visual name="Full Strings Tremolo" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="hammered-dulcimer-v4">
-            <visual name="Hammered Dulcimer" color="#66CCA2" />
-            <data slug="strings" />
-        </object>
-        <object id="harp-v2-v4">
-            <visual name="Harp" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="kantele-v2-v4">
-            <visual name="Kantele" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="koto-v3-v4">
-            <visual name="Koto" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="sitar-v3-v4">
-            <visual name="Sitar" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="solo-violin-v3-v4">
-            <visual name="Solo Violin" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="string-orchestra-pizz-v2-v4">
-            <visual name="String Orchestra Pizz" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="string-orchestra-v2-v4">
-            <visual name="String Orchestra" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="string-orchestra-stacc-v2-v4">
-            <visual name="String Orchestra Stacc" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="viola-section-v2-v4">
-            <visual name="Viola Section" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="viola-solo-pizzicato-v2-v4">
-            <visual name="Viola Solo Pizzicato" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="viola-solo-tremolo-v2-v4">
-            <visual name="Viola Solo Tremolo" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="violas-long-bows-v3-v4">
-            <visual name="Violas Long Bows" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="violas-short-bows-v2-v4">
-            <visual name="Violas Short Bows" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="violas-tremolo-v2-v4">
-            <visual name="Violas Tremolo" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="violin-section-v2-v4">
-            <visual name="Violin Section" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="violin-solo-pizzicato-v2-v4">
-            <visual name="Violin Solo Pizzicato" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="violin-solo-tremolo-v2-v4">
-            <visual name="Violin Solo Tremolo" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="violins-pizzicato-v2-v4">
-            <visual name="Violins Pizzicato" color="#00B105" />
-            <data slug="strings" />
-        </object>
-        <object id="vintage-swell-bass-v2-v4">
-            <visual name="Vintage Swell Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="vintage-pop-stabs-v3-v4">
-            <visual name="Vintage Pop Stabs" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="tropical-house-bass-v3-v4">
-            <visual name="Tropical House Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="thriller-bass-v4-v4">
-            <visual name="Thriller Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="thick-dust-v2-v4">
-            <visual name="Thick Dust" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="square-sub-bass-v3-v4">
-            <visual name="Square Sub Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="solid-bass-v2-v4">
-            <visual name="Solid Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="soft-sine-bass-v4">
-            <visual name="Soft Sine Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="smooth-reese-bass-v2-v4">
-            <visual name="Smooth Reese" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="sine-bass-v5-v4">
-            <visual name="Sine Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="ripped-cabinet-v2-v4">
-            <visual name="Ripped Cabinet" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="retro-bass-v4">
-            <visual name="Retro Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="porto-reese-bass-v4">
-            <visual name="Porto Reese" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="plucked-vaporbass-v2-v4">
-            <visual name="Plucked Vaporbass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="pike-v4">
-            <visual name="Pike" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="party-bass-v2-v4">
-            <visual name="Party Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="pant-flapper-v2-v4">
-            <visual name="Pant Flapper" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="moog-bass-v3-v4">
-            <visual name="Mook Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="modern-hip-hop-bass-v3-v4">
-            <visual name="Modern Hip Hop Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="lately-bass-v3-v4">
-            <visual name="Lately Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="kick-bass-v4">
-            <visual name="Kick Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="house-bass-v3-v4">
-            <visual name="House Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="hadda-bass-v2-v4">
-            <visual name="Hadda Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="growler-bass-v3-v4">
-            <visual name="Growler Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="grime-bass-v4-v4">
-            <visual name="Grime Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="future-redux-bass-v3-v4">
-            <visual name="Future Redux Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="fm-quad-bass-v2-v4">
-            <visual name="FM Quad" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="fm-mulch-bass-v2-v4">
-            <visual name="FM Mulch" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="fancy-bass-v2-v4">
-            <visual name="Fancy Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="exceedingly-nice-v2-v4">
-            <visual name="Exceedingly Nice" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="evolve-bass-v3-v4">
-            <visual name="Evolve Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="electro-saw-bass-v2-v4">
-            <visual name="Electro Saw Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="dustbin-acid-v2-v4">
-            <visual name="Dustbin Acid" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="drive-bass-v4-v4">
-            <visual name="Drive Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="dirty-wub-v2-v4">
-            <visual name="Dirty Wub" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="dirty-growl-v4">
-            <visual name="Dirty Growl" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="detuned-tapper-v4-v4">
-            <visual name="Detuned Tapper" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="deep-house-bass-v3-v4">
-            <visual name="Deep House" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="colossal-lead-v3-v4">
-            <visual name="Colossal Lead" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="clicky-bit-v3-v4">
-            <visual name="Clicky Bit" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="classic-synth-bass-v3-v4">
-            <visual name="Classic Synth Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="boog-bass-v4">
-            <visual name="Boog Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="bodyrocking-bass-v4">
-            <visual name="Bodyrocking Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="attack-bass-v2-v4">
-            <visual name="Attack Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="bass-lead-v2-v4">
-            <visual name="Bass Lead" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="acid-bass-v2-v4">
-            <visual name="Acid Bass" color="#009AF9" />
-            <data slug="synth-bass" />
-        </object>
-        <object id="airy-keys-v4">
-            <visual name="Airy Keys" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="house-chords-v4">
-            <visual name="Chiptune Chords" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="city-keys-v2-v4">
-            <visual name="City Keys" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="deep-house-synth-v2-v4">
-            <visual name="Deep House Synth" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="finesse-pad-v4">
-            <visual name="Finesse" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="fm-string-v2-v4">
-            <visual name="FM String" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="future-keys-v2-v4">
-            <visual name="Future Keys" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="harris-wobble-v4">
-            <visual name="Harris Wobble" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="heart-keys-v2-v4">
-            <visual name="Heart Keys" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="hyper-fm-v4">
-            <visual name="Hyper FM" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="lofi-mallets-v2-v4">
-            <visual name="Lofi Mallets" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="lofi-saw-v2-v4">
-            <visual name="Lofi Saw" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="major-portamento-v4">
-            <visual name="Major Portamento" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="minor-portamento-v4">
-            <visual name="Minor Portamento" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="new-breed-clav-v2-v4">
-            <visual name="New Breed Clav" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="plucked-lead-v2-v4">
-            <visual name="Nova Pluck" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="ol-dusty-v2-v4">
-            <visual name="Ol' Dusty" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="phonk-bell-v2-v4">
-            <visual name="Phonk Bell Classic" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="phonk-bell-dirty-v4">
-            <visual name="Phonk Bell Dirty" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="pumping-anthem-v4">
-            <visual name="Pumping Anthem" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="retro-synth-brass-v2-v4">
-            <visual name="Retro Synth Brass" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="rhythm-partner-v4">
-            <visual name="Rhythm Partner" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="sawsine-v2-v4">
-            <visual name="SawSine" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="harpsichord-v2-v4">
-            <visual name="Sawtooth Harp" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="soft-bells-v4">
-            <visual name="Soft Bells" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="sparkle-keys-v2-v4">
-            <visual name="Sparkle Keys" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="sunset-brass-v4">
-            <visual name="Sunset Brass" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="synth-strings-v2-v4">
-            <visual name="Synth Strings" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="thick-air-pad-v2-v4">
-            <visual name="Thick Air Pad" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="trance-pluck-v4">
-            <visual name="Trance Pluck" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="vista-synth-v4">
-            <visual name="Vista Synth" color="#FD3E2B" />
-            <data slug="synth-keys" />
-        </object>
-        <object id="ahh-synth-v3-v4">
-            <visual name="Ahh Synth" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="choir-male-ahh-v3-v4">
-            <visual name="Choir Male Ahh" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="choir-synth-v2-v4">
-            <visual name="Choir Synth" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="lush-vocals-v2-v4">
-            <visual name="Lush Vocals" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="otamatone-v4">
-            <visual name="Otama" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="solo-female-ahh-v4-v4">
-            <visual name="Solo Female Ahh" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="space-bot-v2-v4">
-            <visual name="Space Bot" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="wailer-synth-v2-v4">
-            <visual name="Wailer Synth" color="#3BB2B8" />
-            <data slug="voices" />
-        </object>
-        <object id="alto-saxophone-v2-v4">
-            <visual name="Alto Saxophone" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="bagpipe-v2-v4">
-            <visual name="Bagpipe" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="bassoon-v3-v4">
-            <visual name="Bassoon" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="blown-bottle-v2-v4">
-            <visual name="Blown Bottle" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="clarinet-v3-v4">
-            <visual name="Clarinet" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="flute-v2-v4">
-            <visual name="Flute" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="harmonica-v4">
-            <visual name="Harmonica" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="oboe-v3-v4">
-            <visual name="Oboe" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="pan-flute-v4-v4">
-            <visual name="Pan Flute" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="tenor-saxophone-v3-v4">
-            <visual name="Tenor Saxophone" color="#00B105" />
-            <data slug="wind" />
-        </object>
-        <object id="whistle-v3-v4">
-            <visual name="Whistle" color="#00B105" />
-            <data slug="wind" />
-        </object>
-    </category>
-    <category id="fx">
-        <object id="guitarAmp">
-            <visual name="Guitar Amp" />
-            <param id="irType" type="string" def="orangeClassicShort" noauto="1" />
-            <param id="bass" type="float" def="4.5" max="10" />
-            <param id="drive" type="float" def="5" max="10" />
-            <param id="master" type="float" def="5" max="10" />
-            <param id="mid" type="float" def="6" max="10" />
-            <param id="presence" type="float" def="5.5" max="10" />
-            <param id="treble" type="float" def="5.5" max="10" />
-        </object>
-        <object id="cabinet">
-            <visual name="Guitar Cab" />
-            <param id="irType" type="string" def="2x12Celestion" noauto="1" />
-        </object>
-        <object id="genericAmp">
-            <visual name="Multi Amp Pro" />
-            <param id="staticModel" type="string" def="fenderTwin" noauto="1" />
-            <param id="bass" type="float" def="4.5" max="10" />
-            <param id="drive" type="float" def="4" max="10" />
-            <param id="mid" type="float" def="6" max="10" />
-            <param id="presence" type="float" def="4" max="10" />
-            <param id="treble" type="float" def="4.8" max="10" />
-            <param id="volume" type="float" def="5" max="10" />
-        </object>
-        <object id="guitarCab">
-            <visual name="Multi Cab Pro" />
-            <param id="cabModel" type="string" def="2x12Jenson" noauto="1" />
-            <param id="micModel" type="string" def="shureSM57" noauto="1" />
-            <param id="micPosition" type="string" def="onAxis" noauto="1" />
-        </object>
-        <object id="fuzzFace">
-            <visual name="Buzz Face" color="#8C2727" />
-            <param id="drive" type="float" def="7" max="10" />
-            <param id="level" type="float" def="6.5" max="10" />
-        </object>
-        <object id="bossCE5">
-            <visual name="Chorus Ensemble" color="#8FBFCB" />
-            <param id="depth" type="float" def="4" max="10" />
-            <param id="high" type="float" def="5" max="10" />
-            <param id="low" type="float" def="5" max="10" />
-            <param id="speed" type="float" def="1.009" max="3.7" min="0.25" />
-            <param id="wet" type="float" def="5" max="10" />
-        </object>
-        <object id="bossBD2">
-            <visual name="Delta Driver" color="#1D346F" />
-            <param id="drive" type="float" def="5.2" max="10" />
-            <param id="level" type="float" def="6" max="10" />
-            <param id="mid" type="float" def="4.5" max="10" />
-        </object>
-        <object id="mxrDistortion">
-            <visual name="Distortion++" color="#E1A54B" />
-            <param id="drive" type="float" def="4.5" max="10" />
-            <param id="level" type="float" def="5.5" max="10" />
-        </object>
-        <object id="bossGE7">
-            <visual name="Graphic EQ" color="#AEA69B" />
-            <param id="gainAt100Hz" type="float" max="15" min="-15" />
-            <param id="gainAt1600Hz" type="float" max="15" min="-15" />
-            <param id="gainAt200Hz" type="float" max="15" min="-15" />
-            <param id="gainAt3200Hz" type="float" max="15" min="-15" />
-            <param id="gainAt400Hz" type="float" max="15" min="-15" />
-            <param id="gainAt6400Hz" type="float" max="15" min="-15" />
-            <param id="gainAt800Hz" type="float" max="15" min="-15" />
-            <param id="level" type="float" max="15" min="-15" />
-        </object>
-        <object id="rossCompr">
-            <visual name="GTR Squeeze" color="#4D515E" />
-            <param id="level" type="float" def="-12" max="0" min="-24" />
-            <param id="sustain" type="float" def="24" max="24" />
-        </object>
-        <object id="bossMT2">
-            <visual name="House of Metal" color="#1A1918" />
-            <param id="bass" type="float" def="3.8" max="10" />
-            <param id="drive" type="float" def="4.5" max="10" />
-            <param id="level" type="float" def="7" max="10" />
-            <param id="treble" type="float" def="5.5" max="10" />
-        </object>
-        <object id="ehSmallStone">
-            <visual name="Little Rock" color="#7E3226" />
-            <param id="resonance" type="string" def="high" noauto="1" />
-            <param id="speed" type="float" def="3.962" max="20" min="0.2" />
-        </object>
-        <object id="proCoRat">
-            <visual name="Mouse Pro" color="#12181C" />
-            <param id="drive" type="float" def="6" max="10" />
-            <param id="level" type="float" def="6" max="10" />
-            <param id="mid" type="float" def="4.5" max="10" />
-        </object>
-        <object id="mxrPhase90">
-            <visual name="Phase 72" color="#B75B10" />
-            <param id="speed" type="float" def="7.922" max="20" min="0.2" />
-        </object>
-        <object id="bigMuffPi">
-            <visual name="Puff Pie" color="#BAC4CF" />
-            <param id="drive" type="float" def="4.5" max="10" />
-            <param id="level" type="float" def="6.5" max="10" />
-            <param id="mid" type="float" def="3.7" max="10" />
-        </object>
-        <object id="tubeScreamer2">
-            <visual name="Valve Screamer" color="#065A3D" />
-            <param id="drive" type="float" def="7" max="10" />
-            <param id="level" type="float" def="7" max="10" />
-            <param id="mid" type="float" def="6" max="10" />
-        </object>
-        <object id="bossVB2">
-            <visual name="VibeToo" color="#020039" />
-            <param id="amount" type="float" def="30" max="100" />
-            <param id="speed" type="float" def="3.17" max="20" min="0.2" />
-        </object>
-        <object id="ddelayPlus2">
-            <visual name="D-Delay +" />
-            <param id="delayTimeBeats" type="string" def="quarterNote" noauto="1" />
-            <param id="delayUnitSelection" type="string" def="delayTimeBeats" noauto="1" />
-            <param id="delayTimeMsec" type="float" def="0.45" max="2.6" min="0.01" />
-            <param id="dry" type="float" def="1" />
-            <param id="feedback" type="float" def="0.1" max="0.5" />
-            <param id="hpf" type="float" def="50" max="1200" min="50" />
-            <param id="level" type="float" max="12" min="-12" />
-            <param id="lpf" type="float" def="16000" max="16000" min="1200" />
-            <param id="spread" type="float" def="0.5" />
-            <param id="wet" type="float" def="0.5" />
-        </object>
-        <object id="beatSyncDelay2">
-            <visual name="Filter Echo +" />
-            <param id="delayUnitSelection" type="string" def="syncDelay" noauto="1" />
-            <param id="syncDelay" type="string" def="quarterNote" noauto="1" />
-            <param id="cutoff" type="float" def="12000" max="16000" min="300" />
-            <param id="delayTime" type="float" def="0.2" />
-            <param id="dryWetMix" type="float" def="0.4" />
-            <param id="feedback" type="float" def="0.204" max="0.85" />
-        </object>
-        <object id="pingpongDelay">
-            <visual name="Ping Pong Delay" />
-            <param id="delayOffsetBeats" type="string" def="quarterNote" noauto="1" />
-            <param id="delayOffsetUnitSelection" type="string" def="delayOffsetBeats" noauto="1" />
-            <param id="delayTimeBeats" type="string" def="quarterNote" noauto="1" />
-            <param id="delayUnitSelection" type="string" def="delayTimeBeats" noauto="1" />
-            <param id="cutoff" type="float" def="9000" max="16000" min="300" />
-            <param id="delayOffsetSec" type="float" def="0.35" />
-            <param id="delayTimeSec" type="float" def="0.7" />
-            <param id="dryWetMix" type="float" def="0.7" />
-            <param id="feedback" type="float" def="0.34" max="0.85" />
-            <param id="spread" type="float" def="1" />
-        </object>
-        <object id="bitBandit">
-            <visual name="Bit Bandit" />
-            <param id="emulation" type="string" def="true" noauto="1" />
-            <param id="clipperMix" type="float" def="0.65" />
-            <param id="crush" type="float" def="12" max="16" min="2" />
-            <param id="effectMix" type="float" def="0.5" />
-            <param id="fidelity" type="float" def="-20" max="20" min="-20" />
-            <param id="inputGain" type="float" max="20" min="-20" />
-            <param id="outputGain" type="float" def="-6" max="20" min="-20" />
-        </object>
-        <object id="lofi">
-            <visual name="Bitcrusher" />
-            <param id="bitDepth" type="float" def="16" max="16" min="1" />
-            <param id="downsample" type="float" def="13.4123" max="200" min="1" />
-            <param id="dryWetMix" type="float" def="0.7" />
-        </object>
-        <object id="overdrive">
-            <visual name="BL Driver" />
-            <param id="amount" type="float" def="3.5" max="10" />
-            <param id="outputGain" type="float" def="4.5" max="10" />
-            <param id="tone" type="float" def="1800" max="16000" min="250" />
-        </object>
-        <object id="exciter">
-            <visual name="Exciter" />
-            <param id="harmonics" type="float" def="50" max="100" />
-            <param id="mix" type="float" max="0" min="-30" />
-            <param id="threshold" type="float" def="-5" max="0" min="-30" />
-            <param id="tune" type="float" def="3500" max="7000" min="1000" />
-        </object>
-        <object id="tapeSimulator">
-            <visual name="Tape Simulator" />
-            <param id="bias" type="float" def="80" max="100" />
-            <param id="drive" type="float" def="8.1" max="18" />
-            <param id="level" type="float" def="-1" max="15" min="-15" />
-            <param id="speed" type="float" def="12.97" max="30" min="3.8" />
-            <param id="wow" type="float" def="30" max="100" />
-        </object>
-        <object id="enhancer">
-            <visual name="Vocal Enhancer" />
-            <param id="mode" type="string" def="warm" noauto="1" />
-            <param id="dryWetMix" type="float" def="0.5" />
-        </object>
-        <object id="compr1176">
-            <visual name="BL 1176" />
-            <param id="ratio" type="string" def="12" noauto="1" />
-            <param id="attack" type="float" def="1.2" max="10" />
-            <param id="gain" type="float" def="10" max="20" />
-            <param id="makeup" type="float" max="15" min="-15" />
-            <param id="release" type="float" def="5" max="10" />
-        </object>
-        <object id="compander">
-            <visual name="Compander" />
-            <param id="mode" type="string" def="dynamic" noauto="1" />
-            <param id="comprThreshold" type="float" def="-18" max="40" min="-30" />
-            <param id="expThreshold" type="float" def="-40" max="-30" min="-90" />
-            <param id="makeupGain" type="float" def="3" max="20" min="-20" />
-        </object>
-        <object id="deEsser">
-            <visual name="DeEsser" />
-            <param id="frequency" type="float" def="9000" max="16000" min="1000" />
-            <param id="threshold" type="float" def="-19" max="0" min="-40" />
-        </object>
-        <object id="compressor">
-            <visual name="DIGI Comp" />
-            <param id="attack" type="float" def="0.018" min="0.001" />
-            <param id="knee" type="float" def="6" max="20" />
-            <param id="ratio" type="float" def="12.1" max="20" min="1" />
-            <param id="release" type="float" def="0.222" min="0.001" />
-            <param id="threshold" type="float" def="-17.5" max="0" min="-60" />
-        </object>
-        <object id="backCompr">
-            <visual name="FBK Compressor" />
-            <param id="attack" type="float" def="0.05" max="0.2" min="0.001" />
-            <param id="makeupGain" type="float" max="15" min="-15" />
-            <param id="ratio" type="float" def="6" max="20" min="1" />
-            <param id="release" type="float" def="0.4" max="4" min="0.04" />
-            <param id="threshold" type="float" def="15" max="40" min="-10" />
-        </object>
-        <object id="expGate">
-            <visual name="Noise Gate" />
-            <param id="attack" type="float" def="0.005" max="0.15" min="0.001" />
-            <param id="release" type="float" def="0.2" max="0.8" min="0.1" />
-            <param id="threshold" type="float" def="-30" max="-18" min="-72" />
-        </object>
-        <object id="pumper2">
-            <visual name="Pumper" />
-            <param id="period" type="string" def="quarterNote" noauto="1" />
-            <param id="amount" type="float" def="0.5" />
-            <param id="phase" type="float" def="18" max="180" min="-180" />
-        </object>
-        <object id="la2aCompr">
-            <visual name="TecLab BA-2A" />
-            <param id="mode" type="string" def="compress" noauto="1" />
-            <param id="makeupGain" type="float" def="3" max="15" min="-15" />
-            <param id="threshold" type="float" def="25" max="40" min="-10" />
-        </object>
-        <object id="cleanLimiter">
-            <visual name="Clean Limiter" />
-            <param id="attack" type="string" def="fast" noauto="1" />
-            <param id="release" type="string" def="slow" noauto="1" />
-            <param id="type" type="string" def="none" noauto="1" />
-            <param id="input" type="float" def="0" max="24" min="-24" />
-            <param id="threshold" type="float" def="0" max="0" min="-24" />
-            <param id="truePeak" type="bool" />
-        </object>
-        <object id="masteringLimiter">
-            <visual name="Vintage Limiter" />
-            <param id="attack" type="float" def="0.001" max="0.001" min="0.0005" />
-            <param id="enhance" type="float" max="8" min="-8" />
-            <param id="gain" type="float" max="18" min="-18" />
-            <param id="masterLevel" type="float" max="15" min="-15" />
-            <param id="release" type="float" def="0.5003" min="0.05" />
-            <param id="softKnee" type="float" def="-5" max="0" min="-15" />
-        </object>
-        <object id="gater2">
-            <visual name="Gater" />
-            <param id="period" type="string" def="quarterNote" noauto="1" />
-            <param id="depth" type="float" def="1" min="1" />
-        </object>
-        <object id="autoFilter">
-            <visual name="Auto Filter" />
-            <param id="filterType" type="string" def="lpf" noauto="1" />
-            <param id="lfoRateUnitSelection" type="string" def="syncLfoRate" noauto="1" />
-            <param id="syncLfoRate" type="string" def="eighthNote" noauto="1" />
-            <param id="drive" type="float" def="0.8" max="10" min="0.1" />
-            <param id="frequency" type="float" def="2000" max="10000" min="20" />
-            <param id="lfoDepth" type="float" def="0.5" />
-            <param id="lfoRate" type="float" def="3" max="10" min="0.1" />
-            <param id="resonance" type="float" def="1" max="20" min="0.1" />
-            <param id="sensitivity" type="float" def="1" max="5" />
-        </object>
-        <object id="autoPan">
-            <visual name="Auto Pan" />
-            <param id="rateBeats" type="string" def="quarterNote" noauto="1" />
-            <param id="rateUnitSelection" type="string" def="rateBeats" noauto="1" />
-            <param id="rateHz" type="float" def="0.5" max="11" min="0.1" />
-            <param id="spread" type="float" def="0.7" />
-        </object>
-        <object id="autoWah">
-            <visual name="Auto Wah" />
-            <param id="mode" type="string" def="lpf" noauto="1" />
-            <param id="polarity" type="string" def="negative" noauto="1" />
-            <param id="depth" type="float" def="35" max="100" />
-            <param id="filter" type="float" def="50" max="100" />
-            <param id="outLevel" type="float" max="12" min="-40" />
-            <param id="release" type="float" def="0.8" max="1.5" min="0.06" />
-            <param id="sensitivity" type="float" def="35" max="100" />
-            <param id="speed" type="float" def="9.936" max="22.2" min="0.3" />
-        </object>
-        <object id="dimensionD">
-            <visual name="Dimension B" />
-            <param id="preset" type="string" def="01" noauto="1" />
-        </object>
-        <object id="octaver">
-            <visual name="Dual Octaver" />
-            <param id="dry" type="float" def="10" max="10" />
-            <param id="oct1" type="float" def="5" max="10" />
-            <param id="oct2" type="float" def="5" max="10" />
-            <param id="tone" type="float" def="5" max="10" />
-        </object>
-        <object id="phaser">
-            <visual name="Phase 45" />
-            <param id="rate" type="float" def="0.395093" max="8" min="0.01" />
-        </object>
-        <object id="chorus">
-            <visual name="ST Chorus" />
-            <param id="depth" type="float" def="1" />
-            <param id="rate" type="float" def="0.464398" max="6" min="0.01" />
-        </object>
-        <object id="tremolo">
-            <visual name="ST Tremolo" />
-            <param id="depth" type="float" def="0.7" />
-            <param id="rate" type="float" def="4.00399" max="11" min="0.1" />
-            <param id="spread" type="float" def="36" max="180" />
-        </object>
-        <object id="vocalDoubler">
-            <visual name="Vocal Doubler" />
-            <param id="depth" type="float" def="0.25" />
-            <param id="spread" type="float" def="1" />
-        </object>
-        <object id="multiShifter">
-            <visual name="Multi Shifter" />
-            <param id="inputType" type="string" def="vocal" noauto="1" />
-            <param id="dry" type="float" def="0.7" />
-            <param id="fifthDown" type="float" def="0.6" />
-            <param id="fifthUp" type="float" />
-            <param id="fourthDown" type="float" />
-            <param id="fourthUp" type="float" def="0.3" />
-            <param id="octaveDown" type="float" def="0.3" />
-            <param id="octaveUp" type="float" />
-        </object>
-        <object id="pitchShifter">
-            <visual name="Pitch Shifter" />
-            <param id="inputType" type="string" def="vocal" noauto="1" />
-            <param id="mix" type="float" def="1" />
-            <param id="shift" type="float" def="-5" max="12" min="-12" />
-        </object>
-        <object id="reverbHybrid">
-            <visual name="Space Maker" />
-            <param id="irType" type="string" def="basic" noauto="1" />
-            <param id="dampening" type="float" def="7500" max="16000" min="250" />
-            <param id="dryWetMix" type="float" def="0.1" />
-            <param id="roomSize" type="float" def="8" max="10" />
-            <param id="spread" type="float" def="3" max="10" />
-        </object>
-        <object id="springReverb2">
-            <visual name="Spring Reverb" />
-            <param id="mode" type="string" def="medium" noauto="1" />
-            <param id="intensity" type="float" def="20" max="100" />
-        </object>
-        <object id="simpleStudioReverb">
-            <visual name="Studio Reverb" />
-            <param id="color" type="float" def="9" max="10" />
-            <param id="mix" type="float" def="5" max="10" />
-            <param id="size" type="float" def="2.5" max="10" />
-        </object>
-        <object id="univerb">
-            <visual name="Univerb" />
-            <param id="irType" type="string" def="womensInstitute" noauto="1" />
-            <param id="dryWetMix" type="float" def="0.35" />
-        </object>
-        <object id="threeBandEq">
-            <visual name="EQ3-M" />
-            <param id="highGain" type="float" max="30" min="-30" />
-            <param id="lowGain" type="float" max="30" min="-30" />
-            <param id="midFreq" type="float" def="5000" max="8000" min="100" />
-            <param id="midGain" type="float" max="30" min="-30" />
-        </object>
-        <object id="threeBandEq2">
-            <visual name="EZ EQ" />
-            <param id="hpfFreq" type="float" def="80" max="10000" min="20" />
-            <param id="lpfFreq" type="float" def="7000" max="10000" min="20" />
-            <param id="peakFreq" type="float" def="5000" max="10000" min="20" />
-            <param id="peakGain" type="float" def="1" max="48" min="-96" />
-            <param id="peakQ" type="float" def="3" max="10" min="0.5" />
-        </object>
-        <object id="filter">
-            <visual name="Multi Filter" />
-            <param id="filterType" type="string" def="lowpass" noauto="1" />
-            <param id="frequency" type="float" def="8000" max="12000" min="30" />
-            <param id="gain" type="float" max="20" min="-20" />
-            <param id="q" type="float" def="2" max="10" />
-        </object>
-        <object id="antiSqueal">
-            <visual name="Feedback Killer" />
-            <param id="amount" type="float" def="0.5" />
-        </object>
-        <object id="gain">
-            <visual name="Gain" />
-            <param id="gain" type="float" max="6" min="-36" />
-        </object>
-        <object id="reverser">
-            <visual name="Reverser" />
-            <param id="intervalTimeBeats" type="string" def="eighthNote" noauto="1" />
-            <param id="intervalUnitSelection" type="string" def="intervalTimeBeats" noauto="1" />
-            <param id="dryWetMix" type="float" def="0.61" />
-            <param id="intervalTimeSec" type="float" def="0.449953" max="2.5" min="0.05" />
-        </object>
-        <object id="stereoSpreader">
-            <visual name="Stereowise" />
-            <param id="lowerIntensity" type="float" def="1" />
-            <param id="upperFrequency" type="float" def="1025.72" max="20000" min="20" />
-            <param id="upperIntensity" type="float" def="1" />
-        </object>
-        <object id="ddelay">
-            <visual name="D-Delay" />
-            <param id="dry" type="float" def="100" max="100" />
-            <param id="hpf" type="float" def="1200" max="1200" min="50" />
-            <param id="level" type="float" max="12" min="-12" />
-            <param id="lpf" type="float" def="6500" max="16000" min="1200" />
-            <param id="regen" type="float" def="25" max="100" />
-            <param id="time" type="float" def="1" max="2.6" min="0.01" />
-            <param id="wet" type="float" def="20" max="100" />
-        </object>
-    </category>
-    <category id="global">
-        <colorset id="drum">
-            <color>#2B87E0</color>
-            <color>#E7610E</color>
-            <color>#A302E8</color>
-            <color>#01B273</color>
-        </colorset>
-    </category>
+  <category id="inst">
+    <object id="studio-grand-v2-v4">
+      <visual name="Studio Grand" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="808-bass-v2-v4">
+      <visual name="808 Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="808-kick-v2-v4">
+      <visual name="808 Kick" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="808-saturated-bass-v2-v4">
+      <visual name="808 Saturated Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="analog-desk-v2-v4">
+      <visual name="Analog Desk" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="car-stereo-v3-v4">
+      <visual name="Car Stereo" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="cheeky-boom-v4">
+      <visual name="Cheeky Boom" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="chonky-bass-v2-v4">
+      <visual name="Chonky Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="divebomb-v2-v4">
+      <visual name="Divebomb" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="fizzy-interrupt-v4">
+      <visual name="Fizzy Interrupt" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="nails-v2-v4">
+      <visual name="Nails" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="paper-v2-v4">
+      <visual name="Paper" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="rumble-bass-v4-v4">
+      <visual name="Rumble Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="space-wobble-v2-v4">
+      <visual name="Space Wobble" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="sub-rattle-v4">
+      <visual name="Sub Rattle" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="sub-shaker-v2-v4">
+      <visual name="Sub Shaker" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="sub-texture-v2-v4">
+      <visual name="Sub Texture" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="subtle-rattle-v2-v4">
+      <visual name="Subtle Rattle" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="flugelhorn-v2-v4">
+      <visual name="Flugelhorn" color="#66A0CC" />
+      <data slug="brass" />
+    </object>
+    <object id="french-horn-v2-v4">
+      <visual name="French Horn" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="full-brass-v2-v4">
+      <visual name="Full Brass" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="full-brass-staccato-v4">
+      <visual name="Full Brass Staccato" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trombone-v2-v4">
+      <visual name="Trombone Concert Hall" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trombone-hard-v4-v4">
+      <visual name="Trombone Hard" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trombone-soft-v4-v4">
+      <visual name="Trombone Soft" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trombone-staccato-v4">
+      <visual name="Trombone Staccato" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trumpet-clean-v3-v4">
+      <visual name="Trumpet" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trumpet-v2-v4">
+      <visual name="Trumpet Concert Hall" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trumpet-cup-mute-v4">
+      <visual name="Trumpet Cup Mute" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trumpet-harmon-mute-v4">
+      <visual name="Trumpet Harmon Mute" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="trumpet-staccato-v4">
+      <visual name="Trumpet Staccato" color="#6966CC" />
+      <data slug="brass" />
+    </object>
+    <object id="trumpet-straight-mute-v4">
+      <visual name="Trumpet Straight Mute" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="tuba-v3-v4">
+      <visual name="Tuba" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="tuba-legato-v4">
+      <visual name="Tuba Legato" color="#00B105" />
+      <data slug="brass" />
+    </object>
+    <object id="tuba-staccato-v2-v4">
+      <visual name="Tuba Staccato" color="#7466CC" />
+      <data slug="brass" />
+    </object>
+    <object id="afro-cuban-percussion">
+      <visual name="Afro Cuban Percussion" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="ballad-kit-v4">
+      <visual name="Ballad" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="blues-kit">
+      <visual name="Blues" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="brooklyn-kit-v4">
+      <visual name="Brooklyn" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="brush-kit">
+      <visual name="Brush" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="chill-wave-kit-v4">
+      <visual name="Chill Wave" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="cinematic-kit-v3-v4">
+      <visual name="Cinematic Classic" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="cinematic-vast-kit-v4">
+      <visual name="Cinematic Vast" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="classic-rock-kit-v2-v4">
+      <visual name="Classic Rock" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="compton-kit-v2-v4">
+      <visual name="Compton" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="country-kit">
+      <visual name="Country" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="drive-kit-v4">
+      <visual name="Drive" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="dry-kit">
+      <visual name="Dry" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="dumpy-kit-v4">
+      <visual name="Dumpy" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="empire-kit-v2-v4">
+      <visual name="Empire" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="funk-kit">
+      <visual name="Funk" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="fusion-kit">
+      <visual name="Fusion" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="groove-kit-v4">
+      <visual name="Groove" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="hard-rock-kit">
+      <visual name="Hard Rock" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="hip-hop-kit">
+      <visual name="Hip Hop" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="hot-pop-kit-v4">
+      <visual name="HOT Pop" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="indie-rock-kit">
+      <visual name="Indie Rock" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="jazz-kit">
+      <visual name="Jazz" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="latin-kit">
+      <visual name="Latin" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="live-kit-v4">
+      <visual name="Live" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="lo-fi-hop-kit-v2-v4">
+      <visual name="Lofi Hop" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="matt-kit-v4">
+      <visual name="Matt" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="modern-metal-kit-v2-v4">
+      <visual name="Modern Metal" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="motorcity-kit-v4">
+      <visual name="Motorcity" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="natty-kit-v4">
+      <visual name="Natty" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="nifty-kit-v4">
+      <visual name="Nifty" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="pop-rock-kit">
+      <visual name="Pop Rock" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="post-punk-kit-v4">
+      <visual name="Post Punk" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="lo-fi-kit-v2-v4">
+      <visual name="Psychedelic" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="punchy-kit-v4">
+      <visual name="Punchy" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="rnb-kit-v4">
+      <visual name="R&amp;B" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="raw-kit-v4">
+      <visual name="Raw" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="reggae-kit">
+      <visual name="Reggae" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="rock-kit-v2-v4">
+      <visual name="Rock" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="soul-kit-v4">
+      <visual name="Soul" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="steve-jackson-kit-v4">
+      <visual name="Steve Jackson" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="thump-kit-v4">
+      <visual name="Thump" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="trash-kit-v4">
+      <visual name="Trash" color="#FFC51C" />
+      <data slug="drum-kit" />
+    </object>
+    <object id="606-kit-v3-v4">
+      <visual name="606" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="8-bit-chiptune-kit-v3-v4">
+      <visual name="8 Bit Chiptune" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="808-kit">
+      <visual name="808" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="909-kit-v4">
+      <visual name="909" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="abstract-hip-hop-kit-v2-v4">
+      <visual name="Abstract Hip Hop" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="atlanta-hip-hop-kit-v3-v4">
+      <visual name="Atlanta Hip Hop" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="bedroom-kit-v4">
+      <visual name="Bedroom" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="boom-bap-kit-v4">
+      <visual name="Boom Bap" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="boom-bap-kit-2-v2-v4">
+      <visual name="Boom Bap Classic" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="classic-house-kit-v4">
+      <visual name="Classic House" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="dark-hip-hop-kit">
+      <visual name="Dark Hip Hop" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="dnb-kit-v2-v4">
+      <visual name="DNB" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="dubstep-kit">
+      <visual name="Dubstep" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="edm-kit">
+      <visual name="EDM" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="electro-pop-kit">
+      <visual name="Electro Pop" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="fat-90s-kit-v4">
+      <visual name="Fat 90's" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="freestyle-kit">
+      <visual name="Freestyle" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="future-trap-kit-v4">
+      <visual name="Future Trap" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="glitch-kit">
+      <visual name="Glitch" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="idm-kit-v4">
+      <visual name="IDM" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="industrial-kit">
+      <visual name="Industrial" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="james-alister-kit-v4">
+      <visual name="James Alister" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="lcd-kit-v2-v4">
+      <visual name="LCD" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="neptunian-kit-v4">
+      <visual name="Neptunian" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="new-wave-kit">
+      <visual name="New Wave" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="nu-house-kit">
+      <visual name="Nu House" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="percussion-plonk-v4">
+      <visual name="Percussion Plonk" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="pillow-kit-v4">
+      <visual name="Pillow" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="prince-kit">
+      <visual name="Prince" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="puppet-pad-v2-v4">
+      <visual name="Puppet" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="sfx-pad">
+      <visual name="SFX" color="#8C4EF9" />
+      <data slug="special-effects" />
+    </object>
+    <object id="sinister-trap-v2-v4">
+      <visual name="Sinister Trap" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="synth-kit">
+      <visual name="Synth" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="techno-brute-kit-v2-v4">
+      <visual name="Techno Brute" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="techno-throwback-kit">
+      <visual name="Techno Throwback" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="textures-kit-v2-v4">
+      <visual name="Textures" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="trap-kit">
+      <visual name="Trap" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="ultra-808-v4">
+      <visual name="Ultraphat 808" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="vintage-hip-hop-kit-v2-v4">
+      <visual name="Vintage Hip Hop" color="#FFC51C" />
+      <data slug="drum-pads" />
+    </object>
+    <object id="62-p-bass-v3-v4">
+      <visual name="'62 P-Bass" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="dub-bass-v3-v4">
+      <visual name="Dub Bass" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="electric-bass-legato-v3-v4">
+      <visual name="Electric Bass Legato" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="electric-bass-staccato-v4-v4">
+      <visual name="Electric Bass Staccato" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="funky-slap-v2-v4">
+      <visual name="Funky Slap" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="jazz-bass-v2-v4">
+      <visual name="Jazz Bass" color="#CC7D66" />
+      <data slug="bass" />
+    </object>
+    <object id="nu-disco-bass-v3-v4">
+      <visual name="Nu Disco Bass" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="pumped-up-bass-v2-v4">
+      <visual name="Pumped Up Bass" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="punchy-jazz-bass-v3-v4">
+      <visual name="Punchy Jazz Bass" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="retro-pick-bass-v2-v4">
+      <visual name="Retro Pick Bass" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="slap-bass-v2-v4">
+      <visual name="Slap Bass" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="12-string-guitar-v2-v4">
+      <visual name="12 String Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="sparkling-acoustic-v2-v4">
+      <visual name="Acoustic Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="banjo-v3-v4">
+      <visual name="Banjo" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="clean-guitar-v3-v4">
+      <visual name="Clean Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="clean-guitar-hard-v3-v4">
+      <visual name="Clean Guitar Hard" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="clean-guitar-muted-v2-v4">
+      <visual name="Clean Guitar Muted" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="clean-guitar-soft-v3-v4">
+      <visual name="Clean Guitar Soft" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="clean-power-chord-v2-v4">
+      <visual name="Clean Power Chord" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="daylight-guitar-v3-v4">
+      <visual name="Daylight Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="guitar-power-chord-v2-v4">
+      <visual name="Dirty Power Chord" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="djent-guitar-v2-v4">
+      <visual name="Djent Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="funk-guitar">
+      <visual name="Funk Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="jazz-guitar-v2-v4">
+      <visual name="Jazz Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="nylon-guitar-v2-v4">
+      <visual name="Nylon Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="overdriven-guitar-v2-v4">
+      <visual name="Overdriven Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="overdriven-power-chord-v2-v4">
+      <visual name="Overdriven Power Chord" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="twang-guitar-v3-v4">
+      <visual name="Twang Guitar" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="lil-ukelele-v3-v4">
+      <visual name="Ukulele" color="#E11764" />
+      <data slug="guitars" />
+    </object>
+    <object id="accordion-v3-v4">
+      <visual name="Accordion" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="bright-piano-v2-v4">
+      <visual name="Bright Piano" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="dark-grand-v4">
+      <visual name="Dark Grand" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="electric-piano-v2-v4">
+      <visual name="Electric Piano" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="felt-piano-v2-v4">
+      <visual name="Felt Piano" color="#CC7466" />
+      <data slug="piano" />
+    </object>
+    <object id="fm-keys-v2-v4">
+      <visual name="FM Keys" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="fm-tines-v2-v4">
+      <visual name="FM Tines" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="grand-piano-v4-v4">
+      <visual name="Grand Piano" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="studio-harpsichord-v3-v4">
+      <visual name="Harpsichord" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="honky-tonk-piano-v2-v4">
+      <visual name="Honky Tonk Piano" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="hyperbrite-piano-v4">
+      <visual name="Hyperbrite Piano" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="lofi-piano-v2-v4">
+      <visual name="Lofi Piano" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="rhodes-v2-v4">
+      <visual name="Mellow EP" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="upright-piano-v2-v4">
+      <visual name="Upright Piano" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="wurlitzer-v2-v4">
+      <visual name="Whirly" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="80s-square-lead-v4">
+      <visual name="80s Square Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="alien-lead-v4">
+      <visual name="Alien Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="ambient-lead-v2-v4">
+      <visual name="Ambient Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="arcade-lead-v2-v4">
+      <visual name="Arcade Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="beginning-lead-v2-v4">
+      <visual name="Beginning Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="berlin-lead-v2-v4">
+      <visual name="Berlin Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="big-synth-lead-v4">
+      <visual name="Big Synth Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="chip-hat-v2-v4">
+      <visual name="Chip Hat" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="dafunky-crunch-v2-v4">
+      <visual name="DaFunky Crunch" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="dance-lead-v2-v4">
+      <visual name="Dance Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="dirty-porto-5th-v2-v4">
+      <visual name="Dirty Porto 5th" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="dirty-legato-saw-v4">
+      <visual name="Dirty Legato Saw" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="dub-supersaw-v2-v4">
+      <visual name="Dub Supersaw" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="dubstep-lead-v3-v4">
+      <visual name="Dubstep Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="eyelash-synth-v2-v4">
+      <visual name="Eyelash Synth" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="fat-n-dirty-v2-v4">
+      <visual name="Fat 'n Dirty" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="fm-lead-v2-v4">
+      <visual name="FM Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="funky-tone-v4">
+      <visual name="Funky Clav" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="funky-phat-lead-v2-v4">
+      <visual name="Funky Phat Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="future-pop-stab-v2-v4">
+      <visual name="Future Pop Stab" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="gfunk-saw-v4">
+      <visual name="G-Funk Saw" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="g-funk-sine-v4">
+      <visual name="G-Funk Sine" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="glitch-lead-v3-v4">
+      <visual name="Glitch Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="halcyon-5th-v4">
+      <visual name="Halcyon 5th" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="hardcore-square-unison-v4">
+      <visual name="Hardcore Square Unison" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="heavy-lead-v3-v4">
+      <visual name="Heavy Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="hyper-pop-synth-v2-v4">
+      <visual name="Hyper Pop Synth" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="leadviathan-v4">
+      <visual name="Leadviathan" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="noir-chord-v4">
+      <visual name="Noir Chord" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="g-funk-lead-v4-v4">
+      <visual name="Retro Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="super-saw-v3-v4">
+      <visual name="Super Saw" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="tape-sawtooth-v2-v4">
+      <visual name="Tape Saw" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="two-saw-detune-v4">
+      <visual name="Two Saw Detune" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="uber-lead-v3-v4">
+      <visual name="Uber Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="vapor-lead-v4">
+      <visual name="Vapor Lead" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="vintagefour-v3-v4">
+      <visual name="Vintage Four" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="zoom-r2d2-v4">
+      <visual name="Zoom R2D2" color="#FD3E2B" />
+      <data slug="synth-leads" />
+    </object>
+    <object id="808-boom-v4">
+      <visual name="808 Boom" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="808-buzz-v4">
+      <visual name="808 Buzz" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="heavy-808-kick-v4">
+      <visual name="Heavy 808 Kick" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="nocturne-pad-v4">
+      <visual name="Nocturne Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="sora-keys-v4">
+      <visual name="Sora Keys" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="skyline-keys-v4">
+      <visual name="Skyline Keys" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="timaeus-pad-v4">
+      <visual name="Timaeus Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="vision-synth-v4">
+      <visual name="Vision Synth" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="b3-hammond-v4">
+      <visual name="B3 Hamm" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="chip-organ-v2-v4">
+      <visual name="Chip Organ" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="chorus-organ-v4">
+      <visual name="Chorus Organ" color="#BBCC66" />
+      <data slug="piano" />
+    </object>
+    <object id="church-organ-v3-v4">
+      <visual name="Church Organ" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="classic-rock-organ-v4">
+      <visual name="Classic Rock Organ" color="#BBCC66" />
+      <data slug="piano" />
+    </object>
+    <object id="clean-5th-sine-organ-v4">
+      <visual name="Clean 5th Sine Organ" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="dark-organ-v2-v4">
+      <visual name="Dark Organ" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="fanfare-organ-v3-v4">
+      <visual name="Fanfare Organ" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="house-organ-v2-v4">
+      <visual name="House Organ" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="rock-organ-v2-v4">
+      <visual name="Rock Organ" color="#FD3E2B" />
+      <data slug="piano" />
+    </object>
+    <object id="simple-organ-v4">
+      <visual name="Simple Organ" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="synth-organ-v3-v4">
+      <visual name="Synth Organ" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="atlantispad-v2-v4">
+      <visual name="Atlantis Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="atmosphere-pad-v2-v4">
+      <visual name="Atmosphere Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="borealis-pad-v2-v4">
+      <visual name="Borealis Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="chill-wave-synth-v4">
+      <visual name="Chill Wave Synth" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="cloud-fluff-v3-v4">
+      <visual name="Cloud Fluff" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="dream-pad-v4">
+      <visual name="Dream Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="dreamy-bells-v4">
+      <visual name="Dreamy Bells" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="duality-pad-v4">
+      <visual name="Duality Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="evolve-pad-v2-v4">
+      <visual name="Evolve Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="fm-pad-v2-v4">
+      <visual name="FM Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="copterorchestra-v4">
+      <visual name="Helicopter Orchestra" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="kaytran-pad-v4">
+      <visual name="Kaytran Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="movie-pad-v2-v4">
+      <visual name="Movie Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="neo-soul-pad-v3-v4">
+      <visual name="Neo Soul Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="new-age-synth-v2-v4">
+      <visual name="New Age Synth" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="ocean-pad-v4">
+      <visual name="Ocean Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="retro-juno-pad-v2-v4">
+      <visual name="Retro Juno Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="seamless-pad-v4">
+      <visual name="Seamless Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="shadow-bells-v5-v4">
+      <visual name="Shadow Bells" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="shadow-soft-v4">
+      <visual name="Shadow Soft" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="smooth-brass-pad-v2-v4">
+      <visual name="Smooth Brass Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="smooth-fuzzy-pad-v2-v4">
+      <visual name="Smooth Fuzzy Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="soft-pad-v4">
+      <visual name="Soft Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="stratosphere-pad-v3-v4">
+      <visual name="Stratosphere Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="string-pad-v2-v4">
+      <visual name="String Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="sun-pad-v4">
+      <visual name="Sun Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="swell-pad-v2-v4">
+      <visual name="Swell Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="tokyo-sunset-v4">
+      <visual name="Tokyo Sunset" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="vintage-pad-v2-v4">
+      <visual name="Vintage Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="wah-rnb-pad-v4">
+      <visual name="Wah RnB" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="warm-pad-v2-v4">
+      <visual name="Warm Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="welcome-pad-v2-v4">
+      <visual name="Welcome Pad" color="#FD3E2B" />
+      <data slug="synth-pads" />
+    </object>
+    <object id="bells-v2-v4">
+      <visual name="Bells" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="blip-perc-v4">
+      <visual name="Blip Perc" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="clap-slap-v4">
+      <visual name="Clap Slap" color="#FD3E2B" />
+      <data slug="percussion" />
+    </object>
+    <object id="electro-splat-v4">
+      <visual name="Electro Splat" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="fm-gamelan-v2-v4">
+      <visual name="FM Gamelan" color="#FD3E2B" />
+      <data slug="percussion" />
+    </object>
+    <object id="general-midi-drums-hiphop-v3-v4">
+      <visual name="General MIDI Drums" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="general-midi-drums-v2-v4">
+      <visual name="General MIDI Percussion" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="glockenspiel-v2-v4">
+      <visual name="Glockenspiel" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="kalimba-v3-v4">
+      <visual name="Kalimba" color="#FD3E2B" />
+      <data slug="percussion" />
+    </object>
+    <object id="log-drum-v4">
+      <visual name="Log Drum" color="#FD3E2B" />
+      <data slug="percussion" />
+    </object>
+    <object id="marimba-v2-v4">
+      <visual name="Marimba" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="steel-drum-v2-v4">
+      <visual name="Steel Drum" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="taiko-v4">
+      <visual name="Taiko" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="timpani-v3-v4">
+      <visual name="Timpani" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="tubular-bells-v2-v4">
+      <visual name="Tubular Bells" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="vibraphone-v3-v4">
+      <visual name="Vibraphone" color="#FD3E2B" />
+      <data slug="percussion" />
+    </object>
+    <object id="xylophone-v2-v4">
+      <visual name="Xylophone" color="#00B105" />
+      <data slug="percussion" />
+    </object>
+    <object id="acoustic-bass-legato-v2-v4">
+      <visual name="Acoustic Bass Legato" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="acoustic-bass-staccato-v3-v4">
+      <visual name="Acoustic Bass Staccato" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="basses-long-bows-v2-v4">
+      <visual name="Basses Long Bows" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="basses-pizzicato-v2-v4">
+      <visual name="Basses Pizzicato" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="basses-short-bows-v2-v4">
+      <visual name="Basses Short Bows" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="basses-tremolo-v2-v4">
+      <visual name="Basses Tremolo" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="bouzouki-hard-v2-v4">
+      <visual name="Bouzouki Hard" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="bouzouki-soft-v3-v4">
+      <visual name="Bouzouki Soft" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="cello-section-v2-v4">
+      <visual name="Cello Section" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="cellos-pizzicato-v2-v4">
+      <visual name="Cellos Pizzicato" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="cellos-short-bows-v2-v4">
+      <visual name="Cellos Short Bows" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="cellos-tremolo-v2-v4">
+      <visual name="Cellos Tremolo" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="double-bass-section-v2-v4">
+      <visual name="Double Bass Section" color="#009AF9" />
+      <data slug="bass" />
+    </object>
+    <object id="full-strings-long-bows-v2-v4">
+      <visual name="Full Strings Long Bows" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="full-strings-pizzicato-v3-v4">
+      <visual name="Full Strings Pizzicato" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="full-strings-short-bows-v2-v4">
+      <visual name="Full Strings Short Bows" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="full-strings-tremolo-v3-v4">
+      <visual name="Full Strings Tremolo" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="hammered-dulcimer-v4">
+      <visual name="Hammered Dulcimer" color="#66CCA2" />
+      <data slug="strings" />
+    </object>
+    <object id="harp-v2-v4">
+      <visual name="Harp" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="kantele-v2-v4">
+      <visual name="Kantele" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="koto-v3-v4">
+      <visual name="Koto" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="sitar-v3-v4">
+      <visual name="Sitar" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="solo-violin-v3-v4">
+      <visual name="Solo Violin" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="string-orchestra-pizz-v2-v4">
+      <visual name="String Orchestra Pizz" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="string-orchestra-v2-v4">
+      <visual name="String Orchestra" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="string-orchestra-stacc-v2-v4">
+      <visual name="String Orchestra Stacc" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="viola-section-v2-v4">
+      <visual name="Viola Section" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="viola-solo-pizzicato-v2-v4">
+      <visual name="Viola Solo Pizzicato" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="viola-solo-tremolo-v2-v4">
+      <visual name="Viola Solo Tremolo" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="violas-long-bows-v3-v4">
+      <visual name="Violas Long Bows" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="violas-short-bows-v2-v4">
+      <visual name="Violas Short Bows" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="violas-tremolo-v2-v4">
+      <visual name="Violas Tremolo" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="violin-section-v2-v4">
+      <visual name="Violin Section" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="violin-solo-pizzicato-v2-v4">
+      <visual name="Violin Solo Pizzicato" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="violin-solo-tremolo-v2-v4">
+      <visual name="Violin Solo Tremolo" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="violins-pizzicato-v2-v4">
+      <visual name="Violins Pizzicato" color="#00B105" />
+      <data slug="strings" />
+    </object>
+    <object id="vintage-swell-bass-v2-v4">
+      <visual name="Vintage Swell Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="vintage-pop-stabs-v3-v4">
+      <visual name="Vintage Pop Stabs" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="tropical-house-bass-v3-v4">
+      <visual name="Tropical House Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="thriller-bass-v4-v4">
+      <visual name="Thriller Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="thick-dust-v2-v4">
+      <visual name="Thick Dust" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="square-sub-bass-v3-v4">
+      <visual name="Square Sub Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="solid-bass-v2-v4">
+      <visual name="Solid Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="soft-sine-bass-v4">
+      <visual name="Soft Sine Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="smooth-reese-bass-v2-v4">
+      <visual name="Smooth Reese" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="sine-bass-v5-v4">
+      <visual name="Sine Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="ripped-cabinet-v2-v4">
+      <visual name="Ripped Cabinet" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="retro-bass-v4">
+      <visual name="Retro Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="porto-reese-bass-v4">
+      <visual name="Porto Reese" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="plucked-vaporbass-v2-v4">
+      <visual name="Plucked Vaporbass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="pike-v4">
+      <visual name="Pike" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="party-bass-v2-v4">
+      <visual name="Party Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="pant-flapper-v2-v4">
+      <visual name="Pant Flapper" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="moog-bass-v3-v4">
+      <visual name="Mook Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="modern-hip-hop-bass-v3-v4">
+      <visual name="Modern Hip Hop Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="lately-bass-v3-v4">
+      <visual name="Lately Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="kick-bass-v4">
+      <visual name="Kick Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="house-bass-v3-v4">
+      <visual name="House Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="hadda-bass-v2-v4">
+      <visual name="Hadda Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="growler-bass-v3-v4">
+      <visual name="Growler Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="grime-bass-v4-v4">
+      <visual name="Grime Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="future-redux-bass-v3-v4">
+      <visual name="Future Redux Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="fm-quad-bass-v2-v4">
+      <visual name="FM Quad" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="fm-mulch-bass-v2-v4">
+      <visual name="FM Mulch" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="fancy-bass-v2-v4">
+      <visual name="Fancy Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="exceedingly-nice-v2-v4">
+      <visual name="Exceedingly Nice" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="evolve-bass-v3-v4">
+      <visual name="Evolve Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="electro-saw-bass-v2-v4">
+      <visual name="Electro Saw Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="dustbin-acid-v2-v4">
+      <visual name="Dustbin Acid" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="drive-bass-v4-v4">
+      <visual name="Drive Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="dirty-wub-v2-v4">
+      <visual name="Dirty Wub" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="dirty-growl-v4">
+      <visual name="Dirty Growl" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="detuned-tapper-v4-v4">
+      <visual name="Detuned Tapper" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="deep-house-bass-v3-v4">
+      <visual name="Deep House" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="colossal-lead-v3-v4">
+      <visual name="Colossal Lead" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="clicky-bit-v3-v4">
+      <visual name="Clicky Bit" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="classic-synth-bass-v3-v4">
+      <visual name="Classic Synth Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="boog-bass-v4">
+      <visual name="Boog Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="bodyrocking-bass-v4">
+      <visual name="Bodyrocking Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="attack-bass-v2-v4">
+      <visual name="Attack Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="bass-lead-v2-v4">
+      <visual name="Bass Lead" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="acid-bass-v2-v4">
+      <visual name="Acid Bass" color="#009AF9" />
+      <data slug="synth-bass" />
+    </object>
+    <object id="airy-keys-v4">
+      <visual name="Airy Keys" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="house-chords-v4">
+      <visual name="Chiptune Chords" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="city-keys-v2-v4">
+      <visual name="City Keys" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="deep-house-synth-v2-v4">
+      <visual name="Deep House Synth" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="finesse-pad-v4">
+      <visual name="Finesse" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="fm-string-v2-v4">
+      <visual name="FM String" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="future-keys-v2-v4">
+      <visual name="Future Keys" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="harris-wobble-v4">
+      <visual name="Harris Wobble" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="heart-keys-v2-v4">
+      <visual name="Heart Keys" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="hyper-fm-v4">
+      <visual name="Hyper FM" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="lofi-mallets-v2-v4">
+      <visual name="Lofi Mallets" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="lofi-saw-v2-v4">
+      <visual name="Lofi Saw" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="major-portamento-v4">
+      <visual name="Major Portamento" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="minor-portamento-v4">
+      <visual name="Minor Portamento" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="new-breed-clav-v2-v4">
+      <visual name="New Breed Clav" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="plucked-lead-v2-v4">
+      <visual name="Nova Pluck" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="ol-dusty-v2-v4">
+      <visual name="Ol' Dusty" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="phonk-bell-v2-v4">
+      <visual name="Phonk Bell Classic" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="phonk-bell-dirty-v4">
+      <visual name="Phonk Bell Dirty" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="pumping-anthem-v4">
+      <visual name="Pumping Anthem" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="retro-synth-brass-v2-v4">
+      <visual name="Retro Synth Brass" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="rhythm-partner-v4">
+      <visual name="Rhythm Partner" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="sawsine-v2-v4">
+      <visual name="SawSine" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="harpsichord-v2-v4">
+      <visual name="Sawtooth Harp" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="soft-bells-v4">
+      <visual name="Soft Bells" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="sparkle-keys-v2-v4">
+      <visual name="Sparkle Keys" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="sunset-brass-v4">
+      <visual name="Sunset Brass" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="synth-strings-v2-v4">
+      <visual name="Synth Strings" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="thick-air-pad-v2-v4">
+      <visual name="Thick Air Pad" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="trance-pluck-v4">
+      <visual name="Trance Pluck" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="vista-synth-v4">
+      <visual name="Vista Synth" color="#FD3E2B" />
+      <data slug="synth-keys" />
+    </object>
+    <object id="ahh-synth-v3-v4">
+      <visual name="Ahh Synth" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="choir-male-ahh-v3-v4">
+      <visual name="Choir Male Ahh" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="choir-synth-v2-v4">
+      <visual name="Choir Synth" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="lush-vocals-v2-v4">
+      <visual name="Lush Vocals" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="otamatone-v4">
+      <visual name="Otama" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="solo-female-ahh-v4-v4">
+      <visual name="Solo Female Ahh" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="space-bot-v2-v4">
+      <visual name="Space Bot" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="wailer-synth-v2-v4">
+      <visual name="Wailer Synth" color="#3BB2B8" />
+      <data slug="voices" />
+    </object>
+    <object id="alto-saxophone-v2-v4">
+      <visual name="Alto Saxophone" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="bagpipe-v2-v4">
+      <visual name="Bagpipe" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="bassoon-v3-v4">
+      <visual name="Bassoon" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="blown-bottle-v2-v4">
+      <visual name="Blown Bottle" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="clarinet-v3-v4">
+      <visual name="Clarinet" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="flute-v2-v4">
+      <visual name="Flute" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="harmonica-v4">
+      <visual name="Harmonica" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="oboe-v3-v4">
+      <visual name="Oboe" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="pan-flute-v4-v4">
+      <visual name="Pan Flute" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="tenor-saxophone-v3-v4">
+      <visual name="Tenor Saxophone" color="#00B105" />
+      <data slug="wind" />
+    </object>
+    <object id="whistle-v3-v4">
+      <visual name="Whistle" color="#00B105" />
+      <data slug="wind" />
+    </object>
+  </category>
+  <category id="fx">
+    <object id="guitarAmp">
+      <visual name="Guitar Amp" />
+      <param id="irType" type="string" def="orangeClassicShort" noauto="1" />
+      <param id="bass" type="float" def="4.5" max="10" />
+      <param id="drive" type="float" def="5" max="10" />
+      <param id="master" type="float" def="5" max="10" />
+      <param id="mid" type="float" def="6" max="10" />
+      <param id="presence" type="float" def="5.5" max="10" />
+      <param id="treble" type="float" def="5.5" max="10" />
+      <data uniqueId="1192237021" />
+    </object>
+    <object id="cabinet">
+      <visual name="Guitar Cab" />
+      <param id="irType" type="string" def="2x12Celestion" noauto="1" />
+      <data uniqueId="116269899" />
+    </object>
+    <object id="genericAmp">
+      <visual name="Multi Amp Pro" />
+      <param id="staticModel" type="string" def="fenderTwin" noauto="1" />
+      <param id="bass" type="float" def="4.5" max="10" />
+      <param id="drive" type="float" def="4" max="10" />
+      <param id="mid" type="float" def="6" max="10" />
+      <param id="presence" type="float" def="4" max="10" />
+      <param id="treble" type="float" def="4.8" max="10" />
+      <param id="volume" type="float" def="5" max="10" />
+      <data uniqueId="2135850225" />
+    </object>
+    <object id="guitarCab">
+      <visual name="Multi Cab Pro" />
+      <param id="cabModel" type="string" def="2x12Jenson" noauto="1" />
+      <param id="micModel" type="string" def="shureSM57" noauto="1" />
+      <param id="micPosition" type="string" def="onAxis" noauto="1" />
+      <data uniqueId="791592824" />
+    </object>
+    <object id="fuzzFace">
+      <visual name="Buzz Face" color="#8C2727" />
+      <param id="drive" type="float" def="7" max="10" />
+      <param id="level" type="float" def="6.5" max="10" />
+      <data uniqueId="1356478409" />
+    </object>
+    <object id="bossCE5">
+      <visual name="Chorus Ensemble" color="#8FBFCB" />
+      <param id="depth" type="float" def="4" max="10" />
+      <param id="high" type="float" def="5" max="10" />
+      <param id="low" type="float" def="5" max="10" />
+      <param id="speed" type="float" def="1.009" max="3.7" min="0.25" />
+      <param id="wet" type="float" def="5" max="10" />
+      <data uniqueId="822068845" />
+    </object>
+    <object id="bossBD2">
+      <visual name="Delta Driver" color="#1D346F" />
+      <param id="drive" type="float" def="5.2" max="10" />
+      <param id="level" type="float" def="6" max="10" />
+      <param id="mid" type="float" def="4.5" max="10" />
+      <data uniqueId="1494074309" />
+    </object>
+    <object id="mxrDistortion">
+      <visual name="Distortion++" color="#E1A54B" />
+      <param id="drive" type="float" def="4.5" max="10" />
+      <param id="level" type="float" def="5.5" max="10" />
+      <data uniqueId="287119594" />
+    </object>
+    <object id="bossGE7">
+      <visual name="Graphic EQ" color="#AEA69B" />
+      <param id="gainAt100Hz" type="float" max="15" min="-15" />
+      <param id="gainAt1600Hz" type="float" max="15" min="-15" />
+      <param id="gainAt200Hz" type="float" max="15" min="-15" />
+      <param id="gainAt3200Hz" type="float" max="15" min="-15" />
+      <param id="gainAt400Hz" type="float" max="15" min="-15" />
+      <param id="gainAt6400Hz" type="float" max="15" min="-15" />
+      <param id="gainAt800Hz" type="float" max="15" min="-15" />
+      <param id="level" type="float" max="15" min="-15" />
+      <data uniqueId="1921617421" />
+    </object>
+    <object id="rossCompr">
+      <visual name="GTR Squeeze" color="#4D515E" />
+      <param id="level" type="float" def="-12" max="0" min="-24" />
+      <param id="sustain" type="float" def="24" max="24" />
+      <data uniqueId="936122465" />
+    </object>
+    <object id="bossMT2">
+      <visual name="House of Metal" color="#1A1918" />
+      <param id="bass" type="float" def="3.8" max="10" />
+      <param id="drive" type="float" def="4.5" max="10" />
+      <param id="level" type="float" def="7" max="10" />
+      <param id="treble" type="float" def="5.5" max="10" />
+      <data uniqueId="2089662240" />
+    </object>
+    <object id="ehSmallStone">
+      <visual name="Little Rock" color="#7E3226" />
+      <param id="resonance" type="string" def="high" noauto="1" />
+      <param id="speed" type="float" def="3.962" max="20" min="0.2" />
+      <data uniqueId="1107099635" />
+    </object>
+    <object id="proCoRat">
+      <visual name="Mouse Pro" color="#12181C" />
+      <param id="drive" type="float" def="6" max="10" />
+      <param id="level" type="float" def="6" max="10" />
+      <param id="mid" type="float" def="4.5" max="10" />
+      <data uniqueId="1605524465" />
+    </object>
+    <object id="mxrPhase90">
+      <visual name="Phase 72" color="#B75B10" />
+      <param id="speed" type="float" def="7.922" max="20" min="0.2" />
+      <data uniqueId="1957324665" />
+    </object>
+    <object id="bigMuffPi">
+      <visual name="Puff Pie" color="#BAC4CF" />
+      <param id="drive" type="float" def="4.5" max="10" />
+      <param id="level" type="float" def="6.5" max="10" />
+      <param id="mid" type="float" def="3.7" max="10" />
+      <data uniqueId="851944361" />
+    </object>
+    <object id="tubeScreamer2">
+      <visual name="Valve Screamer" color="#065A3D" />
+      <param id="drive" type="float" def="7" max="10" />
+      <param id="level" type="float" def="7" max="10" />
+      <param id="mid" type="float" def="6" max="10" />
+      <data uniqueId="2090421957" />
+    </object>
+    <object id="bossVB2">
+      <visual name="VibeToo" color="#020039" />
+      <param id="amount" type="float" def="30" max="100" />
+      <param id="speed" type="float" def="3.17" max="20" min="0.2" />
+      <data uniqueId="111561704" />
+    </object>
+    <object id="ddelayPlus2">
+      <visual name="D-Delay +" />
+      <param id="delayTimeBeats" type="string" def="quarterNote" noauto="1" />
+      <param id="delayUnitSelection" type="string" def="delayTimeBeats" noauto="1" />
+      <param id="delayTimeMsec" type="float" def="0.45" max="2.6" min="0.01" />
+      <param id="dry" type="float" def="1" />
+      <param id="feedback" type="float" def="0.1" max="0.5" />
+      <param id="hpf" type="float" def="50" max="1200" min="50" />
+      <param id="level" type="float" max="12" min="-12" />
+      <param id="lpf" type="float" def="16000" max="16000" min="1200" />
+      <param id="spread" type="float" def="0.5" />
+      <param id="wet" type="float" def="0.5" />
+      <data uniqueId="706403424" />
+    </object>
+    <object id="beatSyncDelay2">
+      <visual name="Filter Echo +" />
+      <param id="delayUnitSelection" type="string" def="syncDelay" noauto="1" />
+      <param id="syncDelay" type="string" def="quarterNote" noauto="1" />
+      <param id="cutoff" type="float" def="12000" max="16000" min="300" />
+      <param id="delayTime" type="float" def="0.2" />
+      <param id="dryWetMix" type="float" def="0.4" />
+      <param id="feedback" type="float" def="0.204" max="0.85" />
+      <data uniqueId="412590923" />
+    </object>
+    <object id="pingpongDelay">
+      <visual name="Ping Pong Delay" />
+      <param id="delayOffsetBeats" type="string" def="quarterNote" noauto="1" />
+      <param id="delayOffsetUnitSelection" type="string" def="delayOffsetBeats" noauto="1" />
+      <param id="delayTimeBeats" type="string" def="quarterNote" noauto="1" />
+      <param id="delayUnitSelection" type="string" def="delayTimeBeats" noauto="1" />
+      <param id="cutoff" type="float" def="9000" max="16000" min="300" />
+      <param id="delayOffsetSec" type="float" def="0.35" />
+      <param id="delayTimeSec" type="float" def="0.7" />
+      <param id="dryWetMix" type="float" def="0.7" />
+      <param id="feedback" type="float" def="0.34" max="0.85" />
+      <param id="spread" type="float" def="1" />
+      <data uniqueId="1621808342" />
+    </object>
+    <object id="bitBandit">
+      <visual name="Bit Bandit" />
+      <param id="emulation" type="string" def="true" noauto="1" />
+      <param id="clipperMix" type="float" def="0.65" />
+      <param id="crush" type="float" def="12" max="16" min="2" />
+      <param id="effectMix" type="float" def="0.5" />
+      <param id="fidelity" type="float" def="-20" max="20" min="-20" />
+      <param id="inputGain" type="float" max="20" min="-20" />
+      <param id="outputGain" type="float" def="-6" max="20" min="-20" />
+      <data uniqueId="1866458299" />
+    </object>
+    <object id="lofi">
+      <visual name="Bitcrusher" />
+      <param id="bitDepth" type="float" def="16" max="16" min="1" />
+      <param id="downsample" type="float" def="13.4123" max="200" min="1" />
+      <param id="dryWetMix" type="float" def="0.7" />
+      <data uniqueId="1832378205" />
+    </object>
+    <object id="overdrive">
+      <visual name="BL Driver" />
+      <param id="amount" type="float" def="3.5" max="10" />
+      <param id="outputGain" type="float" def="4.5" max="10" />
+      <param id="tone" type="float" def="1800" max="16000" min="250" />
+      <data uniqueId="2107421191" />
+    </object>
+    <object id="exciter">
+      <visual name="Exciter" />
+      <param id="harmonics" type="float" def="50" max="100" />
+      <param id="mix" type="float" max="0" min="-30" />
+      <param id="threshold" type="float" def="-5" max="0" min="-30" />
+      <param id="tune" type="float" def="3500" max="7000" min="1000" />
+      <data uniqueId="1643173503" />
+    </object>
+    <object id="tapeSimulator">
+      <visual name="Tape Simulator" />
+      <param id="bias" type="float" def="80" max="100" />
+      <param id="drive" type="float" def="8.1" max="18" />
+      <param id="level" type="float" def="-1" max="15" min="-15" />
+      <param id="speed" type="float" def="12.97" max="30" min="3.8" />
+      <param id="wow" type="float" def="30" max="100" />
+      <data uniqueId="1046885364" />
+    </object>
+    <object id="enhancer">
+      <visual name="Vocal Enhancer" />
+      <param id="mode" type="string" def="warm" noauto="1" />
+      <param id="dryWetMix" type="float" def="0.5" />
+      <data uniqueId="525548948" />
+    </object>
+    <object id="compr1176">
+      <visual name="BL 1176" />
+      <param id="ratio" type="string" def="12" noauto="1" />
+      <param id="attack" type="float" def="1.2" max="10" />
+      <param id="gain" type="float" def="10" max="20" />
+      <param id="makeup" type="float" max="15" min="-15" />
+      <param id="release" type="float" def="5" max="10" />
+      <data uniqueId="998880715" />
+    </object>
+    <object id="compander">
+      <visual name="Compander" />
+      <param id="mode" type="string" def="dynamic" noauto="1" />
+      <param id="comprThreshold" type="float" def="-18" max="40" min="-30" />
+      <param id="expThreshold" type="float" def="-40" max="-30" min="-90" />
+      <param id="makeupGain" type="float" def="3" max="20" min="-20" />
+      <data uniqueId="838898716" />
+    </object>
+    <object id="deEsser">
+      <visual name="DeEsser" />
+      <param id="frequency" type="float" def="9000" max="16000" min="1000" />
+      <param id="threshold" type="float" def="-19" max="0" min="-40" />
+      <data uniqueId="2011042226" />
+    </object>
+    <object id="compressor">
+      <visual name="DIGI Comp" />
+      <param id="attack" type="float" def="0.018" min="0.001" />
+      <param id="knee" type="float" def="6" max="20" />
+      <param id="ratio" type="float" def="12.1" max="20" min="1" />
+      <param id="release" type="float" def="0.222" min="0.001" />
+      <param id="threshold" type="float" def="-17.5" max="0" min="-60" />
+      <data uniqueId="1154233578" />
+    </object>
+    <object id="backCompr">
+      <visual name="FBK Compressor" />
+      <param id="attack" type="float" def="0.05" max="0.2" min="0.001" />
+      <param id="makeupGain" type="float" max="15" min="-15" />
+      <param id="ratio" type="float" def="6" max="20" min="1" />
+      <param id="release" type="float" def="0.4" max="4" min="0.04" />
+      <param id="threshold" type="float" def="15" max="40" min="-10" />
+      <data uniqueId="1297001226" />
+    </object>
+    <object id="expGate">
+      <visual name="Noise Gate" />
+      <param id="attack" type="float" def="0.005" max="0.15" min="0.001" />
+      <param id="release" type="float" def="0.2" max="0.8" min="0.1" />
+      <param id="threshold" type="float" def="-30" max="-18" min="-72" />
+      <data uniqueId="300578881" />
+    </object>
+    <object id="pumper2">
+      <visual name="Pumper" />
+      <param id="period" type="string" def="quarterNote" noauto="1" />
+      <param id="amount" type="float" def="0.5" />
+      <param id="phase" type="float" def="18" max="180" min="-180" />
+      <data uniqueId="2135316263" />
+    </object>
+    <object id="la2aCompr">
+      <visual name="TecLab BA-2A" />
+      <param id="mode" type="string" def="compress" noauto="1" />
+      <param id="makeupGain" type="float" def="3" max="15" min="-15" />
+      <param id="threshold" type="float" def="25" max="40" min="-10" />
+      <data uniqueId="245561241" />
+    </object>
+    <object id="cleanLimiter">
+      <visual name="Clean Limiter" />
+      <param id="attack" type="string" def="fast" noauto="1" />
+      <param id="release" type="string" def="slow" noauto="1" />
+      <param id="type" type="string" def="none" noauto="1" />
+      <param id="input" type="float" def="0" max="24" min="-24" />
+      <param id="threshold" type="float" def="0" max="0" min="-24" />
+      <param id="truePeak" type="bool" />
+      <data uniqueId="790566688" />
+    </object>
+    <object id="masteringLimiter">
+      <visual name="Vintage Limiter" />
+      <param id="attack" type="float" def="0.001" max="0.001" min="0.0005" />
+      <param id="enhance" type="float" max="8" min="-8" />
+      <param id="gain" type="float" max="18" min="-18" />
+      <param id="masterLevel" type="float" max="15" min="-15" />
+      <param id="release" type="float" def="0.5003" min="0.05" />
+      <param id="softKnee" type="float" def="-5" max="0" min="-15" />
+      <data uniqueId="1668779751" />
+    </object>
+    <object id="gater2">
+      <visual name="Gater" />
+      <param id="period" type="string" def="quarterNote" noauto="1" />
+      <param id="depth" type="float" def="1" min="1" />
+      <data uniqueId="795558986" />
+    </object>
+    <object id="autoFilter">
+      <visual name="Auto Filter" />
+      <param id="filterType" type="string" def="lpf" noauto="1" />
+      <param id="lfoRateUnitSelection" type="string" def="syncLfoRate" noauto="1" />
+      <param id="syncLfoRate" type="string" def="eighthNote" noauto="1" />
+      <param id="drive" type="float" def="0.8" max="10" min="0.1" />
+      <param id="frequency" type="float" def="2000" max="10000" min="20" />
+      <param id="lfoDepth" type="float" def="0.5" />
+      <param id="lfoRate" type="float" def="3" max="10" min="0.1" />
+      <param id="resonance" type="float" def="1" max="20" min="0.1" />
+      <param id="sensitivity" type="float" def="1" max="5" />
+      <data uniqueId="357762293" />
+    </object>
+    <object id="autoPan">
+      <visual name="Auto Pan" />
+      <param id="rateBeats" type="string" def="quarterNote" noauto="1" />
+      <param id="rateUnitSelection" type="string" def="rateBeats" noauto="1" />
+      <param id="rateHz" type="float" def="0.5" max="11" min="0.1" />
+      <param id="spread" type="float" def="0.7" />
+      <data uniqueId="1215185213" />
+    </object>
+    <object id="autoWah">
+      <visual name="Auto Wah" />
+      <param id="mode" type="string" def="lpf" noauto="1" />
+      <param id="polarity" type="string" def="negative" noauto="1" />
+      <param id="depth" type="float" def="35" max="100" />
+      <param id="filter" type="float" def="50" max="100" />
+      <param id="outLevel" type="float" max="12" min="-40" />
+      <param id="release" type="float" def="0.8" max="1.5" min="0.06" />
+      <param id="sensitivity" type="float" def="35" max="100" />
+      <param id="speed" type="float" def="9.936" max="22.2" min="0.3" />
+      <data uniqueId="1212565802" />
+    </object>
+    <object id="dimensionD">
+      <visual name="Dimension B" />
+      <param id="preset" type="string" def="01" noauto="1" />
+      <data uniqueId="598969515" />
+    </object>
+    <object id="octaver">
+      <visual name="Dual Octaver" />
+      <param id="dry" type="float" def="10" max="10" />
+      <param id="oct1" type="float" def="5" max="10" />
+      <param id="oct2" type="float" def="5" max="10" />
+      <param id="tone" type="float" def="5" max="10" />
+      <data uniqueId="1995523097" />
+    </object>
+    <object id="phaser">
+      <visual name="Phase 45" />
+      <param id="rate" type="float" def="0.395093" max="8" min="0.01" />
+      <data uniqueId="1908710668" />
+    </object>
+    <object id="chorus">
+      <visual name="ST Chorus" />
+      <param id="depth" type="float" def="1" />
+      <param id="rate" type="float" def="0.464398" max="6" min="0.01" />
+      <data uniqueId="1274422684" />
+    </object>
+    <object id="tremolo">
+      <visual name="ST Tremolo" />
+      <param id="depth" type="float" def="0.7" />
+      <param id="rate" type="float" def="4.00399" max="11" min="0.1" />
+      <param id="spread" type="float" def="36" max="180" />
+      <data uniqueId="1498390990" />
+    </object>
+    <object id="vocalDoubler">
+      <visual name="Vocal Doubler" />
+      <param id="depth" type="float" def="0.25" />
+      <param id="spread" type="float" def="1" />
+      <data uniqueId="202610277" />
+    </object>
+    <object id="multiShifter">
+      <visual name="Multi Shifter" />
+      <param id="inputType" type="string" def="vocal" noauto="1" />
+      <param id="dry" type="float" def="0.7" />
+      <param id="fifthDown" type="float" def="0.6" />
+      <param id="fifthUp" type="float" />
+      <param id="fourthDown" type="float" />
+      <param id="fourthUp" type="float" def="0.3" />
+      <param id="octaveDown" type="float" def="0.3" />
+      <param id="octaveUp" type="float" />
+      <data uniqueId="453247554" />
+    </object>
+    <object id="pitchShifter">
+      <visual name="Pitch Shifter" />
+      <param id="inputType" type="string" def="vocal" noauto="1" />
+      <param id="mix" type="float" def="1" />
+      <param id="shift" type="float" def="-5" max="12" min="-12" />
+      <data uniqueId="1698396972" />
+    </object>
+    <object id="reverbHybrid">
+      <visual name="Space Maker" />
+      <param id="irType" type="string" def="basic" noauto="1" />
+      <param id="dampening" type="float" def="7500" max="16000" min="250" />
+      <param id="dryWetMix" type="float" def="0.1" />
+      <param id="roomSize" type="float" def="8" max="10" />
+      <param id="spread" type="float" def="3" max="10" />
+      <data uniqueId="1374318591" />
+    </object>
+    <object id="springReverb2">
+      <visual name="Spring Reverb" />
+      <param id="mode" type="string" def="medium" noauto="1" />
+      <param id="intensity" type="float" def="20" max="100" />
+      <data uniqueId="495073626" />
+    </object>
+    <object id="simpleStudioReverb">
+      <visual name="Studio Reverb" />
+      <param id="color" type="float" def="9" max="10" />
+      <param id="mix" type="float" def="5" max="10" />
+      <param id="size" type="float" def="2.5" max="10" />
+      <data uniqueId="1722082022" />
+    </object>
+    <object id="univerb">
+      <visual name="Univerb" />
+      <param id="irType" type="string" def="womensInstitute" noauto="1" />
+      <param id="dryWetMix" type="float" def="0.35" />
+      <data uniqueId="1120462778" />
+    </object>
+    <object id="threeBandEq">
+      <visual name="EQ3-M" />
+      <param id="highGain" type="float" max="30" min="-30" />
+      <param id="lowGain" type="float" max="30" min="-30" />
+      <param id="midFreq" type="float" def="5000" max="8000" min="100" />
+      <param id="midGain" type="float" max="30" min="-30" />
+      <data uniqueId="589015423" />
+    </object>
+    <object id="threeBandEq2">
+      <visual name="EZ EQ" />
+      <param id="hpfFreq" type="float" def="80" max="10000" min="20" />
+      <param id="lpfFreq" type="float" def="7000" max="10000" min="20" />
+      <param id="peakFreq" type="float" def="5000" max="10000" min="20" />
+      <param id="peakGain" type="float" def="1" max="48" min="-96" />
+      <param id="peakQ" type="float" def="3" max="10" min="0.5" />
+      <data uniqueId="1796125019" />
+    </object>
+    <object id="filter">
+      <visual name="Multi Filter" />
+      <param id="filterType" type="string" def="lowpass" noauto="1" />
+      <param id="frequency" type="float" def="8000" max="12000" min="30" />
+      <param id="gain" type="float" max="20" min="-20" />
+      <param id="q" type="float" def="2" max="10" />
+      <data uniqueId="121917997" />
+    </object>
+    <object id="antiSqueal">
+      <visual name="Feedback Killer" />
+      <param id="amount" type="float" def="0.5" />
+      <data uniqueId="1230051636" />
+    </object>
+    <object id="gain">
+      <visual name="Gain" />
+      <param id="gain" type="float" max="6" min="-36" />
+      <data uniqueId="864721853" />
+    </object>
+    <object id="reverser">
+      <visual name="Reverser" />
+      <param id="intervalTimeBeats" type="string" def="eighthNote" noauto="1" />
+      <param id="intervalUnitSelection" type="string" def="intervalTimeBeats" noauto="1" />
+      <param id="dryWetMix" type="float" def="0.61" />
+      <param id="intervalTimeSec" type="float" def="0.449953" max="2.5" min="0.05" />
+      <data uniqueId="1688690742" />
+    </object>
+    <object id="stereoSpreader">
+      <visual name="Stereowise" />
+      <param id="lowerIntensity" type="float" def="1" />
+      <param id="upperFrequency" type="float" def="1025.72" max="20000" min="20" />
+      <param id="upperIntensity" type="float" def="1" />
+      <data uniqueId="1656496245" />
+    </object>
+    <object id="ddelay">
+      <visual name="D-Delay" />
+      <param id="dry" type="float" def="100" max="100" />
+      <param id="hpf" type="float" def="1200" max="1200" min="50" />
+      <param id="level" type="float" max="12" min="-12" />
+      <param id="lpf" type="float" def="6500" max="16000" min="1200" />
+      <param id="regen" type="float" def="25" max="100" />
+      <param id="time" type="float" def="1" max="2.6" min="0.01" />
+      <param id="wet" type="float" def="20" max="100" />
+      <data uniqueId="296505561" />
+    </object>
+    <object id="visualEq">
+      <visual name="Visual EQ" />
+      <param id="filter0Bandwidth" type="float" def="0.17"/>
+      <param id="filter0Freq" type="float" def="50.0"/>
+      <param id="filter0Gain" type="float" def="0.0"/>
+      <param id="filter1Bandwidth" type="float" def="0.17"/>
+      <param id="filter1Freq" type="float" def="485.0"/>
+      <param id="filter1Gain" type="float" def="0.0"/>
+      <param id="filter2Bandwidth" type="float" def="0.17"/>
+      <param id="filter2Freq" type="float" def="4985.0"/>
+      <param id="filter2Gain" type="float" def="0.0"/>
+      <param id="filter0Active" type="string" def="true" noauto="1"/>
+      <param id="filter0Type" type="string" def="peaking" noauto="1"/>
+      <param id="filter1Active" type="string" def="true" noauto="1"/>
+      <param id="filter1Type" type="string" def="peaking" noauto="1"/>
+      <param id="filter2Active" type="string" def="true" noauto="1"/>
+      <param id="filter2Type" type="string" def="peaking" noauto="1"/>
+      <data uniqueId="907963035" />
+    </object>
+  </category>
+  <category id="global">
+    <colorset id="drum">
+      <color>#2B87E0</color>
+      <color>#E7610E</color>
+      <color>#A302E8</color>
+      <color>#01B273</color>
+    </colorset>
+  </category>
 </dataset>

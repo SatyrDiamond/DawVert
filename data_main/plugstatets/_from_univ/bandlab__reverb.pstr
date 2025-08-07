@@ -1,4 +1,4 @@
-<plugstatetransform daw_out="bandlab" plugtype="universal:reverb">
+<plugstatetransform daw_out="bandlab;cakewalk_cxf" plugtype="universal:reverb">
   <in__wet to="wet" type="float" />
   <in__param to="room_size" from="size" type="float" />
   <calc name="room_size" type="div">10</calc>

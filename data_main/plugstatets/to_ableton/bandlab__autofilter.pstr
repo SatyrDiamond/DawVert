@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="bandlab" daw_out="ableton" plugtype="native:bandlab:autoFilter">
+<plugstatetransform daw_in="bandlab;cakewalk_cxf" daw_out="ableton" plugtype="native:bandlab:autoFilter">
 
   <define_remap name="filter_types" in_type="string" out_type="int">
     <val in_val="lpf" out_val="0"/>

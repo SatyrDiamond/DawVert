@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Reverb">
+<plugstatetransform daw_in="ableton" daw_out="bandlab;cakewalk_cxf" plugtype="native:ableton:Reverb">
   <in__param from="MixDirect" type="float" />
   <in__param from="RoomSize" type="float" />
   <calc name="RoomSize" type="div">500</calc>

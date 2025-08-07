@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="lmms" daw_out="bandlab" plugtype="native:lmms:stereoenhancer">
+<plugstatetransform daw_in="lmms" daw_out="bandlab;cakewalk_cxf" plugtype="native:lmms:stereoenhancer">
   <in__param from="width" type="float" />
   <calc name="width" type="mul">2000</calc>
   <replace plugtype="native:bandlab:stereoSpreader" />

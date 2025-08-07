@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="amped" daw_out="bandlab" plugtype="native:amped:Phaser">
+<plugstatetransform daw_in="amped" daw_out="bandlab;cakewalk_cxf" plugtype="native:amped:Phaser">
   <in__param from="rate" type="float" />
   
   <replace plugtype="native:bandlab:phaser" />

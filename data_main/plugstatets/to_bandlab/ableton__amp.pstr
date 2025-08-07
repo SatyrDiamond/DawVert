@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="ableton" daw_out="bandlab" plugtype="native:ableton:Amp">
+<plugstatetransform daw_in="ableton" daw_out="bandlab;cakewalk_cxf" plugtype="native:ableton:Amp">
   <in__param from="AmpType" type="int" />
 
   <replace plugtype="native:bandlab:genericAmp" />

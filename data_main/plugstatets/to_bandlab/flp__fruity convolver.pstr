@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="flp" daw_out="bandlab" plugtype="native:flstudio:Fruity Convolver">
+<plugstatetransform daw_in="flp" daw_out="bandlab;cakewalk_cxf" plugtype="native:flstudio:Fruity Convolver">
   <in__param from="DryWet" type="float" />
   <replace plugtype="native:bandlab:reverbHybrid" />
   <out__param to="dryWetMix" from="DryWet" type="float" />

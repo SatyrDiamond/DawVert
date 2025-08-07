@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="fl_mobile" daw_out="bandlab" plugtype="native:fl_mobile:11">
+<plugstatetransform daw_in="fl_mobile" daw_out="bandlab;cakewalk_cxf" plugtype="native:fl_mobile:11">
   <in__param from="param_1" type="float" />
   <in__param from="param_2" type="float" />
   <in__param from="param_4" type="float" />

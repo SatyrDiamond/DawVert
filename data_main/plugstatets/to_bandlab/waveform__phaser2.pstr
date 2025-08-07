@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab" plugtype="native:tracktion:phaser2">
+<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab;cakewalk_cxf" plugtype="native:tracktion:phaser2">
   <in__param from="rateSyncOff" type="float" />
   
   <calc name="rateSyncOff" type="div">8</calc>

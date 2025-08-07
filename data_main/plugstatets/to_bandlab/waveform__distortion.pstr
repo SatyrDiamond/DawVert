@@ -1,4 +1,4 @@
-<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab" plugtype="native:tracktion:distortion">
+<plugstatetransform daw_in="tracktion_edit" daw_out="bandlab;cakewalk_cxf" plugtype="native:tracktion:distortion">
   <in__param from="tone" type="float" />
   <in__param from="drive" type="float" />
   

@@ -590,11 +590,24 @@ class output_reaper(plugins.base):
 				for x in midievents_obj.iter_events():
 					etype = x[1]
 					posdir = int(x[0])-ppos
+
 					if etype == 'NOTE_ON':
 						rpp_source_obj.notes.append([True, posdir, f'{(144+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
 						ppos = int(x[0])
-					if etype == 'NOTE_OFF':
+					elif etype == 'NOTE_OFF':
 						rpp_source_obj.notes.append([True,	posdir, f'{(128+int(x[2])):x}', f'{(int(x[3])):x}', '00'])
+						ppos = int(x[0])
+					elif etype == 'NOTE_PRS':
+						rpp_source_obj.notes.append([True,	posdir, f'{(160+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
+						ppos = int(x[0])
+					elif etype == 'CONTROL':
+						rpp_source_obj.notes.append([True,	posdir, f'{(176+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
+						ppos = int(x[0])
+					elif etype == 'PROGRAM':
+						rpp_source_obj.notes.append([True,	posdir, f'{(192+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
+						ppos = int(x[0])
+					elif etype == 'PRESSURE':
+						rpp_source_obj.notes.append([True,	posdir, f'{(208+int(x[2])):x}', f'{(int(x[3])):x}', '00'])
 						ppos = int(x[0])
 
 				#convert_midi(rpp_source_obj,midipl_obj.notelist,reaper_tempo,'4','4',midipl_obj)

@@ -593,12 +593,27 @@ class input_reaper(plugins.base):
 									curpos += int(note[1])
 	
 									midicmd, midich = data_bytes.splitbyte(int(note[2],16))
-	
+									
 									if midicmd == 9:
 										midievents_obj.add_note_on(curpos, midich, int(note[3],16), int(note[4],16))
 	
-									if midicmd == 8:
+									elif midicmd == 8:
 										midievents_obj.add_note_off(curpos, midich, int(note[3],16), 0)
+
+									elif midicmd == 10:
+										midievents_obj.add_note_pressure(curpos, midich, int(note[3],16), int(note[4],16))
+
+									elif midicmd == 11:
+										control = int(note[3],16)
+										value = int(note[4],16)
+										if control != 123:
+											midievents_obj.add_control(curpos, midich, control, value)
+
+									elif midicmd == 12:
+										midievents_obj.add_program(curpos, midich, int(note[3],16))
+
+									elif midicmd == 13:
+										midievents_obj.add_chan_pressure(curpos, midich, int(note[3],16))
 
 							else:
 								midifile = os.path.join(dawvert_intent.input_folder, midifile)
@@ -609,7 +624,6 @@ class input_reaper(plugins.base):
 							if maxdur and cvpj_loop:
 								cvpj_end_bpm = ((maxdur/midievents_obj.ppq)*4)
 								time_obj.set_loop_data(cvpj_offset_bpm, 0, cvpj_end_bpm)
-								print(time_obj.cut_type)
 
 					do_auto_clip_notes(placement_obj, rpp_trackitem.volenv, 'gain', 'float', False, False)
 					do_auto_clip_notes(placement_obj, rpp_trackitem.panenv, 'pan', 'float', False, False)

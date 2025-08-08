@@ -112,6 +112,9 @@ class input_sequel3(plugins.base):
 
 						sp_obj = placement_obj.sample
 
+						if 'TransposeLock' in paudioclip.additional_attributes:
+							sp_obj.usemasterpitch = not bool(paudioclip.additional_attributes['TransposeLock'])
+
 						audiocluster = paudioclip.cluster.substreams
 
 						if audiocluster:
@@ -146,3 +149,13 @@ class input_sequel3(plugins.base):
 										warp_pos = x.warped/timebase
 										warp_sec = x.position/hz
 										warp_obj.points__add_beatsec(warp_pos, warp_sec)
+
+							if 'StretchPreset' in paudioclip.additional_attributes:
+								StretchPreset = paudioclip.additional_attributes['StretchPreset']
+								stretch_algo = stretch_obj.algorithm
+								if isinstance(StretchPreset, classobj.class_ElastiquePreset):
+									if StretchPreset.formantpreservation:
+										stretch_algo.type = 'elastique_v3'
+										stretch_algo.subtype = 'pro'
+									else:
+										stretch_algo.type = 'elastique_v3'

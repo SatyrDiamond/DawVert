@@ -126,6 +126,9 @@ class input_bandlab(plugins.base):
 				if cxf_auxChannel.id not in groups: groups.append(cxf_auxChannel.id)
 				autoloc = ['group', cxf_auxChannel.id]
 
+				for cxf_auxSend in cxf_auxChannel.auxSends:
+					sendautoid = cxf_auxChannel.id+'__'+'return__'+str(cxf_auxSend.id)
+					track_obj.sends.add(cxf_auxSend.id, sendautoid, cxf_auxSend.sendLevel)
 				#if cxf_auxChannel.idOutput != project_obj.mainBusId:
 				#	track_obj.group = cxf_auxChannel.idOutput
 
@@ -223,19 +226,18 @@ class input_bandlab(plugins.base):
 						stretch_obj.timing.set__real_rate(bpm, speed)
 						stretch_obj.preserve_pitch = True
 
-
-		#for cxf_auxChannel in project_obj.auxChannels:
-		#	print('AUX_IN',
-		#		debugvis_id_store.get(cxf_auxChannel.id), 
-		#		debugvis_id_store.get(cxf_auxChannel.idOutput)
-		#		)
+		#arranger = project_obj.arranger
+		#arrangerTracks = arranger.arrangerTracks
+		#if arrangerTracks:
+		#	for section in arrangerTracks[0].sections:
+		#		timemarker_obj = convproj_obj.timemarker__add()
+		#		timemarker_obj.type = 'region'
+		#		timemarker_obj.position = (section.startTimeArrTicks/960)
+		#		timemarker_obj.duration = ((section.endTimeArrTicks/960)-timemarker_obj.position)
+		#		timemarker_obj.visual.name = section.name
 #
-		#for cxf_track in cxf_tracks:
-		#	print('TRACK_IN',
-		#		debugvis_id_store.get(cxf_track.parentId), 
-		#		debugvis_id_store.get(cxf_track.idOutput)
-		#		)
-
+		#		timemarker_obj.position /= tempomul
+		#		timemarker_obj.duration /= tempomul
 
 def add_sample(convproj_obj, dawvert_intent, cxf_sample, zip_data, zip_start_path, samplefolder):
 	filename = os.path.join(dawvert_intent.input_folder, 'Assets', 'Audio', cxf_sample.file)
@@ -378,7 +380,7 @@ def do_plugin(convproj_obj, startid, cxf_effect, num, fxid, dawvert_intent, temp
 			from objects.inst_params import juce_plugin
 
 			if plugdata is not None:
-				#try:
+				try:
 					juceobj = juce_plugin.juce_plugin()
 					juceobj.name = cxf_effect.name
 					if plugdata[0:4] == b'CcnK': juceobj.plugtype = 'vst2'
@@ -389,8 +391,8 @@ def do_plugin(convproj_obj, startid, cxf_effect, num, fxid, dawvert_intent, temp
 					for param_id in cxf_effect.automation:
 						do_automation(convproj_obj, cxf_effect.automation[param_id], ['plugin', fxid, 'ext_param_'+param_id], tempomul)
 
-				#except:
-				#	pass
+				except:
+					pass
 
 	return plugin_obj, middlenote, pitch
 

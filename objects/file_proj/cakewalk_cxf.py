@@ -168,6 +168,7 @@ class cxf_auxChannel:
 		self.effects = []
 		self.idOutput = ""
 		self.automation = {}
+		self.auxSends = []
 		if indata: self.read(indata)
 
 	def add_effect(self):
@@ -193,6 +194,12 @@ class cxf_auxChannel:
 				auto_obj = cxf_automation()
 				auto_obj.read(a)
 				self.automation[n] = auto_obj
+		if 'auxSends' in indata: self.auxSends = [cxf_auxSend(x) for x in indata['auxSends']]
+
+	def add_auxSend(self):
+		o = cxf_auxSend(None)
+		self.auxSends.append(o)
+		return o
 
 	def write(self):
 		outdata = {}
@@ -208,6 +215,7 @@ class cxf_auxChannel:
 		outdata['isSolo'] = self.isSolo
 		outdata['effects'] = [x.write() for x in self.effects]
 		outdata['idOutput'] = self.idOutput
+		if self.auxSends is not None: outdata['auxSends'] = [x.write() for x in self.auxSends]
 		automation = outdata['automation'] = {}
 		for n, a in self.automation.items(): automation[n] = a.write()
 		return outdata
@@ -275,6 +283,7 @@ class cxf_auxSend:
 		outdata['bypass'] = self.bypass
 		outdata['sendLevel'] = self.sendLevel
 		outdata['sendPan'] = self.sendPan
+		automation = outdata['automation'] = {}
 		for n, a in self.automation.items(): automation[n] = a.write()
 		return outdata
 
@@ -310,7 +319,7 @@ class cxf_track:
 		self.effects.append(o)
 		return o
 
-	def add_synth(self, indata):
+	def add_synth(self):
 		o = cxf_plugin(None)
 		self.synth = o
 		return o
@@ -351,7 +360,7 @@ class cxf_track:
 		outdata['id'] = self.id
 		outdata['order'] = self.order
 		if self.parentId is not None: outdata['parentId'] = self.parentId
-		if self.synth is not None: outdata['synth'] = self.synth
+		if self.synth is not None: outdata['synth'] = self.synth.write()
 		if self.soundbank is not None: outdata['soundbank'] = self.soundbank
 		outdata['name'] = self.name
 		outdata['colorName'] = self.colorName

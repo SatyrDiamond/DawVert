@@ -740,11 +740,13 @@ classes['MDeviceTrackEvent'] = class_MDeviceTrackEvent
 class class_MMidiController:
 	start: float = 0
 	data1: int = 0
+	data2: int = 0
 	flags: int = 0
 	def from_seqobj(self, seqobj):
 		obj_data = seqobj.obj_data
 		if 'Start' in obj_data: self.start = obj_data['Start']
 		if 'Data1' in obj_data: self.data1 = obj_data['Data1']
+		if 'Data2' in obj_data: self.data2 = obj_data['Data2']
 		if 'Flags' in obj_data: self.flags = obj_data['Flags']
 classes['MMidiController'] = class_MMidiController
 

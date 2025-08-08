@@ -127,6 +127,7 @@ class extplug_manu:
 			self.set_type(plugtype, platformtxt)
 			plugin_obj.external_info.id = in_val
 			outtxt = str(in_val)
+			if plugin_obj.external_info.name: outtxt += ' (%s)' % (plugin_obj.external_info.name)
 			logger_plugins.warning(plugtype+': plugin not found in database: '+outtxt)
 			return True
 		else:
@@ -195,6 +196,17 @@ class extplug_manu:
 			with open(filename, 'wb') as f: f.write(outdata)
 
 		return outdata
+
+	def vst3__exportstate_juce(self):
+		from functions.juce import data_vc2xml
+		from functions.juce import juce_memoryblock
+		import xml.etree.ElementTree as ET
+		x_root = ET.Element("VST3PluginState>")
+		icomp = ET.SubElement(x_root, 'IComponent')
+		rawdata = self.plugin_obj.rawdata_get('chunk')
+		icomp.text = juce_memoryblock.toJuceBase64Encoding(rawdata)
+		if rawdata: return data_vc2xml.make(x_root)
+
 
 # --------------------------------------------------- DIRECTX ---------------------------------------------------
 

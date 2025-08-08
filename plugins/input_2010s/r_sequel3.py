@@ -40,7 +40,8 @@ class input_sequel3(plugins.base):
 		traits_obj.audio_stretch = ['warp']
 		traits_obj.audio_filetypes = ['wav']
 		traits_obj.auto_types = ['nopl_points']
-		traits_obj.placement_loop = ['loop']
+		traits_obj.notes_midi = True
+		traits_obj.placement_cut = True
 
 		project_obj = proj_sequel.sequel_project()
 		if dawvert_intent.input_mode == 'file':
@@ -49,13 +50,12 @@ class input_sequel3(plugins.base):
 		seq_project = project_obj.obj_project
 		data_root = seq_project.data_root
 
-		timebase = 384
+		timebase = 480
 
 		tempoid = data_root.tempo_track.obj_id
 		if tempoid in func.globalids:
 			tempo_track = classobj.get_object(func.globalids[tempoid])
 			convproj_obj.params.add('bpm', tempo_track.rehearsaltempo, 'float')
-			print(tempo_track)
 			#for tempoevent in tempo_track.tempoevent:
 			#	convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', 0, tempoevent.bpm)
 
@@ -73,16 +73,24 @@ class input_sequel3(plugins.base):
 				track_obj.visual.name = track_node.name
 				track_obj.visual_ui.height = track.height/73
 				for event in track_node.events:
-					placement_obj = track_obj.placements.add_notes()
+					placement_obj = track_obj.placements.add_midi()
 					placement_obj.time.set_posdur(event.start, event.length)
 					placement_obj.time.set_offset(event.offset)
+
+					events_obj = placement_obj.midievents
+					events_obj.has_duration = True
+					events_obj.ppq = int(convproj_obj.time_ppq)
+
 					if event.idnum in func.globalids:
 						mmidipart = classobj.get_object(func.globalids[event.idnum])
 						placement_obj.visual.name = mmidipart.name
-						cvpj_notelist = placement_obj.notelist
+
 						for event in mmidipart.events:
+							startpos = max(0, event.start)
 							if isinstance(event, classobj.class_MMidiNote):
-								cvpj_notelist.add_r(event.start, event.length, event.data1, event.data2, None)
+								events_obj.add_note_dur(startpos, 0, event.data1, event.data2, event.length)
+							elif isinstance(event, classobj.class_MMidiController):
+								events_obj.add_control(startpos, 0, event.data1, event.data2)
 
 			if isinstance(track, classobj.class_MAudioTrackEvent):
 				track_node = track.node
@@ -124,8 +132,7 @@ class input_sequel3(plugins.base):
 							stretch_obj = sp_obj.stretch
 							s_timing_obj = stretch_obj.timing
 					
-							#if 'TransposeLock' in paudioclip.additional_attributes:
-							#	stretch_obj.preserve_pitch = bool(paudioclip.additional_attributes['TransposeLock'])
+							stretch_obj.preserve_pitch = True
 
 							if 'Warpscale' in paudioclip.additional_attributes:
 								Warpscale = paudioclip.additional_attributes['Warpscale']

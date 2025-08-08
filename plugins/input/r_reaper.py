@@ -615,6 +615,9 @@ class input_reaper(plugins.base):
 									elif midicmd == 13:
 										midievents_obj.add_chan_pressure(curpos, midich, int(note[3],16))
 
+									elif midicmd == 14:
+										midievents_obj.add_pitch_hi_lo(curpos, midich, int(note[4],16), int(note[3],16))
+
 							else:
 								midifile = os.path.join(dawvert_intent.input_folder, midifile)
 								placement_obj.midi_from(midifile)

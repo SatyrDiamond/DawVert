@@ -292,6 +292,15 @@ class midievents:
 		cursor['uflags'] = PBFLAGVAL__NONNOTE
 		cursor['shival'] = value
 
+	def add_pitch_hi_lo(self, curpos, channel, value_hi, value_lo):
+		self.cursor.add()
+		cursor = self.cursor
+		cursor['pos'] = curpos
+		cursor['type'] = EVENTID__PITCH
+		cursor['chan'] = channel
+		cursor['uflags'] = PBFLAGVAL__NONNOTE
+		cursor['shival'] = ((value_hi<<7)+value_lo)-8192
+
 
 
 	def add_port(self, port):

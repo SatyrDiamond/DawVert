@@ -34,7 +34,7 @@ class input_cvpj_f(plugins.base):
 		convproj_obj.set_timings(192)
 
 		convproj_obj.fxtype = 'rack'
-		convproj_obj.type = 'cm'
+		convproj_obj.type = 'cs'
 
 		metadata_obj = convproj_obj.metadata
 
@@ -73,3 +73,6 @@ class input_cvpj_f(plugins.base):
 				if event.type == 11:
 					ctrl, val = event.data
 					events_obj.add_control(event.pos, channel, ctrl, val)
+				if event.type == 14:
+					p_lo, p_hi = event.data
+					events_obj.add_pitch_hi_lo(event.pos, channel, p_hi, p_lo)

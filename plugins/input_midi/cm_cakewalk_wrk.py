@@ -109,7 +109,7 @@ class input_cvpj_f(plugins.base):
 							elif event_type == 0xB0: events_obj.add_control(event_time, trackchannel, event_data.data1, event_data.data2)
 							elif event_type == 0xC0: events_obj.add_program(event_time, trackchannel, event_data.data1)
 							elif event_type == 0xD0: events_obj.add_chan_pressure(event_time, trackchannel, event_data.data1)
-							elif event_type == 0xE0: events_obj.add_pitch(event_time, trackchannel, event_data.data1+(event_data.data2<<8)-16384)
+							elif event_type == 0xE0: events_obj.add_pitch_hi_lo(event_time, trackchannel, event_data.data2, event_data.data1)
 							elif event_type == 0xF0: sysex_points.append([events_obj, event_time, event_data.data1])
 
 					elif chunk.id == 6: #Gen1:Global:SysEx
@@ -206,7 +206,7 @@ class input_cvpj_f(plugins.base):
 							elif event_type == 0xB0: events_obj.add_control(event_time, trackchannel, event_data.data1, event_data.data2)
 							elif event_type == 0xC0: events_obj.add_program(event_time, trackchannel, event_data.data1)
 							elif event_type == 0xD0: events_obj.add_chan_pressure(event_time, trackchannel, event_data.data1)
-							elif event_type == 0xE0: events_obj.add_pitch(event_time, trackchannel, event_data.data1+(event_data.data2<<8)-16384)
+							elif event_type == 0xE0: events_obj.add_pitch_hi_lo(event_time, trackchannel, event_data.data2, event_data.data1)
 
 						time_obj = placement_obj.time
 						time_obj.set_posdur(parseddata.offset, int(events_obj.get_dur()))
@@ -239,7 +239,7 @@ class input_cvpj_f(plugins.base):
 								elif event_type == 0xB0: events_obj.add_control(event_time, trackchannel, event_data.data1, event_data.data2)
 								elif event_type == 0xC0: events_obj.add_program(event_time, trackchannel, event_data.data1)
 								elif event_type == 0xD0: events_obj.add_chan_pressure(event_time, trackchannel, event_data.data1)
-								elif event_type == 0xE0: events_obj.add_pitch(event_time, trackchannel, event_data.data1+(event_data.data2<<8)-16384)
+								elif event_type == 0xE0: events_obj.add_pitch_hi_lo(event_time, trackchannel, event_data.data2, event_data.data1)
 
 							time_obj = placement_obj.time
 							time_obj.set_posdur(firstpos, int(events_obj.get_dur()))

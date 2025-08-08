@@ -591,6 +591,8 @@ class output_reaper(plugins.base):
 					etype = x[1]
 					posdir = int(x[0])-ppos
 
+					#print(etype)
+
 					if etype == 'NOTE_ON':
 						rpp_source_obj.notes.append([True, posdir, f'{(144+int(x[2])):x}', f'{(int(x[3])):x}', f'{(int(x[4])):x}'])
 						ppos = int(x[0])
@@ -608,6 +610,12 @@ class output_reaper(plugins.base):
 						ppos = int(x[0])
 					elif etype == 'PRESSURE':
 						rpp_source_obj.notes.append([True,	posdir, f'{(208+int(x[2])):x}', f'{(int(x[3])):x}', '00'])
+						ppos = int(x[0])
+					elif etype == 'PITCH':
+						outpitch = int(x[3])+8192
+						pitch_hi = outpitch>>7
+						pitch_lo = outpitch%128
+						rpp_source_obj.notes.append([True,	posdir, f'{(224+int(x[2])):x}', f'{(int(pitch_lo)):x}', f'{(int(pitch_hi)):x}'])
 						ppos = int(x[0])
 
 				#convert_midi(rpp_source_obj,midipl_obj.notelist,reaper_tempo,'4','4',midipl_obj)

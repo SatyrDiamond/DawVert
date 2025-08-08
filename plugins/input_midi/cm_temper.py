@@ -85,6 +85,8 @@ class input_cvpj_f(plugins.base):
 							midievents_obj.add_control(ncurpos, channel, event.n, int(event.v))
 						elif isinstance(event, proj_temper.event_patch):
 							midievents_obj.add_program(ncurpos, channel, event.v)
+						elif isinstance(event, proj_temper.event_pitch):
+							midievents_obj.add_pitch(ncurpos, channel, event.v)
 						#else:
 						#	print(event)
 

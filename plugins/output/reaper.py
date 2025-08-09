@@ -586,6 +586,8 @@ class output_reaper(plugins.base):
 				midievents_obj.del_note_durs()
 				midievents_obj.sort()
 
+				maxdur = (time_obj.get_dur()*midievents_obj.ppq)/4
+
 				ppos = 0
 				for x in midievents_obj.iter_events():
 					etype = x[1]
@@ -617,6 +619,9 @@ class output_reaper(plugins.base):
 						pitch_lo = outpitch%128
 						rpp_source_obj.notes.append([True,	posdir, f'{(224+int(x[2])):x}', f'{(int(pitch_lo)):x}', f'{(int(pitch_hi)):x}'])
 						ppos = int(x[0])
+
+				maxdur = int(max(maxdur, ppos))
+				rpp_source_obj.notes.append([True,	maxdur-ppos, 'b0', '7b', '00'])
 
 				#convert_midi(rpp_source_obj,midipl_obj.notelist,reaper_tempo,'4','4',midipl_obj)
 

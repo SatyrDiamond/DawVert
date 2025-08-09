@@ -37,7 +37,7 @@ class input_sequel3(plugins.base):
 		convproj_obj.type = 'r'
 
 		traits_obj = convproj_obj.traits
-		traits_obj.audio_stretch = ['warp']
+		traits_obj.audio_stretch = ['warp', 'rate']
 		traits_obj.audio_filetypes = ['wav']
 		traits_obj.auto_types = ['nopl_points']
 		traits_obj.notes_midi = True
@@ -64,6 +64,15 @@ class input_sequel3(plugins.base):
 		tracklist = data_root.node
 		for num, track in enumerate(tracklist.tracks):
 			tracknum = 'track_'+str(num)
+
+			if isinstance(track, classobj.class_MPlayRangeTrackEvent):
+				track_node = track.node
+				for event in track_node.events:
+					timemarker_obj = convproj_obj.timemarker__add()
+					timemarker_obj.position = event.start
+					timemarker_obj.duration = event.length
+					timemarker_obj.type = 'region'
+					timemarker_obj.visual.name = event.name
 
 			if isinstance(track, classobj.class_MInstrumentTrackEvent):
 				track_node = track.node
@@ -139,7 +148,7 @@ class input_sequel3(plugins.base):
 
 							if 'Warpscale' in paudioclip.additional_attributes:
 								Warpscale = paudioclip.additional_attributes['Warpscale']
-	
+
 								with s_timing_obj.setup_warp(True) as warp_obj:
 									dur_sec = sampleref_obj.get_dur_sec()
 									hz = sampleref_obj.get_hz()

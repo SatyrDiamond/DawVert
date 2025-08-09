@@ -73,7 +73,7 @@ class cvpj_timemarkers:
 				x.position = xtramath.step2sec(x.position, bpm)/(ppq/4)
 				x.duration = xtramath.step2sec(x.duration, bpm)/(ppq/4)
 				self.is_seconds = True
-		elif self.is_seconds:
+		elif not is_seconds and self.is_seconds:
 			for x in self.data: 
 				x.position = xtramath.sec2step(x.position, bpm)
 				x.duration = xtramath.sec2step(x.duration, bpm)

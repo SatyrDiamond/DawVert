@@ -54,24 +54,19 @@ def do_fx(convproj_obj, fxdata):
 	
 			return pluginid
 
-	#elif fxtype == 'vst2':
-	#	if len(fxdata) == 4:
-	#		vstid = int(fxdata[1])
-	#		plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst2', None)
-	#		extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
-	#		if StateChunk: 
-	#			extmanu_obj.vst2__replace_data('id', vstid, StateChunk, None, False)
-	#		elif StateParams: 
-	#			extmanu_obj.vst2__setup_params('id', vstid, len(StateParams), None, False)
-	#			for n, v in enumerate(StateParams): extmanu_obj.vst2__set_param(n, v)
-	#			extmanu_obj.vst2__params_output()
-		#print(fxdata)
-
-
-	#print(fxdata.Name)
-	#print(TypeID)
-	#print(StateChunk )
-	#print(StateParams )
+	elif fxtype == 'vst2':
+		if len(fxdata) == 4:
+			vstid = int(fxdata[1])
+			plugin_obj, pluginid = convproj_obj.plugin__add__genid('external', 'vst2', None)
+			extmanu_obj = plugin_obj.create_ext_manu_obj(convproj_obj, pluginid)
+			if StateChunk: 
+				extmanu_obj.vst2__replace_data('id', vstid, StateChunk, None, False)
+			elif StateParams: 
+				extmanu_obj.vst2__setup_params('id', vstid, len(StateParams), None, False)
+				for n, v in enumerate(StateParams):
+					extmanu_obj.vst2__set_program(0)
+					extmanu_obj.vst2__set_param(n, v)
+				extmanu_obj.vst2__params_output()
 
 class input_soundop(plugins.base):
 	def is_dawvert_plugin(self):

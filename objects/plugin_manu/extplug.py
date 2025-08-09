@@ -10,8 +10,11 @@ logger_plugins = logging.getLogger('extplug')
 
 extplugdb = globalstore.extplug
 
+VERBOSE = False
+
 class extplug_vst2_params:
 	def __init__(self):
+		if VERBOSE: print('extplug_vst2_params: CREATE')
 		self.cur_program = 0
 		self.set_numprogs(1, 0)
 		self.set_program(0)
@@ -22,21 +25,27 @@ class extplug_vst2_params:
 		self.dtype_program = np.dtype([('name', '<S28'),('params', np.float32, self.num_params)]) 
 		self.programs = np.zeros(self.num_programs, dtype=self.dtype_program)
 		self.param_names = ['' for _ in range(self.num_params)]
+		if VERBOSE: print('extplug_vst2_params: set_numprogs', num_programs, num_params)
 
 	def set_program(self, cur_program):
 		self.cur_program = cur_program
 		self.programs_data = self.programs[self.cur_program]
+		if VERBOSE: print('extplug_vst2_params: set_program', cur_program)
 
 	def set_program_name(self, program_name):
 		self.programs_data['name'] = program_name
+		if VERBOSE: print('extplug_vst2_params: set_program_name', program_name)
 
 	def set_param(self, num, val):
 		self.programs_data['params'][num] = val
+		#if VERBOSE: print('extplug_vst2_params: set_param', num, val)
 
 	def set_param_name(self, num, val):
 		self.param_names[num] = val
+		if VERBOSE: print('extplug_vst2_params: set_param_name', num, val)
 
 	def output(self, plugin_obj):
+		if VERBOSE: print('extplug_vst2_params: output', plugin_obj)
 		plugin_obj.program__reset()
 		for num, presetdata in enumerate(self.programs):
 			plugin_obj.program__set(num)

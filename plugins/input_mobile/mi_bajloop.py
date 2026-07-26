@@ -34,8 +34,6 @@ class input_fl_mobile_old(plugins.base):
 		if dawvert_intent.input_mode == 'file':
 			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
 
-		convproj_obj.do_actions.append('do_addloop')
-
 		convproj_obj.metadata.name = project_obj.name
 		convproj_obj.metadata.comment_text = project_obj.info
 
@@ -106,3 +104,6 @@ class input_fl_mobile_old(plugins.base):
 				placement_obj.fromindex = str(pnum)
 				time_obj = placement_obj.time
 				time_obj.set_posdur(pos*32, 32*s)
+
+		convproj_obj.do_actions.append('do_addloop')
+		convproj_obj.do_actions.append('do_lanefit')

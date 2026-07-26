@@ -39,14 +39,21 @@ class bajloop_sample:
 		self.data = b''
 
 	def read(self, byr_stream):
-		self.unk1 = byr_stream.raw(5).hex()
+		assert(byr_stream.int_u8()==6)
+		self.bits = byr_stream.int_u8()
+		#print(  self.bits, end=' | '  )
+		self.channels = byr_stream.int_u8()
+		#print(  self.channels, end=' | '  )
+		self.unk1 = byr_stream.raw(2).hex()
 		#print(  self.unk1, end=' | '  )
 		self.freq = byr_stream.int_u16_b()
 		#print(  self.freq, end=' | '  )
 		self.num_samples = byr_stream.int_u32_b()
 		#print(  self.num_samples, end=' | '  )
-		self.unk2 = byr_stream.raw(8).hex()
-		#print(  self.unk2, end=' | '  )
+		self.loop_1 = byr_stream.int_u32()
+		#print(  self.loop_1, end=' | '  )
+		self.loop_2 = byr_stream.int_u32()
+		#print(  self.loop_1+self.loop_2, end=' | '  )
 		self.name = byr_stream.string_t(encoding='iso-8859-1')
 		#print(  self.name, end=' | '  )
 		self.unk3 = byr_stream.raw(4).hex()
@@ -59,16 +66,23 @@ class bajloop_sample:
 class bajloop_inst:
 	def __init__(self):
 		self.name = ''
+		self.unk = []
 
 	def read(self, byr_stream):
 		assert(byr_stream.int_u8()==0)
 		self.sample_num = byr_stream.int_u8()
 		#print(  self.sample_num, end=' | '  )
-		self.unk1 = byr_stream.raw(63).hex()
-		#print( self.unk1 , end=' | '  )
+		self.unk.append(byr_stream.raw(22).hex())
+		self.vol = byr_stream.int_u8()
+		self.unk.append(byr_stream.raw(1).hex())
+		self.pan = byr_stream.int_u8()
+		self.basenote = byr_stream.int_s16()
+		#print( self.basenote , end=' | '  )
+		self.unk.append(byr_stream.raw(36).hex())
+		#print( self.unk , end=' | '  )
 		self.color = byr_stream.list_int_u8(3)
 		self.name = byr_stream.string_t(encoding='iso-8859-1')
-		#print(  self.unk1, end=' | '  )
+		#print(  self.name, end=' | '  )
 		#print()
 
 class bajloop_fx:
@@ -85,7 +99,7 @@ class bajloop_fx:
 			self.params = byr_stream.list_int_s16(32)
 			if DEBUGTXT: print('FX', self.name, self.params.tolist())
 
-def unknown_data_part(byr_stream):
+def bajloop_automation_part(byr_stream):
 	header1 = byr_stream.int_u8()
 	if header1==255:
 		assert(byr_stream.int_u8()==1)
@@ -95,7 +109,7 @@ def unknown_data_part(byr_stream):
 	else: 
 		return None
 
-def unknown_data_header(byr_stream):
+def bajloop_automations(byr_stream):
 	header1 = byr_stream.int_u8()
 	if header1==255:
 		assert(byr_stream.int_u8()==1)
@@ -103,12 +117,13 @@ def unknown_data_header(byr_stream):
 		outdata2 = []
 		#print('HEAD', outdata1)
 		while True:
-			d = unknown_data_part(byr_stream)
+			d = bajloop_automation_part(byr_stream)
 			if d==None: break
 			else: outdata2.append(d)
 		return outdata1, outdata2
 	else: 
 		#print('DONE')
+		#print()
 		return None
 
 class bajloop_sections:
@@ -140,7 +155,7 @@ class bajloop_file:
 		self.unk5 = None
 		self.unk6 = None
 		self.fx = []
-		self.unk = []
+		self.autos = []
 		self.patterns = []
 		self.samples = []
 		self.insts = []
@@ -150,15 +165,15 @@ class bajloop_file:
 		byr_stream.load_file(input_file)
 
 		self.version = byr_stream.int_u8()
-		assert self.version==10
+		assert(self.version==10)
 		#print('VERSION', self.version)
 
 		if DEBUGTXT: print('--- HEADER ---')
 		byr_stream.magic_check(b'Recipe for pure veg song 1.00:\x00')
 		self.name = byr_stream.string_t()
 		if DEBUGTXT: print('name', self.name)
-		self.string2 = byr_stream.string_t()
-		if DEBUGTXT: print('string2', self.string2)
+		self.info = byr_stream.string_t()
+		if DEBUGTXT: print('info', self.info)
 		self.unk1 = byr_stream.raw(23)
 		if DEBUGTXT: print('unk1', self.unk1)
 		self.unk2 = byr_stream.list_double_b(15)
@@ -186,9 +201,9 @@ class bajloop_file:
 		#print(self.unk7, self.unk8)
 
 		while True:
-			o = unknown_data_header(byr_stream)
+			o = bajloop_automations(byr_stream)
 			if o==None: break
-			else: self.unk.append(o)
+			else: self.autos.append(o)
 
 		sections = bajloop_sections()
 		sections.read(byr_stream)

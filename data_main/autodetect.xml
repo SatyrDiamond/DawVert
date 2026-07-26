@@ -505,4 +505,9 @@
 	<plugin pluginset="main" name="magda">
 		<file fileext=".mgd"/>
 	</plugin>
+
+	<plugin pluginset="mobile" name="bajloop">
+		<file fileext=".bjm"/>
+		<bytes_header data="52656369706520666F7220707572652076656720736F6E6720312E30303A00"/>
+	</plugin>
 </autodetect>

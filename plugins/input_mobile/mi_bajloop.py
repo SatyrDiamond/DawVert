@@ -116,11 +116,11 @@ class input_fl_mobile_old(plugins.base):
 			v_div = 127
 			if tracknum==-1:
 				if paramnum==0: a_loc = ['master', 'vol']
-				else: logger_input.warning('bajloop: Master Automation %i is not implemented.' % paramnum)
+				else: logger_input.warning('bajloop: Master Automation Param #%i is not implemented.' % paramnum)
 			else:
 				instid = str(tracknum)
 				if paramnum==0: a_loc = ['track', instid, 'vol']
-				else: logger_input.warning('bajloop: Track Automation %i is not implemented.' % paramnum)
+				else: logger_input.warning('bajloop: Track Automation Param #%i is not implemented.' % paramnum)
 
 			if a_loc:
 				auto_obj = convproj_obj.automation.create(a_loc, 'float', True)

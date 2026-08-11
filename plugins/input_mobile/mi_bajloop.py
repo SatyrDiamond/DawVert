@@ -4,6 +4,8 @@
 import plugins
 from objects.convproj import fileref
 import os
+import logging
+logger_input = logging.getLogger('input')
 
 class input_fl_mobile_old(plugins.base):
 	def is_dawvert_plugin(self):
@@ -26,6 +28,9 @@ class input_fl_mobile_old(plugins.base):
 		from objects import audio_data
 
 		project_obj = bajloops.bajloop_file()
+
+		traits_obj = convproj_obj.traits
+		traits_obj.auto_types = ['nopl_points']
 
 		convproj_obj.type = 'mi'
 
@@ -104,6 +109,25 @@ class input_fl_mobile_old(plugins.base):
 				placement_obj.fromindex = str(pnum)
 				time_obj = placement_obj.time
 				time_obj.set_posdur(pos*32, 32*s)
+
+		for tracknum, paramnum, data in project_obj.autos:
+			a_loc = None
+			v_add = 0
+			v_div = 127
+			if tracknum==-1:
+				if paramnum==0: a_loc = ['master', 'vol']
+				else: logger_input.warning('bajloop: Master Automation %i is not implemented.' % paramnum)
+			else:
+				instid = str(tracknum)
+				if paramnum==0: a_loc = ['track', instid, 'vol']
+				else: logger_input.warning('bajloop: Track Automation %i is not implemented.' % paramnum)
+
+			if a_loc:
+				auto_obj = convproj_obj.automation.create(a_loc, 'float', True)
+				for pos, val in data.items():
+					pos = (pos-256)/8
+					val = v_add+(val/v_div)
+					auto_obj.add_autopoint(pos, val, None)
 
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_lanefit')

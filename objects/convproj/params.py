@@ -82,19 +82,25 @@ class cvpj_param_unit:
 		elif  outd == ["pitch:octave", "pitch:semitones"]:  return [['mul', 12]]
 
 class cvpj_param:
-	__slots__ = ['value','type','min','max','visual','found','unit','is_enum','enum_max','enum_parts','enum_end_point']
+	__slots__ = ['value','type','min','max','range_defined','visual','found','unit','is_enum','enum_max','enum_parts','enum_end_point']
 	def __init__(self, p_value, p_type):
 		self.value = p_value
 		self.type = p_type
 		self.min = 0
 		self.max = 1
+		self.range_defined = False
 		self.visual = visual.cvpj_visual()
 		self.found = True
 		self.unit = cvpj_param_unit()
 		self.is_enum = False
 		self.enum_max = 0
 		self.enum_parts = []
-		self.enum_end_point = 'end'
+		self.enum_end_point = 'start'
+
+	def add_range(self, minv, maxv):
+		self.min = minv
+		self.max = maxv
+		self.range_defined = True
 
 	def add_enum_part(self, num, idv):
 		self.is_enum = True

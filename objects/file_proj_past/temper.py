@@ -139,11 +139,28 @@ class event_control:
 
 # ============================================= clips ============================================= 
 
+class temper_clip_ui:
+	def __init__(self):
+		self.name = None
+		self.color = None
+
+	@classmethod
+	def fromxml(cls, xmldata):
+		for xmlpart in xmldata:
+			if xmlpart.tag == 's': 
+				cls.name = xmlpart.get('v')
+			if xmlpart.tag == 'c': 
+				cls.color = [xmlpart.get('r'), xmlpart.get('g'), xmlpart.get('b')]
+				if None in cls.color: cls.color = None
+				else: cls.color = [int(x) for x in cls.color]
+		return cls
+
 class temper_phrase:
 	def __init__(self):
 		self.td = 0
 		self.d = 0
 		self.events = []
+		self.ui = None
 
 	@classmethod
 	def fromxml(cls, xmldata):
@@ -158,7 +175,7 @@ class temper_phrase:
 			if xmlpart.tag == 'ca': cls.events.append(event_aftertouch.fromxml(xmlpart))
 			if xmlpart.tag == 'cp': cls.events.append(event_pitch.fromxml(xmlpart))
 			if xmlpart.tag == 'cm': cls.events.append(event_control.fromxml(xmlpart))
-
+			if xmlpart.tag == 'ui': cls.ui = temper_clip_ui.fromxml(xmlpart)
 		return cls
 
 class event_audio:
@@ -168,6 +185,7 @@ class event_audio:
 		self.end = 0
 		self.off = 0
 		self.flags = 0
+		self.ui = None
 
 	@classmethod
 	def fromxml(cls, xmldata):
@@ -177,6 +195,34 @@ class event_audio:
 		if "end" in xmldata.attrib: cls.end = int(xmldata.attrib['end'])
 		if "off" in xmldata.attrib: cls.off = int(xmldata.attrib['off'])
 		if "flags" in xmldata.attrib: cls.flags = int(xmldata.attrib['flags'])
+		for xmlpart in xmldata:
+			if xmlpart.tag == 'ui': cls.ui = temper_clip_ui.fromxml(xmlpart)
+		return cls
+
+class temper_keynames_keyname:
+	def __init__(self):
+		self.key = ''
+		self.name = ''
+
+	@classmethod
+	def fromxml(cls, xmldata):
+		cls = cls()
+		if "key" in xmldata.attrib: cls.key = xmldata.attrib['key']
+		if "name" in xmldata.attrib: cls.name = xmldata.attrib['name']
+		return cls
+
+class temper_keynames:
+	def __init__(self):
+		self.maps = []
+		self.name = None
+
+	@classmethod
+	def fromxml(cls, xmldata):
+		cls = cls()
+		if "n" in xmldata.attrib: cls.name = xmldata.attrib['n']
+		for xp in xmldata:
+			if xp.tag == 'map':
+				cls.maps.append(temper_keynames_keyname.fromxml(xp))
 		return cls
 
 # ============================================= project ============================================= 
@@ -214,18 +260,21 @@ class temper_track:
 	def fromxml(cls, xmldata):
 		cls = cls()
 		if "name" in xmldata.attrib: cls.name = xmldata.attrib['name']
-		if "custom-name" in xmldata.attrib: cls.name = xmldata.attrib['custom-name']
+		if "custom-name" in xmldata.attrib: cls.customname = xmldata.attrib['custom-name']
 		if "channel" in xmldata.attrib: cls.channel = int(xmldata.attrib['channel'])
 		if "sync" in xmldata.attrib: cls.sync = float(xmldata.attrib['sync'])
 
 		cls.phrases = []
 		cls.audios = []
 		cls.metrics = {}
+		cls.keynames = None
 		for xmlpart in xmldata:
 			if xmlpart.tag == 'phrase':
 				cls.phrases.append(temper_phrase.fromxml(xmlpart))
 			elif xmlpart.tag == 'audio':
 				cls.audios.append(event_audio.fromxml(xmlpart))
+			elif xmlpart.tag == 'key-names':
+				cls.keynames = temper_keynames.fromxml(xmlpart)
 			elif xmlpart.tag == 'metrics':
 				for inpartxml in xmlpart:
 					metric_part = temper_track_metrics_part.fromxml(inpartxml)

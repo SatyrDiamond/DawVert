@@ -61,6 +61,13 @@ class input_cvpj_f(plugins.base):
 
 			track_obj.visual.color.set_float([0.66, 0.66, 0.73])
 
+			if tmp_track.keynames:
+				track_obj.visual_keynotes.name = tmp_track.keynames.name
+				for keymap in tmp_track.keynames.maps:
+					note = note_data.text_to_note(keymap.key)+24
+					visual_obj = track_obj.visual_keynotes.add_key(note)
+					visual_obj.name = keymap.name
+
 			if tmp_track.phrases:
 				channel = tmp_track.channel
 
@@ -69,6 +76,10 @@ class input_cvpj_f(plugins.base):
 					curpos += phrase.td
 					phraseauto = {}
 					placement_obj = track_obj.placements.add_midi()
+					if phrase.ui:
+						pui = phrase.ui
+						if pui.name: placement_obj.visual.name = pui.name
+						if pui.color: placement_obj.visual.color.set_int(pui.color)
 					time_obj = placement_obj.time
 					time_obj.set_posdur(curpos, phrase.d)
 
@@ -99,8 +110,12 @@ class input_cvpj_f(plugins.base):
 				for audio in tmp_track.audios:
 					curpos += audio.td
 					placement_obj = track_obj.placements.add_audio()
+					if audio.ui:
+						pui = audio.ui
+						if pui.name: placement_obj.visual.name = pui.name
+						if pui.color: placement_obj.visual.color.set_int(pui.color)
 					time_obj = placement_obj.time
 					time_obj.set_posdur(curpos, audio.end)
-					convproj_obj.sampleref__add(audio.file, audio.file)
+					convproj_obj.sampleref__add(audio.file, audio.file, 'win')
 					sp_obj = placement_obj.sample
 					sp_obj.sampleref = audio.file

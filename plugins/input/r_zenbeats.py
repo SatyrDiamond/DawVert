@@ -56,9 +56,14 @@ def set_filter_type(filter_obj, num):
 def param_find(plugin_obj, cvpjname, xmldata, xmlname, add, mul):
 	paramdata = data_xml.find_first(xmldata, xmlname)
 	if paramdata is not None:
-		paramval = float(paramdata.get('value'))
-		if paramval is not None:
-			param_obj = plugin_obj.params.add(cvpjname, (paramval+add)*mul, 'float')
+		param_val = float(paramdata.get('value'))
+		param_min = float(paramdata.get('min'))
+		param_max = float(paramdata.get('max'))
+		if param_val is not None:
+			param_obj = plugin_obj.params.add(cvpjname, (param_val+add)*mul, 'float')
+			param_min = (param_min+add)*mul
+			param_max = (param_max+add)*mul
+			param_obj.add_minmax(param_min, param_max)
 
 def get_value(xmldata, xmlname, fallbackv):
 	paramdata = data_xml.find_first(xmldata, xmlname)

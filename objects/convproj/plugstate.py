@@ -171,6 +171,7 @@ class cvpj_plugin_state:
 			param_obj = self.params.add(p_id, p_value, 'int')
 			param_obj.min = 0
 			param_obj.max = datapack_param.out_enum_max
+			param_obj.range_defined = True
 			param_obj.is_enum = True
 			param_obj.enum_max = datapack_param.out_enum_max
 			param_obj.enum_end_point = 'start'
@@ -180,6 +181,7 @@ class cvpj_plugin_state:
 			param_obj = self.params.add(p_id, p_value, 'float')
 			param_obj.min = 0
 			param_obj.max = datapack_param.max
+			param_obj.range_defined = True
 			param_obj.is_enum = True
 			param_obj.enum_max = datapack_param.out_enum_max
 			param_obj.enum_end_point = datapack_param.out_enum_end_point
@@ -192,6 +194,7 @@ class cvpj_plugin_state:
 			param_obj = self.params.add(p_id, p_value, 'int')
 			param_obj.min = 0
 			param_obj.max = datapack_param.out_enum_max
+			param_obj.range_defined = True
 			param_obj.is_enum = True
 			param_obj.enum_max = datapack_param.out_enum_max
 			param_obj.enum_end_point = 'start'
@@ -204,10 +207,12 @@ class cvpj_plugin_state:
 			param_obj = self.params.add(p_id, p_value, 'int')
 			param_obj.min = datapack_param.min
 			param_obj.max = datapack_param.max
+			param_obj.range_defined = True
 		elif valtype == 'float': 
 			param_obj = self.params.add(p_id, p_value, 'float')
 			param_obj.min = datapack_param.min
 			param_obj.max = datapack_param.max
+			param_obj.range_defined = True
 		else:
 			print('dpack to: unknown param valtype', valtype)
 			exit()

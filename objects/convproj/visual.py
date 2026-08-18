@@ -524,6 +524,7 @@ class cvpj_window_data:
 class cvpj_visual_keynote:
 	def __init__(self):
 		self.data = {}
+		self.name = None
 
 	def json__make(self):
 		outjson = []

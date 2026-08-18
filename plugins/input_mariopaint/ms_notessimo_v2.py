@@ -3,10 +3,7 @@
 
 from functions import xtramath
 from objects import globalstore
-import json
 import plugins
-import struct
-import zlib
 
 class input_notessimo_v2(plugins.base):
 	def is_dawvert_plugin(self):
@@ -89,7 +86,9 @@ class input_notessimo_v2(plugins.base):
 						time_obj = placement_obj.time
 						time_obj.set_posdur(0, x.size)
 						cvpj_notelist = placement_obj.notelist
-						for nnn in layer: cvpj_notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, None)
+						for nnn in layer: 
+							cvpj_notelist.add_m(str(nnn.inst), (nnn.pos)*notelen, (nnn.dur/4)*notelen, nnn.get_note(), nnn.vol, None)
+							if nnn.pan: cvpj_notelist.last_add_pan(nnn.pan)
 
 		fxchan_data = convproj_obj.fx__chan__add(1)
 		fxchan_data.visual.name = 'Drums'

@@ -3,8 +3,8 @@
 
 import zlib
 import zipfile
-from external.easybinrw import easybinrw
 from functions import note_data
+from external.easybinrw import easybinrw
 from objects.exceptions import ProjectFileParserException
 
 class note_note:

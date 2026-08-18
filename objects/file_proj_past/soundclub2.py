@@ -34,7 +34,6 @@ class sn2_instrument:
 				self.loopstart = 0
 				self.freq = 0
 				self.data = b''
-		#print('[soundclub2] Instrument:', self.name)
 
 class sn2_event:
 	__slot__ = ['len', 'type', 'value', 'p_len', 'p_key']

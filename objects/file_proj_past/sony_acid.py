@@ -1,8 +1,6 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from objects import audio_data
-import zlib
 import logging
 import numpy as np
 from external.easybinrw import easybinrw
@@ -332,10 +330,10 @@ class sony_acid_file:
 				for i in riffpart.iter_reader(ebrw_readstr):
 					try:
 						if i.id == b'INAM': self.name = ebrw_readstr.string(i.size)
-						if i.id == b'IART': self.artist = ebrw_readstr.string(i.size)
-						if i.id == b'ISFT': self.createdBy = ebrw_readstr.string(i.size)
-						if i.id == b'ICMT': self.comments = ebrw_readstr.string(i.size)
-						if i.id == b'ICOP': self.copyright = ebrw_readstr.string(i.size)
+						elif i.id == b'IART': self.artist = ebrw_readstr.string(i.size)
+						elif i.id == b'ISFT': self.createdBy = ebrw_readstr.string(i.size)
+						elif i.id == b'ICMT': self.comments = ebrw_readstr.string(i.size)
+						elif i.id == b'ICOP': self.copyright = ebrw_readstr.string(i.size)
 					except:
 						pass
 

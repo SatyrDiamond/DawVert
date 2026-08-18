@@ -48,12 +48,13 @@ class lanefit:
 
 
 class cvpj_nle:
-	__slots__ = ['visual','notelist','timesig_auto','timemarkers']
+	__slots__ = ['visual','notelist','timesig_auto','timemarkers','visual_roll']
 	def __init__(self, time_ppq):
 		self.visual = visual.cvpj_visual()
 		self.notelist = notelist.cvpj_notelist(time_ppq)
 		self.timesig_auto = autoticks.cvpj_autoticks(time_ppq, 'timesig')
 		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq)
+		self.visual_roll = visual.cvpj_visual_placement_notes()
 
 	def json__make(self):
 		outjson = {}

@@ -564,3 +564,20 @@ class cvpj_visual_track:
 		self.param_auto_track = None
 		self.param_auto_sep = None
 		self.group_expanded = False
+		self.pl_notes_all = False
+		self.pl_notes = cvpj_visual_placement_notes()
+
+	def copy(self):
+		return copy.copy(self)
+
+class cvpj_visual_placement_notes:
+	def __init__(self):
+		self.scale_visible = False
+		self.scale_root = 0
+		self.scale_keys = None
+		self.scale_name = None
+		self.scale_hide = False
+		self.fold = None
+
+	def copy(self):
+		return copy.copy(self)

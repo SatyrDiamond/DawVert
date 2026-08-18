@@ -106,7 +106,6 @@ class cvpj_param:
 		self.range_defined = False
 		self.min = 0
 		self.max = 1
-		self.range_defined = False
 		self.visual = visual.cvpj_visual()
 		self.found = True
 		self.unit = cvpj_param_unit()

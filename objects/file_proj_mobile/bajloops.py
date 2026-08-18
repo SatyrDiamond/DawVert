@@ -103,9 +103,10 @@ def bajloop_automation_part(byr_stream):
 	header1 = byr_stream.int_u8()
 	if header1==255:
 		assert(byr_stream.int_u8()==1)
-		outdata1 = byr_stream.raw(3).hex()
+		outdata1 = byr_stream.int_u16_b()
+		outdata2 = byr_stream.int_u8()
 		#print('PART', outdata1)
-		return outdata1
+		return outdata1, outdata2
 	else: 
 		return None
 
@@ -113,14 +114,14 @@ def bajloop_automations(byr_stream):
 	header1 = byr_stream.int_u8()
 	if header1==255:
 		assert(byr_stream.int_u8()==1)
-		outdata1 = byr_stream.raw(2).hex()
-		outdata2 = []
-		#print('HEAD', outdata1)
+		tracknum = byr_stream.int_s8()
+		paramnum = byr_stream.int_u8()
+		data = {}
 		while True:
 			d = bajloop_automation_part(byr_stream)
 			if d==None: break
-			else: outdata2.append(d)
-		return outdata1, outdata2
+			else: data[d[0]] = d[1]
+		return tracknum, paramnum, data
 	else: 
 		#print('DONE')
 		#print()

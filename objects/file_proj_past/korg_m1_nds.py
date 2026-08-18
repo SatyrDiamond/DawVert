@@ -72,7 +72,7 @@ class korg_m1_proj:
 		for i, song_obj in enumerate(self.songs):
 			ebrw_readstr.seek(0x1000 + 0xC000 * i)
 			if self.songs[i].modified:
-				ebrw_readstr.skip(8)
+				ebrw_readstr.raw(8)
 				for channel_obj in song_obj.channels:
 					channel_obj.mode = ebrw_readstr.int_u8()
 					channel_obj.cat = ebrw_readstr.int_u8()
@@ -90,7 +90,22 @@ class korg_m1_proj:
 						drumset_obj.tune = ebrw_readstr.int_s8()
 					ebrw_readstr.skip(17)
 
-				ebrw_readstr.skip(62)
+				ebrw_readstr.skip(5)
+				song_obj.reverb_time = ebrw_readstr.int_s8()
+				song_obj.reverb_level = ebrw_readstr.int_s8()
+
+				ebrw_readstr.skip(1)
+
+				song_obj.delay_tempo = ebrw_readstr.int_u8()
+				song_obj.delay_time = ebrw_readstr.int_u8()
+				song_obj.delay_lr_ratio = ebrw_readstr.int_s8()
+				song_obj.delay_fb = ebrw_readstr.int_u8()
+				song_obj.delay_level = ebrw_readstr.int_u8()
+
+				ebrw_readstr.skip(3)
+				song_obj.fx_type = ebrw_readstr.int_u8()&1
+				ebrw_readstr.skip(45)
+
 				song_obj.tempo = ebrw_readstr.int_u16()
 				song_obj.swing = ebrw_readstr.int_u8()
 				song_obj.steps = ebrw_readstr.int_u8()

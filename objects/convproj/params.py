@@ -106,13 +106,19 @@ class cvpj_param:
 		self.range_defined = False
 		self.min = 0
 		self.max = 1
+		self.range_defined = False
 		self.visual = visual.cvpj_visual()
 		self.found = True
 		self.unit = cvpj_param_unit()
 		self.is_enum = False
 		self.enum_max = 0
 		self.enum_parts = []
-		self.enum_end_point = 'end'
+		self.enum_end_point = 'start'
+
+	def add_range(self, minv, maxv):
+		self.min = minv
+		self.max = maxv
+		self.range_defined = True
 
 	def add_enum_part(self, num, idv):
 		self.is_enum = True

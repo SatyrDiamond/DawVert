@@ -61,6 +61,33 @@ class input_korg_m1_nds(plugins.base):
 		return_obj = convproj_obj.track_master.fx__return__add('trackfx')
 		return_obj.visual.name = 'FX'
 
+		if projsong_obj.fx_type:
+			return_obj.params.add('vol', projsong_obj.reverb_level/127, 'float')
+			plugin_obj = convproj_obj.plugin__add('trackfx', 'native', 'korg_m1', 'reverb')
+			param_obj = plugin_obj.params.add('time', projsong_obj.reverb_time, 'int')
+			param_obj.add_range(0, 127)
+		else:
+			return_obj.params.add('vol', projsong_obj.delay_level/127, 'float')
+			plugin_obj = convproj_obj.plugin__add('trackfx', 'native', 'korg_m1', 'delay')
+
+			param_obj = plugin_obj.params.add('tempo', bool(projsong_obj.delay_tempo), 'bool')
+			param_obj.visual.name = 'Tempo'
+
+			param_obj = plugin_obj.params.add('time', projsong_obj.delay_time, 'int')
+			param_obj.visual.name = 'Time'
+			param_obj.add_range(0, 127)
+
+			param_obj = plugin_obj.params.add('lr_ratio', projsong_obj.delay_lr_ratio, 'int')
+			param_obj.visual.name = 'L/R Ratio'
+			param_obj.add_range(-63, 63)
+
+			param_obj = plugin_obj.params.add('fb', projsong_obj.delay_fb, 'int')
+			param_obj.visual.name = 'Feedback'
+			param_obj.add_range(0, 127)
+
+		return_obj.plugslots.slots_audio.append('trackfx')
+
+
 		for num, channel_obj in enumerate(projsong_obj.channels):
 			cvpj_trackid = str(num)
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
@@ -68,9 +95,7 @@ class input_korg_m1_nds(plugins.base):
 			track_obj.params.add('pan', channel_obj.pan/5, 'float')
 			track_obj.params.add('enabled', 1 not in channel_obj.flags, 'bool')
 			track_obj.params.add('solo', 2 in channel_obj.flags, 'bool')
-
-			if 0 in channel_obj.flags:
-				track_obj.sends.add('trackfx', None, 1)
+			if 0 in channel_obj.flags: track_obj.sends.add('trackfx', None, 1)
 
 			if channel_obj.mode<3:
 				instset = ['m1','m1w','ex'][channel_obj.mode]

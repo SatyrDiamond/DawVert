@@ -77,13 +77,13 @@ class bajloop_inst:
 		self.unk.append(byr_stream.raw(1).hex())
 		self.pan = byr_stream.int_u8()
 		self.basenote = byr_stream.int_s16()
+		self.pitch = byr_stream.int_s16()
 		#print( self.basenote , end=' | '  )
-		self.unk.append(byr_stream.raw(36).hex())
+		self.unk.append(byr_stream.raw(34).hex())
 		#print( self.unk , end=' | '  )
 		self.color = byr_stream.list_int_u8(3)
 		self.name = byr_stream.string_t(encoding='iso-8859-1')
 		#print(  self.name, end=' | '  )
-		#print()
 
 class bajloop_fx:
 	def __init__(self):
@@ -176,11 +176,12 @@ class bajloop_file:
 		if DEBUGTXT: print('info', self.info)
 		self.unk1 = byr_stream.raw(23)
 		if DEBUGTXT: print('unk1', self.unk1)
-		self.unk2 = byr_stream.list_double_b(15)
+		self.unk2 = byr_stream.raw(15*8)
 		if DEBUGTXT: print('unk2', self.unk2)
 		self.unk3 = [byr_stream.list_int_u8(2).tolist() for x in range(12)]
 		if DEBUGTXT: print('unk3', self.unk3)
-		self.unk4 = byr_stream.int_u32()
+		self.unk4 = byr_stream.raw(3)
+		self.tempo = byr_stream.int_u8()
 		if DEBUGTXT: print('unk4', self.unk4)
 		
 		self.placements = [byr_stream.list_int_u8(8) for x in range(240)]

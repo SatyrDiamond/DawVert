@@ -36,6 +36,7 @@ class input_fl_mobile_old(plugins.base):
 
 		convproj_obj.metadata.name = project_obj.name
 		convproj_obj.metadata.comment_text = project_obj.info
+		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
 
 		samplefolder = dawvert_intent.path_samples['extracted']
 		
@@ -61,6 +62,7 @@ class input_fl_mobile_old(plugins.base):
 			inst_obj.datavals.add('middlenote', binst.basenote)
 			inst_obj.params.add('vol', binst.vol/64, 'float')
 			inst_obj.params.add('pan', -(binst.pan-32)/32, 'float')
+			inst_obj.params.add('pitch', binst.pitch/128, 'float')
 			visual_obj = inst_obj.visual
 			visual_obj.color.set_int(binst.color.tolist())
 			visual_obj.name = binst.name

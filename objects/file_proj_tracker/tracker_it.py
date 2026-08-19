@@ -5,6 +5,9 @@ import struct
 from external.easybinrw import easybinrw
 from objects.inst_params import openmpt_plugin
 from objects.exceptions import ProjectFileParserException
+from objects.file_proj_tracker._it import samplecomp as it214
+from objects import audio_data
+import numpy as np
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -59,6 +62,65 @@ class it_sample:
 		self.vibrato_sweep = ebrw_readstr.int_u8()
 		self.vibrato_wave = ebrw_readstr.int_u8()
 		self.resampling = -1
+		self.ebrw_readstr = ebrw_readstr
+
+	def rip_sample(self, samplefolder, wave_path):
+		ebrw_readstr = self.ebrw_readstr
+		compressed = 3 in self.flags
+		stereo = 2 in self.flags
+		double = 1 in self.flags
+		samp_len = self.length
+
+		audio_obj = audio_data.audio_obj()
+		audio_obj.rate = self.C5_speed
+		audio_obj.channels = 2 if stereo else 1
+
+		datasize_schan = samp_len*(double+1)
+
+		outdata = None
+
+		ebrw_readstr.seek(self.sample_pointer)
+		if compressed:
+			remlen = samp_len
+			xdata = []
+
+			while remlen > 0:
+				blkcomplen = ebrw_readstr.int_u16()
+				data = ebrw_readstr.raw(blkcomplen)
+				decomp = it214.IT214Decompressor(data, remlen, double)
+				xdata += decomp.get_data()
+				blkdecomplen = decomp.get_length()
+				remlen -= blkdecomplen
+
+			outd = np.zeros(samp_len, dtype=(np.uint16 if double else np.uint8))
+			outd[0:len(xdata)] = xdata
+			ebrw_readstr = easybinrw.binread()
+			ebrw_readstr.load_data(outd.tobytes())
+
+		if double == 0:
+			audio_obj.set_codec('int8')
+			if not stereo: 
+				outdata = np.zeros(samp_len, dtype=np.uint8)
+				outdata[:samp_len] = np.frombuffer(ebrw_readstr.read(datasize_schan), dtype=np.uint8)
+			else:
+				outdata = np.zeros(samp_len*2, dtype=np.uint8)
+				outdata[:samp_len*2][0::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint8)
+				outdata[:samp_len*2][1::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint8)
+		else: 
+			audio_obj.set_codec('int16')
+			if not stereo: 
+				outdata = np.zeros(samp_len, dtype=np.uint16)
+				outdata[:samp_len] = np.frombuffer(ebrw_readstr.read(datasize_schan), dtype=np.uint16)
+			else:
+				outdata = np.zeros(samp_len*2, dtype=np.uint16)
+				outdata[:samp_len*2][0::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint16)
+				outdata[:samp_len*2][1::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint16)
+
+		if outdata is not None: 
+			audio_obj.pcm_from_list(outdata)
+			if 4 in self.flags: audio_obj.loop = [self.loop_start, self.loop_end-1]
+
+		audio_obj.to_file_wav(wave_path)
 
 	def vibrato_lfo(self):
 		vibrato_on = self.vibrato_sweep != 0 and self.vibrato_speed != 0

@@ -303,8 +303,6 @@ class input_notessimo_v3(plugins.base):
 		firstlayer = True
 
 		fxchan_data = convproj_obj.fx__chan__add(0)
-		if notet_cursong_data.name: fxchan_data.visual.name = notet_cursong_data.name
-		if notet_cursong_data.comments: fxchan_data.visual.comment = notet_cursong_data.comments
 		incolor(notet_cursong_data.color, fxchan_data.visual)
 		fxchan_data.params.add('vol', xtramath.from_db(notet_cursong_data.volume/3), 'float')
 		fxchan_data.params.add('pan', notet_cursong_data.pan, 'float')
@@ -331,3 +329,6 @@ class input_notessimo_v3(plugins.base):
 
 		for used_inst in used_insts:
 			inst_manager.add_inst(convproj_obj, used_inst, project_obj, maindata_obj)
+
+		if notet_cursong_data.name: convproj_obj.metadata.name = notet_cursong_data.name
+		if notet_cursong_data.comments: convproj_obj.metadata.comment_text = notet_cursong_data.comments

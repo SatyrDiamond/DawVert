@@ -6,6 +6,7 @@ import io
 import os.path
 import plugins
 import tempfile
+import logging
 
 def env_to_cvpj(it_env, plugin_obj, t_type, i_div): 
 	autopoints_obj = plugin_obj.env_points_add(t_type, 48, 'float')
@@ -60,6 +61,8 @@ def idsamp_spobj(it_samp, sp_obj):
 	sp_obj.loop_mode =  'normal' if not (6 in it_samp.flags) else 'pingpong'
 	sp_obj.loop_start = it_samp.loop_start
 	sp_obj.loop_end = it_samp.loop_end
+	name = get_name(it_samp.name, it_samp.dosfilename)
+	if name: sp_obj.visual.name = name
 
 def add_single_sampler(convproj_obj, it_samp, sampleidnum):
 	filename = samplefolder+str(sampleidnum)+'.wav'
@@ -73,6 +76,8 @@ def add_single_sampler(convproj_obj, it_samp, sampleidnum):
 	idsamp_spobj(it_samp, sp_obj)
 	sample_vibrato(it_samp, plugin_obj)
 	return plugin_obj, pluginid, sampleref_obj
+
+logger_input = logging.getLogger('input')
 
 class input_it(plugins.base):
 	def is_dawvert_plugin(self): 
@@ -115,7 +120,8 @@ class input_it(plugins.base):
 		
 		it_useinst = 2 in project_obj.flags
 
-		if xmodits_exists == True:
+		if False:
+		#if xmodits_exists == True:
 			if dawvert_intent.input_mode == 'file':
 				if dawvert_intent.input_file:
 					if not os.path.exists(samplefolder): os.makedirs(samplefolder)
@@ -129,6 +135,12 @@ class input_it(plugins.base):
 						if not os.path.exists(samplefolder): os.makedirs(samplefolder)
 						try: xmodits.dump(tf.file.name, samplefolder, index_only=True, index_raw=True, index_padding=0)
 						except: pass
+
+		else:
+			for n, sample in enumerate(project_obj.samples):
+				wave_path = samplefolder+str(n+1)+'.wav'
+				logger_input.info("IT: Ripping/Decompressing Sample #" + str(n))
+				sample.rip_sample(samplefolder, wave_path)
 
 		tracker_obj = convproj_obj.main__create_tracker_single()
 		tracker_obj.set_num_chans(64)
@@ -271,6 +283,7 @@ class input_it(plugins.base):
 
 						sp_obj = plugin_obj.sampleregion_add(sampleregion[1], sampleregion[2], -(sampleregion[0][0]-60), None)
 						sp_obj.sampleref = filename
+
 						if instrumentnum-1 < len(project_obj.samples): 
 							it_samp = project_obj.samples[instrumentnum-1]
 							idsamp_spobj(it_samp, sp_obj)

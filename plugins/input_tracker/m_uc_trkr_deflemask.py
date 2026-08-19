@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 from objects import globalstore
+from functions import xtramath
 import plugins
 
 class input_deflemask(plugins.base):
@@ -93,16 +94,17 @@ class input_deflemask(plugins.base):
 			wave_path = samplefolder + str(n).zfill(2) + '.wav'
 			audio_obj = audio_data.audio_obj()
 			if sample_obj.bits in [16, 8]:
-				audio_obj.set_codec('int16' if sample_obj.bits==16 else 'int8')
+				audio_obj.set_codec('int16' if sample_obj.bits==16 else 'uint8')
 				audio_obj.pcm_from_list(sample_obj.data)
+				if sample_obj.rate: audio_obj.rate = [8000,11025,16000,22050,32000][sample_obj.rate-1]
 				audio_obj.to_file_wav(wave_path)
 				sampleid = 'sample_'+str(n).zfill(2)
 				sampleref_obj = convproj_obj.sampleref__add(sampleid, wave_path, None)
 				sampleref_obj.set_fileformat('wav')
 				audio_obj.to_sampleref_obj(sampleref_obj)
-				sampleparts.append([sampleid, sample_obj.name])
+				sampleparts.append([sampleid, sample_obj])
 			else:
-				sampleparts.append([None, ''])
+				sampleparts.append([None, None])
 
 		for instname, instnums in used_insts.items():
 			for chinst in instnums:
@@ -114,6 +116,7 @@ class input_deflemask(plugins.base):
 
 				insttype = patterndata_obj.get_channel_insttype(channum)
 				inst_obj.visual.from_datapack('furnace', 'chip', insttype, False)
+				inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 
 				if instnum<10000:
 					dmf_inst = project_obj.insts[instnum]
@@ -149,20 +152,28 @@ class input_deflemask(plugins.base):
 							plugin_obj.env_asdr_add('vol', 0, 0, 0, 0, 1, 0, 1)
 				else:
 					samplenum = instnum-10000
-
-					sampleid, sample_name = sampleparts[samplenum]
+					sampleid, sample_obj = sampleparts[samplenum]
 
 					if sampleid:
-						inst_obj.visual.name = sample_name
+						sample_pitch = xtramath.speed_to_pitch(proj_deflemask.samplePitches[sample_obj.pitch])
+						inst_obj.visual.name = sample_obj.name
 						inst_obj.visual.color.set_float([.9,.9,.9])
+						inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']
 						inst_obj.is_drum = True
+						inst_obj.datavals.add('middlenote', -int(sample_pitch))
+						inst_obj.params.add('vol', (sample_obj.amp)/70, 'float')
+
+						#inst_obj.params.add('pitch', pcms_c[3]/100, 'float')
 
 						plugin_obj, synthid = convproj_obj.plugin__add__genid('universal', 'sampler', 'single')
 						plugin_obj.role = 'synth'
 						inst_obj.plugslots.set_synth(synthid)
 						samplepart_obj = plugin_obj.samplepart_add('sample')
 						samplepart_obj.sampleref = sampleid
+						samplepart_obj.visual.name = sample_obj.name
 						plugin_obj.datavals.add('point_value_type', "samples")
+
 					else:
 						inst_obj.visual.name = ''
 						inst_obj.visual.color.set_float([.9,.9,.9])
+						inst_obj.visual.color.fx_allowed = ['saturate', 'brighter']

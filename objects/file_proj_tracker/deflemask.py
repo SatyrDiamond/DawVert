@@ -12,6 +12,12 @@ from objects.exceptions import ProjectFileParserException
 import logging
 logger_projparse = logging.getLogger('projparse')
 
+samplePitches = [
+  0.1666666666, 0.2, 0.25, 0.333333333, 0.5,
+  1,
+  2, 3, 4, 5, 6
+]
+
 # ============================================= instrument ============================================= 
 
 class deflemask_envelope:
@@ -104,6 +110,8 @@ class deflemask_sample:
 		self.amp = 0
 		self.bits = 0
 		self.data = []
+		self.cutStart = 0
+		self.cutEnd = 0
 
 # ============================================= project ============================================= 
 
@@ -113,6 +121,7 @@ class deflemask_channel:
 		self.visname = None
 		self.patterns = {}
 		self.orders = []
+		self.names = []
 
 class deflemask_project:
 	def __init__(self):
@@ -154,8 +163,9 @@ class deflemask_project:
 		ebrw_readstr.magic_check(b'.DelekDefleMask.')
 		self.version = ebrw_readstr.int_u8()
 
-		if self.version != 24:
-			raise ProjectFileParserException('deflemask: only version 24 is supported.')
+		if self.version<24:
+			raise ProjectFileParserException('deflemask: only version 24+ is supported. not %i.' % self.version)
+		logger_projparse.info('deflemask: dmf version %i' % self.version)
 
 		self.system = ebrw_readstr.int_u8()
 
@@ -163,34 +173,34 @@ class deflemask_project:
 		if self.system == int("02",16): #GENESIS
 			self.chantype = ['opn2','opn2','opn2','opn2','opn2','opn2','square','square','square','noise']
 			self.channames = ['FM 1','FM 2','FM 3','FM 4','FM 5','FM 6','Square 1','Square 2','Square 3','Noise']
-		if self.system == int("42",16): #SYSTEM_GENESIS (mode EXT. CH3) 
+		elif self.system == int("42",16): #SYSTEM_GENESIS (mode EXT. CH3) 
 			self.chantype = ['opn2','opn2','opn2-op','opn2-op','opn2-op','opn2-op','opn2','opn2','opn2','square','square','square','noise']
 			self.channames = ['FM 1','FM 2','FM 3 OP 1','FM 3 OP 2','FM 3 OP 3','FM 3 OP 4','FM 4','FM 5','FM 6','Square 1','Square 2','Square 3','Noise']
-		if self.system == int("03",16): #SMS
+		elif self.system == int("03",16): #SMS
 			self.chantype = ['square','square','square','noise']
 			self.channames = ['Square 1','Square 2','Square 3','Noise']
-		if self.system == int("04",16): #GAMEBOY
+		elif self.system == int("04",16): #GAMEBOY
 			self.chantype = ['gameboy_pulse','gameboy_pulse','gameboy_wavetable','gameboy_noise']
 			self.channames = ['Pulse 1','Pulse 2','Wavetable','Noise']
-		if self.system == int("05",16): #PCENGINE
+		elif self.system == int("05",16): #PCENGINE
 			self.chantype = ['pce','pce','pce','pce','pce','pce']
 			self.channames = ['Channel 1','Channel 2','Channel 3','Channel 4','Channel 5','Channel 6']
-		if self.system == int("06",16): #NES
+		elif self.system == int("06",16): #NES
 			self.chantype = ['pulse','pulse','triangle','noise','pcm']
 			self.channames = ['Pulse 1','Pulse 2','Triangle','Noise','PCM']
-		if self.system == int("07",16): #C64 (SID 8580)
+		elif self.system == int("07",16): #C64 (SID 8580)
 			self.chantype = ['c64','c64','c64']
 			self.channames = ['Channel 1','Channel 2','Channel 3']
-		if self.system == int("47",16): #C64 (mode SID 6581)
+		elif self.system == int("47",16): #C64 (mode SID 6581)
 			self.chantype = ['c64','c64','c64']
 			self.channames = ['Channel 1','Channel 2','Channel 3']
-		if self.system == int("08",16): #ARCADE
+		elif self.system == int("08",16): #ARCADE
 			self.chantype = ['opn2','opn2','opn2','opn2','opn2','opn2','opn2','opn2','sample','sample','sample','sample','sample']
 			self.channames = ['FM 1','FM 2','FM 3','FM 4','FM 5','FM 6','FM 7','FM 8','Channel 1','Channel 2','Channel 3','Channel 4','Channel 5']
-		if self.system == int("09",16): #NEOGEO
+		elif self.system == int("09",16): #NEOGEO
 			self.chantype = ['opn2','opn2','opn2','opn2','psg','psg','psg','adpcma','adpcma','adpcma','adpcma','adpcma','adpcma']
 			self.channames = ['FM 1','FM 2','FM 3','FM 4','PSG 1','PSG 2','PSG 3','ADPCM-A 1','ADPCM-A 2','ADPCM-A 3','ADPCM-A 4','ADPCM-A 5','ADPCM-A 6']
-		if self.system == int("49",16): #NEOGEO (mode EXT. CH2)
+		elif self.system == int("49",16): #NEOGEO (mode EXT. CH2)
 			self.chantype = ['opn2','opn2','opn2_op','opn2_op','opn2_op','opn2_op','opn2','psg','psg','psg','adpcma','adpcma','adpcma','adpcma','adpcma','adpcma']
 			self.channames = ['FM 1','FM 2 OP 1','FM 2 OP 2','FM 2 OP 3','FM 2 OP 4','FM 3','FM 4','PSG 1','PSG 2','PSG 3','ADPCM-A 1','ADPCM-A 2','ADPCM-A 3','ADPCM-A 4','ADPCM-A 5','ADPCM-A 6']
 
@@ -221,7 +231,14 @@ class deflemask_project:
 		self.total_rows_in_pattern_matrix = ebrw_readstr.int_u8()
 
 		self.pat_orders = []
-		for c in self.channels: c.orders = ebrw_readstr.list_int_u8(self.total_rows_in_pattern_matrix)
+		for c in self.channels: 
+			c.orders = []
+			for cp in range(self.total_rows_in_pattern_matrix): 
+				num = ebrw_readstr.int_u8()
+				c.orders.append(num)
+				if (self.version>=25):
+					patname = ebrw_readstr.string_i8()
+					c.names.append(patname)
 
 		num_insts = ebrw_readstr.int_u8()
 		self.insts = [deflemask_instrument(ebrw_readstr, self.system) for _ in range(num_insts)]
@@ -254,8 +271,11 @@ class deflemask_project:
 			sample_obj.pitch = ebrw_readstr.int_u8()
 			sample_obj.amp = ebrw_readstr.int_u8()
 			sample_obj.bits = ebrw_readstr.int_u8()
+			if self.version>=0x1b:
+				sample_obj.cutStart = ebrw_readstr.int_u32()
+				sample_obj.cutEnd = ebrw_readstr.int_u32()
 			if sample_obj.bits == 16: sample_obj.data = ebrw_readstr.list_int_s16(sample_obj.size)
-			if sample_obj.bits == 8: sample_obj.data = ebrw_readstr.list_int_s8(sample_obj.size)
+			if sample_obj.bits == 8: sample_obj.data = ebrw_readstr.list_int_u8(sample_obj.size*2)[0::2]
 			self.samples.append(sample_obj)
 
 		return True

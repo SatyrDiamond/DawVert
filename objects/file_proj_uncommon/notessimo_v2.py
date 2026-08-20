@@ -1,11 +1,10 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import zlib
-import zipfile
 from external.easybinrw import easybinrw
 from functions import note_data
 from objects.exceptions import ProjectFileParserException
+import zlib
 
 class note_note:
 	__slots__ = ['pos','note','layer','inst','sharp','flat','vol','pan','dur']
@@ -30,7 +29,7 @@ class note_note:
 		if self.flat: out_offset = -1
 		return out_note+out_offset
 
-	def from_v2(self, ebrw_readstr):
+	def read(self, ebrw_readstr):
 		self.pos = ebrw_readstr.int_u32()
 		self.note = ebrw_readstr.int_u8()
 		self.layer = ebrw_readstr.int_u8()
@@ -51,12 +50,18 @@ class notev2_pattern:
 		num_notes = ebrw_readstr.int_u32()
 		for _ in range(num_notes):
 			note = note_note()
-			note.from_v2(ebrw_readstr)
+			note.read(ebrw_readstr)
 			self.notes.append(note)
 
 class notev2_song:
 	def __init__(self):
-		pass
+		self.name = ''
+		self.author = ''
+		self.date1 = ''
+		self.date2 = ''
+		self.order = []
+		self.tempo_table = []
+		self.patterns = []
 
 	def load_from_file(self, input_file):
 		ebrw_readstr = easybinrw.binread()

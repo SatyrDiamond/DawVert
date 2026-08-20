@@ -38,7 +38,7 @@ class trackerboy_instrument:
 			self.envs.append(o)
 
 class trackerboy_env:
-	def __init__(self, ebrw_readstr):
+	def __init__(self):
 		self.loopEnabled = 0
 		self.loopIndex = 0
 		self.values = []
@@ -53,7 +53,7 @@ class trackerboy_env:
 		return bool(len(self.values))
 
 class trackerboy_wave:
-	def __init__(self, ebrw_readstr):
+	def __init__(self):
 		self.id = 0
 		self.name = b''
 		self.wave = []
@@ -66,31 +66,40 @@ class trackerboy_wave:
 # ============================================= song ============================================= 
 
 class trackerboy_song:
-	def __init__(self, ebrw_readstr):
+	def __init__(self):
 		self.patterns = {}
+		self.orders = []
+		self.name = ''
+		self.beat = 0
+		self.measure = 0
+		self.speed = 0
+		self.len = 0
+		self.rows = 0
+		self.pat_num = 0
+		self.numfxareas = 0
 
-		if ebrw_readstr:
-			self.name = ebrw_readstr.raw_i16()
-			self.beat = ebrw_readstr.int_u8()
-			self.measure = ebrw_readstr.int_u8()
-			self.speed = ebrw_readstr.int_u8()
-			self.len = ebrw_readstr.int_u8()+1
-			self.rows = ebrw_readstr.int_u8()+1
-			self.pat_num = ebrw_readstr.int_u16()
-			self.numfxareas = ebrw_readstr.int_u8()
-			self.orders = ebrw_readstr.list_int_u8(self.len*4)
-			self.orders = np.reshape(self.orders, [self.len, 4])
+	def read(self, ebrw_readstr):
+		self.name = ebrw_readstr.raw_i16()
+		self.beat = ebrw_readstr.int_u8()
+		self.measure = ebrw_readstr.int_u8()
+		self.speed = ebrw_readstr.int_u8()
+		self.len = ebrw_readstr.int_u8()+1
+		self.rows = ebrw_readstr.int_u8()+1
+		self.pat_num = ebrw_readstr.int_u16()
+		self.numfxareas = ebrw_readstr.int_u8()
+		self.orders = ebrw_readstr.list_int_u8(self.len*4)
+		self.orders = np.reshape(self.orders, [self.len, 4])
 
-			self.orders = np.rot90(self.orders)
+		self.orders = np.rot90(self.orders)
 
-			for _ in range(self.pat_num):
-				pate_ch = ebrw_readstr.int_u8()
-				pate_trkid = ebrw_readstr.int_u8()
-				pate_rows = ebrw_readstr.int_u8()+1
-				pate_data = np.frombuffer(ebrw_readstr.read(9*pate_rows), dtype=dtype_patdata)
+		for _ in range(self.pat_num):
+			pate_ch = ebrw_readstr.int_u8()
+			pate_trkid = ebrw_readstr.int_u8()
+			pate_rows = ebrw_readstr.int_u8()+1
+			pate_data = np.frombuffer(ebrw_readstr.read(9*pate_rows), dtype=dtype_patdata)
 
-				if pate_ch not in self.patterns: self.patterns[pate_ch] = {}
-				self.patterns[pate_ch][pate_trkid] = pate_data
+			if pate_ch not in self.patterns: self.patterns[pate_ch] = {}
+			self.patterns[pate_ch][pate_trkid] = pate_data
 
 class trackerboy_project:
 	def __init__(self):
@@ -99,6 +108,14 @@ class trackerboy_project:
 		self.songs = []
 		self.insts = {}
 		self.waves = {}
+		self.title = ''
+		self.artist = ''
+		self.copyright = ''
+		self.icount = 0
+		self.scount = 0
+		self.wcount = 0
+		self.system = 0
+
 
 	def load_from_file(self, input_file):
 		ebrw_readstr = easybinrw.binread()
@@ -129,7 +146,8 @@ class trackerboy_project:
 				inst_obj.read(ebrw_readstr)
 				self.insts[inst_obj.id] = inst_obj
 			if part_obj.id == b'SONG':
-				song_obj = trackerboy_song(ebrw_readstr)
+				song_obj = trackerboy_song()
+				song_obj.read(ebrw_readstr)
 				self.songs.append(song_obj)
 			if part_obj.id == b'WAVE':
 				wave_obj = trackerboy_wave()

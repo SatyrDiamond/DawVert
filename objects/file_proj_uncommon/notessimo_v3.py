@@ -1,13 +1,11 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-import zlib
-import zipfile
-import xml.etree.ElementTree as ET
 from functions import note_data
-import os
-
 from objects.exceptions import ProjectFileParserException
+import os
+import xml.etree.ElementTree as ET
+import zipfile
 
 import logging
 logger_projparse = logging.getLogger('projparse')

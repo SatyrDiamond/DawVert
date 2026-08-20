@@ -3,7 +3,6 @@
 
 import json
 import numpy as np
-
 from objects.exceptions import ProjectFileParserException
 
 vl_dtype = np.dtype([('n', np.int16),('t', np.int16),('v', np.int16),('f', np.int16),('id', np.int32),('x', np.int16),('p', np.int16),('e', np.int16)])
@@ -12,17 +11,18 @@ class LCSound:
 	def __init__(self, pd):
 		self.play_notes = 32
 		self.play_speed = 30
-		if pd:
-			self.vl = None
-			if '__LCSound__' in pd:
-				self.vl = pd['vl']
-				if 'play_notes' in pd: self.play_notes = pd['play_notes']
-				if 'play_speed' in pd: self.play_speed = pd['play_speed']
-
+		self.vl = None
 		self.voicelist = np.zeros(self.play_notes, dtype=vl_dtype)
 		self.voicelist.fill(-1)
 		self.voicelist['x'] = 14
 		self.voicelist['p'] = 8
+		if pd is not None: self.read(pd)
+
+	def read(self, pd):
+		if '__LCSound__' in pd:
+			self.vl = pd['vl']
+			if 'play_notes' in pd: self.play_notes = pd['play_notes']
+			if 'play_speed' in pd: self.play_speed = pd['play_speed']
 
 		if self.vl:
 			for num in range(min(len(self.voicelist), len(self.vl))):
@@ -48,10 +48,12 @@ class LCSound:
 class LCSoundList:
 	def __init__(self, pd):
 		self.sl = []
-		if pd:
-			if '__LCSoundList__' in pd:
-				for ch in pd['sl']:
-					self.sl.append(LCSound(ch))
+		if pd is not None: self.read(pd)
+
+	def read(self, pd):
+		if '__LCSoundList__' in pd:
+			for ch in pd['sl']:
+				self.sl.append(LCSound(ch))
 
 class LCChannelList:
 	def __init__(self):
@@ -76,7 +78,9 @@ class LCRhythm:
 		self.pattern = 3
 		self.sub_pattern = 2
 		self.enable_chordpart = True
+		if pd is not None: self.read(pd)
 
+	def read(self, pd):
 		if '__LCRhythm__' in pd:
 			if 'enable_drum' in pd: self.enable_drum = pd['enable_drum']
 			if 'enable_base' in pd: self.enable_base = pd['enable_base']

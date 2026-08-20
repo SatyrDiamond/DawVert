@@ -61,7 +61,6 @@ class input_mod(plugins.base):
 		elif project_obj.nametable:
 			firstname = project_obj.nametable[0]
 
-			#outdetected = filedetector_obj.detect_file(dawvert_intent.input_file)
 			dawvert_intent_copy = dawvert_intent.copy()
 			dawvert_intent_copy.input_mode = 'bytes'
 			dawvert_intent_copy.input_data = project_obj.outdata

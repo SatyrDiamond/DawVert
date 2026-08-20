@@ -15,13 +15,15 @@ class ceol_instrument:
 		self.cutoff = 128
 		self.resonance = 0
 		self.volume = 256
-		if ebrw_readstr:
-			self.inst = ebrw_readstr.int_u16()
-			self.type = ebrw_readstr.int_u16()
-			self.palette = ebrw_readstr.int_u16()
-			self.cutoff = ebrw_readstr.int_u16()
-			self.resonance = ebrw_readstr.int_u16()
-			self.volume = ebrw_readstr.int_u16()
+		if ebrw_readstr is not None: self.read(ebrw_readstr)
+
+	def read(self, ebrw_readstr):
+		self.inst = ebrw_readstr.int_u16()
+		self.type = ebrw_readstr.int_u16()
+		self.palette = ebrw_readstr.int_u16()
+		self.cutoff = ebrw_readstr.int_u16()
+		self.resonance = ebrw_readstr.int_u16()
+		self.volume = ebrw_readstr.int_u16()
 
 	def write_ebrw(self, ebrw_writestr):
 		ebrw_writestr.int_u16(self.inst)
@@ -55,20 +57,26 @@ class ceol_note:
 class ceol_pattern:
 	def __init__(self, ebrw_readstr):
 		self.notes = []
+		self.key = 0
+		self.scale = 0
+		self.inst = 0
+		self.palette = 0
 		self.recordfilter = None
-		if ebrw_readstr:
-			self.key = ebrw_readstr.int_u16()
-			self.scale = ebrw_readstr.int_u16()
-			self.inst = ebrw_readstr.int_u16()
-			self.palette = ebrw_readstr.int_u16()
-			numnotes = ebrw_readstr.int_u16()
-			for _ in range(numnotes):
-				note_obj = ceol_note()
-				note_obj.read(ebrw_readstr)
-				self.notes.append(note_obj)
-			if ebrw_readstr.int_u16():
-				self.recordfilter = ebrw_readstr.list_int_u16(16*3)
-				self.recordfilter = np.reshape(self.recordfilter, [16, 3])
+		if ebrw_readstr is not None: self.read(ebrw_readstr)
+
+	def read(self, ebrw_readstr):
+		self.key = ebrw_readstr.int_u16()
+		self.scale = ebrw_readstr.int_u16()
+		self.inst = ebrw_readstr.int_u16()
+		self.palette = ebrw_readstr.int_u16()
+		numnotes = ebrw_readstr.int_u16()
+		for _ in range(numnotes):
+			note_obj = ceol_note()
+			note_obj.read(ebrw_readstr)
+			self.notes.append(note_obj)
+		if ebrw_readstr.int_u16():
+			self.recordfilter = ebrw_readstr.list_int_u16(16*3)
+			self.recordfilter = np.reshape(self.recordfilter, [16, 3])
 
 	def write_ebrw(self, ebrw_writestr):
 		ebrw_writestr.int_u16(self.key)
@@ -85,6 +93,7 @@ class ceol_pattern:
 
 class ceol_song:
 	def __init__(self):
+		self.versionnum = 1
 		self.swing = 0
 		self.effect_type = 0
 		self.effect_value = 0

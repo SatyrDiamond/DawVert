@@ -30,7 +30,19 @@ class xm_env:
 		self.loop_on = bool(i_type&4)
 
 class xm_sample_header:
-	def __init__(self, ebrw_readstr): 
+	def __init__(self): 
+		self.length = 0
+		self.loop_start = 0
+		self.loop_end = 0 
+		self.vol = 64
+		self.fine = 0
+		self.type = 0
+		self.pan = 128
+		self.note = 0
+		self.reserved = 0
+		self.name = ''
+
+	def read(self, ebrw_readstr): 
 		self.length = ebrw_readstr.int_u32()
 		self.loop_start = ebrw_readstr.int_u32()
 		self.loop_end = ebrw_readstr.int_u32()
@@ -41,11 +53,11 @@ class xm_sample_header:
 		self.note = ebrw_readstr.int_u8()
 		self.reserved = ebrw_readstr.int_u8()
 		self.name = ebrw_readstr.string(22, encoding="windows-1252")
+
 		self.vol /= 64
 		if self.type&1: self.loop = 1
 		elif self.type&2: self.loop = 2
 		else: self.loop = 0
-
 		self.stereo = bool(self.type&32)
 		self.loop_on = bool(self.loop)
 		self.double = bool(self.type&16)
@@ -67,7 +79,24 @@ class xm_sample_header:
 		return self.loop!=0, looptype, loop_start, loop_end if self.loop_end else self.length
 
 class xm_instrument:
-	def __init__(self, ebrw_readstr, num):
+	def __init__(self):
+		self.name = ''
+		self.type = 152
+		self.env_vol = xm_env()
+		self.env_pan = xm_env()
+		self.vibrato_type = 0
+		self.vibrato_sweep = 0
+		self.vibrato_depth = 0
+		self.vibrato_rate = 0
+		self.fadeout = 0
+		self.notesampletable = []
+		self.samp_head = []
+		self.samp_data = []
+		self.reserved = 0
+		self.pluginnum = 0
+		self.num_samples = 0
+
+	def read(self, ebrw_readstr, num): 
 		basepos = ebrw_readstr.tell()
 		header_length = ebrw_readstr.int_u32()
 		self.name = ebrw_readstr.string(22, encoding="latin1")
@@ -78,15 +107,6 @@ class xm_instrument:
 			" | "+str(self.num_samples)+' Samples'+
 			" | Name:"+str(self.name)
 			)
-		self.env_vol = xm_env()
-		self.env_pan = xm_env()
-		self.vibrato_type = 0
-		self.vibrato_sweep = 0
-		self.vibrato_depth = 0
-		self.vibrato_rate = 0
-		self.fadeout = 0
-
-		self.notesampletable = []
 
 		if self.num_samples != 0:
 			xm_inst_e_head_size = ebrw_readstr.int_u32()
@@ -115,9 +135,8 @@ class xm_instrument:
 		basepos_end = ebrw_readstr.tell()
 		xm_pat_extra_data = ebrw_readstr.raw(header_length - (basepos_end-basepos))
 
-		self.pluginnum = 0
-
-		self.samp_head = [xm_sample_header(ebrw_readstr) for _ in range(self.num_samples)]
+		self.samp_head = [xm_sample_header() for _ in range(self.num_samples)]
+		for s in self.samp_head: s.read(ebrw_readstr)
 		self.samp_data = [ebrw_readstr.raw(x.length) for x in self.samp_head]
 
 	def vibrato_lfo(self): 
@@ -126,14 +145,17 @@ class xm_instrument:
 # ============================================= song ============================================= 
 
 class xm_pattern:
-	def __init__(self, ebrw_readstr, num, num_channels):
-		#logger_projparse.info("xm: Pattern " + str(num))
+	def __init__(self):
 		self.data = []
 		self.used = False
+		self.rows = 64
+		self.extra_data = b''
 
+	def read(self, ebrw_readstr, num, num_channels): 
+		#logger_projparse.info("xm: Pattern " + str(num))
 		basepos = ebrw_readstr.tell()
 		header_length = ebrw_readstr.int_u32()
-		self.pak_type = ebrw_readstr.int_u8()
+		pak_type = ebrw_readstr.int_u8()
 		self.rows = ebrw_readstr.int_u16()
 		patterndata_size = ebrw_readstr.int_u16()
 		basepos_end = ebrw_readstr.tell()
@@ -180,7 +202,30 @@ class xm_pattern:
 
 class xm_song:
 	def __init__(self):
-		pass
+		self.title = ''
+		self.tracker_name = ''
+		self.version = [4,1]
+		self.num_channels = 0
+		self.num_patterns = 0
+		self.num_instruments = 0
+		self.length = 0
+		self.restart_pos = 0
+		self.flags = []
+		self.speed = 6
+		self.bpm = 120
+		self.l_order = []
+
+		self.extra_data = b''
+
+		self.patterns = []
+		self.instruments = []
+
+		self.ompt_artist = None
+		self.ompt_cnam = None
+		self.ompt_pnam = None
+		self.ompt_chfx = None
+		self.ompt_ccol = []
+		self.plugins = {}
 
 	def load_from_raw(self, input_file):
 		ebrw_readstr = easybinrw.binread()
@@ -233,15 +278,10 @@ class xm_song:
 
 		self.extra_data = ebrw_readstr.raw(calc_pos-findpat)
 
-		self.patterns = [xm_pattern(ebrw_readstr, n, self.num_channels) for n in range(self.num_patterns)]
-		self.instruments = [xm_instrument(ebrw_readstr, n) for n in range(self.num_instruments)]
-
-		self.ompt_artist = None
-		self.ompt_cnam = None
-		self.ompt_pnam = None
-		self.ompt_chfx = None
-		self.ompt_ccol = []
-		self.plugins = {}
+		self.patterns = [xm_pattern() for n in range(self.num_patterns)]
+		for n, p in enumerate(self.patterns): p.read(ebrw_readstr, n, self.num_channels)
+		self.instruments = [xm_instrument() for n in range(self.num_instruments)]
+		for n, s in enumerate(self.instruments): s.read(ebrw_readstr, n)
 
 		endd = 0
 		for part_obj in chunked.chunk_part_read_all_iso(ebrw_readstr, None):

@@ -12,17 +12,36 @@ import logging
 logger_projparse = logging.getLogger('projparse')
 
 class s3m_instrument:
-	def __init__(self, ebrw_readstr, ptr):
+	def __init__(self):
+		self.c2spd = 0
+		self.double = False
+		self.filename = ''
+		self.internal = 0
+		self.length = 0
+		self.loopEnd = 0
+		self.loopon = False
+		self.loopStart = 0
+		self.name = ''
+		self.pack = 0
+		self.reserved = None
+		self.sampleloc = 0
+		self.sig = 0
+		self.stereo = False
+		self.type = 0
+		self.volume = 0
+		self.oplValues = None
+		self.dsk = None
+		self.reserved2 = None
+		self.unused = None
+		self.data = None
+		self.ebrw_readstr = None
+
+	def read(self, ebrw_readstr, ptr):
+		self.__init__()
 		self.ebrw_readstr = ebrw_readstr
 		ebrw_readstr.seek(ptr)
 		self.type = ebrw_readstr.int_u8()
 		self.filename = ebrw_readstr.string(12, encoding="windows-1252")
-		self.name = ''
-		self.volume = 1
-		self.length = 0
-		self.double = False
-		self.stereo = False
-		self.c2spd = 0
 		if self.type == 0 or self.type == 1:
 			self.ptrDataH = ebrw_readstr.raw(1)
 			self.ptrDataL = ebrw_readstr.raw(2)
@@ -62,7 +81,7 @@ class s3m_instrument:
 		return self.length if not self.double else self.length*2
 
 	def rip_sample(self, samplefolder, s3m_samptype, wave_path):
-		if self.type == 1:
+		if self.type == 1 and self.ebrw_readstr is not None:
 			if self.sampleloc != 0 and self.length != 0:
 				self.ebrw_readstr.seek(self.sampleloc)
 				os.makedirs(samplefolder, exist_ok=True)
@@ -105,7 +124,10 @@ class s3m_instrument:
 				audio_obj.to_file_wav(wave_path)
 
 class s3m_pattern:
-	def __init__(self, ebrw_readstr, ptr):
+	def __init__(self):
+		self.data = []
+
+	def read(self, ebrw_readstr, ptr):
 		ebrw_readstr.seek(ptr)
 		data_len = ebrw_readstr.int_u16()
 		self.data = []
@@ -141,7 +163,26 @@ class s3m_pattern:
 
 class s3m_song:
 	def __init__(self):
-		pass
+		self.name = ''
+		self.sig1 = 26
+		self.type = 16
+		self.reserved = 0
+		self.flags = []
+		self.trkrvers = b' \x13'
+		self.samptype = 2
+		self.sig2 = b'SCRM'
+		self.global_vol = 32
+		self.speed = 6
+		self.tempo = 120
+		self.mastervol = 128
+		self.ultra_click_removal = 16
+		self.default_pan = 252
+		self.reserved2 = None
+		self.num_special = 0
+		self.channel_settings = []
+		self.l_order = []
+		self.instruments = []
+		self.patterns = []
 
 	def load_from_raw(self, input_file):
 		ebrw_readstr = easybinrw.binread()
@@ -159,13 +200,21 @@ class s3m_song:
 		self.sig1 = ebrw_readstr.int_u8()
 		self.type = ebrw_readstr.int_u8()
 		self.reserved = ebrw_readstr.int_u16()
-		self.num_orders = ebrw_readstr.int_u16()
+
+		num_orders = ebrw_readstr.int_u16()
+
 		num_instruments = ebrw_readstr.int_u16()
-		if num_instruments > 255: raise ProjectFileParserException('s3m: # of Instruments is over 255')
-		logger_projparse.info("s3m: # of Instruments: " + str(num_instruments))
+		if num_instruments > 255: 
+			raise ProjectFileParserException('s3m: # of Instruments is over 255')
+		else:
+			logger_projparse.info("s3m: # of Instruments: " + str(num_instruments))
+
 		num_patterns = ebrw_readstr.int_u16()
-		if num_patterns > 255: raise ProjectFileParserException('s3m: # of Patterns is over 255')
-		logger_projparse.info("s3m: # of Patterns: " + str(num_patterns))
+		if num_patterns > 255: 
+			raise ProjectFileParserException('s3m: # of Patterns is over 255')
+		else:
+			logger_projparse.info("s3m: # of Patterns: " + str(num_patterns))
+
 		self.flags = ebrw_readstr.flags_i16()
 		self.trkrvers = ebrw_readstr.raw(2)
 		self.samptype = ebrw_readstr.int_u16()
@@ -173,6 +222,7 @@ class s3m_song:
 		self.global_vol = ebrw_readstr.int_u8()
 		self.speed = ebrw_readstr.int_u8()
 		self.tempo = ebrw_readstr.int_u8()
+
 		logger_projparse.info("s3m: Tempo: " + str(self.tempo))
 		self.mastervol = ebrw_readstr.int_u8()
 		self.ultra_click_removal = ebrw_readstr.int_u8()
@@ -180,13 +230,18 @@ class s3m_song:
 		self.reserved2 = ebrw_readstr.raw(8)
 		self.num_special = ebrw_readstr.int_u16()
 		self.channel_settings = ebrw_readstr.list_int_u8(32)
-		self.l_order = ebrw_readstr.list_int_u8(self.num_orders)
+		self.l_order = ebrw_readstr.list_int_u8(num_orders)
 		logger_projparse.info("s3m: Order List: " + str(self.l_order))
-		self.ptrs_insts = [ebrw_readstr.int_u16()*16 for _ in range(num_instruments)]
-		self.ptrs_patterns = [ebrw_readstr.int_u16()*16 for _ in range(num_patterns)]
+		ptrs_insts = [ebrw_readstr.int_u16()*16 for _ in range(num_instruments)]
+		ptrs_patterns = [ebrw_readstr.int_u16()*16 for _ in range(num_patterns)]
 
-		self.instruments = [s3m_instrument(ebrw_readstr, x) for n, x in enumerate(self.ptrs_insts)]
-		self.patterns = [s3m_pattern(ebrw_readstr, x) for n, x in enumerate(self.ptrs_patterns)]
+		self.instruments = [s3m_instrument() for _ in range(num_instruments)]
+		self.patterns = [s3m_pattern() for _ in range(num_patterns)]
+
+		for n, x in enumerate(ptrs_insts):
+			self.instruments[n].read(ebrw_readstr, x)
+		for n, x in enumerate(ptrs_patterns):
+			self.patterns[n].read(ebrw_readstr, x)
 
 		#self.instruments[0].rip_sample(ebrw_readstr, '.', self.samptype, 'test.wav')
 		return True

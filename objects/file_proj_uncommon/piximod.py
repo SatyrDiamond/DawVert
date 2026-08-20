@@ -10,6 +10,12 @@ logger_projparse = logging.getLogger('projparse')
 
 class piximod_pattern:
 	def __init__(self, ebrw_readstr):
+		self.tracks = 0
+		self.length = 0
+		self.data = None
+		if ebrw_readstr is not None: self.read(ebrw_readstr)
+
+	def read(self, ebrw_readstr):
 		ebrw_readstr.skip(4)
 		self.tracks = ebrw_readstr.int_u32()
 		self.length = ebrw_readstr.int_u32()

@@ -12,7 +12,24 @@ visname = {
 	'pan': 'Pan',
 	'solo': 'Solo',
 	'enabled': 'On',
-	'pitch': 'Pitch'
+	'pitch': 'Pitch',
+
+	'amount': 'Amount',
+	'attack': 'Attack',
+	'bits': 'Bits',
+	'decay': 'Decay',
+	'delay': 'Delay',
+	'floor': 'Floor',
+	'freq': 'Freq',
+	'gain': 'Gain',
+	'hold': 'Hold',
+	'post': 'Post',
+	'pre': 'Pre',
+	'pregain': 'Pregain',
+	'ratio': 'Ratio',
+	'release': 'Release',
+	'threshold': 'Threshold',
+	'wet': 'Wet',
 }
 
 def fixval(p_type, p_value):
@@ -86,9 +103,9 @@ class cvpj_param:
 	def __init__(self, p_value, p_type):
 		self.value = p_value
 		self.type = p_type
+		self.range_defined = False
 		self.min = 0
 		self.max = 1
-		self.range_defined = False
 		self.visual = visual.cvpj_visual()
 		self.found = True
 		self.unit = cvpj_param_unit()
@@ -109,6 +126,24 @@ class cvpj_param:
 		enum_part.num = num
 		enum_part.id = idv
 		return enum_part
+
+	def add_data(self, **kwargs):
+		if 'name' in kwargs: param_visname = kwargs['name']
+		elif p_id in visname: param_visname = visname[p_id]
+		else: param_visname = p_id
+		self.visual.name = param_visname
+		if 'minmax' in kwargs:
+			self.min, self.max = kwargs['minmax']
+			self.range_defined = True
+		elif 'max' in kwargs:
+			self.min = 0
+			self.max = kwargs['max']
+			self.range_defined = True
+		if 'unit' in kwargs: self.unit.current = kwargs['unit']
+
+	def add_minmax(self, i_min, i_max):
+		self.min, self.max = i_min, i_max
+		self.range_defined = True
 
 	def __int__(self): return int(self.value)
 

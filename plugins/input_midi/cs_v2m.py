@@ -41,6 +41,15 @@ class input_v2m(plugins.base):
 
 		convproj_obj.set_timings(project_obj.timediv)
 
+		track_obj = convproj_obj.track__add('control', 'midi', 1, False)
+		events_obj = track_obj.placements.midievents
+
+		cp = 0
+		for p in project_obj.gptr:
+			cp += int(p['time'])
+			events_obj.add_timesig(cp, int(p['num']), int(p['den']))
+			events_obj.add_tempo(cp, float(500000/p['usecs'])*120)
+
 		for n, track in enumerate(project_obj.tracks):
 			track_obj = convproj_obj.track__add(str(n), 'midi', 1, False)
 			track_obj.visual.name = 'Track #'+str(n)
@@ -49,6 +58,13 @@ class input_v2m(plugins.base):
 			track_obj.midi.out_chanport.port = 0
 
 			events_obj = track_obj.placements.midievents
+
+			cur_val = 0
+			cur_pos = 0
+			for pgmc in track.pc:
+				cur_pos += int(pgmc['time'])
+				cur_val += int(pgmc['p'])
+				events_obj.add_program(cur_pos, n, cur_val&127)
 
 			cur_note = 0
 			cur_pos = 0

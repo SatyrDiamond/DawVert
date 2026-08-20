@@ -7,6 +7,31 @@ import numpy as np
 
 # ============================================= instrument ============================================= 
 
+scale_data = [
+["Scale: Major", [2, 2, 1, 2, 2, 2, 1]],
+["Scale: Minor", [2, 1, 2, 2, 2, 2, 1]],
+["Scale: Blues", [3, 2, 1, 1, 3, 2]],
+["Scale: Harmonic Minor", [2, 1, 2, 2, 1, 3, 1]],
+["Scale: Pentatonic Major", [2, 3, 2, 2, 3]],
+["Scale: Pentatonic Minor", [3, 2, 2, 3, 2]],
+["Scale: Pentatonic Blues", [3, 2, 1, 1, 3, 2]],
+["Scale: Pentatonic Neutral", [2, 3, 2, 3, 2]],
+["Scale: Romanian Folk", [2, 1, 3, 1, 2, 1, 2]],
+["Scale: Spanish Gypsy", [2, 1, 3, 1, 2, 1, 2]],
+["Scale: Arabic Magam", [2, 2, 1, 1, 2, 2, 2]],
+["Scale: Chinese", [4, 2, 1, 4, 1]],
+["Scale: Hungarian", [2, 1, 3, 1, 1, 3, 1]],
+["Chord: Major", [4, 3, 5]],
+["Chord: Minor", [3, 4, 5]],
+["Chord: 5th", [7, 5]],
+["Chord: Dom 7th", [4, 3, 3, 2]],
+["Chord: Major 7th", [4, 3, 4, 1]],
+["Chord: Minor 7th", [3, 4, 3, 2]],
+["Chord: Minor Major 7th", [3, 4, 4, 1]],
+["Chord: Sus4", [5, 2, 5]],
+["Chord: sus2", [2, 5, 5]]
+]
+
 class ceol_instrument:
 	def __init__(self, ebrw_readstr):
 		self.inst = 0

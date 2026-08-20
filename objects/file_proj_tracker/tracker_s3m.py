@@ -105,8 +105,7 @@ class s3m_instrument:
 						outdata[:len(tempsample)*2][0::2] = tempsample
 						tempsample = np.frombuffer(self.ebrw_readstr.read(t_samplelen), dtype=np.uint8)
 						outdata[:len(tempsample)*2][1::2] = tempsample
-
-				if self.double == 1: 
+				else: 
 					audio_obj.set_codec('uint16')
 					if not self.stereo: 
 						outdata = np.zeros(t_samplelen//2, dtype=np.uint16)

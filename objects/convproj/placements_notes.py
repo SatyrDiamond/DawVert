@@ -156,7 +156,7 @@ class cvpj_placements_notes:
 		return plb_obj
 
 class cvpj_placement_notes:
-	__slots__ = ['time','muted','visual','notelist','time_ppq','auto','fade_in','fade_out','timesig_auto','timemarkers','group','locked','pitch','auto_ticks']
+	__slots__ = ['time','muted','visual','notelist','time_ppq','auto','fade_in','fade_out','timesig_auto','timemarkers','group','locked','pitch','auto_ticks','visual_roll']
 	def __init__(self, time_ppq):
 		self.time = placements.cvpj_placement_timing(time_ppq)
 		self.time_ppq = time_ppq
@@ -172,6 +172,7 @@ class cvpj_placement_notes:
 		self.group = None
 		self.locked = False
 		self.pitch = 0
+		self.visual_roll = visual.cvpj_visual_placement_notes()
 
 	def make_base(self):
 		plb_obj = cvpj_placement_notes(self.time_ppq)

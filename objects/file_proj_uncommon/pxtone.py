@@ -338,7 +338,6 @@ class ptcop_song:
 				ebrw_readstr.isolate_end()
 
 		self.events.clean()
-
 		self.postprocess()
 		return True
 

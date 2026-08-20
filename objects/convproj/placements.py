@@ -598,6 +598,7 @@ class cvpj_placements:
 				new_notespl_obj.visual = nle_obj.visual
 				new_notespl_obj.timesig_auto = nle_obj.timesig_auto.copy()
 				new_notespl_obj.timemarkers = nle_obj.timemarkers.copy()
+				new_notespl_obj.visual_roll = nle_obj.visual_roll.copy()
 
 			self.pl_notes.data.append(new_notespl_obj)
 		self.pl_notes_indexed = placements_index.cvpj_placements_index(self.time_ppq)

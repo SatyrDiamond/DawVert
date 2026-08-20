@@ -446,6 +446,7 @@ class notev3_song:
 		self.video_signature = 'C'
 		self.video_beat = 4
 		self.video_tempo = 120
+		self.name = None
 
 		self.layers = {}
 
@@ -453,6 +454,8 @@ class notev3_song:
 		filename = 'songs/'+id+'.xml'
 		if filename in zip_data.namelist():
 			x_sheet = ET.fromstring(zip_data.read(filename))
+
+			self.name = x_sheet.get('name')
 
 			x_layers = x_sheet.findall('layers')
 

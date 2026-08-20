@@ -175,6 +175,18 @@ class input_ceol(plugins.base):
 			for ceol_note_obj in ceol_pat_obj.notes: 
 				oswing = (project_obj.swing/10) if not (ceol_note_obj.pos%2) else 0
 				cvpj_notelist.add_m(patinstid, ceol_note_obj.pos+oswing, ceol_note_obj.len, (ceol_note_obj.key-60)+t_key_offset[ceol_pat_obj.inst], notevols[ceol_note_obj.pos] if ceol_note_obj.pos in notevols else 1, None)
+			if ceol_pat_obj.scale:
+				scale_name, scale_keys = proj_boscaceoil.scale_data[ceol_pat_obj.scale-1]
+				out_keys = []
+				c = 0
+				for x in scale_keys:
+					out_keys.append(c)
+					c += x
+				visual_roll = nle_obj.visual_roll
+				visual_roll.scale_root = ceol_pat_obj.key
+				visual_roll.scale_keys = out_keys
+				visual_roll.scale_name = scale_name
+				visual_roll.scale_hide = True
 
 		for num in range(8):
 			playlist_obj = convproj_obj.playlist__add(num, 1, True)

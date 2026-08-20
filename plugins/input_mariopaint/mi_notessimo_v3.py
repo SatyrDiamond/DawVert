@@ -1,14 +1,10 @@
 # SPDX-FileCopyrightText: 2024 SatyrDiamond
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-from functions import data_bytes
 from functions import note_data
 from functions import xtramath
 from objects import globalstore
-import json
 import plugins
-import struct
-import zlib
 import os
 import numpy as np
 
@@ -86,6 +82,9 @@ class sample_manager():
 					except: pass
 					realfilepath = os.path.join(samplefolder,zipfilepath)
 					sampleref_obj = convproj_obj.sampleref__add(sample_id, realfilepath, None)
+					sampleref_obj.visual.name = notet_sample.name
+					if notet_sample.comments: sampleref_obj.visual.comment = notet_sample.comments
+					incolor(notet_sample.color, sampleref_obj.visual)
 			samplekey = do_key(notet_sample.pitch, notet_sample.octave, notet_sample.accidental)
 			return sample_id, notet_sample, samplekey, sampleref_obj
 		return None, None, 0, None
@@ -103,7 +102,7 @@ def do_key(pitch, octave, accidental):
 class inst_manager():
 	fxnum = 2
 
-	def proc_inst(convproj_obj, plugin_obj, instid, inst_set, data_obj):
+	def proc_inst(convproj_obj, plugin_obj, instid, inst_set, data_obj, notet_inst):
 		sampleid, notet_sample, samplekey, sampleref_obj = sample_manager.add_sample(data_obj, convproj_obj, inst_set.sample_1)
 
 		start_pitch = do_key(inst_set.pitch_start_1, inst_set.octave_start_1, inst_set.accidental_start_1)
@@ -122,6 +121,9 @@ class inst_manager():
 				sp_obj.end = dur_samples
 				sp_obj.pan = notet_sample.pan
 				sp_obj.vol = xtramath.from_db(notet_sample.volume/3)
+				sp_obj.scale = notet_inst.scale_inst
+				sp_obj.pitch = notet_sample.cent/100
+				sp_obj.visual = sampleref_obj.visual.copy()
 
 	def add_inst(convproj_obj, instid, project_obj, maindata_obj):
 		inst_obj = convproj_obj.instrument__add(instid)
@@ -144,6 +146,7 @@ class inst_manager():
 		if notet_inst: 
 			if notet_inst.name: inst_obj.visual.name = notet_inst.name
 			incolor(notet_inst.color, inst_obj.visual)
+			if notet_inst.comments: inst_obj.visual.comment = notet_inst.comments
 			if DEBUGINSTNAMES:
 				if inst_obj.visual.name: inst_obj.visual.name = '['+dfrom+'] '+inst_obj.visual.name
 				else: inst_obj.visual.name = '['+dfrom+'] !!! NO NAME'
@@ -152,18 +155,14 @@ class inst_manager():
 
 			if sampleids:
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'multi')
-				plugin_obj.midi_fallback__add_from_datapack('notessimo_v3', 'inst', instid)
 				plugin_obj.role = 'synth'
-				inst_obj.plugslots.set_synth(instid)
 
 				for setnum, set_data in notet_inst.sets.items():
-					inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data)
+					inst_manager.proc_inst(convproj_obj, plugin_obj, instid, set_data, notet_data, notet_inst)
 
 			elif notet_inst.sample:
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'sampler', 'single')
-				plugin_obj.midi_fallback__add_from_datapack('notessimo_v3', 'inst', instid)
 				plugin_obj.role = 'synth'
-				inst_obj.plugslots.set_synth(instid)
 
 				sampleid, notet_sample, samplekey, sampleref_obj = sample_manager.add_sample(notet_data, convproj_obj, notet_inst.sample)
 
@@ -179,6 +178,7 @@ class inst_manager():
 						sp_obj.loop_end = notet_sample.end
 						sp_obj.start = notet_sample.sample_start
 						sp_obj.end = dur_samples
+						sp_obj.scale = notet_inst.scale_inst
 	
 						inst_obj.datavals.add('middlenote', samplekey)
 					
@@ -190,6 +190,25 @@ class inst_manager():
 				plugin_obj = convproj_obj.plugin__add(instid, 'universal', 'midi', None)
 				plugin_obj.midi.from_datapack('notessimo_v3', 'inst', instid)
 				plugin_obj.midi.to_visual(inst_obj.visual, False)
+
+			if notet_inst.midi>-1: plugin_obj.midi_fallback__add_inst(notet_inst.midi)
+			else: plugin_obj.midi_fallback__add_from_datapack('notessimo_v3', 'inst', instid)
+
+			inst_obj.plugslots.set_synth(instid)
+
+			plugin_obj.env_asdr_add('vol', 0, notet_inst.fadeIn, 0, 0, 1, notet_inst.fadeOut, 1)
+
+			if notet_inst.biquad_active != '0':
+				fx_id = instid+'_filter'
+				plugin_obj = convproj_obj.plugin__add(fx_id, 'universal', 'filter', 'single')
+				plugin_obj.role = 'fx'
+				plugin_obj.filter.on = True
+				if notet_inst.biquad=='Low Pass': plugin_obj.filter.type.set('low_pass', None)
+				if notet_inst.biquad=='High Pass': plugin_obj.filter.type.set('high_pass', None)
+				if notet_inst.biquad=='Band Pass': plugin_obj.filter.type.set('band_pass', None)
+				plugin_obj.filter.freq = int(notet_inst.biquad_frequency)
+				plugin_obj.filter.q = notet_inst.biquad_q
+				inst_obj.plugslots.plugin_autoplace(plugin_obj, fx_id)
 
 def incolor(value, visual_obj): 
 	if value not in ['0x000000', '', None]:
@@ -260,12 +279,13 @@ class input_notessimo_v3(plugins.base):
 		for sheet_id, sheet_data in project_obj.sheets.items():
 			nle_obj = convproj_obj.notelistindex__add(sheet_id)
 			nle_obj.visual.name = sheet_data.name
+			if sheet_data.comments: nle_obj.visual.comment = sheet_data.comments
 			incolor(sheet_data.color, nle_obj.visual)
 
 			sheetnoteofs = notess_noteoffset[sheet_data.signature]
 
 			cvpj_notelist = nle_obj.notelist
-			
+
 			for nnn in sheet_data.get_allnotes():
 				out_note, out_key, out_oct = nnn.get_key_nooffs()
 				inum = 0
@@ -281,6 +301,12 @@ class input_notessimo_v3(plugins.base):
 
 		auto_bpm_obj = convproj_obj.automation.create(['main','bpm'], 'float', True)
 		firstlayer = True
+
+		fxchan_data = convproj_obj.fx__chan__add(0)
+		incolor(notet_cursong_data.color, fxchan_data.visual)
+		fxchan_data.params.add('vol', xtramath.from_db(notet_cursong_data.volume/3), 'float')
+		fxchan_data.params.add('pan', notet_cursong_data.pan, 'float')
+		
 		for layer_id, layer_data in notet_cursong_data.layers.items():
 			if layer_data.spots:
 				playlist_obj = convproj_obj.playlist__add(layer_id, 1, True)
@@ -303,3 +329,6 @@ class input_notessimo_v3(plugins.base):
 
 		for used_inst in used_insts:
 			inst_manager.add_inst(convproj_obj, used_inst, project_obj, maindata_obj)
+
+		if notet_cursong_data.name: convproj_obj.metadata.name = notet_cursong_data.name
+		if notet_cursong_data.comments: convproj_obj.metadata.comment_text = notet_cursong_data.comments

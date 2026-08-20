@@ -168,6 +168,9 @@ class input_pxtone(plugins.base):
 			convproj_obj.transport.loop_start = project_obj.master.repeat
 			convproj_obj.transport.loop_end = project_obj.master.last
 
+		if project_obj.title: convproj_obj.metadata.name = project_obj.title
+		if project_obj.comment: convproj_obj.metadata.comment_text = project_obj.comment
+
 		convproj_obj.do_actions.append('do_addloop')
 		convproj_obj.do_actions.append('do_singlenotelistcut')
 		convproj_obj.params.add('bpm', project_obj.master.beattempo, 'float')

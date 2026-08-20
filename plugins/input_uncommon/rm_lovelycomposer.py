@@ -2,9 +2,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import plugins
-import json
-import os.path
-import struct
 import numpy as np
 from objects import colors
 from functions import xtramath

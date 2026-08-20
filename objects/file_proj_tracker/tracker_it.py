@@ -5,6 +5,9 @@ import struct
 from external.easybinrw import easybinrw
 from objects.inst_params import openmpt_plugin
 from objects.exceptions import ProjectFileParserException
+from objects.file_proj_tracker._it import samplecomp as it214
+from objects import audio_data
+import numpy as np
 
 import logging
 logger_projparse = logging.getLogger('projparse')
@@ -12,16 +15,7 @@ logger_projparse = logging.getLogger('projparse')
 # ============================================= instrument ============================================= 
 
 class it_env:
-	def __init__(self): 
-		self.flags = []
-		self.env_numpoints = 2
-		self.loop_start = 0
-		self.loop_end = 0
-		self.susloop_start = 0
-		self.susloop_end = 0
-		self.env_points = []
-
-	def read(self, ebrw_readstr): 
+	def __init__(self, ebrw_readstr): 
 		self.flags = ebrw_readstr.flags_i8()
 		self.env_numpoints = ebrw_readstr.int_u8()
 		self.loop_start = ebrw_readstr.int_u8()
@@ -45,26 +39,7 @@ class it_env:
 			for c, v in enumerate(unpacked): self.env_points[c][1] = v
 
 class it_sample:
-	def __init__(self):
-		self.dosfilename = ''
-		self.globalvol = 64
-		self.flags = []
-		self.defualtvolume = 64
-		self.name = ''
-		self.length = 0
-		self.loop_start = 0
-		self.loop_end = 0
-		self.C5_speed = 8363
-		self.susloop_start = 0
-		self.susloop_end = 0
-		self.sample_pointer = 0
-		self.vibrato_speed = 0
-		self.vibrato_depth = 0
-		self.vibrato_sweep = 0
-		self.vibrato_wave = 0
-		self.resampling = -1
-
-	def read(self, ebrw_readstr, ptr, num): 
+	def __init__(self, ebrw_readstr, ptr, num): 
 		logger_projparse.info("IT: Sample " + str(num) + ': at offset ' + str(ptr))
 		ebrw_readstr.seek(ptr)
 		ebrw_readstr.magic_check(b'IMPS')
@@ -86,6 +61,66 @@ class it_sample:
 		self.vibrato_depth = ebrw_readstr.int_u8()
 		self.vibrato_sweep = ebrw_readstr.int_u8()
 		self.vibrato_wave = ebrw_readstr.int_u8()
+		self.resampling = -1
+		self.ebrw_readstr = ebrw_readstr
+
+	def rip_sample(self, samplefolder, wave_path):
+		ebrw_readstr = self.ebrw_readstr
+		compressed = 3 in self.flags
+		stereo = 2 in self.flags
+		double = 1 in self.flags
+		samp_len = self.length
+
+		audio_obj = audio_data.audio_obj()
+		audio_obj.rate = self.C5_speed
+		audio_obj.channels = 2 if stereo else 1
+
+		datasize_schan = samp_len*(double+1)
+
+		outdata = None
+
+		ebrw_readstr.seek(self.sample_pointer)
+		if compressed:
+			remlen = samp_len
+			xdata = []
+
+			while remlen > 0:
+				blkcomplen = ebrw_readstr.int_u16()
+				data = ebrw_readstr.raw(blkcomplen)
+				decomp = it214.IT214Decompressor(data, remlen, double)
+				xdata += decomp.get_data()
+				blkdecomplen = decomp.get_length()
+				remlen -= blkdecomplen
+
+			outd = np.zeros(samp_len, dtype=(np.uint16 if double else np.uint8))
+			outd[0:len(xdata)] = xdata
+			ebrw_readstr = easybinrw.binread()
+			ebrw_readstr.load_data(outd.tobytes())
+
+		if double == 0:
+			audio_obj.set_codec('int8')
+			if not stereo: 
+				outdata = np.zeros(samp_len, dtype=np.uint8)
+				outdata[:samp_len] = np.frombuffer(ebrw_readstr.read(datasize_schan), dtype=np.uint8)
+			else:
+				outdata = np.zeros(samp_len*2, dtype=np.uint8)
+				outdata[:samp_len*2][0::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint8)
+				outdata[:samp_len*2][1::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint8)
+		else: 
+			audio_obj.set_codec('int16')
+			if not stereo: 
+				outdata = np.zeros(samp_len, dtype=np.uint16)
+				outdata[:samp_len] = np.frombuffer(ebrw_readstr.read(datasize_schan), dtype=np.uint16)
+			else:
+				outdata = np.zeros(samp_len*2, dtype=np.uint16)
+				outdata[:samp_len*2][0::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint16)
+				outdata[:samp_len*2][1::2] = np.frombuffer(ebrw_readstr.raw(datasize_schan), dtype=np.uint16)
+
+		if outdata is not None: 
+			audio_obj.pcm_from_list(outdata)
+			if 4 in self.flags: audio_obj.loop = [self.loop_start, self.loop_end-1]
+
+		audio_obj.to_file_wav(wave_path)
 
 	def vibrato_lfo(self):
 		vibrato_on = self.vibrato_sweep != 0 and self.vibrato_speed != 0
@@ -100,42 +135,7 @@ class it_sample:
 		return vibrato_on, vibrato_sweep, vibrato_wave, vibrato_speed, vibrato_depth
 
 class it_instrument:
-	def __init__(self): 
-		self.dosfilename = ''
-		self.new_note_action = 0
-		self.duplicate_check_type = 0
-		self.duplicate_check_action = 0
-		self.fadeout = 4
-		self.pitch_pan_separation = 0
-		self.pitch_pan_center = 60
-		self.global_vol = 128
-		self.default_pan = 160
-		self.randomvariation_volume = 0
-		self.randomvariation_pan = 0
-		self.cwtv = 20784
-		self.num_samples = 0
-
-		self.name = ''
-		self.filtercutoff = 0
-		self.filterresonance = 0
-		self.midi_chan = 0
-		self.midi_inst = 30
-		self.midi_bank = 65535
-		self.notesampletable = [[0,0] for _ in range(120)]
-
-		self.env_vol = it_env()
-		self.env_pan = it_env()
-		self.env_pitch = it_env()
-
-		self.ramping = 0
-		self.resampling = -1
-
-		self.randomvariation_cutoff = 0
-		self.randomvariation_reso = 0
-		self.filtermode = 255
-		self.pluginnum = 0
-
-	def read(self, ebrw_readstr, ptr, num): 
+	def __init__(self, ebrw_readstr, ptr, num): 
 		logger_projparse.info("IT: Instrument " + str(num) + ": at offset " + str(ptr))
 		ebrw_readstr.seek(ptr)
 		ebrw_readstr.magic_check(b'IMPI')
@@ -165,22 +165,25 @@ class it_instrument:
 
 		self.notesampletable = [ebrw_readstr.list_int_u8(2) for _ in range(120)]
 
-		self.env_vol.read(ebrw_readstr)
-		self.env_pan.read(ebrw_readstr)
-		self.env_pitch.read(ebrw_readstr)
+		self.env_vol = it_env(ebrw_readstr)
+		self.env_pan = it_env(ebrw_readstr)
+		self.env_pitch = it_env(ebrw_readstr)
+
+		self.ramping = 0
+		self.resampling = -1
+
+		self.randomvariation_cutoff = 0
+		self.randomvariation_reso = 0
+		self.filtermode = 255
+		self.pluginnum = 0
 
 # ============================================= song ============================================= 
 
 class it_pattern:
-	def __init__(self): 
-		self.used = False
-
-	def read(self, ebrw_readstr, ptr, num):
+	def __init__(self, ebrw_readstr, ptr, num):
 		logger_projparse.info("IT: Pattern " + str(num))
 		self.data = []
 		self.used = False
-		self.length = 0
-		self.rows = 64
 
 		if ptr != 0:
 			self.used = True
@@ -249,38 +252,10 @@ class it_song:
 		self.title = ''
 		self.hilight_minor = 4
 		self.hilight_major = 16
-		self.num_orders = 0
+		self.num_order = 0
 		self.num_instruments = 0
 		self.num_samples = 0
 		self.num_patterns = 0
-		self.cwtv = [3, 0, 5, 1]
-		self.cmwt = '\x14\x02'
-		self.flags = [0]
-		self.special = 14
-		self.globalvol = 128
-		self.mv = 48
-		self.speed = 6
-		self.tempo = 120
-
-		self.sep = 128
-		self.pwd = 0
-		self.msgoffset = 0
-		self.reserved = 1414548815
-
-		self.l_chnpan = []
-		self.l_chnvol = []
-		self.l_order = []
-
-		self.ompt_cnam = None
-		self.ompt_pnam = None
-		self.ompt_chfx = None
-		self.plugins = {}
-
-		self.instruments = []
-		self.samples = []
-		self.patterns = []
-
-		self.songmessage = ''
 
 	def load_from_raw(self, raw_data):
 		ebrw_readstr = easybinrw.binread()
@@ -327,12 +302,11 @@ class it_song:
 		self.mv = ebrw_readstr.int_u8()
 		self.speed = ebrw_readstr.int_u8()
 		self.tempo = ebrw_readstr.int_u8()
-
 		logger_projparse.info("IT: Speed: " + str(self.speed))
 		logger_projparse.info("IT: Tempo: " + str(self.tempo))
 		self.sep = ebrw_readstr.int_u8()
 		self.pwd = ebrw_readstr.int_u8()
-		msglength = ebrw_readstr.int_u16()
+		self.msglength = ebrw_readstr.int_u16()
 		self.msgoffset = ebrw_readstr.int_u32()
 		self.reserved = ebrw_readstr.int_u32()
 
@@ -341,11 +315,16 @@ class it_song:
 
 		self.l_order = ebrw_readstr.list_int_s8(self.num_orders)
 		logger_projparse.info("IT: Order List: " + str(self.l_order))
-		ptrs_insts = ebrw_readstr.list_int_s32(self.num_instruments)
-		ptrs_samples = ebrw_readstr.list_int_s32(self.num_samples)
-		ptrs_patterns = ebrw_readstr.list_int_s32(self.num_patterns)
+		self.ptrs_insts = ebrw_readstr.list_int_s32(self.num_instruments)
+		self.ptrs_samples = ebrw_readstr.list_int_s32(self.num_samples)
+		self.ptrs_patterns = ebrw_readstr.list_int_s32(self.num_patterns)
 
-		ptrall = ptrs_insts.tolist()+ptrs_samples.tolist()+ptrs_patterns.tolist()
+		ptrall = self.ptrs_insts.tolist()+self.ptrs_samples.tolist()+self.ptrs_patterns.tolist()
+
+		self.ompt_cnam = None
+		self.ompt_pnam = None
+		self.ompt_chfx = None
+		self.plugins = {}
 
 		#if ptrall:
 		#	ebrw_readstr.skip(10)
@@ -370,17 +349,10 @@ class it_song:
 		#			#print(chunk_obj.id)
 		#			break
 
-		self.instruments = [it_instrument() for _ in range(self.num_instruments)]
-		self.samples = [it_sample() for _ in range(self.num_samples)]
-		self.patterns = [it_pattern() for _ in range(self.num_patterns)]
-
-		for n, x in enumerate(ptrs_insts):
-			self.instruments[n].read(ebrw_readstr, x, n)
-		for n, x in enumerate(ptrs_samples):
-			self.samples[n].read(ebrw_readstr, x, n)
-		for n, x in enumerate(ptrs_patterns):
-			self.patterns[n].read(ebrw_readstr, x, n)
+		self.instruments = [it_instrument(ebrw_readstr, x, n) for n, x in enumerate(self.ptrs_insts)]
+		self.samples = [it_sample(ebrw_readstr, x, n) for n, x in enumerate(self.ptrs_samples)]
+		self.patterns = [it_pattern(ebrw_readstr, x, n) for n, x in enumerate(self.ptrs_patterns)]
 
 		ebrw_readstr.seek(self.msgoffset)
-		self.songmessage = ebrw_readstr.string(msglength, encoding='windows-1252')
+		self.songmessage = ebrw_readstr.string(self.msglength, encoding='windows-1252')
  

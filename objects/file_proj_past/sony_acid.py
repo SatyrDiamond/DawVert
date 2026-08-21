@@ -338,7 +338,7 @@ class sony_acid_file:
 						pass
 
 			elif riffpart.id == b'tmap':
-				_size = ebrw_readstr.int_u32()
+				_vers = ebrw_readstr.int_u32()
 				self.ppq = ebrw_readstr.int_u32()
 				self.tempo = (500000/ebrw_readstr.int_u32())*120
 				self.root_note = ebrw_readstr.int_u32()

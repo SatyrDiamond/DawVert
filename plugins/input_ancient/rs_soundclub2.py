@@ -195,6 +195,8 @@ class input_soundclub2(plugins.base):
 				startpoint = vstart[0]
 				if startpoint[0] == 0: outtempo = decode_tempopl(startpoint[1], globaltempo)
 
+		convproj_obj.metadata.comment_text = project_obj.comment
+		
 		convproj_obj.timesig = [project_obj.ts_num, project_obj.ts_denum]
 		convproj_obj.params.add('bpm', outtempo, 'float')
 		#convproj_obj.do_actions.append('arranger_from_scene')

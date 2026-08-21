@@ -142,17 +142,25 @@ class event_control:
 class temper_clip_ui:
 	def __init__(self):
 		self.name = None
-		self.color = None
+		self.color_bg = None
+		self.color_fg = None
 
 	@classmethod
 	def fromxml(cls, xmldata):
+		cls.name = None
+		cls.color_bg = None
+		cls.color_fg = None
+		cnum=0
 		for xmlpart in xmldata:
 			if xmlpart.tag == 's': 
 				cls.name = xmlpart.get('v')
 			if xmlpart.tag == 'c': 
-				cls.color = [xmlpart.get('r'), xmlpart.get('g'), xmlpart.get('b')]
-				if None in cls.color: cls.color = None
-				else: cls.color = [int(x) for x in cls.color]
+				color = [xmlpart.get('r'), xmlpart.get('g'), xmlpart.get('b')]
+				if None in color: color = None
+				else: color = [int(x) for x in color]
+				if cnum==0: cls.color_bg = color
+				elif cnum==1: cls.color_fg = color
+				cnum += 1
 		return cls
 
 class temper_phrase:
@@ -253,6 +261,7 @@ class temper_track:
 		self.customname = ''
 		self.channel = 0
 		self.sync = 0
+		self.mode = 0
 		self.phrases = []
 		self.audios = []
 
@@ -263,6 +272,7 @@ class temper_track:
 		if "custom-name" in xmldata.attrib: cls.customname = xmldata.attrib['custom-name']
 		if "channel" in xmldata.attrib: cls.channel = int(xmldata.attrib['channel'])
 		if "sync" in xmldata.attrib: cls.sync = float(xmldata.attrib['sync'])
+		if "mode" in xmldata.attrib: cls.mode = int(xmldata.attrib['mode'])
 
 		cls.phrases = []
 		cls.audios = []

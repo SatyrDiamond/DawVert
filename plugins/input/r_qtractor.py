@@ -102,8 +102,10 @@ class input_midi(plugins.base):
 				track_obj = convproj_obj.track__add(cvpj_trackid, 'instrument', 1, False)
 
 			track_obj.visual.name = qtrack.name
-			if qtrack.view.foreground_color:
-				track_obj.visual.color.set_hex(qtrack.view.foreground_color)
+			if qtrack.view.background_color:
+				track_obj.visual.color.set_hex(qtrack.view.background_color)
+			if qtrack.view.foreground_color: 
+				track_obj.visual.altcolor_add('fg').set_hex(qtrack.view.foreground_color)
 
 			if qtrack.view.height:
 				track_obj.visual_ui.height = qtrack.view.height/96

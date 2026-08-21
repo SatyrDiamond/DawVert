@@ -86,7 +86,16 @@ class sn2_pattern:
 
 class sn2_song:
 	def __init__(self):
-		pass
+		self.comment = ''
+		self.sequence = []
+		self.instruments = []
+		self.patterns = []
+		self.unk1 = 0
+		self.unk2 = 0
+		self.unk3 = 0
+		self.tempo = 30
+		self.ts_num = 4
+		self.ts_denum = 4
 
 	def load_from_file(self, input_file):
 		ebrw_readstr = easybinrw.binread()
@@ -103,11 +112,6 @@ class sn2_song:
 		self.tempo = ebrw_readstr.int_u32()
 		self.ts_num = ebrw_readstr.int_u32()
 		self.ts_denum = ebrw_readstr.int_u32()
-
-		self.comment = ''
-		self.sequence = []
-		self.instruments = []
-		self.patterns = []
 
 		for part_obj in chunked.chunk_part_read_all_iso(ebrw_readstr, chunk_size_data):
 			if part_obj.id == b'NAM': self.comment = ebrw_readstr.string(part_obj.size)

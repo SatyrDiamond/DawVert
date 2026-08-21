@@ -104,8 +104,8 @@ class input_old_magix_maker(plugins.base):
 					track_obj.sends.add('aux1', 'send_%i_aux1' % (tracknum), data_trci.aux1)
 					track_obj.sends.add('aux2', 'send_%i_aux2' % (tracknum), data_trci.aux2)
 
-				totalcolors = []
-				uniquecolors = {}
+				#totalcolors = []
+				#uniquecolors = {}
 
 				for obj in mmm_track.data_objs:
 					data_objc = obj.data_objc
@@ -116,20 +116,23 @@ class input_old_magix_maker(plugins.base):
 							placement_obj = track_obj.placements.add_audio()
 							time_obj = placement_obj.time
 
-							color = list(data_objc.bg_color[0:3])
 							placement_obj.visual.name = data_objc.name
-							placement_obj.visual.color.set_int(color)
 							placement_obj.fade_in.set_dur((data_objc.fade_in/sample_time), 'beats')
 							placement_obj.fade_out.set_dur((data_objc.fade_out/sample_time), 'beats')
 							placement_obj.group = str(data_objc.group) if data_objc.group else None
 
+							bg_color = list(data_objc.bg_color[0:3])
+							placement_obj.visual.color.set_int(bg_color)
+							fg_color = list(data_objc.fg_color[0:3])
+							placement_obj.visual.altcolor_add('fg').set_int(fg_color)
+
 							time_obj.set_startend(data_objc.start, data_objc.end)
 							if data_objc.loop_end: time_obj.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
 
-							if color not in totalcolors: 
-								uniquecolors[len(totalcolors)] = 0
-								totalcolors.append(color)
-							uniquecolors[totalcolors.index(color)] += 1
+							#if color not in totalcolors: 
+							#	uniquecolors[len(totalcolors)] = 0
+							#	totalcolors.append(color)
+							#uniquecolors[totalcolors.index(color)] += 1
 	
 							sampleref_obj = sampleref_objs[data_objc.fileid]
 
@@ -194,9 +197,12 @@ class input_old_magix_maker(plugins.base):
 							placement_obj = track_obj.placements.add_video()
 							time_obj = placement_obj.time
 							
-							color = list(data_objc.bg_color[0:3])
 							placement_obj.visual.name = data_objc.name
-							placement_obj.visual.color.set_int(color)
+
+							bg_color = list(data_objc.bg_color[0:3])
+							placement_obj.visual.color.set_int(bg_color)
+							fg_color = list(data_objc.fg_color[0:3])
+							placement_obj.visual.altcolor_add('fg').set_int(fg_color)
 
 							time_obj.set_startend(data_objc.start, data_objc.end)
 							if data_objc.loop_end: time_obj.set_loop_data(data_objc.offset, 0, data_objc.loop_end)
@@ -205,10 +211,10 @@ class input_old_magix_maker(plugins.base):
 							placement_obj.fade_out.set_dur((data_objc.fade_out/sample_time), 'beats')
 							placement_obj.videoref = 'sample_'+str(data_objc.fileid)
 
-							if color not in totalcolors: 
-								uniquecolors[len(totalcolors)] = 0
-								totalcolors.append(color)
-							uniquecolors[totalcolors.index(color)] += 1
+							#if color not in totalcolors: 
+							#	uniquecolors[len(totalcolors)] = 0
+							#	totalcolors.append(color)
+							#uniquecolors[totalcolors.index(color)] += 1
 	
 						#print(color)
 
@@ -234,9 +240,9 @@ class input_old_magix_maker(plugins.base):
 							val = xtramath.between_from_one(v_min, v_max, (val+32768)/65535)
 							auto_obj.add_autopoint(pos, val, None)
 
-				if uniquecolors:
-					trackcolor = totalcolors[max(uniquecolors, key=lambda k: uniquecolors.get(k))]
-					track_obj.visual.color.set_int(trackcolor)
+				#if uniquecolors:
+				#	trackcolor = totalcolors[max(uniquecolors, key=lambda k: uniquecolors.get(k))]
+				#	track_obj.visual.color.set_int(trackcolor)
 
 				track_obj.placements.pl_audio.sort()
 				track_obj.placements.pl_audio.remove_overlaps()

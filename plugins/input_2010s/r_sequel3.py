@@ -191,7 +191,7 @@ class input_sequel3(plugins.base):
 		in_dict['projtype'] = 'r'
 
 	def parse(self, convproj_obj, dawvert_intent):
-		from objects.file_proj_past import sequel as proj_sequel
+		from objects.file_proj_past import cubasexml as proj_sequel
 		from objects import audio_data
 
 		samplefolder = dawvert_intent.path_samples['extracted']

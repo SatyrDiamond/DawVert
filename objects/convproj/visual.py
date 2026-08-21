@@ -332,10 +332,11 @@ class cvpj_visual_ui:
 		return bool(self.other) and self.height!=1
 
 class cvpj_visual:
-	__slots__ = ['name','color','comment']
+	__slots__ = ['name','color','comment','color_alt']
 	def __init__(self):
 		self.name = None
 		self.color = cvpj_color()
+		self.color_alt = {}
 		self.comment = None
 
 	def json__make(self):
@@ -408,6 +409,13 @@ class cvpj_visual:
 
 	def copy(self):
 		return copy.deepcopy(self)
+
+	def altcolor_add(self, name):
+		self.color_alt[name] = cvpj_color()
+		return self.color_alt[name]
+
+	def altcolor_get(self, name):
+		return self.color_alt[name] if name in self.color_alt else None
 
 class cvpj_metadata:
 	def __init__(self):

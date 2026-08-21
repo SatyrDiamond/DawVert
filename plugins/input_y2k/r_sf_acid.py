@@ -39,6 +39,12 @@ class input_acid_old(plugins.base):
 		from objects import colors
 		from objects.file_proj_past import sony_acid as sony_acid
 
+		project_obj = sony_acid.sony_acid_file()
+		if dawvert_intent.input_mode == 'file':
+			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+
+		globalstore.datapack.load('sony_acid', './data/datapack/app/sony_acid.xml')
+
 		convproj_obj.type = 'r'
 		convproj_obj.fxtype = 'groupreturn'
 
@@ -48,36 +54,25 @@ class input_acid_old(plugins.base):
 		traits_obj.audio_stretch = ['rate']
 		traits_obj.auto_types = ['pl_points','nopl_ticks']
 
-		project_obj = sony_acid.sony_acid_file()
-		if dawvert_intent.input_mode == 'file':
-			if not project_obj.load_from_file(dawvert_intent.input_file): exit()
+		samplefolder = dawvert_intent.path_samples['extracted']
 
+		# project
 		ppq = project_obj.ppq
 		convproj_obj.set_timings(ppq)
 
-		globalstore.datapack.load('sony_acid', './data/datapack/app/sony_acid.xml')
 		colordata = colors.colorset.from_datapack('sony_acid', 'track', 'acid_1')
 		convproj_obj.params.add('bpm', project_obj.tempo, 'float')
- 
-		samplefolder = dawvert_intent.path_samples['extracted']
-
-		songroot = project_obj.root_note
-
-		used_sends = []
-
-		auto_basenotes = {}
-
-		rootnote_auto = regions.rootnote_stor()
-
-		auto_basenotes[0] = project_obj.root_note
-
 		convproj_obj.transport.loop_active = bool(project_obj.loop_enable)
 		convproj_obj.transport.loop_start = project_obj.loop_start
 		convproj_obj.transport.loop_end = project_obj.loop_end
 
+		# tempo and key
+		songroot = project_obj.root_note
+		auto_basenotes = {}
+		rootnote_auto = regions.rootnote_stor()
+		auto_basenotes[0] = project_obj.root_note
 		if len(project_obj.tempmap):
 			convproj_obj.automation.add_autotick(['main', 'bpm'], 'float', 0, project_obj.tempo)
-
 			for x in project_obj.tempmap:
 				if x['tempo']:
 					tempov = (500000/x['tempo'])*120
@@ -103,6 +98,8 @@ class input_acid_old(plugins.base):
 		for pos in list(auto_basenotes): rootnote_auto.add_pos(pos)
 		rootnote_auto.add_notes(auto_basenotes)
 
+		# tracks
+		used_sends = []
 		for tracknum, track in enumerate(project_obj.tracks):
 			cvpj_trackid = 'track_'+str(tracknum)
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
@@ -113,10 +110,7 @@ class input_acid_old(plugins.base):
 			track_obj.params.add('vol', track.vol, 'float')
 			track_obj.params.add('pan', track.pan, 'float')
 			track_obj.is_drum = 1 not in track.flags
-
-			if track.mutesolo == 2: 
-				track_obj.params.add('enabled', False, 'float')
-
+			if track.mutesolo == 2: track_obj.params.add('enabled', False, 'bool')
 			for send in track.sends:
 				returnid = 'return__'+str(send.id)
 				track_obj.sends.add(returnid, 'send_%i_%i' % (tracknum, send.id), send.vol)
@@ -148,9 +142,7 @@ class input_acid_old(plugins.base):
 
 			sample_tempo = track.stretch__tempo
 			sample_beats = track.num_beats
-
 			stretch_type = track.stretch__type
-
 			dur_sec = sampleref_obj.get_dur_sec()
 			if dur_sec: samplemul = sample_beats/(dur_sec*2)
 			else: samplemul = sample_tempo/120
@@ -252,8 +244,6 @@ class input_acid_old(plugins.base):
 					pls.append(placement_obj)
 
 				for p in pls:
-					#p.debugtxt()
-
 					p.visual.name = track.name
 					p.visual.color.set_int(color)
 					p.visual.color.fx_allowed = ['saturate', 'brighter']

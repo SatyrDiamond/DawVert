@@ -55,6 +55,8 @@ class input_cvpj_f(plugins.base):
 		for tracknum, tmp_track in enumerate(project_obj.track):
 			cvpj_trackid = 'track_'+str(tracknum)
 			track_obj = convproj_obj.track__add(cvpj_trackid, 'midi', 1, False)
+			track_obj.params.add('enabled', tmp_track.mode!=1, 'bool')
+			track_obj.params.add('solo', tmp_track.mode!=2, 'bool')
 
 			if tmp_track.customname: track_obj.visual.name = tmp_track.customname
 			else: track_obj.visual.name = tmp_track.name
@@ -79,7 +81,8 @@ class input_cvpj_f(plugins.base):
 					if phrase.ui:
 						pui = phrase.ui
 						if pui.name: placement_obj.visual.name = pui.name
-						if pui.color: placement_obj.visual.color.set_int(pui.color)
+						if pui.color_bg: placement_obj.visual.color.set_int(pui.color_bg)
+						if pui.color_fg: placement_obj.visual.altcolor_add('fg').set_int(pui.color_bg)
 					time_obj = placement_obj.time
 					time_obj.set_posdur(curpos, phrase.d)
 
@@ -103,6 +106,8 @@ class input_cvpj_f(plugins.base):
 
 			elif tmp_track.audios:
 				track_obj = convproj_obj.track__add(str(tracknum), 'audio', 1, False)
+				track_obj.params.add('enabled', tmp_track.mode!=1, 'bool')
+				track_obj.params.add('solo', tmp_track.mode!=2, 'bool')
 				if tmp_track.customname: track_obj.visual.name = tmp_track.customname
 				else: track_obj.visual.name = tmp_track.name
 				track_obj.visual.color.set_float([0.66, 0.73, 0.66])
@@ -113,7 +118,8 @@ class input_cvpj_f(plugins.base):
 					if audio.ui:
 						pui = audio.ui
 						if pui.name: placement_obj.visual.name = pui.name
-						if pui.color: placement_obj.visual.color.set_int(pui.color)
+						if pui.color_bg: placement_obj.visual.color.set_int(pui.color_bg)
+						if pui.color_fg: placement_obj.visual.altcolor_add('fg').set_int(pui.color_bg)
 					time_obj = placement_obj.time
 					time_obj.set_posdur(curpos, audio.end)
 					convproj_obj.sampleref__add(audio.file, audio.file, 'win')

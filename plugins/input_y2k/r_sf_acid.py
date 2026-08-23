@@ -82,14 +82,14 @@ class input_acid_old(plugins.base):
 					if pos:
 						auto_basenotes[pos] = int(x['base_note'])
 						timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[pos]-60)
-						timemarker_obj.position = pos
+						timemarker_obj.time.set_pos(pos)
 						timemarker_obj.visual.color.set_int([0,0,255] if not x['tempo'] else [0,192,0])
 					else:
 						auto_basenotes[0] = int(x['base_note'])
 
 		for marker in project_obj.markers:
 			timemarker_obj = convproj_obj.timemarker__add()
-			timemarker_obj.position = marker.pos
+			timemarker_obj.time.set_pos(marker.pos)
 			timemarker_obj.visual.name = marker.text if marker.text else '[%i]' % marker.id
 			timemarker_obj.visual.color.set_int([255,0,0])
 

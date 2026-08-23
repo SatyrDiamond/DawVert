@@ -1428,7 +1428,7 @@ class output_ableton(plugins.base):
 			locator_obj = proj_ableton.ableton_Locator(None)
 			locator_obj.Name = timemarker_obj.visual.name
 			if timemarker_obj.visual.comment: locator_obj.Annotation = timemarker_obj.visual.comment
-			locator_obj.Time = timemarker_obj.position
+			locator_obj.Time = timemarker_obj.time.get_pos()
 			project_obj.Locators[num] = locator_obj
 
 		for num, alsdata in enumerate(convproj_obj.track_master.iter_return()):

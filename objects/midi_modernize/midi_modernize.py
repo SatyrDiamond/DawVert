@@ -156,7 +156,7 @@ class midi_modernize:
 				elif x['type'] == midievents.EVENTID__MARKER:
 					marker_data = midievents_obj.markers[x['uhival']]
 					timemarker_obj = convproj_obj.timemarker__add()
-					timemarker_obj.position = pos
+					timemarker_obj.time.set_pos(pos)
 					if marker_data: timemarker_obj.visual.name = marker_data
 
 				elif x['type'] == midievents.EVENTID__SEQSPEC:

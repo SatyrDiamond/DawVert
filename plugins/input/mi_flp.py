@@ -746,7 +746,7 @@ class input_flp(plugins.base):
 					else:
 						timemarker_obj = convproj_obj.timemarker__add()
 						timemarker_obj.visual.name = fl_timemark.name
-						timemarker_obj.position = fl_timemark.pos
+						timemarker_obj.time.set_pos(fl_timemark.pos)
 						if fl_timemark.type == 1: timemarker_obj.type = 'markerloop'
 						elif fl_timemark.type == 2: timemarker_obj.type = 'markerskip'
 						elif fl_timemark.type == 3: timemarker_obj.type = 'pause'

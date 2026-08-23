@@ -576,7 +576,6 @@ class input_tracktion_edit(plugins.base):
 		traits_obj.set_time_seconds(True)
 		traits_obj.time_seconds_tempo = False
 		traits_obj.time_seconds_timesig = False
-		traits_obj.time_seconds_timemarkers = False
 		traits_obj.track_hybrid = True
 		traits_obj.track_arranger = True
 
@@ -665,20 +664,18 @@ class input_tracktion_edit(plugins.base):
 
 		for arrclip in project_obj.arrangertrack.clips:
 			timemarker_obj = convproj_obj.arranger.add()
-			timemarker_obj.position = arrclip.start
-			timemarker_obj.duration = arrclip.length
+			timemarker_obj.time.set_posdur(arrclip.start, arrclip.length)
 			timemarker_obj.type = 'region'
 			timemarker_obj.visual.name = str(arrclip.name)
 			do_color(timemarker_obj.visual, arrclip.colour)
 
 		for markclip in project_obj.markertrack.clips:
-			if not markclip.sync:
-				timemarker_obj = convproj_obj.timemarker__add()
-				timemarker_obj.position = markclip.start*8
-				timemarker_obj.duration = markclip.length*8
-				timemarker_obj.type = 'region'
-				timemarker_obj.visual.name = str(markclip.name)
-				do_color(timemarker_obj.visual, markclip.colour)
+			timemarker_obj = convproj_obj.timemarker__add()
+			#if not markclip.sync:
+			timemarker_obj.time.set_posdur(markclip.start*8, markclip.length*8)
+			timemarker_obj.type = 'region'
+			timemarker_obj.visual.name = str(markclip.name)
+			do_color(timemarker_obj.visual, markclip.colour)
 
 		for wf_plugin in project_obj.masterplugins:
 			do_plugin(convproj_obj, wf_plugin, convproj_obj.track_master, software_mode)
@@ -691,7 +688,6 @@ class input_tracktion_edit(plugins.base):
 		#convproj_obj.transport.start_pos = max(0, transport_obj.start)
 		convproj_obj.transport.current_pos = transport_obj.position
 		convproj_obj.transport.is_seconds = True
-		convproj_obj.timemarkers.is_seconds = False
 		
 		tracknum = 0
 		counter_track = counter.counter(1000, '')

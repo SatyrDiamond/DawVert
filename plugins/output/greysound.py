@@ -205,7 +205,7 @@ class output_greysound(plugins.base):
 			greysound_marker = proj_greysound.greysound_marker()
 			greysound_marker.id = 'converted_marker_%i' % (num)
 			greysound_marker.name = timemarker_obj.visual.name if timemarker_obj.visual.name else 'Marker'
-			greysound_marker.position = {"ticks": timemarker_obj.position}
+			greysound_marker.position = {"ticks": timemarker_obj.time.get_pos()}
 			session_obj.markers.append(greysound_marker)
 
 		if dawvert_intent.output_mode == 'file':

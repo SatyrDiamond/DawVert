@@ -850,7 +850,7 @@ class output_dawproject(plugins.base):
 				marker = proj_dawproject.dawproject_marker()
 				if timemarker_obj.visual.name: marker.name = timemarker_obj.visual.name
 				if timemarker_obj.visual.color: marker.color = '#'+timemarker_obj.visual.color.get_hex()
-				marker.time = timemarker_obj.position
+				marker.time = timemarker_obj.time.get_pos()
 				markers.append(marker)
 
 		if bool(convproj_obj.timesig_auto):

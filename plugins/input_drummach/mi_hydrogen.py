@@ -109,7 +109,7 @@ class input_hydrogen(plugins.base):
 
 		for tag in project_obj.timeLineTag:
 			timemarker_obj = convproj_obj.timemarker__add()
-			timemarker_obj.position = tag.bar*48*4
+			timemarker_obj.time.set_pos(tag.bar*48*4)
 			timemarker_obj.visual.name = tag.tag
 
 		for autopath in project_obj.automationPaths:

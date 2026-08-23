@@ -245,7 +245,7 @@ class input_greysound(plugins.base):
 			if 'ticks' in gs_marker.position:
 				timemarker_obj = convproj_obj.timemarker__add()
 				if gs_marker.name: timemarker_obj.visual.name = gs_marker.name
-				timemarker_obj.position = gs_marker.position['ticks']
+				timemarker_obj.time.set_pos(gs_marker.position['ticks'])
 
 		for devdata in session_obj.audioDeviceSnapshots:
 			device_id = devdata['id'] if 'id' in devdata else None

@@ -92,6 +92,5 @@ class input_cvpj_f(plugins.base):
 					else:
 						timemarker_obj = convproj_obj.arranger.add()
 						timemarker_obj.type = 'region'
-						timemarker_obj.position = evo_clip.position
-						timemarker_obj.duration = evo_clip.duration-evo_clip.position
+						timemarker_obj.time.set_posdur(evo_clip.position, evo_clip.duration-evo_clip.position)
 						timemarker_obj.visual.name = evo_clip.name

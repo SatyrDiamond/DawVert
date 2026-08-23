@@ -76,7 +76,7 @@ class mariopaint_song():
 					timemarker_obj = convproj_obj.timemarker__add()
 					timemarker_obj.visual.name = 'Bookmark'
 					timemarker_obj.type = 'text'
-					timemarker_obj.position = (pos/notelen)
+					timemarker_obj.time.set_pos(pos/notelen)
 				for n in chord_obj.notes:
 					cvpj_notelist.add_m(n.inst, notepos, notelen*2, n.get(), chord_obj.volume, None)
 

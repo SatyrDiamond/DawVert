@@ -522,9 +522,10 @@ class output_cvpjs(plugins.base):
 				arrangement_obj.timemarkers.append(flp_timemarker_obj)
 
 		for timemarker_obj in convproj_obj.timemarkers:
-			if start_pos<=timemarker_obj.position:
+			timepos = timemarker_obj.time.get_pos()
+			if start_pos<=timepos:
 				flp_timemarker_obj = arrangement.flp_timemarker()
-				flp_timemarker_obj.pos = timemarker_obj.position
+				flp_timemarker_obj.pos = timepos
 				flp_timemarker_obj.type = 0
 				flp_timemarker_obj.name = timemarker_obj.visual.name if timemarker_obj.visual.name else ""
 				if timemarker_obj.type == 'markerloop': flp_timemarker_obj.type = 1

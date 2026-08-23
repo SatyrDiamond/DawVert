@@ -35,11 +35,46 @@ def do_region_common(sp_obj, placement_obj, region, version):
 	if 5 in region.flags: sp_obj.reverse = True
 	if version>volumeversion: sp_obj.vol = region.vol
 
-def add_audio_regions(
-	placements_obj, ppq, rootnote_auto, 
-	region, stretch_type, num_beats, seconds,
-	stretchflags, filename, tempo,
-	track_root_note, audiotempo, pitch, version):
+def do_color(colordata, visual_obj, icolor):
+	color = colordata.getcolornum(icolor)
+	visual_obj.color.set_int(color)
+	visual_obj.color.fx_allowed = ['brighter']
+	return color
+
+class addregion_data():
+	def __init__(self):
+		self.rootnote_auto = None
+		self.stretch_type = None
+		self.num_beats = None
+		self.seconds = None
+		self.stretchflags = None
+		self.filename = None
+		self.tempo = None
+		self.track_root_note = None
+		self.audiotempo = None
+		self.pitch = 0
+		self.version = 0
+		self.ppq = 96
+
+#def add_audio_regions(
+#	placements_obj, ppq, rootnote_auto, 
+#	region, stretch_type, num_beats, seconds,
+#	stretchflags, filename, tempo,
+#	track_root_note, audiotempo, pitch, version):
+def add_audio_regions(placements_obj, region, addr_d):
+	rootnote_auto = addr_d.rootnote_auto
+	stretch_type = addr_d.stretch_type
+	num_beats = addr_d.num_beats
+	seconds = addr_d.seconds
+	stretchflags = addr_d.stretchflags
+	filename = addr_d.filename
+	tempo = addr_d.tempo
+	track_root_note = addr_d.track_root_note
+	audiotempo = addr_d.audiotempo
+	pitch = addr_d.pitch
+	version = addr_d.version
+	ppq = addr_d.ppq
+
 	mul1 = audiotempo/120 if audiotempo else 1
 
 	if seconds is not None:
@@ -334,10 +369,8 @@ class input_acid_3(plugins.base):
 							if track_header.type == 2:
 								track_obj = convproj_obj.track__add(cvpj_trackid, 'audio', 1, False)
 								tracks_data[track_header.id] = track_obj
-								color = colordata.getcolornum(track_header.color)
 								track_obj.visual.name = track_header.name
-								track_obj.visual.color.set_int(color)
-								track_obj.visual.color.fx_allowed = ['brighter']
+								color = do_color(colordata, track_obj.visual, track_header.color)
 
 								if track_audioinfo:
 									track_obj.params.add('vol', track_audioinfo.vol, 'float')
@@ -346,6 +379,11 @@ class input_acid_3(plugins.base):
 									track_obj.params.add('enabled', 1 not in track_header.flags, 'float')
 
 								if track_regions:
+									addr_d = addregion_data()
+									addr_d.rootnote_auto = rootnote_auto
+									addr_d.tempo = tempo
+									addr_d.version = version
+									addr_d.ppq = ppq
 
 									pls = []
 
@@ -358,13 +396,18 @@ class input_acid_3(plugins.base):
 										sampleref_obj.set_dur_sec(track_header.seconds)
 										sampleref_obj.convert__path__fileformat()
 
+										addr_d.stretch_type = track_header.stretchtype
+										addr_d.num_beats = track_audiostretch.downbeat_offset
+										addr_d.seconds = track_header.seconds
+										addr_d.stretchflags = track_audiostretch.flags
+										addr_d.filename = filename
+										addr_d.track_root_note = track_audiostretch.root_note
+										addr_d.audiotempo = track_audiostretch.tempo
+										addr_d.pitch = 0
+
 										for region in track_regions:
-											pls += add_audio_regions(
-												track_obj.placements, ppq, rootnote_auto, 
-												region, track_header.stretchtype, track_audiostretch.downbeat_offset, track_header.seconds,
-												track_audiostretch.flags, filename, tempo,
-												track_audiostretch.root_note, track_audiostretch.tempo, 0, version
-												)
+
+											pls += add_audio_regions(track_obj.placements, region, addr_d)
 	
 											for p in pls:
 												p.visual.name = track_header.name
@@ -384,18 +427,20 @@ class input_acid_3(plugins.base):
 										for region in track_regions:
 											def_header, def_audiostretch = track_audiodefs[region.index]
 
-											pls += add_audio_regions(
-												track_obj.placements, ppq, rootnote_auto, 
-												region, def_header.stretchtype, def_audiostretch.downbeat_offset, def_header.seconds,
-												def_audiostretch.flags, def_header.filename, tempo,
-												def_audiostretch.root_note, def_audiostretch.tempo, def_header.pitch, version
-												)
+											addr_d.stretch_type = def_header.stretchtype
+											addr_d.num_beats = def_audiostretch.downbeat_offset
+											addr_d.seconds = def_header.seconds
+											addr_d.stretchflags = def_audiostretch.flags
+											addr_d.filename = def_header.filename
+											addr_d.track_root_note = def_audiostretch.root_note
+											addr_d.audiotempo = def_audiostretch.tempo
+											addr_d.pitch = def_header.pitch
+
+											pls += add_audio_regions(track_obj.placements, region, addr_d)
 
 											for p in pls:
 												p.visual.name = def_header.name
-												color = colordata.getcolornum(def_header.color)
-												p.visual.color.set_int(color)
-												p.visual.color.fx_allowed = ['brighter']
+												do_color(colordata, p.visual, def_header.color)
 
 									track_obj.placements.pl_audio.sort()
 									track_obj.placements.pl_audio.remove_overlaps()
@@ -464,7 +509,7 @@ class input_acid_3(plugins.base):
 						if def_data.base_note:
 							if def_data.pos_samples in auto_basenotes:
 								timemarker_obj = convproj_obj.timemarker__add_key(auto_basenotes[def_data.pos_samples]-60)
-								timemarker_obj.position = def_data.pos_samples
+								timemarker_obj.time.set_pos(def_data.pos_samples)
 								timemarker_obj.visual.color.set_int([56, 95, 125])
 
 			elif root_name == 'Group:Markers':
@@ -473,8 +518,7 @@ class input_acid_3(plugins.base):
 						marker = regs_chunk.content
 
 						timemarker_obj = convproj_obj.timemarker__add()
-						timemarker_obj.position = marker.pos
-						timemarker_obj.duration = marker.end
+						timemarker_obj.time.set_posdur(marker.pos, marker.end)
 						timemarker_obj.visual.name = marker.name if marker.name else '[%i]' % marker.id
 						if marker.type == 1: 
 							timemarker_obj.type = 'region'
@@ -501,8 +545,7 @@ class input_acid_3(plugins.base):
 
 						timemarker_obj = convproj_obj.arranger.add()
 						timemarker_obj.type = 'region'
-						timemarker_obj.position = arrdata.pos
-						timemarker_obj.duration = arrdata.dur
+						timemarker_obj.time.set_posdur(arrdata.pos, arrdata.dur)
 						timemarker_obj.visual.name = arrdata.name
 						color = arrcolordata.getcolornum(arrdata.color)
 						timemarker_obj.visual.color.set_int(color)

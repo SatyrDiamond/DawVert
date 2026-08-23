@@ -248,8 +248,7 @@ class input_sequel3(plugins.base):
 				track_node = track.node
 				for event in track_node.events:
 					timemarker_obj = convproj_obj.arranger.add()
-					timemarker_obj.position = event.start
-					timemarker_obj.duration = event.length
+					timemarker_obj.time.set_posdur(event.start, event.length)
 					timemarker_obj.type = 'region'
 					timemarker_obj.visual.name = str(event.name)
 					if 'Farb' in event.additional_attributes:

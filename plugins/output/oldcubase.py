@@ -483,8 +483,8 @@ class output_oldcubase(plugins.base):
 			for arr_obj in sortarr:
 				arrevent = add_list_genid(playrange_track.node.events, 'MPlayRangeEvent', counter_id)
 				arrevent.flags = 8960 
-				arrevent.start = arr_obj.position 
-				arrevent.length = arr_obj.duration
+				arrevent.start = arr_obj.time.get_pos()
+				arrevent.length = arr_obj.time.get_dur()
 				if arr_obj.visual.name: arrevent.name = arr_obj.visual.name 
 				do_color(arr_obj.visual, total_colors, arrevent.additional_attributes)
 

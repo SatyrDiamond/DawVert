@@ -248,8 +248,14 @@ class cvpj_placement_timing:
 	def set_pos(self, pos):
 		self.position.set(pos, 'ppq')
  
+	def set_pos_real(self, pos):
+		self.position.set(pos, 'seconds')
+ 
 	def get_pos(self):
 		return self.position.get('ppq', self.time_ppq)
+
+	def get_pos_real(self):
+		return self.position.get('seconds', self.time_ppq)
 
 	def calc_pos_add(self, val):
 		self.position.calc_add('ppq', val, self.time_ppq, self.realtime_tempo)

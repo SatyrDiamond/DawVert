@@ -232,7 +232,6 @@ class input_reaper(plugins.base):
 					if point[2]: autopoint_obj['tension'] = -point[6]
 
 		convproj_obj.transport.is_seconds = True
-		convproj_obj.timemarkers.is_seconds = True
 
 		convproj_obj.transport.current_pos = rpp_project.cursor.get()
 
@@ -241,14 +240,13 @@ class input_reaper(plugins.base):
 			convproj_obj.transport.loop_start = loop_start
 			convproj_obj.transport.loop_end = loop_size
 
-
 		markerdatas = {}
 		regiondatas = {}
 
 		for marker in rpp_project.markers:
 			if not marker[3]:
 				timemarker_obj = convproj_obj.timemarker__add()
-				timemarker_obj.position = marker[1]
+				timemarker_obj.time.set_pos_real(marker[1])
 				if marker[2]: timemarker_obj.visual.name = marker[2]
 				if marker[4]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[4], True))
 			else:
@@ -261,8 +259,7 @@ class input_reaper(plugins.base):
 				marker_end = markerdata[1]
 				timemarker_obj = convproj_obj.timemarker__add()
 				timemarker_obj.type = 'region'
-				timemarker_obj.position = marker[0]
-				timemarker_obj.duration = marker_end[0]-marker[0]
+				timemarker_obj.time.set_posdur_real(marker[0], marker_end[0]-marker[0])
 				if marker[1]: timemarker_obj.visual.name = marker[1]
 				if marker[3]: timemarker_obj.visual.color.set_int(reaper_color_to_cvpj_color(marker[3], True))
 

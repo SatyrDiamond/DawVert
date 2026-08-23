@@ -508,7 +508,7 @@ class input_dawproject(plugins.base):
 				timemarker_obj = convproj_obj.timemarker__add()
 				if marker.name: timemarker_obj.visual.name = marker.name
 				if marker.color: timemarker_obj.visual.color.set_hex(marker.color)
-				timemarker_obj.position = marker.time
+				timemarker_obj.time.set_pos(marker.time)
 
 		autoid_assoc.output(convproj_obj)
 

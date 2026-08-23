@@ -429,7 +429,7 @@ class input_ableton(plugins.base):
 		for _, loc in project_obj.Locators.items():
 			timemarker_obj = convproj_obj.timemarker__add()
 			timemarker_obj.visual.name = loc.Name
-			timemarker_obj.position = loc.Time
+			timemarker_obj.time.set_pos(loc.Time)
 			if loc.Annotation: timemarker_obj.visual.comment = loc.Annotation
 
 		transport_obj = project_obj.Transport

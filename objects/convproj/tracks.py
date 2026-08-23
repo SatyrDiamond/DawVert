@@ -16,7 +16,7 @@ from objects.convproj import placements_audio
 from objects.convproj import placements_index
 from objects.convproj import midi_inst
 from objects.convproj import autoticks
-from objects.convproj import timemarker
+from objects.convproj import placements_marker
 
 import copy
 
@@ -53,29 +53,29 @@ class cvpj_nle:
 		self.visual = visual.cvpj_visual()
 		self.notelist = notelist.cvpj_notelist(time_ppq)
 		self.timesig_auto = autoticks.cvpj_autoticks(time_ppq, 'timesig')
-		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq)
+		self.timemarkers = placements_marker.cvpj_placements_marker(time_ppq)
 		self.visual_roll = visual.cvpj_visual_placement_notes()
 
-	def json__make(self):
-		outjson = {}
-		outjson['visual'] = self.visual.json__make()
-		outjson['notelist'] = self.notelist.json__make()
-		outjson['timesig_auto'] = self.timesig_auto.json__make()
-		outjson['timemarkers'] = self.timemarkers.json__make()
-		return outjson
-
-	@classmethod
-	def json__parse(cls, injson):
-		cls = cls()
-		if 'visual' in injson: 
-			cls.visual = visual.cvpj_visual.json__parse(injson['visual'])
-		if 'notelist' in injson: 
-			cls.notelist = notelist.cvpj_notelist.json__parse(injson['notelist'])
-		if 'timesig_auto' in injson: 
-			cls.timesig_auto = autoticks.cvpj_autoticks.json__parse(injson['timesig_auto'])
-		if 'timemarkers' in injson: 
-			cls.timemarkers = timemarker.cvpj_timemarkers.json__parse(injson['timemarkers'])
-		return cls
+	#def json__make(self):
+	#	outjson = {}
+	#	outjson['visual'] = self.visual.json__make()
+	#	outjson['notelist'] = self.notelist.json__make()
+	#	outjson['timesig_auto'] = self.timesig_auto.json__make()
+	#	outjson['timemarkers'] = self.timemarkers.json__make()
+	#	return outjson
+#
+	#@classmethod
+	#def json__parse(cls, injson):
+	#	cls = cls()
+	#	if 'visual' in injson: 
+	#		cls.visual = visual.cvpj_visual.json__parse(injson['visual'])
+	#	if 'notelist' in injson: 
+	#		cls.notelist = notelist.cvpj_notelist.json__parse(injson['notelist'])
+	#	if 'timesig_auto' in injson: 
+	#		cls.timesig_auto = autoticks.cvpj_autoticks.json__parse(injson['timesig_auto'])
+	#	if 'timemarkers' in injson: 
+	#		cls.timemarkers = timemarker.cvpj_timemarkers.json__parse(injson['timemarkers'])
+	#	return cls
 
 cvpj_visual = visual.cvpj_visual
 cvpj_stretch = stretch.cvpj_stretch
@@ -392,72 +392,72 @@ class cvpj_track:
 		self.scenes = {}
 		self.audio_channels = 2
 		self.is_drum = False
-		self.timemarkers = timemarker.cvpj_timemarkers(time_ppq)
+		self.timemarkers = placements_marker.cvpj_placements_marker(time_ppq)
 		self.armed = cvpj_armstate()
 		self.latency_offset = 0
 		self.visual_keynotes = visual.cvpj_visual_keynote()
 		self.visual_track = visual.cvpj_visual_track()
 
-	def json__make(self):
-		outjson = {}
-		outjson['time_ppq'] = self.time_ppq
-		outjson['uses_placements'] = self.uses_placements
-		outjson['is_indexed'] = self.is_indexed
-		outjson['type'] = self.type
-		outjson['is_laned'] = self.is_laned
-		outjson['lanes'] = dict([(k, v.json__make()) for k, v in self.lanes])
-		outjson['visual'] = self.visual.json__make() 
-		outjson['visual_ui'] = self.visual_ui.json__make() 
-		outjson['visual_inst'] = self.visual_inst.json__make() 
-		outjson['params'] = self.params.json__make() 
-		outjson['datavals'] = self.datavals.json__make() 
-		outjson['midi'] = self.midi.json__make() 
-		outjson['plugslots'] = self.plugslots.json__make() 
-		outjson['fxrack_channel'] = self.fxrack_channel
-		outjson['sends'] = self.sends.json__make() 
-		outjson['placements'] = self.placements.json__make()
-		outjson['group'] = self.group = None
-		outjson['returns'] = dict([(k, v.json__make()) for k, v in self.returns])
-		outjson['notelist_index'] = dict([(k, v.json__make()) for k, v in self.notelist_index])
-		#outjson['scenes'] = dict([(k, v.json__make()) for k, v in self.scenes]) JSON__WIP
-		outjson['audio_channels'] = self.audio_channels
-		outjson['is_drum'] = self.is_drum
-		outjson['timemarkers'] = self.timemarkers.json__make() 
-		outjson['armed'] = self.armed.json__make() 
-		outjson['latency_offset'] = self.latency_offset
-		outjson['visual_keynotes'] = self.visual_keynotes.json__make() 
-		return outjson
+	#def json__make(self):
+	#	outjson = {}
+	#	outjson['time_ppq'] = self.time_ppq
+	#	outjson['uses_placements'] = self.uses_placements
+	#	outjson['is_indexed'] = self.is_indexed
+	#	outjson['type'] = self.type
+	#	outjson['is_laned'] = self.is_laned
+	#	outjson['lanes'] = dict([(k, v.json__make()) for k, v in self.lanes])
+	#	outjson['visual'] = self.visual.json__make() 
+	#	outjson['visual_ui'] = self.visual_ui.json__make() 
+	#	outjson['visual_inst'] = self.visual_inst.json__make() 
+	#	outjson['params'] = self.params.json__make() 
+	#	outjson['datavals'] = self.datavals.json__make() 
+	#	outjson['midi'] = self.midi.json__make() 
+	#	outjson['plugslots'] = self.plugslots.json__make() 
+	#	outjson['fxrack_channel'] = self.fxrack_channel
+	#	outjson['sends'] = self.sends.json__make() 
+	#	outjson['placements'] = self.placements.json__make()
+	#	outjson['group'] = self.group = None
+	#	outjson['returns'] = dict([(k, v.json__make()) for k, v in self.returns])
+	#	outjson['notelist_index'] = dict([(k, v.json__make()) for k, v in self.notelist_index])
+	#	#outjson['scenes'] = dict([(k, v.json__make()) for k, v in self.scenes]) JSON__WIP
+	#	outjson['audio_channels'] = self.audio_channels
+	#	outjson['is_drum'] = self.is_drum
+	#	outjson['timemarkers'] = self.timemarkers.json__make() 
+	#	outjson['armed'] = self.armed.json__make() 
+	#	outjson['latency_offset'] = self.latency_offset
+	#	outjson['visual_keynotes'] = self.visual_keynotes.json__make() 
+	#	return outjson
 
-	@classmethod
-	def json__parse(cls, injson):
-		cls = cls()
-		if 'time_ppq' in injson: cls.time_ppq = injson['time_ppq']
-		if 'uses_placements' in injson: cls.uses_placements = injson['uses_placements']
-		if 'is_indexed' in injson: cls.is_indexed = injson['is_indexed']
-		if 'type' in injson: cls.type = injson['type']
-		if 'is_laned' in injson: cls.is_laned = injson['is_laned']
-		if 'lanes' in injson: cls.lanes = dict([(k, cvpj_lane.json__parse(v)) for k, v in injson['lanes']])
-		if 'visual' in injson: cls.visual = visual.cvpj_visual.json__parse(injson['visual'])
-		if 'visual_ui' in injson: cls.visual_ui = visual.cvpj_visual_ui.json__parse(injson['visual_ui'])
-		if 'visual_inst' in injson: cls.visual_inst = visual.cvpj_visual.json__parse(injson['visual_inst'])
-		if 'params' in injson: cls.params = params.cvpj_paramset.json__parse(injson['params'])
-		if 'datavals' in injson: cls.datavals = params.cvpj_datavals.json__parse(injson['datavals'])
-		if 'midi' in injson: cls.midi = cvpj_midiport.json__parse(injson['midi'])
-		if 'plugslots' in injson: cls.plugslots = cvpj_plugslots.json__parse(injson['plugslots'])
-		if 'fxrack_channel' in injson: cls.fxrack_channel = injson['fxrack_channel']
-		if 'sends' in injson: cls.sends = sends.cvpj_sends.json__parse(injson['sends'])
-		if 'placements' in injson: cls.placements = placements.cvpj_placements.json__parse(injson['placements'])
-		if 'group' in injson: cls.group = injson['group']
-		if 'returns' in injson: cls.returns = dict([(k, cvpj_track.json__parse(v)) for k, v in injson['lanes']])
-		if 'notelist_index' in injson: cls.notelist_index = dict([(k, cvpj_nle.json__parse(v)) for k, v in injson['lanes']])
-		#if 'scenes' in injson: cls.scenes = dict([(k, cvpj_nle.json__parse(v)) for k, v in injson['lanes']]) JSON__WIP
-		if 'audio_channels' in injson: cls.audio_channels = injson['audio_channels']
-		if 'is_drum' in injson: cls.is_drum = injson['is_drum']
-		if 'timemarkers' in injson: cls.timemarkers = timemarker.cvpj_timemarkers.json__parse(injson['timemarkers'])
-		if 'armed' in injson: cls.armed = cvpj_armstate.json__parse(injson['armed'])
-		if 'latency_offset' in injson: cls.latency_offset = injson['latency_offset']
-		if 'visual_keynotes' in injson: cls.visual_keynotes = visual.cvpj_visual_keynote.json__parse(injson['visual_keynotes'])
-		return cls
+	#@classmethod
+	#def json__parse(cls, injson):
+	#	cls = cls()
+	#	if 'time_ppq' in injson: cls.time_ppq = injson['time_ppq']
+	#	if 'uses_placements' in injson: cls.uses_placements = injson['uses_placements']
+	#	if 'is_indexed' in injson: cls.is_indexed = injson['is_indexed']
+	#	if 'type' in injson: cls.type = injson['type']
+	#	if 'is_laned' in injson: cls.is_laned = injson['is_laned']
+	#	if 'lanes' in injson: cls.lanes = dict([(k, cvpj_lane.json__parse(v)) for k, v in injson['lanes']])
+	#	if 'visual' in injson: cls.visual = visual.cvpj_visual.json__parse(injson['visual'])
+	#	if 'visual_ui' in injson: cls.visual_ui = visual.cvpj_visual_ui.json__parse(injson['visual_ui'])
+	#	if 'visual_inst' in injson: cls.visual_inst = visual.cvpj_visual.json__parse(injson['visual_inst'])
+	#	if 'params' in injson: cls.params = params.cvpj_paramset.json__parse(injson['params'])
+	#	if 'datavals' in injson: cls.datavals = params.cvpj_datavals.json__parse(injson['datavals'])
+	#	if 'midi' in injson: cls.midi = cvpj_midiport.json__parse(injson['midi'])
+	#	if 'plugslots' in injson: cls.plugslots = cvpj_plugslots.json__parse(injson['plugslots'])
+	#	if 'fxrack_channel' in injson: cls.fxrack_channel = injson['fxrack_channel']
+	#	if 'sends' in injson: cls.sends = sends.cvpj_sends.json__parse(injson['sends'])
+	#	if 'placements' in injson: cls.placements = placements.cvpj_placements.json__parse(injson['placements'])
+	#	if 'group' in injson: cls.group = injson['group']
+	#	if 'returns' in injson: cls.returns = dict([(k, cvpj_track.json__parse(v)) for k, v in injson['lanes']])
+	#	if 'notelist_index' in injson: cls.notelist_index = dict([(k, cvpj_nle.json__parse(v)) for k, v in injson['lanes']])
+	#	#if 'scenes' in injson: cls.scenes = dict([(k, cvpj_nle.json__parse(v)) for k, v in injson['lanes']]) JSON__WIP
+	#	if 'audio_channels' in injson: cls.audio_channels = injson['audio_channels']
+	#	if 'is_drum' in injson: cls.is_drum = injson['is_drum']
+	#	if 'timemarkers' in injson: cls.timemarkers = timemarker.cvpj_timemarkers.json__parse(injson['timemarkers'])
+	#	if 'armed' in injson: cls.armed = cvpj_armstate.json__parse(injson['armed'])
+	#	if 'latency_offset' in injson: cls.latency_offset = injson['latency_offset']
+	#	if 'visual_keynotes' in injson: cls.visual_keynotes = visual.cvpj_visual_keynote.json__parse(injson['visual_keynotes'])
+	#	return cls
 
 	def from_datapack(self, ds_id, ds_cat, ds_obj, ow_vis):
 		self.visual.from_datapack(ds_id, ds_cat, ds_obj, ow_vis)

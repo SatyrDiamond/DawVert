@@ -419,7 +419,6 @@ class output_tracktion_edit(plugins.base):
 		in_dict['time_seconds'] = True
 		in_dict['time_seconds_tempo'] = False
 		in_dict['time_seconds_timesig'] = False
-		in_dict['time_seconds_timemarkers'] = False
 		in_dict['track_arranger'] = True
 		in_dict['track_hybrid'] = True
 		in_dict['audio_stretch'] = ['rate', 'warp']
@@ -522,8 +521,8 @@ class output_tracktion_edit(plugins.base):
 		for timemarker_obj in convproj_obj.arranger:
 			wf_arrangerclip = proj_tracktion_edit.tracktion_arrangerclip()
 			if timemarker_obj.visual.name: wf_arrangerclip.name = timemarker_obj.visual.name
-			wf_arrangerclip.start = timemarker_obj.position
-			wf_arrangerclip.length = timemarker_obj.duration
+			wf_arrangerclip.start = timemarker_obj.time.get_pos()
+			wf_arrangerclip.length = timemarker_obj.time.get_dur()
 			wf_arrangerclip.id_num = counter_id.get()
 			if timemarker_obj.visual.color: wf_arrangerclip.colour = 'ff'+timemarker_obj.visual.color.get_hex()
 			project_obj.arrangertrack.clips.append(wf_arrangerclip)
@@ -532,8 +531,8 @@ class output_tracktion_edit(plugins.base):
 			wf_arrangerclip = proj_tracktion_edit.tracktion_markerclip()
 			wf_arrangerclip.markerID = num
 			if timemarker_obj.visual.name: wf_arrangerclip.name = timemarker_obj.visual.name
-			wf_arrangerclip.start = timemarker_obj.position
-			wf_arrangerclip.length = timemarker_obj.duration
+			wf_arrangerclip.start = timemarker_obj.time.get_pos()
+			wf_arrangerclip.length = timemarker_obj.time.get_dur()
 			wf_arrangerclip.id_num = counter_id.get()
 			if timemarker_obj.visual.color: wf_arrangerclip.colour = 'ff'+timemarker_obj.visual.color.get_hex()
 			project_obj.markertrack.clips.append(wf_arrangerclip)

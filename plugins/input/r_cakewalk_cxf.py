@@ -269,8 +269,10 @@ class input_bandlab(plugins.base):
 			for section in arrangerTracks[0].sections:
 				timemarker_obj = convproj_obj.arranger.add()
 				timemarker_obj.type = 'region'
-				timemarker_obj.position = (section.startTimeArrTicks/240)
-				timemarker_obj.duration = ((section.endTimeArrTicks/240)-timemarker_obj.position)
+				timemarker_obj.time.set_posdur(
+					(section.startTimeArrTicks/240), 
+					((section.endTimeArrTicks/240)-timemarker_obj.position)
+					)
 				timemarker_obj.visual.name = section.name
 				timemarker_obj.visual.color.set_int(conv_color(section.color))
 

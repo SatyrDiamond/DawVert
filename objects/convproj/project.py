@@ -24,10 +24,10 @@ from objects.convproj import autoticks
 from objects.convproj import autopoints
 from objects.convproj import notelist
 from objects.convproj import stretch
-from objects.convproj import timemarker
 from objects.convproj import videoref
 from objects.convproj import sampleref
 from objects.convproj import realdevices
+from objects.convproj import placements_marker
 
 from functions.convproj_types import convert_r2m
 from functions.convproj_types import convert_ri2mi
@@ -223,8 +223,8 @@ class cvpj_project:
 		self.playlist = {}
 		self.timesig = [4,4]
 		self.do_actions = []
-		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq)
-		self.arranger = timemarker.cvpj_timemarkers(self.time_ppq)
+		self.timemarkers = placements_marker.cvpj_placements_marker(self.time_ppq)
+		self.arranger = placements_marker.cvpj_placements_marker(self.time_ppq)
 		self.metadata = visual.cvpj_metadata()
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, 'timesig')
 		self.transport = cvpj_transport(self.time_ppq)
@@ -430,8 +430,8 @@ class cvpj_project:
 		self.time_ppq = time_ppq
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, 'timesig')
 		self.automation.time_ppq = self.time_ppq
-		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq)
-		self.arranger = timemarker.cvpj_timemarkers(self.time_ppq)
+		self.timemarkers = placements_marker.cvpj_placements_marker(self.time_ppq)
+		self.arranger = placements_marker.cvpj_placements_marker(self.time_ppq)
 		self.transport = cvpj_transport(self.time_ppq)
 
 	def change_timings(self, time_ppq):

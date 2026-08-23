@@ -12,7 +12,6 @@ from objects.convproj import visual
 from objects.convproj import notelist
 from objects.convproj import time
 from objects.convproj import autoticks
-from objects.convproj import timemarker
 from objects import notelist_splitter
 
 class cvpj_placements_notes:
@@ -166,7 +165,7 @@ class cvpj_placement_notes:
 		self.auto = {}
 		self.auto_ticks = {}
 		self.timesig_auto = autoticks.cvpj_autoticks(self.time_ppq, 'timesig')
-		self.timemarkers = timemarker.cvpj_timemarkers(self.time_ppq)
+		self.timemarkers = placements_marker.cvpj_placements_marker(self.time_ppq)
 		self.fade_in = placements.cvpj_placement_fade()
 		self.fade_out = placements.cvpj_placement_fade()
 		self.group = None

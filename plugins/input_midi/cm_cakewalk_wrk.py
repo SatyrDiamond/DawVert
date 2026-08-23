@@ -252,7 +252,7 @@ class input_cvpj_f(plugins.base):
 						for realtime, pos, text in parseddata.markers:
 							if not realtime:
 								timemarker_obj = convproj_obj.timemarker__add()
-								timemarker_obj.position = pos
+								timemarker_obj.time.set_pos(pos)
 								timemarker_obj.visual.name = text.decode()
 
 					elif chunk.id == 26: #Gen1:Global:VariablePart

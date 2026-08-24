@@ -12,6 +12,7 @@ from objects.convproj import visual
 from objects.convproj import notelist
 from objects.convproj import time
 from objects.convproj import autoticks
+from objects.convproj import placements_marker
 from objects import notelist_splitter
 
 class cvpj_placements_notes:

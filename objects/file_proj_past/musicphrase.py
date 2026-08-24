@@ -69,16 +69,65 @@ class musicphrase_track:
 		self.program = ebrw_readstr.int_s8()
 		self.vol = ebrw_readstr.int_s8()
 		self.pan = ebrw_readstr.int_s8()
-		self.unk5 = ebrw_readstr.int_s32()
-		self.unk6 = ebrw_readstr.int_s32()
-		self.unk7 = ebrw_readstr.int_s32()
-		self.unk8 = ebrw_readstr.int_s32()
+		self.solo = ebrw_readstr.int_s32()
+		self.mute = ebrw_readstr.int_s32()
+		self.record = ebrw_readstr.int_s32()
+		self.input = ebrw_readstr.int_s32()
 		ebrw_readstr.skip(6)
 		self.groove = ebrw_readstr.string(ebrw_readstr.int_u8())
 
+class musicphrase_phrasebank_phrase:
+	def __init__(self, ebrw_readstr):
+		self.clip = musicphrase_segment(ebrw_readstr)
+		ebrw_readstr.skip(2)
+		self.inlim_lo = ebrw_readstr.int_u8()
+		self.inlim_hi = ebrw_readstr.int_u8()
+		self.pkf = ebrw_readstr.int_s32()
+		self.startq = ebrw_readstr.int_s32()
+		self.endq = ebrw_readstr.int_s32()
+		self.out_mode = ebrw_readstr.int_u16()
+		self.out_device = ebrw_readstr.int_s32()
+		self.out_chan = ebrw_readstr.int_u8()
+		self.mode_voices = ebrw_readstr.int_s32()
+		self.mode_loop = ebrw_readstr.int_s32()
+		self.mode_hold = ebrw_readstr.int_s32()
+		self.mode_cont = ebrw_readstr.int_s32()
+		self.vel = ebrw_readstr.int_s16()
+		self.pitch = ebrw_readstr.int_s16()
+		self.playq = ebrw_readstr.int_s32()
+		self.delay = ebrw_readstr.int_s32()
+		self.plim_lo = ebrw_readstr.int_u8()
+		self.plim_hi = ebrw_readstr.int_u8()
+		self.vlim_lo = ebrw_readstr.int_u8()
+		self.vlim_hi = ebrw_readstr.int_u8()
+		self.solo = ebrw_readstr.int_s32()
+		self.mute = ebrw_readstr.int_s32()
+		self.drum = ebrw_readstr.int_s32()
+
+class musicphrase_phrasebank:
+	def __init__(self, ebrw_readstr):
+		self.name = ebrw_readstr.string(ebrw_readstr.int_u8())
+		self.phrases = []
+
+		numphrases = ebrw_readstr.int_u32()
+
+		for x in range(numphrases):
+			phrase = musicphrase_phrasebank_phrase(ebrw_readstr)
+			self.phrases.append(phrase)
+
+class musicphrase_window:
+	def __init__(self, ebrw_readstr):
+		self.state = ebrw_readstr.int_s32()
+		self.pos_x = ebrw_readstr.int_s32()
+		self.pos_y = ebrw_readstr.int_s32()
+		self.size_x = ebrw_readstr.int_s32()
+		self.size_y = ebrw_readstr.int_s32()
+		print(self.state, self.pos_x, self.pos_y, self.size_x, self.size_y)
+
 class musicphrase_song:
 	def __init__(self):
-		pass
+		self.tracks = []
+		self.phrasebanks = []
 
 	def load_from_file(self, input_file):
 		ebrw_readstr = easybinrw.binread()
@@ -94,12 +143,27 @@ class musicphrase_song:
 		self.unk2 = ebrw_readstr.int_u32()
 		self.unk3 = ebrw_readstr.int_u32()
 		self.unk4 = ebrw_readstr.int_u32()
-		self.unk5 = ebrw_readstr.int_u32()
+		numphrasebanks = ebrw_readstr.int_u32()
+
+		for x in range(numphrasebanks):
+			track = musicphrase_phrasebank(ebrw_readstr)
+			self.phrasebanks.append(track)
+
 		numtracks = ebrw_readstr.int_u32()
-		self.tracks = []
 
 		for x in range(numtracks):
 			track = musicphrase_track(ebrw_readstr)
 			self.tracks.append(track)
 
+		ebrw_readstr.skip(4)
+		ebrw_readstr.skip(4)
+		ebrw_readstr.skip(2)
+		self.tempo = ebrw_readstr.int_u32()
+		self.curpos = ebrw_readstr.int_u32()
+		ebrw_readstr.skip(1)
+		self.loop_on = ebrw_readstr.int_u8()
+		ebrw_readstr.skip(1)
+		ebrw_readstr.skip(1)
+		self.loop_start = ebrw_readstr.int_u32()
+		self.loop_end = ebrw_readstr.int_u32()
 		return True

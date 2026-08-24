@@ -38,11 +38,27 @@ class input_musicphrase(plugins.base):
 		traits_obj.fxrack_params = ['vol','pan','pitch']
 		traits_obj.auto_types = ['nopl_ticks']
 
+		convproj_obj.metadata.name = project_obj.name 
+		convproj_obj.metadata.copyright = project_obj.copyright
+		convproj_obj.metadata.author = project_obj.author
+		convproj_obj.metadata.comment_text = project_obj.comment
+
+		convproj_obj.transport.current_pos = project_obj.curpos/256
+		convproj_obj.transport.loop_active = bool(project_obj.loop_on)
+		convproj_obj.transport.loop_start = project_obj.loop_start/256
+		convproj_obj.transport.loop_end = project_obj.loop_end/256
+
+		convproj_obj.params.add('bpm', (project_obj.tempo/3072000)*120, 'float')
+
 		track_pl = []
 		for n, mpxl_track in enumerate(project_obj.tracks):
 			track_obj = convproj_obj.track__add(str(n), 'midi', 1, False)
 			track_obj.visual.name = mpxl_track.name
 			track_obj.visual.color.set_int(list(mpxl_track.color[0:3]))
+			track_obj.params.add('enabled', not mpxl_track.mute, 'bool')
+			track_obj.params.add('solo', mpxl_track.solo, 'bool')
+			track_obj.armed.on = bool(mpxl_track.record)
+			track_obj.armed.in_keys = bool(mpxl_track.record)
 
 			track_obj.midi.out_enabled = True
 			track_obj.midi.out_chanport.chan = mpxl_track.channel

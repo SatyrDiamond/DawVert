@@ -154,8 +154,8 @@ class nanostudio_song:
 		ebrw_readstr = easybinrw.binread()
 		ebrw_readstr.load_file(input_file)
 
-		ebrw_readstr.skip(4) # version
-		ebrw_readstr.skip(4) # full size
+		ebrw_readstr.skip(4) # version?
+		ebrw_readstr.skip(4) # full size?
 		self.unknowns.append(ebrw_readstr.list_int_u32(32))
 		self.tempo = ebrw_readstr.float()
 		self.unknowns.append(ebrw_readstr.int_u32())

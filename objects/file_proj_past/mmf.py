@@ -9,6 +9,8 @@ from external.easybinrw import chunked
 import logging
 logger_projparse = logging.getLogger('projparse')
 
+verbose = 1
+
 chunk_size_data = chunked.chunk_part_size()
 chunk_size_data.size_endian = True
 
@@ -32,8 +34,6 @@ def calc_gatetime_3(ebrw_readstr):
 	out_duration = 0
 	for shift, note_durbyte in enumerate(t_durgate): out_duration += note_durbyte << shift*7
 	return out_duration
-
-verbose = 0
 
 class smaf_track_ma3:
 	def __init__(self, ebrw_readstr, end):

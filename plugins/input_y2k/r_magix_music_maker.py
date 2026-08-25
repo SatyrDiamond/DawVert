@@ -140,7 +140,6 @@ class input_old_magix_maker(plugins.base):
 							sample_obj.sampleref = 'sample_'+str(data_objc.fileid)
 							sample_obj.vol = data_objc.vol/65535
 
-
 							class sample_speedtemp:
 								def __init__(self):
 									self.sample_speed = 1

@@ -9,8 +9,6 @@ from external.easybinrw import chunked
 import logging
 logger_projparse = logging.getLogger('projparse')
 
-verbose = False
-
 chunk_size_data = chunked.chunk_part_size()
 chunk_size_data.size_endian = True
 
@@ -35,6 +33,8 @@ def calc_gatetime_3(ebrw_readstr):
 	for shift, note_durbyte in enumerate(t_durgate): out_duration += note_durbyte << shift*7
 	return out_duration
 
+verbose = 0
+
 class smaf_track_ma3:
 	def __init__(self, ebrw_readstr, end):
 		self.format_type = ebrw_readstr.int_u8()
@@ -42,68 +42,99 @@ class smaf_track_ma3:
 		self.timebase_dur = ebrw_readstr.int_u8()
 		self.timebase_gate = ebrw_readstr.int_u8()
 
-		self.channel_stat = ebrw_readstr.list_int_u32(4)
+		self.channel_stat = ebrw_readstr.raw(16)
 		self.sequence = None
 		self.setup = None
 		self.audio = {}
 
+		if self.format_type==3:
+			self.channel_stat = ebrw_readstr.skip(16)
+
+		if verbose: print('------------------- MA3 TRACK %i -------------------' % self.format_type)
 		for part_obj in chunked.chunk_part_read_all_iso(ebrw_readstr, chunk_size_data):
 			logger_projparse.info('mmf: MA3 chunk '+str(part_obj.id))
 
 			if part_obj.id == b'Mtsq':
 				self.sequence = []
-				while ebrw_readstr.tell_real() < part_obj.end-1:
-					resttime = calc_gatetime_3(ebrw_readstr)
-					if verbose: print(ebrw_readstr.tell_real(), part_obj.end, end=' | ')
-					if verbose: print(str(resttime).ljust(5)+'| ', end='')
-					event_id, channel = ebrw_readstr.int_u4_2()
-					if verbose: print(str(event_id).ljust(3), end=' ')
+				if self.format_type in [2]:
+					while (ebrw_readstr.remaining()-6)>0:
+						resttime = calc_gatetime_3(ebrw_readstr)
+						if verbose: print(str( ebrw_readstr.remaining() ).ljust(7), end=' | ')
+						if verbose: print(str(resttime).ljust(5)+'| ', end='')
+						event_id, channel = ebrw_readstr.int_u4_2()
+						if verbose: print(str(channel).ljust(2), end=' ')
+						if verbose: print(str(event_id).ljust(2), end=' ')
 
-					if event_id == 0:
-						if verbose: print('|	  NULL	')
-						self.sequence.append([resttime, event_id])
-			
-					elif event_id == 8:
-						note_note = ebrw_readstr.int_u8()
-						note_durgate = calc_gatetime_3(ebrw_readstr)
-						if verbose: print('| '+str(channel).ljust(4), 'NOTE	   ', str(note_note).ljust(4), '     dur ', note_durgate)
-						self.sequence.append([resttime, event_id, channel, note_note, note_durgate])
-			
-					elif event_id == 9:
-						note_note = ebrw_readstr.int_u8()
-						note_vol = ebrw_readstr.int_u8()
-						note_durgate = calc_gatetime_3(ebrw_readstr)
-						if verbose: print('| '+str(channel).ljust(4), 'NOTE+V  ', str(note_note).ljust(4), str(note_vol).ljust(4), 'dur ', note_durgate)
-						self.sequence.append([resttime, event_id, channel, note_note, note_vol, note_durgate])
-			
-					elif event_id == 11:
-						cntltype = ebrw_readstr.int_u8()
-						cntldata = ebrw_readstr.int_u8()
-						if verbose: print('| '+str(channel).ljust(4), 'CONTROL ', str(cntltype).ljust(4), str(cntldata).ljust(4))
-						self.sequence.append([resttime, event_id, channel, cntltype, cntldata])
-			
-					elif event_id == 12:
-						prognumber = ebrw_readstr.int_u8()
-						if verbose: print('| '+str(channel).ljust(4), 'PROGRAM ', prognumber)
-						self.sequence.append([resttime, event_id, channel, prognumber])
-			
-					elif event_id == 14:
-						pitch = ebrw_readstr.int_u16()
-						if verbose: print('| '+str(channel).ljust(4), 'PITCH   ', str(pitch).ljust(4))
-						self.sequence.append([resttime, event_id, channel, pitch])
-			
-					elif event_id == 15 and channel == 0:
-						sysexdata = ebrw_readstr.raw(ebrw_readstr.int_u8())
-						if verbose: print('| '+str(channel).ljust(4), 'SYSEX   ', sysexdata.hex())
-						self.sequence.append([resttime, event_id, sysexdata])
-			
-					elif event_id == 15 and channel == 15:
-						ebrw_readstr.skip(1)
-						if verbose: print('| '+str(channel).ljust(4), 'NOP	 ')
-						self.sequence.append([resttime, 16])
-			
-					else:
-						raise ProjectFileParserException('mmf: Unknown Command', event_id, "0x%X" % event_id)
+						if event_id == 0:
+							if verbose: print('|-|	  NULL	')
+							self.sequence.append([resttime, event_id])
+				
+						elif event_id == 2:
+							val = ebrw_readstr.raw(2).hex()
+							if verbose: print('|-|	  UNK 2	', str(val).ljust(4))
+							self.sequence.append([resttime, event_id])
+				
+						elif event_id == 3:
+							val = ebrw_readstr.raw(2).hex()
+							if verbose: print('|-|	  UNK 3	', str(val).ljust(4))
+							self.sequence.append([resttime, event_id])
+				
+						elif event_id == 4:
+							val = ebrw_readstr.raw(1).hex()
+							if verbose: print('|-|	  UNK 4	', str(val).ljust(4))
+							self.sequence.append([resttime, event_id])
+
+						elif event_id == 8:
+							note_note = ebrw_readstr.int_u8()
+							note_durgate = calc_gatetime_3(ebrw_readstr)
+							if verbose: print('|-|', 'NOTE    ', str(note_note).ljust(4), '     dur ', note_durgate)
+							self.sequence.append([resttime, event_id, channel, note_note, note_durgate])
+				
+						elif event_id == 9:
+							note_note = ebrw_readstr.int_u8()
+							note_vol = ebrw_readstr.int_u8()
+							note_durgate = calc_gatetime_3(ebrw_readstr)
+							if verbose: print('|-|', 'NOTE+V  ', str(note_note).ljust(4), str(note_vol).ljust(4), 'dur ', note_durgate)
+							self.sequence.append([resttime, event_id, channel, note_note, note_vol, note_durgate])
+				
+						elif event_id == 10:
+							if verbose: print('|-|', 'SKIP_10 ')
+							ebrw_readstr.skip(2)
+							self.sequence.append([resttime, event_id])
+				
+						elif event_id == 11:
+							cntltype = ebrw_readstr.int_u8()
+							cntldata = ebrw_readstr.int_u8()
+							if verbose: print('|-|', 'CONTROL ', str(cntltype).ljust(4), str(cntldata).ljust(4))
+							self.sequence.append([resttime, event_id, channel, cntltype, cntldata])
+				
+						elif event_id == 12:
+							prognumber = ebrw_readstr.int_u8()
+							if verbose: print('|-|', 'PROGRAM ', prognumber)
+							self.sequence.append([resttime, event_id, channel, prognumber])
+				
+						elif event_id == 13:
+							if verbose: print('|-|', 'SKIP_13 ')
+							ebrw_readstr.skip(1)
+							self.sequence.append([resttime, event_id])
+				
+						elif event_id == 14:
+							pitch = ebrw_readstr.int_u16()
+							if verbose: print('|-|', 'PITCH   ', str(pitch).ljust(4))
+							self.sequence.append([resttime, event_id, channel, pitch])
+				
+						elif event_id == 15 and channel == 0:
+							sysexdata = ebrw_readstr.raw(ebrw_readstr.int_u8())
+							if verbose: print('|-|', 'SYSEX   ', sysexdata.hex())
+							self.sequence.append([resttime, event_id, sysexdata])
+				
+						elif event_id == 15 and channel == 15:
+							ebrw_readstr.skip(1)
+							if verbose: print('|-|', 'NOP	 ')
+							self.sequence.append([resttime, 16])
+				
+						else:
+							raise ProjectFileParserException('mmf: Unknown Command 0x%X, 0x%X' % (event_id, channel))
 
 			if part_obj.id == b'Mtsu': self.setup = ebrw_readstr.raw(part_obj.size)
 
@@ -200,18 +231,20 @@ class smaf_event_ma2:
 			else:
 				logger_projparse.info('mmf: unknown type: '+str(ch_b)+' '+str(p_type))
 
-			if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
-				print(self.channel, '|', self.event_type.ljust(16), '|', self.resttime, self.value)
+			#if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
+			#print(str(self.resttime).ljust(6), self.channel, '|', self.event_type.ljust(16), '|', self.value)
 
 		elif (self.ch_oc, self.notenum) == (15, 15):
 			nval = ebrw_readstr.int_u8()
-			if nval:
+			if nval==240:
 				self.event_type = 'sysex'
+				sysexsize = ebrw_readstr.int_u8()
+				self.data = ebrw_readstr.raw(sysexsize)
 			else:
 				self.event_type = 'nop'
 
-			if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
-				print(self.channel, '|', self.event_type.ljust(16), '|', self.resttime, self.data)
+			#if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
+			#print(str(self.resttime).ljust(6), self.channel, '|', self.event_type.ljust(16), '|', self.data.hex())
 
 		else:
 			self.note_key = self.notenum
@@ -220,8 +253,11 @@ class smaf_event_ma2:
 			self.duration = calc_gatetime_2(ebrw_readstr)
 			self.event_type = 'note'
 
-			if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
-				print(self.channel, '|', self.event_type.ljust(16), '|', self.note_key, self.note_oct)
+			#if VERBOSE_FILTER_CHANNEL==-1 or VERBOSE_FILTER_CHANNEL==self.channel:
+			#print(str(self.resttime).ljust(6), self.channel, '|', self.event_type.ljust(16), '|', self.note_key, self.note_oct)
+
+		#if not self.event_type:
+		#	exit()
 
 class smaf_track_ma2:
 	def __init__(self, ebrw_readstr, end):
@@ -242,8 +278,14 @@ class smaf_track_ma2:
 
 			if part_obj.id == b'Mtsq':
 				self.sequence = []
-				while ebrw_readstr.tell() < part_obj.end-1:
-					self.sequence.append(smaf_event_ma2(ebrw_readstr))
+				try:
+					while (ebrw_readstr.remaining())>0:
+						#print(str( ebrw_readstr.remaining() ).ljust(6), end=' > ')
+						self.sequence.append(smaf_event_ma2(ebrw_readstr))
+				except:
+				#	print('error')
+					pass
+				#print(  ebrw_readstr.rest().hex()  )
 					
 class smaf_song:
 	def __init__(self):
@@ -285,7 +327,18 @@ class smaf_song:
 
 			if part_obj.id[:3] == b'MTR':
 				mmf_tracknum = part_obj.id[3:][0]
-				if mmf_tracknum in range(5, 8): self.tracks3[mmf_tracknum-5] = smaf_track_ma3(ebrw_readstr, part_obj.end)
-				if mmf_tracknum in range(1, 5): self.tracks2[mmf_tracknum-1] = smaf_track_ma2(ebrw_readstr, part_obj.end)
+				match mmf_tracknum:
+					case 0: self.tracks2[0] = smaf_track_ma2(ebrw_readstr, part_obj.end)
+					case 1: self.tracks2[1] = smaf_track_ma2(ebrw_readstr, part_obj.end)
+					case 2: self.tracks2[2] = smaf_track_ma2(ebrw_readstr, part_obj.end)
+					case 3: self.tracks2[3] = smaf_track_ma2(ebrw_readstr, part_obj.end)
+					case 4: self.tracks3[0] = smaf_track_ma3(ebrw_readstr, part_obj.end)
+					case 5: self.tracks3[1] = smaf_track_ma3(ebrw_readstr, part_obj.end)
+					case 6: self.tracks3[2] = smaf_track_ma3(ebrw_readstr, part_obj.end)
+					case 7: self.tracks3[3] = smaf_track_ma3(ebrw_readstr, part_obj.end)
+
+				#print(part_obj.id, mmf_tracknum, mmf_tracknum in range(5, 8), mmf_tracknum in range(1, 5))
+				#if mmf_tracknum in range(5, 8): self.tracks3[mmf_tracknum-5] = smaf_track_ma3(ebrw_readstr, part_obj.end)
+				#if mmf_tracknum in range(1, 5): self.tracks2[mmf_tracknum-1] = smaf_track_ma2(ebrw_readstr, part_obj.end)
 		
 		return True

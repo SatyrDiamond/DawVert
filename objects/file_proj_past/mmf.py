@@ -9,7 +9,7 @@ from external.easybinrw import chunked
 import logging
 logger_projparse = logging.getLogger('projparse')
 
-verbose = 1
+verbose = 0
 
 chunk_size_data = chunked.chunk_part_size()
 chunk_size_data.size_endian = True

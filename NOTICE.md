@@ -24,5 +24,5 @@ File formats themselves are not copyrightable subject matter:
 
 ## DMCA
 
-17 U.S.C. § 1201 prohibits circumventing access controls. A statutory exception ( § 1201(f)) permits circumvention
+17 U.S.C. § 1201 prohibits circumventing access controls. A statutory exception ( § 1201(f) ) permits circumvention
 solely to achieve interoperability of an independently created program.

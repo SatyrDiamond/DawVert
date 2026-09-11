@@ -6,7 +6,7 @@ All product names, trademarks, and registered trademarks are the property of the
 
 All references to "FL Studio", "Ableton" and others in DawVert's source and documentation are nominative fair use — they identify the file format this software parses and writes, and no more.
 
-DawVert neither uses nor distributes the source code, object code, proprietary SDK components, or header files of any proprietary DAW software.
+DawVert neither uses nor distributes the source code, object code, proprietary SDK components, or header files of any proprietary DAW software. No decompilation of any DAW is performed.
 
 All file-format observations were obtained by inspecting the bytes of files written by the DAW Software — using only public tools.
 

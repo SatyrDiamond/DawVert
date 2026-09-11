@@ -126,7 +126,7 @@ class xewtonmusic_song_note:
 		self.vol = ebrw_readstr.int_u8()
 		numauto = ebrw_readstr.int_u16()
 		if numauto: 
-			for _ in range(self.unk1):
+			for _ in range(numauto):
 				auto_pos = ebrw_readstr.int_u16()
 				auto_val = ebrw_readstr.int_u16()
 				self.auto.append([auto_pos, auto_val])
